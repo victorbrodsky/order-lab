@@ -408,7 +408,7 @@ class CallLogEditController extends CallEntryController
     /**
      * Save/Update Call Log Entry
      * @Route("/entry/update/{messageId}/{cycle}", name="calllog_update_entry", options={"expose"=true})
-     * @Template("OlegCallLogBundle:CallLog:call-entry.html.twig")
+     * @Template("OlegCallLogBundle:CallLog:call-entry-edit.html.twig")
      * @Method("POST")
      */
     public function updateEntryAction(Request $request, $messageId, $cycle)

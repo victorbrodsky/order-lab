@@ -670,8 +670,9 @@ class CallEntryController extends Controller
 
 
     /**
-     * Call Entry
+     * Call Entry New Page
      * http://localhost/order/call-log-book/entry/new?mrn-type=4&mrn=3
+     *
      * @Route("/entry/new", name="calllog_callentry")
      * @Template("OlegCallLogBundle:CallLog:call-entry.html.twig")
      */
@@ -711,57 +712,33 @@ class CallEntryController extends Controller
         }
 
         $title = "New Entry";
+        $titleheadroom = null;
 
         $system = $securityUtil->getDefaultSourceSystem($this->container->getParameter('calllog.sitename'));
         $cycle = 'new';
         $formtype = 'call-entry';
         $readonlyPatient = false;
-        $readonlyEncounter = false; //Same Encounter
-        //$patient = null;
+        $readonlyEncounter = false;
+        $patient = null;
+        $encounter1 = null;
+        $encounter2 = null;
 
-        //convert "Auto-generated MRN" to "Existing Auto-generated MRN"
-//        if( $mrntype ) {
-//            $mrntypeEntity = $em->getRepository('OlegOrderformBundle:MrnType')->find($mrntype);
-//            if ($mrntypeEntity->getName() == "Auto-generated MRN") {
-//                $mrntypeEntity = $em->getRepository('OlegOrderformBundle:MrnType')->findOneByName("Existing Auto-generated MRN");
-//                $mrntype = $mrntypeEntity->getId();
-//            }
-//        }
+        //redirect logic for Same Patient, Same/New Encounter
+        if( ($mrntype && $mrn) || ($encounterTypeId && $encounterNumber) ) {
+            return $this->redirect($this->generateUrl('calllog_callentry_same_patient', array(
+                'mrn'=>$mrn,
+                'mrn-type'=>$mrntype,
+                'encounter-number'=>$encounterNumber,
+                'encounter-type'=>$encounterTypeId,
+                'message-type'=>$messageTypeId
+            )));
+        }
 
         $institution = $userSecUtil->getCurrentUserInstitution($user);
 
-        if( $mrntype && $mrn ) {
-            $extra = array();
-            $extra["keytype"] = $mrntype;
-
-            $thisPatient = $em->getRepository('OlegOrderformBundle:Patient')->createElement(
-                $institution,
-                'valid',            //status
-                $user,              //provider
-                "Patient",          //$className
-                "mrn",              //$fieldName
-                null,               //$parent
-                $mrn,        //$fieldValue
-                $extra,             //$extra
-                false               //$withfields
-            );
-            $thisPatientTitle = $thisPatient->obtainPatientInfoTitle('valid',null,false);
-            $titleheadroom = $thisPatientTitle;
-
-            if( $messageTypeId ) {
-                $title = "Add Entry (New Encounter, Same Type) to " . $thisPatientTitle;
-            } else {
-                $title = "Add Entry (New Encounter) to " . $thisPatientTitle;
-            }
-
-            $readonlyPatient = true;
-        }
-
-        //if( !$patient ) {
-            //create patient
-            $patient = new Patient(true, 'valid', $user, $system);
-            $patient->setInstitution($institution);
-        //}
+        //create patient
+        $patient = new Patient(true, 'valid', $user, $system);
+        $patient->setInstitution($institution);
 
         //set patient record status "Active"
         $patientActiveStatus = $em->getRepository('OlegOrderformBundle:PatientRecordStatusList')->findOneByName("Active");
@@ -769,45 +746,34 @@ class CallEntryController extends Controller
             $patient->setPatientRecordStatus($patientActiveStatus);
         }
 
-        //create invalid encounter #1 just to display fields in "Patient Info"
+        //create invalid, dummy encounter #1 just to display fields in "Patient Info"
         $encounter1 = new Encounter(true,'invalid',$user,$system);
         $encounter1->setProvider($user);
         $patient->addEncounter($encounter1); //add new encounter to patient
 
-        $encounter2 = $em->getRepository('OlegOrderformBundle:Encounter')->findOneEncounterByNumberAndType($encounterTypeId,$encounterNumber);
-        //echo "Found encounter=".$encounter2->getId()."; version=".$encounter2->getVersion()."<br>";
-        //exit();
-
-        //check whether patient MRN supplied in the URL corresponds to the supplied encounter number.
-        // If it does not, show the normal /entry/new page but with the notification "
-        // Encounter "1111" of type "blah" is not with patient whose MRN of type "whatever" is "1111"
-        if( $mrn && $mrntype && $encounter2 ) {
-
-            if( !$em->getRepository('OlegOrderformBundle:Encounter')->isPatientEncounterMatch($mrn,$mrntype,$encounter2) ) {
-
-                $mrntypeStr = "";
-                $mrntypeEntity = $em->getRepository('OlegOrderformBundle:MrnType')->find($mrntype);
-                if( $mrntypeEntity ) {
-                    $mrntypeStr = $mrntypeEntity->getName()."";
-                }
-
-                $encounterMsg = "Encounter $encounterNumber of type ".$encounter2->obtainEncounterNumber()." is not with patient whose MRN of type $mrntypeStr is $mrn";
-                $this->get('session')->getFlashBag()->add(
-                    'warning',
-                    $encounterMsg
-                );
-
-                $encounter2 = null;
-            } else {
-                if( $messageTypeId ) {
-                    $title = "Add Entry (Same Encounter & Type) to " . $thisPatientTitle;
-                } else {
-                    $title = "Add Entry (Same Encounter) to " . $thisPatientTitle;
-                }
-
-                $readonlyEncounter = true;
-            }
-        }
+//        $encounter2 = $em->getRepository('OlegOrderformBundle:Encounter')->findOneEncounterByNumberAndType($encounterTypeId,$encounterNumber);
+//
+//        //check whether patient MRN supplied in the URL corresponds to the supplied encounter number.
+//        // If it does not, show the normal /entry/new page but with the notification "
+//        // Encounter "1111" of type "blah" is not with patient whose MRN of type "whatever" is "1111"
+//        if( $mrn && $mrntype && $encounter2 ) {
+//            if( !$em->getRepository('OlegOrderformBundle:Encounter')->isPatientEncounterMatch($mrn,$mrntype,$encounter2) ) {
+//
+//                $mrntypeStr = "";
+//                $mrntypeEntity = $em->getRepository('OlegOrderformBundle:MrnType')->find($mrntype);
+//                if( $mrntypeEntity ) {
+//                    $mrntypeStr = $mrntypeEntity->getName()."";
+//                }
+//
+//                $encounterMsg = "Encounter $encounterNumber of type ".$encounter2->obtainEncounterNumber()." is not with patient whose MRN of type $mrntypeStr is $mrn";
+//                $this->get('session')->getFlashBag()->add(
+//                    'warning',
+//                    $encounterMsg
+//                );
+//
+//                $encounter2 = null;
+//            }
+//        }
 
         if( !$encounter2 ) {
             //echo "Create new encounter <br>";
@@ -1018,16 +984,6 @@ class CallEntryController extends Controller
         //if( $form->isSubmitted() && $form->isValid() ) {
         if( $form->isSubmitted() ) {
 
-            //$data = $form->getData();
-//            $data = $request->request->all();
-//            print "<pre>";
-//            print_r($data);
-//            print "</pre>";
-//            $unmappedField = $data["formnode-4"];
-//            echo "<br>unmappedField=".$unmappedField."<br>";
-//            //print_r($request->get("form"));
-//            //exit('form is valid');
-
             $msg = "No Case found. No action has been performed.";
             $institution = $userSecUtil->getCurrentUserInstitution($user);
 
@@ -1036,6 +992,14 @@ class CallEntryController extends Controller
                 throw new \Exception( "Message must have only one patient. Patient count= ".count($patients)."'" );
             }
             $patient = $patients->first();
+
+            //it should work for mysql, mssql, but in postgres DB's id is already pre-genarated even when object is in the pre-persisting stage with "new" (new Patient)
+            if( $patient->getId() ) {
+                $existingPatientDB = true;
+            } else {
+                $existingPatientDB = false;
+            }
+
             //echo "message id=".$message->getId()."<br>";
             //echo "patient id=".$patient->getId()."<br>";
 
@@ -1043,8 +1007,8 @@ class CallEntryController extends Controller
             $newEncounter = null;
             //get a new encounter without id
             foreach( $patient->getEncounter() as $encounter ) {
-                //echo "encounter ID=".$encounter->getId()."; status=".$encounter->getStatus()."<br>";
-                if( !$encounter->getId() ) {
+                echo "encounter ID=".$encounter->getId()."; status=".$encounter->getStatus()."<br>";
+                //if( !$encounter->getId() ) {
                     if( $encounter->getStatus() == 'valid' ) {
                         $newEncounter = $encounter;
                     }
@@ -1053,12 +1017,23 @@ class CallEntryController extends Controller
                         //it must be removed from the patient
                         $patientInfoEncounter = $encounter;
                     }
-                }
+                //}
             }
 
             //set system source and user's default institution
             if( $newEncounter ) {
 
+                //Update Patient Info from $newEncounter:
+                // The values typed into these fields should be recorded as "valid".
+                // If the user types in the Date of Birth, it should be added to the "Patient" hierarchy level
+                // of the selected patient as a "valid" value and the previous "valid" value should be marked "invalid" on the server side.
+                //Use unmapped encounter's "patientDob" to update patient's DOB
+                if( $patientInfoEncounter && $patient ) {
+                    //dummy $patientInfoEncounter must be removed from the patient
+                    $patient->removeEncounter($patientInfoEncounter);
+                }
+
+                ////////////// processing new encounter ///////////////////
                 $newEncounter->setSource($system);
                 $newEncounter->setInstitution($institution);
                 $newEncounter->setVersion(1);
@@ -1069,7 +1044,7 @@ class CallEntryController extends Controller
 
                 //Remove tracker if spots/location is empty
                 $tracker = $newEncounter->getTracker();
-                if( $tracker ) {
+                if ($tracker) {
                     $tracker->removeEmptySpots();
                     if ($tracker->isEmpty()) {
                         //echo "Tracker is empty! <br>";
@@ -1087,53 +1062,14 @@ class CallEntryController extends Controller
                             }
                         }
                     }
-                }
-                //exit();
-
-                //TODO: just keep timezone as DB field and show it in the encounter Date
-                //re-set encounter date according to the unmapped timezone
-//                $encounterDateObject = $newEncounter->getDate()->first();
-//                $encounterDate = $encounterDateObject->getField();
-//                echo "date1=".$encounterDate->format('Y-m-d H:i')."<br>";
-//                $encounterDateTimezone = $encounterDateObject->getTimezone();
-//                echo "encounterDateTimezone=$encounterDateTimezone <br>";
-//                $encounterDate = $encounterDate->setTimezone(new \DateTimeZone($encounterDateTimezone));
-//                echo "date2=".$encounterDate->format('Y-m-d H:i')."<br>";
-//                $encounterDateObject->setField($encounterDate);
-//                //exit('1');
-
-                //TODO: Update Patient Info from $newEncounter (?):
-                // The values typed into these fields should be recorded as "valid".
-                // If the user types in the Date of Birth, it should be added to the "Patient" hierarchy level
-                // of the selected patient as a "valid" value and the previous "valid" value should be marked "invalid" on the server side.
-                //Use unmapped encounter's "patientDob" to update patient's DOB
-
-                if( $patientInfoEncounter ) {
-                    //TODO: copy all non-empty values from the $patientInfoEncounter to the $newEncounter ?
-
-                    //If the user types in the Date of Birth, it should be added to
-                    // the "Patient" hierarchy level of the selected patient as a "valid" value
-                    // and the previous "valid" value should be marked "invalid" on the server side.
-                    //Use unmapped encounter's "patientDob" to update patient's DOB
-                    //$patientDob = $form['patientDob']->getData();
-                    //echo "patientDob=$patientDob <br>";
-
-                    //$patientInfoEncounter must be removed from the patient
-                    $patient->removeEncounter($patientInfoEncounter);
-                }
+                }//$tracker
 
                 //prevent creating a new location every time: if location id is provided => find location in DB and replace it with tracker->spot->location
                 $calllogUtil->processTrackerLocation($newEncounter);
-                //exit('after location');
 
-                //TODO: process EncounterReferringProvider: set Specialty, Phone and Email for a new userWrapper (getReferringProviders)
+                //process EncounterReferringProvider: set Specialty, Phone and Email for a new userWrapper (getReferringProviders)
                 $calllogUtil->processReferringProviders($newEncounter,$system);
-
-                //testing: process form nodes
-                //$formNodeUtil = $this->get('user_formnode_utility');
-                //$formNodeUtil->processFormNodes($request,$message->getMessageCategory(),$message);
-                //exit('after formnode');
-
+                ////////////// EOF processing new encounter ///////////////////
 
                 //clear encounter
                 $message->clearEncounter();
@@ -1189,55 +1125,9 @@ class CallEntryController extends Controller
                 //On the server side write in the "Versions" of the associated forms into this "Form Version" field in the same order as the Form titles+IDs
                 $calllogUtil->setFormVersions($message);
 
+                //////////////////// Processing ////////////////////////
+                if( $existingPatientDB ) {
 
-                ///////// Issue 51(6): check if patient info is entered but Find Patient is not pressed  ///////
-                //Don't use since it's not possible to restore original entry
-//                if( $patient && !$patient->getId() ) {
-//                    //$patient
-//                    $patientParams = array();
-//                    //oleg_calllogformbundle_messagetype[patient][0][mrn][0][field]
-//                    $data = $request->request->all();
-//                    $mrn1 = $data['oleg_calllogformbundle_messagetype[patient][0][mrn][0][field]'];
-//                    $mrn2 = $request->query->get('oleg_calllogformbundle_messagetype[patient][0][mrn][0][field]');
-//                    echo "mrn1=".$mrn1."; mrn2=".$mrn2."<br>";
-//                    //$mrntype = $data['oleg_calllogformbundle_messagetype[patient][0][mrn][0][keytype]'];
-//                    //echo "mrn:".$mrn."; ".$mrntype."<br>";
-////                    $mrnObject = $patient->getMrn()->first();
-////                    echo "mrn count=".count($patient->getMrn())."<br>";
-////                    if( $mrn ) {
-////                        $mrntype = $mrnObject->getKeytype();
-////                        $mrn = $mrnObject->getField();
-////                        $params['mrntype'] = $mrntype;
-////                        $params['mrn'] = $mrn;
-////                        echo "mrn:".$mrn."; ".$mrntype."<br>";
-////                    }
-////                    $dob = $patient->getDob()->first();
-////                    $params['dob'] = $dob;
-//                    //$patientInfoEncounter
-//                    $lastname = $patientInfoEncounter->getPatlastname()->first();
-//                    $firstname = $patientInfoEncounter->getPatfirstname()->first();
-//                    $params['lastname'] = $lastname;
-//                    $params['firstname'] = $firstname;
-//
-//                    $patientsData = $this->search_Patient($request, false, $patientParams); //submit new entry
-//                    $patients = $patientsData['patients'];
-//                    echo "found patients=".count($patients)."<br>";
-//
-////                    return array(
-////                        //'entity' => $entity,
-////                        'form' => $form->createView(),
-////                        'cycle' => $cycle,
-////                        'title' => $title,
-////                        'formtype' => $formtype,
-////                        'triggerSearch' => 0,
-////                        'mrn' => $mrn,
-////                        'mrntype' => $mrntype
-////                    );
-//                }
-                ///////// EOF Issue 51(6): check if patient info is entered but Find Patient is not pressed ///////
-
-
-                if( $patient->getId() ) {
                     //CASE 1
                     echo "case 1: patient exists: create a new encounter to DB and add it to the existing patient <br>";
                     //get a new encounter without id $newEncounter
@@ -1249,28 +1139,15 @@ class CallEntryController extends Controller
                     $message->clearPatient();
                     $message->addPatient($patient);
 
+                    /////////// processing new encounter ///////////
                     //reset institution from the patient
                     $newEncounter->setInstitution($patient->getInstitution());
 
                     $patient->addEncounter($newEncounter);
 
-                    //add new DOB (if exists) to the Patient
-                    //Use unmapped encounter's "patientDob" to update patient's DOB
-//                    if( $newEncounter->getPatientDob() ) {
-//                        //invalidate all other patient's DOB
-//                        $validDOBs = $patient->obtainStatusFieldArray("dob","valid");
-//                        foreach( $validDOBs as $validDOB) {
-//                            $validDOB->setStatus("invalid");
-//                        }
-//
-//                        $patientDob = $newEncounter->getPatientDob();
-//                        //echo "encounter patientDob=" . $patientDob->format('Y-m-d') . "<br>";
-//                        $newPatientDob = new PatientDob($status,$user,$system);
-//                        $newPatientDob->setField($patientDob);
-//                        $patient->addDob($newPatientDob);
-//                        //echo "patient patientDob=" . $newPatientDob . "<br>";
-//                    }
-                    $calllogUtil->updatePatientInfoFromEncounter($patient,$newEncounter,$user,$system );
+                    //update patient's last name, first name, middle name, dob, sex, ...
+                    $calllogUtil->updatePatientInfoFromEncounter($patient, $newEncounter, $user, $system);
+                    /////////// EOF processing new encounter ///////////
 
                     if(0) { //testing
                         echo "encounter count=" . count($patient->getEncounter()) . "<br>";
@@ -1297,9 +1174,10 @@ class CallEntryController extends Controller
                     //exit('Exit Case 1');
                     //$em->persist($patient);
                     if( !$testing ) {
+                        //new encounter
                         $em->persist($newEncounter);
                         $em->persist($message);
-                        $em->flush(); //testing
+                        $em->flush();
                     }
 
 
@@ -1330,6 +1208,7 @@ class CallEntryController extends Controller
 
                     $msg = "New Encounter (ID#" . $newEncounter->getId() . ") is created with number " . $newEncounter->obtainEncounterNumber();
                 }
+                //////////////////// EOF Processing ////////////////////////
 
                 //set encounter as message's input
                 //$message->addInputObject($newEncounter);

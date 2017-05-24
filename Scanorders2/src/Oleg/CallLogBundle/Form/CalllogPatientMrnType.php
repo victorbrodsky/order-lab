@@ -37,8 +37,8 @@ class CalllogPatientMrnType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        echo "mrntype=".$this->params['mrntype']."<br>";
-        echo "mrn=".$this->params['mrn']."<br>";
+        //echo "mrntype=".$this->params['mrntype']."<br>";
+        //echo "mrn=".$this->params['mrn']."<br>";
 
         $builder->add('keytype', 'custom_selector', array(
             'label'=>'MRN Type:',

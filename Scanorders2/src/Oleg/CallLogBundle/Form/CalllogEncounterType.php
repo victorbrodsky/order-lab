@@ -71,6 +71,7 @@ class CalllogEncounterType extends AbstractType
         ));
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+
             $encounter = $event->getData();
             $form = $event->getForm();
 
@@ -78,7 +79,7 @@ class CalllogEncounterType extends AbstractType
             if( $encounter ) {
                 $status = $encounter->getStatus();
                 //echo "status=".$status."<br>";
-                if( $status == 'invalid' ) {
+                if( $status == 'invalid' || $this->params['readonlyEncounter'] ) {
                     $this->params['alias'] = false;
                 } else {
                     $this->params['alias'] = true;
@@ -87,6 +88,7 @@ class CalllogEncounterType extends AbstractType
 
             $form->add('patsuffix', 'collection', array(
                 'type' => new EncounterPatsuffixType($this->params, null),
+                'read_only' => $this->params['readonlyEncounter'],
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,
@@ -96,6 +98,7 @@ class CalllogEncounterType extends AbstractType
             ));
             $form->add('patlastname', 'collection', array(
                 'type' => new EncounterPatlastnameType($this->params, null),
+                'read_only' => $this->params['readonlyEncounter'],
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,
@@ -105,6 +108,7 @@ class CalllogEncounterType extends AbstractType
             ));
             $form->add('patfirstname', 'collection', array(
                 'type' => new EncounterPatfirstnameType($this->params, null),
+                'read_only' => $this->params['readonlyEncounter'],
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,
@@ -114,6 +118,7 @@ class CalllogEncounterType extends AbstractType
             ));
             $form->add('patmiddlename', 'collection', array(
                 'type' => new EncounterPatmiddlenameType($this->params, null),
+                'read_only' => $this->params['readonlyEncounter'],
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,
@@ -124,6 +129,7 @@ class CalllogEncounterType extends AbstractType
 
             $form->add('patsex', 'collection', array(
                 'type' => new EncounterPatsexType($this->params, null),
+                'read_only' => $this->params['readonlyEncounter'],
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,
@@ -244,6 +250,7 @@ class CalllogEncounterType extends AbstractType
         //Referring Provider for calllog new entry
         $builder->add('referringProviders', 'collection', array(
             'type' => new EncounterReferringProviderType($this->params, null),
+            'read_only' => $this->params['readonlyEncounter'],
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
@@ -254,6 +261,7 @@ class CalllogEncounterType extends AbstractType
 
         $builder->add('attendingPhysicians', 'collection', array(
             'type' => new EncounterAttendingPhysicianType($this->params, null),
+            'read_only' => $this->params['readonlyEncounter'],
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
@@ -276,6 +284,7 @@ class CalllogEncounterType extends AbstractType
             'label' => "Date of Birth:",
             'widget' => 'single_text',
             'required' => false,
+            'read_only' => $this->params['readonlyEncounter'],
             //'mapped' => false,
             'format' => 'MM/dd/yyyy',   //used for birth day only (no hours), so we don't need to set view_timezone
             'attr' => array('class' => 'datepicker form-control patient-dob-date'), //'style'=>'margin-top: 0;'
@@ -285,6 +294,7 @@ class CalllogEncounterType extends AbstractType
             //echo "show locationName <br>";
             $builder->add('locationName', 'employees_custom_selector', array(
                 'label' => "Location Name:",
+                'read_only' => $this->params['readonlyEncounter'],
                 'mapped' => false,
                 'required' => false,
                 'attr' => array('class' => 'combobox combobox-width ajax-combobox-locationName', 'type' => 'hidden'),
@@ -300,6 +310,7 @@ class CalllogEncounterType extends AbstractType
         }
         $builder->add('tracker', new TrackerType($this->params), array(
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\Tracker',
+            'read_only' => $this->params['readonlyEncounter'],
             'label' => false,
         ));
 
