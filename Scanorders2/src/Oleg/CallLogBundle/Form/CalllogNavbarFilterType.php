@@ -39,7 +39,8 @@ class CalllogNavbarFilterType extends AbstractType
             'label' => false,
             'required' => true,
             'choices' => $this->params['navbarSearchTypes'],
-            'attr' => array('class' => 'combobox111 combobox-no-width submit-on-enter-field', 'style'=>'border: 1px solid #ccc; border-radius: 4px 0 0 4px; height: 29px;'),
+            //'attr' => array('class' => 'combobox111 combobox-no-width submit-on-enter-field', 'style'=>'border: 1px solid #ccc; border-radius: 4px 0 0 4px; height: 29px;'),
+            'attr' => array('class' => 'combobox combobox-no-width submit-on-enter-field'),
         );
         if( array_key_exists('calllogsearchtype',$this->params) && $this->params['calllogsearchtype'] ) {
             $searchTypeArray['data'] = $this->params['calllogsearchtype'];
@@ -50,7 +51,8 @@ class CalllogNavbarFilterType extends AbstractType
         $searchArray = array(
             'required'=>false,
             'label' => false,
-            'attr' => array('class'=>'form-control submit-on-enter-field', 'style'=>"height:30px; border-radius: 0 6px 6px 0"),
+            //'attr' => array('class'=>'form-control submit-on-enter-field', 'style'=>"height:30px; border-radius: 0 6px 6px 0"),
+            'attr' => array('class'=>'form-control submit-on-enter-field', 'style'=>"border-radius: 4px"),
         );
         if( array_key_exists('calllogsearch',$this->params) && $this->params['calllogsearch'] ) {
             $searchArray['data'] = $this->params['calllogsearch'];
