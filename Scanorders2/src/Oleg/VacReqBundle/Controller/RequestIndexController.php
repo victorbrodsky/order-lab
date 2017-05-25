@@ -193,7 +193,7 @@ class RequestIndexController extends Controller
         }
 
         //echo "dql=".$dql."<br>";
-        //echo "query=".$query->getSql()."<br>";
+        echo "query=".$query->getSql()."<br>";
 
         $paginationParams = array(
             'defaultSortFieldName' => 'request.firstDayAway', //createDate
@@ -512,7 +512,6 @@ class RequestIndexController extends Controller
                 $instArr[] = $instId;
             }
             if( count($instArr) > 0 ) {
-                //$dql->andWhere("institution.id IN (" . implode(",", $instArr) . ")");
                 $instWhereArr[] = "institution.id IN (" . implode(",", $instArr) . ")";
             }
 
@@ -522,11 +521,12 @@ class RequestIndexController extends Controller
                 $tentativeInstArr[] = $instId;
             }
             if( count($tentativeInstArr) > 0 ) {
-                //$dql->andWhere("tentativeInstitution.id IN (" . implode(",", $tentativeInstArr) . ")");
                 $instWhereArr[] = "tentativeInstitution.id IN (" . implode(",", $tentativeInstArr) . ")";
             }
 
-            $dql->andWhere( implode(" OR ",$instWhereArr) );
+            if( count($instWhereArr) > 0 ) {
+                $dql->andWhere(implode(" OR ", $instWhereArr));
+            }
         }
 
         if( $academicYear ) {
@@ -585,31 +585,26 @@ class RequestIndexController extends Controller
             if( $vacationRequest ) {
                 $requestStatusCriterionArr[] = "requestVacation.startDate IS NOT NULL";
             }
-            $dql->andWhere(implode(" OR ",$requestStatusCriterionArr));
-            $filtered = true;
+
+            if( count($requestStatusCriterionArr) > 0 ) {
+                $dql->andWhere(implode(" OR ", $requestStatusCriterionArr));
+                $filtered = true;
+            }
         }
 
         if( $completed || $pending || $rejected || $approved ) {
             $requestStatusCriterionArr = array();
             if( $requestTypeAbbreviation == "business-vacation" ) {
                 if ($completed) {
-                    //$dql->andWhere("requestBusiness.status='rejected' OR requestVacation.status='rejected' OR requestBusiness.status='approved' OR requestVacation.status='approved'");
-                    //$filtered = true;
                     $requestStatusCriterionArr[] = "requestBusiness.status='rejected' OR requestVacation.status='rejected' OR requestBusiness.status='approved' OR requestVacation.status='approved'";
                 }
                 if ($pending) {
-                    //$dql->andWhere("requestBusiness.status='pending' OR requestVacation.status='pending'");
-                    //$filtered = true;
                     $requestStatusCriterionArr[] = "requestBusiness.status='pending' OR requestVacation.status='pending'";
                 }
                 if ($rejected) {
-                    //$dql->andWhere("requestBusiness.status='rejected' OR requestVacation.status='rejected'");
-                    //$filtered = true;
                     $requestStatusCriterionArr[] = "requestBusiness.status='rejected' OR requestVacation.status='rejected'";
                 }
                 if ($approved) {
-                    //$dql->andWhere("requestBusiness.status='approved' OR requestVacation.status='approved'");
-                    //$filtered = true;
                     $requestStatusCriterionArr[] = "requestBusiness.status='approved' OR requestVacation.status='approved'";
                 }
                 if ($cancellationRequest) {
@@ -639,8 +634,11 @@ class RequestIndexController extends Controller
                     $requestStatusCriterionArr[] = "request.status='canceled'";
                 }
             }
-            $dql->andWhere(implode(" OR ",$requestStatusCriterionArr));
-            $filtered = true;
+
+            if( count($requestStatusCriterionArr) > 0 ) {
+                $dql->andWhere(implode(" OR ", $requestStatusCriterionArr));
+                $filtered = true;
+            }
         }
 
 //        if( $cancellationRequest || $cancellationRequestApproved || $cancellationRequestRejected ) {
