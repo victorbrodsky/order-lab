@@ -193,7 +193,7 @@ class RequestIndexController extends Controller
         }
 
         //echo "dql=".$dql."<br>";
-        echo "query=".$query->getSql()."<br>";
+        //echo "query=".$query->getSql()."<br>";
 
         $paginationParams = array(
             'defaultSortFieldName' => 'request.firstDayAway', //createDate
