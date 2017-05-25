@@ -61,7 +61,7 @@ class DataQualityController extends CallEntryController
 
         $system = $securityUtil->getDefaultSourceSystem($this->container->getParameter('calllog.sitename'));
         $status = 'valid';
-        $cycle = 'show';
+        $cycle = 'new';
 
         $patient1 = new Patient(true,$status,$user,$system);
 
@@ -76,13 +76,13 @@ class DataQualityController extends CallEntryController
         }
         //echo "triggerSearch=".$triggerSearch."<br>";
 
-        $encounter1 = new Encounter(true,$status,$user,$system);
+        $encounter1 = new Encounter(true,'dummy',$user,$system);
         $patient1->addEncounter($encounter1);
         $form1 = $this->createPatientForm($patient1,$mrntype,$mrnid);
 
 
         $patient2 = new Patient(true,$status,$user,$system);
-        $encounter2 = new Encounter(true,$status,$user,$system);
+        $encounter2 = new Encounter(true,'dummy',$user,$system);
         $patient2->addEncounter($encounter2);
         $form2 = $this->createPatientForm($patient2,$mrntype,$mrnid);
 
@@ -115,8 +115,8 @@ class DataQualityController extends CallEntryController
         $id1 = trim($request->get('id1'));
         $id2 = trim($request->get('id2'));
         $masterMergeRecordId = trim($request->get('masterMergeRecordId'));
-        echo "id1=$id1; id2=$id2 <br>";
-        exit('exit');
+        //echo "id1=$id1; id2=$id2 <br>";
+        //exit('exit');
 
         $msg = "";
         //$res = null;
@@ -337,7 +337,7 @@ class DataQualityController extends CallEntryController
 
         $system = $securityUtil->getDefaultSourceSystem($this->container->getParameter('calllog.sitename'));
         $status = 'valid';
-        $cycle = 'show';
+        $cycle = 'new';
 
         $route = $request->get('_route');
 
@@ -361,7 +361,7 @@ class DataQualityController extends CallEntryController
             $triggerSearch = 1;
         }
 
-        $encounter1 = new Encounter(true,$status,$user,$system);
+        $encounter1 = new Encounter(true,'dummy',$user,$system);
         $patient1->addEncounter($encounter1);
         $form1 = $this->createPatientForm($patient1,$mrntype,$mrnid);
 
@@ -530,7 +530,7 @@ class DataQualityController extends CallEntryController
 
         $system = $securityUtil->getDefaultSourceSystem($this->container->getParameter('calllog.sitename'));
         $status = 'valid';
-        $cycle = 'show';
+        $cycle = 'new';
 
         $title = "Edit Patient Info";
         $formtype = 'edit-patient';
@@ -547,9 +547,9 @@ class DataQualityController extends CallEntryController
             $triggerSearch = 1;
         }
 
-        $encounter1 = new Encounter(true,$status,$user,$system);
+        $encounter1 = new Encounter(true,'dummy',$user,$system);
         $patient1->addEncounter($encounter1);
-        $form1 = $this->createPatientForm($patient1,$mrntype,$mrnid);
+        $form1 = $this->createPatientForm($patient1,$mrntype,$mrnid); //edit-patient-record
 
         return array(
             'form1' => $form1->createView(),
@@ -612,7 +612,7 @@ class DataQualityController extends CallEntryController
 
         $system = $securityUtil->getDefaultSourceSystem($this->container->getParameter('calllog.sitename'));
         $status = 'valid';
-        $cycle = 'show';
+        $cycle = 'new';
 
         $patient1 = new Patient(true,$status,$user,$system);
 
@@ -627,13 +627,13 @@ class DataQualityController extends CallEntryController
         }
         //echo "triggerSearch=".$triggerSearch."<br>";
 
-        $encounter1 = new Encounter(true,$status,$user,$system);
+        $encounter1 = new Encounter(true,'dummy',$user,$system);
         $patient1->addEncounter($encounter1);
         $form1 = $this->createPatientForm($patient1,$mrntype,$mrnid);
 
 
         $patient2 = new Patient(true,$status,$user,$system);
-        $encounter2 = new Encounter(true,$status,$user,$system);
+        $encounter2 = new Encounter(true,'dummy',$user,$system);
         $patient2->addEncounter($encounter2);
         $form2 = $this->createPatientForm($patient2,$mrntype,$mrnid);
 

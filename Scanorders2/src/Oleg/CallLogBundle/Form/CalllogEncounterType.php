@@ -51,6 +51,10 @@ class CalllogEncounterType extends AbstractType
         if( !array_key_exists('alias', $this->params) ) {
             $this->params['alias'] = true;
         }
+
+        if( !array_key_exists('readonlyEncounter', $this->params) ) {
+            $this->params['readonlyEncounter'] = false;
+        }
     }
     
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -75,11 +79,10 @@ class CalllogEncounterType extends AbstractType
             $encounter = $event->getData();
             $form = $event->getForm();
 
-            //hide alias for invalid encounter
+            //hide alias for dummy encounter
             if( $encounter ) {
                 $status = $encounter->getStatus();
-                //echo "status=".$status."<br>";
-                if( $status == 'invalid' || $this->params['readonlyEncounter'] ) {
+                if( $status == 'invalid' || $status == 'dummy' || $this->params['readonlyEncounter'] ) {
                     $this->params['alias'] = false;
                 } else {
                     $this->params['alias'] = true;

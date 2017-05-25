@@ -101,7 +101,7 @@ class CalllogPatientType extends AbstractType
             'required' => false,
             'allow_add' => true,
             'allow_delete' => true,
-            'label' => false,//" ",
+            'label' => false,
             'by_reference' => false,
             'prototype' => true,
             'prototype_name' => '__encounter__',

@@ -158,6 +158,7 @@
 
 {% endmacro %}
 
+{#form - patient form#}
 {% macro patientInfoSection(form,cycle,holderId,title,formtype) %}
 
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
@@ -215,12 +216,9 @@
 
                     {% set encounterPatientInfo = null %}
                     {% set readonlyEncounter = false %}
-                    {#{% set encounterEncounterInfo = null %}#}
                     {% for encounter in form.encounter %}
-                        {% if encounter.vars.value.status == 'invalid'  %}
+                        {% if encounter.vars.value.status == 'invalid' or encounter.vars.value.status == 'dummy' %}
                             {% set encounterPatientInfo = encounter %}
-                        {% else %}
-                            {#{% set encounterEncounterInfo = encounter %}#}
                         {% endif %}
                         {% if encounter.vars.value.id %}
                             {% set readonlyEncounter = true %}
@@ -243,7 +241,6 @@
                 {#<a class="collapsed" role="button" data-toggle="collapse" href="#encounter-info">Encounter Info Test</a>#}
                 <div id="encounter-info" class="panel-collapse collapse">
                     {% if encounterPatientInfo is defined and encounterPatientInfo %}
-
                         {{ form_row(encounterPatientInfo.status) }}
 
                         <div class="alias-group">

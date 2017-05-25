@@ -746,8 +746,8 @@ class CallEntryController extends Controller
             $patient->setPatientRecordStatus($patientActiveStatus);
         }
 
-        //create invalid, dummy encounter #1 just to display fields in "Patient Info"
-        $encounter1 = new Encounter(true,'invalid',$user,$system);
+        //create dummy encounter #1 just to display fields in "Patient Info"
+        $encounter1 = new Encounter(true,'dummy',$user,$system);
         $encounter1->setProvider($user);
         $patient->addEncounter($encounter1); //add new encounter to patient
 
@@ -1003,7 +1003,7 @@ class CallEntryController extends Controller
             //echo "message id=".$message->getId()."<br>";
             //echo "patient id=".$patient->getId()."<br>";
 
-            $patientInfoEncounter = null;
+            $patientInfoDummyEncounter = null;
             $newEncounter = null;
             //get a new encounter without id
             foreach( $patient->getEncounter() as $encounter ) {
@@ -1012,10 +1012,10 @@ class CallEntryController extends Controller
                     if( $encounter->getStatus() == 'valid' ) {
                         $newEncounter = $encounter;
                     }
-                    if( $encounter->getStatus() == 'invalid' ) {
+                    if( $encounter->getStatus() == 'dummy' ) {
                         //this encounter is served only to find the patient:
                         //it must be removed from the patient
-                        $patientInfoEncounter = $encounter;
+                        $patientInfoDummyEncounter = $encounter;
                     }
                 //}
             }
@@ -1028,9 +1028,9 @@ class CallEntryController extends Controller
                 // If the user types in the Date of Birth, it should be added to the "Patient" hierarchy level
                 // of the selected patient as a "valid" value and the previous "valid" value should be marked "invalid" on the server side.
                 //Use unmapped encounter's "patientDob" to update patient's DOB
-                if( $patientInfoEncounter && $patient ) {
-                    //dummy $patientInfoEncounter must be removed from the patient
-                    $patient->removeEncounter($patientInfoEncounter);
+                if( $patientInfoDummyEncounter && $patient ) {
+                    //dummy $patientInfoDummyEncounter must be removed from the patient
+                    $patient->removeEncounter($patientInfoDummyEncounter);
                 }
 
                 ////////////// processing new encounter ///////////////////

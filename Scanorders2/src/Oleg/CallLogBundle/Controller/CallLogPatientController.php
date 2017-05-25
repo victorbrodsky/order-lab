@@ -276,7 +276,7 @@ class CallLogPatientController extends PatientController {
         $status = 'invalid';
         $system = $securityUtil->getDefaultSourceSystem($this->container->getParameter('calllog.sitename'));
         $newPatient = new Patient(true,$status,$user,$system);
-        $newEncounter = new Encounter(true,$status,$user,$system);
+        $newEncounter = new Encounter(true,'dummy',$user,$system);
         $newPatient->addEncounter($newEncounter);
         $patientForm = $this->createPatientForm($newPatient);
 
