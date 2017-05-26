@@ -1166,8 +1166,8 @@ function userTeamTwigMacro(myteamurl,btnTargetId,replaceTargetId) {
         async: asyncflag
     }).success(function(response) {
         //console.log(response);
-        var template = response;
-        $('#'+replaceTargetId).html(template); //Change the html of the div with the id = "your_div"
+        //var template = response;
+        $('#' + replaceTargetId).html(response); //Change the html of the div with the id = "your_div"
         $.bootstrapSortable(true);
     }).done(function() {
         lbtn.stop();
@@ -1177,7 +1177,7 @@ function userTeamTwigMacro(myteamurl,btnTargetId,replaceTargetId) {
 }
 
 function userWrapperAjax( userid, btnTargetId, replaceTargetId, cycle ) {
-    console.log("userid="+userid);
+    //console.log("userid="+userid);
 
     var btn = document.getElementById(btnTargetId);
     var lbtn = Ladda.create(btn);
