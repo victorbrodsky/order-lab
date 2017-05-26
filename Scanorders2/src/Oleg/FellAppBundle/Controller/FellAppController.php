@@ -104,11 +104,27 @@ class FellAppController extends Controller {
         //echo "fellowshipTypes count=".count($fellowshipTypes)."<br>";
 
         if( count($fellowshipTypes) == 0 ) {
+
+            $linkUrl = $this->generateUrl(
+                "fellowshipsubspecialtys-list",
+                array(),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+
+            $warningMsg = "No fellowship types (subspecialties) are found for WCMC Pathology and Laboratory Medicine department.";
+
+            //<a href="{{ path('user_admin_index') }}">List Manager</a>
+            //$warningMsg = $linkUrl . "Please associate the department with the appropriate fellowship subspecialties.";
+            $warningMsg = $warningMsg." ".'<a href="'.$linkUrl.'" target="_blank">Please associate the department with the appropriate fellowship subspecialties.</a>';
+            $warningMsg = $warningMsg."<br>"."For example, choose an appropriate subspecialty and set the institution to 'Weill Cornell Medical College => Pathology and Laboratory Medicine'";
             $this->get('session')->getFlashBag()->add(
                 'warning',
-                'No Fellowship Types (Subspecialties) are found for WCMC Pathology and Laboratory Medicine department. Please assign the WCMC department to the appropriate Fellowship Subspecialties'
+                //'No Fellowship Types (Subspecialties) are found for WCMC Pathology and Laboratory Medicine department.
+                // Please assign the WCMC department to the appropriate Fellowship Subspecialties'
+                $warningMsg
             );
-            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+            //return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+            return $this->redirect( $this->generateUrl('fellapp-nopermission',array('empty'=>true)) );
         }
 
         //create fellapp filter

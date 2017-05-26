@@ -460,8 +460,11 @@ class SecurityController extends Controller
      */
     public function actionNoPermission( Request $request )
     {
+        $empty = $request->get('empty');
+
         return array(
-            //'returnpage' => '',
+            'sitename' => $this->container->getParameter('employees.sitename'),
+            'empty' => $empty
         );
     }
 

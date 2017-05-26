@@ -61,14 +61,15 @@ class CallLogSecurityController extends SecurityController
     /**
      * @Route("/no-permission", name="calllog-nopermission")
      * @Method("GET")
-     * @Template("OlegCallLogBundle:Security:nopermission.html.twig")
+     * @Template("OlegUserdirectoryBundle:Security:nopermission.html.twig")
      */
     public function actionNoPermission( Request $request )
     {
-        //exit('calllog: actionNoPermission');
-        //return parent::actionNoPermission($request);
+        $empty = $request->get('empty');
+
         return array(
-            //'returnpage' => '',
+            'sitename' => $this->container->getParameter('calllog.sitename'),
+            'empty' => $empty
         );
     }
 

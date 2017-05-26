@@ -115,12 +115,15 @@ class ScanSecurityController extends SecurityController
     /**
      * @Route("/scan-order/no-permission", name="scan-nopermission")
      * @Method("GET")
-     * @Template("OlegOrderformBundle:Security:nopermission.html.twig")
+     * @Template("OlegUserdirectoryBundle:Security:nopermission.html.twig")
      */
     public function actionNoPermission( Request $request )
     {
+        $empty = $request->get('empty');
+
         return array(
-            //'returnpage' => '',
+            'sitename' => $this->container->getParameter('scan.sitename'),
+            'empty' => $empty
         );
     }
 
