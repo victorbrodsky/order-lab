@@ -111,8 +111,8 @@ function setResearchEducational() {
 
 function customCombobox() {
 
-    //console.log("cycle="+cycle);
-    //console.log("urlBase="+urlBase);
+    //console.log("custom Combobox cycle="+cycle);
+    //console.log("custom Combobox urlBase="+urlBase);
 
     if( cycle && urlBase && cycle != 'edit_user' && cycle != 'accountreq' ) {
         //console.log("custom Combobox: urlBase="+urlBase+"; cycle="+cycle);

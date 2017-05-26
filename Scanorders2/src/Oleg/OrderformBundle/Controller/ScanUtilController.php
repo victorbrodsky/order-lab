@@ -614,7 +614,7 @@ class ScanUtilController extends UtilController {
         $query = $em->createQueryBuilder()
             ->from('OlegOrderformBundle:SlideType', 'list')
             ->select("list.name as text")
-            ->where("list.type='default'")
+            ->where("list.type='default' OR list.type='user-added' OR list.type='TMA'")
             ->orderBy("list.orderinlist","ASC");
 
         //echo "query=".$query."<br>";

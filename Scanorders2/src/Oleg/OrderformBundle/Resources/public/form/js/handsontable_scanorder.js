@@ -319,7 +319,7 @@ $(document).ready(function() {
     getComboboxScanregion(null,true);
 
     //holder,name,globalDataArray,multipleFlag,urlprefix,sitename,force
-    //getComboboxGeneric(null,'parttitle',_parttitle,false,null,'scan',true);
+    //getComboboxGeneric(null,'parttitle',_parttitle,false,null,'scan',true); //get _parttitle from selectAjax.js
 
     $(function(){
         var datepicker = $.fn.datepicker.noConflict;
@@ -332,9 +332,10 @@ $(document).ready(function() {
     getSlideTypes();
 
     // Wait until idle (busy must be false)
+    //console.log('before waiting for handsonTable Init');
     var _TIMEOUT = 100; // 300 waitfor test rate [msec]
     waitfor( ajaxFinishedCondition, true, _TIMEOUT, 0, 'play->busy false', function() {
-        //console.log('The show can resume !');
+        //console.log('The show can resume => handsonTable Init');
         handsonTableInit();
     });
 
@@ -347,16 +348,27 @@ $(document).ready(function() {
 
 function ajaxFinishedCondition() {
 
-//    console.log('_parttitle='+_parttitle);
-//    console.log('_accessiontype.length='+_accessiontype.length);
-//    console.log('_mrntype.length='+_mrntype.length);
-//    console.log('_partname.length='+_partname.length);
-//    console.log('_blockname.length='+_blockname.length);
-//    console.log('_stain.length='+_stain.length);
-//    console.log('_procedure.length='+_procedure.length);
-//    console.log('_organ.length='+_organ.length);
-//    console.log('_scanregion.length='+_scanregion.length);
-//    console.log('_slidetypes.length='+_slidetypes.length);
+    //console.log('_parttitle='+_parttitle);
+    //console.log('_accessiontype.length='+_accessiontype.length);
+    //console.log('_mrntype.length='+_mrntype.length);
+    //console.log('_partname.length='+_partname.length);
+    //console.log('_blockname.length='+_blockname.length);
+    //console.log('_stain.length='+_stain.length);
+    //console.log('_procedure.length='+_procedure.length);
+    //console.log('_organ.length='+_organ.length);
+    //console.log('_scanregion.length='+_scanregion.length);
+    //console.log('_slidetypes.length='+_slidetypes.length);
+
+    if( !(_accessiontype.length > 0) ) { console.log('NULL _accessiontype.length='+_accessiontype.length); }
+    if( !(_procedure.length > 0) ) { console.log('NULL _procedure.length='+_procedure.length); }
+    if( !(_mrntype.length > 0) ) { console.log('NULL _mrntype.length='+_mrntype.length); }
+    if( !(_partname.length > 0) ) { console.log('NULL _partname.length='+_partname.length); }
+    if( !(_blockname.length > 0) ) { console.log('NULL _blockname.length='+_blockname.length); }
+    if( !(_stain.length > 0) ) { console.log('NULL _stain.length='+_stain.length); }
+    if( !(_organ.length > 0) ) { console.log('NULL _organ.length='+_organ.length); }
+    if( !(_scanregion.length > 0) ) { console.log('NULL _scanregion.length='+_scanregion.length); }
+    if( !(_slidetypes.length > 0) ) { console.log('NULL _slidetypes.length='+_slidetypes.length); }
+    if( !(_parttitle.length > 0) ) { console.log('NULL _parttitle.length='+_parttitle.length); }
 
     if(
             _accessiontype.length > 0 &&
@@ -411,7 +423,7 @@ function ajaxFinishedCondition() {
         }
 
         for(var i = 0; i < _parttitle.length; i++) {
-            _parttitle_simple.push( _parttitle[i].text );
+            _parttitle_simple.push( _parttitle[i].text ); //get _parttitle from selectAjax.js
         }
 
         return true;
@@ -533,7 +545,11 @@ function handsonTableInit() {
             cleanValidationAlert(); //clean validationerror-added: MRN-ACC choice errors
         },
         afterCreateRow: function (index, amount) {
+
+            //testing
             return; //TODO: testing
+            console.log('testing after CreateRow: return');
+
             if( !_sotable || typeof _sotable === 'undefined' ) {
                 return;
             }
