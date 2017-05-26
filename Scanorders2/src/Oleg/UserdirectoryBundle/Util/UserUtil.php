@@ -299,6 +299,10 @@ class UserUtil {
             //echo "userkeytype=".$userkeytype."; ID=".$userkeytype->getId()."<br>";
 
             $adminemail = $this->getSiteSetting($em,'siteEmail');
+            if( $adminemail == -1 ) {
+                $adminemail = "email@example.com";
+            }
+
             $systemuser = new User();
             $systemuser->setKeytype($userkeytype);
             $systemuser->setPrimaryPublicUserId('system');

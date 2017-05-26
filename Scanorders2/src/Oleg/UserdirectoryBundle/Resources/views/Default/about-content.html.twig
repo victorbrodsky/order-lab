@@ -17,6 +17,7 @@
 
 <div style="margin-top: 100px;">
 
-        {{ contentabout_page|raw }}
+    {% set contentabout_page = user_security_utility.getSiteSettingParameter("contentAboutPage") %}
+    {{ contentabout_page|raw }}
 
-    </div>
+</div>

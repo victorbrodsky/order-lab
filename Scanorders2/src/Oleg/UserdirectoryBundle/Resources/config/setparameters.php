@@ -103,7 +103,7 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
         $listmanager_title = null;
         $eventlog_title = null;
         $sitesettings_title = null;
-        $contentabout_page = null;
+        $contentabout_page = null;  //not used: now contentabout_page is getting from DB directly on the about page
         //$underlogin_msg_user = null;
         //$underlogin_msg_scan = null;
 
