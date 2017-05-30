@@ -105,6 +105,7 @@ class BaseTitleType extends AbstractType
             $title = $event->getData();
             $form = $event->getForm();
 
+            $institution = null;
             $label = null;
             if( $title ) {
                 $institution = $title->getInstitution();
@@ -117,18 +118,93 @@ class BaseTitleType extends AbstractType
             }
             //echo "label=".$label."<br>";
 
-            $form->add('institution', 'employees_custom_selector', array(
+            $treeFieldArray = array(
                 'label' => $label,
                 'required' => false,
+                //'data' => $treeData,
                 //'attr' => array('class' => 'ajax-combobox-institution', 'type' => 'hidden'),
-                'attr' => array(
-                    'class' => 'ajax-combobox-compositetree',
-                    'type' => 'hidden',
-                    'data-compositetree-bundlename' => 'UserdirectoryBundle',
-                    'data-compositetree-classname' => 'Institution'
-                ),
+//                'attr' => array(
+//                    'class' => 'ajax-combobox-compositetree',
+//                    'type' => 'hidden',
+//                    'data-compositetree-bundlename' => 'UserdirectoryBundle',
+//                    'data-compositetree-classname' => 'Institution',
+//                    //'data-compositetree-params' => $treeParams
+//                ),
                 'classtype' => 'institution'
-            ));
+            );
+
+            $attrArray = array(
+                'class' => 'ajax-combobox-compositetree',
+                'type' => 'hidden',
+                'data-compositetree-bundlename' => 'UserdirectoryBundle',
+                'data-compositetree-classname' => 'Institution',
+                //'data-compositetree-params' => $treeParams
+            );
+
+            /////////////// preset default institution ////////////////
+            if( !$institution ) {
+                $treeParams = null;
+                $treeData = null;
+                //preset default institution for AdministrativeTitle - Weill Cornell or New York Presbyterian Hospital
+                if ($this->params['fullClassName'] == "Oleg\UserdirectoryBundle\Entity\AdministrativeTitle") {
+                    //echo "AdministrativeTitle<br>";
+                    //$treeParams = "entityIds=1,106";
+                    $wcmc = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+                    $nyp = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("NYP");
+                    if ($wcmc && $nyp) {
+                        $treeParams = "entityIds=" . $wcmc->getId() . "," . $nyp->getId();
+                        $treeData = $wcmc->getId();
+                    }
+                }
+                //preset default institution for AppointmentTitle (Academic Title) - Weill Cornell
+                if ($this->params['fullClassName'] == "Oleg\UserdirectoryBundle\Entity\AppointmentTitle") {
+                    //echo "AppointmentTitle<br>";
+                    //$treeParams = "entityIds=1";
+                    $wcmc = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+                    if ($wcmc) {
+                        $treeParams = "entityIds=" . $wcmc->getId();
+                        $treeData = $wcmc->getId();
+                    }
+                }
+                //preset default institution for MedicalTitle (Academic Title) - New York Presbyterian Hospital
+                if ($this->params['fullClassName'] == "Oleg\UserdirectoryBundle\Entity\MedicalTitle") {
+                    //echo "MedicalTitle<br>";
+                    //$treeParams = "entityIds=106";
+                    $nyp = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("NYP");
+                    if ($nyp) {
+                        $treeParams = "entityIds=" . $nyp->getId();
+                        $treeData = $nyp->getId();
+                    }
+                }
+
+                if( $treeData ) {
+                    $treeFieldArray['data'] = $treeData;
+                }
+                if( $treeParams ) {
+                    $attrArray['data-compositetree-params'] = $treeParams;
+                }
+            }
+            /////////////// EOF preset default institution ////////////////
+
+            $treeFieldArray['attr'] = $attrArray;
+
+            $form->add('institution', 'employees_custom_selector',
+                $treeFieldArray
+//                array(
+//                    'label' => $label,
+//                    'required' => false,
+//                    'data' => $treeData,
+//                    //'attr' => array('class' => 'ajax-combobox-institution', 'type' => 'hidden'),
+//                    'attr' => array(
+//                        'class' => 'ajax-combobox-compositetree',
+//                        'type' => 'hidden',
+//                        'data-compositetree-bundlename' => 'UserdirectoryBundle',
+//                        'data-compositetree-classname' => 'Institution',
+//                        'data-compositetree-params' => $treeParams
+//                    ),
+//                    'classtype' => 'institution'
+//                )
+            );
         });
         ///////////////////////// EOF tree node /////////////////////////
 

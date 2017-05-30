@@ -54,11 +54,12 @@ class TreeController extends Controller {
         $className = trim( $request->get('classname') );
         $bundleName = trim( $request->get('bundlename') );
         $type = trim( $request->get('type') ); //user-added or default or undefined
+        $entityIds = trim( $request->get('entityIds') );
         //$level = trim( $request->get('pid') );
         //echo "pid=".$pid."<br>";
         //echo "level=".$level."<br>";
         //echo "userid=".$userid."<br>";
-        //echo "opt=".$opt."<br>";
+        //echo "entityIds=".$entityIds."<br>";
 
         //get filter params
         //$filter = trim( $request->get('types') );
@@ -208,6 +209,13 @@ class TreeController extends Controller {
             $params['filterTypes'] = $typesFilter;
         }
 
+        //$entityIds
+        if( $entityIds ) {
+            $dql->andWhere('list.id IN (:entityIds)');
+            $entityIdsArr = explode(",",$entityIds);
+            $params['entityIds'] = $entityIdsArr;
+        }
+
         $query = $em->createQuery($dql);
         $query->setParameters($params);
         foreach( $params as $key=>$value) {
@@ -222,8 +230,13 @@ class TreeController extends Controller {
         //echo "dql=".$dql." <br>";
 
         $entities = $query->getResult();
-        //echo "count=".count($entities)."<br>";
-        //exit('1');
+
+        //testing
+//        echo "count=".count($entities)."<br>";
+//        foreach( $entities as $entity ) {
+//            echo "entity=".$entity->getName()." [ID#".$entity->getId()."]<br>";
+//        }
+//        exit('exit employees_get_composition_tree');
 
         $levelTitles = null;
         if( count($entities) > 0 ) {

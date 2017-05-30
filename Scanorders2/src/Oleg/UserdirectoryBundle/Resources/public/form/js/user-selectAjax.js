@@ -221,6 +221,17 @@ function populateComboboxCompositetreeData(bundleName,entityName,comboboxEl,opti
     }
 }
 
+
+//Data options:
+//'data-compositetree-bundlename' => 'UserdirectoryBundle',
+//'data-compositetree-classname' => 'Institution'
+//'data-label-prefix' => '',
+//'data-compositetree-types' => 'default,user-added',
+//'data-read-only-exclusion-after-level' => '2', //readonly will be disable for all levels after indicated level
+//'data-label-postfix-value-level' => '<span style="color:red">*</span>', //postfix after level
+//'data-label-postfix-level' => '4', //postfix after level "Issue"
+//'data-compositetree-initnode-function' => 'setOptionalUserEducational'
+//'data-compositetree-params' => //all other parameters. For example, get entities only by ids: entityIds=1,3,5
 function getChildrenByParent( bundleName, entityName, thiselement, thisid, parentid, opt ) {
 
     return Q.promise(function(resolve, reject, treedata) {
@@ -266,10 +277,22 @@ function getChildrenByParent( bundleName, entityName, thiselement, thisid, paren
         }
         //console.log('types='+types);
 
+        //data-compositetree-params
+        var treeParams = thiselement.attr("data-compositetree-params"); //i.e. 'entityIds=6,7'
+        if( treeParams ) {
+            treeParams = '&'+treeParams;
+        } else {
+            treeParams = '';
+        }
+        //console.log('treeParams='+treeParams);
+
         //employees_get_compositetree
         var treeUrl = Routing.generate('employees_get_composition_tree');
         //console.log('treeUrl='+treeUrl);
-        treeUrl = treeUrl + '?thisid=' + thisid + '&id=' + parentid + '&bundlename=' + bundleName + '&classname=' + entityName + '&opt=' + opt + '&userid=' + userid + '&type='+types;
+        treeUrl = treeUrl + '?thisid=' + thisid + '&id=' + parentid +
+            '&bundlename=' + bundleName + '&classname=' + entityName +
+            '&opt=' + opt + '&userid=' + userid + '&type='+types +
+            treeParams;
         //console.log('user-selectAjax.js: final treeUrl='+treeUrl);
 
         if( typeof cycle === 'undefined' ) {
