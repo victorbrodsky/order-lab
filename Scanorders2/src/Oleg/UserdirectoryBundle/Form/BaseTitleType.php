@@ -143,17 +143,31 @@ class BaseTitleType extends AbstractType
 
             /////////////// preset default institution ////////////////
             if( !$institution ) {
-                $treeParams = null;
+                //$treeParams = null;
                 $treeData = null;
+                $newInstitution = null;
+                $mapper = array(
+                    'prefix' => "Oleg",
+                    'className' => "Institution",
+                    'bundleName' => "UserdirectoryBundle"
+                );
                 //preset default institution for AdministrativeTitle - Weill Cornell or New York Presbyterian Hospital
                 if ($this->params['fullClassName'] == "Oleg\UserdirectoryBundle\Entity\AdministrativeTitle") {
                     //echo "AdministrativeTitle<br>";
                     //$treeParams = "entityIds=1,106";
                     $wcmc = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
-                    $nyp = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("NYP");
-                    if ($wcmc && $nyp) {
-                        $treeParams = "entityIds=" . $wcmc->getId() . "," . $nyp->getId();
-                        $treeData = $wcmc->getId();
+                    if( $wcmc ) {
+                        $newInstitution = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+                            "Pathology and Laboratory Medicine",
+                            $wcmc,
+                            $mapper
+                        );
+                        //$nyp = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("NYP");
+//                        if ($wcmcPathology) {
+//                            //$treeParams = "entityIds=" . $wcmc->getId() . "," . $nyp->getId();
+//                            //$treeData = $wcmcPathology->getId();
+//                            //$treeFieldArray['label'] = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels($wcmcPathology) . ":";
+//                        }
                     }
                 }
                 //preset default institution for AppointmentTitle (Academic Title) - Weill Cornell
@@ -161,9 +175,16 @@ class BaseTitleType extends AbstractType
                     //echo "AppointmentTitle<br>";
                     //$treeParams = "entityIds=1";
                     $wcmc = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
-                    if ($wcmc) {
-                        $treeParams = "entityIds=" . $wcmc->getId();
-                        $treeData = $wcmc->getId();
+                    if( $wcmc ) {
+                        $newInstitution = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+                            "Pathology and Laboratory Medicine",
+                            $wcmc,
+                            $mapper
+                        );
+//                        if ($wcmcPathology) {
+//                            //$treeParams = "entityIds=" . $wcmc->getId();
+//                            $treeData = $wcmcPathology->getId();
+//                        }
                     }
                 }
                 //preset default institution for MedicalTitle (Academic Title) - New York Presbyterian Hospital
@@ -172,17 +193,25 @@ class BaseTitleType extends AbstractType
                     //$treeParams = "entityIds=106";
                     $nyp = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("NYP");
                     if ($nyp) {
-                        $treeParams = "entityIds=" . $nyp->getId();
-                        $treeData = $nyp->getId();
+                        $newInstitution = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+                            "Pathology and Laboratory Medicine",
+                            $nyp,
+                            $mapper
+                        );
+//                        if( $nypPathology ) {
+//                            //$treeParams = "entityIds=" . $nyp->getId();
+//                            $treeData = $nypPathology->getId();
+//                        }
                     }
                 }
 
-                if( $treeData ) {
-                    $treeFieldArray['data'] = $treeData;
+                if( $newInstitution ) {
+                    $treeFieldArray['data'] = $newInstitution->getId();
+                    $treeFieldArray['label'] = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels($newInstitution) . ":";
                 }
-                if( $treeParams ) {
-                    $attrArray['data-compositetree-params'] = $treeParams;
-                }
+                //if( $treeParams ) {
+                    //$attrArray['data-compositetree-params'] = $treeParams;
+                //}
             }
             /////////////// EOF preset default institution ////////////////
 

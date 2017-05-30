@@ -383,6 +383,8 @@ class TreeRepository extends NestedTreeRepository {
         return $child;
     }
 
+    //$childName - string
+    //$parent - tree node object
     public function findByChildnameAndParent($childName,$parent,$mapper) { //,$types=array()
 
         if( !$childName || !$parent ) {
