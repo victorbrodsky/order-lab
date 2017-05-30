@@ -235,7 +235,7 @@ class FellAppImportPopulateUtil {
 
         $deleteImportedAplicationsFellApp = $userSecUtil->getSiteSettingParameter('deleteImportedAplicationsFellApp');
         if( !$deleteImportedAplicationsFellApp ) {
-            $logger->error("deleteImportedAplicationsFellApp parameter is nor defined or is set to false");
+            $logger->warning("deleteImportedAplicationsFellApp parameter is nor defined or is set to false");
             return false;
         }
 
