@@ -134,13 +134,15 @@ class TreeController extends Controller {
         }
 
         if( !$addwhere && $pid && $pid != 0 && $pid != '#' && is_numeric($pid) ) {
-            //children: where parent = $pid
-            //echo "by pid=".$pid."<br>";
-            $dql->leftJoin("list.parent", "parent");
-            //$where = $where . " AND parent.id = :id";
-            $where = $this->addToWhere($where,"parent.id = :id");
-            $params['id'] = $pid;
-            $addwhere = true;
+            if ( strval($pid) == strval(intval($pid)) ) {
+                //children: where parent = $pid
+                //echo "by pid=".$pid."<br>";
+                $dql->leftJoin("list.parent", "parent");
+                //$where = $where . " AND parent.id = :id";
+                $where = $this->addToWhere($where, "parent.id = :id");
+                $params['id'] = $pid;
+                $addwhere = true;
+            }
         }
 
         if( !$addwhere && $pid == null && $thisid && $thisid != 0 && is_numeric($thisid) ) {
