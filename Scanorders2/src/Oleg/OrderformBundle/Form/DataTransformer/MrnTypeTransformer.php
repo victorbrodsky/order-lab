@@ -66,7 +66,8 @@ class MrnTypeTransformer implements DataTransformerInterface
 
         //echo "data transformer type=".$type."<br>";
 
-        if( is_int($type) ) {
+        //if( is_int($type) ) {
+        if( strval($type) == strval(intval($type)) ) {
             $type = $this->em->getRepository('OlegOrderformBundle:MrnType')->findOneById($type);
             //echo "findOneById type=".$type."<br>";
         }
@@ -98,7 +99,8 @@ class MrnTypeTransformer implements DataTransformerInterface
             return null;
         }
 
-        if( is_numeric ( $text ) ) {    //number => most probably it is id
+        //if( is_numeric ( $text ) ) {    //number => most probably it is id
+        if( strval($text) == strval(intval($text)) ) {
 
             $entity = $this->em->getRepository('OlegOrderformBundle:MrnType')->findOneById($text);
 

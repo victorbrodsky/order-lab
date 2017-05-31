@@ -62,7 +62,8 @@ class PatientRepository extends ArrayFieldAbstractRepository
     public function getCorrectKeytypeId($keytypeid,$user=null) {
         $em = $this->_em;
 
-        if( is_numeric ( $keytypeid ) ) {
+        //if( is_numeric ( $keytypeid ) ) {
+        if( strval($keytypeid) == strval(intval($keytypeid)) ) {
             $keytypeEntity = $em->getRepository('OlegOrderformBundle:MrnType')->findOneById($keytypeid);
         } else {
             //create a new MrnType entity
@@ -77,8 +78,11 @@ class PatientRepository extends ArrayFieldAbstractRepository
     }
 
     public function getExtraEntityById( $extra ) {
-        $em = $this->_em;
-        return $em->getRepository('OlegOrderformBundle:MrnType')->findOneById($extra["keytype"]);
+        if( strval($extra["keytype"]) == strval(intval($extra["keytype"])) ) {
+            return $this->_em->getRepository('OlegOrderformBundle:MrnType')->findOneById($extra["keytype"]);
+        } else {
+            return null;
+        }
     }
 
     //replace child of patient if duplicated

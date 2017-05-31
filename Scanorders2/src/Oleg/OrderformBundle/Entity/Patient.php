@@ -300,6 +300,7 @@ class Patient extends ObjectAbstract
         if( !$now ) {
             $now = new \DateTime();
         }
+        //echo "nowdate=".$now->format('Y-m-d');
 
         $age = null;
         $dob = $this->obtainValidField('dob');

@@ -2369,7 +2369,7 @@ class CallEntryController extends Controller
 //    }
 
     /**
-     * Get Patient Titles
+     * Get Patient Titles according to a new encounter date specified by nowStr
      * @Route("/patient/title/", name="calllog_get_patient_title", options={"expose"=true})
      * @Method("GET")
      */
@@ -2387,7 +2387,13 @@ class CallEntryController extends Controller
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
 
-        $nowDate = new \DateTime($nowStr);
+        //check if $nowStr is a valid date
+        if( \DateTime::createFromFormat('m/d/Y', $nowStr) !== FALSE ) {
+            // it's a date
+            $nowDate = new \DateTime($nowStr);
+        } else {
+            $nowDate = null;
+        }
 
         $em = $this->getDoctrine()->getManager();
         $patient = $em->getRepository('OlegOrderformBundle:Patient')->find($patientId);

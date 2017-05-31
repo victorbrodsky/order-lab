@@ -84,6 +84,7 @@ class CallEntrySamePatientController extends CallEntryController
         $encounterTypeId = trim($request->get('encounter-type'));
         //$encounterVersion = trim($request->get('encounter-version'));
         $messageTypeId = trim($request->get('message-type'));
+        //echo "mrntype=".$mrntype."<br>";
 
         //check if user has at least one institution
         $securityUtil = $this->get('order_security_utility');

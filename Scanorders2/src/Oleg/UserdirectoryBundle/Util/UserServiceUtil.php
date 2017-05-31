@@ -122,7 +122,7 @@ class UserServiceUtil {
             $user = $this->sc->getToken()->getUser();
         }
         $info = $this->getOrderDateStr($message,$user);
-        if( $message->getProvider() ) {
+        if( $message && $message->getProvider() ) {
             $info = $info . " by ".$message->getProvider()->getUsernameOptimal();
         }
         return $info;
@@ -130,6 +130,10 @@ class UserServiceUtil {
     //DB datetime is UTC. Convert to the user's timezone.
     public function getOrderDateStr( $message, $user=null ) {
         //echo "getOrderDateStr <br>";
+        if( !$message ) {
+            return null;
+        }
+
         $info = "";
         if( $message->getOrderdate() ) {
             if( !$user ) {
@@ -145,7 +149,7 @@ class UserServiceUtil {
         return $info;
     }
     public function getOrderDateTzStr( $message, $tz=null ) {
-        //echo "getOrderDateStr <br>";
+        //echo "getOrderDateTzStr <br>";
         $info = "";
         if( $message->getOrderdate() ) {
             $orderDate = $message->getOrderdate();
@@ -157,7 +161,7 @@ class UserServiceUtil {
     }
     // 05/25/2017 at 3:25pm (Americas/New_York)
     public function getDatetimeTzStr( $datetime, $tz ) {
-        //echo "getOrderDateStr <br>";
+        //echo "getDatetimeTzStr <br>";
         //echo "input datetime=".$datetime->format('m/d/Y') . " at " . $datetime->format('h:i a') . " (" . $tz . ")"."<br>";
         $info = "";
         if( $datetime ) {

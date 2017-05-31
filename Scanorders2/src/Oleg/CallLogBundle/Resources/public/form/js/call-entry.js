@@ -1538,7 +1538,7 @@ function calllogToggleSingleEncounterPanel(btn,target) {
 //    //btnEl.click();
 //}
 
-//overwrite calllog SetPatientAccordionTitle
+//overwrite calllog SetPatientAccordionTitle according to a new encounter date
 function calllogUpdatePatientAgeListener(holderId) {
     $('input.encounter-date').on("input change", function (e) {
         calllogUpdatePatientAge($(this),holderId);
@@ -1551,6 +1551,9 @@ function calllogUpdatePatientAge(fieldEl,holderId) {
     //console.log('dateField='+dateField);
 
     var patientId = holder.find('.patienttype-patient-id').val();
+    if( !patientId ) {
+        return;
+    }
 
     var url = Routing.generate('calllog_get_patient_title');
     $.ajax({
