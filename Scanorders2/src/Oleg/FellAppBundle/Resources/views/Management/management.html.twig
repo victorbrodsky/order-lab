@@ -65,10 +65,17 @@
     {% endfor %}
 
 
+    {% if manual is defined and manual %}
+        <br><br>
+        <div class="well">
+            {{ manual|raw }}
+        </div>
+    {% endif %}
+
     <br><br>
-    <div class="well">
-        {{ manual|raw }}
-    </div>
+    <p>
+        <a class="btn-sm btn-primary" href="{{ path('fellapp_fellowship_type_add') }}" target="_blank">Add a New Fellowship Type</a>
+    </p>
 
 
 {% endblock %}

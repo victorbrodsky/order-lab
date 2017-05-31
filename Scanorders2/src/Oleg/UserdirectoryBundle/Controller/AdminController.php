@@ -1589,7 +1589,9 @@ class AdminController extends Controller
         if( strpos($role,$VacReqGroupStr) !== false ) {
             $groupObject = $em->getRepository('OlegUserdirectoryBundle:Institution')->findNodeByNameAndRoot($root->getId(),$instName);
             if( !$groupObject ) {
-                exit($root.": no child found with name=".$instName);
+                echo "vacreqRoleSetSingleUserInstitution: ".$root.": no child found with name=".$instName."<br>";
+                exit();
+                //return;
             }
             $entity->setInstitution($groupObject);
 

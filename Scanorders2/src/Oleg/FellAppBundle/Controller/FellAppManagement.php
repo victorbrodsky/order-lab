@@ -76,6 +76,11 @@ class FellAppManagement extends Controller {
         $manual = $manual." ".'<a href="'.$linkUrl.'" target="_blank">Please associate the department with the appropriate fellowship subspecialties.</a>';
         $manual = $manual."<br>"."For example, to add a new fellowship type choose an appropriate subspecialty from the list and set the institution to 'Weill Cornell Medical College => Pathology and Laboratory Medicine'";
 
+        //testing
+        $manual = $manual."<br>Also, 3 roles (Coordinator, Director, Interviewer) must be created with association to an appropriate fellowship subspecialty type.";
+        $manual = $manual." Please use the button 'Add a New Fellowship Type' to add a new fellowship type when it will be ready (under construction).";
+        //$manual = null; //testing. Use add new fellowship type button instead.
+
         return array(
             'entities' => $fellowshipTypes,
             'manual' => $manual
@@ -174,6 +179,184 @@ class FellAppManagement extends Controller {
     }
 
 
+    /**
+     * @Route("/add-fellowship-type", name="fellapp_fellowship_type_add")
+     * @Method({"GET", "POST"})
+     * @Template("OlegVacReqBundle:Approver:orginst-add.html.twig")
+     */
+    public function addFellowshipTypeAction(Request $request )
+    {
+
+        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->get('security.context')->isGranted('ROLE_FELLAPP_DIRECTOR') ){
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
+        exit("addFellowshipTypeAction");
+        //echo " => userId=".$id."<br>";
+
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.context')->getToken()->getUser();
+
+//        $role = $em->getRepository('OlegUserdirectoryBundle:Roles')->find($roleId);
+//
+//        if( !$role ) {
+//            throw $this->createNotFoundException('Unable to find Vacation Request Role by id='.$roleId);
+//        }
+
+        //new simple user form: user type, user id
+        $params = array(
+            'em' => $em,
+            'cycle' => 'create',
+            'readonly' => false,
+            //'path' => 'vacreq_orginst_add_action_user'
+        );
+        $form = $this->createForm(new VacReqGroupType($params));
+
+        $form->handleRequest($request);
+
+        if( $form->isSubmitted() && $form->isValid() ) {
+
+            $userSecUtil = $this->container->get('user_security_utility');
+            $site = $em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation('vacreq');
+
+            //add group
+            //$instid = null;
+            $institution = $form["institution"]->getData();
+
+            $instid = $institution->getId();
+            //exit('instid='.$instid);
+
+            $count = 0;
+
+            //get ROLE NAME: Pathology Informatics => PATHOLOGYINFORMATCS
+            $roleNameBase = str_replace(" ","",$institution->getName());
+            $roleNameBase = strtoupper($roleNameBase);
+
+            //create approver role
+            $roleName = "ROLE_VACREQ_APPROVER_".$roleNameBase;
+            $approverRole = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($roleName);
+            if( !$approverRole ) {
+                $approverRole = new Roles();
+                $approverRole = $userSecUtil->setDefaultList($approverRole, null, $user, $roleName);
+                $approverRole->setLevel(50);
+                $approverRole->setAlias('Vacation Request Approver for the ' . $institution->getName());
+                $approverRole->setDescription('Can search and approve vacation requests for specified service');
+                $approverRole->addSite($site);
+                $approverRole->setInstitution($institution);
+                $userSecUtil->checkAndAddPermissionToRole($approverRole, "Approve a Vacation Request", "VacReqRequest", "changestatus");
+
+                $em->persist($approverRole);
+                $em->flush($approverRole);
+
+                $count++;
+            } else {
+                $approverType = $approverRole->getType();
+                if( $approverType != 'default' && $approverType != 'user-added' ) {
+                    $approverRole->setType('default');
+                    $em->persist($approverRole);
+                    $em->flush($approverRole);
+                    $count++;
+                }
+            }
+
+            //create submitter role
+            $roleName = "ROLE_VACREQ_SUBMITTER_".$roleNameBase;
+            $submitterRole = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($roleName);
+            if( !$submitterRole ) {
+                $submitterRole = new Roles();
+                $submitterRole = $userSecUtil->setDefaultList($submitterRole, null, $user, $roleName);
+                $submitterRole->setLevel(30);
+                $submitterRole->setAlias('Vacation Request Approver for the ' . $institution->getName());
+                $submitterRole->setDescription('Can search and approve vacation requests for specified service');
+                $submitterRole->addSite($site);
+                $submitterRole->setInstitution($institution);
+                $userSecUtil->checkAndAddPermissionToRole($submitterRole, "Submit a Vacation Request", "VacReqRequest", "create");
+
+                $em->persist($submitterRole);
+                $em->flush($submitterRole);
+
+                $count++;
+            } else {
+                $submitterType = $submitterRole->getType();
+                if( $submitterType != 'default' && $submitterType != 'user-added' ) {
+                    $submitterRole->setType('default');
+                    $em->persist($submitterRole);
+                    $em->flush($submitterRole);
+                    $count++;
+                }
+            }
+
+            if( $count > 0 ) {
+                //Event Log
+                $event = "New Business/Vacation Group " . $roleNameBase . " has been created for " . $institution->getName();
+                $userSecUtil = $this->container->get('user_security_utility');
+                $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'), $event, $user, $institution, $request, 'Business/Vacation Group Created');
+
+                //Flash
+                $this->get('session')->getFlashBag()->add(
+                    'notice',
+                    $event
+                );
+            }
+
+            return $this->redirectToRoute('vacreq_orginst_management', array('institutionId'=>$instid));
+        }
+
+        return array(
+            'form' => $form->createView(),
+            //'roleId' => $roleId,
+            //'instid' => $instid
+        );
+    }
+
+    /**
+     * It should ONLY remove/strip all of THIS GROUP's roles from all users.
+     * Do not delete the roles themselves and do not delete the organizational group from the Institution tree.
+     *
+     * @Route("/fellowship-type-remove/{fellaptypeid}", name="fellapp_fellowship_type_remove")
+     * @Method({"GET", "POST"})
+     */
+    public function removeFellowshipTypeAction(Request $request, $fellaptypeid )
+    {
+
+        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->get('security.context')->isGranted('ROLE_FELLAPP_DIRECTOR') ){
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
+        //echo " => userId=".$id."<br>";
+        exit('removeFellowshipTypeAction id='.$fellaptypeid);
+
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($instid);
+        if( !$institution ) {
+            throw $this->createNotFoundException('Unable to find Vacation Request Institution by id='.$instid);
+        }
+
+        //exit('not implemented');
+
+        $removedRoles = array();
+
+        $removedRoles[] = $this->removeVacReqGroupByInstitution($instid,"ROLE_VACREQ_APPROVER_",$request);
+        $removedRoles[] = $this->removeVacReqGroupByInstitution($instid,"ROLE_VACREQ_SUBMITTER_",$request);
+
+        if( count($removedRoles) > 0 ) {
+            //Event Log
+            $event = "Business/Vacation Group [" . $institution->getTreeName() . "] has been removed by removing roles: ".implode(", ",$removedRoles);
+            $userSecUtil = $this->container->get('user_security_utility');
+            $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'), $event, $user, $institution, $request, 'Business/Vacation Role Removed');
+
+            //Flash
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                $event
+            );
+        }
+
+        return $this->redirectToRoute('vacreq_approvers');
+    }
+
 
 
 
@@ -217,11 +400,13 @@ class FellAppManagement extends Controller {
     //assign ROLE_FELLAPP_INTERVIEWER corresponding to application
     public function assignFellAppAccessRoles($fellowshipSubspecialty,$users,$roleSubstr) {
 
+        //echo "assignFellAppAccessRoles: fellowshipSubspecialty=$fellowshipSubspecialty; roleSubstr=$roleSubstr <br>";
         $em = $this->getDoctrine()->getManager();
 
         $interviewerRoleFellType = null;
         $interviewerFellTypeRoles = $em->getRepository('OlegUserdirectoryBundle:Roles')->findByFellowshipSubspecialty($fellowshipSubspecialty);
         foreach( $interviewerFellTypeRoles as $role ) {
+            //echo "assignFellAppAccessRoles: $role ?= $roleSubstr <br>";
             if( strpos($role,$roleSubstr) !== false ) {
                 $interviewerRoleFellType = $role;
                 break;
