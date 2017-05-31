@@ -247,7 +247,7 @@ class CallLogLoggerController extends LoggerController
         //search logger.event for [Attending Physician: firstname lastname - cwid (WCMC CWID)]
         $currentUserName = "Attending Physician: ".$currentUser."";
         //$currentUserName = $currentUser->getPrimaryPublicUserId()."";
-        echo "CallLogLoggerController: currentUserName=".$currentUserName."<br>";
+        //echo "CallLogLoggerController: currentUserName=".$currentUserName."<br>";
 
         //the "Capacity" column would show whether the logged in user is a "Submitter" or the "Attending" for this Entry in that row;
         // by default this would be blank and the page would show any entries where the logged in user ($currentUser) is either "Submitter" OR "Attending"

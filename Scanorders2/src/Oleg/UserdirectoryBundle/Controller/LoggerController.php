@@ -257,6 +257,16 @@ class LoggerController extends Controller
             $queryParameters['eventStr'] = '%'.$eventStr.'%';
         }
 
+        if( $allsites ) {
+            if( $entityId && $entityName == "User" ) {
+                if( strval($entityId) == strval(intval($entityId)) ) {
+                    //all activities by this user: logger.user = $entityId
+                    $dql->orWhere("logger.user = :subjectUser");
+                    $queryParameters['subjectUser'] = $entityId;
+                }
+            }
+        }
+
         if( $postData == null ) {
 //            if( $request == null ) {
 //                $request = $this->get('request');
