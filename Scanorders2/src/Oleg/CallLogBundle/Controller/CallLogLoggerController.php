@@ -235,13 +235,19 @@ class CallLogLoggerController extends LoggerController
         }
         //echo "capacity=".$capacity."<br>";
 
+        if( !$capacity ) {
+            // by default this would be blank and the page would show any entries where the logged in user ($currentUser) is either "Submitter" OR "Attending"
+            // => use parent generic method
+            return parent::processOptionalFields($dql,$dqlParameters,$filterform,$filtered);
+        }
+
         //echo "CallLogLoggerController: capacity=".$capacity."<br>";
         //echo "process Optional Fields <br>";
         $currentUser = $this->get('security.context')->getToken()->getUser();
         //search logger.event for [Attending Physician: firstname lastname - cwid (WCMC CWID)]
         $currentUserName = "Attending Physician: ".$currentUser."";
         //$currentUserName = $currentUser->getPrimaryPublicUserId()."";
-        //echo "CallLogLoggerController: currentUserName=".$currentUserName."<br>";
+        echo "CallLogLoggerController: currentUserName=".$currentUserName."<br>";
 
         //the "Capacity" column would show whether the logged in user is a "Submitter" or the "Attending" for this Entry in that row;
         // by default this would be blank and the page would show any entries where the logged in user ($currentUser) is either "Submitter" OR "Attending"
@@ -275,15 +281,15 @@ class CallLogLoggerController extends LoggerController
             $filtered = true;
         }
 
-        if( !$capacity ) {
-            //by default this would be blank and the page would show any entries where the logged in user ($currentUser) is either "Submitter" OR "Attending"
-
-            $dql->andWhere("logger.user = :currentUser OR logger.event LIKE :currentUserName");
-            $dqlParameters['currentUser'] = $currentUser->getId();
-            $dqlParameters['currentUserName'] = '%'.$currentUserName.'%';
-
-            $filtered = true;
-        }
+//        if( !$capacity ) {
+//            //by default this would be blank and the page would show any entries where the logged in user ($currentUser) is either "Submitter" OR "Attending"
+//
+//            $dql->andWhere("logger.user = :currentUser OR logger.event LIKE :currentUserName");
+//            $dqlParameters['currentUser'] = $currentUser->getId();
+//            $dqlParameters['currentUserName'] = '%'.$currentUserName.'%';
+//
+//            $filtered = true;
+//        }
 
         //$dql->andWhere("logger.entityId = :objectId");
         //$dqlParameters['objectId'] = $objectId;
