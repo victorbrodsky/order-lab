@@ -22,6 +22,14 @@
     {#{{ groupName }}#}
 {#</h4>#}
 
+{% if submitters|length > 0 %}
+    {% set submittersExist = true %}
+    {% set collapseClass = 'in' %}
+{% else %}
+    {% set submittersExist = false %}
+    {% set collapseClass = '' %}
+{% endif %}
+
 
 {% set pendingRequests = vacreq_util.getTotalPendingRequests(app.security.getToken().getUser(),groupId) %}
 {% set inaccuracyMessage = vacreq_util.getInaccuracyMessage() %}
@@ -40,10 +48,10 @@
             {% endif %}
         </h4>
     </div>
-    <div id="vacreq-my-single-group-{{ groupId }}" class="panel-collapse collapse in">
+    <div id="vacreq-my-single-group-{{ groupId }}" class="panel-collapse collapse {{ collapseClass }}">
         <div class="panel-body">
 
-{% if submitters|length > 0 %}
+{% if submittersExist %}
 <table class="records_list table table-hover table-condensed text-left table-bordered sortable">
 
     <thead>
