@@ -245,7 +245,16 @@ class FellAppManagement extends Controller {
 
             if( $pathology ) {
                 if( $subspecialtyType->getInstitution() ) {
-                    $msg = "Subspecialty already has an associated institution ".$subspecialtyType->getInstitution().". Institution has not been changed.";
+                    $msg = "Subspecialty ".$subspecialtyType->getName()." already has an associated institution ".$subspecialtyType->getInstitution().
+                        ". No action performed: institution has not been changed, corresponding roles have not been created/enabled.";
+
+                    //Flash
+                    $this->get('session')->getFlashBag()->add(
+                        'warning',
+                        $msg
+                    );
+
+                    return $this->redirectToRoute('fellapp_fellowshiptype_settings');
                 } else {
                     $subspecialtyType->setInstitution($pathology);
                     if (!$testing) {
@@ -271,19 +280,19 @@ class FellAppManagement extends Controller {
 
             $countInt = $fellappUtil->createOrEnableFellAppRole($subspecialtyType,"INTERVIEWER",$pathology,$testing);
             if( $countInt > 0 ) {
-                $msg = $msg . " INTERVIEWER role has been created.";
+                $msg = $msg . " INTERVIEWER role has been created/enabled.";
                 $count = $count + $countInt;
             }
 
             $countInt = $fellappUtil->createOrEnableFellAppRole($subspecialtyType,"COORDINATOR",$pathology,$testing);
             if( $countInt > 0 ) {
-                $msg = $msg . " COORDINATOR role has been created.";
+                $msg = $msg . " COORDINATOR role has been created/enabled.";
                 $count = $count + $countInt;
             }
 
             $countInt = $fellappUtil->createOrEnableFellAppRole($subspecialtyType,"DIRECTOR",$pathology,$testing);
             if( $countInt > 0 ) {
-                $msg = $msg . " DIRECTOR role has been created.";
+                $msg = $msg . " DIRECTOR role has been created/enabled.";
                 $count = $count + $countInt;
             }
 
@@ -361,7 +370,7 @@ class FellAppManagement extends Controller {
         if( count($removedRoles) > 0 ) {
             //Event Log
             $event = "Fellowship Application Type " . $subspecialtyType->getName() . " has been removed by " . $user ." by unlinking institution ".$inst.
-                " and disabling roles: ".implode(", ",$removedRoles);
+                " and disabling corresponding roles: ".implode(", ",$removedRoles);
             $userSecUtil = $this->container->get('user_security_utility');
             $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $event, $user, $subspecialtyType, $request, 'Fellowship Application Type Removed');
 

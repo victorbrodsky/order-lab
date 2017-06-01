@@ -237,6 +237,10 @@ class FormNodeUtil
 
     public function createFormNodeListRecord( $formNode, $formValue, $holderEntity, $testing=false, $params=null ) {
 
+        if( !$formValue ) { //testing: prevent creating a new empty records in DB
+            return;
+        }
+
         $formNodeObjectName = $formNode->getObjectTypeName();
 
         if( $testing ) {
