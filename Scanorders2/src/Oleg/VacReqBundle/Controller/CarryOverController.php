@@ -120,6 +120,7 @@ class CarryOverController extends Controller
         }
 
         $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.context')->getToken()->getUser();
         //$vacreqUtil = $this->get('vacreq_util');
 
         $subjectUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($userId);
@@ -145,10 +146,10 @@ class CarryOverController extends Controller
             $em->flush();
 
             //Event Log
-//            $eventType = "Business/Vacation Request Created";
-            $event = "Carry Over Days for ".$subjectUser." has been updated";
-//            $userSecUtil = $this->container->get('user_security_utility');
-//            $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$entity,$request,$eventType);
+            $eventType = "Carry Over Request Updated";
+            $event = "Carry Over Days for ".$subjectUser." has been updated:<br>".$userCarryOver->getCarryOverInfo();
+            $userSecUtil = $this->container->get('user_security_utility');
+            $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'),$event,$user,$userCarryOver,$request,$eventType);
 
             //Flash
             $this->get('session')->getFlashBag()->add(

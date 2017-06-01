@@ -145,4 +145,5 @@ class VacReqCarryOver
     {
         return "VacReqCarryOver: user=".$this->getUserCarryOver()->getUser().": year=".$this->getYear()."; days=".$this->getDays()."<br>";
     }
+
 }

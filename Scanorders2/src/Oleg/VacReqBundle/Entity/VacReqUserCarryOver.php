@@ -127,6 +127,17 @@ class VacReqUserCarryOver
     }
 
 
+    public function getCarryOverInfo() {
+        $infoArr = array();
+        foreach( $this->getCarryOvers() as $carryOver ) {
+            $days = $carryOver->getDays();
+            if( !$days ) {
+                $days = "0";
+            }
+            $infoArr[] = $carryOver->getYear().": ".$days." days";
+        }
+        return implode("<br>",$infoArr);
+    }
 
 
     public function __toString()
