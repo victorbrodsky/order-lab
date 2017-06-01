@@ -354,6 +354,9 @@ function setFellappNavBar() {
     if( full.indexOf("/fellowship-applications/fellowship-type") !== -1 ) {
         id = 'fellappsettings';
     }
+    if( full.indexOf("/add-fellowship-application-type") !== -1 ) {
+        id = 'fellappsettings';
+    }
 
     if( full.indexOf("/fellowship-applications/my-interviewees/") !== -1 ) {
         id = 'myinterviewees';

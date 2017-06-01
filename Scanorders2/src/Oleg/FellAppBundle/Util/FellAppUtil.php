@@ -40,6 +40,7 @@ use Oleg\UserdirectoryBundle\Entity\GeoLocation;
 use Oleg\UserdirectoryBundle\Entity\JobTitleList;
 use Oleg\UserdirectoryBundle\Entity\Location;
 use Oleg\FellAppBundle\Entity\Reference;
+use Oleg\UserdirectoryBundle\Entity\Roles;
 use Oleg\UserdirectoryBundle\Entity\StateLicense;
 use Oleg\UserdirectoryBundle\Entity\Training;
 use Oleg\UserdirectoryBundle\Entity\User;
@@ -928,5 +929,81 @@ class FellAppUtil {
     }
 
 
+    //$roleType: string (INTERVIEWER, COORDINATOR, DIRECTOR)
+    //name: ROLE_FELLAPP_DIRECTOR_WCMC_BREASTPATHOLOGY
+    //alias: Fellowship Program Interviewer WCMC Breast Pathology
+    //Description: Access to specific Fellowship Application type as Interviewer
+    //site: fellapp
+    //Institution: WCMC
+    //FellowshipSubspecialty: Breast Pathology
+    //Permissions: Create a New Fellowship Application, Modify a Fellowship Application, Submit an interview evaluation
+    public function createOrEnableFellAppRole( $subspecialtyType, $roleType, $institution, $testing=false ) {
+        $em = $this->em;
+        $user = $this->sc->getToken()->getUser();
+        $userSecUtil = $this->container->get('user_security_utility');
+        $site = $em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation('fellapp');
+
+        $count = 0;
+
+        //1) name: ROLE_FELLAPP_DIRECTOR_WCMC_BREASTPATHOLOGY
+        //get ROLE NAME: Pathology Informatics => PATHOLOGYINFORMATCS
+        $roleNameBase = str_replace(" ","",$subspecialtyType->getName());
+        $roleNameBase = strtoupper($roleNameBase);
+        //echo "roleNameBase=$roleNameBase<br>";
+
+        //create Director role
+        $roleName = "ROLE_FELLAPP_".$roleType."_WCMC_".$roleNameBase;
+        //echo "roleName=$roleName<br>";
+        $role = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($roleName);
+
+        if( !$role ) {
+            $roleTypeStr = ucfirst(strtolower($roleType));
+            //exit('1: '.$roleTypeStr);
+
+            $role = new Roles();
+            $role = $userSecUtil->setDefaultList($role, null, $user, $roleName);
+            $role->setAlias('Fellowship Program '.$roleTypeStr.' WCMC ' . $subspecialtyType->getName());
+            $role->setDescription('Access to specific Fellowship Application type as '.$roleTypeStr);
+            $role->addSite($site);
+            $role->setInstitution($institution);
+            $role->setFellowshipSubspecialty($subspecialtyType);
+
+            if( $roleType == "INTERVIEWER" ) {
+                $role->setLevel(30);
+                $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Submit an interview evaluation","Interview","create");
+            }
+
+            if( $roleType == "COORDINATOR" ) {
+                $role->setLevel(40);
+                $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Create a New Fellowship Application","FellowshipApplication","create");
+                $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Modify a Fellowship Application","FellowshipApplication","update");
+            }
+
+            if( $roleType == "DIRECTOR" ) {
+                $role->setLevel(50);
+                $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Create a New Fellowship Application","FellowshipApplication","create");
+                $count = $count + $userSecUtil->checkAndAddPermissionToRole($role,"Modify a Fellowship Application","FellowshipApplication","update");
+            }
+
+            if( $count > 0 && !$testing ) {
+                $em->persist($role);
+                $em->flush($role);
+            }
+
+        } else {
+            $roleType = $role->getType();
+            //exit('2: '.$roleType);
+            if( $roleType != 'default' && $roleType != 'user-added' ) {
+                $role->setType('default');
+                if( !$testing ) {
+                    $em->persist($role);
+                    $em->flush($role);
+                }
+                $count++;
+            }
+        }
+
+        return $count;
+    }
 
 } 

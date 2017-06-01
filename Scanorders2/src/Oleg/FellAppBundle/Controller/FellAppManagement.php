@@ -21,6 +21,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityNotFoundException;
 use Oleg\FellAppBundle\Entity\FellowshipApplication;
 use Oleg\FellAppBundle\Entity\Interview;
+use Oleg\FellAppBundle\Form\FellAppCreateFellowshipType;
+use Oleg\FellAppBundle\Form\FellAppFellowshipApplicationType;
+use Oleg\FellAppBundle\Form\FellAppManagementType;
 use Oleg\FellAppBundle\Form\FellowshipSubspecialtyType;
 use Oleg\FellAppBundle\Form\InterviewType;
 use Oleg\UserdirectoryBundle\Entity\User;
@@ -79,7 +82,7 @@ class FellAppManagement extends Controller {
         //testing
         $manual = $manual."<br>Also, 3 roles (Coordinator, Director, Interviewer) must be created with association to an appropriate fellowship subspecialty type.";
         $manual = $manual." Please use the button 'Add a New Fellowship Type' to add a new fellowship type when it will be ready (under construction).";
-        //$manual = null; //testing. Use add new fellowship type button instead.
+        $manual = null; //Use add new fellowship type button instead.
 
         return array(
             'entities' => $fellowshipTypes,
@@ -180,20 +183,21 @@ class FellAppManagement extends Controller {
 
 
     /**
-     * @Route("/add-fellowship-type", name="fellapp_fellowship_type_add")
+     * @Route("/add-fellowship-application-type", name="fellapp_fellowship_application_type_add")
      * @Method({"GET", "POST"})
-     * @Template("OlegVacReqBundle:Approver:orginst-add.html.twig")
+     * @Template("OlegFellAppBundle:Management:new-fellowship-application-type.html.twig")
      */
-    public function addFellowshipTypeAction(Request $request )
+    public function addFellowshipApplicationTypeAction(Request $request )
     {
 
         if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->get('security.context')->isGranted('ROLE_FELLAPP_DIRECTOR') ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
-        exit("addFellowshipTypeAction");
+        //exit("addFellowshipTypeAction");
         //echo " => userId=".$id."<br>";
 
+        $fellappUtil = $this->container->get('fellapp_util');
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.context')->getToken()->getUser();
 
@@ -203,94 +207,96 @@ class FellAppManagement extends Controller {
 //            throw $this->createNotFoundException('Unable to find Vacation Request Role by id='.$roleId);
 //        }
 
-        //new simple user form: user type, user id
-        $params = array(
-            'em' => $em,
-            'cycle' => 'create',
-            'readonly' => false,
-            //'path' => 'vacreq_orginst_add_action_user'
-        );
-        $form = $this->createForm(new VacReqGroupType($params));
+        //form with 'Fellowship Subspecialties' list
+        $form = $this->createForm(new FellAppFellowshipApplicationType());
 
         $form->handleRequest($request);
 
         if( $form->isSubmitted() && $form->isValid() ) {
 
-            $userSecUtil = $this->container->get('user_security_utility');
-            $site = $em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation('vacreq');
+            $msg = "";
 
-            //add group
-            //$instid = null;
-            $institution = $form["institution"]->getData();
+            $testing = false;
+            //$testing = true;
+            //exit("addFellowshipTypeAction submit");
 
-            $instid = $institution->getId();
-            //exit('instid='.$instid);
+            //$userSecUtil = $this->container->get('user_security_utility');
+            //$site = $em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation('fellapp');
 
+            $subspecialtyType = $form["fellowshipsubspecialtytype"]->getData();
+
+            //exit('subspecialtyType='.$subspecialtyType);
             $count = 0;
 
-            //get ROLE NAME: Pathology Informatics => PATHOLOGYINFORMATCS
-            $roleNameBase = str_replace(" ","",$institution->getName());
-            $roleNameBase = strtoupper($roleNameBase);
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            //////// 1) link subspecialty with institution 'Weill Cornell Medical College => Pathology and Laboratory Medicine' ////////
+            $mapper = array(
+                'prefix' => 'Oleg',
+                'bundleName' => 'UserdirectoryBundle',
+                'className' => 'Institution'
+            );
 
-            //create approver role
-            $roleName = "ROLE_VACREQ_APPROVER_".$roleNameBase;
-            $approverRole = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($roleName);
-            if( !$approverRole ) {
-                $approverRole = new Roles();
-                $approverRole = $userSecUtil->setDefaultList($approverRole, null, $user, $roleName);
-                $approverRole->setLevel(50);
-                $approverRole->setAlias('Vacation Request Approver for the ' . $institution->getName());
-                $approverRole->setDescription('Can search and approve vacation requests for specified service');
-                $approverRole->addSite($site);
-                $approverRole->setInstitution($institution);
-                $userSecUtil->checkAndAddPermissionToRole($approverRole, "Approve a Vacation Request", "VacReqRequest", "changestatus");
+            $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+            $pathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+                "Pathology and Laboratory Medicine",
+                $wcmc,
+                $mapper
+            );
 
-                $em->persist($approverRole);
-                $em->flush($approverRole);
-
-                $count++;
-            } else {
-                $approverType = $approverRole->getType();
-                if( $approverType != 'default' && $approverType != 'user-added' ) {
-                    $approverRole->setType('default');
-                    $em->persist($approverRole);
-                    $em->flush($approverRole);
+            if( $pathology ) {
+                if( $subspecialtyType->getInstitution() ) {
+                    $msg = "Subspecialty already has an associated institution ".$subspecialtyType->getInstitution().". Institution has not been changed.";
+                } else {
+                    $subspecialtyType->setInstitution($pathology);
+                    if (!$testing) {
+                        $em->persist($subspecialtyType);
+                        $em->flush($subspecialtyType);
+                        $msg = "Subspecialty linked with an associated institution ".$subspecialtyType->getInstitution().".";
+                    }
                     $count++;
                 }
             }
+            //////// EOF 1) link subspecialty with institution 'Weill Cornell Medical College => Pathology and Laboratory Medicine' ////////
+            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-            //create submitter role
-            $roleName = "ROLE_VACREQ_SUBMITTER_".$roleNameBase;
-            $submitterRole = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($roleName);
-            if( !$submitterRole ) {
-                $submitterRole = new Roles();
-                $submitterRole = $userSecUtil->setDefaultList($submitterRole, null, $user, $roleName);
-                $submitterRole->setLevel(30);
-                $submitterRole->setAlias('Vacation Request Approver for the ' . $institution->getName());
-                $submitterRole->setDescription('Can search and approve vacation requests for specified service');
-                $submitterRole->addSite($site);
-                $submitterRole->setInstitution($institution);
-                $userSecUtil->checkAndAddPermissionToRole($submitterRole, "Submit a Vacation Request", "VacReqRequest", "create");
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            //////// 2) create a new role (if not existed) ////////
+            //name: ROLE_FELLAPP_DIRECTOR_WCMC_BREASTPATHOLOGY
+            //alias: Fellowship Program Interviewer WCMC Breast Pathology
+            //Description: Access to specific Fellowship Application type as Interviewer
+            //site: fellapp
+            //Institution: WCMC
+            //FellowshipSubspecialty: Breast Pathology
+            //Permissions: Create a New Fellowship Application, Modify a Fellowship Application, Submit an interview evaluation
 
-                $em->persist($submitterRole);
-                $em->flush($submitterRole);
-
-                $count++;
-            } else {
-                $submitterType = $submitterRole->getType();
-                if( $submitterType != 'default' && $submitterType != 'user-added' ) {
-                    $submitterRole->setType('default');
-                    $em->persist($submitterRole);
-                    $em->flush($submitterRole);
-                    $count++;
-                }
+            $countInt = $fellappUtil->createOrEnableFellAppRole($subspecialtyType,"INTERVIEWER",$pathology,$testing);
+            if( $countInt > 0 ) {
+                $msg = $msg . " INTERVIEWER role has been created.";
+                $count = $count + $countInt;
             }
 
-            if( $count > 0 ) {
+            $countInt = $fellappUtil->createOrEnableFellAppRole($subspecialtyType,"COORDINATOR",$pathology,$testing);
+            if( $countInt > 0 ) {
+                $msg = $msg . " COORDINATOR role has been created.";
+                $count = $count + $countInt;
+            }
+
+            $countInt = $fellappUtil->createOrEnableFellAppRole($subspecialtyType,"DIRECTOR",$pathology,$testing);
+            if( $countInt > 0 ) {
+                $msg = $msg . " DIRECTOR role has been created.";
+                $count = $count + $countInt;
+            }
+
+            //////// EOF 2) create a new role (if not existed) ////////
+            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            //exit('subspecialtyType finished');
+
+            if( $count > 0 && !$testing ) {
                 //Event Log
-                $event = "New Business/Vacation Group " . $roleNameBase . " has been created for " . $institution->getName();
+                $event = "New Fellowship Application Type " . $subspecialtyType->getName() . " has been created by " . $user . ". " . $msg;
                 $userSecUtil = $this->container->get('user_security_utility');
-                $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'), $event, $user, $institution, $request, 'Business/Vacation Group Created');
+                $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $event, $user, $subspecialtyType, $request, 'Fellowship Application Type Created');
 
                 //Flash
                 $this->get('session')->getFlashBag()->add(
@@ -299,7 +305,7 @@ class FellAppManagement extends Controller {
                 );
             }
 
-            return $this->redirectToRoute('vacreq_orginst_management', array('institutionId'=>$instid));
+            return $this->redirectToRoute('fellapp_fellowshiptype_settings');
         }
 
         return array(
@@ -313,10 +319,10 @@ class FellAppManagement extends Controller {
      * It should ONLY remove/strip all of THIS GROUP's roles from all users.
      * Do not delete the roles themselves and do not delete the organizational group from the Institution tree.
      *
-     * @Route("/fellowship-type-remove/{fellaptypeid}", name="fellapp_fellowship_type_remove")
+     * @Route("/fellowship-application-type-remove/{fellaptypeid}", name="fellapp_fellowship_application_type_remove")
      * @Method({"GET", "POST"})
      */
-    public function removeFellowshipTypeAction(Request $request, $fellaptypeid )
+    public function removeFellowshipApplicationTypeAction(Request $request, $fellaptypeid )
     {
 
         if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->get('security.context')->isGranted('ROLE_FELLAPP_DIRECTOR') ){
@@ -324,28 +330,40 @@ class FellAppManagement extends Controller {
         }
 
         //echo " => userId=".$id."<br>";
-        exit('removeFellowshipTypeAction id='.$fellaptypeid);
+        //exit('removeFellowshipTypeAction id='.$fellaptypeid);
 
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.context')->getToken()->getUser();
 
-        $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($instid);
-        if( !$institution ) {
-            throw $this->createNotFoundException('Unable to find Vacation Request Institution by id='.$instid);
+        $subspecialtyType = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->find($fellaptypeid);
+        if( !$subspecialtyType ) {
+            throw $this->createNotFoundException('Unable to find FellowshipSubspecialty by id='.$fellaptypeid);
         }
 
         //exit('not implemented');
 
-        $removedRoles = array();
+        //1) unlink FellowshipSubspecialty and Institution
+        $inst = $subspecialtyType->getInstitution();
+        $subspecialtyType->setInstitution(null);
+        $em->persist($subspecialtyType);
+        $em->flush($subspecialtyType);
 
-        $removedRoles[] = $this->removeVacReqGroupByInstitution($instid,"ROLE_VACREQ_APPROVER_",$request);
-        $removedRoles[] = $this->removeVacReqGroupByInstitution($instid,"ROLE_VACREQ_SUBMITTER_",$request);
+        //2) set roles to disabled
+        $removedRoles = array();
+        $roles = $em->getRepository('OlegUserdirectoryBundle:Roles')->findByFellowshipSubspecialty($subspecialtyType);
+        foreach( $roles as $role ) {
+            $role->setType('disabled');
+            $em->persist($role);
+            $em->flush($role);
+            $removedRoles[] = $role->getName()."";
+        }
 
         if( count($removedRoles) > 0 ) {
             //Event Log
-            $event = "Business/Vacation Group [" . $institution->getTreeName() . "] has been removed by removing roles: ".implode(", ",$removedRoles);
+            $event = "Fellowship Application Type " . $subspecialtyType->getName() . " has been removed by " . $user ." by unlinking institution ".$inst.
+                " and disabling roles: ".implode(", ",$removedRoles);
             $userSecUtil = $this->container->get('user_security_utility');
-            $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'), $event, $user, $institution, $request, 'Business/Vacation Role Removed');
+            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'), $event, $user, $subspecialtyType, $request, 'Fellowship Application Type Removed');
 
             //Flash
             $this->get('session')->getFlashBag()->add(
@@ -354,7 +372,7 @@ class FellAppManagement extends Controller {
             );
         }
 
-        return $this->redirectToRoute('vacreq_approvers');
+        return $this->redirectToRoute('fellapp_fellowshiptype_settings');
     }
 
 
