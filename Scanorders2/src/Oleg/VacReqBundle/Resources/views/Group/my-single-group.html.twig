@@ -22,9 +22,11 @@
     {#{{ groupName }}#}
 {#</h4>#}
 
+
 {% set pendingRequests = vacreq_util.getTotalPendingRequests(app.security.getToken().getUser(),groupId) %}
 {% set inaccuracyMessage = vacreq_util.getInaccuracyMessage() %}
 
+<p>
 <div class="panel panel-info">
     <div class="panel-heading">
         <h4 class="panel-title">
@@ -41,6 +43,7 @@
     <div id="vacreq-my-single-group-{{ groupId }}" class="panel-collapse collapse in">
         <div class="panel-body">
 
+{% if submitters|length > 0 %}
 <table class="records_list table table-hover table-condensed text-left table-bordered sortable">
 
     <thead>
@@ -208,9 +211,12 @@
     </tbody>
 
 </table>
+{% else %}
+    No Submitters
+{% endif %}
 
         </div> <!-- panel-body -->
     </div> <!-- panel-collapse -->
 </div> <!-- panel panel-info -->
-
+</p>
 

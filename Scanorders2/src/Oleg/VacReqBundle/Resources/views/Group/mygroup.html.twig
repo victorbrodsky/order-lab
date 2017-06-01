@@ -28,6 +28,16 @@
         My Group
     </h4>
 
+    <br><br>
+    {{ form_start(filterform) }}
+        {{ form_errors(filterform) }}
+        <div class="row">
+            <div class="col-xs-10" align="right">{{ form_row(filterform.filterusers)}}</div>
+            <div class="col-xs-2" align="left">{{ form_row(filterform.filter) }}</div>
+        </div>
+    {{ form_end(filterform) }}
+    <br><br>
+
     <div class="well well-sm">
         {{ yearRange }} Accrued Vacation Days as of today: {{ accruedDays }}
     </div>
@@ -40,11 +50,7 @@
     {#<br>#}
 
     {% for group in groups %}
-        {#group: {{ group.name }}#}
-        <p>
-            {{ render(controller('OlegVacReqBundle:Approver:mySingleGroup', { 'groupId': group.id })) }}
-        </p>
-
+        {{ render(controller('OlegVacReqBundle:Approver:mySingleGroup', { 'groupId': group.id, 'userids': userids })) }}
     {% endfor %}
 
 

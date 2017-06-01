@@ -17,6 +17,7 @@
 
 namespace Oleg\VacReqBundle\Controller;
 
+use Doctrine\ORM\EntityRepository;
 use Oleg\UserdirectoryBundle\Entity\Roles;
 use Oleg\UserdirectoryBundle\Form\SimpleUserType;
 use Oleg\UserdirectoryBundle\Util\UserUtil;
@@ -34,6 +35,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -1053,6 +1055,8 @@ class ApproverController extends Controller
         //vacreq_util
         $vacreqUtil = $this->get('vacreq_util');
 
+        $userids = null;
+
         //find groups for logged in user
         //$params = array('asObject'=>true,'roleSubStrArr'=>array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR'));
         //$groups = $vacreqUtil->getVacReqOrganizationalInstitutions($user,$params);  //"business-vacation",true);
@@ -1074,23 +1078,60 @@ class ApproverController extends Controller
 //        $yearRange = $previousYear."-".$currentYear;
         $yearRange = $vacreqUtil->getCurrentAcademicYearRange();
 
+        /////////////// users filter form ///////////////////
+        $filterform = $this->createFormBuilder()
+            ->add('filterusers', 'entity', array(
+                'class' => 'OlegUserdirectoryBundle:User',
+                'label' => false,
+                'required' => false,
+                'multiple' => true,
+                //'property' => 'name',
+                'attr' => array('class'=>'combobox combobox-width', 'placeholder'=>"Employee"),
+                //'read_only' => true,    //$readOnly,   //($this->params['review'] ? true : false),
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('user')
+                        ->leftJoin("user.infos","infos")
+                        ->leftJoin("user.employmentStatus", "employmentStatus")
+                        ->leftJoin("employmentStatus.employmentType", "employmentType")
+                        ->andWhere("user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system'")
+                        //->andWhere("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+                        ->orderBy("infos.lastName","ASC");
+                },
+            ))
+            ->add('filter', SubmitType::class, array('label' => 'Filter','attr' => array('class' => 'btn btn-sm btn-default')))
+            ->getForm();
+
+        $filterform->handleRequest($request);
+
+        if( $filterform->isSubmitted() && $filterform->isValid() ) {
+            $users = $filterform["filterusers"]->getData();
+            $useridsArr = array();
+            foreach( $users as $thisUser ) {
+                $useridsArr[] = $thisUser->getId();
+            }
+            $userids = implode("-",$useridsArr);
+        }
+        /////////////// EOF: users filter form ///////////////////
+
+
         return array(
             'groups' => $groups,
             'accruedDays' => $accruedDays,
             'yearRange' => $yearRange,
             //'entity' => $entity,
-            //'form' => $form->createView(),
+            'filterform' => $filterform->createView(),
+            'userids' => $userids
             //'organizationalGroupName' => $institution."",
             //'organizationalGroupId' => $instid,
         );
     }
 
     /**
-     * @Route("/my-single-group/{groupId}", name="vacreq_mysinglegroup")
+     * @Route("/my-single-group/{groupId}/{userids}", name="vacreq_mysinglegroup")
      * @Method({"GET", "POST"})
      * @Template("OlegVacReqBundle:Group:my-single-group.html.twig")
      */
-    public function mySingleGroupAction(Request $request, $groupId)
+    public function mySingleGroupAction( Request $request, $groupId, $userids )
     {
 
         if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_SUPERVISOR') &&
@@ -1107,6 +1148,19 @@ class ApproverController extends Controller
         //find role submitters by institution
         //$submitters = $vacreqUtil->getSubmittersFromSubmittedRequestsByGroup($groupId);
         $submitters = $vacreqUtil->getUsersByGroupId($groupId,"ROLE_VACREQ_SUBMITTER");
+
+        //filter users
+        if( $userids ) {
+            //echo "userids=$userids<br>";
+            $useridsArr = explode("-",$userids);
+            $newSubmitters = array();
+            foreach( $submitters as $submitter ) {
+                if( in_array($submitter->getId(),$useridsArr) ) {
+                    $newSubmitters[] = $submitter;
+                }
+            }
+            $submitters = $newSubmitters;
+        }
 
         $group = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($groupId);
 
