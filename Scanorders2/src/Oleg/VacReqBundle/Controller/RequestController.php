@@ -1295,11 +1295,13 @@ class RequestController extends Controller
                 $groupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
             }
         }
+
         $organizationalInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
-        //echo "organizationalInstitutions count=".count($organizationalInstitutions)."<br>";
+        echo "1 organizationalInstitutions count=".count($organizationalInstitutions)."<br>";
 
         //include this request institution to the $organizationalInstitutions array
         $organizationalInstitutions = $vacreqUtil->addRequestInstitutionToOrgGroup( $entity, $organizationalInstitutions );
+        echo "2 organizationalInstitutions count=".count($organizationalInstitutions)."<br>";
 
         //include this request institution to the $tentativeInstitutions array
         $tentativeInstitutions = $vacreqUtil->addRequestInstitutionToOrgGroup( $entity, $tentativeInstitutions, "tentativeInstitution" );
