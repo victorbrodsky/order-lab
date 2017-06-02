@@ -153,46 +153,6 @@
                 {#Search in navbar#}
                 {% if is_granted('ROLE_CALLLOG_USER') %}
 
-                    {#<li id="nav-bar-calllogsearch">#}
-                        {#Search for a name, service, division, etc#}
-                        {#{% if  calllogsearch is not defined %}#}
-                            {#{% set  calllogsearch = "" %}#}
-                        {#{% endif %}#}
-                        {#{% if  calllogsearchtype is not defined %}#}
-                            {#{% set  calllogsearchtype = 'MRN or Last Name' %}#}
-                        {#{% endif %}#}
-                        {#scan_sitename~'_search_patients#}
-                        {#<form class="navbar-form navbar-left" role="search" id="calllogsearchform" name="calllogsearchform" action="{{ path('calllog_home') }}" method="get">#}
-                            {#<input type="hidden" id="calllogsearchform-searchtype" class="form-control" name="searchtype" value="{{ calllogsearchtype }}">#}
-                            {#<div class="form-group">#}
-
-                                {#<div class="input-group">#}
-                                    {#<div class="input-group-btn">#}
-                                        {#<button id="calllogsearch-searchtype-button" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">#}
-                                            {#{{ calllogsearchtype }} <span class="caret"></span>#}
-                                        {#</button>#}
-                                        {#<ul class="dropdown-menu" role="menu">#}
-                                            {#{{ navbarmacros.searchBoxContent('MRN or Last Name') }}#}
-                                            {#{{ navbarmacros.searchBoxContent('MRN') }}#}
-                                            {#{{ navbarmacros.searchBoxContent("Patient Last Name") }}#}
-                                            {#{{ navbarmacros.searchBoxContent('Message Type') }}#}
-                                            {#{{ navbarmacros.searchBoxContent('Service') }}#}
-                                            {#{{ navbarmacros.searchBoxContent('Issue Type') }}#}
-                                            {#{{ navbarmacros.searchBoxContent('Entry full text') }}#}
-                                            {#<li class="divider"></li>#}
-                                        {#</ul>#}
-                                    {#</div><!-- /btn-group -->#}
-                                    {#<div class="form-group has-feedback">#}
-                                        {#<input type="text" id="calllogsearchform-search" class="form-control"#}
-                                               {#aria-label="" name="search"#}
-                                               {#value="{{  calllogsearch }}" placeholder="">#}
-                                        {#<span style="top:0;" class="glyphicon glyphicon-search form-control-feedback btn" onclick="setCallLogSearchtypeAction();" aria-hidden="true"></span>#}
-                                    {#</div>#}
-                                {#</div><!-- /input-group -->#}
-
-                            {#</div>#}
-                        {#</form>#}
-                    {#</li>#}
                     {% if shownavbarfilter is not defined or shownavbarfilter %}
                         {#<li id="nav-bar-metaphone">#}
                             {#<div class="nav-bar-checkbox">#}
@@ -212,14 +172,14 @@
                                               onclick="setCallLogSearchtypeAction();" aria-hidden="true"></span>
                                     </div>
                                     {#{% if navbarfilterform.metaphone is defined %}#}
-                                    {% if user_security_utility.getSiteSettingParameter('enableMetaphone') %}
+                                    {#{% if user_security_utility.getSiteSettingParameter('enableMetaphone') %}#}
                                         {#{{ form_widget(navbarfilterform.metaphone) }}#}
-                                        <div
+                                        {#<div#}
                                             {#data-toggle="tooltip" title="Search similar-sounding names in the whole page"#}
-                                        >
-                                            {{ form_label(navbarfilterform.metaphone) }}{{ form_widget(navbarfilterform.metaphone) }}
-                                        </div>
-                                    {% endif %}
+                                        {#>#}
+                                            {#{{ form_label(navbarfilterform.metaphone) }}{{ form_widget(navbarfilterform.metaphone) }}#}
+                                        {#</div>#}
+                                    {#{% endif %}#}
                                 </div>
                                 {#{{ form_rest(navbarfilterform) }}#}
                             </form>

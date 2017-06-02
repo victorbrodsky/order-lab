@@ -164,7 +164,7 @@ function addnewCalllogPatient(holderId) {
         return false;
     }
 
-    var metaphone = calllogGetMetaphoneValue();
+    var metaphone = calllogGetMetaphoneValue(holderId);
 
     //Clicking "Ok" in the Dialog confirmation box should use the variables
     // to create a create the new patient on the server via AJAX/Promise,
@@ -372,7 +372,7 @@ function submitPatientBtn(holderId) {
         return false;
     }
 
-    var metaphone = calllogGetMetaphoneValue();
+    var metaphone = calllogGetMetaphoneValue(holderId);
 
     //Clicking "Ok" in the Dialog confirmation box should use the variables
     // to create a create the new patient on the server via AJAX/Promise,
@@ -558,7 +558,7 @@ function findCalllogPatient(holderId,formtype,mrntype) {
         singleMatch = true;
     }
 
-    var metaphone = calllogGetMetaphoneValue();
+    var metaphone = calllogGetMetaphoneValue(holderId);
     //console.log('metaphone='+metaphone);
 
     //var currentUrl = window.location.href;
@@ -2115,9 +2115,10 @@ function calllogListPreviousEntriesForPatient( holderId, messageCategoryId ) {
     });
 }
 
-function calllogGetMetaphoneValue() {
+function calllogGetMetaphoneValue(holderId) {
+    var holder = getHolder(holderId);
     var metaphoneRes = null;
-    var metaphone = $('#search_metaphone:checked').val();
+    var metaphone = holder.find('#search_metaphone:checked').val();
     //console.log('metaphone='+metaphone);
     if( metaphone ) {
         metaphoneRes = true;

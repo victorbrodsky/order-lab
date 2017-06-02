@@ -200,9 +200,7 @@ class CallEntryController extends Controller
         $messageCategoryTypeId = null;
         $messageCategoryEntity = null;
         $messageCategorieDefaultIdStr = null;
-        //$metaphone = true;
-        //$metaphone = true;
-        //$metaphone = false;
+        $metaphone = false;
 
         //child nodes of "Pathology Call Log Entry"
         //$messageCategoryParent = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName("Encounter Note");
@@ -247,7 +245,7 @@ class CallEntryController extends Controller
         $navbarfilterform->bind($request);
         $calllogsearchtype = $navbarfilterform['searchtype']->getData();
         $calllogsearch = $navbarfilterform['search']->getData();
-        $metaphone = $navbarfilterform['metaphone']->getData();
+        //$metaphone = $navbarfilterform['metaphone']->getData();
         //echo "navbar: calllogsearchtype=".$calllogsearchtype."; calllogsearch=".$calllogsearch."<br>";
         if( $calllogsearchtype == 'MRN or Last Name' ) {
             $searchFilter = $calllogsearch;
@@ -260,6 +258,10 @@ class CallEntryController extends Controller
         }
         if( $calllogsearchtype == 'Last Name' ) {
             $searchFilter = $calllogsearch;
+        }
+        if( $calllogsearchtype == 'Last Name similar to' ) {
+            $searchFilter = $calllogsearch;
+            $metaphone = true;
         }
         if( $calllogsearchtype == 'Message Type' ) {
             $messageCategoryTypeId = $calllogUtil->getMessageTypeByString($calllogsearch,$messageCategories,$messageCategorieDefaultIdStr);
@@ -568,7 +570,7 @@ class CallEntryController extends Controller
                 $dql->andWhere("mrn.keytype = :keytype");
                 $queryParameters['keytype'] = $defaultMrnType->getId();
             }
-            if( $calllogsearchtype == 'Last Name' ) {
+            if( $calllogsearchtype == 'Last Name' || $calllogsearchtype == 'Last Name similar to' ) {
                 if( $metaphone ) {
                     $userServiceUtil->getMetaphoneLike("lastname.field", "lastname.fieldMetaphone", $calllogsearch, $dql, $queryParameters);
                 } else {

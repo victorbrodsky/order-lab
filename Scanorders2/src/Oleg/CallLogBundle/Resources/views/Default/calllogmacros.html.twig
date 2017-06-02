@@ -201,6 +201,24 @@
 
                 <div class="calllog-search-fields">
 
+                    {#metaphone checkbox#}
+                    {#<div>#}
+                        {#<label for="search_metaphone">Search similar-sounding names:</label>#}
+                        {#<input id="search_metaphone" name="search[metaphone]" class="navbar-search-metaphone" style="margin:0; width: 20px;" value="1" type="checkbox">#}
+                    {#</div>#}
+                    <p>
+                    <div class="row">
+                        <div class="col-xs-6" align="right">
+                            <strong>Search similar-sounding names:</strong>
+                        </div>
+                        <div class="col-xs-6" align="left">
+                            {#name="search[metaphone]" class="navbar-search-metaphone"#}
+                            <input id="search_metaphone" style="margin:0; width: 20px;" value="1" type="checkbox">
+                        </div>
+                    </div>
+                    </p>
+
+
                     {% for mrn in form.mrn %}
                         {#{% if mrn.status == 'valid' or not mrn.vars.value.field %}#}
                             {{ formmacros.field(mrn.keytype) }}

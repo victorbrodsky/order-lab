@@ -1224,6 +1224,7 @@ class CallLogUtil
             'MRN or Last Name' => 'MRN or Last Name',
             'NYH MRN' => 'NYH MRN',
             'Last Name' => 'Last Name',
+            'Last Name similar to' => 'Last Name similar to',
             'Message Type' => 'Message Type',
             'Entry full text' => 'Entry full text'
         );
