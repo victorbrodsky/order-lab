@@ -1311,23 +1311,38 @@ class RequestController extends Controller
         //exit('1');
 
         if( count($organizationalInstitutions) == 0 ) {
-            $adminUsers = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole("ROLE_VACREQ_ADMIN","infos.lastName",true);
-            $emails = array();
-            foreach( $adminUsers as $adminUser ) {
-                $singleEmail = $adminUser->getSingleEmail();
-                if( $singleEmail ) {
-                    $emails[] = $adminUser->getSingleEmail();
+
+            if( $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
+                //admin user
+                $groupPageUrl = $this->generateUrl(
+                    "vacreq_approvers",
+                    null,
+                    UrlGeneratorInterface::ABSOLUTE_URL // This guy right here
+                );
+                $warningMsg = "You don't have any assigned Submitter roles for the Business/Vacation Request site.".
+                    ' <a href="'.$groupPageUrl.'">Please assign a Submitter role to your user account.</a> ';
+            } else {
+                //regular user
+                $adminUsers = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole("ROLE_VACREQ_ADMIN", "infos.lastName", true);
+                $emails = array();
+                foreach ($adminUsers as $adminUser) {
+                    $singleEmail = $adminUser->getSingleEmail();
+                    if ($singleEmail) {
+                        $emails[] = $adminUser->getSingleEmail();
+                    }
                 }
-            }
-            $emailStr = "";
-            if( count($emails) > 0 ) {
-                $emailStr = " Admin email(s): " . implode(", ", $emails);
+                $emailStr = "";
+                if (count($emails) > 0) {
+                    $emailStr = " Administrator email(s): " . implode(", ", $emails);
+                }
+
+                $warningMsg = "You don't have any assigned Submitter roles for the Business/Vacation Request site.".
+                    " Please contact the site administrator to get a Submitter role for your account.".$emailStr;
             }
             //Flash
             $this->get('session')->getFlashBag()->add(
                 'warning',
-                "You don't have any assigned Submitter role for a Business/Vacation Request.".
-                " Please contact the site administrator to have a Submitter role.".$emailStr
+                $warningMsg
             );
         }
 
