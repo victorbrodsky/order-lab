@@ -1297,11 +1297,11 @@ class RequestController extends Controller
         }
 
         $organizationalInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
-        echo "1 organizationalInstitutions count=".count($organizationalInstitutions)."<br>";
+        //echo "1 organizationalInstitutions count=".count($organizationalInstitutions)."<br>";
 
         //include this request institution to the $organizationalInstitutions array
         $organizationalInstitutions = $vacreqUtil->addRequestInstitutionToOrgGroup( $entity, $organizationalInstitutions );
-        echo "2 organizationalInstitutions count=".count($organizationalInstitutions)."<br>";
+        //echo "2 organizationalInstitutions count=".count($organizationalInstitutions)."<br>";
 
         //include this request institution to the $tentativeInstitutions array
         $tentativeInstitutions = $vacreqUtil->addRequestInstitutionToOrgGroup( $entity, $tentativeInstitutions, "tentativeInstitution" );
@@ -1319,7 +1319,7 @@ class RequestController extends Controller
                 $groupPageUrl = $this->generateUrl(
                     "vacreq_approvers",
                     null,
-                    UrlGeneratorInterface::ABSOLUTE_URL // This guy right here
+                    UrlGeneratorInterface::ABSOLUTE_URL
                 );
                 $warningMsg = "You don't have any group and/or assigned Submitter roles for the Business/Vacation Request site.".
                     ' <a href="'.$groupPageUrl.'" target="_blank">Please create a group and/or assign a Submitter role to your user account.</a> ';

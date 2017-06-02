@@ -28,6 +28,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 //vacreq site
 
@@ -334,10 +335,47 @@ class RequestIndexController extends Controller
         }
         $user = $this->get('security.context')->getToken()->getUser();
         $organizationalInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
+
         //testing
         //foreach( $organizationalInstitutions as $organizationalInstitution ) {
-            //echo "organizationalInstitution=".$organizationalInstitution."<br>";
+        //    echo "organizationalInstitution=".$organizationalInstitution."<br>";
         //}
+
+        if( count($organizationalInstitutions) == 0 ) {
+            if( $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
+                $groupPageUrl = $this->generateUrl(
+                    "vacreq_approvers",
+                    null,
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                $warningMsg = "No submitter/approver groups have been set up. Such groups can be set up " .
+                    '<a href="' . $groupPageUrl . '" target="_blank">here.</a>.' .
+                    " Once they are set up, this page will show cumulative summary data.";
+            } else {
+                //regular user
+                $adminUsers = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole("ROLE_VACREQ_ADMIN", "infos.lastName", true);
+                $emails = array();
+                foreach ($adminUsers as $adminUser) {
+                    $singleEmail = $adminUser->getSingleEmail();
+                    if ($singleEmail) {
+                        $emails[] = $adminUser->getSingleEmail();
+                    }
+                }
+                $emailStr = "";
+                if (count($emails) > 0) {
+                    $emailStr = " Administrator email(s): " . implode(", ", $emails);
+                }
+
+                $warningMsg = "No submitter/approver groups have been set up." .
+                    " Please contact the site administrator to create a group and/or get a Submitter role for your account.".$emailStr;
+                    " Once they are set up, this page will show cumulative summary data.";
+            }
+            //Flash
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                $warningMsg
+            );
+        }
 
         $params['organizationalInstitutions'] = $organizationalInstitutions;
 
