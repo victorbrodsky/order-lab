@@ -1320,7 +1320,7 @@ class RequestController extends Controller
                     UrlGeneratorInterface::ABSOLUTE_URL // This guy right here
                 );
                 $warningMsg = "You don't have any assigned Submitter roles for the Business/Vacation Request site.".
-                    ' <a href="'.$groupPageUrl.'">Please assign a Submitter role to your user account.</a> ';
+                    ' <a href="'.$groupPageUrl.'" target="_blank">Please assign a Submitter role to your user account.</a> ';
             } else {
                 //regular user
                 $adminUsers = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole("ROLE_VACREQ_ADMIN", "infos.lastName", true);
