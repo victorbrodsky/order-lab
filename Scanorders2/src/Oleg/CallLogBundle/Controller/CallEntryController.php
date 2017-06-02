@@ -242,6 +242,7 @@ class CallEntryController extends Controller
         ///////////////// search in navbar /////////////////
         $navbarParams = array();
         $navbarParams['navbarSearchTypes'] = $calllogUtil->getNavbarSearchTypes();
+        $navbarParams['container'] = $this->container;
         $navbarfilterform = $this->createForm(new CalllogNavbarFilterType($navbarParams), null);
         $navbarfilterform->bind($request);
         $calllogsearchtype = $navbarfilterform['searchtype']->getData();
@@ -257,7 +258,7 @@ class CallEntryController extends Controller
         if( $calllogsearchtype == 'Entry full text' ) {
             $entryBodySearchFilter = $calllogsearch;
         }
-        if( $calllogsearchtype == 'Patient Last Name' ) {
+        if( $calllogsearchtype == 'Last Name' ) {
             $searchFilter = $calllogsearch;
         }
         if( $calllogsearchtype == 'Message Type' ) {
@@ -567,7 +568,7 @@ class CallEntryController extends Controller
                 $dql->andWhere("mrn.keytype = :keytype");
                 $queryParameters['keytype'] = $defaultMrnType->getId();
             }
-            if( $calllogsearchtype == 'Patient Last Name' ) {
+            if( $calllogsearchtype == 'Last Name' ) {
                 if( $metaphone ) {
                     $userServiceUtil->getMetaphoneLike("lastname.field", "lastname.fieldMetaphone", $calllogsearch, $dql, $queryParameters);
                 } else {

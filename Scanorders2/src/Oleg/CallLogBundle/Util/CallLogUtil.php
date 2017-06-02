@@ -1205,6 +1205,7 @@ class CallLogUtil
     public function getNavbarFilterForm($request) {
         $params = array();
         $params['navbarSearchTypes'] = $this->getNavbarSearchTypes();
+        $params['container'] = $this->container;
         $navbarfilterform = $this->createForm(new CalllogNavbarFilterType($params), null);
         $navbarfilterform->bind($request);
         $calllogsearchtype = $navbarfilterform['searchtype']->getData();
@@ -1222,7 +1223,7 @@ class CallLogUtil
         $navbarSearchTypes = array(
             'MRN or Last Name' => 'MRN or Last Name',
             'NYH MRN' => 'NYH MRN',
-            'Patient Last Name' => 'Patient Last Name',
+            'Last Name' => 'Last Name',
             'Message Type' => 'Message Type',
             'Entry full text' => 'Entry full text'
         );

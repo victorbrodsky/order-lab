@@ -204,12 +204,15 @@
                                         <span style="top:0;" class="glyphicon glyphicon-search form-control-feedback btn"
                                               onclick="setCallLogSearchtypeAction();" aria-hidden="true"></span>
                                     </div>
-                                    {#{{ form_widget(navbarfilterform.metaphone) }}#}
-                                    <div
-                                        {#data-toggle="tooltip" title="Search similar-sounding names in the whole page"#}
-                                    >
-                                        {{ form_label(navbarfilterform.metaphone) }}{{ form_widget(navbarfilterform.metaphone) }}
-                                    </div>
+                                    {#{% if navbarfilterform.metaphone is defined %}#}
+                                    {% if user_security_utility.getSiteSettingParameter('enableMetaphone') %}
+                                        {#{{ form_widget(navbarfilterform.metaphone) }}#}
+                                        <div
+                                            {#data-toggle="tooltip" title="Search similar-sounding names in the whole page"#}
+                                        >
+                                            {{ form_label(navbarfilterform.metaphone) }}{{ form_widget(navbarfilterform.metaphone) }}
+                                        </div>
+                                    {% endif %}
                                 </div>
                                 {#{{ form_rest(navbarfilterform) }}#}
                             </form>

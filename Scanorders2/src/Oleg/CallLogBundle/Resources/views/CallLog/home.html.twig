@@ -126,23 +126,25 @@
                     </div>
                 </div>
 
-                <br>
-                <div class="row">
-                    <div class="col-xs-3" align="left">
-                        {{ form_label(filterform.metaphone) }}
-                        {{ form_widget(filterform.metaphone) }}
+                {% if user_security_utility.getSiteSettingParameter('enableMetaphone') %}
+                    <br>
+                    <div class="row">
+                        <div class="col-xs-3" align="left">
+                            {{ form_label(filterform.metaphone) }}
+                            {{ form_widget(filterform.metaphone) }}
 
-                        {#{% if edit_form.maintenance is defined %}#}
-                        {#{{ formmacros.checkbox(edit_form.maintenance) }}#}
-                        {#{% endif %}#}
+                            {#{% if edit_form.maintenance is defined %}#}
+                            {#{{ formmacros.checkbox(edit_form.maintenance) }}#}
+                            {#{% endif %}#}
+                        </div>
                     </div>
-                </div>
+                {% endif %}
 
 
             </div> <!-- panel-body -->
         </div> <!-- panel-collapse -->
 
-        {{ form_rest(filterform) }}
+        {#{{ form_rest(filterform) }}#}
     </form>
     </p>
 
