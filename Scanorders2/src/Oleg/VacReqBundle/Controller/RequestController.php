@@ -1319,8 +1319,8 @@ class RequestController extends Controller
                     null,
                     UrlGeneratorInterface::ABSOLUTE_URL // This guy right here
                 );
-                $warningMsg = "You don't have any assigned Submitter roles for the Business/Vacation Request site.".
-                    ' <a href="'.$groupPageUrl.'" target="_blank">Please assign a Submitter role to your user account.</a> ';
+                $warningMsg = "You don't have any group and/or assigned Submitter roles for the Business/Vacation Request site.".
+                    ' <a href="'.$groupPageUrl.'" target="_blank">Please create a group and/or assign a Submitter role to your user account.</a> ';
             } else {
                 //regular user
                 $adminUsers = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole("ROLE_VACREQ_ADMIN", "infos.lastName", true);
@@ -1336,8 +1336,8 @@ class RequestController extends Controller
                     $emailStr = " Administrator email(s): " . implode(", ", $emails);
                 }
 
-                $warningMsg = "You don't have any assigned Submitter roles for the Business/Vacation Request site.".
-                    " Please contact the site administrator to get a Submitter role for your account.".$emailStr;
+                $warningMsg = "You don't have any group and/or assigned Submitter roles for the Business/Vacation Request site.".
+                    " Please contact the site administrator to create a group and/or get a Submitter role for your account.".$emailStr;
             }
             //Flash
             $this->get('session')->getFlashBag()->add(
