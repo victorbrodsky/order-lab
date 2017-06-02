@@ -1215,7 +1215,7 @@ class CallEntryController extends Controller
                 //$em->persist($message);
                 //$em->flush($message);
 
-                //process form nodes
+                //process form nodes: process each form field and record it to DB
                 $formNodeUtil = $this->get('user_formnode_utility');
                 $formNodeUtil->processFormNodes($request,$message->getMessageCategory(),$message,$testing); //testing
                 //exit('after formnode');

@@ -54,23 +54,11 @@ class FormNodeUtil
             return;
         }
 
-//        $rootFormNode = $formNode->getRootName($formNode);
-//        if( !$rootFormNode ) {
-//            exit("No Root of the node ".$formNode."<br>");
-//            return;
-//        }
-
         $data = $request->request->all();
 
 //        print "<pre>";
 //        print_r($data);
 //        print "</pre>";
-
-        //$unmappedField = $data["formnode-4"];
-        //echo "<br>unmappedField=" . $unmappedField . "<br>";
-        //$unmappedField = $data["formnode-6"];
-        //echo "<br>unmappedField=" . $unmappedField . "<br>";
-        //echo "<br><br>";
 
         //process by form root's children nodes
         //$this->processFormNodeRecursively($data,$rootFormNode,$holderEntity);
@@ -145,58 +133,17 @@ class FormNodeUtil
 //            exit("value is zero");
 //        }
 
-        if( !isset($formValue) ) {
+        //this condition should prevent creating new empty records in DB
+        if( !isset($formValue) || $formValue == null ) {
             //exit("No Value=".$formValue."<br>");
             //echo "No Value=".$formValue."<br>";
             return;
         }
+        //echo $formNode. ": " .$formNode->getId().": formValue=" . $formValue . "<br>";
         //exit("Value=[".$formValue."]<br>");
-
-//        //"Allow Multiple Selections"
-//        if( $formNodeObjectName == "Form Field - Dropdown Menu - Allow Multiple Selections - Allow New Entries" ) {
-//            //$formValue is an array: newvalue1,newvalue2,newvalue3
-//            $formValueArr = explode(",",$formValue);
-//            foreach( $formValueArr as $thisFormValue ) {
-//                $newListElement = $this->createFormNodeListRecord($formNode,$thisFormValue,$holderEntity,$testing);
-//
-//                if( !$testing ) {
-//                    $this->em->persist($newListElement);
-//                    $this->em->flush($newListElement);
-//                }
-//            }
-//
-//            return;
-//        }
-//
-//        //exception: time [hour] [minute]
-//        if( $formNodeObjectName == "Form Field - Time" ) {
-//            //$formValue is an array: Array ( [time] => Array ( [hour] => 11 [minute] => 51 ) )
-//            //use ObjectTypeDateTime's timeValue
-//
-//            $formValueHour = $formValue['time']['hour'];
-//            $formValueMinute = $formValue['time']['minute'];
-//            $formValueStr = $formValueHour.":".$formValueMinute;
-//
-//            $newListElement = $this->createFormNodeListRecord($formNode,$formValueStr,$holderEntity,$testing);
-//
-//            $newListElement->setTimeValueHourMinute($formValueHour,$formValueMinute);
-//
-//            if( !$testing ) {
-//                $this->em->persist($newListElement);
-//                $this->em->flush($newListElement);
-//            }
-//
-//            return;
-//        }
 
         //All others
         if( is_array($formValue) ) {
-            //$formValue is array
-//            echo $formNodeObjectName.": formValue is array:";
-//            print "<pre>";
-//            print_r($formValue);
-//            print "</pre>";
-//            echo "<br>";
 
             if( array_key_exists('arraysectioncount', $formValue) ) {
                 //echo $formNode.": ".$formNodeObjectName.": formValue is arraysectioncount <br>";
