@@ -107,7 +107,14 @@
                         </ul>
                     </li>
 
-                    <li id="nav-bar-resources"><a href="{{ path(calllog_sitename~'_resources') }}">Resources</a></li>
+                    <li id="nav-bar-resources">
+                        {% if is_granted('ROLE_CALLLOG_PATHOLOGY_ATTENDING') %}
+                            <a id="incoming-orders-menu-title" href="{{ path(calllog_sitename~'_resources') }}">Resources</a><!--
+                            --><a id="incoming-orders-menu-badge" href="{{ path(calllog_sitename~'_siteparameters_resources_edit') }}">[Edit]</a>
+                        {% else %}
+                            <a href="{{ path(calllog_sitename~'_resources') }}">Resources</a>
+                        {% endif %}
+                    </li>
 
 
                     {#{% if is_granted('ROLE_CALLLOG_DATA_QUALITY') || is_granted('ROLE_CALLLOG_PATHOLOGY_ATTENDING') %}#}
@@ -124,12 +131,12 @@
                             {% if shownavbarfilter is defined and shownavbarfilter == false %}
                                 <li><a href="{{ path(calllog_sitename~'_export_csv',app.request.query.all) }}">Export in .CSV</a></li>
                             {% endif %}
-                            {% if is_granted('ROLE_CALLLOG_PATHOLOGY_ATTENDING') %}
-                                <li>
+                            {#{% if is_granted('ROLE_CALLLOG_PATHOLOGY_ATTENDING') %}#}
+                                {#<li>#}
                                     {#<a href="{{ path(calllog_sitename~'_edit_patient_record') }}">Call Log Book Resources</a>#}
-                                    <a href="{{ path(calllog_sitename~'_siteparameters_resources_edit') }}">Edit Call Log Book Resources</a>
-                                </li>
-                            {% endif %}
+                                    {#<a href="{{ path(calllog_sitename~'_siteparameters_resources_edit') }}">Edit Call Log Book Resources</a>#}
+                                {#</li>#}
+                            {#{% endif %}#}
                         </ul>
                     </li>
 
