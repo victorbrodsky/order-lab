@@ -349,7 +349,7 @@ class RequestIndexController extends Controller
                     UrlGeneratorInterface::ABSOLUTE_URL
                 );
                 $warningMsg = "No submitter/approver groups have been set up. Such groups can be set up " .
-                    '<a href="' . $groupPageUrl . '" target="_blank">here.</a>.' .
+                    '<a href="' . $groupPageUrl . '" target="_blank">here</a>.' .
                     " Once they are set up, this page will show cumulative summary data.";
             } else {
                 //regular user
