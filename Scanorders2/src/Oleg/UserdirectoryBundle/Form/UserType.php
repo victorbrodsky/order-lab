@@ -603,6 +603,10 @@ if(1){
 
 
     public function addFellowshipApplication($builder) {
+        //testing: why fellowshipApplications should be shown in the user profile page?
+        return $builder;
+        //exit('addFellowshipApplication to user profile not implemented');
+
         $builder->add('fellowshipApplications', 'collection', array(
             'type' => new FellowshipApplicationType($this->params),
             'label' => false,

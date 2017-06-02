@@ -630,7 +630,8 @@ class FellAppController extends Controller {
             'em' => $em,
             'user' => $entity->getUser(),
             'cloneuser' => null,
-            'roles' => $user->getRoles()
+            'roles' => $user->getRoles(),
+            'container' => $this->container
         );
 
         $form = $this->createForm(
@@ -713,7 +714,8 @@ class FellAppController extends Controller {
             'em' => $this->getDoctrine()->getManager(),
             'user' => $entity->getUser(),
             'cloneuser' => null,
-            'roles' => $user->getRoles()
+            'roles' => $user->getRoles(),
+            'container' => $this->container
         );
 
         $form = $this->createForm( new FellowshipApplicationType($params), $entity );
@@ -1025,7 +1027,8 @@ class FellAppController extends Controller {
             'em' => $this->getDoctrine()->getManager(),
             'user' => $fellowshipApplication->getUser(),
             'cloneuser' => null,
-            'roles' => $user->getRoles()
+            'roles' => $user->getRoles(),
+            'container' => $this->container
         );
         $form = $this->createForm( new FellowshipApplicationType($params), $fellowshipApplication );
 

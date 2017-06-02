@@ -50,9 +50,37 @@ class FellowshipApplicationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add('fellowshipSubspecialty',null, array(
-            'label' => '* Fellowship Type:',
-            'required' => false,
+//        $builder->add('fellowshipSubspecialty',null, array(
+//            'label' => '* Fellowship Type:',
+//            'required' => false,
+//            'attr' => array('class' => 'combobox combobox-width fellapp-fellowshipSubspecialty'),
+//        ));
+//        $builder->add('fellowshipSubspecialty', 'entity', array(
+//            'class' => 'OlegUserdirectoryBundle:FellowshipSubspecialty',
+//            'label'=> "* Fellowship Application Type:",
+//            'required'=> false,
+//            //'multiple' => true,
+//            'attr' => array('class'=>'combobox combobox-width fellapp-fellowshipSubspecialty'),
+//            'query_builder' => function(EntityRepository $er) {
+//                return $er->createQueryBuilder('list')
+//                    ->leftJoin("list.institution","institution")
+//                    ->where("list.type = :typedef OR list.type = :typeadd")
+//                    ->andWhere("institution.id IS NOT NULL")
+//                    ->orderBy("list.orderinlist","ASC")
+//                    ->setParameters( array(
+//                        'typedef' => 'default',
+//                        'typeadd' => 'user-added',
+//                    ));
+//            },
+//        ));
+        //get subfellowship types as for ROLE_FELLAPP_ADMIN
+        $fellappUtil = $this->params['container']->get('fellapp_util');
+        $fellTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
+        $builder->add('fellowshipSubspecialty', 'entity', array(
+            'class' => 'OlegUserdirectoryBundle:FellowshipSubspecialty',
+            'label' => "* Fellowship Application Type:",
+            'required'=> false,
+            'choices' => $fellTypes,
             'attr' => array('class' => 'combobox combobox-width fellapp-fellowshipSubspecialty'),
         ));
 
