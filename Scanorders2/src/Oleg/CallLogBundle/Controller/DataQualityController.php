@@ -66,7 +66,7 @@ class DataQualityController extends CallEntryController
         $patient1 = new Patient(true,$status,$user,$system);
 
         $triggerSearch = 0;
-        $mrntype = trim($request->get('mrn-type'));
+        $mrntype = trim($request->get('mrntype'));
         $mrnid = trim($request->get('mrn'));
         if( $mrntype && $mrnid ) {
             $mrnPatient1 = $patient1->obtainStatusField('mrn', $status);
@@ -84,7 +84,7 @@ class DataQualityController extends CallEntryController
         $patient2 = new Patient(true,$status,$user,$system);
         $encounter2 = new Encounter(true,'dummy',$user,$system);
         $patient2->addEncounter($encounter2);
-        $form2 = $this->createPatientForm($patient2,$mrntype,$mrnid);
+        $form2 = $this->createPatientForm($patient2); //,$mrntype,$mrnid
 
 
         return array(
@@ -94,7 +94,8 @@ class DataQualityController extends CallEntryController
             'cycle' => $cycle,
             'title' => $title,
             'triggerSearch' => $triggerSearch,
-            'mrntype' => $mrntype
+            'mrntype' => $mrntype,
+            'mrn' => $mrnid
         );
     }
 
@@ -274,15 +275,21 @@ class DataQualityController extends CallEntryController
                 $em->flush();
 
                 //testing
-//                foreach( $ids as $patientId ) {
-//                    $patient = $this->getDoctrine()->getRepository('OlegOrderformBundle:Patient')->find($patientId);
-//                    foreach( $patient->getMrn() as $mrn ) {
-//                        $msg .= $patient->getId().": after MRNID=".$mrn->getID()." mrn=".$mrn->obtainOptimalName()."; status=".$mrn->getStatus()."<br>";
-//                    }
-//                }
+                $patientInfoArr = array();
+                foreach( $ids as $patientId ) {
+                    $thisPatient = $this->getDoctrine()->getRepository('OlegOrderformBundle:Patient')->find($patientId);
+                    //foreach( $patient->getMrn() as $mrn ) {
+                        //$msg .= $patient->getId().": after MRNID=".$mrn->getID()." mrn=".$mrn->obtainOptimalName()."; status=".$mrn->getStatus()."<br>";
+                    //}
+                    $thisPatientInfo = $thisPatient->getFullPatientName() . "[ID# " . $patientId . "]";
+                    if( $masterMergeRecordId == $patientId ) {
+                        $thisPatientInfo = $thisPatientInfo . " (Master Patient)";
+                    }
+                    $patientInfoArr[$patientId] = $thisPatientInfo;
+                }
 
                 //"You have successfully merged patient records: Master Patient ID #."
-                $msg .= "You have successfully merged patient records (IDs ".implode(", ",$ids).") with Master Patient ID # $masterMergeRecordId."."<br>";
+                $msg .= "You have successfully merged patient records:<br>".implode("<br>",$patientInfoArr);
             }
 
             if( !$error && !$merged ) {
@@ -352,7 +359,7 @@ class DataQualityController extends CallEntryController
         $patient1 = new Patient(true,$status,$user,$system);
 
         $triggerSearch = 0;
-        $mrntype = trim($request->get('mrn-type'));
+        $mrntype = trim($request->get('mrntype'));
         $mrnid = trim($request->get('mrn'));
         if( $mrntype && $mrnid ) {
             $mrnPatient1 = $patient1->obtainStatusField('mrn', $status);
@@ -378,7 +385,8 @@ class DataQualityController extends CallEntryController
             'title' => $title,
             'formtype' => $formtype,
             'triggerSearch' => $triggerSearch,
-            'mrntype' => $mrntype
+            'mrntype' => $mrntype,
+            'mrn' => $mrnid
         );
     }
 
@@ -495,7 +503,8 @@ class DataQualityController extends CallEntryController
                 //$em->persist($mergeMrn);
                 $em->flush(); //testing
             }
-            $msg .= "Unmerged Patient ID# ".$unmergedPatient->getId()." ".$unmergedPatient->getFullPatientName() . "; " . $processUnmergePatientRes['msg']."<br>";
+            $msg .= "Successfully Unmerged Patient ID# ".$unmergedPatient->getId()." ".$unmergedPatient->getFullPatientName() . ";<br>" .
+                $processUnmergePatientRes['msg'];
         }
 
         if( count($unmergedPatients) > 0 ) {
@@ -538,7 +547,7 @@ class DataQualityController extends CallEntryController
         $patient1 = new Patient(true,$status,$user,$system);
 
         $triggerSearch = 0;
-        $mrntype = trim($request->get('mrn-type'));
+        $mrntype = trim($request->get('mrntype'));
         $mrnid = trim($request->get('mrn'));
         if( $mrntype && $mrnid ) {
             $mrnPatient1 = $patient1->obtainStatusField('mrn', $status);
@@ -617,7 +626,7 @@ class DataQualityController extends CallEntryController
         $patient1 = new Patient(true,$status,$user,$system);
 
         $triggerSearch = 0;
-        $mrntype = trim($request->get('mrn-type'));
+        $mrntype = trim($request->get('mrntype'));
         $mrnid = trim($request->get('mrn'));
         if( $mrntype && $mrnid ) {
             $mrnPatient1 = $patient1->obtainStatusField('mrn', $status);

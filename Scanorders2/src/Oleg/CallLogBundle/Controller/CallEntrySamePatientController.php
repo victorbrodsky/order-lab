@@ -79,7 +79,7 @@ class CallEntrySamePatientController extends CallEntryController
         $em = $this->getDoctrine()->getManager();
 
         $mrn = trim($request->get('mrn'));
-        $mrntype = trim($request->get('mrn-type'));
+        $mrntype = trim($request->get('mrntype'));
         $encounterNumber = trim($request->get('encounter-number'));
         $encounterTypeId = trim($request->get('encounter-type'));
         //$encounterVersion = trim($request->get('encounter-version'));
@@ -326,7 +326,7 @@ class CallEntrySamePatientController extends CallEntryController
         }
 
 //        $mrn = trim($request->get('mrn'));
-//        $mrntype = trim($request->get('mrn-type'));
+//        $mrntype = trim($request->get('mrntype'));
         $mrn = null;
         $mrntype = null;
 

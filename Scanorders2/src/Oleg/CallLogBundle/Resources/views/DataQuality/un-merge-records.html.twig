@@ -39,6 +39,7 @@
     <input type="hidden" id="formtype" value="{{ formtype }}" />
     <input type="hidden" id="triggerSearch" value="{{ triggerSearch }}" />
     <input type="hidden" id="mrntype" value="{{ mrntype }}" />
+    <input type="hidden" id="mrn" value="{{ mrn }}" />
 
     <div id="calllog-patient-list">
 
@@ -78,7 +79,7 @@
             //hide all alias
             //calllogHideAllAlias(true,true);
             showHideUnMergeButton();
-            calllogTriggerSearch();
+            calllogTriggerSearch('patient-holder-1','unmerge');
         });
 
         //triggered by class calllog-patient-id

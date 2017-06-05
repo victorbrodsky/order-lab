@@ -715,7 +715,7 @@
                         {#without version 'encounter-version':encounterVersion => use latest version#}
                         <li><a
                                     href="{{ path('calllog_callentry', {
-                                        'mrn-type':mrnTypeId,
+                                        'mrntype':mrnTypeId,
                                         'mrn':mrnNumber,
                                         'encounter-type':encounterTypeId,
                                         'encounter-number':encounterNumber
@@ -725,7 +725,7 @@
 
                         <li><a
                                     href="{{ path('calllog_callentry', {
-                                        'mrn-type':mrnTypeId,
+                                        'mrntype':mrnTypeId,
                                         'mrn':mrnNumber,
                                         'encounter-type':encounterTypeId,
                                         'encounter-number':encounterNumber,
@@ -734,9 +734,9 @@
                                     target="_blank">Add Entry (Same Encounter & Type)</a>
                         </li>
 
-                        <li><a href="{{ path('calllog_callentry', { 'mrn': mrnNumber, 'mrn-type': mrnTypeId}) }}" target="_blank">Add Entry (New Encounter)</a></li>
+                        <li><a href="{{ path('calllog_callentry', { 'mrn': mrnNumber, 'mrntype': mrnTypeId}) }}" target="_blank">Add Entry (New Encounter)</a></li>
 
-                        <li><a href="{{ path('calllog_callentry', { 'mrn': mrnNumber, 'mrn-type': mrnTypeId, 'message-type': message.messageCategory.id}) }}" target="_blank">Add Entry (New Encounter, Same Type)</a></li>
+                        <li><a href="{{ path('calllog_callentry', { 'mrn': mrnNumber, 'mrntype': mrnTypeId, 'message-type': message.messageCategory.id}) }}" target="_blank">Add Entry (New Encounter, Same Type)</a></li>
 
                         <li><a href="{{ path('calllog_patient_edit_by_mrn', { 'mrn': mrnNumber, 'mrntype': mrnTypeId}) }}" target="_blank">Edit Patient Record</a></li>
 
@@ -802,7 +802,7 @@
                     {#without version 'encounter-version':encounterVersion => use latest version#}
                     {#<li><a#}
                             {#href="{{ path('calllog_callentry', {#}
-                                {#'mrn-type':mrnTypeId,#}
+                                {#'mrntype':mrnTypeId,#}
                                 {#'mrn':mrnNumber,#}
                                 {#'encounter-type':encounterTypeId,#}
                                 {#'encounter-number':encounterNumber#}
@@ -812,7 +812,7 @@
 
                     {#<li><a#}
                             {#href="{{ path('calllog_callentry', {#}
-                                {#'mrn-type':mrnTypeId,#}
+                                {#'mrntype':mrnTypeId,#}
                                 {#'mrn':mrnNumber,#}
                                 {#'encounter-type':encounterTypeId,#}
                                 {#'encounter-number':encounterNumber,#}

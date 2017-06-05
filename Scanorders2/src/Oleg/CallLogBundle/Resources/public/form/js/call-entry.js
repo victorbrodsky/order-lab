@@ -71,7 +71,9 @@ function calllogTriggerSearch(holderId,formtype) {
 
     if( triggerSearch == 1 ) {
         var mrntype = $('#mrntype').val();
-        findCalllogPatient(holderId, formtype, mrntype);
+        var mrn = $('#mrn').val();
+        //console.log('mrntype='+mrntype);
+        findCalllogPatient(holderId, formtype, mrntype, mrn);
     }
 }
 
@@ -462,7 +464,7 @@ function clearCalllogPatient(holderId) {
     calllogShowHideListPreviousEntriesBtn(true);
 }
 
-function findCalllogPatient(holderId,formtype,mrntype) {
+function findCalllogPatient(holderId,formtype,mrntype,mrn) {
 
     //just in case try to close again after calllog PressEnterOnKeyboardAction: close datepicker box
     //printF($(".datepicker-dropdown"),"datepicker-dropdown:");
@@ -488,7 +490,7 @@ function findCalllogPatient(holderId,formtype,mrntype) {
     var searchedStr = "";
 
     if( mrntype ) {
-
+        //
     } else {
         mrntype = holder.find(".mrntype-combobox").select2('val');
         mrntype = trimWithCheck(mrntype);
@@ -499,8 +501,12 @@ function findCalllogPatient(holderId,formtype,mrntype) {
         _mrntype_original = _mrntype[0].id;
     }
 
-    var mrn = holder.find(".patientmrn-mask").val();
-    mrn = trimWithCheck(mrn);
+    if( mrn ) {
+        //
+    } else {
+        mrn = holder.find(".patientmrn-mask").val();
+        mrn = trimWithCheck(mrn);
+    }
 
     var dob = holder.find(".patient-dob-date").val();
     dob = trimWithCheck(dob);
@@ -580,7 +586,7 @@ function findCalllogPatient(holderId,formtype,mrntype) {
             if( firstKey ) {
                 var firstElement = data[firstKey];
                 if( firstElement && firstElement.hasOwnProperty("id") ) {
-                    //console.log("patient found !!!: searchedStr="+searchedStr);
+                    //console.log("patient found: searchedStr="+searchedStr);
                     populatePatientsInfo(data, searchedStr, holderId, singleMatch);
                     dataOk = true;
                 }
@@ -1696,7 +1702,7 @@ function calllogSubmitForm(btn,messageStatus) {
             var latestNextMessageVersion = $('#currentMessageVersion').val();
             var latestNextEncounterVersion = $('#currentEncounterVersion').val();
             var versionValid = calllogIsMessageVersionValid(entityId,latestNextMessageVersion,latestNextEncounterVersion);
-            console.log("versionValid="+versionValid);
+            //console.log("versionValid="+versionValid);
             if( versionValid === true ) {
                 //ok
             } else {
@@ -1950,7 +1956,7 @@ function calllogEncounterReferringProviderListener(holderId) {
     var target = ".ajax-combobox-encounterReferringProvider";
 
     $(target).on("change", function (e) {
-        console.log("calllogEncounterReferringProviderListener: change", e);
+        //console.log("calllogEncounterReferringProviderListener: change", e);
 
         //populate location fields by name
         //var value = $("[name='nameofobject']");
@@ -2145,12 +2151,12 @@ function calllogIsMessageVersionValid( messageId, latestNextMessageVersion, late
         dataType: 'json',
         async: false //use synchronous => wait for response.
     }).success(function(response) {
-        console.log('response='+response);
+        //console.log('response='+response);
         if( response == 'OK' ) {
-            console.log('response OK!');
+            //console.log('response OK!');
             result = true;
         } else {
-            console.log('response not OK');
+            //console.log('response not OK');
             result = false;
         }
     }).done(function() {
