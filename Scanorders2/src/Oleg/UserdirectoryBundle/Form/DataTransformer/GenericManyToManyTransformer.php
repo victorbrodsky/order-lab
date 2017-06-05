@@ -41,9 +41,18 @@ class GenericManyToManyTransformer implements DataTransformerInterface
     {
         $this->em = $em;
         $this->user = $user;
-        $this->bundleName = $bundleName;
         $this->className = $className;
         $this->params = $params;
+
+        if( $bundleName ) {
+            $this->bundleName = $bundleName;
+        } else {
+            $this->bundleName = "UserdirectoryBundle";
+        }
+
+        if( !$this->className ) {
+            throw $this->createNotFoundException('className is null');
+        }
     }
 
     public function getThisEm() {

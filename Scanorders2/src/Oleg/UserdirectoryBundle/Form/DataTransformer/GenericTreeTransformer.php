@@ -67,6 +67,10 @@ class GenericTreeTransformer implements DataTransformerInterface
         } else {
             $this->bundleName = "UserdirectoryBundle";
         }
+
+        if( !$this->className ) {
+            throw $this->createNotFoundException('className is null');
+        }
     }
 
     public function getThisEm() {
