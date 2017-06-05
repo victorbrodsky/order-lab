@@ -315,7 +315,7 @@ class SiteParametersType extends AbstractType
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'contentAboutPage' )
             $builder->add('contentAboutPage',null,array(
                 'label'=>'About Page Content:',
-                'attr' => array('class'=>'form-control')
+                'attr' => array('class'=>'form-control textarea')
             ));
 
         //Fellowship Application parameters
@@ -568,7 +568,7 @@ class SiteParametersType extends AbstractType
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'calllogResources' )
             $builder->add('calllogResources',null,array(
                 'label'=>'Call Log Book Resources:',
-                'attr' => array('class'=>'form-control')
+                'attr' => array('class'=>'form-control textarea')
             ));
 
     }

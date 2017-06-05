@@ -797,10 +797,20 @@ function expandTextarea(holder) {
     var targetid = ".textarea";
 
     targetid = getElementTargetByHolder(holder,targetid);
+    //console.log("expandTextarea: targetid="+targetid);
 
     if( $(targetid).length == 0 ) {
+        //console.log('no textarea => return');
         return;
     }
+
+    var onchangeFunction = function(domElement) {
+        domElement.style.overflow = 'hidden';
+        domElement.style.height = 0;
+        var newH = domElement.scrollHeight + 10;
+        //console.log("event keyup: cur h="+domElement.style.height+", newH="+newH);
+        domElement.style.height = newH + 'px';
+    };
 
     //for (var i = 0; i < elements.length; ++i) {
     //  var element = elements[i];
@@ -814,18 +824,28 @@ function expandTextarea(holder) {
         if( full.indexOf("/event-log") !== -1 ) {
             resize = false;
         }
+        //console.log('resize='+resize);
+
         if( cycle != 'download' && resize ) {
             //console.log('resize textarea');
-            $(element).height($(element).prop('scrollHeight'));
+            var height = $(element).prop('scrollHeight');
+            //console.log('height='+height);
+            $(element).height(height);
         }
 
-        addEvent('keyup', element, function() {
-            this.style.overflow = 'hidden';
-            this.style.height = 0;
-            var newH = this.scrollHeight + 10;
-            //console.log("cur h="+this.style.height+", newH="+newH);
-            this.style.height = newH + 'px';
-        }, false);
+        //this does not work anymore (5 July 2017) => changed to on('input'
+        //addEvent('keyup', element, function() {
+        //    this.style.overflow = 'hidden';
+        //    this.style.height = 0;
+        //    var newH = this.scrollHeight + 10;
+        //    console.log("event keyup: cur h="+this.style.height+", newH="+newH);
+        //    this.style.height = newH + 'px';
+        //}, false);
+
+        $(element).on('input',function(e){
+            //e.target.value
+            onchangeFunction(this);
+        });
 
     });
 
@@ -833,17 +853,20 @@ function expandTextarea(holder) {
 
 //Internet Explorer (up to version 8) used an alternate attachEvent method.
 // The following should be an attempt to write a cross-browser addEvent function.
-function addEvent(event, elem, func) {
-    if (elem.addEventListener)  // W3C DOM
-        elem.addEventListener(event,func,false);
-    else if (elem.attachEvent) { // IE DOM
-        //elem.attachEvent("on"+event, func);
-        elem.attachEvent("on" + event, function() {return(func.call(elem, window.event));});
-    }
-    else { // No much to do
-        elem[event] = func;
-    }
-}
+//function addEvent(event, elem, func) {
+//    if (elem.addEventListener) {  // W3C DOM
+//        console.log('W3C DOM addEventListener');
+//        elem.addEventListener(event, func, false);
+//    } else if (elem.attachEvent) { // IE DOM
+//        console.log('IE DOM attachEvent');
+//        //elem.attachEvent("on"+event, func);
+//        elem.attachEvent("on" + event, function() {return(func.call(elem, window.event));});
+//    }
+//    else { // No much to do
+//        console.log('No much to do');
+//        elem[event] = func;
+//    }
+//}
 
 //Helpers
 function capitaliseFirstLetter(string)

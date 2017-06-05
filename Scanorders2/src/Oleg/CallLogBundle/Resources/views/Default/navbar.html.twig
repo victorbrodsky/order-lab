@@ -108,12 +108,7 @@
                     </li>
 
                     <li id="nav-bar-resources">
-                        {% if is_granted('ROLE_CALLLOG_PATHOLOGY_ATTENDING') %}
-                            <a id="incoming-orders-menu-title" href="{{ path(calllog_sitename~'_resources') }}">Resources</a><!--
-                            --><a id="incoming-orders-menu-badge" href="{{ path(calllog_sitename~'_siteparameters_resources_edit') }}">[Edit]</a>
-                        {% else %}
-                            <a href="{{ path(calllog_sitename~'_resources') }}">Resources</a>
-                        {% endif %}
+                        <a href="{{ path(calllog_sitename~'_resources') }}">Resources</a>
                     </li>
 
 
