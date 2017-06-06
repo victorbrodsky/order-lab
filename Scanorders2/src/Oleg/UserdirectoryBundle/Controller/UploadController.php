@@ -27,12 +27,14 @@ namespace Oleg\UserdirectoryBundle\Controller;
 
 use Oleg\UserdirectoryBundle\Form\ImportUsersType;
 use Oleg\UserdirectoryBundle\Util\LargeFileDownloader;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 
 class UploadController extends Controller {
@@ -358,12 +360,40 @@ class UploadController extends Controller {
             //return $this->redirect($this->generateUrl('employees_listusers'));
         }
 
+
+
         //return $this->container->get('templating')->renderResponse('FOSUserBundle:Profile:show.html.'.$this->container->getParameter('fos_user.template.engine'), array('user' => $user));
         return array(
             'form' => $form->createView(),
             'sitename' => $this->container->getParameter('employees.sitename'),
             'title' => 'Import Users'
         );
+    }
+
+    /**
+     * @Route("/import-users/template/", name="employees_import_users_template_excel")
+     * @Method("GET")
+     */
+    public function importExcelUsersTemplateFileAction() {
+
+        $rootDir = $this->get('kernel')->getRootDir();
+        //echo "rootDir=".$rootDir."<br>";
+
+        //C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/scanorder/importLists/ImportUsersTemplate.xlsx
+//        $templateLink = "file:///C:".DIRECTORY_SEPARATOR."Users".DIRECTORY_SEPARATOR."ch3".DIRECTORY_SEPARATOR."Documents".
+//            DIRECTORY_SEPARATOR."MyDocs".DIRECTORY_SEPARATOR."WCMC".DIRECTORY_SEPARATOR."ORDER".
+//            DIRECTORY_SEPARATOR."scanorder".DIRECTORY_SEPARATOR."importLists".DIRECTORY_SEPARATOR."ImportUsersTemplate.xlsx";
+
+        $templateLink = "file:///".$rootDir.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR.
+            "importLists".DIRECTORY_SEPARATOR."ImportUsersTemplate.xlsx";
+        //echo "templateLink=".$templateLink."<br>";
+
+        //$templateLink = "file:///C:/Users/ch3/Documents/MyDocs/WCMC/ORDER/scanorder/importLists/ImportUsersTemplate.xlsx";
+        //echo "templateLink=".$templateLink."<br>";
+
+        $response = new BinaryFileResponse($templateLink);
+        $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT,'ImportUsersTemplate.xlsx');
+        return $response;
     }
 
 

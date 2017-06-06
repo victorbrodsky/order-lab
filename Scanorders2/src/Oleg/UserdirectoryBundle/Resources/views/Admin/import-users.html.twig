@@ -24,8 +24,15 @@
 
     <h3 class="text-info">{{ title }}</h3>
 
-    <br><br>
+    <br>
 
+    <hr>
+    <p>
+        <a href="{{ path('employees_import_users_template_excel') }}">Download user list template</a>, fill it in, and then upload it via the buttons below to import multiple users in bulk.
+    </p>
+    <hr>
+
+    <br><br>
 
     {{ form_start(form) }}
 
