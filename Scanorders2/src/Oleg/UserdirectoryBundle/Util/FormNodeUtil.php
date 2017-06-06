@@ -945,7 +945,7 @@ class FormNodeUtil
             return null;
         }
 
-        return null; //testing
+        //return null; //testing
 
         //$separator="<br>";
         //$table = false; //testing
@@ -1794,14 +1794,13 @@ class FormNodeUtil
                 ->select("list")
                 ->orderBy("list.orderinlist","ASC");
 
-            //$query->where("list.type = :typedef OR list.type = :typeadd")->setParameters(array('typedef' => 'default','typeadd' => 'user-added'));
             $query->where("list.type = :typedef OR list.type = :typeadd");
             $parameters['typedef'] = 'default';
             $parameters['typeadd'] = 'user-added';
 
             if( $formNodeId ) {
-                $query->andWhere("list.id=:formNodeId");
-                $parameters['formNodeId'] = $formNodeId;
+                //$query->andWhere("list.id=:formNodeId");
+                //$parameters['formNodeId'] = $formNodeId;
             }
 
             $query->setParameters($parameters);
