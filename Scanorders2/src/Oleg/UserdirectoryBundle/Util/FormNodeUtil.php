@@ -1782,7 +1782,7 @@ class FormNodeUtil
 
         $entityNamespace = $formNode->getEntityNamespace(); //"Oleg\OrderformBundle\Entity"
         $entityName = $formNode->getEntityName();           //"BloodProductTransfusedList"
-        //echo "entityName=$entityName ($formNodeId)<br>";
+        echo "entityName=$entityName ($formNodeId)<br>";
 
         if( $entityNamespace && $entityName ) {
 
