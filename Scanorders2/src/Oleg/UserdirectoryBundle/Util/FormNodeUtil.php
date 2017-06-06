@@ -1799,7 +1799,9 @@ class FormNodeUtil
             $parameters['typeadd'] = 'user-added';
 
             if( $formNodeId ) {
-                if( strval($formNodeId) == strval(intval($formNodeId)) ) {
+                if( strval($formNodeId) != strval(intval($formNodeId)) ) {
+                    throw new \Exception("get Dropdown Value: formNodeId is not an integer: entityName=$entityName; formNodeId=$formNodeId");
+                } else {
                     $query->andWhere("list.id=:formNodeId");
                     $parameters['formNodeId'] = $formNodeId;
                 }
