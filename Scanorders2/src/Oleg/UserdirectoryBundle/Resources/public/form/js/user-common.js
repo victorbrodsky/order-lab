@@ -1229,6 +1229,11 @@ function userWrapperAjax( userid, btnTargetId, replaceTargetId, cycle ) {
     });
 }
 
+//options in php getFlashBag: pnotify, pnotify-error:
+//$this->get('session')->getFlashBag()->add(
+//    'pnotify',
+//    "message here ..."
+//);
 function userPnotifyDisplay() {
     //console.log("user Pnotify Display");
     if( !$('#pnotify-notice') ) {
@@ -1239,7 +1244,7 @@ function userPnotifyDisplay() {
     //console.log("user Pnotify Display: text="+text);
     if( text ) {
         var type = 'info';
-        var hide = true;
+        var hide = false;
         if( $('#pnotify-notice').hasClass('pnotify-notice-success') ) {
             type = 'success';
         }

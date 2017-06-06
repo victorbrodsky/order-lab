@@ -614,6 +614,11 @@ class FellAppController extends Controller {
             $method = "PUT";
             $action = $this->generateUrl('fellapp_update', array('id' => $entity->getId()));
             $fellappUtil->addDefaultInterviewers($entity);
+
+            $this->get('session')->getFlashBag()->add(
+                'pnotify',
+                "Important Note: Please manually review added default interviewers in the 'Interviews' section and click 'Update' button to save the changes!"
+            );
         }
 
         if( $routeName == "fellapp_download" ) {
@@ -654,7 +659,8 @@ class FellAppController extends Controller {
             'entity' => $entity,
             'pathbase' => 'fellapp',
             'cycle' => $cycle,
-            'sitename' => $this->container->getParameter('fellapp.sitename')
+            'sitename' => $this->container->getParameter('fellapp.sitename'),
+            'route' => $routeName
         );
     }
 

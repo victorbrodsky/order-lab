@@ -34,17 +34,20 @@
                 {#default interviewers#}
                 {#data-toggle="tooltip" tooltip="{{ entity.fellowshipSubspecialty.interviewers|join(',') }}"#}
 
-                <div id="add-default-interviewers" style="float: right;">
-                    <a
-                       href="{{ path('fellapp_edit_default_interviewers',{'id':entity.id}) }}"
-                       onclick="return confirm('All changes will not be saved. Are you sure?')"
-                    >
-                            Add Default Interviewers
-                    </a>
-                </div>
+                {#It's too dangerous to have this button here, because it will reload existing page without saving the changes. Move to the menu action#}
+                {#<div id="add-default-interviewers" style="float: right;">#}
+                    {#<a#}
+                       {#href="{{ path('fellapp_edit_default_interviewers',{'id':entity.id}) }}"#}
+                       {#onclick="return confirm('All changes will not be saved. Please save your changes before adding default interviewers! Are you sure?')"#}
+                    {#>#}
+                            {#Add Default Interviewers#}
+                    {#</a>#}
+                {#</div>#}
+
             {% endif %}
         </h4>
     </div>
+
 
     <div id="interviews" class="panel-collapse collapse in">
         <div class="panel-body">
