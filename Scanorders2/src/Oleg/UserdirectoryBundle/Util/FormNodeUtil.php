@@ -1782,7 +1782,7 @@ class FormNodeUtil
 
         $entityNamespace = $formNode->getEntityNamespace(); //"Oleg\OrderformBundle\Entity"
         $entityName = $formNode->getEntityName();           //"BloodProductTransfusedList"
-        echo "entityName=$entityName ($formNodeId)<br>";
+        //echo "entityName=$entityName ($formNodeId)<br>";
 
         if( $entityNamespace && $entityName ) {
 
@@ -1799,8 +1799,10 @@ class FormNodeUtil
             $parameters['typeadd'] = 'user-added';
 
             if( $formNodeId ) {
-                $query->andWhere("list.id=:formNodeId");
-                $parameters['formNodeId'] = $formNodeId;
+                if( strval($formNodeId) == strval(intval($formNodeId)) ) {
+                    $query->andWhere("list.id=:formNodeId");
+                    $parameters['formNodeId'] = $formNodeId;
+                }
             }
 
             $query->setParameters($parameters);
