@@ -945,7 +945,7 @@ class FormNodeUtil
             return null;
         }
 
-        //return null; //testing
+        return null; //testing
 
         //$separator="<br>";
         //$table = false; //testing
