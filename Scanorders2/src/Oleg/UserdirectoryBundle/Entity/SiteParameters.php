@@ -641,6 +641,13 @@ class SiteParameters {
      */
     private $loginInstruction;
 
+    /**
+     * Initial Configuration Completed
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $initialConfigurationCompleted;
+
 
 
     function __construct( $addobjects=true )
@@ -2364,6 +2371,22 @@ class SiteParameters {
     public function setLoginInstruction($loginInstruction)
     {
         $this->loginInstruction = $loginInstruction;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInitialConfigurationCompleted()
+    {
+        return $this->initialConfigurationCompleted;
+    }
+
+    /**
+     * @param mixed $initialConfigurationCompleted
+     */
+    public function setInitialConfigurationCompleted($initialConfigurationCompleted)
+    {
+        $this->initialConfigurationCompleted = $initialConfigurationCompleted;
     }
 
 

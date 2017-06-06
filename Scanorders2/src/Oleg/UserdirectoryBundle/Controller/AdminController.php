@@ -1712,6 +1712,8 @@ class AdminController extends Controller
             "academicYearEnd" => new \DateTime('2017-06-30'),
             "holidaysUrl" => "http://intranet.med.cornell.edu/hr/",
 
+            "initialConfigurationCompleted" => false,
+
             "maintenance" => false,
             //"maintenanceenddate" => null,
             "maintenancelogoutmsg" =>   'The scheduled maintenance of this software has begun.'.

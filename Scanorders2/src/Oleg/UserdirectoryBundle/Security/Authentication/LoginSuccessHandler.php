@@ -139,6 +139,13 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 
         $userUtil->setLoginAttempt($request,$this->security,$em,$options);
 
+        //Initial Configuration Completed
+        $userSecUtil = $this->container->get('user_security_utility');
+        $initialConfigurationCompleted = $userSecUtil->getSiteSettingParameter('initialConfigurationCompleted');
+        if( $initialConfigurationCompleted === false ) {
+            return new RedirectResponse( $this->router->generate('employees_initial_configuration') );
+        }
+
         //Issue #381: redirect non-processor users to the previously requested page before authentication
 
         //$response = new RedirectResponse($this->router->generate($this->siteName.'_home'));

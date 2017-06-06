@@ -115,6 +115,18 @@
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'loginInstruction'}) }}">Edit</a></td>
             </tr>
 
+            <tr>
+                <td>Initial Configuration Completed</td>
+                <td>
+                    {% set initialConfigurationCompletedStr = 'No' %}
+                    {% if entity.initialConfigurationCompleted == true %}
+                        {% set initialConfigurationCompletedStr = 'Yes' %}
+                    {% endif %}
+                    {{ initialConfigurationCompletedStr }}
+                </td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'initialConfigurationCompleted'}) }}">Edit</a></td>
+            </tr>
+
             {#Maintenance#}
             <tr>
                 <td class="rowlink-skip" colspan="3" align="center">

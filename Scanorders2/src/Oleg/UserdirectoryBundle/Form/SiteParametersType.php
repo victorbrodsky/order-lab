@@ -739,6 +739,12 @@ class SiteParametersType extends AbstractType
                 'attr' => array('class'=>'form-control')
             ));
 
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'initialConfigurationCompleted' )
+            $builder->add('initialConfigurationCompleted',null,array(
+                'label'=>'Initial Configuration Completed:',
+                'attr' => array('class'=>'form-control')
+            ));
+
     }
 
 }
