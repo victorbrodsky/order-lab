@@ -1799,8 +1799,8 @@ class FormNodeUtil
             $parameters['typeadd'] = 'user-added';
 
             if( $formNodeId ) {
-                //$query->andWhere("list.id=:formNodeId");
-                //$parameters['formNodeId'] = $formNodeId;
+                $query->andWhere("list.id=:formNodeId");
+                $parameters['formNodeId'] = $formNodeId;
             }
 
             $query->setParameters($parameters);
