@@ -103,13 +103,14 @@ class SiteParametersController extends Controller
         //$sitename,SiteParameters $entity, $param=null, $disabled=false
         $editForm = $this->createEditForm($sitename,$entity,null,$disabled,$singleField);
 
-        $link = realpath($_SERVER['DOCUMENT_ROOT']).'\order\scanorder\Scanorders2\app\config\parameters.yml';
+        $link = realpath($_SERVER['DOCUMENT_ROOT']).DIRECTORY_SEPARATOR.'scanorder'.DIRECTORY_SEPARATOR.'Scanorders2'.
+            DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'parameters.yml';
         //echo "link=".$link."<br>";
 
         //get absolute path prefix for Upload folder
         $rootDir = $this->container->get('kernel')->getRootDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2\app
         $rootDir = str_replace('app','',$rootDir);
-        $uploadPath = $rootDir . 'web\\';
+        $uploadPath = $rootDir . 'web'.DIRECTORY_SEPARATOR;
 
         return array(
             'entity'      => $entity,
