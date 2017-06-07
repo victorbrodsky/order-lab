@@ -394,8 +394,8 @@ class UploadController extends Controller {
         $response = new BinaryFileResponse($templateLink);
         $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT,'ImportUsersTemplate.xlsx');
 
-        $mimeType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-        $response->headers->set('Content-Type: '.$mimeType);
+        //$mimeType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+        //$response->headers->set('Content-Type: '.$mimeType);
 
         return $response;
     }
