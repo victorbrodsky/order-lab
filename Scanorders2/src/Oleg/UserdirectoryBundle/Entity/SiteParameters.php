@@ -411,12 +411,19 @@ class SiteParameters {
      */
     private $applicationPageLinkFellApp;
 
+    ////////////////////// third party software //////////////////////////
     /**
      * C:\Program Files (x86)\LibreOffice 5\program
      *
      * @ORM\Column(type="string", nullable=true)
      */
     private $libreOfficeConvertToPDFPathFellApp;
+//    /**
+//     * C:\Program Files (x86)\LibreOffice 5\program
+//     *
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $libreOfficeConvertToPDFPathFellAppLinux;
 
     /**
      * soffice
@@ -424,6 +431,12 @@ class SiteParameters {
      * @ORM\Column(type="string", nullable=true)
      */
     private $libreOfficeConvertToPDFFilenameFellApp;
+//    /**
+//     * soffice
+//     *
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $libreOfficeConvertToPDFFilenameFellAppLinux;
 
     /**
      * --headless -convert-to pdf -outdir
@@ -431,6 +444,12 @@ class SiteParameters {
      * @ORM\Column(type="string", nullable=true)
      */
     private $libreOfficeConvertToPDFArgumentsdFellApp;
+//    /**
+//     * --headless -convert-to pdf -outdir
+//     *
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $libreOfficeConvertToPDFArgumentsdFellAppLinux;
 
     /**
      * C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder
@@ -438,6 +457,12 @@ class SiteParameters {
      * @ORM\Column(type="string", nullable=true)
      */
     private $pdftkPathFellApp;
+//    /**
+//     * C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder
+//     *
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $pdftkPathFellAppLinux;
 
     /**
      * pdftk
@@ -445,6 +470,12 @@ class SiteParameters {
      * @ORM\Column(type="string", nullable=true)
      */
     private $pdftkFilenameFellApp;
+//    /**
+//     * pdftk
+//     *
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $pdftkFilenameFellAppLinux;
 
     /**
      * ###inputFiles### cat output ###outputFile### dont_ask
@@ -452,6 +483,12 @@ class SiteParameters {
      * @ORM\Column(type="string", nullable=true)
      */
     private $pdftkArgumentsFellApp;
+//    /**
+//     * ###inputFiles### cat output ###outputFile### dont_ask
+//     *
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $pdftkArgumentsFellAppLinux;
 
     /**
      * Ghostscript
@@ -460,6 +497,13 @@ class SiteParameters {
      * @ORM\Column(type="string", nullable=true)
      */
     private $gsPathFellApp;
+//    /**
+//     * Ghostscript
+//     * C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin
+//     *
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $gsPathFellAppLinux;
 
     /**
      * Ghostscript
@@ -468,6 +512,13 @@ class SiteParameters {
      * @ORM\Column(type="string", nullable=true)
      */
     private $gsFilenameFellApp;
+//    /**
+//     * Ghostscript
+//     * gswin64c.exe
+//     *
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $gsFilenameFellAppLinux;
 
     /**
      * Ghostscript
@@ -476,6 +527,14 @@ class SiteParameters {
      * @ORM\Column(type="string", nullable=true)
      */
     private $gsArgumentsFellApp;
+//    /**
+//     * Ghostscript
+//     * -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile= ###outputFile###  -c .setpdfwrite -f ###inputFiles###
+//     *
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $gsArgumentsFellAppLinux;
+    ////////////////////// EOF third party software //////////////////////////
     ///////////////////// EOF FELLAPP /////////////////////
 
     // Co-Path //
