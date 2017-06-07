@@ -29,6 +29,30 @@
 
         {{ formmacros.field(form.environment) }}
 
+        {{ formmacros.field(form.institutionname) }}
+        {{ formmacros.field(form.institutionurl) }}
+
+        {{ formmacros.field(form.subinstitutionname) }}
+        {{ formmacros.field(form.subinstitutionurl) }}
+
+        {{ formmacros.field(form.departmentname) }}
+        {{ formmacros.field(form.departmenturl) }}
+
+        <div id="user-password-box" class="well well-sm">
+            {{ formmacros.field(form.password.first) }}
+            {{ formmacros.field(form.password.second) }}
+        </div>
+
+        {{ formmacros.field(form.siteEmail) }}
+
+        {{ formmacros.field(form.liveSiteRootUrl) }}
+
+
+        <br>
+        <p>
+            {{ form_row(form.save) }}
+        </p>
+
     {{ form_end(form) }}
 
 {% endblock %}

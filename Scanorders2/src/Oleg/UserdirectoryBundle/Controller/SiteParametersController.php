@@ -19,6 +19,7 @@ namespace Oleg\UserdirectoryBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Oleg\UserdirectoryBundle\Entity\OrganizationalGroupDefault;
+use Oleg\UserdirectoryBundle\Form\InitialConfigurationType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,6 +31,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Oleg\UserdirectoryBundle\Entity\SiteParameters;
 use Oleg\UserdirectoryBundle\Form\SiteParametersType;
 use Oleg\UserdirectoryBundle\Util\UserUtil;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * SiteParameters controller.
@@ -469,85 +471,88 @@ class SiteParametersController extends Controller
         }
 
         $em = $this->getDoctrine()->getManager();
+        $encoder = $this->container->get('security.password_encoder');
+        //$userSecUtil = $this->container->get('user_security_utility');
+        //$routeName = $request->get('_route');
 
-        $routeName = $request->get('_route');
+        $administratorUser = $this->get('security.context')->getToken()->getUser();
+        if( $administratorUser->getPrimaryPublicUserId() != "Administrator" ) {
+            $administratorUser = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByPrimaryPublicUserId("Administrator");
+            if( !$administratorUser ) {
+                throw new \Exception('Initial Configuration: Administrator user not found.');
+            }
+        }
 
-//        $entity = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->find($id);
-//
-//        if( !$entity ) {
-//            throw $this->createNotFoundException('Unable to find SiteParameters entity.');
-//        }
+        $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
 
-        exit('initial ConfigurationAction');
+        if( count($entities) != 1 ) {
+            throw new \Exception( 'Must have only one parameter object. Found '.count($entities).'object(s)' );
+        }
 
-        $form = $this->createForm(new SiteParametersType($params), $entity, array(
-            'action' => $this->generateUrl('employees_management_organizationalgroupdefault', array('id' => $entity->getId() )),
+        $entity = $entities[0];
+
+        //exit('initial ConfigurationAction');
+
+        $form = $this->createForm(new InitialConfigurationType(), $entity, array(
+            'action' => $this->generateUrl('employees_initial_configuration', array('id' => $entity->getId() )),
             'method' => 'POST',
             'disabled' => false,
         ));
 
-        $form->add('save', 'submit', array(
-            'label' => 'Update',
-            'attr' => array('class'=>'btn btn-primary')
-        ));
-
         $form->handleRequest($request);
-
-        //check for empty target institution
-        if( $form->isSubmitted() ) {
-
-            $instArr = new ArrayCollection();
-            foreach ($entity->getOrganizationalGroupDefaults() as $organizationalGroupDefault) {
-                if (!$organizationalGroupDefault->getInstitution()) {
-                    $form->addError(new FormError('Please select the Target Institution for all Organizational Group Management Sections'));
-                    //$form['organizationalGroupDefaults']->addError(new FormError('Please select the Target Institution'));
-                    //$entity->removeOrganizationalGroupDefault($organizationalGroupDefault);
-                } else {
-                    if( $instArr->contains($organizationalGroupDefault->getInstitution()) ) {
-                        $form->addError(new FormError('Please make sure that the Target Institutions are Unique in all Organizational Group Management Sections'));
-                    } else {
-                        $instArr->add($organizationalGroupDefault->getInstitution());
-                    }
-                }
-            }
-
-        }
 
         if( $form->isSubmitted() && $form->isValid() ) {
 
             //exit("form is valid");
 
-            // remove the relationship between the tag and the Task
-            foreach( $originalGroups as $originalGroup ) {
-                $currentGroups = $entity->getOrganizationalGroupDefaults();
-                if( false === $currentGroups->contains($originalGroup) ) {
-                    // remove the Task from the Tag
-                    $entity->removeOrganizationalGroupDefault($originalGroup);
+            $modifiedAdminUser = false;
 
-                    // if it was a many-to-one relationship, remove the relationship like this
-                    $originalGroup->setSiteParameter(null);
-
-                    //$em->persist($originalGroup);
-                    // if you wanted to delete the Tag entirely, you can also do that
-                    //$em->remove($originalGroup);
-                }
+            //unmapped password
+            $password = $form['password']->getData();
+            //echo "password=".$password."<br>";
+            if( $password ) {
+                $encoded = $encoder->encodePassword($administratorUser, $password);
+                //echo "encoded=" . $encoded . "<br>";
+                $administratorUser->setPassword($encoded);
+                $modifiedAdminUser = true;
             }
 
-            //testing
-//            foreach( $entity->getOrganizationalGroupDefaults() as $group ) {
-//                echo "primary Type=".$group->getPrimaryPublicUserIdType()."<br>";
-//            }
-            //exit('1');
+            //email
+            $email = $entity->getSiteEmail();
+            if( $email ) {
+                $administratorUser->setEmail($email);
+                $administratorUser->setEmailCanonical($email);
+                $modifiedAdminUser = true;
+            }
 
-            //$em->persist($entity);
-            //$em->flush();
+            //$initialConfigurationCompleted = $userSecUtil->getSiteSettingParameter('initialConfigurationCompleted');
+            $entity->setInitialConfigurationCompleted(true);
+
+            if( $modifiedAdminUser ) {
+                $em->persist($administratorUser);
+                $em->flush($administratorUser);
+            }
+
+            $em->persist($entity);
+            $em->flush($entity);
+
+            //exit("form is valid");
+
+            //url: user_update_system_cache_assets
+            $urlUpdateCacheAssets = $this->container->get('router')->generate(
+                'user_update_system_cache_assets',
+                null,
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
 
             $this->get('session')->getFlashBag()->add(
                 'notice',
-                "Defaults for an Organizational Group have been updated."
+                "Thank You for completing the initial configuration!<br>".
+                'Please update <a href="' . $urlUpdateCacheAssets . '">Systems Cache and Assets</a> to update the footer.<br>'.
+                "You can set other options to ensure proper operation on this 'Site Settings' page!"
             );
 
-            return $this->redirect($this->generateUrl($sitename.'_siteparameters'));
+            return $this->redirect($this->generateUrl('employees_siteparameters'));
         }
 
         return array(
@@ -555,7 +560,7 @@ class SiteParametersController extends Controller
             'entity'      => $entity,
             'form'   => $form->createView(),
             'cycle' => 'edit',
-            'sitename' => $sitename
+            'sitename' => 'employees'
         );
     }
 
