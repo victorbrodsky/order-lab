@@ -665,24 +665,44 @@ class ReportGenerator {
 
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
         $fileNamesArr = array();
 
-        //C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\LibreOfficePortable\App\libreoffice\program\soffice.exe
-        //$cmd = '"C:\Program Files (x86)\LibreOffice 5\program\soffice" --headless -convert-to pdf -outdir "'.$outdir.'"';
-        //"C:\Program Files (x86)\LibreOffice 5\program\soffice" --headless -convert-to pdf -outdir
-        $libreOfficeConvertToPDFPathFellApp = $userSecUtil->getSiteSettingParameter('libreOfficeConvertToPDFPathFellApp');
-        if( !$libreOfficeConvertToPDFPathFellApp ) {
-            throw new \InvalidArgumentException('libreOfficeConvertToPDFPathFellApp is not defined in Site Parameters.');
-        }
+        if( $userServiceUtil->isWinOs() ) {
+            $logger->notice('libreOffice Windows');
+            //C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\LibreOfficePortable\App\libreoffice\program\soffice.exe
+            //$cmd = '"C:\Program Files (x86)\LibreOffice 5\program\soffice" --headless -convert-to pdf -outdir "'.$outdir.'"';
+            //"C:\Program Files (x86)\LibreOffice 5\program\soffice" --headless -convert-to pdf -outdir
+            $libreOfficeConvertToPDFPathFellApp = $userSecUtil->getSiteSettingParameter('libreOfficeConvertToPDFPathFellApp');
+            if (!$libreOfficeConvertToPDFPathFellApp) {
+                throw new \InvalidArgumentException('libreOfficeConvertToPDFPathFellApp is not defined in Site Parameters.');
+            }
 
-        $libreOfficeConvertToPDFFilenameFellApp = $userSecUtil->getSiteSettingParameter('libreOfficeConvertToPDFFilenameFellApp');
-        if( !$libreOfficeConvertToPDFFilenameFellApp ) {
-            throw new \InvalidArgumentException('libreOfficeConvertToPDFFilenameFellApp is not defined in Site Parameters.');
-        }
+            $libreOfficeConvertToPDFFilenameFellApp = $userSecUtil->getSiteSettingParameter('libreOfficeConvertToPDFFilenameFellApp');
+            if (!$libreOfficeConvertToPDFFilenameFellApp) {
+                throw new \InvalidArgumentException('libreOfficeConvertToPDFFilenameFellApp is not defined in Site Parameters.');
+            }
 
-        $libreOfficeConvertToPDFArgumentsdFellApp = $userSecUtil->getSiteSettingParameter('libreOfficeConvertToPDFArgumentsdFellApp');
-        if( !$libreOfficeConvertToPDFArgumentsdFellApp ) {
-            throw new \InvalidArgumentException('libreOfficeConvertToPDFArgumentsdFellApp is not defined in Site Parameters.');
+            $libreOfficeConvertToPDFArgumentsdFellApp = $userSecUtil->getSiteSettingParameter('libreOfficeConvertToPDFArgumentsdFellApp');
+            if (!$libreOfficeConvertToPDFArgumentsdFellApp) {
+                throw new \InvalidArgumentException('libreOfficeConvertToPDFArgumentsdFellApp is not defined in Site Parameters.');
+            }
+        } else {
+            $logger->notice('libreOffice not Windows');
+            $libreOfficeConvertToPDFPathFellApp = $userSecUtil->getSiteSettingParameter('libreOfficeConvertToPDFPathFellAppLinux');
+            if (!$libreOfficeConvertToPDFPathFellApp) {
+                throw new \InvalidArgumentException('libreOfficeConvertToPDFPathFellAppLinux is not defined in Site Parameters.');
+            }
+
+            $libreOfficeConvertToPDFFilenameFellApp = $userSecUtil->getSiteSettingParameter('libreOfficeConvertToPDFFilenameFellAppLinux');
+            if (!$libreOfficeConvertToPDFFilenameFellApp) {
+                throw new \InvalidArgumentException('libreOfficeConvertToPDFFilenameFellAppLinux is not defined in Site Parameters.');
+            }
+
+            $libreOfficeConvertToPDFArgumentsdFellApp = $userSecUtil->getSiteSettingParameter('libreOfficeConvertToPDFArgumentsdFellAppLinux');
+            if (!$libreOfficeConvertToPDFArgumentsdFellApp) {
+                throw new \InvalidArgumentException('libreOfficeConvertToPDFArgumentsdFellAppLinux is not defined in Site Parameters.');
+            }
         }
 
         $cmd = '"' . $libreOfficeConvertToPDFPathFellApp . '\\' . $libreOfficeConvertToPDFFilenameFellApp .
@@ -801,6 +821,7 @@ class ReportGenerator {
 
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
 
         $filesStr = $this->convertFilesArrToString($filesArr);
 
@@ -810,22 +831,42 @@ class ReportGenerator {
 
         //echo "filenameMerged=".$filenameMerged."<br>";
 
-        //C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk.exe
-        //$pdftkLocation = '"C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk" ';
-        $userUtil = new UserUtil();
-        $pdftkPathFellApp = $userUtil->getSiteSetting($this->em,'pdftkPathFellApp');
-        if( !$pdftkPathFellApp ) {
-            throw new \InvalidArgumentException('pdftkPathFellApp is not defined in Site Parameters.');
-        }
+        if( $userServiceUtil->isWinOs() ) {
+            $logger->notice('pdftk Windows');
+            //C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk.exe
+            //$pdftkLocation = '"C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk" ';
+            $userUtil = new UserUtil();
+            $pdftkPathFellApp = $userUtil->getSiteSetting($this->em, 'pdftkPathFellApp');
+            if (!$pdftkPathFellApp) {
+                throw new \InvalidArgumentException('pdftkPathFellApp is not defined in Site Parameters.');
+            }
 
-        $pdftkFilenameFellApp = $userUtil->getSiteSetting($this->em,'pdftkFilenameFellApp');
-        if( !$pdftkFilenameFellApp ) {
-            throw new \InvalidArgumentException('pdftkFilenameFellApp is not defined in Site Parameters.');
-        }
+            $pdftkFilenameFellApp = $userUtil->getSiteSetting($this->em, 'pdftkFilenameFellApp');
+            if (!$pdftkFilenameFellApp) {
+                throw new \InvalidArgumentException('pdftkFilenameFellApp is not defined in Site Parameters.');
+            }
 
-        $pdftkArgumentsFellApp = $userUtil->getSiteSetting($this->em,'pdftkArgumentsFellApp');
-        if( !$pdftkArgumentsFellApp ) {
-            throw new \InvalidArgumentException('pdftkArgumentsFellApp is not defined in Site Parameters.');
+            $pdftkArgumentsFellApp = $userUtil->getSiteSetting($this->em, 'pdftkArgumentsFellApp');
+            if (!$pdftkArgumentsFellApp) {
+                throw new \InvalidArgumentException('pdftkArgumentsFellApp is not defined in Site Parameters.');
+            }
+        } else {
+            $logger->notice('pdftk not Windows');
+            $userUtil = new UserUtil();
+            $pdftkPathFellApp = $userUtil->getSiteSetting($this->em, 'pdftkPathFellAppLinux');
+            if (!$pdftkPathFellApp) {
+                throw new \InvalidArgumentException('pdftkPathFellAppLinux is not defined in Site Parameters.');
+            }
+
+            $pdftkFilenameFellApp = $userUtil->getSiteSetting($this->em, 'pdftkFilenameFellAppLinux');
+            if (!$pdftkFilenameFellApp) {
+                throw new \InvalidArgumentException('pdftkFilenameFellAppLinux is not defined in Site Parameters.');
+            }
+
+            $pdftkArgumentsFellApp = $userUtil->getSiteSetting($this->em, 'pdftkArgumentsFellAppLinux');
+            if (!$pdftkArgumentsFellApp) {
+                throw new \InvalidArgumentException('pdftkArgumentsFellAppLinux is not defined in Site Parameters.');
+            }
         }
 
         $pdftkLocation = '"' . $pdftkPathFellApp . '\\' . $pdftkFilenameFellApp . '"';
@@ -964,20 +1005,46 @@ class ReportGenerator {
 
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
         $systemUser = $userSecUtil->findSystemUser();
 
         $filesOutArr = array();
 
-        //$gsLocation = '"C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin\gswin64c.exe" ';
-        $userUtil = new UserUtil();
-        $gsPathFellApp = $userUtil->getSiteSetting($this->em,'gsPathFellApp');
-        if( !$gsPathFellApp ) {
-            throw new \InvalidArgumentException('gsPathFellApp is not defined in Site Parameters.');
-        }
+        if( $userServiceUtil->isWinOs() ) {
+            $logger->notice('gs Windows');
+            //$gsLocation = '"C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin\gswin64c.exe" ';
+            $userUtil = new UserUtil();
+            $gsPathFellApp = $userUtil->getSiteSetting($this->em, 'gsPathFellApp');
+            if (!$gsPathFellApp) {
+                throw new \InvalidArgumentException('gsPathFellApp is not defined in Site Parameters.');
+            }
 
-        $gsFilenameFellApp = $userUtil->getSiteSetting($this->em,'gsFilenameFellApp');
-        if( !$gsFilenameFellApp ) {
-            throw new \InvalidArgumentException('gsFilenameFellApp is not defined in Site Parameters.');
+            $gsFilenameFellApp = $userUtil->getSiteSetting($this->em, 'gsFilenameFellApp');
+            if (!$gsFilenameFellApp) {
+                throw new \InvalidArgumentException('gsFilenameFellApp is not defined in Site Parameters.');
+            }
+
+            $gsArgumentsFellAppOrig = $userUtil->getSiteSetting($this->em,'gsArgumentsFellApp');
+            if( !$gsArgumentsFellAppOrig ) {
+                throw new \InvalidArgumentException('gsArgumentsFellApp is not defined in Site Parameters.');
+            }
+        } else {
+            $logger->notice('gs not Windows');
+            $userUtil = new UserUtil();
+            $gsPathFellApp = $userUtil->getSiteSetting($this->em, 'gsPathFellAppLinux');
+            if (!$gsPathFellApp) {
+                throw new \InvalidArgumentException('gsPathFellAppLinux is not defined in Site Parameters.');
+            }
+
+            $gsFilenameFellApp = $userUtil->getSiteSetting($this->em, 'gsFilenameFellAppLinux');
+            if (!$gsFilenameFellApp) {
+                throw new \InvalidArgumentException('gsFilenameFellAppLinux is not defined in Site Parameters.');
+            }
+
+            $gsArgumentsFellAppOrig = $userUtil->getSiteSetting($this->em,'gsArgumentsFellAppLinux');
+            if( !$gsArgumentsFellAppOrig ) {
+                throw new \InvalidArgumentException('gsArgumentsFellAppLinux is not defined in Site Parameters.');
+            }
         }
 
         $gsLocation = '"' . $gsPathFellApp . '\\' . $gsFilenameFellApp . '"';
@@ -989,10 +1056,10 @@ class ReportGenerator {
 
         foreach( $filesArr as $file ) {
 
-            $gsArgumentsFellApp = $userUtil->getSiteSetting($this->em,'gsArgumentsFellApp');
-            if( !$gsArgumentsFellApp ) {
-                throw new \InvalidArgumentException('gsArgumentsFellApp is not defined in Site Parameters.');
-            }
+//            $gsArgumentsFellApp = $userUtil->getSiteSetting($this->em,'gsArgumentsFellApp');
+//            if( !$gsArgumentsFellApp ) {
+//                throw new \InvalidArgumentException('gsArgumentsFellApp is not defined in Site Parameters.');
+//            }
 
             //$ "C:\Users\DevServer\Desktop\php\Ghostscript\bin\gswin64c.exe" -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile="C:\Temp New\out\out.pdf" -c .setpdfwrite -f "C:\Temp New\test.pdf"
             //"C:\Users\DevServer\Desktop\php\Ghostscript\bin\gswin64.exe"
@@ -1020,6 +1087,7 @@ class ReportGenerator {
             //replace ###parameter### by appropriate variable
             //-q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile= ###outputFile###  -c .setpdfwrite -f ###inputFiles###
             //$logger->notice('0 gsArgumentsFellApp='.$gsArgumentsFellApp);
+            $gsArgumentsFellApp = $gsArgumentsFellAppOrig."";
             $gsArgumentsFellApp = str_replace('###inputFiles###',$filesStr,$gsArgumentsFellApp);
             $gsArgumentsFellApp = str_replace('###outputFile###',$outFilename,$gsArgumentsFellApp);
             //$logger->notice('gsArgumentsFellApp='.$gsArgumentsFellApp);

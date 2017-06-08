@@ -697,7 +697,7 @@ class SiteParametersType extends AbstractType
 
 
     public function addThirdPartySoftware( $builder ) {
-        //echo "edit param".$this->params['param']."<br>";
+        //3 libreOffice
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'libreOfficeConvertToPDFPathFellApp' ) {
             //echo "edit libreOfficeConvertToPDFPathFellApp <br>";
             $builder->add('libreOfficeConvertToPDFPathFellApp', null, array(
@@ -734,6 +734,7 @@ class SiteParametersType extends AbstractType
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
 
+        //3 pdftk
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'pdftkPathFellApp' )
             $builder->add('pdftkPathFellApp',null,array(
                 'label'=>'Path to pdftk for PDF concatenation (E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder):',
@@ -767,6 +768,7 @@ class SiteParametersType extends AbstractType
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
 
+        //3 gs
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'gsPathFellApp' )
             $builder->add('gsPathFellApp',null,array(
                 'label'=>'Path to Ghostscript for stripping PDF password protection (E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin):',
