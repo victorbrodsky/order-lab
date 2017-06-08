@@ -51,12 +51,12 @@ class SiteParametersController extends Controller
     public function indexAction(Request $request)
     {
         //testing
-        $userServiceUtil = $this->container->get('user_service_utility');
-        if( $userServiceUtil->isWinOs() ) {
-            echo "Windows <br>";
-        } else {
-            echo "Not Windows <br>";
-        }
+//        $userServiceUtil = $this->container->get('user_service_utility');
+//        if( $userServiceUtil->isWinOs() ) {
+//            echo "Windows <br>";
+//        } else {
+//            echo "Not Windows <br>";
+//        }
 
         return $this->indexParameters($request);
     }
