@@ -37,17 +37,17 @@ class SiteParameters {
 
     /**
      * Max idle time in minutes
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $maxIdleTime;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $environment;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $siteEmail;
 
@@ -124,59 +124,59 @@ class SiteParameters {
     private $autoAssignInstitution;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $aperioeSlideManagerDBServerAddress;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $aperioeSlideManagerDBServerPort;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $aperioeSlideManagerDBUserName;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $aperioeSlideManagerDBPassword;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $aperioeSlideManagerDBName;
 
 
     //Footer
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $institutionurl;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $institutionname;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $departmenturl;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $departmentname;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $subinstitutionurl;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $subinstitutionname;
 
@@ -231,22 +231,22 @@ class SiteParameters {
 
     //site titles and messages
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $mainHomeTitle;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $listManagerTitle;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $eventLogTitle;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $siteSettingsTitle;
 
@@ -256,12 +256,12 @@ class SiteParameters {
     private $contentAboutPage;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $underLoginMsgUser;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $underLoginMsgScan;
 
@@ -270,7 +270,7 @@ class SiteParameters {
      * Path to the local copy of the fellowship application form
      * https://script.google.com/a/macros/pathologysystems.org/d/14jgVkEBCAFrwuW5Zqiq8jsw37rc4JieHkKrkYz1jyBp_DFFyTjRGKgHj/edit
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $codeGoogleFormFellApp;
 
@@ -290,14 +290,14 @@ class SiteParameters {
     private $confirmationBodyFellApp;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $confirmationEmailFellApp;
 
     /**
      * Client Email to get GoogleSrevice: i.e. '1040591934373-1sjcosdt66bmani0kdrr5qmc5fibmvk5@developer.gserviceaccount.com'
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $clientEmailFellApp;
 
@@ -305,42 +305,42 @@ class SiteParameters {
      * Path to p12 key file: i.e. /../Util/FellowshipApplication-f1d9f98353e5.p12
      * E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\src\Oleg\FellAppBundle\Util\FellowshipApplication-f1d9f98353e5.p12
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $p12KeyPathFellApp;
 
     /**
      * https://www.googleapis.com/auth/drive https://spreadsheets.google.com/feeds
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $googleDriveApiUrlFellApp;
 
     /**
      * Impersonate user Email: i.e. olegivanov@pathologysystems.org
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $userImpersonateEmailFellApp;
 
     /**
      * Template Google Spreadsheet ID (1ITacytsUV2yChbfOSVjuBoW4aObSr_xBfpt6m_vab48)
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $templateIdFellApp;
 
     /**
      * Backup Google Spreadsheet ID (19KlO1oCC88M436JzCa89xGO08MJ1txQNgLeJI0BpNGo)
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $backupFileIdFellApp;
 
     /**
      * Application Google Drive Folder ID (0B2FwyaXvFk1efmc2VGVHUm5yYjJRWGFYYTF0Z2N6am9iUFVzcTc1OXdoWEl1Vmc0LWdZc0E)
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $folderIdFellApp;
 
@@ -354,7 +354,7 @@ class SiteParameters {
     /**
      * Local Institution to which every imported application is set: Pathology Fellowship Programs (WCMC)
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $localInstitutionFellApp;
 
@@ -385,14 +385,14 @@ class SiteParameters {
     /**
      * Path to spreadsheets: i.e. Spreadsheets
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $spreadsheetsPathFellApp;
 
     /**
      * Path to upload applicants documents: i.e. FellowshipApplicantUploads
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $applicantsUploadPathFellApp;
 
@@ -400,14 +400,14 @@ class SiteParameters {
     /**
      * Path to upload applicants documents used in ReportGenerator: i.e. Reports
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $reportsUploadPathFellApp;
 
     /**
      * Link to the Application Page (so the users can click and see how it looks)
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $applicationPageLinkFellApp;
 
@@ -415,236 +415,235 @@ class SiteParameters {
     /**
      * C:\Program Files (x86)\LibreOffice 5\program
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $libreOfficeConvertToPDFPathFellApp;
-//    /**
-//     * C:\Program Files (x86)\LibreOffice 5\program
-//     *
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $libreOfficeConvertToPDFPathFellAppLinux;
+    /**
+     * path\LibreOffice 5\program
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $libreOfficeConvertToPDFPathFellAppLinux;
 
     /**
      * soffice
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $libreOfficeConvertToPDFFilenameFellApp;
-//    /**
-//     * soffice
-//     *
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $libreOfficeConvertToPDFFilenameFellAppLinux;
+    /**
+     * soffice
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $libreOfficeConvertToPDFFilenameFellAppLinux;
 
     /**
      * --headless -convert-to pdf -outdir
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $libreOfficeConvertToPDFArgumentsdFellApp;
-//    /**
-//     * --headless -convert-to pdf -outdir
-//     *
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $libreOfficeConvertToPDFArgumentsdFellAppLinux;
+    /**
+     * --headless -convert-to pdf -outdir
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $libreOfficeConvertToPDFArgumentsdFellAppLinux;
 
     /**
      * C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $pdftkPathFellApp;
-//    /**
-//     * C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder
-//     *
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $pdftkPathFellAppLinux;
+    /**
+     * path\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $pdftkPathFellAppLinux;
 
     /**
      * pdftk
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $pdftkFilenameFellApp;
-//    /**
-//     * pdftk
-//     *
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $pdftkFilenameFellAppLinux;
+    /**
+     * pdftk
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $pdftkFilenameFellAppLinux;
 
     /**
      * ###inputFiles### cat output ###outputFile### dont_ask
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $pdftkArgumentsFellApp;
-//    /**
-//     * ###inputFiles### cat output ###outputFile### dont_ask
-//     *
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $pdftkArgumentsFellAppLinux;
+    /**
+     * ###inputFiles### cat output ###outputFile### dont_ask
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $pdftkArgumentsFellAppLinux;
 
     /**
      * Ghostscript
      * C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $gsPathFellApp;
-//    /**
-//     * Ghostscript
-//     * C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin
-//     *
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $gsPathFellAppLinux;
+    /**
+     * Ghostscript
+     * path\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $gsPathFellAppLinux;
 
     /**
      * Ghostscript
      * gswin64c.exe
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $gsFilenameFellApp;
-//    /**
-//     * Ghostscript
-//     * gswin64c.exe
-//     *
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $gsFilenameFellAppLinux;
+    /**
+     * Ghostscript
+     * gswin64c.exe
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $gsFilenameFellAppLinux;
 
     /**
      * Ghostscript
      * -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile= ###outputFile###  -c .setpdfwrite -f ###inputFiles###
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $gsArgumentsFellApp;
-//    /**
-//     * Ghostscript
-//     * -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile= ###outputFile###  -c .setpdfwrite -f ###inputFiles###
-//     *
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $gsArgumentsFellAppLinux;
+    /**
+     * Ghostscript
+     * -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile= ###outputFile###  -c .setpdfwrite -f ###inputFiles###
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $gsArgumentsFellAppLinux;
     ////////////////////// EOF third party software //////////////////////////
     ///////////////////// EOF FELLAPP /////////////////////
 
     // Co-Path //
     //Production
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $coPathDBServerAddress;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $coPathDBServerPort;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $coPathDBAccountUserName;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $coPathDBAccountPassword;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $coPathDBName;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $LISName;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $LISVersion;
 
 
-    //Testing
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $coPathDBServerAddressTest;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $coPathDBServerPortTest;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $coPathDBAccountUserNameTest;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $coPathDBAccountPasswordTest;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $coPathDBNameTest;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $LISNameTest;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $LISVersionTest;
 
 
     //Development
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $coPathDBServerAddressDevelopment;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $coPathDBServerPortDevelopment;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $coPathDBAccountUserNameDevelopment;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $coPathDBAccountPasswordDevelopment;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $coPathDBNameDevelopment;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $LISNameDevelopment;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $LISVersionDevelopment;
 
@@ -659,7 +658,7 @@ class SiteParameters {
     private $academicYearEnd;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $holidaysUrl;
 
@@ -670,7 +669,7 @@ class SiteParameters {
 
     //Live Site Root URL: http://c.med.cornell.edu/order/
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $liveSiteRootUrl;
 
@@ -686,7 +685,7 @@ class SiteParameters {
     private $enableMetaphone;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $pathMetaphone;
 
@@ -2032,105 +2031,6 @@ class SiteParameters {
     /**
      * @return mixed
      */
-    public function getPdftkPathFellApp()
-    {
-        return $this->pdftkPathFellApp;
-    }
-
-    /**
-     * @param mixed $pdftkPathFellApp
-     */
-    public function setPdftkPathFellApp($pdftkPathFellApp)
-    {
-        $this->pdftkPathFellApp = $pdftkPathFellApp;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getGsPathFellApp()
-    {
-        return $this->gsPathFellApp;
-    }
-
-    /**
-     * @param mixed $gsPathFellApp
-     */
-    public function setGsPathFellApp($gsPathFellApp)
-    {
-        $this->gsPathFellApp = $gsPathFellApp;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPdftkFilenameFellApp()
-    {
-        return $this->pdftkFilenameFellApp;
-    }
-
-    /**
-     * @param mixed $pdftkFilenameFellApp
-     */
-    public function setPdftkFilenameFellApp($pdftkFilenameFellApp)
-    {
-        $this->pdftkFilenameFellApp = $pdftkFilenameFellApp;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPdftkArgumentsFellApp()
-    {
-        return $this->pdftkArgumentsFellApp;
-    }
-
-    /**
-     * @param mixed $pdftkArgumentsFellApp
-     */
-    public function setPdftkArgumentsFellApp($pdftkArgumentsFellApp)
-    {
-        $this->pdftkArgumentsFellApp = $pdftkArgumentsFellApp;
-    }
-
-
-    /**
-     * @return mixed
-     */
-    public function getGsFilenameFellApp()
-    {
-        return $this->gsFilenameFellApp;
-    }
-
-    /**
-     * @param mixed $gsFilenameFellApp
-     */
-    public function setGsFilenameFellApp($gsFilenameFellApp)
-    {
-        $this->gsFilenameFellApp = $gsFilenameFellApp;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getGsArgumentsFellApp()
-    {
-        return $this->gsArgumentsFellApp;
-    }
-
-    /**
-     * @param mixed $gsArgumentsFellApp
-     */
-    public function setGsArgumentsFellApp($gsArgumentsFellApp)
-    {
-        $this->gsArgumentsFellApp = $gsArgumentsFellApp;
-    }
-
-
-
-    /**
-     * @return mixed
-     */
     public function getGoogleDriveApiUrlFellApp()
     {
         return $this->googleDriveApiUrlFellApp;
@@ -2142,54 +2042,6 @@ class SiteParameters {
     public function setGoogleDriveApiUrlFellApp($googleDriveApiUrlFellApp)
     {
         $this->googleDriveApiUrlFellApp = $googleDriveApiUrlFellApp;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLibreOfficeConvertToPDFArgumentsdFellApp()
-    {
-        return $this->libreOfficeConvertToPDFArgumentsdFellApp;
-    }
-
-    /**
-     * @param mixed $libreOfficeConvertToPDFArgumentsdFellApp
-     */
-    public function setLibreOfficeConvertToPDFArgumentsdFellApp($libreOfficeConvertToPDFArgumentsdFellApp)
-    {
-        $this->libreOfficeConvertToPDFArgumentsdFellApp = $libreOfficeConvertToPDFArgumentsdFellApp;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLibreOfficeConvertToPDFFilenameFellApp()
-    {
-        return $this->libreOfficeConvertToPDFFilenameFellApp;
-    }
-
-    /**
-     * @param mixed $libreOfficeConvertToPDFFilenameFellApp
-     */
-    public function setLibreOfficeConvertToPDFFilenameFellApp($libreOfficeConvertToPDFFilenameFellApp)
-    {
-        $this->libreOfficeConvertToPDFFilenameFellApp = $libreOfficeConvertToPDFFilenameFellApp;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLibreOfficeConvertToPDFPathFellApp()
-    {
-        return $this->libreOfficeConvertToPDFPathFellApp;
-    }
-
-    /**
-     * @param mixed $libreOfficeConvertToPDFPathFellApp
-     */
-    public function setLibreOfficeConvertToPDFPathFellApp($libreOfficeConvertToPDFPathFellApp)
-    {
-        $this->libreOfficeConvertToPDFPathFellApp = $libreOfficeConvertToPDFPathFellApp;
     }
 
     /**
@@ -2448,6 +2300,297 @@ class SiteParameters {
         $this->initialConfigurationCompleted = $initialConfigurationCompleted;
     }
 
+    ////////////////////// third party software //////////////////////////
+    /////////////////////// WINDOWS /////////////////////////
+    /**
+     * @return mixed
+     */
+    public function getLibreOfficeConvertToPDFArgumentsdFellApp()
+    {
+        return $this->libreOfficeConvertToPDFArgumentsdFellApp;
+    }
+
+    /**
+     * @param mixed $libreOfficeConvertToPDFArgumentsdFellApp
+     */
+    public function setLibreOfficeConvertToPDFArgumentsdFellApp($libreOfficeConvertToPDFArgumentsdFellApp)
+    {
+        $this->libreOfficeConvertToPDFArgumentsdFellApp = $libreOfficeConvertToPDFArgumentsdFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLibreOfficeConvertToPDFFilenameFellApp()
+    {
+        return $this->libreOfficeConvertToPDFFilenameFellApp;
+    }
+
+    /**
+     * @param mixed $libreOfficeConvertToPDFFilenameFellApp
+     */
+    public function setLibreOfficeConvertToPDFFilenameFellApp($libreOfficeConvertToPDFFilenameFellApp)
+    {
+        $this->libreOfficeConvertToPDFFilenameFellApp = $libreOfficeConvertToPDFFilenameFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLibreOfficeConvertToPDFPathFellApp()
+    {
+        return $this->libreOfficeConvertToPDFPathFellApp;
+    }
+
+    /**
+     * @param mixed $libreOfficeConvertToPDFPathFellApp
+     */
+    public function setLibreOfficeConvertToPDFPathFellApp($libreOfficeConvertToPDFPathFellApp)
+    {
+        $this->libreOfficeConvertToPDFPathFellApp = $libreOfficeConvertToPDFPathFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPdftkPathFellApp()
+    {
+        return $this->pdftkPathFellApp;
+    }
+
+    /**
+     * @param mixed $pdftkPathFellApp
+     */
+    public function setPdftkPathFellApp($pdftkPathFellApp)
+    {
+        $this->pdftkPathFellApp = $pdftkPathFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGsPathFellApp()
+    {
+        return $this->gsPathFellApp;
+    }
+
+    /**
+     * @param mixed $gsPathFellApp
+     */
+    public function setGsPathFellApp($gsPathFellApp)
+    {
+        $this->gsPathFellApp = $gsPathFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGsFilenameFellApp()
+    {
+        return $this->gsFilenameFellApp;
+    }
+
+    /**
+     * @param mixed $gsFilenameFellApp
+     */
+    public function setGsFilenameFellApp($gsFilenameFellApp)
+    {
+        $this->gsFilenameFellApp = $gsFilenameFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGsArgumentsFellApp()
+    {
+        return $this->gsArgumentsFellApp;
+    }
+
+    /**
+     * @param mixed $gsArgumentsFellApp
+     */
+    public function setGsArgumentsFellApp($gsArgumentsFellApp)
+    {
+        $this->gsArgumentsFellApp = $gsArgumentsFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPdftkFilenameFellApp()
+    {
+        return $this->pdftkFilenameFellApp;
+    }
+
+    /**
+     * @param mixed $pdftkFilenameFellApp
+     */
+    public function setPdftkFilenameFellApp($pdftkFilenameFellApp)
+    {
+        $this->pdftkFilenameFellApp = $pdftkFilenameFellApp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPdftkArgumentsFellApp()
+    {
+        return $this->pdftkArgumentsFellApp;
+    }
+
+    /**
+     * @param mixed $pdftkArgumentsFellApp
+     */
+    public function setPdftkArgumentsFellApp($pdftkArgumentsFellApp)
+    {
+        $this->pdftkArgumentsFellApp = $pdftkArgumentsFellApp;
+    }
+
+    /////////////// LINUX /////////////////
+    /**
+     * @return mixed
+     */
+    public function getLibreOfficeConvertToPDFPathFellAppLinux()
+    {
+        return $this->libreOfficeConvertToPDFPathFellAppLinux;
+    }
+
+    /**
+     * @param mixed $libreOfficeConvertToPDFPathFellAppLinux
+     */
+    public function setLibreOfficeConvertToPDFPathFellAppLinux($libreOfficeConvertToPDFPathFellAppLinux)
+    {
+        $this->libreOfficeConvertToPDFPathFellAppLinux = $libreOfficeConvertToPDFPathFellAppLinux;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLibreOfficeConvertToPDFFilenameFellAppLinux()
+    {
+        return $this->libreOfficeConvertToPDFFilenameFellAppLinux;
+    }
+
+    /**
+     * @param mixed $libreOfficeConvertToPDFFilenameFellAppLinux
+     */
+    public function setLibreOfficeConvertToPDFFilenameFellAppLinux($libreOfficeConvertToPDFFilenameFellAppLinux)
+    {
+        $this->libreOfficeConvertToPDFFilenameFellAppLinux = $libreOfficeConvertToPDFFilenameFellAppLinux;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLibreOfficeConvertToPDFArgumentsdFellAppLinux()
+    {
+        return $this->libreOfficeConvertToPDFArgumentsdFellAppLinux;
+    }
+
+    /**
+     * @param mixed $libreOfficeConvertToPDFArgumentsdFellAppLinux
+     */
+    public function setLibreOfficeConvertToPDFArgumentsdFellAppLinux($libreOfficeConvertToPDFArgumentsdFellAppLinux)
+    {
+        $this->libreOfficeConvertToPDFArgumentsdFellAppLinux = $libreOfficeConvertToPDFArgumentsdFellAppLinux;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPdftkPathFellAppLinux()
+    {
+        return $this->pdftkPathFellAppLinux;
+    }
+
+    /**
+     * @param mixed $pdftkPathFellAppLinux
+     */
+    public function setPdftkPathFellAppLinux($pdftkPathFellAppLinux)
+    {
+        $this->pdftkPathFellAppLinux = $pdftkPathFellAppLinux;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPdftkFilenameFellAppLinux()
+    {
+        return $this->pdftkFilenameFellAppLinux;
+    }
+
+    /**
+     * @param mixed $pdftkFilenameFellAppLinux
+     */
+    public function setPdftkFilenameFellAppLinux($pdftkFilenameFellAppLinux)
+    {
+        $this->pdftkFilenameFellAppLinux = $pdftkFilenameFellAppLinux;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPdftkArgumentsFellAppLinux()
+    {
+        return $this->pdftkArgumentsFellAppLinux;
+    }
+
+    /**
+     * @param mixed $pdftkArgumentsFellAppLinux
+     */
+    public function setPdftkArgumentsFellAppLinux($pdftkArgumentsFellAppLinux)
+    {
+        $this->pdftkArgumentsFellAppLinux = $pdftkArgumentsFellAppLinux;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGsPathFellAppLinux()
+    {
+        return $this->gsPathFellAppLinux;
+    }
+
+    /**
+     * @param mixed $gsPathFellAppLinux
+     */
+    public function setGsPathFellAppLinux($gsPathFellAppLinux)
+    {
+        $this->gsPathFellAppLinux = $gsPathFellAppLinux;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGsFilenameFellAppLinux()
+    {
+        return $this->gsFilenameFellAppLinux;
+    }
+
+    /**
+     * @param mixed $gsFilenameFellAppLinux
+     */
+    public function setGsFilenameFellAppLinux($gsFilenameFellAppLinux)
+    {
+        $this->gsFilenameFellAppLinux = $gsFilenameFellAppLinux;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGsArgumentsFellAppLinux()
+    {
+        return $this->gsArgumentsFellAppLinux;
+    }
+
+    /**
+     * @param mixed $gsArgumentsFellAppLinux
+     */
+    public function setGsArgumentsFellAppLinux($gsArgumentsFellAppLinux)
+    {
+        $this->gsArgumentsFellAppLinux = $gsArgumentsFellAppLinux;
+    }
+    ////////////////////// EOF third party software //////////////////////////
 
 
 

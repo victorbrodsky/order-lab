@@ -455,60 +455,6 @@ class SiteParametersType extends AbstractType
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
 
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'libreOfficeConvertToPDFPathFellApp' )
-            $builder->add('libreOfficeConvertToPDFPathFellApp',null,array(
-                'label'=>'Path to LibreOffice for converting a file to pdf (C:\Program Files (x86)\LibreOffice 5\program):',
-                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
-            ));
-
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'libreOfficeConvertToPDFFilenameFellApp' )
-            $builder->add('libreOfficeConvertToPDFFilenameFellApp',null,array(
-                'label'=>'LibreOffice executable file (soffice):',
-                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
-            ));
-
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'libreOfficeConvertToPDFArgumentsdFellApp' )
-            $builder->add('libreOfficeConvertToPDFArgumentsdFellApp',null,array(
-                'label'=>'LibreOffice arguments (--headless -convert-to pdf -outdir):',
-                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
-            ));
-
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'pdftkPathFellApp' )
-            $builder->add('pdftkPathFellApp',null,array(
-                'label'=>'Path to pdftk for PDF concatenation (E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder):',
-                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
-            ));
-
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'pdftkFilenameFellApp' )
-            $builder->add('pdftkFilenameFellApp',null,array(
-                'label'=>'pdftk executable file (pdftk):',
-                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
-            ));
-
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'pdftkArgumentsFellApp' )
-            $builder->add('pdftkArgumentsFellApp',null,array(
-                'label'=>'pdftk arguments (###inputFiles### cat output ###outputFile### dont_ask):',
-                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
-            ));
-
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'gsPathFellApp' )
-            $builder->add('gsPathFellApp',null,array(
-                'label'=>'Path to Ghostscript for stripping PDF password protection (E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin):',
-                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
-            ));
-
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'gsFilenameFellApp' )
-            $builder->add('gsFilenameFellApp',null,array(
-                'label'=>'Ghostscript executable file (gswin64c.exe):',
-                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
-            ));
-
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'gsArgumentsFellApp' )
-            $builder->add('gsArgumentsFellApp',null,array(
-                'label'=>'Ghostscript arguments (-q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=###outputFile###  -c .setpdfwrite -f ###inputFiles###):',
-                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
-            ));
-
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'academicYearStart' )
             $builder->add('academicYearStart',null,array(
                 'label'=>'Academic Year Start (July 1st):',
@@ -547,6 +493,8 @@ class SiteParametersType extends AbstractType
             ));
 
         $this->addCoPath($builder);
+
+        $this->addThirdPartySoftware($builder);
 
         if( !array_key_exists('singleField', $this->params) ) {
             $this->params['singleField'] = true;
@@ -745,6 +693,112 @@ class SiteParametersType extends AbstractType
                 'attr' => array('class'=>'form-control')
             ));
 
+    }
+
+
+    public function addThirdPartySoftware( $builder ) {
+        //echo "edit param".$this->params['param']."<br>";
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'libreOfficeConvertToPDFPathFellApp' ) {
+            //echo "edit libreOfficeConvertToPDFPathFellApp <br>";
+            $builder->add('libreOfficeConvertToPDFPathFellApp', null, array(
+                'label' => 'Path to LibreOffice for converting a file to pdf (C:\Program Files (x86)\LibreOffice 5\program):',
+                'attr' => array('class' => 'form-control form-control-modif', 'style' => 'margin:0')
+            ));
+        }
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'libreOfficeConvertToPDFPathFellAppLinux' ) {
+            $builder->add('libreOfficeConvertToPDFPathFellAppLinux', null, array(
+                'label' => 'Path to LibreOffice for converting a file to pdf (path\LibreOffice 5\program) - Linux:',
+                'attr' => array('class' => 'form-control form-control-modif', 'style' => 'margin:0')
+            ));
+        }
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'libreOfficeConvertToPDFFilenameFellApp' )
+            $builder->add('libreOfficeConvertToPDFFilenameFellApp',null,array(
+                'label'=>'LibreOffice executable file (soffice):',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'libreOfficeConvertToPDFFilenameFellAppLinux' )
+            $builder->add('libreOfficeConvertToPDFFilenameFellAppLinux',null,array(
+                'label'=>'LibreOffice executable file (soffice) - Linux:',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'libreOfficeConvertToPDFArgumentsdFellApp' )
+            $builder->add('libreOfficeConvertToPDFArgumentsdFellApp',null,array(
+                'label'=>'LibreOffice arguments (--headless -convert-to pdf -outdir):',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'libreOfficeConvertToPDFArgumentsdFellAppLinux' )
+            $builder->add('libreOfficeConvertToPDFArgumentsdFellAppLinux',null,array(
+                'label'=>'LibreOffice arguments (--headless -convert-to pdf -outdir) - Linux:',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'pdftkPathFellApp' )
+            $builder->add('pdftkPathFellApp',null,array(
+                'label'=>'Path to pdftk for PDF concatenation (E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder):',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'pdftkPathFellAppLinux' )
+            $builder->add('pdftkPathFellAppLinux',null,array(
+                'label'=>'Path to pdftk for PDF concatenation (path\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder) - Linux:',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'pdftkFilenameFellApp' )
+            $builder->add('pdftkFilenameFellApp',null,array(
+                'label'=>'pdftk executable file (pdftk):',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'pdftkFilenameFellAppLinux' )
+            $builder->add('pdftkFilenameFellAppLinux',null,array(
+                'label'=>'pdftk executable file (pdftk) - Linux:',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'pdftkArgumentsFellApp' )
+            $builder->add('pdftkArgumentsFellApp',null,array(
+                'label'=>'pdftk arguments (###inputFiles### cat output ###outputFile### dont_ask):',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'pdftkArgumentsFellAppLinux' )
+            $builder->add('pdftkArgumentsFellAppLinux',null,array(
+                'label'=>'pdftk arguments (###inputFiles### cat output ###outputFile### dont_ask) - Linux:',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'gsPathFellApp' )
+            $builder->add('gsPathFellApp',null,array(
+                'label'=>'Path to Ghostscript for stripping PDF password protection (E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin):',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'gsPathFellAppLinux' )
+            $builder->add('gsPathFellAppLinux',null,array(
+                'label'=>'Path to Ghostscript for stripping PDF password protection (path\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin) - Linux:',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'gsFilenameFellApp' )
+            $builder->add('gsFilenameFellApp',null,array(
+                'label'=>'Ghostscript executable file (gswin64c.exe):',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'gsFilenameFellAppLinux' )
+            $builder->add('gsFilenameFellAppLinux',null,array(
+                'label'=>'Ghostscript executable file (gswin64c) - Linux:',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'gsArgumentsFellApp' )
+            $builder->add('gsArgumentsFellApp',null,array(
+                'label'=>'Ghostscript arguments (-q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=###outputFile###  -c .setpdfwrite -f ###inputFiles###):',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'gsArgumentsFellAppLinux' )
+            $builder->add('gsArgumentsFellAppLinux',null,array(
+                'label'=>'Ghostscript arguments (-q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=###outputFile###  -c .setpdfwrite -f ###inputFiles###) - Linux:',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
     }
 
 }

@@ -36,6 +36,13 @@
                 </thead>
                 <tbody data-link="row" class="rowlink">
 
+                    {# WINDOWS #}
+                    <tr>
+                        <td class="rowlink-skip" colspan="3" align="center">
+                            <h3>Windows:</h3>
+                        </td>
+                    </tr>
+
                     <tr>
                         <td>Path to LibreOffice for converting a file to pdf (C:\Program Files (x86)\LibreOffice 5\program)</td>
                         <td>{{ entity.libreOfficeConvertToPDFPathFellApp }}</td>
@@ -89,7 +96,69 @@
                         <td>{{ entity.gsArgumentsFellApp }}</td>
                         <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'gsArgumentsFellApp'}) }}">Edit</a></td>
                     </tr>
+                    {# EOF WINDOWS #}
 
+                    {# LINUX #}
+                    <tr>
+                        <td class="rowlink-skip" colspan="3" align="center">
+                            <h3>Linux:</h3>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>Path to LibreOffice for converting a file to pdf (path\LibreOffice 5\program) - Linux</td>
+                        <td>{{ entity.libreOfficeConvertToPDFPathFellAppLinux }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'libreOfficeConvertToPDFPathFellAppLinux'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>LibreOffice executable file (soffice) - Linux</td>
+                        <td>{{ entity.libreOfficeConvertToPDFFilenameFellAppLinux }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'libreOfficeConvertToPDFFilenameFellAppLinux'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>LibreOffice arguments (--headless -convert-to pdf -outdir) - Linux</td>
+                        <td>{{ entity.libreOfficeConvertToPDFArgumentsdFellAppLinux }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'libreOfficeConvertToPDFArgumentsdFellAppLinux'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Path to pdftk for PDF concatenation (path\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder) - Linux</td>
+                        <td>{{ entity.pdftkPathFellAppLinux }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'pdftkPathFellAppLinux'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>pdftk executable file (pdftk) - Linux</td>
+                        <td>{{ entity.pdftkFilenameFellAppLinux }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'pdftkFilenameFellAppLinux'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>pdftk arguments (###inputFiles### cat output ###outputFile### dont_ask) - Linux</td>
+                        <td>{{ entity.pdftkArgumentsFellAppLinux }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'pdftkArgumentsFellAppLinux'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Path to Ghostscript for stripping PDF password protection (path\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin) - Linux</td>
+                        <td>{{ entity.gsPathFellAppLinux }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'gsPathFellAppLinux'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Ghostscript executable file (gswin64c.exe) - Linux</td>
+                        <td>{{ entity.gsFilenameFellAppLinux }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'gsFilenameFellAppLinux'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Ghostscript arguments (-q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=###outputFile###  -c .setpdfwrite -f ###inputFiles###) - Linux</td>
+                        <td>{{ entity.gsArgumentsFellAppLinux }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'gsArgumentsFellAppLinux'}) }}">Edit</a></td>
+                    </tr>
+                    {# EOF LINUX #}
 
                     <tr>
                         <td class="rowlink-skip" colspan="3" align="center">
