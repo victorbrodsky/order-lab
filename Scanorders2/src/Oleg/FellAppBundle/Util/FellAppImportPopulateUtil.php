@@ -511,7 +511,7 @@ class FellAppImportPopulateUtil {
 
         //2a) get spreadsheet path
         $inputFileName = $document->getServerPath();    //'Uploaded/fellapp/Spreadsheets/Pathology Fellowships Application Form (Responses).xlsx';
-        $logger->notice("Population a single application sheet with filename=".$inputFileName);
+        //$logger->notice("Population a single application sheet with filename=".$inputFileName);
 
 //        if( $path ) {
 //            $inputFileName = $path . "/" . $inputFileName;
@@ -656,7 +656,7 @@ class FellAppImportPopulateUtil {
             //$googleFormId = $rowData[0][0];
             $googleFormId = $this->getValueByHeaderName('ID',$rowData,$headers);
             if( !$googleFormId ) {
-                $logger->error('Skip this fell application, because googleFormId does not exists. googleFormId='.$googleFormId);
+                //$logger->error('Skip this fell application, because googleFormId does not exists. googleFormId='.$googleFormId);
                 continue; //skip this fell application, because it already exists in DB
             }
 

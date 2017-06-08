@@ -669,7 +669,7 @@ class ReportGenerator {
         $fileNamesArr = array();
 
         if( $userServiceUtil->isWinOs() ) {
-            $logger->notice('libreOffice Windows');
+            //$logger->notice('libreOffice Windows');
             //C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\LibreOfficePortable\App\libreoffice\program\soffice.exe
             //$cmd = '"C:\Program Files (x86)\LibreOffice 5\program\soffice" --headless -convert-to pdf -outdir "'.$outdir.'"';
             //"C:\Program Files (x86)\LibreOffice 5\program\soffice" --headless -convert-to pdf -outdir
@@ -688,7 +688,7 @@ class ReportGenerator {
                 throw new \InvalidArgumentException('libreOfficeConvertToPDFArgumentsdFellApp is not defined in Site Parameters.');
             }
         } else {
-            $logger->notice('libreOffice not Windows');
+            //$logger->notice('libreOffice not Windows');
             $libreOfficeConvertToPDFPathFellApp = $userSecUtil->getSiteSettingParameter('libreOfficeConvertToPDFPathFellAppLinux');
             if (!$libreOfficeConvertToPDFPathFellApp) {
                 throw new \InvalidArgumentException('libreOfficeConvertToPDFPathFellAppLinux is not defined in Site Parameters.');
@@ -832,7 +832,7 @@ class ReportGenerator {
         //echo "filenameMerged=".$filenameMerged."<br>";
 
         if( $userServiceUtil->isWinOs() ) {
-            $logger->notice('pdftk Windows');
+            //$logger->notice('pdftk Windows');
             //C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk.exe
             //$pdftkLocation = '"C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk" ';
             $userUtil = new UserUtil();
@@ -851,7 +851,7 @@ class ReportGenerator {
                 throw new \InvalidArgumentException('pdftkArgumentsFellApp is not defined in Site Parameters.');
             }
         } else {
-            $logger->notice('pdftk not Windows');
+            //$logger->notice('pdftk not Windows');
             $userUtil = new UserUtil();
             $pdftkPathFellApp = $userUtil->getSiteSetting($this->em, 'pdftkPathFellAppLinux');
             if (!$pdftkPathFellApp) {
@@ -1011,7 +1011,7 @@ class ReportGenerator {
         $filesOutArr = array();
 
         if( $userServiceUtil->isWinOs() ) {
-            $logger->notice('gs Windows');
+            //$logger->notice('gs Windows');
             //$gsLocation = '"C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin\gswin64c.exe" ';
             $userUtil = new UserUtil();
             $gsPathFellApp = $userUtil->getSiteSetting($this->em, 'gsPathFellApp');
@@ -1029,7 +1029,7 @@ class ReportGenerator {
                 throw new \InvalidArgumentException('gsArgumentsFellApp is not defined in Site Parameters.');
             }
         } else {
-            $logger->notice('gs not Windows');
+            //$logger->notice('gs not Windows');
             $userUtil = new UserUtil();
             $gsPathFellApp = $userUtil->getSiteSetting($this->em, 'gsPathFellAppLinux');
             if (!$gsPathFellApp) {

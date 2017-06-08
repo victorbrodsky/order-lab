@@ -46,7 +46,7 @@ class SwiftCronCommand extends ContainerAwareCommand {
     //php app/console cron:swift --env=prod
     protected function execute(InputInterface $input, OutputInterface $output) {
 
-        $logger = $this->getContainer()->get('logger');
+        //$logger = $this->getContainer()->get('logger');
 
         //$userSecUtil = $this->getContainer()->get('user_security_utility');
 
@@ -64,7 +64,7 @@ class SwiftCronCommand extends ContainerAwareCommand {
         //Last line of the output: ' . $last_line . '
         //Return value: ' . $retval;
 
-        $logger->notice("cron:swift: Last line of the output:".$last_line."; Return value:".$retval);
+        //$logger->notice("cron:swift: Last line of the output:".$last_line."; Return value:".$retval);
 
         $output->writeln($retval);
     }
