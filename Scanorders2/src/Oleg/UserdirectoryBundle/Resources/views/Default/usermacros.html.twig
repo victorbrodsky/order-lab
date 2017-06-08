@@ -54,6 +54,19 @@
     {% endif %}
 {% endmacro %}
 
+
+{% macro browserCheck() %}
+    {% set browserCheck = user_service_utility.browserCheck() %}
+    {% if browserCheck %}
+        <p>
+        <div class="alert alert-danger" role="alert">
+            {{ browserCheck|raw }}
+        </div>
+        </p>
+    {% endif %}
+{% endmacro %}
+
+
 {% macro siteSwitch() %}
 
     {% import _self as usermacros %}

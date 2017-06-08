@@ -263,11 +263,11 @@ class ReportGenerator {
                 $logger->warning("libreoffice task is running!");
                 if( $this->isProcessHang($process) ) {
                     $this->killTaskByName("soffice");
-                    $logger->warning("libreoffice is running and hang => kill task; fellapp id=" . $process->getFellappId() );
+                    $logger->error("libreoffice is running and hang => kill task; fellapp id=" . $process->getFellappId() );
                 } else {
                     //$this->killTaskByName("soffice");
                     //wait and try run again?
-                    $logger->warning("libreoffice is running but not hang => return (wait until next try run); fellapp id=" . $process->getFellappId() );
+                    $logger->error("libreoffice is running but not hang => return (wait until next try run); fellapp id=" . $process->getFellappId() );
                     return;
                 }
             } else {
