@@ -372,6 +372,9 @@ class UserServiceUtil {
     }
 
     public function browserCheck() {
+
+        return null; //testing
+
         //echo $_SERVER['HTTP_USER_AGENT'] . "\n\n";
         //$browser = get_browser(null, true);
         //print_r($browser);
