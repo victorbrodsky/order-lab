@@ -371,9 +371,14 @@ class UserServiceUtil {
         return false;
     }
 
-    public function browserCheck() {
+    public function browserCheck( $asString=false ) {
 
-        return null; //testing
+        //return null; //testing
+
+        $name = "unknown";
+        $version = "unknown";
+        $majorver = "unknown";
+        $platform = "unknown";
 
         //echo $_SERVER['HTTP_USER_AGENT'] . "\n\n";
         //$browser = get_browser(null, true);
@@ -383,126 +388,69 @@ class UserServiceUtil {
 //        $majorver = $browser['majorver'];
 //        $platform = $browser['platform'];
 
-        $ua = $this->getBrowser();
-        $yourbrowser= "Your browser: " . $ua['name'] . " " . $ua['version'] . " on " .$ua['platform'] . " reports: <br >" . $ua['userAgent'];
+        //use: https://github.com/cbschuld/Browser.php
+        $browser = new Browser();
 
-        $name = $ua['name'];
-        $version = $ua['version'];
-        $majorver = null;
-        $platform = $ua['platform'];
+        $name = $browser->getBrowser();
+        $version = $browser->getVersion();
+        $platform = $browser->getPlatform();
+        //echo "name=".$name."<br>";
 
-        echo "name=".$name."<br>";
+        if( $asString ) {
+            $browserInfo = $name . " " . $version . " on " . $platform;
+            //echo "Your browser: " . $browserInfo . "<br>";
+            return $browserInfo;
+        }
 
-        $msg = "You appear to be using the outdated $name $version $platform browser
-        and it is not able to show you this site properly.
-        Please use Chrome, Firefox, Safari, Internet Explorer 9, Internet Explorer 10, Internet Explorer 11,
-        or the Edge browser instead and visit this page again.
+        $msg = "You appear to be using the <strong>outdated $name $version browser on $platform</strong>
+        and it is not able to show you this site properly.<br>
+        Please use Chrome, Firefox, Internet Explorer 9, Internet Explorer 10, Internet Explorer 11,
+        or the Edge browser instead and visit this page again.<br>
         You can copy the URL of this page and paste it into the
         address bar of the other browser once you switch to it.";
 
-        if( $name == "IE" ) {
-            if( intval($majorver) < 9 ) {
+        //Select2:
+        //        IE 8+       >8
+        //        Chrome 8+   >48
+        //        Firefox 10+ >45
+        //        Safari 3+
+        //        Opera 10.6+ >12
+        //Bootstrap: Safari on Windows not supported
+
+        if( $name == Browser::BROWSER_IE ) {
+            //Bootstrap IE 8+
+            //Select2 IE 8+
+            if( $version < 9 ) {
                 return $msg;
             }
         }
 
-        if( $name == "Safari" ) {
-            if( strpos($platform, "Win") !== false ) {
+        if( $name == Browser::BROWSER_SAFARI ) {
+            //Bootstrap: Safari on Windows not supported
+            if( $platform == Browser::PLATFORM_WINDOWS || $platform == Browser::PLATFORM_WINDOWS_CE ) {
                 return $msg;
             }
         }
 
-        if( $name == "Firefox" ) {
-            return $msg;
+        if( $name == Browser::BROWSER_CHROME ) {
+            if( $version < 48 ) {
+                return $msg;
+            }
+        }
+
+        if( $name == Browser::BROWSER_FIREFOX ) {
+            if( $version < 45 ) {
+                return $msg;
+            }
+        }
+
+        if( $name == Browser::BROWSER_OPERA ) {
+            if( $version < 12 ) {
+                return $msg;
+            }
         }
 
         return null;
-    }
-    function getBrowser()
-    {
-        $u_agent = $_SERVER['HTTP_USER_AGENT'];
-        echo "$u_agent <br>";
-        $bname = 'Unknown';
-        $platform = 'Unknown';
-        $version= "";
-
-        //First get the platform?
-        if (preg_match('/linux/i', $u_agent)) {
-            $platform = 'linux';
-        }
-        elseif (preg_match('/macintosh|mac os x/i', $u_agent)) {
-            $platform = 'mac';
-        }
-        elseif (preg_match('/windows|win32/i', $u_agent)) {
-            $platform = 'windows';
-        }
-
-        // Next get the name of the useragent yes seperately and for good reason
-        if(preg_match('/MSIE/i',$u_agent) && !preg_match('/Opera/i',$u_agent))
-        {
-            $bname = 'Internet Explorer';
-            $ub = "MSIE";
-        }
-        elseif(preg_match('/Firefox/i',$u_agent))
-        {
-            $bname = 'Mozilla Firefox';
-            $ub = "Firefox";
-        }
-        elseif(preg_match('/OPR/i',$u_agent))
-        {
-            $bname = 'Opera';
-            $ub = "Opera";
-        }
-        elseif(preg_match('/Chrome/i',$u_agent))
-        {
-            $bname = 'Google Chrome';
-            $ub = "Chrome";
-        }
-        elseif(preg_match('/Safari/i',$u_agent))
-        {
-            $bname = 'Apple Safari';
-            $ub = "Safari";
-        }
-        elseif(preg_match('/Netscape/i',$u_agent))
-        {
-            $bname = 'Netscape';
-            $ub = "Netscape";
-        }
-
-        // finally get the correct version number
-        $known = array('Version', $ub, 'other');
-        $pattern = '#(?<browser>' . join('|', $known) .
-            ')[/ ]+(?<version>[0-9.|a-zA-Z.]*)#';
-        if (!preg_match_all($pattern, $u_agent, $matches)) {
-            // we have no matching number just continue
-        }
-
-        // see how many we have
-        $i = count($matches['browser']);
-        if ($i != 1) {
-            //we will have two since we are not using 'other' argument yet
-            //see if version is before or after the name
-            if (strripos($u_agent,"Version") < strripos($u_agent,$ub)){
-                $version= $matches['version'][0];
-            }
-            else {
-                $version= $matches['version'][1];
-            }
-        }
-        else {
-            $version= $matches['version'][0];
-        }
-
-        // check if we have a number
-        if ($version==null || $version=="") {$version="?";}
-
-        return array(
-            'userAgent' => $u_agent,
-            'name'      => $bname,
-            'version'   => $version,
-            'platform'  => $platform,
-            'pattern'    => $pattern
-        );
     }
 
 

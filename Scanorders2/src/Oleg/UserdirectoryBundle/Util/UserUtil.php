@@ -98,11 +98,22 @@ class UserUtil {
         $logger->setRoles($roles);
         $logger->setUsername($username);
         $logger->setIp($request->getClientIp());
-        $logger->setUseragent($_SERVER['HTTP_USER_AGENT']);
         $logger->setWidth($request->get('display_width'));
         $logger->setHeight($request->get('display_height'));
         $logger->setEvent($options['event']);
         $logger->setServerresponse($options['serverresponse']);
+
+        ////////////// browser info //////////////
+        $browser = new Browser();
+        $name = $browser->getBrowser();
+        $version = $browser->getVersion();
+        $platform = $browser->getPlatform();
+        $browserInfo = $name . " " . $version . " on " . $platform;
+        //echo "Your browser: " . $browserInfo . "<br>";
+        ////////////// EOF browser info //////////////
+
+        $userAgent = $browserInfo . "; User Agent: " . $_SERVER['HTTP_USER_AGENT'];
+        $logger->setUseragent($userAgent);
 
         //set Event Type
         $eventtype = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName($options['eventtype']);
