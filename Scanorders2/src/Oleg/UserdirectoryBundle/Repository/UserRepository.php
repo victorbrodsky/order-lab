@@ -241,6 +241,8 @@ class UserRepository extends EntityRepository {
     //get all roles with corresponding permissions: object-action
     public function findRolesByObjectAction($object, $action) {
 
+        //echo "find RolesByObjectAction: object=".$object."; action=".$action."<br>";
+
         //check if user's roles have permission
         $query = $this->_em->createQueryBuilder()
             ->from('OlegUserdirectoryBundle:Roles', 'list')
@@ -427,15 +429,15 @@ class UserRepository extends EntityRepository {
         $userRoles = $this->findUserRolesBySitePermissionObjectAction($user,$sitename,$childObjectStr,$childActionStr);
         //echo "userRole count=".count($userRoles)."<br>";
 //        foreach( $userRoles as $userRole ) {
-//            echo "testing: userRole=".$userRole."<br>";
+//            //echo "testing: userRole=".$userRole."<br>";
 //        }
 
         //find parent roles
-//        echo "testing: parentActionStr=".$parentActionStr."<br>";
+//        //echo "testing: parentActionStr=".$parentActionStr."<br>";
         $parentRoles = $this->findRolesByObjectActionInstitutionSite($parentObjectStr,$parentActionStr,null,$sitename);
         //echo "parentRoles=".count($parentRoles)."<br>";
 //        foreach( $parentRoles as $parentRole ) {
-//            echo "testing: parentRoles=".$parentRole."<br>";
+//            //echo "testing: parentRoles=".$parentRole."<br>";
 //        }
 
         foreach( $parentRoles as $parentRole ) {
@@ -451,7 +453,7 @@ class UserRepository extends EntityRepository {
         }
 
 //        foreach( $userParentRoles as $userParentRole ) {
-//            echo "testing: userParentRole=".$userParentRole."<br>";
+//            //echo "testing: userParentRole=".$userParentRole."<br>";
 //        }
 
         return $userParentRoles;
@@ -540,7 +542,7 @@ class UserRepository extends EntityRepository {
         if( !$permission ) {
             return array();
         }
-        echo "permission=".$permission."<br>";
+        //echo "permission=".$permission."<br>";
 
         $query = $this->_em->createQueryBuilder()->from('OlegUserdirectoryBundle:User', 'user');
         $query->select("user");
@@ -592,10 +594,10 @@ class UserRepository extends EntityRepository {
             )
         );
 
-        echo "query=".$query."<br>";
+        //echo "query=".$query."<br>";
 
         $users = $query->getQuery()->getResult();
-        echo "<br>users count=".count($users)."<br>";
+        //echo "<br>users count=".count($users)."<br>";
 
         return $users;
     }

@@ -254,6 +254,7 @@ class PatientController extends Controller
 
         $securityUtil = $this->get('order_security_utility');
         if( $entity && !$securityUtil->hasUserPermission($entity,$user,array("Union","Intersection"),array("show")) ) {
+            //exit("showPatient: no permission to show patient");
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 

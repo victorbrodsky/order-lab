@@ -104,6 +104,7 @@ class SecurityUtil extends UserSecurityUtil {
         }
         ///////////////// EOF /////////////////
 
+        //exit("hasUserPermission: no permission to show ".$entity);
         return false;
     }
 
