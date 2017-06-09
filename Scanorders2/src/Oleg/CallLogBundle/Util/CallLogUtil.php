@@ -865,6 +865,7 @@ class CallLogUtil
             //not integer
             return null;
         }
+        //echo "mrntypeId=".$mrntypeId."<br>";
 
         $mrntype = $this->em->getRepository('OlegOrderformBundle:MrnType')->find($mrntypeId);
         if( !$mrntype ) {

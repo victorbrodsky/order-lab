@@ -878,6 +878,13 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             throw new \Exception( 'Validity is provided, but not as array; validities=' . $validities );
         }
 
+        if( $extra && count($extra) > 0 ) {
+            if ( strval($extra["keytype"]) != strval(intval($extra["keytype"])) ) {
+                //echo "Your variable is not an integer";
+                throw new \Exception("keytype is not an integer: ".$extra["keytype"]);
+            }
+        }
+
         //add validity conditions
         $validityStr = "";
         if( $validities && is_array($validities) && count($validities)>0 ) {
@@ -1033,6 +1040,13 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             throw new \Exception('Institution is not provided for creation of element '.$className);
         }
 
+        if( $extra && count($extra) > 0 ) {
+            if ( strval($extra["keytype"]) != strval(intval($extra["keytype"])) ) {
+                //echo "Your variable is not an integer";
+                throw new \Exception("keytype is not an integer: ".$extra["keytype"]);
+            }
+        }
+
         if( !$status ) {
             $status = self::STATUS_RESERVED;
         }
@@ -1163,6 +1177,13 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         $className = $class->getShortName();
         $fieldName = $entity->obtainKeyFieldName();
         //$name = "NO".strtoupper($className)."IDPROVIDED";
+
+        if( $extra && count($extra) > 0 ) {
+            if ( strval($extra["keytype"]) != strval(intval($extra["keytype"])) ) {
+                //echo "Your variable is not an integer";
+                throw new \Exception("keytype is not an integer: ".$extra["keytype"]);
+            }
+        }
 
         if( !$prefixname ) {
             $prefixname = $entity->obtainNoprovidedKeyPrefix();
