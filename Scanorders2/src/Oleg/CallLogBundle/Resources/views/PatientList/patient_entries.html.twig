@@ -110,7 +110,8 @@
 
                 <tr class="{{ trclassname }}">
 
-                    <td style="display: none;">
+                    {#style="display: none;"#}
+                    <td >
                         <a href="{{ path(calllog_sitename~'_callentry_view', {'messageOid': message.oid, 'messageVersion':message.version}) }}" target="_blank">{{ message.getMessageOidVersion }}</a>
                     </td>
 

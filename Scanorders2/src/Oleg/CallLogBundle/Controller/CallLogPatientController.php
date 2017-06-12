@@ -419,13 +419,14 @@ class CallLogPatientController extends PatientController {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
-        $calllogUtil = $this->get('calllog_util');
+        //$calllogUtil = $this->get('calllog_util');
         $em = $this->getDoctrine()->getManager();
 
         $template = null;
         $filterMessageCategory = null;
 
         $patientid = $request->query->get('patientid');
+        //echo "patientid=".$patientid."<br>";
 
         $messageCategoryId = $request->query->get('type');
         //if ( strval($messageCategoryId) != strval(intval($messageCategoryId)) ) {
@@ -469,6 +470,9 @@ class CallLogPatientController extends PatientController {
         $repository = $em->getRepository('OlegOrderformBundle:Message');
         $dql = $repository->createQueryBuilder('message');
 
+        $dql->select('message, MAX(message.version) AS max_version');
+        $dql->groupBy('patient');
+
         $dql->leftJoin("message.messageStatus","messageStatus");
         $dql->leftJoin("message.messageCategory","messageCategory");
         $dql->leftJoin("message.provider","provider");
@@ -487,7 +491,9 @@ class CallLogPatientController extends PatientController {
         $dql->orderBy("message.orderdate","DESC");
         $dql->addOrderBy("editorInfos.modifiedOn","DESC");
 
-        $dql->where("patient=:patientId");
+        $dql->where("patient.id = :patientId");
+        //$dql->andWhere("(SELECT messages, MAX(messages.version) AS maxversion FROM OlegOrderformBundle:Message WHERE messages.id=message.id)");
+
         $queryParameters['patientId'] = $patientid;
 
         if( $messageCategoryId ) {
@@ -502,7 +508,7 @@ class CallLogPatientController extends PatientController {
         // "Previous Entries for FirstNameOfMasterRecord LastNameOfMasterRecord (DOB: DateOfBirthOfMasterRecord, MRNTypeOfMasterRecord: MRNofMasterRecord).
         // Clicking "Re-enter patient" in the Patient Info accordion should re-set the title of the accordion to "Previous Entries" (remove the patient name/info).
 
-        $limit = 1000;
+        //$limit = 1000;
         $query = $em->createQuery($dql);
         $query->setParameters($queryParameters);
 
@@ -517,6 +523,7 @@ class CallLogPatientController extends PatientController {
 //        );
 
         $messages = $query->getResult();
+        echo "messages count=".count($messages)."<br>";
         //////////////// find messages ////////////////
 
         $params = array(
