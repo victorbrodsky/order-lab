@@ -56,7 +56,9 @@
 
 
 {% macro browserCheck() %}
-    {% set browserCheck = user_service_utility.browserCheck() %}
+    {#{% set browserCheck = user_service_utility.browserCheck() %}#}
+    {#session has been set in loginPage method in SecurityController#}
+    {% set browserCheck = app.session.get('browserWarningInfo') %}
     {% if browserCheck %}
         <p>
         <div class="alert alert-danger" role="alert">

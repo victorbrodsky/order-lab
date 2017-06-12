@@ -104,7 +104,7 @@ class UserUtil {
         $logger->setServerresponse($options['serverresponse']);
 
         ////////////// browser info //////////////
-        $browser = new Browser();
+        $browser = BrowserInfo::Instance();
         $name = $browser->getBrowser();
         $version = $browser->getVersion();
         $platform = $browser->getPlatform();

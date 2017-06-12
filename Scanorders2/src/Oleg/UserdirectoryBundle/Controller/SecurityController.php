@@ -82,6 +82,14 @@ class SecurityController extends Controller
         }
         //exit('sitename='.$sitename);
 
+        /////////////// set browser info ///////////////
+        //$request = $this->get('request_stack')->getCurrentRequest();
+        $session = $request->getSession();
+        $userServiceUtil = $this->get('user_service_utility');
+        $browserInfo = $userServiceUtil->browserCheck();
+        $session->set('browserWarningInfo', $browserInfo);
+        /////////////// EOF set browser info ///////////////
+
         //$sitename = $this->container->getParameter('employees.sitename');
         $formArr = $this->loginPage($sitename);
 

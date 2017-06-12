@@ -1,44 +1,34 @@
 <?php
+/**
+ * Copyright (c) 2017 Cornell University
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 
 /**
- * File: Browser.php
- * Author: Chris Schuld (http://chrisschuld.com/)
- * Last Modified: July 22nd, 2016
- * @version 2.0
- * @package PegasusPHP
- *
- * Copyright (C) 2008-2010 Chris Schuld  (chris@chrisschuld.com)
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of
- * the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details at:
- * http://www.gnu.org/copyleft/gpl.html
- *
- *
- * Typical Usage:
- *
- *   $browser = new Browser();
- *   if( $browser->getBrowser() == Browser::BROWSER_FIREFOX && $browser->getVersion() >= 2 ) {
- *    echo 'You have FireFox version 2 or greater';
- *   }
- *
- * User Agents Sampled from: http://www.useragentstring.com/
- *
- * This implementation is based on the original work from Gary White
- * http://apptools.com/phptools/browser/
- *
+ * Created by PhpStorm.
+ * User: ch3
+ * Date: 6/12/2017
+ * Time: 9:12 AM
  */
 
 namespace Oleg\UserdirectoryBundle\Util;
 
-class Browser
-{
+//Singleton class
+//modified: https://github.com/cbschuld/Browser.php
+
+final class BrowserInfo {
+
     private $_agent = '';
     private $_browser_name = '';
     private $_version = '';
@@ -117,16 +107,35 @@ class Browser
     const OPERATING_SYSTEM_UNKNOWN = 'unknown';
 
     /**
+     * Private ctor so nobody else can instance it
      * Class constructor
      */
-    public function __construct($userAgent = "")
+    private function __construct($userAgent = "")
     {
+        //echo "BrowserInfo constructor<br>";
         $this->reset();
         if ($userAgent != "") {
             $this->setUserAgent($userAgent);
         } else {
             $this->determine();
         }
+    }
+
+    /**
+     * Call this method to get singleton:
+     * $fact = BrowserInfo::Instance();
+     * $fact2 = BrowserInfo::Instance();
+     * => $fact == $fact2;
+     *
+     * @return UserFactory
+     */
+    public static function Instance()
+    {
+        static $inst = null;
+        if ($inst === null) {
+            $inst = new BrowserInfo();
+        }
+        return $inst;
     }
 
     /**
@@ -266,9 +275,9 @@ class Browser
     }
 
     /**
-    * Is the browser from facebook?
-    * @return boolean True if the browser is from facebook otherwise false
-    */
+     * Is the browser from facebook?
+     * @return boolean True if the browser is from facebook otherwise false
+     */
     public function isFacebook()
     {
         return $this->_is_facebook;
@@ -594,19 +603,19 @@ class Browser
      */
     protected function checkBrowserEdge()
     {
-      if( stripos($this->_agent,'Edge/') !== false ) {
-	    	$aresult = explode('/', stristr($this->_agent, 'Edge'));
-    		if (isset($aresult[1])) {
-            $aversion = explode(' ', $aresult[1]);
-            $this->setVersion($aversion[0]);
-            $this->setBrowser(self::BROWSER_EDGE);
-            if(stripos($this->_agent, 'Windows Phone') !== false || stripos($this->_agent, 'Android') !== false) {
-                $this->setMobile(true);
+        if( stripos($this->_agent,'Edge/') !== false ) {
+            $aresult = explode('/', stristr($this->_agent, 'Edge'));
+            if (isset($aresult[1])) {
+                $aversion = explode(' ', $aresult[1]);
+                $this->setVersion($aversion[0]);
+                $this->setBrowser(self::BROWSER_EDGE);
+                if(stripos($this->_agent, 'Windows Phone') !== false || stripos($this->_agent, 'Android') !== false) {
+                    $this->setMobile(true);
+                }
+                return true;
             }
-            return true;
         }
-      }
-      return false;
+        return false;
     }
 
     /**
@@ -615,12 +624,12 @@ class Browser
      */
     protected function checkBrowserInternetExplorer()
     {
-	//  Test for IE11
-	if( stripos($this->_agent,'Trident/7.0; rv:11.0') !== false ) {
-		$this->setBrowser(self::BROWSER_IE);
-		$this->setVersion('11.0');
-		return true;
-	}
+        //  Test for IE11
+        if( stripos($this->_agent,'Trident/7.0; rv:11.0') !== false ) {
+            $this->setBrowser(self::BROWSER_IE);
+            $this->setVersion('11.0');
+            return true;
+        }
         // Test for v1 - v1.5 IE
         else if (stripos($this->_agent, 'microsoft internet explorer') !== false) {
             $this->setBrowser(self::BROWSER_IE);
@@ -652,14 +661,14 @@ class Browser
                 return true;
             }
         } // Test for versions > IE 10
-		else if(stripos($this->_agent, 'trident') !== false) {
-			$this->setBrowser(self::BROWSER_IE);
-			$result = explode('rv:', $this->_agent);
+        else if(stripos($this->_agent, 'trident') !== false) {
+            $this->setBrowser(self::BROWSER_IE);
+            $result = explode('rv:', $this->_agent);
             if (isset($result[1])) {
                 $this->setVersion(preg_replace('/[^0-9.]+/', '', $result[1]));
                 $this->_agent = str_replace(array("Mozilla", "Gecko"), "MSIE", $this->_agent);
             }
-		} // Test for Pocket IE
+        } // Test for Pocket IE
         else if (stripos($this->_agent, 'mspie') !== false || stripos($this->_agent, 'pocket') !== false) {
             $aresult = explode(' ', stristr($this->_agent, 'mspie'));
             if (isset($aresult[1])) {
@@ -1357,4 +1366,5 @@ class Browser
         }
 
     }
+
 }

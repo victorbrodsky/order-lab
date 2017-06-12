@@ -389,7 +389,8 @@ class UserServiceUtil {
 //        $platform = $browser['platform'];
 
         //use: https://github.com/cbschuld/Browser.php
-        $browser = new Browser();
+        //$browser = new Browser();
+        $browser = BrowserInfo::Instance();
 
         $name = $browser->getBrowser();
         $version = $browser->getVersion();
@@ -417,7 +418,7 @@ class UserServiceUtil {
         //        Opera 10.6+ >12
         //Bootstrap: Safari on Windows not supported
 
-        if( $name == Browser::BROWSER_IE ) {
+        if( $name == BrowserInfo::BROWSER_IE ) {
             //Bootstrap IE 8+
             //Select2 IE 8+
             if( $version < 9 ) {
@@ -425,26 +426,26 @@ class UserServiceUtil {
             }
         }
 
-        if( $name == Browser::BROWSER_SAFARI ) {
+        if( $name == BrowserInfo::BROWSER_SAFARI ) {
             //Bootstrap: Safari on Windows not supported
-            if( $platform == Browser::PLATFORM_WINDOWS || $platform == Browser::PLATFORM_WINDOWS_CE ) {
+            if( $platform == BrowserInfo::PLATFORM_WINDOWS || $platform == BrowserInfo::PLATFORM_WINDOWS_CE ) {
                 return $msg;
             }
         }
 
-        if( $name == Browser::BROWSER_CHROME ) {
+        if( $name == BrowserInfo::BROWSER_CHROME ) {
             if( $version < 48 ) {
                 return $msg;
             }
         }
 
-        if( $name == Browser::BROWSER_FIREFOX ) {
+        if( $name == BrowserInfo::BROWSER_FIREFOX ) {
             if( $version < 45 ) {
                 return $msg;
             }
         }
 
-        if( $name == Browser::BROWSER_OPERA ) {
+        if( $name == BrowserInfo::BROWSER_OPERA ) {
             if( $version < 12 ) {
                 return $msg;
             }
