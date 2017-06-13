@@ -987,7 +987,7 @@ var matchingPatientBtnClick = function(holderId) {
     var holder = getHolder(holderId);
 
     var patientToPopulate = getCalllogPatientToPopulate(holderId,true); //keepOriginalPatient = true
-    console.log('patientToPopulate='+patientToPopulate.id+"; fullName="+patientToPopulate.fullName);
+    //console.log('patientToPopulate='+patientToPopulate.id+"; fullName="+patientToPopulate.fullName);
 
     populatePatientInfo(    //matching btn click:
         patientToPopulate,  //patient
@@ -1027,10 +1027,10 @@ var matchingPatientBtnClick = function(holderId) {
 }
 //
 var getCalllogPatientToPopulate = function(holderId,keepOriginalPatient) {
-    console.log("original replace Calllog PatientToPopulate");
+    //console.log("original replace Calllog PatientToPopulate");
     var holder = getHolder(holderId);
     var index = holder.find('#calllog-matching-patients-table-'+holderId).find('.active').attr('id');
-    console.log('patient id to populate='+index);
+    //console.log('patient id to populate='+index);
     //remove holderId from index
     //index = index.replace("-"+holderId, "");
     //console.log('index='+index);
@@ -1038,16 +1038,19 @@ var getCalllogPatientToPopulate = function(holderId,keepOriginalPatient) {
     if( typeof keepOriginalPatient === 'undefined' ){
         keepOriginalPatient = false;
     }
+    //console.log("keepOriginalPatient=" + keepOriginalPatient);
 
     //find patient with id from _patients array
     var patientToPopulate = getPatientByIdFromPatients(index,_patients,keepOriginalPatient);
 
     //for call_entry return master record instead of the actual clicked patient record
-    var masterPatientId = patientToPopulate['masterPatientId'];
-    console.log("Replace by masterPatientId?=" + masterPatientId);
-    if( masterPatientId && keepOriginalPatient == false ) {
-        console.log("masterPatientId=" + masterPatientId);
-        patientToPopulate = getPatientByIdFromPatients(masterPatientId,_patients,keepOriginalPatient);
+    if( keepOriginalPatient == false ) {
+        var masterPatientId = patientToPopulate['masterPatientId'];
+        //console.log("Replace by masterPatientId?=" + masterPatientId);
+        if (masterPatientId) {
+            //console.log("masterPatientId=" + masterPatientId);
+            patientToPopulate = getPatientByIdFromPatients(masterPatientId, _patients, keepOriginalPatient);
+        }
     }
 
     return patientToPopulate;

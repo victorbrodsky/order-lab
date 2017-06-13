@@ -419,14 +419,46 @@ class CallLogPatientController extends PatientController {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
-        //$calllogUtil = $this->get('calllog_util');
+        $calllogUtil = $this->get('calllog_util');
         $em = $this->getDoctrine()->getManager();
 
+        $title = "Previous Entries";
         $template = null;
         $filterMessageCategory = null;
 
         $patientid = $request->query->get('patientid');
         //echo "patientid=".$patientid."<br>";
+
+        $patient = $em->getRepository('OlegOrderformBundle:Patient')->find($patientid);
+        if( !$patient ) {
+            throw new \Exception( "Patient not found by id $patientid" );
+        }
+
+        //get linked patients
+        $mergedPatients = $calllogUtil->getAllMergedPatients( array($patient) );
+
+        //get master patient If the entered patient is linked to another
+        if( count($mergedPatients) > 1 ) {
+            $masterPatient = $calllogUtil->getMasterRecordPatients($mergedPatients);
+            if ($masterPatient) {
+                if ($masterPatient->getId() != $patientid) {
+                    //not master record
+                    //"Previous Entries for FirstNameOfMasterRecord LastNameOfMasterRecord (DOB: DateOfBirthOfMasterRecord, MRNTypeOfMasterRecord: MRNofMasterRecord)
+                    $title = "Previous Entries for all linked patients with the master patient ".$masterPatient->obtainPatientInfoSimple();
+                }
+            }
+        }
+
+        //get patient ids
+        $patientIdArr = array();
+        foreach( $mergedPatients as $mergedPatient ) {
+            $patientIdArr[] = $mergedPatient->getId();
+        }
+        if( count($patientIdArr) > 0 ) {
+            $patientIds = implode(",", $patientIdArr);
+        } else {
+            throw new \Exception( "Patient array does not have any patients. count=".count($patientIdArr) );
+        }
 
         $messageCategoryId = $request->query->get('type');
         //if ( strval($messageCategoryId) != strval(intval($messageCategoryId)) ) {
@@ -495,10 +527,13 @@ class CallLogPatientController extends PatientController {
         $dql->orderBy("message.orderdate","DESC");
         $dql->addOrderBy("editorInfos.modifiedOn","DESC");
 
-        $dql->where("patient.id = :patientId");
-        //$dql->andWhere("(SELECT messages, MAX(messages.version) AS maxversion FROM OlegOrderformBundle:Message WHERE messages.id=message.id)");
+        //$dql->where("patient.id = :patientId");
+        //$queryParameters['patientId'] = $patientid;
 
-        $queryParameters['patientId'] = $patientid;
+        $dql->where('patient.id IN (:patientIds)');
+        $queryParameters['patientIds'] = $patientIds;
+
+        //$dql->andWhere("(SELECT messages, MAX(messages.version) AS maxversion FROM OlegOrderformBundle:Message WHERE messages.id=message.id)");
 
         //We can use the fact that latest version messages have status not "Deleted"
         $dql->andWhere("messageStatus.name != :deletedMessageStatus");
@@ -543,7 +578,7 @@ class CallLogPatientController extends PatientController {
             'filterform' => $filterform->createView(),
             'route_path' => $request->get('_route'),
             'messages' => $messages,
-            'title' => "Previous Entries"
+            'title' => $title
             //'testing' => true
         );
         $htmlPage = $this->render('OlegCallLogBundle:PatientList:patient_entries.html.twig',$params);
