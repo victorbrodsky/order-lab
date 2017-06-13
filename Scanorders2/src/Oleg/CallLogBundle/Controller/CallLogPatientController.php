@@ -466,14 +466,16 @@ class CallLogPatientController extends PatientController {
         $filterform->bind($request);
 
         //////////////// find messages ////////////////
-        $this->testSelectMessagesWithMaxVersion($patientid);
+        //$this->testSelectMessagesWithMaxVersion($patientid);
 
         $queryParameters = array();
         $repository = $em->getRepository('OlegOrderformBundle:Message');
         $dql = $repository->createQueryBuilder('message');
+        $dql->select('message');
 
-        $dql->select('message, MAX(message.version) AS max_version');
-        $dql->groupBy('patient');
+        //$dql->select('message, MAX(message.version) AS HIDDEN max_version');
+        //$dql->groupBy('message.oid');
+        //$dql->addGroupBy('message.version');
 
         $dql->leftJoin("message.messageStatus","messageStatus");
         $dql->leftJoin("message.messageCategory","messageCategory");
@@ -497,6 +499,10 @@ class CallLogPatientController extends PatientController {
         //$dql->andWhere("(SELECT messages, MAX(messages.version) AS maxversion FROM OlegOrderformBundle:Message WHERE messages.id=message.id)");
 
         $queryParameters['patientId'] = $patientid;
+
+        //We can use the fact that latest version messages have status not "Deleted"
+        $dql->andWhere("messageStatus.name != :deletedMessageStatus");
+        $queryParameters['deletedMessageStatus'] = "Deleted";
 
         if( $messageCategoryId ) {
             $dql->andWhere("messageCategory.name=:messageCategoryId");
@@ -526,13 +532,11 @@ class CallLogPatientController extends PatientController {
 
         $messages = $query->getResult();
 
-        $messagesComplex = $messages['message'];
-        echo "messages count=".count($messagesComplex)."<br>";
-
-        foreach( $messagesComplex as $message ) {
-            echo "Message=".$message->getId()."<br>";
-        }
-        exit('testing');
+        //echo "messages count=".count($messagesComplex)."<br>";
+        //foreach( $messages as $message ) {
+        //    echo "Message=".$message->getMessageOidVersion()."<br>";
+        //}
+        //exit('testing');
         //////////////// find messages ////////////////
 
         $params = array(
@@ -556,24 +560,56 @@ class CallLogPatientController extends PatientController {
         $response->headers->set('Content-Type', 'application/json');
         return $response;
     }
+    //NOT USED
     public function testSelectMessagesWithMaxVersion( $patientid ) {
         $em = $this->getDoctrine()->getManager();
         $repository = $em->getRepository('OlegOrderformBundle:Message');
         $query = $repository->createQueryBuilder('s');
-        $query->select('s, MAX(s.version) AS HIDDEN max_version');
+        $query->select('s, MAX(s.version)');
         $query->leftJoin("s.patient","patient");
         $query->where('patient.id = :patient')->setParameter('patient', $patientid);
-        $query->groupBy('patient');
+        $query->groupBy('s');
+        //$query->addGroupBy('s.version');
         //$query->setMaxResults($limit);
-        $query->orderBy('max_version', 'DESC');
+        $query->orderBy('s.oid', 'ASC');
 
-        $messages = $query->getQuery()->getResult();
+        $messagesComplex = $query->getQuery()->getResult();
+        //print_r($messagesComplex);
+        echo "messagesComplex count=".count($messagesComplex)."<br>";
+
+        $messages = $messagesComplex['s'];
+        echo "messages=".$messages."<br>";
         echo "messages count=".count($messages)."<br>";
 
         foreach( $messages as $message ) {
-            echo "Message=".$message->getId()."<br>";
+            echo "Message=".$message->getMessageOidVersion()."<br>";
         }
         exit('testing');
+    }
+    //NOT USED
+    public function testSelectMessagesWithMaxVersion_OLD($patientid) {
+        $em = $this->getDoctrine()->getManager();
+
+        $query = $em->createQuery('
+            SELECT message, message.version AS HIDDEN
+            FROM OlegOrderformBundle:Message message
+            INNER JOIN message.patient patient'.
+            ' LEFT OUTER JOIN OlegOrderformBundle:Message b ON message.id = b.id AND message.version < b.version'.
+            ' WHERE patient.id = :patient
+            ORDER BY message.oid ASC'
+        )->setParameter('patient', $patientid);
+
+        echo "query=".$query->getSql()."<br>";
+
+        $messages = $query->getResult();
+
+        echo "messages count=".count($messages)."<br>";
+
+        foreach( $messages as $message ) {
+            echo "Message=".$message->getMessageOidVersion()."<br>";
+        }
+
+        exit("testing");
     }
 
 
