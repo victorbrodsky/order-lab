@@ -5590,7 +5590,7 @@ class AdminController extends Controller
 
         $types = array(
             "Patient" => array("",array("scan")),
-            "Patient Record" => array("",array("scan","calllog")),
+            "Patient Record" => array("",array("scan","calllog")), //TODEL
             "Encounter" => array("",array("scan")),
             "Procedure" => array("",array("scan")),
 
@@ -5610,7 +5610,7 @@ class AdminController extends Controller
             "VacReqRequest" => array("",array("vacreq")), //"Business/Vacation Request"
 
             "Call Log Entry" => array("",array("calllog")),
-            "Complex Patient" => array("",array("calllog")),
+            "Complex Patient" => array("",array("calllog")), //TODEL
 
 
         );

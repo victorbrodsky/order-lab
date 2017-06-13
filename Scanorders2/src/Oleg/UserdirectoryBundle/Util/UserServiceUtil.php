@@ -29,6 +29,8 @@ namespace Oleg\UserdirectoryBundle\Util;
 
 use Oleg\UserdirectoryBundle\Entity\Permission;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
+use Sinergi\BrowserDetector\Browser;
+use Sinergi\BrowserDetector\Os;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -372,13 +374,78 @@ class UserServiceUtil {
     }
 
     public function browserCheck( $asString=false ) {
+        //https://github.com/sinergi/php-browser-detector with MIT license
+        $browser = new Browser();
+        $name = $browser->getName();
+        $version = $browser->getVersion();
+
+        $os = new Os();
+        $platform = $os->getName();
+
+        $msg = "You appear to be using the <strong>outdated $name $version browser on $platform</strong>
+        and it is not able to show you this site properly.<br>
+        Please use Chrome, Firefox, Internet Explorer 9, Internet Explorer 10, Internet Explorer 11,
+        or the Edge browser instead and visit this page again.<br>
+        You can copy the URL of this page and paste it into the
+        address bar of the other browser once you switch to it.";
+
+        //Select2:
+        //        IE 8+       >8
+        //        Chrome 8+   >48
+        //        Firefox 10+ >45
+        //        Safari 3+
+        //        Opera 10.6+ >12
+        //Bootstrap: Safari on Windows not supported
+
+        if( $asString ) {
+            $browserInfo = $name . " " . $version . " on " . $platform;
+            //echo "Your browser: " . $browserInfo . "<br>";
+            return $browserInfo;
+        }
+
+        if( $name == Browser::IE ) {
+            //Bootstrap IE 8+
+            //Select2 IE 8+
+            if( $version < 9 ) {
+                return $msg;
+            }
+        }
+
+        if( $name == Browser::SAFARI ) {
+            //Bootstrap: Safari on Windows not supported
+            if( $platform == Os::WINDOWS || $platform == Os::WINDOWS_PHONE ) {
+                return $msg;
+            }
+        }
+
+        if( $name == Browser::CHROME ) {
+            if( $version < 48 ) {
+                return $msg;
+            }
+        }
+
+        if( $name == Browser::FIREFOX ) {
+            if( $version < 45 ) {
+                return $msg;
+            }
+        }
+
+        if( $name == Browser::OPERA || $name == Browser::OPERA_MINI ) {
+            if( $version < 12 ) {
+                return $msg;
+            }
+        }
+
+        return null;
+    }
+    public function browserCheck_OLD( $asString=false ) {
 
         //return null; //testing
 
-        $name = "unknown";
-        $version = "unknown";
-        $majorver = "unknown";
-        $platform = "unknown";
+//        $name = "unknown";
+//        $version = "unknown";
+//        $majorver = "unknown";
+//        $platform = "unknown";
 
         //echo $_SERVER['HTTP_USER_AGENT'] . "\n\n";
         //$browser = get_browser(null, true);

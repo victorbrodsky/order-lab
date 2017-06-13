@@ -38,7 +38,8 @@ use Oleg\UserdirectoryBundle\Entity\Logger;
 use Oleg\UserdirectoryBundle\Entity\UsernameType;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use Oleg\UserdirectoryBundle\Security\Util\UserSecurityUtil;
-
+use Sinergi\BrowserDetector\Browser;
+use Sinergi\BrowserDetector\Os;
 
 
 class UserUtil {
@@ -104,10 +105,17 @@ class UserUtil {
         $logger->setServerresponse($options['serverresponse']);
 
         ////////////// browser info //////////////
-        $browser = BrowserInfo::Instance();
-        $name = $browser->getBrowser();
+        //$browser = BrowserInfo::Instance();
+        //$name = $browser->getBrowser();
+        //$version = $browser->getVersion();
+        //$platform = $browser->getPlatform();
+        $browser = new Browser();
+        $name = $browser->getName();
         $version = $browser->getVersion();
-        $platform = $browser->getPlatform();
+
+        $os = new Os();
+        $platform = $os->getName();
+
         $browserInfo = $name . " " . $version . " on " . $platform;
         //echo "Your browser: " . $browserInfo . "<br>";
         ////////////// EOF browser info //////////////

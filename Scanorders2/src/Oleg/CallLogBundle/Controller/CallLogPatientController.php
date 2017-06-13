@@ -466,6 +466,8 @@ class CallLogPatientController extends PatientController {
         $filterform->bind($request);
 
         //////////////// find messages ////////////////
+        $this->testSelectMessagesWithMaxVersion($patientid);
+
         $queryParameters = array();
         $repository = $em->getRepository('OlegOrderformBundle:Message');
         $dql = $repository->createQueryBuilder('message');
@@ -523,7 +525,14 @@ class CallLogPatientController extends PatientController {
 //        );
 
         $messages = $query->getResult();
-        echo "messages count=".count($messages)."<br>";
+
+        $messagesComplex = $messages['message'];
+        echo "messages count=".count($messagesComplex)."<br>";
+
+        foreach( $messagesComplex as $message ) {
+            echo "Message=".$message->getId()."<br>";
+        }
+        exit('testing');
         //////////////// find messages ////////////////
 
         $params = array(
@@ -546,6 +555,25 @@ class CallLogPatientController extends PatientController {
         $response = new Response($json);
         $response->headers->set('Content-Type', 'application/json');
         return $response;
+    }
+    public function testSelectMessagesWithMaxVersion( $patientid ) {
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository('OlegOrderformBundle:Message');
+        $query = $repository->createQueryBuilder('s');
+        $query->select('s, MAX(s.version) AS HIDDEN max_version');
+        $query->leftJoin("s.patient","patient");
+        $query->where('patient.id = :patient')->setParameter('patient', $patientid);
+        $query->groupBy('patient');
+        //$query->setMaxResults($limit);
+        $query->orderBy('max_version', 'DESC');
+
+        $messages = $query->getQuery()->getResult();
+        echo "messages count=".count($messages)."<br>";
+
+        foreach( $messages as $message ) {
+            echo "Message=".$message->getId()."<br>";
+        }
+        exit('testing');
     }
 
 
