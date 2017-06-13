@@ -986,10 +986,15 @@ var matchingPatientBtnClick = function(holderId) {
     //console.log('holderId='+holderId);
     var holder = getHolder(holderId);
 
-    var patientToPopulate = getCalllogPatientToPopulate(holderId);
-    //console.log('patientToPopulate='+patientToPopulate.id);
+    var patientToPopulate = getCalllogPatientToPopulate(holderId,true); //keepOriginalPatient = true
+    console.log('patientToPopulate='+patientToPopulate.id+"; fullName="+patientToPopulate.fullName);
 
-    populatePatientInfo(patientToPopulate,false,true,holderId); //matching btn click
+    populatePatientInfo(    //matching btn click:
+        patientToPopulate,  //patient
+        false,              //showinfo
+        true,               //modify
+        holderId            //holderId
+    );
     disableAllFields(true,holderId);
 
     //show edit patient info button
@@ -1021,30 +1026,38 @@ var matchingPatientBtnClick = function(holderId) {
     calllogScrollToTop();
 }
 //
-var getCalllogPatientToPopulate = function(holderId) {
-    //console.log("original replace Calllog PatientToPopulate");
+var getCalllogPatientToPopulate = function(holderId,keepOriginalPatient) {
+    console.log("original replace Calllog PatientToPopulate");
     var holder = getHolder(holderId);
     var index = holder.find('#calllog-matching-patients-table-'+holderId).find('.active').attr('id');
-    //console.log('patient id to populate='+index);
+    console.log('patient id to populate='+index);
     //remove holderId from index
     //index = index.replace("-"+holderId, "");
     //console.log('index='+index);
 
+    if( typeof keepOriginalPatient === 'undefined' ){
+        keepOriginalPatient = false;
+    }
+
     //find patient with id from _patients array
-    var patientToPopulate = getPatientByIdFromPatients(index,_patients);
+    var patientToPopulate = getPatientByIdFromPatients(index,_patients,keepOriginalPatient);
 
     //for call_entry return master record instead of the actual clicked patient record
     var masterPatientId = patientToPopulate['masterPatientId'];
-    //console.log("Replace by masterPatientId=" + masterPatientId);
-    if( masterPatientId ) {
-        //console.log("masterPatientId=" + masterPatientId);
-        patientToPopulate = getPatientByIdFromPatients(masterPatientId,_patients);
+    console.log("Replace by masterPatientId?=" + masterPatientId);
+    if( masterPatientId && keepOriginalPatient == false ) {
+        console.log("masterPatientId=" + masterPatientId);
+        patientToPopulate = getPatientByIdFromPatients(masterPatientId,_patients,keepOriginalPatient);
     }
 
     return patientToPopulate;
 }
-function getPatientByIdFromPatients(index,patients) {
+function getPatientByIdFromPatients(index,patients,keepOriginalPatient) {
     //console.log("Start: get patients by index="+index);
+    if( typeof keepOriginalPatient === 'undefined' ){
+        keepOriginalPatient = false;
+    }
+
     for( var k in patients ) {
         if( patients.hasOwnProperty(k) ) {
             var patient = patients[k];
@@ -1146,6 +1159,9 @@ function disableSelectFieldCalllog(fieldEl,disable) {
     }
 }
 
+//patient - patient ifno
+//showinfo - force to show encounter info
+//modify - modify fields in the patient info
 function populatePatientInfo( patient, showinfo, modify, holderId, singleMatch ) {
 
     var holder = getHolder(holderId);
