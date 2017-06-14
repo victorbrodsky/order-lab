@@ -444,7 +444,7 @@ class CallLogPatientController extends PatientController {
                 if ($masterPatient->getId() != $patientid) {
                     //not master record
                     //"Previous Entries for FirstNameOfMasterRecord LastNameOfMasterRecord (DOB: DateOfBirthOfMasterRecord, MRNTypeOfMasterRecord: MRNofMasterRecord)
-                    $title = "Previous Entries for all linked patients with the master patient ".$masterPatient->obtainPatientInfoSimple();
+                    $title = "Previous entries for all patients linked with the master patient record of ".$masterPatient->obtainPatientInfoSimple();
                 }
             }
         }

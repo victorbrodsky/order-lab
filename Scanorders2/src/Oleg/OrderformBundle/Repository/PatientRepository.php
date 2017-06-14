@@ -50,11 +50,14 @@ class PatientRepository extends ArrayFieldAbstractRepository
             $key->setKeytype($newkeytypeEntity);
         }
 
-        //strip zeros and record original
-        $originalKey = $key->getField();
-        $stripedKey = ltrim($originalKey,'0');
-        $key->setField($stripedKey);
-        $key->setOriginal($originalKey);
+        ////0 should be maintained and not deleted out when the patient is registered
+        //if(0) {
+            //strip zeros and record original
+            $originalKey = $key->getField();
+            $stripedKey = ltrim($originalKey, '0');
+            $key->setField($stripedKey);
+            $key->setOriginal($originalKey);
+        //}
 
         return $entity;
     }

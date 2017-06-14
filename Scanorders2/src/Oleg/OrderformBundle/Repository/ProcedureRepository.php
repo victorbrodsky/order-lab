@@ -70,7 +70,7 @@ class ProcedureRepository extends ArrayFieldAbstractRepository
         //strip zeros and record original
         $originalKey = $key->getField();
         $key->setOriginal($originalKey);
-        $stripedKey = ltrim($originalKey,'0');
+        $stripedKey = ltrim($originalKey, '0');
         $key->setField($stripedKey);
 
         return $entity;

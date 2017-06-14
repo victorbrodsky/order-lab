@@ -1075,7 +1075,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         //TODO: If someone generated this name already (very low probability), so regenerate key field name (?)
         $entitiesFound = $this->findOneByIdJoinedToField( $institutions, $fieldValue, $className, $fieldName, $validity, false, $extra );
         //echo "Entities Found count=".count($entitiesFound)."<br>";
-        
+
         if( count($entitiesFound) == 1 ) {
             return $entitiesFound[0];
         }
@@ -1130,14 +1130,14 @@ class ArrayFieldAbstractRepository extends EntityRepository {
             $field->setExtra($extraEntity);
         }
 
-        if( $field && method_exists($field,'setOriginal') ) {
+        if ($field && method_exists($field, 'setOriginal')) {
             //strip zeros and record original
             $originalKey = $field->getField();
             $field->setOriginal($originalKey);
-            $stripedKey = ltrim($originalKey,'0');
+            $stripedKey = ltrim($originalKey, '0');
             $field->setField($stripedKey);
         }
-        
+
 //        $keyAddMethod = "add".ucfirst($fieldName);
 //        //echo "keyAddMethod=".$keyAddMethod."<br> ";
 //

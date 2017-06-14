@@ -2226,19 +2226,21 @@ class CallEntryController extends Controller
             $patient->setPatientRecordStatus($patientActiveStatus);
         }
 
-        //mrn with leading zeros
-        if( 0 && $mrn ) {
-            $mrnClean = ltrim($mrn, '0');
-            //echo "mrn: ".$mrn."?=".$mrnClean."<br>";
-            if ($mrn !== $mrnClean) {
-                //create additional valid patient MRN: "00123456" and "123456".
-                $mrnCleanObject = new PatientMrn($status,$user,$sourcesystem);
-                $mrnCleanObject->setKeytype($mrnRes->getKeytype());
-                $mrnCleanObject->setField($mrnClean);
-                $patient->addMrn($mrnCleanObject);
-                $createdWithArr[] = "Clean MRN: ".$mrnClean;
+        ////0 should be maintained and not deleted out when the patient is registered
+        //if(0) {
+            if( $mrn ) {    //mrn with leading zeros
+                $mrnClean = ltrim($mrn, '0');
+                //echo "mrn: ".$mrn."?=".$mrnClean."<br>";
+                if ($mrn !== $mrnClean) {
+                    //create additional valid patient MRN: "00123456" and "123456".
+                    $mrnCleanObject = new PatientMrn($status, $user, $sourcesystem);
+                    $mrnCleanObject->setKeytype($mrnRes->getKeytype());
+                    $mrnCleanObject->setField($mrnClean);
+                    $patient->addMrn($mrnCleanObject);
+                    $createdWithArr[] = "Clean MRN: " . $mrnClean;
+                }
             }
-        }
+        //}
 
         //$patient->addDob( new PatientDob($status,$user,$sourcesystem) );
         if( $dob ) {
