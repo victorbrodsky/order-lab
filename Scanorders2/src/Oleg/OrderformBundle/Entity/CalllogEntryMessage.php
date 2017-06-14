@@ -71,6 +71,76 @@ class CalllogEntryMessage extends OrderBase {
 //     */
 //    private $entityName;
 
+    //Within each message object, add the following variables for backup
+    /**
+     * Patient Last Name Backup
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $patientLastNameBackup;
+
+    /**
+     * Patient First Name Backup
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $patientFirstNameBackup;
+
+    /**
+     * Patient Middle Name Backup
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $patientMiddleNameBackup;
+
+    /**
+     * Patient Date of Birth Backup
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $patientDOBBackup;
+
+    /**
+     * Patient MRN Type Backup
+     * @ORM\ManyToOne(targetEntity="MrnType", cascade={"persist"})
+     */
+    private $patientMRNTypeBackup;
+
+    /**
+     * Patient MRN Backup
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $patientMRNBackup;
+
+    /**
+     * Encounter Number Type Backup
+     * @ORM\ManyToOne(targetEntity="EncounterType", cascade={"persist"})
+     */
+    private $encounterEncounterTypeBackup;
+
+    /**
+     * Encounter Number Backup
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $encounterEncounterNumberBackup;
+
+    /**
+     * Encounter Date Backup
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $encounterDateBackup;
+
+//    /**
+//     * Message Type Backup
+//     * @ORM\ManyToOne(targetEntity="MessageCategory", cascade={"persist"})
+//     */
+//    private $messageCategoryBackup;
+//
+//    /**
+//     * Message Version Backup
+//     * @ORM\Column(type="integer", nullable=true)
+//     */
+//    private $messageVersionBackup;
+
+    //Form Type Backup
+
+    //Form Version Backup
 
 
 
