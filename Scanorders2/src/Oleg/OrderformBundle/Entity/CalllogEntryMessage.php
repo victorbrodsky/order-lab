@@ -126,20 +126,18 @@ class CalllogEntryMessage extends OrderBase {
      */
     private $encounterDateBackup;
 
+    //All Message related fields are already exists in Message objects
 //    /**
 //     * Message Type Backup
 //     * @ORM\ManyToOne(targetEntity="MessageCategory", cascade={"persist"})
 //     */
 //    private $messageCategoryBackup;
-//
 //    /**
 //     * Message Version Backup
 //     * @ORM\Column(type="integer", nullable=true)
 //     */
 //    private $messageVersionBackup;
-
     //Form Type Backup
-
     //Form Version Backup
 
 
