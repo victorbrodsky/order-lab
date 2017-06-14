@@ -745,8 +745,8 @@ class ApproverController extends Controller
                 $submitterRole = new Roles();
                 $submitterRole = $userSecUtil->setDefaultList($submitterRole, null, $user, $roleName);
                 $submitterRole->setLevel(30);
-                $submitterRole->setAlias('Vacation Request Approver for the ' . $institution->getName());
-                $submitterRole->setDescription('Can search and approve vacation requests for specified service');
+                $submitterRole->setAlias('Vacation Request Submitter for the ' . $institution->getName());
+                $submitterRole->setDescription('Can search and create vacation requests for specified service');
                 $submitterRole->addSite($site);
                 $submitterRole->setInstitution($institution);
                 $userSecUtil->checkAndAddPermissionToRole($submitterRole, "Submit a Vacation Request", "VacReqRequest", "create");
