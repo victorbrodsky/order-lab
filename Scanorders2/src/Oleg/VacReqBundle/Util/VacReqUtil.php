@@ -2364,6 +2364,7 @@ class VacReqUtil
                 $roles = $this->em->getRepository('OlegUserdirectoryBundle:User')->
                     findUserRolesBySitePermissionObjectAction($user,'vacreq',$objectStr,$actionStr);
             }
+            //echo "0 role count=".count($roles)."<br>";
             //second try to get group. This is the case for changestatus-carryover action
             if( count($roles)==0 && $actionStr == "changestatus-carryover" ) {
                 //echo "second try 4<br>";
@@ -2372,6 +2373,7 @@ class VacReqUtil
                 $childActionStr = "create";
                 $roles = $this->em->getRepository('OlegUserdirectoryBundle:User')->
                     findUserParentRolesBySitePermissionObjectAction($user,'vacreq',$objectStr,$actionStr,$childObjectStr,$childActionStr);
+                echo "1 role count=".count($roles)."<br>"; //testing this role count is 1 for wcmc pathology
 
                 if( count($roles)==0 ) {
                     //echo "another try 5 for view-away-calendar action for role ROLE_VACREQ_OBSERVER_WCMC_PATHOLOGY<br>";
@@ -2379,6 +2381,7 @@ class VacReqUtil
                     $roles = $this->em->getRepository('OlegUserdirectoryBundle:User')->
                     findUserParentRolesBySitePermissionObjectAction($user,'vacreq',$objectStr,$actionStr,$childObjectStr,$childActionStr);
                 }
+                //echo "2 role count=".count($roles)."<br>";
             }
 
             //echo "role count=".count($roles)."<br>";

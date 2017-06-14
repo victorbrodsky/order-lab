@@ -1307,9 +1307,12 @@ class RequestController extends Controller
         $tentativeInstitutions = $vacreqUtil->addRequestInstitutionToOrgGroup( $entity, $tentativeInstitutions, "tentativeInstitution" );
 
         //TODO: test tentativeInstitutions
-//        foreach( $tentativeInstitutions as $tentativeInstitution ) {
-//            echo "tentativeInstitution=".$tentativeInstitution."<br>";
-//        }
+        foreach( $tentativeInstitutions as $tentativeInstitution ) {
+            echo "tentativeInstitution=".$tentativeInstitution."<br>";
+        }
+        foreach( $organizationalInstitutions as $orginstitution ) {
+            echo "orginstitution=".$orginstitution."<br>";
+        }
         //exit('1');
 
         if( count($organizationalInstitutions) == 0 ) {
