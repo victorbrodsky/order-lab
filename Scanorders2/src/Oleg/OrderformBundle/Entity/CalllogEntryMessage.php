@@ -112,17 +112,17 @@ class CalllogEntryMessage extends OrderBase {
      * Encounter Number Type Backup
      * @ORM\ManyToOne(targetEntity="EncounterType", cascade={"persist"})
      */
-    private $encounterEncounterTypeBackup;
+    private $encounterTypeBackup;
 
     /**
      * Encounter Number Backup
      * @ORM\Column(type="string", nullable=true)
      */
-    private $encounterEncounterNumberBackup;
+    private $encounterNumberBackup;
 
     /**
      * Encounter Date Backup
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\OneToOne(targetEntity="EncounterDate", cascade={"persist","remove"})
      */
     private $encounterDateBackup;
 
@@ -182,6 +182,152 @@ class CalllogEntryMessage extends OrderBase {
     {
         return $this->patientLists;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getPatientLastNameBackup()
+    {
+        return $this->patientLastNameBackup;
+    }
+
+    /**
+     * @param mixed $patientLastNameBackup
+     */
+    public function setPatientLastNameBackup($patientLastNameBackup)
+    {
+        $this->patientLastNameBackup = $patientLastNameBackup;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPatientFirstNameBackup()
+    {
+        return $this->patientFirstNameBackup;
+    }
+
+    /**
+     * @param mixed $patientFirstNameBackup
+     */
+    public function setPatientFirstNameBackup($patientFirstNameBackup)
+    {
+        $this->patientFirstNameBackup = $patientFirstNameBackup;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPatientMiddleNameBackup()
+    {
+        return $this->patientMiddleNameBackup;
+    }
+
+    /**
+     * @param mixed $patientMiddleNameBackup
+     */
+    public function setPatientMiddleNameBackup($patientMiddleNameBackup)
+    {
+        $this->patientMiddleNameBackup = $patientMiddleNameBackup;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPatientDOBBackup()
+    {
+        return $this->patientDOBBackup;
+    }
+
+    /**
+     * @param mixed $patientDOBBackup
+     */
+    public function setPatientDOBBackup($patientDOBBackup)
+    {
+        $this->patientDOBBackup = $patientDOBBackup;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPatientMRNTypeBackup()
+    {
+        return $this->patientMRNTypeBackup;
+    }
+
+    /**
+     * @param mixed $patientMRNTypeBackup
+     */
+    public function setPatientMRNTypeBackup(MrnType $patientMRNTypeBackup)
+    {
+        $this->patientMRNTypeBackup = $patientMRNTypeBackup;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPatientMRNBackup()
+    {
+        return $this->patientMRNBackup;
+    }
+
+    /**
+     * @param mixed $patientMRNBackup
+     */
+    public function setPatientMRNBackup($patientMRNBackup)
+    {
+        $this->patientMRNBackup = $patientMRNBackup;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEncounterTypeBackup()
+    {
+        return $this->encounterTypeBackup;
+    }
+
+    /**
+     * @param mixed $encounterTypeBackup
+     */
+    public function setEncounterTypeBackup(EncounterType $encounterTypeBackup)
+    {
+        $this->encounterTypeBackup = $encounterTypeBackup;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEncounterNumberBackup()
+    {
+        return $this->encounterNumberBackup;
+    }
+
+    /**
+     * @param mixed $encounterNumberBackup
+     */
+    public function setEncounterNumberBackup($encounterNumberBackup)
+    {
+        $this->encounterNumberBackup = $encounterNumberBackup;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEncounterDateBackup()
+    {
+        return $this->encounterDateBackup;
+    }
+
+    /**
+     * @param mixed $encounterDateBackup
+     */
+    public function setEncounterDateBackup($encounterDateBackup)
+    {
+        $this->encounterDateBackup = $encounterDateBackup;
+    }
+
+
 
 
 

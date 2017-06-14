@@ -1937,4 +1937,87 @@ class CallLogUtil
         return $url;
     }
 
+
+    public function copyEncounterBackupToMessage( $message, $encounter ) {
+
+        $calllogEntryMessage = $message->getCalllogEntryMessage();
+        if( !$calllogEntryMessage ) {
+            return;
+        }
+
+        $key = $encounter->obtainAllKeyfield()->first();
+
+        if( $key ) {
+            //Encounter Number Type Backup
+            $keytype = $key->getKeytype();
+            if( $keytype ) {
+                $calllogEntryMessage->setEncounterTypeBackup($keytype);
+            }
+
+            //Encounter Number Backup
+            $number = $key->getField();
+            if( $number ) {
+                $calllogEntryMessage->setEncounterNumberBackup($number);
+            }
+        }
+
+        //Encounter Date Backup
+        $date = $encounter->getDate()->first();
+        if( $date ) {
+            $calllogEntryMessage->setEncounterDateBackup($date);
+        }
+    }
+
+    public function copyPatientBackupToMessage( $message, $patient ) {
+        if( !$patient ) {
+            return;
+        }
+
+        $calllogEntryMessage = $message->getCalllogEntryMessage();
+        if( !$calllogEntryMessage ) {
+            return;
+        }
+
+        $status = 'valid';
+
+        //Patient Last Name Backup
+        $lastName = $patient->obtainStatusField('lastname', $status);
+        if( $lastName ) {
+            $calllogEntryMessage->setPatientLastNameBackup($lastName);
+        }
+
+        //Patient First Name Backup
+        $firstName = $patient->obtainStatusField('firstname', $status);
+        if( $firstName ) {
+            $calllogEntryMessage->setPatientFirstNameBackup($firstName);
+        }
+
+        //Patient Middle Name Backup
+        $middleName = $patient->obtainStatusField('middlename', $status);
+        if( $middleName ) {
+            $calllogEntryMessage->setPatientMiddleNameBackup($middleName);
+        }
+
+        //Patient Date of Birth Backup
+        $dob = $patient->obtainStatusField('dob', $status);
+        if( $dob && $dob->getField() ) {
+            $calllogEntryMessage->setPatientDOBBackup($dob->getField());
+        }
+
+        $mrnRes = $patient->obtainStatusField('mrn', $status);
+        if( $mrnRes ) {
+            //Patient MRN Type Backup
+            $mrntype = $mrnRes->getKeytype();
+            if( $mrntype ) {
+                $calllogEntryMessage->setPatientMRNTypeBackup($mrntype);
+            }
+
+            //Patient MRN Backup
+            $mrn = $mrnRes->getField();
+            if( $mrn ) {
+                $calllogEntryMessage->setPatientMRNBackup($mrn);
+            }
+        }
+
+    }
 }

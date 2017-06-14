@@ -1074,6 +1074,9 @@ class CallEntryController extends Controller
                 $calllogUtil->processReferringProviders($newEncounter,$system);
                 ////////////// EOF processing new encounter ///////////////////
 
+                //backup encounter to message
+                $calllogUtil->copyEncounterBackupToMessage($message,$newEncounter);
+
                 //clear encounter
                 $message->clearEncounter();
                 //add encounter to the message
@@ -1132,7 +1135,7 @@ class CallEntryController extends Controller
                 if( $existingPatientDB ) {
 
                     //CASE 1
-                    echo "case 1: patient exists: create a new encounter to DB and add it to the existing patient <br>";
+                    echo "case 1: patient exists in this Call Entry form: create a new encounter to DB and add it to the existing patient <br>";
                     //get a new encounter without id $newEncounter
     //                foreach( $encounter->getReferringProviders() as $referringProvider ) {
     //                    echo "encounter referringProvider phone=".$referringProvider->getReferringProviderPhone()."<br>";
@@ -1141,6 +1144,9 @@ class CallEntryController extends Controller
                     $patient = $em->getRepository('OlegOrderformBundle:Patient')->find($patient->getId());
                     $message->clearPatient();
                     $message->addPatient($patient);
+
+                    //backup patient to message
+                    $calllogUtil->copyPatientBackupToMessage($message,$patient);
 
                     /////////// processing new encounter ///////////
                     //reset institution from the patient
@@ -1192,7 +1198,7 @@ class CallEntryController extends Controller
 
                 } else {
                     //CASE 2
-                    echo "case 2: patient does not exists: create a new encounter to DB <br>";
+                    echo "case 2: patient does not exists in this Call Entry form: create a new encounter to DB <br>";
                     //oleg_calllogbundle_patienttype[encounter][0][referringProviders][0][referringProviderPhone]
 
                     $newEncounter->setPatient(null);
