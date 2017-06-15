@@ -176,6 +176,7 @@ class ScanListController extends ListController
      * @Route("/message-statuses/", name="messagestatuses-list")
      * @Route("/encounter-info-types/", name="encounterinfotypes-list")
      * @Route("/suggested-message-categories/", name="suggestedmessagecategorys-list")
+     * @Route("/calllog-entry-tags/", name="calllogentrytags-list")
      *
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:index.html.twig")
@@ -236,6 +237,7 @@ class ScanListController extends ListController
      * @Route("/message-statuses/", name="messagestatuses_create")
      * @Route("/encounter-info-types/", name="encounterinfotypes_create")
      * @Route("/suggested-message-categories/", name="suggestedmessagecategorys_create")
+     * @Route("/calllog-entry-tags/", name="calllogentrytags_create")
      *
      * @Method("POST")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
@@ -296,6 +298,7 @@ class ScanListController extends ListController
      * @Route("/message-statuses/new", name="messagestatuses_new")
      * @Route("/encounter-info-types/new", name="encounterinfotypes_new")
      * @Route("/suggested-message-categories/", name="suggestedmessagecategorys_new")
+     * @Route("/calllog-entry-tags/", name="calllogentrytags_new")
      *
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:new.html.twig")
@@ -356,6 +359,7 @@ class ScanListController extends ListController
      * @Route("/message-statuses/{id}", name="messagestatuses_show")
      * @Route("/encounter-info-types/{id}", name="encounterinfotypes_show")
      * @Route("/suggested-message-categories/{id}", name="suggestedmessagecategorys_show")
+     * @Route("/calllog-entry-tags/{id}", name="calllogentrytags_show")
      *
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:show.html.twig")
@@ -416,6 +420,7 @@ class ScanListController extends ListController
      * @Route("/message-statuses/{id}/edit", name="messagestatuses_edit")
      * @Route("/encounter-info-types/{id}/edit", name="encounterinfotypes_edit")
      * @Route("/suggested-message-categories/{id}/edit", name="suggestedmessagecategorys_edit")
+     * @Route("/calllog-entry-tags/{id}/edit", name="calllogentrytags_edit")
      *
      * @Method("GET")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
@@ -476,6 +481,7 @@ class ScanListController extends ListController
      * @Route("/message-statuses/{id}", name="messagestatuses_update")
      * @Route("/encounter-info-types/{id}", name="encounterinfotypes_update")
      * @Route("/suggested-message-categories/{id}", name="suggestedmessagecategorys_update")
+     * @Route("/calllog-entry-tags/{id}", name="calllogentrytags_update")
      *
      * @Method("PUT")
      * @Template("OlegOrderformBundle:ListForm:edit.html.twig")
@@ -677,6 +683,10 @@ class ScanListController extends ListController
             $className = "SuggestedMessageCategoriesList";
             $displayName = "Suggested Message Categories List";
             break;
+        case "calllogentrytags":
+            $className = "CalllogEntryTagsList";
+            $displayName = "Call Log Entry Tags List";
+            break;
 
 
         default:
@@ -744,6 +754,7 @@ class ScanListController extends ListController
      * @Route("/message-statuses/{id}", name="messagestatuses_delete")
      * @Route("/encounter-info-types/{id}", name="encounterinfotypes_delete")
      * @Route("/suggested-message-categories/{id}", name="suggestedmessagecategorys_delete")
+     * @Route("/calllog-entry-tags/{id}", name="calllogentrytags_delete")
      *
      *
      *

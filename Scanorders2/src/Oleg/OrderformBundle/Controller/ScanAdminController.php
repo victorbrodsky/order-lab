@@ -23,6 +23,7 @@ namespace Oleg\OrderformBundle\Controller;
 
 
 use Oleg\OrderformBundle\Entity\AmendmentReasonList;
+use Oleg\OrderformBundle\Entity\CalllogEntryTagsList;
 use Oleg\OrderformBundle\Entity\CourseGroupType;
 use Oleg\OrderformBundle\Entity\DiseaseOriginList;
 use Oleg\OrderformBundle\Entity\DiseaseTypeList;
@@ -187,6 +188,7 @@ class ScanAdminController extends AdminController
         $count_generateEncounterStatus = $this->generateEncounterStatus();
         $count_generatePatientRecordStatus = $this->generatePatientRecordStatus();
         $count_generateMessageStatus = $this->generateMessageStatus();
+        $count_generateCalllogEntryTagsList = $this->generateCalllogEntryTagsList();
 
         $this->get('session')->getFlashBag()->add(
             'notice',
@@ -225,6 +227,7 @@ class ScanAdminController extends AdminController
             'EncounterStatus='.$count_generateEncounterStatus.', '.
             'PatientRecordStatus='.$count_generatePatientRecordStatus.', '.
             'MessageStatus='.$count_generateMessageStatus.', '.
+            'CalllogEntryTagsList='.$count_generateCalllogEntryTagsList.', '.
 
             ' (Note: -1 means that this table is already exists)'
         );
@@ -2114,6 +2117,39 @@ class ScanAdminController extends AdminController
             }
 
             $entity = new MessageStatusList();
+            $this->setDefaultList($entity,$count,$username,$name);
+
+            $em->persist($entity);
+            $em->flush();
+
+            $count = $count + 10;
+
+        } //foreach
+
+        return round($count/10);
+
+    }
+
+    public function generateCalllogEntryTagsList() {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $elements = array(
+            "Sign out issue",
+            "Educational"
+        );
+
+        $username = $this->get('security.context')->getToken()->getUser();
+
+        $count = 10;
+        foreach( $elements as $name ) {
+
+            $entity = $em->getRepository('OlegOrderformBundle:CalllogEntryTagsList')->findOneByName($name);
+            if( $entity ) {
+                continue;
+            }
+
+            $entity = new CalllogEntryTagsList();
             $this->setDefaultList($entity,$count,$username,$name);
 
             $em->persist($entity);

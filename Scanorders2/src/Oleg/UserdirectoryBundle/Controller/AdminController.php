@@ -6166,6 +6166,7 @@ class AdminController extends Controller
             "1060" => array('LifeFormList','lifeforms-list','Life Form'),
             "1070" => array('PositionTrackTypeList','positiontracktypes-list','Position Track Type List'),
             "1080" => array('SuggestedMessageCategoriesList','suggestedmessagecategorys-list','Suggested Message Categories List'),
+            "1090" => array('CalllogEntryTagsList','calllogentrytags-list','Call Log Entry Tags List'),
             //"1050" => array('','-list'),
 
         );
