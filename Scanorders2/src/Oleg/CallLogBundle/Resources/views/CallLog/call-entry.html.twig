@@ -36,6 +36,13 @@
 
     <br>
 
+    {% set timeSpentMinutes = calllog_util.getTotalTimeSpentMinutes() %}
+    {% if timeSpentMinutes %}
+        <p>{{ timeSpentMinutes|raw }}</p>
+    {% endif %}
+
+    <br>
+
     {% if formnodetrigger is not defined %}
         {% set formnodetrigger = 1 %}
     {% endif %}
@@ -165,6 +172,8 @@
 
                     {#Patient List    #}
                     {{ calllogmacros.calllogPatientList(form,cycle) }}
+
+                    {{ calllogmacros.calllogEntryTags(form,cycle) }}
 
                     <div id="form-node-holder"></div>
                     {# EOF Entry #}

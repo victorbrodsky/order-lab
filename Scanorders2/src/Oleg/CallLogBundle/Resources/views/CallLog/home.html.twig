@@ -41,15 +41,18 @@
         {#basic search#}
         <div class="row">
 
-            <div class="col-xs-2" align="left">
+            <div class="col-xs-1" align="left">
                 {#{{ calllogmacros.singleDateField('','Start Date') }}#}
                 {{ formmacros.fielddate(filterform.startDate,'regular-datepicker') }}
                 {#{{ form_row(filterform.startDate, {'attr': {'placeholder': 'Start Date'}}) }}#}
             </div>
-            <div class="col-xs-2" align="left">
+            <div class="col-xs-1" align="left">
                 {#{{ calllogmacros.singleDateField('','End Date') }}#}
                 {{ formmacros.fielddate(filterform.endDate,'regular-datepicker') }}
                 {#{{ form_row(filterform.endDate, {'attr': {'placeholder': 'End Date'}}) }}#}
+            </div>
+            <div class="col-xs-2" align="left">
+                {{ form_widget(filterform.entryTags) }}
             </div>
             <div class="col-xs-3" align="left">
                 {{ form_widget(filterform.messageCategory) }}

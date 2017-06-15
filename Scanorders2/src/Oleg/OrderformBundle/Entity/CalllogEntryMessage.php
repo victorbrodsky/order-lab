@@ -52,6 +52,18 @@ class CalllogEntryMessage extends OrderBase {
      **/
     private $patientLists;
 
+    /**
+     * Call Log Entry Tags
+     * @ORM\ManyToMany(targetEntity="CalllogEntryTagsList", inversedBy="calllogEntryMessages" )
+     * @ORM\JoinTable(name="scan_calllogEntryMessage_entryTag")
+     **/
+    private $entryTags;
+
+    /**
+     * Amount of Time Spent in Minutes
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $timeSpentMinutes;
 
 //    /**
 //     * Linked Object ID. Used to make a link to other lists in the list manager.
@@ -145,6 +157,8 @@ class CalllogEntryMessage extends OrderBase {
     public function __construct() {
 
         $this->patientLists = new ArrayCollection();
+        $this->entryTags = new ArrayCollection();
+
 
     }
 
@@ -182,6 +196,23 @@ class CalllogEntryMessage extends OrderBase {
     {
         return $this->patientLists;
     }
+
+    public function addEntryTag($item)
+    {
+        if( $item && !$this->entryTags->contains($item) ) {
+            $this->entryTags->add($item);
+        }
+        return $this;
+    }
+    public function removeEntryTag($item)
+    {
+        $this->entryTags->removeElement($item);
+    }
+    public function getEntryTags()
+    {
+        return $this->entryTags;
+    }
+
 
     /**
      * @return mixed
@@ -325,6 +356,22 @@ class CalllogEntryMessage extends OrderBase {
     public function setEncounterDateBackup($encounterDateBackup)
     {
         $this->encounterDateBackup = $encounterDateBackup;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTimeSpentMinutes()
+    {
+        return $this->timeSpentMinutes;
+    }
+
+    /**
+     * @param mixed $timeSpentMinutes
+     */
+    public function setTimeSpentMinutes($timeSpentMinutes)
+    {
+        $this->timeSpentMinutes = $timeSpentMinutes;
     }
 
 

@@ -296,6 +296,7 @@ class CallEntryController extends Controller
         $specialtyFilter = $filterform['referringProviderSpecialty']->getData();
         $patientListTitleFilter = $filterform['patientListTitle']->getData();
         $attendingFilter = $filterform['attending']->getData();
+        $entryTags = $filterform['entryTags']->getData();
 
         if( !$searchFilter ) {
             $searchFilter = $filterform['search']->getData();
@@ -337,6 +338,7 @@ class CallEntryController extends Controller
         $dql->leftJoin("patient.mrn","mrn");
         $dql->leftJoin("patient.lastname","lastname");
         $dql->leftJoin("message.encounter","encounter");
+        $dql->leftJoin("message.calllogEntryMessage","calllogEntryMessage");
 
         $dql->leftJoin("encounter.referringProviders","referringProviders");
         $dql->leftJoin("referringProviders.field","referringProviderWrapper");
@@ -389,6 +391,17 @@ class CallEntryController extends Controller
             //echo "endDate=" . $endDate->format('Y-m-d') . "<br>";
             $dql->andWhere('message.orderdate <= :endDate');
             $queryParameters['endDate'] = $endDate->format('Y-m-d H:i:s');
+        }
+
+        if( $entryTags ) {
+            $entryTagsArr = array();
+            foreach( $entryTags as $entryTag ) {
+                //echo "entryTag=".$entryTag->getId()."<br>";
+                $entryTagsArr[] = $entryTag->getId();
+            }
+            $dql->leftJoin("calllogEntryMessage.entryTags","entryTags");
+            $dql->andWhere("entryTags.id IN (:entryTags)");
+            $queryParameters['entryTags'] = implode(",",$entryTagsArr);
         }
 
         if( $messageCategoryEntity ) {
@@ -537,7 +550,6 @@ class CallEntryController extends Controller
 
         //patientListTitle: Selecting the list should filter the shown entries/messages to only those that belong to patients currently on this list.
         if( $patientListTitleFilter ) {
-            $dql->leftJoin("message.calllogEntryMessage","calllogEntryMessage");
             $dql->leftJoin("calllogEntryMessage.patientLists","patientList");
             //show message if the message's patient has been removed from the patient list (disabled)?
             $patientListEntityStr = "patientList=:patientList";

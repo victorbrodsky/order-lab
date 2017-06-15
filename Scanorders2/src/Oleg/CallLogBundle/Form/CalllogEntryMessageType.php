@@ -96,6 +96,23 @@ class CalllogEntryMessageType extends AbstractType
             //exit();
         });
 
+
+        $builder->add('entryTags', null, array(
+            //'class' => 'OlegOrderformBundle:CalllogEntryTagsList',
+            'label' => "Call Log Entry Tag(s):",
+            'required' => false,
+            'multiple' => true,
+            //'data' => $this->params['mrntype'],
+            'attr' => array('class' => 'combobox', 'placeholder' => "Call Log Entry Tag(s)"),
+        ));
+
+        $builder->add('timeSpentMinutes', null, array(
+            'label' => "Amount of Time Spent in Minutes:",
+            'required' => false,
+            //'data' => $this->params['mrntype'],
+            'attr' => array('class' => 'form-control'),
+        ));
+
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -159,128 +176,128 @@ class CalllogEntryMessageType extends AbstractType
 
 
     //BELOW NOT USED
-    public function addFormNodes( $form, $formHolder, $params ) {
-
-        if( !$formHolder ) {
-            return $form;
-        }
-
-        $rootFormNode = $formHolder->getFormNode();
-        if( !$rootFormNode ) {
-            return $form;
-        }
-
-        $form = $this->addFormNodeRecursively($form,$rootFormNode,$params);
-
-        return $form;
-    }
-
-
-    public function addFormNodeRecursively( $form, $formNode, $params ) {
-
-        //echo "formNode=".$formNode."<br>";
-        $children = $formNode->getChildren();
-        if( $children ) {
-
-            foreach( $children as $childFormNode ) {
-                $this->addFormNodeByType($form,$childFormNode,$params);
-                $this->addFormNodeRecursively($form,$childFormNode,$params);
-            }
-
-        } else {
-            $this->addFormNodeByType($form,$formNode,$params);
-        }
-
-    }
-
-    public function addFormNodeByType( $form, $formNode, $params ) {
-
-        $formNodeType = $formNode->getObjectType()."";
-        //echo "formNodeType=".$formNodeType."<br>";
-
-        if( $formNodeType == "Form" ) {
-            echo "added Form <br>";
-            $form->add('formFormNode',null,array(
-                'label' => $formNode->getName()."",
-                'mapped' => false
-            ));
-        }
-
-        if( $formNodeType == "Form Section" ) {
-            echo "added Section <br>";
-            $form->add('sectionFormNode',null,array(
-                'label' => $formNode->getName()."",
-                'mapped' => false
-            ));
-        }
-
-        if( $formNodeType == "Form Field - Free Text" ) {
-            echo "added text <br>";
-            $form->add('formNode','text',array(
-                'label' => $formNode->getName()."",
-                'mapped' => false,
-                'attr' => array('class' => 'form-control textarea')
-            ));
-        }
-
-    }
-
-    //DO NOT USED
-    public function processPatientList_PRE_SUBMIT( $patientListsArr ) {
-
-        $newPatientListsIds = array();
-        $newPatientListsStr = array();
-        foreach( $patientListsArr as $patientList ) {
-            //echo "ID=".$patientList->getId().": patientList=".$patientList."<br>";
-            if (strval($patientList) != strval(intval($patientList))) {
-                //echo "string <br>";
-                $newPatientListsStr[] = $patientList;
-            } else {
-                //echo "integer <br>";
-                $newPatientListsIds[] = $patientList;
-            }
-        }
-
-        //get level, org group, parent from the first element
-        $level = null;
-        $orgGroupType = null;
-        $parent = null;
-        if (count($newPatientListsIds) > 0) {
-            $firstPatientListId = $newPatientListsIds[0];
-            $firstPatientList = $this->params['em']->getRepository('OlegOrderformBundle:PatientListHierarchy')->find($firstPatientListId);
-            if ($firstPatientList) {
-                $level = $firstPatientList->getLevel();
-                $orgGroupType = $firstPatientList->getOrganizationalGroupType();
-                $parent = $firstPatientList->getParent();
-            }
-        }
-
-        if ($level || $orgGroupType || $parent) {
-            $userSecUtil = $this->params['container']->get('user_security_utility');
-            foreach ($newPatientListsStr as $newPatientListStr) {
-                $newPatientList = $userSecUtil->getObjectByNameTransformer($this->params['user'], $newPatientListStr, 'OrderformBundle', 'PatientListHierarchy');
-                if ($newPatientList) {
-                    if ($level) {
-                        $newPatientList->setLevel($level);
-                    }
-                    if ($orgGroupType) {
-                        $newPatientList->setOrganizationalGroupType($orgGroupType);
-                    }
-                    if ($parent) {
-                        $parent->addChild($newPatientList);
-                    }
-
-                    $this->params['em']->persist($newPatientList);
-                    $this->params['em']->flush($newPatientList);
-
-                    if ($newPatientList->getId()) {
-                        $newPatientListsIds[] = $newPatientList->getId();
-                    }
-                }
-            }
-        }
-
-        return $newPatientListsIds;
-    }
+//    public function addFormNodes( $form, $formHolder, $params ) {
+//
+//        if( !$formHolder ) {
+//            return $form;
+//        }
+//
+//        $rootFormNode = $formHolder->getFormNode();
+//        if( !$rootFormNode ) {
+//            return $form;
+//        }
+//
+//        $form = $this->addFormNodeRecursively($form,$rootFormNode,$params);
+//
+//        return $form;
+//    }
+//
+//
+//    public function addFormNodeRecursively( $form, $formNode, $params ) {
+//
+//        //echo "formNode=".$formNode."<br>";
+//        $children = $formNode->getChildren();
+//        if( $children ) {
+//
+//            foreach( $children as $childFormNode ) {
+//                $this->addFormNodeByType($form,$childFormNode,$params);
+//                $this->addFormNodeRecursively($form,$childFormNode,$params);
+//            }
+//
+//        } else {
+//            $this->addFormNodeByType($form,$formNode,$params);
+//        }
+//
+//    }
+//
+//    public function addFormNodeByType( $form, $formNode, $params ) {
+//
+//        $formNodeType = $formNode->getObjectType()."";
+//        //echo "formNodeType=".$formNodeType."<br>";
+//
+//        if( $formNodeType == "Form" ) {
+//            echo "added Form <br>";
+//            $form->add('formFormNode',null,array(
+//                'label' => $formNode->getName()."",
+//                'mapped' => false
+//            ));
+//        }
+//
+//        if( $formNodeType == "Form Section" ) {
+//            echo "added Section <br>";
+//            $form->add('sectionFormNode',null,array(
+//                'label' => $formNode->getName()."",
+//                'mapped' => false
+//            ));
+//        }
+//
+//        if( $formNodeType == "Form Field - Free Text" ) {
+//            echo "added text <br>";
+//            $form->add('formNode','text',array(
+//                'label' => $formNode->getName()."",
+//                'mapped' => false,
+//                'attr' => array('class' => 'form-control textarea')
+//            ));
+//        }
+//
+//    }
+//
+//    //DO NOT USED
+//    public function processPatientList_PRE_SUBMIT( $patientListsArr ) {
+//
+//        $newPatientListsIds = array();
+//        $newPatientListsStr = array();
+//        foreach( $patientListsArr as $patientList ) {
+//            //echo "ID=".$patientList->getId().": patientList=".$patientList."<br>";
+//            if (strval($patientList) != strval(intval($patientList))) {
+//                //echo "string <br>";
+//                $newPatientListsStr[] = $patientList;
+//            } else {
+//                //echo "integer <br>";
+//                $newPatientListsIds[] = $patientList;
+//            }
+//        }
+//
+//        //get level, org group, parent from the first element
+//        $level = null;
+//        $orgGroupType = null;
+//        $parent = null;
+//        if (count($newPatientListsIds) > 0) {
+//            $firstPatientListId = $newPatientListsIds[0];
+//            $firstPatientList = $this->params['em']->getRepository('OlegOrderformBundle:PatientListHierarchy')->find($firstPatientListId);
+//            if ($firstPatientList) {
+//                $level = $firstPatientList->getLevel();
+//                $orgGroupType = $firstPatientList->getOrganizationalGroupType();
+//                $parent = $firstPatientList->getParent();
+//            }
+//        }
+//
+//        if ($level || $orgGroupType || $parent) {
+//            $userSecUtil = $this->params['container']->get('user_security_utility');
+//            foreach ($newPatientListsStr as $newPatientListStr) {
+//                $newPatientList = $userSecUtil->getObjectByNameTransformer($this->params['user'], $newPatientListStr, 'OrderformBundle', 'PatientListHierarchy');
+//                if ($newPatientList) {
+//                    if ($level) {
+//                        $newPatientList->setLevel($level);
+//                    }
+//                    if ($orgGroupType) {
+//                        $newPatientList->setOrganizationalGroupType($orgGroupType);
+//                    }
+//                    if ($parent) {
+//                        $parent->addChild($newPatientList);
+//                    }
+//
+//                    $this->params['em']->persist($newPatientList);
+//                    $this->params['em']->flush($newPatientList);
+//
+//                    if ($newPatientList->getId()) {
+//                        $newPatientListsIds[] = $newPatientList->getId();
+//                    }
+//                }
+//            }
+//        }
+//
+//        return $newPatientListsIds;
+//    }
 
 }

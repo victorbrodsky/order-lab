@@ -51,6 +51,14 @@ class CalllogFilterType extends AbstractType
             'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'End Date'), //'title'=>'End Year', 'data-toggle'=>'tooltip',
         ));
 
+        $builder->add('entryTags', 'entity', array(
+            'class' => 'OlegOrderformBundle:CalllogEntryTagsList',
+            'label' => false,
+            'required' => false,
+            'multiple' => true,
+            'attr' => array('class' => 'combobox', 'placeholder' => "Entry Tag"),
+        ));
+
         //echo "def=".$this->params['messageCategoryDefault']."<br>";
         //print_r($this->params['messageCategories']);
         $builder->add('messageCategory', 'choice', array(

@@ -2020,4 +2020,111 @@ class CallLogUtil
         }
 
     }
+
+    public function getTotalTimeSpentMinutes( $user=null ) {
+        if( !$user ) {
+            $user = $this->sc->getToken()->getUser();
+        }
+
+        $msg = null;
+
+        $monday = strtotime( 'monday this week' );
+        $sunday = strtotime( 'sunday this week' );
+        //echo "strtotime( 'monday this week' )=".$monday."<br>";
+
+        $mondayStr = date( 'm/d/Y', $monday );
+        $sundayStr = date( 'm/d/Y', $sunday );
+
+        $mondayDBStr = date( 'Y-m-d', $monday );
+        $sundayDBStr = date( 'Y-m-d', $sunday );
+        //echo "sundayDBStr=".$sundayDBStr."<br>";
+
+        //get the sum of timeSpentMinutes from CalllogEntryMessage for Message's provider for this week by orderdate
+        $repository = $this->em->getRepository('OlegOrderformBundle:Message');
+        $dql =  $repository->createQueryBuilder("message");
+        $dql->leftJoin("message.calllogEntryMessage","calllogEntryMessage");
+        $dql->leftJoin("message.provider","provider");
+
+        $dql->select('SUM(calllogEntryMessage.timeSpentMinutes) as totalTimeSpentMinutes');
+
+        $dql->where("provider.id = :userId");
+
+        $dql->andWhere("message.orderdate BETWEEN :monday AND :sunday");
+
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameters( array(
+            'userId' => $user->getId(),
+            'monday' => $mondayDBStr,
+            'sunday' => $sundayDBStr
+        ));
+
+        $results = $query->getResult();
+        //echo "count=".count($results)."<br>";
+
+        if( count($results) > 0 ) {
+            //$result = $results[0];
+            //print_r($result);
+            $totalTimeSpentMinutes = $results[0]['totalTimeSpentMinutes'];
+
+            if( $totalTimeSpentMinutes ) {
+
+                $totalTimeSpentMinutes = 33446;
+                //$totalTimeSpentMinutesStr = date('H:i', mktime(0,$totalTimeSpentMinutes));
+
+                /////////////
+                if(0) {
+                    $totalTimeSpentMinutesStr = "";
+
+                    $zero = new \DateTime('@0');
+                    $offset = new \DateTime('@' . $totalTimeSpentMinutes * 60);
+                    $diff = $zero->diff($offset);
+                    $days = $diff->format('%a');
+                    $hours = $diff->format('%h');
+                    $minutes = $diff->format('%i');
+                    if ($days) {
+                        $str = "day";
+                        if ($days > 1) {
+                            $str = $str . "s";
+                        }
+                        $totalTimeSpentMinutesStr .= $days . " " . $str . " ";
+                    }
+
+                    if ($hours) {
+                        $str = "hour";
+                        if ($hours > 1) {
+                            $str = $str . "s";
+                        }
+                        $totalTimeSpentMinutesStr .= $hours . " " . $str . " ";
+                    }
+
+                    if ($minutes) {
+                        $str = "minute";
+                        if ($minutes > 1) {
+                            $str = $str . "s";
+                        }
+                        $totalTimeSpentMinutesStr = $minutes . " " . $str . " ";
+                    }
+                }
+                /////////////
+
+                $totalTimeSpentMinutesStr = $this->convertToHoursMins($totalTimeSpentMinutes);
+
+
+                //"During the current week (MM/DD/YYYY to MM/DD/YYYY) you have spent HH:MM on call activities."
+                $msg = "During the current week ($mondayStr to $sundayDBStr) you have spent $totalTimeSpentMinutesStr on call activities.";
+            }
+        }
+
+        return $msg;
+    }
+    function convertToHoursMins($time, $format = '%02d:%02d') {
+        if ($time < 1) {
+            return;
+        }
+        $hours = floor($time / 60);
+        $minutes = ($time % 60);
+        return sprintf($format, $hours, $minutes);
+    }
+
 }

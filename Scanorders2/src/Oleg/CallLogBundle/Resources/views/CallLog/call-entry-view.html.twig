@@ -257,6 +257,10 @@
                             {{ calllogmacros.calllogPatientList(form,cycle,sitename) }}
                         {% endif %}
 
+                        {% if message.calllogEntryMessage and message.calllogEntryMessage.entryTags %}
+                            {{ calllogmacros.calllogEntryTags(form,cycle) }}
+                        {% endif %}
+
                         <div id="form-node-holder"></div>
 
                         {# EOF Entry #}

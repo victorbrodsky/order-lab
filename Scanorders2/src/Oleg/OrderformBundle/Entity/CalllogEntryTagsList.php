@@ -17,6 +17,7 @@
 
 namespace Oleg\OrderformBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -38,5 +39,38 @@ class CalllogEntryTagsList extends ListAbstract {
      * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
      **/
     protected $original;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="CalllogEntryMessage", mappedBy="entryTags", cascade={"persist"})
+     **/
+    private $calllogEntryMessages;
+
+
+
+    public function __construct() {
+        parent::__construct();
+
+        $this->calllogEntryMessages = new ArrayCollection();
+    }
+
+
+
+
+    public function addCalllogEntryMessage($item)
+    {
+        if( $item && !$this->calllogEntryMessages->contains($item) ) {
+            $this->calllogEntryMessages->add($item);
+        }
+        return $this;
+    }
+    public function removeCalllogEntryMessage($item)
+    {
+        $this->calllogEntryMessages->removeElement($item);
+    }
+    public function getCalllogEntryMessages()
+    {
+        return $this->calllogEntryMessages;
+    }
+
 
 }
