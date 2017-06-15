@@ -58,6 +58,37 @@ class TreeRepository extends NestedTreeRepository {
         return false;
     }
 
+    //the same as isNodeUnderParentnode, but the parent node might be a collaboration node
+    public function isNodeUnderCollaborationParentnode( $parentNode, $node ) {
+
+        //a) check pure provided institutions
+        if( $this->isNodeUnderParentnode($parentNode,$node) ) {
+            //echo "pure institution ok <br>";
+            return true;
+        }
+
+        //b) if the provided parent institutions are not enough => check for parent collaboration institutions
+        $collaborations = $this->findCollaborationsByNode( $parentNode, array("Union") );
+        //echo "collaborations count=".count($collaborations)."<br>";
+        //foreach( $collaborations as $collaboration ) {
+            //echo "collaboration=".$collaboration."<br>";
+        //}
+
+        if( $this->isNodeUnderParentnodes($collaborations,$node) ) {
+            //echo "collaboration institution ok <br>";
+            return true;
+        }
+
+        //All Institutions => disregard institutions => always true
+        if( $parentNode->getName()."" == "All Institutions" ) {
+            //echo "All Institutions ok <br>";
+            return true;
+        }
+
+        //echo "isNodeUnderCollaborationParentnode not ok<br>";
+        return false;
+    }
+
 //    public function isParentNodeUnderNodes( $parentNode, $nodes ) {
 //        foreach( $nodes as $node ) {
 //            if( $this->isNodeUnderParentnode($parentNode, $node) ) {

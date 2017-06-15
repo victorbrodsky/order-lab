@@ -137,9 +137,9 @@ class SecurityUtil extends UserSecurityUtil {
         $collaborationInstitutions = $orderUtil->getPermittedScopeCollaborationInstitutions($permittedInstitutions,$collaborationTypesStrArr,false);
 
         //echo "collaborationInstitutions count=".count($collaborationInstitutions)."<br>";
-        foreach( $collaborationInstitutions as $collaborationInstitution ) {
+        //foreach( $collaborationInstitutions as $collaborationInstitution ) {
             //echo "collaborationInstitution=".$collaborationInstitution."<br>";
-        }
+        //}
 
         if( $this->em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderParentnodes($collaborationInstitutions,$entity->getInstitution()) ) {
             return true;

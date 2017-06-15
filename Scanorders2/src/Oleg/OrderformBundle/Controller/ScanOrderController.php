@@ -1500,7 +1500,7 @@ class ScanOrderController extends Controller {
                 }
 
                 //All Institutions => disregard institutions => show all institutions
-                if( $rootNode == "All Institutions" ) {
+                if( $rootNode->getName()."" == "All Institutions" ) {
                     $institutionalCriteriaStr = "";
                 }
 

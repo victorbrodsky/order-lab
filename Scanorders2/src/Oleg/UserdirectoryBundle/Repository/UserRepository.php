@@ -444,7 +444,9 @@ class UserRepository extends EntityRepository {
             //check if the $userRoles is under $parentRole
             foreach( $userRoles as $userRole ) {
                 //echo "parentRole=".$parentRole."; userRole=".$userRole."<br>";
-                if( $this->_em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderParentnode($parentRole->getInstitution(), $userRole->getInstitution()) ) {
+                //$nodeUnderParent = $this->_em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderParentnode($parentRole->getInstitution(), $userRole->getInstitution());
+                $nodeUnderParent = $this->_em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderCollaborationParentnode($parentRole->getInstitution(), $userRole->getInstitution());
+                if( $nodeUnderParent ) {
                     if( $parentRole && !$userParentRoles->contains($parentRole) ) {
                         $userParentRoles->add($parentRole);
                     }
