@@ -2069,44 +2069,8 @@ class CallLogUtil
 
             if( $totalTimeSpentMinutes ) {
 
-                $totalTimeSpentMinutes = 33446;
+                //$totalTimeSpentMinutes = 1; //testing
                 //$totalTimeSpentMinutesStr = date('H:i', mktime(0,$totalTimeSpentMinutes));
-
-                /////////////
-                if(0) {
-                    $totalTimeSpentMinutesStr = "";
-
-                    $zero = new \DateTime('@0');
-                    $offset = new \DateTime('@' . $totalTimeSpentMinutes * 60);
-                    $diff = $zero->diff($offset);
-                    $days = $diff->format('%a');
-                    $hours = $diff->format('%h');
-                    $minutes = $diff->format('%i');
-                    if ($days) {
-                        $str = "day";
-                        if ($days > 1) {
-                            $str = $str . "s";
-                        }
-                        $totalTimeSpentMinutesStr .= $days . " " . $str . " ";
-                    }
-
-                    if ($hours) {
-                        $str = "hour";
-                        if ($hours > 1) {
-                            $str = $str . "s";
-                        }
-                        $totalTimeSpentMinutesStr .= $hours . " " . $str . " ";
-                    }
-
-                    if ($minutes) {
-                        $str = "minute";
-                        if ($minutes > 1) {
-                            $str = $str . "s";
-                        }
-                        $totalTimeSpentMinutesStr = $minutes . " " . $str . " ";
-                    }
-                }
-                /////////////
 
                 $totalTimeSpentMinutesStr = $this->convertToHoursMins($totalTimeSpentMinutes);
 
@@ -2118,13 +2082,40 @@ class CallLogUtil
 
         return $msg;
     }
-    function convertToHoursMins($time, $format = '%02d:%02d') {
-        if ($time < 1) {
-            return;
+    function convertToHoursMins($time) {
+        $totalTimeSpentMinutesStr = "";
+
+        $zero = new \DateTime('@0');
+        $offset = new \DateTime('@' . $time * 60);
+        $diff = $zero->diff($offset);
+        $days = $diff->format('%a');
+        $hours = $diff->format('%h');
+        $minutes = $diff->format('%i');
+        if ($days) {
+            $str = "day";
+            if ($days > 1) {
+                $str = $str . "s";
+            }
+            $totalTimeSpentMinutesStr .= $days . " " . $str . " ";
         }
-        $hours = floor($time / 60);
-        $minutes = ($time % 60);
-        return sprintf($format, $hours, $minutes);
+
+        if ($hours) {
+            $str = "hour";
+            if ($hours > 1) {
+                $str = $str . "s";
+            }
+            $totalTimeSpentMinutesStr .= $hours . " " . $str . " ";
+        }
+
+        if ($minutes) {
+            $str = "minute";
+            if ($minutes > 1) {
+                $str = $str . "s";
+            }
+            $totalTimeSpentMinutesStr .= $minutes . " " . $str . " ";
+        }
+
+        return $totalTimeSpentMinutesStr;
     }
 
 }
