@@ -527,11 +527,15 @@ class DataQualityController extends CallEntryController
     }
 
     /**
-     * @Route("/edit-patient-record", name="calllog_edit_patient_record", options={"expose"=true})
+     * TODO: use /patient/edit-by-mrn/{mrn}/{mrntype} (calllog_patient_edit_by_mrn) with show-tree-depth=X (if X=2, show only the first and second level (patient + encounter))
+     *
+     * Form to find patient and select. When patient is found and select clicked, patient/{id}/edit page is opened with patient edit form.
+     * This form also used in new entry page, when "Edit patient record" action menu, for a specific patient, is clicked.
+     *
+     * @Route("/find-and-edit-patient-record", name="calllog_find_and_edit_patient_record", options={"expose"=true})
      * @Template("OlegCallLogBundle:DataQuality:edit-patient-record.html.twig")
      */
-    public function editPatientAction(Request $request)
-    {
+    public function findAndEditPatientAction(Request $request) {
 
         $user = $this->get('security.context')->getToken()->getUser();
         $securityUtil = $this->get('order_security_utility');
@@ -555,6 +559,7 @@ class DataQualityController extends CallEntryController
             $mrnPatient1->setField($mrnid);
             $triggerSearch = 1;
         }
+        //exit("mrn=".$mrntype.";".$mrnid);
 
         $encounter1 = new Encounter(true,'dummy',$user,$system);
         $patient1->addEncounter($encounter1);
@@ -571,6 +576,7 @@ class DataQualityController extends CallEntryController
     }
 
     /**
+     * TODO: Under construction. Not Used
      * @Route("/edit-patient-record-ajax", name="calllog_edit_patient_record_ajax", options={"expose"=true})
      */
     public function editPatientAjaxAction(Request $request)

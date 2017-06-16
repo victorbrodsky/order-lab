@@ -738,7 +738,9 @@
 
                         <li><a href="{{ path('calllog_callentry', { 'mrn': mrnNumber, 'mrntype': mrnTypeId, 'message-type': message.messageCategory.id}) }}" target="_blank">Add Entry (New Encounter, Same Type)</a></li>
 
-                        <li><a href="{{ path('calllog_patient_edit_by_mrn', { 'mrn': mrnNumber, 'mrntype': mrnTypeId}) }}" target="_blank">Edit Patient Record</a></li>
+                        <li><a href="{{ path('calllog_patient_view_by_mrn', { 'mrn': mrnNumber, 'mrntype': mrnTypeId, 'show-tree-depth': 2}) }}" target="_blank">View Patient Record</a></li>
+
+                        <li><a href="{{ path('calllog_patient_edit_by_mrn', { 'mrn': mrnNumber, 'mrntype': mrnTypeId, 'show-tree-depth': 2}) }}" target="_blank">Edit Patient Record</a></li>
 
                         <li><a href="{{ path('calllog_merge_patient_records', { 'mrn': mrnNumber, 'mrntype': mrnTypeId}) }}" target="_blank">Merge Patient Record</a></li>
 
@@ -908,7 +910,11 @@
                            target="_blank">Show all entries</a>
                     </li>
 
-                    <li><a href="{{ path('calllog_patient_edit_by_mrn', { 'mrn': mrnNumber, 'mrntype': mrnTypeId}) }}"
+                    <li><a href="{{ path('calllog_patient_view_by_mrn', { 'mrn': mrnNumber, 'mrntype': mrnTypeId, 'show-tree-depth': 2}) }}"
+                           target="_blank">View Patient Record</a>
+                    </li>
+
+                    <li><a href="{{ path('calllog_patient_edit_by_mrn', { 'mrn': mrnNumber, 'mrntype': mrnTypeId, 'show-tree-depth': 2}) }}"
                            target="_blank">Edit Patient Record</a>
                     </li>
 

@@ -864,15 +864,15 @@ function constractPatientInfoRow( patient, masterId, type, holderId ) {
     if( formtype == 'call-entry' ) {
         //var patMergedLen = getMergedPatientInfoLength(patient);
         //console.log('patMergedLen='+patMergedLen);
-        var mergeUrl = Routing.generate('calllog_merge_patient_records') + "?mrn-type=" + patient.mrntype + "&mrn=" + patient.mrn;
-        var editUrl = Routing.generate('calllog_edit_patient_record') + "?mrn-type=" + patient.mrntype + "&mrn=" + patient.mrn;
+        var mergeUrl = Routing.generate('calllog_merge_patient_records') + "?mrntype=" + patient.mrntype + "&mrn=" + patient.mrn;
+        var editUrl = Routing.generate('calllog_find_and_edit_patient_record') + "?mrntype=" + patient.mrntype + "&mrn=" + patient.mrn;
 
         var unmergeMenu = "";
         var setrecordMenu = "";
         //if( patMergedLen > 0 || ( patMergedLen == 0 && masterId && masterId != patient.id) ) {
         if (masterId) {
-            var unmergeUrl = Routing.generate('calllog_unmerge_patient_records') + "?mrn-type=" + patient.mrntype + "&mrn=" + patient.mrn;
-            var setmasterUrl = Routing.generate('calllog_set_master_patient_record') + "?mrn-type=" + patient.mrntype + "&mrn=" + patient.mrn;
+            var unmergeUrl = Routing.generate('calllog_unmerge_patient_records') + "?mrntype=" + patient.mrntype + "&mrn=" + patient.mrn;
+            var setmasterUrl = Routing.generate('calllog_set_master_patient_record') + "?mrntype=" + patient.mrntype + "&mrn=" + patient.mrn;
             unmergeMenu = '<li><a href="' + unmergeUrl + '">Un-merge patient record</a></li>';
             setrecordMenu = '<li><a href="' + setmasterUrl + '">Set Master record</a></li>';
         }

@@ -60,19 +60,102 @@ class CallLogPatientController extends PatientController {
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
+        $showtreedepth = 2;
+
         $params = array(
             'sitename' => $this->container->getParameter('calllog.sitename'),
             'datastructure' => 'datastructure-patient',
             'tracker' => 'tracker',
-            'editpath' => 'calllog_patient_edit'
+            'editpath' => 'calllog_patient_edit',
+            'show-tree-depth' => $showtreedepth
         );
 
         return $this->showPatient($request,$id,$params);
     }
 
+    /**
+     * Displays a form to view an existing Patient entity by mrn.
+     **
+     * @Route("/patient/view-patient-record", name="calllog_patient_view_by_mrn", options={"expose"=true})
+     * @Method("GET")
+     * @Template("OlegOrderformBundle:Patient:new.html.twig")
+     */
+    public function viewPatientByMrnAction( Request $request )
+    {
+        if( false == $this->get('security.context')->isGranted('ROLE_CALLLOG_USER') ){
+            return $this->redirect( $this->generateUrl('calllog-nopermission') );
+        }
+
+        $user = $this->get('security.context')->getToken()->getUser();
+        $userSecUtil = $this->get('user_security_utility');
+        $em = $this->getDoctrine()->getManager();
+
+        $mrntype = trim($request->get('mrntype'));
+        $mrn = trim($request->get('mrn'));
+        $showtreedepth = trim($request->get('show-tree-depth'));
+
+        $extra = array();
+        $extra["keytype"] = $mrntype;
+        $validity = array('valid','reserved');
+        $single = false;
+
+        $institution = $userSecUtil->getCurrentUserInstitution($user);
+        $institutions = array();
+        $institutions[] = $institution->getId();
+
+        $patients = $em->getRepository('OlegOrderformBundle:Patient')->findOneByIdJoinedToField($institutions,$mrn,"Patient","mrn",$validity,$single,$extra);
+
+        if( count($patients) > 1 ) {
+            $patient = null;
+            $patientArr = array();
+            foreach( $patients as $thisPatient ) {
+                if( $thisPatient->obtainValidKeyfield() ) {
+                    //we should return a single result, but we got multiple entity, so return the first valid key one.
+                    $patient = $thisPatient;
+                }
+                $patientArr[] = $patient->obtainPatientInfoSimple();
+            }
+            if( !$patient ) {
+                $patient = $patients[0];
+            }
+            $this->get('session')->getFlashBag()->add(
+                'pnotify-error',
+                'Multiple patients found with mrn ' . $mrn . ". Displayed is the first patient with a valid mrn. Found " . count($patients) . " patients: <hr>" . implode("<hr>",$patientArr)
+            );
+        }
+
+        if( count($patients) == 1 ) {
+            $patient = $patients[0];
+        }
+
+        if( !$patient || !$patient->getId() ) {
+            $this->get('session')->getFlashBag()->add(
+                'pnotify-error',
+                'No patient found with mrn ' . $mrn
+            );
+            return $this->redirect($this->generateUrl('calllog_home'));
+        }
+
+
+        if( !$showtreedepth ) {
+            $showtreedepth = 2;
+        }
+        //echo "showtreedepth=".$showtreedepth."<br>";
+
+        $params = array(
+            'sitename' => $this->container->getParameter('calllog.sitename'),
+            'datastructure' => 'datastructure-patient',
+            'tracker' => 'tracker',
+            'editpath' => 'calllog_patient_edit',
+            'show-tree-depth' => $showtreedepth
+        );
+
+        return $this->showPatient($request,$patient->getId(),$params);
+    }
+
 
     /**
-     * Displays a form to edit an existing Patient entity.
+     * Displays a form to edit an existing Patient entity by id.
      *
      * @Route("/patient/{id}/edit", name="calllog_patient_edit", options={"expose"=true})
      * @Method("GET")
@@ -84,13 +167,15 @@ class CallLogPatientController extends PatientController {
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
+        $showtreedepth = 2;
 
         $params = array(
             'sitename' => $this->container->getParameter('calllog.sitename'),
             'datastructure' => 'datastructure-patient',
             'tracker' => 'tracker',
             'updatepath' => 'calllog_patient_update',
-            'showPlus' => 'showPlus'
+            'showPlus' => 'showPlus',
+            'show-tree-depth' => $showtreedepth
         );
 
         $formResArr = $this->editPatient($request,$id,$params);
@@ -101,13 +186,15 @@ class CallLogPatientController extends PatientController {
     }
 
     /**
-     * Displays a form to edit an existing Patient entity.
+     * Displays a form to edit an existing Patient entity by mrn.
      *
-     * @Route("/patient/edit-by-mrn/{mrn}/{mrntype}", name="calllog_patient_edit_by_mrn", options={"expose"=true})
+     * ////Route("/patient/edit-by-mrn/{mrn}/{mrntype}", name="calllog_patient_edit_by_mrn", options={"expose"=true})
+     *
+     * @Route("/patient/edit-patient-record", name="calllog_patient_edit_by_mrn", options={"expose"=true})
      * @Method("GET")
      * @Template("OlegOrderformBundle:Patient:new.html.twig")
      */
-    public function editPatientByMrnAction( Request $request, $mrn, $mrntype )
+    public function editPatientByMrnAction( Request $request )
     {
         if( false == $this->get('security.context')->isGranted('ROLE_CALLLOG_USER') ){
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
@@ -116,6 +203,10 @@ class CallLogPatientController extends PatientController {
         $user = $this->get('security.context')->getToken()->getUser();
         $userSecUtil = $this->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
+
+        $mrntype = trim($request->get('mrntype'));
+        $mrn = trim($request->get('mrn'));
+        $showtreedepth = trim($request->get('show-tree-depth'));
 
         $extra = array();
         $extra["keytype"] = $mrntype;
@@ -170,12 +261,18 @@ class CallLogPatientController extends PatientController {
 //            'Ok!'
 //        );
 
+        if( !$showtreedepth ) {
+            $showtreedepth = 2;
+        }
+        //echo "showtreedepth=".$showtreedepth."<br>";
+
         $params = array(
             'sitename' => $this->container->getParameter('calllog.sitename'),
             'datastructure' => 'datastructure-patient',
             'tracker' => 'tracker',
             'updatepath' => 'calllog_patient_update',
-            'showPlus' => 'showPlus'
+            'showPlus' => 'showPlus',
+            'show-tree-depth' => $showtreedepth
         );
 
         return $this->editPatient($request,$patient->getId(),$params);

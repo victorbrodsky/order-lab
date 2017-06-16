@@ -258,6 +258,7 @@ function setCallLogNavBar() {
     if( full.indexOf("/call-log-book/merge-patient-records") !== -1 ||
         full.indexOf("/call-log-book/un-merge-patient-records") !== -1 ||
         full.indexOf("/call-log-book/edit-patient-record") !== -1 ||
+        full.indexOf("/call-log-book/find-and-edit-patient-record") !== -1 ||
         full.indexOf("/call-log-book/set-master-patient-record") !== -1
     ) {
         id = 'dataquality';

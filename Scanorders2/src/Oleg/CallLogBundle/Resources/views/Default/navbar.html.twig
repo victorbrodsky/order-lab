@@ -118,7 +118,7 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Data<b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             {% if is_granted('ROLE_CALLLOG_DATA_QUALITY') %}
-                                <li><a href="{{ path(calllog_sitename~'_edit_patient_record') }}">Edit Patient Info</a></li>
+                                <li><a href="{{ path(calllog_sitename~'_find_and_edit_patient_record') }}">Edit Patient Info</a></li>
                                 <li><a href="{{ path(calllog_sitename~'_merge_patient_records') }}">Merge Patient Records</a></li>
                                 <li><a href="{{ path(calllog_sitename~'_unmerge_patient_records') }}">Un-merge Patient Records</a></li>
                                 <li><a href="{{ path(calllog_sitename~'_set_master_patient_record') }}">Set master record</a></li>
