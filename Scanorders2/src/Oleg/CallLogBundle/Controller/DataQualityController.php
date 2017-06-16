@@ -527,8 +527,8 @@ class DataQualityController extends CallEntryController
     }
 
     /**
-     * TODO: use /patient/edit-by-mrn/{mrn}/{mrntype} (calllog_patient_edit_by_mrn) with show-tree-depth=X (if X=2, show only the first and second level (patient + encounter))
-     *
+     * TODO: test if the found patient correctly shown: New Entry -> found multiple patient -> Edit patient record menu action => mrn and mrntype are not set correctly
+     * TODO: http://localhost/order/call-log-book/find-and-edit-patient-record?mrntype=13&mrn=NOMRNPROVIDED-0000000000010
      * Form to find patient and select. When patient is found and select clicked, patient/{id}/edit page is opened with patient edit form.
      * This form also used in new entry page, when "Edit patient record" action menu, for a specific patient, is clicked.
      *
@@ -558,8 +558,12 @@ class DataQualityController extends CallEntryController
             $mrnPatient1->setKeytype($mrntype);
             $mrnPatient1->setField($mrnid);
             $triggerSearch = 1;
+
+            //redirect to calllog_patient_edit_by_mrn
+            return $this->redirect( $this->generateUrl('calllog_patient_edit_by_mrn',array('mrntype'=>$mrntype,'mrn'=>$mrnid,'show-tree-depth'=>2)) );
+
         }
-        //exit("mrn=".$mrntype.";".$mrnid);
+        //echo "mrn=".$mrntype.";".$mrnid."<br>";
 
         $encounter1 = new Encounter(true,'dummy',$user,$system);
         $patient1->addEncounter($encounter1);
@@ -571,7 +575,8 @@ class DataQualityController extends CallEntryController
             'title' => $title,
             'formtype' => $formtype,
             'triggerSearch' => $triggerSearch,
-            'mrntype' => $mrntype
+            'mrntype' => $mrntype,
+            'mrn' => $mrnid
         );
     }
 
@@ -660,7 +665,8 @@ class DataQualityController extends CallEntryController
             'cycle' => $cycle,
             'title' => $title,
             'triggerSearch' => $triggerSearch,
-            'mrntype' => $mrntype
+            'mrntype' => $mrntype,
+            'mrn' => $mrnid
         );
     }
 

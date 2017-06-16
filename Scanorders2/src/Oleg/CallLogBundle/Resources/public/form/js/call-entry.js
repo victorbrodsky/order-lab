@@ -865,7 +865,8 @@ function constractPatientInfoRow( patient, masterId, type, holderId ) {
         //var patMergedLen = getMergedPatientInfoLength(patient);
         //console.log('patMergedLen='+patMergedLen);
         var mergeUrl = Routing.generate('calllog_merge_patient_records') + "?mrntype=" + patient.mrntype + "&mrn=" + patient.mrn;
-        var editUrl = Routing.generate('calllog_find_and_edit_patient_record') + "?mrntype=" + patient.mrntype + "&mrn=" + patient.mrn;
+        var editUrl = Routing.generate('calllog_patient_edit_by_mrn') + "?mrntype=" + patient.mrntype + "&mrn=" + patient.mrn + '&show-tree-depth=2';
+        var viewUrl = Routing.generate('calllog_patient_view_by_mrn') + "?mrntype=" + patient.mrntype + "&mrn=" + patient.mrn + '&show-tree-depth=2';
 
         var unmergeMenu = "";
         var setrecordMenu = "";
@@ -884,6 +885,7 @@ function constractPatientInfoRow( patient, masterId, type, holderId ) {
             '<ul class="dropdown-menu dropdown-menu-right">' +
                 //'<li><a href="javascript:void(0)" onclick="matchingPatientUnmergeBtnClick(\''+holderId+'\',\'unmerge\')">Un-merge patient record</a></li>'+
                 //'<li><a href="javascript:void(0)" onclick="matchingPatientUnmergeBtnClick(\''+holderId+'\',\'set-master-record\')">Set Master record</a></li>'+
+            '<li><a href="' + viewUrl + '">View patient record</a></li>' +
             '<li><a href="' + editUrl + '">Edit patient record</a></li>' +
             '<li><a href="' + mergeUrl + '">Merge patient record</a></li>' +
                 //'<li><a href="' + unmergeUrl + '">Un-merge patient record</a></li>' +
