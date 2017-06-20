@@ -449,10 +449,10 @@ class User extends BaseUser {
         }
 
         foreach( $this->getLocations() as $loc ) {
-            if( $loc->hasLocationTypeName("Employee Office") ) {
+            if( $loc && $loc->hasLocationTypeName("Employee Office") ) {
                 return $loc;
             }
-            if( $loc->getName() == "Main Office" ) {
+            if( $loc && $loc->getName() == "Main Office" ) {
                 return $loc;
             }
         }
@@ -464,15 +464,15 @@ class User extends BaseUser {
 
         $loc = $this->getLocations()->get(1);
 
-        if( $loc->hasLocationTypeName("Employee Home") ) {
+        if( $loc && $loc->hasLocationTypeName("Employee Home") ) {
             return $loc;
         }
 
         foreach( $this->getLocations() as $loc ) {
-            if( $loc->hasLocationTypeName("Employee Home") ) {
+            if( $loc && $loc->hasLocationTypeName("Employee Home") ) {
                 return $loc;
             }
-            if( $loc->getName() == "Home" ) {
+            if( $loc && $loc->getName() == "Home" ) {
                 return $loc;
             }
         }
