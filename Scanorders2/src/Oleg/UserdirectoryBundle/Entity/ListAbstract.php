@@ -152,7 +152,7 @@ abstract class ListAbstract
     protected $entityName;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="integer", nullable=true)
      */
     protected $version;
 
@@ -182,7 +182,7 @@ abstract class ListAbstract
         $this->setType('user-added');
         $this->setCreatedate(new \DateTime());
         $this->setOrderinlist(-1);
-        $this->setVersion('1');
+        $this->setVersion(1);
 
         if( $creator ) {
             $this->setCreator($creator);
@@ -452,6 +452,10 @@ abstract class ListAbstract
      */
     public function getVersion()
     {
+        if( $this->version === NULL ) {
+            return 1;
+        }
+
         return $this->version;
     }
 

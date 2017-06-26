@@ -332,6 +332,7 @@ class PatientController extends Controller
             'sitename' => $parameters['sitename'],
             'editpath' => $parameters['editpath'],
             'title' => $title,
+            'titleheadroom' => $title
         );
     }
 

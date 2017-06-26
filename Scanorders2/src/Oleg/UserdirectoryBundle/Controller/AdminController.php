@@ -5506,9 +5506,9 @@ class AdminController extends Controller
 //        }
 
         $types = array(
-            "View Patient Data for a given patient", //(our "check" button AND our "Test Patient" view page)
+            //"View Patient Data for a given patient", //(our "check" button AND our "Test Patient" view page)
             "Add Patient Data",
-            "Modify Patient Data",
+            //"Modify Patient Data",
             "Delete Patient Data", //(or mark it inactive/invalid since we don't delete; this and 3 above are for Data Quality role)
             "Add a New Patient",
             "Add a New Encounter",
@@ -5588,10 +5588,11 @@ class AdminController extends Controller
 //            return -1;
 //        }
 
+        //use only real object names corresponding to the entity's DB name
         $types = array(
-            "Patient" => array("",array("scan")),
-            "Patient Record" => array("",array("scan","calllog")), //TODEL
-            "Encounter" => array("",array("scan")),
+            "Patient" => array("",array("scan","calllog")),
+            //"Patient Record" => array("",array("scan","calllog")), //TODEL
+            "Encounter" => array("",array("scan","calllog")),
             "Procedure" => array("",array("scan")),
 
             "Accession" => array("",array("scan","deidentifier")),
@@ -5600,8 +5601,9 @@ class AdminController extends Controller
             "Block" => array("",array("scan")),
             "Slide" => array("",array("scan")),
             "Image" => array("Imaging",array("scan")),
-            "Image Analysis" => array("",array("scan")),
-            "Order" => array("Message",array("scan")),
+            //"Image Analysis" => array("",array("scan")),
+            //"Order" => array("Message",array("scan")),
+            "Message" => array("",array("scan","calllog")),
             "Report" => array("",array("scan")),
 
             "Interview" => array("",array("fellapp")),
@@ -5609,8 +5611,8 @@ class AdminController extends Controller
 
             "VacReqRequest" => array("",array("vacreq")), //"Business/Vacation Request"
 
-            "Call Log Entry" => array("",array("calllog")),
-            "Complex Patient" => array("",array("calllog")), //TODEL
+            //"Call Log Entry" => array("",array("calllog")),
+            //"Complex Patient" => array("",array("calllog")), //TODEL
 
 
         );

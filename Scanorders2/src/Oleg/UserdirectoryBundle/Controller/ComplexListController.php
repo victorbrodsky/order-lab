@@ -511,6 +511,14 @@ class ComplexListController extends Controller
                 $userUtil->setUpdateInfo($entity,$em,$sc);
             }
 
+            //increments the version (current +1)
+            $currentVersion = $entity->getVersion();
+            if( $currentVersion === NULL ) {
+                $currentVersion = 1;
+            }
+            $newVersion = $currentVersion + 1;
+            $entity->setVersion($newVersion);
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();

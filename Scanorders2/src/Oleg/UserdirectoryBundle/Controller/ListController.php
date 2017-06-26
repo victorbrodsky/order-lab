@@ -1230,6 +1230,14 @@ class ListController extends Controller
             }
             /////////// EOF remove permissions. Used for roles ///////////
 
+            //increments the version (current +1)
+            $currentVersion = $entity->getVersion();
+            if( $currentVersion === NULL ) {
+                $currentVersion = 1;
+            }
+            $newVersion = $currentVersion + 1;
+            $entity->setVersion($newVersion);
+
             $em->flush();
 
             return $this->redirect($this->generateUrl($pathbase.'_show', array('id' => $id)));
