@@ -32,6 +32,10 @@ class ProcedureType extends AbstractType
     {
         $this->params = $params;
         $this->entity = $entity;
+
+        if( !array_key_exists('show-tree-depth',$this->params) || !$this->params['show-tree-depth'] ) {
+            $this->params['show-tree-depth'] = true; //show all levels
+        }
     }
     
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -53,18 +57,20 @@ class ProcedureType extends AbstractType
             'prototype_name' => '__procedurename__',
         ));
 
-        //children
-        $builder->add('accession', 'collection', array(
-            'type' => new AccessionType($this->params),
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'label' => false,//" ",
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype' => true,
-            'prototype_name' => '__accession__',
-        ));
+        //children: if X=4, show only the first 4 levels (patient + encounter + procedure + accession)
+        if( $this->params['show-tree-depth'] === true || intval($this->params['show-tree-depth']) >= 4 ) {
+            $builder->add('accession', 'collection', array(
+                'type' => new AccessionType($this->params),
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'label' => false,//" ",
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype' => true,
+                'prototype_name' => '__accession__',
+            ));
+        }
 
 
         //extra data-structure fields

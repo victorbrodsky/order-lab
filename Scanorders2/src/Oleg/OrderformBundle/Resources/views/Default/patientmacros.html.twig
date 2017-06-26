@@ -264,16 +264,22 @@
             {% set spotHtml = "" %}
         {% endif %}
 
-        {#{% set accessionHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.accession,type,"key","prototype","","","","accessionaccession","") %}#}
-        {% set accessionHtml = formmacros.inputField(patientEncounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.accession,type,"key","prototype","","","","accessionaccession","") %}
+        {% if patientEncounter.vars.prototype.procedure is defined and patientEncounter.vars.prototype.procedure %}
+            {% set accessionHtml = formmacros.inputField(patientEncounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.accession,type,"key","prototype","","","","accessionaccession","") %}
+            {#{% set accessionHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.accession.vars.prototype.accession,type,"key","prototype","","","","accessionaccession","") %}#}
+
+            {% set procedurenameHtml = formmacros.inputField(patientEncounter.vars.prototype.procedure.vars.prototype.name,type,"","prototype","","","","procedurename") %}
+            {#{% set procedurenumberHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.number,type,"","prototype","","","nolabel") %}#}
+
+        {% else %}
+            {% set accessionHtml = null %}
+            {% set procedurenameHtml = null %}
+        {% endif %}
 
         {#{% set encounterHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.name,type,"","prototype") %}#}
         {#{% set encounternumberHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.number,type,"","prototype","","","nolabel") %}#}
         {% set encounterdateHtml = formmacros.inputField(patientEncounter.vars.prototype.date,type,"date","prototype","","","","encounterdate") %}
-
-        {% set procedurenameHtml = formmacros.inputField(patientEncounter.vars.prototype.procedure.vars.prototype.name,type,"","prototype","","","","procedurename") %}
-        {#{% set procedurenumberHtml = formmacros.inputField(formPatient.vars.prototype.encounter.vars.prototype.procedure.vars.prototype.number,type,"","prototype","","","nolabel") %}#}
-
+        
         {% if patientEncounter.vars.prototype.procedure.vars.prototype.date is defined %}
             {% set proceduredateHtml = formmacros.inputField(patientEncounter.vars.prototype.procedure.vars.prototype.date,type,"date","prototype","","","","proceduredate") %}
         {% else %}

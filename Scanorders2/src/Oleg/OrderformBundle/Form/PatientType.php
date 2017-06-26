@@ -35,6 +35,10 @@ class PatientType extends AbstractType
     {
         $this->params = $params;
         $this->entity = $entity;
+
+        if( !array_key_exists('show-tree-depth',$this->params) || !$this->params['show-tree-depth'] ) {
+            $this->params['show-tree-depth'] = true; //show all levels
+        }
     }
     
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -63,17 +67,18 @@ class PatientType extends AbstractType
             'prototype_name' => '__patientmrn__',
         ));
 
+
         $builder->add('dob', 'collection', array(
             'type' => new PatientDobType($this->params, null),
             //'read_only' => $flag,
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
-//            'label' => "Dob:",
             'by_reference' => false,
             'prototype' => true,
             'prototype_name' => '__patientdob__',
         ));
+
 
         $attr = array('class'=>'textarea form-control patient-clinicalhistory-field');
         $gen_attr = array('label'=>'Clinical Summary:','class'=>'Oleg\OrderformBundle\Entity\PatientClinicalHistory','type'=>null);
@@ -89,18 +94,20 @@ class PatientType extends AbstractType
             'prototype_name' => '__patientclinicalhistory__',
         ));
 
-        $builder->add('encounter', 'collection', array(
-            'type' => new EncounterType($this->params,$this->entity),
-            'required' => false,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'label' => false,//" ",
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__encounter__',
-        ));
+        if( $this->params['show-tree-depth'] === true || intval($this->params['show-tree-depth']) >= 2 ) {
+            $builder->add('encounter', 'collection', array(
+                'type' => new EncounterType($this->params, $this->entity),
+                'required' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'label' => false,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__encounter__',
+            ));
+        }
 
-        //use these fields only for data reviewer and for view
+        //////////// use these fields only for data reviewer and for view ///////////////
         if( 0 ) {
 
             $attr = array('class'=>'form-control patientname-field', 'disabled' => 'disabled');
@@ -129,6 +136,7 @@ class PatientType extends AbstractType
             ));
 
         }
+        //////////// EOF use these fields only for data reviewer and for view ///////////////
 
 
         //extra data-structure fields

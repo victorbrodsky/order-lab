@@ -41,6 +41,7 @@ class ImagingType extends AbstractType
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        //echo "ImagingType <br>";
 
         //scanregion
         $attr = array('class' => 'ajax-combobox-scanregion', 'type' => 'hidden');

@@ -45,22 +45,28 @@ class EncounterType extends AbstractType
         if( !array_key_exists('referringProviders-readonly', $this->params) ) {
             $this->params['referringProviders-readonly'] = true;
         }
+
+        if( !array_key_exists('show-tree-depth',$this->params) || !$this->params['show-tree-depth'] ) {
+            $this->params['show-tree-depth'] = true; //show all levels
+        }
     }
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        //children
-        $builder->add('procedure', 'collection', array(
-            'type' => new ProcedureType($this->params),
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'label' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__procedure__',
-        ));
+        //children: if X=3, show only the first 3 levels (patient + encounter + procedure)
+        if( $this->params['show-tree-depth'] === true || intval($this->params['show-tree-depth']) >= 3 ) {
+            $builder->add('procedure', 'collection', array(
+                'type' => new ProcedureType($this->params),
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'label' => false,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__procedure__',
+            ));
+        }
 
 
 //        $builder->add('name', 'collection', array(

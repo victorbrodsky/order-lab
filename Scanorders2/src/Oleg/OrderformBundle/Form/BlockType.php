@@ -36,6 +36,10 @@ class BlockType extends AbstractType
     {
         $this->params = $params;
         $this->entity = $entity;
+
+        if( !array_key_exists('show-tree-depth',$this->params) || !$this->params['show-tree-depth'] ) {
+            $this->params['show-tree-depth'] = true; //show all levels
+        }
     }
     
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -65,16 +69,19 @@ class BlockType extends AbstractType
             'prototype_name' => '__blocksectionsource__',
         ));
 
-        $builder->add('slide', 'collection', array(
-            'type' => new SlideType($this->params),
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'label' => "Slide:",
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__slide__',
-        ));
+        //if X=7, show only the first 7 levels (patient + encounter + procedure + accession + part + block + slide)
+        if( $this->params['show-tree-depth'] === true || intval($this->params['show-tree-depth']) >= 7 ) {
+            $builder->add('slide', 'collection', array(
+                'type' => new SlideType($this->params),
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'label' => "Slide:",
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__slide__',
+            ));
+        }
 
         $builder->add('specialStains', 'collection', array(
             'type' => new SpecialStainsType($this->params),

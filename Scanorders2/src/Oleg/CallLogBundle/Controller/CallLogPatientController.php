@@ -75,7 +75,8 @@ class CallLogPatientController extends PatientController {
 
     /**
      * Displays a form to view an existing Patient entity by mrn.
-     **
+     * Test 'show-tree-depth': http://localhost/order/call-log-book/patient/view-patient-record?mrn=testmrn-1&mrntype=16&show-tree-depth=2
+     *
      * @Route("/patient/view-patient-record", name="calllog_patient_view_by_mrn", options={"expose"=true})
      * @Method("GET")
      * @Template("OlegOrderformBundle:Patient:new.html.twig")
@@ -145,6 +146,7 @@ class CallLogPatientController extends PatientController {
         $params = array(
             'sitename' => $this->container->getParameter('calllog.sitename'),
             'datastructure' => 'datastructure-patient',
+            //'datastructure' => 'datastructure', //images are shown only if the 'datastructure' parameters is set to 'datastructure'
             'tracker' => 'tracker',
             'editpath' => 'calllog_patient_edit',
             'show-tree-depth' => $showtreedepth

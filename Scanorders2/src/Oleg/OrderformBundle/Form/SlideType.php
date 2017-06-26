@@ -36,6 +36,10 @@ class SlideType extends AbstractType
     {
         $this->params = $params;
         $this->entity = $entity;
+
+        if( !array_key_exists('show-tree-depth',$this->params) || !$this->params['show-tree-depth'] ) {
+            $this->params['show-tree-depth'] = true; //show all levels
+        }
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -53,16 +57,20 @@ class SlideType extends AbstractType
             'prototype_name' => '__slidestain__',
         ));
 
-        $builder->add('scan', 'collection', array(
-            'type' => new ImagingType($this->params),
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'label' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__slidescan__',
-        ));
+        //if X=8, show only the first 8 levels (patient + encounter + procedure + accession + part + block + slide + image)
+        if( $this->params['show-tree-depth'] === true || intval($this->params['show-tree-depth']) >= 8 ) {
+            //echo "SlideType: new ImagingType <br>";
+            $builder->add('scan', 'collection', array(
+                'type' => new ImagingType($this->params),
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'label' => false,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__slidescan__',
+            ));
+        }
         
         $builder->add('microscopicdescr', 'textarea', array(
                 'max_length'=>10000,

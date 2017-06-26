@@ -268,6 +268,17 @@ class PatientController extends Controller
             ini_set('memory_limit', '3072M');
         }
 
+//        $showtreedepth = true; //show all levels
+//        if( array_key_exists('show-tree-depth',$parameters) ) {
+//            $showtreedepth = intval($parameters['show-tree-depth']);
+//        }
+//        echo "showPatient: show-tree-depth=".$parameters['show-tree-depth']."<br>";
+        //echo "showPatient: datastructure=".$parameters['datastructure']."<br>";
+
+        //NOTE: if X=8, show only the first 8 levels (patient + encounter + procedure + accession + part + block + slide + image)
+        //image is an 'attachmentContainer' field in AccessionType, PartType, BlockType ans 'scan' field in SlideType
+        //BUT images are shown only if the 'datastructure' parameters is set to 'datastructure'.
+
         $params = array(
             'type' => 'multy',
             'cycle' => "show",
@@ -276,7 +287,8 @@ class PatientController extends Controller
             'container' => $this->container,
             'sitename' => $parameters['sitename'],
             'datastructure' => $parameters['datastructure'],
-            'tracker' => $parameters['tracker']
+            'tracker' => $parameters['tracker'],
+            'show-tree-depth' => $parameters['show-tree-depth']
         );
 
         //message fields
@@ -306,6 +318,9 @@ class PatientController extends Controller
         //echo 'form created: exec_time='.round($exec_time)."<br>";
         //phpinfo();
 
+        //LastName, FirstName, MiddleName | MRN Type: MRN | DOB: MM/DD/YY
+        $title = $entity->obtainPatientInfoTitle('valid',null,false);
+
         return array(
             'entity' => $entity,
             'form' => $form->createView(),
@@ -315,7 +330,8 @@ class PatientController extends Controller
             'datastructure' => $parameters['datastructure'],
             'tracker' => $parameters['tracker'],
             'sitename' => $parameters['sitename'],
-            'editpath' => $parameters['editpath']
+            'editpath' => $parameters['editpath'],
+            'title' => $title,
         );
     }
 
@@ -391,7 +407,8 @@ class PatientController extends Controller
             'container' => $this->container,
             'sitename' => $parameters['sitename'],
             'datastructure' => $parameters['datastructure'],
-            'tracker' => $parameters['tracker']
+            'tracker' => $parameters['tracker'],
+            'show-tree-depth' => $parameters['show-tree-depth']
         );
 
         $params['endpoint.system'] = true;
