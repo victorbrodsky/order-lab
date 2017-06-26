@@ -276,6 +276,10 @@ class TreeController extends Controller {
                 $text = $entity->getName()." [" . $levelTitle . "]";
             }
 
+            if( $mapper['className'] == "FormNode" ) {
+                $text = $text . " " . "v." . $entity->getVersion();
+            }
+
             //disabled or not
             if( $entity->getType()."" == 'default' || $entity->getType()."" == 'user-added' ) {
                 $optionDisabled = false;
