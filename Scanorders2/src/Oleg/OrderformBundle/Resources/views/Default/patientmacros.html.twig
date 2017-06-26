@@ -400,13 +400,15 @@
                             {#scan#}
                             {% if slidePrototype.scan is defined %}
                                 {% set scanPrototype = slidePrototype.scan %}
-                                {% set scanMagnificationPrototypeFormField = formmacros.field(slidePrototype.vars.prototype.magnification) %}
-                                {% set scanScanregionPrototypeFormField = formmacros.field(slidePrototype.vars.prototype.scanregion) %}
-                                {% set scanNotePrototypeFormField = formmacros.field(slidePrototype.vars.prototype.note) %}
+                                {% if slidePrototype.vars.prototype is defined %}
+                                    {% set scanMagnificationPrototypeFormField = formmacros.field(slidePrototype.vars.prototype.magnification) %}
+                                    {% set scanScanregionPrototypeFormField = formmacros.field(slidePrototype.vars.prototype.scanregion) %}
+                                    {% set scanNotePrototypeFormField = formmacros.field(slidePrototype.vars.prototype.note) %}
+                                {% endif %}
                             {% endif %}
 
                             {#stain#}
-                            {% if slidePrototype.stain is defined %}
+                            {% if slidePrototype.stain is defined and slidePrototype.stain.vars.prototype is defined %}
                                 {% set stainPrototypeFormField = formmacros.field(slidePrototype.stain.vars.prototype.field) %}
                             {% endif %}
 
