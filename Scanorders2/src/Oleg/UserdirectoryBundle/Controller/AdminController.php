@@ -5507,7 +5507,7 @@ class AdminController extends Controller
 
         $types = array(
             //"View Patient Data for a given patient", //(our "check" button AND our "Test Patient" view page)
-            "Add Patient Data",
+            //"Add Patient Data",
             //"Modify Patient Data",
             "Delete Patient Data", //(or mark it inactive/invalid since we don't delete; this and 3 above are for Data Quality role)
             "Add a New Patient",
@@ -5549,7 +5549,7 @@ class AdminController extends Controller
             "Hide Call Log Entry",
             "Change Status of Patient to Complex",
             "Change Status of Patient away from Complex",
-            "Create Patient Record",
+            //"Create Patient Record", //the same as "Add a New Patient"
             "Edit Patient Record",
             "Hide Patient Record",
             "Delete Patient Record",

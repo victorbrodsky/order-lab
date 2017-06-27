@@ -110,4 +110,142 @@ class DefaultController extends Controller
 //        exit("Not used");
 //    }
 
+
+    /**
+     * http://localhost/order/call-log-book/assign-calllog-users
+     * This is one time run method to assign the calllog roles
+     * @Route("/assign-calllog-users", name="calllog_assign-calllog-users")
+     */
+    public function assignUsersAction(Request $request)
+    {
+        if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        $inputFileName = __DIR__ . '/../../../../../importUserLists/Calllog_Users.xlsx';
+
+        try {
+            $inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
+            $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
+            $objPHPExcel = $objReader->load($inputFileName);
+        } catch(Exception $e) {
+            die('Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage());
+        }
+
+        $sheet = $objPHPExcel->getSheet(0);
+        $highestRow = $sheet->getHighestRow();
+        $highestColumn = $sheet->getHighestColumn();
+
+        $attendingCount = 0;
+        $residentCount = 0;
+        $fellowCount = 0;
+
+        //for each row in excel
+        for( $row = 2; $row <= $highestRow; $row++ ) {
+
+            //  Read a row of data into an array
+            $rowData = $sheet->rangeToArray(
+                'A' . $row . ':' . $highestColumn . $row,
+                NULL,
+                TRUE,
+                FALSE
+            );
+
+            //echo $row.": ";
+            //var_dump($rowData);
+            //echo "<br>";
+
+            $attendingUserStr = trim($rowData[0][0]);
+            $attendingUserCwid = trim($rowData[0][1]);
+            $attendingCount = $this->assignRoleToUser($attendingUserStr,$attendingUserCwid,"ROLE_CALLLOG_PATHOLOGY_ATTENDING",$attendingCount);
+
+            $residentUserStr = trim($rowData[0][2]);
+            $residentUserCwid = trim($rowData[0][3]);
+            $residentCount = $this->assignRoleToUser($residentUserStr,$residentUserCwid,"ROLE_CALLLOG_PATHOLOGY_RESIDENT",$residentCount);
+
+            $fellowUserStr = trim($rowData[0][4]);
+            $fellowUserCwid = trim($rowData[0][5]);
+            $fellowCount = $this->assignRoleToUser($fellowUserStr,$fellowUserCwid,"ROLE_CALLLOG_PATHOLOGY_FELLOW",$fellowCount);
+
+            //echo "attendingUserStr=".$attendingUserStr."<br>";
+            //echo "attendingUserCwid=".$attendingUserCwid."<br>";
+
+            //echo "residentUserStr=".$residentUserStr."<br>";
+            //echo "residentUserCwid=".$residentUserCwid."<br>";
+
+            //echo "fellowUserStr=".$fellowUserStr."<br>";
+            //echo "fellowUserCwid=".$fellowUserCwid."<br>";
+
+        } //for loop
+
+        exit("attendingCount=".$attendingCount."; residentCount=".$residentCount."; fellowCount=".$fellowCount);
+    }
+
+    public function assignRoleToUser( $userStr, $cwid, $roleStr ) {
+        if( $userStr ) {
+            $attendingUser = $this->getUserByStrOrCwid($userStr,$cwid);
+            echo $roleStr.": ".$attendingUser;
+            if( !$attendingUser ) {
+                echo " NOT FOUND!!!<br>";
+                return null;
+            } else {
+                echo "<br>";
+            }
+
+            $em = $this->getDoctrine()->getManager();
+            $role = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($roleStr);
+            if( $role ) {
+                $attendingUser->addRole($roleStr);
+                //save
+                //$em->flush($attendingUser);
+            } else {
+                exit("Role not found by name $roleStr");
+            }
+        }
+    }
+    public function getUserByStrOrCwid( $userStr, $cwid ) {
+        echo "Trying to find by [$userStr] [$cwid]: ";
+        $user = $this->getUserByDisplayName($userStr);
+        if( $user ) {
+            return $user;
+        } else {
+            $user = $this->getUserByCwid($cwid);
+            if( $user ) {
+                return $user;
+            }
+        }
+        return null;
+    }
+    public function getUserByDisplayName( $userStr ) {
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository('OlegUserdirectoryBundle:User');
+        $dql =  $repository->createQueryBuilder("user");
+        $dql->select('user');
+        $dql->leftJoin("user.infos", "infos");
+        $dql->where("infos.displayName = :displayName");
+
+        $query = $em->createQuery($dql);
+        $query->setParameter('displayName', $userStr);
+
+        $users = $query->getResult();
+        if( count($users) != 1 ) {
+            //echo "No single user found by [$userStr] <br>";
+            return null;
+        }
+
+        return $users[0];
+    }
+    public function getUserByCwid( $cwid ) {
+        //echo "Trying to find by cwid [$cwid] <br>";
+        $usernamePrefix = 'wcmc-cwid';
+        $em = $this->getDoctrine()->getManager();
+        $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername( $cwid."_@_". $usernamePrefix);
+
+        return $user;
+    }
+
 }
