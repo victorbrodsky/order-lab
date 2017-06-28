@@ -183,32 +183,36 @@ class DefaultController extends Controller
         exit("attendingCount=".$attendingCount."; residentCount=".$residentCount."; fellowCount=".$fellowCount);
     }
 
-    public function assignRoleToUser( $userStr, $cwid, $roleStr ) {
+    public function assignRoleToUser( $userStr, $cwid, $roleStr, $count ) {
         if( $userStr ) {
             $attendingUser = $this->getUserByStrOrCwid($userStr,$cwid);
             //echo $roleStr.": ".$attendingUser;
             if( !$attendingUser ) {
                 //echo " NOT FOUND!!!<br>";
-                return null;
+                return $count;
             } else {
                 //echo "<br>";
             }
 
-            $em = $this->getDoctrine()->getManager();
-            $role = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($roleStr);
-            if( $role ) {
-                if( !$attendingUser->hasRole($roleStr) ) {
-                    $attendingUser->addRole($roleStr);
-                    //save
-                    $em->flush($attendingUser);
-                    echo "Role $roleStr has been assigned to user ".$attendingUser."<br>";
+            if( $attendingUser ) {
+                $em = $this->getDoctrine()->getManager();
+                $role = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($roleStr);
+                if ($role) {
+                    if (!$attendingUser->hasRole($roleStr)) {
+                        $attendingUser->addRole($roleStr);
+                        //save
+                        $em->flush($attendingUser);
+                        echo "Role $roleStr has been assigned to user " . $attendingUser . "<br>";
+                        $count++;
+                    } else {
+                        //echo "###Role $roleStr already exists in user ".$attendingUser."<br>";
+                    }
                 } else {
-                    //echo "###Role $roleStr already exists in user ".$attendingUser."<br>";
+                    exit("Role not found by name $roleStr");
                 }
-            } else {
-                exit("Role not found by name $roleStr");
             }
         }
+        return $count;
     }
     public function getUserByStrOrCwid( $userStr, $cwid ) {
         //echo "Trying to find by [$userStr] [$cwid]: ";
