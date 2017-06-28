@@ -189,6 +189,7 @@ class DefaultController extends Controller
             //echo $roleStr.": ".$attendingUser;
             if( !$attendingUser ) {
                 //echo " NOT FOUND!!!<br>";
+                echo "User not found by [$userStr] [$cwid] [$roleStr]<br>";
                 return $count;
             } else {
                 //echo "<br>";
@@ -225,7 +226,7 @@ class DefaultController extends Controller
                 return $user;
             }
         }
-        echo "!!! User not found by [$userStr] [$cwid] <br>";
+        //echo "!!! User not found by [$userStr] [$cwid] <br>";
         return null;
     }
     public function getUserByDisplayName( $userStr ) {
