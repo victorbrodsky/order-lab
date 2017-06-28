@@ -161,25 +161,23 @@ class DefaultController extends Controller
 
             $attendingUserStr = trim($rowData[0][0]);
             $attendingUserCwid = trim($rowData[0][1]);
+            //echo "attendingUserStr=".$attendingUserStr."<br>";
+            //echo "attendingUserCwid=".$attendingUserCwid."<br>";
             $attendingCount = $this->assignRoleToUser($attendingUserStr,$attendingUserCwid,"ROLE_CALLLOG_PATHOLOGY_ATTENDING",$attendingCount);
 
             $residentUserStr = trim($rowData[0][2]);
             $residentUserCwid = trim($rowData[0][3]);
+            //echo "residentUserStr=".$residentUserStr."<br>";
+            //echo "residentUserCwid=".$residentUserCwid."<br>";
             $residentCount = $this->assignRoleToUser($residentUserStr,$residentUserCwid,"ROLE_CALLLOG_PATHOLOGY_RESIDENT",$residentCount);
 
             $fellowUserStr = trim($rowData[0][4]);
             $fellowUserCwid = trim($rowData[0][5]);
-            $fellowCount = $this->assignRoleToUser($fellowUserStr,$fellowUserCwid,"ROLE_CALLLOG_PATHOLOGY_FELLOW",$fellowCount);
-
-            //echo "attendingUserStr=".$attendingUserStr."<br>";
-            //echo "attendingUserCwid=".$attendingUserCwid."<br>";
-
-            //echo "residentUserStr=".$residentUserStr."<br>";
-            //echo "residentUserCwid=".$residentUserCwid."<br>";
-
             //echo "fellowUserStr=".$fellowUserStr."<br>";
             //echo "fellowUserCwid=".$fellowUserCwid."<br>";
+            $fellowCount = $this->assignRoleToUser($fellowUserStr,$fellowUserCwid,"ROLE_CALLLOG_PATHOLOGY_FELLOW",$fellowCount);
 
+            //exit("end of row $row");
         } //for loop
 
         exit("attendingCount=".$attendingCount."; residentCount=".$residentCount."; fellowCount=".$fellowCount);
@@ -188,27 +186,32 @@ class DefaultController extends Controller
     public function assignRoleToUser( $userStr, $cwid, $roleStr ) {
         if( $userStr ) {
             $attendingUser = $this->getUserByStrOrCwid($userStr,$cwid);
-            echo $roleStr.": ".$attendingUser;
+            //echo $roleStr.": ".$attendingUser;
             if( !$attendingUser ) {
-                echo " NOT FOUND!!!<br>";
+                //echo " NOT FOUND!!!<br>";
                 return null;
             } else {
-                echo "<br>";
+                //echo "<br>";
             }
 
             $em = $this->getDoctrine()->getManager();
             $role = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($roleStr);
             if( $role ) {
-                $attendingUser->addRole($roleStr);
-                //save
-                //$em->flush($attendingUser);
+                if( !$attendingUser->hasRole($roleStr) ) {
+                    $attendingUser->addRole($roleStr);
+                    //save
+                    $em->flush($attendingUser);
+                    echo "Role $roleStr has been assigned to user ".$attendingUser."<br>";
+                } else {
+                    //echo "###Role $roleStr already exists in user ".$attendingUser."<br>";
+                }
             } else {
                 exit("Role not found by name $roleStr");
             }
         }
     }
     public function getUserByStrOrCwid( $userStr, $cwid ) {
-        echo "Trying to find by [$userStr] [$cwid]: ";
+        //echo "Trying to find by [$userStr] [$cwid]: ";
         $user = $this->getUserByDisplayName($userStr);
         if( $user ) {
             return $user;
@@ -218,6 +221,7 @@ class DefaultController extends Controller
                 return $user;
             }
         }
+        echo "!!! User not found by [$userStr] [$cwid] <br>";
         return null;
     }
     public function getUserByDisplayName( $userStr ) {
