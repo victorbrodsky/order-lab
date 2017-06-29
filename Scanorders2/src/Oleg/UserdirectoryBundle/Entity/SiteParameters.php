@@ -706,12 +706,18 @@ class SiteParameters {
      */
     private $initialConfigurationCompleted;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $networkDrivePath;
+
 
 
     function __construct( $addobjects=true )
     {
         $this->organizationalGroupDefaults = new ArrayCollection();
     }
+
 
 
 
@@ -2592,7 +2598,21 @@ class SiteParameters {
     }
     ////////////////////// EOF third party software //////////////////////////
 
+    /**
+     * @return mixed
+     */
+    public function getNetworkDrivePath()
+    {
+        return $this->networkDrivePath;
+    }
 
+    /**
+     * @param mixed $networkDrivePath
+     */
+    public function setNetworkDrivePath($networkDrivePath)
+    {
+        $this->networkDrivePath = $networkDrivePath;
+    }
 
 
 

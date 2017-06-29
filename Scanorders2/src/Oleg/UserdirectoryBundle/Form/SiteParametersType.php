@@ -693,6 +693,12 @@ class SiteParametersType extends AbstractType
                 'attr' => array('class'=>'form-control')
             ));
 
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'networkDrivePath' )
+            $builder->add('networkDrivePath',null,array(
+                'label'=>'Network drive path to store DB backup files:',
+                'attr' => array('class'=>'form-control')
+            ));
+
     }
 
 

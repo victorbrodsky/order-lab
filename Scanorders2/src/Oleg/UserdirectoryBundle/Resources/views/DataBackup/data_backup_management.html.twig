@@ -1,0 +1,58 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{% set extendStr = "OlegUserdirectoryBundle::Default/base.html.twig" %}
+{% extends extendStr %}
+
+
+{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+
+{% block content %}
+
+    <input type="hidden" id="formcycle" value="{{ cycle }}" />
+
+    <h4 class="text-info" align="center">{{ title }}</h4>
+
+    <br>
+    <br>
+    <br>
+
+    <p>
+        <div class="well">Current Network Drive Path: {{ networkDrivePath }}</div>
+    </p>
+
+    <br>
+    <br>
+
+    {#{{ formmacros.field(backupFiles) }}#}
+
+    <p>
+        <a href="{{ path(employees_sitename~'_create_backup') }}">Create Backup Page</a>
+    </p>
+
+    <p>
+        <a href="{{ path(employees_sitename~'_restore_backup') }}">Load Backup Page</a>
+    </p>
+
+
+{% endblock %}
