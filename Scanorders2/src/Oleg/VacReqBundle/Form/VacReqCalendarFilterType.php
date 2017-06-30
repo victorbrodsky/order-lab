@@ -61,11 +61,12 @@ class VacReqCalendarFilterType extends AbstractType
 
             //Institutional Group name - ApproverName
             $builder->add('organizationalInstitutions', 'choice', $groupParams);
+
             $builder->get('organizationalInstitutions')
                 ->addModelTransformer(new CallbackTransformer(
                     //original from DB to form: institutionObject to institutionId
                         function ($originalInstitution) {
-                            //echo "originalInstitution=".$originalInstitution."<br>";
+                            //echo "originalInstitution=" . $originalInstitution . "<br>";
                             if (is_object($originalInstitution) && $originalInstitution->getId()) { //object
                                 return $originalInstitution->getId();
                             }
@@ -73,7 +74,7 @@ class VacReqCalendarFilterType extends AbstractType
                         },
                         //reverse from form to DB: institutionId to institutionObject
                         function ($submittedInstitutionObject) {
-                            //echo "submittedInstitutionObject=".$submittedInstitutionObject."<br>";
+                            //echo "submittedInstitutionObject=" . $submittedInstitutionObject . "<br>";
                             if ($submittedInstitutionObject) { //id
                                 $institutionObject = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->find($submittedInstitutionObject);
                                 return $institutionObject;

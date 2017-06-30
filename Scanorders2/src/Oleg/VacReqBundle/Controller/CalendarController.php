@@ -56,33 +56,43 @@ class CalendarController extends Controller
 
         $vacreqUtil = $this->get('vacreq_util');
         $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.context')->getToken()->getUser();
 
         $params = array();
         $params['em'] = $em;
         $params['supervisor'] = $this->get('security.context')->isGranted('ROLE_VACREQ_SUPERVISOR');
 
-        //get submitter groups: VacReqRequest, create
-        $groupParams = array();
+        ///// NOT USED /////
+        if(0) {
+            //get submitter groups: VacReqRequest, create
+            $groupParams = array();
 
-        $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
-        $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus');
-        if( $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') == false ) {
-            $groupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
-        }
+            $groupParams['permissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'create');
+            $groupParams['permissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus');
+            if ($this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') == false) {
+                $groupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
+            }
 
-        //to get the select filter with all groups under the supervisor group, find the first upper supervisor of this group.
-        $user = $this->get('security.context')->getToken()->getUser();
-        if( $this->get('security.context')->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
-            $subjectUser = $user;
-        } else {
-            $groupParams['asSupervisor'] = true;
-            $subjectUser = $vacreqUtil->getClosestSupervisor( $user );
+            //to get the select filter with all groups under the supervisor group, find the first upper supervisor of this group.
+            if ($this->get('security.context')->isGranted('ROLE_VACREQ_SUPERVISOR')) {
+                $subjectUser = $user;
+            } else {
+                $groupParams['asSupervisor'] = true;
+                $subjectUser = $vacreqUtil->getClosestSupervisor($user);
+            }
+            //echo "subjectUser=".$subjectUser."<br>";
+            if (!$subjectUser) {
+                $subjectUser = $user;
+            }
+
+            $organizationalInstitutions = $vacreqUtil->getGroupsByPermission($subjectUser,$groupParams);
         }
-        //echo "subjectUser=".$subjectUser."<br>";
-        if( !$subjectUser ) {
-            $subjectUser = $user;
-        }
-        $organizationalInstitutions = $vacreqUtil->getGroupsByPermission($subjectUser,$groupParams);
+        ///// EOF NOT USED /////
+
+        $organizationalInstitutions = $vacreqUtil->getAllGroupsByUser($user);
+//        foreach($organizationalInstitutions as $id=>$organizationalInstitution) {
+//            echo $id.": group=".$organizationalInstitution."<br>";
+//        }
 
         $params['organizationalInstitutions'] = $organizationalInstitutions;
 

@@ -2320,6 +2320,53 @@ class VacReqUtil
         return $supervisorUser;
     }
 
+    //get all groups for this user children groups
+    public function getAllGroupsByUser( $user ) {
+
+        $groupParams = array();
+
+        //1) get user groups
+        $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
+        $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'view-away-calendar');
+        $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus');
+        $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus-carryover');
+        $userOrganizationalInstitutions = $this->getGroupsByPermission($user,$groupParams);
+//        echo "user group:<br><pre>";
+//        print_r($userOrganizationalInstitutions);
+//        echo "</pre>";
+//        foreach($userOrganizationalInstitutions as $organizationalInstitution) {
+//            echo "user group=".$organizationalInstitution."<br>";
+//        }
+
+        //2) get user's supervisor groups
+        //to get the select filter with all groups under the supervisor group, find the first upper supervisor of this group.
+        if( $this->sc->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
+            $subjectUser = $user;
+        } else {
+            $groupParams['asSupervisor'] = true;
+            $subjectUser = $this->getClosestSupervisor( $user );
+        }
+        //echo "subjectUser=".$subjectUser."<br>";
+        if( !$subjectUser ) {
+            $subjectUser = $user;
+        }
+
+        $supervisorOrganizationalInstitutions = $this->getGroupsByPermission($subjectUser,$groupParams);
+//        echo "supervisor group:<br><pre>";
+//        print_r($supervisorOrganizationalInstitutions);
+//        echo "</pre>";
+
+        //3) merge user and supervisor groups keeping original indexes
+        $organizationalInstitutions = $userOrganizationalInstitutions + $supervisorOrganizationalInstitutions;
+        $organizationalInstitutions = array_unique($organizationalInstitutions);
+
+//        echo "res group:<br><pre>";
+//        print_r($organizationalInstitutions);
+//        echo "</pre>";
+
+        return $organizationalInstitutions;
+    }
+
     //get all user's organizational groups and children specified to permission
     //get only institutions from the same institutional tree:
     //if submitter has CYTOPATHOLOGY submitter role, then the each resulting institution should be equal or be a parent of CYTOPATHOLOGY
