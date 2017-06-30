@@ -165,9 +165,9 @@ class CalendarEventListener
             if( $fast ) {
                 //$url = null;
                 $url = $this->container->get('router')->generate(
-                    'vacreq_show',
+                    'vacreq_showuser',
                     array(
-                        'id' => $requestFull->getId()
+                        'id' => $requestFull->getUser()->getId()
                     )
                     //UrlGeneratorInterface::ABSOLUTE_URL
                 );
