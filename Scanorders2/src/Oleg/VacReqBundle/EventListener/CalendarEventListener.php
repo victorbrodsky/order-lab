@@ -161,7 +161,7 @@ class CalendarEventListener
             }
 
             //isGranted by action might be heavy method
-            $fast = true;
+            $fast = true; //if fast is true => calendar appears in 2-3 sec, otherwise ~25 sec
             if( $fast ) {
                 $url = null;
             } else {
