@@ -63,6 +63,8 @@ class CalendarController extends Controller
 
         //get submitter groups: VacReqRequest, create
         $groupParams = array();
+
+        $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
         $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus');
         if( $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') == false ) {
             $groupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');

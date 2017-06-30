@@ -21,6 +21,7 @@
     <head>
 
         {% stylesheets
+            'bundles/oleguserdirectory/pnotify/pnotify.custom.min.css' filter='cssrewrite'
             'bundles/oleguserdirectory/bootstrap/css/*' filter='cssrewrite'
             'bundles/oleguserdirectory/form/css/form.css' filter='cssrewrite'
             'bundles/oleguserdirectory/select2/select2.css' filter='cssrewrite'
@@ -94,6 +95,7 @@
         '@OlegUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'
         '@OlegUserdirectoryBundle/Resources/public/bootstrap/js/*'
         '@OlegUserdirectoryBundle/Resources/public/select2/select2.js'
+        '@OlegUserdirectoryBundle/Resources/public/pnotify/pnotify.custom.min.js'
         '@OlegUserdirectoryBundle/Resources/public/form/js/user-common.js'
         %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
@@ -108,6 +110,7 @@
 
             $(document).ready(function() {
 
+                userPnotifyDisplay();
                 regularCombobox();
 
                 $("#login-form").on("submit", function () {

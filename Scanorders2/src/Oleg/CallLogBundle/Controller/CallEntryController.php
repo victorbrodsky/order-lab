@@ -889,6 +889,14 @@ class CallEntryController extends Controller
             $formnodeTopHolderId = $messageCategory->getId();
         }
 
+        $environment = $userSecUtil->getSiteSettingParameter('environment');
+        if( $environment != 'live' ) {
+            $this->get('session')->getFlashBag()->add(
+                'pnotify-error',
+                "THIS IS A TEST SERVER. USE ONLY FOR TESTING !!!"
+            );
+        }
+
         return array(
             //'entity' => $entity,
             'form' => $form->createView(),

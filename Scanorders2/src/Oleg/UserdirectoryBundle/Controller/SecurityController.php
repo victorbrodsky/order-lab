@@ -59,6 +59,8 @@ class SecurityController extends Controller
      */
     public function loginAction( Request $request ) {
 
+        $userSecUtil = $this->get('user_security_utility');
+
         $routename = $request->get('_route');
         //echo "routename=".$routename."<br>";
 
@@ -131,6 +133,18 @@ class SecurityController extends Controller
         }
         ///////////// EOF read cookies /////////////
 
+        //not live warning
+        $environment = $userSecUtil->getSiteSettingParameter('environment');
+        //echo "environment=$environment <br>"; //dev
+        $formArr['environment'] = $environment;
+        $formArr['inputStyle'] = "";
+        if( $environment != 'live' ) {
+            $this->get('session')->getFlashBag()->add(
+                'pnotify-error',
+                "THIS IS A TEST SERVER. USE ONLY FOR TESTING !!!"
+            );
+            $formArr['inputStyle'] = "background-color:#FF5050;";
+        }
 
         return $this->render(
             'OlegUserdirectoryBundle:Security:login.html.twig',

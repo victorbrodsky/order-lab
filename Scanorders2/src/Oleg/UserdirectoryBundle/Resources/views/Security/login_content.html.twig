@@ -28,6 +28,17 @@
     </div>
 {% endfor %}
 
+{% for flashMessage in app.session.flashbag.get('pnotify') %}
+    <input type="hidden" id="pnotify-notice" value="{{ flashMessage|raw }}" />
+{% endfor %}
+{% for flashMessage in app.session.flashbag.get('pnotify-error') %}
+    <input type="hidden" id="pnotify-notice" class="pnotify-notice-error" value="{{ flashMessage|raw }}" />
+{% endfor %}
+{% for flashMessage in app.session.flashbag.get('pnotify-success') %}
+    <input type="hidden" id="pnotify-notice" class="pnotify-notice-success" value="{{ flashMessage|raw }}" />
+{% endfor %}
+
+
 {% if error is not defined %}
     {% set error = '' %}
 {% endif %}
@@ -68,9 +79,9 @@
 
             {#display username field and hidden real fields using by security#}
             <input type="text" id="username" name="_username" value="{{ last_username }}" class="form-control limit-font-size" placeholder="Username Hidden" style="display:none;">
-            <input type="text" id="display-username" value="{{ last_username }}" class="form-control limit-font-size" placeholder="Username">
+            <input type="text" id="display-username" value="{{ last_username }}" class="form-control limit-font-size" placeholder="Username" style="{{ inputStyle }}">
 
-            <input type="password" id="password" name="_password" class="form-control limit-font-size" placeholder="Password">
+            <input type="password" id="password" name="_password" class="form-control limit-font-size" placeholder="Password" style="{{ inputStyle }}">
 
             {#<input type="checkbox" id="remember_me" name="_remember_me" checked />#}
             {#<label for="remember_me">Keep me logged in</label>#}
