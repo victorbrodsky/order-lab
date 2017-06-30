@@ -163,7 +163,14 @@ class CalendarEventListener
             //isGranted by action might be heavy method
             $fast = true; //if fast is true => calendar appears in 2-3 sec, otherwise ~25 sec
             if( $fast ) {
-                $url = null;
+                //$url = null;
+                $url = $this->container->get('router')->generate(
+                    'vacreq_show',
+                    array(
+                        'id' => $requestFull->getId()
+                    )
+                    //UrlGeneratorInterface::ABSOLUTE_URL
+                );
             } else {
                 if ($this->container->get('security.context')->isGranted("read", $requestFull)) {
                     $url = $this->container->get('router')->generate(
