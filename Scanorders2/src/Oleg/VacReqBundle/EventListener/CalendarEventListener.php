@@ -160,22 +160,28 @@ class CalendarEventListener
                 array_push($requestArr[$subjectUserId], $request->getStartDate());
             }
 
-            if( $this->container->get('security.context')->isGranted("read", $requestFull) ) {
-                $url = $this->container->get('router')->generate(
-                    'vacreq_show',
-                    array(
-                        'id' => $requestFull->getId()
-                    )
-                    //UrlGeneratorInterface::ABSOLUTE_URL
-                );
+            //isGranted by action might be heavy method
+            $fast = true;
+            if( $fast ) {
+                $url = null;
             } else {
-                $url = $this->container->get('router')->generate(
-                    'vacreq_showuser',
-                    array(
-                        'id' => $requestFull->getUser()->getId()
-                    )
+                if ($this->container->get('security.context')->isGranted("read", $requestFull)) {
+                    $url = $this->container->get('router')->generate(
+                        'vacreq_show',
+                        array(
+                            'id' => $requestFull->getId()
+                        )
                     //UrlGeneratorInterface::ABSOLUTE_URL
-                );
+                    );
+                } else {
+                    $url = $this->container->get('router')->generate(
+                        'vacreq_showuser',
+                        array(
+                            'id' => $requestFull->getUser()->getId()
+                        )
+                    //UrlGeneratorInterface::ABSOLUTE_URL
+                    );
+                }
             }
 
             //$userNameLink = '<a href="'.$url.'">'.$requestFull->getUser().'</a>';
@@ -207,7 +213,11 @@ class CalendarEventListener
             $eventEntity->setAllDay(true); // default is false, set to true if this is an all day event
             $eventEntity->setBgColor($backgroundColorCalendar); //set the background color of the event's label
             $eventEntity->setFgColor('#2F4F4F'); //set the foreground color of the event's label
-            $eventEntity->setUrl($url); // url to send user to when event label is clicked
+
+            if( $url ) {
+                $eventEntity->setUrl($url); // url to send user to when event label is clicked
+            }
+
             //$eventEntity->setCssClass('my-custom-class'); // a custom class you may want to apply to event labels
 
             //finally, add the event to the CalendarEvent for displaying on the calendar
