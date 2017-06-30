@@ -30,10 +30,10 @@
 {% block content %}
 
     <input type="hidden" id="formcycle" value="{{ cycle }}" />
+    <input type="hidden" id="fileId" value="" />
 
     <h4 class="text-info" align="center">{{ title }}</h4>
 
-    <br>
     <br>
     <br>
 
@@ -44,15 +44,74 @@
     <br>
     <br>
 
-    {#{{ formmacros.field(backupFiles) }}#}
+    <div class="row">
+        <div class="col-xs-3"></div>
+        <div class="col-xs-6">
+            {#{{ formmacros.field(backupFiles) }}#}
+            <p>
+                <select id="backup-file-id" class="combobox" style="width: 30%;">
+                    {% for  backupFile in backupFiles %}
+                        <option value="{{ backupFile.id }}" {{ selected }}>{{ backupFile.name }}</option>
+                    {% endfor %}
+                </select>
+            </p>
+        </div>
+        <div class="col-xs-3"></div>
+    </div>
+
+    <br>
 
     <p>
         <a href="{{ path(employees_sitename~'_create_backup') }}">Create Backup Page</a>
     </p>
 
     <p>
-        <a href="{{ path(employees_sitename~'_restore_backup') }}">Load Backup Page</a>
+        <a
+           {#general-data-confirm="Are you sure you want to load backup DB? This action will overwrite all existing data."#}
+           {#href="{{ path(employees_sitename~'_restore_backup',{'backupFilePath': document.getElementById("fileId").val()}) }}"#}
+           href="#"
+           onclick="return restoreBackup();"
+        >Load Backup Page</a>
     </p>
 
+
+{% endblock %}
+
+
+{% block additionaljs %}
+
+    <script>
+        $(document).ready(function () {
+
+            $('#backup-file-id').on("change", function(e) {
+                var fileId = $(this).select2('val');
+                console.log('fileId='+fileId);
+                $('#fileId').val(fileId);
+            });
+
+        });
+
+        function restoreBackup() {
+
+            var result = confirm("Are you sure you want to load backup DB? This action will overwrite all existing data.");
+            if (result) {
+                //Logic to delete the item
+            } else {
+                return;
+            }
+
+            var file = $('#backup-file-id').select2('data');
+            if( file ) {
+                var fileId = file.id;
+                console.log("fileId=" + fileId);
+
+                var url = Routing.generate('employees_restore_backup');
+                url = url + "/" + fileId;
+                console.log("url=" + url);
+
+                window.location.replace(url);
+            }
+        }
+    </script>
 
 {% endblock %}

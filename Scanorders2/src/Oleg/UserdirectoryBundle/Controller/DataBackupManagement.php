@@ -47,7 +47,7 @@ class DataBackupManagement extends Controller
      */
     public function dataBackupManagementAction(Request $request) {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_ADMIN') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
@@ -64,13 +64,16 @@ class DataBackupManagement extends Controller
         }
 
         $sitename = "employees";
-        $form = null;
+
+        //get backup files
+        $backupFiles = $this->getBackupFiles($networkDrivePath);
 
         return array(
             'sitename' => $sitename,
             'title' => "Data Backup Management",
             'cycle' => 'new',
-            'networkDrivePath' => $networkDrivePath
+            'networkDrivePath' => $networkDrivePath,
+            'backupFiles' => $backupFiles
         );
     }
 
@@ -82,7 +85,7 @@ class DataBackupManagement extends Controller
      */
     public function createBackupAction(Request $request) {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_ADMIN') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
@@ -111,7 +114,6 @@ class DataBackupManagement extends Controller
         }
 
         return array(
-            //'entity' => $entity,
             'form' => $form->createView(),
             'sitename' => $sitename,
             'title' => "Create Backup",
@@ -121,13 +123,13 @@ class DataBackupManagement extends Controller
 
 
     /**
-     * @Route("/restore-backup/", name="employees_restore_backup")
-     * @Template("OlegUserdirectoryBundle:DataBackup:restore_backup.html.twig")
+     * @Route("/restore-backup/{backupFilePath}", name="employees_restore_backup", options={"expose"=true})
+     * @Template("OlegUserdirectoryBundle:DataBackup:data_backup_management.html.twig")
      * @Method("GET")
      */
-    public function restoreBackupAction(Request $request) {
+    public function restoreBackupAction( Request $request, $backupFilePath ) {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_ADMIN') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
@@ -143,23 +145,45 @@ class DataBackupManagement extends Controller
             return $this->redirect($this->generateUrl('employees_data_backup_management'));
         }
 
+        echo "backupFilePath=".$backupFilePath."<br>";
+
+        //get backup files
+        $backupFiles = $this->getBackupFiles($networkDrivePath);
+
         $sitename = "employees";
-        $form = null;
 
-        $form->handleRequest($request);
-
-        if( $form->isSubmitted() && $form->isValid() ) {
+        if( $backupFilePath ) {
 
             //create backup
+
+            $this->get('session')->getFlashBag()->add(
+                'pnotify',
+                "DB has been restored by backup ".$backupFilePath
+            );
 
             return $this->redirect($this->generateUrl('employees_data_backup_management'));
         }
 
         return array(
-            //'entity' => $entity,
-            'form' => $form->createView(),
-            'sitename' => $sitename
+            'sitename' => $sitename,
+            'title' => "Data Backup Management",
+            'cycle' => 'new',
+            'networkDrivePath' => $networkDrivePath,
+            'backupFiles' => $backupFiles
         );
     }
 
+
+    public function getBackupFiles( $networkDrivePath ) {
+        if( !$networkDrivePath ) {
+            return null;
+        }
+
+        $file0 = array("id"=>null,"name"=>"");
+        $file1 = array("id"=>1,"name"=>"file 1");
+        $file2 = array("id"=>2,"name"=>"file 2");
+        $backupFiles = array($file0,$file1,$file2);
+
+        return $backupFiles;
+    }
 }

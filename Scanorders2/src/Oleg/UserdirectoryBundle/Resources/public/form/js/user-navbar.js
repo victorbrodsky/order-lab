@@ -512,6 +512,9 @@ function commonNavBar(full,id) {
     if( full.indexOf("/authorization-user-manager/") !== -1 ) {
         id = 'admin';
     }
+    if( full.indexOf("/data-backup-management/") !== -1 ) {
+        id = 'admin';
+    }
 
     if( full.indexOf("/users") !== -1 ) {
         id = 'userlist';
