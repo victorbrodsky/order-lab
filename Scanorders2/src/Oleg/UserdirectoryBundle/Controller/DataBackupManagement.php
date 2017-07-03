@@ -317,7 +317,9 @@ class DataBackupManagement extends Controller
         }
         else
         {
-            echo “Transaction log backed up to $log_backup_file”;
+            $msgLog = "Transaction log backed up to $backupfileLog";
+            $msg = $msg . " <br> " . $msgLog;
+            echo $msgLog;
         }
 
         return $msg;
