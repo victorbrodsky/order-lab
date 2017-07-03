@@ -207,10 +207,17 @@ class DataBackupManagement extends Controller
     }
 
     public function getConnection() {
-        $uid = "symfony2";
+        $uid = "symfony21";
         $pwd = "symfony2";
         $connOptions = array("Database"=>"ScanOrder", "UID"=>$uid, "PWD"=>$pwd);
-        $conn = sqlsrv_connect("WORK-MSSQL", $connOptions);
+        $conn = sqlsrv_connect("WORK-MSSQL1", $connOptions);
+
+        if( $conn ) {
+            echo "Connection ok <br>";
+        } else {
+            echo "Connection not ok!!! <br>";
+        }
+
         return $conn;
 
         //$em = $this->getDoctrine()->getManager();
