@@ -207,15 +207,30 @@ class DataBackupManagement extends Controller
     }
 
     public function getConnection() {
+        $dbname = "ScanOrder";
         $uid = "symfony2";
         $pwd = "symfony2";
-        $connOptions = array("Database"=>"ScanOrder", "UID"=>$uid, "PWD"=>$pwd);
-        $conn = sqlsrv_connect("WORK-MSSQL", $connOptions);
+        $host = "127.0.0.1";
+        $driver = "pdo_sqlsrv";
+
+        //$connOptions = array("Database"=>$dbname, "UID"=>$uid, "PWD"=>$pwd);
+        //$conn = sqlsrv_connect("WORK-MSSQL", $connOptions);
+
+        $config = new \Doctrine\DBAL\Configuration();
+        $connectionParams = array(
+            'dbname' => $dbname,
+            'user' => $uid,
+            'password' => $pwd,
+            'host' => $host,
+            'driver' => $driver,
+        );
+        $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
 
         if( $conn ) {
-            echo "Connection ok <br>";
-        } else {
-            echo "Connection not ok!!! <br>";
+            echo "Connection established.<br />";
+        }else{
+            echo "Connection could not be established.<br />";
+            die( print_r( sqlsrv_errors(), true));
         }
 
         return $conn;
