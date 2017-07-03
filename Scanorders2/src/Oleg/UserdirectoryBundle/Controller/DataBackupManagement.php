@@ -308,7 +308,7 @@ class DataBackupManagement extends Controller
 
         //Backup log. Put DB into “Restoring…” state.
         $backupfileLog = "c:\\backup\\testbackupLog.bak";
-        $sql = "BACKUP LOG TestDB TO DISK = '".$backupfileLog."' WITH NORECOVERY";
+        $sql = "BACKUP LOG $dbname TO DISK = '".$backupfileLog."' WITH NORECOVERY";
         echo "LOG sql=".$sql."<br>";
         $stmt = sqlsrv_query($conn, $sql);
         if($stmt === false)
