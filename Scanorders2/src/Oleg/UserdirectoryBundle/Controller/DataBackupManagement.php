@@ -115,7 +115,7 @@ class DataBackupManagement extends Controller
 
             //create backup
             $backupfile = "c:\\backup\\test.bak";
-            $res = $this->creatingBackup($backupfile);
+            $res = $this->creatingBackupSQL($backupfile);
 
             $this->get('session')->getFlashBag()->add(
                 'pnotify',
@@ -206,30 +206,40 @@ class DataBackupManagement extends Controller
         return $backupFiles;
     }
 
-//    public function getConnection() {
-////        $uid = "symfony2";
-////        $pwd = "symfony2";
-////        $connOptions = array("Database"=>"ScanOrder", "UID"=>$uid, "PWD"=>$pwd);
-////        $conn = sqlsrv_connect($serverName, $connOptions);
-////        return $conn;
-//        $em = $this->getDoctrine()->getManager();
-//        return $em->getConnection();
-//    }
+    public function getConnection() {
+//        $uid = "symfony2";
+//        $pwd = "symfony2";
+//        $connOptions = array("Database"=>"ScanOrder", "UID"=>$uid, "PWD"=>$pwd);
+//        $conn = sqlsrv_connect($serverName, $connOptions);
+//        return $conn;
+        $em = $this->getDoctrine()->getManager();
+        return $em->getConnection();
+    }
 
     //SQL Server Database backup
-    public function creatingBackup( $backupfile ) {
+    public function creatingBackupSQL( $backupfile ) {
         $backupfile = "testbackup.bak";
         $backupfile = "c:\\backup\\testbackup.bak";
-        $em = $this->getDoctrine()->getManager();
+        //$em = $this->getDoctrine()->getManager();
         sqlsrv_configure( "WarningsReturnAsErrors", 0 );
-        $sql = "BACKUP DATABASE ScanOrder TO DISK = :backupfile";
+        $sql = "BACKUP DATABASE ScanOrder TO DISK = '".$backupfile."'";
         echo "sql=".$sql."<br>";
 
-        $params['backupfile'] = $backupfile;
+//        $params['backupfile'] = $backupfile;
+//        $query = $em->getConnection()->prepare($sql);
+//        $res = $query->execute($params);
+//        echo "res=".$res."<br>";
 
-        $query = $em->getConnection()->prepare($sql);
-        $res = $query->execute($params);
+        $conn = $this->getConnection();
+        $stmt = sqlsrv_query($conn, $sql);
+        if($stmt === false)
+        {
+            die(print_r(sqlsrv_errors()));
+        }
+        else
+        {
+            echo "Database backed up to $backupfile<br>";
+        }
 
-        echo "res=".$res."<br>";
     }
 }
