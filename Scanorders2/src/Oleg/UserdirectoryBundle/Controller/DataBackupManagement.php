@@ -222,18 +222,22 @@ class DataBackupManagement extends Controller
         echo "driver=".$driver."<br>";
         //$pwd = $pwd."1";
 
-        //$connOptions = array("Database"=>$dbname, "UID"=>$uid, "PWD"=>$pwd);
-        //$conn = sqlsrv_connect("COLLAGE", $connOptions);
+        if( 1 ) {
+            $connOptions = array("Database"=>$dbname, "UID"=>$uid, "PWD"=>$pwd);
+            $conn = sqlsrv_connect("COLLAGE", $connOptions);
+        }
 
-        $config = new \Doctrine\DBAL\Configuration();
-        $connectionParams = array(
-            'dbname' => $dbname,
-            'user' => $uid,
-            'password' => $pwd,
-            'host' => $host,
-            'driver' => $driver,
-        );
-        $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
+        if( 0 ) {
+            $config = new \Doctrine\DBAL\Configuration();
+            $connectionParams = array(
+                'dbname' => $dbname,
+                'user' => $uid,
+                'password' => $pwd,
+                'host' => $host,
+                'driver' => $driver,
+            );
+            $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
+        }
 
         if( $conn ) {
             echo "Connection established.<br />";
