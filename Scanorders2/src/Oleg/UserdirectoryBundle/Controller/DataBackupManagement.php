@@ -25,6 +25,7 @@
 namespace Oleg\UserdirectoryBundle\Controller;
 
 
+use Doctrine\DBAL\Configuration;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -207,11 +208,19 @@ class DataBackupManagement extends Controller
     }
 
     public function getConnection() {
-        $dbname = "ScanOrder";
-        $uid = "symfony2";
-        $pwd = "symfony2";
-        $host = "127.0.0.1";
-        $driver = "pdo_sqlsrv";
+//        $dbname = "ScanOrder";
+//        $uid = "symfony2";
+//        $pwd = "symfony2";
+//        $host = "127.0.0.1";
+//        $driver = "pdo_sqlsrv";
+
+        $dbname = $this->getParameter('database_name');
+        $uid = $this->getParameter('database_user');
+        $pwd = $this->getParameter('database_password');
+        $host = $this->getParameter('database_host');
+        $driver = $this->getParameter('database_driver');
+        echo "driver=".$driver."<br>";
+        //$pwd = $pwd."1";
 
         //$connOptions = array("Database"=>$dbname, "UID"=>$uid, "PWD"=>$pwd);
         //$conn = sqlsrv_connect("WORK-MSSQL", $connOptions);
@@ -233,6 +242,13 @@ class DataBackupManagement extends Controller
             die( print_r( sqlsrv_errors(), true));
         }
 
+        //esting
+        $sql = "SELECT * FROM user_siteParameters";
+        echo "sql=".$sql."<br>";
+        $params = $conn->query($sql);
+        $res = $params->fetch();
+        echo "env=".$res['environment']."<br>";
+
         return $conn;
 
         //$em = $this->getDoctrine()->getManager();
@@ -241,6 +257,7 @@ class DataBackupManagement extends Controller
 
     //SQL Server Database backup
     public function creatingBackupSQL( $backupfile ) {
+        $conn = $this->getConnection();
         $backupfile = "testbackup.bak";
         $backupfile = "c:\\backup\\testbackup.bak";
         //$em = $this->getDoctrine()->getManager();
@@ -256,7 +273,7 @@ class DataBackupManagement extends Controller
 //        $res = $query->execute($params);
 //        echo "res=".$res."<br>";
 
-        $conn = $this->getConnection();
+
         $stmt = sqlsrv_query($conn, $sql);
         if($stmt === false)
         {
