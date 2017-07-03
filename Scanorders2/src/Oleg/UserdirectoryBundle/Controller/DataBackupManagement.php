@@ -257,6 +257,7 @@ class DataBackupManagement extends Controller
 
     //SQL Server Database backup
     public function creatingBackupSQL( $backupfile ) {
+        $msg = null;
         $conn = $this->getConnection();
         $dbname = $this->getParameter('database_name');
 
@@ -286,8 +287,10 @@ class DataBackupManagement extends Controller
         }
         else
         {
-            echo "Database backed up to $backupfile<br>";
+            $msg = "Database backed up to $backupfile";
+            echo $msg."<br>";
         }
 
+        return $msg;
     }
 }
