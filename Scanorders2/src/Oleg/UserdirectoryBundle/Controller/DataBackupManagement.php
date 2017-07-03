@@ -271,12 +271,15 @@ class DataBackupManagement extends Controller
     //SQL Server Database backup
     public function creatingBackupSQL( $backupfile ) {
         $msg = null;
+        $timePrefix = date("d-m-Y-H-i-s");
+        echo "timePrefix=".$timePrefix."<br>";
+        //$timePrefix = str_replace(" ","_",$timePrefix);
         $conn = $this->getConnection();
         $dbname = $this->getParameter('database_name');
         echo "dbname=".$dbname."<br>";
 
-        $backupfile = "testbackup.bak";
-        $backupfile = "c:\\backup\\testbackup.bak";
+        //$backupfile = "testbackup_$timePrefix.bak";
+        $backupfile = "c:\\backup\\testbackup_$timePrefix.bak";
 
         //$em = $this->getDoctrine()->getManager();
         sqlsrv_configure( "WarningsReturnAsErrors", 0 );
@@ -326,7 +329,7 @@ class DataBackupManagement extends Controller
         // Then, to capture any transactions that occur between backups,
         // you need to backup your transaction log periodically.
         // Again, a simple script does this. And, again, this process might be automated:
-        $backupfileLog = "c:\\backup\\testbackupLog.bak";
+        $backupfileLog = "c:\\backup\\testbackupLog_$timePrefix.bak";
         $sql = "BACKUP LOG $dbname TO DISK = '".$backupfileLog."' WITH NORECOVERY";
         echo "LOG sql=".$sql."<br>";
         $stmt = sqlsrv_query($conn, $sql);
