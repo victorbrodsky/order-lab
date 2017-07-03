@@ -297,7 +297,7 @@ class DataBackupManagement extends Controller
 
         if($stmt === false)
         {
-            die(print_r(sqlsrv_errors()));
+            die(print_r(sqlsrv_errors(),true));
         }
         else
         {
