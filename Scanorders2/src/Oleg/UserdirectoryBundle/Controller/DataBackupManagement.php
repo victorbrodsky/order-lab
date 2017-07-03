@@ -216,8 +216,10 @@ class DataBackupManagement extends Controller
 //        return $em->getConnection();
 //    }
 
+    //SQL Server Database backup
     public function creatingBackup( $backupfile ) {
         $backupfile = "testbackup.bak";
+        $backupfile = "c:\\backup\\testbackup.bak";
         $em = $this->getDoctrine()->getManager();
         //sqlsrv_configure( "WarningsReturnAsErrors", 0 );
         $sql = "BACKUP DATABASE ScanOrder TO DISK = :backupfile";
