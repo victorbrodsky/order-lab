@@ -282,8 +282,8 @@ class DataBackupManagement extends Controller
 //        $res = $query->execute($params);
 //        echo "res=".$res."<br>";
 
-        //$stmt = sqlsrv_query($conn, $sql);
-        $stmt = $conn->query($sql);
+        $stmt = sqlsrv_query($conn, $sql);
+        //$stmt = $conn->query($sql);
 
         if($stmt === false)
         {
