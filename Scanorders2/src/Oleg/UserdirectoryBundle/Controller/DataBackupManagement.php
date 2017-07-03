@@ -119,7 +119,7 @@ class DataBackupManagement extends Controller
             $res = $this->creatingBackupSQL($backupfile);
 
             $this->get('session')->getFlashBag()->add(
-                'pnotify',
+                'notice',
                 $res
             );
 
