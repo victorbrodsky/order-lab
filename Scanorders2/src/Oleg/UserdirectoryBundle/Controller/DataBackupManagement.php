@@ -116,7 +116,7 @@ class DataBackupManagement extends Controller
 
             //create backup
             $backupfile = "c:\\backup\\test.bak";
-            $res = $this->creatingBackupSQL($backupfile);
+            $res = $this->creatingBackupSQLFull($backupfile);
 
             $this->get('session')->getFlashBag()->add(
                 'notice',
@@ -269,7 +269,7 @@ class DataBackupManagement extends Controller
     }
 
     //SQL Server Database backup
-    public function creatingBackupSQL( $backupfile ) {
+    public function creatingBackupSQLFull( $filepath ) {
         $msg = null;
         $timePrefix = date("d-m-Y-H-i-s");
         echo "timePrefix=".$timePrefix."<br>";
@@ -325,10 +325,26 @@ class DataBackupManagement extends Controller
 
         ////////////////// 3) Backup log //////////////////
         //2. Create periodic log backups. These capture activity since the last backup.
-        //Suppose you create a full database backup every night at midnight.
-        // Then, to capture any transactions that occur between backups,
-        // you need to backup your transaction log periodically.
-        // Again, a simple script does this. And, again, this process might be automated:
+        $msgLog = $this->creatingBackupSQLLog($filepath);
+        $msg = $msg . "<br>" . $msgLog;
+
+        return $msg;
+    }
+
+    //2. Create periodic log backups. These capture activity since the last backup.
+    //Suppose you create a full database backup every night at midnight.
+    // Then, to capture any transactions that occur between backups,
+    // you need to backup your transaction log periodically.
+    // Again, a simple script does this. And, again, this process might be automated:
+    public function creatingBackupSQLLog( $filepath ) {
+        $msg = null;
+        $timePrefix = date("d-m-Y-H-i-s");
+        echo "timePrefix=".$timePrefix."<br>";
+        //$timePrefix = str_replace(" ","_",$timePrefix);
+        $conn = $this->getConnection();
+        $dbname = $this->getParameter('database_name');
+        echo "dbname=".$dbname."<br>";
+
         $backupfileLog = "c:\\backup\\testbackupLog_$timePrefix.bak";
         $sql = "BACKUP LOG $dbname TO DISK = '".$backupfileLog."' WITH NORECOVERY";
         echo "LOG sql=".$sql."<br>";
@@ -339,9 +355,8 @@ class DataBackupManagement extends Controller
         }
         else
         {
-            $msgLog = "Transaction log backed up to $backupfileLog";
-            $msg = $msg . " <br> " . $msgLog;
-            echo $msgLog;
+            $msg = "Transaction log backed up to $backupfileLog";
+            echo $msg;
         }
 
         return $msg;
