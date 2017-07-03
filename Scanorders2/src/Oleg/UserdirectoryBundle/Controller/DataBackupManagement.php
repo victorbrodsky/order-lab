@@ -264,7 +264,8 @@ class DataBackupManagement extends Controller
         sqlsrv_configure( "WarningsReturnAsErrors", 0 );
         $sql = "BACKUP DATABASE ScanOrder TO DISK = '".$backupfile."'";
 
-        $sql = "SELECT name FROM scan_stainlist";
+        //$sql = "SELECT name FROM scan_stainlist";
+        $sql = "SELECT * FROM user_siteParameters";
 
         echo "sql=".$sql."<br>";
 
