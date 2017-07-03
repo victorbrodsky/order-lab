@@ -221,7 +221,7 @@ class DataBackupManagement extends Controller
         $backupfile = "testbackup.bak";
         $backupfile = "c:\\backup\\testbackup.bak";
         $em = $this->getDoctrine()->getManager();
-        //sqlsrv_configure( "WarningsReturnAsErrors", 0 );
+        sqlsrv_configure( "WarningsReturnAsErrors", 0 );
         $sql = "BACKUP DATABASE ScanOrder TO DISK = :backupfile";
         echo "sql=".$sql."<br>";
 
