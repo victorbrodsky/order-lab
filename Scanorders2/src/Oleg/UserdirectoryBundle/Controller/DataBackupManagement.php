@@ -321,14 +321,14 @@ class DataBackupManagement extends Controller
         {
             $msg = $msg . "<br>" . "Database backed up to $backupfile; stmt=".$stmt;
             echo $msg."<br>";
-
+            exit('exit to write to disk Full backup');
         }
         ////////////////// EOF 2 //////////////////
 
         ////////////////// 3) Backup log //////////////////
         //2. Create periodic log backups. These capture activity since the last backup.
-        $msgLog = $this->creatingBackupSQLLog($filepath);
-        $msg = $msg . "<br>" . $msgLog;
+        //$msgLog = $this->creatingBackupSQLLog($filepath);
+        //$msg = $msg . "<br>" . $msgLog;
 
         return $msg;
     }
@@ -339,7 +339,6 @@ class DataBackupManagement extends Controller
     // you need to backup your transaction log periodically.
     // Again, a simple script does this. And, again, this process might be automated:
     public function creatingBackupSQLLog( $filepath ) {
-        exit('exit 0');
         $msg = null;
         $timePrefix = date("d-m-Y-H-i-s");
         echo "timePrefix=".$timePrefix."<br>";
@@ -347,7 +346,7 @@ class DataBackupManagement extends Controller
         $conn = $this->getConnection();
         $dbname = $this->getParameter('database_name');
         echo "dbname=".$dbname."<br>";
-        exit('exit 1');
+        //exit('exit 1');
 
         $backupfileLog = "c:\\backup\\testbackupLog_$timePrefix.bak";
         $sql = "BACKUP LOG $dbname TO DISK = '".$backupfileLog."' WITH NORECOVERY";
@@ -361,6 +360,7 @@ class DataBackupManagement extends Controller
         {
             $msg = "Transaction log backed up to $backupfileLog";
             echo $msg;
+            exit('exit to write to disk Log backup');
         }
 
         return $msg;
