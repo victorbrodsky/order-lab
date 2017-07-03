@@ -268,7 +268,8 @@ class DataBackupManagement extends Controller
         //return $em->getConnection();
     }
 
-    //SQL Server Database backup
+    //SQL Server Database backup FULL
+    //https://blogs.msdn.microsoft.com/brian_swan/2010/04/06/backup-and-restore-a-database-with-the-sql-server-driver-for-php/
     public function creatingBackupSQLFull( $filepath ) {
         $msg = null;
         $timePrefix = date("d-m-Y-H-i-s");
@@ -344,6 +345,7 @@ class DataBackupManagement extends Controller
         $conn = $this->getConnection();
         $dbname = $this->getParameter('database_name');
         echo "dbname=".$dbname."<br>";
+        exit('exit');
 
         $backupfileLog = "c:\\backup\\testbackupLog_$timePrefix.bak";
         $sql = "BACKUP LOG $dbname TO DISK = '".$backupfileLog."' WITH NORECOVERY";
