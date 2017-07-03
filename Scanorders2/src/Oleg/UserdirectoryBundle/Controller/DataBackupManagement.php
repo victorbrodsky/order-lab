@@ -41,6 +41,10 @@ class DataBackupManagement extends Controller
      * https://blogs.msdn.microsoft.com/brian_swan/2010/04/06/backup-and-restore-a-database-with-the-sql-server-driver-for-php/
      * Bundle (no MSSQL): https://github.com/dizda/CloudBackupBundle
      *
+     * Table specific backup/restore:
+     * http://www.php-mysql-tutorial.com/wikis/mysql-tutorials/using-php-to-backup-mysql-databases.aspx
+     * https://www.phpclasses.org/package/5761-PHP-Dump-a-Microsoft-SQL-server-database.html#view_files/files/29084
+     *
      * @Route("/data-backup-management/", name="employees_data_backup_management")
      * @Template("OlegUserdirectoryBundle:DataBackup:data_backup_management.html.twig")
      * @Method("GET")
@@ -79,8 +83,10 @@ class DataBackupManagement extends Controller
 
 
     /**
+     * //@Template("OlegUserdirectoryBundle:DataBackup:create_backup.html.twig")
+     *
      * @Route("/create-backup/", name="employees_create_backup")
-     * @Template("OlegUserdirectoryBundle:DataBackup:create_backup.html.twig")
+     * @Template("OlegUserdirectoryBundle:DataBackup:data_backup_management.html.twig")
      * @Method("GET")
      */
     public function createBackupAction(Request $request) {
@@ -101,24 +107,37 @@ class DataBackupManagement extends Controller
             return $this->redirect($this->generateUrl('employees_data_backup_management'));
         }
 
+        $em = $this->getDoctrine()->getManager();
         $sitename = "employees";
-        $form = null;
 
-        $form->handleRequest($request);
 
-        if( $form->isSubmitted() && $form->isValid() ) {
+        if( $networkDrivePath ) {
 
             //create backup
+            $backupfile = "c:\\backup\\test.bak";
+            $res = $this->creatingBackup($backupfile);
+
+            $this->get('session')->getFlashBag()->add(
+                'pnotify',
+                $res
+            );
 
             return $this->redirect($this->generateUrl('employees_data_backup_management'));
         }
 
-        return array(
-            'form' => $form->createView(),
-            'sitename' => $sitename,
-            'title' => "Create Backup",
-            'cycle' => 'new'
+
+        $this->get('session')->getFlashBag()->add(
+            'pnotify-error',
+            "Error backup"
         );
+
+        return $this->redirect($this->generateUrl('employees_data_backup_management'));
+//        return array(
+//            //'form' => $form->createView(),
+//            'sitename' => $sitename,
+//            'title' => "Create Backup",
+//            'cycle' => 'new'
+//        );
     }
 
 
@@ -185,5 +204,30 @@ class DataBackupManagement extends Controller
         $backupFiles = array($file0,$file1,$file2);
 
         return $backupFiles;
+    }
+
+//    public function getConnection() {
+////        $uid = "symfony2";
+////        $pwd = "symfony2";
+////        $connOptions = array("Database"=>"ScanOrder", "UID"=>$uid, "PWD"=>$pwd);
+////        $conn = sqlsrv_connect($serverName, $connOptions);
+////        return $conn;
+//        $em = $this->getDoctrine()->getManager();
+//        return $em->getConnection();
+//    }
+
+    public function creatingBackup( $backupfile ) {
+        $backupfile = "testbackup.bak";
+        $em = $this->getDoctrine()->getManager();
+        //sqlsrv_configure( "WarningsReturnAsErrors", 0 );
+        $sql = "BACKUP DATABASE ScanOrder TO DISK = :backupfile";
+        echo "sql=".$sql."<br>";
+
+        $params['backupfile'] = $backupfile;
+
+        $query = $em->getConnection()->prepare($sql);
+        $res = $query->execute($params);
+
+        echo "res=".$res."<br>";
     }
 }

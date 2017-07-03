@@ -51,7 +51,7 @@
             <p>
                 <select id="backup-file-id" class="combobox" style="width: 30%;">
                     {% for  backupFile in backupFiles %}
-                        <option value="{{ backupFile.id }}" {{ selected }}>{{ backupFile.name }}</option>
+                        <option value="{{ backupFile.id }}">{{ backupFile.name }}</option>
                     {% endfor %}
                 </select>
             </p>
