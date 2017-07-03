@@ -285,7 +285,7 @@ class DataBackupManagement extends Controller
         //$sql = "SELECT name FROM scan_stainlist";
         //$sql = "SELECT * FROM user_siteParameters";
 
-        echo "sql=".$sql."<br>";
+        echo "FULL sql=".$sql."<br>";
 
 //        $params['backupfile'] = $backupfile;
 //        $query = $em->getConnection()->prepare($sql);
@@ -303,6 +303,21 @@ class DataBackupManagement extends Controller
         {
             $msg = "Database backed up to $backupfile; stmt=".$stmt;
             echo $msg."<br>";
+        }
+
+
+        //Backup log. Put DB into “Restoring…” state.
+        $backupfileLog = "c:\\backup\\testbackupLog.bak";
+        $sql = "BACKUP LOG TestDB TO DISK = '".$backupfileLog."' WITH NORECOVERY";
+        echo "LOG sql=".$sql."<br>";
+        $stmt = sqlsrv_query($conn, $sql);
+        if($stmt === false)
+        {
+            die(print_r(sqlsrv_errors()));
+        }
+        else
+        {
+            echo “Transaction log backed up to $log_backup_file”;
         }
 
         return $msg;
