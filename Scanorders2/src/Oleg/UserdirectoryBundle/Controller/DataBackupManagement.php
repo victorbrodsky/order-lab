@@ -273,6 +273,7 @@ class DataBackupManagement extends Controller
         $msg = null;
         $conn = $this->getConnection();
         $dbname = $this->getParameter('database_name');
+        echo "dbname=".$dbname."<br>";
 
         $backupfile = "testbackup.bak";
         $backupfile = "c:\\backup\\testbackup.bak";
@@ -300,7 +301,7 @@ class DataBackupManagement extends Controller
         }
         else
         {
-            $msg = "Database backed up to $backupfile";
+            $msg = "Database backed up to $backupfile; stmt=".$stmt;
             echo $msg."<br>";
         }
 
