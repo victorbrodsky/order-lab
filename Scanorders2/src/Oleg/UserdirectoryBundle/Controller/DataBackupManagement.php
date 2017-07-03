@@ -225,6 +225,13 @@ class DataBackupManagement extends Controller
         if( 1 ) {
             $connOptions = array("Database"=>$dbname, "UID"=>$uid, "PWD"=>$pwd);
             $conn = sqlsrv_connect("COLLAGE", $connOptions);
+
+            //testing
+//            $sql = "SELECT * FROM user_siteParameters";
+//            echo "sql=".$sql."<br>";
+//            $params = sqlsrv_query($conn, $sql);
+//            $res = $params->fetch();
+//            echo "env=".$res['environment']."<br>";
         }
 
         if( 0 ) {
@@ -237,6 +244,13 @@ class DataBackupManagement extends Controller
                 'driver' => $driver,
             );
             $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
+
+            //testing
+            $sql = "SELECT * FROM user_siteParameters";
+            echo "sql=".$sql."<br>";
+            $params = $conn->query($sql); // Simple, but has several drawbacks
+            $res = $params->fetch();
+            echo "env=".$res['environment']."<br>";
         }
 
         if( $conn ) {
@@ -246,12 +260,7 @@ class DataBackupManagement extends Controller
             die( print_r( sqlsrv_errors(), true));
         }
 
-        //esting
-        $sql = "SELECT * FROM user_siteParameters";
-        echo "sql=".$sql."<br>";
-        $params = $conn->query($sql); // Simple, but has several drawbacks
-        $res = $params->fetch();
-        echo "env=".$res['environment']."<br>";
+
 
         return $conn;
 
