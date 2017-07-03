@@ -282,7 +282,7 @@ class DataBackupManagement extends Controller
         sqlsrv_configure( "WarningsReturnAsErrors", 0 );
 
 
-        //////////////////
+        ////////////////// 1) make sure that the recovery model of your database is set to FULL ////////////////////
         $sql = "ALTER DATABASE $dbname SET RECOVERY FULL";
         $stmt = sqlsrv_query($conn, $sql);
         if($stmt === false)
@@ -294,13 +294,11 @@ class DataBackupManagement extends Controller
             $msg = "Recovery model set to FULL";
             echo $msg;
         }
+        ////////////////// EOF 1 ////////////////////
 
-        //2) Full
+        ////////////////// 2) Full //////////////////
+        //1. Creating a full (as opposed to a differential) database backup. This essentially creates a copy of your database.
         $sql = "BACKUP DATABASE $dbname TO DISK = '".$backupfile."'";
-
-        //$sql = "SELECT name FROM scan_stainlist";
-        //$sql = "SELECT * FROM user_siteParameters";
-
         echo "FULL sql=".$sql."<br>";
 
 //        $params['backupfile'] = $backupfile;
@@ -320,9 +318,14 @@ class DataBackupManagement extends Controller
             $msg = $msg . "<br>" . "Database backed up to $backupfile; stmt=".$stmt;
             echo $msg."<br>";
         }
+        ////////////////// EOF 2 //////////////////
 
-
-        //Backup log. Put DB into “Restoring…” state.
+        ////////////////// 3) Backup log //////////////////
+        //2. Create periodic log backups. These capture activity since the last backup.
+        //Suppose you create a full database backup every night at midnight.
+        // Then, to capture any transactions that occur between backups,
+        // you need to backup your transaction log periodically.
+        // Again, a simple script does this. And, again, this process might be automated:
         $backupfileLog = "c:\\backup\\testbackupLog.bak";
         $sql = "BACKUP LOG $dbname TO DISK = '".$backupfileLog."' WITH NORECOVERY";
         echo "LOG sql=".$sql."<br>";
