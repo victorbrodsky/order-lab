@@ -325,8 +325,8 @@ class DataBackupManagement extends Controller
 
         ////////////////// 3) Backup log //////////////////
         //2. Create periodic log backups. These capture activity since the last backup.
-        //$msgLog = $this->creatingBackupSQLLog($filepath);
-        //$msg = $msg . "<br>" . $msgLog;
+        $msgLog = $this->creatingBackupSQLLog($filepath);
+        $msg = $msg . "<br>" . $msgLog;
 
         return $msg;
     }
