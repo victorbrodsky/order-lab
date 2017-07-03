@@ -210,7 +210,7 @@ class DataBackupManagement extends Controller
         $uid = "symfony2";
         $pwd = "symfony2";
         $connOptions = array("Database"=>"ScanOrder", "UID"=>$uid, "PWD"=>$pwd);
-        $conn = sqlsrv_connect("WORK-MSSQL1", $connOptions);
+        $conn = sqlsrv_connect("WORK-MSSQL", $connOptions);
 
         if( $conn ) {
             echo "Connection ok <br>";
