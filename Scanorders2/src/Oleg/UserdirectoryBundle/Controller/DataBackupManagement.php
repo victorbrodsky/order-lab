@@ -223,6 +223,9 @@ class DataBackupManagement extends Controller
         //$em = $this->getDoctrine()->getManager();
         sqlsrv_configure( "WarningsReturnAsErrors", 0 );
         $sql = "BACKUP DATABASE ScanOrder TO DISK = '".$backupfile."'";
+
+        $sql = "SELECT name FROM scan_stainlist";
+
         echo "sql=".$sql."<br>";
 
 //        $params['backupfile'] = $backupfile;
