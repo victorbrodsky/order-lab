@@ -258,14 +258,17 @@ class DataBackupManagement extends Controller
     //SQL Server Database backup
     public function creatingBackupSQL( $backupfile ) {
         $conn = $this->getConnection();
+        $dbname = $this->getParameter('database_name');
+
         $backupfile = "testbackup.bak";
         $backupfile = "c:\\backup\\testbackup.bak";
+
         //$em = $this->getDoctrine()->getManager();
         sqlsrv_configure( "WarningsReturnAsErrors", 0 );
-        $sql = "BACKUP DATABASE ScanOrder TO DISK = '".$backupfile."'";
+        $sql = "BACKUP DATABASE $dbname TO DISK = '".$backupfile."'";
 
         //$sql = "SELECT name FROM scan_stainlist";
-        $sql = "SELECT * FROM user_siteParameters";
+        //$sql = "SELECT * FROM user_siteParameters";
 
         echo "sql=".$sql."<br>";
 
@@ -273,7 +276,6 @@ class DataBackupManagement extends Controller
 //        $query = $em->getConnection()->prepare($sql);
 //        $res = $query->execute($params);
 //        echo "res=".$res."<br>";
-
 
         $stmt = sqlsrv_query($conn, $sql);
         if($stmt === false)
