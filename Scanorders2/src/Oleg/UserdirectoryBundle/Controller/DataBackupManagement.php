@@ -115,8 +115,10 @@ class DataBackupManagement extends Controller
         if( $networkDrivePath ) {
 
             //create backup
-            $backupfile = "c:\\backup\\test.bak";
-            $res = $this->creatingBackupSQLFull($backupfile);
+            //$backupfile = "c:\\backup\\test.bak";
+            $filepath = "c:\\backup\\";
+            $res = $this->creatingBackupSQLFull($filepath);
+            exit($res);
 
             $this->get('session')->getFlashBag()->add(
                 'notice',
@@ -321,7 +323,7 @@ class DataBackupManagement extends Controller
         {
             $msg = $msg . "<br>" . "Database backed up to $backupfile; stmt=".$stmt;
             echo $msg."<br>";
-            exit('exit to write to disk Full backup');
+            //exit('exit to write to disk Full backup'); //this is required to write file to disk (?)
         }
         ////////////////// EOF 2 //////////////////
 
@@ -360,7 +362,7 @@ class DataBackupManagement extends Controller
         {
             $msg = "Transaction log backed up to $backupfileLog";
             echo $msg;
-            exit('exit to write to disk Log backup');
+            //exit('exit to write to disk Log backup');
         }
 
         return $msg;
