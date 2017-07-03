@@ -280,6 +280,22 @@ class DataBackupManagement extends Controller
 
         //$em = $this->getDoctrine()->getManager();
         sqlsrv_configure( "WarningsReturnAsErrors", 0 );
+
+
+        //////////////////
+        $sql = "ALTER DATABASE $dbname SET RECOVERY FULL";
+        $stmt = sqlsrv_query($conn, $sql);
+        if($stmt === false)
+        {
+            die(print_r(sqlsrv_errors()));
+        }
+        else
+        {
+            $msg = "Recovery model set to FULL";
+            echo $msg;
+        }
+
+        //2) Full
         $sql = "BACKUP DATABASE $dbname TO DISK = '".$backupfile."'";
 
         //$sql = "SELECT name FROM scan_stainlist";
@@ -301,7 +317,7 @@ class DataBackupManagement extends Controller
         }
         else
         {
-            $msg = "Database backed up to $backupfile; stmt=".$stmt;
+            $msg = $msg . "<br>" . "Database backed up to $backupfile; stmt=".$stmt;
             echo $msg."<br>";
         }
 
