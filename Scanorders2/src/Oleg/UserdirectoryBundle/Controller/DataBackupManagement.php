@@ -207,13 +207,14 @@ class DataBackupManagement extends Controller
     }
 
     public function getConnection() {
-//        $uid = "symfony2";
-//        $pwd = "symfony2";
-//        $connOptions = array("Database"=>"ScanOrder", "UID"=>$uid, "PWD"=>$pwd);
-//        $conn = sqlsrv_connect($serverName, $connOptions);
-//        return $conn;
-        $em = $this->getDoctrine()->getManager();
-        return $em->getConnection();
+        $uid = "symfony2";
+        $pwd = "symfony2";
+        $connOptions = array("Database"=>"ScanOrder", "UID"=>$uid, "PWD"=>$pwd);
+        $conn = sqlsrv_connect("WORK-MSSQL", $connOptions);
+        return $conn;
+
+        //$em = $this->getDoctrine()->getManager();
+        //return $em->getConnection();
     }
 
     //SQL Server Database backup
