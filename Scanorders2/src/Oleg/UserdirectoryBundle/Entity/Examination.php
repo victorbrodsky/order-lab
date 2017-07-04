@@ -563,7 +563,9 @@ class Examination
      */
     public function setUSMLEStep1Percentile($USMLEStep1Percentile)
     {
-        $this->USMLEStep1Percentile = $USMLEStep1Percentile;
+        if( $this->isInteger($USMLEStep1Percentile) ) {
+            $this->USMLEStep1Percentile = $USMLEStep1Percentile;
+        }
     }
 
     /**
@@ -579,7 +581,9 @@ class Examination
      */
     public function setUSMLEStep2CKPercentile($USMLEStep2CKPercentile)
     {
-        $this->USMLEStep2CKPercentile = $USMLEStep2CKPercentile;
+        if( $this->isInteger($USMLEStep2CKPercentile) ) {
+            $this->USMLEStep2CKPercentile = $USMLEStep2CKPercentile;
+        }
     }
 
     /**
@@ -595,7 +599,9 @@ class Examination
      */
     public function setUSMLEStep2CSPercentile($USMLEStep2CSPercentile)
     {
-        $this->USMLEStep2CSPercentile = $USMLEStep2CSPercentile;
+        if( $this->isInteger($USMLEStep2CSPercentile) ) {
+            $this->USMLEStep2CSPercentile = $USMLEStep2CSPercentile;
+        }
     }
 
     /**
@@ -611,7 +617,9 @@ class Examination
      */
     public function setUSMLEStep3Percentile($USMLEStep3Percentile)
     {
-        $this->USMLEStep3Percentile = $USMLEStep3Percentile;
+        if( $this->isInteger($USMLEStep3Percentile) ) {
+            $this->USMLEStep3Percentile = $USMLEStep3Percentile;
+        }
     }
 
     /**
@@ -627,7 +635,9 @@ class Examination
      */
     public function setCOMLEXLevel1Percentile($COMLEXLevel1Percentile)
     {
-        $this->COMLEXLevel1Percentile = $COMLEXLevel1Percentile;
+        if( $this->isInteger($COMLEXLevel1Percentile) ) {
+            $this->COMLEXLevel1Percentile = $COMLEXLevel1Percentile;
+        }
     }
 
     /**
@@ -643,7 +653,9 @@ class Examination
      */
     public function setCOMLEXLevel2Percentile($COMLEXLevel2Percentile)
     {
-        $this->COMLEXLevel2Percentile = $COMLEXLevel2Percentile;
+        if( $this->isInteger($COMLEXLevel2Percentile) ) {
+            $this->COMLEXLevel2Percentile = $COMLEXLevel2Percentile;
+        }
     }
 
     /**
@@ -659,7 +671,9 @@ class Examination
      */
     public function setCOMLEXLevel3Percentile($COMLEXLevel3Percentile)
     {
-        $this->COMLEXLevel3Percentile = $COMLEXLevel3Percentile;
+        if( $this->isInteger($COMLEXLevel3Percentile) ) {
+            $this->COMLEXLevel3Percentile = $COMLEXLevel3Percentile;
+        }
     }
 
 
@@ -682,6 +696,15 @@ class Examination
     }
 
 
+    public function isInteger( $variable ) {
+        # Check if your variable is an integer
+        if ( strval($variable) != strval(intval($variable)) ) {
+            //echo "Your variable is not an integer";
+            return false;
+        } else {
+            return true;
+        }
+    }
 
 
     public function __toString() {
