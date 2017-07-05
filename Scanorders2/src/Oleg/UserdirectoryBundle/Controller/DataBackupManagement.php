@@ -288,8 +288,9 @@ class DataBackupManagement extends Controller
         echo "backupfile=".$backupfile."<br>";
 
         //create file on disk
-        $myfile = fopen($backupfile, "w") or die("Unable to open file!");
-        fclose($backupfile);
+        //$myfile = fopen($backupfile, "w") or die("Unable to open file!");
+        //fclose($backupfile);
+        touch($backupfile);
 
         //$em = $this->getDoctrine()->getManager();
         sqlsrv_configure( "WarningsReturnAsErrors", 0 );
@@ -303,7 +304,7 @@ class DataBackupManagement extends Controller
         }
         else
         {
-            $msg = "Recovery model set to FULL";
+            $msg = "Recovery model set to FULL<br>";
             echo $msg;
         }
         ////////////////// EOF 1 ////////////////////
