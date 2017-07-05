@@ -215,7 +215,9 @@ class DataBackupManagement extends Controller
 
         $backupFiles = array($file0);
 
-        $files = scandir($networkDrivePath,2);
+        //$files = scandir($networkDrivePath); //with dots
+        $files = array_diff(scandir($networkDrivePath), array('..', '.'));
+
         foreach( $files as $file ) {
             $fileOption = array("id"=>$file,"name"=>$file);
             $backupFiles[] = $fileOption;
