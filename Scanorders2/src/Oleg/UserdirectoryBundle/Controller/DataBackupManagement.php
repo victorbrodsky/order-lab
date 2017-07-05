@@ -291,6 +291,7 @@ class DataBackupManagement extends Controller
         //$myfile = fopen($backupfile, "w") or die("Unable to open file!");
         //fclose($backupfile);
         touch($backupfile);
+        chmod($backupfile, 777);
 
         //$em = $this->getDoctrine()->getManager();
         sqlsrv_configure( "WarningsReturnAsErrors", 0 );
