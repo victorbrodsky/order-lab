@@ -58,6 +58,7 @@ class EncounterRepository extends ArrayFieldAbstractRepository
 
 
     //add Encounter's name, sex to the corresponding patient fields
+    //Used only by setResult() in ArrayFieldAbstractRepository
     public function copyCommonFieldsToPatient( $encounter, $user, $sitename=null ) {
 
         $patient = $encounter->getParent();
@@ -157,6 +158,8 @@ class EncounterRepository extends ArrayFieldAbstractRepository
 
         //echo "patient after copy encounter fields: ".$patient."<br>";
     }
+
+    //Used only copyCommonEncountersFieldsToPatient in PatientRepository class (in turn Used only by updatePatient in PatientController)
     public function copyNewCommonFieldsToPatient( $encounter, $user, $source ) {
         $patient = $encounter->getParent();
 
@@ -176,6 +179,8 @@ class EncounterRepository extends ArrayFieldAbstractRepository
         $this->processEncounterCommonPatientField( $patient, $encounter->getPatsex(), $user, $source, "Sex" );
 
     }
+    //Used only by $this->copyNewCommonFieldsToPatient
+    //If field is exists - set status to valid (if not valid); otherwise, create a new valid field
     //$fieldStr - i.e. "Lastname"
     public function processEncounterCommonPatientField( $patient, $encounterFields, $user, $source, $fieldStr ) {
         $validStatus = self::STATUS_VALID;

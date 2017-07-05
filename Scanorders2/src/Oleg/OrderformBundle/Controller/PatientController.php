@@ -563,7 +563,7 @@ class PatientController extends Controller
         if( $form->isValid() ) {
 
             //set patient's name if does not exists
-            $em->getRepository('OlegOrderformBundle:Patient')->copyCommonEncountersFieldsToPatient($entity,$user,$parameters['sitename']);
+            //$em->getRepository('OlegOrderformBundle:Patient')->copyCommonEncountersFieldsToPatient($entity,$user,$parameters['sitename']);
             //echo "<br><br>";
             //foreach( $entity->getLastname() as $lastname ) {
             //    echo $lastname->getStatus()." ID#".$lastname->getId().": lastname=".$lastname."<br>";
@@ -588,6 +588,12 @@ class PatientController extends Controller
 
             //exit("Form is valid");
             $em->persist($entity);
+            $em->flush();
+
+            //DO IT AFTER UPDATE DB: set patient's common fields (names, suffix and gender) for the latest modified encounter.
+            // The latest encounter fields will be copy to the patient object. They can come from different encounters
+            $em->getRepository('OlegOrderformBundle:Patient')->copyCommonLatestEncounterFieldsToPatient($entity,$user,$parameters['sitename']);
+            $em->persist($entity); //entity is a patient object
             $em->flush();
 
             if( $changeSetStr ) {

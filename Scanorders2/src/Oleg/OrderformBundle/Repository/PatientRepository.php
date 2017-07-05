@@ -214,14 +214,138 @@ class PatientRepository extends ArrayFieldAbstractRepository
         return $patients;
     }
 
+    //Used only by updatePatient in PatientController
+    //Find the most recent updated encounter and use it to update patient's common fields (names, suffix and gender)
+    // The latest encounter fields will be copy to the patient object. They can come from different encounters
+    public function copyCommonLatestEncounterFieldsToPatient($patient,$user,$sitename)
+    {
 
-    public function copyCommonEncountersFieldsToPatient($patient,$user,$sitename) {
-        $securityUtil = new SecurityUtil($this->_em,null,null);
-        $source = $securityUtil->getDefaultSourceSystem($sitename);
-        foreach( $patient->getEncounter() as $encounter ) {
-            $this->_em->getRepository('OlegOrderformBundle:Encounter')->copyNewCommonFieldsToPatient($encounter,$user,$source);
+        if (!$patient || !$patient->getId()) {
+            return null;
         }
+
+        $securityUtil = new SecurityUtil($this->_em, null, null);
+        $source = $securityUtil->getDefaultSourceSystem($sitename);
+
+//        foreach( $patient->getEncounter() as $encounter ) {
+//            $this->_em->getRepository('OlegOrderformBundle:Encounter')->copyNewCommonFieldsToPatient($encounter,$user,$source);
+//        }
+//        return $patient;
+
+        //suffix
+        $this->processLatestEncounterCommonPatientField( $patient, $user, $source, "Suffix" );
+
+        //lastname
+        $this->processLatestEncounterCommonPatientField( $patient, $user, $source, "Lastname" );
+
+        //firstname
+        $this->processLatestEncounterCommonPatientField( $patient, $user, $source, "Firstname" );
+
+        //middlename
+        $this->processLatestEncounterCommonPatientField( $patient, $user, $source, "Middlename" );
+
+        //sex
+        $this->processLatestEncounterCommonPatientField( $patient,$user, $source, "Sex" );
+
+        $testing = false;
+        if( $testing ) {
+            exit();
+        }
+    }
+
+    public function processLatestEncounterCommonPatientField( $patient, $user, $source, $fieldStr, $testing=false  ) {
+        if( !$patient || !$fieldStr ) {
+            return null;
+        }
+
+        //$fieldStr = "Lastname";
+        $fieldlc = strtolower($fieldStr);
+
+        //include latest updated or created
+        $query = $this->_em->createQueryBuilder()
+            ->from('OlegOrderformBundle:EncounterPat'.$fieldlc, 'commonfield')
+            ->select("commonfield")
+            ->leftJoin("commonfield.encounter", "encounter")
+            ->leftJoin("encounter.patient", "patient")
+            ->where("patient.id = :patientId AND commonfield.status = 'valid' AND commonfield.field IS NOT NULL")
+            ->orderBy("commonfield.updateDate","DESC")
+            ->setParameters( array('patientId'=>$patient->getId()) )
+            ->getQuery();
+
+        $commonfields = $query->getResult();
+
+        if( $testing ) {
+            //testing
+            foreach ($commonfields as $commonfield) {
+                if ($commonfield->getUpdateDate()) {
+                    $updateDate = $commonfield->getUpdateDate()->format('d-m-Y H:i:s');
+                } else {
+                    $updateDate = null;
+                }
+                echo $commonfield->getId() . ": $fieldStr=" . $updateDate . "; value=" . $commonfield->getField() . "<br>";
+            }
+        }
+
+        $encounterField = null;
+        if( count($commonfields) > 0 ) {
+            $encounterField = $commonfields[0];
+        }
+
+        if( $encounterField ) {
+
+            if( $testing ) {
+                //testing
+                if ($encounterField->getUpdateDate()) {
+                    $updateDate = $encounterField->getUpdateDate()->format('d-m-Y H:i:s');
+                } else {
+                    $updateDate = null;
+                }
+                echo "Final: " . $encounterField->getId() . ": $fieldStr=" . $updateDate . "; value=" . $encounterField->getField() . "<br>";
+                //EOF testing
+            }
+
+            //update corresponding patient's field
+            $this->processEncounterCommonPatientField($patient,$encounterField,$user,$source,$fieldStr,$testing);
+        }
+
+        if( $testing ) {
+            echo "<br><br>";
+        }
+
         return $patient;
+    }
+    //create/update the patient field according to the provided encounter field value
+    public function processEncounterCommonPatientField( $patient, $encounterField, $user, $source, $fieldStr, $testing=false ) {
+
+        if( !$encounterField || !$encounterField->getField() || !$patient ) {
+            return;
+        }
+
+        $validStatus = self::STATUS_VALID;
+        $invalidStatus = self::STATUS_INVALID;
+        $getterMethod = "get".$fieldStr;
+        $adderMethod = "add".$fieldStr;
+        $classname = "Patient".$fieldStr;
+        $patientFieldObject = $patient->hasSimpleField($encounterField,$getterMethod); //"getLastname"
+        if( $patientFieldObject ) {
+            if( $testing ) {
+                echo "### " . $fieldStr . " field exists: " . $patientFieldObject . "; status=" . $patientFieldObject->getStatus() . "<br>";
+            }
+            if( $patientFieldObject->getStatus() != $validStatus ) {
+                $patient->setStatusAllFields($patient->$getterMethod(), $invalidStatus);
+                $patientFieldObject->setStatus($validStatus);
+                //echo $fieldStr." change status field : ".$patientFieldObject."; status=".$patientFieldObject->getStatus()."<br>";
+            }
+        } else {
+            if( $testing ) {
+                echo "!!! " . $fieldStr . " create new field : " . $classname . " with value " . $encounterField->getField() . "<br>";
+            }
+            $patient->setStatusAllFields($patient->$getterMethod(), $invalidStatus);
+            $entityClass = "Oleg\\OrderformBundle\\Entity\\".$classname;
+            $patientFieldObject = new $entityClass($validStatus, $user, $source); //PatientLastName
+            $patientFieldObject->setField($encounterField->getField());
+            $patient->$adderMethod($patientFieldObject); //addLastname
+        }
     }
 
 }
