@@ -306,7 +306,7 @@ class DataBackupManagement extends Controller
 
         ////////////////// 2) Full //////////////////
         //1. Creating a full (as opposed to a differential) database backup. This essentially creates a copy of your database.
-        $sql = "BACKUP DATABASE $dbname TO DISK = '".$backupfile."' WITH INIT";
+        $sql = "BACKUP DATABASE $dbname TO DISK = '".$backupfile."' WITH INIT, NOUNLOAD , NAME = N'%DB_NAME% backup', NOSKIP , STATS = 10, NOFORMAT";
         echo "FULL sql=".$sql."<br>";
 
 //        $params['backupfile'] = $backupfile;
