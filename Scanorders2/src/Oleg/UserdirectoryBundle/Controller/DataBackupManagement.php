@@ -201,10 +201,25 @@ class DataBackupManagement extends Controller
             return null;
         }
 
+        if (file_exists($networkDrivePath)) {
+            echo "The file $networkDrivePath exists";
+        } else {
+            echo "The file $networkDrivePath does not exist";
+            return null;
+        }
+
         $file0 = array("id"=>null,"name"=>"");
-        $file1 = array("id"=>1,"name"=>"file 1");
-        $file2 = array("id"=>2,"name"=>"file 2");
-        $backupFiles = array($file0,$file1,$file2);
+//        $file1 = array("id"=>1,"name"=>"file 1");
+//        $file2 = array("id"=>2,"name"=>"file 2");
+//        $backupFiles = array($file0,$file1,$file2);
+
+        $backupFiles = array($file0);
+
+        $files = scandir($networkDrivePath);
+        foreach( $files as $file ) {
+            $fileOption = array("id"=>$file,"name"=>$file);
+            $backupFiles[] = $fileOption;
+        }
 
         return $backupFiles;
     }
