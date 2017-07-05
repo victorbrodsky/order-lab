@@ -116,8 +116,8 @@ class DataBackupManagement extends Controller
 
             //create backup
             //$backupfile = "c:\\backup\\test.bak";
-            $filepath = "c:\\backup\\";
-            $res = $this->creatingBackupSQLFull($filepath);
+            //$networkDrivePath = "c:\\backup\\";
+            $res = $this->creatingBackupSQLFull($networkDrivePath);
             //exit($res);
 
             $this->get('session')->getFlashBag()->add(
@@ -282,11 +282,13 @@ class DataBackupManagement extends Controller
         echo "dbname=".$dbname."<br>";
 
         //$backupfile = "testbackup_$timePrefix.bak";
-        $backupfile = "c:\\backup\\testbackup_$timePrefix.bak";
+        //$backupfile = "c:\\backup\\testbackup_$timePrefix.bak";
+        //$backupfile = $filepath . DIRECTORY_SEPARATOR . "testbackup_$timePrefix.bak";
+        $backupfile = $filepath . "testbackup_$timePrefix.bak";
+        echo "backupfile=".$backupfile."<br>";
 
         //$em = $this->getDoctrine()->getManager();
         sqlsrv_configure( "WarningsReturnAsErrors", 0 );
-
 
         ////////////////// 1) make sure that the recovery model of your database is set to FULL ////////////////////
         $sql = "ALTER DATABASE $dbname SET RECOVERY FULL";
@@ -350,7 +352,10 @@ class DataBackupManagement extends Controller
         echo "dbname=".$dbname."<br>";
         //exit('exit 1');
 
-        $backupfileLog = "c:\\backup\\testbackupLog_$timePrefix.bak";
+        //$backupfileLog = "c:\\backup\\testbackupLog_$timePrefix.bak";
+        //$backupfileLog = $filepath . DIRECTORY_SEPARATOR . "testbackupLog_$timePrefix.bak";
+        $backupfileLog = $filepath . "testbackupLog_$timePrefix.bak";
+
         $sql = "BACKUP LOG $dbname TO DISK = '".$backupfileLog."' WITH NORECOVERY";
         echo "LOG sql=".$sql."<br>";
         $stmt = sqlsrv_query($conn, $sql);
