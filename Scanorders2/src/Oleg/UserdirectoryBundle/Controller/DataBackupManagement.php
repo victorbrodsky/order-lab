@@ -325,7 +325,7 @@ class DataBackupManagement extends Controller
         {
             $msg = $msg . "<br>" . "Database backed up to $backupfile; stmt=".$stmt;
             echo $msg."<br>";
-            exit('exit to write to disk Full backup'); //this is required to write file to disk (?)
+            exit('Write Full backup file to disk: '.$backupfile); //this is required to write file to disk (?)
         }
         ////////////////// EOF 2 //////////////////
 
