@@ -290,8 +290,8 @@ class DataBackupManagement extends Controller
         //create file on disk
         //$myfile = fopen($backupfile, "w") or die("Unable to open file!");
         //fclose($backupfile);
-        touch($backupfile);
-        chmod($backupfile, 777);
+        //touch($backupfile);
+        //chmod($backupfile, 777);
 
         //$em = $this->getDoctrine()->getManager();
         sqlsrv_configure( "WarningsReturnAsErrors", 0 );
@@ -331,7 +331,7 @@ class DataBackupManagement extends Controller
         {
             $msg = $msg . "<br>" . "Database backed up to $backupfile; stmt=".$stmt;
             echo $msg."<br>";
-            //exit('Write Full backup file to disk: '.$backupfile); //this is required to write file to disk (?)
+            exit('Write Full backup file to disk: '.$backupfile); //this is required to write file to disk (?)
         }
         ////////////////// EOF 2 //////////////////
 
