@@ -313,19 +313,19 @@ class DataBackupManagement extends Controller
         //$em = $this->getDoctrine()->getManager();
         sqlsrv_configure( "WarningsReturnAsErrors", 0 );
 
-        ////////////////// 1) make sure that the recovery model of your database is set to FULL ////////////////////
-        $setRecovery = false;
-        if( $setRecovery ) {
-            $sql = "ALTER DATABASE $dbname SET RECOVERY FULL";
-            $stmt = sqlsrv_query($conn, $sql);
-            if ($stmt === false) {
-                die(print_r(sqlsrv_errors()));
-            } else {
-                $msg = "Recovery model set to FULL<br>";
-                echo $msg;
-            }
-        }
-        ////////////////// EOF 1 ////////////////////
+//        ////////////////// 1) make sure that the recovery model of your database is set to FULL (Requires log backups.) ////////////////////
+//        $setRecovery = false;
+//        if( $setRecovery ) {
+//            $sql = "ALTER DATABASE $dbname SET RECOVERY FULL";
+//            $stmt = sqlsrv_query($conn, $sql);
+//            if ($stmt === false) {
+//                die(print_r(sqlsrv_errors()));
+//            } else {
+//                $msg = "Recovery model set to FULL<br>";
+//                echo $msg;
+//            }
+//        }
+//        ////////////////// EOF 1 ////////////////////
 
         ////////////////// 2) Full //////////////////
         //1. Creating a full (as opposed to a differential) database backup. This essentially creates a copy of your database.
@@ -374,6 +374,20 @@ class DataBackupManagement extends Controller
         $dbname = $this->getParameter('database_name');
         echo "dbname=".$dbname."<br>";
         //exit('exit 1');
+
+        ////////////////// 1) make sure that the recovery model of your database is set to FULL (Requires log backups.) ////////////////////
+        $setRecovery = false;
+        if( $setRecovery ) {
+            $sql = "ALTER DATABASE $dbname SET RECOVERY FULL";
+            $stmt = sqlsrv_query($conn, $sql);
+            if ($stmt === false) {
+                die(print_r(sqlsrv_errors()));
+            } else {
+                $msg = "Recovery model set to FULL<br>";
+                echo $msg;
+            }
+        }
+        ////////////////// EOF 1 ////////////////////
 
         //$backupfileLog = "c:\\backup\\testbackupLog_$timePrefix.bak";
         //$backupfileLog = $filepath . DIRECTORY_SEPARATOR . "testbackupLog_$timePrefix.bak";
