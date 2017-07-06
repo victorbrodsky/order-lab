@@ -314,16 +314,16 @@ class DataBackupManagement extends Controller
         sqlsrv_configure( "WarningsReturnAsErrors", 0 );
 
         ////////////////// 1) make sure that the recovery model of your database is set to FULL ////////////////////
-        $sql = "ALTER DATABASE $dbname SET RECOVERY FULL";
-        $stmt = sqlsrv_query($conn, $sql);
-        if($stmt === false)
-        {
-            die(print_r(sqlsrv_errors()));
-        }
-        else
-        {
-            $msg = "Recovery model set to FULL<br>";
-            echo $msg;
+        $setRecovery = false;
+        if( $setRecovery ) {
+            $sql = "ALTER DATABASE $dbname SET RECOVERY FULL";
+            $stmt = sqlsrv_query($conn, $sql);
+            if ($stmt === false) {
+                die(print_r(sqlsrv_errors()));
+            } else {
+                $msg = "Recovery model set to FULL<br>";
+                echo $msg;
+            }
         }
         ////////////////// EOF 1 ////////////////////
 
