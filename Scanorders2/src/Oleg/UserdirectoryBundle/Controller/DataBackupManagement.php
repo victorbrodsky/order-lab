@@ -161,7 +161,7 @@ class DataBackupManagement extends Controller
         if( !$networkDrivePath ) {
             //exit("No networkDrivePath is defined");
             $this->get('session')->getFlashBag()->add(
-                'pnotify-error',
+                'error',
                 "Cannot continue with Backup: No Network Drive Path is defined in the Site Settings"
             );
             return $this->redirect($this->generateUrl('employees_data_backup_management'));
@@ -202,9 +202,9 @@ class DataBackupManagement extends Controller
         }
 
         if (file_exists($networkDrivePath)) {
-            echo "The file $networkDrivePath exists";
+            //echo "The file $networkDrivePath exists";
         } else {
-            echo "The file $networkDrivePath does not exist";
+            //echo "The file $networkDrivePath does not exist";
             return null;
         }
 
