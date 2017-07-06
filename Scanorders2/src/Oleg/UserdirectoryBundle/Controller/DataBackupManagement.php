@@ -155,6 +155,13 @@ class DataBackupManagement extends Controller
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
+        $hostname = $request->getSchemeAndHttpHost();
+        echo "hostname=$hostname<br>";
+        if( strpos($hostname, 'med.cornell.edu') !== false ) {
+            exit("Under construction!!!");
+        }
+        exit('111');
+
         //networkDrivePath
         $userSecUtil = $this->container->get('user_security_utility');
         $networkDrivePath = $userSecUtil->getSiteSettingParameter('networkDrivePath');
