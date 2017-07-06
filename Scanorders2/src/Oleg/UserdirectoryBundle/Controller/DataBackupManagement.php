@@ -177,10 +177,18 @@ class DataBackupManagement extends Controller
         if( $backupFilePath ) {
 
             //create backup
+            $res = $this->restoringBackupSQLFull($networkDrivePath);
+            //exit($res);
+
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                $res
+            );
 
             $this->get('session')->getFlashBag()->add(
                 'pnotify',
-                "DB has been restored by backup ".$backupFilePath
+                //"DB has been restored by backup ".$backupFilePath
+                $res
             );
 
             return $this->redirect($this->generateUrl('employees_data_backup_management'));
@@ -195,6 +203,10 @@ class DataBackupManagement extends Controller
         );
     }
 
+
+
+
+    ///////////////// UTIL METHODS /////////////////////
 
     public function getBackupFiles( $networkDrivePath ) {
         if( !$networkDrivePath ) {
@@ -292,7 +304,7 @@ class DataBackupManagement extends Controller
     public function creatingBackupSQLFull( $filepath ) {
         $msg = null;
         $timePrefix = date("d-m-Y-H-i-s");
-        echo "timePrefix=".$timePrefix."<br>";
+        //echo "timePrefix=".$timePrefix."<br>";
         //$timePrefix = str_replace(" ","_",$timePrefix);
         $conn = $this->getConnection();
         $dbname = $this->getParameter('database_name');
@@ -368,7 +380,7 @@ class DataBackupManagement extends Controller
     public function creatingBackupSQLLog( $filepath ) {
         $msg = null;
         $timePrefix = date("d-m-Y-H-i-s");
-        echo "timePrefix=".$timePrefix."<br>";
+        //echo "timePrefix=".$timePrefix."<br>";
         //$timePrefix = str_replace(" ","_",$timePrefix);
         $conn = $this->getConnection();
         $dbname = $this->getParameter('database_name');
@@ -405,6 +417,47 @@ class DataBackupManagement extends Controller
             $msg = "Transaction log backed up to $backupfileLog";
             echo $msg."<br>";
             exit('exit to write to disk Log backup');
+        }
+
+        return $msg;
+    }
+
+
+
+    public function restoringBackupSQLFull($networkDrivePath) {
+        $msg = null;
+        $timePrefix = date("d-m-Y-H-i-s");
+        //echo "timePrefix=".$timePrefix."<br>";
+        //$timePrefix = str_replace(" ","_",$timePrefix);
+        $conn = $this->getConnection();
+        $dbname = $this->getParameter('database_name');
+        echo "dbname=".$dbname."<br>";
+
+        //Restore DB.
+        $sql = "RESTORE DATABASE $dbname FROM DISK = '".$networkDrivePath."' WITH RECOVERY";
+        echo "RESTORE sql=".$sql."<br>";
+        $stmt = sqlsrv_query($conn, $sql);
+        if($stmt === false)
+        {
+            die(print_r(sqlsrv_errors()));
+        }
+        else
+        {
+            $msg = "Database restored from $networkDrivePath</br>";
+            echo $msg;
+        }
+
+        //Put DB into usable state.
+        $sql = "USE $dbname";
+        echo "USE sql=".$sql."<br>";
+        $stmt = sqlsrv_query($conn, $sql);
+        if($stmt === false)
+        {
+            die(print_r(sqlsrv_errors()));
+        }
+        else
+        {
+            $msg = $msg . "Using TestDB</br>";
         }
 
         return $msg;
