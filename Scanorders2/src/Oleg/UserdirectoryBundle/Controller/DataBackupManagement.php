@@ -257,12 +257,13 @@ class DataBackupManagement extends Controller
         $pwd = $this->getParameter('database_password');
         $host = $this->getParameter('database_host');
         $driver = $this->getParameter('database_driver');
+        $serverName = gethostname();    //"COLLAGE";
         echo "driver=".$driver."<br>";
         //$pwd = $pwd."1";
 
         if( 1 ) {
             $connOptions = array("Database"=>$dbname, "UID"=>$uid, "PWD"=>$pwd);
-            $conn = sqlsrv_connect("COLLAGE", $connOptions);
+            $conn = sqlsrv_connect($serverName, $connOptions);
 
             //testing
 //            $sql = "SELECT * FROM user_siteParameters";
