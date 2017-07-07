@@ -948,7 +948,7 @@ class FormNodeUtil
         //return null; //testing
 
         //$separator="<br>";
-        //$table = false; //testing
+        $table = false; //testing
 
         if( $table ) {
             $result = "";   //'<td colspan=9><table class = "table table-hover table-bordered table-condensed">';
@@ -959,9 +959,19 @@ class FormNodeUtil
         $formNodes = $formNodeHolderEntity->getEntityBreadcrumbs(); //message category hierarchy
         //echo "formNode count=".count($formNodes)."<br>";
 
+        $resultsArr = array();
+
         foreach( $formNodes as $formNode ) {
-            $result = $this->getSingleFormNodeHolderShortInfo($holderEntity,$formNode,$result,$table,$trclassname);
+            //$result = $this->getSingleFormNodeHolderShortInfo($holderEntity,$formNode,$result,$table,$trclassname);
+            $thisResult = $this->getSingleFormNodeHolderShortInfo($holderEntity,$formNode,$result,$table,$trclassname);
+//            print "<pre>";
+//            print_r($thisResult);
+//            //echo "Res==".$thisResult;
+//            print "</pre><br>";
+            $resultsArr[] = $thisResult;
         }
+
+        $result = $this->mergeResults( $resultsArr, $table, $trclassname );
 
         if( $table ) {
             //http://jsfiddle.net/dqq5B/524/
@@ -1154,12 +1164,90 @@ class FormNodeUtil
 
         }//foreach
 
-        foreach( $formSectionNodeArr as $sectionName => $nameValueArrs ) {
+//        echo "<br><br><pre>";
+//        print_r($formSectionNodeArr);
+//        echo "</pre><br><br>";
+
+        if(0) {
+            foreach ($formSectionNodeArr as $sectionName => $nameValueArrs) {
+                //echo "sectionName=$sectionName<br>";
+                if ($table) {
+                    if ($sectionName) {
+                        $result = $result .
+                            '<tr class="' . $trclassname . '">' .
+                            '<td colspan=9 class="rowlink-skip">' . $sectionName . '</td>' .
+                            '</tr>';
+                    }
+                    foreach ($nameValueArrs as $nameValueArr) {
+                        $formNodeName = $space . $space . $space . $nameValueArr['name'];
+                        $result = $result .
+                            '<tr class="' . $trclassname . '">' .
+                            '<td colspan=3 class="rowlink-skip" style="width:20%">' . $formNodeName . '</td>' .
+                            '<td colspan=6 class="rowlink-skip" style="width:80%">' . $nameValueArr['value'] . '</td>' .
+                            '</tr>';
+                    }
+                } else {
+                    //row height can not exceed 409
+                    //$info = "";
+                    if ($sectionName) {
+                        //$info = $sectionName . "\n";
+                        $result[] = $sectionName;// . "\n";
+                    }
+                    //$numItems = count($nameValueArrs);
+                    //$i = 0;
+                    $spacePrefix = "   ";
+                    //$spacePrefix = "";
+                    foreach ($nameValueArrs as $nameValueArr) {
+                        $thisInfo = $spacePrefix . $nameValueArr['name'] . ": " . $nameValueArr['value'];
+                        //$info = $info . $thisInfo;
+                        //if( ++$i < $numItems ) {
+                        //    $info = $info . "\n";
+                        //}
+                        $result[] = $thisInfo;// . "\n";
+                    }
+                    //$result[] = $info;
+                }
+            }//foreach
+        }//if(0)
+
+        //return $result;
+        return $formSectionNodeArr;
+    }
+    //$holderEntity, $formNodeHolderEntity, $result, $table, $trclassname
+    public function mergeResults( $resultsArr, $table, $trclassname ) {
+        if( $table ) {
+            $space = "&nbsp;";
+            $result = "";
+        } else {
+            $space = "";
+            $result = array();
+        }
+
+        print "#########<pre>";
+        print_r($resultsArr);
+        //echo "Res==".$thisResult;
+        print "</pre>#########<br>";
+
+        $finalResultsArr = array();
+
+        foreach( $resultsArr as $thisResult ) {
+            print "*** start ***<pre>";
+            print_r($thisResult);
+            print "</pre>*** finish ***<br>";
+
+            $sectionName = $thisResult[0][0];
+            $nameValueArrs = $thisResult[0][1];
+            echo "sectionName=$sectionName; value=$nameValueArrs<br>";
+            $finalResultsArr[$sectionName] = $nameValueArrs;
+        }
+
+        foreach( $finalResultsArr as $sectionName => $nameValueArrs ) {
+            echo "sectionName=$sectionName; value=$nameValueArrs<br>";
             if( $table ) {
                 if( $sectionName ) {
                     $result = $result.
                         '<tr class="'.$trclassname.'">'.
-                            '<td colspan=9 class="rowlink-skip">'.$sectionName.'</td>'.
+                        '<td colspan=9 class="rowlink-skip">'.$sectionName.'</td>'.
                         '</tr>';
                 }
                 foreach( $nameValueArrs as $nameValueArr ) {
@@ -1192,6 +1280,10 @@ class FormNodeUtil
                 //$result[] = $info;
             }
         }
+
+        print "<br><pre>";
+        print_r($result);
+        print "</pre><br>";
 
         return $result;
     }

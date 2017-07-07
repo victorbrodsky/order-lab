@@ -264,7 +264,7 @@ class DataBackupManagement extends Controller
 
         if( 1 ) {
             $connOptions = array("Database"=>$dbname, "UID"=>$uid, "PWD"=>$pwd);
-            $conn = sqlsrv_connect($serverName, $connOptions);
+            $conn = sqlsrv_connect($serverName, $connOptions); //it does not work for php > 5.3 ???
 
             //testing
 //            $sql = "SELECT * FROM user_siteParameters";
