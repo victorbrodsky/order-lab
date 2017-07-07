@@ -258,6 +258,7 @@ class DataBackupManagement extends Controller
         $host = $this->getParameter('database_host');
         $driver = $this->getParameter('database_driver');
         $serverName = gethostname();    //"COLLAGE";
+        echo "serverName=".$serverName."<br>";
         echo "driver=".$driver."<br>";
         //$pwd = $pwd."1";
 
