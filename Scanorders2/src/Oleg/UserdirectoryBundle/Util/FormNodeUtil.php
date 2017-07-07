@@ -1221,7 +1221,7 @@ class FormNodeUtil
         //return $result;
         return $result;
     }
-    //$holderEntity, $formNodeHolderEntity, $result, $table, $trclassname
+    //TODO: fix merge for excel
     public function mergeResults( $resultsArr, $table, $trclassname ) {
         if( $table ) {
             //echo "result is a string for html table<br>";
