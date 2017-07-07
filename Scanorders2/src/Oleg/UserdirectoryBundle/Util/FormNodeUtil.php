@@ -1240,7 +1240,7 @@ class FormNodeUtil
             echo "sectionName=$sectionName; value=$nameValueArrs<br>";
             $finalResultsArr[$sectionName] = $nameValueArrs;
         }
-
+ 
         foreach( $finalResultsArr as $sectionName => $nameValueArrs ) {
             echo "sectionName=$sectionName; value=$nameValueArrs<br>";
             if( $table ) {
