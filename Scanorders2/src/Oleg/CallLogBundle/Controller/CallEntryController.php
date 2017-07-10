@@ -2859,6 +2859,8 @@ class CallEntryController extends Controller
             $row = $row + 1;
             $trclassname = "";
             $snapshotArr = $formNodeUtil->getFormNodeHolderShortInfo($message,$message->getMessageCategory(),false,$trclassname);
+
+            //divide results by chunks of 21 rows in order to fit them in the excel row max height
 //            echo "snapshotArr count=".count($snapshotArr)."<br>";
 //            print "<pre>";
 //            print_r($snapshotArr);
@@ -2874,6 +2876,7 @@ class CallEntryController extends Controller
                 //$snapshot = implode("\n",$snapshotArrChunk);
                 $objRichText = new \PHPExcel_RichText();
                 foreach( $snapshotArrChunk as $snapshotRow ) {
+//                    $snapshotRow = "snapshotRow=$snapshotRow<br>";
                     if( strpos($snapshotRow, "[###excel_section_flag###]") === false ) {
                         $objRichText->createText($snapshotRow."\n");
                     } else {

@@ -948,7 +948,12 @@ class FormNodeUtil
         //return null; //testing
 
         //$separator="<br>";
-        //$table = false; //testing
+        $testing = false;
+
+        ////// testing variables (comment out them for production) /////
+        $testing = true;
+        $table = false; //testing
+        ////// EOF testing variables /////
 
 //        if( $table ) {
 //            $result = "";   //'<td colspan=9><table class = "table table-hover table-bordered table-condensed">';
@@ -968,22 +973,27 @@ class FormNodeUtil
             $thisResult = $this->getSingleFormNodeHolderShortInfo($holderEntity,$formNode,$table);
             //print "<pre>";
             //print_r($thisResult);
-            //echo "Res==".$thisResult;
             //print "</pre><br>";
             $resultsArr[] = $thisResult;
         }
 
-        $result = $this->mergeResults( $resultsArr, $table, $trclassname );
+        $result = $this->mergeResults( $resultsArr, $table, $trclassname, $testing );
 
         if( $table ) {
             //http://jsfiddle.net/dqq5B/524/
             $result = '<td colspan=9><table class = "table table-hover table-condensed">' . $result . '</table></td>';
-            //$result = '<td colspan=9>' . $result . '</td>';
         } else {
             //$result = '<td colspan=9>'.implode($separator,$result).'</td>';
         }
 
-        //exit('$result='.$result);
+
+        if( $testing ) {
+            print "<br>################ FINAL RESULT ################:<pre>";
+            print_r($result);
+            print "</pre><br>################ EOF FINAL RESULT ################<br>";
+            exit('$result=' . $result);
+        }
+
         return $result;
     }
     //TODO: rewrite with section, subsection, array section structure
@@ -1222,7 +1232,7 @@ class FormNodeUtil
         return $result;
     }
     //TODO: fix merge for excel
-    public function mergeResults( $resultsArr, $table, $trclassname ) {
+    public function mergeResults( $resultsArr, $table, $trclassname, $testing=false ) {
         if( $table ) {
             //echo "result is a string for html table<br>";
             $space = "&nbsp;";
@@ -1233,9 +1243,11 @@ class FormNodeUtil
             $result = array();
         }
 
-        //print "#########<pre>";
-        //print_r($resultsArr);
-        //print "</pre>#########<br>";
+        if( $testing ) {
+            print "#########<pre>";
+            print_r($resultsArr);
+            print "</pre>#########<br>";
+        }
 
         $finalResultsArr = array();
 
@@ -1267,9 +1279,9 @@ class FormNodeUtil
             }
         }
 
-        //print "######### final ######### <pre>";
-        //print_r($finalResultsArr);
-        //print "</pre>######### EOF final #########<br>";
+        print "######### final ######### <pre>";
+        print_r($finalResultsArr);
+        print "</pre>######### EOF final #########<br>";
 
         foreach( $finalResultsArr as $sectionName => $nameValueArrs ) {
 
@@ -1306,19 +1318,18 @@ class FormNodeUtil
                     //$info = $sectionName . "\n";
                     $result[] = $sectionName;// . "\n";
                 }
-                //$numItems = count($nameValueArrs);
-                //$i = 0;
+
                 $spacePrefix = "   ";
-                //$spacePrefix = "";
-                foreach( $nameValueArrs as $nameValueArr ) {
-                    $thisInfo = $spacePrefix . $nameValueArr['name'] . ": " . $nameValueArr['value'];
-                    //$info = $info . $thisInfo;
-                    //if( ++$i < $numItems ) {
-                    //    $info = $info . "\n";
-                    //}
-                    $result[] = $thisInfo;// . "\n";
+                foreach( $nameValueArrs as $nameValueMultipleArr ) {
+                    //print "*** value start ***<pre>";
+                    //print_r($nameValueMultipleArr);
+                    //print "</pre>*** value finish ***<br>";
+
+                    foreach( $nameValueMultipleArr as $nameValueArr ) {
+                        $thisInfo = $spacePrefix . $nameValueArr['name'] . ": " . $nameValueArr['value'];
+                        $result[] = $thisInfo;// . "\n";
+                    }
                 }
-                //$result[] = $info;
             }
         }
 
