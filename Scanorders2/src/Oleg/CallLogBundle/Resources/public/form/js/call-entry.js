@@ -1781,8 +1781,8 @@ function calllogSubmitForm(btn,messageStatus) {
 
     ///////// if the other fields in that accordion remain empty and only "Lab Result Date" has a value, do not write it to the DB. /////////
     removeDefaultDateTimeIfEmptyOtherFieldsInSection($('#calllog-new-entry-form'));
-    lbtn.stop();//testing
-    return; //testing
+    //lbtn.stop();//testing
+    //return; //testing
     ///////// EOF if the other fields in that accordion remain empty and only "Lab Result Date" has a value, do not write it to the DB. /////////
 
     if( messageStatus == "Draft" ) {
@@ -1825,39 +1825,35 @@ function calllogSubmitForm(btn,messageStatus) {
 }
 
 function removeDefaultDateTimeIfEmptyOtherFieldsInSection( formElement ) {
-
     var selectStr = 'input,textarea,select';
-    var elements = formElement.find(selectStr).not("*[id^='s2id_']").not(".with-default-datetime");
-
     formElement.find('.with-default-datetime').each( function() {
         var section = $(this).closest('.form-nodes-holder');
         var fields = section.find(selectStr).not("*[id^='s2id_']").not(".with-default-datetime");
         removeDefaultDateTimeIfOtherEmpty($(this),fields);
     });
-
 }
 function removeDefaultDateTimeIfOtherEmpty( thisField, allFields ) {
-    printF(thisField,"thisField=");
-    console.log("thisField="+thisField.value);
+    //printF(thisField,"thisField=");
+    //console.log("thisField="+thisField.value);
     var allFieldsLen = allFields.length;
-    console.log("allFieldsLen="+allFieldsLen);
+    //console.log("allFieldsLen="+allFieldsLen);
     var empty = 0;
     allFields.each( function() {
-        console.log("field="+$.trim(this.value));
+        //console.log("field="+$.trim(this.value));
         if ($.trim(this.value) == "") empty++;
     });
 
-    console.log("empty="+empty);
+    //console.log("empty="+empty);
     if( empty == allFieldsLen ) {
-        console.log("set datetime empty; original="+thisField.value+"; thisField.val()="+thisField.val());
-        //thisField.value = null;
-        if( thisField.hasClass('datepicker') ) {
-            thisField.val(null);
-        } else {
-            thisField[0].selectedIndex = -1;
-        }
+        //console.log("set datetime empty; original="+thisField.value+"; thisField.val()="+thisField.val());
+        thisField.val(null);
+        //if( thisField.hasClass('datepicker') ) {
+        //    thisField.val(null);
+        //} else {
+        //    thisField[0].selectedIndex = -1;
+        //}
     } else {
-        console.log("Don't change default datetime; original="+thisField.value);
+        //console.log("Don't change default datetime; original="+thisField.value);
     }
 }
 

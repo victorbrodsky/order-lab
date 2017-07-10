@@ -349,13 +349,13 @@ class FormNodeUtil
             $formValueHour = $formValue['hour'];
             $formValueMinute = $formValue['minute'];
 
-            $zero = 0; //"00"
-            if( !$formValueHour ) {
-                $formValueHour = $zero;
-            }
-            if( !$formValueMinute ) {
-                $formValueMinute = $zero;
-            }
+//            $zero = 0; //"00"
+//            if( !$formValueHour ) {
+//                $formValueHour = $zero;
+//            }
+//            if( !$formValueMinute ) {
+//                $formValueMinute = $zero;
+//            }
 
             if( isset($formValueHour) || isset($formValueMinute) ) {
                 $formValueStr = $formValueHour . ":" . $formValueMinute;
@@ -378,8 +378,12 @@ class FormNodeUtil
                 }
             }
 
-            echo "0 datetime: date=$formValueDate hour=$formValueHour minute=$formValueMinute<br>";
-            if( !isset($formValueDate) && !isset($formValueHour) && !isset($formValueMinute) ) {
+            //echo "0 datetime: date=$formValueDate hour=$formValueHour minute=$formValueMinute: formValueStr=$formValueStr<br>";
+//            if( !isset($formValueDate) && !isset($formValueHour) && !isset($formValueMinute) ) {
+//                return;
+//            }
+            //default date, hour and minutes are set to null if all other fields are empty
+            if( $formValueDate == null && $formValueHour == null && $formValueMinute == null ) {
                 return;
             }
             //echo $formNode->getId().": datetime: formValueStr=$formValueStr<br>";
