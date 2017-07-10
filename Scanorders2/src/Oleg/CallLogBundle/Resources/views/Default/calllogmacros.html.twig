@@ -950,8 +950,8 @@
         {% set headFlag = "sortable" %}
     {% endif %}
 
-    {#table-striped #}
-    <table class="records_list table table-hover table-condensed text-left">
+    {#table-striped table-hover#}
+    <table class="records_list table table-condensed table-hover text-left">
         <thead>
         <tr>
 
@@ -996,6 +996,7 @@
                 {% set trclassname = "order-reject-status" %}
             {% endif %}
 
+            <tbody class="table-tbody-hover">
             <tr class="{{ trclassname }}" style="border-bottom: 1px solid #C6C6C6;">
 
                 <td>
@@ -1089,6 +1090,7 @@
                 {#</td>#}
 
             </tr>
+            </tbody>
 
         {% endfor %}
 
