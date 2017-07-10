@@ -378,7 +378,7 @@ class FormNodeUtil
                 }
             }
 
-            //echo "0 datetime: date=$formValueDate hour=$formValueHour minute=$formValueMinute<br>";
+            echo "0 datetime: date=$formValueDate hour=$formValueHour minute=$formValueMinute<br>";
             if( !isset($formValueDate) && !isset($formValueHour) && !isset($formValueMinute) ) {
                 return;
             }
@@ -390,7 +390,7 @@ class FormNodeUtil
             $newListElement->setDateTimeValueDateHourMinute($formValueTimezone,$formValueDate,$formValueHour,$formValueMinute);
 
             if( $testing ) {
-                echo $formNode->getId().": $formNodeObjectName, formValueStr=$formValueStr; ";
+                echo $formNode->getId().": $formNodeObjectName, formValueStr=$formValueStr; => ";
                 echo $newListElement->getDatetimeValue()->format('m/d/Y H:i:s');
             }
 

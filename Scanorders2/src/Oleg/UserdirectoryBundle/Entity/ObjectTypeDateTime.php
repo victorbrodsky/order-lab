@@ -128,7 +128,7 @@ class ObjectTypeDateTime extends ObjectTypeReceivingBase
 
     public function setDateTimeValueDateHourMinute($timezone,$date,$hour,$minute,$second=null)
     {
-        //echo "hour=".$hour."; minute=".$minute."<br>";
+        //echo "date=".$date."; hour=".$hour."; minute=".$minute."<br>";
         if( $date ) {
             //$date = 12/21/2016
             $datetimeValue = \DateTime::createFromFormat('m/d/Y', $date);

@@ -687,7 +687,7 @@
             {% set fieldValue = formNodeValue %}
         {% endif %}
     {% else %}
-        {% set fieldValue = null %}
+        {% set fieldValue = "now"|date("m/d/Y") %}
     {% endif %}
     {% if cycle != 'show' %}
         {% set disabled = "" %}
@@ -914,6 +914,9 @@
             {% set hour = formNodeValue|date('H') %}
             {% set minute = formNodeValue|date('i') %}
         {% endif %}
+    {% else %}
+        {% set hour = "now"|date("H") %}
+        {% set minute = "now"|date("i") %}
     {% endif %}
     {#hour={{ hour }} : minute={{ minute }}<br>#}
 
@@ -931,7 +934,7 @@
                 {% if hour and hour == i %}
                     {% set selected = "selected" %}
                 {% endif %}
-                <option value="{{ i }}" {{ selected }}>{{ i }}</option>
+                <option value="{{ i }}" {{ selected }}>{{ "%02d"|format(i) }}</option>
             {% endfor %}
         </select>:<select
             id="oleg_userdirectorybundle_formnode_{{ formNodeId }}_time_minute"
@@ -946,7 +949,7 @@
                 {% if minute and minute == i %}
                     {% set selected = "selected" %}
                 {% endif %}
-                <option value="{{ i }}" {{ selected }}>{{ i }}</option>
+                <option value="{{ i }}" {{ selected }}>{{ "%02d"|format(i) }}</option>
             {% endfor %}
         </select>
         {% if timezone is defined and timezone %}
