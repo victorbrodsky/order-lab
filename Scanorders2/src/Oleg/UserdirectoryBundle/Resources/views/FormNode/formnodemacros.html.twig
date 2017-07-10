@@ -711,7 +711,7 @@
                 type="text"
                 id="oleg_userdirectorybundle_formnode_{{ formNodeId }}"
                 name="{{ fieldname }}{{ fieldNamePostfix }}"
-                class="datepicker form-control"
+                class="datepicker form-control with-default-datetime"
                 value="{{ fieldValue }}"
                 placeholder="{{ placeholder }}"
                 {{ disabled }}
@@ -924,6 +924,7 @@
         <select
             id="oleg_userdirectorybundle_formnode_{{ formNodeId }}_time_hour"
             name="{{ fieldname }}[time][hour]"
+            class="with-default-datetime"
             {{ disabled }}
         >
             {#<option value="0">00</option>#}
@@ -939,6 +940,7 @@
         </select>:<select
             id="oleg_userdirectorybundle_formnode_{{ formNodeId }}_time_minute"
             name="{{ fieldname }}[time][minute]"
+            class="with-default-datetime"
             {{ disabled }}
         >
             {#<option value="0">00</option>#}Integer
