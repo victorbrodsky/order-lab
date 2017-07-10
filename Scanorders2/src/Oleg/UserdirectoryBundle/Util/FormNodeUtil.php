@@ -951,8 +951,8 @@ class FormNodeUtil
         $testing = false;
 
         ////// testing variables (comment out them for production) /////
-        $testing = true;
-        $table = false; //testing
+        //$testing = true;
+        //$table = false; //testing
         ////// EOF testing variables /////
 
 //        if( $table ) {
@@ -1231,16 +1231,17 @@ class FormNodeUtil
         //return $result;
         return $result;
     }
-    //TODO: fix merge for excel
     public function mergeResults( $resultsArr, $table, $trclassname, $testing=false ) {
         if( $table ) {
             //echo "result is a string for html table<br>";
             $space = "&nbsp;";
             $result = "";
+            $spacePrefix = null;
         } else {
             //echo "show is an array for excel <br>";
             $space = "";
             $result = array();
+            $spacePrefix = "   ";
         }
 
         if( $testing ) {
@@ -1279,9 +1280,9 @@ class FormNodeUtil
             }
         }
 
-        print "######### final ######### <pre>";
-        print_r($finalResultsArr);
-        print "</pre>######### EOF final #########<br>";
+//        print "######### final ######### <pre>";
+//        print_r($finalResultsArr);
+//        print "</pre>######### EOF final #########<br>";
 
         foreach( $finalResultsArr as $sectionName => $nameValueArrs ) {
 
@@ -1290,47 +1291,41 @@ class FormNodeUtil
             //print_r($nameValueArrs);
             //print "</pre>*** value finish ***<br>";
 
-            if( $table ) {
-                if( $sectionName ) {
-                    $result = $result.
-                        '<tr class="'.$trclassname.'">'.
-                        '<td colspan=9 class="rowlink-skip">'.$sectionName.'</td>'.
+            if( $sectionName ) {
+                if( $table ) {
+                    //html table
+                    $result = $result .
+                        '<tr class="' . $trclassname . '">' .
+                        '<td colspan=9 class="rowlink-skip">' . $sectionName . '</td>' .
                         '</tr>';
+                } else {
+                    //excel array
+                    $result[] = $sectionName;
                 }
-                foreach( $nameValueArrs as $nameValueMultipleArr ) {
-                    //print "*** value start ***<pre>";
-                    //print_r($nameValueMultipleArr);
-                    //print "</pre>*** value finish ***<br>";
+            }
+            foreach( $nameValueArrs as $nameValueMultipleArr ) {
+                //print "*** value start ***<pre>";
+                //print_r($nameValueMultipleArr);
+                //print "</pre>*** value finish ***<br>";
 
-                    foreach( $nameValueMultipleArr as $nameValueArr ) {
+                foreach( $nameValueMultipleArr as $nameValueArr ) {
+
+                    if( $table ) {
+                        //html table
                         $formNodeName = $space . $space . $space . $nameValueArr['name'];
                         $result = $result .
                             '<tr class="' . $trclassname . '">' .
                             '<td colspan=3 class="rowlink-skip" style="width:20%">' . $formNodeName . '</td>' .
                             '<td colspan=6 class="rowlink-skip" style="width:80%">' . $nameValueArr['value'] . '</td>' .
                             '</tr>';
-                    }
-                }
-            } else {
-                //row height can not exceed 409
-                //$info = "";
-                if( $sectionName ) {
-                    //$info = $sectionName . "\n";
-                    $result[] = $sectionName;// . "\n";
-                }
-
-                $spacePrefix = "   ";
-                foreach( $nameValueArrs as $nameValueMultipleArr ) {
-                    //print "*** value start ***<pre>";
-                    //print_r($nameValueMultipleArr);
-                    //print "</pre>*** value finish ***<br>";
-
-                    foreach( $nameValueMultipleArr as $nameValueArr ) {
+                    } else {
+                        //excel array
                         $thisInfo = $spacePrefix . $nameValueArr['name'] . ": " . $nameValueArr['value'];
-                        $result[] = $thisInfo;// . "\n";
+                        $result[] = $thisInfo;
                     }
                 }
             }
+
         }
 
 //        print "<br><pre>";
