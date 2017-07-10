@@ -687,7 +687,11 @@
             {% set fieldValue = formNodeValue %}
         {% endif %}
     {% else %}
-        {% set fieldValue = "now"|date("m/d/Y") %}
+        {% if cycle != 'show' %}
+            {% set fieldValue = "now"|date("m/d/Y") %}
+        {% else %}
+            {% set fieldValue = null %}
+        {% endif %}
     {% endif %}
     {% if cycle != 'show' %}
         {% set disabled = "" %}
@@ -915,8 +919,10 @@
             {% set minute = formNodeValue|date('i') %}
         {% endif %}
     {% else %}
-        {% set hour = "now"|date("H") %}
-        {% set minute = "now"|date("i") %}
+        {% if cycle != 'show' %}
+            {% set hour = "now"|date("H") %}
+            {% set minute = "now"|date("i") %}
+        {% endif %}
     {% endif %}
     {#hour={{ hour }} : minute={{ minute }}<br>#}
 
