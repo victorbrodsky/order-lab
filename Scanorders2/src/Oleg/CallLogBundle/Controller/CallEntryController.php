@@ -2545,6 +2545,10 @@ class CallEntryController extends Controller
             //LastName, FirstName, MiddleName | MRN Type: MRN | DOB: MM/DD/YY |
             // Entry ID XXX submitted on MM/DD/YYYY at HH:MM by SubmitterFirstName SubmitterLastName, MD | Call Log Book
             $title = $message->getPatient()->first()->obtainPatientInfoTitle('valid',null,false);
+
+            //TODO: the beginning potion of the title ("LastName, FirstName | DOB: 09/22/1955 | 71 y.o. | NYH MRN: 12345678")
+            //should be a link to the homepage with the filters set to this patient's MRN
+
             $title = $title . " | ".$messageInfo;
 
         } else {

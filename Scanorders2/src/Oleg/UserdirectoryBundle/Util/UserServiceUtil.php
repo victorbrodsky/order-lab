@@ -145,7 +145,8 @@ class UserServiceUtil {
             //$orderDate = $this->convertFromUserTzToUserTz($orderDate,$message->getProvider(),$user);
             //$info = $message->getOrderdate()->format('m/d/Y') . " at " . $message->getOrderdate()->format('h:i a (T)');
             $orderDateUserTz = $this->convertToUserTimezone($orderDate,$user);
-            $viewingUserTz = $user->getPreferences()->getTimezone();
+            //$viewingUserTz = $user->getPreferences()->getTimezone();
+            $viewingUserTz = $orderDateUserTz->format('T');
             $info = $orderDateUserTz->format('m/d/Y') . " at " . $orderDateUserTz->format('h:i a') . " (" . $viewingUserTz . ")";
         }
         return $info;
