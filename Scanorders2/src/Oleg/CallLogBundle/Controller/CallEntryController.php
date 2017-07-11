@@ -1363,7 +1363,8 @@ class CallEntryController extends Controller
             'timezoneDefault' => $userTimeZone,
             'readonlyEncounter' => $readonlyEncounter,
             'attendingPhysicians-readonly' => false,
-            'referringProviders-readonly' => false
+            'referringProviders-readonly' => false,
+            'readonlyLocationType' => true //lock the "Location Type" field (with the default "Encounter Location" value in it)
         );
 
         $form = $this->createForm(

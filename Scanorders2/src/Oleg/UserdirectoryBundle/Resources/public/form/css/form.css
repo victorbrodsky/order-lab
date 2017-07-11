@@ -623,24 +623,3 @@ Bootstrap NavBar not collapsing as expected - separating onto two lines.
     padding-left: 15px;
 }
 
-/*tbody.table-tbody-hover:hover {*/
-    /*background-color: red;*/
-    /*background: green;*/
-    /*color: blue;*/
-    /*bgcolor: yellow;*/
-/*}*/
-
-/*.my-table-class tr:nth-child(4n+1), .my-table-class tr:nth-child(4n+2) {*/
-    /*!* Example color *!*/
-    /*background: red;*/
-/*}*/
-
-/*.my-table-class tbody.table-tbody-hover:nth-child(4n+1):hover, .my-table-class tbody.table-tbody-hover:nth-child(4n+2) {*/
-    /*background: red;*/
-/*}*/
-
-/*.table-tbody-hover:hover {*/
-    /*background-color: #A9B2BC;*/
-/*}*/
-
-

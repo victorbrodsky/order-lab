@@ -47,6 +47,10 @@ class SpotType extends AbstractType
             $this->params['complexLocation'] = true;
         }
 
+        if( !array_key_exists('readonlyLocationType', $this->params) ) {
+            $this->params['readonlyLocationType'] = false;
+        }
+
         $currentUser = true;
         $cycle = $this->params['cycle'];
         $em = $this->params['em'];
@@ -61,7 +65,8 @@ class SpotType extends AbstractType
             'cycle' => $cycle,
             'em' => $em,
             'institution' => false,
-            'complexLocation' => $complexLocation
+            'complexLocation' => $complexLocation,
+            'readonlyLocationType' => $this->params['readonlyLocationType']
         );
 
         $builder->add('currentLocation', new LocationType($params), array(

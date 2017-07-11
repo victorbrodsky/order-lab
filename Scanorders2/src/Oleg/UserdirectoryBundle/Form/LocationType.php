@@ -51,6 +51,10 @@ class LocationType extends AbstractType
             $this->params['complexLocation'] = true;
         }
 
+        if( !array_key_exists('readonlyLocationType', $this->params) ) {
+            $this->params['readonlyLocationType'] = false;
+        }
+
         $this->hasRoleSimpleView = false;
         if( array_key_exists('sc', $this->params) ) {
             $this->hasRoleSimpleView = $this->params['sc']->getToken()->getUser()->hasRole("ROLE_USERDIRECTORY_SIMPLEVIEW");
@@ -128,6 +132,7 @@ class LocationType extends AbstractType
         $builder->add('locationTypes','entity',array(
             'class' => 'OlegUserdirectoryBundle:LocationTypeList',
             'label' => "Location Type:",
+            'read_only' => $this->params['readonlyLocationType'],
             'multiple' => true,
             'attr' => array('class'=>'combobox combobox-width user-location-locationTypes'),
             'required' => false,
