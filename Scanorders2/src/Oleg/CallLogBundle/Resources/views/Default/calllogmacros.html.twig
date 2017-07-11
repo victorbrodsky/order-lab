@@ -951,7 +951,7 @@
     {% endif %}
 
     {#table-striped table-hover#}
-    <table class="records_list table table-condensed table-hover text-left">
+    <table class="records_list table table-condensed text-left my-table-class">
         <thead>
         <tr>
 
@@ -980,7 +980,7 @@
 
         </tr>
         </thead>
-        <tbody data-link="row" class="rowlink">
+        {#<tbody data-link="row" class="rowlink">#}
 
         {% set count = 0 %}
         {% for message in messages %}
@@ -996,8 +996,9 @@
                 {% set trclassname = "order-reject-status" %}
             {% endif %}
 
-            <tbody class="table-tbody-hover">
-            <tr class="{{ trclassname }}" style="border-bottom: 1px solid #C6C6C6;">
+            {#https://jsfiddle.net/dqq5B/670/#}
+            <tbody data-link="row" class="rowlink table-tbody-hover {{ trclassname }}">
+            <tr style="border-bottom: 1px solid #C6C6C6;">
 
                 <td>
                     {#{{ 'messageOid': message.oid, 'messageVersion':message.version }}#}
@@ -1076,7 +1077,7 @@
                 {% endif %}
 
             </tr>
-            <tr class="table-no-border {{ trclassname }}">
+            <tr class="table-no-border">
                 <td style="display: none">
                     <a href="{{ path(calllog_sitename~'_callentry_view', { 'messageOid': message.oid, 'messageVersion':message.version }) }}" target="_blank">{{ message.getMessageOidVersion }}</a>
                 </td>
@@ -1094,7 +1095,7 @@
 
         {% endfor %}
 
-        </tbody>
+        {#</tbody>#}
     </table>
 {% endmacro %}
 

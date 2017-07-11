@@ -1288,6 +1288,13 @@ class FormNodeUtil
 //        print_r($finalResultsArr);
 //        print "</pre>######### EOF final #########<br>";
 
+        $withFrame = true;
+        if( $withFrame ) {
+            $tr = '<tr class="' . $trclassname . '">';
+        } else {
+            $tr = '<tr>';
+        }
+
         foreach( $finalResultsArr as $sectionName => $nameValueArrs ) {
 
             //echo "sectionName=$sectionName:<br>";
@@ -1299,7 +1306,8 @@ class FormNodeUtil
                 if( $table ) {
                     //html table
                     $result = $result .
-                        '<tr class="' . $trclassname . '">' .
+                        //'<tr class="' . $trclassname . '">' .
+                        $tr .
                         '<td colspan=9 class="rowlink-skip">' . $sectionName . '</td>' .
                         '</tr>';
                 } else {
@@ -1318,7 +1326,8 @@ class FormNodeUtil
                         //html table
                         $formNodeName = $space . $space . $space . $nameValueArr['name'];
                         $result = $result .
-                            '<tr class="' . $trclassname . '">' .
+                            //'<tr class="' . $trclassname . '">' .
+                            $tr .
                             '<td colspan=3 class="rowlink-skip" style="width:20%">' . $formNodeName . '</td>' .
                             '<td colspan=6 class="rowlink-skip" style="width:80%">' . $nameValueArr['value'] . '</td>' .
                             '</tr>';
