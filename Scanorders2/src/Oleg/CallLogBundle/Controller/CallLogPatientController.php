@@ -37,6 +37,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 use Oleg\OrderformBundle\Controller\PatientController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
 ///**
@@ -650,11 +651,13 @@ class CallLogPatientController extends PatientController {
         // "Previous Entries for FirstNameOfMasterRecord LastNameOfMasterRecord (DOB: DateOfBirthOfMasterRecord, MRNTypeOfMasterRecord: MRNofMasterRecord).
         // Clicking "Re-enter patient" in the Patient Info accordion should re-set the title of the accordion to "Previous Entries" (remove the patient name/info).
 
-        //$limit = 1000;
         $query = $em->createQuery($dql);
         $query->setParameters($queryParameters);
 
-        echo "query=".$query->getSql()."<br>";
+        $limit = 3;
+        //$query->setMaxResults($limit);
+
+        //echo "query=".$query->getSql()."<br>";
 
 //        $paginator  = $this->get('knp_paginator');
 //        $messages = $paginator->paginate(
@@ -666,18 +669,36 @@ class CallLogPatientController extends PatientController {
 
         $messages = $query->getResult();
 
-        echo "messages count=".count($messages)."<br>";
-        foreach( $messages as $message ) {
-            echo "Message=".$message->getMessageOidVersion()."<br>";
-        }
-        exit('testing');
+        //echo "messages count=".count($messages)."<br>";
+        //foreach( $messages as $message ) {
+        //    echo "Message=".$message->getMessageOidVersion()."<br>";
+        //}
+        //exit('testing');
         //////////////// find messages ////////////////
+
+        if( count($messages) > $limit ) {
+            $mrnRes = $patient->obtainStatusField('mrn', "valid");
+            $mrntype = $mrnRes->getKeytype()->getId();
+            $mrn = $mrnRes->getField();
+            $linkUrl = $this->generateUrl(
+                "calllog_home",
+                array(
+                    'filter[mrntype]'=>$mrntype,
+                    'filter[search]'=>$mrn,
+                ),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $showAllMsg = "Showing the last $limit entries, click here to view all";
+            $href = '<a href="'.$linkUrl.'" target="_blank">'.$showAllMsg.'</a>';
+            $title = $title . "<br>" . $href;
+        }
 
         $params = array(
             'filterform' => $filterform->createView(),
             'route_path' => $request->get('_route'),
             'messages' => $messages,
-            'title' => $title
+            'title' => $title,
+            'limit' => $limit
             //'testing' => true
         );
         $htmlPage = $this->render('OlegCallLogBundle:PatientList:patient_entries.html.twig',$params);

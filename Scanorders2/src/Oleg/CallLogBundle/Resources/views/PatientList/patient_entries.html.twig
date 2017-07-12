@@ -101,8 +101,10 @@
             </thead>
             <tbody data-link="row" class="rowlink">
 
-            {% for message in messages %}
+            {% set count = 0 %}
+            {% for message in messages if count < limit %}
 
+                {% set count = count + 1 %}
                 {% set trclassname = "" %}
                 {#{% if message.messageStatus.name == 'Deleted' %}#}
                     {#{% set trclassname = "order-reject-status" %}#}
