@@ -52,6 +52,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
 class CallEntryController extends Controller
@@ -2546,10 +2547,19 @@ class CallEntryController extends Controller
             // Entry ID XXX submitted on MM/DD/YYYY at HH:MM by SubmitterFirstName SubmitterLastName, MD | Call Log Book
             $title = $message->getPatient()->first()->obtainPatientInfoTitle('valid',null,false);
 
-            //TODO: the beginning potion of the title ("LastName, FirstName | DOB: 09/22/1955 | 71 y.o. | NYH MRN: 12345678")
+            //The beginning potion of the title ("LastName, FirstName | DOB: 09/22/1955 | 71 y.o. | NYH MRN: 12345678")
             //should be a link to the homepage with the filters set to this patient's MRN
+            $linkUrl = $this->generateUrl(
+                "calllog_home",
+                array(
+                    'filter[mrntype]'=>$mrntype,
+                    'filter[search]'=>$mrn,
+                ),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $titleBody = '<a href="'.$linkUrl.'" target="_blank">'.$title.'</a>';
 
-            $title = $title . " | ".$messageInfo;
+            $titleBody = $titleBody . " | ".$messageInfo;
 
         } else {
             $mrntype = null;
@@ -2607,6 +2617,7 @@ class CallEntryController extends Controller
             'form' => $form->createView(),
             'cycle' => $cycle,
             'title' => $title,
+            'titleBody' => $titleBody,
             'formtype' => $formtype,
             'triggerSearch' => 0,
             'mrn' => $mrn,
@@ -2618,7 +2629,7 @@ class CallEntryController extends Controller
             'entityName' => $className,
             'entityId' => $message->getId(),
             'sitename' => $this->container->getParameter('calllog.sitename'),
-            'titleheadroom' => $title,
+            'titleheadroom' => $titleBody,
             'formnodeTopHolderId' => $formnodeTopHolderId,
             'eventObjectTypeId' => $eventObjectTypeId,
             'allMessages' => $allMessages,
