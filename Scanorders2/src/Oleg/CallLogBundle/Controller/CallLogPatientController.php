@@ -512,7 +512,7 @@ class CallLogPatientController extends PatientController {
      * @Route("/patient/list-previous-entries/", name="calllog-list-previous-entries", options={"expose"=true})
      * @Method({"GET", "POST"})
      */
-    public function showOnlyAjaxUserAction(Request $request)
+    public function listPatientPreviousEntriesAction(Request $request)
     {
         if( false === $this->get('security.context')->isGranted('ROLE_USER') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
@@ -654,7 +654,7 @@ class CallLogPatientController extends PatientController {
         $query = $em->createQuery($dql);
         $query->setParameters($queryParameters);
 
-        //echo "query=".$query->getSql()."<br>";
+        echo "query=".$query->getSql()."<br>";
 
 //        $paginator  = $this->get('knp_paginator');
 //        $messages = $paginator->paginate(
@@ -666,11 +666,11 @@ class CallLogPatientController extends PatientController {
 
         $messages = $query->getResult();
 
-        //echo "messages count=".count($messagesComplex)."<br>";
-        //foreach( $messages as $message ) {
-        //    echo "Message=".$message->getMessageOidVersion()."<br>";
-        //}
-        //exit('testing');
+        echo "messages count=".count($messages)."<br>";
+        foreach( $messages as $message ) {
+            echo "Message=".$message->getMessageOidVersion()."<br>";
+        }
+        exit('testing');
         //////////////// find messages ////////////////
 
         $params = array(

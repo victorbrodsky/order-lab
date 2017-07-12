@@ -417,14 +417,23 @@ class CallEntryController extends Controller
         }
 
         if( $searchFilter ) {
+            //echo "searchFilter=$searchFilter; mrntypeFilter=".$mrntypeFilter->getId()."<br>";
             if ( strval($searchFilter) != strval(intval($searchFilter)) ) {
                 //echo "lastname.field string: $searchFilter<br>";
                 ////$dql->andWhere("mrn.field LIKE :search OR lastname.field LIKE :search OR message.messageTitle LIKE :search OR authorInfos.displayName LIKE :search OR messageCategory.name LIKE :search");
                 if( $metaphone ) {
                     $userServiceUtil->getMetaphoneLike("lastname.field","lastname.fieldMetaphone",$searchFilter,$dql,$queryParameters);
                 } else {
-                    $dql->andWhere("lastname.field LIKE :search");
+                    //search can be both: lastname or mrn number
+                    //$dql->andWhere("lastname.field LIKE :search");
+                    //$queryParameters['search'] = "%".$searchFilter."%";
+                    $lastnameOrMrn = "lastname.field LIKE :search OR (mrn.field = :searchMrn AND mrn.keytype = :keytype)";
+                    //$lastnameOrMrn = "lastname.field LIKE :search OR (mrn.field = :searchMrn)";
                     $queryParameters['search'] = "%".$searchFilter."%";
+                    $queryParameters['searchMrn'] = $searchFilter;
+                    $queryParameters['keytype'] = $mrntypeFilter; //->getId()?
+                    $dql->andWhere($lastnameOrMrn);
+                    //echo "keytype=".$queryParameters['keytype']."<br>";
                 }
             } else {
                 //echo "integer $searchFilter<br>";
@@ -2542,6 +2551,7 @@ class CallEntryController extends Controller
             $mrnRes = $message->getPatient()->first()->obtainStatusField('mrn', "valid");
             $mrntype = $mrnRes->getKeytype()->getId();
             $mrn = $mrnRes->getField();
+            $patientId = $message->getPatient()->first()->getId();
 
             //LastName, FirstName, MiddleName | MRN Type: MRN | DOB: MM/DD/YY |
             // Entry ID XXX submitted on MM/DD/YYYY at HH:MM by SubmitterFirstName SubmitterLastName, MD | Call Log Book
@@ -2564,6 +2574,7 @@ class CallEntryController extends Controller
         } else {
             $mrntype = null;
             $mrn = null;
+            $patientId = null;
 
             $title = $messageInfo;
         }
@@ -2612,6 +2623,8 @@ class CallEntryController extends Controller
         //View Previous Version(s)
         $allMessages = $em->getRepository('OlegOrderformBundle:Message')->findAllMessagesByOid($messageOid);
 
+        //previous entries similar to calllog-list-previous-entries: get it in the view by ajax
+
         return array(
             //'entity' => $entity,
             'form' => $form->createView(),
@@ -2622,6 +2635,7 @@ class CallEntryController extends Controller
             'triggerSearch' => 0,
             'mrn' => $mrn,
             'mrntype' => $mrntype,
+            'patientId' => $patientId,
             'message' => $message,
             'complexPatientStr' => $complexPatientStr,
             //'encounterid' => $encounterid

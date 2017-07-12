@@ -59,6 +59,20 @@
     <input type="hidden" id="formnodetrigger" value="{{ formnodetrigger }}" />
     <input type="hidden" id="formnodeTopHolderId" value="{{ formnodeTopHolderId }}" />
 
+
+    {#List previous entries#}
+    {% set holderId = "patient-holder-1" %}
+    <div id="{{ holderId }}" style="display: none;">
+        <input type="hidden" id="calllog-patient-id-{{ holderId }}" value="{{ patientId }}" />
+    </div>
+    <button id="calllog-list-previous-entries-btn"
+            class="btn btn-primary" type="button"
+            onclick="calllogListPreviousEntriesForPatient('{{ holderId }}')">Previous Entries</button>
+    <div id="calllog-list-previous-entries"></div>
+    <br>
+
+
+
     {% set mainPanelClass = "panel-primary" %}
 
     {% if allMessages and allMessages|length > 1 and allMessages|first.version != message.version %}
@@ -297,6 +311,9 @@
             //initCallLogPage();
             //preset mrn and mrn-type
             //calllogPresetMrnMrntype('patient-holder-1');
+
+            $('#calllog-list-previous-entries-btn').click();
+            $('#calllog-list-previous-entries-btn').hide();
 
         });
 
