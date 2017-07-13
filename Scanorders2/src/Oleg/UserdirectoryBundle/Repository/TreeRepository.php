@@ -284,16 +284,23 @@ class TreeRepository extends NestedTreeRepository {
         $addedNodes[] = $node->getId();
         $institutionalCriteriaStr = $this->selectNodesUnderParentNode( $node, $field, $instDefault );
 
-        //collaborations
+        //collaborations: find nodes where this node is indicated as collaboration
         $collaborations = $this->findCollaborationsByNode( $node, $collaborationTypesStrArr );
+        echo "collaborations count=".count($collaborations)."<br>";
         $collaborationCriterionArr = array();
         foreach( $collaborations as $collaboration ) {
             echo $collaboration->getId().": collaboration=".$collaboration."<br>";
+            //add this collaboration institution too (?)
+            //if( !in_array($collaboration->getId(), $addedNodes) ) {
+            //    $collaborationCriterionArr[] = $this->selectNodesUnderParentNode($collaboration, $field, $collDefault);
+            //    $addedNodes[] = $collaboration;
+            //}
             foreach( $collaboration->getCollaborationInstitutions() as $collaborationNode ) {
                 echo "0collaborationNode=".$collaborationNode."<br>";
                 if( !in_array($collaborationNode->getId(), $addedNodes) ) {
-                    echo "collaborationNode=".$collaborationNode."<br>";
+                    //echo "collaborationNode=".$collaborationNode."<br>";
                     $collaborationCriterionArr[] = $this->selectNodesUnderParentNode( $collaborationNode, $field, $collDefault );
+                    $addedNodes[] = $collaborationNode;
                 }
             }
         }

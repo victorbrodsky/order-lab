@@ -194,7 +194,7 @@ class RequestIndexController extends Controller
         }
 
         //echo "dql=".$dql."<br>";
-        echo "query=".$query->getSql()."<br>";
+        //echo "query=".$query->getSql()."<br>";
 
         $paginationParams = array(
             'defaultSortFieldName' => 'request.firstDayAway', //createDate
@@ -338,9 +338,9 @@ class RequestIndexController extends Controller
         $organizationalInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
 
         //testing
-        foreach( $organizationalInstitutions as $organizationalInstitution ) {
-            echo "organizationalInstitution=".$organizationalInstitution."<br>";
-        }
+//        foreach( $organizationalInstitutions as $organizationalInstitution ) {
+//            echo "organizationalInstitution=".$organizationalInstitution."<br>";
+//        }
 
         if( count($organizationalInstitutions) == 0 ) {
             if( $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
@@ -528,7 +528,7 @@ class RequestIndexController extends Controller
         }
 
         if( $groups && $groups->getId() ) {
-            echo "groupId=".$groups->getId()."<br>";
+            //echo "groupId=".$groups->getId()."<br>";
             $where = "";
             if( $where != "" ) {
                 $where .= " OR ";
@@ -540,14 +540,14 @@ class RequestIndexController extends Controller
                 $where .= $em->getRepository('OlegUserdirectoryBundle:Institution')->getCriterionStrForCollaborationsByNode(
                     $groups,
                     "institution",
-                    array("Union","Intersection","Untrusted Intersection")
-                    //true,
-                    //true
+                    array("Union","Intersection","Untrusted Intersection"),
+                    true,
+                    false
                 );
             } else {
                 $where .= "institution IS NULL";
             }
-            echo "group where=".$where."<br>";
+            //echo "group where=".$where."<br>";
             $dql->andWhere($where);
 
             $filtered = true;
