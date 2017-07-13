@@ -654,7 +654,7 @@ class CallLogPatientController extends PatientController {
         $query = $em->createQuery($dql);
         $query->setParameters($queryParameters);
 
-        $limit = 3;
+        $limit = 10;
         //$query->setMaxResults($limit);
 
         //echo "query=".$query->getSql()."<br>";
@@ -688,9 +688,9 @@ class CallLogPatientController extends PatientController {
                 ),
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
-            $showAllMsg = "Showing the last $limit entries, click here to view all";
+            $showAllMsg = "showing the last $limit entries, click here to view all";
             $href = '<a href="'.$linkUrl.'" target="_blank">'.$showAllMsg.'</a>';
-            $title = $title . "<br>" . $href;
+            $title = $title . " (" . $href . ")";
         }
 
         $params = array(
