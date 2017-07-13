@@ -320,17 +320,21 @@ class CallEntryController extends Controller
         //echo "metaphone=".$metaphone."<br>";
 
         //redirect if filter is empty
-        if( $this->isFilterEmpty($filterform) && !$calllogsearch ) {
-            $redirect = $this->redirect( $this->generateUrl('calllog_home',
-                array(
-                    'filter[messageStatus]'=>"All except deleted",
-                    'filter[messageCategory]'=>$messageCategorieDefaultIdStr,    //$messageCategoriePathCall->getName()."_".$messageCategoriePathCall->getId()
-                    //'filter[metaphone]'=>false
-                )
-            ) );
-            return array('redirect' => $redirect);
+        if( $this->isFilterEmpty($filterform) ) {
+            //echo "calllogsearch isFilterEmpty true; calllogsearch=$calllogsearch <br>";
+            if( !$calllogsearch ) {
+                $redirect = $this->redirect($this->generateUrl('calllog_home',
+                    array(
+                        'filter[messageStatus]' => "All except deleted",
+                        'filter[messageCategory]' => $messageCategorieDefaultIdStr,    //$messageCategoriePathCall->getName()."_".$messageCategoriePathCall->getId()
+                        //'filter[metaphone]'=>false
+                    )
+                ));
+                //exit('filter empty');
+                return array('redirect' => $redirect);
+            }
         }
-
+        //exit('filter is not empty');
 
         //perform search
         $repository = $em->getRepository('OlegOrderformBundle:Message');
@@ -687,10 +691,24 @@ class CallEntryController extends Controller
 
     }
     public function isFilterEmpty($filterform) {
-        //print_r($filterform->getData());
+//        echo "<pre>";
+//        print_r($filterform->getData());
+//        echo "</pre>";
         foreach( $filterform->getData() as $key=>$value ) {
             if( $value ) {
-                return false;
+                //echo $key.": value=".$value."<br>";
+                if( is_array($value) || $value instanceof ArrayCollection ) {
+                    //echo $key.": value is array=".$value."<br>";
+                    foreach($value as $thisValue ) {
+                        if( $thisValue ) {
+                            //echo $key.": filterform not empty: thisValue=".$thisValue."<br>";
+                            return false;
+                        }
+                    }
+                } else {
+                    //echo $key.": filterform not empty: value=".$value."<br>";
+                    return false;
+                }
             }
         }
         return true;
