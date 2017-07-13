@@ -351,6 +351,23 @@ class CallLogUtil
 //            $masterStr = "";
 //        }
 
+        //if patient does not have encounter => use patient's values
+        if( !$lastNameRes ) {
+            $lastNameRes = $patient->obtainStatusField('lastname', $status);
+        }
+        if( !$firstNameRes ) {
+            $firstNameRes = $patient->obtainStatusField('firstname', $status);
+        }
+        if( !$middleNameRes ) {
+            $middleNameRes = $patient->obtainStatusField('middlename', $status);
+        }
+        if( !$suffixRes ) {
+            $suffixRes = $patient->obtainStatusField('suffix', $status);
+        }
+        if( !$sexRes ) {
+            $sexRes = $patient->obtainStatusField('sex', $status);
+        }
+
         $mrntypeId = null;
         $mrntypeStr = null;
         if( $mrnRes->getKeytype() ) {

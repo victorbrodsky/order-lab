@@ -924,6 +924,9 @@ class Encounter extends ObjectAbstract
 
         $fullName = implode(", ",$fullNameArr);
 
+        //testing
+        //$fullName = $fullName . "[ID# ".$this->getId()."]";
+
         return $fullName;
     }
 

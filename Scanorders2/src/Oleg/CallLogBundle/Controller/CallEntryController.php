@@ -330,11 +330,9 @@ class CallEntryController extends Controller
                         //'filter[metaphone]'=>false
                     )
                 ));
-                //exit('filter empty');
                 return array('redirect' => $redirect);
             }
         }
-        //exit('filter is not empty');
 
         //perform search
         $repository = $em->getRepository('OlegOrderformBundle:Message');
@@ -2118,6 +2116,7 @@ class CallEntryController extends Controller
 
         $securityUtil = $this->get('order_security_utility');
         $userSecUtil = $this->get('user_security_utility');
+        $withEncounter = false;
         $res = array();
         $output = 'OK';
         $response = new Response();
@@ -2309,14 +2308,20 @@ class CallEntryController extends Controller
             $createdWithArr[] = "DOB: " . $dob;
         }
 
-        //create an encounter for this new patient with the First Name, Last Name, Middle Name, Suffix, and sex (if any)
-        $encounter = new Encounter(false,$status,$user,$sourcesystem);
-        $encounter->setInstitution($institution);
+
+
+        if( $withEncounter ) {
+            //create an encounter for this new patient with the First Name, Last Name, Middle Name, Suffix, and sex (if any)
+            $encounter = new Encounter(false, $status, $user, $sourcesystem);
+            $encounter->setInstitution($institution);
+        }
 
         if( $lastname ) {
-            $EncounterPatlastname = new EncounterPatlastname($status, $user, $sourcesystem);
-            $EncounterPatlastname->setField($lastname);
-            $encounter->addPatlastname($EncounterPatlastname);
+            if( $withEncounter ) {
+                $EncounterPatlastname = new EncounterPatlastname($status, $user, $sourcesystem);
+                $EncounterPatlastname->setField($lastname);
+                $encounter->addPatlastname($EncounterPatlastname);
+            }
 
             $PatientLastname = new PatientLastName($status,$user,$sourcesystem);
             $PatientLastname->setField($lastname);
@@ -2326,9 +2331,11 @@ class CallEntryController extends Controller
         }
 
         if( $firstname ) {
-            $EncounterPatfirstname = new EncounterPatfirstname($status, $user, $sourcesystem);
-            $EncounterPatfirstname->setField($firstname);
-            $encounter->addPatfirstname($EncounterPatfirstname);
+            if( $withEncounter ) {
+                $EncounterPatfirstname = new EncounterPatfirstname($status, $user, $sourcesystem);
+                $EncounterPatfirstname->setField($firstname);
+                $encounter->addPatfirstname($EncounterPatfirstname);
+            }
 
             $PatientFirstname = new PatientFirstName($status,$user,$sourcesystem);
             $PatientFirstname->setField($firstname);
@@ -2338,9 +2345,11 @@ class CallEntryController extends Controller
         }
 
         if( $middlename ) {
-            $EncounterPatmiddlename = new EncounterPatmiddlename($status, $user, $sourcesystem);
-            $EncounterPatmiddlename->setField($middlename);
-            $encounter->addPatmiddlename($EncounterPatmiddlename);
+            if( $withEncounter ) {
+                $EncounterPatmiddlename = new EncounterPatmiddlename($status, $user, $sourcesystem);
+                $EncounterPatmiddlename->setField($middlename);
+                $encounter->addPatmiddlename($EncounterPatmiddlename);
+            }
 
             $PatientMiddlename = new PatientMiddleName($status,$user,$sourcesystem);
             $PatientMiddlename->setField($middlename);
@@ -2350,9 +2359,11 @@ class CallEntryController extends Controller
         }
 
         if( $suffix ) {
-            $EncounterPatsuffix = new EncounterPatsuffix($status, $user, $sourcesystem);
-            $EncounterPatsuffix->setField($suffix);
-            $encounter->addPatsuffix($EncounterPatsuffix);
+            if( $withEncounter ) {
+                $EncounterPatsuffix = new EncounterPatsuffix($status, $user, $sourcesystem);
+                $EncounterPatsuffix->setField($suffix);
+                $encounter->addPatsuffix($EncounterPatsuffix);
+            }
 
             $PatientSuffix = new PatientSuffix($status,$user,$sourcesystem);
             $PatientSuffix->setField($suffix);
@@ -2364,9 +2375,12 @@ class CallEntryController extends Controller
         if( $sex ) {
             //echo "sex=".$sex."<br>";
             $sexObj = $em->getRepository('OlegUserdirectoryBundle:SexList')->findOneById( $sex );
-            $EncounterPatsex = new EncounterPatsex($status, $user, $sourcesystem);
-            $EncounterPatsex->setField($sexObj);
-            $encounter->addPatsex($EncounterPatsex);
+
+            if( $withEncounter ) {
+                $EncounterPatsex = new EncounterPatsex($status, $user, $sourcesystem);
+                $EncounterPatsex->setField($sexObj);
+                $encounter->addPatsex($EncounterPatsex);
+            }
 
             $PatientSex = new PatientSex($status,$user,$sourcesystem);
             $PatientSex->setField($sexObj);
@@ -2375,10 +2389,12 @@ class CallEntryController extends Controller
             $createdWithArr[] = "Gender: " . $sexObj;
         }
 
-        $patient->addEncounter($encounter);
+        if( $withEncounter ) {
+            $patient->addEncounter($encounter);
+            $em->persist($encounter);
+        }
 
         $em->persist($patient);
-        $em->persist($encounter);
         $em->flush();
 
         //convert patient to json
