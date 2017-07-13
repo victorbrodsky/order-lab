@@ -288,9 +288,11 @@ class TreeRepository extends NestedTreeRepository {
         $collaborations = $this->findCollaborationsByNode( $node, $collaborationTypesStrArr );
         $collaborationCriterionArr = array();
         foreach( $collaborations as $collaboration ) {
+            echo $collaboration->getId().": collaboration=".$collaboration."<br>";
             foreach( $collaboration->getCollaborationInstitutions() as $collaborationNode ) {
+                echo "0collaborationNode=".$collaborationNode."<br>";
                 if( !in_array($collaborationNode->getId(), $addedNodes) ) {
-                    //echo "collaborationNode=".$collaborationNode."<br>";
+                    echo "collaborationNode=".$collaborationNode."<br>";
                     $collaborationCriterionArr[] = $this->selectNodesUnderParentNode( $collaborationNode, $field, $collDefault );
                 }
             }

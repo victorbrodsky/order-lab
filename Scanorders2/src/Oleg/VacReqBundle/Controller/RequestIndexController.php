@@ -194,7 +194,7 @@ class RequestIndexController extends Controller
         }
 
         //echo "dql=".$dql."<br>";
-        //echo "query=".$query->getSql()."<br>";
+        echo "query=".$query->getSql()."<br>";
 
         $paginationParams = array(
             'defaultSortFieldName' => 'request.firstDayAway', //createDate
@@ -320,6 +320,7 @@ class RequestIndexController extends Controller
 
         //get submitter groups: VacReqRequest, create
         $groupParams = array();
+        $groupParams['statusArr'] = array('default','user-added');
         if( $request->get('_route') == "vacreq_myrequests" ) {
             $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'create');
         }
@@ -337,9 +338,9 @@ class RequestIndexController extends Controller
         $organizationalInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
 
         //testing
-        //foreach( $organizationalInstitutions as $organizationalInstitution ) {
-        //    echo "organizationalInstitution=".$organizationalInstitution."<br>";
-        //}
+        foreach( $organizationalInstitutions as $organizationalInstitution ) {
+            echo "organizationalInstitution=".$organizationalInstitution."<br>";
+        }
 
         if( count($organizationalInstitutions) == 0 ) {
             if( $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
@@ -527,15 +528,26 @@ class RequestIndexController extends Controller
         }
 
         if( $groups && $groups->getId() ) {
+            echo "groupId=".$groups->getId()."<br>";
             $where = "";
             if( $where != "" ) {
                 $where .= " OR ";
             }
             if( $groups ) {
-                $where .= "request.institution=".$groups->getId();
+                //TODO: add institution hierarchy: "Pathology and Laboratory Medicine" institution is under "WCMC-NYP Collaboration" institution.
+                //$where .= "institution=".$groups->getId();
+                //$where .= $em->getRepository('OlegUserdirectoryBundle:Institution')->selectNodesUnderParentNode($groups,"institution",false);
+                $where .= $em->getRepository('OlegUserdirectoryBundle:Institution')->getCriterionStrForCollaborationsByNode(
+                    $groups,
+                    "institution",
+                    array("Union","Intersection","Untrusted Intersection")
+                    //true,
+                    //true
+                );
             } else {
-                $where .= "request.institution IS NULL";
+                $where .= "institution IS NULL";
             }
+            echo "group where=".$where."<br>";
             $dql->andWhere($where);
 
             $filtered = true;
