@@ -537,7 +537,14 @@ class RequestIndexController extends Controller
                 //TODO: add institution hierarchy: "Pathology and Laboratory Medicine" institution is under "WCMC-NYP Collaboration" institution.
                 //$where .= "institution=".$groups->getId();
                 //$where .= $em->getRepository('OlegUserdirectoryBundle:Institution')->selectNodesUnderParentNode($groups,"institution",false);
-                $where .= $em->getRepository('OlegUserdirectoryBundle:Institution')->getCriterionStrForCollaborationsByNode(
+//                $where .= $em->getRepository('OlegUserdirectoryBundle:Institution')->getCriterionStrForCollaborationsByNode(
+//                    $groups,
+//                    "institution",
+//                    array("Union","Intersection","Untrusted Intersection"),
+//                    true,
+//                    false
+//                );
+                $where .= $em->getRepository('OlegUserdirectoryBundle:Institution')->getCriterionStrIncludingCollaborationsByNode(
                     $groups,
                     "institution",
                     array("Union","Intersection","Untrusted Intersection"),
