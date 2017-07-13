@@ -273,10 +273,11 @@ class TreeRepository extends NestedTreeRepository {
         return $collaborations;
     }
 
-    //get criterion string:
+    //get criterion string for provided node:
+    // it will include this node and all collaborations and institutions (I1->I2,I3,I4; then this function for I3 will include I1,I2,I3,I4  )
     // 0) get criterion string for the original node
     // 1) find nodes where this node is indicated as collaboration
-    // 2) for each of these nodes get collaborations (not institutions!) and include each of these collaborations to the criterion string
+    // 2) for each of these nodes get collaborations and include each of these collaborations to the criterion string (not institution itself!?)
     //$node - institution of the search entity
     //$field = "institutions"
     //$collaborationTypesStrArr: array("Union","Intersection","Untrusted Intersection"). If null => ignore collaboration
@@ -290,19 +291,21 @@ class TreeRepository extends NestedTreeRepository {
         $addedNodes[] = $node->getId();
 
         //1) collaborations: find nodes where this node is indicated as collaboration
+        // WCMC-NYP Collaboration => will find WCMC, NYP, NYP Lower Manhattan Hospital
+        // Pathology and Laboratory Medicine => fill find WCMC-NYP Collaboration
         $collaborations = $this->findCollaborationsByNode( $node, $collaborationTypesStrArr );
         //echo "collaborations count=".count($collaborations)."<br>";
 
         $collaborationCriterionArr = array();
         foreach( $collaborations as $collaboration ) {
-            echo $collaboration->getId().": collaboration=".$collaboration."<br>";
-            //add this collaboration institution too (?)
-            //if( !in_array($collaboration->getId(), $addedNodes) ) {
-            //    $collaborationCriterionArr[] = $this->selectNodesUnderParentNode($collaboration, $field, $collDefault);
-            //    $addedNodes[] = $collaboration;
-            //}
+            //echo $collaboration->getId().": collaboration=".$collaboration."<br>";
+            //add this collaboration institution itself too (?)
+            if( !in_array($collaboration->getId(), $addedNodes) ) {
+                $collaborationCriterionArr[] = $this->selectNodesUnderParentNode($collaboration, $field, $collDefault);
+                $addedNodes[] = $collaboration;
+            }
 
-            //2) for each of these nodes get collaborations (not institutions!) and include each of these collaborations to the criterion string
+            //2) for each of these nodes get collaborations and include each of these collaborations to the criterion string (not institution itself)
             foreach( $collaboration->getCollaborationInstitutions() as $collaborationNode ) {
                 //echo "0collaborationNode=".$collaborationNode."<br>";
                 if( !in_array($collaborationNode->getId(), $addedNodes) ) {
@@ -311,51 +314,6 @@ class TreeRepository extends NestedTreeRepository {
                     $addedNodes[] = $collaborationNode;
                 }
             }
-        }
-
-        $collaborationCriteriaStr = "";
-        if( count($collaborationCriterionArr) > 0 ) {
-            $collaborationCriteriaStr = " OR " . implode(" OR ",$collaborationCriterionArr);
-        }
-
-        $criteriastr = $institutionalCriteriaStr . $collaborationCriteriaStr;
-
-        return $criteriastr;
-    }
-    //get criterion string v2:
-    //0) get criterion string for the original node
-    //1) get all collaborations
-    //2) include each collaboration institution to the criterion string
-    public function getCriterionStrIncludingCollaborationsByNode( $node, $field, $collaborationTypesStrArr=array("Union"), $instDefault=true, $collDefault=true ) {
-        //institutional scope
-        $addedNodes = array();
-
-        //0) get criterion string for the original node
-        $institutionalCriteriaStr = $this->selectNodesUnderParentNode( $node, $field, $instDefault );
-        $addedNodes[] = $node->getId();
-
-        //1) collaborations: find nodes where this node is indicated as collaboration
-        $collaborations = $this->findCollaborationsByNode( $node, $collaborationTypesStrArr );
-        //echo "collaborations count=".count($collaborations)."<br>";
-
-        $collaborationCriterionArr = array();
-        foreach( $collaborations as $collaboration ) {
-            echo $collaboration->getId().": collaboration=".$collaboration."<br>";
-            //add this collaboration institution too (?)
-            if( !in_array($collaboration->getId(), $addedNodes) ) {
-                $collaborationCriterionArr[] = $this->selectNodesUnderParentNode($collaboration, $field, $collDefault);
-                $addedNodes[] = $collaboration;
-            }
-
-//            //2) for each of these nodes get collaborations (not institutions!) and include each of these collaborations to the criterion string
-//            foreach( $collaboration->getCollaborationInstitutions() as $collaborationNode ) {
-//                //echo "0collaborationNode=".$collaborationNode."<br>";
-//                if( !in_array($collaborationNode->getId(), $addedNodes) ) {
-//                    //echo "collaborationNode=".$collaborationNode."<br>";
-//                    $collaborationCriterionArr[] = $this->selectNodesUnderParentNode( $collaborationNode, $field, $collDefault );
-//                    $addedNodes[] = $collaborationNode;
-//                }
-//            }
         }
 
         $collaborationCriteriaStr = "";
