@@ -155,6 +155,12 @@ class SiteParametersType extends AbstractType
                 'attr' => array('class'=>'form-control')
             ));
 
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'enableAutoAssignmentInstitutionalScope' )
+            $builder->add('enableAutoAssignmentInstitutionalScope',null,array(
+                'label'=>'Enable auto-assignment of Institutional (PHI) Scope:',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
+
 
 
 

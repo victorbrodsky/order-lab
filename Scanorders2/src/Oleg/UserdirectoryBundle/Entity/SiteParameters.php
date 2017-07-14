@@ -119,6 +119,12 @@ class SiteParameters {
 
 
     /**
+     * Enable auto-assignment of Institutional Scope
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $enableAutoAssignmentInstitutionalScope;
+
+    /**
      * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
      */
     private $autoAssignInstitution;
@@ -713,6 +719,7 @@ class SiteParameters {
 
 
 
+
     function __construct( $addobjects=true )
     {
         $this->organizationalGroupDefaults = new ArrayCollection();
@@ -1179,6 +1186,22 @@ class SiteParameters {
     public function getAutoAssignInstitution()
     {
         return $this->autoAssignInstitution;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEnableAutoAssignmentInstitutionalScope()
+    {
+        return $this->enableAutoAssignmentInstitutionalScope;
+    }
+
+    /**
+     * @param mixed $enableAutoAssignmentInstitutionalScope
+     */
+    public function setEnableAutoAssignmentInstitutionalScope($enableAutoAssignmentInstitutionalScope)
+    {
+        $this->enableAutoAssignmentInstitutionalScope = $enableAutoAssignmentInstitutionalScope;
     }
 
     /**

@@ -107,6 +107,7 @@ class CallEntryController extends Controller
             $title = $title . " (Alerts)";
         }
 
+        //create a filter and perform search
         $res = $this->getCalllogEntryFilter($request);
 
         if( $res['redirect'] ) {
@@ -419,7 +420,7 @@ class CallEntryController extends Controller
         }
 
         if( $searchFilter ) {
-            //echo "searchFilter=$searchFilter; mrntypeFilter=".$mrntypeFilter->getId()."<br>";
+            echo "searchFilter=$searchFilter; mrntypeFilter=".$mrntypeFilter->getId()."<br>";
             if ( strval($searchFilter) != strval(intval($searchFilter)) ) {
                 //echo "lastname.field string: $searchFilter<br>";
                 ////$dql->andWhere("mrn.field LIKE :search OR lastname.field LIKE :search OR message.messageTitle LIKE :search OR authorInfos.displayName LIKE :search OR messageCategory.name LIKE :search");
@@ -429,12 +430,17 @@ class CallEntryController extends Controller
                     //search can be both: lastname or mrn number
                     //$dql->andWhere("lastname.field LIKE :search");
                     //$queryParameters['search'] = "%".$searchFilter."%";
-                    $lastnameOrMrn = "lastname.field LIKE :search OR (mrn.field = :searchMrn AND mrn.keytype = :keytype)";
-                    //$lastnameOrMrn = "lastname.field LIKE :search OR (mrn.field = :searchMrn)";
-                    $queryParameters['search'] = "%".$searchFilter."%";
-                    $queryParameters['searchMrn'] = $searchFilter;
-                    $queryParameters['keytype'] = $mrntypeFilter; //->getId()?
-                    $dql->andWhere($lastnameOrMrn);
+                    //if( strpos($searchFilter, ',') === false ) {
+                        echo "no commas in search <br>";
+                        $lastnameOrMrn = "lastname.field LIKE :search OR (mrn.field = :searchMrn AND mrn.keytype = :keytype)";
+                        //$lastnameOrMrn = "lastname.field LIKE :search OR (mrn.field = :searchMrn)";
+                        $queryParameters['search'] = "%" . $searchFilter . "%";
+                        $queryParameters['searchMrn'] = $searchFilter;
+                        $queryParameters['keytype'] = $mrntypeFilter; //->getId()?
+                        $dql->andWhere($lastnameOrMrn);
+                    //} else {
+                    //    echo "comma exists in search<br>";
+                    //}
                     //echo "keytype=".$queryParameters['keytype']."<br>";
                 }
             } else {
@@ -743,17 +749,22 @@ class CallEntryController extends Controller
         $messageTypeId = trim($request->get('message-type'));
 
         //check if user has at least one institution
-        $securityUtil = $this->get('order_security_utility');
-        $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
-        if( !$userSiteSettings ) {
-            $orderUtil->setWarningMessageNoInstitution($user);
-            return $this->redirect( $this->generateUrl('calllog_home') );
-        }
-        $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
+//        $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
+//        if( !$userSiteSettings ) {
+//            $orderUtil->setWarningMessageNoInstitution($user);
+//            return $this->redirect( $this->generateUrl('calllog_home') );
+//        }
+//        $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
+//        if( count($permittedInstitutions) == 0 ) {
+//            $orderUtil->setWarningMessageNoInstitution($user);
+//            return $this->redirect( $this->generateUrl('calllog_home') );
+//        }
+        $permittedInstitutions = $orderUtil->getAndAddAtleastOneInstitutionPHI($user,$this->get('session'));
         if( count($permittedInstitutions) == 0 ) {
             $orderUtil->setWarningMessageNoInstitution($user);
             return $this->redirect( $this->generateUrl('calllog_home') );
         }
+
 
         $title = "New Entry";
         $titleheadroom = null;

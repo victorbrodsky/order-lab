@@ -28,6 +28,7 @@ namespace Oleg\OrderformBundle\Helper;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Oleg\UserdirectoryBundle\Entity\InstitutionWrapper;
+use Oleg\UserdirectoryBundle\Entity\PerSiteSettings;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use Oleg\OrderformBundle\Entity\History;
@@ -735,6 +736,64 @@ class OrderUtil {
             $msg
         );
 
+    }
+
+    public function addDefaultInstitutionalPhiScope( $user, $session=null ) {
+
+        $permittedInstitutions = $this->getAtleastOneInstitutionPHI($user);
+        if( count($permittedInstitutions) > 0 ) {
+            return $permittedInstitutions;
+        }
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        $enableAutoAssignmentInstitutionalScope = $userSecUtil->getSiteSettingParameter('enableAutoAssignmentInstitutionalScope');
+        $autoAssignInstitution = $userSecUtil->getSiteSettingParameter('autoAssignInstitution');
+
+        if( $enableAutoAssignmentInstitutionalScope && $autoAssignInstitution ) {
+            $userSiteSettings = $user->getPerSiteSettings();
+            if( !$userSiteSettings ) {
+                //set institution to per site settings
+                $userSiteSettings = new PerSiteSettings();
+                //$userSiteSettings->setAuthor($creator);
+                $systemUser = $userSecUtil->findSystemUser();
+                $userSiteSettings->setAuthor($systemUser);
+                $userSiteSettings->setUser($user);
+                //$this->em->persist($userSiteSettings);
+            }
+            $userSiteSettings->addPermittedInstitutionalPHIScope($autoAssignInstitution);
+            $this->em->flush($userSiteSettings);
+            $this->em->flush($user);
+
+            if( $session ) {
+                $session->getFlashBag()->add(
+                    'notice',
+                    "Institutional PHI Scope has been set to ".$autoAssignInstitution
+                );
+            }
+        }
+
+        $permittedInstitutions = $this->getAtleastOneInstitutionPHI($user);
+
+        return $permittedInstitutions;
+    }
+    public function getAndAddAtleastOneInstitutionPHI( $user, $session=null ) {
+        $permittedInstitutions = $this->getAtleastOneInstitutionPHI($user);
+
+        if( count($permittedInstitutions) == 0 ) {
+            $permittedInstitutions = $this->addDefaultInstitutionalPhiScope($user,$session);
+        }
+        //echo "permittedInstitutions count=".count($permittedInstitutions)."<br>";
+
+        return $permittedInstitutions;
+    }
+    public function getAtleastOneInstitutionPHI( $user ) {
+        $permittedInstitutions = array();
+        $securityUtil = $this->container->get('order_security_utility');
+        $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
+        if( $userSiteSettings ) {
+            $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
+        }
+        return $permittedInstitutions;
     }
 
 
