@@ -796,6 +796,7 @@ function createPatientsTableCalllog( patients, holderId ) {
         matchingPatientsHeaderHtml += '<th>&nbsp;</th>';
     } else {
         //console.log("hasMaster false");
+        matchingPatientsHeaderHtml += '<th></th>';
     }
 
     matchingPatientsHeaderHtml +=
@@ -851,12 +852,17 @@ function constractPatientInfoRow( patient, masterId, type, holderId ) {
             patientsHtml += '<span class="glyphicon glyphicon-plus-sign"></span></button>';
             patientsHtml += '</td>';
             hasMaster = true;
+        } else {
+            patientsHtml += '<td></td>';
         }
     } else {
         //masterId
         patientsHtml += '<tr id="'+patient.id+'" class="clickable-row collapseme'+masterId+' collapse out" style="background: #A9A9A9;">';
-        patientsHtml += '<td>&nbsp;&nbsp;<span class="glyphicon glyphicon-link"></span></td>';
+        patientsHtml += '<td>';
+        patientsHtml += '&nbsp;&nbsp;<span class="glyphicon glyphicon-link"></span>';
+        patientsHtml += '</td>';
     }
+
 
     //action menu (only for call-entry form)
     var action = "";
@@ -885,9 +891,9 @@ function constractPatientInfoRow( patient, masterId, type, holderId ) {
             '<ul class="dropdown-menu dropdown-menu-right">' +
                 //'<li><a href="javascript:void(0)" onclick="matchingPatientUnmergeBtnClick(\''+holderId+'\',\'unmerge\')">Un-merge patient record</a></li>'+
                 //'<li><a href="javascript:void(0)" onclick="matchingPatientUnmergeBtnClick(\''+holderId+'\',\'set-master-record\')">Set Master record</a></li>'+
-            '<li><a href="' + viewUrl + '">View patient record</a></li>' +
-            '<li><a href="' + editUrl + '">Edit patient record</a></li>' +
-            '<li><a href="' + mergeUrl + '">Merge patient record</a></li>' +
+            '<li><a href="' + viewUrl + '" target="_blank">View patient record</a></li>' +
+            '<li><a href="' + editUrl + '" target="_blank">Edit patient record</a></li>' +
+            '<li><a href="' + mergeUrl + '" target="_blank">Merge patient record</a></li>' +
                 //'<li><a href="' + unmergeUrl + '">Un-merge patient record</a></li>' +
                 //'<li><a href="' + setmasterUrl + '">Set Master record</a></li>' +
             unmergeMenu +

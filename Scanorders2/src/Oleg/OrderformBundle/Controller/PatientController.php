@@ -377,12 +377,13 @@ class PatientController extends Controller
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
+        $system = $securityUtil->getDefaultSourceSystem();
+
         ini_set('max_execution_time', 300); //300 seconds = 5 minutes
         ini_set('memory_limit', '3072M');
 
         //add tracker if does not exists
         if( !$entity->getTracker() ) {
-            $system = $securityUtil->getDefaultSourceSystem();
             //$entity->addContactinfoByTypeAndName($user, $system);
 
             //$patientSpotPurpose = $em->getRepository('OlegUserdirectoryBundle:SpotPurpose')->findOneByName("Initial Patient Encounter - Address Entry");
@@ -396,6 +397,13 @@ class PatientController extends Controller
             $entity->addContactinfoByTypeAndName($user,$system,$locationTypePrimary,"Patient's Current Location",$spotEntityPatient,$withdummyfields,$em);
 
             //echo "spots=".count($entity->getTracker()->getSpots())."<br>";
+        }
+
+        if( count($entity->getEncounter()) == 0 ) {
+            //exit("no encounter");
+            $encounter = new Encounter(true,'valid',$user,$system);
+            $encounter->setProvider($user);
+            $entity->addEncounter($encounter); //add new encounter to patient
         }
 
 
@@ -585,6 +593,14 @@ class PatientController extends Controller
 //            echo "changeSetStr:<br>";
 //            echo $changeSetStr;
 //            exit('1');
+
+            //we might have newly added not persisted encounter without ID
+            foreach( $entity->getEncounter() as $encounter ) {
+                //echo "ID=".$encounter->getId()."; creationdate=".$encounter->getCreationDate()."<br>";
+                if( !$encounter->getCreationdate() ) {
+                    $em->persist($encounter);
+                }
+            }
 
             //exit("Form is valid");
             $em->persist($entity);
