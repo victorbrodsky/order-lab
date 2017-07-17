@@ -1711,7 +1711,9 @@ function calllogSubmitForm(btn,messageStatus) {
 
         //Please provide the amendment reason
         var amendmentReason = $(".ajax-combobox-amendmentReason");
-        if (amendmentReason) {
+        //console.log(amendmentReason);
+        if( amendmentReason.length > 0 ) {
+            //console.log("process amendmentReason="+amendmentReason);
             var amendmentReasonData = amendmentReason.select2('data');
             if (amendmentReasonData && amendmentReasonData.id) {
                 //ok

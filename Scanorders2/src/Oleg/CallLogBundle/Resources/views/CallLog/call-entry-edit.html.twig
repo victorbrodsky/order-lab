@@ -198,7 +198,9 @@
                             {#{{ formmacros.simplefield("Form(s):", message.getFormVersionsInfo, "", "disabled") }}#}
 
                             {#Amendment Reason#}
-                            {{ formmacros.field(form.amendmentReason) }}
+                            {% if form.amendmentReason is defined %}
+                                {{ formmacros.field(form.amendmentReason) }}
+                            {% endif %}
                         </p>
 
                         {#Patient List#}

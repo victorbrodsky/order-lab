@@ -164,7 +164,9 @@
                         {#Message Version#}
                         {{ formmacros.field(form.version) }}
                         {#Amendment Reason#}
-                        {{ formmacros.field(form.amendmentReason) }}
+                        {% if form.amendmentReason is defined %}
+                            {{ formmacros.field(form.amendmentReason) }}
+                        {% endif %}
                         {% if cycle == "new" %}
                             </div>
                         {% endif %}

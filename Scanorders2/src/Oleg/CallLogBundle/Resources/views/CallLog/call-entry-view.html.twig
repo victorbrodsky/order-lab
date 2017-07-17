@@ -262,7 +262,9 @@
 
                             {#Amendment Reason#}
                             {% if message.version|number_format > 1 %}
-                                {{ formmacros.field(form.amendmentReason) }}
+                                {% if form.amendmentReason is defined %}
+                                    {{ formmacros.field(form.amendmentReason) }}
+                                {% endif %}
                             {% endif %}
                         </p>
 

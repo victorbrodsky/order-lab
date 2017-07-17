@@ -186,12 +186,16 @@ class CalllogMessageType extends AbstractType
             'attr' => array('class' => 'form-control')
         ));
 
-        $builder->add('amendmentReason', 'custom_selector', array(
-            'label' => 'Amendment Reason:',
-            'required' => false,
-            'attr' => array('class' => 'ajax-combobox-amendmentReason', 'type' => 'hidden'),
-            'classtype' => 'amendmentReason'
-        ));
+        if( $this->entity->getMessageStatus()->getName()."" != "Draft" || ($this->params['cycle'] != "edit" && $this->params['cycle'] != "amend" ) ) {
+            //echo "status=".$this->entity->getMessageStatus()->getName().""."<br>";
+            //echo "show amendmentReason<br>";
+            $builder->add('amendmentReason', 'custom_selector', array(
+                'label' => 'Amendment Reason:',
+                'required' => false,
+                'attr' => array('class' => 'ajax-combobox-amendmentReason', 'type' => 'hidden'),
+                'classtype' => 'amendmentReason'
+            ));
+        }
 
         if( $this->params['cycle'] != "new" ) {
             $builder->add('messageStatus', 'entity', array(
