@@ -94,7 +94,7 @@ class CalllogFilterType extends AbstractType
             'label' => false,
             //'data' => $this->params['search'],
             'empty_data' => $this->params['search'],
-            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder' => "MRN or Last Name", 'style'=>'width:50%; float:right; height:28px;'),
+            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder' => "MRN or Last Name, First Name", 'style'=>'width:50%; float:right; height:28px;'),
         ));
 
         $builder->add('author', 'entity', array(
