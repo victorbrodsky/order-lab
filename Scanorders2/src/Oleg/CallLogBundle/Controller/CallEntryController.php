@@ -341,6 +341,7 @@ class CallEntryController extends Controller
         $dql->leftJoin("message.patient","patient");
         $dql->leftJoin("patient.mrn","mrn");
         $dql->leftJoin("patient.lastname","lastname");
+        $dql->leftJoin("patient.firstname","firstname");
         $dql->leftJoin("message.encounter","encounter");
         $dql->leftJoin("message.calllogEntryMessage","calllogEntryMessage");
 
@@ -420,7 +421,7 @@ class CallEntryController extends Controller
         }
 
         if( $searchFilter ) {
-            echo "searchFilter=$searchFilter; mrntypeFilter=".$mrntypeFilter->getId()."<br>";
+            //echo "searchFilter=$searchFilter; mrntypeFilter=".$mrntypeFilter->getId()."<br>";
             if ( strval($searchFilter) != strval(intval($searchFilter)) ) {
                 //echo "lastname.field string: $searchFilter<br>";
                 ////$dql->andWhere("mrn.field LIKE :search OR lastname.field LIKE :search OR message.messageTitle LIKE :search OR authorInfos.displayName LIKE :search OR messageCategory.name LIKE :search");
@@ -430,17 +431,44 @@ class CallEntryController extends Controller
                     //search can be both: lastname or mrn number
                     //$dql->andWhere("lastname.field LIKE :search");
                     //$queryParameters['search'] = "%".$searchFilter."%";
-                    //if( strpos($searchFilter, ',') === false ) {
-                        echo "no commas in search <br>";
+                    if( strpos($searchFilter, ',') === false ) {
+                        //echo "no commas in search <br>";
                         $lastnameOrMrn = "lastname.field LIKE :search OR (mrn.field = :searchMrn AND mrn.keytype = :keytype)";
                         //$lastnameOrMrn = "lastname.field LIKE :search OR (mrn.field = :searchMrn)";
                         $queryParameters['search'] = "%" . $searchFilter . "%";
                         $queryParameters['searchMrn'] = $searchFilter;
                         $queryParameters['keytype'] = $mrntypeFilter; //->getId()?
                         $dql->andWhere($lastnameOrMrn);
-                    //} else {
-                    //    echo "comma exists in search<br>";
-                    //}
+                    } else {
+                        //If a comma is present, treat the string to the left of the comma as the Beginning of a last name
+                        // and the string to the right of the comma (if any non-space characters are present) as the Beginning of a last name.
+                        echo "comma exists in search<br>";
+                        $namesArr = explode(",",$searchFilter);
+                        if( count($namesArr) == 2 ) {
+                            $latentLastname = $namesArr[0];
+                            $latentFirstname = $namesArr[1];
+                            echo "0: [$latentLastname] [$latentFirstname]<br>";
+                            if( $latentLastname && $latentFirstname ) {
+                                $latentLastname = trim($latentLastname);
+                                $latentFirstname = trim($latentFirstname);
+                                echo "1: [$latentLastname] [$latentFirstname]<br>";
+                                $lastnameOrMrn = "(lastname.field LIKE :searchLastname AND firstname.field LIKE :searchFirstname) OR (mrn.field = :searchMrn AND mrn.keytype = :keytype)";
+                                $queryParameters['searchLastname'] = "%" . $latentLastname . "%";
+                                $queryParameters['searchFirstname'] = "%" . $latentFirstname . "%";
+                                $queryParameters['searchMrn'] = $searchFilter;
+                                $queryParameters['keytype'] = $mrntypeFilter; //->getId()?
+                                $dql->andWhere($lastnameOrMrn);
+                            }
+                            if( $latentLastname && !$latentFirstname ) {
+                                echo "2: [$latentLastname]<br>";
+                                $lastnameOrMrn = "(lastname.field LIKE :searchLastname) OR (mrn.field = :searchMrn AND mrn.keytype = :keytype)";
+                                $queryParameters['searchLastname'] = "%" . $latentLastname . "%";
+                                $queryParameters['searchMrn'] = $searchFilter;
+                                $queryParameters['keytype'] = $mrntypeFilter; //->getId()?
+                                $dql->andWhere($lastnameOrMrn);
+                            }
+                        }
+                    }
                     //echo "keytype=".$queryParameters['keytype']."<br>";
                 }
             } else {
