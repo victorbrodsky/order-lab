@@ -442,16 +442,16 @@ class CallEntryController extends Controller
                     } else {
                         //If a comma is present, treat the string to the left of the comma as the Beginning of a last name
                         // and the string to the right of the comma (if any non-space characters are present) as the Beginning of a last name.
-                        echo "comma exists in search<br>";
+                        //echo "comma exists in search<br>";
                         $namesArr = explode(",",$searchFilter);
                         if( count($namesArr) == 2 ) {
                             $latentLastname = $namesArr[0];
                             $latentFirstname = $namesArr[1];
-                            echo "0: [$latentLastname] [$latentFirstname]<br>";
+                            //echo "0: [$latentLastname] [$latentFirstname]<br>";
                             if( $latentLastname && $latentFirstname ) {
                                 $latentLastname = trim($latentLastname);
                                 $latentFirstname = trim($latentFirstname);
-                                echo "1: [$latentLastname] [$latentFirstname]<br>";
+                                //echo "1: [$latentLastname] [$latentFirstname]<br>";
                                 $lastnameOrMrn = "(lastname.field LIKE :searchLastname AND firstname.field LIKE :searchFirstname) OR (mrn.field = :searchMrn AND mrn.keytype = :keytype)";
                                 $queryParameters['searchLastname'] = "%" . $latentLastname . "%";
                                 $queryParameters['searchFirstname'] = "%" . $latentFirstname . "%";
@@ -460,7 +460,7 @@ class CallEntryController extends Controller
                                 $dql->andWhere($lastnameOrMrn);
                             }
                             if( $latentLastname && !$latentFirstname ) {
-                                echo "2: [$latentLastname]<br>";
+                                //echo "2: [$latentLastname]<br>";
                                 $lastnameOrMrn = "(lastname.field LIKE :searchLastname) OR (mrn.field = :searchMrn AND mrn.keytype = :keytype)";
                                 $queryParameters['searchLastname'] = "%" . $latentLastname . "%";
                                 $queryParameters['searchMrn'] = $searchFilter;
