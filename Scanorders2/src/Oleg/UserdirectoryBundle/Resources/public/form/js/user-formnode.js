@@ -31,6 +31,11 @@ var _TIMEOUT = 50; // waitfor test rate [msec]
 function treeSelectAdditionalJsAction(comboboxEl) {
     //printF( comboboxEl, "treeSelect AdditionalJsAction: combobox on change:" );
 
+    //don't run this function if the div where to put the results does not exists in the page.
+    if( $("#form-node-holder").length == 0 ) {
+        return;
+    }
+
     if( !comboboxEl.hasClass("ajax-combobox-messageCategory") ) {
         //console.log('this combobox is not message category');
         return;

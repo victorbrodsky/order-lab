@@ -940,7 +940,7 @@ class FormNodeUtil
 
     //Get all formnode from bottom to top. Split the row into two columns so that the values all begin at the same point.
     //$holderEntity - message; $formNodeHolderEntity - message category
-    public function getFormNodeHolderShortInfo( $holderEntity, $formNodeHolderEntity, $table=true, $trclassname ) {
+    public function getFormNodeHolderShortInfo( $holderEntity, $formNodeHolderEntity, $table=true, $trclassname, $withValue=true ) {
         if( !$holderEntity ) {
             return null;
         }
@@ -957,6 +957,7 @@ class FormNodeUtil
         ////// testing variables (comment out them for production) /////
         //$testing = true;
         //$table = false; //testing
+        //$withValue = false;
         ////// EOF testing variables /////
 
 //        if( $table ) {
@@ -974,7 +975,7 @@ class FormNodeUtil
 
         foreach( $formNodes as $formNode ) {
             //$result = $this->getSingleFormNodeHolderShortInfo($holderEntity,$formNode,$result,$table,$trclassname);
-            $thisResult = $this->getSingleFormNodeHolderShortInfo($holderEntity,$formNode,$table);
+            $thisResult = $this->getSingleFormNodeHolderShortInfo($holderEntity,$formNode,$table,$withValue);
             //print "<pre>";
             //print_r($thisResult);
             //print "</pre><br>";
@@ -1004,7 +1005,7 @@ class FormNodeUtil
     //version getting form node holder (messageCategory) form nodes info (i.e. "Impression/Outcome: This is an example of an impression and outcome.")
     //$holderEntity is the holder of the $formNodeHolderEntity, for example, Message entity
     //$formNodeHolderEntity is a form node holder, for example, MessageCategory entity
-    public function getSingleFormNodeHolderShortInfo( $holderEntity, $formNodeHolderEntity, $table ) {
+    public function getSingleFormNodeHolderShortInfo( $holderEntity, $formNodeHolderEntity, $table, $withValue=true ) {
 
         if( !$holderEntity ) {
             //return $result;
@@ -1090,7 +1091,9 @@ class FormNodeUtil
 
                         //hide message fields that are empty/have no value
                         if( !$elementValue ) {
-                            continue;
+                            if( $withValue ) {
+                                continue;
+                            }
                         }
 
                         //testing
@@ -1142,7 +1145,9 @@ class FormNodeUtil
                     //hide message fields that are empty/have no value
                     if( $formNodeValue == null || $formNodeValue == "" ) {
                     //if( !$formNodeValue ) {
-                        continue;
+                        if( $withValue ) {
+                            continue;
+                        }
                     }
 
                     $formNodeValue = $this->getValueStrFromValueId($formNode, $receivingEntity, $formNodeValue);
@@ -1344,6 +1349,98 @@ class FormNodeUtil
 //        print "<br><pre>";
 //        print_r($result);
 //        print "</pre><br>";
+
+        return $result;
+    }
+
+    //This is used by call entry View page
+    //Get all formnodes from bottom to top. Split the row into two columns so that the values all begin at the same point.
+    //$holderEntity - message; $formNodeHolderEntity - message category
+    public function getFormNodeHolderShortInfoForView( $holderEntity, $formNodeHolderEntity, $withValue=true ) {
+        if( !$holderEntity ) {
+            return null;
+        }
+
+        if( !$formNodeHolderEntity ) {
+            return null;
+        }
+
+        $table = true;
+
+        $testing = false;
+
+        ////// testing variables (comment out them for production) /////
+        //$testing = true;
+        //$table = false; //testing
+        //$withValue = false;
+        ////// EOF testing variables /////
+
+        $formNodes = $formNodeHolderEntity->getEntityBreadcrumbs(); //message category hierarchy
+        //echo "formNode count=".count($formNodes)."<br>";
+
+        $resultsArr = array();
+
+        foreach( $formNodes as $formNode ) {
+            $thisResult = $this->getSingleFormNodeHolderShortInfo($holderEntity,$formNode,$table,$withValue);
+            $resultsArr[] = $thisResult;
+        }
+
+        $result = $this->mergeResultsView( $resultsArr, $testing );
+
+        $result =   '<div class="well"><table class="table text-left">'.
+                    $result.
+                    '</table></div>';
+
+        return $result;
+    }
+    public function mergeResultsView( $resultsArr, $testing=false ) {
+
+        $space = "&nbsp;";
+        $result = "";
+        $spacePrefix = null;
+
+        if( $testing ) {
+            print "#########<pre>";
+            print_r($resultsArr);
+            print "</pre>#########<br>";
+        }
+
+        $finalResultsArr = array();
+
+        //group by section name
+        foreach( $resultsArr as $thisResult  ) {
+            if( count($thisResult) == 0 ) {
+                continue;
+            }
+
+            foreach( $thisResult as $sectionName => $nameValueArrs ) {
+                $finalResultsArr[$sectionName][] = $nameValueArrs;
+            }
+        }
+
+        foreach( $finalResultsArr as $sectionName => $nameValueArrs ) {
+
+            if( $sectionName ) {
+                $result = $result .
+                    '<tr>' .
+                    '<td>' . $sectionName . '</td>' .
+                    '<td></td>' .
+                    '</tr>';
+
+            }
+            foreach( $nameValueArrs as $nameValueMultipleArr ) {
+
+                foreach( $nameValueMultipleArr as $nameValueArr ) {
+                    $formNodeName = $space . $space . $space . $nameValueArr['name'];
+                    $result = $result .
+                        '<tr>' .
+                        '<td>' . $formNodeName . '</td>' .
+                        '<td>' . $nameValueArr['value'] . '</td>' .
+                        '</tr>';
+                }
+            }
+
+        }
 
         return $result;
     }

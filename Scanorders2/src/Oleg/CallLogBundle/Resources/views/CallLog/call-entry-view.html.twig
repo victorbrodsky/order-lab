@@ -273,7 +273,17 @@
                             {{ calllogmacros.calllogPatientList(form,cycle,sitename) }}
                         {% endif %}
 
-                        <div id="form-node-holder"></div>
+                        {#div where to append the form fields#}
+                        {#<div id="form-node-holder"></div>#}
+
+                        {#<div class="well">#}
+                        {#<table class="records_list table table-condensed text-left my-table-class">#}
+                            {#<tr class="table-no-border">#}
+                                {{ user_formnode_utility.getFormNodeHolderShortInfoForView(message,message.messageCategory,false)|raw }}
+                            {#</tr>#}
+                        {#</table>#}
+                        {#</div>#}
+
 
                         {% if message.calllogEntryMessage and message.calllogEntryMessage.entryTags %}
                             {{ calllogmacros.calllogEntryTags(form,cycle) }}
