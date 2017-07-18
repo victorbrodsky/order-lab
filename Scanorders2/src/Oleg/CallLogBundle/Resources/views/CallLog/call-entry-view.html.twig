@@ -28,7 +28,7 @@
 {% endblock %}
 
 
-{% block content %}
+{% block contentleft %}
 
     <h4 class="text-info calllog-title" align="center">
         {{ titleBody|raw }}
@@ -85,7 +85,7 @@
         </div>
     {% endif %}
 
-    <div class="well">
+    <div class="well text-center">
         {% set patientNameMrnInfo = message.getPatientNameMrnInfo %}
         {% if patientNameMrnInfo %}
             {% set patientNameMrnInfo = " for patient " ~ patientNameMrnInfo %}
@@ -119,7 +119,7 @@
                 </h4>
             </div>
             <div id="allMessages" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
-                <div class="panel-body">
+                <div class="panel-body text-center">
                     {% for thisMessage in allMessages %}
                         {% set thisMessageInfo = "ID "~thisMessage.getMessageOidVersion ~ " " ~ thisMessage.getSubmitterInfoSimpleDate %}
                         {% set thisMessageInfo = thisMessageInfo ~ " [" ~ thisMessage.getMessageStatus ~ "]" %}
