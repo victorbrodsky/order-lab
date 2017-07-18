@@ -1353,7 +1353,7 @@ class FormNodeUtil
         return $result;
     }
 
-    //This is used by call entry View page
+    //This is used by call entry View page. Similar to getFormNodeHolderShortInfo
     //Get all formnodes from bottom to top. Split the row into two columns so that the values all begin at the same point.
     //$holderEntity - message; $formNodeHolderEntity - message category
     public function getFormNodeHolderShortInfoForView( $holderEntity, $formNodeHolderEntity, $withValue=true ) {
@@ -1366,17 +1366,9 @@ class FormNodeUtil
         }
 
         $table = true;
-
         $testing = false;
 
-        ////// testing variables (comment out them for production) /////
-        //$testing = true;
-        //$table = false; //testing
-        //$withValue = false;
-        ////// EOF testing variables /////
-
         $formNodes = $formNodeHolderEntity->getEntityBreadcrumbs(); //message category hierarchy
-        //echo "formNode count=".count($formNodes)."<br>";
 
         $resultsArr = array();
 
