@@ -1108,3 +1108,12 @@
         </div>
     {% endif %}
 {% endmacro %}
+{% macro calllogWarningMessageWithLatestEncounterEntity( message, encounter ) %}
+    {% set editPageWithLatestEncounterUrl = calllog_util.getUrlWithLatestEncounterIfDifferent(message,encounter) %}
+    {% if editPageWithLatestEncounterUrl %}
+        <div class="alert alert-danger" role="alert">
+            {{ editPageWithLatestEncounterUrl|raw }}
+        </div>
+    {% endif %}
+{% endmacro %}
+

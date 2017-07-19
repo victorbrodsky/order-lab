@@ -35,4 +35,8 @@ services:
         class: Oleg\CallLogBundle\Util\CallLogUtil
         arguments: ["@doctrine.orm.entity_manager", "@security.context", "@service_container"]
 
+    calllog_util_form:
+            class: Oleg\CallLogBundle\Util\CallLogUtilForm
+            arguments: ["@doctrine.orm.entity_manager", "@security.context", "@service_container"]
+
 

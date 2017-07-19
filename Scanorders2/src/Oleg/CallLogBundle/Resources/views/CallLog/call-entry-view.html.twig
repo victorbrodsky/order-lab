@@ -133,175 +133,189 @@
 
     {% endif %}
 
-    <div id="calllog-patient-list">
+    {% if formbased %}
 
-        {% set holderId = "patient-holder-1" %}
+        <div id="calllog-patient-list">
 
-        {{ form_start(form) }}
+            {% set holderId = "patient-holder-1" %}
 
-        {{ form_errors(form) }}
+            {{ form_start(form) }}
 
-        {#get encounter from the message#}
-        {% set encounterPatientInfo = form.encounter|first %}
+            {{ form_errors(form) }}
 
-
-        {% if form.patient|length == 0 %}
-            <p>No single patient is referenced by this entry</p>
-            <br>
-        {% endif %}
-
-        {#latest encounter info#}
-        {{ calllogmacros.calllogWarningMessageWithLatestEncounter(form,encounterPatientInfo) }}
-
-        {# Encounter Info #}
-        <div id="callentry-form" class="panel-collapse collapse in">{#testing in#}
-
-            {#{{ calllogmacros.referingProviderObject(encounterPatientInfo) }}#}
-
-            {#above the "Call Information" accordion, insert an accordion with the title "Encounter Info"    #}
-            <div class="panel {{ mainPanelClass }}">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <a data-toggle="collapse" href="#calllog-EncounterInfo-{{ encounterPatientInfo.vars.value.id }}">
-                            Encounter Info
-                        </a>
-                    </h4>
-                </div>
-                <div id="calllog-EncounterInfo-{{ encounterPatientInfo.vars.value.id }}" class="panel-collapse collapse in">
-                    <div class="panel-body">
-
-                        {% set status = 'Submitted' %}
-
-                        {% if encounterPatientInfo %}
-
-                            {{ form_row(encounterPatientInfo.status) }}
-                            {{ formmacros.inputArrayField(encounterPatientInfo.number,"new","encounternumber","key","","","",status) }}
-
-                            {% if cycle == 'show' %}
-                                {% for encounterDate in encounterPatientInfo.vars.value.date %}
-                                    {#encounterDate.field|date('(T)')#}
-                                    {#{% set encounterDateStr = encounterDate.field|date('m/d/Y',encounterDate.timezone) ~ " at " ~ encounterDate.time|date('h:i a',encounterDate.timezone)~" ("~encounterDate.timezone~")" %}#}
-                                    {% set encounterDateStr = user_service_utility.getSeparateDateTimeTzStr(encounterDate.field,encounterDate.time,encounterDate.timezone,true,false) %}
-                                    {{ formmacros.simplefield("Encounter Date:", encounterDateStr, "", "disabled") }}
-                                {% endfor %}
-                            {% else %}
-                                {{ formmacros.inputArrayField(encounterPatientInfo.date,cycle,"encounterdate","date","","","",status) }}
-                            {% endif %}
-
-                            {{ formmacros.field(encounterPatientInfo.encounterStatus) }}
-                            {{ formmacros.inputArrayField(encounterPatientInfo.encounterInfoTypes,cycle,"encounterinfotypes","","","","",status) }}
-                            {{ formmacros.field(encounterPatientInfo.provider) }}
-
-                            {% for attendingPhysician in encounterPatientInfo.attendingPhysicians %}
-                                {{ formmacros.field(attendingPhysician.field) }}
-                            {% endfor %}
-
-                            {{ calllogmacros.referingProviderObject(encounterPatientInfo) }}
-
-                            {{ calllogmacros.trackerContactinfoForm(encounterPatientInfo,cycle,status) }}
-
-                            {% if encounterPatientInfo.vars.value.hasPatientInfo %}
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4 class="panel-title">
-                                            <a class="calllog-patient-panel-title" data-toggle="collapse" href="#form_body_encounterInfo">
-                                                Update Patient Info
-                                            </a>
-                                        </h4>
-                                    </div>
-                                    <div id="form_body_encounterInfo" class="panel-collapse collapse in">
-                                        <div class="panel-body">
-                                            <div id="calllog-encounterInfo-holder">
-                                                {{ formmacros.inputArrayField(encounterPatientInfo.patlastname,cycle,"encounterpatlastname","","","","",status) }}
-                                                {{ formmacros.inputArrayField(encounterPatientInfo.patfirstname,cycle,"encounterpatfirstname","","","","",status) }}
-                                                {{ formmacros.inputArrayField(encounterPatientInfo.patmiddlename,cycle,"encounterpatmiddlename","","","","",status) }}
-                                                {{ formmacros.inputArrayField(encounterPatientInfo.patsuffix,cycle,"encounterpatsuffix","","","","",status) }}
-                                                {{ formmacros.inputArrayField(encounterPatientInfo.patsex,cycle,"encounterpatsex","","","","",status) }}
-                                                {#{{ formmacros.field(encounterPatientInfo.patientDob) }}#}
-                                                {#{{ formmacros.fieldDateLabel(encounterPatientInfo.patientDob,'regular-datepicker') }}#}
-                                            </div>
-                                        </div> <!-- panel-body -->
-                                    </div> <!-- panel-collapse -->
-                                </div> <!-- panel panel-default -->
-                            {% endif %}
-
-                        {% endif %} {#encounterPatientInfo#}
-
-                    </div> <!-- panel-body -->
-                </div> <!-- panel-collapse -->
-            </div> <!-- panel panel-primary -->
+            {#get encounter from the message#}
+            {% set encounterPatientInfo = form.encounter|first %}
 
 
+            {% if form.patient|length == 0 %}
+                <p>No single patient is referenced by this entry</p>
+                <br>
+            {% endif %}
 
-            {# Entry #}
-            <div class="panel {{ mainPanelClass }}">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <a data-toggle="collapse" href="#calllog-Entry">
-                            Entry
-                        </a>
-                    </h4>
-                </div>
-                <div id="calllog-Entry" class="panel-collapse collapse in">
-                    <div class="panel-body">
-                        {# Entry #}
+            {#latest encounter info#}
+            {{ calllogmacros.calllogWarningMessageWithLatestEncounter(form,encounterPatientInfo) }}
 
-                        {#Message Fields        #}
-                        <p>
-                            {#Message Type: Message->messageCategory#}
-                            {% if form.messageCategory is defined %}
-                                {{ treemacros.compositeTreeNode(form.messageCategory,cycle,"noprototype") }}
-                            {% endif %}
-                            {{ formmacros.field(form.messageStatus) }}
-                            {#Message Version#}
-                            {{ formmacros.field(form.version) }}
-                            {{ formmacros.field(form.messageTitle) }}
+            {# Encounter Info #}
+            <div id="callentry-form" class="panel-collapse collapse in">{#testing in#}
 
-                            {#form version#}
-                            {{ formmacros.simplefield("Form(s):", message.getFormVersionsInfo, "", "disabled") }}
+                {#{{ calllogmacros.referingProviderObject(encounterPatientInfo) }}#}
 
-                            {#Amendment Reason#}
-                            {% if message.version|number_format > 1 %}
-                                {% if form.amendmentReason is defined %}
-                                    {{ formmacros.field(form.amendmentReason) }}
+                {#above the "Call Information" accordion, insert an accordion with the title "Encounter Info"    #}
+                <div class="panel {{ mainPanelClass }}">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" href="#calllog-EncounterInfo-{{ encounterPatientInfo.vars.value.id }}">
+                                Encounter Info
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="calllog-EncounterInfo-{{ encounterPatientInfo.vars.value.id }}" class="panel-collapse collapse in">
+                        <div class="panel-body">
+
+                            {% set status = 'Submitted' %}
+
+                            {% if encounterPatientInfo %}
+
+                                {{ form_row(encounterPatientInfo.status) }}
+                                {{ formmacros.inputArrayField(encounterPatientInfo.number,"new","encounternumber","key","","","",status) }}
+
+                                {% if cycle == 'show' %}
+                                    {% for encounterDate in encounterPatientInfo.vars.value.date %}
+                                        {#encounterDate.field|date('(T)')#}
+                                        {#{% set encounterDateStr = encounterDate.field|date('m/d/Y',encounterDate.timezone) ~ " at " ~ encounterDate.time|date('h:i a',encounterDate.timezone)~" ("~encounterDate.timezone~")" %}#}
+                                        {% set encounterDateStr = user_service_utility.getSeparateDateTimeTzStr(encounterDate.field,encounterDate.time,encounterDate.timezone,true,false) %}
+                                        {{ formmacros.simplefield("Encounter Date:", encounterDateStr, "", "disabled") }}
+                                    {% endfor %}
+                                {% else %}
+                                    {{ formmacros.inputArrayField(encounterPatientInfo.date,cycle,"encounterdate","date","","","",status) }}
                                 {% endif %}
+
+                                {{ formmacros.field(encounterPatientInfo.encounterStatus) }}
+                                {{ formmacros.inputArrayField(encounterPatientInfo.encounterInfoTypes,cycle,"encounterinfotypes","","","","",status) }}
+                                {{ formmacros.field(encounterPatientInfo.provider) }}
+
+                                {% for attendingPhysician in encounterPatientInfo.attendingPhysicians %}
+                                    {{ formmacros.field(attendingPhysician.field) }}
+                                {% endfor %}
+
+                                {{ calllogmacros.referingProviderObject(encounterPatientInfo) }}
+
+                                {{ calllogmacros.trackerContactinfoForm(encounterPatientInfo,cycle,status) }}
+
+                                {% if encounterPatientInfo.vars.value.hasPatientInfo %}
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a class="calllog-patient-panel-title" data-toggle="collapse" href="#form_body_encounterInfo">
+                                                    Update Patient Info
+                                                </a>
+                                            </h4>
+                                        </div>
+                                        <div id="form_body_encounterInfo" class="panel-collapse collapse in">
+                                            <div class="panel-body">
+                                                <div id="calllog-encounterInfo-holder">
+                                                    {{ formmacros.inputArrayField(encounterPatientInfo.patlastname,cycle,"encounterpatlastname","","","","",status) }}
+                                                    {{ formmacros.inputArrayField(encounterPatientInfo.patfirstname,cycle,"encounterpatfirstname","","","","",status) }}
+                                                    {{ formmacros.inputArrayField(encounterPatientInfo.patmiddlename,cycle,"encounterpatmiddlename","","","","",status) }}
+                                                    {{ formmacros.inputArrayField(encounterPatientInfo.patsuffix,cycle,"encounterpatsuffix","","","","",status) }}
+                                                    {{ formmacros.inputArrayField(encounterPatientInfo.patsex,cycle,"encounterpatsex","","","","",status) }}
+                                                    {#{{ formmacros.field(encounterPatientInfo.patientDob) }}#}
+                                                    {#{{ formmacros.fieldDateLabel(encounterPatientInfo.patientDob,'regular-datepicker') }}#}
+                                                </div>
+                                            </div> <!-- panel-body -->
+                                        </div> <!-- panel-collapse -->
+                                    </div> <!-- panel panel-default -->
+                                {% endif %}
+
+                            {% endif %} {#encounterPatientInfo#}
+
+                        </div> <!-- panel-body -->
+                    </div> <!-- panel-collapse -->
+                </div> <!-- panel panel-primary -->
+
+                {# Entry #}
+                <div class="panel {{ mainPanelClass }}">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" href="#calllog-Entry">
+                                Entry
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="calllog-Entry" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            {# Entry #}
+
+                            {#Message Fields        #}
+                            <p>
+                                {#Message Type: Message->messageCategory#}
+                                {% if form.messageCategory is defined %}
+                                    {{ treemacros.compositeTreeNode(form.messageCategory,cycle,"noprototype") }}
+                                {% endif %}
+                                {{ formmacros.field(form.messageStatus) }}
+                                {#Message Version#}
+                                {{ formmacros.field(form.version) }}
+                                {{ formmacros.field(form.messageTitle) }}
+
+                                {#form version#}
+                                {{ formmacros.simplefield("Form(s):", message.getFormVersionsInfo, "", "disabled") }}
+
+                                {#Amendment Reason#}
+                                {% if message.version|number_format > 1 %}
+                                    {% if form.amendmentReason is defined %}
+                                        {{ formmacros.field(form.amendmentReason) }}
+                                    {% endif %}
+                                {% endif %}
+                            </p>
+
+                            {#Patient List#}
+                            {% if message.calllogEntryMessage and message.calllogEntryMessage.addPatientToList %}
+                                {{ calllogmacros.calllogPatientList(form,cycle,sitename) }}
                             {% endif %}
-                        </p>
 
-                        {#Patient List#}
-                        {% if message.calllogEntryMessage and message.calllogEntryMessage.addPatientToList %}
-                            {{ calllogmacros.calllogPatientList(form,cycle,sitename) }}
-                        {% endif %}
+                            {#div where to append the form fields#}
+                            {#<div id="form-node-holder"></div>#}
 
-                        {#div where to append the form fields#}
-                        {#<div id="form-node-holder"></div>#}
-
-                        {#<div class="well">#}
-                        {#<table class="records_list table table-condensed text-left my-table-class">#}
-                            {#<tr class="table-no-border">#}
-                                {{ user_formnode_utility.getFormNodeHolderShortInfoForView(message,message.messageCategory,false)|raw }}
-                            {#</tr>#}
-                        {#</table>#}
-                        {#</div>#}
+                            {#<div class="well">#}
+                            {#<table class="records_list table table-condensed text-left my-table-class">#}
+                                {#<tr class="table-no-border">#}
+                                    {{ user_formnode_utility.getFormNodeHolderShortInfoForView(message,message.messageCategory,false)|raw }}
+                                {#</tr>#}
+                            {#</table>#}
+                            {#</div>#}
 
 
-                        {% if message.calllogEntryMessage and message.calllogEntryMessage.entryTags %}
-                            {{ calllogmacros.calllogEntryTags(form,cycle) }}
-                        {% endif %}
+                            {% if message.calllogEntryMessage and message.calllogEntryMessage.entryTags %}
+                                {{ calllogmacros.calllogEntryTags(form,cycle) }}
+                            {% endif %}
 
-                        {# EOF Entry #}
-                    </div> <!-- panel-body -->
-                </div> <!-- panel-collapse -->
-            </div> <!-- panel panel-primary -->
-            {# EOF Entry #}
+                            {# EOF Entry #}
+                        </div> <!-- panel-body -->
+                    </div> <!-- panel-collapse -->
+                </div> <!-- panel panel-primary -->
+                {# EOF Entry #}
 
-        </div> {#callentry-form#}
+            </div> {#callentry-form#}
 
-        {#{{ form_row(form._token) }}#}
-        {#{{ form_rest(form) }}#}
+            {#{{ form_row(form._token) }}#}
+            {#{{ form_rest(form) }}#}
 
-        {{ form_end(form,{'render_rest': false}) }}
+            {{ form_end(form,{'render_rest': false}) }}
 
+        {% else %}
+
+            {% if patient == null %}
+                <p>No single patient is referenced by this entry</p>
+                <br>
+            {% endif %}
+
+            {{ calllogmacros.calllogWarningMessageWithLatestEncounterEntity(message,encounter) }}
+
+            {{ calllog_util_form.getEncounterPatientInfoHtml(encounter,status)|raw }}
+
+            {{ calllog_util_form.getEntryHtml(message,status)|raw }}
+
+        {% endif %}
 
         <p>
             {{ calllogmacros.calllogAuthors(message,cycle,sitename,mainPanelClass) }}
@@ -319,10 +333,6 @@
     <script language="Javascript">
 
         $(document).ready(function() {
-            //init
-            //initCallLogPage();
-            //preset mrn and mrn-type
-            //calllogPresetMrnMrntype('patient-holder-1');
 
             $('#calllog-list-previous-entries-btn').click();
             $('#calllog-list-previous-entries-btn').hide();
@@ -331,25 +341,3 @@
 
     </script>
 {% endblock %}
-
-{#{% block additionalcss %}#}
-    {#<style type="text/css">#}
-        {#.headroom {position: fixed;top: 0;left: 0;right: 0;transition: all .2s ease-in-out;}#}
-        {#.headroom--unpinned {top: -100px;}#}
-        {#.headroom--pinned {top: 0;}#}
-    {#</style>#}
-
-    {#{% stylesheets#}
-        {#'bundles/oleguserdirectory/headroom/animate.min.css' filter='cssrewrite'#}
-    {#%}#}
-        {#<link rel="stylesheet" href="{{ asset_url }}" />#}
-    {#{% endstylesheets %}#}
-
-    {#{% stylesheets#}
-    {#'bundles/oleguserdirectory/headroom/slide.css' filter='cssrewrite'#}
-    {#%}#}
-    {#<link rel="stylesheet" href="{{ asset_url }}" />#}
-    {#{% endstylesheets %}#}
-
-
-{#{% endblock %}#}

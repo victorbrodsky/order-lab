@@ -2600,11 +2600,13 @@ class CallEntryController extends Controller
         //echo "tz=".$tz->getName()."<br>";
         //exit('1');
 
+        $encounter = $message->getEncounter()->first();
+
         //Replace encounter with the latest encounter.
         //Used replaced encounter for latest url only to show message's encounter, not patient's encounter!.
         if( $route == "calllog_callentry_view_latest_encounter" ) {
             $pathPostfix = "_latest_encounter";
-            $encounter = $message->getEncounter()->first();
+            //$encounter = $message->getEncounter()->first();
             if( !$calllogUtil->isLatestEncounterVersion($encounter) ) {
                 $latestEncounter = $em->getRepository('OlegOrderformBundle:Encounter')->findLatestVersionEncounter($encounter);
                 if( $latestEncounter ) {
@@ -2621,14 +2623,15 @@ class CallEntryController extends Controller
         //echo "messageInfo=".$messageInfo."<br>";
         //exit('1');
         if (count($message->getPatient()) > 0 ) {
-            $mrnRes = $message->getPatient()->first()->obtainStatusField('mrn', "valid");
+            $patient = $message->getPatient()->first();
+            $mrnRes = $patient->obtainStatusField('mrn', "valid");
             $mrntype = $mrnRes->getKeytype()->getId();
             $mrn = $mrnRes->getField();
-            $patientId = $message->getPatient()->first()->getId();
+            $patientId = $patient->getId();
 
             //LastName, FirstName, MiddleName | MRN Type: MRN | DOB: MM/DD/YY |
             // Entry ID XXX submitted on MM/DD/YYYY at HH:MM by SubmitterFirstName SubmitterLastName, MD | Call Log Book
-            $title = $message->getPatient()->first()->obtainPatientInfoTitle('valid',null,false);
+            $title = $patient->obtainPatientInfoTitle('valid',null,false);
 
             //The beginning potion of the title ("LastName, FirstName | DOB: 09/22/1955 | 71 y.o. | NYH MRN: 12345678")
             //should be a link to the homepage with the filters set to this patient's MRN
@@ -2645,6 +2648,7 @@ class CallEntryController extends Controller
             $titleBody = $titleBody . " | ".$messageInfo;
 
         } else {
+            $patient = null;
             $mrntype = null;
             $mrn = null;
             $patientId = null;
@@ -2698,30 +2702,65 @@ class CallEntryController extends Controller
 
         //previous entries similar to calllog-list-previous-entries: get it in the view by ajax
 
-        return array(
-            //'entity' => $entity,
-            'form' => $form->createView(),
-            'cycle' => $cycle,
-            'title' => $title,
-            'titleBody' => $titleBody,
-            'formtype' => $formtype,
-            'triggerSearch' => 0,
-            'mrn' => $mrn,
-            'mrntype' => $mrntype,
-            'patientId' => $patientId,
-            'message' => $message,
-            'complexPatientStr' => $complexPatientStr,
-            //'encounterid' => $encounterid
-            'entityNamespace' => $classNamespace,
-            'entityName' => $className,
-            'entityId' => $message->getId(),
-            'sitename' => $this->container->getParameter('calllog.sitename'),
-            'titleheadroom' => $titleBody,
-            'formnodeTopHolderId' => $formnodeTopHolderId,
-            'eventObjectTypeId' => $eventObjectTypeId,
-            'allMessages' => $allMessages,
-            'pathPostfix' => $pathPostfix
-        );
+        $formbased = false;
+        //$formbased = true;
+
+        if( $formbased ) {
+            return array(
+                //'entity' => $entity,
+                'form' => $form->createView(),
+                'cycle' => $cycle,
+                'title' => $title,
+                'titleBody' => $titleBody,
+                'formtype' => $formtype,
+                'triggerSearch' => 0,
+                'mrn' => $mrn,
+                'mrntype' => $mrntype,
+                'patientId' => $patientId,
+                'message' => $message,
+                'complexPatientStr' => $complexPatientStr,
+                //'encounterid' => $encounterid
+                'entityNamespace' => $classNamespace,
+                'entityName' => $className,
+                'entityId' => $message->getId(),
+                'sitename' => $this->container->getParameter('calllog.sitename'),
+                'titleheadroom' => $titleBody,
+                'formnodeTopHolderId' => $formnodeTopHolderId,
+                'eventObjectTypeId' => $eventObjectTypeId,
+                'allMessages' => $allMessages,
+                'pathPostfix' => $pathPostfix,
+                /////// formbased=false /////////
+                'formbased' => $formbased
+            );
+        } else {
+            return array(
+                'cycle' => $cycle,
+                'title' => $title,
+                'titleBody' => $titleBody,
+                'formtype' => $formtype,
+                'triggerSearch' => 0,
+                'mrn' => $mrn,
+                'mrntype' => $mrntype,
+                'patientId' => $patientId,
+                'message' => $message,
+                'complexPatientStr' => $complexPatientStr,
+                //'encounterid' => $encounterid
+                'entityNamespace' => $classNamespace,
+                'entityName' => $className,
+                'entityId' => $message->getId(),
+                'sitename' => $this->container->getParameter('calllog.sitename'),
+                'titleheadroom' => $titleBody,
+                'formnodeTopHolderId' => $formnodeTopHolderId,
+                'eventObjectTypeId' => $eventObjectTypeId,
+                'allMessages' => $allMessages,
+                'pathPostfix' => $pathPostfix,
+                /////// formbased=false /////////
+                'formbased' => $formbased,
+                'patient' => $patient,
+                'encounter' => $encounter,
+                'status' => 'Submitted'
+            );
+        }
     }
 
 

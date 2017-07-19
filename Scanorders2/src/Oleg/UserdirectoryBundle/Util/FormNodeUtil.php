@@ -1379,9 +1379,15 @@ class FormNodeUtil
 
         $result = $this->mergeResultsView( $resultsArr, $testing );
 
-        $result =   '<div class="well"><table class="table text-left">'.
+        $result =
+                    '<br><p>'.
+                    //'<div class="well">'.
+                    //'<table class="table text-left">'.
+                    '<table class="table">'.
                     $result.
-                    '</table></div>';
+                    '</table>'.
+                    //'</div>';
+                    '</p><br>';
 
         return $result;
     }
@@ -1414,10 +1420,10 @@ class FormNodeUtil
 
             if( $sectionName ) {
                 $result = $result .
-                    '<tr>' .
-                    '<td>' . $sectionName . '</td>' .
-                    '<td></td>' .
-                    '</tr>';
+                    '<tr style="border:none;">' .
+                    '<td style="border:none;">' . $sectionName . '</td>' .
+                    '<td style="border:none;"></td>' .
+                    '</tr style="border:none;">';
 
             }
             foreach( $nameValueArrs as $nameValueMultipleArr ) {
@@ -1425,10 +1431,10 @@ class FormNodeUtil
                 foreach( $nameValueMultipleArr as $nameValueArr ) {
                     $formNodeName = $space . $space . $space . $nameValueArr['name'];
                     $result = $result .
-                        '<tr>' .
-                        '<td>' . $formNodeName . '</td>' .
-                        '<td>' . $nameValueArr['value'] . '</td>' .
-                        '</tr>';
+                        '<tr style="border:none;">' .
+                        '<td style="width:20%; border:none;">' . $formNodeName . '</td>' .
+                        '<td style="width:80%; border:none;">' . $nameValueArr['value'] . '</td>' .
+                        '</tr style="border:none;">';
                 }
             }
 
