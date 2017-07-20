@@ -78,6 +78,44 @@ class CallLogUtilForm
 
         $html .= $this->getTrField("Encounter Status",$encounter->getEncounterStatus());
 
+        $encounterInfoType = $encounter->obtainValidField('encounterInfoTypes');
+        $html .= $this->getTrField("Encounter Type",$encounterInfoType);
+
+        $provider = $encounter->getProvider();
+        $html .= $this->getTrField("Provider",$provider);
+
+        //attendingPhysicians
+        $attendingPhysician = $encounter->obtainAttendingPhysicianInfo();
+        if( $attendingPhysician ) {
+            $html .= $this->getTrField("Attending Physician", $attendingPhysician);
+        }
+
+        //referringProviderInfo
+        $referringProviderInfo = $encounter->obtainReferringProviderInfo();
+        if( $referringProviderInfo ) {
+            $html .= $this->getTrField("Referring Provider ", $referringProviderInfo);
+        }
+
+        //Location
+        $location = $encounter->obtainLocationInfo();
+        if( $location ) {
+            $html .= $this->getTrField("Encounter Location ", $location);
+        }
+
+        //Update Patient Info
+        $lastname = $encounter->obtainValidField('patlastname');
+        $firstname = $encounter->obtainValidField('patfirstname');
+        $middlename = $encounter->obtainValidField('patmiddlename');
+        $suffix = $encounter->obtainValidField('patsuffix');
+        $sex = $encounter->obtainValidField('patsex');
+        if( $lastname || $firstname || $middlename || $suffix || $sex ) {
+            $html .= $this->getTrSection("Update Patient Info");
+            $html .= $this->getTrField("Patient's Last Name (at the time of encounter) ", $lastname);
+            $html .= $this->getTrField("Patient's First Name (at the time of encounter) ", $firstname);
+            $html .= $this->getTrField("Patient's Middle Name (at the time of encounter) ", $middlename);
+            $html .= $this->getTrField("Patient's Suffix (at the time of encounter) ", $suffix);
+            $html .= $this->getTrField("Patient's Gender (at the time of encounter) ", $sex);
+        }
 
         $html =
             '<br><p>'.
@@ -90,9 +128,30 @@ class CallLogUtilForm
     }
 
     public function getEntryHtml( $message, $status ) {
+        $userServiceUtil = $this->container->get('user_service_utility');
         $space = "&nbsp;";
+        $tabspace = $space . $space . $space;
 
-        $html = "<p>"."<i>"."Entry"."</i>"."</p>";
+        //$html = "<p>"."<i>"."Entry"."</i>"."</p>";
+        $html = $this->getTrSection("Entry");
+
+        $messageCategory = $message->getMessageCategory();
+        if( $messageCategory ) {
+            $html .= $this->getTrField("Message Type ", $messageCategory->getTreeName());
+        }
+
+        $messageStatus = $message->getMessageStatus();
+        $html .= $this->getTrField("Message Status ", $messageStatus);
+
+        $version = $message->getVersion();
+        $html .= $this->getTrField("Message Version ", $version);
+
+        $html =
+            '<br><p>'.
+            '<table class="table">'.
+            $html.
+            '</table>'.
+            '</p><br>';
 
         return $html;
     }
