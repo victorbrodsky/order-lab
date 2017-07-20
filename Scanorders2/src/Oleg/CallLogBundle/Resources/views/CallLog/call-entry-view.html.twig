@@ -302,6 +302,10 @@
 
             {{ form_end(form,{'render_rest': false}) }}
 
+            <p>
+                {{ calllogmacros.calllogAuthors(message,cycle,sitename,mainPanelClass) }}
+            </p>
+
         {% else %}
 
             {% if patient == null %}
@@ -315,11 +319,16 @@
 
             {{ calllog_util_form.getEntryHtml(message,status)|raw }}
 
+            {#enrty form body#}
+            {{ user_formnode_utility.getFormNodeHolderShortInfoForView(message,message.messageCategory,false)|raw }}
+
+            {{ calllog_util_form.getEntryTagsHtml(message,status)|raw }}
+
+            {{ calllog_util_form.getCalllogAuthorsHtml(message,sitename)|raw }}
+
         {% endif %}
 
-        <p>
-            {{ calllogmacros.calllogAuthors(message,cycle,sitename,mainPanelClass) }}
-        </p>
+
 
     </div>
 

@@ -61,9 +61,9 @@ class CallLogUtilForm
     public function getEncounterPatientInfoHtml( $encounter, $status )
     {
         $userServiceUtil = $this->container->get('user_service_utility');
-        $status = "valid";
-        $space = "&nbsp;";
-        $tabspace = $space . $space . $space;
+        //$status = "valid";
+        //$space = "&nbsp;";
+        //$tabspace = $space . $space . $space;
 
         $html = $this->getTrSection("Encounter Info");
         //$html = "<p>" . "<i>" . "Encounter Info" . "</i>" . "</p>";
@@ -128,9 +128,6 @@ class CallLogUtilForm
     }
 
     public function getEntryHtml( $message, $status ) {
-        $userServiceUtil = $this->container->get('user_service_utility');
-        $space = "&nbsp;";
-        $tabspace = $space . $space . $space;
 
         //$html = "<p>"."<i>"."Entry"."</i>"."</p>";
         $html = $this->getTrSection("Entry");
@@ -146,8 +143,126 @@ class CallLogUtilForm
         $version = $message->getVersion();
         $html .= $this->getTrField("Message Version ", $version);
 
+        $messageTitle = $message->getMessageTitle();
+        $html .= $this->getTrField("Form Title ", $messageTitle);
+
+        $formVersionsInfo = $message->getFormVersionsInfo();
+        $html .= $this->getTrField("Form(s) ", $formVersionsInfo);
+
+        //Amendment Reason
+        $amendmentReason = $message->getAmendmentReason();
+        if( $amendmentReason ) {
+            $html .= $this->getTrField("Amendment Reason ", $amendmentReason);
+        }
+//        if( intval($version) > 1 ) {
+//            if( $this->entity->getMessageStatus()->getName()."" != "Draft" || ($this->params['cycle'] != "edit" && $this->params['cycle'] != "amend" ) ) {
+//                $amendmentReason = $message->getAmendmentReason();
+//                if( $amendmentReason ) {
+//                    $html .= $this->getTrField("Amendment Reason ", $amendmentReason);
+//                }
+//            }
+//        }
+
+        //Patient List
+        $calllogEntryMessage = $message->getCalllogEntryMessage();
+        if( $calllogEntryMessage && $calllogEntryMessage->getAddPatientToList() ) {
+            $patientLists = $calllogEntryMessage->getPatientLists();
+            if( count($patientLists) > 0 ) {
+                $html .= $this->getTrSection("Patient List");
+                foreach( $patientLists as $patientList ) {
+                    $html .= $this->getTrField("List Title ", $patientList->getName());
+                }
+            }
+        }
+
+        //Search aides and time tracking
+
+
+
         $html =
             '<br><p>'.
+            '<table class="table">'.
+            $html.
+            '</table>'.
+            '</p><br>';
+
+        return $html;
+    }
+
+    public function getEntryTagsHtml( $message, $status ) {
+
+        $calllogEntryMessage = $message->getCalllogEntryMessage();
+        if( !$calllogEntryMessage ) {
+            return null;
+        }
+
+        $html = $this->getTrSection("Search aides and time tracking");
+
+        $entryTags = $calllogEntryMessage->getEntryTags();
+        $entryTagsArr = array();
+        foreach( $entryTags as $entryTag ) {
+            $entryTagsArr[] = $entryTag->getName();
+        }
+        $html .= $this->getTrField("Call Log Entry Tag(s) ", implode("; ",$entryTagsArr));
+
+        $timeSpentMinutes = $calllogEntryMessage->getTimeSpentMinutes();
+        $html .= $this->getTrField("Amount of Time Spent in Minutes ", $timeSpentMinutes);
+
+
+        $html =
+            '<br><p>'.
+            '<table class="table">'.
+            $html.
+            '</table>'.
+            '</p><br>';
+
+        return $html;
+    }
+
+    public function getCalllogAuthorsHtml( $message, $sitename ) {
+
+        if( intval($message->getVersion()) > 1) {
+            $name = "Authors";
+        } else {
+            $name = "Author";
+        }
+
+        $html = $this->getTrSection($name);
+
+        $router = $this->container->get('router');
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $userSecurityUtil = $this->container->get('user_security_utility');
+
+        //Submitter
+        if( $message->getProvider() ) {
+            $providerUrl = $router->generate($sitename . '_showuser', array('id' => $message->getProvider()->getId()), true);
+            $hreflink = '<a target="_blank" href="'.$providerUrl.'">'.$message->getProvider()->getUsernameOptimal().'</a>';
+            $html .= $this->getTrField("Submitter ", $hreflink);
+        }
+
+        //Submitted on
+        $html .= $this->getTrField("Submitted on ", $userServiceUtil->getOrderDateStr($message));
+
+        //Submitter role(s) at submission time
+        $firstEditorInfo = $message->getEditorInfos()->first();
+        if( $firstEditorInfo ) {
+            if( count($firstEditorInfo->getModifierRoles()) > 0 ) {
+                $editorRoles = $userSecurityUtil->getRolesByRoleNames($firstEditorInfo->getModifierRoles());
+                $html .= $this->getTrField("Submitter role(s) at submission time ", $editorRoles);
+            } else {
+                $html .= $this->getTrField("Submitter role(s) at submission time ", "No Roles");
+            }
+        }
+
+        //Message Status
+        $messageStatus = $message->getMessageStatus()->getName();
+        $html .= $this->getTrField("Message Status ", $messageStatus);
+
+        //Signed
+        //TODO: add 
+
+        $html =
+            '<br><hr><p>'.
             '<table class="table">'.
             $html.
             '</table>'.
