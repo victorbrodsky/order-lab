@@ -69,15 +69,22 @@ class CallLogUtilForm
         $date = $encounter->obtainValidField('date');
         if( !$date ) {
             $dates = $encounter->getDate();
-            echo "dates count=".count($dates)."<br>";
+            //echo "dates count=".count($dates)."<br>";
             if( count($dates) > 0 ) {
                 $date = $dates->first();
             }
         }
         if( $date ) {
-            $encounterDateStr = $userServiceUtil->getSeparateDateTimeTzStr($date->getField(), $date->getTime(), $date->getTimezone(), true, false);
-            $html .= $this->getTrField("Encounter Date", $encounterDateStr);
+            $dateField = $date->getField();
+            $dateTime = $date->getTime();
+            $dateTimezone = $date->getTimezone();
+        } else {
+            $dateField = null;
+            $dateTime = null;
+            $dateTimezone = null;
         }
+        $encounterDateStr = $userServiceUtil->getSeparateDateTimeTzStr($dateField, $dateTime, $dateTimezone, true, false);
+        $html .= $this->getTrField("Encounter Date", $encounterDateStr);
 
         $html .= $this->getTrField("Encounter Status",$encounter->getEncounterStatus());
 
