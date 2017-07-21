@@ -69,6 +69,7 @@ class CallLogUtilForm
         $date = $encounter->obtainValidField('date');
         if( !$date ) {
             $dates = $encounter->getDate();
+            echo "dates count=".count($dates)."<br>";
             if( count($dates) > 0 ) {
                 $date = $dates->first();
             }
