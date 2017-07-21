@@ -103,11 +103,12 @@ class CallLogUtilForm
         }
 
         //Update Patient Info
-        $lastname = $encounter->obtainValidField('patlastname');
-        $firstname = $encounter->obtainValidField('patfirstname');
-        $middlename = $encounter->obtainValidField('patmiddlename');
-        $suffix = $encounter->obtainValidField('patsuffix');
-        $sex = $encounter->obtainValidField('patsex');
+        $lastname = trim($encounter->obtainValidField('patlastname'));
+        $firstname = trim($encounter->obtainValidField('patfirstname'));
+        $middlename = trim($encounter->obtainValidField('patmiddlename'));
+        $suffix = trim($encounter->obtainValidField('patsuffix'));
+        $sex = trim($encounter->obtainValidField('patsex'));
+        //echo "### [$lastname] || [$firstname] || [$middlename] || [$suffix] || [$sex] <br>";
         if( $lastname || $firstname || $middlename || $suffix || $sex ) {
             $html .= $this->getTrSection("Update Patient Info");
             $html .= $this->getTrField("Patient's Last Name (at the time of encounter) ", $lastname);
@@ -221,7 +222,9 @@ class CallLogUtilForm
 
     public function getCalllogAuthorsHtml( $message, $sitename ) {
 
-        if( intval($message->getVersion()) > 1) {
+        $messageVersion = intval($message->getVersion());
+
+        if( $messageVersion > 1) {
             $name = "Authors";
         } else {
             $name = "Author";
@@ -259,7 +262,53 @@ class CallLogUtilForm
         $html .= $this->getTrField("Message Status ", $messageStatus);
 
         //Signed
-        //TODO: add 
+        $messageSigneeInfo = $message->getSigneeInfo();
+        if( strpos($messageStatus, 'Signed') !== false && $messageSigneeInfo ) {
+            if ($messageSigneeInfo->getModifiedBy()) {
+                $authorHref = $router->generate($sitename . '_showuser', array('id' => $messageSigneeInfo->getModifiedBy()->getId()), true);
+                $hreflink = '<a target="_blank" href="' . $authorHref . '">' . $messageSigneeInfo->getModifiedBy()->getUsernameOptimal() . '</a>';
+                $html .= $this->getTrField("Signed by ", $hreflink);
+            }
+            if ($messageSigneeInfo->getModifiedOn() ) {
+                $signedDate = $messageSigneeInfo->getModifiedOn()->format('m/d/Y') . " at " . $messageSigneeInfo->getModifiedOn()->format('h:i a (T)');
+                $html .= $this->getTrField("Signed on ", $signedDate);
+            }
+            if (count($messageSigneeInfo->getModifierRoles()) > 0) {
+                $signeeRoles = $userSecurityUtil->getRolesByRoleNames($messageSigneeInfo->getModifierRoles());
+                $html .= $this->getTrField("Signee role(s) at signature time ", $signeeRoles);
+            } else {
+                $html .= $this->getTrField("Signee role(s) at signature time ", "No roles");
+            }
+        }
+
+        //IF "Message Version">1 (2 or more), display the following three fields:
+        if( $messageVersion > 1 ) {
+            //echo "messageVersion=$messageVersion<br>";
+            //echo "count=".count($message->getEditorInfos())."<br>";
+            $lastEditorInfo = $message->getEditorInfos()->last();
+            if( $lastEditorInfo ) {
+                $modifiedBy = $lastEditorInfo->getModifiedBy();
+                if( $modifiedBy ) {
+                    $authorHref = $router->generate($sitename . '_showuser', array('id' => $modifiedBy->getId()), true);
+                    $hreflink = '<a target="_blank" href="' . $authorHref . '">' . $modifiedBy->getUsernameOptimal() . '</a>';
+                    $html .= $this->getTrField("Last edited by ", $hreflink);
+                }
+
+                $modifiedOn = $lastEditorInfo->getModifiedOn();
+                if( $modifiedOn ) {
+                    $editedDate = $modifiedOn->format('m/d/Y') . " at " . $modifiedOn->format('h:i a (T)');
+                    $html .= $this->getTrField("Last edited on ", $editedDate);
+                }
+
+                $modifierRoles = $lastEditorInfo->getModifierRoles();
+                if( count($modifierRoles) > 0 ) {
+                    $editorRoles = $userSecurityUtil->getRolesByRoleNames($modifierRoles);
+                    $html .= $this->getTrField("Editor role(s) at edit submission time ", $editorRoles);
+                } else {
+                    $html .= $this->getTrField("Editor role(s) at edit submission time ", "No roles");
+                }
+            }
+        }
 
         $html =
             '<br><hr><p>'.
