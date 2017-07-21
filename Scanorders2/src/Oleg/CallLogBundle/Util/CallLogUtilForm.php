@@ -61,19 +61,13 @@ class CallLogUtilForm
     public function getEncounterPatientInfoHtml( $encounter, $status )
     {
         $userServiceUtil = $this->container->get('user_service_utility');
-        //$status = "valid";
-        //$space = "&nbsp;";
-        //$tabspace = $space . $space . $space;
 
         $html = $this->getTrSection("Encounter Info");
-        //$html = "<p>" . "<i>" . "Encounter Info" . "</i>" . "</p>";
 
-        //$html .= "<p>" . $tabspace . "Encounter Number: " . $encounter->obtainEncounterNumber() . "</p>";
         $html .= $this->getTrField("Encounter Number",$encounter->obtainEncounterNumber());
 
         $date = $encounter->obtainValidField('date');
         $encounterDateStr = $userServiceUtil->getSeparateDateTimeTzStr($date->getField(), $date->getTime(), $date->getTimezone(), true, false);
-        //$html .= "<p>" . $tabspace . "Encounter Date: " . $encounterDateStr . "</p>";
         $html .= $this->getTrField("Encounter Date",$encounterDateStr);
 
         $html .= $this->getTrField("Encounter Status",$encounter->getEncounterStatus());
@@ -130,7 +124,6 @@ class CallLogUtilForm
 
     public function getEntryHtml( $message, $status ) {
 
-        //$html = "<p>"."<i>"."Entry"."</i>"."</p>";
         $html = $this->getTrSection("Entry");
 
         $messageCategory = $message->getMessageCategory();
@@ -175,9 +168,6 @@ class CallLogUtilForm
                 }
             }
         }
-
-        //Search aides and time tracking
-
 
 
         $html =

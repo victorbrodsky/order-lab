@@ -2548,6 +2548,9 @@ class CallEntryController extends Controller
         //$title = "Call Log Entry";
         $formtype = "call-entry";
 
+        $formbased = false;
+        //$formbased = true;
+
         //$patientId = trim($request->get('patientId'));
         //$nowStr = trim($request->get('nowStr'));
         //echo "patientId=".$patientId."<br>";
@@ -2661,8 +2664,9 @@ class CallEntryController extends Controller
 //            echo "thisEncounter: id=".$thisEncounter->getId()."; version=".$thisEncounter->getVersion()."<br>";
 //        }
 
-        //echo "patients=".count($message->getPatient())."<br>";
-        $form = $this->createCalllogEntryForm($message,$mrntype,$mrn,$cycle); //view
+        if( $formbased ) {
+            $form = $this->createCalllogEntryForm($message, $mrntype, $mrn, $cycle); //view
+        }
 
         $complexPatientStr = null;
         //find record in the "Pathology Call Complex Patients" list by message object entityName, entityId
@@ -2702,9 +2706,6 @@ class CallEntryController extends Controller
 
         //previous entries similar to calllog-list-previous-entries: get it in the view by ajax
 
-        $formbased = false;
-        //$formbased = true;
-
         if( $formbased ) {
             return array(
                 //'entity' => $entity,
@@ -2729,7 +2730,6 @@ class CallEntryController extends Controller
                 'eventObjectTypeId' => $eventObjectTypeId,
                 'allMessages' => $allMessages,
                 'pathPostfix' => $pathPostfix,
-                /////// formbased=false /////////
                 'formbased' => $formbased
             );
         } else {
@@ -2744,7 +2744,6 @@ class CallEntryController extends Controller
                 'patientId' => $patientId,
                 'message' => $message,
                 'complexPatientStr' => $complexPatientStr,
-                //'encounterid' => $encounterid
                 'entityNamespace' => $classNamespace,
                 'entityName' => $className,
                 'entityId' => $message->getId(),
