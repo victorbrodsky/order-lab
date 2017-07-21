@@ -78,12 +78,13 @@ class CallLogUtilForm
             $dateField = $date->getField();
             $dateTime = $date->getTime();
             $dateTimezone = $date->getTimezone();
+            $encounterDateStr = $userServiceUtil->getSeparateDateTimeTzStr($dateField, $dateTime, $dateTimezone, true, false);
         } else {
             $dateField = null;
             $dateTime = null;
             $dateTimezone = null;
+            $encounterDateStr = null;
         }
-        $encounterDateStr = $userServiceUtil->getSeparateDateTimeTzStr($dateField, $dateTime, $dateTimezone, true, false);
         $html .= $this->getTrField("Encounter Date", $encounterDateStr);
 
         $html .= $this->getTrField("Encounter Status",$encounter->getEncounterStatus());
