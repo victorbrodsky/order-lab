@@ -85,30 +85,7 @@
         </div>
     {% endif %}
 
-    <div class="well text-center">
-        {% set patientNameMrnInfo = message.getPatientNameMrnInfo %}
-        {% if patientNameMrnInfo %}
-            {% set patientNameMrnInfo = " for patient " ~ patientNameMrnInfo %}
-        {% endif %}
-        {% if message.messageStatus and message.messageStatus.name == "Draft" %}
-            <a  class="btn btn-warning"
-                data-confirm="Are you sure you would like to edit entry {{message.getMessageOidVersion}}{{patientNameMrnInfo}}?"
-                href="{{ path('calllog_callentry_edit'~pathPostfix, {'messageOid': message.oid, 'messageVersion':message.version}) }}"
-                >Edit Entry</a>
-        {% else %}
-            <a  class="btn btn-warning"
-                data-confirm="Are you sure you would like to amend entry {{message.getMessageOidVersion}}{{patientNameMrnInfo}}?"
-                href="{{ path('calllog_callentry_amend'~pathPostfix, {'messageOid': message.oid, 'messageVersion':message.version}) }}"
-                >Amend Entry</a>
-        {% endif %}
-
-        {% if eventObjectTypeId is defined and eventObjectTypeId %}
-            <a  class="btn btn-info"
-                href="{{ path('calllog_event-log-per-object_log', { 'filter[objectType][]': eventObjectTypeId, 'filter[objectId]': message.id}) }}"
-               target="_blank">View Event Log</a>
-        {% endif %}
-    </div>
-
+    {#Other Versions#}
     {% if allMessages and allMessages|length > 1 %}
         <div class="panel panel-default">
             <div class="panel-heading" role="tab" id="headingOne">
@@ -130,8 +107,34 @@
                 </div>
             </div>
         </div>
-
     {% endif %}
+
+
+    {#Edit/Amend Event Log#}
+    <div class="well text-center">
+        {% set patientNameMrnInfo = message.getPatientNameMrnInfo %}
+        {% if patientNameMrnInfo %}
+            {% set patientNameMrnInfo = " for patient " ~ patientNameMrnInfo %}
+        {% endif %}
+        {% if message.messageStatus and message.messageStatus.name == "Draft" %}
+            <a  class="btn btn-warning"
+                data-confirm="Are you sure you would like to edit entry {{message.getMessageOidVersion}}{{patientNameMrnInfo}}?"
+                href="{{ path('calllog_callentry_edit'~pathPostfix, {'messageOid': message.oid, 'messageVersion':message.version}) }}"
+            >Edit Entry</a>
+        {% else %}
+            <a  class="btn btn-warning"
+                data-confirm="Are you sure you would like to amend entry {{message.getMessageOidVersion}}{{patientNameMrnInfo}}?"
+                href="{{ path('calllog_callentry_amend'~pathPostfix, {'messageOid': message.oid, 'messageVersion':message.version}) }}"
+            >Amend Entry</a>
+        {% endif %}
+
+        {% if eventObjectTypeId is defined and eventObjectTypeId %}
+            <a  class="btn btn-info"
+                href="{{ path('calllog_event-log-per-object_log', { 'filter[objectType][]': eventObjectTypeId, 'filter[objectId]': message.id}) }}"
+                target="_blank">View Event Log</a>
+        {% endif %}
+    </div>
+
 
     {% if formbased %}
 
@@ -313,6 +316,8 @@
                 <br>
             {% endif %}
 
+            <div style="background-color:white;">
+            
             {{ calllogmacros.calllogWarningMessageWithLatestEncounterEntity(message,encounter) }}
 
             {{ calllog_util_form.getEncounterPatientInfoHtml(encounter,status)|raw }}
@@ -325,6 +330,8 @@
             {{ calllog_util_form.getEntryTagsHtml(message,status)|raw }}
 
             {{ calllog_util_form.getCalllogAuthorsHtml(message,sitename)|raw }}
+
+            </div>
 
         {% endif %}
 
