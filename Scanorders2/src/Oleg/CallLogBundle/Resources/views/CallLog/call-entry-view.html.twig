@@ -74,9 +74,11 @@
 
 
     {% set mainPanelClass = "panel-primary" %}
+    {% set oldVersion = false %}
 
     {% if allMessages and allMessages|length > 1 and allMessages|first.version != message.version %}
         {% set mainPanelClass = "panel-danger" %}
+        {% set oldVersion = true %}
         <div class="alert alert-danger" role="alert">
             {#"This is an older version of the entry. View the current version"#}
             This is an older version of the entry.
@@ -316,6 +318,13 @@
                 <br>
             {% endif %}
 
+            {#{% if oldVersion %}#}
+                {#<div id="background-watermark-warning-text">#}
+                    {#<p id="bg-watermark-warning-text">OLD VERSION</p>#}
+                {#</div>#}
+            {#{% endif %}#}
+            {#<div style="background-color:white; position:absolute; z-index:1;">#}
+            
             <div style="background-color:white;">
 
             {{ calllogmacros.calllogWarningMessageWithLatestEncounterEntity(message,encounter) }}

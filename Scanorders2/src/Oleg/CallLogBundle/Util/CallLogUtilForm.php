@@ -37,6 +37,17 @@ class CallLogUtilForm
         $this->container = $container;
     }
 
+
+    public function getTable( $html ) {
+        $html =
+            '<br><p>'.
+            '<table class="table">'.
+            $html.
+            '</table>'.
+            '</p><br>';
+
+        return $html;
+    }
     public function getTrSection( $label ) {
         $html =
             '<tr style="border:none;">' .
@@ -129,14 +140,15 @@ class CallLogUtilForm
             $html .= $this->getTrField("Patient's Gender (at the time of encounter) ", $sex);
         }
 
-        $html =
-            '<br><p>'.
-            '<table class="table">'.
-            $html.
-            '</table>'.
-            '</p><br>';
+//        $html =
+//            '<br><p>'.
+//            '<table class="table">'.
+//            $html.
+//            '</table>'.
+//            '</p><br>';
+//        return $html;
 
-        return $html;
+        return $this->getTable($html);
     }
 
     public function getEntryHtml( $message, $status ) {
@@ -187,14 +199,15 @@ class CallLogUtilForm
         }
 
 
-        $html =
-            '<br><p>'.
-            '<table class="table">'.
-            $html.
-            '</table>'.
-            '</p><br>';
+//        $html =
+//            '<br><p>'.
+//            '<table class="table">'.
+//            $html.
+//            '</table>'.
+//            '</p><br>';
+//        return $html;
 
-        return $html;
+        return $this->getTable($html);
     }
 
     public function getEntryTagsHtml( $message, $status ) {
@@ -217,14 +230,15 @@ class CallLogUtilForm
         $html .= $this->getTrField("Amount of Time Spent in Minutes ", $timeSpentMinutes);
 
 
-        $html =
-            '<br><p>'.
-            '<table class="table">'.
-            $html.
-            '</table>'.
-            '</p><br>';
+//        $html =
+//            '<br><p>'.
+//            '<table class="table">'.
+//            $html.
+//            '</table>'.
+//            '</p><br>';
+//        return $html;
 
-        return $html;
+        return $this->getTable($html);
     }
 
     public function getCalllogAuthorsHtml( $message, $sitename ) {
@@ -317,14 +331,15 @@ class CallLogUtilForm
             }
         }
 
-        $html =
-            '<br><hr><p>'.
-            '<table class="table">'.
-            $html.
-            '</table>'.
-            '</p><br>';
+//        $html =
+//            '<br><hr><p>'.
+//            '<table class="table">'.
+//            $html.
+//            '</table>'.
+//            '</p><br>';
+//        return $html;
 
-        return $html;
+        return $this->getTable($html);
     }
 
 }

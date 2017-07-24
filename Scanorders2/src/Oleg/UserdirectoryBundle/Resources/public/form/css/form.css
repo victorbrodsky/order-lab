@@ -623,4 +623,19 @@ Bootstrap NavBar not collapsing as expected - separating onto two lines.
     padding-left: 15px;
 }
 
-
+#background-watermark-warning-text {
+    position:absolute;
+    z-index:0;
+    background:white;
+    display:block;
+    min-height:50%;
+    min-width:50%;
+    /*color:yellow;*/
+}
+#bg-watermark-warning-text {
+    color:#FA8072;
+    font-size:120px;
+    /*font-size:200%;*/
+    transform:rotate(300deg);
+    -webkit-transform:rotate(300deg);
+}

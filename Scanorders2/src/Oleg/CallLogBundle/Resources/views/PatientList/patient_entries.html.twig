@@ -77,7 +77,7 @@
             <thead>
             <tr>
                 {% if 0 %}
-                    {#<th>{{ knp_pagination_sortable(messages, 'ID', 'message.id') }}</th>#}
+                    <th>{{ knp_pagination_sortable(messages, 'ID', 'message.id') }}</th>
                     <th>{{ knp_pagination_sortable(messages, 'Encounter Date', 'encounter.creationdate') }}</th>
                     <th>{{ knp_pagination_sortable(messages, 'Last Modified', 'editorInfos.modifiedOn') }}</th>
                     <th>{{ knp_pagination_sortable(messages, 'Message Type', 'messageCategory.name') }}</th>
@@ -87,7 +87,7 @@
                     <th>{{ knp_pagination_sortable(messages, 'Submitter', 'provider.displayName') }}</th>
                     <th>{{ knp_pagination_sortable(messages, 'Signee', 'signee.displayName') }}</th>
                 {% else %}
-                    {#<th>ID</th>#}
+                    <th>ID</th>
                     <th>Encounter Date</th>
                     <th>Last Modified</th>
                     <th>Message Type</th>
