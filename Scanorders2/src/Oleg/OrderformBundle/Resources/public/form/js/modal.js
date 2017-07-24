@@ -231,7 +231,8 @@ function confirmAction() {
             $('body').append(modalHtml);
         }
 
-        $('#dataConfirmModal').find('.modal-body').text( $(this).attr('data-confirm') );
+        $('#dataConfirmModal').find('.modal-body').html( $(this).attr('data-confirm') );
+
         $('#dataConfirmOK').attr('href', href); //testing
 
         /////////////// add comment /////////////////////

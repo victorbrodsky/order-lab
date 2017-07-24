@@ -972,8 +972,7 @@ function generalConfirmAction() {
             $('body').append(modalHtml);
         }
 
-
-        $('#generalDataConfirmModal').find('.modal-body').text( $(this).attr('general-data-confirm') );
+        $('#generalDataConfirmModal').find('.modal-body').html( $(this).attr('general-data-confirm') );
 
         var callbackfn = $(this).attr('general-data-callback');
 

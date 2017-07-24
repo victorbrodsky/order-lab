@@ -548,66 +548,17 @@ class FormNodeUtil
         }
 
         if( $receivingEntity && $formNode->getObjectTypeName() == "Form Field - Checkboxes" ) {
-
-            if( 1 ) {
-                $valueArr = $receivingEntity->getIdValues();
+            $valueArr = $receivingEntity->getIdValues();
+            if( $asString ) {
                 //return value string as for Form Field - Dropdown Menu
                 $resArr = array();
                 foreach ($valueArr as $value) {
-
-                    //$resArr[] = $thisFormNodeValue;
-                    if ($asString) {
-                        $thisFormNodeValue = $this->getValueStrFromValueId($formNode, $receivingEntity, $value);
-                        $resArr[] = $thisFormNodeValue;
-                    } else {
-                        $resArr[] = $value;
-                    }
+                    $resArr[] = $this->getValueStrFromValueId($formNode, $receivingEntity, $value);
                 }
-
-                if ($asString) {
-                    $separator = ', ';
-                } else {
-                    $separator = ',';
-                }
-
-                return implode($separator, $resArr);
+                return implode(", ", $resArr);
+            } else {
+                return implode(",", $valueArr);
             }
-
-            if( 0 ) {
-                $creator = $this->sc->getToken()->getUser();
-                $transformer = new GenericTreeTransformer($this->em, $creator, "ObjectTypeCheckbox", "UserdirectoryBundle");
-                //$userWrapperTransformer = new SingleUserWrapperTransformer($this->em, $this->container, $creator, 'UserWrapper');
-
-                $valueArr = $receivingEntity->getIdValues();
-                //echo "valueArr=".count($valueArr)."<br>";
-
-                //$valueArr = explode(",",$values);
-
-                $resArr = array();
-
-                foreach ($valueArr as $value) {
-                    //echo "value=".$value."<br>";
-                    //convert all to PathologyResultSignatoriesList's id
-                    $dropdownObject = $transformer->reverseTransform($value);
-                    if ($dropdownObject) {
-                        //echo "dropdownObject=".$dropdownObject."<br>";
-                        if ($asString) {
-                            $resArr[] = $dropdownObject->getName() . "";
-                        } else {
-                            $resArr[] = $dropdownObject->getId();
-                        }
-                    }
-                }
-
-                if ($asString) {
-                    $separator = ', ';
-                } else {
-                    $separator = ',';
-                }
-
-                return implode($separator, $resArr);
-            }
-
         }
 
         if( $receivingEntity ) {
