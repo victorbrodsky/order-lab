@@ -41,6 +41,7 @@ class CallLogUtilForm
     public function getTable( $html ) {
         $html =
             '<br><p>'.
+            //'<div class="watermark-text">OLD VERSION</div>'.
             '<table class="table">'.
             $html.
             '</table>'.

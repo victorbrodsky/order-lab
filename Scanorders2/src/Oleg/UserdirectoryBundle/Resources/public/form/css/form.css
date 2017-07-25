@@ -623,19 +623,28 @@ Bootstrap NavBar not collapsing as expected - separating onto two lines.
     padding-left: 15px;
 }
 
-#background-watermark-warning-text {
-    position:absolute;
-    z-index:0;
-    background:white;
-    display:block;
-    min-height:50%;
-    min-width:50%;
-    /*color:yellow;*/
-}
-#bg-watermark-warning-text {
-    color:#FA8072;
-    font-size:120px;
-    /*font-size:200%;*/
-    transform:rotate(300deg);
-    -webkit-transform:rotate(300deg);
+/*.watermark-text {*/
+    /*position: absolute;*/
+    /*opacity: 0.25;*/
+    /*font-size: 3em;*/
+    /*width: 100%;*/
+    /*text-align: center;*/
+    /*z-index: 1000;*/
+    /*color:#FA8072;*/
+    /*transform:rotate(300deg);*/
+    /*-webkit-transform:rotate(300deg);*/
+/*}*/
+.watermark-image::after {
+    content: "";
+    /*background:url(https://www.google.co.in/images/srpr/logo11w.png);*/
+    background: url("../img/old_version.png");
+    opacity: 0.1;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+    /*z-index: -1;*/
+    /*transform:rotate(300deg);*/
+    /*-webkit-transform:rotate(300deg);*/
 }
