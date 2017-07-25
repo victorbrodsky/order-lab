@@ -310,8 +310,8 @@
                 <th>{{ knp_pagination_sortable(entities, 'Start Date', 'fellapp.startDate') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'ID', 'fellapp.id') }}</th>
                 <th>Photo</th>
-                <th>{{ knp_pagination_sortable(entities, 'Last Name', 'applicantinfos.lastName') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'First Name', 'applicantinfos.firstName') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Last Name', 'applicantinfos.lastName') }}</th>
 
                 <th>{{ knp_pagination_sortable(entities, 'U1 [C1]', 'examinations.USMLEStep1Score') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'U2 CK [C2]', 'examinations.USMLEStep2CKScore')}}</th>
@@ -487,20 +487,19 @@
 
                     <td>
                         {% if is_granted('ROLE_PLATFORM_DEMO') %}
-                            Applicant
-                        {% else %}
-                            {{ entity.user.getLastNameUppercase() }}
-                        {% endif %}
-                    </td>
-
-                    <td>
-                        {% if is_granted('ROLE_PLATFORM_DEMO') %}
                             Demo
                         {% else %}
                             {{ entity.user.getFirstNameUppercase() }}
                         {% endif %}
                     </td>
 
+                    <td>
+                        {% if is_granted('ROLE_PLATFORM_DEMO') %}
+                            Applicant
+                        {% else %}
+                            {{ entity.user.getLastNameUppercase() }}
+                        {% endif %}
+                    </td>
 
                     <td>
                         {{ u1 }}{% if c1 %} [{{ c1 }}]{% endif %}

@@ -754,8 +754,8 @@ class FellAppUtil {
         $ews->getDefaultStyle()->applyFromArray($style);
         
         $ews->setCellValue('A1', 'ID'); // Sets cell 'a1' to value 'ID 
-        $ews->setCellValue('B1', 'Last Name');
-        $ews->setCellValue('C1', 'First Name');
+        $ews->setCellValue('B1', 'First Name');
+        $ews->setCellValue('C1', 'Last Name');
         $ews->setCellValue('D1', 'Medical Degree');
         $ews->setCellValue('E1', 'Medical School');
         $ews->setCellValue('F1', 'Residency Institution');
@@ -789,8 +789,8 @@ class FellAppUtil {
             }
             
             $ews->setCellValue('A'.$row, $fellapp->getId());  
-            $ews->setCellValue('B'.$row, $fellapp->getUser()->getLastNameUppercase());
-            $ews->setCellValue('C'.$row, $fellapp->getUser()->getFirstNameUppercase());
+            $ews->setCellValue('B'.$row, $fellapp->getUser()->getFirstNameUppercase());
+            $ews->setCellValue('C'.$row, $fellapp->getUser()->getLastNameUppercase());
             
             //Medical Degree
             $ews->setCellValue('D'.$row, $fellapp->getDegreeByTrainingTypeName('Medical'));
