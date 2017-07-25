@@ -364,7 +364,12 @@ class CallLogPatientController extends PatientController {
             $query,
             $this->get('request')->query->get('page', 1), /*page number*/
             //$request->query->getInt('page', 1),
-            $limit      /*limit per page*/
+            $limit,      /*limit per page*/
+            array(
+                'defaultSortFieldName' => 'patient.id',
+                'defaultSortDirection' => 'DESC',
+                //'wrap-queries'=>true
+            )
         );
         //$patients = $query->getResult();
 

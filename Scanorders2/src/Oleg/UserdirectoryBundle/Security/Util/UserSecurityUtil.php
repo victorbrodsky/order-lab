@@ -1354,8 +1354,11 @@ class UserSecurityUtil {
         }
 
         if( !$url ) {
+            //Make sure url (i.e. 'entry/view') is set in the object type (EventObjectTypeList)
             $baseUrl = $request->getScheme() . '://' . $request->getHttpHost() . $request->getBasePath();
             $url = $baseUrl . '/' . $siteName . '/' . $logger->getObjectType()->getUrl() . '/' . $logger->getEntityId();
+            //echo "logger->getObjectType()->getUrl()=".$logger->getObjectType()->getUrl()."<br>";
+            //echo "url=".$url."<br>";
         }
 
         return $url;

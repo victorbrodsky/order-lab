@@ -637,6 +637,7 @@ Bootstrap NavBar not collapsing as expected - separating onto two lines.
 .order-white-background {
     background-color: white;
 }
+/* https://jsfiddle.net/yg0xgm9t/224/ */
 .watermark-image-old-version::after {
     content: "";
     /*background:url(https://www.google.co.in/images/srpr/logo11w.png);*/

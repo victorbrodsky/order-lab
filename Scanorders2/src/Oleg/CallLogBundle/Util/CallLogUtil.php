@@ -2099,7 +2099,7 @@ class CallLogUtil
 
         return $msg;
     }
-    function convertToHoursMins($time) {
+    public function convertToHoursMins($time) {
         $totalTimeSpentMinutesStr = "";
 
         $zero = new \DateTime('@0');
@@ -2133,6 +2133,41 @@ class CallLogUtil
         }
 
         return $totalTimeSpentMinutesStr;
+    }
+
+    //get the date of last entry for this patient
+    public function getLastEntryDate( $patient ) {
+        //get the sum of timeSpentMinutes from CalllogEntryMessage for Message's provider for this week by orderdate
+        $repository = $this->em->getRepository('OlegOrderformBundle:Message');
+        $dql =  $repository->createQueryBuilder("message");
+        $dql->select('message');
+        $dql->leftJoin("message.messageStatus","messageStatus");
+        $dql->leftJoin("message.patient","patient");
+
+        $dql->where("patient.id = :patientId");
+        $dql->andWhere("messageStatus.name != :deletedMessageStatus");
+
+        $dql->orderBy("message.orderdate","DESC");
+
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameters( array(
+            'patientId' => $patient->getId(),
+            'deletedMessageStatus' => "Deleted"
+        ));
+
+        $messages = $query->getResult();
+
+        if( count($messages) > 0 ) {
+            $message = $messages[0];
+            if( $message && $message->getOrderdate() ) {
+                $date = $message->getOrderdate()->format("m/d/Y");
+            }
+        } else {
+            $date = null;
+        }
+
+        return $date;
     }
 
 }

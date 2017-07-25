@@ -104,6 +104,8 @@
             <th>{{ knp_pagination_sortable(patientNodes, 'Last Name', 'lastname.field') }}</th>
             <th>{{ knp_pagination_sortable(patientNodes, 'First Name', 'firstname.field') }}</th>
             <th>{{ knp_pagination_sortable(patientNodes, 'MRN', 'mrn.field') }}</th>
+            {#<th>{{ knp_pagination_sortable(patientNodes, 'Date of Last Entry', 'mrn.field') }}</th>#}
+            <th>Date of Last Entry</th>
             <th>Actions</th>
         </tr>
         </thead>
@@ -181,6 +183,11 @@
                         {#{{  mrn.obtainOptimalName }}<br>#}
                     {#{% endfor %}#}
                     {{ patient.obtainFullValidKeyName }}
+                </td>
+
+                {#Date of Last Entry#}
+                <td>
+                    {{ calllog_util.getLastEntryDate(patient) }}
                 </td>
 
                 <td class="rowlink-skip">
