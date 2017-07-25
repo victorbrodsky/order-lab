@@ -906,7 +906,7 @@
                 {% set mrnNumber = mrn.field %}
                 {% set mrnTypeId = mrn.keytype.id %}
                 {% if mrnNumber and mrnTypeId %}
-                    <li><a href="{{ path('calllog_home', { 'filter[search]': mrnNumber}) }}"
+                    <li><a href="{{ path('calllog_home', { 'filter[search]': mrnNumber, 'filter[mrntype]': mrnTypeId }) }}"
                            target="_blank">Show all entries</a>
                     </li>
 

@@ -114,6 +114,14 @@
         {% for patientNode in patientNodes if patientNode.patient %}
 
             {% set patient = patientNode.patient %}
+            {% set mrn = patient.obtainValidField('mrn') %}
+            {% if mrn and mrn.field and mrn.keytype %}
+                {% set mrnNumber = mrn.field %}
+                {% set mrnTypeId = mrn.keytype.id %}
+            {% else %}
+                {% set mrnNumber = null %}
+                {% set mrnTypeId = null %}
+            {% endif %}
 
             {% set trclassname = "" %}
             {#{% if patient.status == 'Deleted' %}#}
@@ -123,7 +131,8 @@
             <tr class="{{ trclassname }}">
 
                 <td style="display: none;">
-                    <a href="{{ path(calllog_sitename~'_patient_show', { 'id': patient.id }) }}" target="_blank">{{ patient.id }}</a>
+                    {#<a href="{{ path(calllog_sitename~'_patient_show', { 'id': patient.id }) }}" target="_blank">{{ patient.id }}</a>#}
+                    <a href="{{ path('calllog_home', { 'filter[search]': mrnNumber, 'filter[mrntype]': mrnTypeId }) }}" target="_blank">Show all entries</a>
                 </td>
 
                 {#Last Name#}
