@@ -318,15 +318,17 @@
                 <br>
             {% endif %}
 
-            {#{% if oldVersion %}#}
+            {% set callLogViewClass = "" %}
+            {% if oldVersion %}
+                {% set callLogViewClass = "watermark-image-old-version" %}
                 {#<div id="background-watermark-warning-text">#}
                     {#<p id="bg-watermark-warning-text">OLD VERSION</p>#}
                 {#</div>#}
-            {#{% endif %}#}
+            {% endif %}
             {#<div style="background-color:white; position:absolute; z-index:1;">#}
             {#<div class="watermark">OLD VERSION</div>#}
 
-            <div class="watermark-image" style="background-color:white;">
+            <div class="{{ callLogViewClass }}" style="background-color:white;">
 
             {{ calllogmacros.calllogWarningMessageWithLatestEncounterEntity(message,encounter) }}
 
