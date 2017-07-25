@@ -634,6 +634,9 @@ Bootstrap NavBar not collapsing as expected - separating onto two lines.
     /*transform:rotate(300deg);*/
     /*-webkit-transform:rotate(300deg);*/
 /*}*/
+.order-white-background {
+    background-color: white;
+}
 .watermark-image-old-version::after {
     content: "";
     /*background:url(https://www.google.co.in/images/srpr/logo11w.png);*/
@@ -644,7 +647,7 @@ Bootstrap NavBar not collapsing as expected - separating onto two lines.
     bottom: 0;
     right: 0;
     position: absolute;
-    /*z-index: -1;*/
+    z-index: -1;
     /*transform:rotate(300deg);*/
     /*-webkit-transform:rotate(300deg);*/
 }
