@@ -132,7 +132,7 @@
 
                 <td style="display: none;">
                     {#<a href="{{ path(calllog_sitename~'_patient_show', { 'id': patient.id }) }}" target="_blank">{{ patient.id }}</a>#}
-                    <a href="{{ path('calllog_home', { 'filter[search]': mrnNumber, 'filter[mrntype]': mrnTypeId }) }}" target="_blank">Show all entries</a>
+                    <a href="{{ path('calllog_home', { 'filter[search]': mrnNumber, 'filter[mrntype]': mrnTypeId, 'filter[messageStatus]': "All except deleted" }) }}" target="_blank">Show all entries</a>
                 </td>
 
                 {#Last Name#}

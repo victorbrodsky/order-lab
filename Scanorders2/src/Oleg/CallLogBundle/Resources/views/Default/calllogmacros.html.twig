@@ -1024,49 +1024,69 @@
                 {% endif %}
 
                 {#Patient Name#}
-                <td>
+                <td class="rowlink-skip">
                     {% for thisPatient in message.patient %}
-                        {{  thisPatient.getFullPatientName|raw }}<br>
+                        {#{{  thisPatient.getFullPatientName|raw }}<br>#}
+                        {% set hrefLabel = thisPatient.getFullPatientName %}
+                        {{ calllogmacros.getHrefHomePageFilteredByPatient(thisPatient,hrefLabel) }}<br>
                     {% endfor %}
                 </td>
 
                 {#MRN#}
-                <td>
+                <td class="rowlink-skip">
                     {% for thisPatient in message.patient %}
-                        {{  thisPatient.obtainFullValidKeyName }}<br>
+                        {#{{  thisPatient.obtainFullValidKeyName }}<br>#}
+                        {% set hrefLabel = thisPatient.obtainFullValidKeyName %}
+                        {{ calllogmacros.getHrefHomePageFilteredByPatient(thisPatient,hrefLabel) }}<br>
                     {% endfor %}
                 </td>
 
                 {#Location#}
-                <td>
+                <td class="rowlink-skip">
                     {% for encounter in message.encounter %}
-                        {{ encounter.obtainLocationInfo }}<br>
+                        {#{{ encounter.obtainLocationInfo }}<br>#}
+                        {{ calllogmacros.getHrefHomePageFilteredByLocation(encounter) }}<br>
                     {% endfor %}
                 </td>
 
                 {#referringProviders#}
-                <td>
+                <td class="rowlink-skip">
                     {% for encounter in message.encounter %}
                         {% for referringProvider in encounter.referringProviders %}
+                            {#referringProvider.field - UserWrapper#}
+                            {#referringProvider.field.user - User#}
                             {% if referringProvider.field %}
-                                {{ referringProvider.field.getFullName }}<br>
+                                {#{{ referringProvider.field.getFullName }}<br>#}
+                                {% set referringProviderName = referringProvider.field.getFullName %}
+                                {% if referringProvider.field.user %}
+                                    <a href="{{ path('calllog_home', { 'filter[referringProvider]': referringProvider.field.user.id, 'filter[messageStatus]': "All except deleted" }) }}" target="_blank">{{ referringProviderName|raw }}</a>
+                                {% else %}
+                                    {{ referringProviderName|raw }}<br>
+                                {% endif %}
                             {% endif %}
                         {% endfor %}
                     {% endfor %}
                 </td>
 
-                <td>
-                    {{  message.messageCategory.getNodeNameWithParents }}
+                {#Call Issue#}
+                <td class="rowlink-skip">
+                    {#{{  message.messageCategory.getNodeNameWithParents }}#}
+                    {% set messageCategoryStr = message.messageCategory.getName() ~ "_" ~ message.messageCategory.id %}
+                    <a href="{{ path('calllog_home', { 'filter[messageCategory]': messageCategoryStr, 'filter[messageStatus]': "All except deleted" }) }}" target="_blank">{{ message.messageCategory.getNodeNameWithParents|raw }}</a>
                 </td>
 
-                <td>
+                {#Author#}
+                <td class="rowlink-skip">
                     {% if message.messageStatus and message.messageStatus.name == "Draft" %}
                         {% if message.provider %}
-                            {{ message.provider.getUsernameOptimal }}<br>
+                            {#{{ message.provider.getUsernameOptimal }}<br>#}
+                            <a href="{{ path('calllog_home', { 'filter[author]': message.provider.id, 'filter[messageStatus]': "All except deleted" }) }}" target="_blank">{{ message.provider.getUsernameOptimal|raw }}</a>
                         {% endif %}
                     {% else %}
                         {% if message.signeeInfo and message.signeeInfo.modifiedBy %}
-                            {{ message.signeeInfo.modifiedBy.getUsernameOptimal }}<br>
+                            {#{{ message.signeeInfo.modifiedBy.getUsernameOptimal }}<br>#}
+                            {#<a href="{{ path('calllog_showuser', { 'id': message.signeeInfo.modifiedBy.id }) }}" target="_blank">{{ message.signeeInfo.modifiedBy.getUsernameOptimal }}</a><br>#}
+                            <a href="{{ path('calllog_home', { 'filter[author]': message.signeeInfo.modifiedBy.id, 'filter[messageStatus]': "All except deleted" }) }}" target="_blank">{{ message.signeeInfo.modifiedBy.getUsernameOptimal|raw }}</a>
                         {% endif %}
                     {% endif %}
                 </td>
@@ -1117,3 +1137,19 @@
     {% endif %}
 {% endmacro %}
 
+{% macro getHrefHomePageFilteredByPatient( patientEntity, hrefLabel ) %}
+    {% set mrn = patientEntity.obtainValidField('mrn') %}
+    {% if mrn and mrn.field and mrn.keytype %}
+        <a href="{{ path('calllog_home', { 'filter[search]': mrn.field, 'filter[mrntype]': mrn.keytype.id, 'filter[messageStatus]': "All except deleted" }) }}" target="_blank">{{ hrefLabel|raw }}</a>
+    {% else %}
+        {{ hrefLabel|raw }}
+    {% endif %}
+{% endmacro %}
+
+{% macro getHrefHomePageFilteredByLocation( encounter ) %}
+    {% set locationInfo = encounter.obtainLocationInfo %}
+    {% set encounterLocationId = encounter.obtainTrackerSpotsLocationId %}
+    {% if locationInfo %}
+        <a href="{{ path('calllog_home', { 'filter[encounterLocation]': encounterLocationId, 'filter[messageStatus]': "All except deleted" }) }}" target="_blank">{{ locationInfo|raw }}</a>
+    {% endif %}
+{% endmacro %}
