@@ -66,22 +66,24 @@ class FellAppManagement extends Controller {
         //$user = $this->get('security.context')->getToken()->getUser();
         $fellappUtil = $this->container->get('fellapp_util');
 
-        //get all fellowship types using institution
+        //get all fellowship types using institution: FellowshipSubspecialty objects that have $coordinators, $directors, $interviewers
         $fellowshipTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
 
-        //manual message how to add/remove fellowship types
-        $linkUrl = $this->generateUrl(
-            "fellowshipsubspecialtys-list",
-            array(),
-            UrlGeneratorInterface::ABSOLUTE_URL
-        );
-        $manual = "Tips: Fellowship types can be added or removed by editing 'Fellowship Subspecialties' list.";
-        $manual = $manual." ".'<a href="'.$linkUrl.'" target="_blank">Please associate the department with the appropriate fellowship subspecialties.</a>';
-        $manual = $manual."<br>"."For example, to add a new fellowship type choose an appropriate subspecialty from the list and set the institution to 'Weill Cornell Medical College => Pathology and Laboratory Medicine'";
+        //TODO: when the role (i.e. coordinator) is added by editing the user's profile directly, this FellowshipSubspecialty object is not updated.
 
-        //testing
-        $manual = $manual."<br>Also, 3 roles (Coordinator, Director, Interviewer) must be created with association to an appropriate fellowship subspecialty type.";
-        $manual = $manual." Please use the button 'Add a New Fellowship Type' to add a new fellowship type when it will be ready (under construction).";
+        //manual message how to add/remove fellowship types
+//        $linkUrl = $this->generateUrl(
+//            "fellowshipsubspecialtys-list",
+//            array(),
+//            UrlGeneratorInterface::ABSOLUTE_URL
+//        );
+//        $manual = "Tips: Fellowship types can be added or removed by editing 'Fellowship Subspecialties' list.";
+//        $manual = $manual." ".'<a href="'.$linkUrl.'" target="_blank">Please associate the department with the appropriate fellowship subspecialties.</a>';
+//        $manual = $manual."<br>"."For example, to add a new fellowship type choose an appropriate subspecialty from the list and set the institution to 'Weill Cornell Medical College => Pathology and Laboratory Medicine'";
+//
+//        //testing
+//        $manual = $manual."<br>Also, 3 roles (Coordinator, Director, Interviewer) must be created with association to an appropriate fellowship subspecialty type.";
+//        $manual = $manual." Please use the button 'Add a New Fellowship Type' to add a new fellowship type when it will be ready (under construction).";
         $manual = null; //Use add new fellowship type button instead.
 
         return array(
