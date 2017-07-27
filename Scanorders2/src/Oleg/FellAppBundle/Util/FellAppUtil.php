@@ -1043,6 +1043,8 @@ class FellAppUtil {
     //Synchronise the FellowshipSubspecialty's $coordinators, $directors, $interviewers with the user profiles based on the specific roles:
     //get all users with specific coordinator role and add them (if not added) to the $coordinators in the FellowshipSubspecialty object
     public function synchroniseFellowshipSubspecialtyAndProfileRoles( $fellowshipTypes ) {
+        //testing
+        return null;
         //iterate over all FellowshipSubspecialty objects
         foreach( $fellowshipTypes as $fellowshipSubspecialty ) {
             //$fellowshipType - Pain Medicine => ROLE_FELLAPP_DIRECTOR_WCMC_PAINMEDICINE
