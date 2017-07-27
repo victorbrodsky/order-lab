@@ -120,7 +120,7 @@ class FellAppManagement extends Controller {
 
         //when the role (i.e. coordinator) is added by editing the user's profile directly, this FellowshipSubspecialty object is not updated.
         //Synchronise the FellowshipSubspecialty's $coordinators, $directors, $interviewers with the user profiles based on the specific roles
-        $fellappUtil->synchroniseFellowshipSubspecialtyAndProfileRoles($felltype);
+        $fellappUtil->synchroniseFellowshipSubspecialtyAndProfileRoles( array($felltype) );
 
         $routeName = $request->get('_route');
 
