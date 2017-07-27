@@ -1903,6 +1903,13 @@ class UserSecurityUtil {
         return null;
     }
 
+    public function getRoleAliasByName( $name ) {
+        $role = $this->em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($name);
+        if( $role ) {
+            return $role->getAlias();
+        }
+        return null;
+    }
 
 
 }

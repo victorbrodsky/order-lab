@@ -199,7 +199,7 @@ class FellAppUtil {
         return $filterTypes;
     }
 
-    //get all fellowship application types using role
+    //get all fellowship application types (with WCMC Pathology) using role
     public function getFellowshipTypesByInstitution($asEntities=false) {
         $em = $this->em;
 
@@ -365,19 +365,52 @@ class FellAppUtil {
             return null;
         }
 
-        $coordinatorFellTypeRole = null;
+        return $this->getUsersOfFellowshipSubspecialtyByRole($fellowshipSubspecialty,$roleName);
 
-        $roles = $em->getRepository('OlegUserdirectoryBundle:Roles')->findByFellowshipSubspecialty($fellowshipSubspecialty);
+//        $coordinatorFellTypeRole = null;
+//
+//        $roles = $em->getRepository('OlegUserdirectoryBundle:Roles')->findByFellowshipSubspecialty($fellowshipSubspecialty);
+//        foreach( $roles as $role ) {
+//            if( strpos($role,$roleName) !== false ) {
+//                $coordinatorFellTypeRole = $role;
+//                break;
+//            }
+//        }
+//
+//        $users = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($coordinatorFellTypeRole);
+//
+//        return $users;
+    }
+    public function getUsersOfFellowshipSubspecialtyByRole( $fellowshipSubspecialty, $roleName ) {
+
+        if( !$fellowshipSubspecialty ) {
+            return null;
+        }
+
+//        $coordinatorFellTypeRole = null;
+//        $roles = $this->em->getRepository('OlegUserdirectoryBundle:Roles')->findByFellowshipSubspecialty($fellowshipSubspecialty);
+//        foreach( $roles as $role ) {
+//            if( strpos($role,$roleName) !== false ) {
+//                $coordinatorFellTypeRole = $role;
+//                break;
+//            }
+//        }
+        $coordinatorFellTypeRole = $this->getRoleByFellowshipSubspecialtyAndRolename($fellowshipSubspecialty,$roleName );
+
+        $users = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($coordinatorFellTypeRole);
+
+        return $users;
+    }
+    public function getRoleByFellowshipSubspecialtyAndRolename( $fellowshipSubspecialty, $roleName ) {
+        $roles = $this->em->getRepository('OlegUserdirectoryBundle:Roles')->findByFellowshipSubspecialty($fellowshipSubspecialty);
         foreach( $roles as $role ) {
             if( strpos($role,$roleName) !== false ) {
-                $coordinatorFellTypeRole = $role;
+                return $role;
                 break;
             }
         }
 
-        $users = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole($coordinatorFellTypeRole);
-
-        return $users;
+        return null;
     }
 
     public function getEmailsOfFellApp( $fellapp, $roleName ) {
@@ -1004,6 +1037,140 @@ class FellAppUtil {
         }
 
         return $count;
+    }
+
+    //When the role (i.e. coordinator) is added by editing the user's profile directly, this FellowshipSubspecialty object is not updated.
+    //Synchronise the FellowshipSubspecialty's $coordinators, $directors, $interviewers with the user profiles based on the specific roles:
+    //get all users with specific coordinator role and add them (if not added) to the $coordinators in the FellowshipSubspecialty object
+    public function synchroniseFellowshipSubspecialtyAndProfileRoles( $fellowshipTypes ) {
+        //iterate over all FellowshipSubspecialty objects
+        foreach( $fellowshipTypes as $fellowshipSubspecialty ) {
+            //$fellowshipType - Pain Medicine => ROLE_FELLAPP_DIRECTOR_WCMC_PAINMEDICINE
+            $this->synchroniseSingleFellowshipSubspecialtyAndProfileRoles($fellowshipSubspecialty,"_COORDINATOR_");
+            $this->synchroniseSingleFellowshipSubspecialtyAndProfileRoles($fellowshipSubspecialty,"_DIRECTOR_");
+            $this->synchroniseSingleFellowshipSubspecialtyAndProfileRoles($fellowshipSubspecialty,"_INTERVIEWER_");
+        }
+    }
+    public function synchroniseSingleFellowshipSubspecialtyAndProfileRoles( $fellowshipSubspecialty, $roleName ) {
+        //1) get all users with role ROLE_FELLAPP_DIRECTOR_WCMC_PAINMEDICINE
+        $users = $this->getUsersOfFellowshipSubspecialtyByRole($fellowshipSubspecialty,$roleName); //"_COORDINATOR_"
+
+        //2) for each $coordinators in the FellowshipSubspecialty - check if this user exists in the coordinators, add if not.
+        if( $roleName == "_COORDINATOR_" ) {
+            $attachedUsers = $fellowshipSubspecialty->getCoordinators();
+        }
+        if( $roleName == "_DIRECTOR_" ) {
+            $attachedUsers = $fellowshipSubspecialty->getDirectors();
+        }
+        if( $roleName == "_INTERVIEWER_" ) {
+            $attachedUsers = $fellowshipSubspecialty->getInterviewers();
+        }
+
+        $modified = false;
+
+        foreach( $users as $user ) {
+
+            //Add user to FellowshipSubspecialty if user is not attached yet
+            if( $user && !$attachedUsers->contains($user) ) {
+                if( $roleName == "_COORDINATOR_" ) {
+                    $fellowshipSubspecialty->addCoordinator($user);
+                }
+                if( $roleName == "_DIRECTOR_" ) {
+                    $fellowshipSubspecialty->addDirector($user);
+                }
+                if( $roleName == "_INTERVIEWER_" ) {
+                    $fellowshipSubspecialty->addInterviewer($user);
+                }
+                $modified = true;
+            }
+
+        }
+
+        //Removing the role manually => remove user from $fellowshipSubspecialty: remove user from FellowshipSubspecialty if user does not have role
+        //get coordinators => check if each coordinator has role => if not => remove this user from FellowshipSubspecialty
+        $role = $this->getRoleByFellowshipSubspecialtyAndRolename($fellowshipSubspecialty,$roleName );
+        //echo $roleName.": role=".$role."<br>";
+
+        foreach( $attachedUsers as $user ) {
+            if( !$user->hasRole($role) ) {
+                //echo $roleName.": remove user=".$user."!!!!!!!!!!!!<br>";
+                if ($roleName == "_COORDINATOR_") {
+                    $fellowshipSubspecialty->removeCoordinator($user);
+                }
+                if ($roleName == "_DIRECTOR_") {
+                    $fellowshipSubspecialty->removeDirector($user);
+                }
+                if ($roleName == "_INTERVIEWER_") {
+                    $fellowshipSubspecialty->removeInterviewer($user);
+                }
+                $modified = true;
+            }
+        }
+
+
+        if( $modified ) {
+            //$this->em->persist($fellowshipSubspecialty);
+            $this->em->flush($fellowshipSubspecialty);
+        }
+    }
+
+    //compare original and final users => get removed users => for each removed user, remove the role
+    public function processRemovedUsersByFellowshipSetting( $fellowshipSubspecialty, $newUsers, $origUsers, $roleName ) {
+        if( count($newUsers) > 0 && count($origUsers) > 0 ) {
+            //$this->printUsers($origUsers,"orig");
+            //$this->printUsers($newUsers,"new");
+
+            //get diff
+            $diffUsers = $this->array_diff_assoc_true($newUsers->toArray(), $origUsers->toArray());
+            //$diffUsers = array_diff($newUsers->toArray(),$origUsers->toArray());
+            //$diffUsers = array_diff($origUsers->toArray(),$newUsers->toArray());
+
+            //echo $roleName.": diffUsers count=".count($diffUsers)."<br>";
+            //$this->printUsers($diffUsers,"diff");
+
+            $this->removeRoleFromUsers($diffUsers,$fellowshipSubspecialty,$roleName);
+        }
+    }
+    public function removeRoleFromUsers( $users, $fellowshipSubspecialty, $roleName ) {
+        $role = $this->getRoleByFellowshipSubspecialtyAndRolename($fellowshipSubspecialty,$roleName );
+        if( !$role ) {
+            return null;
+        }
+        //echo $roleName.": role=".$role."<br>";
+        foreach( $users as $user ) {
+            //echo $roleName.": removeRole from user=".$user."<br>";
+            $user->removeRole($role);
+            $this->em->flush($user);
+        }
+    }
+    public function array_diff_assoc_true($array1, $array2)
+    {
+        //$diff1 = array_diff_assoc($array1,$array2);
+        //$diff2 = array_diff_assoc($array2,$array1);
+        $diff1 = array_diff($array1,$array2);
+        $diff2 = array_diff($array2,$array1);
+
+        //echo "diff1:<br>";
+        //print_r($diff1);
+        //echo "<br>diff2:<br>";
+        //print_r($diff2);
+        //echo "<br><br>";
+
+        $res = array_merge( $diff1, $diff2 );
+        $res = array_unique($res);
+
+        //echo "res:<br>";
+        //print_r($res);
+        //echo "<br><br>";
+
+        return $res;
+    }
+    public function printUsers( $users, $prefix=null ) {
+        echo "###########$prefix############<br>";
+        foreach( $users as $user ) {
+            echo "$user <br>";
+        }
+        echo "######################<br><br>";
     }
 
 } 

@@ -80,7 +80,20 @@
     {% else %}    
         {{ userform.snapshot_steve(entity,sitename,cycle) }}
     {% endif %}
-    
+
+    {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+        <br>
+        <div class="well well-sm">
+            <strong>Roles (shown only to Platform Admin):</strong><br>
+            {% for role in entity.roles %}
+                {% if role != "ROLE_USER" %}
+                    {#{{ role }}<br>#}
+                    {{ user_security_utility.getRoleAliasByName(role) }}<br>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+
     <br>
 
     {# use hinclude as in http://symfony.com/doc/current/book/templating.html #}

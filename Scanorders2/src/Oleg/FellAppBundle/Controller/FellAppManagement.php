@@ -69,7 +69,9 @@ class FellAppManagement extends Controller {
         //get all fellowship types using institution: FellowshipSubspecialty objects that have $coordinators, $directors, $interviewers
         $fellowshipTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
 
-        //TODO: when the role (i.e. coordinator) is added by editing the user's profile directly, this FellowshipSubspecialty object is not updated.
+        //when the role (i.e. coordinator) is added by editing the user's profile directly, this FellowshipSubspecialty object is not updated.
+        //Synchronise the FellowshipSubspecialty's $coordinators, $directors, $interviewers with the user profiles based on the specific roles
+        $fellappUtil->synchroniseFellowshipSubspecialtyAndProfileRoles($fellowshipTypes);
 
         //manual message how to add/remove fellowship types
 //        $linkUrl = $this->generateUrl(
@@ -107,6 +109,7 @@ class FellAppManagement extends Controller {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
+        $fellappUtil = $this->container->get('fellapp_util');
         $em = $this->getDoctrine()->getManager();
 
         $felltype = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->find($id);
@@ -115,14 +118,15 @@ class FellAppManagement extends Controller {
             throw $this->createNotFoundException('Unable to find Fellowship Subspecialty Type by id='.$id);
         }
 
+        //when the role (i.e. coordinator) is added by editing the user's profile directly, this FellowshipSubspecialty object is not updated.
+        //Synchronise the FellowshipSubspecialty's $coordinators, $directors, $interviewers with the user profiles based on the specific roles
+        $fellappUtil->synchroniseFellowshipSubspecialtyAndProfileRoles($felltype);
+
         $routeName = $request->get('_route');
 
         $args = $this->getShowParameters($routeName,$felltype);
 
-        //TODO: list all other users with related fellowship roles for this fellowship type
-
         return $this->render('OlegFellAppBundle:Management:new.html.twig', $args);
-
     }
 
 
@@ -138,6 +142,7 @@ class FellAppManagement extends Controller {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
+        $fellappUtil = $this->container->get('fellapp_util');
         $em = $this->getDoctrine()->getManager();
 
         $felltype = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->find($id);
@@ -146,7 +151,21 @@ class FellAppManagement extends Controller {
             throw $this->createNotFoundException('Unable to find Fellowship Subspecialty Type by id='.$id);
         }
 
-        //TODO: delete role if a user is removed from default list?
+        $origDirectors = new ArrayCollection();
+        foreach( $felltype->getDirectors() as $item ) {
+            $origDirectors->add($item);
+        }
+
+        $origCoordinators = new ArrayCollection();
+        foreach( $felltype->getCoordinators() as $item ) {
+            $origCoordinators->add($item);
+        }
+        //$fellappUtil->printUsers($origCoordinators,"origCoordinators");
+
+        $origInterviewers = new ArrayCollection();
+        foreach( $felltype->getInterviewers() as $item ) {
+            $origInterviewers->add($item);
+        }
 
         $form = $this->createForm( new FellowshipSubspecialtyType(),$felltype);
 
@@ -159,9 +178,16 @@ class FellAppManagement extends Controller {
         }
 
         if( $form->isValid() ) {
-
             //exit('form valid');
 
+            //1) Remove role if a user is removed from default list (Remove,Add Order is important!)
+            //compare original and final users => get removed users => for each removed user, remove the role
+            $fellappUtil->processRemovedUsersByFellowshipSetting($felltype,$felltype->getDirectors(),$origDirectors,"_DIRECTOR_");
+            $fellappUtil->processRemovedUsersByFellowshipSetting($felltype,$felltype->getCoordinators(),$origCoordinators,"_COORDINATOR_");
+            $fellappUtil->processRemovedUsersByFellowshipSetting($felltype,$felltype->getInterviewers(),$origInterviewers,"_INTERVIEWER_");
+            //exit('test');
+
+            //2 Add role (Remove,Add Order is important!)
             $this->assignFellAppAccessRoles($felltype,$felltype->getDirectors(),"DIRECTOR");
             $this->assignFellAppAccessRoles($felltype,$felltype->getCoordinators(),"COORDINATOR");
             $this->assignFellAppAccessRoles($felltype,$felltype->getInterviewers(),"INTERVIEWER");
