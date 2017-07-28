@@ -336,15 +336,19 @@ class FellAppUtil {
         return false;
     }
 
+    //get based on roles
     public function getCoordinatorsOfFellAppEmails($fellapp) {
         return $this->getEmailsOfFellApp( $fellapp, "_COORDINATOR_" );
     }
+    //get based on roles
     public function getDirectorsOfFellAppEmails($fellapp) {
         return $this->getEmailsOfFellApp( $fellapp, "_DIRECTOR_" );
     }
+    //get based on roles
     public function getCoordinatorsOfFellApp( $fellapp ) {
         return $this->getUsersOfFellAppByRole( $fellapp, "_COORDINATOR_" );
     }
+    //get based on roles
     public function getDirectorsOfFellApp( $fellapp ) {
         return $this->getUsersOfFellAppByRole( $fellapp, "_DIRECTOR_" );
     }
@@ -356,7 +360,7 @@ class FellAppUtil {
             return null;
         }
 
-        $em = $this->em;
+        //$em = $this->em;
 
         $fellowshipSubspecialty = $fellapp->getFellowshipSubspecialty();
         //echo "fellowshipSubspecialty=".$fellowshipSubspecialty."<br>";
@@ -510,6 +514,8 @@ class FellAppUtil {
         $emailUtil->sendEmail( $responsibleEmails, $populatedSubjectFellApp, $populatedBodyFellApp );
     }
 
+    //add based on interviewers in FellowshipSubspecialty object
+    //TODO: rewrite and test add default interviewers based on roles and discard interviewers, coordinator, directors in FellowshipSubspecialty object?
     public function addDefaultInterviewers( $fellapp ) {
 
         $fellowshipSubspecialty = $fellapp->getFellowshipSubspecialty();
@@ -1039,6 +1045,7 @@ class FellAppUtil {
         return $count;
     }
 
+    //TODO: add this function to user's profile create/update. Maybe, find a more efficient way to sync (if user's role with fellapp changed).
     //When the role (i.e. coordinator) is added by editing the user's profile directly, this FellowshipSubspecialty object is not updated.
     //Synchronise the FellowshipSubspecialty's $coordinators, $directors, $interviewers with the user profiles based on the specific roles:
     //get all users with specific coordinator role and add them (if not added) to the $coordinators in the FellowshipSubspecialty object
