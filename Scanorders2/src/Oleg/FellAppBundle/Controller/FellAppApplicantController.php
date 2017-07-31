@@ -314,7 +314,8 @@ class FellAppApplicantController extends Controller {
         //fellapp_interview_edit
         $interviewFormLink = $this->generateUrl( 'fellapp_interview_edit', array("id"=>$interview->getId()), true );
 
-        $pdfLink = $this->generateUrl( 'fellapp_file_download', array("id"=>$fellapp->getRecentReport()->getId()), true );
+        //$pdfLink = $this->generateUrl( 'fellapp_file_download', array("id"=>$fellapp->getRecentReport()->getId()), true );
+        $pdfLink = $this->generateUrl( 'fellapp_download_pdf', array("id"=>$fellapp->getId()), true );
 
         $break = "\r\n";
 
@@ -426,7 +427,8 @@ class FellAppApplicantController extends Controller {
         $senderEmail = $user->getEmail();
 
         foreach( $entity->getObservers() as $observer ) {
-            $pdfLink = $this->generateUrl( 'fellapp_file_download', array("id"=>$entity->getRecentReport()->getId()), true );
+            //$pdfLink = $this->generateUrl( 'fellapp_file_download', array("id"=>$entity->getRecentReport()->getId()), true );
+            $pdfLink = $this->generateUrl( 'fellapp_download_pdf', array("id"=>$entity->getId()), true );
 
             //fellapp_file_download
             $scheduleLink = null;
