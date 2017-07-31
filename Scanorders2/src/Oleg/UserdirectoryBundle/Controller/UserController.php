@@ -1560,7 +1560,7 @@ class UserController extends Controller
     /**
      * @Route("/user/new", name="employees_create_user")
      * @Method("POST")
-     * @Template("OlegUserdirectoryBundle:Profile:register.html.twig")
+     * @Template("OlegUserdirectoryBundle:Profile:edit_user.html.twig")
      */
     public function createUserAction( Request $request )
     {
@@ -1677,7 +1677,7 @@ class UserController extends Controller
                 if( $role ) {
                     //echo "check role=".$role."<br>";
                     $roleEntity = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($role);
-                    if( $roleEntity->hasSite("fellapp") && $roleEntity->getFellowshipSubspecialty() ) {
+                    if( $roleEntity && $roleEntity->hasSite("fellapp") && $roleEntity->getFellowshipSubspecialty() ) {
                         $fellappUtil->synchroniseFellowshipSubspecialtyAndProfileRoles( array($roleEntity->getFellowshipSubspecialty()) );
                     }
                 }
@@ -1691,7 +1691,10 @@ class UserController extends Controller
             'form' => $form->createView(),
             'cycle' => 'create_user',
             'user_id' => '',
-            'sitename' => $this->container->getParameter('employees.sitename')
+            'sitename' => $this->container->getParameter('employees.sitename'),
+            'userclone' => null,
+            'postData' => $request->query->all(),
+            'title' => 'Create New User',
         );
     }
 
@@ -2751,7 +2754,7 @@ class UserController extends Controller
                 if( $role ) {
                     //echo "check role=".$role."<br>";
                     $roleEntity = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($role);
-                    if( $roleEntity->hasSite("fellapp") && $roleEntity->getFellowshipSubspecialty() ) {
+                    if( $roleEntity && $roleEntity->hasSite("fellapp") && $roleEntity->getFellowshipSubspecialty() ) {
                         $fellappUtil->synchroniseFellowshipSubspecialtyAndProfileRoles( array($roleEntity->getFellowshipSubspecialty()) );
                     }
                 }
