@@ -1175,23 +1175,34 @@ class ReportGenerator {
         $removeMethod = "remove".$holderMethodSingularStr;
         $addMethod = "add".$holderMethodSingularStr;
 
-        //remove all reports
-        foreach( $holderEntity->$getMethod() as $report ) {
-
-            //delete file from server
-            if( $deleteOldFileFromServer ) {
-                $filePath = $report->getServerPath();
-                if( file_exists($filePath) ) {
-                    //$logger->notice("create FellApp ReportDB: unlink file path=" . $filePath);
-                    unlink($filePath);
-                } else {
-                    $logger->warning("create FellApp ReportDB: cannot unlink file path=" . $filePath);
-                }
+        //do not remove documents Application PDF
+        //move all reports to OldReports
+        if( $holderMethodSingularStr == "report" ) {
+            foreach ($holderEntity->getReports() as $report) {
+                $holderEntity->removeReport($report);
+                $holderEntity->addOldReport($report);
             }
+        }
 
-            //delete file from DB
-            $holderEntity->$removeMethod($report);
-            $this->em->remove($report);
+        //remove all reports for Application PDF without attached documents
+        if( $holderMethodSingularStr == "formReport" ) {
+            foreach ($holderEntity->$getMethod() as $report) {
+
+                //delete file from server
+                if ($deleteOldFileFromServer) {
+                    $filePath = $report->getServerPath();
+                    if (file_exists($filePath)) {
+                        //$logger->notice("create FellApp ReportDB: unlink file path=" . $filePath);
+                        unlink($filePath);
+                    } else {
+                        $logger->warning("create FellApp ReportDB: cannot unlink file path=" . $filePath);
+                    }
+                }
+
+                //delete file from DB
+                $holderEntity->$removeMethod($report);
+                $this->em->remove($report);
+            }
         }
 
         //add report
