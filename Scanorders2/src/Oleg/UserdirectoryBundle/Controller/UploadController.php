@@ -208,6 +208,10 @@ class UploadController extends Controller {
             $downloader = new LargeFileDownloader();
             $downloader->downloadLargeFile($abspath, $originalname, $size);
         } else {
+            $user = $this->get('security.context')->getToken()->getUser();
+            $eventDescription = "Document has been downloaded by " . $user;
+            $this->setDownloadEventLog($request, $document, $user, $sitename, $eventtype, $eventDescription);
+
             //$logger->error("Document not found by id $id");
             throw new \Exception("Document not found by id $id");
         }

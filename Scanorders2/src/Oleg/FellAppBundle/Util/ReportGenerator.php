@@ -536,7 +536,12 @@ class ReportGenerator {
         //4) add the report to application report DB
         $filesize = filesize($filenameMerged);
         $deleteOldFileFromServer = false;
-        $this->createFellAppReportDB($entity,"report",$systemUser,$fileFullReportUniqueName,$uploadReportPath,$filesize,'Complete Fellowship Application PDF',$deleteOldFileFromServer);
+        $documentPdf = $this->createFellAppReportDB($entity,"report",$systemUser,$fileFullReportUniqueName,$uploadReportPath,$filesize,'Complete Fellowship Application PDF',$deleteOldFileFromServer);
+        if( $documentPdf ) {
+            $documentPdfId = $documentPdf->getId();
+        } else {
+            $documentPdfId = null;
+        }
 
         //keep application form pdf for "Application PDF without attached documents"
         $fileUniqueName = $this->constructUniqueFileName($entity,"Fellowship-Application-Without-Attachments");
@@ -561,7 +566,7 @@ class ReportGenerator {
         } else {
             $actionStr = "updated";
         }
-        $event = "Report for Fellowship Application with ID".$id." has been successfully ".$actionStr." " . $fileFullReportUniqueName;
+        $event = "Report for Fellowship Application with ID".$id." has been successfully ".$actionStr." " . $fileFullReportUniqueName . " (PDF document ID".$documentPdfId.")";
         //echo $event."<br>";
         //$logger->notice($event);
 
@@ -1196,6 +1201,9 @@ class ReportGenerator {
         $this->em->persist($object);
         $this->em->flush();
 
+        $logger->notice("Document created with ID=".$object->getId()." for fellapp ID=".$holderEntity->getId() . "; documentType=".$documentType);
+
+        return $object;
     }
 
     //Cytopathology-Fellowship-Application-2017-ID47-Smith-John-generated-on-12-25-2015-at-02-13-pm.pdf
