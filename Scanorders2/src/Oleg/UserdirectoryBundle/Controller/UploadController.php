@@ -297,9 +297,8 @@ class UploadController extends Controller {
 
         //try to get document type
         if( !$eventtype ) {
-            $documentType = $document->getType();
-            if( $documentType ) {
-                $eventtype = $documentType->getName() . " Downloaded";
+            if( $document && $document->getType() ) {
+                $eventtype = $document->getType()->getName() . " Downloaded";
             } else {
                 $eventtype = "Document Downloaded";
             }
