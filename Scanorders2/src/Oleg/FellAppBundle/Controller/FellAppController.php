@@ -442,7 +442,7 @@ class FellAppController extends Controller {
 //            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
 //        }
 
-        ini_set('memory_limit', '3072M');
+        ini_set('memory_limit', '-1'); //3072M
 
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.context')->getToken()->getUser();
@@ -684,7 +684,7 @@ class FellAppController extends Controller {
         //echo "update <br>";
         //exit('update');
 
-        ini_set('memory_limit', '3072M');
+        ini_set('memory_limit', '-1'); //3072M
 
         $user = $this->get('security.context')->getToken()->getUser();
 
