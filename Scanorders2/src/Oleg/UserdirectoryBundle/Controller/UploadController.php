@@ -188,9 +188,11 @@ class UploadController extends Controller {
         }
 
         $em = $this->getDoctrine()->getManager();
+        //$logger = $this->container->get('logger');
+
         $document = $em->getRepository('OlegUserdirectoryBundle:Document')->find($id);
 
-        $response = new Response();
+        //$response = new Response();
 
         if( $document ) {
 
@@ -205,6 +207,9 @@ class UploadController extends Controller {
 
             $downloader = new LargeFileDownloader();
             $downloader->downloadLargeFile($abspath, $originalname, $size);
+        } else {
+            //$logger->error("Document not found by id $id");
+            throw new \Exception("Document not found by id $id");
         }
 
         exit;
