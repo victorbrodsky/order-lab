@@ -2733,6 +2733,19 @@ class UserController extends Controller
             //delete old avatar document from DB
             $this->processDeleteOldAvatar($entity,$oldAvatarId);
 
+            //check fellapp roles to sync with FellowshipSubspecialty
+            $fellappUtil = $this->container->get('fellapp_util');
+            foreach( $resultRoles as $role ) {
+                if( $role ) {
+                    //echo "check role=".$role."<br>";
+                    $roleEntity = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($role);
+                    if( $roleEntity->hasSite("fellapp") && $roleEntity->getFellowshipSubspecialty() ) {
+                        $fellappUtil->synchroniseFellowshipSubspecialtyAndProfileRoles( array($roleEntity->getFellowshipSubspecialty()) );
+                    }
+                }
+            }
+            //exit('testing');
+
             //redirect only if this was called by the same controller class
             //if( $sitename == $this->container->getParameter('employees.sitename') ) {
                 return $this->redirect($this->generateUrl($sitename.'_showuser', array('id' => $id)));
