@@ -1671,6 +1671,18 @@ class UserController extends Controller
             $userSecUtil = $this->get('user_security_utility');
             $userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'),$event,$userAdmin,$user,$request,'New user record added');
 
+            //check fellapp roles to sync with FellowshipSubspecialty
+            $fellappUtil = $this->container->get('fellapp_util');
+            foreach( $user->getRoles() as $role ) {
+                if( $role ) {
+                    //echo "check role=".$role."<br>";
+                    $roleEntity = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($role);
+                    if( $roleEntity->hasSite("fellapp") && $roleEntity->getFellowshipSubspecialty() ) {
+                        $fellappUtil->synchroniseFellowshipSubspecialtyAndProfileRoles( array($roleEntity->getFellowshipSubspecialty()) );
+                    }
+                }
+            }
+
             return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename').'_showuser',array('id' => $user->getId())));
         }
 
@@ -2744,7 +2756,6 @@ class UserController extends Controller
                     }
                 }
             }
-            //exit('testing');
 
             //redirect only if this was called by the same controller class
             //if( $sitename == $this->container->getParameter('employees.sitename') ) {
