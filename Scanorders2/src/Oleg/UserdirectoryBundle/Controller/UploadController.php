@@ -213,7 +213,7 @@ class UploadController extends Controller {
             $this->setDownloadEventLog($request, $document, $user, $sitename, $eventtype, $eventDescription);
 
             //$logger->error("Document not found by id $id");
-            throw new \Exception("Document not found by id $id");
+            throw new \Exception("User ".$user.": Document not found by id $id");
         }
 
         exit;
