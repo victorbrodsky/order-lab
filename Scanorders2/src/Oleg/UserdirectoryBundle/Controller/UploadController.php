@@ -211,10 +211,10 @@ class UploadController extends Controller {
             $user = $this->get('security.context')->getToken()->getUser();
             $eventDescription = "Document download failed by " . $user . ": Document not found by id $id";
             $this->setDownloadEventLog($request, $document, $user, $sitename, $eventtype, $eventDescription);
-            echo $eventDescription." An error notification email has been sent to the system administrator.<br>";
+            echo $eventDescription.".<br> An error notification email has been sent to the system administrator.<br>";
 
             $userSecUtil = $this->container->get('user_security_utility');
-            $userSecUtil->sendEmailToSystemEmail("Document not found by id $id", $eventDescription);
+            $userSecUtil->sendEmailToSystemEmail("Document not found by id $id for $sitename", $eventDescription);
             //$logger->error("Document not found by id $id");
             //throw new \Exception("User ".$user.": Document not found by id $id");
         }
