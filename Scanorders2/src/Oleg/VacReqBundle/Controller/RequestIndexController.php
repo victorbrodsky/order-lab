@@ -338,9 +338,9 @@ class RequestIndexController extends Controller
         $organizationalInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
 
         //testing
-//        foreach( $organizationalInstitutions as $organizationalInstitution ) {
-//            echo "organizationalInstitution=".$organizationalInstitution."<br>";
-//        }
+        foreach( $organizationalInstitutions as $organizationalInstitution ) {
+            echo "organizationalInstitution=".$organizationalInstitution."<br>";
+        }
 
         if( count($organizationalInstitutions) == 0 ) {
             if( $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
