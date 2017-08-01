@@ -578,11 +578,11 @@ class RequestIndexController extends Controller
                 $tentativeInstArr[] = $instId;
             }
             if( count($tentativeInstArr) > 0 ) {
-                $instWhereArr[] = "tentativeInstitution.id IN (" . implode(",", $tentativeInstArr) . ")";
+                $instWhereArr[] = "(tentativeInstitution.id IN (" . implode(",", $tentativeInstArr) . ") OR tentativeInstitution.id is NULL)";
             }
 
             if( count($instWhereArr) > 0 ) {
-                $dql->andWhere(implode(" OR ", $instWhereArr)); //OR
+                $dql->andWhere(implode(" AND ", $instWhereArr)); //OR
             }
         }
 
