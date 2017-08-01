@@ -574,7 +574,7 @@ class RequestIndexController extends Controller
 
             $tentativeInstArr = array();
             foreach( $tentativeInstitutions as $instId => $instNameStr ) {
-                //echo "tentativeInstitution: id=".$instId."; name=".$instNameStr."<br>";
+                echo "tentativeInstitution: id=".$instId."; name=".$instNameStr."<br>";
                 $tentativeInstArr[] = $instId;
             }
             if( count($tentativeInstArr) > 0 ) {
