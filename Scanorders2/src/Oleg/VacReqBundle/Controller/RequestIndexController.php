@@ -193,7 +193,7 @@ class RequestIndexController extends Controller
             $query->setParameters( $dqlParameters );
         }
 
-        echo "dql=".$dql."<br>";
+        //echo "dql=".$dql."<br>";
         //echo "query=".$query->getSql()."<br>";
 
         $paginationParams = array(
@@ -338,9 +338,9 @@ class RequestIndexController extends Controller
         $organizationalInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
 
         //testing
-        foreach( $organizationalInstitutions as $organizationalInstitution ) {
-            echo "organizationalInstitution=".$organizationalInstitution."<br>";
-        }
+        //foreach( $organizationalInstitutions as $organizationalInstitution ) {
+            //echo "organizationalInstitution=".$organizationalInstitution."<br>";
+        //}
 
         if( count($organizationalInstitutions) == 0 ) {
             if( $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
@@ -388,9 +388,9 @@ class RequestIndexController extends Controller
         }
         $tentativeInstitutions = $vacreqUtil->getGroupsByPermission($user,$tentativeGroupParams);
         //testing
-        foreach( $tentativeInstitutions as $tentativeInstitution ) {
-            echo "tentativeInstitution=".$tentativeInstitution."<br>";
-        }
+        //foreach( $tentativeInstitutions as $tentativeInstitution ) {
+            //echo "tentativeInstitution=".$tentativeInstitution."<br>";
+        //}
 
         //tooltip for Academic Year:
         //"Academic Year Start (for [Current Academic Year, show as 2015-2016], pick [first/starting year, show as 2015]"
@@ -574,7 +574,7 @@ class RequestIndexController extends Controller
 
             $tentativeInstArr = array();
             foreach( $tentativeInstitutions as $instId => $instNameStr ) {
-                echo "tentativeInstitution: id=".$instId."; name=".$instNameStr."<br>";
+                //echo "tentativeInstitution: id=".$instId."; name=".$instNameStr."<br>";
                 $tentativeInstArr[] = $instId;
             }
             if( count($tentativeInstArr) > 0 ) {
