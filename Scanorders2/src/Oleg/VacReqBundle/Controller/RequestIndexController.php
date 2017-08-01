@@ -388,9 +388,9 @@ class RequestIndexController extends Controller
         }
         $tentativeInstitutions = $vacreqUtil->getGroupsByPermission($user,$tentativeGroupParams);
         //testing
-        //foreach( $tentativeInstitutions as $tentativeInstitution ) {
-            //echo "tentativeInstitution=".$tentativeInstitution."<br>";
-        //}
+        foreach( $tentativeInstitutions as $tentativeInstitution ) {
+            echo "tentativeInstitution=".$tentativeInstitution."<br>";
+        }
 
         //tooltip for Academic Year:
         //"Academic Year Start (for [Current Academic Year, show as 2015-2016], pick [first/starting year, show as 2015]"
