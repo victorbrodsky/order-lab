@@ -193,7 +193,7 @@ class RequestIndexController extends Controller
             $query->setParameters( $dqlParameters );
         }
 
-        //echo "dql=".$dql."<br>";
+        echo "dql=".$dql."<br>";
         //echo "query=".$query->getSql()."<br>";
 
         $paginationParams = array(
@@ -582,7 +582,7 @@ class RequestIndexController extends Controller
             }
 
             if( count($instWhereArr) > 0 ) {
-                $dql->andWhere(implode(" OR ", $instWhereArr));
+                $dql->andWhere(implode(" OR ", $instWhereArr)); //OR
             }
         }
 
