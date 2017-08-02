@@ -222,9 +222,35 @@ function setNavBar(sitename) {
     else if( sitename == "call-log-book" ){
         setCallLogNavBar();
     }
+    else if( sitename == "translational-research" ){
+        setTranslationalResearchNavBar();
+    }
     else {
         setDirectoryNavBar();
     }
+}
+
+function setTranslationalResearchNavBar() {
+
+    var id = 'translationalresearch-home';
+
+    var full = window.location.pathname;
+
+    if( full.indexOf("/translational-research/new") !== -1 ) {
+        id = 'translationalresearch-new-project';
+    }
+
+    if( full.indexOf("/translational-research/my-projects") !== -1 ) {
+        id = 'translationalresearch-my-projects';
+    }
+
+    id = commonNavBar(full,id);
+
+    //if( full.indexOf("/translational-research/event-log/event-log-per-user-per-event-type/") !== -1 ) {
+    //    id = 'mycalllogentrees';
+    //}
+
+    userAddActiveClass(id);
 }
 
 function setCallLogNavBar() {
