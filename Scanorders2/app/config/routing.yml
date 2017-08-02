@@ -33,6 +33,11 @@ oleg_orderform:
     type:     annotation
     prefix:   /scan
 
+oleg_translationalresearch:
+    resource: "@OlegTranslationalResearchBundle/Controller/"
+    type:     annotation
+    prefix:   /translational-research
+
 oleg_userdirectory:
     resource: "@OlegUserdirectoryBundle/Controller/"
     type:     annotation
@@ -98,6 +103,11 @@ calllog_login_check:
     path:   /call-log-book/login_check
 calllog_logout:
     path:   /call-log-book/logout
+
+translationalresearch_login_check:
+    path:   /translational-research/login_check
+translationalresearch_logout:
+    path:   /translational-research/logout
 
 #fos user bundle
 #fos_user_security:

@@ -28,6 +28,8 @@
     {% set extendStr = "OlegVacReqBundle::Default/base.html.twig" %}
 {% elseif sitename == 'calllog' %}
     {% set extendStr = "OlegCallLogBundle::Default/base.html.twig" %}
+{% elseif sitename == 'translationalresearch' %}
+    {% set extendStr = "OlegTranslationalResearchBundle::Default/base.html.twig" %}
 {% endif %}
 
 {% extends extendStr%}

@@ -66,9 +66,11 @@ security:
 #        ROLE_VACREQ_ADMIN: [ROLE_VACREQ_USER]
 #        ROLE_VACREQ_USER: [ROLE_USER]
 
+        ROLE_TRANSLATIONALRESEARCH_ADMIN: [ROLE_TRANSLATIONALRESEARCH_USER]
+
 #        ROLE_ROLEEDITOR: [ROLE_SCANORDER_ADMIN, ROLE_USERDIRECTORY_EDITOR]
         #impersonate user: ?_switch_user=thomas
-        ROLE_PLATFORM_DEPUTY_ADMIN: [ROLE_ALLOWED_TO_SWITCH, ROLE_USERDIRECTORY_ADMIN, ROLE_SCANORDER_ADMIN, ROLE_FELLAPP_ADMIN, ROLE_DEIDENTIFICATOR_ADMIN, ROLE_VACREQ_ADMIN, ROLE_CALLLOG_ADMIN]
+        ROLE_PLATFORM_DEPUTY_ADMIN: [ROLE_ALLOWED_TO_SWITCH, ROLE_USERDIRECTORY_ADMIN, ROLE_SCANORDER_ADMIN, ROLE_FELLAPP_ADMIN, ROLE_DEIDENTIFICATOR_ADMIN, ROLE_VACREQ_ADMIN, ROLE_CALLLOG_ADMIN, ROLE_TRANSLATIONALRESEARCH_ADMIN]
         ROLE_PLATFORM_ADMIN: [ROLE_PLATFORM_DEPUTY_ADMIN]
 
 
@@ -235,7 +237,27 @@ security:
                 path:     /call-log-book
 #                always_remember_me: true
 
-
+        ldap_translationalresearch_firewall:
+            pattern: ^/translational-research
+            context: scan_auth
+            switch_user: true
+            simple_form:
+                authenticator: custom_authenticator
+                use_referer: true
+                success_handler: translationalresearch_authentication_handler
+                failure_handler: translationalresearch_authentication_handler
+                check_path: /translational-research/login_check
+                login_path: /translational-research/login
+            logout:
+                path:   /translational-research/logout
+                target: /translational-research/login
+            anonymous:  true
+            access_denied_url: /translational-research/access-requests/new/create
+            remember_me:
+                key:      "%secret%"
+                lifetime: 604800 # 1 week in seconds
+                path:     /translational-research
+#                always_remember_me: true
 
     #Note: first match is used, the later would be ignored
     access_control:
@@ -349,3 +371,10 @@ security:
        - { path: ^/call-log-book/account-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
        - { path: ^/call-log-book/, role: ROLE_CALLLOG_USER }
 #       - { path: ^/call-log-book/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+
+      ############################## TranslationalResearch SITE SETTINGS ##############################
+       - { path: ^/translational-research/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/translational-research/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/translational-research/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/translational-research/account-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/translational-research/, role: ROLE_TRANSLATIONALRESEARCH_USER }

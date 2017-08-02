@@ -161,7 +161,8 @@ class HomeController extends Controller {
             'fellowship-applications' => 'fellapp',
             'deidentifier' => 'deidentifier',
             'vacation-request' => 'vacreq',
-            'call-log-book' => 'calllog'
+            'call-log-book' => 'calllog',
+            'translational-research' => 'translationalresearch'
         );
 
 

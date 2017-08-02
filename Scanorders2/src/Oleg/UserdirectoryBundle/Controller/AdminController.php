@@ -2174,7 +2174,8 @@ class AdminController extends Controller
             'fellowship-applications' => 'fellapp',
             'deidentifier' => 'deidentifier',
             'vacation-request' => 'vacreq',
-            'call-log-book' => 'calllog'
+            'call-log-book' => 'calllog',
+            'translational-research' => 'translationalresearch'
         );
 
         $count = 10;
@@ -3175,7 +3176,8 @@ class AdminController extends Controller
             'Aperio eSlide Manager on C.MED.CORNELL.EDU',
             'Indica HALO',
             'ORDER Deidentifier', //'Deidentifier',
-            'ORDER Call Log Book'
+            'ORDER Call Log Book',
+            'ORDER Translational Research'
         );
 
 

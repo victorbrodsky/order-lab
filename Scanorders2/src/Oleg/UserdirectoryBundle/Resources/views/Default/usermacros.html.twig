@@ -151,6 +151,7 @@
             {{ usermacros.siteSingleSwitchElement(deidentifier_sitename,'<span class="glyphicon glyphicon-retweet"></span>','Deidentifier') }}
             {{ usermacros.siteSingleSwitchElement(vacreq_sitename,'<span class="glyphicon glyphicon-plane"></span>','Vacation Request') }}
             {{ usermacros.siteSingleSwitchElement(calllog_sitename,'<span class="glyphicon glyphicon-phone-alt"></span>','Call Log Book') }}
+            {{ usermacros.siteSingleSwitchElement(translationalresearch_sitename,'<span class="glyphicon glyphicon-phone-alt"></span>','Translational Research') }}
 
         </ul>
     </li>
@@ -312,6 +313,9 @@
     {% endif %}
     {% if '/call-log-book/' in currentPath %}
         {% set sitename = calllog_sitename %}
+    {% endif %}
+    {% if '/translational-research/' in currentPath %}
+        {% set sitename = translationalresearch_sitename %}
     {% endif %}
 
 
@@ -2167,6 +2171,9 @@
         {% endif %}
         {% if '/call-log-book/' in currentPath %}
             {% set sitename = calllog_sitename %}
+        {% endif %}
+        {% if '/translational-research/' in currentPath %}
+            {% set sitename = translationalresearch_sitename %}
         {% endif %}
     {% endif %}
 

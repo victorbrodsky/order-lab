@@ -40,6 +40,7 @@ use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use Oleg\UserdirectoryBundle\Security\Util\UserSecurityUtil;
 use Sinergi\BrowserDetector\Browser;
 use Sinergi\BrowserDetector\Os;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
 class UserUtil {
@@ -65,7 +66,7 @@ class UserUtil {
         //find site object by sitename
         $site = $em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation($options['sitename']);
         if( !$site ) {
-            throw $this->createNotFoundException('Unable to find SiteList entity by abbreviation='.$options['sitename']);
+            throw new NotFoundHttpException('Unable to find SiteList entity by abbreviation='.$options['sitename']);
         }
 
         $logger = new Logger($site);

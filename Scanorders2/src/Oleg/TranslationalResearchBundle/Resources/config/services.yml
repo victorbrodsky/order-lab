@@ -1,0 +1,33 @@
+parameters:
+
+    translationalresearch.sitename: translationalresearch
+    translationalresearch.uploadpath:
+
+
+twig:
+    globals:
+        translationalresearch_sitename: %translationalresearch.sitename%
+        #service
+#        translationalresearch_util: "@translationalresearch_util"
+
+
+services:
+
+    translationalresearch_authentication_handler:
+        class: Oleg\TranslationalResearchBundle\Security\Authentication\TranslationalResearchLoginSuccessHandler
+        arguments:  [@service_container, @security.context, @doctrine.orm.entity_manager]
+
+    translationalresearch_role_voter:
+        class: Oleg\TranslationalResearchBundle\Security\Voter\TranslationalResearchRoleVoter
+        public: false
+        arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
+        tags:
+            - { name: security.voter }
+
+    translationalresearch_permission_voter:
+        class: Oleg\TranslationalResearchBundle\Security\Voter\TranslationalResearchPermissionVoter
+        public: false
+        arguments: ['@security.access.decision_manager', "@doctrine.orm.entity_manager", "@service_container"]
+        tags:
+            - { name: security.voter }
+

@@ -409,6 +409,10 @@ class UserSecurityUtil {
                 $roles = array("ROLE_CALLLOG_ADMIN");
             }
 
+            if( $sitename == $this->container->getParameter('translationalresearch.sitename') ) {
+                $roles = array("ROLE_TRANSLATIONALRESEARCH_ADMIN");
+            }
+
         } else {
             return null;
         }
@@ -601,6 +605,9 @@ class UserSecurityUtil {
 
         $defaultSourceSystemName = 'ORDER Scan Order';
 
+        if( $sitename == 'translationalresearch' ) {
+            $defaultSourceSystemName = 'ORDER Translational Research';
+        }
         if( $sitename == 'calllog' ) {
             $defaultSourceSystemName = 'ORDER Call Log Book';
         }

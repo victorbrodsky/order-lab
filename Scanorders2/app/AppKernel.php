@@ -27,18 +27,20 @@ class AppKernel extends Kernel
             new Knp\Bundle\SnappyBundle\KnpSnappyBundle(),
             new ADesigns\CalendarBundle\ADesignsCalendarBundle(),
 
+            new Bmatzner\FontAwesomeBundle\BmatznerFontAwesomeBundle(),
+
+            //password encoder
+            new Usu\ScryptPasswordEncoderBundle\UsuScryptPasswordEncoderBundle(),
+
             //new Acme\DemoBundle\AcmeDemoBundle(),
             new Oleg\UserdirectoryBundle\OlegUserdirectoryBundle(),
             new Oleg\OrderformBundle\OlegOrderformBundle(),
             new Oleg\FellAppBundle\OlegFellAppBundle(),
             new Oleg\DeidentifierBundle\OlegDeidentifierBundle(),
-
-            new Bmatzner\FontAwesomeBundle\BmatznerFontAwesomeBundle(),
-
-            //password encoder
-            new Usu\ScryptPasswordEncoderBundle\UsuScryptPasswordEncoderBundle(),
             new Oleg\VacReqBundle\OlegVacReqBundle(),
             new Oleg\CallLogBundle\OlegCallLogBundle(),
+            new Oleg\TranslationalResearchBundle\OlegTranslationalResearchBundle(),
+
         );
 
 //		echo "environment:<br>";

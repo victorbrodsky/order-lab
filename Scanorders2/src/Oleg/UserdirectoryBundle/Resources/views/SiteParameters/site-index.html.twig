@@ -39,6 +39,10 @@
     {% set extendStr = "OlegCallLogBundle::Default/base.html.twig" %}
 {% endif %}
 
+{% if sitename == 'translationalresearch' %}
+    {% include 'OlegTranslationalResearchBundle::Default/base.html.twig' %}
+{% endif %}
+
 {% extends extendStr%}
 
 

@@ -29,6 +29,8 @@
             <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
         {% endstylesheets %}
 
+
+        {#glyphicons-39-plane.png#}
         {#{% set favicon = 'favicon.ico' %}#}
         {% set favicon = 'glyphicons-157-show-thumbnails.png' %}
 
@@ -60,6 +62,11 @@
         {% if sitename == calllog_sitename %}
             {% set title = "Call Log Book" %}
             {% set favicon = 'glyphicons-442-phone-alt.png' %}
+        {% endif %}
+
+        {% if sitename == translationalresearch_sitename %}
+            {% set title = "Translational Research" %}
+            {% set favicon = 'glyphicons-342-briefcase.png' %}
         {% endif %}
 
         <title>{{ title }}</title>

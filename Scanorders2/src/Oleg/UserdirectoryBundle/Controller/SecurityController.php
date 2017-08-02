@@ -82,6 +82,9 @@ class SecurityController extends Controller
         if( $routename == "calllog_login" ) {
             $sitename = $this->container->getParameter('calllog.sitename');
         }
+        if( $routename == "translationalresearch_login" ) {
+            $sitename = $this->container->getParameter('translationalresearch.sitename');
+        }
         //exit('sitename='.$sitename);
 
         /////////////// set browser info ///////////////
@@ -226,6 +229,9 @@ class SecurityController extends Controller
         if( $routename == "calllog_idlelogout" ) {
             $sitename = $this->container->getParameter('calllog.sitename');
         }
+        if( $routename == "translationalresearch_idlelogout" ) {
+            $sitename = $this->container->getParameter('translationalresearch.sitename');
+        }
 
         $userSecUtil = $this->get('user_security_utility');
         return $userSecUtil->idleLogout( $request, $sitename, $flag );
@@ -267,7 +273,11 @@ class SecurityController extends Controller
         }
         if( $routename == "calllog_setloginvisit" ) {
             $options['sitename'] = $this->container->getParameter('calllog.sitename');
-            $options['event'] = " Call Log Book login page visit";
+            $options['event'] = "Call Log Book login page visit";
+        }
+        if( $routename == "translationalresearch_setloginvisit" ) {
+            $options['sitename'] = $this->container->getParameter('translationalresearch.sitename');
+            $options['event'] = "Translational Research login page visit";
         }
 
 
