@@ -11,6 +11,14 @@ use Symfony\Component\HttpFoundation\Request;
 class DefaultController extends Controller
 {
 
+    /**
+     * @Route("/about", name="translationalresearch_about_page")
+     * @Template("OlegUserdirectoryBundle:Default:about.html.twig")
+     */
+    public function aboutAction( Request $request ) {
+        return array('sitename'=>$this->container->getParameter('translationalresearch.sitename'));
+    }
+
 
     /**
      * @Route("/", name="translationalresearch_home")

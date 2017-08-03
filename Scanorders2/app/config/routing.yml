@@ -1,3 +1,7 @@
+oleg_translational_research_project:
+    resource: "@OlegTranslationalResearchBundle/Controller/ProjectController.php"
+    type:     annotation
+
 
 main_common_home:
     path:      /

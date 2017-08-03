@@ -1,0 +1,77 @@
+{% extends "OlegTranslationalResearchBundle::Default/base.html.twig" %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block content %}
+
+    <h4 class="text-info" align="center">
+        {{ title }}
+    </h4>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Createdate</th>
+                <th>Updatedate</th>
+                <th>Status</th>
+                <th>Title</th>
+                <th>Irbnumber</th>
+                <th>Startdate</th>
+                <th>Expirationdate</th>
+                <th>Funded</th>
+                <th>Fundedaccountnumber</th>
+                <th>Description</th>
+                <th>Budgetsummary</th>
+                <th>Totalcost</th>
+                <th>Projecttype</th>
+                <th>Biostatisticalcomment</th>
+                <th>Administratorcomment</th>
+                <th>Primaryreviewercomment</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for project in projects %}
+            <tr>
+                <td><a href="{{ path('project_show', { 'id': project.id }) }}">{{ project.id }}</a></td>
+                <td>{% if project.createDate %}{{ project.createDate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if project.updateDate %}{{ project.updateDate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{{ project.status }}</td>
+                <td>{{ project.title }}</td>
+                <td>{{ project.irbNumber }}</td>
+                <td>{% if project.startDate %}{{ project.startDate|date('Y-m-d') }}{% endif %}</td>
+                <td>{% if project.expirationDate %}{{ project.expirationDate|date('Y-m-d') }}{% endif %}</td>
+                <td>{% if project.funded %}Yes{% else %}No{% endif %}</td>
+                <td>{{ project.fundedAccountNumber }}</td>
+                <td>{{ project.description }}</td>
+                <td>{{ project.budgetSummary }}</td>
+                <td>{{ project.totalCost }}</td>
+                <td>{{ project.projectType }}</td>
+                <td>{{ project.biostatisticalComment }}</td>
+                <td>{{ project.administratorComment }}</td>
+                <td>{{ project.primaryReviewerComment }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('project_show', { 'id': project.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('project_edit', { 'id': project.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('project_new') }}">Create a new project</a>
+        </li>
+    </ul>
+{% endblock %}
