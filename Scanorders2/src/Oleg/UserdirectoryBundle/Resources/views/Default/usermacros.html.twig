@@ -914,9 +914,9 @@
     {% import _self as usermacros %}
     <p>
     <div class="well well-sm user-margin-block">
-        {% set bossurl = path(sitename~'_showuser',{'id':person.id}) %}
-        {% set bosslink = '<a href="'~bossurl~'">'~person.getUsernameOptimal()~'</a>'  %}
-        {{ formmacros.simplefield( "Name:", bosslink, "", "disabled" ) }}
+        {% set personurl = path(sitename~'_showuser',{'id':person.id}) %}
+        {% set personlink = '<a href="'~personurl~'">'~person.getUsernameOptimal()~'</a>'  %}
+        {{ formmacros.simplefield( "Name:", personlink, "", "disabled" ) }}
         {{ usermacros.emailPhoneField(person.preferredPhone,cycle,'phone',"Preferred Phone Number:") }}
         {{ usermacros.emailPhoneField(person.email,cycle,'email',"Preferred Email:") }}
     </div>

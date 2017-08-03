@@ -11,67 +11,96 @@
         {{ title }}
     </h4>
 
-    <table>
+    <table class="table table-hover table-condensed text-left table-bordered">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Createdate</th>
-                <th>Updatedate</th>
-                <th>Status</th>
-                <th>Title</th>
-                <th>Irbnumber</th>
-                <th>Startdate</th>
-                <th>Expirationdate</th>
-                <th>Funded</th>
-                <th>Fundedaccountnumber</th>
-                <th>Description</th>
-                <th>Budgetsummary</th>
-                <th>Totalcost</th>
-                <th>Projecttype</th>
-                <th>Biostatisticalcomment</th>
-                <th>Administratorcomment</th>
-                <th>Primaryreviewercomment</th>
+                {#<th>Id</th>#}
+                <th>{{ knp_pagination_sortable(projects, 'ID#', 'project.id') }}</th>
+                <th>{{ knp_pagination_sortable(projects, 'IRB#', 'project.irbNumber') }}</th>
+                <th>{{ knp_pagination_sortable(projects, 'Principal Investigator(s)', 'principalInvestigatorsInfos.displayName') }}</th>
+                <th>{{ knp_pagination_sortable(projects, 'Project Title', 'project.title') }}</th>
+                <th>{{ knp_pagination_sortable(projects, 'Project Funded', 'project.funded') }}</th>
+                <th>{{ knp_pagination_sortable(projects, 'Status', 'project.status') }}</th>
+                <th>{{ knp_pagination_sortable(projects, 'Approval Date', 'project.approvalDate') }}</th>
+                <th>{{ knp_pagination_sortable(projects, 'Expiration Date', 'project.expirationDate') }}</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
         {% for project in projects %}
             <tr>
-                <td><a href="{{ path('project_show', { 'id': project.id }) }}">{{ project.id }}</a></td>
-                <td>{% if project.createDate %}{{ project.createDate|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>{% if project.updateDate %}{{ project.updateDate|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>{{ project.status }}</td>
-                <td>{{ project.title }}</td>
-                <td>{{ project.irbNumber }}</td>
-                <td>{% if project.startDate %}{{ project.startDate|date('Y-m-d') }}{% endif %}</td>
-                <td>{% if project.expirationDate %}{{ project.expirationDate|date('Y-m-d') }}{% endif %}</td>
-                <td>{% if project.funded %}Yes{% else %}No{% endif %}</td>
-                <td>{{ project.fundedAccountNumber }}</td>
-                <td>{{ project.description }}</td>
-                <td>{{ project.budgetSummary }}</td>
-                <td>{{ project.totalCost }}</td>
-                <td>{{ project.projectType }}</td>
-                <td>{{ project.biostatisticalComment }}</td>
-                <td>{{ project.administratorComment }}</td>
-                <td>{{ project.primaryReviewerComment }}</td>
                 <td>
-                    <ul>
-                        <li>
-                            <a href="{{ path('project_show', { 'id': project.id }) }}">show</a>
-                        </li>
-                        <li>
-                            <a href="{{ path('project_edit', { 'id': project.id }) }}">edit</a>
-                        </li>
-                    </ul>
+                    <a href="{{ path(translationalresearch_sitename~'_project_show', { 'id': project.id }) }}" target="_blank">{{ project.id }}</a>
+                </td>
+
+                <td>
+                    {{ project.irbNumber }}
+                </td>
+
+                <td>
+                    {% for principalInvestigator in project.principalInvestigators %}
+                        {#{{ principalInvestigator }}<br>#}
+                        {% set personurl = path(translationalresearch_sitename~'_showuser',{'id':principalInvestigator.id}) %}
+                        {% set personlink = '<a href="'~personurl~'" target="_blank">'~principalInvestigator.getUsernameOptimal()~'</a>'  %}
+                        {{ personlink|raw }}<br>
+                    {% endfor %}
+                </td>
+
+                <td>{{ project.title }}</td>
+
+                <td>
+                    {% if project.funded %}
+                        Funded
+                    {% else %}
+                        Not Funded
+                    {% endif %}
+                </td>
+
+                <td>
+                    {{ project.status }}
+                </td>
+
+                <td>
+                    {% if project.approvalDate %}
+                        {{ project.approvalDate|date('Y-m-d H:i:s') }}
+                    {% endif %}
+                </td>
+
+                <td>
+                    {% if project.expirationDate %}
+                        {{ project.expirationDate|date('Y-m-d H:i:s') }}
+                    {% endif %}
+                </td>
+
+
+                <td class="rowlink-skip">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            Action <span class="caret"></span>
+                        </button>
+
+                        <ul class="dropdown-menu dropdown-menu-right">
+
+                            <li>
+                                <a href="{{ path(translationalresearch_sitename~'_project_show', { 'id': project.id }) }}" target="_blank">Show Project</a>
+                            </li>
+
+                            <li>
+                                <a href="{{ path(translationalresearch_sitename~'_project_edit', { 'id': project.id }) }}" target="_blank">Edit Project</a>
+                            </li>
+
+                        </ul>
+
+                    </div>
                 </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <ul>
-        <li>
-            <a href="{{ path('project_new') }}">Create a new project</a>
-        </li>
-    </ul>
+    <br>
+    <p>
+        <a class="btn btn-primary" href="{{ path(translationalresearch_sitename~'_project_new') }}">Create a new project</a>
+    </p>
+
 {% endblock %}

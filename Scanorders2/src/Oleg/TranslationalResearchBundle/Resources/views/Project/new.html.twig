@@ -1,5 +1,8 @@
 {% extends "OlegTranslationalResearchBundle::Default/base.html.twig" %}
 
+{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+
 {% block title %}
     {{ title }}
 {% endblock %}
@@ -10,16 +13,57 @@
     <h4 class="text-info" align="center">
         {{ title }}
     </h4>
+    <br>
 
     {{ form_start(form) }}
-        {{ form_widget(form) }}
-        <input type="submit" value="Create" />
+        {#{{ form_widget(form) }}#}
+
+        {#{% if form.vars.id  %}#}
+            {#{{ formmacros.simplefield("Project #:", form.vars.id, "input", "disabled") }}#}
+        {#{% endif %}#}
+
+        {% if form.createDate is defined or form.submitter is defined %}
+            <div class="well well-sm">
+                {% if form.createDate is defined %}
+                    {{ formmacros.field(form.createDate) }}
+                {% endif %}
+                {% if form.submitter is defined %}
+                    {{ formmacros.field(form.submitter) }}
+                {% endif %}
+            </div>
+        {% endif %}
+
+        {% if form.updateDate is defined or form.updateUser is defined  %}
+            <div class="well well-sm">
+                {% if form.updateDate is defined %}
+                    {{ formmacros.field(form.updateDate) }}
+                {% endif %}
+                {% if form.updateUser is defined %}
+                    {{ formmacros.field(form.updateUser) }}
+                {% endif %}
+            </div>
+        {% endif %}
+
+
+        {{ transres.projectForm(form,null,cycle) }}
+
+
+        {{ formmacros.checkbox(form.readyForReview) }}
+
+        {% if form.primaryReviewerComment is defined %}
+            {{ formmacros.field(form.primaryReviewerComment) }}
+        {% endif %}
+
+
+        <input class="btn btn-primary" type="submit" value="Create New Project" />
+
     {{ form_end(form) }}
 
-    <ul>
-        <li>
-            <a href="{{ path('project_index') }}">Back to the list</a>
-        </li>
-    </ul>
+    <br>
+
+
+    <p>
+        <a href="{{ path(translationalresearch_sitename~'_project_index') }}">Back to the project list</a>
+    </p>
 
 {% endblock %}

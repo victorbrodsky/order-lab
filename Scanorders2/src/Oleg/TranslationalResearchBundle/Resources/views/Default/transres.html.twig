@@ -1,0 +1,127 @@
+{% macro projectForm( form, project, cycle ) %}
+
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+
+    {% if form.status is defined %}
+        {{ formmacros.field(form.status) }}
+    {% endif %}
+
+    {% if form.approvalDate is defined %}
+        {{ formmacros.field(form.approvalDate) }}
+    {% endif %}
+
+    {% if cycle == "show" %}
+        {% set principalInvestigators = project.principalInvestigators %}
+    {% else %}
+        {% set principalInvestigators = null %}
+    {% endif %}
+    {{ transres.usersInfo(form.principalInvestigators,principalInvestigators,cycle) }}
+
+    {% if cycle == "show" %}
+        {% set pathologists = project.pathologists %}
+    {% else %}
+        {% set pathologists = null %}
+    {% endif %}
+    {{ transres.usersInfo(form.pathologists,pathologists,cycle) }}
+
+    {% if cycle == "show" %}
+        {% set coInvestigators = project.coInvestigators %}
+    {% else %}
+        {% set coInvestigators = null %}
+    {% endif %}
+    {{ transres.usersInfo(form.coInvestigators,coInvestigators,cycle) }}
+
+    {{ formmacros.field(form.title) }}
+
+    <div class="well well-sm">
+        {% if cycle == "show" %}
+            {% set irbSubmitter = project.irbSubmitter %}
+        {% else %}
+            {% set irbSubmitter = null %}
+        {% endif %}
+        {{ transres.userInfo(form.irbSubmitter,irbSubmitter,cycle) }}
+        {{ formmacros.field(form.irbNumber) }}
+    </div>
+
+    <div class="well well-sm">
+        {{ formmacros.fieldDateLabel(form.startDate,'allow-future-date') }}
+        {{ formmacros.fieldDateLabel(form.expirationDate,'allow-future-date') }}
+    </div>
+
+    {#{{ formmacros.field(form.contact) }}#}
+    {% if cycle == "show" %}
+        {% set contact = project.contact %}
+    {% else %}
+        {% set contact = null %}
+    {% endif %}
+    {{ transres.userInfo(form.contact,contact,cycle) }}
+
+    <div class="well well-sm">
+        {{ formmacros.checkbox(form.funded) }}
+        {{ formmacros.field(form.fundedAccountNumber) }}
+    </div>
+
+    {{ formmacros.field(form.description) }}
+
+    {{ formmacros.field(form.budgetSummary) }}
+
+    {{ formmacros.field(form.totalCost) }}
+
+    {{ formmacros.field(form.projectType) }}
+
+    {{ formmacros.field(form.biostatisticalComment) }}
+
+    {{ formmacros.field(form.administratorComment) }}
+
+{% endmacro %}
+
+
+
+{% macro updateInfo( form, cycle ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% if form.vars.value.updateDate or form.vars.value.updateUser %}
+        <div class="well well-sm">
+        {{ formmacros.simplefield("Update Date:", form.vars.value.updateDate|date("m/d/Y"), "input", "disabled") }}
+        {{ formmacros.simplefield("Updated By:", form.vars.value.updateUser, "input", "disabled") }}
+        </div>
+    {% endif %}
+{% endmacro %}
+
+{% macro usersInfo( usersForm, usersEntity, cycle ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% if cycle == "show" %}
+        <div class="well well-sm">
+            <div style="text-align: center;">
+                <p>
+                    <strong>{{ usersForm.vars.label }}</strong>
+                </p>
+            </div>
+            {% for userEntity in usersEntity %}
+                {{ usermacros.personInfo(userEntity, cycle, 'translationalresearch') }}
+            {% endfor %}
+        </div>
+        {% do usersForm.setRendered %}
+    {% else %}
+        {{ formmacros.field(usersForm) }}
+    {% endif %}
+{% endmacro %}
+
+{% macro userInfo( userForm, userEntity, cycle ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% if cycle == "show" %}
+        <div class="well well-sm">
+            <div style="text-align: center;">
+                <p>
+                    <strong>{{ userForm.vars.label }}</strong>
+                </p>
+            </div>
+            {{ usermacros.personInfo(userEntity, cycle, 'translationalresearch') }}
+        </div>
+        {% do userForm.setRendered %}
+    {% else %}
+        {{ formmacros.field(userForm) }}
+    {% endif %}
+{% endmacro %}

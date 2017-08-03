@@ -1,5 +1,9 @@
 {% extends "OlegTranslationalResearchBundle::Default/base.html.twig" %}
 
+{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+
+
 {% block title %}
     {{ title }}
 {% endblock %}
@@ -10,91 +14,155 @@
     <h4 class="text-info" align="center">
         {{ title }}
     </h4>
+    <br>
 
-    <table>
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ project.id }}</td>
-            </tr>
-            <tr>
-                <th>Createdate</th>
-                <td>{% if project.createDate %}{{ project.createDate|date('Y-m-d H:i:s') }}{% endif %}</td>
-            </tr>
-            <tr>
-                <th>Updatedate</th>
-                <td>{% if project.updateDate %}{{ project.updateDate|date('Y-m-d H:i:s') }}{% endif %}</td>
-            </tr>
-            <tr>
-                <th>Status</th>
-                <td>{{ project.status }}</td>
-            </tr>
-            <tr>
-                <th>Title</th>
-                <td>{{ project.title }}</td>
-            </tr>
-            <tr>
-                <th>Irbnumber</th>
-                <td>{{ project.irbNumber }}</td>
-            </tr>
-            <tr>
-                <th>Startdate</th>
-                <td>{% if project.startDate %}{{ project.startDate|date('Y-m-d') }}{% endif %}</td>
-            </tr>
-            <tr>
-                <th>Expirationdate</th>
-                <td>{% if project.expirationDate %}{{ project.expirationDate|date('Y-m-d') }}{% endif %}</td>
-            </tr>
-            <tr>
-                <th>Funded</th>
-                <td>{% if project.funded %}Yes{% else %}No{% endif %}</td>
-            </tr>
-            <tr>
-                <th>Fundedaccountnumber</th>
-                <td>{{ project.fundedAccountNumber }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ project.description }}</td>
-            </tr>
-            <tr>
-                <th>Budgetsummary</th>
-                <td>{{ project.budgetSummary }}</td>
-            </tr>
-            <tr>
-                <th>Totalcost</th>
-                <td>{{ project.totalCost }}</td>
-            </tr>
-            <tr>
-                <th>Projecttype</th>
-                <td>{{ project.projectType }}</td>
-            </tr>
-            <tr>
-                <th>Biostatisticalcomment</th>
-                <td>{{ project.biostatisticalComment }}</td>
-            </tr>
-            <tr>
-                <th>Administratorcomment</th>
-                <td>{{ project.administratorComment }}</td>
-            </tr>
-            <tr>
-                <th>Primaryreviewercomment</th>
-                <td>{{ project.primaryReviewerComment }}</td>
-            </tr>
-        </tbody>
-    </table>
 
-    <ul>
-        <li>
-            <a href="{{ path('project_index') }}">Back to the list</a>
-        </li>
-        <li>
-            <a href="{{ path('project_edit', { 'id': project.id }) }}">Edit</a>
-        </li>
-        <li>
-            {{ form_start(delete_form) }}
-                <input type="submit" value="Delete">
-            {{ form_end(delete_form) }}
-        </li>
-    </ul>
+    {{ form_start(form) }}
+    {#{{ form_widget(form) }}#}
+
+    {#{% if form.vars.id  %}#}
+    {#{{ formmacros.simplefield("Project #:", form.vars.id, "input", "disabled") }}#}
+    {#{% endif %}#}
+
+    {% if form.createDate is defined or form.submitter is defined %}
+        <div class="well well-sm">
+            {% if form.createDate is defined %}
+                {{ formmacros.field(form.createDate) }}
+            {% endif %}
+            {% if form.submitter is defined %}
+                {{ formmacros.field(form.submitter) }}
+            {% endif %}
+        </div>
+    {% endif %}
+
+    {#{% if form.updateDate is defined or form.updateUser is defined  %}#}
+        {#<div class="well well-sm">#}
+            {#{% if form.updateDate is defined %}#}
+                {#{{ formmacros.field(form.updateDate) }}#}
+            {#{% endif %}#}
+            {#{% if form.updateUser is defined %}#}
+                {#{{ formmacros.field(form.updateUser) }}#}
+            {#{% endif %}#}
+        {#</div>#}
+    {#{% endif %}#}
+
+    {{ transres.updateInfo(form,cycle) }}
+
+
+    {{ transres.projectForm(form,project,cycle) }}
+
+
+    {{ formmacros.checkbox(form.readyForReview) }}
+
+    {% if form.primaryReviewerComment is defined %}
+        {{ formmacros.field(form.primaryReviewerComment) }}
+    {% endif %}
+
+
+    {{ form_end(form) }}
+
+
+    <br>
+    <p>
+        <a class="btn btn-warning" href="{{ path(translationalresearch_sitename~'_project_edit', { 'id': project.id }) }}">Edit project</a>
+    </p>
+
+    <br>
+    <br>
+    <p>
+        <a href="{{ path(translationalresearch_sitename~'_project_index') }}">Back to the list</a>
+    </p>
+    {{ form_start(delete_form) }}
+    <input class="btn btn-danger" type="submit" value="Delete">
+    {{ form_end(delete_form) }}
+
+
+
+    {#<table>#}
+        {#<tbody>#}
+            {#<tr>#}
+                {#<th>Id</th>#}
+                {#<td>{{ project.id }}</td>#}
+            {#</tr>#}
+            {#<tr>#}
+                {#<th>Createdate</th>#}
+                {#<td>{% if project.createDate %}{{ project.createDate|date('Y-m-d H:i:s') }}{% endif %}</td>#}
+            {#</tr>#}
+            {#<tr>#}
+                {#<th>Updatedate</th>#}
+                {#<td>{% if project.updateDate %}{{ project.updateDate|date('Y-m-d H:i:s') }}{% endif %}</td>#}
+            {#</tr>#}
+            {#<tr>#}
+                {#<th>Status</th>#}
+                {#<td>{{ project.status }}</td>#}
+            {#</tr>#}
+            {#<tr>#}
+                {#<th>Title</th>#}
+                {#<td>{{ project.title }}</td>#}
+            {#</tr>#}
+            {#<tr>#}
+                {#<th>Irbnumber</th>#}
+                {#<td>{{ project.irbNumber }}</td>#}
+            {#</tr>#}
+            {#<tr>#}
+                {#<th>Startdate</th>#}
+                {#<td>{% if project.startDate %}{{ project.startDate|date('Y-m-d') }}{% endif %}</td>#}
+            {#</tr>#}
+            {#<tr>#}
+                {#<th>Expirationdate</th>#}
+                {#<td>{% if project.expirationDate %}{{ project.expirationDate|date('Y-m-d') }}{% endif %}</td>#}
+            {#</tr>#}
+            {#<tr>#}
+                {#<th>Funded</th>#}
+                {#<td>{% if project.funded %}Yes{% else %}No{% endif %}</td>#}
+            {#</tr>#}
+            {#<tr>#}
+                {#<th>Fundedaccountnumber</th>#}
+                {#<td>{{ project.fundedAccountNumber }}</td>#}
+            {#</tr>#}
+            {#<tr>#}
+                {#<th>Description</th>#}
+                {#<td>{{ project.description }}</td>#}
+            {#</tr>#}
+            {#<tr>#}
+                {#<th>Budgetsummary</th>#}
+                {#<td>{{ project.budgetSummary }}</td>#}
+            {#</tr>#}
+            {#<tr>#}
+                {#<th>Totalcost</th>#}
+                {#<td>{{ project.totalCost }}</td>#}
+            {#</tr>#}
+            {#<tr>#}
+                {#<th>Projecttype</th>#}
+                {#<td>{{ project.projectType }}</td>#}
+            {#</tr>#}
+            {#<tr>#}
+                {#<th>Biostatisticalcomment</th>#}
+                {#<td>{{ project.biostatisticalComment }}</td>#}
+            {#</tr>#}
+            {#<tr>#}
+                {#<th>Administratorcomment</th>#}
+                {#<td>{{ project.administratorComment }}</td>#}
+            {#</tr>#}
+            {#<tr>#}
+                {#<th>Primaryreviewercomment</th>#}
+                {#<td>{{ project.primaryReviewerComment }}</td>#}
+            {#</tr>#}
+        {#</tbody>#}
+    {#</table>#}
+
+    {#<ul>#}
+        {#<li>#}
+            {#<a href="{{ path(translationalresearch_sitename~'_project_index') }}">Back to the list</a>#}
+        {#</li>#}
+        {#<li>#}
+            {#<a href="{{ path(translationalresearch_sitename~'_project_edit', { 'id': project.id }) }}">Edit</a>#}
+        {#</li>#}
+        {#<li>#}
+            {#{{ form_start(delete_form) }}#}
+                {#<input type="submit" value="Delete">#}
+            {#{{ form_end(delete_form) }}#}
+        {#</li>#}
+    {#</ul>#}
+
 {% endblock %}

@@ -2,12 +2,23 @@
 
 namespace Oleg\TranslationalResearchBundle\Form;
 
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ProjectType extends AbstractType
 {
+
+    protected $project;
+    protected $params;
+
+    public function __construct( $project, $params=null )
+    {
+        $this->project = $project;
+        $this->params = $params;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -18,41 +29,71 @@ class ProjectType extends AbstractType
         //->add('biostatisticalComment')->add('administratorComment')->add('primaryReviewerComment')->add('submitter')->add('updateUser')
         //->add('principalInvestigators')->add('coInvestigators')->add('pathologists')->add('irbSubmitter')->add('contact');
 
-        $builder->add('createDate','date',array(
-            'widget' => 'single_text',
-            'label' => "Create Date:",
-            'read_only' => true,
-            'format' => 'MM/dd/yyyy',
-            'attr' => array('class' => 'datepicker form-control'),
-            'required' => false,
-        ));
+        if( $this->params['cycle'] != 'new' ) {
 
-        $builder->add('updateDate','date',array(
-            'widget' => 'single_text',
-            'label' => "Update Date:",
-            'read_only' => true,
-            'format' => 'MM/dd/yyyy',
-            'attr' => array('class' => 'datepicker form-control'),
-            'required' => false,
-        ));
+//            if( $this->project->getSubmitter() ) {
+//                $builder->add('submitter', null, array(
+//                    'label' => "Created By:",
+//                    'read_only' => true,
+//                    'attr' => array('class'=>'combobox combobox-width')
+//                ));
+//            }
 
-//        $builder->add( 'submitter', null, array(
-//            'label'=> "Created By:",
-//            'read_only' => true,
-//        ));
+            if( $this->project->getCreateDate() ) {
+                $builder->add('createDate', 'date', array(
+                    'widget' => 'single_text',
+                    'label' => "Create Date:",
+                    'read_only' => true,
+                    'format' => 'MM/dd/yyyy',
+                    'attr' => array('class' => 'datepicker form-control'),
+                    'required' => false,
+                ));
 
-        $builder->add( 'updateUser', null, array(
-            'label'=> "Updated By:",
-            'read_only' => true,
-        ));
+                $builder->add('submitter', null, array(
+                    'label' => "Created By:",
+                    'read_only' => true,
+                    'attr' => array('class'=>'combobox combobox-width')
+                ));
+            }
 
+            $builder->add('primaryReviewerComment',null,array(
+                'label' => "Primary Reviewer Comment:",
+                'attr' => array('class'=>'textarea form-control')
+            ));
 
-        $builder->add('status',null, array(
-            'label' => 'Status:',
-            'read_only' => true,
-            'required' => false,
-            'attr' => array('class' => 'form-control'),
-        ));
+            $builder->add('status',null, array(
+                'label' => 'Status:',
+                //'read_only' => true,
+                'required' => false,
+                'attr' => array('class' => 'form-control'),
+            ));
+
+            $builder->add('approvalDate', 'date', array(
+                'widget' => 'single_text',
+                'label' => "Approval Date:",
+                //'read_only' => true,
+                'format' => 'MM/dd/yyyy',
+                'attr' => array('class' => 'datepicker form-control'),
+                'required' => false,
+            ));
+        }
+
+//        if( $this->project->getUpdateDate() ) {
+//            $builder->add('updateDate', 'date', array(
+//                'widget' => 'single_text',
+//                'label' => "Update Date:",
+//                'read_only' => true,
+//                'format' => 'MM/dd/yyyy',
+//                'attr' => array('class' => 'datepicker form-control'),
+//                'required' => false,
+//            ));
+//        }
+//        if( $this->project->getUpdateUser() ) {
+//            $builder->add('updateUser', null, array(
+//                'label' => "Updated By:",
+//                'read_only' => true,
+//            ));
+//        }
 
         $builder->add('title',null,array(
             'required' => false,
@@ -62,7 +103,6 @@ class ProjectType extends AbstractType
 
         $builder->add('irbNumber',null, array(
             'label' => 'IRB Number:',
-            'read_only' => true,
             'required' => false,
             'attr' => array('class' => 'form-control'),
         ));
@@ -70,7 +110,6 @@ class ProjectType extends AbstractType
         $builder->add('startDate','date',array(
             'widget' => 'single_text',
             'label' => "Project Start Date:",
-            'read_only' => true,
             'format' => 'MM/dd/yyyy',
             'attr' => array('class' => 'datepicker form-control'),
             'required' => false,
@@ -79,7 +118,6 @@ class ProjectType extends AbstractType
         $builder->add('expirationDate','date',array(
             'widget' => 'single_text',
             'label' => "Project Expiration Date:",
-            'read_only' => true,
             'format' => 'MM/dd/yyyy',
             'attr' => array('class' => 'datepicker form-control'),
             'required' => false,
@@ -124,7 +162,6 @@ class ProjectType extends AbstractType
             'attr' => array('class' => 'form-control'),
         ));
 
-        //->add('biostatisticalComment')->add('administratorComment')->add('primaryReviewerComment')->add('submitter')->add('updateUser')
         $builder->add('biostatisticalComment',null,array(
             'label' => "Biostatistical Comment:",
             'attr' => array('class'=>'textarea form-control')
@@ -135,14 +172,15 @@ class ProjectType extends AbstractType
             'attr' => array('class'=>'textarea form-control')
         ));
 
-        $builder->add('primaryReviewerComment',null,array(
-            'label' => "Primary Reviewer Comment:",
-            'attr' => array('class'=>'textarea form-control')
+        $builder->add('readyForReview', 'checkbox', array(
+            'required' => false,
+            'label' => "Please check the box if this project is ready for committee to review:",
+            'attr' => array('class' => 'form-control')
         ));
 
         $builder->add( 'principalInvestigators', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:User',
-            'label'=> "Submitter:",
+            'label'=> "Principal Investigator(s):",
             'required'=> false,
             'multiple' => true,
             'attr' => array('class'=>'combobox combobox-width'),
@@ -156,6 +194,69 @@ class ProjectType extends AbstractType
             },
         ));
 
+        $builder->add( 'coInvestigators', 'entity', array(
+            'class' => 'OlegUserdirectoryBundle:User',
+            'label'=> "Co-Investigator(s):",
+            'required'=> false,
+            'multiple' => true,
+            'attr' => array('class'=>'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->leftJoin("list.employmentStatus", "employmentStatus")
+                    ->leftJoin("employmentStatus.employmentType", "employmentType")
+                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+                    ->leftJoin("list.infos", "infos")
+                    ->orderBy("infos.displayName","ASC");
+            },
+        ));
+
+        $builder->add( 'irbSubmitter', 'entity', array(
+            'class' => 'OlegUserdirectoryBundle:User',
+            'label'=> "Name of PI Who Submitted the IRB:",
+            'required'=> false,
+            'multiple' => false,
+            'attr' => array('class'=>'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->leftJoin("list.employmentStatus", "employmentStatus")
+                    ->leftJoin("employmentStatus.employmentType", "employmentType")
+                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+                    ->leftJoin("list.infos", "infos")
+                    ->orderBy("infos.displayName","ASC");
+            },
+        ));
+
+        $builder->add( 'pathologists', 'entity', array(
+            'class' => 'OlegUserdirectoryBundle:User',
+            'label'=> "WCMC Pathologist Involved:",
+            'required'=> false,
+            'multiple' => true,
+            'attr' => array('class'=>'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->leftJoin("list.employmentStatus", "employmentStatus")
+                    ->leftJoin("employmentStatus.employmentType", "employmentType")
+                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+                    ->leftJoin("list.infos", "infos")
+                    ->orderBy("infos.displayName","ASC");
+            },
+        ));
+
+        $builder->add( 'contact', 'entity', array(
+            'class' => 'OlegUserdirectoryBundle:User',
+            'label'=> "Contact:",
+            'required'=> false,
+            'multiple' => false,
+            'attr' => array('class'=>'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->leftJoin("list.employmentStatus", "employmentStatus")
+                    ->leftJoin("employmentStatus.employmentType", "employmentType")
+                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+                    ->leftJoin("list.infos", "infos")
+                    ->orderBy("infos.displayName","ASC");
+            },
+        ));
 
 
     }

@@ -189,6 +189,17 @@ class Project {
      */
     private $primaryReviewerComment;
 
+    //Please check the box if this project is ready for committee to review
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $readyForReview;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $approvalDate;
+
     //TODO:
     //Click on the "View Biostatistical Request" button to view the biostatistical request form
     //Click on the "View Master Request" button to view the master request form
@@ -287,6 +298,14 @@ class Project {
     {
         $this->updateDate = new \DateTime();
     }
+//    public function setUpdateDate( $date=null )
+//    {
+//        if( $date ) {
+//            $this->updateDate = $date;
+//        } else {
+//            $this->updateDate = new \DateTime();
+//        }
+//    }
 
     /**
      * @return mixed
@@ -593,6 +612,40 @@ class Project {
     {
         $this->pathologists->removeElement($item);
     }
+
+    /**
+     * @return mixed
+     */
+    public function getReadyForReview()
+    {
+        return $this->readyForReview;
+    }
+
+    /**
+     * @param mixed $readyForReview
+     */
+    public function setReadyForReview($readyForReview)
+    {
+        $this->readyForReview = $readyForReview;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getApprovalDate()
+    {
+        return $this->approvalDate;
+    }
+
+    /**
+     * @param mixed $approvalDate
+     */
+    public function setApprovalDate($approvalDate)
+    {
+        $this->approvalDate = $approvalDate;
+    }
+
+
 
 
 }

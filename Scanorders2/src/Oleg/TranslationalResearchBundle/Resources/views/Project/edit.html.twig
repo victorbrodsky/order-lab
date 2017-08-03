@@ -1,5 +1,8 @@
 {% extends "OlegTranslationalResearchBundle::Default/base.html.twig" %}
 
+{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+
 {% block title %}
     {{ title }}
 {% endblock %}
@@ -12,18 +15,57 @@
     </h4>
 
     {{ form_start(edit_form) }}
-        {{ form_widget(edit_form) }}
-        <input type="submit" value="Edit" />
+        {#{{ form_widget(edit_form) }}#}
+
+        {% if edit_form.createDate is defined or edit_form.submitter is defined %}
+            <div class="well well-sm">
+                {% if edit_form.createDate is defined %}
+                    {{ formmacros.field(edit_form.createDate) }}
+                {% endif %}
+                {% if edit_form.submitter is defined %}
+                    {{ formmacros.field(edit_form.submitter) }}
+                {% endif %}
+            </div>
+        {% endif %}
+
+        {#{% if edit_form.updateDate is defined or edit_form.updateUser is defined  %}#}
+            {#<div class="well well-sm">#}
+                {#{% if edit_form.updateDate is defined %}#}
+                    {#{{ formmacros.field(edit_form.updateDate) }}#}
+                {#{% endif %}#}
+                {#{% if edit_form.updateUser is defined %}#}
+                    {#{{ formmacros.field(edit_form.updateUser) }}#}
+                {#{% endif %}#}
+            {#</div>#}
+        {#{% endif %}#}
+        {{ transres.updateInfo(edit_form,cycle) }}
+
+        {{ transres.projectForm(edit_form,project,cycle) }}
+
+        {{ formmacros.checkbox(edit_form.readyForReview) }}
+
+        {% if edit_form.primaryReviewerComment is defined %}
+            {{ formmacros.field(edit_form.primaryReviewerComment) }}
+        {% endif %}
+
+        <br>
+        <p>
+            <input class="btn btn-warning" type="submit" value="Update Project" />
+        </p>
+
     {{ form_end(edit_form) }}
 
-    <ul>
-        <li>
-            <a href="{{ path('project_index') }}">Back to the list</a>
-        </li>
-        <li>
-            {{ form_start(delete_form) }}
-                <input type="submit" value="Delete">
-            {{ form_end(delete_form) }}
-        </li>
-    </ul>
+    <p>
+        <a class="btn btn-primary" href="{{ path(translationalresearch_sitename~'_project_show',{ 'id': project.id }) }}">Cancel</a>
+    </p>
+
+    <br>
+    <br>
+    <p>
+        <a href="{{ path(translationalresearch_sitename~'_project_index') }}">Back to the list</a>
+    </p>
+    {{ form_start(delete_form) }}
+        <input class="btn btn-danger" type="submit" value="Delete">
+    {{ form_end(delete_form) }}
+
 {% endblock %}

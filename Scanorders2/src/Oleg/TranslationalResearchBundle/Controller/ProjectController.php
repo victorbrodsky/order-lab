@@ -3,6 +3,7 @@
 namespace Oleg\TranslationalResearchBundle\Controller;
 
 use Oleg\TranslationalResearchBundle\Entity\Project;
+use Oleg\TranslationalResearchBundle\Form\ProjectType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -16,6 +17,16 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class ProjectController extends Controller
 {
+
+    /**
+     * @Route("/home/", name="translationalresearch_home")
+     * @Method("GET")
+     */
+    public function homeAction()
+    {
+        return $this->redirectToRoute('translationalresearch_project_index');
+    }
+
     /**
      * Lists all project entities.
      *
@@ -27,7 +38,30 @@ class ProjectController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $projects = $em->getRepository('OlegTranslationalResearchBundle:Project')->findAll();
+        //$projects = $em->getRepository('OlegTranslationalResearchBundle:Project')->findAll();
+
+        $repository = $em->getRepository('OlegTranslationalResearchBundle:Project');
+        $dql =  $repository->createQueryBuilder("project");
+        $dql->select('project');
+
+        $dql->leftJoin('project.principalInvestigators','principalInvestigators');
+        $dql->leftJoin('principalInvestigators.infos','principalInvestigatorsInfos');
+
+        $limit = 30;
+        $query = $em->createQuery($dql);
+
+        $paginationParams = array(
+            'defaultSortFieldName' => 'project.id',
+            'defaultSortDirection' => 'DESC'
+        );
+
+        $paginator  = $this->get('knp_paginator');
+        $projects = $paginator->paginate(
+            $query,
+            $this->get('request')->query->get('page', 1),   /*page number*/
+            $limit,                                         /*limit per page*/
+            $paginationParams
+        );
 
         return array(
             'projects' => $projects,
@@ -44,8 +78,12 @@ class ProjectController extends Controller
      */
     public function newAction(Request $request)
     {
-        $project = new Project();
-        $form = $this->createForm('Oleg\TranslationalResearchBundle\Form\ProjectType', $project);
+        $user = $this->get('security.context')->getToken()->getUser();
+        $cycle = "new";
+
+        $project = new Project($user);
+        //$form = $this->createForm('Oleg\TranslationalResearchBundle\Form\ProjectType', $project);
+        $form = $this->createProjectForm($project,$cycle);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -59,6 +97,7 @@ class ProjectController extends Controller
         return array(
             'project' => $project,
             'form' => $form->createView(),
+            'cycle' => $cycle,
             'title' => "Create Project"
         );
     }
@@ -72,13 +111,26 @@ class ProjectController extends Controller
      */
     public function showAction(Project $project)
     {
+        $cycle = "show";
+
+        $form = $this->createProjectForm($project,$cycle);
+
         $deleteForm = $this->createDeleteForm($project);
 
         return array(
             'project' => $project,
+            'form' => $form->createView(),
+            'cycle' => $cycle,
+            'title' => "Project ID ".$project->getId(),
             'delete_form' => $deleteForm->createView(),
-            'title' => "Project ID ".$project->getId()
         );
+
+//        return array(
+//            'project' => $project,
+//            'cycle' => 'show',
+//            'delete_form' => $deleteForm->createView(),
+//            'title' => "Project ID ".$project->getId()
+//        );
     }
 
     /**
@@ -90,19 +142,28 @@ class ProjectController extends Controller
      */
     public function editAction(Request $request, Project $project)
     {
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        $cycle = "edit";
+
         $deleteForm = $this->createDeleteForm($project);
-        $editForm = $this->createForm('Oleg\TranslationalResearchBundle\Form\ProjectType', $project);
+        //$editForm = $this->createForm('Oleg\TranslationalResearchBundle\Form\ProjectType', $project);
+        $editForm = $this->createProjectForm($project,$cycle);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+
+            $project->setUpdateUser($user);
+
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('translationalresearch_project_edit', array('id' => $project->getId()));
+            return $this->redirectToRoute('translationalresearch_project_show', array('id' => $project->getId()));
         }
 
         return array(
             'project' => $project,
             'edit_form' => $editForm->createView(),
+            'cycle' => $cycle,
             'delete_form' => $deleteForm->createView(),
             'title' => "Edit Project ID ".$project->getId()
         );
@@ -126,6 +187,35 @@ class ProjectController extends Controller
         }
 
         return $this->redirectToRoute('translationalresearch_project_index');
+    }
+
+    private function createProjectForm( Project $project, $cycle )
+    {
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        $disabled = false;
+
+        $params = array(
+            'cycle' => $cycle,
+            'sc' => $this->get('security.context'),
+            'em' => $em,
+            'user' => $user,
+        );
+
+        if( $cycle == "show" ) {
+            $disabled = true;
+        }
+
+        $form = $this->createForm(
+            new ProjectType($project,$params),
+            $project,
+            array(
+                'disabled' => $disabled,
+            )
+        );
+
+        return $form;
     }
 
     /**
