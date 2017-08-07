@@ -44,10 +44,10 @@
         {{ formmacros.field(form.irbNumber) }}
     </div>
 
-    <div class="well well-sm">
-        {{ formmacros.fieldDateLabel(form.startDate,'allow-future-date') }}
-        {{ formmacros.fieldDateLabel(form.expirationDate,'allow-future-date') }}
-    </div>
+    {#<div class="well well-sm">#}
+        {#{{ formmacros.fieldDateLabel(form.startDate,'allow-future-date') }}#}
+        {#{{ formmacros.fieldDateLabel(form.expirationDate,'allow-future-date') }}#}
+    {#</div>#}
 
     {#{{ formmacros.field(form.contact) }}#}
     {% if cycle == "show" %}

@@ -99,21 +99,21 @@ class ProjectType extends AbstractType
             'attr' => array('class' => 'form-control'),
         ));
 
-        $builder->add('startDate','date',array(
-            'widget' => 'single_text',
-            'label' => "Project Start Date:",
-            'format' => 'MM/dd/yyyy',
-            'attr' => array('class' => 'datepicker form-control'),
-            'required' => false,
-        ));
-
-        $builder->add('expirationDate','date',array(
-            'widget' => 'single_text',
-            'label' => "Project Expiration Date:",
-            'format' => 'MM/dd/yyyy',
-            'attr' => array('class' => 'datepicker form-control'),
-            'required' => false,
-        ));
+//        $builder->add('startDate','date',array(
+//            'widget' => 'single_text',
+//            'label' => "Project Start Date:",
+//            'format' => 'MM/dd/yyyy',
+//            'attr' => array('class' => 'datepicker form-control'),
+//            'required' => false,
+//        ));
+//
+//        $builder->add('expirationDate','date',array(
+//            'widget' => 'single_text',
+//            'label' => "Project Expiration Date:",
+//            'format' => 'MM/dd/yyyy',
+//            'attr' => array('class' => 'datepicker form-control'),
+//            'required' => false,
+//        ));
 
         $builder->add('funded','checkbox',array(
             'required' => false,
@@ -127,11 +127,12 @@ class ProjectType extends AbstractType
             'attr' => array('class' => 'form-control'),
         ));
 
-        $descriptionLabel =
-            "Please provide a brief description of the project to include background information,
-            purpose and objective, and a methodology section stating a justification for
-            the size and scope of the project. The breadth of information
-            should be adequate for a scientific committee to understand and assess the value of the research.";
+//        $descriptionLabel =
+//            "Please provide a brief description of the project to include background information,
+//            purpose and objective, and a methodology section stating a justification for
+//            the size and scope of the project. The breadth of information
+//            should be adequate for a scientific committee to understand and assess the value of the research.";
+        $descriptionLabel = "Brief Description";
         $builder->add('description',null,array(
             'label' => $descriptionLabel,
             'attr' => array('class'=>'textarea form-control') //,'style'=>'height:300px'

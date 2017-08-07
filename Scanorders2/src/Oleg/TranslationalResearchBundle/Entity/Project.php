@@ -116,15 +116,15 @@ class Project {
      */
     private $irbNumber;
 
-    /**
-     * @ORM\Column(type="date", nullable=true)
-     */
-    private $startDate;
-
-    /**
-     * @ORM\Column(type="date", nullable=true)
-     */
-    private $expirationDate;
+//    /**
+//     * @ORM\Column(type="date", nullable=true)
+//     */
+//    private $startDate;
+//
+//    /**
+//     * @ORM\Column(type="date", nullable=true)
+//     */
+//    private $expirationDate;
 
     /**
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
@@ -371,37 +371,37 @@ class Project {
         $this->irbNumber = $irbNumber;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getStartDate()
-    {
-        return $this->startDate;
-    }
-
-    /**
-     * @param mixed $startDate
-     */
-    public function setStartDate($startDate)
-    {
-        $this->startDate = $startDate;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getExpirationDate()
-    {
-        return $this->expirationDate;
-    }
-
-    /**
-     * @param mixed $expirationDate
-     */
-    public function setExpirationDate($expirationDate)
-    {
-        $this->expirationDate = $expirationDate;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getStartDate()
+//    {
+//        return $this->startDate;
+//    }
+//
+//    /**
+//     * @param mixed $startDate
+//     */
+//    public function setStartDate($startDate)
+//    {
+//        $this->startDate = $startDate;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getExpirationDate()
+//    {
+//        return $this->expirationDate;
+//    }
+//
+//    /**
+//     * @param mixed $expirationDate
+//     */
+//    public function setExpirationDate($expirationDate)
+//    {
+//        $this->expirationDate = $expirationDate;
+//    }
 
     /**
      * @return mixed
