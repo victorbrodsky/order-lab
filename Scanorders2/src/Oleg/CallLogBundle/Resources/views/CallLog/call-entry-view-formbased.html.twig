@@ -110,11 +110,16 @@
     </div>
 
     {% if allMessages and allMessages|length > 1 %}
+        {#{% if allMessages|length > 2 %}#}
+            {#{% set versionTitle = "All versions" %}#}
+        {#{% else %}#}
+            {#{% set versionTitle = "Previous version" %}#}
+        {#{% endif %}#}
         <div class="panel panel-default">
             <div class="panel-heading" role="tab" id="headingOne">
                 <h4 class="panel-title">
                     <a role="button" data-toggle="collapse" data-parent="#accordion" href="#allMessages" aria-expanded="true" aria-controls="collapseOne">
-                        All Version(s)
+                        All Versions
                     </a>
                 </h4>
             </div>

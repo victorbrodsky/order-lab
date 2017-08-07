@@ -26,7 +26,7 @@
                 <th>Actions</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody data-link="row" class="rowlink">
         {% for project in projects %}
             <tr>
                 <td>
@@ -37,7 +37,7 @@
                     {{ project.irbNumber }}
                 </td>
 
-                <td>
+                <td class="rowlink-skip">
                     {% for principalInvestigator in project.principalInvestigators %}
                         {#{{ principalInvestigator }}<br>#}
                         {% set personurl = path(translationalresearch_sitename~'_showuser',{'id':principalInvestigator.id}) %}

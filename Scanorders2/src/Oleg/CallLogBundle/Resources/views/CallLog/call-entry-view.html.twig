@@ -93,7 +93,7 @@
             <div class="panel-heading" role="tab" id="headingOne">
                 <h4 class="panel-title">
                     <a role="button" data-toggle="collapse" data-parent="#accordion" href="#allMessages" aria-expanded="true" aria-controls="collapseOne">
-                        All Version(s)
+                        All Versions
                     </a>
                 </h4>
             </div>
@@ -102,8 +102,15 @@
                     {% for thisMessage in allMessages %}
                         {% set thisMessageInfo = "ID "~thisMessage.getMessageOidVersion ~ " " ~ thisMessage.getSubmitterInfoSimpleDate %}
                         {% set thisMessageInfo = thisMessageInfo ~ " [" ~ thisMessage.getMessageStatus ~ "]" %}
+                        {% if thisMessage.id == message.id %}
+                            {% set thisShownStyle = "style=color:#2db92d" %}
+                            {% set thisShownText = " (shown)" %}
+                        {% else %}
+                            {% set thisShownStyle = "" %}
+                            {% set thisShownText = "" %}
+                        {% endif %}
                         <p>
-                            <a href="{{ path('calllog_callentry_view', {'messageOid': thisMessage.oid, 'messageVersion':thisMessage.version}) }}">{{ thisMessageInfo }}</a>
+                            <a href="{{ path('calllog_callentry_view', {'messageOid': thisMessage.oid, 'messageVersion':thisMessage.version}) }}" {{ thisShownStyle }}>{{ thisMessageInfo ~ thisShownText }}</a>
                         </p>
                     {% endfor %}
                 </div>

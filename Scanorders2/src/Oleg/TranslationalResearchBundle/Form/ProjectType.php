@@ -31,31 +31,6 @@ class ProjectType extends AbstractType
 
         if( $this->params['cycle'] != 'new' ) {
 
-//            if( $this->project->getSubmitter() ) {
-//                $builder->add('submitter', null, array(
-//                    'label' => "Created By:",
-//                    'read_only' => true,
-//                    'attr' => array('class'=>'combobox combobox-width')
-//                ));
-//            }
-
-            if( $this->project->getCreateDate() ) {
-                $builder->add('createDate', 'date', array(
-                    'widget' => 'single_text',
-                    'label' => "Create Date:",
-                    'read_only' => true,
-                    'format' => 'MM/dd/yyyy',
-                    'attr' => array('class' => 'datepicker form-control'),
-                    'required' => false,
-                ));
-
-                $builder->add('submitter', null, array(
-                    'label' => "Created By:",
-                    'read_only' => true,
-                    'attr' => array('class'=>'combobox combobox-width')
-                ));
-            }
-
             $builder->add('primaryReviewerComment',null,array(
                 'label' => "Primary Reviewer Comment:",
                 'attr' => array('class'=>'textarea form-control')
@@ -75,6 +50,23 @@ class ProjectType extends AbstractType
                 'format' => 'MM/dd/yyyy',
                 'attr' => array('class' => 'datepicker form-control'),
                 'required' => false,
+            ));
+        }
+
+        if( $this->project->getCreateDate() ) {
+            $builder->add('createDate', 'date', array(
+                'widget' => 'single_text',
+                'label' => "Create Date:",
+                'read_only' => true,
+                'format' => 'MM/dd/yyyy',
+                'attr' => array('class' => 'datepicker form-control'),
+                'required' => false,
+            ));
+
+            $builder->add('submitter', null, array(
+                'label' => "Created By:",
+                'read_only' => true,
+                'attr' => array('class'=>'combobox combobox-width')
             ));
         }
 
@@ -138,11 +130,11 @@ class ProjectType extends AbstractType
         $descriptionLabel =
             "Please provide a brief description of the project to include background information,
             purpose and objective, and a methodology section stating a justification for
-            the size and scope of the project (<250 words). The breadth of information
+            the size and scope of the project. The breadth of information
             should be adequate for a scientific committee to understand and assess the value of the research.";
         $builder->add('description',null,array(
             'label' => $descriptionLabel,
-            'attr' => array('class'=>'textarea form-control')
+            'attr' => array('class'=>'textarea form-control') //,'style'=>'height:300px'
         ));
 
         $builder->add('budgetSummary',null,array(
@@ -151,9 +143,9 @@ class ProjectType extends AbstractType
         ));
 
         $builder->add('totalCost',null, array(
-            'label' => 'Estimated Total Costs:',
+            'label' => 'Estimated Total Costs ($):',
             'required' => false,
-            'attr' => array('class' => 'form-control'),
+            'attr' => array('class' => 'form-control', 'data-inputmask' => "'alias': 'currency'", 'style'=>'text-align: left !important;'),
         ));
 
         $builder->add('projectType',null, array(
