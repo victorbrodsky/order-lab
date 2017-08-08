@@ -283,6 +283,7 @@ security:
        - { path: ^/directory/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
        - { path: ^/directory/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
        - { path: ^/directory/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/directory/account-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
 
        - { path: ^/directory/event-log, role: ROLE_USERDIRECTORY_EDITOR }
        - { path: ^/directory/users/previous, role: ROLE_USERDIRECTORY_EDITOR }
@@ -315,7 +316,7 @@ security:
        - { path: ^/scan/incoming-scan-orders, role: ROLE_SCANORDER_PROCESSOR }
        - { path: ^/scan/settings/, role: ROLE_PLATFORM_DEPUTY_ADMIN }
        - { path: ^/scan/incoming-scan-orders, role: ROLE_SCANORDER_PROCESSOR }
-       - { path: ^/scan/account-requests, role: ROLE_SCANORDER_PROCESSOR }
+#       - { path: ^/scan/account-requests, role: ROLE_SCANORDER_PROCESSOR }
        - { path: ^/scan/event-log, role: ROLE_SCANORDER_PROCESSOR }
        - { path: ^/scan/incoming-slide-return-requests, role: [ROLE_SCANORDER_PROCESSOR]}
 
@@ -339,6 +340,7 @@ security:
        - { path: ^/fellowship-applications/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
        - { path: ^/fellowship-applications/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
        - { path: ^/fellowship-applications/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/fellowship-applications/account-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
   #     - { path: ^/fellowship-applications/download/, allow_if: "'::1' == request.getClientIp() or has_role('ROLE_FELLAPP_USER')" }
 
        - { path: ^/fellowship-applications/download/, roles: IS_AUTHENTICATED_ANONYMOUSLY, ips: [127.0.0.1, ::1] }

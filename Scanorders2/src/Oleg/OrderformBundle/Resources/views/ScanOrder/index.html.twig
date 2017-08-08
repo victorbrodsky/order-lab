@@ -34,7 +34,7 @@
 
         <p>
         {% if accountreqs is defined and accountreqs | length > 0 %}
-            <a class="text-danger" href="{{ path('accountrequest') }}">Active Account Requests:{{ accountreqs | length }}</a>
+            <a class="text-danger" href="{{ path(employees_sitename~'_accountrequest') }}">Active Account Requests:{{ accountreqs | length }}</a>
         {% endif %}
 
         {% if (accountreqs is defined and accountreqs | length > 0) and (accessreqs is defined and accessreqs | length > 0) %}

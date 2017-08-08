@@ -15,15 +15,15 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Entity;
+namespace Oleg\UserdirectoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @ORM\Entity(repositoryClass="Oleg\OrderformBundle\Repository\UserRequestRepository")
- * @ORM\Table(name="scan_accountrequest")
+ * @ORM\Entity(repositoryClass="Oleg\UserdirectoryBundle\Repository\UserRequestRepository")
+ * @ORM\Table(name="user_accountrequest")
  * @ORM\HasLifecycleCallbacks
  */
 class UserRequest
@@ -89,7 +89,7 @@ class UserRequest
      * request permittedInstitutionalPHIScope
      *
      * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
-     * @ORM\JoinTable(name="scan_accountrequest_institution",
+     * @ORM\JoinTable(name="user_accountrequest_institution",
      *      joinColumns={@ORM\JoinColumn(name="request_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="institution_id", referencedColumnName="id")}
      * )
@@ -103,22 +103,6 @@ class UserRequest
      * @ORM\JoinColumn(name="institution_id", referencedColumnName="id")
      **/
     private $requestedScanOrderInstitutionScope;
-
-
-    
-//    /**
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    protected $department;
-//
-//    /**
-//     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Service")
-//     * @ORM\JoinTable(name="scan_accountrequest_service",
-//     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-//     *      inverseJoinColumns={@ORM\JoinColumn(name="service_id", referencedColumnName="id")}
-//     * )
-//     */
-//    protected $services;
     
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -167,9 +151,15 @@ class UserRequest
      */
     private $referencephone;
 
+    //TODO: change it to source-systems (SourceSystemList)
+//    /**
+//     * Systems for account requests: System for which the account is being requested
+//     * @ORM\ManyToOne(targetEntity="SystemAccountRequestType")
+//     **/
+//    private $systemAccountRequest;
     /**
      * Systems for account requests: System for which the account is being requested
-     * @ORM\ManyToOne(targetEntity="SystemAccountRequestType")
+     * @ORM\ManyToOne(targetEntity="SourceSystemList")
      **/
     private $systemAccountRequest;
 

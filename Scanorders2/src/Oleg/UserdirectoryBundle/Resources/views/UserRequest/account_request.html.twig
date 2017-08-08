@@ -84,7 +84,7 @@
 
         <br>
 
-        <form id="accountrequestform" action="{{ path('accountrequest_create') }}" method="post" {{ form_enctype(form) }}>
+        <form id="accountrequestform" action="{{ path(sitename~'_accountrequest_create') }}" method="post" {{ form_enctype(form) }}>
 
             {{ form_errors(form) }}
 
@@ -196,13 +196,13 @@
 
             <br>
             <p>
-                <a href="{{ path(scan_sitename~'_login') }}">Return to Log In page</a>
+                <a href="{{ path(employees_sitename~'_login') }}">Return to Log In page</a>
             </p>
 
         </form>
 
         {#dummy login form with style="display:none"#}
-        <form id="loginform" action="{{ path(scan_sitename~'_login_check') }}" method="post" style="display:none">
+        <form id="loginform" action="{{ path(employees_sitename~'_login_check') }}" method="post" style="display:none">
             <input type="hidden" name="display_height" id="display_height" value="" />
             <input type="hidden" name="display_width" id="display_width" value="" />
 
@@ -263,7 +263,7 @@
                 //console.log("checkedValue="+checkedValue);
 
                 if( checkedValue == "Yes" ) {
-                    $("#oleg_orderformbundle_userrequesttype_cwid").prop('disabled', false);
+                    $("#oleg_userdirectorybundle_userrequesttype_cwid").prop('disabled', false);
                     //disable all fields, except some
                     var allInputs = $(":input").not('.hascwid, .cwid-password, .cwid, :button, :radio, #username, #password, #usernametypeid_show');
                     allInputs.prop('disabled', true);
@@ -272,7 +272,7 @@
                 } else {
                     $('.cwid').val('');
                     $(":input").prop('disabled', false);
-                    $("#oleg_orderformbundle_userrequesttype_cwid").prop('disabled', true);
+                    $("#oleg_userdirectorybundle_userrequesttype_cwid").prop('disabled', true);
                     $('#password_field').hide();
                     $('#usernametypeid_show_holder').hide();
                 }

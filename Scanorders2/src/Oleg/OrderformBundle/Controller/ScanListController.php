@@ -128,6 +128,8 @@ class ScanListController extends ListController
 
 //* @Route("/principal-investigators/", name="principalinvestigators-list")
 //* @Route("/course-directors/", name="coursedirectors-list")
+//     * @Route("/system-account-request-types/", name="systemaccountrequesttypes-list")
+
 
     /**
      * Lists all entities.
@@ -165,7 +167,6 @@ class ScanListController extends ListController
      * @Route("/disease-origins/", name="diseaseorigins-list")
      * @Route("/laboratory-test-id-types/", name="labtesttype-list")
      * @Route("/part-titles/", name="parttitle-list")
-     * @Route("/system-account-request-types/", name="systemaccountrequesttypes-list")
      * @Route("/message-type-classifiers/", name="messagetypeclassifiers-list")
      * @Route("/amendment-reasons/", name="amendmentreasons-list")
      * @Route("/pathology-call-complex-patients/", name="pathologycallcomplexpatients-list")
@@ -226,7 +227,6 @@ class ScanListController extends ListController
      * @Route("/disease-origins/", name="diseaseorigins_create")
      * @Route("/laboratory-test-id-types/", name="labtesttype_create")
      * @Route("/part-titles/", name="parttitle_create")
-     * @Route("/system-account-request-types/", name="systemaccountrequesttypes_create")
      * @Route("/message-type-classifiers/", name="messagetypeclassifiers_create")
      * @Route("/amendment-reasons/", name="amendmentreasons_create")
      * @Route("/pathology-call-complex-patients/", name="pathologycallcomplexpatients_create")
@@ -287,7 +287,6 @@ class ScanListController extends ListController
      * @Route("/disease-origins/new", name="diseaseorigins_new")
      * @Route("/laboratory-test-id-types/new", name="labtesttype_new")
      * @Route("/part-titles/new", name="parttitle_new")
-     * @Route("/system-account-request-types/new", name="systemaccountrequesttypes_new")
      * @Route("/message-type-classifiers/new", name="messagetypeclassifiers_new")
      * @Route("/amendment-reasons/new", name="amendmentreasons_new")
      * @Route("/pathology-call-complex-patients/new", name="pathologycallcomplexpatients_new")
@@ -348,7 +347,6 @@ class ScanListController extends ListController
      * @Route("/disease-origins/{id}", name="diseaseorigins_show")
      * @Route("/laboratory-test-id-types/{id}", name="labtesttype_show")
      * @Route("/part-titles/{id}", name="parttitle_show")
-     * @Route("/system-account-request-types/{id}", name="systemaccountrequesttypes_show")
      * @Route("/message-type-classifiers/{id}", name="messagetypeclassifiers_show")
      * @Route("/amendment-reasons/{id}", name="amendmentreasons_show")
      * @Route("/pathology-call-complex-patients/{id}", name="pathologycallcomplexpatients_show")
@@ -409,7 +407,6 @@ class ScanListController extends ListController
      * @Route("/disease-origins/{id}/edit", name="diseaseorigins_edit")
      * @Route("/laboratory-test-id-types/{id}/edit", name="labtesttype_edit")
      * @Route("/part-titles/{id}/edit", name="parttitle_edit")
-     * @Route("/system-account-request-types/{id}/edit", name="systemaccountrequesttypes_edit")
      * @Route("/message-type-classifiers/{id}/edit", name="messagetypeclassifiers_edit")
      * @Route("/amendment-reasons/{id}/edit", name="amendmentreasons_edit")
      * @Route("/pathology-call-complex-patients/{id}/edit", name="pathologycallcomplexpatients_edit")
@@ -470,7 +467,6 @@ class ScanListController extends ListController
      * @Route("/disease-origins/{id}", name="diseaseorigins_update")
      * @Route("/laboratory-test-id-types/{id}", name="labtesttype_update")
      * @Route("/part-titles/{id}", name="parttitle_update")
-     * @Route("/system-account-request-types/{id}", name="systemaccountrequesttypes_update")
      * @Route("/message-type-classifiers/{id}", name="messagetypeclassifiers_update")
      * @Route("/amendment-reasons/{id}", name="amendmentreasons_update")
      * @Route("/pathology-call-complex-patients/{id}", name="pathologycallcomplexpatients_update")
@@ -633,10 +629,10 @@ class ScanListController extends ListController
             $className = "ParttitleList";
             $displayName = "Part Titles";
             break;
-        case "systemaccountrequesttypes":
-            $className = "SystemAccountRequestType";
-            $displayName = "System Account Request Types";
-            break;
+//        case "systemaccountrequesttypes":
+//            $className = "SystemAccountRequestType";
+//            $displayName = "System Account Request Types";
+//            break;
         case "messagetypeclassifiers":
             $className = "MessageTypeClassifiers";
             $displayName = "Message Type Classifiers";
@@ -743,7 +739,6 @@ class ScanListController extends ListController
      * @Route("/disease-origins/{id}", name="diseaseorigins_delete")
      * @Route("/laboratory-test-id-types/{id}", name="labtesttype_delete")
      * @Route("/part-titles/{id}", name="parttitle_delete")
-     * @Route("/system-account-request-types/{id}", name="systemaccountrequesttypes_delete")
      * @Route("/message-type-classifiers/{id}", name="messagetypeclassifiers_delete")
      * @Route("/amendment-reasons/{id}", name="amendmentreasons_delete")
      * @Route("/pathology-call-complex-patients/{id}", name="pathologycallcomplexpatients_delete")

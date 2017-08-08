@@ -39,7 +39,7 @@ use Oleg\OrderformBundle\Entity\PatientListHierarchy;
 use Oleg\OrderformBundle\Entity\PatientListHierarchyGroupType;
 use Oleg\OrderformBundle\Entity\PatientRecordStatusList;
 use Oleg\OrderformBundle\Entity\ResearchGroupType;
-use Oleg\OrderformBundle\Entity\SystemAccountRequestType;
+//use Oleg\OrderformBundle\Entity\SystemAccountRequestType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -181,7 +181,7 @@ class ScanAdminController extends AdminController
         $count_DiseaseOriginList = $this->generateDiseaseOriginList();
         $count_ResearchGroupType = $this->generateResearchGroupType();
         $count_CourseGroupType = $this->generateCourseGroupType();
-        $count_SystemAccountRequestType = $this->generateSystemAccountRequestType();
+        //$count_SystemAccountRequestType = $this->generateSystemAccountRequestType();
         $count_AmendmentReason = $this->generateAmendmentReason();
         $count_PatientListHierarchyGroupType = $this->generatePatientListHierarchyGroupType();
         $count_PatientListHierarchy = $this->generatePatientListHierarchy();
@@ -219,7 +219,7 @@ class ScanAdminController extends AdminController
             'ImageAnalysisAlgorithmList='.$count_generateImageAnalysisAlgorithmList.', '.
             'Research Group Types='.$count_ResearchGroupType.', '.
             'Educational Group Types='.$count_CourseGroupType.', '.
-            'SystemAccountRequestTypes='.$count_SystemAccountRequestType.', '.
+            //'SystemAccountRequestTypes='.$count_SystemAccountRequestType.', '.
             'AmendmentReasons='.$count_AmendmentReason.', '.
             'PatientListHierarchyGroupType='.$count_PatientListHierarchyGroupType.', '.
             'PatientListHierarchy='.$count_PatientListHierarchy.', '.
@@ -1955,37 +1955,37 @@ class ScanAdminController extends AdminController
 
     }
 
-    public function generateSystemAccountRequestType() {
-
-        $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegOrderformBundle:SystemAccountRequestType')->findAll();
-
-        if( $entities ) {
-            return -1;
-        }
-
-        $elements = array(
-            'Aperio eSlide Manager on C.MED.CORNELL.EDU',
-        );
-
-        $username = $this->get('security.context')->getToken()->getUser();
-
-        $count = 10;
-        foreach( $elements as $name ) {
-
-            $entity = new SystemAccountRequestType();
-            $this->setDefaultList($entity,$count,$username,$name);
-
-            $em->persist($entity);
-            $em->flush();
-
-            $count = $count + 10;
-
-        } //foreach
-
-        return round($count/10);
-
-    }
+//    public function generateSystemAccountRequestType() {
+//
+//        $em = $this->getDoctrine()->getManager();
+//        $entities = $em->getRepository('OlegOrderformBundle:SystemAccountRequestType')->findAll();
+//
+//        if( $entities ) {
+//            return -1;
+//        }
+//
+//        $elements = array(
+//            'Aperio eSlide Manager on C.MED.CORNELL.EDU',
+//        );
+//
+//        $username = $this->get('security.context')->getToken()->getUser();
+//
+//        $count = 10;
+//        foreach( $elements as $name ) {
+//
+//            $entity = new SystemAccountRequestType();
+//            $this->setDefaultList($entity,$count,$username,$name);
+//
+//            $em->persist($entity);
+//            $em->flush();
+//
+//            $count = $count + 10;
+//
+//        } //foreach
+//
+//        return round($count/10);
+//
+//    }
 
     public function generateAmendmentReason() {
 

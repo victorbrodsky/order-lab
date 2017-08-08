@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Form;
+namespace Oleg\UserdirectoryBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -59,9 +59,11 @@ class UserRequestApproveType extends AbstractType
             //'empty_value' => false,
             'property' => 'getNodeNameWithRoot',
             'class' => 'OlegUserdirectoryBundle:Institution',
-            'choices' => $requestedScanOrderInstitutionScope,
+            //'choices' => $requestedScanOrderInstitutionScope,
             'attr' => array('class' => 'combobox combobox-width combobox-institution')
         ));
+
+        //TODO: add roles if system != Aperio 
 
 
     }
@@ -69,12 +71,12 @@ class UserRequestApproveType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\UserRequest',
+            'data_class' => 'Oleg\UserdirectoryBundle\Entity\UserRequest',
         ));
     }
 
     public function getName()
     {
-        return 'oleg_orderformbundle_userrequesttype';
+        return 'oleg_userdirectorybundle_userrequesttype';
     }
 }

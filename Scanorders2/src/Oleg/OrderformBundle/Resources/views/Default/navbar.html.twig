@@ -217,7 +217,7 @@
                             {% if is_granted('ROLE_SCANORDER_ADMIN') %}
                                 <li class="divider"></li>
                                 <li><a href="{{ path(scan_sitename~'_accessrequest_list') }}">Access Requests</a></li>
-                                <li><a href="{{ path('accountrequest') }}">Account Requests</a></li>
+                                <li><a href="{{ path(employees_sitename~'_accountrequest') }}">Account Requests</a></li>
                                 <li><a href="{{ path(scan_sitename~'_authorized_users') }}">Authorized Users</a></li>
                                 {#<li><a href="{{ path(scan_sitename~'_listusers') }}">Users</a></li>#}
                                 <li><a href="{{ path('admin_index') }}">ScanOrder List Manager</a></li>

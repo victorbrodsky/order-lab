@@ -15,10 +15,9 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Controller;
+namespace Oleg\UserdirectoryBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Oleg\OrderformBundle\Entity\AccessRequest;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -27,10 +26,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
-use Oleg\OrderformBundle\Entity\UserRequest;
-use Oleg\OrderformBundle\Form\UserRequestType;
-use Oleg\OrderformBundle\Form\UserRequestApproveType;
-use Oleg\OrderformBundle\Helper\ScanEmailUtil;
+use Oleg\UserdirectoryBundle\Entity\UserRequest;
+use Oleg\UserdirectoryBundle\Form\UserRequestType;
+use Oleg\UserdirectoryBundle\Form\UserRequestApproveType;
 
 /**
  * UserRequest controller.
@@ -38,24 +36,37 @@ use Oleg\OrderformBundle\Helper\ScanEmailUtil;
 class UserRequestController extends Controller
 {
 
+    protected $router;
+    protected $siteName;
+    protected $siteNameShowuser;
+    protected $siteNameStr;
+    protected $roleEditor;
+
+    public function __construct() {
+        $this->siteName = 'employees'; //controller is not setup yet, so we can't use $this->container->getParameter('employees.sitename');
+        $this->siteNameShowuser = 'employees';
+        $this->siteNameStr = 'Employee Directory';
+        $this->roleEditor = 'ROLE_USERDIRECTORY_EDITOR';
+    }
+
     /**
      * Lists all UserRequest entities.
      *
-     * @Route("/account-requests", name="accountrequest")
+     * @Route("/account-requests", name="employees_accountrequest")
      * @Method("GET")
      * @Template()
      */
     public function indexAction( Request $request )
     {
-        if (false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR')) {
-            return $this->redirect( $this->generateUrl('scan-nopermission') );
+        if (false === $this->get('security.context')->isGranted($this->roleEditor)) {
+            return $this->redirect( $this->generateUrl($this->siteName.'-nopermission') );
         }
         
         $em = $this->getDoctrine()->getManager();
 
-        //$entities = $em->getRepository('OlegOrderformBundle:UserRequest')->findAll();
+        //$entities = $em->getRepository('OlegUserdirectoryBundle:UserRequest')->findAll();
 
-        $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:UserRequest');
+        $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:UserRequest');
         $dql =  $repository->createQueryBuilder("accreq");
         $dql->select('accreq');
         //$dql->leftJoin("accreq.division", "division");
@@ -88,23 +99,24 @@ class UserRequestController extends Controller
                 $disable = true;
             }
 
-            $params = $this->getParams();
+            $params = $this->getParams($this->siteName);
 
             $forms[] = $this->createForm(new UserRequestApproveType($params), $req, array('disabled' => $disable) )->createView();
         }
 
         return array(
             'entities' => $pagination,
-            'forms' => $forms
+            'forms' => $forms,
+            'sitename' => $this->siteName
         );
     }
 
     /**
      * Creates a new UserRequest entity.
      *
-     * @Route("/account-requests/new", name="accountrequest_create")
+     * @Route("/account-requests/new", name="employees_accountrequest_create")
      * @Method("POST")
-     * @Template("OlegOrderformBundle:UserRequest:account_request.html.twig")
+     * @Template("OlegUserdirectoryBundle:UserRequest:account_request.html.twig")
      */
     public function createAction(Request $request)
     {
@@ -112,7 +124,7 @@ class UserRequestController extends Controller
 
         $entity  = new UserRequest();
 
-        $params = $this->getParams();
+        $params = $this->getParams($this->siteName);
 
         $form = $this->createForm(new UserRequestType($params), $entity);
 
@@ -147,21 +159,22 @@ class UserRequestController extends Controller
                 'Thank You! You have successfully submitted an account request. If you have provided your email or phone number we will let you know once your request is reviewed.'
             );
 
-            return $this->redirect( $this->generateUrl('scan_login') );
+            return $this->redirect( $this->generateUrl($this->siteName.'_login') );
         }
 
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
+            'sitename' => $this->siteName
         );
     }
 
     /**
      * Displays a form to create a new UserRequest entity.
      *
-     * @Route("/account-requests/new", name="accountrequest_new")
+     * @Route("/account-requests/new", name="employees_accountrequest_new")
      * @Method("GET")
-     * @Template("OlegOrderformBundle:UserRequest:account_request.html.twig")
+     * @Template("OlegUserdirectoryBundle:UserRequest:account_request.html.twig")
      */
     public function newAction()
     {
@@ -176,14 +189,15 @@ class UserRequestController extends Controller
             array('orderinlist' => 'ASC')
         );
 
-        $params = $this->getParams();
+        $params = $this->getParams($this->siteName);
 
         $form   = $this->createForm(new UserRequestType($params), $entity);
 
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
-            'usernametypes' => $usernametypes
+            'usernametypes' => $usernametypes,
+            'sitename' => $this->siteName
             //'security' => 'false'
         );
     }
@@ -191,19 +205,19 @@ class UserRequestController extends Controller
     /**
      * Finds and displays a UserRequest entity.
      *
-     * @Route("/account-requests/{id}", name="accountrequest_show", requirements={"id" = "\d+"})
+     * @Route("/account-requests/{id}", name="employees_accountrequest_show", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template()
      */
     public function showAction($id)
     {
-        if (false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR')) {
-            return $this->redirect( $this->generateUrl('scan-nopermission') );
+        if (false === $this->get('security.context')->isGranted($this->roleEditor)) {
+            return $this->redirect( $this->generateUrl($this->siteName.'-nopermission') );
         }
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegOrderformBundle:UserRequest')->find($id);
+        $entity = $em->getRepository('OlegUserdirectoryBundle:UserRequest')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find UserRequest entity.');
@@ -221,20 +235,20 @@ class UserRequestController extends Controller
     
     
     /**
-     * @Route("/account-requests/{id}/{status}/status", name="accountrequest_status", requirements={"id" = "\d+"})
+     * @Route("/account-requests/{id}/{status}/status", name="employees_accountrequest_status", requirements={"id" = "\d+"})
      * @Method("GET")
-     * @Template("OlegOrderformBundle:UserRequest:index.html.twig")
+     * @Template("OlegUserdirectoryBundle:UserRequest:index.html.twig")
      */
     public function statusAction($id, $status)
     {
         
-        if (false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR')) {
-            return $this->redirect( $this->generateUrl('scan-nopermission') );
+        if (false === $this->get('security.context')->isGranted($this->roleEditor)) {
+            return $this->redirect( $this->generateUrl($this->siteName.'-nopermission') );
         }
         
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegOrderformBundle:UserRequest')->find($id);
+        $entity = $em->getRepository('OlegUserdirectoryBundle:UserRequest')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find UserRequest entity.');
@@ -243,29 +257,27 @@ class UserRequestController extends Controller
         $entity->setStatus($status);
         $em->persist($entity);
         $em->flush();
-        
-        
-        return $this->redirect($this->generateUrl('accountrequest'));
-            
+
+        return $this->redirect($this->generateUrl($this->siteName.'_accountrequest'));
     }
 
     /**
      * Update (Approve) a new UserRequest entity.
      *
-     * @Route("/account-requests-approve", name="accountrequest_approve")
+     * @Route("/account-requests-approve", name="employees_accountrequest_approve")
      * @Method("POST")
-     * @Template("OlegOrderformBundle:UserRequest:index.html.twig")
+     * @Template("OlegUserdirectoryBundle:UserRequest:index.html.twig")
      */
     public function approveUserAccountRequestAction(Request $request)
     {
 
-        if (false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR')) {
-            return $this->redirect( $this->generateUrl('scan-nopermission') );
+        if (false === $this->get('security.context')->isGranted($this->roleEditor)) {
+            return $this->redirect( $this->generateUrl($this->siteName.'-nopermission') );
         }
 
         $entity  = new UserRequest();
 
-        $params = $this->getParams();
+        $params = $this->getParams($this->siteName);
 
         $form = $this->createForm(new UserRequestApproveType($params), $entity);
         $form->handleRequest($request);
@@ -284,7 +296,7 @@ class UserRequestController extends Controller
 //            exit();
             $em = $this->getDoctrine()->getManager();
 
-            $entityDb = $em->getRepository('OlegOrderformBundle:UserRequest')->findOneById($entity->getId());
+            $entityDb = $em->getRepository('OlegUserdirectoryBundle:UserRequest')->findOneById($entity->getId());
             if (!$entityDb) {
                 throw $this->createNotFoundException('Unable to find UserRequest entity with ID:'.$entity->getId());
             }
@@ -325,10 +337,10 @@ class UserRequestController extends Controller
 
         }
 
-        return $this->redirect($this->generateUrl('accountrequest'));
+        return $this->redirect($this->generateUrl($this->siteName.'_accountrequest'));
     }
 
-    public function getParams() {
+    public function getParams( $sitename ) {
 
         $params = array();
 
@@ -339,19 +351,20 @@ class UserRequestController extends Controller
         $department = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
 
         $params['institution'] = $department;
+        $params['sitename'] = $sitename;
 
-        //$requestedInstitutionalPHIScope = $em->getRepository('OlegUserdirectoryBundle:Institution')->findBy(array('level'=>0));
+        $requestedScanOrderInstitutionScope = $em->getRepository('OlegUserdirectoryBundle:Institution')->findBy(array('level'=>0));
 
-        $repository = $em->getRepository('OlegUserdirectoryBundle:Institution');
-        $dql =  $repository->createQueryBuilder("institution");
-        $dql->select('institution');
-        $dql->leftJoin("institution.types", "types");
-
-        $dql->where("institution.type = 'default'");
-        $dql->andWhere("types.name IS NULL OR types.name != 'Collaboration'");
-
-        $query = $em->createQuery($dql);
-        $requestedScanOrderInstitutionScope = $query->getResult();
+//        $repository = $em->getRepository('OlegUserdirectoryBundle:Institution');
+//        $dql =  $repository->createQueryBuilder("institution");
+//        $dql->select('institution');
+//        $dql->leftJoin("institution.types", "types");
+//
+//        $dql->where("institution.type = 'default'");
+//        $dql->andWhere("types.name IS NULL OR types.name != 'Collaboration'");
+//
+//        $query = $em->createQuery($dql);
+//        $requestedScanOrderInstitutionScope = $query->getResult();
 
         //$params['requestedInstitutionalPHIScope'] = $requestedInstitutionalPHIScope;
         $params['requestedScanOrderInstitutionScope'] = $requestedScanOrderInstitutionScope;
@@ -411,19 +424,19 @@ class UserRequestController extends Controller
     /**
      * Displays a form to edit an existing UserRequest entity.
      *
-     * @Route("/account-requests/{id}/edit", name="accountrequest_edit", requirements={"id" = "\d+"})
+     * @Route("/account-requests/{id}/edit", name="employees_accountrequest_edit", requirements={"id" = "\d+"})
      * @Method("GET")
      * @Template()
      */
     public function editAction($id)
     {
-        if (false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR')) {
-            return $this->redirect( $this->generateUrl('scan-nopermission') );
+        if (false === $this->get('security.context')->isGranted($this->roleEditor)) {
+            return $this->redirect( $this->generateUrl($this->siteName.'-nopermission') );
         }
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegOrderformBundle:UserRequest')->find($id);
+        $entity = $em->getRepository('OlegUserdirectoryBundle:UserRequest')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find UserRequest entity.');
@@ -445,20 +458,20 @@ class UserRequestController extends Controller
     /**
      * Edits an existing UserRequest entity.
      *
-     * @Route("/account-requests/{id}", name="accountrequest_update", requirements={"id" = "\d+"})
+     * @Route("/account-requests/{id}", name="employees_accountrequest_update", requirements={"id" = "\d+"})
      * @Method("PUT")
-     * @Template("OlegOrderformBundle:UserRequest:edit.html.twig")
+     * @Template("OlegUserdirectoryBundle:UserRequest:edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
 
-        if (false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR')) {
-            return $this->redirect( $this->generateUrl('scan-nopermission') );
+        if (false === $this->get('security.context')->isGranted($this->roleEditor)) {
+            return $this->redirect( $this->generateUrl($this->siteName.'-nopermission') );
         }
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('OlegOrderformBundle:UserRequest')->find($id);
+        $entity = $em->getRepository('OlegUserdirectoryBundle:UserRequest')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find UserRequest entity.');
@@ -477,9 +490,9 @@ class UserRequestController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect( $this->generateUrl('multy_new') );
-
-            return $this->redirect($this->generateUrl('accountrequest_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl($this->siteName.'_accountrequest'));
+            //return $this->redirect( $this->generateUrl('multy_new') );
+            //return $this->redirect($this->generateUrl($this->siteName.'_accountrequest_edit', array('id' => $id)));
         }
 
         return array(
@@ -491,14 +504,14 @@ class UserRequestController extends Controller
     /**
      * Deletes a UserRequest entity.
      *
-     * @Route("/account-requests/{id}", name="accountrequest_delete", requirements={"id" = "\d+"})
+     * @Route("/account-requests/{id}", name="employees_accountrequest_delete", requirements={"id" = "\d+"})
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)
     {
 
-        if (false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR')) {
-            return $this->redirect( $this->generateUrl('scan-nopermission') );
+        if (false === $this->get('security.context')->isGranted($this->roleEditor)) {
+            return $this->redirect( $this->generateUrl($this->siteName.'-nopermission') );
         }
 
         $form = $this->createDeleteForm($id);
@@ -506,7 +519,7 @@ class UserRequestController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('OlegOrderformBundle:UserRequest')->find($id);
+            $entity = $em->getRepository('OlegUserdirectoryBundle:UserRequest')->find($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find UserRequest entity.');
@@ -516,7 +529,7 @@ class UserRequestController extends Controller
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('accountrequest'));
+        return $this->redirect($this->generateUrl($this->siteName.'_accountrequest'));
     }
 
     /**

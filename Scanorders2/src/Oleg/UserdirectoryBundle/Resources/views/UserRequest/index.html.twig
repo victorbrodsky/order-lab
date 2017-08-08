@@ -14,7 +14,7 @@
     limitations under the License.
 #}
 
-{% extends "OlegOrderformBundle::Default/base.html.twig" %}
+{% extends "OlegUserdirectoryBundle::Default/base.html.twig" %}
 
 {% import "OlegOrderformBundle::Default/formmacros.html.twig" as myform %}
 
@@ -135,14 +135,16 @@
                 <th>{{ knp_pagination_sortable(entities, 'Reference Name', 'accreq.referencename') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Reference Email', 'accreq.referenceemail') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Reference Phone Number', 'accreq.referencephone') }}</th>
-                <th>{{ knp_pagination_sortable(entities, 'Aperio User Name', 'accreq.username') }}</th>
+                {% if sitename == scan_sitename %}
+                    <th>{{ knp_pagination_sortable(entities, 'Aperio User Name', 'accreq.username') }}</th>
+                {% endif %}
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
         {% for entity in entities %}
 
-            <form id="userrequestform-{{ loop.index0 }}" action="{{ path('accountrequest_approve') }}" method="post" {{ form_enctype(forms[loop.index0]) }}>
+            <form id="userrequestform-{{ loop.index0 }}" action="{{ path(employees_sitename~'_accountrequest_approve') }}" method="post" {{ form_enctype(forms[loop.index0]) }}>
 
             {{ form_widget(forms[loop.index0].id) }}
 
@@ -197,9 +199,11 @@
                 <td>{{ entity.referenceemail }}</td>
                 <td>{{ entity.referencephone }}</td>
 
-                <td>
-                    {{ form_widget(forms[loop.index0].username) }}
-                </td>
+                {% if sitename == scan_sitename %}
+                    <td>
+                        {{ form_widget(forms[loop.index0].username) }}
+                    </td>
+                {% endif %}
 
                 <td>
                     {% if entity.status == 'active' %}
@@ -209,7 +213,7 @@
                             </button>
                             <ul class="dropdown-menu dropdown-menu-right">
                                 <li><a data-confirm="Are you sure you want to Decline?"
-                                       href="{{ path('accountrequest_status', { 'id': entity.id, 'status': 'declined' }) }}">Decline</a>
+                                       href="{{ path(employees_sitename~'_accountrequest_status', { 'id': entity.id, 'status': 'declined' }) }}">Decline</a>
                                 </li>
                                 <li>
                                     <a

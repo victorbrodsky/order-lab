@@ -22,10 +22,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 use Oleg\UserdirectoryBundle\Entity\ListAbstract;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="scan_systemAccountRequestType")
- */
+//Replaced by the
+///**
+// * @ORM\Entity
+// * @ORM\Table(name="scan_systemAccountRequestType")
+// */
 class SystemAccountRequestType extends ListAbstract
 {
 

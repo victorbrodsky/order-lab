@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Form;
+namespace Oleg\UserdirectoryBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -24,7 +24,6 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 
-use Oleg\OrderformBundle\Helper\FormHelper;
 
 class UserRequestType extends AbstractType
 {
@@ -182,8 +181,25 @@ class UserRequestType extends AbstractType
             'required'=> true,
             //'multiple' => true,
             //'empty_value' => false,
-            'class' => 'OlegOrderformBundle:SystemAccountRequestType',
+            'class' => 'OlegUserdirectoryBundle:SourceSystemList',
             'attr' => array('class' => 'combobox combobox-width')
+        ));
+        $builder->add( 'systemAccountRequest', 'entity', array(
+            'class' => 'OlegUserdirectoryBundle:SourceSystemList',
+            //'property' => 'name',
+            'label' => 'System for which the account is being requested:',
+            'required'=> false,
+            'attr' => array('class' => 'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->andWhere("list.name LIKE '%ORDER%' OR list.name LIKE '%Aperio eSlide Manager%'")
+                    ->orderBy("list.orderinlist","ASC")
+                    ->setParameters( array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
+            },
         ));
 
     }
@@ -191,12 +207,12 @@ class UserRequestType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\UserRequest',
+            'data_class' => 'Oleg\UserdirectoryBundle\Entity\UserRequest',
         ));
     }
 
     public function getName()
     {
-        return 'oleg_orderformbundle_userrequesttype';
+        return 'oleg_userdirectorybundle_userrequesttype';
     }
 }

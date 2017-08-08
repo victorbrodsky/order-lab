@@ -3174,16 +3174,19 @@ class AdminController extends Controller
         //}
 
         $elements = array(
+            'ORDER Employee Directory',
+            'ORDER Deidentifier',
+            'ORDER Call Log Book',
+            'ORDER Fellowship Applications',
+            'ORDER Vacation Request',
+            'ORDER Translational Research',
             'ORDER Scan Order', //used as default in getDefaultSourceSystem //'Scan Order',
             'WCMC Epic Practice Management',
             'WCMC Epic Ambulatory EMR',
             'NYH Paper Requisition',
             'Written or oral referral',
             'Aperio eSlide Manager on C.MED.CORNELL.EDU',
-            'Indica HALO',
-            'ORDER Deidentifier', //'Deidentifier',
-            'ORDER Call Log Book',
-            'ORDER Translational Research'
+            'Indica HALO'
         );
 
 
@@ -3197,7 +3200,7 @@ class AdminController extends Controller
             }
 
             $entity = new SourceSystemList();
-            $this->setDefaultList($entity,$count,$username,$value);
+            $this->setDefaultList($entity,null,$username,$value);
 
             $em->persist($entity);
             $em->flush();

@@ -737,7 +737,7 @@ class ScanOrderController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $accountreqs = array();
         if( $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
-            $accountreqs = $em->getRepository('OlegOrderformBundle:UserRequest')->findByStatus("active");
+            $accountreqs = $em->getRepository('OlegUserdirectoryBundle:UserRequest')->findByStatus("active");
         }
         return $accountreqs;
     }

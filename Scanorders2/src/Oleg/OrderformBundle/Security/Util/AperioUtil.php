@@ -110,7 +110,7 @@ class AperioUtil {
                 ////////// EOF assign Institution //////////
 
                 ////////// check if aperio username was set in UserRequest for this user (identification by email). //////////
-                $userRequest = $em->getRepository('OlegOrderformBundle:UserRequest')->findOneByEmail($AuthResult['E_Mail']);
+                $userRequest = $em->getRepository('OlegUserdirectoryBundle:UserRequest')->findOneByEmail($AuthResult['E_Mail']);
                 if( $userRequest ) {
                     if( $userRequest->getStatus() != 'approved' ) {
                         throw new AuthenticationException('The Aperio authentication failed. User Account Request was not approved, status='.$userRequest->getStatus());
