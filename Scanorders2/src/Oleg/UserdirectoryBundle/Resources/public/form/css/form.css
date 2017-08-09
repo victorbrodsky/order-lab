@@ -652,3 +652,7 @@ Bootstrap NavBar not collapsing as expected - separating onto two lines.
     /*transform:rotate(300deg);*/
     /*-webkit-transform:rotate(300deg);*/
 }
+
+.mask-text-align-left {
+    text-align: left !important;
+}

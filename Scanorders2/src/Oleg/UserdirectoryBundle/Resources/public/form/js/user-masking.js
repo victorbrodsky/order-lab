@@ -103,6 +103,9 @@ function fieldInputMask( holder ) {
         "mask": "9", "repeat": 50, "greedy": false
     });
 
+    $(".currency-mask").inputmask({ alias: "currency"});
+    //$(".currency-mask").inputmask("currency");
+
     //$('.email-mask').inputmask('Regex', { regex: "[a-zA-Z0-9._%-]+@[a-zA-Z0-9-]+\\.[a-zA-Z]{2,4}" });
 
 }

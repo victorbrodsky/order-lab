@@ -146,7 +146,8 @@ class ProjectType extends AbstractType
         $builder->add('totalCost',null, array(
             'label' => 'Estimated Total Costs ($):',
             'required' => false,
-            'attr' => array('class' => 'form-control', 'data-inputmask' => "'alias': 'currency'", 'style'=>'text-align: left !important;'),
+            //'attr' => array('class' => 'form-control', 'data-inputmask' => "'alias': 'currency'", 'style'=>'text-align: left !important;' )
+            'attr' => array('class' => 'form-control currency-mask mask-text-align-left'),
         ));
 
         $builder->add('projectType',null, array(
