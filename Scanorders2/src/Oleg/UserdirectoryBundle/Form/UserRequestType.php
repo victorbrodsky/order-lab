@@ -36,9 +36,15 @@ class UserRequestType extends AbstractType
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
-    {     
-        //$helper = new FormHelper();
-        
+    {
+
+        $builder->add( 'siteName', 'hidden', array(
+            'label'=> false,    //'Site Name:',
+            'read_only' => true,
+            'required'=> true,
+            'attr' => array('class'=>'form-control'),
+        ));
+
         $builder->add( 'cwid', 'text', array(
                 'label'=>'WCMC CWID:',
                 'required'=> false,

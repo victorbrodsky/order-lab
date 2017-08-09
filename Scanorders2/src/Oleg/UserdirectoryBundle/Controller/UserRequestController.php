@@ -54,7 +54,7 @@ class UserRequestController extends Controller
      *
      * @Route("/account-requests", name="employees_accountrequest")
      * @Method("GET")
-     * @Template()
+     * @Template("OlegUserdirectoryBundle:UserRequest:index.html.twig")
      */
     public function indexAction( Request $request )
     {
@@ -70,6 +70,8 @@ class UserRequestController extends Controller
         $dql =  $repository->createQueryBuilder("accreq");
         $dql->select('accreq');
         //$dql->leftJoin("accreq.division", "division");
+
+        $dql->where("accreq.siteName = :siteName");
 		
 		$postData = $request->query->all();
 		
@@ -84,6 +86,11 @@ class UserRequestController extends Controller
 
         $limit = 30;
         $query = $em->createQuery($dql);
+        $query->setParameter("siteName",$this->siteName);
+
+        //echo "siteName=".$this->siteName."<br>";
+        //echo "query=".$query->getSql()."<br>";
+
         $paginator  = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
             $query,
@@ -165,7 +172,8 @@ class UserRequestController extends Controller
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
-            'sitename' => $this->siteName
+            'sitename' => $this->siteName,
+            'title' => "Account Request for ".$this->siteNameStr
         );
     }
 
@@ -179,6 +187,7 @@ class UserRequestController extends Controller
     public function newAction()
     {
         $entity = new UserRequest();
+        $entity->setSiteName($this->siteName);
 
         $em = $this->getDoctrine()->getManager();
         $usernametypes = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findBy(
@@ -197,7 +206,8 @@ class UserRequestController extends Controller
             'entity' => $entity,
             'form'   => $form->createView(),
             'usernametypes' => $usernametypes,
-            'sitename' => $this->siteName
+            'sitename' => $this->siteName,
+            'title' => "Account Request for ".$this->siteNameStr
             //'security' => 'false'
         );
     }
@@ -228,6 +238,7 @@ class UserRequestController extends Controller
         return array(
             'entity'      => $entity,
             'delete_form' => $deleteForm->createView(),
+            'sitename' => $this->siteName
         );
     }
 
@@ -275,6 +286,7 @@ class UserRequestController extends Controller
             return $this->redirect( $this->generateUrl($this->siteName.'-nopermission') );
         }
 
+        $em = $this->getDoctrine()->getManager();
         $entity  = new UserRequest();
 
         $params = $this->getParams($this->siteName);
@@ -282,66 +294,123 @@ class UserRequestController extends Controller
         $form = $this->createForm(new UserRequestApproveType($params), $entity);
         $form->handleRequest($request);
 
-        if( $entity->getId() &&
-            $entity->getId() != "" &&
-            $entity->getUsername() &&
-            $entity->getUsername() != "" &&
-            //count($entity->getRequestedInstitutionalPHIScope()) != 0 &&
-            $entity->getRequestedScanOrderInstitutionScope() &&
-            $entity->getUsername()
-        ) {
+        if( $entity->getSiteName() == "scan" ) {
+            //Case 1: scan order with Aperio user
+            if ($entity->getId() &&
+                $entity->getId() != "" &&
+                $entity->getUsername() &&
+                $entity->getUsername() != "" &&
+                //count($entity->getRequestedInstitutionalPHIScope()) != 0 &&
+                $entity->getRequestedScanOrderInstitutionScope() &&
+                $entity->getUsername()
+            ) {
 
 //            echo "form valid!";
 //            echo "getRequestedScanOrderInstitutionScope=".$entity->getRequestedScanOrderInstitutionScope();
 //            exit();
-            $em = $this->getDoctrine()->getManager();
 
-            $entityDb = $em->getRepository('OlegUserdirectoryBundle:UserRequest')->findOneById($entity->getId());
-            if (!$entityDb) {
-                throw $this->createNotFoundException('Unable to find UserRequest entity with ID:'.$entity->getId());
-            }
+                $entityDb = $em->getRepository('OlegUserdirectoryBundle:UserRequest')->findOneById($entity->getId());
+                if (!$entityDb) {
+                    throw $this->createNotFoundException('Unable to find UserRequest entity with ID:' . $entity->getId());
+                }
 
-            $entityDb->setStatus('approved');
-            $entityDb->setUsername($entity->getUsername());
-            //$entityDb->setRequestedInstitutionalPHIScope($entity->getRequestedInstitutionalPHIScope());
-            $entityDb->setRequestedScanOrderInstitutionScope($entity->getRequestedScanOrderInstitutionScope());
+                $entityDb->setStatus('approved');
+                $entityDb->setUsername($entity->getUsername());
+                //$entityDb->setRequestedInstitutionalPHIScope($entity->getRequestedInstitutionalPHIScope());
+                $entityDb->setRequestedScanOrderInstitutionScope($entity->getRequestedScanOrderInstitutionScope());
 
-            $em->persist($entityDb);
-            $em->flush();
+                $em->persist($entityDb);
+                $em->flush();
 
-            $this->get('session')->getFlashBag()->add(
-                'notice',
-                "User with username ".$entityDb->getUsername()." has been successfully approved. You can lock this user or change institutions later on using the user's profile."
-            );
+                $this->get('session')->getFlashBag()->add(
+                    'notice',
+                    "User with username " . $entityDb->getUsername() . " has been successfully approved. ".
+                    "You must manually create this user in the system. ".
+                    "You can lock this user or change institutions later on using the user's profile."
+                );
 
-        } else {
+            } else {
 
-            $failedArr = array();
+                $failedArr = array();
 
-            if( $entity->getUsername() && $entity->getUsername() == "" ) {
-                $failedArr[] = "username is empty";
-            }
+                if ($entity->getUsername() && $entity->getUsername() == "") {
+                    $failedArr[] = "username is empty";
+                }
 
 //            if( count($entity->getRequestedInstitutionalPHIScope()) == 0 ) {
 //                $failedArr[] = "Institution list is empty";
 //            }
 
-            if( !$entity->getRequestedScanOrderInstitutionScope() ) {
-                $failedArr[] = "organizational group is empty";
+                if (!$entity->getRequestedScanOrderInstitutionScope()) {
+                    $failedArr[] = "organizational group is empty";
+                }
+
+                $this->get('session')->getFlashBag()->add(
+                    'notice',
+                    "Approve a user with username " . $entity->getUsername() . " failed." . " " . implode(",", $failedArr)
+                );
+
             }
+        } else {
+            //Case 2: all other sites, except scan
+            if ($entity->getId() &&
+                $entity->getId() != "" &&
+                $entity->getRequestedScanOrderInstitutionScope() &&
+                count($entity->getRoles()) > 0
+            ) {
+                //exit('Approve ');
 
-            $this->get('session')->getFlashBag()->add(
-                'notice',
-                "Approve user with username ".$entity->getUsername()." failed."." ".implode(",", $failedArr)
-            );
+                $entityDb = $em->getRepository('OlegUserdirectoryBundle:UserRequest')->findOneById($entity->getId());
+                if (!$entityDb) {
+                    throw $this->createNotFoundException('Unable to find UserRequest entity with ID:' . $entity->getId());
+                }
 
+                $entityDb->setStatus('approved');
+                if( $entity->getUsername() ) {
+                    $entityDb->setUsername($entity->getUsername());
+                }
+
+                $entityDb->setRequestedScanOrderInstitutionScope($entity->getRequestedScanOrderInstitutionScope());
+
+                if( count($entity->getRoles()) > 0 ) {
+                    $entityDb->setRoles( $entity->getRoles() );
+                }
+
+                $em->persist($entityDb);
+                $em->flush();
+
+                $this->get('session')->getFlashBag()->add(
+                    'notice',
+                    "User with username " . $entityDb->getUsername() . " has been successfully approved. ".
+                    "You must manually create this user in the system. ".
+                    "You can lock this user or change institutions later on using the user's profile."
+                );
+
+            } else {
+                $failedArr = array();
+
+                if( count($entity->getRoles()) == 0 ) {
+                    $failedArr[] = "Roles are not assigned";
+                }
+
+                if (!$entity->getRequestedScanOrderInstitutionScope()) {
+                    $failedArr[] = "organizational group is empty";
+                }
+
+                $this->get('session')->getFlashBag()->add(
+                    'notice',
+                    "Approve a user with username " . $entity->getUsername() . " failed." . " " . implode(",", $failedArr)
+                );
+            }
         }
+
 
         return $this->redirect($this->generateUrl($this->siteName.'_accountrequest'));
     }
 
     public function getParams( $sitename ) {
 
+        //$user = $this->get('security.context')->getToken()->getUser();
         $params = array();
 
         $em = $this->getDoctrine()->getManager();
@@ -353,22 +422,26 @@ class UserRequestController extends Controller
         $params['institution'] = $department;
         $params['sitename'] = $sitename;
 
-        $requestedScanOrderInstitutionScope = $em->getRepository('OlegUserdirectoryBundle:Institution')->findBy(array('level'=>0));
+        //Institution
+        //$requestedScanOrderInstitutionScope = $em->getRepository('OlegUserdirectoryBundle:Institution')->findBy(array('level'=>0));
+        $repository = $em->getRepository('OlegUserdirectoryBundle:Institution');
+        $dql =  $repository->createQueryBuilder("institution");
+        $dql->select('institution');
+        $dql->leftJoin("institution.types", "types");
 
-//        $repository = $em->getRepository('OlegUserdirectoryBundle:Institution');
-//        $dql =  $repository->createQueryBuilder("institution");
-//        $dql->select('institution');
-//        $dql->leftJoin("institution.types", "types");
-//
-//        $dql->where("institution.type = 'default'");
-//        $dql->andWhere("types.name IS NULL OR types.name != 'Collaboration'");
-//
-//        $query = $em->createQuery($dql);
-//        $requestedScanOrderInstitutionScope = $query->getResult();
+        $dql->where("institution.type = 'default' OR institution.type = 'user-added'");
+        $dql->andWhere("types.name IS NULL OR types.name != 'Collaboration'");
+
+        $query = $em->createQuery($dql);
+        $requestedScanOrderInstitutionScope = $query->getResult();
 
         //$params['requestedInstitutionalPHIScope'] = $requestedInstitutionalPHIScope;
         $params['requestedScanOrderInstitutionScope'] = $requestedScanOrderInstitutionScope;
 
+        //Roles
+        $securityUtil = $this->get('order_security_utility');
+        $rolesArr = $securityUtil->getSiteRolesKeyValue($this->siteName);
+        $params['roles'] = $rolesArr;
 
         return $params;
     }
@@ -452,6 +525,7 @@ class UserRequestController extends Controller
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
+            'sitename' => $this->siteName
         );
     }
 
@@ -499,6 +573,7 @@ class UserRequestController extends Controller
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
+            'sitename' => $this->siteName
         );
     }
     /**

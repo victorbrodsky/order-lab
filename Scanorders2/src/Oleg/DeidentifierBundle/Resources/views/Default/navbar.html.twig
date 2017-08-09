@@ -155,7 +155,7 @@
                         <ul class="dropdown-menu">
 
                             <li><a href="{{ path(deidentifier_sitename~'_accessrequest_list') }}">Access Requests</a></li>
-                            <li><a href="{{ path(employees_sitename~'_accountrequest') }}">Account Requests</a></li>
+                            <li><a href="{{ path(deidentifier_sitename~'_accountrequest') }}">Account Requests</a></li>
                             <li><a href="{{ path(deidentifier_sitename~'_authorized_users') }}">Authorized Users</a></li>
 
                             {% if is_granted('ROLE_DEIDENTIFICATOR_ADMIN') %}

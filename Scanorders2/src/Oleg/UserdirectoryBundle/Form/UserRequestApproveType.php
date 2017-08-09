@@ -63,8 +63,12 @@ class UserRequestApproveType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width combobox-institution')
         ));
 
-        //TODO: add roles if system != Aperio 
-
+        $builder->add('roles', 'choice', array(
+            'choices' => $this->params['roles'],
+            'label' => false,   //ucfirst($this->params['sitename']) . ' Role(s):',
+            'attr' => array('class' => 'combobox combobox-width'),
+            'multiple' => true,
+        ));
 
     }
 

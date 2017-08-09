@@ -163,6 +163,17 @@ class UserRequest
      **/
     private $systemAccountRequest;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $siteName;
+
+    /**
+     * @var array
+     * @ORM\Column(type="array", nullable=true)
+     */
+    private $roles = array();
+
 
 
     function __construct()
@@ -549,6 +560,53 @@ class UserRequest
         $this->systemAccountRequest = $systemAccountRequest;
     }
 
+
+    /**
+     * @param array $roles
+     */
+    public function setRoles($roles)
+    {
+        if( $roles ) {
+            foreach( $roles as $role ) {
+                $this->addRole($role."");
+            }
+        }
+
+    }
+
+    /**
+     * @return array
+     */
+    public function getRoles()
+    {
+        return $this->roles;
+    }
+
+    public function addRole($role) {
+        $this->roles[] = $role;
+        return $this;
+    }
+
+    public function hasRole($role)
+    {
+        return in_array(strtoupper($role), $this->roles, true);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSiteName()
+    {
+        return $this->siteName;
+    }
+
+    /**
+     * @param mixed $siteName
+     */
+    public function setSiteName($siteName)
+    {
+        $this->siteName = $siteName;
+    }
 
 
 }

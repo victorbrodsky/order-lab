@@ -22,7 +22,7 @@
                 <th>{{ knp_pagination_sortable(projects, 'Project Funded', 'project.funded') }}</th>
                 <th>{{ knp_pagination_sortable(projects, 'Status', 'project.status') }}</th>
                 <th>{{ knp_pagination_sortable(projects, 'Approval Date', 'project.approvalDate') }}</th>
-                <th>{{ knp_pagination_sortable(projects, 'Expiration Date', 'project.expirationDate') }}</th>
+                {#<th>{{ knp_pagination_sortable(projects, 'Expiration Date', 'project.expirationDate') }}</th>#}
                 <th>Actions</th>
             </tr>
         </thead>
@@ -66,11 +66,11 @@
                     {% endif %}
                 </td>
 
-                <td>
-                    {% if project.expirationDate %}
-                        {{ project.expirationDate|date('Y-m-d H:i:s') }}
-                    {% endif %}
-                </td>
+                {#<td>#}
+                    {#{% if project.expirationDate %}#}
+                        {#{{ project.expirationDate|date('Y-m-d H:i:s') }}#}
+                    {#{% endif %}#}
+                {#</td>#}
 
 
                 <td class="rowlink-skip">
