@@ -1933,7 +1933,7 @@ class FellAppController extends Controller {
      */
     public function regenerateAllReportsAction(Request $request) {
 
-        exit("This method is disabled");
+        exit("This method is disabled for security reason.");
 
         if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_ADMIN') ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
