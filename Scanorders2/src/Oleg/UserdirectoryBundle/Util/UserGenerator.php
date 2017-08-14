@@ -50,14 +50,12 @@ use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 class UserGenerator {
 
     private $em;
-    private $sc;
     private $container;
 
     private $usernamePrefix = 'wcmc-cwid';
 
-    public function __construct( $em, $sc, $container ) {
+    public function __construct( $em, $container ) {
         $this->em = $em;
-        $this->sc = $sc;
         $this->container = $container;
     }
 

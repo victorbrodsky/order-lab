@@ -41,18 +41,20 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class UserSecurityUtil {
 
     protected $em;
-    protected $sc;
+    protected $secToken;
+    protected $secAuth;
     protected $container;
 
-    public function __construct( $em, $sc, $container ) {
+    public function __construct( $em, $secToken, $secAuth, $container ) {
         $this->em = $em;
-        $this->sc = $sc;
+        $this->secToken = $secToken;
+        $this->secAuth = $secAuth;
         $this->container = $container;
     }
 
     public function isCurrentUser( $id ) {
 
-        $user = $this->sc->getToken()->getUser();
+        $user = $this->secToken->getToken()->getUser();
 
         $entity = $this->em->getRepository('OlegUserdirectoryBundle:User')->find($id);
 
@@ -70,7 +72,7 @@ class UserSecurityUtil {
     public function isUserVisible( $subjectUser, $currentUser ) {
 
         //always visible to Platform Administrator and Deputy Platform Administrator
-        if( $this->sc->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( $this->secAuth->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return true;
         }
 
@@ -143,7 +145,7 @@ class UserSecurityUtil {
             //check if current user has one of the role
             foreach( $showToRoles as $role ) {
                 //echo "role=".$role."<br>";
-                if( $this->sc->isGranted($role."") ) {
+                if( $this->secAuth->isGranted($role."") ) {
                     $hideRole = false;
                     break;
                 }
@@ -198,21 +200,21 @@ class UserSecurityUtil {
     //check for the role in security context and in the user DB
     public function hasGlobalUserRole( $role, $user=null ) {
 
-        if( false === $this->sc->isGranted('IS_AUTHENTICATED_FULLY') ) {
+        if( false === $this->secAuth->isGranted('IS_AUTHENTICATED_FULLY') ) {
             return false;
         }
 
-        if( $this->sc->isGranted($role) ) {
+        if( $this->secAuth->isGranted($role) ) {
             return true;
         }
 
         //get user from DB?
 
         if( $user == null ) {
-            $user = $this->sc->getToken()->getUser();
+            $user = $this->secToken->getToken()->getUser();
         }
 
-//        if( $this->sc->isGranted('IS_AUTHENTICATED_ANONYMOUSLY') )
+//        if( $this->secAuth->isGranted('IS_AUTHENTICATED_ANONYMOUSLY') )
 //            return false;
 
         if( !is_object($user) ) {
@@ -238,7 +240,7 @@ class UserSecurityUtil {
     function idleLogout( $request, $sitename, $flag = null ) {
 
         $userUtil = new UserUtil();
-        $res = $userUtil->getMaxIdleTimeAndMaintenance($this->em,$this->sc,$this->container);
+        $res = $userUtil->getMaxIdleTimeAndMaintenance($this->em,$this->secAuth,$this->container);
         $maxIdleTime = $res['maxIdleTime'];
         $maintenance = $res['maintenance'];
 
@@ -261,7 +263,7 @@ class UserSecurityUtil {
             $msg
         );
 
-        $this->container->get('security.context')->setToken(null);
+        $this->container->get('security.token_storage')->setToken(null);
         //$this->get('request')->getSession()->invalidate();
 
 

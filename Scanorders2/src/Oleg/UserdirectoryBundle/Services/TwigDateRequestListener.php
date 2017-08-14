@@ -27,19 +27,18 @@ namespace Oleg\UserdirectoryBundle\Services;
 
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\Security\Core\SecurityContext;
 
 //Twig listener to modify timezone as per http://stackoverflow.com/questions/9886058/how-can-i-set-the-default-date-format-for-twig-templates-in-symfony2
 
 class TwigDateRequestListener {
 
     protected $twig;
-    protected $sc;
+    protected $secTokenStorage;
     protected $defaultTimeZone;
 
-    function __construct(\Twig_Environment $twig, SecurityContext $sc, $defaultTimeZone = null) {
+    function __construct(\Twig_Environment $twig, $secTokenStorage, $defaultTimeZone = null) {
         $this->twig = $twig;
-        $this->sc = $sc;
+        $this->secTokenStorage = $secTokenStorage;
         $this->defaultTimeZone = $defaultTimeZone;
     }
 
@@ -49,8 +48,8 @@ class TwigDateRequestListener {
         $user = null;
         $timezone = $this->defaultTimeZone;
 
-        if( $this->sc->getToken() ) {
-            $user = $this->sc->getToken()->getUser();
+        if( $this->secTokenStorage->getToken() ) {
+            $user = $this->secTokenStorage->getToken()->getUser();
         }
 
         if( $user && is_object($user) && $user->getPreferences()->getTimezone() ) {

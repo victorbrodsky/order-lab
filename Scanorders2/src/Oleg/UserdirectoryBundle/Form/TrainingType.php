@@ -41,8 +41,8 @@ class TrainingType extends AbstractType
         $this->entity = $entity;
 
         $this->hasRoleSimpleView = false;
-        if( array_key_exists('sc', $this->params) ) {
-            $this->hasRoleSimpleView = $this->params['sc']->getToken()->getUser()->hasRole("ROLE_USERDIRECTORY_SIMPLEVIEW");
+        if( array_key_exists('container', $this->params) ) {
+            $this->hasRoleSimpleView = $this->params['container']->get('security.token_storage')->getToken()->getUser()->hasRole("ROLE_USERDIRECTORY_SIMPLEVIEW");
         }
     }
 

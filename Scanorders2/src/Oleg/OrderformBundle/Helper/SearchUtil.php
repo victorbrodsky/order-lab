@@ -29,12 +29,10 @@ class SearchUtil {
 
     private $em;
     private $container;
-    private $sc;
 
-    public function __construct( $em, $container, $sc ) {
+    public function __construct( $em, $container ) {
         $this->em = $em;
         $this->container = $container;
-        $this->sc = $sc;
     }
 
 
@@ -125,8 +123,8 @@ class SearchUtil {
         }
 
         //check for institution and collaboration (only union)
-        $user = $this->sc->getToken()->getUser();
-        $orderUtil = $this->container->get('scanorder_utility');
+        //$user = $this->container->get('security.token_storage')->getToken()->getUser();
+        //$orderUtil = $this->container->get('scanorder_utility');
         //$criteriastr = $orderUtil->addInstitutionQueryCriterion($user,$criteriastr,array("Union"));
 
         if( $criteriastr ) {

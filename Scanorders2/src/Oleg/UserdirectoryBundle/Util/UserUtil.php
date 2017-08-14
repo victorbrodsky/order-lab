@@ -50,7 +50,7 @@ class UserUtil {
     private $usernamePrefix = 'wcmc-cwid';
 
 
-    public function setLoginAttempt( $request, $security_content, $em, $options ) {
+    public function setLoginAttempt( $request, $secTokenStorage, $em, $options ) {
 
         //return;
 
@@ -71,11 +71,11 @@ class UserUtil {
 
         $logger = new Logger($site);
 
-        $token = $security_content->getToken();
+        $token = $secTokenStorage->getToken();
 
         if( $token ) {
 
-            $user = $security_content->getToken()->getUser();
+            $user = $secTokenStorage->getToken()->getUser();
             $username = $token->getUsername();
 
             if( $user && is_object($user) ) {
@@ -152,7 +152,7 @@ class UserUtil {
             $logger->setEntityId($eventEntity->getId());
 
             //create EventObjectTypeList if not exists
-            $userSecUtil = new UserSecurityUtil($em,null,null);
+            $userSecUtil = new UserSecurityUtil($em,null,null,null);
             $eventObjectType = $userSecUtil->getObjectByNameTransformer($user,$className,'UserdirectoryBundle','EventObjectTypeList');
             if( $eventObjectType ) {
                 $logger->setObjectType($eventObjectType);
@@ -186,7 +186,7 @@ class UserUtil {
         return $maxIdleTime;
     }
 
-    public function getMaxIdleTimeAndMaintenance($em, $sc, $container) {
+    public function getMaxIdleTimeAndMaintenance($em, $secAuth, $container) {
 
         $params = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
 
@@ -209,7 +209,7 @@ class UserUtil {
         $maintenance = $param->getMaintenance();
 
         //do not use maintenance for admin
-        if( $sc->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( $secAuth->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             $maintenance = false;
         }
 
@@ -309,7 +309,7 @@ class UserUtil {
 
     public function createSystemUser( $em, $userkeytype, $default_time_zone ) {
 
-        $userSecUtil = new UserSecurityUtil($em,null,null);
+        $userSecUtil = new UserSecurityUtil($em,null,null,null);
 
         $found_user = $userSecUtil->findSystemUser();
 
@@ -595,25 +595,25 @@ class UserUtil {
 
 
 
-    public function processResidencySpecialtyTree( $treeholder, $em, $sc ) {
+    public function processResidencySpecialtyTree( $treeholder, $em, $secTokenStorage ) {
 
         $residencySpecialty = $treeholder->getResidencySpecialty();
         $fellowshipSubspecialty = $treeholder->getFellowshipSubspecialty();
         //echo "fellowshipSubspecialty: name=".$fellowshipSubspecialty->getName().", id=".$fellowshipSubspecialty->getId()."<br>";
         //exit();
 
-        $user = $sc->getToken()->getUser();
+        $user = $secTokenStorage->getToken()->getUser();
 
         //use Institution tree set parent method for residency specialty-subspecialty because it's the same logic
         $fellowshipSubspecialty = $em->getRepository('OlegUserdirectoryBundle:Institution')->checkAndSetParent($user,$treeholder,$residencySpecialty,$fellowshipSubspecialty);
 
         //set author if not set
-        $this->setUpdateInfo($treeholder,$em,$sc);
+        $this->setUpdateInfo($treeholder,$em,$secTokenStorage);
 
     }
 
     //re-set node by id
-    public function processInstTree( $treeholder, $em, $sc, $subjectUser=null ) {
+    public function processInstTree( $treeholder, $em, $secTokenStorage, $subjectUser=null ) {
 
         echo "///////////////title=".$treeholder.", id=".$treeholder->getId()."<br>";
 
@@ -622,7 +622,7 @@ class UserUtil {
 
         if( !$institution ) {
             //set author if not set
-            $this->setUpdateInfo($treeholder,$em,$sc);
+            $this->setUpdateInfo($treeholder,$em,$secTokenStorage);
             return;
         }
 
@@ -646,7 +646,7 @@ class UserUtil {
 
         if( !$subjectUser ) {
             //set author if not set
-            $this->setUpdateInfo($treeholder,$em,$sc);
+            $this->setUpdateInfo($treeholder,$em,$secTokenStorage);
             return;
         }
 
@@ -732,7 +732,7 @@ class UserUtil {
 
 
         //set author if not set
-        $this->setUpdateInfo($treeholder,$em,$sc);
+        $this->setUpdateInfo($treeholder,$em,$secTokenStorage);
     }
     public function removeUserPositionFromInstitution( $userid, $originalIdBreadcrumbs, $newIdBreadcrumbs, $em ) {
 
@@ -786,13 +786,13 @@ class UserUtil {
     }
 
 
-    public function setUpdateInfo( $entity, $em, $sc ) {
+    public function setUpdateInfo( $entity, $em, $secTokenStorage ) {
 
         if( !$entity ) {
             return;
         }
 
-        $user = $sc->getToken()->getUser();
+        $user = $secTokenStorage->getToken()->getUser();
 
         $author = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId());
 

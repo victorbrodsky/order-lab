@@ -1363,7 +1363,7 @@ class RequestController extends Controller
         //echo "roleCarryOverApprover=".$roleCarryOverApprover."<br>";
 
         $params = array(
-            'sc' => $this->get('security.context'),
+            'container' => $this->container,
             'em' => $em,
             'user' => $entity->getUser(),
             'cycle' => $cycle,

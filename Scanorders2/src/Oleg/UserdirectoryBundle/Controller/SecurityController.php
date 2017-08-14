@@ -293,7 +293,7 @@ class SecurityController extends Controller
             $options['eventEntity'] = $siteObject;
         }
 
-        $userUtil->setLoginAttempt($request,$this->get('security.context'),$em,$options);
+        $userUtil->setLoginAttempt($request,$this->get('security.token_storage'),$em,$options);
 
         $response = new Response();
         $response->setContent('OK');
@@ -320,7 +320,7 @@ class SecurityController extends Controller
         $logger = $this->container->get('logger');
 
         $userUtil = new UserUtil();
-        $res = $userUtil->getMaxIdleTimeAndMaintenance($this->getDoctrine()->getManager(),$this->get('security.context'),$this->container);
+        $res = $userUtil->getMaxIdleTimeAndMaintenance($this->getDoctrine()->getManager(),$this->get('security.authorization_checker'),$this->container);
         $maxIdleTime = $res['maxIdleTime']+5; //in seconds; add some seconds as a safety delay.
         $maintenance = $res['maintenance'];
 
@@ -377,59 +377,6 @@ class SecurityController extends Controller
     }
     
     /**
-     * Not used anymore; Replaced by keepAliveAction
-     * @Route("/common/isserveractive", name="isserveractive")
-     * @Method("GET")
-     */
-//    public function isServerActiveAction( Request $request )
-//    {
-//        //echo "keep Alive Action! <br>";
-//
-//        $response = new Response();
-//
-//        $logger = $this->container->get('logger');
-//
-//        $userUtil = new UserUtil();
-//        $res = $userUtil->getMaxIdleTimeAndMaintenance($this->getDoctrine()->getManager(),$this->get('security.context'),$this->container);
-//        $maxIdleTime = $res['maxIdleTime'];   //in seconds
-//        $maintenance = $res['maintenance'];
-//
-//        //$maxIdleTime = 55;  //(60000-5000)/1000;
-//
-//        if( $maintenance ) {
-//            $response->setContent(json_encode('NOTOK'));
-//            return $response;
-//        }
-//
-//        $session = $request->getSession();
-//
-//        $lastRequest = $session->get('lastRequest');
-//        //echo "lastRequest=".gmdate("Y-m-d H:i:s",$lastRequest)."<br>";
-//        //echo "pingCheck=".$session->get('pingCheck')."<br>";
-//
-//        if( !$lastRequest ) {
-//            //echo "init set lastRequest=".gmdate("Y-m-d H:i:s",time())."<br>";
-//            $logger->notice("isServerActiveAction: set lastRequest to ".time());
-//            $session->set('lastRequest',time());
-//            $lastRequest = $session->get('lastRequest');
-//        }
-//
-//        //echo "time=".time()."; lastRequest=".$lastRequest."<br>";
-//        $lapse = time() - $lastRequest; //time() in seconds
-//
-//        //echo "lapse=".$lapse."; maxIdleTime=".$maxIdleTime."<br>";
-//
-//        if( $lapse > $maxIdleTime ) {
-//            $overlapseMsg = 'over lapse = '.($lapse-$maxIdleTime);
-//            $response->setContent(json_encode($overlapseMsg));
-//        } else {
-//            $response->setContent(json_encode('OK'));
-//        }
-//
-//        return $response;
-//    }
-    
-    /**
      *
      *
      * @Route("/common/setserveractive", name="setserveractive")
@@ -463,7 +410,7 @@ class SecurityController extends Controller
         //$maxIdleTime = $userUtil->getMaxIdleTime($this->getDoctrine()->getManager());
 
         $userUtil = new UserUtil();
-        $res = $userUtil->getMaxIdleTimeAndMaintenance($this->getDoctrine()->getManager(),$this->get('security.context'),$this->container);
+        $res = $userUtil->getMaxIdleTimeAndMaintenance($this->getDoctrine()->getManager(),$this->get('security.authorization_checker'),$this->container);
         $maxIdleTime = $res['maxIdleTime']; //in seconds
         $maintenance = $res['maintenance'];
 
@@ -510,7 +457,7 @@ class SecurityController extends Controller
 //        echo "logout Action! <br>";
 //        //exit();
 //
-//        $this->get('security.context')->setToken(null);
+//        $this->get('security.token_storage')->setToken(null);
 //        //$this->get('request')->getSession()->invalidate();
 //
 //
@@ -531,14 +478,14 @@ class SecurityController extends Controller
 //        //exit();
 //
 //
-//        $this->get('security.context')->setToken(null);
+//        $this->get('security.token_storage')->setToken(null);
 //        //$this->get('request')->getSession()->invalidate();
 //
 //        return $this->accreqLogout($request,$this->container->getParameter('employees.sitename'));
 //    }
 //
 //    public function accreqLogout($request,$sitename) {
-//        $this->get('security.context')->setToken(null);
+//        $this->get('security.token_storage')->setToken(null);
 //        return $this->redirect($this->generateUrl($sitename.'_login'));
 //    }
 

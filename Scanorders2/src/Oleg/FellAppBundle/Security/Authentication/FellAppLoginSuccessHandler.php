@@ -29,34 +29,18 @@ use Oleg\UserdirectoryBundle\Security\Authentication\LoginSuccessHandler;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Router;
 
-use Oleg\UserdirectoryBundle\Util\UserUtil;
-
 
 class FellAppLoginSuccessHandler extends LoginSuccessHandler {
 
-//    protected $container;
-//    protected $security;
-//    protected $em;
-//    protected $router;
-//    protected $siteName;
-//    protected $siteNameStr;
-//    protected $roleBanned;
-//    protected $roleUser;
-//    protected $roleUnapproved;
-
-    public function __construct( $container, SecurityContext $security, $em )
+    public function __construct( $container, $em )
     {
-        $this->container = $container;
-        $this->router = $container->get('router');
-        $this->security = $security;
-        $this->em = $em;
+        parent::__construct($container,$em);
+
         $this->siteName = $container->getParameter('fellapp.sitename');
         $this->siteNameStr = 'Fellowship Applications';
         $this->roleBanned = 'ROLE_FELLAPP_BANNED';
@@ -68,7 +52,7 @@ class FellAppLoginSuccessHandler extends LoginSuccessHandler {
     public function onAuthenticationSuccess(Request $request, TokenInterface $token) {
         $redirectResponse = parent::onAuthenticationSuccess($request,$token);
 
-        if( $this->security->isGranted('ROLE_FELLAPP_ADMIN') ) {
+        if( $this->secAuth->isGranted('ROLE_FELLAPP_ADMIN') ) {
             return $redirectResponse;
         }
 

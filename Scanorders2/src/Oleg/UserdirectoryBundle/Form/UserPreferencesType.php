@@ -53,8 +53,8 @@ class UserPreferencesType extends AbstractType
     {
 
         $hasRoleSimpleView = false;
-        if( array_key_exists('sc', $this->params) ) {
-            $hasRoleSimpleView = $this->params['sc']->getToken()->getUser()->hasRole("ROLE_USERDIRECTORY_SIMPLEVIEW");
+        if( array_key_exists('container', $this->params) ) {
+            $hasRoleSimpleView = $this->params['container']->get('security.token_storage')->getToken()->getUser()->hasRole("ROLE_USERDIRECTORY_SIMPLEVIEW");
         }
 
 

@@ -174,7 +174,7 @@ class CarryOverController extends Controller
         //$user = $this->get('security.token_storage')->getToken()->getUser();
 
         $params = array(
-            'sc' => $this->get('security.context'),
+            'container' => $this->container,
             'em' => $em,
             'cycle' => $cycle,
         );

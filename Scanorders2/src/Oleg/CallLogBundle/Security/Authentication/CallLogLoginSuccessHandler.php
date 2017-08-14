@@ -41,12 +41,10 @@ use Symfony\Component\Routing\Router;
 class CallLogLoginSuccessHandler extends LoginSuccessHandler {
 
 
-    public function __construct( $container, SecurityContext $security, $em )
+    public function __construct( $container, $em )
     {
-        $this->container = $container;
-        $this->router = $container->get('router');
-        $this->security = $security;
-        $this->em = $em;
+        parent::__construct($container,$em);
+
         $this->siteName = $container->getParameter('calllog.sitename');
         $this->siteNameStr = 'Call Log Book';
         $this->roleBanned = 'ROLE_CALLLOG_BANNED';

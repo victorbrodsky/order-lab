@@ -155,7 +155,7 @@ class ScanOrderController extends Controller {
         $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:Message');
 
         $withSearch = true;
-        $res = $this->getDQL( $repository, $service, $filter, $search, $routeName, $this->get('security.context'), $withSearch );
+        $res = $this->getDQL( $repository, $service, $filter, $search, $routeName, $withSearch );
 
         $dql = $res['dql'];
 
@@ -936,7 +936,7 @@ class ScanOrderController extends Controller {
         $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:Message');
 
         $withSearch = false;
-        $res = $this->getDQL( $repository, $service, $filter, $search, $routeName, $this->get('security.context'), $withSearch );
+        $res = $this->getDQL( $repository, $service, $filter, $search, $routeName, $withSearch );
 
         $dql = $res['dql'];
         $criteriastrOrig = $res['criteriastr'];
@@ -1219,13 +1219,13 @@ class ScanOrderController extends Controller {
     }
 
 
-    public function getDQL( $repository, $service, $filter, $search, $routeName, $securityContext, $withSearch = false ) {
+    public function getDQL( $repository, $service, $filter, $search, $routeName, $withSearch = false ) {
 
         $securityUtil = $this->get('order_security_utility');
         $filter = $securityUtil->mysql_escape_mimic($filter);
         $search = $securityUtil->mysql_escape_mimic($search);
 
-        $user = $securityContext->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         if( $routeName == "incoming-scan-orders" ) {
             $commentFlag = 'admin';
@@ -1384,7 +1384,7 @@ class ScanOrderController extends Controller {
         //***************** END of Status filetr ***************************//
 
         //***************** Superseded filter ***************************//
-        if( false === $securityContext->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
             //$superseded_status = $em->getRepository('OlegOrderformBundle:Status')->findOneByName('Superseded');
             if( $criteriastr != "" ) {
                 $criteriastr .= " AND ";
@@ -1423,7 +1423,7 @@ class ScanOrderController extends Controller {
             }
 
             //show all for ROLE_SCANORDER_DIVISION_CHIEF: remove all user's restriction
-            if( $securityContext->isGranted('ROLE_SCANORDER_DIVISION_CHIEF') ) {
+            if( $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_DIVISION_CHIEF') ) {
                 //echo "ROLE_SCANORDER_DIVISION_CHIEF";
                 $crituser = "";
             }

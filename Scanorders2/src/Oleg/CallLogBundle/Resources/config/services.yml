@@ -15,7 +15,7 @@ services:
 
     calllog_authentication_handler:
         class: Oleg\CallLogBundle\Security\Authentication\CallLogLoginSuccessHandler
-        arguments:  [@service_container, @security.context, @doctrine.orm.entity_manager]
+        arguments:  ["@service_container", "@doctrine.orm.entity_manager"]
 
     calllog_role_voter:
         class: Oleg\CallLogBundle\Security\Voter\CallLogRoleVoter
@@ -33,10 +33,10 @@ services:
 
     calllog_util:
         class: Oleg\CallLogBundle\Util\CallLogUtil
-        arguments: ["@doctrine.orm.entity_manager", "@security.context", "@service_container"]
+        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
     calllog_util_form:
             class: Oleg\CallLogBundle\Util\CallLogUtilForm
-            arguments: ["@doctrine.orm.entity_manager", "@security.context", "@service_container"]
+            arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
 

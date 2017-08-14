@@ -36,7 +36,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
     {
         parent::__construct($em, $class);
 
-        $securityUtil = new SecurityUtil($em,null,null);
+        $securityUtil = new SecurityUtil($em,null,null,null);
         $this->source = $securityUtil->getDefaultSourceSystem();
     }
 
@@ -553,7 +553,7 @@ class ArrayFieldAbstractRepository extends EntityRepository {
         }
 
         //default source
-        $securityUtil = new SecurityUtil($this->_em,null,null);
+        $securityUtil = new SecurityUtil($this->_em,null,null,null);
         $source = $securityUtil->getDefaultSourceSystem();
 
         $class = new \ReflectionClass($entity);

@@ -159,7 +159,7 @@ class AdminController extends Controller
         if (count($users) == 0) {
 
             //1) get systemuser
-            $userSecUtil = new UserSecurityUtil($em, null, null);
+            $userSecUtil = new UserSecurityUtil($em, null, null, null);
             $systemuser = $userSecUtil->findSystemUser();
 
             //$this->generateSitenameList($systemuser);

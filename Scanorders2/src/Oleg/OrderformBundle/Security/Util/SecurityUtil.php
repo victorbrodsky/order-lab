@@ -115,7 +115,7 @@ class SecurityUtil extends UserSecurityUtil {
         }
         foreach( $actionStrArr as $action ) {
             //echo "check action=".$action."<br>";
-            if( false === $this->sc->isGranted($action, $entity) ) {
+            if( false === $this->secAuth->isGranted($action, $entity) ) {
                 return false;
             }
         }
@@ -180,9 +180,9 @@ class SecurityUtil extends UserSecurityUtil {
 
         //processor and division chief can perform any actions
         if(
-            $this->sc->isGranted('ROLE_SCANORDER_ADMIN') ||
-            $this->sc->isGranted('ROLE_SCANORDER_PROCESSOR') ||
-            $this->sc->isGranted('ROLE_SCANORDER_DIVISION_CHIEF')
+            $this->secAuth->isGranted('ROLE_SCANORDER_ADMIN') ||
+            $this->secAuth->isGranted('ROLE_SCANORDER_PROCESSOR') ||
+            $this->secAuth->isGranted('ROLE_SCANORDER_DIVISION_CHIEF')
         ) {
             return true;
         }

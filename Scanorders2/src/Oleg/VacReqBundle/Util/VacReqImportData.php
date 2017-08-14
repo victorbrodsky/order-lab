@@ -35,7 +35,6 @@ class VacReqImportData
 {
 
     protected $em;
-    protected $sc;
     protected $container;
 
     private $usernamePrefix = 'wcmc-cwid';
@@ -43,7 +42,6 @@ class VacReqImportData
     public function __construct( $em, $sc, $container ) {
 
         $this->em = $em;
-        $this->sc = $sc;
         $this->container = $container;
 
     }

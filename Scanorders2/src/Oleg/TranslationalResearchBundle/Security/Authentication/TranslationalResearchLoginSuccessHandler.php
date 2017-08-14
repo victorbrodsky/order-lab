@@ -29,9 +29,7 @@ use Oleg\UserdirectoryBundle\Security\Authentication\LoginSuccessHandler;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Router;
@@ -40,12 +38,10 @@ use Symfony\Component\Routing\Router;
 class TranslationalResearchLoginSuccessHandler extends LoginSuccessHandler {
 
 
-    public function __construct( $container, SecurityContext $security, $em )
+    public function __construct( $container, $em )
     {
-        $this->container = $container;
-        $this->router = $container->get('router');
-        $this->security = $security;
-        $this->em = $em;
+        parent::__construct($container,$em);
+
         $this->siteName = $container->getParameter('translationalresearch.sitename');
         $this->siteNameStr = 'Translational Research System';
         $this->roleBanned = 'ROLE_TRANSLATIONALRESEARCH_BANNED';

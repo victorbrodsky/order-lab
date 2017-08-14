@@ -12,7 +12,7 @@ services:
 
     deidentifier_authentication_handler:
         class: Oleg\DeidentifierBundle\Security\Authentication\DeidentifierLoginSuccessHandler
-        arguments: [@service_container, @security.context, @doctrine.orm.entity_manager]
+        arguments: ["@service_container", "@doctrine.orm.entity_manager"]
 
     deidentifier_role_voter:
         class: Oleg\DeidentifierBundle\Security\Voter\DeidentifierRoleVoter

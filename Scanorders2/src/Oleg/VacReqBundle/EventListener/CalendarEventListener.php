@@ -35,12 +35,10 @@ class CalendarEventListener
 {
 
     protected $em;
-    protected $sc;
     protected $container;
 
-    public function __construct( $em, $sc, $container ) {
+    public function __construct( $em, $container ) {
         $this->em = $em;
-        $this->sc = $sc;
         $this->container = $container;
     }
 
@@ -70,11 +68,8 @@ class CalendarEventListener
     public function setCalendar( $calendarEvent, $requestTypeStr, $startDate, $endDate, $filter ) {
         //echo "ID";
         $dateformat = 'M d Y';
-        $vacreqUtil = $this->container->get('vacreq_util');
 
-        $user = $this->sc->getToken()->getUser();
-        //echo "user=".$user."<br>";
-
+        //$vacreqUtil = $this->container->get('vacreq_util');
         //$requests = $vacreqUtil->getApprovedRequestStartedBetweenDates( $requestTypeStr, $startDate, $endDate );
 
         $groupId = $filter['groupId'];
@@ -172,7 +167,7 @@ class CalendarEventListener
                     //UrlGeneratorInterface::ABSOLUTE_URL
                 );
             } else {
-                if ($this->container->get('security.context')->isGranted("read", $requestFull)) {
+                if ($this->container->get('security.authorization_checker')->isGranted("read", $requestFull)) {
                     $url = $this->container->get('router')->generate(
                         'vacreq_show',
                         array(

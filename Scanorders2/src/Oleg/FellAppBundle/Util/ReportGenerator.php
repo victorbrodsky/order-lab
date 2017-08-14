@@ -49,7 +49,6 @@ class ReportGenerator {
 
 
     protected $em;
-    protected $sc;
     protected $container;
     protected $templating;
     protected $uploadDir;
@@ -61,9 +60,8 @@ class ReportGenerator {
     //protected $env;
 
 
-    public function __construct( $em, $sc, $container, $templating ) {
+    public function __construct( $em, $container, $templating ) {
         $this->em = $em;
-        $this->sc = $sc;
         $this->container = $container;
         $this->templating = $templating;
 

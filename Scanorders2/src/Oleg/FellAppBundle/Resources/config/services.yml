@@ -13,23 +13,23 @@ services:
 
     fellapp_authentication_handler:
         class: Oleg\FellAppBundle\Security\Authentication\FellAppLoginSuccessHandler
-        arguments:  [@service_container, @security.context, @doctrine.orm.entity_manager]
+        arguments:  ["@service_container", "@doctrine.orm.entity_manager"]
 
     #fellowship application utilities
     fellapp_util:
             class: Oleg\FellAppBundle\Util\FellAppUtil
-            arguments: ["@doctrine.orm.entity_manager", "@security.context", "@service_container"]
+            arguments: ["@doctrine.orm.entity_manager", "@service_container"]
     fellapp_importpopulate_util:
         class: Oleg\FellAppBundle\Util\FellAppImportPopulateUtil
-        arguments: ["@doctrine.orm.entity_manager", "@security.context", "@service_container"]
+        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
     fellapp_reportgenerator:
         class: Oleg\FellAppBundle\Util\ReportGenerator
-        arguments: ["@doctrine.orm.entity_manager", "@security.context", "@service_container", "@templating"]
+        arguments: ["@doctrine.orm.entity_manager", "@service_container", "@templating"]
 
     fellapp_googlesheetmanagement:
         class: Oleg\FellAppBundle\Util\GoogleSheetManagement
-        arguments: ["@doctrine.orm.entity_manager", "@security.context", "@service_container"]
+        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
 
     fellapp_role_voter:

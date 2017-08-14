@@ -265,7 +265,7 @@ class MultiScanOrderController extends Controller {
 
                 //email
                 $email = $user->getEmail();
-                $scanEmailUtil = new ScanEmailUtil($em,$this->get('security.context'),$this->container);
+                $scanEmailUtil = new ScanEmailUtil($em,$this->container);
 
                 $submitStatusStr = null;
                 if( isset($_POST['btnAmend']) ) {

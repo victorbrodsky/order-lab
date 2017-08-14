@@ -198,7 +198,7 @@ class GenericTreeTransformer implements DataTransformerInterface
             //echo "user=".$this->user."<br>"; //user must be an object (exist in DB)
             if( !$this->user instanceof User ) {
                 //user = system user
-                $userSecUtil = new UserSecurityUtil($this->em,null,null);
+                $userSecUtil = new UserSecurityUtil($this->em,null,null,null);
                 $this->user = $userSecUtil->findSystemUser();
             }
 
@@ -241,7 +241,7 @@ class GenericTreeTransformer implements DataTransformerInterface
         $newEntity = new $fullClassName();
 
         //add default type
-        $userSecUtil = new UserSecurityUtil($this->em,null,null);
+        $userSecUtil = new UserSecurityUtil($this->em,null,null,null);
         $newEntity = $userSecUtil->addDefaultType($newEntity,$this->params);
 
         $newEntity = $this->populateEntity($newEntity);

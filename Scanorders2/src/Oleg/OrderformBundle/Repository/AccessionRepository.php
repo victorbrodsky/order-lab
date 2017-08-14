@@ -246,7 +246,7 @@ class AccessionRepository extends ArrayFieldAbstractRepository {
 
         $acctype = $em->getRepository('OlegOrderformBundle:AccessionType')->findOneByName("Auto-generated Accession Number");
 
-        $securityUtil = new SecurityUtil($this->_em,null,null);
+        $securityUtil = new SecurityUtil($this->_em,null,null,null);
         $source = $securityUtil->getDefaultSourceSystem();
 
         //we should have only one key field !!!

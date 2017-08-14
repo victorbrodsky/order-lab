@@ -38,7 +38,9 @@ class UserType extends AbstractType
     protected $currentUser;
     protected $cloneUser;
     protected $roles;
-    protected $sc;
+    protected $container;
+    protected $secTokenStorage;
+    protected $secAuthChecker;
     protected $em;
     protected $hasRoleSimpleView;
 
@@ -51,8 +53,12 @@ class UserType extends AbstractType
         $this->cycle = $params['cycle'];
         $this->subjectUser = $params['user'];
         $this->cloneUser = $params['cloneuser'];
-        $this->sc = $params['sc'];
         $this->em = $params['em'];
+
+        //$this->sc = $params['sc'];
+        $this->container = $params['container'];
+        $this->secAuthChecker = $this->container->get('security.authorization_checker');
+        $this->secTokenStorage = $this->container->get('security.token_storage');
 
         if( !array_key_exists('showfellapp', $params) ) {
             $this->params['showfellapp'] = null;
@@ -65,7 +71,7 @@ class UserType extends AbstractType
         }
 
         //echo "cycle=".$this->cycle."<br>";
-        if( $this->sc->isGranted('ROLE_USERDIRECTORY_EDITOR') || $this->sc->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( $this->secAuthChecker->isGranted('ROLE_USERDIRECTORY_EDITOR') || $this->secAuthChecker->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             //echo "role ADMIN<br>";
             $this->roleAdmin = true;
         } else {
@@ -83,14 +89,14 @@ class UserType extends AbstractType
         }
 
         $this->currentUser = false;
-        $user = $this->sc->getToken()->getUser();
+        $user = $this->secTokenStorage->getToken()->getUser();
         if( $user->getId() === $this->subjectUser->getId() ) {
             $this->currentUser = true;
         }
 
         $this->hasRoleSimpleView = false;
-        if( array_key_exists('sc', $this->params) ) {
-            $this->hasRoleSimpleView = $this->params['sc']->getToken()->getUser()->hasRole("ROLE_USERDIRECTORY_SIMPLEVIEW");
+        if( array_key_exists('container', $this->params) ) {
+            $this->hasRoleSimpleView = $this->params['container']->get('security.token_storage')->getToken()->getUser()->hasRole("ROLE_USERDIRECTORY_SIMPLEVIEW");
         }
     }
 
@@ -202,7 +208,7 @@ class UserType extends AbstractType
     public function userNamePreferredContactInfo($builder) {
         
         $readOnly = true;
-        if( $this->cycle == 'create' || $this->sc->isGranted('ROLE_PLATFORM_ADMIN') ) {
+        if( $this->cycle == 'create' || $this->secAuthChecker->isGranted('ROLE_PLATFORM_ADMIN') ) {
             $readOnly = false;
         }
         
@@ -406,7 +412,7 @@ class UserType extends AbstractType
     }
 
     public function userTrainings($builder) {
-        $params = array('read_only'=>$this->readonly,'admin'=>$this->roleAdmin,'currentUser'=>$this->currentUser,'cycle'=>$this->cycle,'em'=>$this->em,'subjectUser'=>$this->subjectUser,'sc'=>$this->sc);
+        $params = array('read_only'=>$this->readonly,'admin'=>$this->roleAdmin,'currentUser'=>$this->currentUser,'cycle'=>$this->cycle,'em'=>$this->em,'subjectUser'=>$this->subjectUser,'container'=>$this->container);
         $builder->add('trainings', 'collection', array(
             'type' => new TrainingType($params),
             'label' => false,
@@ -422,7 +428,7 @@ class UserType extends AbstractType
     }
 
     public function userLocations($builder) {
-        $params = array('read_only'=>$this->readonly,'admin'=>$this->roleAdmin,'currentUser'=>$this->currentUser,'cycle'=>$this->cycle,'em'=>$this->em,'subjectUser'=>$this->subjectUser,'sc'=>$this->sc);
+        $params = array('read_only'=>$this->readonly,'admin'=>$this->roleAdmin,'currentUser'=>$this->currentUser,'cycle'=>$this->cycle,'em'=>$this->em,'subjectUser'=>$this->subjectUser,'container'=>$this->container);
         $builder->add('locations', 'collection', array(
             'type' => new LocationType($params),
             'label' => false,
@@ -459,7 +465,7 @@ class UserType extends AbstractType
         
 if(1){    
         //it takes 4 seconds to load
-        $params = array('read_only'=>$this->readonly,'admin'=>$this->roleAdmin,'subjectUser'=>$this->subjectUser,'cycle'=>$this->cycle,'em'=>$this->em,'sc'=>$this->sc);
+        $params = array('read_only'=>$this->readonly,'admin'=>$this->roleAdmin,'subjectUser'=>$this->subjectUser,'cycle'=>$this->cycle,'em'=>$this->em,'container'=>$this->container);
         $builder->add('researchLabs', 'collection', array(
             'type' => new ResearchLabType($params),
             'label' => false,
@@ -527,7 +533,7 @@ if(1){
 
     public function addCredentials($builder) {
         if( $this->roleAdmin || $this->currentUser ) {
-            $params = array('sc'=>$this->sc,'em'=>$this->em,'cycle'=>$this->cycle,'roleAdmin'=>$this->roleAdmin);
+            $params = array('container'=>$this->container,'em'=>$this->em,'cycle'=>$this->cycle,'roleAdmin'=>$this->roleAdmin);
             $builder->add('credentials', new CredentialsType($params), array(
                 'data_class' => 'Oleg\UserdirectoryBundle\Entity\Credentials',
                 'label' => false,

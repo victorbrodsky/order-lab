@@ -103,7 +103,7 @@ class HomeController extends Controller {
         //$user = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername( $username."_@_". $usernamePrefix);
 
 
-        $userSecUtil = new UserSecurityUtil($em,null,null);
+        $userSecUtil = new UserSecurityUtil($em,null,null,null);
         $systemuser = $userSecUtil->findSystemUser();
 
         //$this->generateSitenameList($systemuser);

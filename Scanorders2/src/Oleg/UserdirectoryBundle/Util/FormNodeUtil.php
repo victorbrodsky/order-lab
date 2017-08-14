@@ -33,13 +33,13 @@ class FormNodeUtil
 {
 
     protected $em;
-    protected $sc;
+    protected $secTokenStorage;
     protected $container;
 
-    public function __construct($em, $sc, $container)
+    public function __construct($em, $secTokenStorage, $container)
     {
         $this->em = $em;
-        $this->sc = $sc;
+        $this->secTokenStorage = $secTokenStorage;
         $this->container = $container;
     }
 
@@ -265,7 +265,7 @@ class FormNodeUtil
 
                 if( $bundleName ) {
 
-                    $creator = $this->sc->getToken()->getUser();
+                    $creator = $this->secTokenStorage->getToken()->getUser();
 
                     $transformer = new GenericTreeTransformer($this->em, $creator, $className, $bundleName);
 
@@ -512,7 +512,7 @@ class FormNodeUtil
             $formNode->getObjectTypeName() != "Form Field - Dropdown Menu"
         ) {
 
-            $creator = $this->sc->getToken()->getUser();
+            $creator = $this->secTokenStorage->getToken()->getUser();
             $transformer = new GenericTreeTransformer($this->em, $creator, "PathologyResultSignatoriesList", "UserdirectoryBundle");
             //$userWrapperTransformer = new SingleUserWrapperTransformer($this->em, $this->container, $creator, 'UserWrapper');
 
@@ -629,7 +629,7 @@ class FormNodeUtil
                 $bundleName = $bundleNameArr[1];
             }
             if( $bundleName ) {
-                $creator = $this->sc->getToken()->getUser();
+                $creator = $this->secTokenStorage->getToken()->getUser();
                 $transformer = new GenericTreeTransformer($this->em, $creator, $className, $bundleName);
                 //echo "thisValue=".$thisValue."<br>";
                 if ( strval($thisValue) != strval(intval($thisValue)) ) {
@@ -700,7 +700,7 @@ class FormNodeUtil
         $listClassName = $receivedValueEntityNamespace."\\".$receivedValueEntityName;
         $newListElement = new $listClassName();
         //$newListElement = new ObjectTypeText();
-        $creator = $this->sc->getToken()->getUser();
+        $creator = $this->secTokenStorage->getToken()->getUser();
         $name = "";
         $count = null;
         $userSecUtil->setDefaultList($newListElement,$count,$creator,$name);
@@ -1546,7 +1546,7 @@ class FormNodeUtil
     public function createV2FormNode( $params ) {
         $em = $this->em;
         $userSecUtil = $this->container->get('user_security_utility');
-        $username = $this->container->get('security.context')->getToken()->getUser();
+        $username = $this->container->get('security.token_storage')->getToken()->getUser();
 
         $objectType = $params['objectType'];
         $name = $params['name'];
@@ -2155,7 +2155,7 @@ class FormNodeUtil
     public function generateFormNode() {
 
         $em = $this->em;
-        $username = $this->container->get('security.context')->getToken()->getUser();
+        $username = $this->container->get('security.token_storage')->getToken()->getUser();
 
         //root
         $categories = array(
@@ -2934,7 +2934,7 @@ class FormNodeUtil
     }
 
     public function createandLinkOtherIssueSection( $parentNode ) {
-        $username = $this->container->get('security.context')->getToken()->getUser();
+        $username = $this->container->get('security.token_storage')->getToken()->getUser();
         $em = $this->em;
         $count = null;
 
@@ -3107,7 +3107,7 @@ class FormNodeUtil
 //        return;
 //
 //        $em = $this->em;
-//        $username = $this->container->get('security.context')->getToken()->getUser();
+//        $username = $this->container->get('security.token_storage')->getToken()->getUser();
 //
 //        //root
 //        $categories = array(
@@ -4747,7 +4747,7 @@ class FormNodeUtil
 //        exit("Depreciated. Not Used!!!");
 //        $em = $this->em;
 //        $userSecUtil = $this->container->get('user_security_utility');
-//        $username = $this->container->get('security.context')->getToken()->getUser();
+//        $username = $this->container->get('security.token_storage')->getToken()->getUser();
 //
 //        $objectType = $params['objectType'];
 //        $showLabel = $params['showLabel'];

@@ -30,7 +30,6 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 
 use Oleg\UserdirectoryBundle\Util\UserUtil;
 
@@ -41,16 +40,14 @@ class SessionIdleHandler
 
     protected $container;
     protected $session;
-    protected $securityContext;
     protected $router;
     protected $maxIdleTime;
     protected $em;
 
-    public function __construct($container, SessionInterface $session, SecurityContextInterface $securityContext, RouterInterface $router, $em )
+    public function __construct($container, SessionInterface $session, RouterInterface $router, $em )
     {
         $this->container = $container;
         $this->session = $session;
-        $this->securityContext = $securityContext;
         $this->router = $router;
         $this->em = $em;
 

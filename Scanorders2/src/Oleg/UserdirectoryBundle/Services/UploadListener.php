@@ -41,13 +41,11 @@ class UploadListener {
 
     private $container;
     private $em;
-    private $sc;
 
     public function __construct(ContainerInterface $container, EntityManager $em, $sc)
     {
         $this->container = $container;
         $this->em = $em;
-        $this->sc = $sc;
     }
 
     public function onUpload(PostPersistEvent $event)

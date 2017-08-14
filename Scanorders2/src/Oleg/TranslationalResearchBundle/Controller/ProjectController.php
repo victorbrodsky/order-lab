@@ -78,7 +78,7 @@ class ProjectController extends Controller
      */
     public function newAction(Request $request)
     {
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $cycle = "new";
 
         $project = new Project($user);
@@ -142,7 +142,7 @@ class ProjectController extends Controller
      */
     public function editAction(Request $request, Project $project)
     {
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $cycle = "edit";
 
@@ -192,13 +192,12 @@ class ProjectController extends Controller
     private function createProjectForm( Project $project, $cycle )
     {
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $disabled = false;
 
         $params = array(
             'cycle' => $cycle,
-            'sc' => $this->get('security.context'),
             'em' => $em,
             'user' => $user,
         );

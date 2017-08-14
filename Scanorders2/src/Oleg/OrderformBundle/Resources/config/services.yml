@@ -15,14 +15,14 @@ services:
     #Custom selector fields
     order_form.type.custom_selector:
         class: Oleg\OrderformBundle\Form\CustomType\CustomSelectorType
-        arguments: ["@doctrine.orm.entity_manager","@security.context", "@service_container"]
+        arguments: ["@doctrine.orm.entity_manager","@security.token_storage", "@service_container"]
         tags:
             - { name: form.type, alias: custom_selector }
 
     #Redirect admin to index
     authentication_handler:
         class: Oleg\OrderformBundle\Security\Authentication\ScanLoginSuccessHandler
-        arguments:  [@service_container, @security.context, @doctrine.orm.entity_manager]
+        arguments:  ["@service_container", "@doctrine.orm.entity_manager"]
 
 #    #aperio authentication
 #    aperio.security.authentication.provider:
@@ -37,17 +37,17 @@ services:
     #security utility
     order_security_utility:
         class: Oleg\OrderformBundle\Security\Util\SecurityUtil
-        arguments: ["@doctrine.orm.entity_manager", "@security.context", "@service_container"]
+        arguments: ["@doctrine.orm.entity_manager", "@security.token_storage", "@security.authorization_checker", "@service_container"]
 
     #scanorder utility
     scanorder_utility:
         class: Oleg\OrderformBundle\Helper\OrderUtil
-        arguments: ["@doctrine.orm.entity_manager", "@service_container", "@security.context"]
+        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
     #patient utility
     search_utility:
         class: Oleg\OrderformBundle\Helper\SearchUtil
-        arguments: ["@doctrine.orm.entity_manager", "@service_container", "@security.context"]
+        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
     scan_role_voter:
         class: Oleg\OrderformBundle\Security\Voter\ScanRoleVoter

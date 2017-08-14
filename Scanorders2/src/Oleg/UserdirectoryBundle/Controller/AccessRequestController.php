@@ -476,7 +476,8 @@ class AccessRequestController extends Controller
                 'notice',
                 $text
             );
-            $this->get('security.context')->setToken(null);
+            //$this->get('security.context')->setToken(null);
+            $this->get('security.token_storage')->setToken(null);
             return $this->redirect($this->generateUrl($sitename . '_login'));
         } else {
             return $this->render('OlegUserdirectoryBundle:AccessRequest:request_confirmation.html.twig', array('text' => $text, 'sitename' => $sitename, 'pendinguser' => true));

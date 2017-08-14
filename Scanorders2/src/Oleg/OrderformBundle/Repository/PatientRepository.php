@@ -224,7 +224,7 @@ class PatientRepository extends ArrayFieldAbstractRepository
             return null;
         }
 
-        $securityUtil = new SecurityUtil($this->_em, null, null);
+        $securityUtil = new SecurityUtil($this->_em, null, null, null);
         $source = $securityUtil->getDefaultSourceSystem($sitename);
 
 //        foreach( $patient->getEncounter() as $encounter ) {

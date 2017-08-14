@@ -55,25 +55,21 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class FellAppUtil {
 
     protected $em;
-    protected $sc;
     protected $container;
 
     protected $systemEmail;
 
 
-    public function __construct( $em, $sc, $container ) {
-
+    public function __construct( $em, $container ) {
         $this->em = $em;
-        $this->sc = $sc;
         $this->container = $container;
-
     }
 
 
 
     //check for active access requests
     public function getActiveAccessReq() {
-        if( !$this->sc->isGranted('ROLE_FELLAPP_COORDINATOR') ) {
+        if( !$this->container->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_COORDINATOR') ) {
             //exit('not granted ROLE_FELLAPP_COORDINATOR ???!!!'); //testing
             return null;
         } else {
@@ -555,7 +551,7 @@ class FellAppUtil {
         //$userSecUtil = $this->container->get('user_security_utility');
         //$systemUser = $userSecUtil->findSystemUser();
         $user = $fellowshipApplication->getUser();
-        $author = $this->sc->getToken()->getUser();
+        $author = $this->container->get('security.token_storage')->getToken()->getUser();
 
         //Pathology Fellowship Applicant in EmploymentStatus
         $employmentType = $em->getRepository('OlegUserdirectoryBundle:EmploymentType')->findOneByName("Pathology Fellowship Applicant");
@@ -592,7 +588,7 @@ class FellAppUtil {
     //oleg_fellappbundle_fellowshipapplication_references_0_name
     public function addEmptyReferences($fellowshipApplication) {
 
-        $author = $this->sc->getToken()->getUser();
+        $author = $this->container->get('security.token_storage')->getToken()->getUser();
         $references = $fellowshipApplication->getReferences();
         $count = count($references);
 
@@ -609,7 +605,7 @@ class FellAppUtil {
 
     public function addEmptyBoardCertifications($fellowshipApplication) {
 
-        $author = $this->sc->getToken()->getUser();
+        $author = $this->container->get('security.token_storage')->getToken()->getUser();
         $boardCertifications = $fellowshipApplication->getBoardCertifications();
         $count = count($boardCertifications);
 
@@ -627,7 +623,7 @@ class FellAppUtil {
     //oleg_fellappbundle_fellowshipapplication[stateLicenses][0][licenseNumber]
     public function addEmptyStateLicenses($fellowshipApplication) {
 
-        $author = $this->sc->getToken()->getUser();
+        $author = $this->container->get('security.token_storage')->getToken()->getUser();
 
         $stateLicenses = $fellowshipApplication->getStateLicenses();
 
@@ -646,7 +642,7 @@ class FellAppUtil {
 
     public function addEmptyNationalBoards($fellowshipApplication) {
 
-        $author = $this->sc->getToken()->getUser();
+        $author = $this->container->get('security.token_storage')->getToken()->getUser();
 
         $examinations = $fellowshipApplication->getExaminations();
 
@@ -742,7 +738,7 @@ class FellAppUtil {
 
         //echo "!!!!!!!!!! add single training with type=".$typeName."<br>";
 
-        $author = $this->sc->getToken()->getUser();
+        $author = $this->container->get('security.token_storage')->getToken()->getUser();
         $training = new Training($author);
         $training->setOrderinlist($orderinlist);
 
@@ -766,7 +762,7 @@ class FellAppUtil {
 
     public function createApplicantListExcel( $fellappids ) {
         
-        $author = $this->sc->getToken()->getUser();
+        $author = $this->container->get('security.token_storage')->getToken()->getUser();
         $transformer = new DateTimeToStringTransformer(null,null,'d/m/Y');
         
         $ea = new \PHPExcel(); // ea is short for Excel Application
@@ -938,7 +934,7 @@ class FellAppUtil {
 
     public function createInterviewApplicantList( $fellappids ) {
 
-        $author = $this->sc->getToken()->getUser();
+        $author = $this->container->get('security.token_storage')->getToken()->getUser();
 
         $fellapps = array();
 
@@ -978,7 +974,7 @@ class FellAppUtil {
     //Permissions: Create a New Fellowship Application, Modify a Fellowship Application, Submit an interview evaluation
     public function createOrEnableFellAppRole( $subspecialtyType, $roleType, $institution, $testing=false ) {
         $em = $this->em;
-        $user = $this->sc->getToken()->getUser();
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $userSecUtil = $this->container->get('user_security_utility');
         $site = $em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation('fellapp');
 

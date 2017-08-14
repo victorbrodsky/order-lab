@@ -30,7 +30,7 @@ use Oleg\OrderformBundle\Security\Util\AperioUtil;
 
 class AuthUtil {
 
-    private $sc;        //container
+    private $container;        //container
     private $em;        //entity manager
     private $logger;
 
@@ -38,11 +38,11 @@ class AuthUtil {
     private $supportedUsertypesLdap = array('wcmc-cwid');
     private $supportedUsertypesLocal = array('local-user');
 
-    public function __construct($sc,$em)
+    public function __construct($container,$em)
     {
-        $this->sc = $sc;
+        $this->container = $container;
         $this->em = $em;
-        $this->logger = $sc->get('logger');
+        $this->logger = $container->get('logger');
     }
 
 
@@ -54,7 +54,7 @@ class AuthUtil {
         //return NULL;
 
         //get clean username
-        $userSecUtil = $this->sc->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         $usernameClean = $userSecUtil->createCleanUsername($token->getUsername());
 
         $usernamePrefix = $userSecUtil->getUsernamePrefix($token->getUsername());
@@ -74,7 +74,7 @@ class AuthUtil {
             //return $user;
 
             //check password
-            $encoder = $this->sc->get('security.password_encoder');
+            $encoder = $this->container->get('security.password_encoder');
             $encoded = $encoder->encodePassword($user, $token->getCredentials());
             //echo "token getPassword=".$token->getCredentials()."<br>";
             //echo "getPassword=".$user->getPassword()."<br>";
@@ -128,7 +128,7 @@ class AuthUtil {
         //exit('local ok');
 
         //////////////////// save user to DB ////////////////////
-        $userManager = $this->sc->get('fos_user.user_manager');
+        $userManager = $this->container->get('fos_user.user_manager');
         $userManager->updateUser($user);
 
         return $user;
@@ -142,7 +142,7 @@ class AuthUtil {
         //echo "AperioAuthentication<br>";
         //exit();
 
-        $userSecUtil = $this->sc->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
 
         $usernamePrefix = $userSecUtil->getUsernamePrefix($token->getUsername());
         if( in_array($usernamePrefix, $this->supportedUsertypesAperio) == false ) {
@@ -152,7 +152,7 @@ class AuthUtil {
 
         $aperioUtil = new AperioUtil();
 
-        $user = $aperioUtil->aperioAuthenticateToken( $token, $this->sc, $this->em );
+        $user = $aperioUtil->aperioAuthenticateToken( $token, $this->container, $this->em );
 
         if( $user ) {
             //echo "Aperio user found=".$user->getUsername()."<br>";
@@ -171,7 +171,7 @@ class AuthUtil {
         //exit();
 
         //get clean username
-        $userSecUtil = $this->sc->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         $usernameClean = $userSecUtil->createCleanUsername($token->getUsername());
 
         $usernamePrefix = $userSecUtil->getUsernamePrefix($token->getUsername());
@@ -243,7 +243,7 @@ class AuthUtil {
         //exit('ldap ok');
 
         //////////////////// save user to DB ////////////////////
-        $userManager = $this->sc->get('fos_user.user_manager');
+        $userManager = $this->container->get('fos_user.user_manager');
         $userManager->updateUser($user);
 
         return $user;
@@ -431,7 +431,7 @@ class AuthUtil {
     public function addEventLog( $subjectUser, $identifierKeytypeStr, $identifierUsername ) {
         //record edit user to Event Log
         $event = "Logged in using identifier keytype '$identifierKeytypeStr' and username '$identifierUsername'";
-        $request = $this->sc->get('request'); //http://localhost/order/directory/login_check
+        $request = $this->container->get('request'); //http://localhost/order/directory/login_check
 
         //get sitename as "fellowship-applications" or "directory"
         $currentUrl = $request->getUri();
@@ -442,7 +442,7 @@ class AuthUtil {
 
         //exit("sitename=$sitename");
 
-        $userSecUtil = $this->sc->get('user_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
         //$sitename,$event,$user,$subjectEntities,$request,$action='Unknown Event'
         $userSecUtil->createUserEditEvent($sitename,$event,$subjectUser,$subjectUser,$request,'Successful Login');
     }
@@ -452,7 +452,7 @@ class AuthUtil {
 
     public function findUserByUsername($username) {
 
-        $userManager = $this->sc->get('fos_user.user_manager');
+        $userManager = $this->container->get('fos_user.user_manager');
         $user = $userManager->findUserByUsername($username);
 
         return $user;
@@ -476,13 +476,13 @@ class AuthUtil {
         //echo "Windows ldap<br>";
 
         //Ldap authentication using exe script
-        $LDAPHost = $this->sc->getParameter('ldaphost');
-        $LDAPPort = $this->sc->getParameter('ldapport');
+        $LDAPHost = $this->container->getParameter('ldaphost');
+        $LDAPPort = $this->container->getParameter('ldapport');
 
         //$exePath = "../src/Oleg/UserdirectoryBundle/Util/";
-        $exePath = $this->sc->getParameter('ldapexepath');
+        $exePath = $this->container->getParameter('ldapexepath');
         //$exeFile = "LdapSaslCustom.exe";
-        $exeFile = $this->sc->getParameter('ldapexefilename');
+        $exeFile = $this->container->getParameter('ldapexefilename');
 
         $command = $exePath.$exeFile;
         //$command = $exeFile;
@@ -520,7 +520,7 @@ class AuthUtil {
     //TODO: must be tested on unix environment
     public function ldapBindUnix( $username, $password ) {
         $this->logger->warning("Unix system detected. Must be tested!");
-        $LDAPHost = $this->sc->getParameter('ldaphost');
+        $LDAPHost = $this->container->getParameter('ldaphost');
         $mech = "GSSAPI";
         $cnx = $this->connectToLdap($LDAPHost);
 
@@ -542,20 +542,20 @@ class AuthUtil {
         //echo "username=".$username."<br>";
 
 
-        $LDAPHost = $this->sc->getParameter('ldaphost');
+        $LDAPHost = $this->container->getParameter('ldaphost');
         //echo "LDAPHost=".$LDAPHost."<br>";
 
         //$dn = "CN=Users,DC=a,DC=wcmc-ad,DC=net";
         $dn = "CN=Users";
-        $ldapDc = $this->sc->getParameter('ldapou');
+        $ldapDc = $this->container->getParameter('ldapou');
         $dcArr = explode(".",$ldapDc);
         foreach( $dcArr as $dc ) {
             $dn = $dn . ",DC=".$dc;
         }
         //echo "dn=".$dn."<br>";
 
-        $LDAPUserAdmin = $this->sc->getParameter('ldapusername');
-        $LDAPUserPasswordAdmin = $this->sc->getParameter('ldappassword');
+        $LDAPUserAdmin = $this->container->getParameter('ldapusername');
+        $LDAPUserPasswordAdmin = $this->container->getParameter('ldappassword');
 
         //$filter="(ObjectClass=Person)";
         $filter="(cn=".$username.")";

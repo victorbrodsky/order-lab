@@ -37,14 +37,16 @@ class VacReqUtil
 {
 
     protected $em;
-    protected $sc;
+    protected $secToken;
+    protected $secAuth;
     protected $container;
 
 
-    public function __construct( $em, $sc, $container ) {
+    public function __construct( $em, $secToken, $secAuth, $container ) {
 
         $this->em = $em;
-        $this->sc = $sc;
+        $this->secToken = $secToken;
+        $this->secAuth = $secAuth;
         $this->container = $container;
 
     }
@@ -2340,7 +2342,7 @@ class VacReqUtil
 
         //2) get user's supervisor groups
         //to get the select filter with all groups under the supervisor group, find the first upper supervisor of this group.
-        if( $this->sc->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
+        if( $this->secAuth->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
             $subjectUser = $user;
         } else {
             $groupParams['asSupervisor'] = true;
@@ -2391,14 +2393,14 @@ class VacReqUtil
 
             $roles = new ArrayCollection();
 
-            if( count($roles)==0 && $this->sc->isGranted('ROLE_VACREQ_ADMIN') ) {
+            if( count($roles)==0 && $this->secAuth->isGranted('ROLE_VACREQ_ADMIN') ) {
                 //echo "roles try 1<br>";
                 if( !$asUser ) {
                     $roles = $this->em->getRepository('OlegUserdirectoryBundle:User')->
                     findRolesByObjectActionInstitutionSite($objectStr, $actionStr, null, 'vacreq', null);
                 }
             }
-            if( count($roles)==0 && ($this->sc->isGranted('ROLE_VACREQ_SUPERVISOR') || $asSupervisor) ) {
+            if( count($roles)==0 && ($this->secAuth->isGranted('ROLE_VACREQ_SUPERVISOR') || $asSupervisor) ) {
                 //echo "roles for ROLE_VACREQ_SUPERVISOR<br>";
                 //echo "roles try 2<br>";
                 if( !$asUser ) {
@@ -2434,7 +2436,7 @@ class VacReqUtil
             //echo "### EOF ".$actionStr.": final role count=".count($roles)."### <br>";
 
 //            $adminRole = false;
-//            if( $this->sc->isGranted('ROLE_VACREQ_ADMIN') ) {
+//            if( $this->secAuth->isGranted('ROLE_VACREQ_ADMIN') ) {
 //                //echo "admin<br>";
 //                $adminRole = true;
 //            }
@@ -2554,7 +2556,7 @@ class VacReqUtil
         //get user's roles by site and role name array
         $submitterRoles = new ArrayCollection();
         foreach( $roleSubStrArr as $roleSubStr ) {
-            if( $this->sc->isGranted('ROLE_VACREQ_ADMIN') || $this->sc->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
+            if( $this->secAuth->isGranted('ROLE_VACREQ_ADMIN') || $this->secAuth->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
                 //find all submitter role's institution
                 $submitterSubRoles = $this->em->getRepository('OlegUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName("vacreq",$roleSubStr);
             } else {
@@ -2591,7 +2593,7 @@ class VacReqUtil
                 //get only institutions from the same institutional tree:
                 //  if submitter has CYTOPATHOLOGY submitter role, then the each resulting institution should be equal or be a parent of CYTOPATHOLOGY
                 //check if this institution is equal or under user's site institution
-                if( $this->sc->isGranted('ROLE_VACREQ_ADMIN') == false ) {
+                if( $this->secAuth->isGranted('ROLE_VACREQ_ADMIN') == false ) {
                     if( $this->em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderParentnodes($userInsts, $institution) == false ) {
                         //echo "remove institution=".$institution."<br>";
                         continue;
@@ -2696,11 +2698,11 @@ class VacReqUtil
 
     //$rolePartialNameArr - array of roles partial names. For example, array('ROLE_VACREQ_APPROVER','ROLE_VACREQ_SUPERVISOR')
     public function hasRoleNameAndGroup( $rolePartialNameArr, $institutionId=null ) {
-        if( $this->sc->isGranted('ROLE_VACREQ_ADMIN') ) {
+        if( $this->secAuth->isGranted('ROLE_VACREQ_ADMIN') ) {
             return true;
         }
 
-        $user = $this->sc->getToken()->getUser();
+        $user = $this->secToken->getToken()->getUser();
         //$sitename = "vacreq";
 
         //TODO: fix this by permission
@@ -3191,7 +3193,7 @@ class VacReqUtil
 
     public function getPendingCarryOverRequests($user) {
 
-        if( $this->sc->isGranted('ROLE_VACREQ_SUPERVISOR') == false ) {
+        if( $this->secAuth->isGranted('ROLE_VACREQ_SUPERVISOR') == false ) {
            return null;
         }
 
@@ -3705,7 +3707,7 @@ class VacReqUtil
 //            return $this->redirect($this->generateUrl('vacreq-nopermission'));
 //        }
         /////////////// check permission: if user is in approvers => ok ///////////////
-        if( false == $this->container->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
+        if( false == $this->container->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') ) {
             $permitted = false;
             $approvers = $this->getRequestApprovers($entity);
             $approversName = array();

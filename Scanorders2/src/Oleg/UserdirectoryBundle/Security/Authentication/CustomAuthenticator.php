@@ -38,13 +38,13 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 class CustomAuthenticator implements SimpleFormAuthenticatorInterface {
 
     private $encoder;
-    private $sc;
+    private $container;
     private $em;
 
-    public function __construct(UserPasswordEncoderInterface $encoder,$sc,$em)
+    public function __construct(UserPasswordEncoderInterface $encoder,$container,$em)
     {
         $this->encoder = $encoder;
-        $this->sc = $sc;                //Service Container
+        $this->container = $container;                //Service Container
         $this->em = $em;                //Entity Manager
     }
 
@@ -53,7 +53,7 @@ class CustomAuthenticator implements SimpleFormAuthenticatorInterface {
         //echo "CustomAuthenticator: username=".$token->getUsername()."<br>"; //", pwd=".$token->getCredentials()
         //exit();
 
-        $authUtil = new AuthUtil($this->sc,$this->em);
+        $authUtil = new AuthUtil($this->container,$this->em);
 
         //////////////////////////////////////////////////////////////////////
         //                       1) local authentication                   //

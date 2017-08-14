@@ -423,7 +423,7 @@ class FellowshipApplicationType extends AbstractType
     public function userLocations($builder) {
 
 
-        if( $this->params['sc']->isGranted('ROLE_FELLAPP_COORDINATOR') ) {
+        if( $this->params['container']->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_COORDINATOR') ) {
             $roleAdmin = true;
             $readonly = true;
         } else {
@@ -434,7 +434,7 @@ class FellowshipApplicationType extends AbstractType
         $readonly = false;
 
         $currentUser = false;
-        $user = $this->params['sc']->getToken()->getUser();
+        $user = $this->params['container']->get('security.token_storage')->getToken()->getUser();
         if( $user->getId() === $this->params['user']->getId() ) {
             $currentUser = true;
         }

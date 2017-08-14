@@ -29,7 +29,6 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
-use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -40,17 +39,20 @@ class MaintenanceListener {
 
     private $container;
     private $em;
-    private $sc;
+    protected $secTokenStorage;
+    protected $secAuthChecker;
     private $logger;
 
     private $userUtil;
 
-    public function __construct(ContainerInterface $container, $em, SecurityContext $sc)
+    public function __construct(ContainerInterface $container, $em)
     {
         $this->container = $container;
         $this->em = $em;
-        $this->sc = $sc;
         $this->logger = $this->container->get('logger');
+
+        $this->secAuthChecker = $container->get('security.authorization_checker');
+        $this->secTokenStorage = $container->get('security.token_storage');
 
         $this->userUtil = new UserUtil();
     }
@@ -123,20 +125,20 @@ class MaintenanceListener {
             //echo "route=".$event->getRequest()->get('_route')."<br>";
             //echo "urlLogout=".$urlLogout."<br>";
             //echo "route=".$route."<br>";
-            //echo "token=".$this->sc->getToken()."<br>";
+            //echo "token=".$this->secTokenStorage->getToken()."<br>";
             //exit('maintenance mode');
 
-            if( null === $this->sc->getToken() ) {
+            if( null === $this->secTokenStorage->getToken() ) {
                 //exit('token not set');
             } else {
 
-                if( $this->sc->isGranted('IS_AUTHENTICATED_FULLY') ) {
+                if( $this->secAuthChecker->isGranted('IS_AUTHENTICATED_FULLY') ) {
                     //don't kick out already logged in users
                     //exit('do not kick out already logged in users');
                     return;
                 }
 
-                if( $this->sc->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+                if( $this->secAuthChecker->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
                     //don't kick out already logged in users
                     //exit('do not kick out already logged in users');
                     return;

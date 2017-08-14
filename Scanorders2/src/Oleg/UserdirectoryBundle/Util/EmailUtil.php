@@ -27,12 +27,10 @@ use Oleg\UserdirectoryBundle\Util\UserUtil;
 class EmailUtil {
 
     protected $em;
-    protected $sc;
     protected $container;
 
-    public function __construct( $em, $sc, $container ) {
+    public function __construct( $em, $container ) {
         $this->em = $em;
-        $this->sc = $sc;
         $this->container = $container;
     }
 

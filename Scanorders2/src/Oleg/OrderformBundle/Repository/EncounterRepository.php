@@ -63,7 +63,7 @@ class EncounterRepository extends ArrayFieldAbstractRepository
 
         $patient = $encounter->getParent();
 
-        $securityUtil = new SecurityUtil($this->_em,null,null);
+        $securityUtil = new SecurityUtil($this->_em,null,null,null);
         $source = $securityUtil->getDefaultSourceSystem($sitename);
         //$status = self::STATUS_VALID;
 

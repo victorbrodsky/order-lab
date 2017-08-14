@@ -47,13 +47,11 @@ use Symfony\Component\Filesystem\Exception\IOException;
 class GoogleSheetManagement {
 
     protected $em;
-    protected $sc;
     protected $container;
 
-    public function __construct( $em, $sc, $container ) {
+    public function __construct( $em, $container ) {
 
         $this->em = $em;
-        $this->sc = $sc;
         $this->container = $container;
     }
 

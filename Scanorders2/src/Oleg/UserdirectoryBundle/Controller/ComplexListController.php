@@ -321,6 +321,7 @@ class ComplexListController extends Controller
     {
 
         $em = $this->getDoctrine()->getManager();
+        $secTokenStorage = $this->get('security.token_storage');
 
         $cycle = 'new_post_standalone';
 
@@ -359,8 +360,7 @@ class ComplexListController extends Controller
             if( $mapper['pathname'] == 'locations' ) {
                 //set parents for institution tree for Administrative and Academical Titles
                 $userUtil = new UserUtil();
-                $sc = $this->get('security.context');
-                $userUtil->processInstTree($entity,$em,$sc);
+                $userUtil->processInstTree($entity,$em,$secTokenStorage);
 
                 //set Reviewed by Administration
                 $entity->setStatus($entity::STATUS_VERIFIED);
@@ -372,14 +372,12 @@ class ComplexListController extends Controller
 
             if( $mapper['pathname'] == 'buildings' ) {
                 $userUtil = new UserUtil();
-                $sc = $this->get('security.context');
-                $userUtil->setUpdateInfo($entity,$em,$sc);
+                $userUtil->setUpdateInfo($entity,$em,$secTokenStorage);
             }
 
             if( $mapper['pathname'] == 'researchlabs' ) {
                 $userUtil = new UserUtil();
-                $sc = $this->get('security.context');
-                $userUtil->setUpdateInfo($entity,$em,$sc);
+                $userUtil->setUpdateInfo($entity,$em,$secTokenStorage);
             }
 
             if( $mapper['pathname'] == 'grants' ) {
@@ -393,8 +391,7 @@ class ComplexListController extends Controller
                 }
 
                 $userUtil = new UserUtil();
-                $sc = $this->get('security.context');
-                $userUtil->setUpdateInfo($entity,$em,$sc);
+                $userUtil->setUpdateInfo($entity,$em,$secTokenStorage);
             }
 
             $em->persist($entity);
@@ -444,6 +441,7 @@ class ComplexListController extends Controller
 
         $cycle = 'edit_put_standalone';
 
+        $secTokenStorage = $this->get('security.token_storage');
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository($mapper['bundleName'].':'.$mapper['className'])->find($id);
@@ -469,23 +467,17 @@ class ComplexListController extends Controller
             if( $mapper['pathname'] == 'locations' ) {
                 //set parents for institution tree for Administrative and Academical Titles
                 $userUtil = new UserUtil();
-                $em = $this->getDoctrine()->getManager();
-                $sc = $this->get('security.context');
-                $userUtil->processInstTree($entity,$em,$sc);
+                $userUtil->processInstTree($entity,$em,$secTokenStorage);
             }
 
             if( $mapper['pathname'] == 'buildings' ) {
                 $userUtil = new UserUtil();
-                $em = $this->getDoctrine()->getManager();
-                $sc = $this->get('security.context');
-                $userUtil->setUpdateInfo($entity,$em,$sc);
+                $userUtil->setUpdateInfo($entity,$em,$secTokenStorage);
             }
 
             if( $mapper['pathname'] == 'researchlabs' ) {
                 $userUtil = new UserUtil();
-                $em = $this->getDoctrine()->getManager();
-                $sc = $this->get('security.context');
-                $userUtil->setUpdateInfo($entity,$em,$sc);
+                $userUtil->setUpdateInfo($entity,$em,$secTokenStorage);
             }
 
             if( $mapper['pathname'] == 'grants' ) {
@@ -499,16 +491,12 @@ class ComplexListController extends Controller
                 }
 
                 $userUtil = new UserUtil();
-                $em = $this->getDoctrine()->getManager();
-                $sc = $this->get('security.context');
-                $userUtil->setUpdateInfo($entity,$em,$sc);
+                $userUtil->setUpdateInfo($entity,$em,$secTokenStorage);
             }
 
             if( $mapper['pathname'] == 'labtests' ) {
                 $userUtil = new UserUtil();
-                $em = $this->getDoctrine()->getManager();
-                $sc = $this->get('security.context');
-                $userUtil->setUpdateInfo($entity,$em,$sc);
+                $userUtil->setUpdateInfo($entity,$em,$secTokenStorage);
             }
 
             //increments the version (current +1)
@@ -519,7 +507,6 @@ class ComplexListController extends Controller
             $newVersion = $currentVersion + 1;
             $entity->setVersion($newVersion);
 
-            $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
 

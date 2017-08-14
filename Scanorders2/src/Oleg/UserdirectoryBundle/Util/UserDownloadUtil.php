@@ -33,7 +33,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 class UserDownloadUtil {
 
     protected $em;
-    protected $sc;
+    protected $secTokenStorage;
     protected $container;
 
     private $cellSize = 10;
@@ -41,9 +41,9 @@ class UserDownloadUtil {
     private $headerSize = 11;
     private $headerFont = "Calibri";
 
-    public function __construct( $em, $sc, $container ) {
+    public function __construct( $em, $secTokenStorage, $container ) {
         $this->em = $em;
-        $this->sc = $sc;
+        $this->secTokenStorage = $secTokenStorage;
         $this->container = $container;
     }
 
@@ -186,7 +186,7 @@ class UserDownloadUtil {
             $this->headerSize = $sheetSize;
         }
 
-        $author = $this->sc->getToken()->getUser();
+        $author = $this->secTokenStorage->getToken()->getUser();
 
         $row = 1;
         //$withheader = false;

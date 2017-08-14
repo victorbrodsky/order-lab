@@ -736,7 +736,7 @@ class TableController extends Controller {
         $orderurl = $this->generateUrl( 'multy_show',array('id'=>$entity->getOid()), true );    //was $entity->getId()
 
         //email
-        $scanEmailUtil = new ScanEmailUtil($em,$this->get('security.context'),$this->container);
+        $scanEmailUtil = new ScanEmailUtil($em,$this->container);
         $scanEmailUtil->sendEmail( $user->getEmail(), $entity, $orderurl, null, $conflictStr, $submitStatusStr );
 
         if( isset($_POST['btnSaveOnIdleTimeout']) ) {

@@ -1532,7 +1532,7 @@ class UserController extends Controller
             'user' => $user,
             'cloneuser' => $subjectUser,
             'roles' => $rolesArr,
-            'sc' => $this->get('security.context'),
+            'container' => $this->container,
             'em' => $em
         );
 
@@ -1588,7 +1588,7 @@ class UserController extends Controller
             'user' => $user,
             'cloneuser' => null,
             'roles' => $rolesArr,
-            'sc' => $this->get('security.context'),
+            'container' => $this->container,
             'em' => $em
         );
 
@@ -1990,7 +1990,7 @@ class UserController extends Controller
             'user' => $entity,
             'cloneuser' => null,
             'roles' => $rolesArr,
-            'sc' => $this->get('security.context'),
+            'container' => $this->container,
             'em' => $em
         );
 
@@ -2078,7 +2078,7 @@ class UserController extends Controller
             'user' => $entity,
             'cloneuser' => null,
             'roles' => $rolesArr,
-            'sc' => $this->get('security.context'),
+            'container' => $this->container,
             'em' => $em
         );
 
@@ -2430,7 +2430,7 @@ class UserController extends Controller
             'user' => $entity,
             'cloneuser' => null,
             'roles' => $rolesArr,
-            'sc' => $this->get('security.context'),
+            'container' => $this->container,
             'em' => $em
         );
 
@@ -2785,29 +2785,28 @@ class UserController extends Controller
         //$user = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $sc = $this->get('security.context');
         $userUtil = new UserUtil();
 
         //Administartive and Appointment Titles and Comments update info set when parent are processed
         //So, set author info for the rest: EmploymentStatus, Location, Credentials, ResearchLab
         foreach( $subjectUser->getEmploymentStatus() as $entity ) {
-            $userUtil->setUpdateInfo($entity,$em,$sc);
+            $userUtil->setUpdateInfo($entity,$em,$this->get('security.token_storage'));
         }
 
         foreach( $subjectUser->getLocations() as $entity ) {
-            $userUtil->setUpdateInfo($entity,$em,$sc);
-            $userUtil->setUpdateInfo($entity->getBuilding(),$em,$sc);
+            $userUtil->setUpdateInfo($entity,$em,$this->get('security.token_storage'));
+            $userUtil->setUpdateInfo($entity->getBuilding(),$em,$this->get('security.token_storage'));
         }
 
         //credentials
-        $userUtil->setUpdateInfo($subjectUser->getCredentials(),$em,$sc);
+        $userUtil->setUpdateInfo($subjectUser->getCredentials(),$em,$this->get('security.token_storage'));
 
         foreach( $subjectUser->getResearchLabs() as $entity ) {
-            $userUtil->setUpdateInfo($entity,$em,$sc);
+            $userUtil->setUpdateInfo($entity,$em,$this->get('security.token_storage'));
         }
 
         foreach( $subjectUser->getGrants() as $entity ) {
-            $userUtil->setUpdateInfo($entity,$em,$sc);
+            $userUtil->setUpdateInfo($entity,$em,$this->get('security.token_storage'));
         }
 
     }
@@ -2843,13 +2842,13 @@ class UserController extends Controller
     public function setParentsForResidencySpecialtyTree($entity) {
 
         $em = $this->getDoctrine()->getManager();
-        $sc = $this->get('security.context');
+        $secTokenStorage = $this->get('security.token_storage');
         $userUtil = new UserUtil();
 
         $educationalType = null;
 
         foreach( $entity->getTrainings() as $training) {
-            $userUtil->processResidencySpecialtyTree($training,$em,$sc);
+            $userUtil->processResidencySpecialtyTree($training,$em,$secTokenStorage);
 
             //set Educational type for training Institution
             $institution = $training->getInstitution();
@@ -2904,8 +2903,7 @@ class UserController extends Controller
 
         //set author if not set
         $userUtil = new UserUtil();
-        $sc = $this->get('security.context');
-        $userUtil->setUpdateInfo($comment,$em,$sc);
+        $userUtil->setUpdateInfo($comment,$em,$this->get('security.token_storage'));
     }
 
 
@@ -2923,7 +2921,7 @@ class UserController extends Controller
                 if( $documentContainer ) {
                     //$userUtil = new UserUtil();
                     //$sc = $this->get('security.context');
-                    //$userUtil->setUpdateInfo($documentContainer,$em,$sc);
+                    //$userUtil->setUpdateInfo($documentContainer,$em,$this->get('security.token_storage'));
                 }
 
             }

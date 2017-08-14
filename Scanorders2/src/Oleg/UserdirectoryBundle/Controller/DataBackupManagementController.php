@@ -32,7 +32,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 
-class DataBackupManagement extends Controller
+class DataBackupManagementController extends Controller
 {
 
     /**
@@ -52,7 +52,7 @@ class DataBackupManagement extends Controller
      */
     public function dataBackupManagementAction(Request $request) {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_ADMIN') ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_ADMIN') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
@@ -92,7 +92,7 @@ class DataBackupManagement extends Controller
      */
     public function createBackupAction(Request $request) {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_ADMIN') ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_ADMIN') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
@@ -151,7 +151,7 @@ class DataBackupManagement extends Controller
      */
     public function restoreBackupAction( Request $request, $backupFilePath ) {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_ADMIN') ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_ADMIN') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 

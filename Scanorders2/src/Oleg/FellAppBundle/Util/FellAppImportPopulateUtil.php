@@ -55,17 +55,15 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class FellAppImportPopulateUtil {
 
     protected $em;
-    protected $sc;
     protected $container;
 
     protected $uploadDir;
     protected $systemEmail;
 
 
-    public function __construct( $em, $sc, $container ) {
+    public function __construct( $em, $container ) {
 
         $this->em = $em;
-        $this->sc = $sc;
         $this->container = $container;
 
         $this->uploadDir = 'Uploaded';

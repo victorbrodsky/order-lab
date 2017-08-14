@@ -15,7 +15,7 @@ services:
 
     translationalresearch_authentication_handler:
         class: Oleg\TranslationalResearchBundle\Security\Authentication\TranslationalResearchLoginSuccessHandler
-        arguments:  [@service_container, @security.context, @doctrine.orm.entity_manager]
+        arguments:  ["@service_container", "@doctrine.orm.entity_manager"]
 
     translationalresearch_role_voter:
         class: Oleg\TranslationalResearchBundle\Security\Voter\TranslationalResearchRoleVoter

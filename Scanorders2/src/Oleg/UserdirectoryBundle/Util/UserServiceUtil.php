@@ -42,13 +42,13 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class UserServiceUtil {
 
     protected $em;
-    protected $sc;
+    protected $secTokenStorage;
     protected $container;
     protected $m3;
 
-    public function __construct( $em, $sc, $container ) {
+    public function __construct( $em, $secTokenStorage, $container ) {
         $this->em = $em;
-        $this->sc = $sc;
+        $this->secTokenStorage = $secTokenStorage;
         $this->container = $container;
     }
 
@@ -121,7 +121,7 @@ class UserServiceUtil {
     //the timestamp must change based on the timezone set in Global User Preferences > TimeZone of the currently logged in user's profile
     public function getSubmitterInfo( $message, $user=null ) {
         if( !$user ) {
-            $user = $this->sc->getToken()->getUser();
+            $user = $this->secTokenStorage->getToken()->getUser();
         }
         $info = $this->getOrderDateStr($message,$user);
         if( $message && $message->getProvider() ) {
@@ -139,7 +139,7 @@ class UserServiceUtil {
         $info = "";
         if( $message->getOrderdate() ) {
             if( !$user ) {
-                $user = $this->sc->getToken()->getUser();
+                $user = $this->secTokenStorage->getToken()->getUser();
             }
             $orderDate = $message->getOrderdate();
             //$orderDate = $this->convertFromUserTzToUserTz($orderDate,$message->getProvider(),$user);

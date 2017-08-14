@@ -48,12 +48,10 @@ class CallLogUtil
 {
 
     protected $em;
-    protected $sc;
     protected $container;
 
-    public function __construct( $em, $sc, $container ) {
+    public function __construct( $em, $container ) {
         $this->em = $em;
-        $this->sc = $sc;
         $this->container = $container;
     }
 
@@ -1264,7 +1262,7 @@ class CallLogUtil
         $userServiceUtil = $this->container->get('user_service_utility');
 
         //only send the notification email if the box noAttendingEmail is not checked
-        $currentUser = $this->sc->getToken()->getUser();
+        $currentUser = $this->container->get('security.token_storage')->getToken()->getUser();
         if( $currentUser && $currentUser->getPreferences() ) {
             $noAttendingEmail = $currentUser->getPreferences()->getNoAttendingEmail();
             if( $noAttendingEmail ) {
@@ -1325,7 +1323,7 @@ class CallLogUtil
 
         //testing
 //        $eventType = "New Call Log Book Entry Submitted";
-//        $user = $this->sc->getToken()->getUser();
+//        $user = $this->container->get('security.token_storage')->getToken()->getUser();
 //        $userSecUtil = $this->container->get('user_security_utility');
 //        $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $body, $user, $message, null, $eventType);
     }
@@ -1398,7 +1396,7 @@ class CallLogUtil
         }
 
         $userSecUtil = $this->container->get('user_security_utility');
-        $user = $this->sc->getToken()->getUser();
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
 
         //add only if the patient does not exists in the list
         $similarPatients = $this->getSamePatientsInList($patientList,$patient);
@@ -2040,7 +2038,7 @@ class CallLogUtil
 
     public function getTotalTimeSpentMinutes( $user=null ) {
         if( !$user ) {
-            $user = $this->sc->getToken()->getUser();
+            $user = $this->container->get('security.token_storage')->getToken()->getUser();
         }
 
         $msg = null;

@@ -468,12 +468,12 @@ class FellAppController extends Controller {
                 $systemUser = $userSecUtil->findSystemUser();
                 if( $systemUser ) {
                     $token = new UsernamePasswordToken($systemUser, null, $firewall, $systemUser->getRoles());
-                    $this->get('security.context')->setToken($token);
+                    $this->get('security.token_storage')->setToken($token);
                     //$this->get('security.token_storage')->setToken($token);
                 }
                 $logger->notice("Download view: Logged in as systemUser=".$systemUser);
             } else {
-                $logger->notice("Download view: Token user is valid security.context user=".$user);
+                $logger->notice("Download view: Token user is valid security.token_storage user=".$user);
             }
         }
 
@@ -633,7 +633,6 @@ class FellAppController extends Controller {
 
         $params = array(
             'cycle' => $cycle,
-            'sc' => $this->get('security.context'),
             'em' => $em,
             'user' => $entity->getUser(),
             'cloneuser' => null,
@@ -720,7 +719,6 @@ class FellAppController extends Controller {
 
         $params = array(
             'cycle' => $cycle,
-            'sc' => $this->get('security.context'),
             'em' => $this->getDoctrine()->getManager(),
             'user' => $entity->getUser(),
             'cloneuser' => null,
@@ -784,8 +782,8 @@ class FellAppController extends Controller {
             //set update author application
             $em = $this->getDoctrine()->getManager();
             $userUtil = new UserUtil();
-            $sc = $this->get('security.context');
-            $userUtil->setUpdateInfo($entity,$em,$sc);
+            $secTokenStorage = $this->get('security.token_storage');
+            $userUtil->setUpdateInfo($entity,$em,$secTokenStorage);
 
 
             /////////////// Add event log on edit (edit or add collection) ///////////////
@@ -1033,7 +1031,6 @@ class FellAppController extends Controller {
 
         $params = array(
             'cycle' => 'new',
-            'sc' => $this->get('security.context'),
             'em' => $this->getDoctrine()->getManager(),
             'user' => $fellowshipApplication->getUser(),
             'cloneuser' => null,
@@ -1431,7 +1428,7 @@ class FellAppController extends Controller {
 
         $params = array(
             'cycle' => $cycle,
-            'sc' => $this->get('security.context'),
+            'container' => $this->container,
             'em' => $em,
             'interviewer' => $interview->getInterviewer(),
             'showFull' => false
@@ -1494,7 +1491,7 @@ class FellAppController extends Controller {
 
         $params = array(
             'cycle' => $cycle,
-            'sc' => $this->get('security.context'),
+            'container' => $this->container,
             'em' => $em,
             'interviewer' => $interview->getInterviewer(),
             'showFull' => false

@@ -41,12 +41,15 @@ class OrderUtil {
 
     private $em;
     private $container;
-    private $sc;
+    private $secTokenStorage;
+    private $secAuthChecker;
 
-    public function __construct( $em, $container, $sc ) {
+    public function __construct( $em, $container ) {
         $this->em = $em;
+
         $this->container = $container;
-        $this->sc = $sc;
+        $this->secAuthChecker = $container->get('security.authorization_checker');
+        $this->secTokenStorage = $container->get('security.token_storage');
     }
 
     public function redirectOrderByStatus($order,$routeName) {
@@ -149,10 +152,10 @@ class OrderUtil {
 
             $fieldStatusStr = "deleted-by-canceled-order";
 
-            if( $entity->getProvider() == $user || $this->sc->isGranted("ROLE_SCANORDER_ORDERING_PROVIDER") ) {
+            if( $entity->getProvider() == $user || $this->secAuthChecker->isGranted("ROLE_SCANORDER_ORDERING_PROVIDER") ) {
                 $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByName("Canceled by Submitter");
             } else
-            if( $this->sc->isGranted("ROLE_SCANORDER_ADMIN") || $this->sc->isGranted("ROLE_SCANORDER_PROCESSOR") ) {
+            if( $this->secAuthChecker->isGranted("ROLE_SCANORDER_ADMIN") || $this->secAuthChecker->isGranted("ROLE_SCANORDER_PROCESSOR") ) {
                 $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByName("Canceled by Processor");
             } else {
                 $status_entity = $em->getRepository('OlegOrderformBundle:Status')->findOneByName("Canceled by Submitter");
@@ -488,7 +491,7 @@ class OrderUtil {
     //$commentFlag = null-show only comments to the orders belonging to admin
     public function getCommentsCriteriaStr($flag = 'new_comments', $commentFlag = null) {
 
-        if( !$this->sc->getToken() ) {
+        if( !$this->secTokenStorage->getToken() ) {
             return "";
         }
 
@@ -500,7 +503,7 @@ class OrderUtil {
             return $criteriastr;
         }
 
-        $user = $this->sc->getToken()->getUser();
+        $user = $this->secTokenStorage->getToken()->getUser();
 
         if( !is_object($user) ) {
             return "";
@@ -703,7 +706,7 @@ class OrderUtil {
         $sysemail = $this->container->getParameter('default_system_email');
         $flashBag = $this->container->get('session')->getFlashBag();
 
-        if( $this->sc->isGranted('ROLE_SCANORDER_PROCESSOR') || $this->sc->isGranted('ROLE_SCANORDER_ADMIN') ) {
+        if( $this->secAuthChecker->isGranted('ROLE_SCANORDER_PROCESSOR') || $this->secAuthChecker->isGranted('ROLE_SCANORDER_ADMIN') ) {
 
             $webUserUrl = "<a href=".$userUrl.">profile</a>";
             $msg =  "Please add at least one institution to your ".$webUserUrl." (field 'Order data visible to members of (Institutional PHI Scope)') in order to be able to place orders.";
@@ -817,7 +820,7 @@ class OrderUtil {
 
             //chief scope
             $userSiteSettings = $secUtil->getUserPerSiteSettings($user);
-            if( $this->sc->isGranted('ROLE_SCANORDER_SERVICE_CHIEF') ) {
+            if( $this->secAuthChecker->isGranted('ROLE_SCANORDER_SERVICE_CHIEF') ) {
                 $chiefServices = $userSiteSettings->getChiefServices();
                 foreach( $chiefServices as $serv ) {
                     if( !$userServices->contains($serv) ) {
@@ -863,7 +866,7 @@ class OrderUtil {
     public function getPreviousMessage( $categoryStr=null ) {
         $previousOrder = null;
 
-        $user = $this->sc->getToken()->getUser();
+        $user = $this->secTokenStorage->getToken()->getUser();
 
 //        $previousOrders = $this->em->getRepository('OlegOrderformBundle:Message')->findBy(
 //            array('provider'=>$user),

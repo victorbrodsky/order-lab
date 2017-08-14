@@ -29,9 +29,7 @@ use Oleg\UserdirectoryBundle\Security\Authentication\LoginSuccessHandler;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Router;
@@ -41,12 +39,10 @@ use Symfony\Component\Routing\Router;
 class VacReqLoginSuccessHandler extends LoginSuccessHandler {
 
 
-    public function __construct( $container, SecurityContext $security, $em )
+    public function __construct( $container, $em )
     {
-        $this->container = $container;
-        $this->router = $container->get('router');
-        $this->security = $security;
-        $this->em = $em;
+        parent::__construct($container,$em);
+
         $this->siteName = $container->getParameter('vacreq.sitename');
         $this->siteNameStr = 'Vacation Request System';
         $this->roleBanned = 'ROLE_VACREQ_BANNED';
@@ -60,7 +56,7 @@ class VacReqLoginSuccessHandler extends LoginSuccessHandler {
 
         $redirectResponse = parent::onAuthenticationSuccess($request,$token);
 
-        if( $this->security->isGranted("ROLE_VACREQ_ADMIN") ) {
+        if( $this->secAuth->isGranted("ROLE_VACREQ_ADMIN") ) {
             return $redirectResponse;
         }
 
