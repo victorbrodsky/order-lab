@@ -88,7 +88,7 @@ class CallLogPatientController extends PatientController {
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $userSecUtil = $this->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
 
@@ -203,7 +203,7 @@ class CallLogPatientController extends PatientController {
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $userSecUtil = $this->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
 
@@ -321,7 +321,7 @@ class CallLogPatientController extends PatientController {
 
         $em = $this->getDoctrine()->getManager();
         $securityUtil = $this->get('order_security_utility');
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         //$listname
         $listnameArr = explode('-',$listname);
@@ -774,7 +774,7 @@ class CallLogPatientController extends PatientController {
 
 
     public function createPatientForm($patient, $mrntype=null, $mrn=null) {
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
         if( !$mrntype ) {

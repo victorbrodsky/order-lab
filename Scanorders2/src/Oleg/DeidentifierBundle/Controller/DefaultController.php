@@ -122,7 +122,7 @@ class DefaultController extends Controller
 
     public function createGenerateForm() {
         //permittedInstitutions for generation
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         //echo "user=".$user."<br>";
         $securityUtil = $this->get('order_security_utility');
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
@@ -193,7 +193,7 @@ class DefaultController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         //get search string
         $accessionNumber = $request->query->get('accessionNumber');
@@ -293,7 +293,7 @@ class DefaultController extends Controller
         }
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         //get search string
         $institution = $request->query->get('institution');
@@ -433,7 +433,7 @@ class DefaultController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         //parameters
         $extra = array();
@@ -671,7 +671,7 @@ class DefaultController extends Controller
             throw $this->createNotFoundException('Accession is not found by ID ' . $accessionId);
         }
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $status = 'deidentified-valid';
         $securityUtil = $this->get('order_security_utility');

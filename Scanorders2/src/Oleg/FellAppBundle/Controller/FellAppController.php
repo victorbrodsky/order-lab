@@ -94,7 +94,7 @@ class FellAppController extends Controller {
 
         //echo "fellapp user ok <br>";
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $fellappUtil = $this->container->get('fellapp_util');
 
         $searchFlag = false;
@@ -445,7 +445,7 @@ class FellAppController extends Controller {
         //ini_set('memory_limit', '3072M');
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $logger = $this->container->get('logger');
         $routeName = $request->get('_route');
         $userSecUtil = $this->container->get('user_security_utility');
@@ -461,7 +461,7 @@ class FellAppController extends Controller {
 
         //download: user or localhost
         if( $routeName == 'fellapp_download' ) {
-            //$user = $this->get('security.context')->getToken()->getUser();
+            //$user = $this->get('security.token_storage')->getToken()->getUser();
             //download link can be accessed by a console as localhost with role IS_AUTHENTICATED_ANONYMOUSLY, so simulate login manually           
             if( !($user instanceof User) ) {
                 $firewall = 'ldap_fellapp_firewall';               
@@ -539,7 +539,7 @@ class FellAppController extends Controller {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         //$user = new User();
         $addobjects = true;
@@ -561,7 +561,7 @@ class FellAppController extends Controller {
 
     public function getShowParameters($routeName, $id=null, $entity=null) {
              
-        $user = $this->get('security.context')->getToken()->getUser(); 
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
 //        echo "user=".$user."<br>";
 //        if( !($user instanceof User) ) {
@@ -686,7 +686,7 @@ class FellAppController extends Controller {
 
         //ini_set('memory_limit', '3072M'); //3072M
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $entity = $this->getDoctrine()->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
 
@@ -716,7 +716,7 @@ class FellAppController extends Controller {
         }
 
         $cycle = 'edit';
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $params = array(
             'cycle' => $cycle,
@@ -1008,7 +1008,7 @@ class FellAppController extends Controller {
         }
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $fellowshipApplication = new FellowshipApplication($user);
 
@@ -1273,7 +1273,7 @@ class FellAppController extends Controller {
     public function changeFellAppStatus($fellapp, $status, $request) {
         
         $logger = $this->container->get('logger');
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
         
         //get status object
@@ -1395,7 +1395,7 @@ class FellAppController extends Controller {
             throw $this->createNotFoundException('Unable to find Fellowship Application Interview by id='.$id);
         }
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         //check if the interviewer is the same as current user
         $interviewer = $interview->getInterviewer();
@@ -1482,7 +1482,7 @@ class FellAppController extends Controller {
         }
 
         //check if the interviewer is the same as current user
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         if( $user->getId() != $interview->getInterviewer()->getId() ) {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
@@ -1542,7 +1542,7 @@ class FellAppController extends Controller {
             $applicant = $fellapp->getUser();
             $eventType = 'Fellowship Interview Evaluation Updated';
             $userSecUtil = $this->container->get('user_security_utility');
-            $user = $this->get('security.context')->getToken()->getUser();
+            $user = $this->get('security.token_storage')->getToken()->getUser();
             //$event = $eventType . '; application ID ' . $fellapp->getId();
             $event = 'Fellowship Interview Evaluation for applicant '.$applicant->getUsernameOptimal().' (ID: '.$fellapp->getId().') has been submitted by ' . $user->getUsernameOptimal();
             $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$fellapp,$request,$eventType);
@@ -1863,7 +1863,7 @@ class FellAppController extends Controller {
 //            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
 //        }
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);

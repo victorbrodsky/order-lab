@@ -483,7 +483,7 @@ class TreeController extends Controller {
 
             if( !$node ) {
 
-                $username = $this->get('security.context')->getToken()->getUser();
+                $username = $this->get('security.token_storage')->getToken()->getUser();
                 $parent = $treeRepository->find($pid);
 
                 if( $parent ) {

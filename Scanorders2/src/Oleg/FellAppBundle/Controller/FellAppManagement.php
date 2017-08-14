@@ -63,7 +63,7 @@ class FellAppManagement extends Controller {
         }
 
         //$em = $this->getDoctrine()->getManager();
-        //$user = $this->get('security.context')->getToken()->getUser();
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
         $fellappUtil = $this->container->get('fellapp_util');
 
         //get all fellowship types using institution: FellowshipSubspecialty objects that have $coordinators, $directors, $interviewers
@@ -227,7 +227,7 @@ class FellAppManagement extends Controller {
 
         $fellappUtil = $this->container->get('fellapp_util');
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
 //        $role = $em->getRepository('OlegUserdirectoryBundle:Roles')->find($roleId);
 //
@@ -370,7 +370,7 @@ class FellAppManagement extends Controller {
         //exit('removeFellowshipTypeAction id='.$fellaptypeid);
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $subspecialtyType = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->find($fellaptypeid);
         if( !$subspecialtyType ) {
@@ -505,7 +505,7 @@ class FellAppManagement extends Controller {
         }
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $fellappUtil = $this->container->get('fellapp_util');
 
 

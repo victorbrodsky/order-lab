@@ -111,7 +111,7 @@ class CallLogLoggerController extends LoggerController
         }
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $userSecUtil = $this->get('user_security_utility');
 
         $eventType = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->findOneByName("New Call Log Book Entry Submitted");
@@ -243,7 +243,7 @@ class CallLogLoggerController extends LoggerController
 
         //echo "CallLogLoggerController: capacity=".$capacity."<br>";
         //echo "process Optional Fields <br>";
-        $currentUser = $this->get('security.context')->getToken()->getUser();
+        $currentUser = $this->get('security.token_storage')->getToken()->getUser();
         //search logger.event for [Attending Physician: firstname lastname - cwid (WCMC CWID)]
         $currentUserName = "Attending Physician: ".$currentUser."";
         //$currentUserName = $currentUser->getPrimaryPublicUserId()."";

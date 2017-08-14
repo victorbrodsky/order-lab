@@ -162,7 +162,7 @@ class EducationalResearchController extends Controller {
             );
 
             //add event log to History
-            $user = $this->get('security.context')->getToken()->getUser();
+            $user = $this->get('security.token_storage')->getToken()->getUser();
             $history = new History();
 
             $eventtype = $em->getRepository('OlegOrderformBundle:ProgressCommentsEventTypeList')->findOneByName('Data Reviewed');

@@ -53,7 +53,7 @@ class SlideReturnRequestController extends Controller
     public function newRequestSlideReturnTableAction(Request $request)
     {
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $orderUtil = $this->get('scanorder_utility');
 
@@ -244,7 +244,7 @@ class SlideReturnRequestController extends Controller
         if( $form->isValid() ) {
             //echo "form is valid !!! <br>";
 
-            $user = $this->get('security.context')->getToken()->getUser();
+            $user = $this->get('security.token_storage')->getToken()->getUser();
             $em = $this->getDoctrine()->getManager();
 
             //add message with specified id to associated objects to message
@@ -304,7 +304,7 @@ class SlideReturnRequestController extends Controller
 
     public function constractSlideRequestForm($slideReturnRequest,$params,$scanorderId) {
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
 
@@ -423,7 +423,7 @@ class SlideReturnRequestController extends Controller
             $setParameter = true;
         }
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         /////////// institution ///////////
         $criteriastr = $this->addSlideReturnRequestInstitutionQueryCriterion($user,$criteriastr);
@@ -508,7 +508,7 @@ class SlideReturnRequestController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $repository = $this->getDoctrine()->getRepository('OlegOrderformBundle:SlideReturnRequest');
         $dql =  $repository->createQueryBuilder("list");
@@ -603,7 +603,7 @@ class SlideReturnRequestController extends Controller
             throw $this->createNotFoundException('Unable to find SlideReturnRequest entity.');
         }
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $message = $entity->getMessage();
         $securityUtil = $this->get('order_security_utility');
         if( $message && !$securityUtil->hasUserPermission($message,$user,array("Union"),array("changestatus")) ) {
@@ -681,7 +681,7 @@ class SlideReturnRequestController extends Controller
 //                throw $this->createNotFoundException('Unable to find SlideReturnRequest entity.');
 //            }
 //
-//            $user = $this->get('security.context')->getToken()->getUser();
+//            $user = $this->get('security.token_storage')->getToken()->getUser();
 //            $slideReturnRequest->addComment($text_value, $user);
 //
 //            //echo "ok";
@@ -690,7 +690,7 @@ class SlideReturnRequestController extends Controller
 //
 //
 //            //record history
-//            $user = $this->get('security.context')->getToken()->getUser();
+//            $user = $this->get('security.token_storage')->getToken()->getUser();
 //            $message = $slideReturnRequest->getMessage();
 //            $slides = $slideReturnRequest->getSlide();
 //            $history = new History();
@@ -734,7 +734,7 @@ class SlideReturnRequestController extends Controller
         } else {
 
             $em = $this->getDoctrine()->getManager();
-            $user = $this->get('security.context')->getToken()->getUser();
+            $user = $this->get('security.token_storage')->getToken()->getUser();
 
             $slideReturnRequest = $em->getRepository('OlegOrderformBundle:SlideReturnRequest')->find($id);
 
@@ -748,7 +748,7 @@ class SlideReturnRequestController extends Controller
             $message = $slideReturnRequest->getMessage();
             if( $message ) {
 
-                $user = $this->get('security.context')->getToken()->getUser();
+                $user = $this->get('security.token_storage')->getToken()->getUser();
                 $slides = $slideReturnRequest->getSlide();
                 $history = new History();
                 $history->setMessage($message);

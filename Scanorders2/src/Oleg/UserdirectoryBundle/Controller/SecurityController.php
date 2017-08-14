@@ -555,7 +555,7 @@ class SecurityController extends Controller
         }
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.context')->getToken()->getUser(); //oli2002_@_local-user
+        $user = $this->get('security.token_storage')->getToken()->getUser(); //oli2002_@_local-user
 
         $res = "NOTOK";
 

@@ -396,7 +396,7 @@ class LoggerController extends Controller
         $objectTypes = $filterform['objectType']->getData();
         $objectId = $filterform['objectId']->getData();
 
-        $currentUser = $this->get('security.context')->getToken()->getUser();
+        $currentUser = $this->get('security.token_storage')->getToken()->getUser();
 
 //        foreach( $users as $user ) {
 //            echo "user=".$user."<br>";

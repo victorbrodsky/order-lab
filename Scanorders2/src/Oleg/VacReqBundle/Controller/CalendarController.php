@@ -56,7 +56,7 @@ class CalendarController extends Controller
 
         $vacreqUtil = $this->get('vacreq_util');
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $params = array();
         $params['em'] = $em;

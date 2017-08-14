@@ -53,7 +53,7 @@ class ScanAccessRequestController extends AccessRequestController
 
         $userSecUtil = $this->get('user_security_utility');
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         //the user might be authenticated by another site. If the user does not have lowest role => assign unapproved role to trigger access request
         if( false === $userSecUtil->hasGlobalUserRole('ROLE_SCANORDER_SUBMITTER',$user) ) {
@@ -98,7 +98,7 @@ class ScanAccessRequestController extends AccessRequestController
 
         $sitename = $this->container->getParameter('scan.sitename');
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $userSecUtil = $this->get('user_security_utility');
         if( false === $userSecUtil->hasGlobalUserRole('ROLE_SCANORDER_UNAPPROVED',$user) ) {
@@ -121,7 +121,7 @@ class ScanAccessRequestController extends AccessRequestController
     public function accessRequestAction()
     {
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $id = $user->getId();
         $sitename = $this->container->getParameter('scan.sitename');
 
@@ -186,7 +186,7 @@ class ScanAccessRequestController extends AccessRequestController
 //            $entity->addRole('ROLE_SCANORDER_ORDERING_PROVIDER');
 //
 //            //add WCMC institional scope to Aperio created users
-//            $creator = $this->get('security.context')->getToken()->getUser();
+//            $creator = $this->get('security.token_storage')->getToken()->getUser();
 //            $orderSecUtil = $this->container->get('order_security_utility');
 //            $orderSecUtil->addInstitutionalPhiScopeWCMC($entity,$creator);
 //
@@ -229,7 +229,7 @@ class ScanAccessRequestController extends AccessRequestController
         $entity->addRole('ROLE_SCANORDER_ORDERING_PROVIDER');
 
         //add WCMC institional scope to Aperio created users
-        $creator = $this->get('security.context')->getToken()->getUser();
+        $creator = $this->get('security.token_storage')->getToken()->getUser();
         $orderSecUtil = $this->container->get('order_security_utility');
         $orderSecUtil->addInstitutionalPhiScopeWCMC($entity,$creator);
     }

@@ -47,7 +47,7 @@ class CallLogEditController extends CallEntryController
         }
 
         //$userServiceUtil = $this->get('user_service_utility');
-        //$user = $this->get('security.context')->getToken()->getUser();
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
         //$securityUtil = $this->get('order_security_utility');
         //$userSecUtil = $this->get('user_security_utility');
         //$orderUtil = $this->get('scanorder_utility');
@@ -83,7 +83,7 @@ class CallLogEditController extends CallEntryController
 
         $userServiceUtil = $this->get('user_service_utility');
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $userSecUtil = $this->get('user_security_utility');
 
         $message = $em->getRepository('OlegOrderformBundle:Message')->findByOidAndVersion($messageOid,$messageVersion);
@@ -133,7 +133,7 @@ class CallLogEditController extends CallEntryController
         $em = $this->getDoctrine()->getManager();
         $userServiceUtil = $this->get('user_service_utility');
         $userSecUtil = $this->get('user_security_utility');
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         if( $message->getMessageStatus() != "Deleted" ) {
             $message->setMessageStatusPrior($message->getMessageStatus());
@@ -189,7 +189,7 @@ class CallLogEditController extends CallEntryController
         $calllogUtil = $this->get('calllog_util');
         $securityUtil = $this->get('order_security_utility');
         $userServiceUtil = $this->get('user_service_utility');
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
         //$title = "Call Log Entry";
@@ -419,7 +419,7 @@ class CallLogEditController extends CallEntryController
 
         //exit('update entry');
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $securityUtil = $this->get('order_security_utility');
         $userSecUtil = $this->get('user_security_utility');
         $orderUtil = $this->get('scanorder_utility');

@@ -124,7 +124,7 @@ class DefaultController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $inputFileName = __DIR__ . '/../../../../../importUserLists/Calllog_Users.xlsx';
 

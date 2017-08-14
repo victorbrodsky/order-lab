@@ -304,7 +304,7 @@ class FellAppApplicantController extends Controller {
 
         //$userutil = new UserUtil();
         //$adminemail = $userutil->getSiteSetting($em,'siteEmail');
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $senderEmail = $user->getEmail();
 
         //fellapp_file_download
@@ -368,7 +368,7 @@ class FellAppApplicantController extends Controller {
         }
 
         //send only 1 email to coordinator
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $senderEmail = $user->getEmail();
 
         //get coordinator emails
@@ -423,7 +423,7 @@ class FellAppApplicantController extends Controller {
         $emailUtil = $this->get('user_mailer_utility');
 
         //get all interviews
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $senderEmail = $user->getEmail();
 
         foreach( $entity->getObservers() as $observer ) {

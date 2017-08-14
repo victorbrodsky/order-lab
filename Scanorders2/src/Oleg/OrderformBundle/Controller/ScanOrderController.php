@@ -107,7 +107,7 @@ class ScanOrderController extends Controller {
         }
 
         //by user
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         //echo "user=".$user;
         if( !is_object($user) ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
@@ -333,7 +333,7 @@ class ScanOrderController extends Controller {
         
         $em = $this->getDoctrine()->getManager();
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $orderUtil = $this->get('scanorder_utility');
 
@@ -648,7 +648,7 @@ class ScanOrderController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         /////////// institution ///////////
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $orderUtil = $this->get('scanorder_utility');
         $instStr = $orderUtil->getInstitutionQueryCriterion($user);
 //        $instStr = "";
@@ -697,7 +697,7 @@ class ScanOrderController extends Controller {
         //$slideReturnRequest = $em->getRepository('OlegOrderformBundle:SlideReturnRequest')->findByStatus('active');
 
         /////////// institution ///////////
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $orderUtil = $this->get('scanorder_utility');
         $instStr = $orderUtil->getInstitutionQueryCriterion($user);
 //        $instStr = "";
@@ -829,7 +829,7 @@ class ScanOrderController extends Controller {
         //////// record to EventLog ////////
         if( !$page || $page == "" ) {
             $em = $this->getDoctrine()->getManager();
-            $user = $this->get('security.context')->getToken()->getUser();
+            $user = $this->get('security.token_storage')->getToken()->getUser();
             $roles = $user->getRoles();
             $request = $this->get('request');
 
@@ -883,7 +883,7 @@ class ScanOrderController extends Controller {
         //////// record to EventLog ////////
         if( !$page || $page == "" ) {
             $em = $this->getDoctrine()->getManager();
-            $user = $this->get('security.context')->getToken()->getUser();
+            $user = $this->get('security.token_storage')->getToken()->getUser();
             $roles = $user->getRoles();
             $request = $this->get('request');
 

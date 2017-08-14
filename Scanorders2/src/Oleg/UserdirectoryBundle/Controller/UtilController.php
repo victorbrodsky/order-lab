@@ -392,7 +392,7 @@ class UtilController extends Controller {
             ->select("list")
             ->orderBy("list.orderinlist","ASC");
 
-        //$user = $this->get('security.context')->getToken()->getUser();
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
 
         if( $newCycle ) {
             $query->where("list.type = :typedef")->setParameters(array('typedef' => 'default'));
@@ -743,7 +743,7 @@ class UtilController extends Controller {
             ->select("list")
             ->orderBy("list.orderinlist","ASC");
 
-        //$user = $this->get('security.context')->getToken()->getUser();
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
 
         $query->where("institution.id=".$id);
 
@@ -861,7 +861,7 @@ class UtilController extends Controller {
             ->select("list")
             ->orderBy("list.orderinlist","ASC");
 
-        //$user = $this->get('security.context')->getToken()->getUser();
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
 
         $query->where("list.id=".$id);
 
@@ -1407,7 +1407,7 @@ class UtilController extends Controller {
         $userid = trim( $request->get('userid') );
         $userpassword = trim( $request->get('userpassword') );
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         if( $userid != $user->getId() ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }

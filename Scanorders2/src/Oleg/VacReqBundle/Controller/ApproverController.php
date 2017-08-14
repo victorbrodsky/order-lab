@@ -58,7 +58,7 @@ class ApproverController extends Controller
         }
 
         $vacreqUtil = $this->get('vacreq_util');
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         //$em = $this->getDoctrine()->getManager();
 
         //list all organizational group (institution)
@@ -230,7 +230,7 @@ class ApproverController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         //find role approvers by institution
         $approvers = array();
@@ -382,7 +382,7 @@ class ApproverController extends Controller
         //echo " => userId=".$id."<br>";
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         //check if logged in user has approver role for $instid
         $vacreqUtil = $this->get('vacreq_util');
@@ -463,7 +463,7 @@ class ApproverController extends Controller
         //echo " => userId=".$id."<br>";
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         //check if logged in user has approver role for $instid
         $vacreqUtil = $this->get('vacreq_util');
@@ -594,7 +594,7 @@ class ApproverController extends Controller
         //echo " => userId=".$id."<br>";
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $role = $em->getRepository('OlegUserdirectoryBundle:Roles')->find($roleId);
         if( !$role ) {
@@ -674,7 +674,7 @@ class ApproverController extends Controller
         //echo " => userId=".$id."<br>";
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
 //        $role = $em->getRepository('OlegUserdirectoryBundle:Roles')->find($roleId);
 //
@@ -808,7 +808,7 @@ class ApproverController extends Controller
         //echo " => userId=".$id."<br>";
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->find($instid);
         if( !$institution ) {
@@ -885,7 +885,7 @@ class ApproverController extends Controller
             $eventType = "Business/Vacation Group Updated";
             $event = $institutionTreeName.": The role " . $roleName . " has been removed from the users: " . implode(", ", $userNamesArr);
             $userSecUtil = $this->container->get('user_security_utility');
-            $user = $this->get('security.context')->getToken()->getUser();
+            $user = $this->get('security.token_storage')->getToken()->getUser();
             $userSecUtil->createUserEditEvent($this->container->getParameter('vacreq.sitename'), $event, $user, $institution, $request, $eventType);
         }
 
@@ -917,7 +917,7 @@ class ApproverController extends Controller
     {
 
         $em = $this->getDoctrine()->getManager();
-        //$user = $this->get('security.context')->getToken()->getUser();
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
 
         //vacreq_util
         $vacreqUtil = $this->get('vacreq_util');
@@ -975,7 +975,7 @@ class ApproverController extends Controller
     {
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
 //        $keytype = $request->query->get('keytype');
 //        $keytype = trim($keytype);
@@ -1050,7 +1050,7 @@ class ApproverController extends Controller
         }
 
         //$em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         //vacreq_util
         $vacreqUtil = $this->get('vacreq_util');

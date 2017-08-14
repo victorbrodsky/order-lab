@@ -121,7 +121,7 @@ class UploadController extends Controller {
             } //if commentid && $commentclass
 
             //event log
-            $user = $this->get('security.context')->getToken()->getUser();
+            $user = $this->get('security.token_storage')->getToken()->getUser();
             $eventDescription = "Document has been deleted from the server by " . $user;
             //get eventtype
             $documentType = $document->getType();
@@ -197,7 +197,7 @@ class UploadController extends Controller {
         if( $document ) {
 
             //event log
-            $user = $this->get('security.context')->getToken()->getUser();
+            $user = $this->get('security.token_storage')->getToken()->getUser();
             $eventDescription = "Document has been downloaded by " . $user;
             $this->setDownloadEventLog($request, $document, $user, $sitename, $eventtype, $eventDescription);
 
@@ -208,7 +208,7 @@ class UploadController extends Controller {
             $downloader = new LargeFileDownloader();
             $downloader->downloadLargeFile($abspath, $originalname, $size);
         } else {
-            $user = $this->get('security.context')->getToken()->getUser();
+            $user = $this->get('security.token_storage')->getToken()->getUser();
             $eventDescription = "Document download failed by " . $user . ": Document not found by id $id";
             $this->setDownloadEventLog($request, $document, $user, $sitename, $eventtype, $eventDescription);
             echo $eventDescription.".<br> An error notification email has been sent to the system administrator.<br>";
@@ -269,7 +269,7 @@ class UploadController extends Controller {
 
             //event log
             if( $viewType != 'snapshot' ) {
-                $user = $this->get('security.context')->getToken()->getUser();
+                $user = $this->get('security.token_storage')->getToken()->getUser();
                 $eventDescription = "Document has been viewed by " . $user;
                 $this->setDownloadEventLog($request, $document, $user, $sitename, $eventtype, $eventDescription);
             }
@@ -311,7 +311,7 @@ class UploadController extends Controller {
         if( $eventtype && $sitename ) {
             //$logger->notice("document event log created: eventDescription=".$eventDescription);
             $userSecUtil = $this->container->get('user_security_utility');
-            //$user = $this->get('security.context')->getToken()->getUser();
+            //$user = $this->get('security.token_storage')->getToken()->getUser();
             //$eventDescription = "Document has been downloaded by " . $user;
             $userSecUtil->createUserEditEvent($sitename,$eventDescription,$user,$document,$request,$eventtype);
         } else {

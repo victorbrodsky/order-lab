@@ -134,7 +134,7 @@ class CheckController extends Controller {
      */
     public function getPatientAction() {
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $request = $this->get('request');
         $key = trim( $request->get('key') );
@@ -161,7 +161,7 @@ class CheckController extends Controller {
         $element = array();
         
         //$security_content = $this->get('security.context');
-        //$user = $this->get('security.context')->getToken()->getUser();
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
         //$userUtil = new UserUtil();
         $securityUtil = $this->get('order_security_utility');
         if( $entity && !$securityUtil->hasUserPermission($entity,$user,array("Union","Intersection"),array("show")) ) {
@@ -219,7 +219,7 @@ class CheckController extends Controller {
         $request = $this->get('request');
         $inst = trim( $request->get('inst') );
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $keytypeEntity = $this->getDoctrine()->getRepository('OlegOrderformBundle:MrnType')->findOneByName("Auto-generated MRN");
         $keytype = $keytypeEntity->getId().""; //id of "New York Hospital MRN" in DB
@@ -265,7 +265,7 @@ class CheckController extends Controller {
         //echo "deleteMrnAction key=".$key."<br>";
         //exit('delete finish');
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $key = trim( $request->get('key') );
         $keytype = trim( $request->get('extra') );
@@ -299,7 +299,7 @@ class CheckController extends Controller {
      */
     public function getAccessionAction() {
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $request = $this->get('request');
         $key = trim( $request->get('key') );
@@ -476,7 +476,7 @@ class CheckController extends Controller {
         $request = $this->get('request');
         $inst = trim( $request->get('inst') );
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
 
@@ -518,7 +518,7 @@ class CheckController extends Controller {
      */
     public function deleteAccessionAction(Request $request) {
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $key = trim( $request->get('key') );
         $keytype = trim( $request->get('extra') );
@@ -576,7 +576,7 @@ class CheckController extends Controller {
             $element = -2;
         }
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $securityUtil = $this->get('order_security_utility');
         if( !$securityUtil->hasUserPermission($entity,$user,array("Union","Intersection"),array("show")) ) {
             $entity = null;
@@ -623,13 +623,13 @@ class CheckController extends Controller {
 
         if( $accession && $accession != ""  ) {
 
-            $user = $this->get('security.context')->getToken()->getUser();
+            $user = $this->get('security.token_storage')->getToken()->getUser();
             $em = $this->getDoctrine()->getManager();
             $part = $em->getRepository('OlegOrderformBundle:Part')->createPartByAccession($inst,$accession,$keytype,$user);
             //echo "len=".count($entity->getMrn()).",mrn=".$entity->getMrn()->last()." ";
 
             if( $part ) {
-                $user = $this->get('security.context')->getToken()->getUser();
+                $user = $this->get('security.token_storage')->getToken()->getUser();
                 $part->getPartname()->first()->setProvider($user);
                 //$validPartname = $em->getRepository('OlegOrderformBundle:Part')->obtainValidField($part->getPartname());
                 $element = array(
@@ -715,7 +715,7 @@ class CheckController extends Controller {
                 $element = -2;
             }
 
-            $user = $this->get('security.context')->getToken()->getUser();
+            $user = $this->get('security.token_storage')->getToken()->getUser();
             $securityUtil = $this->get('order_security_utility');
             if( !$securityUtil->hasUserPermission($entity,$user,array("Union","Intersection"),array("show")) ) {
                 $entity = null;
@@ -763,12 +763,12 @@ class CheckController extends Controller {
 
         if( $accession != "" && $partname != "" ) {
 
-            $user = $this->get('security.context')->getToken()->getUser();
+            $user = $this->get('security.token_storage')->getToken()->getUser();
             $em = $this->getDoctrine()->getManager();
             $block = $em->getRepository('OlegOrderformBundle:Block')->createBlockByPartnameAccession($inst,$accession,$keytype,$partname,$user);
             //echo "len=".count($entity->getMrn()).",mrn=".$entity->getMrn()->last()." ";
 
-            $user = $this->get('security.context')->getToken()->getUser();
+            $user = $this->get('security.token_storage')->getToken()->getUser();
             $block->getBlockname()->first()->setProvider($user);
 
             //echo "partname=".$part->getPartname()."  ";
@@ -862,7 +862,7 @@ class CheckController extends Controller {
 //
 //        $external = 'true';
 //
-//        $user = $this->get('security.context')->getToken()->getUser();
+//        $user = $this->get('security.token_storage')->getToken()->getUser();
 //
 //        if( !$user->hasRole('ROLE_SCANORDER_EXTERNAL_SUBMITTER') && !$user->hasRole('ROLE_SCANORDER_EXTERNAL_ORDERING_PROVIDER') ) {
 //            $external = 'not_external_role';

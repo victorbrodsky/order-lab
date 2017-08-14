@@ -54,7 +54,7 @@ class RequestIndexController extends Controller
         //$em = $this->getDoctrine()->getManager();
         //$entities = $em->getRepository('OlegVacReqBundle:VacReqRequest')->findAll();
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         //calculate approved vacation days in total.
         //$totalApprovedDaysString = $vacreqUtil->getApprovedDaysString($user);
@@ -87,7 +87,7 @@ class RequestIndexController extends Controller
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $params = array(
             'sitename' => $this->container->getParameter('vacreq.sitename'),
@@ -250,7 +250,7 @@ class RequestIndexController extends Controller
 
     public function processFilter( $dql, $request, $params ) {
 
-        $currentUser = $this->get('security.context')->getToken()->getUser();
+        $currentUser = $this->get('security.token_storage')->getToken()->getUser();
         $vacreqUtil = $this->get('vacreq_util');
 
         $dqlParameters = array();
@@ -334,7 +334,7 @@ class RequestIndexController extends Controller
                 $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus-carryover');
             }
         }
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $organizationalInstitutions = $vacreqUtil->getGroupsByPermission($user,$groupParams);
 
         //testing

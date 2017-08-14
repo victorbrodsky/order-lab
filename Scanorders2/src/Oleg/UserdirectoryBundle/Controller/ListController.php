@@ -470,7 +470,7 @@ class ListController extends Controller
             //the date from the form does not contain time, so set createdate with date and time.
             $entity->setCreatedate(new \DateTime());
 
-            $user = $this->get('security.context')->getToken()->getUser();
+            $user = $this->get('security.token_storage')->getToken()->getUser();
             $entity->setCreator($user);
 
             $em->persist($entity);
@@ -502,7 +502,7 @@ class ListController extends Controller
         }
 
         //use $timezone = $user->getTimezone(); ?
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $options['user'] = $user;
         $options['entity'] = $entity;
         $options['em'] = $this->getDoctrine()->getManager();
@@ -648,7 +648,7 @@ class ListController extends Controller
 
         $entity = new $entityClass();
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $entity->setCreatedate(new \DateTime());
         $entity->setType('user-added');
         $entity->setCreator($user);
@@ -992,7 +992,7 @@ class ListController extends Controller
         }
 
         //use $timezone = $user->getTimezone(); ?
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $options['user'] = $user;
         $options['entity'] = $entity;
         $options['em'] = $this->getDoctrine()->getManager();
@@ -1167,7 +1167,7 @@ class ListController extends Controller
             $entity->setCreator($originalEntity->getCreator());
             $entity->setCreatedate($originalEntity->getCreatedate());
 
-            $user = $this->get('security.context')->getToken()->getUser();
+            $user = $this->get('security.token_storage')->getToken()->getUser();
             $entity->setUpdatedby($user);
             //$entity->setUpdatedon(new \DateTime());
             $entity->setUpdateAuthorRoles($user->getRoles());

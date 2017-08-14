@@ -64,7 +64,7 @@ class FellAppRankController extends Controller {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$fellappid);
         }
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $rank = $fellApp->getRank();
 
@@ -109,7 +109,7 @@ class FellAppRankController extends Controller {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$fellappid);
         }
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $rank = $fellApp->getRank();
 
@@ -173,7 +173,7 @@ class FellAppRankController extends Controller {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$fellappid);
         }
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $rank = $fellApp->getRank();
 

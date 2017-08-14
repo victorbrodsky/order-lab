@@ -223,7 +223,7 @@ class FellAppLoggerController extends LoggerController
         $em = $this->getDoctrine()->getManager();
 
         //1) get user's role's fellowship types
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $roleObjects = $em->getRepository('OlegUserdirectoryBundle:User')->findUserRolesBySiteAndPartialRoleName($user, 'fellapp', "ROLE_FELLAPP_");
         $fellowshipTypes = array();
         foreach ($roleObjects as $roleObject) {

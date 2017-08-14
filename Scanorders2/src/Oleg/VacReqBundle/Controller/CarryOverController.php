@@ -120,7 +120,7 @@ class CarryOverController extends Controller
         }
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         //$vacreqUtil = $this->get('vacreq_util');
 
         $subjectUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($userId);
@@ -171,7 +171,7 @@ class CarryOverController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         //$vacreqUtil = $this->get('vacreq_util');
-        //$user = $this->get('security.context')->getToken()->getUser();
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
 
         $params = array(
             'sc' => $this->get('security.context'),
@@ -262,7 +262,7 @@ class CarryOverController extends Controller
         $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
         $routeName = $request->get('_route');
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $vacreqUtil = $this->get('vacreq_util');
         $emailUtil = $this->container->get('user_mailer_utility');
         $userSecUtil = $this->container->get('user_security_utility');

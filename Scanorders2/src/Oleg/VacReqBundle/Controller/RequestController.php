@@ -63,7 +63,7 @@ class RequestController extends Controller
         $vacreqUtil = $this->get('vacreq_util');
         $userSecUtil = $this->container->get('user_security_utility');
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         //testing
 //        $currentYear = new \DateTime();
@@ -401,7 +401,7 @@ class RequestController extends Controller
         $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
         $vacreqUtil = $this->get('vacreq_util');
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $entity = $em->getRepository('OlegVacReqBundle:VacReqRequest')->find($id);
 
@@ -659,7 +659,7 @@ class RequestController extends Controller
 
             //set event log for objects
             if( count($changedInfoArr) > 0 ) {
-                //$user = $this->get('security.context')->getToken()->getUser();
+                //$user = $this->get('security.token_storage')->getToken()->getUser();
                 $event .= "Updated Data:".$break;
                 $event .= implode("<br>", $changedInfoArr);
             }
@@ -722,7 +722,7 @@ class RequestController extends Controller
         $logger = $this->container->get('logger');
         $em = $this->getDoctrine()->getManager();
         $routeName = $request->get('_route');
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $vacreqUtil = $this->get('vacreq_util');
 
         $entity = $em->getRepository('OlegVacReqBundle:VacReqRequest')->find($id);
@@ -1003,7 +1003,7 @@ class RequestController extends Controller
      */
     public function statusCancellationRequestAction(Request $request, $id) {
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $entity = $em->getRepository('OlegVacReqBundle:VacReqRequest')->find($id);
 
@@ -1112,7 +1112,7 @@ class RequestController extends Controller
     public function statusCancellationRequestChaneAction(Request $request, $id, $status) {
         $em = $this->getDoctrine()->getManager();
         $routeName = $request->get('_route');
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $entity = $em->getRepository('OlegVacReqBundle:VacReqRequest')->find($id);
 
@@ -1195,7 +1195,7 @@ class RequestController extends Controller
     public function sendReminderEmailAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        //$user = $this->get('security.context')->getToken()->getUser();
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
 
         $entity = $em->getRepository('OlegVacReqBundle:VacReqRequest')->find($id);
 
@@ -1242,7 +1242,7 @@ class RequestController extends Controller
         $vacreqUtil = $this->get('vacreq_util');
         $routeName = $request->get('_route');
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 //        if( !$entity ) {
 //            $entity = new VacReqRequest($user);
 //        }
@@ -1627,7 +1627,7 @@ class RequestController extends Controller
 
         $emailUtil = $this->container->get('user_mailer_utility');
 
-        //$user = $this->get('security.context')->getToken()->getUser();
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
         //$toEmail = $user->getSingleEmail();
 
         $toEmail = "cinava@yahoo.com,cinava10@gmail.com";

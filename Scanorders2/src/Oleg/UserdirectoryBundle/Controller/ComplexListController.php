@@ -280,7 +280,7 @@ class ComplexListController extends Controller
 
         $cycle = 'new_standalone';
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $entity = new $entityClass($user);
 
@@ -324,7 +324,7 @@ class ComplexListController extends Controller
 
         $cycle = 'new_post_standalone';
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $routeName = $request->get('_route');
 
@@ -593,7 +593,7 @@ class ComplexListController extends Controller
             $action = $this->generateUrl($path, array('id' => $entity->getId()));
         }
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $isAdmin = $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR');
 

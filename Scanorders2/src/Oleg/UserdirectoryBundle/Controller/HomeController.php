@@ -166,7 +166,7 @@ class HomeController extends Controller {
         );
 
 
-        //$username = $this->get('security.context')->getToken()->getUser();
+        //$username = $this->get('security.token_storage')->getToken()->getUser();
 
         $count = 10;
         foreach( $elements as $name => $abbreviation ) {

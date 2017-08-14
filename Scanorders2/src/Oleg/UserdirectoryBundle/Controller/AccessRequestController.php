@@ -79,7 +79,7 @@ class AccessRequestController extends Controller
 
         $userSecUtil = $this->get('user_security_utility');
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         //the user might be authenticated by another site. If the user does not have lowest role => assign unapproved role to trigger access request
         if( false === $userSecUtil->hasGlobalUserRole($this->roleUser,$user) ) {
@@ -125,7 +125,7 @@ class AccessRequestController extends Controller
 
         $sitename = $this->siteName;
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $userSecUtil = $this->get('user_security_utility');
         if( false === $userSecUtil->hasGlobalUserRole($this->roleUnapproved,$user) ) {
@@ -299,7 +299,7 @@ class AccessRequestController extends Controller
 //     */
 //    public function accessRequestDetailsAction()
 //    {
-//        $user = $this->get('security.context')->getToken()->getUser();
+//        $user = $this->get('security.token_storage')->getToken()->getUser();
 //        $id = $user->getId();
 //        $sitename = $this->siteName;
 //
@@ -316,7 +316,7 @@ class AccessRequestController extends Controller
       */
     public function accessRequestAction()
     {
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $id = $user->getId();
         $sitename = $this->siteName;
 
@@ -683,7 +683,7 @@ class AccessRequestController extends Controller
 
         //set updated by and updated author roles
         if( $accReq ) {
-            $user = $this->get('security.context')->getToken()->getUser();
+            $user = $this->get('security.token_storage')->getToken()->getUser();
             $accReq->setUpdatedby($user);
             $accReq->setUpdateAuthorRoles($user->getRoles());
             $em->persist($accReq);
@@ -715,7 +715,7 @@ class AccessRequestController extends Controller
 
         $sitenameFull = $this->siteNameStr." site";
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $siteLink = $this->generateUrl( $sitename.'_home', array(), true );
         $newline = "\r\n";
         $msg = "";
@@ -1281,7 +1281,7 @@ class AccessRequestController extends Controller
 
         //set Edit event log for removed collection and changed fields or added collection
         if( count($removedCollections) > 0 ) {
-            $user = $this->get('security.context')->getToken()->getUser();
+            $user = $this->get('security.token_storage')->getToken()->getUser();
             $event = "User information of ".$entity." has been changed by ".$user.":"."<br>";
             $event = $event . "<br>" . implode("<br>", $removedCollections);
             $userSecUtil = $this->get('user_security_utility');

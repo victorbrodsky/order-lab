@@ -1099,7 +1099,7 @@ class UserController extends Controller
 
 //    public function getMyTeam( $dql, $myteam, $myboss, $inputCriteriastr ) {
 //
-//        $user = $this->get('security.context')->getToken()->getUser();
+//        $user = $this->get('security.token_storage')->getToken()->getUser();
 //
 //        $criteriastr = "";
 //
@@ -1149,7 +1149,7 @@ class UserController extends Controller
         if( $subjectUserId ) {
             $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($subjectUserId);
         } else {
-            $user = $this->get('security.context')->getToken()->getUser();
+            $user = $this->get('security.token_storage')->getToken()->getUser();
         }
 
         $criteriastr = "";
@@ -1464,7 +1464,7 @@ class UserController extends Controller
         $userManager = $this->container->get('fos_user.user_manager');
         $user = $userManager->createUser();
 
-        $creator = $this->get('security.context')->getToken()->getUser();
+        $creator = $this->get('security.token_storage')->getToken()->getUser();
         $user = $userGenerator->addDefaultLocations($user,$creator);
 
         $userSecUtil = $this->get('user_security_utility');
@@ -1666,7 +1666,7 @@ class UserController extends Controller
             $em->flush();
 
             //record create user to Event Log
-            $userAdmin = $this->get('security.context')->getToken()->getUser();
+            $userAdmin = $this->get('security.token_storage')->getToken()->getUser();
             $event = "User ".$user." has been created by ".$userAdmin."<br>";
             $userSecUtil = $this->get('user_security_utility');
             $userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'),$event,$userAdmin,$user,$request,'New user record added');
@@ -1730,7 +1730,7 @@ class UserController extends Controller
 //        }
 //
 //        //check if this subject user is visible according to the subject user's preferences
-//        $user = $this->get('security.context')->getToken()->getUser();
+//        $user = $this->get('security.token_storage')->getToken()->getUser();
 //        $secUtil = $this->get('user_security_utility');
 //        if( !$secUtil->isUserVisible($entity,$user) ) {
 //            return $this->redirect( $this->generateUrl('employees-nopermission') );
@@ -1771,7 +1771,7 @@ class UserController extends Controller
         }
 
         //check if this subject user is visible according to the subject user's preferences
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $secUtil = $this->get('user_security_utility');
         if( !$secUtil->isUserVisible($entity,$user) ) {
             //exit('1 show User Optimized no permission');
@@ -1965,7 +1965,7 @@ class UserController extends Controller
             $entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
 
             //check if this subject user is visible according to the subject user's preferences
-            $user = $this->get('security.context')->getToken()->getUser();
+            $user = $this->get('security.token_storage')->getToken()->getUser();
             $secUtil = $this->get('user_security_utility');
             if( !$secUtil->isUserVisible($entity,$user) ) {
                 return false;
@@ -2058,7 +2058,7 @@ class UserController extends Controller
         }
 
         //check if this subject user is visible according to the subject user's preferences
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $secUtil = $this->get('user_security_utility');
         if( !$secUtil->isUserVisible($entity,$user) ) {
             return false;
@@ -2107,7 +2107,7 @@ class UserController extends Controller
     public function addEmptyCollections($entity) {
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         if( count($entity->getAdministrativeTitles()) == 0 ) {
             $entity->addAdministrativeTitle(new AdministrativeTitle($user));
@@ -2261,7 +2261,7 @@ class UserController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $logger = $this->container->get('logger');
-        $loggedUser = $this->get('security.context')->getToken()->getUser();
+        $loggedUser = $this->get('security.token_storage')->getToken()->getUser();
 
         $entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
 
@@ -2728,7 +2728,7 @@ class UserController extends Controller
 
             //set Edit event log for removed collection and changed fields or added collection
             if( count($changedInfoArr) > 0 || count($removedCollections) > 0 ) {
-                $user = $this->get('security.context')->getToken()->getUser();
+                $user = $this->get('security.token_storage')->getToken()->getUser();
                 $event = "User information of ".$entity." has been changed by ".$user.":"."<br>";
                 $event = $event . implode("<br>", $changedInfoArr);
                 $event = $event . "<br>" . implode("<br>", $removedCollections);
@@ -2780,7 +2780,7 @@ class UserController extends Controller
     }
 
     public function updateInfo($subjectUser) {
-        //$user = $this->get('security.context')->getToken()->getUser();
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
         $sc = $this->get('security.context');
@@ -2932,7 +2932,7 @@ class UserController extends Controller
     //set documents for Credentials's coqAttachmentContainer and StateLicense's attachmentContainer
     public function processCredentials($subjectUser) {
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
         $userSecUtil = $this->get('user_security_utility');
 
@@ -3354,7 +3354,7 @@ class UserController extends Controller
 
         //record edit user to Event Log
         $request = $this->container->get('request');
-        $userAdmin = $this->get('security.context')->getToken()->getUser();
+        $userAdmin = $this->get('security.token_storage')->getToken()->getUser();
         $event = "User information of ".$user." has been changed by ".$userAdmin.":"."<br>";
         $event = $event . "User status changed to ".$status;
         $userSecUtil = $this->get('user_security_utility');
@@ -3704,7 +3704,7 @@ class UserController extends Controller
             $em = $this->getDoctrine()->getManager();
 
             //document's creator
-            $user = $this->get('security.context')->getToken()->getUser();
+            $user = $this->get('security.token_storage')->getToken()->getUser();
 
             $object = new Document($user);
             $object->setCleanOriginalname(NULL);
@@ -3781,7 +3781,7 @@ class UserController extends Controller
         }
 
         $em = $this->getDoctrine()->getManager();
-        $userAdmin = $this->get('security.context')->getToken()->getUser();
+        $userAdmin = $this->get('security.token_storage')->getToken()->getUser();
 
         //get username
         $subjectUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);

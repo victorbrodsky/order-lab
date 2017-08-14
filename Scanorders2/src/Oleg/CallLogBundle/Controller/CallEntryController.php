@@ -762,7 +762,7 @@ class CallEntryController extends Controller
 
         //1) search box: MRN,Name...
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $securityUtil = $this->get('order_security_utility');
         $calllogUtil = $this->get('calllog_util');
         $userSecUtil = $this->get('user_security_utility');
@@ -997,7 +997,7 @@ class CallEntryController extends Controller
         //add patient id field to the form (id="oleg_calllogbundle_patienttype_id") or use class="calllog-patient-id" input field.
         //case 2: patient does not exists: create a new encounter to DB
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $securityUtil = $this->get('order_security_utility');
         $userSecUtil = $this->get('user_security_utility');
         $orderUtil = $this->get('scanorder_utility');
@@ -1381,7 +1381,7 @@ class CallEntryController extends Controller
     }//save
 
     public function createCalllogEntryForm($message, $mrntype=null, $mrn=null, $cycle, $readonlyEncounter=false) {
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
         //$patient = $message->getPatient()->first();
@@ -2115,7 +2115,7 @@ class CallEntryController extends Controller
                 } else {
                     $patientEntities = $patients;
                 }
-                $user = $this->get('security.context')->getToken()->getUser();
+                $user = $this->get('security.token_storage')->getToken()->getUser();
                 $userSecUtil = $this->container->get('user_security_utility');
                 $eventType = "Patient Searched";
                 $event = "Patient searched by ".$searchBy;
@@ -2177,7 +2177,7 @@ class CallEntryController extends Controller
         }
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $calllogUtil = $this->get('calllog_util');
 
         $mrn = trim($request->get('mrn'));
@@ -2773,7 +2773,7 @@ class CallEntryController extends Controller
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $userSecUtil = $this->get('user_security_utility');
 
         //$all = $request->get('all');

@@ -87,7 +87,7 @@ class MultiScanOrderController extends Controller {
 
         $entity  = new Message();
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         //check if user has at least one institution
         $securityUtil = $this->get('order_security_utility');
@@ -346,7 +346,7 @@ class MultiScanOrderController extends Controller {
             return $this->redirect( $this->generateUrl('scan_home') );
         }
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $orderUtil = $this->get('scanorder_utility');
@@ -533,7 +533,7 @@ class MultiScanOrderController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         //check if user has at least one institution
         $securityUtil = $this->get('order_security_utility');

@@ -594,7 +594,7 @@ class AdminController extends Controller
     public function generateAll() {
 
         $userutil = new UserUtil();
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         //$max_exec_time = ini_get('max_execution_time');
         ini_set('max_execution_time', 1800); //1800 seconds = 30 minutes; it will set back to original value after execution of this script
@@ -1414,7 +1414,7 @@ class AdminController extends Controller
 
         );
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $count = 10;
         foreach( $types as $role => $aliasDescription ) {
@@ -2220,7 +2220,7 @@ class AdminController extends Controller
         );
 
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $count = 10;
         foreach( $elements as $name ) {
@@ -2262,7 +2262,7 @@ class AdminController extends Controller
             'Research Lab' => -22
         );
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $count = 10;
         foreach( $elements as $name=>$level ) {
@@ -2286,7 +2286,7 @@ class AdminController extends Controller
     //https://bitbucket.org/weillcornellpathology/scanorder/issue/221/multiple-office-locations-and-phone
     public function generateInstitutions() {
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
 
@@ -2658,7 +2658,7 @@ class AdminController extends Controller
     public function generateAuxiliaryInstitutions() {
 
         $em = $this->getDoctrine()->getManager();
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
         $count = 0;
 
         //echo 'generate Auxiliary Institutions <br>';
@@ -2820,7 +2820,7 @@ class AdminController extends Controller
             'WY'=>"Wyoming"
         );
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $count = 10;
         foreach( $states as $key => $value ) {
@@ -2886,7 +2886,7 @@ class AdminController extends Controller
 
 
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $count = 10;
         foreach( $elements as $value ) {
@@ -2911,7 +2911,7 @@ class AdminController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $inputFileName = __DIR__ . '/../Util/Cities.xlsx';
 
@@ -3021,7 +3021,7 @@ class AdminController extends Controller
         //print_r($elements);
         //exit();
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $count = 10;
         foreach( $elements as $abbreviation=>$name ) {
@@ -3084,7 +3084,7 @@ class AdminController extends Controller
         //print_r($elements);
         //exit();
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $count = 10;
         foreach( $elements as $locale=>$description ) {
@@ -3143,7 +3143,7 @@ class AdminController extends Controller
         );
 
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $count = 10;
         foreach( $elements as $value ) {
@@ -3190,7 +3190,7 @@ class AdminController extends Controller
         );
 
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $count = 10;
         foreach( $elements as $value ) {
@@ -3257,7 +3257,7 @@ class AdminController extends Controller
         );
 
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $count = 10;
         foreach( $elements as $value ) {
@@ -3298,7 +3298,7 @@ class AdminController extends Controller
             'Download'
         );
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $count = 10;
         foreach( $elements as $value ) {
@@ -3332,7 +3332,7 @@ class AdminController extends Controller
             'Pathology Fellowship Applicant'
         );
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $count = 10;
         foreach( $elements as $value ) {
@@ -3368,7 +3368,7 @@ class AdminController extends Controller
             'Fired'
         );
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $count = 10;
         foreach( $elements as $value ) {
@@ -3445,7 +3445,7 @@ class AdminController extends Controller
             'Error'
         );
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $count = 10;
         foreach( $elements as $value ) {
@@ -3485,7 +3485,7 @@ class AdminController extends Controller
             'WCMC CWID'
         );
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $count = 10;
         foreach( $elements as $value ) {
@@ -3540,7 +3540,7 @@ class AdminController extends Controller
             "Surgical/Oncologic pathology"
         );
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $count = 10;
         foreach( $elements as $value ) {
@@ -3573,7 +3573,7 @@ class AdminController extends Controller
             'AP/CP'
         );
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $count = 10;
         foreach( $elements as $value ) {
@@ -3604,7 +3604,7 @@ class AdminController extends Controller
             'Fellow'
         );
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $count = 10;
         foreach( $elements as $value ) {
@@ -3656,7 +3656,7 @@ class AdminController extends Controller
             'Transfusion Medicine'
         );
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $count = 10;
         foreach( $elements as $value ) {
@@ -3715,7 +3715,7 @@ class AdminController extends Controller
             'WCM Pathology Department Common Location For Phone Directory'
         );
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $count = 10;
         foreach( $elements as $value ) {
@@ -3739,7 +3739,7 @@ class AdminController extends Controller
 
     public function generateEquipmentType() {
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
 
@@ -3784,7 +3784,7 @@ class AdminController extends Controller
 
     public function generateEquipment() {
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
 
@@ -3841,7 +3841,7 @@ class AdminController extends Controller
 
     public function generateLocationPrivacy() {
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('OlegUserdirectoryBundle:LocationPrivacyList')->findAll();
@@ -3876,7 +3876,7 @@ class AdminController extends Controller
 
     public function generateResLabs_OLD() {
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->findAll();
@@ -3922,7 +3922,7 @@ class AdminController extends Controller
     //"Skeletal Biology", "Dr. Inghirami's Lab", "Wayne Tam Lab"
     public function generateResLabs() {
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
 
@@ -4067,7 +4067,7 @@ class AdminController extends Controller
 
     public function generateBuildings() {
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('OlegUserdirectoryBundle:BuildingList')->findAll();
@@ -4170,7 +4170,7 @@ class AdminController extends Controller
 
     public function generateLocations() {
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
 
@@ -4250,7 +4250,7 @@ class AdminController extends Controller
     }
 
     public function generateLocationsFromExcel( $count=null ) {
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
 //        $entities = $em->getRepository('OlegUserdirectoryBundle:Location')->findAll();
@@ -4410,7 +4410,7 @@ class AdminController extends Controller
         $userGenerator = $this->container->get('user_generator');
         $userUtil = new UserUtil();
         $em = $this->getDoctrine()->getManager();
-        $systemuser = $userUtil->createSystemUser($em,null,null);  //$this->get('security.context')->getToken()->getUser();
+        $systemuser = $userUtil->createSystemUser($em,null,null);  //$this->get('security.token_storage')->getToken()->getUser();
         $default_time_zone = $this->container->getParameter('default_time_zone');
         //echo "systemuser ".$systemuser.", id=".$systemuser->getId()."<br>";
 
@@ -4515,7 +4515,7 @@ class AdminController extends Controller
 
     public function generateCompletionReasons() {
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('OlegUserdirectoryBundle:CompletionReasonList')->findAll();
@@ -4546,7 +4546,7 @@ class AdminController extends Controller
 
     public function generateTrainingDegrees() {
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('OlegUserdirectoryBundle:TrainingDegreeList')->findAll();
@@ -4589,7 +4589,7 @@ class AdminController extends Controller
 
     public function generateResidencySpecialties() {
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
 
@@ -4712,7 +4712,7 @@ class AdminController extends Controller
 
     public function generateHonorTrainings() {
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('OlegUserdirectoryBundle:HonorTrainingList')->findAll();
@@ -4743,7 +4743,7 @@ class AdminController extends Controller
     //Professional Fellowship Title
     public function generateFellowshipTitles() {
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('OlegUserdirectoryBundle:FellowshipTitleList')->findAll();
@@ -4793,7 +4793,7 @@ class AdminController extends Controller
 
     public function generatesourceOrganizations() {
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('OlegUserdirectoryBundle:SourceOrganization')->findAll();
@@ -4826,7 +4826,7 @@ class AdminController extends Controller
 
     public function generateImportances() {
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('OlegUserdirectoryBundle:ImportanceList')->findAll();
@@ -4862,7 +4862,7 @@ class AdminController extends Controller
 
     public function generateAuthorshipRoles() {
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('OlegUserdirectoryBundle:AuthorshipRoles')->findAll();
@@ -4894,7 +4894,7 @@ class AdminController extends Controller
 
 //    public function generateTitlePositionTypes() {
 //
-//        $username = $this->get('security.context')->getToken()->getUser();
+//        $username = $this->get('security.token_storage')->getToken()->getUser();
 //
 //        $em = $this->getDoctrine()->getManager();
 //        $entities = $em->getRepository('OlegUserdirectoryBundle:TitlePositionType')->findAll();
@@ -4947,7 +4947,7 @@ class AdminController extends Controller
 
     public function generateSex() {
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('OlegUserdirectoryBundle:SexList')->findAll();
@@ -4982,7 +4982,7 @@ class AdminController extends Controller
 
     public function generatePositionTypeList() {
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('OlegUserdirectoryBundle:PositionTypeList')->findAll();
@@ -5043,7 +5043,7 @@ class AdminController extends Controller
             'Comment Name' => 1,
         );
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $count = 10;
         foreach( $elements as $name=>$level ) {
@@ -5083,7 +5083,7 @@ class AdminController extends Controller
 //            'Slide'
         );
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $count = 10;
         foreach( $elements as $name ) {
@@ -5116,7 +5116,7 @@ class AdminController extends Controller
             'No',
         );
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $count = 10;
         foreach( $elements as $name ) {
@@ -5149,7 +5149,7 @@ class AdminController extends Controller
             'American Board of Pathology',
         );
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $count = 10;
         foreach( $elements as $name ) {
@@ -5187,7 +5187,7 @@ class AdminController extends Controller
             'Other'
         );
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $count = 10;
         foreach( $elements as $name ) {
@@ -5230,7 +5230,7 @@ class AdminController extends Controller
             'Research Associate'
         );
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $count = 10;
         foreach( $elements as $name ) {
@@ -5275,7 +5275,7 @@ class AdminController extends Controller
             'archive'=>'Archived',
         );
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $count = 10;
         foreach( $elements as $name=>$action ) {
@@ -5317,7 +5317,7 @@ class AdminController extends Controller
             '3 (Below Average)'=>3
         );
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $count = 10;
         foreach( $elements as $name=>$value ) {
@@ -5353,7 +5353,7 @@ class AdminController extends Controller
             "N/A"
         );
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $count = 10;
         foreach( $elements as $name ) {
@@ -5374,7 +5374,7 @@ class AdminController extends Controller
 
     public function generateVacReqRequestTypeList() {
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
 
@@ -5407,7 +5407,7 @@ class AdminController extends Controller
 
     public function generateHealthcareProviderSpecialtiesList() {
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
 
@@ -5485,7 +5485,7 @@ class AdminController extends Controller
                                         'If the user enters an existing MRN number and click check button it will retrieve empty data, so the user can enter a new data which will marked as "invalid".'
         );
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $count = 10;
         foreach( $elements as $name => $description ) {
@@ -5508,7 +5508,7 @@ class AdminController extends Controller
 
     public function generatePermissions() {
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
 //        $entities = $em->getRepository('OlegUserdirectoryBundle:PermissionList')->findAll();
@@ -5590,7 +5590,7 @@ class AdminController extends Controller
 
     public function generatePermissionObjects() {
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
 
@@ -5685,7 +5685,7 @@ class AdminController extends Controller
 
     public function generatePermissionActions() {
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
 //        $entities = $em->getRepository('OlegUserdirectoryBundle:PermissionActionList')->findAll();
@@ -5732,7 +5732,7 @@ class AdminController extends Controller
 
     public function generateObjectTypeActions() {
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
 //        $entities = $em->getRepository('OlegUserdirectoryBundle:PermissionActionList')->findAll();
@@ -5997,7 +5997,7 @@ class AdminController extends Controller
 
     public function generateEventObjectTypeList() {
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
 
@@ -6057,7 +6057,7 @@ class AdminController extends Controller
      */
     public function generatePlatformListManagerList( Request $request=null ) {
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
 
@@ -6885,7 +6885,7 @@ class AdminController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        //$user = $this->get('security.context')->getToken()->getUser();
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
         $primaryPublicUserId = 'Administrator';
         //$primaryPublicUserId = 'Administrator1';
 
@@ -7002,7 +7002,7 @@ class AdminController extends Controller
     //Blood Product Transfused
     public function generateBloodProductTransfused() {
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
@@ -7038,7 +7038,7 @@ class AdminController extends Controller
     //ClericalErrorList
     public function generateClericalErrorList() {
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
@@ -7069,7 +7069,7 @@ class AdminController extends Controller
 
     //LabResultNames
     public function generateLabResultNames() {
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $entities = $em->getRepository('OlegUserdirectoryBundle:LabResultNameList')->findAll();
@@ -7157,7 +7157,7 @@ class AdminController extends Controller
     //LabResultUnitsMeasureList
     public function generateLabResultUnitsMeasureList() {
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $entities = $em->getRepository('OlegUserdirectoryBundle:LabResultUnitsMeasureList')->findAll();
@@ -7228,7 +7228,7 @@ class AdminController extends Controller
     //LabResultFlagList
     public function generateLabResultFlagList() {
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
@@ -7275,7 +7275,7 @@ class AdminController extends Controller
     //PathologyResultSignatoriesList
     public function generatePathologyResultSignatoriesList() {
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
@@ -7305,7 +7305,7 @@ class AdminController extends Controller
     //Transfusion Reaction Type
     public function generateTransfusionReactionType() {
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
@@ -7347,7 +7347,7 @@ class AdminController extends Controller
     //BloodTypeList
     public function generateBloodTypeList() {
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
@@ -7382,7 +7382,7 @@ class AdminController extends Controller
 
     public function generateTransfusionAntibodyScreenResultsList() {
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
@@ -7413,7 +7413,7 @@ class AdminController extends Controller
 
     public function generateTransfusionDATResultsList() {
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
@@ -7444,7 +7444,7 @@ class AdminController extends Controller
 
     public function generateTransfusionCrossmatchResultsList() {
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
@@ -7475,7 +7475,7 @@ class AdminController extends Controller
 
     public function generateTransfusionHemolysisCheckResultsList() {
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
@@ -7506,7 +7506,7 @@ class AdminController extends Controller
 
     public function generateComplexPlateletSummaryAntibodiesList() {
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
@@ -7539,7 +7539,7 @@ class AdminController extends Controller
 
     public function generateCCIUnitPlateletCountDefaultValueList() {
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
@@ -7569,7 +7569,7 @@ class AdminController extends Controller
 
     public function generateCCIPlateletTypeTransfusedList() {
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
@@ -7602,7 +7602,7 @@ class AdminController extends Controller
 
     public function generatePlateletTransfusionProductReceivingList() {
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
@@ -7635,7 +7635,7 @@ class AdminController extends Controller
 
     public function generateTransfusionProductStatusList() {
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
@@ -7669,7 +7669,7 @@ class AdminController extends Controller
 
     public function generateWeekDaysList() {
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
@@ -7705,7 +7705,7 @@ class AdminController extends Controller
 
     public function generateMonthsList() {
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
@@ -7747,7 +7747,7 @@ class AdminController extends Controller
 
     public function generateLifeForm() {
 
-        $username = $this->get('security.context')->getToken()->getUser();
+        $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
@@ -7788,7 +7788,7 @@ class AdminController extends Controller
         }
 
         $em = $this->getDoctrine()->getManager();
-        $creator = $this->get('security.context')->getToken()->getUser();
+        $creator = $this->get('security.token_storage')->getToken()->getUser();
         $userSecUtil = $this->container->get('user_security_utility');
 
         //user_trainings_0_degree

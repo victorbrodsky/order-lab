@@ -114,7 +114,7 @@ class ScanUtilController extends UtilController {
             ->orderBy("list.orderinlist","ASC"); //ASC DESC
 
         if( $opt ) {
-            $user = $this->get('security.context')->getToken()->getUser();
+            $user = $this->get('security.token_storage')->getToken()->getUser();
             $query->andWhere("list.type = 'default' OR ( list.type = 'user-added' AND list.creator = :user)")->setParameter('user',$user);
         }
 
@@ -157,7 +157,7 @@ class ScanUtilController extends UtilController {
             ->orderBy("list.orderinlist","ASC");
 
         if( $opt ) {
-            $user = $this->get('security.context')->getToken()->getUser();
+            $user = $this->get('security.token_storage')->getToken()->getUser();
             $query->where("list.type = 'default' OR ( list.type = 'user-added' AND list.creator = :user)")->setParameter('user',$user);
         }
 
@@ -197,7 +197,7 @@ class ScanUtilController extends UtilController {
             ->orderBy("list.orderinlist","ASC");
 
         if( $opt ) {
-            $user = $this->get('security.context')->getToken()->getUser();
+            $user = $this->get('security.token_storage')->getToken()->getUser();
             $query->where("list.type = 'default' OR ( list.type = 'user-added' AND list.creator = :user)")->setParameter('user',$user);
         }
 
@@ -224,7 +224,7 @@ class ScanUtilController extends UtilController {
 
         $arr = array();
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
         //$entities = $em->getRepository('OlegOrderformBundle:RegionToScan')->findByType('default');
@@ -263,7 +263,7 @@ class ScanUtilController extends UtilController {
 
 //        //add custom added values
 //        //TODO: add custom values, added by ordering provider
-//        $user = $this->get('security.context')->getToken()->getUser();
+//        $user = $this->get('security.token_storage')->getToken()->getUser();
 //        $entities = $this->getDoctrine()->getRepository('OlegOrderformBundle:Imaging')->findByProvider($user);
 //        foreach( $entities as $entity ) {
 //            $arr[] = $entity->getScanregion();
@@ -334,7 +334,7 @@ class ScanUtilController extends UtilController {
 
         $arr = array();
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
         //$entities = $em->getRepository('OlegOrderformBundle:OrderDelivery')->findByType('default');
@@ -516,7 +516,7 @@ class ScanUtilController extends UtilController {
             ->select("list.id as id, list.name as text")
             ->orderBy("list.orderinlist","ASC");
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         if( $type == "single" ) {
             if( $opt && $opt != "undefined" ) {
@@ -570,7 +570,7 @@ class ScanUtilController extends UtilController {
 
         $query->orderBy("list.orderinlist","ASC");
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         if( $opt && $opt != "undefined" ) {
             $query->where("list.type = :type OR ( list.type = 'user-added' AND list.creator = :user)");
@@ -737,7 +737,7 @@ class ScanUtilController extends UtilController {
             ->select("list.id as id, list.name as text")
             ->orderBy("list.orderinlist","ASC");
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         if( $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
             //$query->where("list.type = 'user-added' AND list.creator = :user")->setParameter('user',$user);
@@ -771,7 +771,7 @@ class ScanUtilController extends UtilController {
             ->select("list.id as id, list.name as text")
             ->orderBy("list.orderinlist","ASC");
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $query->where("list.type = 'default' OR ( list.type = 'user-added' AND list.creator = :user)")->setParameter('user',$user);
 
@@ -892,7 +892,7 @@ class ScanUtilController extends UtilController {
     public function getProxyusersAction(Request $request) {
 
         $em = $this->getDoctrine()->getManager();
-        $loggedUser = $this->get('security.context')->getToken()->getUser();
+        $loggedUser = $this->get('security.token_storage')->getToken()->getUser();
         $securityUtil = $this->get('order_security_utility');
         $cycle = $request->query->get('cycle');
 
