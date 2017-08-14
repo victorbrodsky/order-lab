@@ -44,7 +44,7 @@ class HistoryController extends Controller
 //    public function indexAction()
 //    {
 //
-//        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
+//        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
 //            return $this->redirect( $this->generateUrl('scan-nopermission') );
 //        }
 //
@@ -333,8 +333,8 @@ class HistoryController extends Controller
     public function showHistoryMessageAction($id)
     {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_SUBMITTER') &&
-            false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ORDERING_PROVIDER')           
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_SUBMITTER') &&
+            false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_ORDERING_PROVIDER')
         )
         {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
@@ -374,7 +374,7 @@ class HistoryController extends Controller
 
             $viewed = false;
 
-            if( $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
+            if( $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
 
                 //don't mark with view comments placed by PROCESSOR to User and viewed by another PROCESSOR (order->provider does not have role PROCESSOR)
 //                $orderprovider = $entity->getMessage()->getProvider();

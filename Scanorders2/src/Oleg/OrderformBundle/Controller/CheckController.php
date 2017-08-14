@@ -212,7 +212,7 @@ class CheckController extends Controller {
      */
     public function createPatientAction() {
 
-//        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+//        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
 //            return $this->render('OlegOrderformBundle:Security:login.html.twig');
 //        }
 
@@ -469,7 +469,7 @@ class CheckController extends Controller {
      */
     public function createAccessionAction() {
 
-//        if (false === $this->get('security.context')->isGranted('ROLE_USER')) {
+//        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
 //            return $this->render('OlegOrderformBundle:Security:login.html.twig');
 //        }
 

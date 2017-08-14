@@ -77,7 +77,7 @@ class HomeController extends Controller {
 //     * @Route("/admin/list-manager/", name="platformlistmanager-list")
 //     */
 //    public function listManagerAction() {
-//        if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+//        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
 //            //exit('no access');
 //            return $this->redirect( $this->generateUrl('employees-nopermission') );
 //        }

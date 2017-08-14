@@ -48,7 +48,7 @@ class FormNodeController extends Controller {
      */
     public function getFormNodeFieldsAction( Request $request )
     {
-        if( false === $this->get('security.context')->isGranted('ROLE_USER') ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USER') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
@@ -545,7 +545,7 @@ class FormNodeController extends Controller {
      */
     public function formNodeTestAction(Request $request)
     {
-        if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
         }
 

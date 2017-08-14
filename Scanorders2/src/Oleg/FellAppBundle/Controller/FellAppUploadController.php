@@ -40,7 +40,7 @@ class FellAppUploadController extends UploadController {
      * @Method({"GET", "POST", "DELETE"})
      */
     public function deleteFileAction(Request $request) {
-        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->get('security.context')->isGranted('ROLE_FELLAPP_DIRECTOR') ){
+        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_DIRECTOR') ){
             //exit('no fellapp permission');
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
@@ -56,7 +56,7 @@ class FellAppUploadController extends UploadController {
      */
     public function downloadFileAction(Request $request,$id,$eventtype=null) {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_USER') ){
+        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_USER') ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
@@ -80,7 +80,7 @@ class FellAppUploadController extends UploadController {
      */
     public function viewFileAction(Request $request,$id,$eventtype=null, $viewType=null) {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_USER') ){
+        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_USER') ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 

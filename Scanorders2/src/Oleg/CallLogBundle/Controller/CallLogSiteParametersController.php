@@ -83,7 +83,7 @@ class CallLogSiteParametersController extends SiteParametersController
     public function editResourcesAction( Request $request )
     {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_CALLLOG_PATHOLOGY_ATTENDING') ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_CALLLOG_PATHOLOGY_ATTENDING') ) {
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 

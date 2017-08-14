@@ -44,7 +44,7 @@ class FellAppUserController extends UserController
     public function editUserAction($id)
     {
         $secUtil = $this->get('user_security_utility');
-        if( !$secUtil->isCurrentUser($id) && false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+        if( !$secUtil->isCurrentUser($id) && false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
@@ -65,7 +65,7 @@ class FellAppUserController extends UserController
     public function updateUserAction(Request $request, $id)
     {
         $secUtil = $this->get('user_security_utility');
-        if( !$secUtil->isCurrentUser($id) && false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+        if( !$secUtil->isCurrentUser($id) && false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 

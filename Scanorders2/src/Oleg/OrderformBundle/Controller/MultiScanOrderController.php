@@ -78,7 +78,7 @@ class MultiScanOrderController extends Controller {
         //echo "multi new controller !!!! <br>";
         //exit();
 
-        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_SUBMITTER')
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_SUBMITTER')
         ) {
             return $this->redirect( $this->generateUrl('scan_home') );
         }
@@ -342,7 +342,7 @@ class MultiScanOrderController extends Controller {
     public function newMultyAction()
     {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_SUBMITTER') ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_SUBMITTER') ) {
             return $this->redirect( $this->generateUrl('scan_home') );
         }
 
@@ -525,8 +525,8 @@ class MultiScanOrderController extends Controller {
     public function showMultyAction( Request $request, $id, $type = "show" )
     {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_SUBMITTER') &&
-            false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ORDERING_PROVIDER')
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_SUBMITTER') &&
+            false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_ORDERING_PROVIDER')
         ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
@@ -603,7 +603,7 @@ class MultiScanOrderController extends Controller {
         }
 
         //Note: can be replaced by voter:
-        //if( $entity && !$this->get('security.context')->isGranted(implode(",",$actions),$entity) ) {
+        //if( $entity && !$this->get('security.authorization_checker')->isGranted(implode(",",$actions),$entity) ) {
         if( $entity && !$securityUtil->isUserAllowOrderActions($entity, $user, $actions) ) {
             //exit('isUserAllowOrderActions false');
             return $this->redirect( $this->generateUrl('scan-nopermission') );
@@ -643,7 +643,7 @@ class MultiScanOrderController extends Controller {
             //echo "viewGranted=".$viewGranted."<br>";
             //$actions = array('show111');
             if( !$securityUtil->hasUserPermission( $patient, $user, $collaborationTypesStrArr, $actions ) ) {
-            //if( false === $this->get('security.context')->isGranted('view', $patient) ) { // check for "view" access: calls all voters
+            //if( false === $this->get('security.authorization_checker')->isGranted('view', $patient) ) { // check for "view" access: calls all voters
                 $entity->removePatient($patient);
                 continue;
             }

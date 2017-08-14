@@ -138,7 +138,7 @@ class ScanAccessRequestController extends AccessRequestController
      */
     public function accessRequestIndexAction()
     {
-        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
@@ -157,7 +157,7 @@ class ScanAccessRequestController extends AccessRequestController
         return parent::accessRequestChangeAction($request, $id, $status);
 
 //        ///////////////////////////
-//        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
+//        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
 //            return $this->redirect( $this->generateUrl('scan-nopermission') );
 //        }
 //

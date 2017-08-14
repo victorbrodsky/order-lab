@@ -48,7 +48,7 @@ class FellAppApplicantController extends Controller {
      */
     public function interviewModalAction(Request $request, $id) {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_USER') ) {
+        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_USER') ) {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
@@ -84,7 +84,7 @@ class FellAppApplicantController extends Controller {
      */
     public function intervieweScoreRankAction(Request $request, $id) {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_USER') ) {
+        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_USER') ) {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
@@ -188,7 +188,7 @@ class FellAppApplicantController extends Controller {
      */
     public function inviteInterviewersToRateAction(Request $request, $id) {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->get('security.context')->isGranted('ROLE_FELLAPP_DIRECTOR') ){
+        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_DIRECTOR') ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
@@ -233,7 +233,7 @@ class FellAppApplicantController extends Controller {
      */
     public function inviteSingleInterviewerToRateAction(Request $request, $interviewId) {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->get('security.context')->isGranted('ROLE_FELLAPP_DIRECTOR') ){
+        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_DIRECTOR') ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
@@ -403,7 +403,7 @@ class FellAppApplicantController extends Controller {
  */
     public function inviteObserversToRateAction(Request $request, $id) {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->get('security.context')->isGranted('ROLE_FELLAPP_DIRECTOR') ){
+        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_DIRECTOR') ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
@@ -477,10 +477,10 @@ class FellAppApplicantController extends Controller {
      */
     public function downloadInterviewApplicantsListAction(Request $request, $currentYear, $fellappTypeId, $fellappIds) {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR') &&
-            false == $this->get('security.context')->isGranted('ROLE_FELLAPP_DIRECTOR') &&
-            false == $this->get('security.context')->isGranted('ROLE_FELLAPP_INTERVIEWER') &&
-            false == $this->get('security.context')->isGranted('ROLE_FELLAPP_OBSERVER')
+        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_COORDINATOR') &&
+            false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_DIRECTOR') &&
+            false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_INTERVIEWER') &&
+            false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_OBSERVER')
         ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
@@ -571,10 +571,10 @@ class FellAppApplicantController extends Controller {
      */
     public function downloadInterviewApplicantsListDocAction(Request $request, $currentYear, $fellappTypeId, $fellappIds) {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR') &&
-            false == $this->get('security.context')->isGranted('ROLE_FELLAPP_DIRECTOR') &&
-            false == $this->get('security.context')->isGranted('ROLE_FELLAPP_INTERVIEWER') &&
-            false == $this->get('security.context')->isGranted('ROLE_FELLAPP_OBSERVER')
+        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_COORDINATOR') &&
+            false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_DIRECTOR') &&
+            false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_INTERVIEWER') &&
+            false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_OBSERVER')
         ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
@@ -631,10 +631,10 @@ class FellAppApplicantController extends Controller {
      */
     public function showInterviewApplicantsListAction(Request $request, $fellappIds) {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR') &&
-            false == $this->get('security.context')->isGranted('ROLE_FELLAPP_DIRECTOR') &&
-            false == $this->get('security.context')->isGranted('ROLE_FELLAPP_INTERVIEWER') &&
-            false == $this->get('security.context')->isGranted('ROLE_FELLAPP_OBSERVER')
+        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_COORDINATOR') &&
+            false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_DIRECTOR') &&
+            false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_INTERVIEWER') &&
+            false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_OBSERVER')
         ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }

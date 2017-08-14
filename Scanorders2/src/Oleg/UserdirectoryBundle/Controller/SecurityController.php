@@ -158,7 +158,7 @@ class SecurityController extends Controller
     public function loginPage($sitename) {
 
         if(
-            $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
+            $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
         ){
             return null;
         }
@@ -550,7 +550,7 @@ class SecurityController extends Controller
     public function authenticateUserAction( Request $request )
     {
 
-        if( false === $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY') ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 

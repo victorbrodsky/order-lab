@@ -52,7 +52,7 @@ class CarryOverController extends Controller
 //    public function carryOverRequestReviewAction(Request $request, $id)
 //    {
 //
-//        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
+//        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') ) {
 //            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
 //        }
 //
@@ -115,7 +115,7 @@ class CarryOverController extends Controller
     public function carryOverAction(Request $request, $userId)
     {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
+        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
@@ -255,7 +255,7 @@ class CarryOverController extends Controller
      */
     public function statusAction(Request $request, $id, $requestName, $status) {
 
-//        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') ) {
+//        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_APPROVER') ) {
 //            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
 //        }
 
@@ -284,7 +284,7 @@ class CarryOverController extends Controller
         }
 
         /////////////// check permission: if user is in approvers => ok ///////////////
-        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
+        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') ) {
             $permitted = false;
             $approvers = $vacreqUtil->getRequestApprovers($entity);
             $approversName = array();
@@ -307,11 +307,11 @@ class CarryOverController extends Controller
         /////////////// EOF check permission: if user is in approvers => ok ///////////////
 
         //check permissions
-//        if( $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') || $this->get('security.context')->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
-//            if( false == $this->get('security.context')->isGranted("changestatus", $entity) ) {
+//        if( $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_APPROVER') || $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
+//            if( false == $this->get('security.authorization_checker')->isGranted("changestatus", $entity) ) {
 //                return $this->redirect($this->generateUrl('vacreq-nopermission'));
 //            }
-//        } elseif( $this->get('security.context')->isGranted("update", $entity) ) {
+//        } elseif( $this->get('security.authorization_checker')->isGranted("update", $entity) ) {
 //            if( $status != 'canceled' && $status != 'pending' && $status != 'cancellation-request' ) {
 //                return $this->redirect($this->generateUrl('vacreq-nopermission'));
 //            }
@@ -362,7 +362,7 @@ class CarryOverController extends Controller
 
         //echo "tent status=".$entity->getTentativeStatus()."<br>";
         if(
-            $this->get('security.context')->isGranted("changestatus", $entity)
+            $this->get('security.authorization_checker')->isGranted("changestatus", $entity)
         ) {
             //OK
         } else {
@@ -377,8 +377,8 @@ class CarryOverController extends Controller
 
 //        if( $entity->getTentativeStatus() == 'pending' ) {
 //            //first step: group approver
-//            if( $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') &&
-//                $this->get('security.context')->isGranted("changestatus", $entity)
+//            if( $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_APPROVER') &&
+//                $this->get('security.authorization_checker')->isGranted("changestatus", $entity)
 //            ) {
 //                //OK
 //            } else {
@@ -387,8 +387,8 @@ class CarryOverController extends Controller
 //            }
 //        } else {
 //            //second step: supervisor
-//            if( $this->get('security.context')->isGranted('ROLE_VACREQ_SUPERVISOR') &&
-//                $this->get('security.context')->isGranted("changestatus-carryover", $entity)
+//            if( $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_SUPERVISOR') &&
+//                $this->get('security.authorization_checker')->isGranted("changestatus-carryover", $entity)
 //            ) {
 //                //OK
 //            } else {

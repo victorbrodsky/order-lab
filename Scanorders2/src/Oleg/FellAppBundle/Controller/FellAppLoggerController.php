@@ -45,13 +45,13 @@ class FellAppLoggerController extends LoggerController
     public function indexAction(Request $request)
     {
         if(
-            false == $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR') &&
-            false == $this->get('security.context')->isGranted('ROLE_FELLAPP_DIRECTOR') &&
-            false == $this->get('security.context')->isGranted('ROLE_FELLAPP_ADMIN')
+            false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_COORDINATOR') &&
+            false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_DIRECTOR') &&
+            false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN')
         ) {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
-//        if( false == $this->get('security.context')->isGranted("read","FellowshipApplication") ){
+//        if( false == $this->get('security.authorization_checker')->isGranted("read","FellowshipApplication") ){
 //            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
 //        }
 
@@ -76,14 +76,14 @@ class FellAppLoggerController extends LoggerController
     public function applicationLogAction(Request $request,$id) {
 
         if(
-            false == $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR') &&
-            false == $this->get('security.context')->isGranted('ROLE_FELLAPP_DIRECTOR') &&
-            false == $this->get('security.context')->isGranted('ROLE_FELLAPP_ADMIN')
+            false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_COORDINATOR') &&
+            false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_DIRECTOR') &&
+            false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN')
         ) {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
-//        if( false == $this->get('security.context')->isGranted("read","FellowshipApplication") ){
+//        if( false == $this->get('security.authorization_checker')->isGranted("read","FellowshipApplication") ){
 //            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
 //        }
 
@@ -94,7 +94,7 @@ class FellAppLoggerController extends LoggerController
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
         }
 
-        if( false == $this->get('security.context')->isGranted("read",$fellApp) ) {
+        if( false == $this->get('security.authorization_checker')->isGranted("read",$fellApp) ) {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
@@ -169,7 +169,7 @@ class FellAppLoggerController extends LoggerController
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$objectId);
         }
 
-        if( false == $this->get('security.context')->isGranted("read",$fellApp) ) {
+        if( false == $this->get('security.authorization_checker')->isGranted("read",$fellApp) ) {
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
@@ -215,7 +215,7 @@ class FellAppLoggerController extends LoggerController
     public function addCustomDql($dql) {
 
         //show all for admin
-        if( $this->get('security.context')->isGranted('ROLE_FELLAPP_ADMIN') ) {
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN') ) {
             $dql->select('logger');
             return $dql;
         }

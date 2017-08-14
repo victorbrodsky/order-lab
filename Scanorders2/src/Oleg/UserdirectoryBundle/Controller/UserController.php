@@ -264,8 +264,8 @@ class UserController extends Controller
     public function indexAction( Request $request ) {
 
         if(
-            false == $this->get('security.context')->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)
-            false == $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
+            false == $this->get('security.authorization_checker')->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)
+            false == $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
         ){
             return $this->redirect( $this->generateUrl('login') );
         }
@@ -325,7 +325,7 @@ class UserController extends Controller
 
     //check for active access requests
     public function getActiveAccessReq() {
-        if( !$this->get('security.context')->isGranted('ROLE_USERDIRECTORY_ADMIN') ) {
+        if( !$this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_ADMIN') ) {
             return null;
         }
         $userSecUtil = $this->get('user_security_utility');
@@ -347,7 +347,7 @@ class UserController extends Controller
      */
     public function indexUserAction(Request $request)
     {
-        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
@@ -507,7 +507,7 @@ class UserController extends Controller
             $totalcriteriastr = $totalcriteriastr . " AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)";
 
             //filter out users with excludeFromSearch set to true
-            if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
                 $totalcriteriastr = $totalcriteriastr . " AND (preferences.excludeFromSearch IS NULL OR preferences.excludeFromSearch = FALSE)";
             }
 
@@ -648,7 +648,7 @@ class UserController extends Controller
         //$criteriastr .= "locations.associatedCode LIKE '%".$search."%' OR ";
         $criteriastr .= "locations.associatedCode='".$search."' OR ";
 
-        if( $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             //WCMC Employee Identification Number (EIN)
             //NPI
             $dql->leftJoin("credentials.identifiers", "identifiers");
@@ -1347,7 +1347,7 @@ class UserController extends Controller
         
         $pending = null;
 
-        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             $response = new Response();
             $response->setContent($pending);
             return $response;
@@ -1450,7 +1450,7 @@ class UserController extends Controller
     public function newUserAction(Request $request,$id=null)
     {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
@@ -1568,7 +1568,7 @@ class UserController extends Controller
     }
     public function createUser($request) {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
@@ -1716,7 +1716,7 @@ class UserController extends Controller
 
         return $this->showUserOptimized( $request, $id, $this->container->getParameter('employees.sitename') );
 
-//        if( false === $this->get('security.context')->isGranted('ROLE_USER') ) { //!$secUtil->isCurrentUser($id) &&
+//        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USER') ) { //!$secUtil->isCurrentUser($id) &&
 //            return $this->redirect( $this->generateUrl('employees-nopermission') );
 //        }
 //
@@ -1756,8 +1756,10 @@ class UserController extends Controller
     public function showUserOptimized( Request $request, $id, $sitename )
     {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_USER') ) { //!$secUtil->isCurrentUser($id) &&
-            //exit('0 show User Optimized no permission');
+//        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USER') ) {
+//            return $this->redirect( $this->generateUrl('employees-nopermission') );
+//        }
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USER') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
@@ -1806,7 +1808,7 @@ class UserController extends Controller
     public function showUserOptimizedCustomhAction($id)
     {
         //$secUtil = $this->get('user_security_utility');
-        if( false === $this->get('security.context')->isGranted('ROLE_USER') ) { //!$secUtil->isCurrentUser($id) &&
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USER') ) { //!$secUtil->isCurrentUser($id) &&
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
         
@@ -1887,7 +1889,7 @@ class UserController extends Controller
     public function showOnlyUserAction($id)
     {
         //$secUtil = $this->get('user_security_utility');
-        if( false === $this->get('security.context')->isGranted('ROLE_USER') ) { //!$secUtil->isCurrentUser($id) &&
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USER') ) { //!$secUtil->isCurrentUser($id) &&
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
@@ -1909,7 +1911,7 @@ class UserController extends Controller
      */
     public function showOnlyAjaxUserAction(Request $request)
     {
-        if( false === $this->get('security.context')->isGranted('ROLE_USER') ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USER') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
@@ -1937,7 +1939,7 @@ class UserController extends Controller
     public function showUserAction($id)
     {
         //$secUtil = $this->get('user_security_utility');
-        if( false === $this->get('security.context')->isGranted('ROLE_USER') ) { //!$secUtil->isCurrentUser($id) &&
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USER') ) { //!$secUtil->isCurrentUser($id) &&
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
@@ -2029,7 +2031,7 @@ class UserController extends Controller
     public function editUserAction($id)
     {
         $secUtil = $this->get('user_security_utility');
-        if( !$secUtil->isCurrentUser($id) && false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+        if( !$secUtil->isCurrentUser($id) && false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
@@ -2177,19 +2179,19 @@ class UserController extends Controller
         if( count($entity->getPublicComments()) == 0 ) {
             $entity->addPublicComment( new PublicComment($user) );
         }
-        if( $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') || $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ||
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') || $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ||
             $entity->getId() && $entity->getId() == $user->getId()
         ) {
             if( count($entity->getPrivateComments()) == 0 ) {
                 $entity->addPrivateComment( new PrivateComment($user) );
             }
         }
-        if( $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') || $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') || $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             if( count($entity->getAdminComments()) == 0 ) {
                 $entity->addAdminComment( new AdminComment($user) );
             }
         }
-        if( $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') || $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') || $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             if( count($entity->getConfidentialComments()) == 0 ) {
                 $entity->addConfidentialComment( new ConfidentialComment($user) );
             }
@@ -2247,7 +2249,7 @@ class UserController extends Controller
     public function updateUserAction(Request $request, $id)
     {
         $secUtil = $this->get('user_security_utility');
-        if( !$secUtil->isCurrentUser($id) && false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+        if( !$secUtil->isCurrentUser($id) && false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
@@ -2500,11 +2502,11 @@ class UserController extends Controller
 
             //check 1: if the roles are changed by non admin user
             if( count($resultRoles) > 0 ) {
-                if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') &&
-                    false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_ADMIN') &&
-                    false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN') &&
-                    false === $this->get('security.context')->isGranted('ROLE_DEIDENTIFICATOR_ADMIN')
-                    //&& false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR')
+                if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') &&
+                    false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_ADMIN') &&
+                    false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_ADMIN') &&
+                    false === $this->get('security.authorization_checker')->isGranted('ROLE_DEIDENTIFICATOR_ADMIN')
+                    //&& false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR')
                 ) {
                     $msg = "You do not have permission to perform this operation: ".$msg;
                     $logger->notice($msg);
@@ -2516,7 +2518,7 @@ class UserController extends Controller
             //check 2: if the roles "Platform Administrator" or "Deputy Platform Administrator" are changed by non super admin user
             foreach( $resultRoles as $role ) {
                 if( $role == "ROLE_PLATFORM_DEPUTY_ADMIN" || $role == "ROLE_PLATFORM_ADMIN" ) {
-                    if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_ADMIN') ) {
+                    if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_ADMIN') ) {
                         $this->setSessionForbiddenNote("Change Role ".$role);
                         //throw new ForbiddenOverwriteException("You do not have permission to perform this operation: Change Role ".$role);
                         return $this->redirect( $this->generateUrl($sitename.'_user_edit',array('id'=>$id)) );
@@ -2526,7 +2528,7 @@ class UserController extends Controller
             
             $currentPrimaryPublicUsername = $entity->getPrimaryPublicUserId();
             if( $currentPrimaryPublicUsername != $originalPrimaryPublicUsername ) {
-                if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_ADMIN') ) {
+                if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_ADMIN') ) {
                     $this->setSessionForbiddenNote("You don't have permission to change Primary Public User ID");                   
                     return $this->redirect( $this->generateUrl($sitename.'_user_edit',array('id'=>$id)) );
                 } else {
@@ -2537,11 +2539,11 @@ class UserController extends Controller
 
 
             //check if insts were changed and user is not admin
-            if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') &&
-                false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_ADMIN') &&
-                false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN') &&
-                false === $this->get('security.context')->isGranted('ROLE_DEIDENTIFICATOR_ADMIN')
-                //&& false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR')
+            if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') &&
+                false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_ADMIN') &&
+                false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_ADMIN') &&
+                false === $this->get('security.authorization_checker')->isGranted('ROLE_DEIDENTIFICATOR_ADMIN')
+                //&& false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR')
             ) {
                 $currentInsts = $entity->getPerSiteSettings()->getPermittedInstitutionalPHIScope();
                 $logger->notice("compare: currentInsts=".count($currentInsts)." != originalInsts=".count($originalInsts));
@@ -3271,7 +3273,7 @@ class UserController extends Controller
     public function generateUsersAction()
     {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_ADMIN') ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_ADMIN') ) {
             $this->get('session')->getFlashBag()->add(
                 'notice',
                 'You do not have permission to visit this page'
@@ -3325,7 +3327,7 @@ class UserController extends Controller
      */
     public function lockUnlockChangeAction($id, $status) {
 
-        if (false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR')) {
+        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR')) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
@@ -3673,7 +3675,7 @@ class UserController extends Controller
         //echo "userid1=".$userid." <br>";
 
         $secUtil = $this->get('user_security_utility');
-        if( !$secUtil->isCurrentUser($userid) && false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+        if( !$secUtil->isCurrentUser($userid) && false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             echo "employees-nopermission<br>";
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
@@ -3752,7 +3754,7 @@ class UserController extends Controller
      */
     public function impersonateUserAction(Request $request, $id)
     {
-        if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
@@ -3776,7 +3778,7 @@ class UserController extends Controller
      */
     public function employmentTerminateAction(Request $request, $id)
     {
-        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
@@ -3881,8 +3883,8 @@ class UserController extends Controller
     {
 
         if (
-            false == $this->get('security.context')->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)
-            false == $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
+            false == $this->get('security.authorization_checker')->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)
+            false == $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
         ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
@@ -4076,7 +4078,7 @@ class UserController extends Controller
      * @Template("OlegUserdirectoryBundle:Labels:label_user_preview.html.twig")
      */
     public function averySingleUserPrintAction(Request $request, $id) {
-        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
@@ -4158,7 +4160,7 @@ class UserController extends Controller
      * @Template("OlegUserdirectoryBundle:Labels:label_user_preview.html.twig")
      */
     public function averyMultipleUsersPrintAction(Request $request) {
-        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 

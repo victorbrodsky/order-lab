@@ -53,7 +53,7 @@ class FellAppRankController extends Controller {
      */
     public function rankEditAction(Request $request, $fellappid) {
 
-        if( false == $this->get('security.context')->isGranted("read","FellowshipApplication") ){
+        if( false == $this->get('security.authorization_checker')->isGranted("read","FellowshipApplication") ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
@@ -91,7 +91,7 @@ class FellAppRankController extends Controller {
      */
     public function rankUpdateAjaxAction(Request $request, $fellappid) {
 
-        if( false == $this->get('security.context')->isGranted("read","FellowshipApplication") ){
+        if( false == $this->get('security.authorization_checker')->isGranted("read","FellowshipApplication") ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
@@ -159,7 +159,7 @@ class FellAppRankController extends Controller {
      */
     public function rankUpdateAction(Request $request, $fellappid) {
 
-        if( false == $this->get('security.context')->isGranted("read","FellowshipApplication") ){
+        if( false == $this->get('security.authorization_checker')->isGranted("read","FellowshipApplication") ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 

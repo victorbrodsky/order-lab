@@ -63,7 +63,7 @@ class SiteParametersController extends Controller
 
     public function indexParameters($request) {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
@@ -155,11 +155,11 @@ class SiteParametersController extends Controller
         //exit('role='.$role."; sitename=".$sitename);
 
         if( $role ) {
-            if( false === $this->get('security.context')->isGranted($role) ) {
+            if( false === $this->get('security.authorization_checker')->isGranted($role) ) {
                 return $this->redirect( $this->generateUrl($sitename.'-nopermission') );
             }
         } else {
-            if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
                 return $this->redirect( $this->generateUrl($sitename.'-nopermission') );
             }
         }
@@ -208,11 +208,11 @@ class SiteParametersController extends Controller
         $sitename = $routeArr[0];
 
         if( $role ) {
-            if( false === $this->get('security.context')->isGranted($role) ) {
+            if( false === $this->get('security.authorization_checker')->isGranted($role) ) {
                 return $this->redirect( $this->generateUrl($sitename.'-nopermission') );
             }
         } else {
-            if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
                 return $this->redirect( $this->generateUrl($sitename.'-nopermission') );
             }
         }
@@ -276,7 +276,7 @@ class SiteParametersController extends Controller
     public function manageOrgGroupDefaultAction(Request $request, $id)
     {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
@@ -474,7 +474,7 @@ class SiteParametersController extends Controller
     public function initialConfigurationAction(Request $request)
     {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 

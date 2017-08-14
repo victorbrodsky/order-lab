@@ -70,7 +70,7 @@ class CallEntryController extends Controller
      */
     public function homeAction(Request $request)
     {
-        if( false == $this->get('security.context')->isGranted("ROLE_CALLLOG_USER") ){
+        if( false == $this->get('security.authorization_checker')->isGranted("ROLE_CALLLOG_USER") ){
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
@@ -756,7 +756,7 @@ class CallEntryController extends Controller
      */
     public function callEntryAction(Request $request)
     {
-        if( false == $this->get('security.context')->isGranted("ROLE_CALLLOG_USER") ){
+        if( false == $this->get('security.authorization_checker')->isGranted("ROLE_CALLLOG_USER") ){
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
@@ -988,7 +988,7 @@ class CallEntryController extends Controller
      */
     public function saveEntryAction(Request $request)
     {
-        if( false == $this->get('security.context')->isGranted("ROLE_CALLLOG_USER") ){
+        if( false == $this->get('security.authorization_checker')->isGranted("ROLE_CALLLOG_USER") ){
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
@@ -1501,7 +1501,7 @@ class CallEntryController extends Controller
      */
     public function searchCallEntryAction(Request $request)
     {
-        if( false == $this->get('security.context')->isGranted('ROLE_CALLLOG_USER') ){
+        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_CALLLOG_USER') ){
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
@@ -1556,7 +1556,7 @@ class CallEntryController extends Controller
      */
     public function patientSearchAction(Request $request)
     {
-        if (false == $this->get('security.context')->isGranted('ROLE_CALLLOG_USER')) {
+        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_CALLLOG_USER')) {
             return $this->redirect($this->generateUrl('calllog-nopermission'));
         }
 
@@ -2149,7 +2149,7 @@ class CallEntryController extends Controller
     public function createPatientAction(Request $request)
     {
 
-        if( false == $this->get('security.context')->isGranted("ROLE_CALLLOG_USER") ){
+        if( false == $this->get('security.authorization_checker')->isGranted("ROLE_CALLLOG_USER") ){
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
@@ -2168,7 +2168,7 @@ class CallEntryController extends Controller
         //return $response;
 
         //TODO: The server should DOUBLECHECK that the user has a role with a permission of "Create Patient Record"
-        if (false == $this->get('security.context')->isGranted('ROLE_CALLLOG_USER')) {
+        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_CALLLOG_USER')) {
             //return $this->redirect($this->generateUrl('calllog-nopermission'));
             $res['patients'] = null;
             $res['output'] = "You don't have a permission to create a new patient record";
@@ -2485,7 +2485,7 @@ class CallEntryController extends Controller
      */
     public function getPatientTitleAction(Request $request) {
 
-        if (false == $this->get('security.context')->isGranted('ROLE_CALLLOG_USER')) {
+        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_CALLLOG_USER')) {
             return $this->redirect($this->generateUrl('calllog-nopermission'));
         }
 
@@ -2534,7 +2534,7 @@ class CallEntryController extends Controller
     public function getCallLogEntryAction(Request $request, $messageOid, $messageVersion=null)
     {
 
-        if (false == $this->get('security.context')->isGranted('ROLE_CALLLOG_USER')) {
+        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_CALLLOG_USER')) {
             return $this->redirect($this->generateUrl('calllog-nopermission'));
         }
 
@@ -2769,7 +2769,7 @@ class CallEntryController extends Controller
      */
     public function exportCsvAction(Request $request)
     {
-        if( false == $this->get('security.context')->isGranted("ROLE_CALLLOG_USER") ){
+        if( false == $this->get('security.authorization_checker')->isGranted("ROLE_CALLLOG_USER") ){
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 

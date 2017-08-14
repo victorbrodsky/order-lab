@@ -45,7 +45,7 @@ class DefaultController extends Controller
 //     */
 //    public function indexAction()
 //    {
-//        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_USER') ) {
+//        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_USER') ) {
 //            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
 //        }
 //

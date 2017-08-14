@@ -45,7 +45,7 @@ class VacReqLoggerController extends LoggerController
      */
     public function indexAction(Request $request)
     {
-        if( false == $this->get('security.context')->isGranted("ROLE_VACREQ_ADMIN") ){
+        if( false == $this->get('security.authorization_checker')->isGranted("ROLE_VACREQ_ADMIN") ){
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 

@@ -3693,11 +3693,11 @@ class VacReqUtil
         $session = $this->container->get('session');
 
         //check permissions
-//        if( $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') || $this->get('security.context')->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
-//            if( false == $this->get('security.context')->isGranted("changestatus", $entity) ) {
+//        if( $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_APPROVER') || $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
+//            if( false == $this->get('security.authorization_checker')->isGranted("changestatus", $entity) ) {
 //                return $this->redirect($this->generateUrl('vacreq-nopermission'));
 //            }
-//        } elseif( $this->get('security.context')->isGranted("update", $entity) ) {
+//        } elseif( $this->get('security.authorization_checker')->isGranted("update", $entity) ) {
 //            if( $status != 'canceled' && $status != 'pending' && $status != 'cancellation-request' ) {
 //                return $this->redirect($this->generateUrl('vacreq-nopermission'));
 //            }

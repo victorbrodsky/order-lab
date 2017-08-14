@@ -47,8 +47,8 @@ class SearchController extends Controller {
     public function searchPatientAction( Request $request ) {
 
         if(
-            false == $this->get('security.context')->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)
-            false == $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
+            false == $this->get('security.authorization_checker')->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)
+            false == $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
         ){
             return $this->redirect( $this->generateUrl('login') );
         }

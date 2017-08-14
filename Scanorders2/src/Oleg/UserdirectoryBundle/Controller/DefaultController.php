@@ -50,8 +50,8 @@ class DefaultController extends Controller
 //    {
 //
 //        if(
-//            false == $this->get('security.context')->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)
-//            false == $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
+//            false == $this->get('security.authorization_checker')->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)
+//            false == $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
 //        ){
 //            return $this->redirect( $this->generateUrl('login') );
 //        }
@@ -73,7 +73,7 @@ class DefaultController extends Controller
 //
 //    //check for active access requests
 //    public function getActiveAccessReq() {
-//        if( !$this->get('security.context')->isGranted('ROLE_USERDIRECTORY_ADMIN') ) {
+//        if( !$this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_ADMIN') ) {
 //            return null;
 //        }
 //        $userSecUtil = $this->get('user_security_utility');

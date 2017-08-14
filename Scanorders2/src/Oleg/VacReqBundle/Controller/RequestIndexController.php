@@ -45,7 +45,7 @@ class RequestIndexController extends Controller
     public function myRequestsAction(Request $request)
     {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_USER') ) {
+        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_USER') ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
@@ -83,7 +83,7 @@ class RequestIndexController extends Controller
     public function incomingRequestsAction(Request $request)
     {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') && false == $this->get('security.context')->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
+        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_APPROVER') && false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_SUPERVISOR') ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
@@ -139,7 +139,7 @@ class RequestIndexController extends Controller
 
         //incoming requests: show all requests with institutions in vacreq roles institutions
         //filter by institutions for any user by using a general sub role name "ROLE_VACREQ_"
-        if( false == $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
+        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') ) {
             if( $approver ) {
                 $partialRoleName = "ROLE_VACREQ_";  //"ROLE_VACREQ_APPROVER"
                 $vacreqRoles = $em->getRepository('OlegUserdirectoryBundle:User')->
@@ -327,7 +327,7 @@ class RequestIndexController extends Controller
         if( $request->get('_route') == "vacreq_incomingrequests" ) {
             if( $params['requestTypeAbbreviation'] == "business-vacation" ) {
                 $groupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus');
-                if( $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') == false ) {
+                if( $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') == false ) {
                     $groupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
                 }
             } else {
@@ -343,7 +343,7 @@ class RequestIndexController extends Controller
         //}
 
         if( count($organizationalInstitutions) == 0 ) {
-            if( $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') ) {
+            if( $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') ) {
                 $groupPageUrl = $this->generateUrl(
                     "vacreq_approvers",
                     null,
@@ -383,7 +383,7 @@ class RequestIndexController extends Controller
         //tentative institutions
         $tentativeGroupParams = array(); //'asObject'=>true
         $tentativeGroupParams['permissions'][] = array('objectStr'=>'VacReqRequest','actionStr'=>'changestatus');
-        if( $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN') == false ) {
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN') == false ) {
             $tentativeGroupParams['exceptPermissions'][] = array('objectStr' => 'VacReqRequest', 'actionStr' => 'changestatus-carryover');
         }
         $tentativeInstitutions = $vacreqUtil->getGroupsByPermission($user,$tentativeGroupParams);
@@ -403,16 +403,16 @@ class RequestIndexController extends Controller
         $params['routeName'] = $request->get('_route');
 
         $approverRole = false;
-        if( $this->get('security.context')->isGranted('ROLE_VACREQ_APPROVER') ||
-            $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN')
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_APPROVER') ||
+            $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN')
         ) {
             $approverRole = true;
         }
         $params['approverRole'] = $approverRole;
 
         $supervisorRole = false;
-        if( $this->get('security.context')->isGranted('ROLE_VACREQ_SUPERVISOR') ||
-            $this->get('security.context')->isGranted('ROLE_VACREQ_ADMIN')
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_SUPERVISOR') ||
+            $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_ADMIN')
         ) {
             $supervisorRole = true;
         }

@@ -203,8 +203,8 @@ class SlideReturnRequestController extends Controller
     public function indexAction( $id ) {
 
         //check if the user has permission to view this order
-        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_SUBMITTER') &&
-            false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ORDERING_PROVIDER')
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_SUBMITTER') &&
+            false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_ORDERING_PROVIDER')
         ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
@@ -586,11 +586,11 @@ class SlideReturnRequestController extends Controller
 
         $url = $request->headers->get('referer');
         if( strpos($url,'my-slide-return-requests') ) {
-            if( false === $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY') ) {
+            if( false === $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY') ) {
                 return $this->redirect( $this->generateUrl('scan-nopermission') );
             }
         } else {
-            if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
+            if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
                 return $this->redirect( $this->generateUrl('scan-nopermission') );
             }
         }

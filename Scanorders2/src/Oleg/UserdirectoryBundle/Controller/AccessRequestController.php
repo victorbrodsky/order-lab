@@ -519,7 +519,7 @@ class AccessRequestController extends Controller
      */
     public function accessRequestIndexAction()
     {
-        if( false === $this->get('security.context')->isGranted($this->roleEditor) ) {
+        if( false === $this->get('security.authorization_checker')->isGranted($this->roleEditor) ) {
             return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
         }
 
@@ -593,7 +593,7 @@ class AccessRequestController extends Controller
     public function accessRequestChangeAction(Request $request, $id, $status)
     {
 
-        if (false === $this->get('security.context')->isGranted($this->roleEditor)) {
+        if (false === $this->get('security.authorization_checker')->isGranted($this->roleEditor)) {
             return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
         }
 
@@ -777,7 +777,7 @@ class AccessRequestController extends Controller
     public function accessRequestManagementAction( $id )
     {
 
-        if (false === $this->get('security.context')->isGranted($this->roleEditor)) {
+        if (false === $this->get('security.authorization_checker')->isGranted($this->roleEditor)) {
             return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
         }
 
@@ -849,7 +849,7 @@ class AccessRequestController extends Controller
     public function accessRequestManagementSubmitAction( Request $request, $id )
     {
 
-        if (false === $this->get('security.context')->isGranted($this->roleEditor)) {
+        if (false === $this->get('security.authorization_checker')->isGranted($this->roleEditor)) {
             return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
         }
 
@@ -962,7 +962,7 @@ class AccessRequestController extends Controller
     public function accessRequestRemoveAction(Request $request,$userId)
     {
 
-        if (false === $this->get('security.context')->isGranted($this->roleEditor)) {
+        if (false === $this->get('security.authorization_checker')->isGranted($this->roleEditor)) {
             return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
         }
 
@@ -979,7 +979,7 @@ class AccessRequestController extends Controller
     public function authorizationRemoveAction(Request $request, $userId)
     {
 
-        if (false === $this->get('security.context')->isGranted($this->roleEditor)) {
+        if (false === $this->get('security.authorization_checker')->isGranted($this->roleEditor)) {
             return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
         }
 
@@ -1030,7 +1030,7 @@ class AccessRequestController extends Controller
     public function authorizationManagementAction( $id )
     {
 
-        if (false === $this->get('security.context')->isGranted($this->roleEditor)) {
+        if (false === $this->get('security.authorization_checker')->isGranted($this->roleEditor)) {
             return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
         }
 
@@ -1088,7 +1088,7 @@ class AccessRequestController extends Controller
     public function authorizationManagementSubmitAction( Request $request, $id )
     {
 
-        if (false === $this->get('security.context')->isGranted($this->roleEditor)) {
+        if (false === $this->get('security.authorization_checker')->isGranted($this->roleEditor)) {
             return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
         }
 
@@ -1165,7 +1165,7 @@ class AccessRequestController extends Controller
     public function authorizedUsersAction( Request $request )
     {
 
-        if (false === $this->get('security.context')->isGranted($this->roleEditor)) {
+        if (false === $this->get('security.authorization_checker')->isGranted($this->roleEditor)) {
             return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
         }
 
@@ -1216,7 +1216,7 @@ class AccessRequestController extends Controller
     public function addAuthorizedUserAction( Request $request )
     {
 
-        if (false === $this->get('security.context')->isGranted($this->roleEditor)) {
+        if (false === $this->get('security.authorization_checker')->isGranted($this->roleEditor)) {
             return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
         }
 
@@ -1336,7 +1336,7 @@ class AccessRequestController extends Controller
 //    public function addAuthorizedUserSubmitAction( Request $request )
 //    {
 //
-//        if (false === $this->get('security.context')->isGranted($this->roleEditor)) {
+//        if (false === $this->get('security.authorization_checker')->isGranted($this->roleEditor)) {
 //            return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
 //        }
 //

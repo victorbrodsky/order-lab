@@ -65,7 +65,7 @@ class CallEntrySamePatientController extends CallEntryController
      */
     public function callEntrySamePatientAction(Request $request)
     {
-        if( false == $this->get('security.context')->isGranted("ROLE_CALLLOG_USER") ){
+        if( false == $this->get('security.authorization_checker')->isGranted("ROLE_CALLLOG_USER") ){
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
@@ -291,7 +291,7 @@ class CallEntrySamePatientController extends CallEntryController
      */
     public function saveEntrySamePatientAction(Request $request)
     {
-        if( false == $this->get('security.context')->isGranted("ROLE_CALLLOG_USER") ){
+        if( false == $this->get('security.authorization_checker')->isGranted("ROLE_CALLLOG_USER") ){
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 

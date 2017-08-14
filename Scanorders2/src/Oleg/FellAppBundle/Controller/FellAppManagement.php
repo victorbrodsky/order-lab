@@ -58,7 +58,7 @@ class FellAppManagement extends Controller {
      */
     public function felltypeSettingsAction(Request $request) {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->get('security.context')->isGranted('ROLE_FELLAPP_DIRECTOR') ){
+        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_DIRECTOR') ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
@@ -105,7 +105,7 @@ class FellAppManagement extends Controller {
      */
     public function showAction(Request $request, $id) {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->get('security.context')->isGranted('ROLE_FELLAPP_DIRECTOR') ){
+        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_DIRECTOR') ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
@@ -138,7 +138,7 @@ class FellAppManagement extends Controller {
      */
     public function updateAction(Request $request, $id) {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->get('security.context')->isGranted('ROLE_FELLAPP_DIRECTOR') ){
+        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_DIRECTOR') ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
@@ -218,7 +218,7 @@ class FellAppManagement extends Controller {
     public function addFellowshipApplicationTypeAction(Request $request )
     {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->get('security.context')->isGranted('ROLE_FELLAPP_DIRECTOR') ){
+        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_DIRECTOR') ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
@@ -362,7 +362,7 @@ class FellAppManagement extends Controller {
     public function removeFellowshipApplicationTypeAction(Request $request, $fellaptypeid )
     {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->get('security.context')->isGranted('ROLE_FELLAPP_DIRECTOR') ){
+        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_DIRECTOR') ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
@@ -500,7 +500,7 @@ class FellAppManagement extends Controller {
      */
     public function populateDefaultAction(Request $request) {
 
-        if( false == $this->get('security.context')->isGranted('ROLE_FELLAPP_ADMIN') ){
+        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN') ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 

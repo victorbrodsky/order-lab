@@ -42,7 +42,7 @@ class CallLogEditController extends CallEntryController
      */
     public function deleteMessageAction(Request $request, $messageOid, $messageVersion)
     {
-        if( false == $this->get('security.context')->isGranted("ROLE_CALLLOG_USER") ){
+        if( false == $this->get('security.authorization_checker')->isGranted("ROLE_CALLLOG_USER") ){
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
@@ -77,7 +77,7 @@ class CallLogEditController extends CallEntryController
      */
     public function unDeleteMessageAction(Request $request, $messageOid, $messageVersion)
     {
-        if( false == $this->get('security.context')->isGranted("ROLE_CALLLOG_USER") ){
+        if( false == $this->get('security.authorization_checker')->isGranted("ROLE_CALLLOG_USER") ){
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
@@ -181,7 +181,7 @@ class CallLogEditController extends CallEntryController
     public function getCallLogEntryAction(Request $request, $messageOid, $messageVersion=null)
     {
 
-        if (false == $this->get('security.context')->isGranted('ROLE_CALLLOG_USER')) {
+        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_CALLLOG_USER')) {
             return $this->redirect($this->generateUrl('calllog-nopermission'));
         }
 
@@ -413,7 +413,7 @@ class CallLogEditController extends CallEntryController
      */
     public function updateEntryAction(Request $request, $messageId, $cycle)
     {
-        if( false == $this->get('security.context')->isGranted("ROLE_CALLLOG_USER") ){
+        if( false == $this->get('security.authorization_checker')->isGranted("ROLE_CALLLOG_USER") ){
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
@@ -784,7 +784,7 @@ class CallLogEditController extends CallEntryController
      */
     public function checkMessageVersionAction(Request $request)
     {
-        if (false == $this->get('security.context')->isGranted("ROLE_CALLLOG_USER")) {
+        if (false == $this->get('security.authorization_checker')->isGranted("ROLE_CALLLOG_USER")) {
             return $this->redirect($this->generateUrl('calllog-nopermission'));
         }
 

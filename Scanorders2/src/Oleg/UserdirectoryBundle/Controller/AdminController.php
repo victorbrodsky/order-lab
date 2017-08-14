@@ -231,7 +231,7 @@ class AdminController extends Controller
      * @Route("/update-system-cache-assets/", name="user_update_system_cache_assets")
      */
     public function updateSystemAction() {
-        if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
@@ -6313,7 +6313,7 @@ class AdminController extends Controller
     public function setInstitutionEmploymentPeriodAction()
     {
 
-        if (false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
             return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename') . '-order-nopermission'));
         }
 
@@ -6351,7 +6351,7 @@ class AdminController extends Controller
     public function setDefaultOrgGroupAction()
     {
 
-        if (false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
             return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename') . '-order-nopermission'));
         }
 
@@ -6438,7 +6438,7 @@ class AdminController extends Controller
      */
     public function convertLoggerSitenameToSiteObectAction() {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
         }
 
@@ -6747,7 +6747,7 @@ class AdminController extends Controller
      */
     public function institutionTreeAction(Request $request)
     {
-        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
             return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
         }
 
@@ -6878,7 +6878,7 @@ class AdminController extends Controller
     public function generateAdministratorAction($force=false) {
 
         if( $force == false ) {
-            if (false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+            if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
                 return $this->redirect($this->generateUrl('employees-nopermission'));
             }
         }
@@ -6973,7 +6973,7 @@ class AdminController extends Controller
      */
     public function generateFormNodeAction(Request $request)
     {
-        if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
         }
 
@@ -6989,7 +6989,7 @@ class AdminController extends Controller
      */
     public function generateTestFormNodeAction(Request $request)
     {
-        if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
         }
 
@@ -7783,7 +7783,7 @@ class AdminController extends Controller
      */
     public function addMDUsersToPathologyResultSignatoriesList(Request $request)
     {
-        if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
         }
 
@@ -7928,7 +7928,7 @@ class AdminController extends Controller
      * @Route("/generate-patient-metaphone-name/", name="user_generate-patient-metaphone-name")
      */
     public function generatePatientMetaphoneNameKeyAction() {
-        if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
         }
 

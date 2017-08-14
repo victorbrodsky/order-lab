@@ -51,7 +51,7 @@ class UploadController extends Controller {
 
     public function deleteFileMethod(Request $request) {
         //exit('deleteFileMethod exit');
-        if( false == $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY') ){
+        if( false == $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY') ){
             //exit('no permission');
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
@@ -183,7 +183,7 @@ class UploadController extends Controller {
 
     public function downloadFileMethod($request,$id,$sitename=null,$eventtype=null) {
 
-        if( false == $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY') ){
+        if( false == $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY') ){
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
@@ -256,7 +256,7 @@ class UploadController extends Controller {
 
     public function viewFileMethod($request,$id,$sitename=null,$eventtype=null,$viewType=null) {
 
-        if( false == $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY') ){
+        if( false == $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY') ){
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
@@ -330,7 +330,7 @@ class UploadController extends Controller {
     public function importExcelUsersFileAction( Request $request )
     {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_USERDIRECTORY_ADMIN') ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_ADMIN') ) {
             $this->get('session')->getFlashBag()->add(
                 'notice',
                 'You do not have permission to import users.'

@@ -58,7 +58,7 @@ class DefaultController extends Controller
      */
     public function resourcesAction(Request $request)
     {
-        if( false === $this->get('security.context')->isGranted('ROLE_CALLLOG_PATHOLOGY_ATTENDING') ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_CALLLOG_PATHOLOGY_ATTENDING') ) {
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
@@ -118,7 +118,7 @@ class DefaultController extends Controller
      */
     public function assignUsersAction(Request $request)
     {
-        if( false === $this->get('security.context')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 

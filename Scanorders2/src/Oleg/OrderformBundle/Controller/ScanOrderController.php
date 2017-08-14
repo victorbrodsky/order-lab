@@ -61,8 +61,8 @@ class ScanOrderController extends Controller {
     public function indexAction( Request $request ) {
 
         if(
-            false == $this->get('security.context')->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)
-            false == $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
+            false == $this->get('security.authorization_checker')->isGranted('ROLE_USER') ||              // authenticated (might be anonymous)
+            false == $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')    // authenticated (NON anonymous)
         ){
             return $this->redirect( $this->generateUrl('login') );
         }
@@ -102,7 +102,7 @@ class ScanOrderController extends Controller {
         $routeName = $request->get('_route');
         //echo "routeName=".$routeName."<br>";
 
-        if( $routeName == "incoming-scan-orders" && false === $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR')) {
+        if( $routeName == "incoming-scan-orders" && false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR')) {
             return $this->redirect( $this->generateUrl('my-scan-orders') );
         }
 
@@ -288,7 +288,7 @@ class ScanOrderController extends Controller {
     public function deleteAction(Request $request, $id)
     {
 
-        if (false === $this->get('security.context')->isGranted('ROLE_SCANORDER_ADMIN')) {
+        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_ADMIN')) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
@@ -327,7 +327,7 @@ class ScanOrderController extends Controller {
      */
     public function statusAction(Request $request, $id, $status) {
 
-        if( false === $this->get('security.context')->isGranted('ROLE_SCANORDER_SUBMITTER') ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_SUBMITTER') ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
         
@@ -392,7 +392,7 @@ class ScanOrderController extends Controller {
     public function getFilter($routeName) {
         $em = $this->getDoctrine()->getManager();
 
-//        if( $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
+//        if( $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
         if( $routeName == "incoming-scan-orders" ) {
             $statuses = $em->getRepository('OlegOrderformBundle:Status')->findAll();
         } else {
@@ -465,7 +465,7 @@ class ScanOrderController extends Controller {
     public function getServiceFilter() {
         $em = $this->getDoctrine()->getManager();
 
-        if( $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
             $statuses = $em->getRepository('OlegUserdirectoryBundle:Institution')->findAll(); //filter by Level = 4?
         } 
 
@@ -494,7 +494,7 @@ class ScanOrderController extends Controller {
         $criteriastr = "";
         $em = $this->getDoctrine()->getManager();
 
-        if( $this->get('security.context')->isGranted('ROLE_SCANORDER_DIVISION_CHIEF') ) {
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_DIVISION_CHIEF') ) {
             return $criteriastr;
         }
 
@@ -511,7 +511,7 @@ class ScanOrderController extends Controller {
             $userServices = $userSiteSettings->getScanOrdersServicesScope();
             //echo "userServices count=".count($userServices)."<br>";
 
-            if( $this->get('security.context')->isGranted('ROLE_SCANORDER_SERVICE_CHIEF') ) {
+            if( $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_SERVICE_CHIEF') ) {
                 $chiefServices = $userSiteSettings->getChiefServices();
                 //echo "chief services count=".count($chiefServices)."<br>";
                 //if( $userServices && count($userServices) > 0 ) {
@@ -570,7 +570,7 @@ class ScanOrderController extends Controller {
 //        $criteriastr = "";
 //        $em = $this->getDoctrine()->getManager();
 //
-//        if( $this->get('security.context')->isGranted('ROLE_SCANORDER_DIVISION_CHIEF') ) {
+//        if( $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_DIVISION_CHIEF') ) {
 //            return $criteriastr;
 //        }
 //
@@ -588,7 +588,7 @@ class ScanOrderController extends Controller {
 //            $userScanOrderInstitutionScope = $userSiteSettings->getScanOrderInstitutionScope();
 //            $criteriastr .= " scanorder.scanOrderInstitutionScope=".$userScanOrderInstitutionScope->getId();
 //
-//            if( $this->get('security.context')->isGranted('ROLE_SCANORDER_SERVICE_CHIEF') ) {
+//            if( $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_SERVICE_CHIEF') ) {
 //                $chiefServices = $userSiteSettings->getChiefServices();
 //                if( $userScanOrderInstitutionScope && count($userServices)>0 ) {
 //                    //$services = array_merge($userServices, $chiefServices);
@@ -736,7 +736,7 @@ class ScanOrderController extends Controller {
     public function getActiveAccountReq() {
         $em = $this->getDoctrine()->getManager();
         $accountreqs = array();
-        if( $this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
             //$accountreqs = $em->getRepository('OlegUserdirectoryBundle:UserRequest')->findByStatus("active");
             $accountreqs = $em->getRepository('OlegUserdirectoryBundle:UserRequest')->findBy(
                 array(
@@ -750,7 +750,7 @@ class ScanOrderController extends Controller {
 
     //check for active access requests
     public function getActiveAccessReq() {
-        if( !$this->get('security.context')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
+        if( !$this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
             return null;
         }
         $userSecUtil = $this->get('user_security_utility');
