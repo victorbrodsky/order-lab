@@ -21,7 +21,7 @@ use Doctrine\ORM\EntityRepository;
 use Oleg\UserdirectoryBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class HierarchyFilterType extends AbstractType
 {
@@ -67,7 +67,7 @@ class HierarchyFilterType extends AbstractType
 
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
             'csrf_protection' => false,

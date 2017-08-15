@@ -23,7 +23,7 @@ use Oleg\UserdirectoryBundle\Form\InstitutionalWrapperType;
 use Oleg\UserdirectoryBundle\Form\InstitutionType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 use Doctrine\ORM\EntityRepository;
@@ -367,7 +367,7 @@ class MessageType extends AbstractType
         
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\OrderformBundle\Entity\Message'

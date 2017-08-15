@@ -29,7 +29,7 @@ namespace Oleg\UserdirectoryBundle\Form\CustomType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericSelectTransformer;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\IntegerCheckboxTransformer;
@@ -208,7 +208,7 @@ class CustomSelectorType extends AbstractType {
         
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
             'invalid_message' => 'The selection does not exist',

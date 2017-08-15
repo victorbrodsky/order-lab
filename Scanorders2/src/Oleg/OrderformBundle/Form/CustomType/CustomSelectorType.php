@@ -31,7 +31,7 @@ use Oleg\UserdirectoryBundle\Form\DataTransformer\UserWrapperTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\SecurityContext;
 
 use Oleg\OrderformBundle\Form\DataTransformer\ProcedureTransformer;
@@ -151,7 +151,7 @@ class CustomSelectorType extends AbstractType {
         
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
             'invalid_message' => 'The selection does not exist',

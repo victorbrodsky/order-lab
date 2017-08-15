@@ -20,7 +20,7 @@ namespace Oleg\OrderformBundle\Form;
 
 
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 use Oleg\UserdirectoryBundle\Form\PerSiteSettingsType;
 

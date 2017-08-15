@@ -21,7 +21,7 @@ use Oleg\OrderformBundle\Form\EncounterAttendingPhysicianType;
 use Oleg\OrderformBundle\Form\EncounterReferringProviderType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
 
 class EncounterType extends AbstractType
@@ -352,7 +352,7 @@ class EncounterType extends AbstractType
         
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\OrderformBundle\Entity\Encounter'
