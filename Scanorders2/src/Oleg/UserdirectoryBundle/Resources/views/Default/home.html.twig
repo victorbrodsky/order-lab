@@ -97,17 +97,17 @@
                 Welcome to the Employee Directory!
             </p>
 
-            {% if app.security.getToken().getUser.getEmail == "" %}
+            {% if app.user.getEmail == "" %}
                 <p>
                     If you would like to receive email notifications regarding your orders, please take a moment to update
-                    <a href="{{ path(employees_sitename~'_showuser', { 'id': app.security.getToken().getUser.getId }) }}">your profile</a>
+                    <a href="{{ path(employees_sitename~'_showuser', { 'id': app.user.getId }) }}">your profile</a>
                     by adding your email account.
                 </p>
             {% endif %}
 
 
             <p>
-                Please review and update your <a href="{{ path(employees_sitename~'_showuser', { 'id': app.security.getToken().getUser.getId }) }}">profile</a>.
+                Please review and update your <a href="{{ path(employees_sitename~'_showuser', { 'id': app.user.getId }) }}">profile</a>.
             </p>
 
 
@@ -143,15 +143,15 @@
         <br>
 
         {# My Team #}
-        {#{{ usermacros.userTeam( app.security.getToken().getUser, 'home', employees_sitename, postData, 'in' ) }}#}
+        {#{{ usermacros.userTeam( app.user, 'home', employees_sitename, postData, 'in' ) }}#}
 
-        {#{% set myteamurl = path(employees_sitename~'_my_team',{'userid': app.security.getToken().getUser.getId}) %}#}
+        {#{% set myteamurl = path(employees_sitename~'_my_team',{'userid': app.user.getId}) %}#}
         {#<button id="userMyTeamDetailsBtn" type="button" class="btn btn-primary" onclick="userTeamTwigMacro('{{ myteamurl }}');">#}
             {#My Team#}
         {#</button>#}
         {#<div id="userMyTeamDetails"></div>#}
 
-        {{ usermacros.userTeamAjax( app.security.getToken().getUser.getId, 'home', 'My Team', employees_sitename ) }}
+        {{ usermacros.userTeamAjax( app.user.getId, 'home', 'My Team', employees_sitename ) }}
 
     {% endif %}
 

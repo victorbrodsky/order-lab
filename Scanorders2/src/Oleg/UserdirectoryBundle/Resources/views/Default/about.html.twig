@@ -14,7 +14,9 @@
     limitations under the License.
 #}
 
-{#{% extends "OlegUserdirectoryBundle::Default/base.html.twig" %}#}
+
+{#default is user base#}
+    {% set extendStr = "OlegUserdirectoryBundle::Default/base.html.twig" %}
 
 {% if sitename == 'employees' %}
     {% set extendStr = "OlegUserdirectoryBundle::Default/base.html.twig" %}
@@ -33,6 +35,7 @@
 {% endif %}
 
 {% extends extendStr%}
+
 
 {% block title %}
     About Employee Directory

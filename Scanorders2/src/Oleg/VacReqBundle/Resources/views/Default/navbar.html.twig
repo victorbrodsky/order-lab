@@ -91,8 +91,8 @@
                             {#<a href="{{ path('vacreq_incomingrequests') }}">#}
                                 {#Incoming Requests#}
                             {#</a>#}
-                            {% set pendingRequests = vacreq_util.getTotalPendingRequests(app.security.getToken().getUser()) %}
-                            {#{% set pendingCarryoverRequests = vacreq_util.getTotalPendingCarryoverRequests(app.security.getToken().getUser()) %}#}
+                            {% set pendingRequests = vacreq_util.getTotalPendingRequests(app.user) %}
+                            {#{% set pendingCarryoverRequests = vacreq_util.getTotalPendingCarryoverRequests(app.user) %}#}
                             {% if pendingRequests is defined and pendingRequests > 0 %}
                                 <a id="incoming-orders-menu-title" href="{{ path('vacreq_incomingrequests') }}">Incoming Requests</a><!--
                                             --><a id="incoming-orders-menu-badge"
@@ -186,7 +186,7 @@
                         <ul class="dropdown-menu">
 
                             {% if pendinguser is not defined %}
-                                <li><a href="{{ path(vacreq_sitename~'_showuser', {id:app.security.getToken().getUser().getId()}) }}">My Profile ({{ app.security.getToken().getUser().getUserNameShortStr() }})</a></li>
+                                <li><a href="{{ path(vacreq_sitename~'_showuser', {id:app.user.getId()}) }}">My Profile ({{ app.user.getUserNameShortStr() }})</a></li>
                             {% endif %}
 
                             {% if pendinguser is not defined %}

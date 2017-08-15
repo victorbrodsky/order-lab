@@ -164,13 +164,13 @@
                 <p class="alert alert-danger center-block" align="middle" style="width: 70%;">{{ flashMessage|raw }}</p>
             {% endfor %}
 
-            {% if app.security.getToken().getUser() is defined %}
+            {% if app.user is defined %}
                 <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
-                <input type="hidden" id="user-preferences-tooltip" value="{{ order_security_utility.getTooltip(app.security.getToken().getUser()) }}" />
+                <input type="hidden" id="user-preferences-tooltip" value="{{ order_security_utility.getTooltip(app.user) }}" />
             {% endif %}
             <input type="hidden" id="maxIdleTime" value="{{app.session.get('maxIdleTime')}}" />
 			<input type="hidden" id="siteEmail" value="{{app.session.get('siteEmail')}}" />
-            <input type="hidden" id="authuser_id" value="{{app.security.getToken().getUser().getId()}}" />
+            <input type="hidden" id="authuser_id" value="{{app.user.getId()}}" />
 
         </div>
 

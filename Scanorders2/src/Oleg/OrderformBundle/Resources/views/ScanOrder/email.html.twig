@@ -22,7 +22,8 @@
 
     <div class="jumbotron alert-info well">
         <p><h1>Thank you for your order!</h1></p>
-        <p><h3>Order {{ oid }} has been successfully submitted and a confirmation email was sent to {{ app.security.getToken().getAttribute('email') }}.</h3></p>             
+        {#<p><h3>Order {{ oid }} has been successfully submitted and a confirmation email was sent to {{ app.security.getToken().getAttribute('email') }}.</h3></p>#}
+        <p><h3>Order {{ oid }} has been successfully submitted and a confirmation email was sent.</h3></p>
     </div>
 
       

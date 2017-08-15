@@ -170,7 +170,7 @@
 
                 <td>
                     <a href="{{ path(vacreq_sitename~'_show', { 'id': entity.id }) }}">{{ entity.id }}</a>
-                    {% if entity.getUser().getId() != entity.getSubmitter().getId() and entity.getSubmitter().getId() == app.security.getToken().getUser().getId() %}
+                    {% if entity.getUser().getId() != entity.getSubmitter().getId() and entity.getSubmitter().getId() == app.user.getId() %}
                         S
                     {% endif %}
                 </td>

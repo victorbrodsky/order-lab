@@ -126,7 +126,7 @@
                  data-prototype-blockspecialStains="{{ formmacros.inputField(specialStainsField,cycle,"blockspecialStains","prototype",specialStainsWidget,"","","","","plusbtn")|e }}"
 
                  data-uploadurl = "{{ oneup_uploader_endpoint('scan_gallery') }}"
-                 data-userid = "{{ app.security.getToken().getUser().getId() }}"
+                 data-userid = "{{ app.user.getId() }}"
             >
             </div>
 

@@ -31,7 +31,7 @@
 {% endif %}
 
 
-{% set pendingRequests = vacreq_util.getTotalPendingRequests(app.security.getToken().getUser(),groupId) %}
+{% set pendingRequests = vacreq_util.getTotalPendingRequests(app.user,groupId) %}
 {% set inaccuracyMessage = vacreq_util.getInaccuracyMessage() %}
 
 <p>

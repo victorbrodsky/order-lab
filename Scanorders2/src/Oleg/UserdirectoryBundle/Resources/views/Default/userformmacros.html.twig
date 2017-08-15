@@ -199,7 +199,7 @@
         {% if formfield.attachmentContainer is defined %}
 
             {% set dropzoneInit = 'default' %}
-            {#{% if formfield.vars.value and formfield.vars.value.id == app.security.getToken().getUser().getId() %}#}
+            {#{% if formfield.vars.value and formfield.vars.value.id == app.user.getId() %}#}
                 {#{% set dropzoneInit = 'inactive' %}#}
             {#{% endif %}#}
 
@@ -303,7 +303,7 @@
     <div class="user-collection-holder well {{ classname }}">
 
         {% if cycle != 'show_user' %}
-            {% if not formfield.vars.value or formfield.vars.value and formfield.vars.value.id != app.security.getToken().getUser().getId() %}
+            {% if not formfield.vars.value or formfield.vars.value and formfield.vars.value.id != app.user.getId() %}
                 <div class="text-right">
                     <button type="button" class="btn btn-default btn-sm btn-remove-minimumone-collection confirm-delete-with-expired"
                             onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
@@ -332,7 +332,7 @@
         {% if formfield.attachmentContainer is defined %}
 
             {% set dropzoneInit = 'default' %}
-            {% if formfield.vars.value and formfield.vars.value.id == app.security.getToken().getUser().getId() %}
+            {% if formfield.vars.value and formfield.vars.value.id == app.user.getId() %}
                 {% set dropzoneInit = 'inactive' %}
             {% endif %}
 
@@ -1005,7 +1005,7 @@
                     {% else %}
                         {% set userEditor = false %}
                     {% endif %}
-                    {% if userEditor == true or user.id == app.security.getToken().getUser().getId() %}
+                    {% if userEditor == true or user.id == app.user.getId() %}
                         <p>
 
                         {% if userEditor == true %}
@@ -1027,7 +1027,7 @@
                             </a>
                         {% endif %}
 
-                        {% if user.id != app.security.getToken().getUser().getId() %}
+                        {% if user.id != app.user.getId() %}
                             <a
                                 general-data-confirm="Are you sure you want to mark user as no longer working here as of yesterday and prevent them from logging in?"
                                 data-toggle="tooltip"

@@ -201,7 +201,7 @@
                 {#slides#}
                 <td>
 
-                    {% for descr in sliderequest.getSlideDescription(app.security.getToken().getUser()) %}
+                    {% for descr in sliderequest.getSlideDescription(app.user) %}
 
                         <p>
                             {{ descr|raw }}
@@ -213,7 +213,7 @@
                         <b>Return all slides that belong to listed accession numbers:</b><br>
                     {% endif %}
 
-                    {% for descr in sliderequest.getSlideTextDescription(app.security.getToken().getUser()) %}
+                    {% for descr in sliderequest.getSlideTextDescription(app.user) %}
 
                         <p>
                             {{ descr|raw }}

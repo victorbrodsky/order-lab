@@ -346,7 +346,7 @@
         {% import "OlegCallLogBundle::Default/calllogmacros.html.twig" as calllogmacros %}
 
         {% set sitename = 'scan' %}
-        {% set currentUser = app.security.getToken().getUser() %}
+        {% set currentUser = app.user %}
         {% set counter = 0 %}
 
         {% for spot in entity.tracker.spots %}

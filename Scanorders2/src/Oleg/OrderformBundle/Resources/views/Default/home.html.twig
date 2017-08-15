@@ -61,10 +61,10 @@
             Welcome to the Scan Order System!
         </p>
 
-        {% if app.security.getToken().getUser.getEmail == "" %}
+        {% if app.user.getEmail == "" %}
             <p>
                 If you would like to receive email notifications regarding your orders, please take a moment to update
-                <a href="{{ path(scan_sitename~'_showuser', { 'id': app.security.getToken().getUser.getId }) }}">your profile</a>
+                <a href="{{ path(scan_sitename~'_showuser', { 'id': app.user.getId }) }}">your profile</a>
                 by adding your email account.
             </p>
         {% endif %}
@@ -81,7 +81,7 @@
         </p>
 
         <p>
-            Lastly, please review and update your <a href="{{ path(scan_sitename~'_showuser', { 'id': app.security.getToken().getUser.getId }) }}">profile</a>.
+            Lastly, please review and update your <a href="{{ path(scan_sitename~'_showuser', { 'id': app.user.getId }) }}">profile</a>.
         </p>
 
 

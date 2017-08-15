@@ -865,7 +865,7 @@
                                     {#This link should only appear if the logged in user is one of the interviewers.#}
                                     {% if is_granted('ROLE_FELLAPP_INTERVIEWER') %}
 
-                                        {% set userInterviewId = entity.getInterviewIdByUser( app.security.getToken().getUser() ) %}
+                                        {% set userInterviewId = entity.getInterviewIdByUser( app.user ) %}
 
                                         {% if userInterviewId %}
                                             <li>
@@ -892,7 +892,7 @@
 
                         {% if route_path == "fellapp_myinterviewees" %}
 
-                            {% set thisUserInterview = entity.getInterviewByUser(app.security.getToken().getUser()) %}
+                            {% set thisUserInterview = entity.getInterviewByUser(app.user) %}
                             {% set totalRank = thisUserInterview.totalRank %}
 
                             {% if totalRank and totalRank > 0 %}

@@ -44,8 +44,8 @@
     {% endif %}
 
     {% set emailconf = "" %}
-    {% if app.security.getToken().getUser.getEmail != "" %}
-        {% set emailconf = " and a confirmation email was sent to "~app.security.getToken().getUser.getEmail %}
+    {% if app.user.getEmail != "" %}
+        {% set emailconf = " and a confirmation email was sent to "~app.user.getEmail %}
     {% endif %}
 
     <div class="alert alert-info well-lg">
@@ -54,10 +54,10 @@
             <a href="{{ path('multy_show', { 'id': oid }) }}">Order {{ oid }}</a> has been successfully {{ cycleStr|lower }}{{ emailconf }}.
         </h3></p>
 
-        {% if app.security.getToken().getUser.getEmail == null or app.security.getToken().getUser.getEmail == "" %}
+        {% if app.user.getEmail == null or app.user.getEmail == "" %}
             <p><h3>
                 If you would like to receive email notifications regarding this and future orders, please update
-                <a href="{{ path(scan_sitename~'_showuser', { 'id': app.security.getToken().getUser.getId }) }}">your profile</a>
+                <a href="{{ path(scan_sitename~'_showuser', { 'id': app.user.getId }) }}">your profile</a>
                 by adding your email account.
             </h3></p>
         {% endif %}

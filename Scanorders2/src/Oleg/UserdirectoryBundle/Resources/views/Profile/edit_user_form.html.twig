@@ -34,7 +34,7 @@
     {% set collapsein = "in" %}
 {% endif %}
 
-{% set hasRoleSimpleView = app.security.getToken().getUser().hasRole('ROLE_USERDIRECTORY_SIMPLEVIEW') %}
+{% set hasRoleSimpleView = app.user.hasRole('ROLE_USERDIRECTORY_SIMPLEVIEW') %}
 
     <p>
         <button type="button" class="btn btn-default btn-sm" onClick="collapseAll()" >Collapse All</button>
@@ -344,7 +344,7 @@
                     {% endif %}
 
                     {% if form.locked is defined and userEditor == true %}
-                        {% if app.security.getToken().getUser().getId() != entity.id %}
+                        {% if app.user.getId() != entity.id %}
                             {{ formmacros.checkbox(form.locked) }}
                             {% if form.testingAccount is defined %}
                                 {{ formmacros.checkbox(form.testingAccount) }}
@@ -470,7 +470,7 @@
                             {% for employmentStatus in form.employmentStatus %}
                                 {{ userform.employmentStatuses(employmentStatus,cycle,'user-employmentStatus','noprototype') }}
                             {% endfor %}
-                            {% if cycle != 'show_user' and entity.id != app.security.getToken().getUser().getId() %}
+                            {% if cycle != 'show_user' and entity.id != app.user.getId() %}
                                 {#<button class="btn btn-default btn-add-minimumone-collection" onClick="addNewObject(this,'user-employmentStatus')" type='button'>Add Employment Period</button>#}
                                 {{ usermacros.addNewObjectBtn( cycle, 'user-employmentStatus', 'Add Employment Period') }}
                             {% endif %}
@@ -1467,7 +1467,7 @@
     {{ form_end(form,{'render_rest': false}) }}
 
 
-    {% if userEditor == true or entity.id == app.security.getToken().getUser().getId() %}
+    {% if userEditor == true or entity.id == app.user.getId() %}
         {% if cycle == "show_user" and cycle != "create_user" %}
             <p><a class="btn btn-success" href="{{ path(sitename~'_user_edit',{'id':entity.id}) }}">Edit</a></p>
         {% endif %}

@@ -250,7 +250,7 @@
       {#{% endif %}#}
 
      {#data-uploadurl = "{{ oneup_uploader_endpoint('scan_gallery') }}"#}
-     {#data-userid = "{{ app.security.getToken().getUser().getId() }}"#}
+     {#data-userid = "{{ app.user.getId() }}"#}
 
     {#></div>#}
     {#Note: addSameForm button pass variables - object name and 6 counts for: 1-patient, 2-proceudre, 3-accession, 4-part, 5-block, 6-slide#}

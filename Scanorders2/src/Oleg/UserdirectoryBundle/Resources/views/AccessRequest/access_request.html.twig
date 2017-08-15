@@ -52,7 +52,7 @@
 
             {#<br>#}
             {#<p>#}
-                {#{{ app.security.getToken().getUser().getUsername() }} | <a href="{{ path(sitename~'_logout') }}">Logout</a>#}
+                {#{{ app.user.getUsername() }} | <a href="{{ path(sitename~'_logout') }}">Logout</a>#}
             {#</p>#}
 
             <br>

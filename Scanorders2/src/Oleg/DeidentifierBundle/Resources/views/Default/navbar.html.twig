@@ -181,7 +181,7 @@
                         <ul class="dropdown-menu">
 
                             {% if pendinguser is not defined %}
-                                <li><a href="{{ path(deidentifier_sitename~'_showuser', {id:app.security.getToken().getUser().getId()}) }}">My Profile ({{ app.security.getToken().getUser().getUserNameShortStr() }})</a></li>
+                                <li><a href="{{ path(deidentifier_sitename~'_showuser', {id:app.user.getId()}) }}">My Profile ({{ app.user.getUserNameShortStr() }})</a></li>
                             {% endif %}
 
                             {% if pendinguser is not defined %}

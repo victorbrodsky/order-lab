@@ -303,7 +303,7 @@
                             {#<li><a href="{{ path(sitename~'_showuser', { 'id': entity.id }) }}">View Details</a></li>#}
 
 
-                            {#{% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') and app.security.getToken().getUser().getId() != entity.id %}#}
+                            {#{% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') and app.user.getId() != entity.id %}#}
 
                                 {#{% if entity.locked == 0 %}#}
                                     {#<li><a general-data-confirm="Are you sure you want to Lock this user?"#}

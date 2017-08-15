@@ -81,7 +81,7 @@
 
     {#<div id="form-prototype-data"#}
          {#data-uploadurl = "{{ oneup_uploader_endpoint('scan_gallery') }}"#}
-         {#data-userid = "{{ app.security.getToken().getUser().getId() }}"#}
+         {#data-userid = "{{ app.user.getId() }}"#}
     {#></div>#}
 
     {{ form_errors(form) }}

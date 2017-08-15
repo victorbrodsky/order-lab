@@ -1480,7 +1480,7 @@
                     {% set showInfoDate = 1 %}
                 {% endif %}
                 {% if field.vars.value.provider is defined and field.vars.value.provider != "" %}
-                    {% if field.vars.value.provider.id != app.security.getToken().getUser().getId() %}
+                    {% if field.vars.value.provider.id != app.user.getId() %}
                         {% set showInfoProvider = 1 %}
                     {% endif %}
                     {% if field.vars.value.status != 'valid' or (showPlus is defined and showPlus == 'showPlus') %}
@@ -2816,7 +2816,7 @@
             {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
             {% set sitename = 'scan' %}
-            {% set entity = app.security.getToken().getUser() %}
+            {% set entity = app.user %}
             {% set counter = 0 %}
 
             {% for spot in patient.tracker.spots %}
