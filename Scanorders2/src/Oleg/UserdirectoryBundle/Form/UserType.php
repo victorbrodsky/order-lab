@@ -44,7 +44,7 @@ class UserType extends AbstractType
     protected $em;
     protected $hasRoleSimpleView;
 
-    public function __construct( $params )
+    public function formConstructor( $params )
     {
 
 
@@ -103,6 +103,9 @@ class UserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
+        $this->formConstructor($options['form_custom_value']);
+
+
         //hook for extended class
         $this->addHookFields($builder);
 
@@ -158,13 +161,14 @@ class UserType extends AbstractType
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\User',
             'csrf_protection' => false,
+            'form_custom_value' => null,
         ));
     }
 
     /**
      * @return string
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_userdirectorybundle_user';
     }
@@ -219,7 +223,7 @@ class UserType extends AbstractType
             'attr' => array('class'=>'form-control form-control-modif')
         ));
 
-        $builder->add('avatar', new DocumentType(), array(
+        $builder->add('avatar', DocumentType::class, array(
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\Document',
             'label' => false
         ));
@@ -261,7 +265,7 @@ class UserType extends AbstractType
     public function addUserInfos($builder) {
 
         $builder->add('infos', 'collection', array(
-            'type' => new UserInfoType(),
+            'type' => UserInfoType::class,
             'label' => false,
             'required' => false,
             'allow_add' => true,
@@ -306,7 +310,8 @@ class UserType extends AbstractType
     public function globalUserPreferences($builder) {
 
         if( !$this->hasRoleSimpleView ) {
-            $builder->add('preferences', new UserPreferencesType($this->params), array(
+            $builder->add('preferences', UserPreferencesType::class, array(
+                'form_custom_value' => $this->params,
                 'data_class' => 'Oleg\UserdirectoryBundle\Entity\UserPreferences',
                 'label' => false,
                 'required' => false,
@@ -326,7 +331,7 @@ class UserType extends AbstractType
             if( !$this->hasRoleSimpleView ) {
                 //permissions: show list of
                 $builder->add('permissions', 'collection', array(
-                    'type' => new PermissionType($this->params),
+                    'entry_type' => PermissionType::class,
                     'label' => false,
                     'required' => false,
                     'allow_add' => true,
@@ -360,7 +365,10 @@ class UserType extends AbstractType
 
     public function addPerSiteSettings($builder) {
         if( !$this->hasRoleSimpleView ) {
-            $builder->add('perSiteSettings', new PerSiteSettingsType(null, $this->roleAdmin, $this->params), array(
+            $builder->add('perSiteSettings', PerSiteSettingsType::class, array(
+                'form_custom_value_user' => null,
+                'form_custom_value_roleAdmin' => $this->roleAdmin,
+                'form_custom_value' => $this->params,
                 'data_class' => 'Oleg\UserdirectoryBundle\Entity\PerSiteSettings',
                 'label' => false,
                 'required' => false,
@@ -372,8 +380,12 @@ class UserType extends AbstractType
         //Administrative Titles
         $params = array('read_only'=>$this->readonly,'label'=>'Administrative','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\AdministrativeTitle','formname'=>'administrativetitletype','cycle'=>$this->cycle);
         $params = array_merge($this->params, $params);
+        //BaseTitleType($params)
         $builder->add('administrativeTitles', 'collection', array(
-            'type' => new BaseTitleType($params),
+            'entry_type' => AdministrativeTitleType::class,
+            'entry_options' => array(
+                'form_custom_value' => $params
+            ),
             'label' => false,
             'required' => false,
             'allow_add' => true,
@@ -386,7 +398,10 @@ class UserType extends AbstractType
         $params = array('read_only'=>$this->readonly,'label'=>'Academic Appointment','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\AppointmentTitle','formname'=>'appointmenttitletype','cycle'=>$this->cycle);
         $params = array_merge($this->params, $params);
         $builder->add('appointmentTitles', 'collection', array(
-            'type' => new BaseTitleType($params),
+            'entry_type' => AppointmentTitleType::class,
+            'entry_options' => array(
+                'form_custom_value' => $params
+            ),
             'label' => false,
             'required' => false,
             'allow_add' => true,
@@ -399,7 +414,10 @@ class UserType extends AbstractType
         $params = array('read_only'=>$this->readonly,'label'=>'Medical Appointment','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\MedicalTitle','formname'=>'medicaltitletype','cycle'=>$this->cycle);
         $params = array_merge($this->params, $params);
         $builder->add('medicalTitles', 'collection', array(
-            'type' => new BaseTitleType($params),
+            'entry_type' => MedicalTitleType::class,
+            'entry_options' => array(
+                'form_custom_value' => $params
+            ),
             'label' => false,
             'required' => false,
             'allow_add' => true,
@@ -415,7 +433,11 @@ class UserType extends AbstractType
     public function userTrainings($builder) {
         $params = array('read_only'=>$this->readonly,'admin'=>$this->roleAdmin,'currentUser'=>$this->currentUser,'cycle'=>$this->cycle,'em'=>$this->em,'subjectUser'=>$this->subjectUser,'container'=>$this->container);
         $builder->add('trainings', 'collection', array(
-            'type' => new TrainingType($params),
+            'entry_type' => TrainingType::class,
+            'entry_options' => array(
+                'form_custom_value' => $params,
+                'form_custom_value_entity' => null
+            ),
             'label' => false,
             'required' => false,
             'allow_add' => true,
@@ -429,9 +451,20 @@ class UserType extends AbstractType
     }
 
     public function userLocations($builder) {
-        $params = array('read_only'=>$this->readonly,'admin'=>$this->roleAdmin,'currentUser'=>$this->currentUser,'cycle'=>$this->cycle,'em'=>$this->em,'subjectUser'=>$this->subjectUser,'container'=>$this->container);
+        $params = array(
+            'read_only'=>$this->readonly,
+            'admin'=>$this->roleAdmin,
+            'currentUser'=>$this->currentUser,
+            'cycle'=>$this->cycle,
+            'em'=>$this->em,
+            'subjectUser'=>$this->subjectUser,
+            'container'=>$this->container
+        );
         $builder->add('locations', 'collection', array(
-            'type' => new LocationType($params),
+            'entry_type' => LocationType::class,
+            'entry_options' => array(
+                'form_custom_value' => $params
+            ),
             'label' => false,
             'required' => false,
             'allow_add' => true,
@@ -448,7 +481,10 @@ class UserType extends AbstractType
         if( $this->roleAdmin || ($this->currentUser == false && $this->cycle == "show") ) {
             $params = array('em'=>$this->params['em'],'read_only'=>$this->readonly,'currentUser'=>$this->currentUser,'admin'=>$this->roleAdmin);
             $builder->add('employmentStatus', 'collection', array(
-                'type' => new EmploymentStatusType($params),
+                'entry_type' => EmploymentStatusType::class,
+                'entry_options' => array(
+                    'form_custom_value' => $params
+                ),
                 'label' => false,
                 'required' => false,
                 'allow_add' => true,
@@ -468,7 +504,10 @@ if(1){
         //it takes 4 seconds to load
         $params = array('read_only'=>$this->readonly,'admin'=>$this->roleAdmin,'subjectUser'=>$this->subjectUser,'cycle'=>$this->cycle,'em'=>$this->em,'container'=>$this->container);
         $builder->add('researchLabs', 'collection', array(
-            'type' => new ResearchLabType($params),
+            'entry_type' => ResearchLabType::class,
+            'entry_options' => array(
+                'form_custom_value' => $params
+            ),
             'label' => false,
             'required' => false,
             'allow_add' => true,
@@ -482,7 +521,10 @@ if(1){
             //it takes 7 seconds to load
             $params = array('read_only'=>$this->readonly,'admin'=>$this->roleAdmin,'subjectUser'=>$this->subjectUser,'cycle'=>$this->cycle,'em'=>$this->em);
             $builder->add('grants', 'collection', array(
-                'type' => new GrantType($params),
+                'entry_type' => GrantType::class,
+                'entry_options' => array(
+                    'form_custom_value' => $params
+                ),
                 'label' => false,
                 'required' => false,
                 'allow_add' => true,
@@ -494,7 +536,10 @@ if(1){
 
             $params = array('read_only'=>$this->readonly,'admin'=>$this->roleAdmin,'currentUser'=>$this->currentUser,'cycle'=>$this->cycle,'em'=>$this->em,'subjectUser'=>$this->subjectUser);
             $builder->add('publications', 'collection', array(
-                'type' => new PublicationType($params),
+                'entry_type' => PublicationType::class,
+                'entry_options' => array(
+                    'form_custom_value' => $params
+                ),
                 'label' => false,
                 'required' => false,
                 'allow_add' => true,
@@ -506,7 +551,10 @@ if(1){
 
             $params = array('read_only'=>$this->readonly,'admin'=>$this->roleAdmin,'currentUser'=>$this->currentUser,'cycle'=>$this->cycle,'em'=>$this->em,'subjectUser'=>$this->subjectUser);
             $builder->add('books', 'collection', array(
-                'type' => new BookType($params),
+                'entry_type' => BookType::class,
+                'entry_options' => array(
+                    'form_custom_value' => $params
+                ),
                 'label' => false,
                 'required' => false,
                 'allow_add' => true,
@@ -518,7 +566,10 @@ if(1){
 
             $params = array('read_only'=>$this->readonly,'admin'=>$this->roleAdmin,'currentUser'=>$this->currentUser,'cycle'=>$this->cycle,'em'=>$this->em,'subjectUser'=>$this->subjectUser);
             $builder->add('lectures', 'collection', array(
-                'type' => new LectureType($params),
+                'entry_type' => LectureType::class,
+                'entry_options' => array(
+                    'form_custom_value' => $params
+                ),
                 'label' => false,
                 'required' => false,
                 'allow_add' => true,
@@ -535,7 +586,8 @@ if(1){
     public function addCredentials($builder) {
         if( $this->roleAdmin || $this->currentUser ) {
             $params = array('container'=>$this->container,'em'=>$this->em,'cycle'=>$this->cycle,'roleAdmin'=>$this->roleAdmin);
-            $builder->add('credentials', new CredentialsType($params), array(
+            $builder->add('credentials', CredentialsType::class, array(
+                'form_custom_value' => $params,
                 'data_class' => 'Oleg\UserdirectoryBundle\Entity\Credentials',
                 'label' => false,
                 'required' => false,
@@ -553,7 +605,10 @@ if(1){
 
         $params = array('read_only'=>$readOnlyComment,'label'=>'Public','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\PublicComment','formname'=>'publiccomments','em'=>$this->params['em']);
         $builder->add('publicComments', 'collection', array(
-            'type' => new BaseCommentsType($params),
+            'entry_type' => PublicCommentType::class,
+            'entry_options' => array(
+                'form_custom_value' => $params
+            ),
             'label' => false,
             'required' => false,
             'allow_add' => true,
@@ -566,7 +621,10 @@ if(1){
         if( $this->roleAdmin || $this->currentUser ) {
             $params = array('roleAdmin'=>$this->roleAdmin,'read_only'=>$readOnlyComment,'label'=>'Private','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\PrivateComment','formname'=>'privatecomments','em'=>$this->params['em']);
             $builder->add('privateComments', 'collection', array(
-                'type' => new BaseCommentsType($params),
+                'entry_type' => PrivateCommentType::class,
+                'entry_options' => array(
+                    'form_custom_value' => $params
+                ),
                 'label' => false,
                 'required' => false,
                 'allow_add' => true,
@@ -580,7 +638,10 @@ if(1){
         if( $this->roleAdmin ) {
             $params = array('read_only'=>$this->readonly,'label'=>'Administrative','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\AdminComment','formname'=>'admincomments','em'=>$this->params['em']);
             $builder->add('adminComments', 'collection', array(
-                'type' => new BaseCommentsType($params),
+                'entry_type' => AdminCommentType::class,
+                'entry_options' => array(
+                    'form_custom_value' => $params
+                ),
                 'label' => false,
                 'required' => false,
                 'allow_add' => true,
@@ -594,7 +655,10 @@ if(1){
         if( $this->roleAdmin || ($this->currentUser && $this->cycle == 'show') ) {
             $params = array('read_only'=>$this->readonly,'label'=>'Confidential','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\ConfidentialComment','formname'=>'confidentialcomments','em'=>$this->params['em']);
             $builder->add('confidentialComments', 'collection', array(
-                'type' => new BaseCommentsType($params),
+                'entry_type' => ConfidentialCommentType::class,
+                'entry_options' => array(
+                    'form_custom_value' => $params
+                ),
                 'label' => false,
                 'required' => false,
                 'allow_add' => true,
@@ -615,7 +679,11 @@ if(1){
         //exit('addFellowshipApplication to user profile not implemented');
 
         $builder->add('fellowshipApplications', 'collection', array(
-            'type' => new FellowshipApplicationType($this->params),
+            //'type' => new FellowshipApplicationType($this->params),
+            'entry_type' => FellowshipApplicationType::class,
+            'entry_options' => array(
+                'form_custom_value' => $this->params
+            ),
             'label' => false,
             'required' => false,
             'allow_add' => true,

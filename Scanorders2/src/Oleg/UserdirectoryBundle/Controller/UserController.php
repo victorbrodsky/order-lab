@@ -1536,10 +1536,16 @@ class UserController extends Controller
             'em' => $em
         );
 
-        $form = $this->createForm(new UserType($params), $user, array(
+//        $form = $this->createForm(new UserType($params), $user, array(
+//            'disabled' => false,
+//            'action' => $this->generateUrl( $this->container->getParameter('employees.sitename').'_create_user' ),
+//            'method' => 'POST',
+//        ));
+        $form = $this->createForm(UserType::class, $user, array(
             'disabled' => false,
             'action' => $this->generateUrl( $this->container->getParameter('employees.sitename').'_create_user' ),
             'method' => 'POST',
+            'form_custom_value' => $params,
         ));
 
         //return $this->container->get('templating')->renderResponse('FOSUserBundle:Profile:show.html.'.$this->container->getParameter('fos_user.template.engine'), array('user' => $user));
@@ -1592,7 +1598,11 @@ class UserController extends Controller
             'em' => $em
         );
 
-        $form = $this->createForm(new UserType($params), $user, array('disabled' => false));
+        //$form = $this->createForm(new UserType($params), $user, array('disabled' => false));
+        $form = $this->createForm(UserType::class, $user, array(
+            'disabled' => false,
+            'form_custom_value' => $params,
+        ));
 
         $form->handleRequest($request);
 
@@ -1994,7 +2004,11 @@ class UserController extends Controller
             'em' => $em
         );
 
-        $form = $this->createForm(new UserType($params), $entity, array('disabled' => true));
+        //$form = $this->createForm(new UserType($params), $entity, array('disabled' => true));
+        $form = $this->createForm(UserType::class, $entity, array(
+            'disabled' => true,
+            'form_custom_value' => $params,
+        ));
 
 //        if (!is_object($user) || !$user instanceof UserInterface) {
 //            throw new AccessDeniedException('This user does not have access to this section.');
@@ -2082,9 +2096,14 @@ class UserController extends Controller
             'em' => $em
         );
 
-        $form = $this->createForm(new UserType($params), $entity, array(
+//        $form = $this->createForm(new UserType($params), $entity, array(
+//            'action' => $this->generateUrl($sitename.'_user_update', array('id' => $entity->getId())),
+//            'method' => 'PUT',
+//        ));
+        $form = $this->createForm(UserType::class, $entity, array(
             'action' => $this->generateUrl($sitename.'_user_update', array('id' => $entity->getId())),
             'method' => 'PUT',
+            'form_custom_value' => $params,
         ));
 //        $form->add('submit', 'submit', array('label' => 'Update','attr' => array('class' => 'btn btn-warning')));
 
@@ -2434,9 +2453,14 @@ class UserController extends Controller
             'em' => $em
         );
 
-        $form = $this->createForm(new UserType($params), $entity, array(
+//        $form = $this->createForm(new UserType($params), $entity, array(
+//            'action' => $this->generateUrl($sitename.'_user_update', array('id' => $entity->getId())),
+//            'method' => 'PUT',
+//        ));
+        $form = $this->createForm(UserType::class, $entity, array(
             'action' => $this->generateUrl($sitename.'_user_update', array('id' => $entity->getId())),
             'method' => 'PUT',
+            'form_custom_value' => $params,
         ));
         //$form->add('submit', 'submit', array('label' => 'Update'));
 

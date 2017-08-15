@@ -27,16 +27,16 @@ class SpotType extends AbstractType
 {
 
     protected $params;
-    protected $entity;
 
-    public function __construct( $params=null, $entity = null )
+    public function formConstructor( $params=null, $entity = null )
     {
         $this->params = $params;
-        $this->entity = $entity;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
+        $this->formConstructor($options['form_custom_value']);
 
 //        $builder->add('id',null,array(
 //            'label' => "ID:",
@@ -69,7 +69,11 @@ class SpotType extends AbstractType
             'readonlyLocationType' => $this->params['readonlyLocationType']
         );
 
-        $builder->add('currentLocation', new LocationType($params), array(
+        //LocationType($params)
+        //echo "cycle=".$params['cycle']."<br>";
+        //exit();
+        $builder->add('currentLocation', LocationType::class, array(
+            'form_custom_value' => $params,
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\Location',
             'label' => false,
         ));
@@ -105,10 +109,11 @@ class SpotType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\Spot',
+            'form_custom_value' => null
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_userdirectorybundle_spottypetype';
     }

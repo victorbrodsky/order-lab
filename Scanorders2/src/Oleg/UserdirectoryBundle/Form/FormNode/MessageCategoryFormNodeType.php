@@ -103,7 +103,7 @@ class MessageCategoryFormNodeType extends FormNodeType
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_userdirectorybundle_messagecategoryformnodetype';
     }

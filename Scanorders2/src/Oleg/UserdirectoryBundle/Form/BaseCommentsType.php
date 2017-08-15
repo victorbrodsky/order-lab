@@ -33,13 +33,14 @@ class BaseCommentsType extends AbstractType
 
     protected $params;
 
-    public function __construct( $params )
+    public function formConstructor( $params )
     {
         $this->params = $params;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
 
         $builder->add( 'id', 'hidden', array(
             'label'=>false,
@@ -141,11 +142,12 @@ class BaseCommentsType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => $this->params['fullClassName'],
+            'data_class' => null,
+            'form_custom_value' => null
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_userdirectorybundle_'.$this->params['formname'];
     }

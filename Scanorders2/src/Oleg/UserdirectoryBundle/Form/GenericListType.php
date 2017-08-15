@@ -52,7 +52,10 @@ class GenericListType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add('list', new ListType($this->params, $this->mapper), array(
+        //ListType($this->params, $this->mapper)
+        $builder->add('list', ListType::class, array(
+            'form_custom_value' => $this->params,
+            'form_custom_value_entity' => $this->mapper,
             'data_class' => $this->mapper['fullClassName'],
             'label' => false
         ));
@@ -372,7 +375,7 @@ class GenericListType extends AbstractType
 
             //permissions: show list of
             $builder->add('permissions', 'collection', array(
-                'type' => new PermissionType($this->params),
+                'entry_type' => PermissionType::class,
                 'label' => false,
                 'required' => false,
                 'allow_add' => true,
@@ -711,7 +714,7 @@ class GenericListType extends AbstractType
     /**
      * @return string
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_userdirectorybundle_'.strtolower($this->mapper['className']);
     }

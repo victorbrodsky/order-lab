@@ -79,7 +79,10 @@ class LabTestType extends AbstractType
             $mapper['className'] = "LabTest";
             $mapper['bundleName'] = "OlegOrderformBundle";
 
-            $builder->add('list', new ListType($params, $mapper), array(
+            //ListType($params, $mapper)
+            $builder->add('list', ListType::class, array(
+                'form_custom_value' => $params,
+                'form_custom_value_entity' => $mapper,
                 'data_class' => 'Oleg\OrderformBundle\Entity\LabTest',
                 'label' => false
             ));

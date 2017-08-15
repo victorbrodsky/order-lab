@@ -31,19 +31,19 @@ class GrantType extends AbstractType
 {
 
     protected $params;
-    protected $entity;
 
     //private $commentData = null;
     //private $effortData = null;
 
-    public function __construct( $params=null, $entity = null )
+    public function formConstructor( $params=null )
     {
         $this->params = $params;
-        $this->entity = $entity;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
+        $this->formConstructor($options['form_custom_value']);
 
         //echo "cycle=".$this->params['cycle']."<br>";
 
@@ -153,7 +153,10 @@ class GrantType extends AbstractType
             $mapper['className'] = "Grant";
             $mapper['bundleName'] = "OlegUserdirectoryBundle";
 
-            $builder->add('list', new ListType($params, $mapper), array(
+            //ListType($params, $mapper)
+            $builder->add('list', ListType::class, array(
+                'form_custom_value' => $params,
+                'form_custom_value_entity' => $mapper,
                 'data_class' => 'Oleg\UserdirectoryBundle\Entity\Grant',
                 'label' => false
             ));
@@ -244,11 +247,12 @@ class GrantType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\Grant',
+            'form_custom_value' => null
             //'csrf_protection' => false,
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_userdirectorybundle_grant';
     }

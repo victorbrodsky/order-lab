@@ -310,7 +310,10 @@ class CalllogEncounterType extends AbstractType
 //                //'classtype' => 'location'
 //            ));
         }
-        $builder->add('tracker', new TrackerType($this->params), array(
+
+        //TrackerType($this->params)
+        $builder->add('tracker', TrackerType::class, array(
+            'form_custom_value' => $this->params,
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\Tracker',
             'read_only' => $this->params['readonlyEncounter'],
             'label' => false,

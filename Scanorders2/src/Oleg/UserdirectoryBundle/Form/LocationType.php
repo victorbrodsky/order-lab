@@ -35,13 +35,12 @@ class LocationType extends AbstractType
 {
 
     protected $params;
-    protected $entity;
     protected $hasRoleSimpleView;
 
-    public function __construct( $params=null, $entity = null )
+
+    public function formConstructor( $params )
     {
         $this->params = $params;
-        $this->entity = $entity;
 
         if( !array_key_exists('institution', $this->params) ) {
             $this->params['institution'] = true;
@@ -64,6 +63,9 @@ class LocationType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
+        //echo "cycle=".$options['form_custom_value']['cycle']."<br>";
+        $this->formConstructor($options['form_custom_value']);
 
         if (strpos($this->params['cycle'], '_standalone') === false) {
             $standalone = false;
@@ -145,7 +147,9 @@ class LocationType extends AbstractType
             }
         ));
 
-        $builder->add('geoLocation', new GeoLocationType($this->params), array(
+        //GeoLocationType($this->params)
+        $builder->add('geoLocation', GeoLocationType::class, array(
+            'form_custom_value' => $this->params,
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\GeoLocation',
             'label' => false,
             'required' => false
@@ -352,7 +356,10 @@ class LocationType extends AbstractType
             $mapper['className'] = "Location";
             $mapper['bundleName'] = "OlegUserdirectoryBundle";
 
-            $builder->add('list', new ListType($params, $mapper), array(
+            //ListType($params, $mapper)
+            $builder->add('list', ListType::class, array(
+                'form_custom_value' => $params,
+                'form_custom_value_entity' => $mapper,
                 'data_class' => 'Oleg\UserdirectoryBundle\Entity\Location',
                 'label' => false
             ));
@@ -365,11 +372,12 @@ class LocationType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\Location',
+            'form_custom_value' => null,
             //'csrf_protection' => false,
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_userdirectorybundle_location';
     }

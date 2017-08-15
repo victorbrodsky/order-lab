@@ -151,7 +151,7 @@ class GenericTreeTransformer implements DataTransformerInterface
 
             } else {
 
-                //echo "found:".$entity->getName()."<br>";
+                //echo "found:".$entity->getBlockPrefix()."<br>";
                 //exit('use found object <br>');
                 return $entity; //use found object
 
@@ -211,7 +211,7 @@ class GenericTreeTransformer implements DataTransformerInterface
             if( method_exists($newEntity,'getParent') && !($newEntity instanceof BaseCompositeNode) ) {
                 //don't flush this entity because it has parent and parent can not be set here
                 //echo "this entity has parent => don't create <br>";
-                //echo "name=".$newEntity->getName()."<br>";
+                //echo "name=".$newEntity->getBlockPrefix()."<br>";
                 //$this->em->persist($newEntity);
                 return $newEntity;
             }

@@ -48,7 +48,11 @@ class AuthorizitaionUserType extends AbstractType
         ));
 
 
-        $builder->add('perSiteSettings', new PerSiteSettingsType(null, true, $this->params), array(
+        //PerSiteSettingsType(null, true, $this->params)
+        $builder->add('perSiteSettings', PerSiteSettingsType::class, array(
+            'form_custom_value_user' => null,
+            'form_custom_value_roleAdmin' => true,
+            'form_custom_value' => $this->params,
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\PerSiteSettings',
             'label' => false,
             'required' => false,
@@ -78,7 +82,7 @@ class AuthorizitaionUserType extends AbstractType
     /**
      * @return string
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_userdirectorybundle_user';
     }

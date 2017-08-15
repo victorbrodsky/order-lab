@@ -29,7 +29,7 @@ class CredentialsType extends AbstractType
 
     protected $params;
 
-    public function __construct( $params=null )
+    public function formConstructor( $params=null )
     {
         $this->params = $params;
     }
@@ -37,6 +37,8 @@ class CredentialsType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
+        $this->formConstructor($options['form_custom_value']);
 
         $hasRoleSimpleView = false;
         if( array_key_exists('container', $this->params) ) {
@@ -220,14 +222,15 @@ class CredentialsType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\UserPreferences'
+            'data_class' => 'Oleg\UserdirectoryBundle\Entity\UserPreferences',
+            'form_custom_value' => null
         ));
     }
 
     /**
      * @return string
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_userdirectorybundle_userpreferences';
     }

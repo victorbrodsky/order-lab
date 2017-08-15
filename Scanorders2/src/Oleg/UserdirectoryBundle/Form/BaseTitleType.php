@@ -32,13 +32,16 @@ class BaseTitleType extends AbstractType
 
     protected $params;
 
-    public function __construct( $params )
+
+    public function formConstructor( $params )
     {
         $this->params = $params;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
+        $this->formConstructor($options['form_custom_value']);
 
         $hasRoleSimpleView = false;
         if( array_key_exists('container', $this->params) ) {
@@ -392,14 +395,20 @@ class BaseTitleType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
+        //$fullClassName = $resolver->resolve('form_custom_value');
+        //echo "fullClassName=".$fullClassName."<br>";
+        //echo "fullClassName=".$this->params['fullClassName']."<br>";
+
         $resolver->setDefaults(array(
-            'data_class' => $this->params['fullClassName'],
+            'data_class' => null,   //$this->params['fullClassName'],
+            //'data_class' => 'Oleg\UserdirectoryBundle\Entity\AdministrativeTitle',
             //'csrf_protection' => false,
-            'allow_extra_fields' => true
+            'allow_extra_fields' => true,
+            'form_custom_value' => null
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_userdirectorybundle_'.$this->params['formname'];
     }

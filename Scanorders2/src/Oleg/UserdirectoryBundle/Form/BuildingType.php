@@ -33,16 +33,16 @@ class BuildingType extends AbstractType
 {
 
     protected $params;
-    protected $entity;
 
-    public function __construct( $params=null, $entity = null )
+    public function formConstructor( $params=null )
     {
         $this->params = $params;
-        $this->entity = $entity;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
+        $this->formConstructor($options['form_custom_value']);
 
         $standAloneLocation = false;
         if( strpos($this->params['cycle'],'_standalone') !== false && strpos($this->params['cycle'],'new') === false ) {
@@ -60,7 +60,10 @@ class BuildingType extends AbstractType
             $mapper['className'] = "BuildingList";
             $mapper['bundleName'] = "OlegUserdirectoryBundle";
 
-            $builder->add('list', new ListType($params, $mapper), array(
+            //ListType($params, $mapper)
+            $builder->add('list', ListType::class, array(
+                'form_custom_value' => $params,
+                'form_custom_value_entity' => $mapper,
                 'data_class' => 'Oleg\UserdirectoryBundle\Entity\BuildingList',
                 'label' => false
             ));
@@ -94,7 +97,9 @@ class BuildingType extends AbstractType
                 },
         ));
 
-        $builder->add('geoLocation', new GeoLocationType($this->params), array(
+        //GeoLocationType($this->params)
+        $builder->add('geoLocation', GeoLocationType::class, array(
+            'form_custom_value' => $this->params,
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\GeoLocation',
             'label' => false,
             'required' => false
@@ -106,11 +111,12 @@ class BuildingType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\BuildingList',
+            'form_custom_value' => null
             //'csrf_protection' => false,
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_userdirectorybundle_building';
     }

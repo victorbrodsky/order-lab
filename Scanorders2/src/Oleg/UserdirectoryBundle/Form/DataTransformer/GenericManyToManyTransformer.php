@@ -65,7 +65,7 @@ class GenericManyToManyTransformer implements DataTransformerInterface
      */
     public function transform( $entities )
     {
-        //echo $entities->first()->getName()."<br>";
+        //echo $entities->first()->getBlockPrefix()."<br>";
         //echo "!!!!!!!!!!!transform: entities=".$entities."<br>";
         //echo $this->className.": transform: count=".count($entities)."<br>";
         //var_dump($entities);
@@ -203,7 +203,7 @@ class GenericManyToManyTransformer implements DataTransformerInterface
             if( method_exists($newEntity,'getParent')  ) {
                 //don't flush this entity because it has parent and parent can not be set here
                 //echo "this entity has parent => don't create <br>";
-                //echo "name=".$newEntity->getName()."<br>";
+                //echo "name=".$newEntity->getBlockPrefix()."<br>";
                 //$this->em->persist($newEntity);
                 return $newEntity;
             }

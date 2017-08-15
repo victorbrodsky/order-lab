@@ -39,7 +39,7 @@ class ListType extends AbstractType
                             "draft"=>"draft"
                         );
 
-    public function __construct( $params=null, $mapper=null )
+    public function formConstructor( $params=null, $mapper=null )
     {
         $this->params = $params;
         $this->mapper = $mapper;
@@ -57,6 +57,8 @@ class ListType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
+        $this->formConstructor($options['form_custom_value'],$options['form_custom_value_mapper']);
 
         $builder->add('orderinlist',null,array(
             'label'=>'Display Order:',
@@ -206,11 +208,13 @@ class ListType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'inherit_data' => true
+            'inherit_data' => true,
+            'form_custom_value' => null,
+            'form_custom_value_mapper' => null
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_userdirectorybundle_listtype';
     }

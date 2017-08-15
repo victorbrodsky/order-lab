@@ -33,7 +33,8 @@ class PerSiteSettingsType extends AbstractType
     protected $roleAdmin;
     protected $params;
 
-    public function __construct( $user, $roleAdmin, $params )
+
+    public function formConstructor( $user, $roleAdmin, $params )
     {
         $this->user = $user;
         $this->roleAdmin = $roleAdmin;
@@ -42,6 +43,8 @@ class PerSiteSettingsType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
+        $this->formConstructor($options['form_custom_value_user'],$options['form_custom_value_roleAdmin'],$options['form_custom_value']);
 
         if( $this->roleAdmin ) {
 
@@ -217,10 +220,13 @@ class PerSiteSettingsType extends AbstractType
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\PerSiteSettings',
             'csrf_protection' => false,
+            'form_custom_value_user' => null,
+            'form_custom_value_roleAdmin' => null,
+            'form_custom_value' => null,
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_userdirectorybundle_persitesettings';
     }

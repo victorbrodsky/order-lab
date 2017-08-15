@@ -59,7 +59,7 @@ class LoggerType extends AbstractType
     /**
      * @return string
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_userdirectorybundle_logger';
     }

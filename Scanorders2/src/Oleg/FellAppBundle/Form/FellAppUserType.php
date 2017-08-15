@@ -22,18 +22,15 @@ use Doctrine\ORM\EntityRepository;
 use Oleg\UserdirectoryBundle\Form\UserType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-
 
 
 class FellAppUserType extends UserType
 {
 
-    public function __construct( $params )
+    public function formConstructor( $params )
     {
 
-        parent::__construct($params);
+        parent::formConstructor($params);
 
         if( $this->secAuthChecker->isGranted('ROLE_FELLAPP_ADMIN') || $this->secAuthChecker->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             $this->roleAdmin = true;
@@ -46,6 +43,7 @@ class FellAppUserType extends UserType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
+        $this->formConstructor($options['form_custom_value']);
 
         //Name and Preferred Contact Info
         $this->addUserInfos($builder);

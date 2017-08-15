@@ -380,7 +380,11 @@ class ScanUserController extends UserController
         }
 
         $params = array('em' => $em );
-        $form = $this->createForm(new PerSiteSettingsType($user,$this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_ADMIN'),$params), $entity, array(
+        //PerSiteSettingsType($user,$this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_ADMIN')
+        $form = $this->createForm(PerSiteSettingsType::class, $entity, array(
+            'form_custom_value_user' => $user,
+            'form_custom_value_roleAdmin' => $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_ADMIN'),
+            'form_custom_value' => $params,
             'action' => $this->generateUrl('scan_order_settings_update', array('id' => $id)),
             'method' => 'PUT',
             'disabled' => $disabled
@@ -439,7 +443,11 @@ class ScanUserController extends UserController
         $entity->setUpdateAuthorRoles($user->getRoles());
 
         $params = array('em' => $em );
-        $form = $this->createForm(new PerSiteSettingsType($user,$this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_ADMIN'),$params), $entity, array(
+        //PerSiteSettingsType($user,$this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_ADMIN'),$params)
+        $form = $this->createForm(PerSiteSettingsType::class, $entity, array(
+            'form_custom_value_user' => $user,
+            'form_custom_value_roleAdmin' => $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_ADMIN'),
+            'form_custom_value' => $params,
             'action' => $this->generateUrl('scan_order_settings_update', array('id' => $id)),
             'method' => 'PUT',
         ));

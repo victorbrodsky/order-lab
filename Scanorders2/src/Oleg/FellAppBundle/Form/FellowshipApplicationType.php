@@ -37,18 +37,16 @@ class FellowshipApplicationType extends AbstractType
 {
 
     protected $params;
-    protected $entity;
 
-    public function __construct( $params=null, $entity = null )
+    public function formConstructor( $params=null )
     {
         $this->params = $params;
-        $this->entity = $entity;
-
-        //print_r($this->params);
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
+        $this->formConstructor($options['form_custom_value']);
 
 //        $builder->add('fellowshipSubspecialty',null, array(
 //            'label' => '* Fellowship Type:',
@@ -111,7 +109,9 @@ class FellowshipApplicationType extends AbstractType
             'required' => false,
         ));
 
-        $builder->add('user', new FellAppUserType($this->params), array(
+        //FellAppUserType($this->params)
+        $builder->add('user', FellAppUserType::class, array(
+            'form_custom_value' => $this->params,
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\User',
             'label' => false,
             'required' => false,
@@ -409,6 +409,7 @@ class FellowshipApplicationType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\FellAppBundle\Entity\FellowshipApplication',
+            'form_custom_value' => null,
             'csrf_protection' => false
         ));
     }

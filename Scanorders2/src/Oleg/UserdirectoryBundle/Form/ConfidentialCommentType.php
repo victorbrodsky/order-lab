@@ -15,50 +15,31 @@
  *  limitations under the License.
  */
 
-namespace Oleg\OrderformBundle\Form;
+namespace Oleg\UserdirectoryBundle\Form;
+
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Doctrine\ORM\EntityRepository;
 
-class StatusType extends AbstractType
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
+
+
+class ConfidentialCommentType extends BaseCommentsType
 {
-        /**
-     * @param FormBuilderInterface $builder
-     * @param array $options
-     */
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder
-            ->add('action')
-            ->add('message')
-        ;
 
-        //ListType()
-        $builder->add('list', ListType::class, array(
-            'form_custom_value' => null,
-            'form_custom_value_entity' => null,
-            'data_class' => 'Oleg\OrderformBundle\Entity\Status',
-            'label' => false
-        ));
-
-    }
-    
-    /**
-     * @param OptionsResolver $resolver
-     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\Status'
+            'data_class' => 'Oleg\UserdirectoryBundle\Entity\ConfidentialComment',
+            'form_custom_value' => null
         ));
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getBlockPrefix()
     {
-        return 'oleg_orderformbundle_status';
+        return 'oleg_userdirectorybundle_confidentialcomments';
     }
 }

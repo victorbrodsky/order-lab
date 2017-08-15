@@ -119,7 +119,7 @@ class InitialConfigurationType extends AbstractType
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_userdirectorybundle_initialconfigurationtype';
     }

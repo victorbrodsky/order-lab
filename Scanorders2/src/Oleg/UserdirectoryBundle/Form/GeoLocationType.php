@@ -32,16 +32,16 @@ class GeoLocationType extends AbstractType
 {
 
     protected $params;
-    protected $entity;
 
-    public function __construct( $params=null, $entity = null )
+    public function formConstructor( $params=null )
     {
         $this->params = $params;
-        $this->entity = $entity;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
+        $this->formConstructor($options['form_custom_value']);
 
         $hasRoleSimpleView = false;
         if( array_key_exists('container', $this->params) ) {
@@ -131,11 +131,12 @@ class GeoLocationType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\GeoLocation',
+            'form_custom_value' => null
             //'csrf_protection' => false,
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_userdirectorybundle_geolocation';
     }

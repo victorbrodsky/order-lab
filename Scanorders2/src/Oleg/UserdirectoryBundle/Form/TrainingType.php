@@ -35,7 +35,7 @@ class TrainingType extends AbstractType
 
     protected $hasRoleSimpleView;
 
-    public function __construct( $params=null, $entity = null )
+    public function formConstructor( $params=null, $entity = null )
     {
         $this->params = $params;
         $this->entity = $entity;
@@ -48,6 +48,8 @@ class TrainingType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
+        $this->formConstructor($options['form_custom_value'],$options['form_custom_value_entity']);
 
         $builder->add('id','hidden',array(
             'label'=>false,
@@ -222,10 +224,12 @@ class TrainingType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\Training',
+            'form_custom_value' => null,
+            'form_custom_value_entity' => null
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_userdirectorybundle_training';
     }

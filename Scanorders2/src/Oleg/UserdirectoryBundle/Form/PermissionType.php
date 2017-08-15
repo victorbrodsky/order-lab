@@ -28,13 +28,6 @@ use Oleg\UserdirectoryBundle\Util\TimeZoneUtil;
 class PermissionType extends AbstractType
 {
 
-    protected $params;
-
-    public function __construct($params)
-    {
-        $this->params = $params;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
@@ -98,7 +91,7 @@ class PermissionType extends AbstractType
     /**
      * @return string
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_userdirectorybundle_permission';
     }

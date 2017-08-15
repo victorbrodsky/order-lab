@@ -176,7 +176,8 @@ class PatientType extends AbstractType
 //                'prototype' => true,
 //                'prototype_name' => '__patientcontactinfo__',
 //            ));
-            $builder->add('tracker', new TrackerType($this->params), array(
+            $builder->add('tracker', TrackerType::class, array(
+                'form_custom_value' => $this->params,
                 'data_class' => 'Oleg\UserdirectoryBundle\Entity\Tracker',
                 'label' => false,
             ));
@@ -196,7 +197,8 @@ class PatientType extends AbstractType
 
         if( array_key_exists('tracker',$this->params) && $this->params['tracker'] == 'tracker' ) {
             //echo "add tracker <br>";
-            $builder->add('tracker', new TrackerType($this->params), array(
+            $builder->add('tracker', TrackerType::class, array(
+                'form_custom_value' => $this->params,
                 'data_class' => 'Oleg\UserdirectoryBundle\Entity\Tracker',
                 'label' => false,
             ));

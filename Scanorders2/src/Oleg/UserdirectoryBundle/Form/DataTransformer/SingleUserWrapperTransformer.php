@@ -95,7 +95,7 @@ class SingleUserWrapperTransformer extends UserWrapperTransformer//implements Da
         $transformedEntity = $newListArr->first();
 
 //        echo "transformedEntity id=".$transformedEntity->getId()."<br>";
-//        echo "transformedEntity name=".$transformedEntity->getName()."<br>";
+//        echo "transformedEntity name=".$transformedEntity->getBlockPrefix()."<br>";
 //        echo "transformedEntity user=".$transformedEntity->getUser()."<br>";
 //        exit('1');
 

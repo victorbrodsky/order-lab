@@ -108,7 +108,7 @@ class GenericSelectTransformer implements DataTransformerInterface
             $entity = $this->em->getRepository('Oleg'.$this->bundleName.':'.$this->className)->findOneById($text);
 
             if( $entity ) {
-                //return $entity->getName();
+                //return $entity->getBlockPrefix();
                 return $entity;
             } else {
                 return $this->findEntityByString($text);

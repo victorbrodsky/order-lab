@@ -586,7 +586,15 @@ class ComplexListController extends Controller
 
         $params = array('read_only'=>false,'admin'=>$isAdmin,'currentUser'=>false,'cycle'=>$cycle,'em'=>$em,'user'=>$user);
 
-        $form = $this->createForm(new $mapper['fullFormType']($params,$entity), $entity, array(
+        //exit($mapper['fullFormType']);
+//        $form = $this->createForm(new $mapper['fullFormType']($params,$entity), $entity, array(
+//            'disabled' => $disabled,
+//            'action' => $action,
+//            'method' => $method,
+//        ));
+        $form = $this->createForm($mapper['fullFormType'], $entity, array(
+            'form_custom_value' => $params,
+            //'form_custom_value_entity' => $entity,
             'disabled' => $disabled,
             'action' => $action,
             'method' => $method,

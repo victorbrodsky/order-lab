@@ -54,7 +54,8 @@ class ReferenceType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
 
-        $builder->add('geoLocation', new GeoLocationType($this->params), array(
+        $builder->add('geoLocation', GeoLocationType::class, array(
+            'form_custom_value' => $this->params,
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\GeoLocation',
             'label' => false,
             'required' => false

@@ -31,16 +31,16 @@ class ResearchLabType extends AbstractType
 {
 
     protected $params;
-    protected $entity;
 
-    public function __construct( $params=null, $entity = null )
+    public function formConstructor( $params=null )
     {
         $this->params = $params;
-        $this->entity = $entity;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
+        $this->formConstructor($options['form_custom_value']);
 
         if( strpos($this->params['cycle'],'_standalone') === false ) {
             $readonly = true;
@@ -107,7 +107,10 @@ class ResearchLabType extends AbstractType
             $mapper['className'] = "ResearchLab";
             $mapper['bundleName'] = "OlegUserdirectoryBundle";
 
-            $builder->add('list', new ListType($params, $mapper), array(
+            //new ListType($params, $mapper)
+            $builder->add('list', ListType::class, array(
+                'form_custom_value' => $params,
+                'form_custom_value_entity' => $mapper,
                 'data_class' => 'Oleg\UserdirectoryBundle\Entity\ResearchLab',
                 'label' => false
             ));
@@ -211,11 +214,12 @@ class ResearchLabType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\ResearchLab',
+            'form_custom_value' => null
             //'csrf_protection' => false,
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_userdirectorybundle_researchlab';
     }

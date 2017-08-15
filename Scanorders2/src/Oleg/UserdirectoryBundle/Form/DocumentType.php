@@ -31,13 +31,6 @@ use Symfony\Component\Form\FormEvent;
 class DocumentType extends AbstractType
 {
 
-    protected $params;
-
-    public function __construct( $params=null )
-    {
-        $this->params = $params;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
@@ -63,7 +56,7 @@ class DocumentType extends AbstractType
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_userdirectorybundle_documenttype';
     }

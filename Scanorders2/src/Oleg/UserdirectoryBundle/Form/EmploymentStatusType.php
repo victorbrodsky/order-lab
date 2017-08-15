@@ -31,16 +31,15 @@ class EmploymentStatusType extends AbstractType
 {
 
     protected $params;
-    protected $entity;
 
-    public function __construct( $params=null, $entity = null )
+    public function formConstructor( $params=null, $entity = null )
     {
         $this->params = $params;
-        $this->entity = $entity;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
 
         if( $this->params['currentUser'] == true ) {
             $readonly = true;
@@ -170,10 +169,11 @@ class EmploymentStatusType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\EmploymentStatus',
+            'form_custom_value' => null
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_userdirectorybundle_employmentstatus';
     }

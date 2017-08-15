@@ -77,7 +77,7 @@ class SimpleUserType extends UserType {
     /**
      * @return string
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return null;
         //return 'oleg_userdirectorybundle_user';

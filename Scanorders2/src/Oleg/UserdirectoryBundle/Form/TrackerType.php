@@ -27,20 +27,24 @@ class TrackerType extends AbstractType
 {
 
     protected $params;
-    protected $entity;
 
-    public function __construct( $params=null, $entity = null )
+    public function formConstructor( $params=null )
     {
         $this->params = $params;
-        $this->entity = $entity;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
+        $this->formConstructor($options['form_custom_value']);
 
+        //SpotType($this->params, null)
         $builder->add('spots', 'collection', array(
-            'type' => new SpotType($this->params, null),
+            //'type' => SpotType($this->params, null),
+            'entry_type' => SpotType::class,
+            'entry_options' => array(
+                'form_custom_value' => $this->params
+            ),
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
@@ -57,10 +61,11 @@ class TrackerType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\Tracker',
+            'form_custom_value' => null
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_userdirectorybundle_trackertypetype';
     }

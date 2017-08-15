@@ -640,16 +640,25 @@ class FellAppController extends Controller {
             'container' => $this->container
         );
 
+//        $form = $this->createForm(
+//            new FellowshipApplicationType($params),
+//            $entity,
+//            array(
+//                'disabled' => $disabled,
+//                'method' => $method,
+//                'action' => $action
+//            )
+//        );
         $form = $this->createForm(
-            new FellowshipApplicationType($params),
+            FellowshipApplicationType::class,
             $entity,
             array(
                 'disabled' => $disabled,
                 'method' => $method,
-                'action' => $action
+                'action' => $action,
+                'form_custom_value' => $params
             )
         );
-
 
         //clear em, because createUserEditEvent will flush em
         $em = $this->getDoctrine()->getManager();
@@ -726,7 +735,8 @@ class FellAppController extends Controller {
             'container' => $this->container
         );
 
-        $form = $this->createForm( new FellowshipApplicationType($params), $entity );
+        //$form = $this->createForm( new FellowshipApplicationType($params), $entity );
+        $form = $this->createForm( FellowshipApplicationType::class, $entity, array('form_custom_value' => $params) );
 
         $form->handleRequest($request);
 
@@ -1037,7 +1047,8 @@ class FellAppController extends Controller {
             'roles' => $user->getRoles(),
             'container' => $this->container
         );
-        $form = $this->createForm( new FellowshipApplicationType($params), $fellowshipApplication );
+        //$form = $this->createForm( new FellowshipApplicationType($params), $fellowshipApplication );
+        $form = $this->createForm( FellowshipApplicationType::class, $fellowshipApplication, array('form_custom_value' => $params) );
 
         $form->handleRequest($request);
 
