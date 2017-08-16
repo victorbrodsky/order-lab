@@ -43,14 +43,15 @@ class DocumentRepository extends EntityRepository {
         $addMethodName = "add".$docfieldname;
         $removeMethodName = "remove".$docfieldname;
         $getMethod = "get".$docfieldname."s";
+        //echo "getMethod=".$getMethod."<br>";
 
         if( count($documentHolder->$getMethod()) == 0 ) {
             //echo "return: no documents<br>";
             return $documentHolder;
         }
 
-//        echo $documentHolder. ", id=".$documentHolder->getId()."<br>";
-//        echo "<br>before processing holder count=".count($documentHolder->$getMethod())."<br>";
+        //echo get_class($documentHolder).": holder id=".$documentHolder->getId()."<br>";
+        //echo "<br>$getMethod: before processing holder count=".count($documentHolder->$getMethod())."<br>";
 
         //get type by $documentHolder class
         if( !$docType ) {
@@ -59,22 +60,27 @@ class DocumentRepository extends EntityRepository {
 
         foreach( $documentHolder->$getMethod() as $doc ) {
 
-//            echo "document id:<br>";
-//            print_r($doc->getId());
-//            echo "<br>";
+            //echo "document id:<br>";
+            //print_r($doc->getId());
+            //echo "doc id=".$doc->getId()."<br>";
+            //echo "<br>";
 
             $documentHolder->$removeMethodName($doc);
 
             if( $doc->getId() ) {
 
                 $docDb = $this->_em->getRepository('OlegUserdirectoryBundle:Document')->find($doc->getId());
+                if( $docDb ) {
 
-                //set type if not set
-                if( !$docDb->getType() && $docType ) {
-                    $docDb->setType($docType);
+                    //set type if not set
+                    if (!$docDb->getType() && $docType) {
+                        $docDb->setType($docType);
+                    }
+
+                    $documentHolder->$addMethodName($docDb);
+                } else {
+                    //exit("Document not found by id=".$doc->getId());
                 }
-
-                $documentHolder->$addMethodName($docDb);
 
             } //if
 
