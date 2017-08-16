@@ -63,7 +63,8 @@ class TreeController extends Controller {
 
         //get filter params
         //$filter = trim( $request->get('types') );
-        $filterform = $this->createForm(new HierarchyFilterType(), null);
+        $filterform = $this->createForm(HierarchyFilterType::class,null,array('form_custom_value'=>null));
+
         $formname = $filterform->getName();
         $formData = $request->query->get($formname);
         $typesFilter = $formData['types'];

@@ -29,13 +29,14 @@ class HierarchyFilterType extends AbstractType
     private $params;
 
 
-    public function __construct( $params=null )
+    public function formConstructor( $params=null )
     {
         $this->params = $params;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
 
 //        $types = array(
 //            "default"=>"default",
@@ -71,6 +72,7 @@ class HierarchyFilterType extends AbstractType
     {
         $resolver->setDefaults(array(
             'csrf_protection' => false,
+            'form_custom_value' => null
         ));
     }
 

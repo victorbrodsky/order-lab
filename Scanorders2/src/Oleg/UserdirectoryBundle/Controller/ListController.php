@@ -263,7 +263,7 @@ class ListController extends Controller
 //        }
 
         $dqlParameters = array();
-        $filterform = $this->createForm(new ListFilterType(), null);
+        $filterform = $this->createForm(ListFilterType::class, null);
         $filterform->bind($request);
         $search = $filterform['search']->getData();
         //echo "search=".$search."<br>";
@@ -507,11 +507,17 @@ class ListController extends Controller
         $options['entity'] = $entity;
         $options['em'] = $this->getDoctrine()->getManager();
 
-        $newForm = new GenericListType($options,$mapper);
-
-        $form = $this->createForm($newForm, $entity, array(
+//        $newForm = new GenericListType($options,$mapper);
+//        $form = $this->createForm($newForm, $entity, array(
+//            'action' => $this->generateUrl($pathbase.'_create'),
+//            'method' => 'POST',
+//        ));
+        $form = $this->createForm(GenericListType::class, $entity, array(
             'action' => $this->generateUrl($pathbase.'_create'),
             'method' => 'POST',
+            'data_class' => $mapper['fullClassName'],
+            'form_custom_value' => $options,
+            'form_custom_value_mapper' => $mapper
         ));
 
         $form->add('submit', 'submit', array('label' => 'Create','attr'=>array('class'=>'btn btn-warning')));
@@ -997,15 +1003,19 @@ class ListController extends Controller
         $options['entity'] = $entity;
         $options['em'] = $this->getDoctrine()->getManager();
 
-        $newForm = new GenericListType($options,$mapper);
-
-        //$linkToListId = $mapper['linkToListId'];
-
-        $form = $this->createForm($newForm, $entity, array(
+//        $newForm = new GenericListType($options,$mapper);
+//        $form = $this->createForm($newForm, $entity, array(
+//            'action' => $this->generateUrl($pathbase.'_show', array('id' => $entity->getId())),
+//            'method' => 'PUT',
+//            'disabled' => $disabled
+//        ));
+        $form = $this->createForm(GenericListType::class, $entity, array(
             'action' => $this->generateUrl($pathbase.'_show', array('id' => $entity->getId())),
-            //'action' => $this->generateUrl('platform_list_manager_element', array('linkToListId'=>$linkToListId,'entityId'=>$entity->getId())),
             'method' => 'PUT',
-            'disabled' => $disabled
+            'disabled' => $disabled,
+            'data_class' => $mapper['fullClassName'],
+            'form_custom_value' => $options,
+            'form_custom_value_mapper' => $mapper
         ));
 
         if( !$disabled ) {

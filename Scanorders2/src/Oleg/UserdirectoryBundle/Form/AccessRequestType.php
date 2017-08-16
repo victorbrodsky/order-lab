@@ -31,13 +31,15 @@ class AccessRequestType extends AbstractType
 
     protected $params;
 
-    public function __construct( $params )
+    public function formConstructor( $params )
     {
         $this->params = $params;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
+
         $builder->add( 'firstName', 'text', array(
             'label'=>'First Name:',
             'required'=> false,
@@ -176,6 +178,7 @@ class AccessRequestType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\AccessRequest',
+            'form_custom_value' => null
         ));
     }
 

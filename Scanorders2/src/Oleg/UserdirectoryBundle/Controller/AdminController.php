@@ -6782,7 +6782,7 @@ class AdminController extends Controller
 //            $filter = implode(",", $filters);
 //        }
         //get filter types from request
-        $filterform = $this->createForm(new HierarchyFilterType(), null);
+        $filterform = $this->createForm(HierarchyFilterType::class,null,array('form_custom_value'=>null));
         $formname = $filterform->getName();
         $formData = $request->query->get($formname);
         $types = $formData['types'];
@@ -6795,7 +6795,7 @@ class AdminController extends Controller
 //        }
         $params = array('types'=>$types);
         //create final filter form with data params
-        $filterform = $this->createForm(new HierarchyFilterType($params), null);
+        $filterform = $this->createForm(HierarchyFilterType::class,null,array('form_custom_value'=>$params));
         //$filterform->bind($request);
         //$filterform->handleRequest($request);
         //$types = $filterform['types']->getData();

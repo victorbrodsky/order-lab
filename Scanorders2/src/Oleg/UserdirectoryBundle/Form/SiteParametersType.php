@@ -509,7 +509,11 @@ class SiteParametersType extends AbstractType
         if( $this->params['singleField'] == false ) {
         //if(1) {
             $builder->add('organizationalGroupDefaults', CollectionType::class, array(
-                'type' => new OrganizationalGroupDefaultType($this->params),
+                //'type' => new OrganizationalGroupDefaultType($this->params),
+                'entry_type' => OrganizationalGroupDefaultType::class,
+                'entry_options' => array(
+                    'form_custom_value' => $this->params
+                ),
                 'label' => false,
                 'required' => false,
                 'allow_add' => true,

@@ -63,7 +63,7 @@ class BuildingType extends AbstractType
             //ListType($params, $mapper)
             $builder->add('list', ListType::class, array(
                 'form_custom_value' => $params,
-                'form_custom_value_entity' => $mapper,
+                'form_custom_value_mapper' => $mapper,
                 'data_class' => 'Oleg\UserdirectoryBundle\Entity\BuildingList',
                 'label' => false
             ));

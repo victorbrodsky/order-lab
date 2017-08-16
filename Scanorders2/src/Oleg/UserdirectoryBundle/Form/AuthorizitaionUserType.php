@@ -32,13 +32,14 @@ class AuthorizitaionUserType extends AbstractType
 
     protected $params;
 
-    public function __construct( $params )
+    public function formConstructor( $params )
     {
         $this->params = $params;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
 
         $builder->add('roles', 'choice', array(
             'choices' => $this->params['roles'],
@@ -75,6 +76,7 @@ class AuthorizitaionUserType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\User',
+            'form_custom_value' => null,
             'csrf_protection' => false,
         ));
     }

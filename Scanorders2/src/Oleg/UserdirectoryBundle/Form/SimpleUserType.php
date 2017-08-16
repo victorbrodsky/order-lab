@@ -33,7 +33,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class SimpleUserType extends UserType {
 
 
-    public function __construct( $params )
+    public function formConstructor( $params )
     {
         $this->params = $params;
 
@@ -44,6 +44,7 @@ class SimpleUserType extends UserType {
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
 
         //keytype
         $this->addKeytype($builder,'Primary Public User ID Type:','combobox combobox-width');
@@ -70,6 +71,7 @@ class SimpleUserType extends UserType {
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\User',
+            'form_custom_value' => null,
             'csrf_protection' => false,
         ));
     }

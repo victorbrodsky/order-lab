@@ -37,7 +37,7 @@ class StatusType extends AbstractType
         //ListType()
         $builder->add('list', ListType::class, array(
             'form_custom_value' => null,
-            'form_custom_value_entity' => null,
+            'form_custom_value_mapper' => null,
             'data_class' => 'Oleg\OrderformBundle\Entity\Status',
             'label' => false
         ));

@@ -35,7 +35,8 @@ class GenericListType extends AbstractType
     protected $params;
     protected $mapper;
 
-    public function __construct( $params, $mapper )
+
+    public function formConstructor( $params, $mapper )
     {
         $this->params = $params;
         $this->mapper = $mapper;
@@ -52,11 +53,12 @@ class GenericListType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value'],$options['form_custom_value_mapper']);
 
         //ListType($this->params, $this->mapper)
         $builder->add('list', ListType::class, array(
             'form_custom_value' => $this->params,
-            'form_custom_value_entity' => $this->mapper,
+            'form_custom_value_mapper' => $this->mapper,
             'data_class' => $this->mapper['fullClassName'],
             'label' => false
         ));
@@ -708,7 +710,9 @@ class GenericListType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => $this->mapper['fullClassName']
+            'data_class' => null,   //$this->mapper['fullClassName'],
+            'form_custom_value' => null,
+            'form_custom_value_mapper' => null
         ));
     }
 
@@ -717,6 +721,10 @@ class GenericListType extends AbstractType
      */
     public function getBlockPrefix()
     {
-        return 'oleg_userdirectorybundle_'.strtolower($this->mapper['className']);
+        $prefix = strtolower($this->mapper['className']);
+        if( !$prefix ) {
+            $prefix = 'genericlist';
+        }
+        return 'oleg_userdirectorybundle_'.$prefix;
     }
 }

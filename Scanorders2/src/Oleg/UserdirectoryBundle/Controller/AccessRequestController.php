@@ -243,7 +243,7 @@ class AccessRequestController extends Controller
         //organizationalGroup
         $accReq->setOrganizationalGroup($userDetalsArr["institution"]);
 
-        $form = $this->createForm(new AccessRequestType($params), $accReq);
+        $form = $this->createForm(AccessRequestType::class, $accReq, array('form_custom_value'=>$params));
 
         return array(
             'user' => $user,
@@ -374,7 +374,7 @@ class AccessRequestController extends Controller
         $accReq->setSiteName($sitename);
 
         $params = $this->getParams();
-        $form = $this->createForm(new AccessRequestType($params), $accReq);
+        $form = $this->createForm(AccessRequestType::class, $accReq, array('form_custom_value'=>$params));
 
         $request = $this->get('request');
         $form->handleRequest($request);
@@ -825,7 +825,7 @@ class AccessRequestController extends Controller
             'roles' => $rolesArr,
             'simple-form' => true //show only permittedInstitutionalPHIScope
         );
-        $form = $this->createForm(new AuthorizitaionUserType($params), $entity);
+        $form = $this->createForm(AuthorizitaionUserType::class, $entity, array('form_custom_value'=>$params));
 
         $userViewArr = array(
             'form' => $form->createView(),
@@ -879,7 +879,7 @@ class AccessRequestController extends Controller
             'roles' => $rolesArr,
             'simple-form' => true //show only permittedInstitutionalPHIScope
         );
-        $form = $this->createForm(new AuthorizitaionUserType($params), $entity);
+        $form = $this->createForm(AuthorizitaionUserType::class, $entity, array('form_custom_value'=>$params));
 
 //        $userViewArr = array(
 //            'form' => $form->createView(),
@@ -1057,7 +1057,7 @@ class AccessRequestController extends Controller
             'roles' => $rolesArr,
             'simple-form' => true //show only permittedInstitutionalPHIScope
         );
-        $form = $this->createForm(new AuthorizitaionUserType($params), $entity);
+        $form = $this->createForm(AuthorizitaionUserType::class, $entity, array('form_custom_value'=>$params));
 
         //user's roles associated with this site
         $siteRoles = $securityUtil->getUserRolesBySite( $entity, $this->siteName );
@@ -1112,7 +1112,7 @@ class AccessRequestController extends Controller
             'roles' => $rolesArr,
             'simple-form' => true //show only permittedInstitutionalPHIScope
         );
-        $form = $this->createForm(new AuthorizitaionUserType($params), $entity);
+        $form = $this->createForm(AuthorizitaionUserType::class, $entity, array('form_custom_value'=>$params));
 
 //        $userViewArr = array(
 //            'form' => $form->createView(),
@@ -1178,7 +1178,7 @@ class AccessRequestController extends Controller
             'readonly' => false,
             //'sc' => $this->get('security.context')
         );
-        $form = $this->createForm(new SimpleUserType($params));
+        $form = $this->createForm(SimpleUserType::class,null,array('form_custom_value'=>$params));
 
         $userSecUtil = $this->get('user_security_utility');
         $query = $userSecUtil->getQueryUserBySite( $this->siteName );

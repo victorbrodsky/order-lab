@@ -560,7 +560,7 @@ class ApproverController extends Controller
                 'readonly' => false,
                 //'path' => 'vacreq_orginst_add_action_user'
             );
-            $form = $this->createForm(new SimpleUserType($params));
+            $form = $this->createForm(SimpleUserType::class,null,array('form_custom_value'=>$params));
         }else {
             $params = array(
                 'btnName' => $btnName

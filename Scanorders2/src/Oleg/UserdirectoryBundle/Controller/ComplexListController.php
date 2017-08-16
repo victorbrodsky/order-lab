@@ -125,7 +125,7 @@ class ComplexListController extends Controller
 
 
         $dqlParameters = array();
-        $filterform = $this->createForm(new ListFilterType(), null);
+        $filterform = $this->createForm(ListFilterType::class, null);
         $filterform->bind($request);
         $search = $filterform['search']->getData();
         //echo "search=".$search."<br>";

@@ -26,14 +26,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class ListFilterType extends AbstractType
 {
 
-    private $params;
-
-
-    public function __construct( $params=null )
-    {
-        $this->params = $params;
-    }
-
     //Start Date, Start Time, End Date, End Time, User [Select2 dropdown), Event Type [Entity Updated], [Free Text Search value for Event column] [Filter Button]
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
