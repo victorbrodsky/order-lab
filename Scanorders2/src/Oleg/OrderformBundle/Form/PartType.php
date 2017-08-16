@@ -187,7 +187,8 @@ class PartType extends AbstractType
             $params = array('labelPrefix'=>'Gross Image');
             $equipmentTypes = array('Gross Image Camera');
             $params['device.types'] = $equipmentTypes;
-            $builder->add('attachmentContainer', new AttachmentContainerType($params), array(
+            $builder->add('attachmentContainer', AttachmentContainerType::class, array(
+                'form_custom_value' => $params,
                 'required' => false,
                 'label' => false
             ));

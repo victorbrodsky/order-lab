@@ -135,7 +135,8 @@ class GrantType extends AbstractType
         $params['document.imageId'] = false;
         $params['document.source'] = false;
         //$params['read_only'] = $readonly;
-        $builder->add('attachmentContainer', new AttachmentContainerType($params), array(
+        $builder->add('attachmentContainer', AttachmentContainerType::class, array(
+            'form_custom_value' => $params,
             'required' => false,
             'label' => false
         ));

@@ -28,7 +28,6 @@ namespace Oleg\UserdirectoryBundle\Services;
 use Doctrine\ORM\EntityManager;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Security\Core\SecurityContext;
 
 use Oneup\UploaderBundle\Event\PostPersistEvent;
 use Oneup\UploaderBundle\Event\PreUploadEvent;

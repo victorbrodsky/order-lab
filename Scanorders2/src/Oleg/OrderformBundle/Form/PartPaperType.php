@@ -43,7 +43,7 @@ class PartPaperType extends AbstractType
 
 
         $builder->add('documents', 'collection', array(
-            'type' => new DocumentType($this->params),
+            'entry_type' => DocumentType::class,
             'label' => " Associated Document(s):",
             'allow_add' => true,
             'allow_delete' => true,

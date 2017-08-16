@@ -31,7 +31,7 @@ class InterviewType extends AbstractType
     protected $params;
     protected $rolePlatformAdmin;
 
-    public function __construct( $params=null )
+    public function formConstructor( $params=null )
     {
         $this->params = $params;
 
@@ -43,6 +43,7 @@ class InterviewType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
 
         if( $this->params['showFull'] ) {
 
@@ -157,6 +158,7 @@ class InterviewType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\FellAppBundle\Entity\Interview',
+            'form_custom_value' => null
             //'csrf_protection' => false,
         ));
     }

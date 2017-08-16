@@ -90,7 +90,8 @@ class CredentialsType extends AbstractType
         $params['document.imageId'] = false;
         $params['document.source'] = false;
         //$params['read_only'] = $readonly;
-        $builder->add('cliaAttachmentContainer', new AttachmentContainerType($params), array(
+        $builder->add('cliaAttachmentContainer', AttachmentContainerType::class, array(
+            'form_custom_value' => $params,
             'required' => false,
             'label' => false
         ));
@@ -124,7 +125,8 @@ class CredentialsType extends AbstractType
         $params['document.imageId'] = false;
         $params['document.source'] = false;
         //$params['read_only'] = $readonly;
-        $builder->add('coqAttachmentContainer', new AttachmentContainerType($params), array(
+        $builder->add('coqAttachmentContainer', AttachmentContainerType::class, array(
+            'form_custom_value' => $params,
             'required' => false,
             'label' => false
         ));
@@ -148,7 +150,7 @@ class CredentialsType extends AbstractType
 
 
         $builder->add('codeNYPH', 'collection', array(
-            'type' => new CodeNYPHType(),
+            'entry_type' => CodeNYPHType::class,
             'label' => false,
             'required' => false,
             'allow_add' => true,
@@ -159,7 +161,10 @@ class CredentialsType extends AbstractType
         ));
 
         $builder->add('stateLicense', 'collection', array(
-            'type' => new StateLicenseType($this->params),
+            'entry_type' => StateLicenseType::class,
+            'entry_options' => array(
+                'form_custom_value' => $this->params
+            ),
             'label' => false,
             'required' => false,
             'allow_add' => true,
@@ -170,7 +175,7 @@ class CredentialsType extends AbstractType
         ));
 
         $builder->add('boardCertification', 'collection', array(
-            'type' => new BoardCertificationType(),
+            'entry_type' => BoardCertificationType::class,
             'label' => false,
             'required' => false,
             'allow_add' => true,
@@ -181,7 +186,10 @@ class CredentialsType extends AbstractType
         ));
 
         $builder->add('identifiers', 'collection', array(
-            'type' => new IdentifierType($this->params),
+            'entry_type' => IdentifierType::class,
+            'entry_options' => array(
+                'form_custom_value' => $this->params
+            ),
             'label' => false,
             'required' => false,
             'allow_add' => true,
@@ -193,7 +201,7 @@ class CredentialsType extends AbstractType
 
 
         $builder->add('citizenships', 'collection', array(
-            'type' => new CitizenshipType($this->params),
+            'entry_type' => CitizenshipType::class,
             'label' => false,
             'required' => false,
             'allow_add' => true,
@@ -204,7 +212,7 @@ class CredentialsType extends AbstractType
         ));
 
         $builder->add('examinations', 'collection', array(
-            'type' => new ExaminationType($this->params),
+            'entry_type' => ExaminationType::class,
             'label' => false,
             'required' => false,
             'allow_add' => true,

@@ -167,7 +167,7 @@ class FellAppManagement extends Controller {
             $origInterviewers->add($item);
         }
 
-        $form = $this->createForm( new FellowshipSubspecialtyType(),$felltype);
+        $form = $this->createForm(FellowshipSubspecialtyType::class,$felltype);
 
         $form->handleRequest($request);
 
@@ -236,7 +236,7 @@ class FellAppManagement extends Controller {
 //        }
 
         //form with 'Fellowship Subspecialties' list
-        $form = $this->createForm(new FellAppFellowshipApplicationType());
+        $form = $this->createForm(FellAppFellowshipApplicationType::class);
 
         $form->handleRequest($request);
 
@@ -433,7 +433,7 @@ class FellAppManagement extends Controller {
 
 
         $form = $this->createForm(
-            new FellowshipSubspecialtyType(),
+            FellowshipSubspecialtyType::class,
             $felltype,
             array(
                 'disabled' => $disabled,

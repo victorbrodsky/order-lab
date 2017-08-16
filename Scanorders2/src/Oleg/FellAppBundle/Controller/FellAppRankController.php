@@ -73,7 +73,7 @@ class FellAppRankController extends Controller {
 //            $fellApp->setRank($rank);
 //        }
 
-        $form = $this->createForm(new RankType(), $rank, array(
+        $form = $this->createForm(RankType::class, $rank, array(
             'action' => $this->generateUrl('fellapp_rank_update', array('fellappid' => $fellappid)),
             'method' => 'PUT',
         ));
@@ -188,8 +188,7 @@ class FellAppRankController extends Controller {
             $rank->setUpdateuserroles($user->getRoles());
         }
 
-        //$form = $this->createForm(new RankType(), $rank);
-        $form = $this->createForm(new RankType(), $rank, array(
+        $form = $this->createForm(RankType::class, $rank, array(
             'action' => $this->generateUrl('fellapp_rank_update', array('fellappid' => $fellappid)),
             'method' => 'PUT',
         ));

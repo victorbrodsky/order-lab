@@ -30,7 +30,7 @@ class DocumentContainerType extends AbstractType
 
     protected $params;
 
-    public function __construct( $params=null )
+    public function formConstructor( $params=null )
     {
 
         if( !$params || !array_key_exists('labelPrefix',$params) || !$params['labelPrefix'] ) {
@@ -110,13 +110,14 @@ class DocumentContainerType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
 
         $builder->add('id', 'hidden', array(
             'attr' => array('class' => 'documentcontainer-field-id'),
         ));
 
         $builder->add('documents', 'collection', array(
-            'type' => new DocumentType($this->params),
+            'entry_type' => DocumentType::class,
             'label' => $this->params['labelPrefix'] . '(s):',
             'allow_add' => true,
             'allow_delete' => true,
@@ -136,7 +137,11 @@ class DocumentContainerType extends AbstractType
             //comments
             $docParams = array('documentContainer.comments.comment.label' => $this->params['labelPrefix'] );
             $builder->add('comments', 'collection', array(
-                'type' => new DocumentCommentType($docParams),
+                //'type' => new DocumentCommentType($docParams),
+                'entry_type' => DocumentCommentType::class,
+                'entry_options' => array(
+                    'form_custom_value' => $docParams
+                ),
                 'label' => false,
                 'allow_add' => true,
                 'allow_delete' => true,
@@ -227,7 +232,10 @@ class DocumentContainerType extends AbstractType
 //                    'attr' => array('class' => 'form-control'),
 //                ));
                 $builder->add('links', 'collection', array(
-                    'type' => new LinkType($this->params),
+                    'entry_type' => LinkType::class,
+                    'entry_options' => array(
+                        'form_custom_value' => $this->params
+                    ),
                     'label' => false,
                     'allow_add' => true,
                     'allow_delete' => true,
@@ -246,6 +254,7 @@ class DocumentContainerType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\DocumentContainer',
+            'form_custom_value' => null
         ));
     }
 

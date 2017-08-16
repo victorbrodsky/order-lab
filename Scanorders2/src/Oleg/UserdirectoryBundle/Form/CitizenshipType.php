@@ -26,14 +26,6 @@ use Doctrine\ORM\EntityRepository;
 class CitizenshipType extends AbstractType
 {
 
-    protected $params;
-    protected $rolePlatformAdmin;
-
-    public function __construct( $params=null )
-    {
-        $this->params = $params;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 

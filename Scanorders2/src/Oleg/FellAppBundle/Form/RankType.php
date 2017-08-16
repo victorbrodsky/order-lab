@@ -28,13 +28,6 @@ use Symfony\Component\Form\FormEvent;
 class RankType extends AbstractType
 {
 
-    protected $params;
-
-    public function __construct( $params=null )
-    {
-        $this->params = $params;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 

@@ -87,7 +87,8 @@ class BaseCommentsType extends AbstractType
 
 
         $builder->add('documents', 'collection', array(
-            'type' => new DocumentType($this->params),
+            //'type' => new DocumentType($this->params),
+            'entry_type' => DocumentType::class,
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,

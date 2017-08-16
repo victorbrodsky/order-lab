@@ -29,22 +29,21 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
 use Symfony\Component\Security\Http\Firewall\AbstractAuthenticationListener;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
-
+//THIS CLASS NOT USED ANYMORE.
 class AperioListener { //implements ListenerInterface  {
 
-    protected $securityContext;
+    protected $container;
     protected $authenticationManager;
     protected $providerKey;
 
-    public function __construct(SecurityContextInterface $securityContext, AuthenticationManagerInterface $authenticationManager, $providerKey = null)
+    public function __construct( $container, AuthenticationManagerInterface $authenticationManager, $providerKey = null)
     {
-        $this->securityContext = $securityContext;
+        $this->$container = $container;
         $this->authenticationManager = $authenticationManager;
         $this->providerKey = $providerKey;
     }
@@ -77,7 +76,7 @@ class AperioListener { //implements ListenerInterface  {
 
             $authToken = $this->authenticationManager->authenticate($unauthenticatedToken);
 
-            $this->securityContext->setToken($authToken);
+            $this->container->get('security.token_storage')->setToken($authToken);
 
             return;
 
@@ -87,9 +86,9 @@ class AperioListener { //implements ListenerInterface  {
 
             // To deny the authentication clear the token. This will redirect to the login page.
             // Make sure to only clear your token, not those of other authentication listeners.
-            $unauthenticatedToken = $this->securityContext->getToken();
+            $unauthenticatedToken = $this->container->get('security.token_storage')->getToken();
             if( $unauthenticatedToken instanceof AperioToken ) {//&& $this->providerKey === $unauthenticatedToken->getProviderKey()) {
-                $this->securityContext->setToken(null);
+                $this->container->get('security.token_storage')->setToken(null);
             }
 
         }

@@ -32,7 +32,6 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Security\Core\SecurityContext;
 
 use Oleg\OrderformBundle\Form\DataTransformer\ProcedureTransformer;
 use Oleg\OrderformBundle\Form\DataTransformer\SourceOrganTransformer;
@@ -48,7 +47,6 @@ class CustomSelectorType extends AbstractType {
 
     /**
      * @var ObjectManager
-     * @var SecurityContext
      */
     private $om;
     private $secTokenStorage;

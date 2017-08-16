@@ -442,7 +442,8 @@ if( 1 ) {
                         $params = array('labelPrefix'=>'Requisition Form Image');
                         $equipmentTypes = array('Requisition Form Scanner');
                         $params['device.types'] = $equipmentTypes;
-                        $form->add('attachmentContainer', new AttachmentContainerType($params), array(
+                        $form->add('attachmentContainer', AttachmentContainerType::class, array(
+                            'form_custom_value' => $params,
                             'required' => false,
                             'label' => false
                         ));
@@ -485,7 +486,8 @@ if( 1 ) {
                         $params = array('labelPrefix'=>'Reference Representation');
                         $equipmentTypes = array();
                         $params['device.types'] = $equipmentTypes;
-                        $form->add('attachmentContainer', new AttachmentContainerType($params), array(
+                        $form->add('attachmentContainer', AttachmentContainerType::class, array(
+                            'form_custom_value' => $params,
                             'required' => false,
                             'label' => false
                         ));

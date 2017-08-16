@@ -36,16 +36,15 @@ class FellAppLocationType extends AbstractType
 {
 
     protected $params;
-    protected $entity;
 
-    public function __construct( $params=null, $entity = null )
+    public function formConstructor( $params=null )
     {
         $this->params = $params;
-        $this->entity = $entity;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
 
         $builder->add('phone',null,array(
             'label'=>'Phone Number:',
@@ -77,6 +76,7 @@ class FellAppLocationType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\Location',
+            'form_custom_value' => null
         ));
     }
 

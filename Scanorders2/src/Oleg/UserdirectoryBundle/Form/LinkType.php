@@ -32,15 +32,6 @@ use Oleg\UserdirectoryBundle\Entity\Location;
 class LinkType extends AbstractType
 {
 
-    protected $params;
-    protected $entity;
-
-    public function __construct( $params=null, $entity = null )
-    {
-        $this->params = $params;
-        $this->entity = $entity;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 

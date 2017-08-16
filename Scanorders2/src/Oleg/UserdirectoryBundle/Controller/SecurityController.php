@@ -21,7 +21,7 @@ namespace Oleg\UserdirectoryBundle\Controller;
 use Oleg\UserdirectoryBundle\Security\Authentication\AuthUtil;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Security\Core\SecurityContext;
+//use Symfony\Component\Security\Core\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -163,18 +163,21 @@ class SecurityController extends Controller
             return null;
         }
 
-        $request = $this->get('request_stack')->getCurrentRequest();
-        $session = $request->getSession();
+        $helper = $this->get('security.authentication_utils');
+
+        //Symfony < 2.6 deprecated methods
+        //$request = $this->get('request_stack')->getCurrentRequest();
+        //$session = $request->getSession();
 
         // get the login error if there is one
-        if( $request->attributes->has(SecurityContext::AUTHENTICATION_ERROR) ) {
-            $error = $request->attributes->get(
-                SecurityContext::AUTHENTICATION_ERROR
-            );
-        } else {
-            $error = $session->get(SecurityContext::AUTHENTICATION_ERROR);
-            $session->remove(SecurityContext::AUTHENTICATION_ERROR);
-        }
+//        if( $request->attributes->has(Security::AUTHENTICATION_ERROR) ) {
+//            $error = $request->attributes->get(
+//                Security::AUTHENTICATION_ERROR
+//            );
+//        } else {
+//            $error = $session->get(Security::AUTHENTICATION_ERROR);
+//            $session->remove(Security::AUTHENTICATION_ERROR);
+//        }
 
 //        $em = $this->getDoctrine()->getManager();
 //        $usernametypes = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findBy( array('type' => array('default', 'user-added')), array('orderinlist' => 'ASC') );
@@ -185,13 +188,15 @@ class SecurityController extends Controller
 //            $usernametypes[] = $option;
 //        }
 
+        //get error
+        $error = $helper->getLastAuthenticationError();
+
         //get original username entered by a user in login form
-        $lastUsername = $session->get(SecurityContext::LAST_USERNAME);
+        $lastUsername = $helper->getLastUsername();
         $lastUsernameArr = explode("_@_", $lastUsername);
         $lastUsername = $lastUsernameArr[0];
 
         $formArr = array(
-//                            'usernametypes' => $usernametypes,
                             'last_username' => $lastUsername,   // last username entered by the user
                             'error'         => $error,
                             'sitename'     => $sitename

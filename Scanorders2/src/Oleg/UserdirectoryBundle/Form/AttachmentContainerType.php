@@ -30,16 +30,20 @@ class AttachmentContainerType extends AbstractType
 
     protected $params;
 
-    public function __construct( $params=null )
+    public function formConstructor( $params=null )
     {
         $this->params = $params;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
 
         $builder->add('documentContainers', 'collection', array(
-            'type' => new DocumentContainerType($this->params),
+            'entry_type' => DocumentContainerType::class,
+            'entry_options' => array(
+                'form_custom_value' => $this->params
+            ),
             'label' => false,
             'allow_add' => true,
             'allow_delete' => true,
@@ -55,6 +59,7 @@ class AttachmentContainerType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\AttachmentContainer',
+            'form_custom_value' => null
         ));
     }
 

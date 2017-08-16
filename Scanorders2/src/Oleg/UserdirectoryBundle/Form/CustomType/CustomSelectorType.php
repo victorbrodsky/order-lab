@@ -43,7 +43,6 @@ class CustomSelectorType extends AbstractType {
 
     /**
      * @var ObjectManager
-     * @var SecurityContext
      */
     private $om;
     private $secTokenStorage;

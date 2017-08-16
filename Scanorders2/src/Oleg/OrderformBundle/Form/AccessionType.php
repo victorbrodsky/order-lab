@@ -88,7 +88,8 @@ class AccessionType extends AbstractType
             $params = array('labelPrefix'=>'Autopsy Image');
             $equipmentTypes = array('Autopsy Camera');
             $params['device.types'] = $equipmentTypes;
-            $builder->add('attachmentContainer', new AttachmentContainerType($params), array(
+            $builder->add('attachmentContainer', AttachmentContainerType::class, array(
+                'form_custom_value' => $params,
                 'required' => false,
                 'label' => false
             ));

@@ -26,19 +26,11 @@ use Doctrine\ORM\EntityRepository;
 class ExaminationType extends AbstractType
 {
 
-    protected $params;
-    protected $rolePlatformAdmin;
-
-    public function __construct( $params=null )
-    {
-        $this->params = $params;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
         $builder->add('scores', 'collection', array(
-            'type' => new DocumentType($this->params),
+            'entry_type' => DocumentType::class,
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,

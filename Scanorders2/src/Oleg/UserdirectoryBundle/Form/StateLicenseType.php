@@ -29,13 +29,14 @@ class StateLicenseType extends AbstractType
 
     protected $params;
 
-    public function __construct( $params=null )
+    public function formConstructor( $params=null )
     {
         $this->params = $params;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
 
         $this->processStateCountry($builder);
 
@@ -76,7 +77,8 @@ class StateLicenseType extends AbstractType
         $params['document.imageId'] = false;
         $params['document.source'] = false;
         //$params['read_only'] = $readonly;
-        $builder->add('attachmentContainer', new AttachmentContainerType($params), array(
+        $builder->add('attachmentContainer', AttachmentContainerType::class, array(
+            'form_custom_value' => $params,
             'required' => false,
             'label' => false
         ));
@@ -87,6 +89,7 @@ class StateLicenseType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\StateLicense',
+            'form_custom_value' => null
         ));
     }
 

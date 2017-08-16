@@ -27,13 +27,14 @@ class FellAppFilterType extends AbstractType
 
     private $params;
 
-    public function __construct( $params=null )
+    public function formConstructor( $params=null )
     {
         $this->params = $params;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
 
         $builder->add('startDate', 'datetime', array(
             'label' => false, //'Start Date',
@@ -129,6 +130,7 @@ class FellAppFilterType extends AbstractType
     {
         $resolver->setDefaults(array(
             'csrf_protection' => false,
+            'form_custom_value' => null
         ));
     }
 

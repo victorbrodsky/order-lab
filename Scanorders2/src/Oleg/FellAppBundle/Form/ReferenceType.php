@@ -31,13 +31,15 @@ class ReferenceType extends AbstractType
     protected $params;
     protected $rolePlatformAdmin;
 
-    public function __construct( $params=null )
+    public function formConstructor( $params=null )
     {
         $this->params = $params;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
+        $this->formConstructor($options['form_custom_value']);
 
         $builder->add('name', null, array(
             'label' => 'Last Name:',
@@ -71,7 +73,7 @@ class ReferenceType extends AbstractType
 
         //Reference Letters
         $builder->add('documents', 'collection', array(
-            'type' => new DocumentType($this->params),
+            'entry_type' => DocumentType::class,
             'label' => 'Reference Letter(s):',
             'allow_add' => true,
             'allow_delete' => true,
@@ -102,6 +104,7 @@ class ReferenceType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\FellAppBundle\Entity\Reference',
+            'form_custom_value' => null
         ));
     }
 

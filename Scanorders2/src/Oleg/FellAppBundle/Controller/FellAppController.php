@@ -127,7 +127,7 @@ class FellAppController extends Controller {
         $params = array(
             'fellTypes' => $fellowshipTypes,
         );
-        $filterform = $this->createForm(new FellAppFilterType($params), null);
+        $filterform = $this->createForm(FellAppFilterType::class, null,array('form_custom_value'=>$params));
 
         $filterform->bind($request);  //use bind instead of handleRequest. handleRequest does not get filter data
 
@@ -1445,10 +1445,13 @@ class FellAppController extends Controller {
             'showFull' => false
         );
 
+        //InterviewType($params)
         $form = $this->createForm(
-            new InterviewType($params),
+            //new InterviewType($params),
+            InterviewType::class,
             $interview,
             array(
+                'form_custom_value' => $params,
                 'disabled' => $disabled,
                 'method' => $method,
                 'action' => $action
@@ -1508,9 +1511,11 @@ class FellAppController extends Controller {
             'showFull' => false
         );
         $form = $this->createForm(
-            new InterviewType($params),
+            //new InterviewType($params),
+            InterviewType::class,
             $interview,
             array(
+                'form_custom_value' => $params,
                 'disabled' => $disabled,
                 'method' => $method,
                 'action' => $action

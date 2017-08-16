@@ -19,7 +19,6 @@ namespace Oleg\OrderformBundle\Controller;
 
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Security\Core\SecurityContext;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -32,7 +31,6 @@ use Symfony\Component\HttpFoundation\Session\Storage\PhpBridgeSessionStorage;
 use Oleg\OrderformBundle\Security\Util\AperioUtil;
 
 use Oleg\UserdirectoryBundle\Controller\SecurityController;
-use Oleg\UserdirectoryBundle\Util\UserUtil;
 
 class ScanSecurityController extends SecurityController
 {

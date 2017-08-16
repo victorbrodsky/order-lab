@@ -112,8 +112,9 @@ class ImagingType extends AbstractType
             $params['document.time.label'] = 'Image Acquisition Time:';
             $params['document.provider.label'] = 'Image Acquired By:';
             $params['document.link.label'] = 'Image Link:';
-            $builder->add('documentContainer', new DocumentContainerType($params), array(
+            $builder->add('documentContainer', DocumentContainerType::class, array(
                 'data_class' => 'Oleg\UserdirectoryBundle\Entity\DocumentContainer',
+                'form_custom_value' => $params,
                 'label' => false
             ));
 
