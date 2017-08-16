@@ -20,6 +20,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -116,7 +117,7 @@ class DocumentContainerType extends AbstractType
             'attr' => array('class' => 'documentcontainer-field-id'),
         ));
 
-        $builder->add('documents', 'collection', array(
+        $builder->add('documents', CollectionType::class, array(
             'entry_type' => DocumentType::class,
             'label' => $this->params['labelPrefix'] . '(s):',
             'allow_add' => true,
@@ -136,7 +137,7 @@ class DocumentContainerType extends AbstractType
 
             //comments
             $docParams = array('documentContainer.comments.comment.label' => $this->params['labelPrefix'] );
-            $builder->add('comments', 'collection', array(
+            $builder->add('comments', CollectionType::class, array(
                 //'type' => new DocumentCommentType($docParams),
                 'entry_type' => DocumentCommentType::class,
                 'entry_options' => array(
@@ -231,7 +232,7 @@ class DocumentContainerType extends AbstractType
 //                    'label' => $this->params['document.link.label'],
 //                    'attr' => array('class' => 'form-control'),
 //                ));
-                $builder->add('links', 'collection', array(
+                $builder->add('links', CollectionType::class, array(
                     'entry_type' => LinkType::class,
                     'entry_options' => array(
                         'form_custom_value' => $this->params

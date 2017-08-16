@@ -19,6 +19,7 @@ namespace Oleg\OrderformBundle\Form;
 
 use Oleg\UserdirectoryBundle\Form\AttachmentContainerType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormEvents;
@@ -46,7 +47,7 @@ class BlockType extends AbstractType
     {     
 
         //name
-        $builder->add('blockname', 'collection', array(
+        $builder->add('blockname', CollectionType::class, array(
             'type' => new BlockNameType($this->params, null),
             'allow_add' => true,
             'allow_delete' => true,
@@ -58,7 +59,7 @@ class BlockType extends AbstractType
         ));
 
         $gen_attr = array('label'=>'Section Source:','class'=>'Oleg\OrderformBundle\Entity\BlockSectionsource','type'=>null);    //type=null => auto type
-        $builder->add('sectionsource', 'collection', array(
+        $builder->add('sectionsource', CollectionType::class, array(
             'type' => new GenericFieldType($this->params, null, $gen_attr),
             'allow_add' => true,
             'allow_delete' => true,
@@ -71,7 +72,7 @@ class BlockType extends AbstractType
 
         //if X=7, show only the first 7 levels (patient + encounter + procedure + accession + part + block + slide)
         if( $this->params['show-tree-depth'] === true || intval($this->params['show-tree-depth']) >= 7 ) {
-            $builder->add('slide', 'collection', array(
+            $builder->add('slide', CollectionType::class, array(
                 'type' => new SlideType($this->params),
                 'allow_add' => true,
                 'allow_delete' => true,
@@ -83,7 +84,7 @@ class BlockType extends AbstractType
             ));
         }
 
-        $builder->add('specialStains', 'collection', array(
+        $builder->add('specialStains', CollectionType::class, array(
             'type' => new SpecialStainsType($this->params),
             'allow_add' => true,
             'allow_delete' => true,
@@ -108,7 +109,7 @@ class BlockType extends AbstractType
 
         //messages
         if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure' ) {
-            $builder->add('message', 'collection', array(
+            $builder->add('message', CollectionType::class, array(
                 'type' => new MessageObjectType($this->params),
                 'allow_add' => true,
                 'allow_delete' => true,

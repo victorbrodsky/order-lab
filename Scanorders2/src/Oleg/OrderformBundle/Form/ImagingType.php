@@ -19,6 +19,7 @@ namespace Oleg\OrderformBundle\Form;
 
 use Oleg\UserdirectoryBundle\Form\DocumentContainerType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormEvents;
@@ -126,7 +127,7 @@ class ImagingType extends AbstractType
         if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure' ) {
             //echo "slide datastructure <br>";
 
-            $builder->add('message', 'collection', array(
+            $builder->add('message', CollectionType::class, array(
                 'type' => new MessageObjectType($this->params),
                 'allow_add' => true,
                 'allow_delete' => true,

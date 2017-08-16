@@ -30,6 +30,7 @@ use Oleg\OrderformBundle\Form\GenericFieldType;
 
 use Oleg\UserdirectoryBundle\Form\TrackerType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -62,7 +63,7 @@ class CalllogEncounterType extends AbstractType
 
         $builder->add('status', 'hidden');
 
-        $builder->add('date', 'collection', array(
+        $builder->add('date', CollectionType::class, array(
             'type' => new CalllogEncounterDateType($this->params, null),
             'read_only' => $this->params['readonlyEncounter'],
             'allow_add' => true,
@@ -88,7 +89,7 @@ class CalllogEncounterType extends AbstractType
                 }
             }
 
-            $form->add('patsuffix', 'collection', array(
+            $form->add('patsuffix', CollectionType::class, array(
                 'type' => new EncounterPatsuffixType($this->params, null),
                 'read_only' => $this->params['readonlyEncounter'],
                 'allow_add' => true,
@@ -98,7 +99,7 @@ class CalllogEncounterType extends AbstractType
                 'prototype' => true,
                 'prototype_name' => '__encounterpatsuffix__',
             ));
-            $form->add('patlastname', 'collection', array(
+            $form->add('patlastname', CollectionType::class, array(
                 'type' => new EncounterPatlastnameType($this->params, null),
                 'read_only' => $this->params['readonlyEncounter'],
                 'allow_add' => true,
@@ -108,7 +109,7 @@ class CalllogEncounterType extends AbstractType
                 'prototype' => true,
                 'prototype_name' => '__encounterpatlastname__',
             ));
-            $form->add('patfirstname', 'collection', array(
+            $form->add('patfirstname', CollectionType::class, array(
                 'type' => new EncounterPatfirstnameType($this->params, null),
                 'read_only' => $this->params['readonlyEncounter'],
                 'allow_add' => true,
@@ -118,7 +119,7 @@ class CalllogEncounterType extends AbstractType
                 'prototype' => true,
                 'prototype_name' => '__encounterpatfirstname__',
             ));
-            $form->add('patmiddlename', 'collection', array(
+            $form->add('patmiddlename', CollectionType::class, array(
                 'type' => new EncounterPatmiddlenameType($this->params, null),
                 'read_only' => $this->params['readonlyEncounter'],
                 'allow_add' => true,
@@ -129,7 +130,7 @@ class CalllogEncounterType extends AbstractType
                 'prototype_name' => '__encounterpatmiddlename__',
             ));
 
-            $form->add('patsex', 'collection', array(
+            $form->add('patsex', CollectionType::class, array(
                 'type' => new EncounterPatsexType($this->params, null),
                 'read_only' => $this->params['readonlyEncounter'],
                 'allow_add' => true,
@@ -144,7 +145,7 @@ class CalllogEncounterType extends AbstractType
 
 //        $attr = array('class'=>'form-control encounterage-field patientage-mask');
 //        $gen_attr = array('label'=>"Patient's Age (at the time of encounter):",'class'=>'Oleg\OrderformBundle\Entity\EncounterPatage','type'=>'text');
-//        $builder->add('patage', 'collection', array(
+//        $builder->add('patage', CollectionType::class, array(
 //            'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
 //            'allow_add' => true,
 //            'allow_delete' => true,
@@ -158,7 +159,7 @@ class CalllogEncounterType extends AbstractType
         //pathistory'
 //        $attr = array('class'=>'textarea form-control encounterhistory-field');
 //        $gen_attr = array('label'=>"Clinical History (at the time of encounter):",'class'=>'Oleg\OrderformBundle\Entity\EncounterPathistory','type'=>null);
-//        $builder->add('pathistory', 'collection', array(
+//        $builder->add('pathistory', CollectionType::class, array(
 //            'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
 //            'allow_add' => true,
 //            'allow_delete' => true,
@@ -170,7 +171,7 @@ class CalllogEncounterType extends AbstractType
 //        ));
 
         //number and source
-        $builder->add('number', 'collection', array(
+        $builder->add('number', CollectionType::class, array(
             'type' => new CalllogEncounterNumberType($this->params, $this->entity),
             'allow_add' => true,
             'allow_delete' => true,
@@ -181,7 +182,7 @@ class CalllogEncounterType extends AbstractType
             'prototype_name' => '__encounternumber__',
         ));
 
-//        $builder->add('location', 'collection', array(
+//        $builder->add('location', CollectionType::class, array(
 //            'type' => new EncounterLocationType($this->params, null),
 //            'allow_add' => true,
 //            'allow_delete' => true,
@@ -193,7 +194,7 @@ class CalllogEncounterType extends AbstractType
 
 //            $sources = array('WCMC Epic Ambulatory EMR','Written or oral referral');
 //            $params = array('name'=>'Encounter','dataClass'=>'Oleg\OrderformBundle\Entity\EncounterOrder','typename'=>'encounterorder','sources'=>$sources);
-//            $builder->add('order', 'collection', array(
+//            $builder->add('order', CollectionType::class, array(
 //                'type' => new GeneralOrderType($params, null),
 //                'allow_add' => true,
 //                'allow_delete' => true,
@@ -203,7 +204,7 @@ class CalllogEncounterType extends AbstractType
 //                'prototype_name' => '__encounterorder__',
 //            ));
 //
-//        $builder->add('inpatientinfo', 'collection', array(
+//        $builder->add('inpatientinfo', CollectionType::class, array(
 //            'type' => new EncounterInpatientinfoType($this->params, null),
 //            'allow_add' => true,
 //            'allow_delete' => true,
@@ -237,7 +238,7 @@ class CalllogEncounterType extends AbstractType
 
         //messages
         if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure' ) {
-            $builder->add('message', 'collection', array(
+            $builder->add('message', CollectionType::class, array(
                 'type' => new MessageObjectType($this->params),
                 'allow_add' => true,
                 'allow_delete' => true,
@@ -250,7 +251,7 @@ class CalllogEncounterType extends AbstractType
         }
 
         //Referring Provider for calllog new entry
-        $builder->add('referringProviders', 'collection', array(
+        $builder->add('referringProviders', CollectionType::class, array(
             'type' => new EncounterReferringProviderType($this->params, null),
             'read_only' => $this->params['readonlyEncounter'],
             'allow_add' => true,
@@ -261,7 +262,7 @@ class CalllogEncounterType extends AbstractType
             'prototype_name' => '__encounterreferringprovider__',
         ));
 
-        $builder->add('attendingPhysicians', 'collection', array(
+        $builder->add('attendingPhysicians', CollectionType::class, array(
             'type' => new EncounterAttendingPhysicianType($this->params, null),
             'read_only' => $this->params['readonlyEncounter'],
             'allow_add' => true,
@@ -272,7 +273,7 @@ class CalllogEncounterType extends AbstractType
             'prototype_name' => '__encounterattendingphysician__',
         ));
 
-        $builder->add('encounterInfoTypes', 'collection', array(
+        $builder->add('encounterInfoTypes', CollectionType::class, array(
             'type' => new EncounterInfoTypeType($this->params, null),
             'allow_add' => true,
             'allow_delete' => true,

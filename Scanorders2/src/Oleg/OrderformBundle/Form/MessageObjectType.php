@@ -20,6 +20,7 @@ namespace Oleg\OrderformBundle\Form;
 use Oleg\UserdirectoryBundle\Form\InstitutionalWrapperType;
 use Oleg\UserdirectoryBundle\Form\InstitutionType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormEvents;
@@ -312,7 +313,7 @@ class MessageObjectType extends AbstractType
 
         //message's slide
         if( $this->keyInArrayAndTrue($this->params,'slide') ) {
-            $builder->add('slide', 'collection', array(
+            $builder->add('slide', CollectionType::class, array(
                 'type' => new SlideSimpleType($this->params,$this->entity),
                 'label' => false,
                 'required' => false,
@@ -777,7 +778,7 @@ if( 1 ) {
 //
 //        //message's slide
 //        if( array_key_exists('slide', $this->params) && $this->params['slide'] == true ) {
-//            $builder->add('slide', 'collection', array(
+//            $builder->add('slide', CollectionType::class, array(
 //                'type' => new SlideSimpleType($this->params,$this->entity),
 //                'label' => false,
 //                'required' => false,
@@ -1050,7 +1051,7 @@ if( 1 ) {
 
 
     public function addFormEndpoint( $field, $form, $params ) {
-        $form->add($field, 'collection', array(
+        $form->add($field, CollectionType::class, array(
             'type' => new EndpointType($params,$this->entity),
             'label' => false,
             'required' => false,
@@ -1063,7 +1064,7 @@ if( 1 ) {
     }
 
     public function addFormExternalIds( $field, $form, $params ) {
-        $form->add($field, 'collection', array(
+        $form->add($field, CollectionType::class, array(
             'type' => new ExternalIdType($params,$this->entity),
             'label' => false,
             'required' => false,
@@ -1076,7 +1077,7 @@ if( 1 ) {
     }
 
     public function addFormOrganizationRecipients( $field, $form, $params ) {
-        $form->add($field, 'collection', array(
+        $form->add($field, CollectionType::class, array(
             'type' => new InstitutionalWrapperType($params,$this->entity),
             'label' => false,   //$this->params['label'],
             'required' => false,

@@ -23,6 +23,7 @@ use Oleg\UserdirectoryBundle\Entity\FormNode;
 use Oleg\UserdirectoryBundle\Entity\Institution;
 use Oleg\UserdirectoryBundle\Entity\PlatformListManagerRootList;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
@@ -374,7 +375,7 @@ class GenericListType extends AbstractType
             ));
 
             //permissions: show list of
-            $builder->add('permissions', 'collection', array(
+            $builder->add('permissions', CollectionType::class, array(
                 'entry_type' => PermissionType::class,
                 'label' => false,
                 'required' => false,

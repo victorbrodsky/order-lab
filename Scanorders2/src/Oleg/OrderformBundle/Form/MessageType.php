@@ -22,6 +22,7 @@ use Oleg\UserdirectoryBundle\Form\DataTransformer\UserWrapperTransformer;
 use Oleg\UserdirectoryBundle\Form\InstitutionalWrapperType;
 use Oleg\UserdirectoryBundle\Form\InstitutionType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormEvents;
@@ -75,7 +76,7 @@ class MessageType extends AbstractType
         $builder->add( 'oid' , 'hidden', array('attr'=>array('class'=>'message-id')) );
 
         //unmapped data quality form to record the MRN-Accession conflicts
-        $builder->add('conflicts', 'collection', array(
+        $builder->add('conflicts', CollectionType::class, array(
             'mapped' => false,
             'type' => new DataQualityMrnAccType($this->params, null),
             'label' => false,
@@ -91,7 +92,7 @@ class MessageType extends AbstractType
         if( $this->params['type'] != 'Table-View Scan Order' ) {
 
             //echo "message type: show patient <br>";
-            $builder->add('patient', 'collection', array(
+            $builder->add('patient', CollectionType::class, array(
                 'type' => new PatientType($this->params,$this->entity),    //$this->type),
                 'label' => false,
                 'required' => false,
@@ -299,7 +300,7 @@ class MessageType extends AbstractType
         //$this->params['label'] = 'Return Slides to:';
         $this->params['endpoint.system'] = false;
         $this->params['endpoint.location.label'] = 'Return Slides to:';
-        $builder->add('destinations', 'collection', array(
+        $builder->add('destinations', CollectionType::class, array(
             'type' => new EndpointType($this->params,$this->entity),    //$this->type),
             'label' => false,
             'required' => false,
@@ -331,7 +332,7 @@ class MessageType extends AbstractType
         ));
 
         //Performing organization
-        $builder->add('organizationRecipients', 'collection', array(
+        $builder->add('organizationRecipients', CollectionType::class, array(
             'type' => new InstitutionalWrapperType($this->params,$this->entity),
             'label' => "Organization Recipient",
             'required' => false,

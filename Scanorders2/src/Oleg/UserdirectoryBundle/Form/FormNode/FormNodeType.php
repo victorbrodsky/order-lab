@@ -73,7 +73,7 @@ class FormNodeType extends AbstractType
 //        $children = $formNode->getChildren();
 //        if( $children ) {
 //
-//            $form->add('children', 'collection', array(
+//            $form->add('children', CollectionType::class, array(
 //                'type' => new FormNodeType($params,$formNode),
 //                'label' => false,
 //                'required' => false,

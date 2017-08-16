@@ -22,6 +22,7 @@ use Oleg\UserdirectoryBundle\Form\FormNode\FormNodeType;
 use Oleg\UserdirectoryBundle\Form\InstitutionType;
 use Oleg\UserdirectoryBundle\Form\FormNode\MessageCategoryFormNodeType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormEvents;
@@ -93,7 +94,7 @@ class CalllogMessageType extends AbstractType
         //echo "calllog patient id=".$patient->getId()."<br>";
 
         //echo "message type: show patient <br>";
-        $builder->add('patient', 'collection', array(
+        $builder->add('patient', CollectionType::class, array(
             'type' => new CalllogPatientType($this->params, $patient),    //$this->type),
             'label' => false,
             'required' => false,
@@ -105,7 +106,7 @@ class CalllogMessageType extends AbstractType
         ));
 
         //if (count($this->entity->getPatient()) == 0) {
-            $builder->add('encounter', 'collection', array(
+            $builder->add('encounter', CollectionType::class, array(
                 'type' => new CalllogEncounterType($this->params, $this->entity),
                 'required' => false,
                 'allow_add' => true,

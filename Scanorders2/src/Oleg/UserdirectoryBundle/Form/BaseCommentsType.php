@@ -20,6 +20,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 
 use Oleg\UserdirectoryBundle\Entity\PrivateComment;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -86,7 +87,7 @@ class BaseCommentsType extends AbstractType
 //        ));
 
 
-        $builder->add('documents', 'collection', array(
+        $builder->add('documents', CollectionType::class, array(
             //'type' => new DocumentType($this->params),
             'entry_type' => DocumentType::class,
             'allow_add' => true,

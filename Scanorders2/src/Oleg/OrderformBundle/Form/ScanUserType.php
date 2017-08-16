@@ -19,6 +19,7 @@
 namespace Oleg\OrderformBundle\Form;
 
 
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -32,7 +33,7 @@ class ScanUserType extends UserType
     public function addHookFields($builder) {
 
         //PerSiteSettingsType($this->user,$this->roleAdmin,$this->params)
-        $builder->add('perSiteSettings', 'collection', array(
+        $builder->add('perSiteSettings', CollectionType::class, array(
             //'type' => new PerSiteSettingsType($this->user,$this->roleAdmin,$this->params),
             'entry_type' => PermissionType::class,
             'entry_options' => array(

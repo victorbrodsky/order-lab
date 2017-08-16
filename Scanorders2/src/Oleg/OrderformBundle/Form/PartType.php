@@ -20,6 +20,7 @@ namespace Oleg\OrderformBundle\Form;
 use Oleg\UserdirectoryBundle\Form\AttachmentContainerType;
 use Oleg\UserdirectoryBundle\Form\DocumentContainerType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormEvents;
@@ -51,7 +52,7 @@ class PartType extends AbstractType
 
         //if X=6, show only the first 6 levels (patient + encounter + procedure + accession + part + block)
         if( $this->params['show-tree-depth'] === true || intval($this->params['show-tree-depth']) >= 6 ) {
-            $builder->add('block', 'collection', array(
+            $builder->add('block', CollectionType::class, array(
                 'type' => new BlockType($this->params),
                 'allow_add' => true,
                 'allow_delete' => true,
@@ -65,7 +66,7 @@ class PartType extends AbstractType
 
         //if X=7, show only the first 7 levels (patient + encounter + procedure + accession + part + block + slide)
         if( $this->params['show-tree-depth'] === true || intval($this->params['show-tree-depth']) >= 7 ) {
-            $builder->add('slide', 'collection', array(
+            $builder->add('slide', CollectionType::class, array(
                 'type' => new SlideType($this->params),
                 'allow_add' => true,
                 'allow_delete' => true,
@@ -78,7 +79,7 @@ class PartType extends AbstractType
         }
 
         //name
-        $builder->add('partname', 'collection', array(
+        $builder->add('partname', CollectionType::class, array(
             'type' => new PartNameType($this->params, null),
             'allow_add' => true,
             'allow_delete' => true,
@@ -90,7 +91,7 @@ class PartType extends AbstractType
         ));
 
         //title
-        $builder->add('parttitle', 'collection', array(
+        $builder->add('parttitle', CollectionType::class, array(
             'type' => new PartTitleType($this->params, null),
             'allow_add' => true,
             'allow_delete' => true,
@@ -102,7 +103,7 @@ class PartType extends AbstractType
         ));
 
         //sourceOrgan
-        $builder->add('sourceOrgan', 'collection', array(
+        $builder->add('sourceOrgan', CollectionType::class, array(
             'type' => new PartSourceOrganType($this->params, null),
             'allow_add' => true,
             'allow_delete' => true,
@@ -116,7 +117,7 @@ class PartType extends AbstractType
         //description
         $attr = array('class'=>'textarea form-control');
         $gen_attr = array('label'=>'Gross Description:','class'=>'Oleg\OrderformBundle\Entity\PartDescription','type'=>null);    //type=null => auto type
-        $builder->add('description', 'collection', array(
+        $builder->add('description', CollectionType::class, array(
             'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
             'allow_add' => true,
             'allow_delete' => true,
@@ -130,7 +131,7 @@ class PartType extends AbstractType
         //diagnosis
         //$attr = array('class'=>'textarea form-control', 'style'=>'height:35px');
         $gen_attr = array('label'=>'Diagnosis:','class'=>'Oleg\OrderformBundle\Entity\PartDisident','type'=>null);    //type=null => auto type
-        $builder->add('disident', 'collection', array(
+        $builder->add('disident', CollectionType::class, array(
             'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
             'allow_add' => true,
             'allow_delete' => true,
@@ -142,7 +143,7 @@ class PartType extends AbstractType
         ));
 
         //paper
-        $builder->add('paper', 'collection', array(
+        $builder->add('paper', CollectionType::class, array(
             'type' => new PartPaperType($this->params),
             'allow_add' => true,
             'allow_delete' => true,
@@ -156,7 +157,7 @@ class PartType extends AbstractType
         //diffDiagnoses
         $gen_attr = array('label'=>'Differential Diagnoses:','class'=>'Oleg\OrderformBundle\Entity\PartDiffDisident','type'=>'text');
         $attr = array('class'=>'form-control partdiffdisident-field');
-        $builder->add('diffDisident', 'collection', array(
+        $builder->add('diffDisident', CollectionType::class, array(
             'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
             'allow_add' => true,
             'allow_delete' => true,
@@ -169,7 +170,7 @@ class PartType extends AbstractType
 
         //diseaseType
         $gen_attr = array('label'=>'Type of Disease:','class'=>'Oleg\OrderformBundle\Entity\PartDiseaseType','type'=>null);    //type=null => auto type
-        $builder->add('diseaseType', 'collection', array(
+        $builder->add('diseaseType', CollectionType::class, array(
             'type' => new PartDiseaseTypeType($this->params, null, $gen_attr),
             'allow_add' => true,
             'allow_delete' => true,
@@ -198,7 +199,7 @@ class PartType extends AbstractType
         //$this->params['datastructure'] = false;
         //messages
         if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure' ) {
-            $builder->add('message', 'collection', array(
+            $builder->add('message', CollectionType::class, array(
                 'type' => new MessageObjectType($this->params),
                 'allow_add' => true,
                 'allow_delete' => true,

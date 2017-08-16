@@ -20,6 +20,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -39,7 +40,7 @@ class AttachmentContainerType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        $builder->add('documentContainers', 'collection', array(
+        $builder->add('documentContainers', CollectionType::class, array(
             'entry_type' => DocumentContainerType::class,
             'entry_options' => array(
                 'form_custom_value' => $this->params

@@ -55,7 +55,7 @@ class CalllogPatientType extends AbstractType
             'attr' => array('class' => 'form-control patienttype-patient-id', 'type' => 'hidden'),
         ));
 
-        $builder->add('mrn', 'collection', array(
+        $builder->add('mrn', CollectionType::class, array(
             'type' => new CalllogPatientMrnType($this->params, null),
             //'allow_add' => true,
             //'allow_delete' => true,
@@ -66,7 +66,7 @@ class CalllogPatientType extends AbstractType
         ));
 
 
-        $builder->add('dob', 'collection', array(
+        $builder->add('dob', CollectionType::class, array(
             'type' => new PatientDobType($this->params, null),
             //'read_only' => $flag,
             //'allow_add' => true,
@@ -96,7 +96,7 @@ class CalllogPatientType extends AbstractType
 //            },
 //        ));
 
-        $builder->add('encounter', 'collection', array(
+        $builder->add('encounter', CollectionType::class, array(
             'type' => new CalllogEncounterType($this->params,$this->entity),
             'required' => false,
             'allow_add' => true,
@@ -108,7 +108,7 @@ class CalllogPatientType extends AbstractType
         ));
 
 
-//        $builder->add('lastname', 'collection', array(
+//        $builder->add('lastname', CollectionType::class, array(
 //            'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
 //            'allow_add' => true,
 //            'allow_delete' => true,
@@ -119,7 +119,7 @@ class CalllogPatientType extends AbstractType
 //            'prototype_name' => '__patientlastname__',
 //        ));
 //
-//        $builder->add('firstname', 'collection', array(
+//        $builder->add('firstname', CollectionType::class, array(
 //            'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
 //            'allow_add' => true,
 //            'allow_delete' => true,
@@ -130,7 +130,7 @@ class CalllogPatientType extends AbstractType
 //            'prototype_name' => '__patientfirstname__',
 //        ));
 //
-//        $builder->add('middlename', 'collection', array(
+//        $builder->add('middlename', CollectionType::class, array(
 //            'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
 //            'allow_add' => true,
 //            'allow_delete' => true,
@@ -141,7 +141,7 @@ class CalllogPatientType extends AbstractType
 //            'prototype_name' => '__patientmiddlename__',
 //        ));
 //
-//        $builder->add('sex', 'collection', array(
+//        $builder->add('sex', CollectionType::class, array(
 //            'type' => new PatientSexType($this->params, null),
 //            'allow_add' => true,
 //            'allow_delete' => true,
@@ -151,7 +151,7 @@ class CalllogPatientType extends AbstractType
 //            'prototype_name' => '__patientsex__',
 //        ));
 //
-//        $builder->add('suffix', 'collection', array(
+//        $builder->add('suffix', CollectionType::class, array(
 //            'type' => new PatientSexType($this->params, null),
 //            'allow_add' => true,
 //            'allow_delete' => true,

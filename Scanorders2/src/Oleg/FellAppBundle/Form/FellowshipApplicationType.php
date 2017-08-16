@@ -26,6 +26,7 @@ use Oleg\UserdirectoryBundle\Form\ExaminationType;
 use Oleg\UserdirectoryBundle\Form\LocationType;
 use Oleg\UserdirectoryBundle\Form\StateLicenseType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -118,7 +119,7 @@ class FellowshipApplicationType extends AbstractType
         ));
 
 
-        $builder->add('coverLetters', 'collection', array(
+        $builder->add('coverLetters', CollectionType::class, array(
             //'type' => new DocumentType($this->params),
             'entry_type' => DocumentType::class,
             'label' => 'Cover Letter(s):',
@@ -130,7 +131,7 @@ class FellowshipApplicationType extends AbstractType
             'prototype_name' => '__documentsid__',
         ));
 
-        $builder->add('cvs', 'collection', array(
+        $builder->add('cvs', CollectionType::class, array(
             'entry_type' => DocumentType::class,
             'label' => 'Curriculum Vitae (CV):',
             'allow_add' => true,
@@ -154,7 +155,7 @@ class FellowshipApplicationType extends AbstractType
             'attr' => array('class' => 'form-control fellapp-reprimand-field', 'onclick' => 'showHideWell(this)'),
         ));
         $builder->get('reprimand')->addModelTransformer(new StringToBooleanTransformer());
-        $builder->add('reprimandDocuments', 'collection', array(
+        $builder->add('reprimandDocuments', CollectionType::class, array(
             'entry_type' => DocumentType::class,
             'label' => 'Upload Reprimand Explanation(s):',
             'allow_add' => true,
@@ -177,7 +178,7 @@ class FellowshipApplicationType extends AbstractType
             'attr' => array('class' => 'form-control fellapp-lawsuit-field', 'onclick' => 'showHideWell(this)'),
         ));
         $builder->get('lawsuit')->addModelTransformer(new StringToBooleanTransformer());
-        $builder->add('lawsuitDocuments', 'collection', array(
+        $builder->add('lawsuitDocuments', CollectionType::class, array(
             'entry_type' => DocumentType::class,
             'label' => 'Upload Legal Explanation(s):',
             'allow_add' => true,
@@ -189,7 +190,7 @@ class FellowshipApplicationType extends AbstractType
         ));
 
 
-        $builder->add('references', 'collection', array(
+        $builder->add('references', CollectionType::class, array(
             'entry_type' => ReferenceType::class,
             'entry_options' => array(
                 'form_custom_value' => $this->params
@@ -239,7 +240,7 @@ class FellowshipApplicationType extends AbstractType
         ));
 
 
-        $builder->add('reports', 'collection', array(
+        $builder->add('reports', CollectionType::class, array(
             'entry_type' => DocumentType::class,
             'label' => 'Report(s):',
             'allow_add' => true,
@@ -250,7 +251,7 @@ class FellowshipApplicationType extends AbstractType
             'prototype_name' => '__documentsid__',
         ));
 
-        $builder->add('formReports', 'collection', array(
+        $builder->add('formReports', CollectionType::class, array(
             'entry_type' => DocumentType::class,
             'label' => 'Form Report(s):',
             'allow_add' => true,
@@ -262,7 +263,7 @@ class FellowshipApplicationType extends AbstractType
         ));
 
 
-        $builder->add('oldReports', 'collection', array(
+        $builder->add('oldReports', CollectionType::class, array(
             'entry_type' => DocumentType::class,
             'label' => 'Old Report(s):',
             'allow_add' => true,
@@ -275,7 +276,7 @@ class FellowshipApplicationType extends AbstractType
 
 
         //other documents
-        $builder->add('documents', 'collection', array(
+        $builder->add('documents', CollectionType::class, array(
             'entry_type' => DocumentType::class,
             'label' => 'Other Document(s):',
             'allow_add' => true,
@@ -286,7 +287,7 @@ class FellowshipApplicationType extends AbstractType
             'prototype_name' => '__documentsid__',
         ));
 
-        $builder->add('itinerarys', 'collection', array(
+        $builder->add('itinerarys', CollectionType::class, array(
             'entry_type' => DocumentType::class,
             'label' => 'Itinerary / Interview Schedule(s):',
             'allow_add' => true,
@@ -306,7 +307,7 @@ class FellowshipApplicationType extends AbstractType
             'attr' => array('class' => 'datepicker form-control'),
         ));
 
-        $builder->add('interviews', 'collection', array(
+        $builder->add('interviews', CollectionType::class, array(
             'entry_type' => InterviewType::class,
             'entry_options' => array(
                 'form_custom_value' => $this->params
@@ -339,7 +340,7 @@ class FellowshipApplicationType extends AbstractType
 
         /////////////////// user objects ////////////////////////////
 
-        $builder->add('avatars', 'collection', array(
+        $builder->add('avatars', CollectionType::class, array(
             'entry_type' => DocumentType::class,
             'label' => 'Applicant Photo(s):',
             'allow_add' => true,
@@ -350,7 +351,7 @@ class FellowshipApplicationType extends AbstractType
             'prototype_name' => '__documentsid__',
         ));
 
-        $builder->add('trainings', 'collection', array(
+        $builder->add('trainings', CollectionType::class, array(
             'entry_type' => FellAppTrainingType::class,
             'entry_options' => array(
                 'form_custom_value' => $this->params
@@ -366,7 +367,7 @@ class FellowshipApplicationType extends AbstractType
 
         $this->userLocations($builder);
 
-        $builder->add('citizenships', 'collection', array(
+        $builder->add('citizenships', CollectionType::class, array(
             'entry_type' => CitizenshipType::class,
             'label' => false,
             'required' => false,
@@ -377,7 +378,7 @@ class FellowshipApplicationType extends AbstractType
             'prototype_name' => '__citizenships__',
         ));
 
-        $builder->add('examinations', 'collection', array(
+        $builder->add('examinations', CollectionType::class, array(
             'entry_type' => ExaminationType::class,
             'label' => false,
             'required' => false,
@@ -388,7 +389,7 @@ class FellowshipApplicationType extends AbstractType
             'prototype_name' => '__examinations__',
         ));
 
-        $builder->add('stateLicenses', 'collection', array(
+        $builder->add('stateLicenses', CollectionType::class, array(
             'entry_type' => StateLicenseType::class,
             'entry_options' => array(
                 'form_custom_value' => $this->params
@@ -402,7 +403,7 @@ class FellowshipApplicationType extends AbstractType
             'prototype_name' => '__statelicenses__',
         ));
 
-        $builder->add('boardCertifications', 'collection', array(
+        $builder->add('boardCertifications', CollectionType::class, array(
             'entry_type' => BoardCertificationType::class,
             'label' => false,
             'required' => false,
@@ -457,7 +458,7 @@ class FellowshipApplicationType extends AbstractType
 
         $params = array('read_only'=>$readonly,'admin'=>$roleAdmin,'currentUser'=>$currentUser,'cycle'=>$this->params['cycle'],'em'=>$this->params['em'],'subjectUser'=>$this->params['user']);
 
-        $builder->add('locations', 'collection', array(
+        $builder->add('locations', CollectionType::class, array(
             'entry_type' => FellAppLocationType::class,
             'entry_options' => array(
                 'form_custom_value' => $params

@@ -19,6 +19,7 @@ namespace Oleg\OrderformBundle\Form;
 
 use Oleg\UserdirectoryBundle\Form\UserWrapperType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormEvent;
@@ -69,7 +70,7 @@ class ResearchType extends AbstractType
                 $this->params['name.label'] = 'Principal Investigator (as entered by user for this order):';
                 $this->params['user.label'] = 'Principal Investigator:';
 
-                $form->add('userWrappers', 'collection', array(
+                $form->add('userWrappers', CollectionType::class, array(
                     'type' => new UserWrapperType($this->params),
                     'label' => false,
                     'required' => false,

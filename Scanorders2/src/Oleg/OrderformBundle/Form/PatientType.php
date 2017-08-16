@@ -20,6 +20,7 @@ namespace Oleg\OrderformBundle\Form;
 use Doctrine\ORM\EntityRepository;
 use Oleg\UserdirectoryBundle\Form\TrackerType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormEvents;
@@ -56,7 +57,7 @@ class PatientType extends AbstractType
             $readonly = true;
         }
 
-        $builder->add('mrn', 'collection', array(
+        $builder->add('mrn', CollectionType::class, array(
             'type' => new PatientMrnType($this->params, null),
             'read_only' => $readonly,
             'allow_add' => true,
@@ -68,7 +69,7 @@ class PatientType extends AbstractType
         ));
 
 
-        $builder->add('dob', 'collection', array(
+        $builder->add('dob', CollectionType::class, array(
             'type' => new PatientDobType($this->params, null),
             //'read_only' => $flag,
             'allow_add' => true,
@@ -82,7 +83,7 @@ class PatientType extends AbstractType
 
         $attr = array('class'=>'textarea form-control patient-clinicalhistory-field');
         $gen_attr = array('label'=>'Clinical Summary:','class'=>'Oleg\OrderformBundle\Entity\PatientClinicalHistory','type'=>null);
-        $builder->add('clinicalHistory', 'collection', array(
+        $builder->add('clinicalHistory', CollectionType::class, array(
             'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
             //'read_only' => $flag,
             'allow_add' => true,
@@ -95,7 +96,7 @@ class PatientType extends AbstractType
         ));
 
         if( $this->params['show-tree-depth'] === true || intval($this->params['show-tree-depth']) >= 2 ) {
-            $builder->add('encounter', 'collection', array(
+            $builder->add('encounter', CollectionType::class, array(
                 'type' => new EncounterType($this->params, $this->entity),
                 'required' => false,
                 'allow_add' => true,
@@ -112,7 +113,7 @@ class PatientType extends AbstractType
 
             $attr = array('class'=>'form-control patientname-field', 'disabled' => 'disabled');
             $gen_attr = array('label'=>'Name','class'=>'Oleg\OrderformBundle\Entity\PatientName','type'=>null);
-            $builder->add('lastname', 'collection', array(
+            $builder->add('lastname', CollectionType::class, array(
                 'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
                 'read_only' => $flag,
                 'allow_add' => true,
@@ -124,7 +125,7 @@ class PatientType extends AbstractType
                 'prototype_name' => '__patientlastname__',
             ));
 
-            $builder->add('sex', 'collection', array(
+            $builder->add('sex', CollectionType::class, array(
                 'type' => new PatientSexType($this->params, null),
                 'read_only' => $flag,
                 'allow_add' => true,
@@ -144,7 +145,7 @@ class PatientType extends AbstractType
 
             //echo "flag datastructure=".$this->params['datastructure']."<br>";
 
-            $builder->add('race', 'collection', array(
+            $builder->add('race', CollectionType::class, array(
                 'type' => new PatientRaceType($this->params, null),
                 'read_only' => $flag,
                 'allow_add' => true,
@@ -155,7 +156,7 @@ class PatientType extends AbstractType
                 'prototype_name' => '__patientrace__',
             ));
 
-            $builder->add('deceased', 'collection', array(
+            $builder->add('deceased', CollectionType::class, array(
                 'type' => new PatientDeceasedType($this->params, null),
                 'read_only' => $flag,
                 'allow_add' => true,
@@ -166,7 +167,7 @@ class PatientType extends AbstractType
                 'prototype_name' => '__patientdeceased__',
             ));
 
-//            $builder->add('contactinfo', 'collection', array(
+//            $builder->add('contactinfo', CollectionType::class, array(
 //                'type' => new PatientContactinfoType($this->params, null),
 //                'read_only' => $flag,
 //                'allow_add' => true,
@@ -182,7 +183,7 @@ class PatientType extends AbstractType
                 'label' => false,
             ));
 
-            $builder->add('type', 'collection', array(
+            $builder->add('type', CollectionType::class, array(
                 'type' => new PatientTypeType($this->params, null),
                 'read_only' => $flag,
                 'allow_add' => true,
@@ -206,7 +207,7 @@ class PatientType extends AbstractType
 
         //messages
         if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure' ) {
-            $builder->add('message', 'collection', array(
+            $builder->add('message', CollectionType::class, array(
                 'type' => new MessageObjectType($this->params),
                 'allow_add' => true,
                 'allow_delete' => true,

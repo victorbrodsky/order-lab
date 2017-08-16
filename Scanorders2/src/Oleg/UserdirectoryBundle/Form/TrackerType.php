@@ -19,6 +19,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 
 use Oleg\UserdirectoryBundle\Form\LocationType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -39,7 +40,7 @@ class TrackerType extends AbstractType
         $this->formConstructor($options['form_custom_value']);
 
         //SpotType($this->params, null)
-        $builder->add('spots', 'collection', array(
+        $builder->add('spots', CollectionType::class, array(
             //'type' => SpotType($this->params, null),
             'entry_type' => SpotType::class,
             'entry_options' => array(

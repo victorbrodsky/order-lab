@@ -19,6 +19,7 @@ namespace Oleg\OrderformBundle\Form;
 
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -42,7 +43,7 @@ class PartPaperType extends AbstractType
     {
 
 
-        $builder->add('documents', 'collection', array(
+        $builder->add('documents', CollectionType::class, array(
             'entry_type' => DocumentType::class,
             'label' => " Associated Document(s):",
             'allow_add' => true,

@@ -18,6 +18,7 @@
 namespace Oleg\UserdirectoryBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -507,7 +508,7 @@ class SiteParametersType extends AbstractType
         }
         if( $this->params['singleField'] == false ) {
         //if(1) {
-            $builder->add('organizationalGroupDefaults', 'collection', array(
+            $builder->add('organizationalGroupDefaults', CollectionType::class, array(
                 'type' => new OrganizationalGroupDefaultType($this->params),
                 'label' => false,
                 'required' => false,

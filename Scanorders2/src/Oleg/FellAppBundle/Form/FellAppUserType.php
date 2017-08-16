@@ -60,7 +60,7 @@ class FellAppUserType extends UserType
 
 //    public function userLocations($builder) {
 //        $params = array('read_only'=>$this->readonly,'admin'=>$this->roleAdmin,'currentUser'=>$this->currentUser,'cycle'=>$this->cycle,'em'=>$this->em,'subjectUser'=>$this->subjectUser);
-//        $builder->add('locations', 'collection', array(
+//        $builder->add('locations', CollectionType::class, array(
 //            'type' => new FellAppLocationType($params),
 //            'label' => false,
 //            'required' => false,
@@ -77,7 +77,7 @@ class FellAppUserType extends UserType
 
 //    public function userTrainings($builder) {
 //        $params = array('read_only'=>$this->readonly,'admin'=>$this->roleAdmin,'currentUser'=>$this->currentUser,'cycle'=>$this->cycle,'em'=>$this->em,'subjectUser'=>$this->subjectUser);
-//        $builder->add('trainings', 'collection', array(
+//        $builder->add('trainings', CollectionType::class, array(
 //            'type' => new FellAppTrainingType($params),
 //            'label' => false,
 //            'required' => false,

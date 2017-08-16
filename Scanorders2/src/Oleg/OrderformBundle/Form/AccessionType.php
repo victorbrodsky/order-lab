@@ -19,6 +19,7 @@ namespace Oleg\OrderformBundle\Form;
 
 use Oleg\UserdirectoryBundle\Form\AttachmentContainerType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -46,7 +47,7 @@ class AccessionType extends AbstractType
             $readonly = true;
         }
 
-        $builder->add('accessionDate', 'collection', array(
+        $builder->add('accessionDate', CollectionType::class, array(
             'type' => new AccessionDateType($this->params, null),
             'allow_add' => true,
             'allow_delete' => true,
@@ -56,7 +57,7 @@ class AccessionType extends AbstractType
             'prototype_name' => '__accessionaccessiondate__',
         ));
 
-        $builder->add('accession', 'collection', array(
+        $builder->add('accession', CollectionType::class, array(
             'type' => new AccessionAccessionType($this->params, null),
             'read_only' => $readonly,
             'allow_add' => true,
@@ -69,7 +70,7 @@ class AccessionType extends AbstractType
 
         //if X=5, show only the first 5 levels (patient + encounter + procedure + accession + part)
         if( $this->params['show-tree-depth'] === true || intval($this->params['show-tree-depth']) >= 5 ) {
-            $builder->add('part', 'collection', array(
+            $builder->add('part', CollectionType::class, array(
                 'type' => new PartType($this->params),
                 'allow_add' => true,
                 'allow_delete' => true,
@@ -97,7 +98,7 @@ class AccessionType extends AbstractType
 
         //messages
         if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure' ) {
-            $builder->add('message', 'collection', array(
+            $builder->add('message', CollectionType::class, array(
                 'type' => new MessageObjectType($this->params),
                 'allow_add' => true,
                 'allow_delete' => true,

@@ -20,6 +20,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -149,7 +150,7 @@ class CredentialsType extends AbstractType
         }
 
 
-        $builder->add('codeNYPH', 'collection', array(
+        $builder->add('codeNYPH', CollectionType::class, array(
             'entry_type' => CodeNYPHType::class,
             'label' => false,
             'required' => false,
@@ -160,7 +161,7 @@ class CredentialsType extends AbstractType
             'prototype_name' => '__codenyph__',
         ));
 
-        $builder->add('stateLicense', 'collection', array(
+        $builder->add('stateLicense', CollectionType::class, array(
             'entry_type' => StateLicenseType::class,
             'entry_options' => array(
                 'form_custom_value' => $this->params
@@ -174,7 +175,7 @@ class CredentialsType extends AbstractType
             'prototype_name' => '__statelicense__',
         ));
 
-        $builder->add('boardCertification', 'collection', array(
+        $builder->add('boardCertification', CollectionType::class, array(
             'entry_type' => BoardCertificationType::class,
             'label' => false,
             'required' => false,
@@ -185,7 +186,7 @@ class CredentialsType extends AbstractType
             'prototype_name' => '__boardcertification__',
         ));
 
-        $builder->add('identifiers', 'collection', array(
+        $builder->add('identifiers', CollectionType::class, array(
             'entry_type' => IdentifierType::class,
             'entry_options' => array(
                 'form_custom_value' => $this->params
@@ -200,7 +201,7 @@ class CredentialsType extends AbstractType
         ));
 
 
-        $builder->add('citizenships', 'collection', array(
+        $builder->add('citizenships', CollectionType::class, array(
             'entry_type' => CitizenshipType::class,
             'label' => false,
             'required' => false,
@@ -211,7 +212,7 @@ class CredentialsType extends AbstractType
             'prototype_name' => '__citizenships__',
         ));
 
-        $builder->add('examinations', 'collection', array(
+        $builder->add('examinations', CollectionType::class, array(
             'entry_type' => ExaminationType::class,
             'label' => false,
             'required' => false,

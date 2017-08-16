@@ -19,6 +19,7 @@ namespace Oleg\OrderformBundle\Form;
 
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -46,7 +47,7 @@ class SlideType extends AbstractType
     {      
         $builder->add( 'id', 'hidden' );
 
-        $builder->add('stain', 'collection', array(
+        $builder->add('stain', CollectionType::class, array(
             'type' => new StainType($this->params),
             'allow_add' => true,
             'allow_delete' => true,
@@ -60,7 +61,7 @@ class SlideType extends AbstractType
         //if X=8, show only the first 8 levels (patient + encounter + procedure + accession + part + block + slide + image)
         if( $this->params['show-tree-depth'] === true || intval($this->params['show-tree-depth']) >= 8 ) {
             //echo "SlideType: new ImagingType <br>";
-            $builder->add('scan', 'collection', array(
+            $builder->add('scan', CollectionType::class, array(
                 'type' => new ImagingType($this->params),
                 'allow_add' => true,
                 'allow_delete' => true,
@@ -80,7 +81,7 @@ class SlideType extends AbstractType
         ));
 
         //relevantScans
-        $builder->add('relevantScans', 'collection', array(
+        $builder->add('relevantScans', CollectionType::class, array(
             'type' => new RelevantScansType($this->params),
             'allow_add' => true,
             'allow_delete' => true,
@@ -121,7 +122,7 @@ class SlideType extends AbstractType
         if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure' ) {
             //echo "slide datastructure <br>";
 
-            $builder->add('message', 'collection', array(
+            $builder->add('message', CollectionType::class, array(
                 'type' => new MessageObjectType($this->params),
                 'allow_add' => true,
                 'allow_delete' => true,
