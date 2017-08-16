@@ -308,8 +308,9 @@ class FellAppApplicantController extends Controller {
         $senderEmail = $user->getEmail();
 
         //fellapp_file_download
-        $scheduleDocumentId = $fellapp->getRecentItinerary()->getId();
-        $scheduleLink = $this->generateUrl( 'fellapp_file_download', array("id"=>$scheduleDocumentId), true );
+        //$scheduleDocumentId = $fellapp->getRecentItinerary()->getId();
+        //$scheduleLink = $this->generateUrl( 'fellapp_file_download', array("id"=>$scheduleDocumentId), true );
+        $scheduleLink = $this->generateUrl( 'fellapp_download_itinerary_pdf', array("id"=>$fellapp->getId()), true );
 
         //fellapp_interview_edit
         $interviewFormLink = $this->generateUrl( 'fellapp_interview_edit', array("id"=>$interview->getId()), true );
@@ -433,8 +434,9 @@ class FellAppApplicantController extends Controller {
             //fellapp_file_download
             $scheduleLink = null;
             if( $entity->getRecentItinerary() ) {
-                $scheduleDocumentId = $entity->getRecentItinerary()->getId();
-                $scheduleLink = $this->generateUrl( 'fellapp_file_download', array("id"=>$scheduleDocumentId), true );
+                //$scheduleDocumentId = $entity->getRecentItinerary()->getId();
+                //$scheduleLink = $this->generateUrl( 'fellapp_file_download', array("id"=>$scheduleDocumentId), true );
+                $scheduleLink = $this->generateUrl( 'fellapp_download_itinerary_pdf', array("id"=>$entity->getId()), true );
             }
 
             //get email

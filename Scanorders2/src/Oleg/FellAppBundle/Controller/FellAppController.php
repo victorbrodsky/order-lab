@@ -1938,6 +1938,28 @@ class FellAppController extends Controller {
 
     }
 
+    /**
+     * Download itinerary
+     * @Route("/download-itinerary-pdf/{id}", name="fellapp_download_itinerary_pdf")
+     * @Method("GET")
+     */
+    public function downloadItineraryAction(Request $request, $id) {
+
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
+
+        if( !$entity ) {
+            throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
+        }
+
+        $scheduleDocument = $entity->getRecentItinerary();
+        if( $scheduleDocument ) {
+            return $this->redirect( $this->generateUrl('fellapp_file_download',array('id' => $scheduleDocument->getId())) );
+        }
+
+        return null;
+    }
 
     /**
      * @Route("/regenerate-all-complete-application-pdfs/", name="fellapp_regenerate_reports")
