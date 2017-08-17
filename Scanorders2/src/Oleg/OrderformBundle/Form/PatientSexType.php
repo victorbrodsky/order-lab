@@ -25,16 +25,15 @@ class PatientSexType extends AbstractType
 {
 
     protected $params;
-    protected $entity;
 
-    public function __construct( $params=null, $entity = null )
+    public function formConstructor( $params=null )
     {
         $this->params = $params;
-        $this->entity = $entity;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
 
 //        $builder->add( 'field', 'entity', array(
 //            'label'=>'Sex',
@@ -63,6 +62,7 @@ class PatientSexType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\OrderformBundle\Entity\PatientSex',
+            'form_custom_value' => null
         ));
     }
 

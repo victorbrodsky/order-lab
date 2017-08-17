@@ -26,17 +26,15 @@ class PatientTypeType extends AbstractType
 {
 
     protected $params;
-    protected $entity;
 
-    public function __construct( $params=null, $entity = null )
+    public function formConstructor( $params=null )
     {
         $this->params = $params;
-        $this->entity = $entity;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
+        $this->formConstructor($options['form_custom_value']);
 
         $builder->add('field', 'entity', array(
             'class' => 'OlegOrderformBundle:PatientTypeList',
@@ -71,6 +69,7 @@ class PatientTypeType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\OrderformBundle\Entity\PatientType',
+            'form_custom_value' => null
         ));
     }
 

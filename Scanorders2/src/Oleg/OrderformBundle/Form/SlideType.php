@@ -31,12 +31,10 @@ class SlideType extends AbstractType
 {
 
     protected $params;
-    protected $entity;
 
-    public function __construct( $params=null, $entity = null )
+    public function formConstructor( $params=null )
     {
         $this->params = $params;
-        $this->entity = $entity;
 
         if( !array_key_exists('show-tree-depth',$this->params) || !$this->params['show-tree-depth'] ) {
             $this->params['show-tree-depth'] = true; //show all levels
@@ -44,11 +42,16 @@ class SlideType extends AbstractType
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
-    {      
+    {
+        $this->formConstructor($options['form_custom_value']);
+
         $builder->add( 'id', 'hidden' );
 
         $builder->add('stain', CollectionType::class, array(
-            'type' => new StainType($this->params),
+            'entry_type' => StainType::class,
+            'entry_options' => array(
+                'form_custom_value' => $this->params
+            ),
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
@@ -60,9 +63,11 @@ class SlideType extends AbstractType
 
         //if X=8, show only the first 8 levels (patient + encounter + procedure + accession + part + block + slide + image)
         if( $this->params['show-tree-depth'] === true || intval($this->params['show-tree-depth']) >= 8 ) {
-            //echo "SlideType: new ImagingType <br>";
             $builder->add('scan', CollectionType::class, array(
-                'type' => new ImagingType($this->params),
+                'entry_type' => ImagingType::class,
+                'entry_options' => array(
+                    'form_custom_value' => $this->params
+                ),
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,
@@ -82,7 +87,10 @@ class SlideType extends AbstractType
 
         //relevantScans
         $builder->add('relevantScans', CollectionType::class, array(
-            'type' => new RelevantScansType($this->params),
+            'entry_type' => RelevantScansType::class,
+            'entry_options' => array(
+                'form_custom_value' => $this->params
+            ),
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
@@ -145,6 +153,7 @@ class SlideType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\OrderformBundle\Entity\Slide',
+            'form_custom_value' => null
 //            'empty_data' => function (FormInterface $form) {
 //                    return new Slide(true,'valid',null,'111');
 //            }

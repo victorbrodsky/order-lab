@@ -126,7 +126,7 @@ class MessageController extends Controller {
     public function createAction(Request $request)
     {       
         $entity  = new Message();
-        $form = $this->createForm(new MessageType(), $entity);
+        $form = $this->createForm(MessageType::class, $entity);
         $form->submit($request);
           
 //        it works!
@@ -184,7 +184,7 @@ class MessageController extends Controller {
 //        $patient2->setMrn('mrn2');
 //        $entity->addPatient($patient2);
         
-        $form   = $this->createForm(new MessageType(), $entity);
+        $form   = $this->createForm(MessageType::class, $entity);
         
         return array(
             'entity' => $entity,
@@ -209,7 +209,7 @@ class MessageController extends Controller {
             throw $this->createNotFoundException('Unable to find Message entity.');
         }
 
-        $editForm = $this->createForm(new MessageType(), $entity);
+        $editForm = $this->createForm(MessageType::class, $entity);
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
@@ -237,7 +237,7 @@ class MessageController extends Controller {
         }
 
         $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createForm(new MessageType(), $entity);
+        $editForm = $this->createForm(MessageType::class, $entity);
         $editForm->submit($request);
 
         if ($editForm->isValid()) {

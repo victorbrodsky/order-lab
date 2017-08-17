@@ -26,16 +26,15 @@ class PartSourceOrganType extends AbstractType
 {
 
     protected $params;
-    protected $entity;
 
-    public function __construct( $params=null, $entity = null )
+    public function formConstructor( $params=null )
     {
         $this->params = $params;
-        $this->entity = $entity;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
 
         $attr = array('class' => 'ajax-combobox ajax-combobox-organ', 'type' => 'hidden');
 
@@ -60,6 +59,7 @@ class PartSourceOrganType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\OrderformBundle\Entity\PartSourceOrgan',
+            'form_custom_value' => null
         ));
     }
 

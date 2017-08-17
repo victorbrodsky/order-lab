@@ -225,7 +225,11 @@ class TableController extends Controller {
             //'division'=>$division,
             //'department'=>$department
         );
-        $form = $this->createForm( new MessageType($params,$message), $message, array('disabled' => $disable) );
+        $form = $this->createForm(MessageType::class, $message, array(
+            'form_custom_value' => $params,
+            'form_custom_value_entity' => $message,
+            'disabled' => $disable
+        ));
 
         //$slides = $message->getSlide();
         $query = $em->createQuery('
@@ -578,7 +582,10 @@ class TableController extends Controller {
             //'department'=>$department,
             'destinationLocation'=>$orderUtil->getOrderReturnLocations($entity)
         );
-        $form = $this->createForm( new MessageType($params, $entity), $entity );
+        $form = $this->createForm(MessageType::class, $entity, array(
+            'form_custom_value' => $params,
+            'form_custom_value_entity' => $entity
+        ));
 
         return $this->render('OlegOrderformBundle:MultiScanOrder:newtable.html.twig', array(
             'form' => $form->createView(),
@@ -620,7 +627,10 @@ class TableController extends Controller {
 
         $params = array('type'=>$type, 'cycle'=>'new', 'service'=>null, 'user'=>$user, 'em' => $em);
 
-        $form = $this->createForm(new MessageType($params,$entity), $entity);
+        $form = $this->createForm(MessageType::class, $entity, array(
+            'form_custom_value' => $params,
+            'form_custom_value_entity' => $entity
+        ));
 
         //$form->submit($request);
         $form->handleRequest($request);

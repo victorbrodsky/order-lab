@@ -64,7 +64,10 @@ class ProcedureType extends AbstractType
         //children: if X=4, show only the first 4 levels (patient + encounter + procedure + accession)
         if( $this->params['show-tree-depth'] === true || intval($this->params['show-tree-depth']) >= 4 ) {
             $builder->add('accession', CollectionType::class, array(
-                'type' => new AccessionType($this->params),
+                'entry_type' => AccessionType::class,
+                'entry_options' => array(
+                    'form_custom_value' => $this->params
+                ),
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,
@@ -106,7 +109,10 @@ class ProcedureType extends AbstractType
             ));
 
             $builder->add('date', CollectionType::class, array(
-                'type' => new ProcedureDateType($this->params, null),
+                'entry_type' => ProcedureDateType::class,
+                'entry_options' => array(
+                    'form_custom_value' => $this->params
+                ),
                 //'read_only' => $readonly,
                 'allow_add' => true,
                 'allow_delete' => true,
@@ -117,7 +123,10 @@ class ProcedureType extends AbstractType
             ));
 
             $builder->add('location', CollectionType::class, array(
-                'type' => new ProcedureLocationType($this->params, null),
+                'entry_type' => ProcedureLocationType::class,
+                'entry_options' => array(
+                    'form_custom_value' => $this->params
+                ),
                 //'read_only' => $readonly,
                 'allow_add' => true,
                 'allow_delete' => true,
@@ -157,7 +166,10 @@ class ProcedureType extends AbstractType
             ($this->params['datastructure'] == 'datastructure' || $this->params['datastructure'] == 'datastructure-patient' )
         ) {
             $builder->add('date', CollectionType::class, array(
-                'type' => new ProcedureDateType($this->params, null),
+                'entry_type' => ProcedureDateType::class,
+                'entry_options' => array(
+                    'form_custom_value' => $this->params
+                ),
                 //'read_only' => $readonly,
                 'allow_add' => true,
                 'allow_delete' => true,

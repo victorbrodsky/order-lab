@@ -13,10 +13,11 @@ class ProjectType extends AbstractType
     protected $project;
     protected $params;
 
-    public function __construct( $project, $params=null )
+    public function formConstructor( $params )
     {
-        $this->project = $project;
         $this->params = $params;
+
+        $this->project = $params['project'];
     }
 
     /**
@@ -24,6 +25,8 @@ class ProjectType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
+
         //$builder->add('createDate')->add('updateDate')->add('status')->add('title')->add('irbNumber')->add('startDate')->add('expirationDate')
         //->add('funded')->add('fundedAccountNumber')->add('description')->add('budgetSummary')->add('totalCost')->add('projectType')
         //->add('biostatisticalComment')->add('administratorComment')->add('primaryReviewerComment')->add('submitter')->add('updateUser')
@@ -261,7 +264,8 @@ class ProjectType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\TranslationalResearchBundle\Entity\Project'
+            'data_class' => 'Oleg\TranslationalResearchBundle\Entity\Project',
+            'form_custom_value' => null
         ));
     }
 

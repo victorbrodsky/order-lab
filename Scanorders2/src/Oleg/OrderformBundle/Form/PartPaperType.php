@@ -31,17 +31,15 @@ class PartPaperType extends AbstractType
 {
 
     protected $params;
-    protected $entity;
 
-    public function __construct( $params=null, $entity = null )
+    public function formConstructor( $params=null )
     {
         $this->params = $params;
-        $this->entity = $entity;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
+        $this->formConstructor($options['form_custom_value']);
 
         $builder->add('documents', CollectionType::class, array(
             'entry_type' => DocumentType::class,
@@ -67,6 +65,7 @@ class PartPaperType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\OrderformBundle\Entity\PartPaper',
+            'form_custom_value' => null
         ));
     }
 

@@ -47,7 +47,7 @@ class MessageType extends AbstractType
     //params: cycle: new, edit, show
     //params: service: pathology service
     //params: entity: entity itself
-    public function __construct( $params=null, $entity=null )
+    public function formConstructor( $params=null, $entity=null )
     {
         if( $params ) $this->params = $params;
         if( $entity ) $this->entity = $entity;
@@ -65,6 +65,7 @@ class MessageType extends AbstractType
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value'],$options['form_custom_value_entity']);
 
 //        echo "message params=";
         //echo "type=".$this->params['type']."<br>";
@@ -388,7 +389,9 @@ class MessageType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\Message'
+            'data_class' => 'Oleg\OrderformBundle\Entity\Message',
+            'form_custom_value' => null,
+            'form_custom_value_entity' => null
         ));
     }
 

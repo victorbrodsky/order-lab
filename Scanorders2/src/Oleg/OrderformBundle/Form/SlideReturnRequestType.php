@@ -26,13 +26,11 @@ use Doctrine\ORM\EntityRepository;
 class SlideReturnRequestType extends AbstractType
 {
 
-    protected $entity;
     protected $params;
 
-    public function __construct( $params=null, $entity=null )
+    public function formConstructor( $params=null )
     {
         if( $params ) $this->params = $params;
-        if( $entity ) $this->entity = $entity;
 
         $labels = array(
             'institution' => 'Institution:',
@@ -45,6 +43,7 @@ class SlideReturnRequestType extends AbstractType
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
 
         $this->params['slide'] = true;
         $builder->add('message', MessageObjectType::class, array(
@@ -88,7 +87,8 @@ class SlideReturnRequestType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\SlideReturnRequest'
+            'data_class' => 'Oleg\OrderformBundle\Entity\SlideReturnRequest',
+            'form_custom_value' => null
         ));
     }
 

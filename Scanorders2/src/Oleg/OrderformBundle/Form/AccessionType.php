@@ -27,12 +27,10 @@ class AccessionType extends AbstractType
 {
 
     protected $params;
-    protected $entity;
 
-    public function __construct( $params=null, $entity = null )
+    public function formConstructor( $params=null )
     {
         $this->params = $params;
-        $this->entity = $entity;
 
         if( !array_key_exists('show-tree-depth',$this->params) || !$this->params['show-tree-depth'] ) {
             $this->params['show-tree-depth'] = true; //show all levels
@@ -41,6 +39,7 @@ class AccessionType extends AbstractType
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
 
         $readonly = false;
         if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure-patient' ) {
@@ -48,7 +47,10 @@ class AccessionType extends AbstractType
         }
 
         $builder->add('accessionDate', CollectionType::class, array(
-            'type' => new AccessionDateType($this->params, null),
+            'entry_type' => AccessionDateType::class,
+            'entry_options' => array(
+                'form_custom_value' => $this->params,
+            ),
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
@@ -58,7 +60,10 @@ class AccessionType extends AbstractType
         ));
 
         $builder->add('accession', CollectionType::class, array(
-            'type' => new AccessionAccessionType($this->params, null),
+            'entry_type' => AccessionAccessionType::class,
+            'entry_options' => array(
+                'form_custom_value' => $this->params,
+            ),
             'read_only' => $readonly,
             'allow_add' => true,
             'allow_delete' => true,
@@ -71,7 +76,10 @@ class AccessionType extends AbstractType
         //if X=5, show only the first 5 levels (patient + encounter + procedure + accession + part)
         if( $this->params['show-tree-depth'] === true || intval($this->params['show-tree-depth']) >= 5 ) {
             $builder->add('part', CollectionType::class, array(
-                'type' => new PartType($this->params),
+                'entry_type' => PartType::class,
+                'entry_options' => array(
+                    'form_custom_value' => $this->params,
+                ),
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,
@@ -119,7 +127,8 @@ class AccessionType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\Accession'
+            'data_class' => 'Oleg\OrderformBundle\Entity\Accession',
+            'form_custom_value' => null
         ));
     }
 

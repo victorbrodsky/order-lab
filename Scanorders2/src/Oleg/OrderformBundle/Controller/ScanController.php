@@ -63,7 +63,7 @@ class ScanController extends Controller
     public function createAction(Request $request)
     {
         $entity  = new Imaging();
-        $form = $this->createForm(new ImagingType(), $entity);
+        $form = $this->createForm(ImagingType::class, $entity);
         $form->submit($request);
 
         $mag = $form["mag"]->getData();
@@ -125,7 +125,7 @@ class ScanController extends Controller
                 
         $entity->setMag( key($helper->getMags()) );       
         
-        $form   = $this->createForm(new ImagingType(), $entity);
+        $form   = $this->createForm(ImagingType::class, $entity);
 
         return array(
             'entity' => $entity,
@@ -175,7 +175,7 @@ class ScanController extends Controller
             throw $this->createNotFoundException('Unable to find Imaging entity.');
         }
 
-        $editForm = $this->createForm(new ImagingType(), $entity);
+        $editForm = $this->createForm(ImagingType::class, $entity);
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
@@ -203,7 +203,7 @@ class ScanController extends Controller
         }
 
         $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createForm(new ImagingType(), $entity);
+        $editForm = $this->createForm(ImagingType::class, $entity);
         $editForm->submit($request);
 
         if ($editForm->isValid()) {

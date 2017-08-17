@@ -127,7 +127,7 @@ class HistoryController extends Controller
     */
     private function createCreateForm(History $entity)
     {
-        $form = $this->createForm(new HistoryType(), $entity, array(
+        $form = $this->createForm(HistoryType::class, $entity, array(
             'action' => $this->generateUrl('history_create'),
             'method' => 'POST',
         ));
@@ -228,7 +228,7 @@ class HistoryController extends Controller
     */
     private function createEditForm(History $entity)
     {
-        $form = $this->createForm(new HistoryType(), $entity, array(
+        $form = $this->createForm(HistoryType::class, $entity, array(
             'action' => $this->generateUrl('history_update', array('id' => $entity->getId())),
             'method' => 'PUT',
         ));

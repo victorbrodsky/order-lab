@@ -131,7 +131,7 @@ class ScanOrderController extends Controller {
         $params = array();
         $params['services'] = $services;
         $params['statuses'] = $this->getFilter($routeName);
-        $form = $this->createForm(new FilterType( $params ), null);
+        $form = $this->createForm(FilterType::class, null, array ('form_custom_value'=>$params));
 
 
         $form->submit($request);  //use bind instead of handleRequest. handleRequest does not get filter data

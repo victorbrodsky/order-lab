@@ -34,13 +34,14 @@ class RelevantScansType extends AbstractType
 
     protected $params;
 
-    public function __construct( $params=null )
+    public function formConstructor( $params=null )
     {
         $this->params = $params;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
 
         $builder->add('field', null, array(
             'label' => 'Link(s) to related image(s):',
@@ -55,7 +56,8 @@ class RelevantScansType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\RelevantScans'
+            'data_class' => 'Oleg\OrderformBundle\Entity\RelevantScans',
+            'form_custom_value' => null
         ));
     }
 

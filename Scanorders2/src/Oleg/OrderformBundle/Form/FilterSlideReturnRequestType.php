@@ -26,13 +26,14 @@ class FilterSlideReturnRequestType extends AbstractType
 
     protected $status;
 
-    public function __construct( $status = null )
+    public function formConstructor( $status = null )
     {
         $this->status = $status;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
 
         $choices = array(   'all' => 'All',
                             'active' => 'Active',
@@ -63,6 +64,7 @@ class FilterSlideReturnRequestType extends AbstractType
             //'data_class' => 'Oleg\OrderformBundle\Entity\Scan'
         //));
         $resolver->setDefaults(array(
+            'form_custom_value' => null,
             'csrf_protection' => false,
         ));
     }

@@ -26,16 +26,15 @@ class PartDiseaseTypeType extends AbstractType
 {
 
     protected $params;
-    protected $entity;
 
-    public function __construct( $params=null, $entity = null )
+    public function formConstructor( $params=null )
     {
         $this->params = $params;
-        $this->entity = $entity;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
 
         //New in Symfony 2.8: choices is array
         //get array of diseaseTypes
@@ -118,6 +117,7 @@ class PartDiseaseTypeType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\OrderformBundle\Entity\PartDiseaseType',
+            'form_custom_value' => null
         ));
     }
 

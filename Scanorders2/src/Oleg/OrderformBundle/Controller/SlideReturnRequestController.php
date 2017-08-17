@@ -357,7 +357,7 @@ class SlideReturnRequestController extends Controller
         $params['destinationLocation'] = $orderUtil->getOrderReturnLocations($message);
 
 
-        $form = $this->createForm(new SlideReturnRequestType($params,$slideReturnRequest), $slideReturnRequest);
+        $form = $this->createForm(SlideReturnRequestType::class, $slideReturnRequest, array('form_custom_value'=>$params));
 
         return $form;
     }
@@ -376,7 +376,7 @@ class SlideReturnRequestController extends Controller
      */
     public function allRequestedSlidesAction( Request $request ) {
 
-        $filterForm = $this->createForm(new FilterSlideReturnRequestType());
+        $filterForm = $this->createForm(FilterSlideReturnRequestType::class);
 
         //$filterForm->handleRequest($request);
         $filterForm->submit($request); //use bind. handleRequest does not work with GET
@@ -498,7 +498,7 @@ class SlideReturnRequestController extends Controller
      */
     public function userRequestedSlidesAction( Request $request ) {
 
-        $filterForm = $this->createForm(new FilterSlideReturnRequestType());
+        $filterForm = $this->createForm(FilterSlideReturnRequestType::class);
 
         //$filterForm->handleRequest($request);
         $filterForm->submit($request); //use bind. handleRequest does not work with GET

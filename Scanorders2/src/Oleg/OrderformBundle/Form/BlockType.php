@@ -31,12 +31,10 @@ class BlockType extends AbstractType
 {
 
     protected $params;
-    protected $entity;
 
-    public function __construct( $params=null, $entity = null )
+    public function formConstructor( $params=null )
     {
         $this->params = $params;
-        $this->entity = $entity;
 
         if( !array_key_exists('show-tree-depth',$this->params) || !$this->params['show-tree-depth'] ) {
             $this->params['show-tree-depth'] = true; //show all levels
@@ -44,11 +42,15 @@ class BlockType extends AbstractType
     }
     
     public function buildForm(FormBuilderInterface $builder, array $options)
-    {     
+    {
+        $this->formConstructor($options['form_custom_value']);
 
         //name
         $builder->add('blockname', CollectionType::class, array(
-            'type' => new BlockNameType($this->params, null),
+            'entry_type' => BlockNameType::class,
+            'entry_options' => array(
+                'form_custom_value' => $this->params,
+            ),
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
@@ -80,7 +82,10 @@ class BlockType extends AbstractType
         //if X=7, show only the first 7 levels (patient + encounter + procedure + accession + part + block + slide)
         if( $this->params['show-tree-depth'] === true || intval($this->params['show-tree-depth']) >= 7 ) {
             $builder->add('slide', CollectionType::class, array(
-                'type' => new SlideType($this->params),
+                'entry_type' => SlideType::class,
+                'entry_options' => array(
+                    'form_custom_value' => $this->params,
+                ),
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,
@@ -92,7 +97,10 @@ class BlockType extends AbstractType
         }
 
         $builder->add('specialStains', CollectionType::class, array(
-            'type' => new SpecialStainsType($this->params),
+            'entry_type' => SpecialStainsType::class,
+            'entry_options' => array(
+                'form_custom_value' => $this->params,
+            ),
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
@@ -137,7 +145,8 @@ class BlockType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\Block'
+            'data_class' => 'Oleg\OrderformBundle\Entity\Block',
+            'form_custom_value' => null
         ));
     }
 

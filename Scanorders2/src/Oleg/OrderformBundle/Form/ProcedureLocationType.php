@@ -26,16 +26,15 @@ class ProcedureLocationType extends AbstractType
 {
 
     protected $params;
-    protected $entity;
 
-    public function __construct( $params=null, $entity = null )
+    public function formConstructor( $params=null )
     {
         $this->params = $params;
-        $this->entity = $entity;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
 
         //Location Source System - array field location source
         $builder->add('source', 'entity', array(
@@ -82,6 +81,7 @@ class ProcedureLocationType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\OrderformBundle\Entity\ProcedureLocation',
+            'form_custom_value' => null
         ));
     }
 

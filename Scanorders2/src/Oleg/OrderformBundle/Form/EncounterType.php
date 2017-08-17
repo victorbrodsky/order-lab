@@ -29,12 +29,10 @@ class EncounterType extends AbstractType
 {
 
     protected $params;
-    protected $entity;
 
-    public function __construct( $params=null, $entity = null )
+    public function formConstructor( $params=null )
     {
         $this->params = $params;
-        $this->entity = $entity;
 
         if( !array_key_exists('alias', $this->params) ) {
             $this->params['alias'] = true;
@@ -54,6 +52,7 @@ class EncounterType extends AbstractType
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
 
         //children: if X=3, show only the first 3 levels (patient + encounter + procedure)
         if( $this->params['show-tree-depth'] === true || intval($this->params['show-tree-depth']) >= 3 ) {
@@ -413,7 +412,8 @@ class EncounterType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\Encounter'
+            'data_class' => 'Oleg\OrderformBundle\Entity\Encounter',
+            'form_custom_value' => null
         ));
     }
 

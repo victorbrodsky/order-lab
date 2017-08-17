@@ -59,7 +59,10 @@ class PatientType extends AbstractType
         }
 
         $builder->add('mrn', CollectionType::class, array(
-            'type' => new PatientMrnType($this->params, null),
+            'entry_type' => PatientMrnType::class,
+            'entry_options' => array(
+                'form_custom_value' => $this->params
+            ),
             'read_only' => $readonly,
             'allow_add' => true,
             'allow_delete' => true,
@@ -108,7 +111,10 @@ class PatientType extends AbstractType
 
         if( $this->params['show-tree-depth'] === true || intval($this->params['show-tree-depth']) >= 2 ) {
             $builder->add('encounter', CollectionType::class, array(
-                'type' => new EncounterType($this->params, $this->entity),
+                'entry_type' => EncounterType::class,
+                'entry_options' => array(
+                    'form_custom_value' => $this->params,
+                ),
                 'required' => false,
                 'allow_add' => true,
                 'allow_delete' => true,
@@ -144,7 +150,10 @@ class PatientType extends AbstractType
             ));
 
             $builder->add('sex', CollectionType::class, array(
-                'type' => new PatientSexType($this->params, null),
+                'entry_type' => PatientSexType::class,
+                'entry_options' => array(
+                    'form_custom_value' => $this->params,
+                ),
                 'read_only' => $flag,
                 'allow_add' => true,
                 'allow_delete' => true,
@@ -164,7 +173,10 @@ class PatientType extends AbstractType
             //echo "flag datastructure=".$this->params['datastructure']."<br>";
 
             $builder->add('race', CollectionType::class, array(
-                'type' => new PatientRaceType($this->params, null),
+                'entry_type' => PatientRaceType::class,
+                'entry_options' => array(
+                    'form_custom_value' => $this->params,
+                ),
                 'read_only' => $flag,
                 'allow_add' => true,
                 'allow_delete' => true,
@@ -175,7 +187,10 @@ class PatientType extends AbstractType
             ));
 
             $builder->add('deceased', CollectionType::class, array(
-                'type' => new PatientDeceasedType($this->params, null),
+                'entry_type' => PatientDeceasedType::class,
+                'entry_options' => array(
+                    'form_custom_value' => $this->params,
+                ),
                 'read_only' => $flag,
                 'allow_add' => true,
                 'allow_delete' => true,
@@ -202,7 +217,10 @@ class PatientType extends AbstractType
             ));
 
             $builder->add('type', CollectionType::class, array(
-                'type' => new PatientTypeType($this->params, null),
+                'entry_type' => PatientTypeType::class,
+                'entry_options' => array(
+                    'form_custom_value' => $this->params,
+                ),
                 'read_only' => $flag,
                 'allow_add' => true,
                 'allow_delete' => true,

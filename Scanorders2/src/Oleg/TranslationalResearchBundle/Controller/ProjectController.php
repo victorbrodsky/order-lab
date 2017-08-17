@@ -200,19 +200,17 @@ class ProjectController extends Controller
             'cycle' => $cycle,
             'em' => $em,
             'user' => $user,
+            'project' => $project
         );
 
         if( $cycle == "show" ) {
             $disabled = true;
         }
 
-        $form = $this->createForm(
-            new ProjectType($project,$params),
-            $project,
-            array(
-                'disabled' => $disabled,
-            )
-        );
+        $form = $this->createForm(ProjectType::class, $project, array(
+            'form_custom_value' => $params,
+            'disabled' => $disabled,
+        ));
 
         return $form;
     }

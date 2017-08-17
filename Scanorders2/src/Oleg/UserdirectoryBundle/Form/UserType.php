@@ -267,7 +267,7 @@ class UserType extends AbstractType
     public function addUserInfos($builder) {
 
         $builder->add('infos', CollectionType::class, array(
-            'type' => UserInfoType::class,
+            'entry_type' => UserInfoType::class,
             'label' => false,
             'required' => false,
             'allow_add' => true,

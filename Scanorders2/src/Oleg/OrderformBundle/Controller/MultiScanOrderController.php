@@ -139,7 +139,10 @@ class MultiScanOrderController extends Controller {
             'datastructure'=>$this->datastructure
         );
 
-        $form = $this->createForm(new MessageType($params,$entity), $entity);
+        $form = $this->createForm(MessageType::class, $entity, array(
+            'form_custom_value' => $params,
+            'form_custom_value_entity' => $entity
+        ));
 
         $form->handleRequest($request);
 
@@ -491,7 +494,10 @@ class MultiScanOrderController extends Controller {
             'destinationLocation'=>$orderUtil->getOrderReturnLocations($entity),
             'datastructure'=>$this->datastructure
         );
-        $form   = $this->createForm( new MessageType($params, $entity), $entity );
+        $form = $this->createForm(MessageType::class, $entity, array(
+            'form_custom_value' => $params,
+            'form_custom_value_entity' => $entity
+        ));
 
         if( $routeName != "single_new") {
             return $this->render('OlegOrderformBundle:MultiScanOrder:new.html.twig', array(
@@ -834,7 +840,11 @@ class MultiScanOrderController extends Controller {
             //'department'=>$department,
             'datastructure' => $datastructure
         );
-        $form   = $this->createForm( new MessageType($params,$entity), $entity, array('disabled' => $disable) );
+        $form = $this->createForm(MessageType::class, $entity, array(
+            'form_custom_value' => $params,
+            'form_custom_value_entity' => $entity,
+            'disabled' => $disable
+        ));
 
         //echo "type=".$entity->getMessageCategory();
         //exit();

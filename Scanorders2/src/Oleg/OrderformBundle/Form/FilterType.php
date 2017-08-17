@@ -26,13 +26,14 @@ class FilterType extends AbstractType
 
     private $params;
 
-    public function __construct( $params )
+    public function formConstructor( $params )
     {
         $this->params = $params;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
-    {                              
+    {
+        $this->formConstructor($options['form_custom_value']);
 
         $builder->add( 'filter', 'choice', array(  
             'label' => 'Filter by Order Status:',
@@ -60,10 +61,8 @@ class FilterType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        //$resolver->setDefaults(array(
-            //'data_class' => 'Oleg\OrderformBundle\Entity\Scan'
-        //));
         $resolver->setDefaults(array(
+            'form_custom_value' => null,
             'csrf_protection' => false,
         ));
     }

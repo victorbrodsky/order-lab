@@ -26,16 +26,15 @@ class PatientDeceasedType extends AbstractType
 {
 
     protected $params;
-    protected $entity;
 
-    public function __construct( $params=null, $entity = null )
+    public function formConstructor( $params=null )
     {
         $this->params = $params;
-        $this->entity = $entity;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
 
         $builder->add('deceased', 'checkbox', array(
             'label'     => 'Deceased:',
@@ -76,6 +75,7 @@ class PatientDeceasedType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\OrderformBundle\Entity\PatientDeceased',
+            'form_custom_value' => null
         ));
     }
 

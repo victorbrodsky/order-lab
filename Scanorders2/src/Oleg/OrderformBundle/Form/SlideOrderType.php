@@ -32,8 +32,9 @@ class SlideOrderType extends AbstractType
     {
 
         $params = array('labelPrefix'=>' for Histotechnologist');
-        $builder->add('instruction', new InstructionType($params), array(
+        $builder->add('instruction', InstructionType::class, array(
             'data_class' => 'Oleg\OrderformBundle\Entity\Instruction',
+            'form_custom_value' => $params,
             'label' => false
         ));
 

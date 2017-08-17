@@ -29,16 +29,15 @@ class SpecialStainsType extends AbstractType
 {
 
     protected $params;
-    protected $entity;
 
-    public function __construct( $params=null, $entity = null )
+    public function formConstructor( $params=null )
     {
         $this->params = $params;
-        $this->entity = $entity;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
 
         //field
         $builder->add('field', 'textarea', array(
@@ -74,7 +73,8 @@ class SpecialStainsType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\BlockSpecialStains'
+            'data_class' => 'Oleg\OrderformBundle\Entity\BlockSpecialStains',
+            'form_custom_value' => null
         ));
     }
 

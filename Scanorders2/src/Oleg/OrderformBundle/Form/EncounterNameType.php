@@ -23,20 +23,21 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
 use Oleg\OrderformBundle\Entity\ProcedureList;
 
+//NOT USED
 class EncounterNameType extends AbstractType
 {
 
     protected $params;
-    protected $entity;
 
-    public function __construct( $params=null, $entity = null )
+
+    public function formConstructor( $params=null ) 
     {
         $this->params = $params;
-        $this->entity = $entity;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
 
         $builder->add('field', 'hidden', array('label'=>false));
 
@@ -53,6 +54,7 @@ class EncounterNameType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\OrderformBundle\Entity\EncounterName',
+            'form_custom_value' => null
         ));
     }
 
