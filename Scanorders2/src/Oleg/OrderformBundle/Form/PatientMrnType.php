@@ -80,8 +80,9 @@ class PatientMrnType extends AbstractType
         $builder->add('keytype', 'custom_selector', $options);
 
         //other fields from abstract
-        $builder->add('others', new ArrayFieldType($this->params), array(
+        $builder->add('others', ArrayFieldType::class, array(
             'data_class' => 'Oleg\OrderformBundle\Entity\PatientMrn',
+            'form_custom_value' => $this->params,
             'label' => false,
 			'attr' => array('style'=>'display:none;')
         ));
@@ -95,7 +96,7 @@ class PatientMrnType extends AbstractType
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_orderformbundle_mrntype';
     }

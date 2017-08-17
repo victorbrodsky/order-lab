@@ -29,13 +29,11 @@ class ReportType extends AbstractType
 {
 
     protected $params;
-    protected $entity;
     protected $label;
 
-    public function __construct( $params=null, $entity = null )
+    public function formConstructor( $params=null )
     {
         $this->params = $params;
-        $this->entity = $entity;
 
         //////////// create labels ////////////
         $label = array();
@@ -73,6 +71,7 @@ class ReportType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
 
         $builder->add('issuedDate', 'date', array(
             'label' => "Issued Date & Time:",
@@ -129,10 +128,11 @@ class ReportType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\OrderformBundle\Entity\Report',
+            'form_custom_value' => null
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_orderformbundle_reporttype';
     }

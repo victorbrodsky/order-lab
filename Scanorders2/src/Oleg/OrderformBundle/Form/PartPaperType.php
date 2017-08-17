@@ -54,8 +54,9 @@ class PartPaperType extends AbstractType
             'prototype_name' => '__documentsid__',
         ));
 
-        $builder->add('others', new ArrayFieldType($this->params), array(
+        $builder->add('others', ArrayFieldType::class, array(
             'data_class' => 'Oleg\OrderformBundle\Entity\PartPaper',
+            'form_custom_value' => $this->params,
             'label' => false,
 			'attr' => array('class'=>'field-partpaperothers','style'=>'display:none;')
         ));
@@ -69,7 +70,7 @@ class PartPaperType extends AbstractType
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_orderformbundle_partpapertype';
     }

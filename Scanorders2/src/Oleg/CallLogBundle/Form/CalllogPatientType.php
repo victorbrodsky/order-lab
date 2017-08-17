@@ -38,7 +38,7 @@ class CalllogPatientType extends AbstractType
     protected $params;
     protected $entity;
 
-    public function __construct( $params=null, $entity = null )
+    public function formConstructor( $params=null, $entity = null )
     {
         $this->params = $params;
         $this->entity = $entity;
@@ -46,6 +46,7 @@ class CalllogPatientType extends AbstractType
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value'],$options['form_custom_value_entity']);
 
         //echo "calllog patient: type=".$this->params['type']."<br>";
 
@@ -56,7 +57,10 @@ class CalllogPatientType extends AbstractType
         ));
 
         $builder->add('mrn', CollectionType::class, array(
-            'type' => new CalllogPatientMrnType($this->params, null),
+            'entry_type' => CalllogPatientMrnType::class,
+            'entry_options' => array(
+                'form_custom_value' => $this->params
+            ),
             //'allow_add' => true,
             //'allow_delete' => true,
             'required' => false,
@@ -67,7 +71,10 @@ class CalllogPatientType extends AbstractType
 
 
         $builder->add('dob', CollectionType::class, array(
-            'type' => new PatientDobType($this->params, null),
+            'entry_type' => PatientDobType::class,
+            'entry_options' => array(
+                'form_custom_value' => $this->params
+            ),
             //'read_only' => $flag,
             //'allow_add' => true,
             //'allow_delete' => true,
@@ -97,7 +104,11 @@ class CalllogPatientType extends AbstractType
 //        ));
 
         $builder->add('encounter', CollectionType::class, array(
-            'type' => new CalllogEncounterType($this->params,$this->entity),
+            'entry_type' => CalllogEncounterType::class,
+            'entry_options' => array(
+                'form_custom_value' => $this->params,
+                'form_custom_value_entity' => $this->entity
+            ),
             'required' => false,
             'allow_add' => true,
             'allow_delete' => true,
@@ -176,11 +187,13 @@ class CalllogPatientType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\OrderformBundle\Entity\Patient',
+            'form_custom_value' => null,
+            'form_custom_value_entity' => null,
             //'csrf_protection' => false
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_calllogbundle_patienttype';
     }

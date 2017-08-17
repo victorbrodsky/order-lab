@@ -207,18 +207,20 @@ class EducationalResearchController extends Controller {
         }
 
         if( $entity instanceof Educational ) {
-            $typeform = new EducationalType($params,$entity);
+            //$typeform = new EducationalType($params);
+            $typeform = EducationalType::class;
             $type = "educational";
             $btnMsg = "Course Director";
         }
 
         if( $entity instanceof Research ) {
-            $typeform = new ResearchType($params,$entity);
+            $typeform = ResearchType::class;
             $type = "research";
             $btnMsg = "Principal Investigator";
         }
 
         $form = $this->createForm( $typeform, $entity, array(
+            'form_custom_value' => $params,
             'action' => $this->generateUrl($type.'_update', array('id' => $entity->getId())),
             'method' => 'PUT',
             'disabled' => $disable

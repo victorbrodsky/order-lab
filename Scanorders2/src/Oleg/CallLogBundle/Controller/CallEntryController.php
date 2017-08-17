@@ -243,8 +243,8 @@ class CallEntryController extends Controller
         $navbarParams = array();
         $navbarParams['navbarSearchTypes'] = $calllogUtil->getNavbarSearchTypes();
         $navbarParams['container'] = $this->container;
-        $navbarfilterform = $this->createForm(new CalllogNavbarFilterType($navbarParams), null);
-        $navbarfilterform->bind($request);
+        $navbarfilterform = $this->createForm(CalllogNavbarFilterType::class, null, array('form_custom_value'=>$navbarParams));
+        $navbarfilterform->submit($request);
         $calllogsearchtype = $navbarfilterform['searchtype']->getData();
         $calllogsearch = $navbarfilterform['search']->getData();
         //$metaphone = $navbarfilterform['metaphone']->getData();
@@ -284,9 +284,9 @@ class CallEntryController extends Controller
             'messageCategoryType' => $messageCategoryTypeId,
             'metaphone' => $metaphone
         );
-        $filterform = $this->createForm(new CalllogFilterType($params), null);
+        $filterform = $this->createForm(CalllogFilterType::class, null, array('form_custom_value'=>$params));
 
-        $filterform->bind($request);
+        $filterform->submit($request);
 
         $messageStatusFilter = $filterform['messageStatus']->getData();
         $mrntypeFilter = $filterform['mrntype']->getData();
@@ -1433,9 +1433,11 @@ class CallEntryController extends Controller
         );
 
         $form = $this->createForm(
-            new CalllogMessageType($params, $message),
+            CalllogMessageType::class,
             $message,
             array(
+                'form_custom_value' => $params,
+                'form_custom_value_entity' => $message,
                 'disabled' => $disabled
             )
         );

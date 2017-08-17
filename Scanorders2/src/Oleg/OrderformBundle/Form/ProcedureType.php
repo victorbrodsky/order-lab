@@ -27,12 +27,10 @@ class ProcedureType extends AbstractType
 {
 
     protected $params;
-    protected $entity;
 
-    public function __construct( $params=null, $entity = null )
+    public function formConstructor( $params=null )
     {
         $this->params = $params;
-        $this->entity = $entity;
 
         if( !array_key_exists('show-tree-depth',$this->params) || !$this->params['show-tree-depth'] ) {
             $this->params['show-tree-depth'] = true; //show all levels
@@ -42,12 +40,17 @@ class ProcedureType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
+        $this->formConstructor($options['form_custom_value']);
+
 //        $readonly = false;
 //        if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure-patient' ) {
 //            $readonly = true;
 //        }
         $builder->add('name', CollectionType::class, array(
-            'type' => new ProcedureNameType($this->params, $this->entity),
+            'entry_type' => ProcedureNameType::class,
+            'entry_options' => array(
+                'form_custom_value' => $this->params
+            ),
             //'read_only' => $readonly,
             'allow_add' => true,
             'allow_delete' => true,
@@ -88,7 +91,10 @@ class ProcedureType extends AbstractType
             //echo "flag datastructure=".$this->params['datastructure']."<br>";
 
             $builder->add('number', CollectionType::class, array(
-                'type' => new ProcedureNumberType($this->params, $this->entity),
+                'entry_type' => ProcedureNumberType::class,
+                'entry_options' => array(
+                    'form_custom_value' => $this->params
+                ),
                 'read_only' => $readonly,
                 'allow_add' => true,
                 'allow_delete' => true,
@@ -165,7 +171,11 @@ class ProcedureType extends AbstractType
         //messages
         if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure' ) {
             $builder->add('message', CollectionType::class, array(
-                'type' => new MessageObjectType($this->params),
+                'entry_type' => MessageObjectType::class,
+                'entry_options' => array(
+                    'form_custom_value' => $this->params,
+                    'form_custom_value_entity' => null
+                ),
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,
@@ -182,11 +192,12 @@ class ProcedureType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\Procedure'
+            'data_class' => 'Oleg\OrderformBundle\Entity\Procedure',
+            'form_custom_value' => null
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_orderformbundle_proceduretype';
     }

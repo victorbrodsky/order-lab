@@ -34,13 +34,14 @@ class VacReqEmailusersType extends AbstractType
 
     protected $params;
 
-    public function __construct( $params )
+    public function formConstructor( $params )
     {
         $this->params = $params;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
 
         $builder->add('emailUsers', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:User',
@@ -68,11 +69,12 @@ class VacReqEmailusersType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\VacReqBundle\Entity\VacReqSettings',
+            'form_custom_value' => null,
             'csrf_protection' => false,
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_vacreqbundle_settings';
     }

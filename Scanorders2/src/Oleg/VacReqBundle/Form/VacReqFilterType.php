@@ -31,7 +31,7 @@ class VacReqFilterType extends AbstractType
     private $params;
 
 
-    public function __construct( $params=null )
+    public function formConstructor( $params=null )
     {
         $this->params = $params;
     }
@@ -39,6 +39,7 @@ class VacReqFilterType extends AbstractType
     //Start Date, Start Time, End Date, End Time, User [Select2 dropdown), Event Type [Entity Updated], [Free Text Search value for Event column] [Filter Button]
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
 
         //visible only for my request and incoming requests for SUPERVISOR users
         if( $this->params['routeName'] == 'vacreq_myrequests' || $this->params['supervisor'] || $this->params['approverRole'] ) {
@@ -172,11 +173,12 @@ class VacReqFilterType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
+            'form_custom_value' => null,
             'csrf_protection' => false,
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'filter';
     }

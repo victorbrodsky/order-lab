@@ -264,7 +264,8 @@ class ListController extends Controller
 
         $dqlParameters = array();
         $filterform = $this->createForm(ListFilterType::class, null);
-        $filterform->bind($request);
+        //$filterform->submit($request);
+        $filterform->submit($request);
         $search = $filterform['search']->getData();
         //echo "search=".$search."<br>";
 
@@ -507,11 +508,6 @@ class ListController extends Controller
         $options['entity'] = $entity;
         $options['em'] = $this->getDoctrine()->getManager();
 
-//        $newForm = new GenericListType($options,$mapper);
-//        $form = $this->createForm($newForm, $entity, array(
-//            'action' => $this->generateUrl($pathbase.'_create'),
-//            'method' => 'POST',
-//        ));
         $form = $this->createForm(GenericListType::class, $entity, array(
             'action' => $this->generateUrl($pathbase.'_create'),
             'method' => 'POST',
@@ -1003,12 +999,6 @@ class ListController extends Controller
         $options['entity'] = $entity;
         $options['em'] = $this->getDoctrine()->getManager();
 
-//        $newForm = new GenericListType($options,$mapper);
-//        $form = $this->createForm($newForm, $entity, array(
-//            'action' => $this->generateUrl($pathbase.'_show', array('id' => $entity->getId())),
-//            'method' => 'PUT',
-//            'disabled' => $disabled
-//        ));
         $form = $this->createForm(GenericListType::class, $entity, array(
             'action' => $this->generateUrl($pathbase.'_show', array('id' => $entity->getId())),
             'method' => 'PUT',

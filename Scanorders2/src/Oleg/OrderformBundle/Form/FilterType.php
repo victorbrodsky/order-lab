@@ -68,7 +68,7 @@ class FilterType extends AbstractType
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'filter_search_box';
     }

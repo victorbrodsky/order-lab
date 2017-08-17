@@ -32,16 +32,16 @@ class ArrayFieldType extends AbstractType
 {
 
     protected $params;
-    protected $entity;
 
-    public function __construct( $params=null, $entity = null )
+    public function formConstructor( $params=null )
     {
         $this->params = $params;
-        $this->entity = $entity;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
+
         $builder->add('id', 'hidden');
 
         if( $this->params && $this->params['cycle'] == "show") {
@@ -256,11 +256,12 @@ class ArrayFieldType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
+            'form_custom_value' => null,
             'inherit_data' => true
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_orderformbundle_arrayfieldtype';
     }

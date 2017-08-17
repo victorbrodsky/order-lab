@@ -26,12 +26,10 @@ class EncounterAttendingPhysicianType extends AbstractType
 {
 
     protected $params;
-    protected $entity;
 
-    public function __construct( $params=null, $entity = null )
+    public function formConstructor( $params=null )
     {
         $this->params = $params;
-        $this->entity = $entity;
 
         if( !array_key_exists('attendingPhysicians-readonly', $this->params) ) {
             $this->params['attendingPhysicians-readonly'] = true;
@@ -40,6 +38,7 @@ class EncounterAttendingPhysicianType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
 
         $builder->add('field', 'custom_selector', array(
             'label' => 'Attending Physician:',
@@ -73,10 +72,11 @@ class EncounterAttendingPhysicianType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\OrderformBundle\Entity\EncounterAttendingPhysician',
+            'form_custom_value' => null
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_orderformbundle_encounterattendingphysiciantype';
     }

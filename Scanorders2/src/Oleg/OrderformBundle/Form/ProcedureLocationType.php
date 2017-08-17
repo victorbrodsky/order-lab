@@ -68,8 +68,9 @@ class ProcedureLocationType extends AbstractType
         ));
 
 
-        $builder->add('others', new ArrayFieldType($this->params), array(
+        $builder->add('others', ArrayFieldType::class, array(
             'data_class' => 'Oleg\OrderformBundle\Entity\ProcedureLocation',
+            'form_custom_value' => $this->params,
             'label' => false,
 			'attr' => array('style'=>'display:none;')
         ));
@@ -84,7 +85,7 @@ class ProcedureLocationType extends AbstractType
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_orderformbundle_procedurelocationtype';
     }

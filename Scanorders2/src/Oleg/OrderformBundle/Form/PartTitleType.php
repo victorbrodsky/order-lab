@@ -44,8 +44,9 @@ class PartTitleType extends AbstractType
         ));
 
 
-        $builder->add('others', new ArrayFieldType($this->params), array(
+        $builder->add('others', ArrayFieldType::class, array(
             'data_class' => 'Oleg\OrderformBundle\Entity\PartParttitle',
+            'form_custom_value' => $this->params,
             'label' => false,
             'attr' => array('style'=>'display:none;')
         ));
@@ -59,7 +60,7 @@ class PartTitleType extends AbstractType
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_orderformbundle_parttitletype';
     }

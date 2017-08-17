@@ -45,8 +45,9 @@ class AccessionDateType extends AbstractType
             'attr' => array('class' => 'datepicker form-control accessionaccessiondate'),
         ));
 
-        $builder->add('others', new ArrayFieldType($this->params), array(
+        $builder->add('others', ArrayFieldType::class, array(
             'data_class' => 'Oleg\OrderformBundle\Entity\AccessionAccessionDate',
+            'form_custom_value' => $this->params,
             'label' => false,
             'attr' => array('style'=>'display:none;')
         ));
@@ -70,7 +71,7 @@ class AccessionDateType extends AbstractType
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_orderformbundle_accessionaccessiondatetype';
     }

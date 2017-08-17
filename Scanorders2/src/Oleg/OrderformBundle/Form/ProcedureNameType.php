@@ -27,16 +27,15 @@ class ProcedureNameType extends AbstractType
 {
 
     protected $params;
-    protected $entity;
 
-    public function __construct( $params=null, $entity = null )
+    public function formConstructor( $params=null )
     {
         $this->params = $params;
-        $this->entity = $entity;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
 
         $attr = array('class' => 'ajax-combobox ajax-combobox-procedure', 'type' => 'hidden');
 
@@ -48,8 +47,9 @@ class ProcedureNameType extends AbstractType
         ));
 
 
-        $builder->add('others', new ArrayFieldType($this->params), array(
+        $builder->add('others', ArrayFieldType::class, array(
             'data_class' => 'Oleg\OrderformBundle\Entity\ProcedureName',
+            'form_custom_value' => $this->params,
             'label' => false,
 			'attr' => array('style'=>'display:none;')
         ));
@@ -60,10 +60,11 @@ class ProcedureNameType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\OrderformBundle\Entity\ProcedureName',
+            'form_custom_value' => null
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_orderformbundle_nametype';
     }

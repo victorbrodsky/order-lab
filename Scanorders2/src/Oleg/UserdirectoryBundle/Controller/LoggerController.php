@@ -384,7 +384,7 @@ class LoggerController extends Controller
         //$filterform = $this->createForm(new LoggerFilterType($params), null);
         $filterform = $this->createLoggerFilter($params);
 
-        $filterform->bind($request);
+        $filterform->submit($request);
 
         $startdate = $filterform['startdate']->getData();
         $enddate = $filterform['enddate']->getData();
@@ -529,7 +529,7 @@ class LoggerController extends Controller
 
     public function createLoggerFilter($params) {
         //Start Date, Start Time, End Date, End Time, User [Select2 dropdown), Event Type [Entity Updated], [Free Text Search value for Event column] [Filter Button]
-        return $this->createForm(new LoggerFilterType($params), null);
+        return $this->createForm(LoggerFilterType::class,null,array('form_custom_value'=>$params));
     }
     public function processOptionalFields( $dql, &$dqlParameters, $filterform, $filtered ) {
         $users = $filterform['user']->getData();
@@ -657,7 +657,7 @@ class LoggerController extends Controller
      */
     protected function createCreateForm(Logger $entity, $sitename)
     {
-        $form = $this->createForm(new LoggerType(), $entity, array(
+        $form = $this->createForm(LoggerType::class, $entity, array(
             'action' => $this->generateUrl($sitename.'_logger_create'),
             'method' => 'POST',
         ));
@@ -750,7 +750,7 @@ class LoggerController extends Controller
     */
     private function createEditForm(Logger $entity)
     {
-        $form = $this->createForm(new LoggerType(), $entity, array(
+        $form = $this->createForm(LoggerType::class, $entity, array(
             'action' => $this->generateUrl('logger_update', array('id' => $entity->getId())),
             'method' => 'PUT',
         ));

@@ -94,7 +94,7 @@ class ScanUploadController extends UploadController {
         $statement = $aperioConnection->prepare(
             'SELECT * FROM [Aperio].[dbo].[Image] a WHERE a.ImageId = :imageId'
         );
-        $statement->bindValue('imageId', intval($imageid));
+        $statement->submitValue('imageId', intval($imageid));
         $statement->execute();
 
         // for SELECT queries

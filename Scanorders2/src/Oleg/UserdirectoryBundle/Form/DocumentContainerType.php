@@ -234,9 +234,9 @@ class DocumentContainerType extends AbstractType
 //                ));
                 $builder->add('links', CollectionType::class, array(
                     'entry_type' => LinkType::class,
-                    'entry_options' => array(
-                        'form_custom_value' => $this->params
-                    ),
+                    //'entry_options' => array(
+                    //    'form_custom_value' => $this->params
+                    //),
                     'label' => false,
                     'allow_add' => true,
                     'allow_delete' => true,

@@ -170,9 +170,12 @@ class CustomSelectorType extends AbstractType {
         return 'text';
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'custom_selector';
+    }
+    public function getName() {
+        return $this->getBlockPrefix();
     }
 
 

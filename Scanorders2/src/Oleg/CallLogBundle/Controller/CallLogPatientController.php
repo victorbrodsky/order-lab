@@ -599,8 +599,8 @@ class CallLogPatientController extends PatientController {
             'messageCategory' => $messageCategoryId,
             'messageCategories' => $messageCategories
         );
-        $filterform = $this->createForm(new CalllogListPreviousEntriesFilterType($params), null);
-        $filterform->bind($request);
+        $filterform = $this->createForm(CalllogListPreviousEntriesFilterType::class, null, array('form_custom_value'=>$params));
+        $filterform->submit($request);
 
         //////////////// find messages ////////////////
         //$this->testSelectMessagesWithMaxVersion($patientid);
@@ -795,7 +795,10 @@ class CallLogPatientController extends PatientController {
             'alias' => false
         );
 
-        $form = $this->createForm(new CalllogPatientType($params, $patient), $patient);
+        $form = $this->createForm(CalllogPatientType::class, $patient, array(
+            'form_custom_value' => $params,
+            'form_custom_value_entity' => $patient
+        ));
 
         return $form;
     }

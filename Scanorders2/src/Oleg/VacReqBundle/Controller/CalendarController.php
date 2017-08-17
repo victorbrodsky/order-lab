@@ -101,7 +101,7 @@ class CalendarController extends Controller
 
         $params['groupId'] = $groupId;
 
-        $filterform = $this->createForm(new VacReqCalendarFilterType($params), null);
+        $filterform = $this->createForm(VacReqCalendarFilterType::class, null, array('form_custom_value'=>$params));
 
 
         return array(

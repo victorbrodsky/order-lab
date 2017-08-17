@@ -24,15 +24,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class SlideSimpleType extends AbstractType
 {
 
-    protected $params;
-    protected $entity;
-
-    public function __construct( $params=null, $entity = null )
-    {
-        $this->params = $params;
-        $this->entity = $entity;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {      
         $builder->add( 'id' );//, 'hidden' );
@@ -45,7 +36,7 @@ class SlideSimpleType extends AbstractType
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_orderformbundle_slidetype';
     }

@@ -29,13 +29,14 @@ class UserRequestApproveType extends AbstractType
 
     protected $params;
 
-    public function __construct( $params=null )
+    public function formConstructor( $params=null )
     {
         $this->params = $params;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
 
         $builder->add( 'id', 'hidden' );
 
@@ -76,6 +77,7 @@ class UserRequestApproveType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\UserRequest',
+            'form_custom_value' => null
         ));
     }
 

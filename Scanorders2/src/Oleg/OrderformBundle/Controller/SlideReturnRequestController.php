@@ -379,7 +379,7 @@ class SlideReturnRequestController extends Controller
         $filterForm = $this->createForm(new FilterSlideReturnRequestType());
 
         //$filterForm->handleRequest($request);
-        $filterForm->bind($request); //use bind. handleRequest does not work with GET
+        $filterForm->submit($request); //use bind. handleRequest does not work with GET
 
         $filter = $filterForm->get('filter')->getData();
         //echo "filter = ".$filter."<br>";
@@ -501,7 +501,7 @@ class SlideReturnRequestController extends Controller
         $filterForm = $this->createForm(new FilterSlideReturnRequestType());
 
         //$filterForm->handleRequest($request);
-        $filterForm->bind($request); //use bind. handleRequest does not work with GET
+        $filterForm->submit($request); //use bind. handleRequest does not work with GET
 
         $filter = $filterForm->get('filter')->getData();
         //echo "filter = ".$filter."<br>";

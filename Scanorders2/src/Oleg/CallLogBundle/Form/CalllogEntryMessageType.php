@@ -35,7 +35,7 @@ class CalllogEntryMessageType extends AbstractType
     protected $entity;
     protected $params;
 
-    public function __construct( $params=null, $entity=null )
+    public function formConstructor( $params=null, $entity=null )
     {
         if( $params ) $this->params = $params;
         if( $entity ) $this->entity = $entity;
@@ -45,6 +45,7 @@ class CalllogEntryMessageType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
+        $this->formConstructor($options['form_custom_value'],$options['form_custom_value_entity']);
 
         $builder->add('addPatientToList', 'checkbox', array(
             'label' => 'Add patient to the list:',
@@ -118,11 +119,13 @@ class CalllogEntryMessageType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\CalllogEntryMessage'
+            'data_class' => 'Oleg\OrderformBundle\Entity\CalllogEntryMessage',
+            'form_custom_value' => null,
+            'form_custom_value_entity' => null
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_calllogformbundle_calllogentrymessagetype';
     }

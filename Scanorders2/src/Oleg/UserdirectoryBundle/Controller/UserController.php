@@ -271,8 +271,7 @@ class UserController extends Controller
         }
 
         //$form = $this->createForm(new SearchType(),null);
-
-        //$form->bind($request);  //use bind instead of handleRequest. handleRequest does not get filter data
+        //$form->submit($request);  //use bind instead of handleRequest. handleRequest does not get filter data
         //$search = $form->get('search')->getData();
 
         //check for active access requests
@@ -4112,7 +4111,7 @@ class UserController extends Controller
         $userElStr = $userDownloadUtil->getLabelSingleUser($subjectUser);
 
         $params = array('label'=>$userElStr,'singleUser'=>true);
-        $form = $this->createForm(new LabelType($params),null);
+        $form = $this->createForm(LabelType::class,null,array('form_custom_value'=>$params));
 
         $form->handleRequest($request);
 
@@ -4214,7 +4213,7 @@ class UserController extends Controller
 //        }
 
         $params = array('singleUser'=>false,'allusers'=>$allusers,'users'=>$facultyUsers);
-        $form = $this->createForm(new LabelType($params),null);
+        $form = $this->createForm(LabelType::class,null,array('form_custom_value'=>$params));
 
         $form->handleRequest($request);
 

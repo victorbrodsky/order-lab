@@ -19,6 +19,7 @@
 namespace Oleg\UserdirectoryBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -205,7 +206,7 @@ class UserType extends AbstractType
             $options['data'] = $this->cloneUser;
         }
 
-        $builder->add('userclone','entity',$options);
+        $builder->add('userclone',EntityType::class,$options);
 
         return $builder;
     }
@@ -286,7 +287,7 @@ class UserType extends AbstractType
         if( $this->readonly ) {
             $attr['readonly'] = 'readonly';
         }
-        $builder->add('keytype', 'entity', array(
+        $builder->add('keytype', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:UsernameType',
             'read_only' => ($this->cycle == 'create' ? false : true ), //it is not possible to edit keytype for existed user
             'property' => 'name',
@@ -680,7 +681,6 @@ if(1){
         //exit('addFellowshipApplication to user profile not implemented');
 
         $builder->add('fellowshipApplications', CollectionType::class, array(
-            //'type' => new FellowshipApplicationType($this->params),
             'entry_type' => FellowshipApplicationType::class,
             'entry_options' => array(
                 'form_custom_value' => $this->params

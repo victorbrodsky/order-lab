@@ -1226,15 +1226,18 @@ class CallLogUtil
         $params = array();
         $params['navbarSearchTypes'] = $this->getNavbarSearchTypes();
         $params['container'] = $this->container;
-        $navbarfilterform = $this->createForm(new CalllogNavbarFilterType($params), null);
-        $navbarfilterform->bind($request);
+
+        //get submitted parameters
+        $navbarfilterform = $this->createForm(CalllogNavbarFilterType::class, null, array('form_custom_value'=>$params));
+        $navbarfilterform->submit($request);
         $calllogsearchtype = $navbarfilterform['searchtype']->getData();
         $calllogsearch = $navbarfilterform['search']->getData();
 
         $params['calllogsearchtype'] = $calllogsearchtype;
         $params['calllogsearch'] = $calllogsearch;
 
-        $navbarfilterform = $this->createForm(new CalllogNavbarFilterType($params), null);
+        //build final filter form
+        $navbarfilterform = $this->createForm(CalllogNavbarFilterType::class, null, array('form_custom_value'=>$params));
 
         //echo "calllogsearchtype=".$calllogsearchtype."; calllogsearch=".$calllogsearch."<br>";
         return $navbarfilterform->createView();

@@ -27,16 +27,15 @@ class CalllogEncounterDateType extends AbstractType
 {
 
     protected $params;
-    protected $entity;
 
-    public function __construct( $params=null, $entity = null )
+    public function formConstructor( $params=null )
     {
         $this->params = $params;
-        $this->entity = $entity;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
 
         $builder->add('field', 'date', array(
             'label' => "Encounter Date:",
@@ -46,8 +45,9 @@ class CalllogEncounterDateType extends AbstractType
             'attr' => array('class' => 'datepicker form-control encounter-date', 'style'=>'margin-top: 0;'),
         ));
 
-        $builder->add('others', new ArrayFieldType($this->params), array(
+        $builder->add('others', ArrayFieldType::class, array(
             'data_class' => 'Oleg\OrderformBundle\Entity\EncounterDate',
+            'form_custom_value' => $this->params,
             'label' => false,
 			'attr' => array('style'=>'display:none;')
         ));
@@ -78,10 +78,11 @@ class CalllogEncounterDateType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\OrderformBundle\Entity\EncounterDate',
+            'form_custom_value' => null
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_orderformbundle_encounterdatetype';
     }

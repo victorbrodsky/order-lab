@@ -315,7 +315,8 @@ class SiteParametersController extends Controller
             'singleField' => false
         );
 
-        $form = $this->createForm(new SiteParametersType($params), $entity, array(
+        $form = $this->createForm(SiteParametersType::class, $entity, array(
+            'form_custom_value' => $params,
             'action' => $this->generateUrl('employees_management_organizationalgroupdefault', array('id' => $entity->getId() )),
             'method' => 'POST',
             'disabled' => false,
@@ -436,7 +437,8 @@ class SiteParametersController extends Controller
             'singleField'=>$singleField
         );
 
-        $form = $this->createForm(new SiteParametersType($params), $entity, array(
+        $form = $this->createForm(SiteParametersType::class, $entity, array(
+            'form_custom_value' => $params,
             'action' => $this->generateUrl($sitename.'_siteparameters_update', array('id' => $entity->getId(), 'param' => $param )),
             'method' => 'PUT',
             'disabled' => $disabled
@@ -501,7 +503,7 @@ class SiteParametersController extends Controller
 
         //exit('initial ConfigurationAction');
 
-        $form = $this->createForm(new InitialConfigurationType(), $entity, array(
+        $form = $this->createForm(InitialConfigurationType::class, $entity, array(
             'action' => $this->generateUrl('employees_initial_configuration', array('id' => $entity->getId() )),
             'method' => 'POST',
             'disabled' => false,

@@ -134,7 +134,7 @@ class FellAppFilterType extends AbstractType
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'filter';
     }

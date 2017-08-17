@@ -34,14 +34,14 @@ class VacReqGroupType extends AbstractType
 
     protected $params;
 
-    public function __construct( $params )
+    public function formConstructor( $params )
     {
         $this->params = $params;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
+        $this->formConstructor($options['form_custom_value']);
 
         ///////////////////////// tree node /////////////////////////
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
@@ -83,10 +83,11 @@ class VacReqGroupType extends AbstractType
         $resolver->setDefaults(array(
             //'data_class' => 'Oleg\UserdirectoryBundle\Entity\Institution',
             'csrf_protection' => false,
+            'form_custom_value' => null
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_vacreqbundle_group';
     }

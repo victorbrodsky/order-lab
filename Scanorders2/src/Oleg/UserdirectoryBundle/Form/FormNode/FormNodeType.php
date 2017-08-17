@@ -26,7 +26,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 
-
+//Used as a base in MessageCategoryFormNodeType
 class FormNodeType extends AbstractType
 {
 

@@ -108,7 +108,7 @@ class UserRequestController extends Controller
 
             $params = $this->getParams($this->siteName);
 
-            $forms[] = $this->createForm(new UserRequestApproveType($params), $req, array('disabled' => $disable) )->createView();
+            $forms[] = $this->createForm(UserRequestApproveType::class,$req,array('disabled'=>$disable,'form_custom_value'=>$params))->createView();
         }
 
         return array(
@@ -133,7 +133,7 @@ class UserRequestController extends Controller
 
         $params = $this->getParams($this->siteName);
 
-        $form = $this->createForm(new UserRequestType($params), $entity);
+        $form = $this->createForm(UserRequestType::class,$entity,array('form_custom_value'=>$params));
 
         $form->handleRequest($request);
 
@@ -200,7 +200,7 @@ class UserRequestController extends Controller
 
         $params = $this->getParams($this->siteName);
 
-        $form   = $this->createForm(new UserRequestType($params), $entity);
+        $form = $this->createForm(UserRequestType::class,$entity,array('form_custom_value'=>$params));
 
         return array(
             'entity' => $entity,
@@ -291,7 +291,7 @@ class UserRequestController extends Controller
 
         $params = $this->getParams($this->siteName);
 
-        $form = $this->createForm(new UserRequestApproveType($params), $entity);
+        $form = $this->createForm(UserRequestApproveType::class,$entity,array('form_custom_value'=>$params));
         $form->handleRequest($request);
 
         if( $entity->getSiteName() == "scan" ) {
@@ -517,7 +517,7 @@ class UserRequestController extends Controller
 
         $params = $this->getParams();
 
-        $editForm = $this->createForm(new UserRequestType($params), $entity);
+        $editForm = $this->createForm(UserRequestType::class,$entity,array('form_custom_value'=>$params));
 
         $deleteForm = $this->createDeleteForm($id);
 
@@ -555,7 +555,7 @@ class UserRequestController extends Controller
 
         $params = $this->getParams();
 
-        $editForm = $this->createForm(new UserRequestType($params), $entity);
+        $editForm = $this->createForm(UserRequestType::class,$entity,array('form_custom_value'=>$params));
 
         $editForm->handleRequest($request);
 

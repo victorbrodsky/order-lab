@@ -64,7 +64,7 @@ class ScanController extends Controller
     {
         $entity  = new Imaging();
         $form = $this->createForm(new ImagingType(), $entity);
-        $form->bind($request);
+        $form->submit($request);
 
         $mag = $form["mag"]->getData();
         echo "mag=".$mag."<br>";
@@ -204,7 +204,7 @@ class ScanController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createForm(new ImagingType(), $entity);
-        $editForm->bind($request);
+        $editForm->submit($request);
 
         if ($editForm->isValid()) {
             $em->persist($entity);
@@ -228,7 +228,7 @@ class ScanController extends Controller
     public function deleteAction(Request $request, $id)
     {
         $form = $this->createDeleteForm($id);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();

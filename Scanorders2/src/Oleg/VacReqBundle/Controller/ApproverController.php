@@ -342,9 +342,10 @@ class ApproverController extends Controller
         $params = array('roles'=>$rolesArr);
 
         $form = $this->createForm(
-            new VacReqUserType($params),
+            VacReqUserType::class,
             $subjectUser,
             array(
+                'form_custom_value' => $params,
                 'method' => "POST",
                 //'action' => $action
             )
@@ -565,7 +566,7 @@ class ApproverController extends Controller
             $params = array(
                 'btnName' => $btnName
             );
-            $form = $this->createForm(new VacReqUserComboboxType($params));
+            $form = $this->createForm(VacReqUserComboboxType::class,null,array('form_custom_value'=>$params));
         }
 
         return array(
@@ -611,7 +612,7 @@ class ApproverController extends Controller
             'cycle' => 'create',
             'readonly' => false,
         );
-        $form = $this->createForm(new VacReqUserComboboxType($params));
+        $form = $this->createForm(VacReqUserComboboxType::class,null,array('form_custom_value'=>$params));
 
         $form->handleRequest($request);
 
@@ -689,7 +690,7 @@ class ApproverController extends Controller
             'readonly' => false,
             //'path' => 'vacreq_orginst_add_action_user'
         );
-        $form = $this->createForm(new VacReqGroupType($params));
+        $form = $this->createForm(VacReqGroupType::class, null, array('form_custom_value'=>$params));
 
         $form->handleRequest($request);
 
@@ -935,9 +936,10 @@ class ApproverController extends Controller
         $params = array();
 
         $form = $this->createForm(
-            new VacReqEmailusersType($params),
+            VacReqEmailusersType::class,
             $entity,
             array(
+                'form_custom_value' => $params,
                 'method' => "POST",
                 //'action' => $action
             )

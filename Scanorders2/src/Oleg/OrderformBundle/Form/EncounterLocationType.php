@@ -26,16 +26,15 @@ class EncounterLocationType extends AbstractType
 {
 
     protected $params;
-    protected $entity;
 
-    public function __construct( $params=null, $entity = null )
+    public function formConstructor( $params=null )
     {
         $this->params = $params;
-        $this->entity = $entity;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
 
         $builder->add('field', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:Location',
@@ -51,8 +50,9 @@ class EncounterLocationType extends AbstractType
         ));
 
 
-        $builder->add('others', new ArrayFieldType($this->params), array(
+        $builder->add('others', ArrayFieldType::class, array(
             'data_class' => 'Oleg\OrderformBundle\Entity\EncounterLocation',
+            'form_custom_value' => $this->params,
             'label' => false,
 			'attr' => array('style'=>'display:none;')
         ));
@@ -64,10 +64,11 @@ class EncounterLocationType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\OrderformBundle\Entity\EncounterLocation',
+            'form_custom_value' => null
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_orderformbundle_encounterlocationtype';
     }

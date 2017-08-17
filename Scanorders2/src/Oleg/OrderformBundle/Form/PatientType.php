@@ -32,7 +32,7 @@ class PatientType extends AbstractType
     protected $params;
     protected $entity;
 
-    public function __construct( $params=null, $entity = null )
+    public function formConstructor( $params=null, $entity = null )
     {
         $this->params = $params;
         $this->entity = $entity;
@@ -44,6 +44,7 @@ class PatientType extends AbstractType
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value'],$options['form_custom_value_entity']);
 
         //echo "patient: type=".$this->params['type']."<br>";
 
@@ -70,7 +71,10 @@ class PatientType extends AbstractType
 
 
         $builder->add('dob', CollectionType::class, array(
-            'type' => new PatientDobType($this->params, null),
+            'entry_type' => PatientDobType::class,
+            'entry_options' => array(
+                'form_custom_value' => $this->params
+            ),
             //'read_only' => $flag,
             'allow_add' => true,
             'allow_delete' => true,
@@ -84,7 +88,14 @@ class PatientType extends AbstractType
         $attr = array('class'=>'textarea form-control patient-clinicalhistory-field');
         $gen_attr = array('label'=>'Clinical Summary:','class'=>'Oleg\OrderformBundle\Entity\PatientClinicalHistory','type'=>null);
         $builder->add('clinicalHistory', CollectionType::class, array(
-            'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
+            //GenericFieldType($this->params, null, $gen_attr, $attr),
+            'entry_type' => GenericFieldType::class,
+            'entry_options' => array(
+                'data_class' => $gen_attr['class'],
+                'form_custom_value' => $this->params,
+                'form_custom_value_genAttr' => $gen_attr,
+                'form_custom_value_attr' => $attr
+            ),
             //'read_only' => $flag,
             'allow_add' => true,
             'allow_delete' => true,
@@ -114,7 +125,14 @@ class PatientType extends AbstractType
             $attr = array('class'=>'form-control patientname-field', 'disabled' => 'disabled');
             $gen_attr = array('label'=>'Name','class'=>'Oleg\OrderformBundle\Entity\PatientName','type'=>null);
             $builder->add('lastname', CollectionType::class, array(
-                'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
+                //GenericFieldType($this->params, null, $gen_attr, $attr),
+                'entry_type' => GenericFieldType::class,
+                'entry_options' => array(
+                    'data_class' => $gen_attr['class'],
+                    'form_custom_value' => $this->params,
+                    'form_custom_value_genAttr' => $gen_attr,
+                    'form_custom_value_attr' => $attr
+                ),
                 'read_only' => $flag,
                 'allow_add' => true,
                 'allow_delete' => true,
@@ -208,7 +226,11 @@ class PatientType extends AbstractType
         //messages
         if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure' ) {
             $builder->add('message', CollectionType::class, array(
-                'type' => new MessageObjectType($this->params),
+                'entry_type' => MessageObjectType::class,
+                'entry_options' => array(
+                    'form_custom_value' => $this->params,
+                    'form_custom_value_entity' => null
+                ),
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,
@@ -304,11 +326,13 @@ class PatientType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\Patient'
+            'data_class' => 'Oleg\OrderformBundle\Entity\Patient',
+            'form_custom_value' => null,
+            'form_custom_value_entity' => null
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_orderformbundle_patienttype';
     }

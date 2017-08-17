@@ -33,13 +33,14 @@ class VacReqCarryOverType extends AbstractType
 
     protected $params;
 
-    public function __construct( $params )
+    public function formConstructor( $params )
     {
         $this->params = $params;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
 
 //        $builder->add('year', null, array(
 //            'label' => "Academic Year:",
@@ -58,11 +59,12 @@ class VacReqCarryOverType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\VacReqBundle\Entity\VacReqCarryOver',
+            'form_custom_value' => null
             //'csrf_protection' => false,
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_vacreqbundle_carryover';
     }

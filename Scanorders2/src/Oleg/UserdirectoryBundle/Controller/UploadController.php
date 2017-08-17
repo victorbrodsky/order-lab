@@ -338,7 +338,7 @@ class UploadController extends Controller {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
-        $form = $this->createForm(new ImportUsersType(),null);
+        $form = $this->createForm(ImportUsersType::class,null);
 
         $form->handleRequest($request);
 

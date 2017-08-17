@@ -128,7 +128,11 @@ class ImagingType extends AbstractType
             //echo "slide datastructure <br>";
 
             $builder->add('message', CollectionType::class, array(
-                'type' => new MessageObjectType($this->params),
+                'entry_type' => MessageObjectType::class,
+                'entry_options' => array(
+                    'form_custom_value' => $this->params,
+                    'form_custom_value_entity' => null
+                ),
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,
@@ -150,7 +154,7 @@ class ImagingType extends AbstractType
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_orderformbundle_imagingtype';
     }

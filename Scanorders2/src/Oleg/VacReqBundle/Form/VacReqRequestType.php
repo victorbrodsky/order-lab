@@ -34,13 +34,14 @@ class VacReqRequestType extends AbstractType
 
     protected $params;
 
-    public function __construct( $params )
+    public function formConstructor( $params )
     {
         $this->params = $params;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
 
         //common fields for all request types
         $this->addCommonFields($builder);
@@ -125,11 +126,12 @@ class VacReqRequestType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\VacReqBundle\Entity\VacReqRequest',
+            'form_custom_value' => null,
             'csrf_protection' => false,
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_vacreqbundle_request';
     }
@@ -142,15 +144,17 @@ class VacReqRequestType extends AbstractType
         ));
 
         //Business Travel
-        $builder->add('requestBusiness', new VacReqRequestBusinessType($this->params), array(
+        $builder->add('requestBusiness', VacReqRequestBusinessType::class, array(
             'data_class' => 'Oleg\VacReqBundle\Entity\VacReqRequestBusiness',
+            'form_custom_value' => $this->params,
             'label' => false,
             'required' => false,
         ));
 
         //Business Travel
-        $builder->add('requestVacation', new VacReqRequestVacationType($this->params), array(
+        $builder->add('requestVacation', VacReqRequestVacationType::class, array(
             'data_class' => 'Oleg\VacReqBundle\Entity\VacReqRequestVacation',
+            'form_custom_value' => $this->params,
             'label' => false,
             'required' => false,
         ));

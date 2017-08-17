@@ -28,9 +28,9 @@ use Symfony\Component\Form\FormEvent;
 
 class VacReqRequestBusinessType extends VacReqRequestBaseType {
 
-    public function __construct( $params=null, $entity = null )
+    public function formConstructor( $params=null )
     {
-        parent::__construct($params,$entity);
+        parent::formConstructor($params);
 
         $this->requestTypeName = "Business Travel";
         $this->numberOfDaysLabelPrefix = "Number of Work Days Off-site";
@@ -70,10 +70,11 @@ class VacReqRequestBusinessType extends VacReqRequestBaseType {
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\VacReqBundle\Entity\VacReqRequestBusiness',
+            'form_custom_value' => null
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_vacreqbundle_request_business';
     }

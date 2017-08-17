@@ -127,12 +127,12 @@ class MessageController extends Controller {
     {       
         $entity  = new Message();
         $form = $this->createForm(new MessageType(), $entity);
-        $form->bind($request);
+        $form->submit($request);
           
 //        it works!
 //        $part_entity  = new Part();
 //        $part_form = $this->createForm(new PartType(), $part_entity);
-//        $part_form->bind($request);
+//        $part_form->submit($request);
 //        echo "entity provider=".$entity->getProvider()."<br>";
 //        echo "part name=".$part_entity->getName()." part description".$part_entity->getDescription()."<br>";
 //        exit();
@@ -238,7 +238,7 @@ class MessageController extends Controller {
 
         $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createForm(new MessageType(), $entity);
-        $editForm->bind($request);
+        $editForm->submit($request);
 
         if ($editForm->isValid()) {
             $em->persist($entity);
@@ -262,7 +262,7 @@ class MessageController extends Controller {
     public function deleteAction(Request $request, $id)
     {
         $form = $this->createDeleteForm($id);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();

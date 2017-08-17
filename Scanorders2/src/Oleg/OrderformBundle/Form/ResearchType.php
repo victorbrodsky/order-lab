@@ -30,17 +30,16 @@ use Doctrine\ORM\EntityRepository;
 class ResearchType extends AbstractType
 {
 
-    protected $entity;
     protected $params;
 
-    public function __construct( $params=null, $entity=null )
+    public function formConstructor( $params=null )
     {
         $this->params = $params;
-        $this->entity = $entity;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
 
         //Display fields for Data Review
         if( $this->params['type'] == 'SingleObject' ) {
@@ -71,7 +70,10 @@ class ResearchType extends AbstractType
                 $this->params['user.label'] = 'Principal Investigator:';
 
                 $form->add('userWrappers', CollectionType::class, array(
-                    'type' => new UserWrapperType($this->params),
+                    'entry_type' => UserWrapperType::class,
+                    'entry_options' => array(
+                        'form_custom_value' => $this->params,
+                    ),
                     'label' => false,
                     'required' => false,
                     'allow_add' => true,
@@ -170,11 +172,12 @@ class ResearchType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\Research'
+            'data_class' => 'Oleg\OrderformBundle\Entity\Research',
+            'form_custom_value' => null
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_orderformbundle_researchtype';
     }

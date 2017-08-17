@@ -60,8 +60,9 @@ class BlockNameType extends AbstractType
             ));
         }
 
-        $builder->add('others', new ArrayFieldType($this->params), array(
+        $builder->add('others', ArrayFieldType::class, array(
             'data_class' => 'Oleg\OrderformBundle\Entity\BlockBlockname',
+            'form_custom_value' => $this->params,
             'label' => false,
             'attr' => array('style'=>'display:none;')
         ));
@@ -75,7 +76,7 @@ class BlockNameType extends AbstractType
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_orderformbundle_blocknametype';
     }

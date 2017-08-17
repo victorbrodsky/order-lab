@@ -180,7 +180,11 @@ class PatientController extends Controller
 //        $params['message.slideorder'] = true;
 //        $params['message.stainorder'] = true;
 
-        $form = $this->createForm( new PatientType($params), $patient, array('disabled' => $disabled) );
+        $form = $this->createForm(PatientType::class, $patient, array(
+                'form_custom_value' => $params,
+                'form_custom_value_entity' => $patient,
+                'disabled' => $disabled
+        ));
 
         return array(
             'entity' => $patient,
@@ -310,7 +314,11 @@ class PatientController extends Controller
 
         //$time_pre = microtime(true);
 
-        $form = $this->createForm( new PatientType($params), $entity, array('disabled' => true) );
+        $form = $this->createForm(PatientType::class,$entity,array(
+            'form_custom_value' => $params,
+            'form_custom_value_entity' => $entity,
+            'disabled' => true
+        ));
 
         //$time_post = microtime(true);
         //$exec_time = $time_post - $time_pre;
@@ -437,7 +445,12 @@ class PatientController extends Controller
         $params['labels'] = $labels;
         //////////////// EOF params ////////////////
 
-        $form = $this->createForm(new PatientType($params), $entity);
+        $form = $this->createForm(PatientType::class,$entity,array(
+            'form_custom_value' => $params,
+            'form_custom_value_entity' => $entity,
+        ));
+
+
         //$deleteForm = $this->createDeleteForm($id);
 
 //        return array(
@@ -544,11 +557,14 @@ class PatientController extends Controller
         );
         $params['labels'] = $labels;
         //////////////// EOF params ////////////////
-        $form = $this->createForm(new PatientType($params), $entity);
+        $form = $this->createForm(PatientType::class,$entity,array(
+            'form_custom_value' => $params,
+            'form_custom_value_entity' => $entity,
+        ));
 
         //exit("3 Form scan_patient_update");
 
-        //$editForm->bind($request);
+        //$editForm->submit($request);
         $form->handleRequest($request);
 
         //exit("4 Form scan_patient_update");

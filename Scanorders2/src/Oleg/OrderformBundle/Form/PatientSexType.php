@@ -50,8 +50,9 @@ class PatientSexType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width patientsex-field')
         ));
 
-        $builder->add('others', new ArrayFieldType($this->params), array(
+        $builder->add('others', ArrayFieldType::class, array(
             'data_class' => 'Oleg\OrderformBundle\Entity\PatientSex',
+            'form_custom_value' => $this->params,
             'label' => false,
 			'attr' => array('style'=>'display:none;')
         ));
@@ -65,7 +66,7 @@ class PatientSexType extends AbstractType
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_orderformbundle_sextype';
     }

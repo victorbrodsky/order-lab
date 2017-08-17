@@ -31,19 +31,17 @@ class VacReqRequestBaseType extends AbstractType
 {
 
     protected $params;
-    protected $entity;
 
     protected $requestTypeName;
 
-    public function __construct( $params=null, $entity = null )
+    public function formConstructor( $params=null )
     {
         $this->params = $params;
-        $this->entity = $entity;
-
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
 
         $builder->add('startDate', 'date', array(
             'label' => $this->requestTypeName.' - First Day Away:',

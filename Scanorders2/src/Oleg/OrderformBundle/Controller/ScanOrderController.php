@@ -134,7 +134,7 @@ class ScanOrderController extends Controller {
         $form = $this->createForm(new FilterType( $params ), null);
 
 
-        $form->bind($request);  //use bind instead of handleRequest. handleRequest does not get filter data
+        $form->submit($request);  //use bind instead of handleRequest. handleRequest does not get filter data
 
         $search = $form->get('search')->getData();
         $filter = $form->get('filter')->getData();
@@ -293,7 +293,7 @@ class ScanOrderController extends Controller {
         }
 
         $form = $this->createDeleteForm($id);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();

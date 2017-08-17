@@ -219,7 +219,7 @@ class CallLogLoggerController extends LoggerController
 
     public function createLoggerFilter($params) {
         //Start Date, Start Time, End Date, End Time, User [Select2 dropdown), Event Type [Entity Updated], [Free Text Search value for Event column] [Filter Button]
-        return $this->createForm(new CalllogLoggerFilterType($params), null);
+        return $this->createForm(CalllogLoggerFilterType::class, null, array('form_custom_value'=>$params));
     }
 
     //For calllog, for "My Entrees" page when $filterform has $capacity: add AND filter by $capacity (Submitter or Attending)

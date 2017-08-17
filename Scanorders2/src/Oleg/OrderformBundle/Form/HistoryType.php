@@ -56,7 +56,7 @@ class HistoryType extends AbstractType
     /**
      * @return string
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_orderformbundle_history';
     }

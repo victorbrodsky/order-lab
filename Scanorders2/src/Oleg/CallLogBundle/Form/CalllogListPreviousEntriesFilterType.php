@@ -27,13 +27,14 @@ class CalllogListPreviousEntriesFilterType extends AbstractType
 
     private $params;
 
-    public function __construct( $params=null )
+    public function formConstructor( $params=null )
     {
         $this->params = $params;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
 
         $messageCategoryParams = array(
             'label' => false,
@@ -53,11 +54,12 @@ class CalllogListPreviousEntriesFilterType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
+            'form_custom_value' => null,
             'csrf_protection' => false,
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'filter';
     }

@@ -58,7 +58,7 @@ class DefaultController extends Controller
 //
 //        //$form = $this->createForm(new SearchType(),null);
 //
-//        //$form->bind($request);  //use bind instead of handleRequest. handleRequest does not get filter data
+//        //$form->submit($request);  //use bind instead of handleRequest. handleRequest does not get filter data
 //        //$search = $form->get('search')->getData();
 //
 //        //check for active access requests

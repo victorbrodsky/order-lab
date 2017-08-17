@@ -39,7 +39,7 @@ class MessageObjectType extends AbstractType
     protected $params;
     protected $labels;
 
-    public function __construct( $params=null, $entity=null )
+    public function formConstructor( $params=null, $entity=null )
     {
         if( $params ) $this->params = $params;
         if( $entity ) $this->entity = $entity;
@@ -123,6 +123,8 @@ class MessageObjectType extends AbstractType
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options) {
+        $this->formConstructor($options['form_custom_value'],$options['form_custom_value_entity']);
+
         $this->buildForm_new($builder,$options);
     }
 
@@ -202,11 +204,17 @@ class MessageObjectType extends AbstractType
         }
 
         if( $this->keyInArrayAndTrue($this->params,'educational') ) {
-            $builder->add( 'educational', new EducationalType($this->params,$this->entity), array('label'=>$this->labels['educational']) );
+            $builder->add('educational',EducationalType::class,array(
+                'form_custom_value' => $this->params,
+                'label'=>$this->labels['educational']
+            ));
         }
 
         if( $this->keyInArrayAndTrue($this->params,'research') ) {
-            $builder->add( 'research', new ResearchType($this->params,$this->entity), array('label'=>$this->labels['research']) );
+            $builder->add('research',ResearchType::class,array(
+                'form_custom_value' => $this->params,
+                'label'=>$this->labels['research']
+            ));
         }
 
         //priority
@@ -314,7 +322,7 @@ class MessageObjectType extends AbstractType
         //message's slide
         if( $this->keyInArrayAndTrue($this->params,'slide') ) {
             $builder->add('slide', CollectionType::class, array(
-                'type' => new SlideSimpleType($this->params,$this->entity),
+                'entry_type' => SlideSimpleType::class,
                 'label' => false,
                 'required' => false,
                 'allow_add' => true,
@@ -384,7 +392,7 @@ if( 1 ) {
 
                 //Procedure Order
                 if( $messageCategory == "Procedure Order" ) {
-                    $form->add('procedureorder', new ProcedureOrderType($this->params,$this->entity), array(
+                    $form->add('procedureorder', ProcedureOrderType::class, array(
                         'required' => false,
                         'label' => false
                     ));
@@ -428,7 +436,8 @@ if( 1 ) {
 
                 //laborder
                 if( $dataEntity->getLaborder() ) {
-                    $form->add('laborder', new LabOrderType($this->params,$this->entity), array(
+                    $form->add('laborder', LabOrderType::class, array(
+                        'form_custom_value' => $this->params,
                         'required' => false,
                         'label' => false
                     ));
@@ -453,7 +462,8 @@ if( 1 ) {
 
                 //imageAnalysisOrder
                 if( $dataEntity->getImageAnalysisOrder() ) {
-                    $form->add('imageAnalysisOrder', new ImageAnalysisOrderType($this->params,$this->entity), array(
+                    $form->add('imageAnalysisOrder', ImageAnalysisOrderType::class, array(
+                        'form_custom_value' => $this->params,
                         'required' => false,
                         'label' => false
                     ));
@@ -469,7 +479,8 @@ if( 1 ) {
 
                 //Genaral Report
                 if( $dataEntity->getReport() ) {
-                    $form->add('report', new ReportType($this->params,$this->entity), array(
+                    $form->add('report', ReportType::class, array(
+                        'form_custom_value' => $this->params,
                         'required' => false,
                         'label' => false
                     ));
@@ -499,7 +510,7 @@ if( 1 ) {
 
                 //report block
                 if( $dataEntity->getReportBlock() ) {
-                    $form->add('reportBlock', new ReportBlockType($this->params,$this->entity), array(
+                    $form->add('reportBlock', ReportBlockType::class, array(
                         'required' => false,
                         'label' => false
                     ));
@@ -513,7 +524,7 @@ if( 1 ) {
 
                 //blockorder
                 if( $dataEntity->getBlockorder() ) {
-                    $form->add('blockorder', new BlockOrderType($this->params,$this->entity), array(
+                    $form->add('blockorder', BlockOrderType::class, array(
                         'required' => false,
                         'label' => false
                     ));
@@ -533,7 +544,7 @@ if( 1 ) {
 
                 //slideorder
                 if( $dataEntity->getSlideorder() ) {
-                    $form->add('slideorder', new SlideOrderType($this->params,$this->entity), array(
+                    $form->add('slideorder', SlideOrderType::class, array(
                         'required' => false,
                         'label' => false
                     ));
@@ -564,7 +575,7 @@ if( 1 ) {
 
                 //stainorder
                 if( $dataEntity->getStainorder() ) {
-                    $form->add('stainorder', new StainOrderType($this->params,$this->entity), array(
+                    $form->add('stainorder', StainOrderType::class, array(
                         'required' => false,
                         'label' => false
                     ));
@@ -1028,11 +1039,13 @@ if( 1 ) {
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\Message'
+            'data_class' => 'Oleg\OrderformBundle\Entity\Message',
+            'form_custom_value' => null,
+            'form_custom_value_entity' => null,
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_orderformbundle_messageobjecttype';
     }
@@ -1052,7 +1065,10 @@ if( 1 ) {
 
     public function addFormEndpoint( $field, $form, $params ) {
         $form->add($field, CollectionType::class, array(
-            'type' => new EndpointType($params,$this->entity),
+            'entry_type' => EndpointType::class,
+            'entry_options' => array(
+                'form_custom_value' => $params
+            ),
             'label' => false,
             'required' => false,
             'allow_add' => true,
@@ -1065,7 +1081,7 @@ if( 1 ) {
 
     public function addFormExternalIds( $field, $form, $params ) {
         $form->add($field, CollectionType::class, array(
-            'type' => new ExternalIdType($params,$this->entity),
+            'type' => ExternalIdType::class,
             'label' => false,
             'required' => false,
             'allow_add' => true,
@@ -1078,7 +1094,10 @@ if( 1 ) {
 
     public function addFormOrganizationRecipients( $field, $form, $params ) {
         $form->add($field, CollectionType::class, array(
-            'type' => new InstitutionalWrapperType($params,$this->entity),
+            'entry_type' => InstitutionalWrapperType::class,
+            'entry_options' => array(
+                'form_custom_value' => $params
+            ),
             'label' => false,   //$this->params['label'],
             'required' => false,
             'allow_add' => true,

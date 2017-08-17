@@ -902,7 +902,7 @@ class AccessRequestController extends Controller
             $originalRoles[] = $item;
         }
 
-        $form->bind($request);
+        $form->submit($request);
 
         if( $form->isValid() ) {
 

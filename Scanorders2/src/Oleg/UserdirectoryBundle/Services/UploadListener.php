@@ -41,7 +41,7 @@ class UploadListener {
     private $container;
     private $em;
 
-    public function __construct(ContainerInterface $container, EntityManager $em, $sc)
+    public function __construct(ContainerInterface $container, EntityManager $em)
     {
         $this->container = $container;
         $this->em = $em;

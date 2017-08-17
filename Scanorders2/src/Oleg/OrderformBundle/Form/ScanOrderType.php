@@ -27,18 +27,17 @@ use Symfony\Component\Form\FormEvent;
 class ScanOrderType extends AbstractType
 {
 
-    protected $entity;
     protected $params;
 
-    public function __construct( $params=null, $entity=null )
+    public function formConstructor( $params=null )
     {
         if( $params ) $this->params = $params;
-        if( $entity ) $this->entity = $entity;
     }
         
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
 
 //        if( $this->params['cycle'] == 'show' ) {
 //            //echo "entity service";
@@ -110,11 +109,12 @@ class ScanOrderType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\ScanOrder'
+            'data_class' => 'Oleg\OrderformBundle\Entity\ScanOrder',
+            'form_custom_value' => null
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_orderformbundle_scanordertype';
     }

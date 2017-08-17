@@ -27,13 +27,15 @@ class CalllogNavbarFilterType extends AbstractType
 
     private $params;
 
-    public function __construct( $params=null )
+    public function formConstructor( $params=null )
     {
         $this->params = $params;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
+
         //searchtype
         $searchTypeArray = array(
             'label' => false,
@@ -74,11 +76,12 @@ class CalllogNavbarFilterType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
+            'form_custom_value' => null,
             'csrf_protection' => false,
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'search';
     }

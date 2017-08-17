@@ -31,13 +31,14 @@ class LabelType extends AbstractType
 
     protected $params;
 
-    public function __construct( $params=null )
+    public function formConstructor( $params=null )
     {
         $this->params = $params;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
 
         if( $this->params['singleUser'] ) {
             $builder->add('userlabel', 'textarea', array(
@@ -118,6 +119,7 @@ class LabelType extends AbstractType
     {
         $resolver->setDefaults(array(
             'csrf_protection' => false,
+            'form_custom_value' => null
         ));
     }
 

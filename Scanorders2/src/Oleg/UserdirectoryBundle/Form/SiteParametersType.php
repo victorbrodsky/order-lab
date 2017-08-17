@@ -27,7 +27,7 @@ class SiteParametersType extends AbstractType
 
     protected $params;
 
-    public function __construct( $params )
+    public function formConstructor( $params )
     {
         $this->params = $params;
     }
@@ -38,6 +38,8 @@ class SiteParametersType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
+        $this->formConstructor($options['form_custom_value']);
 
 //        $always_empty = true;
 //
@@ -538,7 +540,8 @@ class SiteParametersType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\SiteParameters'
+            'data_class' => 'Oleg\UserdirectoryBundle\Entity\SiteParameters',
+            'form_custom_value' => null
         ));
     }
 

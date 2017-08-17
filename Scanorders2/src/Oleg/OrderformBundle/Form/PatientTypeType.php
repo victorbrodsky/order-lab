@@ -58,8 +58,9 @@ class PatientTypeType extends AbstractType
 //        ));
 
         //other fields from abstract
-        $builder->add('others', new ArrayFieldType($this->params), array(
+        $builder->add('others', ArrayFieldType::class, array(
             'data_class' => 'Oleg\OrderformBundle\Entity\PatientType',
+            'form_custom_value' => $this->params,
             'label' => false,
 			'attr' => array('style'=>'display:none;')
         ));
@@ -73,7 +74,7 @@ class PatientTypeType extends AbstractType
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_orderformbundle_patienttypetype';
     }

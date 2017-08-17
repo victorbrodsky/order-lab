@@ -186,9 +186,10 @@ class CarryOverController extends Controller
 //        }
 
         $form = $this->createForm(
-            new VacReqUserCarryOverType($params),
+            VacReqUserCarryOverType::class,
             $entity,
             array(
+                'form_custom_value' => $params,
                 //'disabled' => $disabled,
                 //'method' => $method,
                 //'action' => $action

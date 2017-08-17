@@ -28,15 +28,6 @@ use Doctrine\ORM\EntityRepository;
 class SlideOrderType extends AbstractType
 {
 
-    protected $params;
-    protected $entity;
-
-    public function __construct( $params=null, $entity = null )
-    {
-        $this->params = $params;
-        $this->entity = $entity;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
@@ -55,7 +46,7 @@ class SlideOrderType extends AbstractType
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_orderformbundle_slideordertype';
     }

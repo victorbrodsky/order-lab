@@ -6796,7 +6796,7 @@ class AdminController extends Controller
         $params = array('types'=>$types);
         //create final filter form with data params
         $filterform = $this->createForm(HierarchyFilterType::class,null,array('form_custom_value'=>$params));
-        //$filterform->bind($request);
+        //$filterform->submit($request);
         //$filterform->handleRequest($request);
         //$types = $filterform['types']->getData();
         //$types = $filterform->get('types')->getData();

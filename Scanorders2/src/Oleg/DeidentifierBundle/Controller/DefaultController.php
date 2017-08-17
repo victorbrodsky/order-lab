@@ -151,7 +151,7 @@ class DefaultController extends Controller
         );
 
         //search box
-        $form = $this->createForm(new DeidentifierSearchType($params), null);
+        $form = $this->createForm(DeidentifierSearchType::class, null, array('form_custom_value'=>$params));
 
         return $form;
     }

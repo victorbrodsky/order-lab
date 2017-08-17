@@ -708,7 +708,10 @@ class DataQualityController extends CallEntryController
             'alias' => false
         );
 
-        $form = $this->createForm(new CalllogPatientType($params, $patient), $patient);
+        $form = $this->createForm(CalllogPatientType::class, $patient, array(
+            'form_custom_value' => $params,
+            'form_custom_value_entity' => $patient
+        ));
 
         return $form;
     }

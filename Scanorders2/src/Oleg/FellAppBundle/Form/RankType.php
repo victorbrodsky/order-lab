@@ -48,7 +48,7 @@ class RankType extends AbstractType
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_fellappbundle_rank';
     }

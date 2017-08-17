@@ -60,7 +60,14 @@ class BlockType extends AbstractType
 
         $gen_attr = array('label'=>'Section Source:','class'=>'Oleg\OrderformBundle\Entity\BlockSectionsource','type'=>null);    //type=null => auto type
         $builder->add('sectionsource', CollectionType::class, array(
-            'type' => new GenericFieldType($this->params, null, $gen_attr),
+            //'type' => new GenericFieldType($this->params, null, $gen_attr),
+            'entry_type' => GenericFieldType::class,
+            'entry_options' => array(
+                'data_class' => $gen_attr['class'],
+                'form_custom_value' => $this->params,
+                'form_custom_value_genAttr' => $gen_attr,
+                'form_custom_value_attr' => null
+            ),
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
@@ -110,7 +117,11 @@ class BlockType extends AbstractType
         //messages
         if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure' ) {
             $builder->add('message', CollectionType::class, array(
-                'type' => new MessageObjectType($this->params),
+                'entry_type' => MessageObjectType::class,
+                'entry_options' => array(
+                    'form_custom_value' => $this->params,
+                    'form_custom_value_entity' => null
+                ),
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,
@@ -130,7 +141,7 @@ class BlockType extends AbstractType
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_orderformbundle_blocktype';
     }

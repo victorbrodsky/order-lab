@@ -29,12 +29,10 @@ class UserWrapperType extends AbstractType
 {
 
     protected $params;
-    protected $entity;
 
-    public function __construct( $params=null, $entity = null )
+    public function formConstructor( $params=null )
     {
         $this->params = $params;
-        $this->entity = $entity;
 
         if( !array_key_exists('labelPrefix', $this->params) ) {
             $this->params['labelPrefix'] = '';
@@ -51,6 +49,7 @@ class UserWrapperType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
 
         $builder->add('name', null, array(
             'label' => $this->params['name.label'],
@@ -90,6 +89,7 @@ class UserWrapperType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\UserWrapper',
+            'form_custom_value' => null
         ));
     }
 

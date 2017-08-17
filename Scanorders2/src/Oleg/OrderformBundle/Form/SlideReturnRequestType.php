@@ -47,7 +47,9 @@ class SlideReturnRequestType extends AbstractType
     {
 
         $this->params['slide'] = true;
-        $builder->add('message', new MessageObjectType($this->params), array(
+        $builder->add('message', MessageObjectType::class, array(
+            'form_custom_value' => $this->params,
+            'form_custom_value_entity' => null,
             'data_class' => 'Oleg\OrderformBundle\Entity\Message',
             'label' => false
         ));
@@ -90,7 +92,7 @@ class SlideReturnRequestType extends AbstractType
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_orderformbundle_slidereturnrequesttype';
     }

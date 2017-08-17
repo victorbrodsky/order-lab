@@ -1430,9 +1430,10 @@ class RequestController extends Controller
         }
 
         $form = $this->createForm(
-            new VacReqRequestType($params),
+            VacReqRequestType::class,
             $entity,
             array(
+                'form_custom_value' => $params,
                 'disabled' => $disabled,
                 'method' => $method,
                 //'action' => $action

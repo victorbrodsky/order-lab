@@ -35,7 +35,7 @@ class LoggerFilterType extends AbstractType
 //    private $hideIp;
 //    private $hideRoles;
 
-    public function __construct( $params=null )
+    public function formConstructor( $params=null )
     {
         $this->params = $params;
 
@@ -79,6 +79,8 @@ class LoggerFilterType extends AbstractType
     //Start Date, Start Time, End Date, End Time, User [Select2 dropdown), Event Type [Entity Updated], [Free Text Search value for Event column] [Filter Button]
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
+        $this->formConstructor($options['form_custom_value']);
 
         $builder->add('user', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:User',
@@ -226,6 +228,7 @@ class LoggerFilterType extends AbstractType
     {
         $resolver->setDefaults(array(
             'csrf_protection' => false,
+            'form_custom_value' => null
         ));
     }
 

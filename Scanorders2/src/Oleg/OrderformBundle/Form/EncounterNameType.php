@@ -40,8 +40,9 @@ class EncounterNameType extends AbstractType
 
         $builder->add('field', 'hidden', array('label'=>false));
 
-        $builder->add('others', new ArrayFieldType($this->params), array(
+        $builder->add('others', ArrayFieldType::class, array(
             'data_class' => 'Oleg\OrderformBundle\Entity\EncounterName',
+            'form_custom_value' => $this->params,
             'label' => false,
 			'attr' => array('style'=>'display:none;')
         ));
@@ -55,7 +56,7 @@ class EncounterNameType extends AbstractType
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_orderformbundle_encounternametype';
     }

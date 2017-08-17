@@ -26,20 +26,19 @@ class GenericFieldType extends AbstractType
 {
 
     protected $params;
-    protected $entity;
     protected $attr;
     protected $genAttr;
 
-    public function __construct( $params=null, $entity = null, $genAttr=null, $attr=null )
+    public function formConstructor( $params=null, $genAttr=null, $attr=null )
     {
         $this->params = $params;
-        $this->entity = $entity;
         $this->attr = $attr;
         $this->genAttr = $genAttr;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value'],$options['form_custom_value_genAttr'],$options['form_custom_value_attr']);
 
         if( $this->attr == null ) {
             $attr = array('class'=>'form-control');
@@ -53,8 +52,9 @@ class GenericFieldType extends AbstractType
             'attr' =>$attr
         ));
 
-        $builder->add('others', new ArrayFieldType($this->params), array(
+        $builder->add('others', ArrayFieldType::class, array(
             'data_class' => $this->genAttr['class'],
+            'form_custom_value' => $this->params,
             'label' => false,
             'attr' => array('style'=>'display:none;')
         ));
@@ -65,10 +65,13 @@ class GenericFieldType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => $this->genAttr['class'],
+            'form_custom_value' => null,
+            'form_custom_value_genAttr' => null,
+            'form_custom_value_attr' => null,
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_orderformbundle_genfieldtype'; //generic field type
     }

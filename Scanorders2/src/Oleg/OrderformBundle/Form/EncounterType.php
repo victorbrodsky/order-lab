@@ -58,7 +58,10 @@ class EncounterType extends AbstractType
         //children: if X=3, show only the first 3 levels (patient + encounter + procedure)
         if( $this->params['show-tree-depth'] === true || intval($this->params['show-tree-depth']) >= 3 ) {
             $builder->add('procedure', CollectionType::class, array(
-                'type' => new ProcedureType($this->params),
+                'entry_type' => ProcedureType::class,
+                'entry_options' => array(
+                    'form_custom_value' => $this->params
+                ),
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,
@@ -82,7 +85,10 @@ class EncounterType extends AbstractType
 //        ));
 
         $builder->add('date', CollectionType::class, array(
-            'type' => new EncounterDateType($this->params, null),
+            'entry_type' => EncounterDateType::class,
+            'entry_options' => array(
+                'form_custom_value' => $this->params
+            ),
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
@@ -92,7 +98,10 @@ class EncounterType extends AbstractType
         ));
 
         $builder->add('patsuffix', CollectionType::class, array(
-            'type' => new EncounterPatsuffixType($this->params, null),
+            'entry_type' => EncounterPatsuffixType::class,
+            'entry_options' => array(
+                'form_custom_value' => $this->params
+            ),
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
@@ -101,7 +110,10 @@ class EncounterType extends AbstractType
             'prototype_name' => '__encounterpatsuffix__',
         ));
         $builder->add('patlastname', CollectionType::class, array(
-            'type' => new EncounterPatlastnameType($this->params, null),
+            'entry_type' => EncounterPatlastnameType::class,
+            'entry_options' => array(
+                'form_custom_value' => $this->params
+            ),
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
@@ -110,7 +122,10 @@ class EncounterType extends AbstractType
             'prototype_name' => '__encounterpatlastname__',
         ));
         $builder->add('patfirstname', CollectionType::class, array(
-            'type' => new EncounterPatfirstnameType($this->params, null),
+            'entry_type' => EncounterPatfirstnameType::class,
+            'entry_options' => array(
+                'form_custom_value' => $this->params
+            ),
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
@@ -119,7 +134,10 @@ class EncounterType extends AbstractType
             'prototype_name' => '__encounterpatfirstname__',
         ));
         $builder->add('patmiddlename', CollectionType::class, array(
-            'type' => new EncounterPatmiddlenameType($this->params, null),
+            'entry_type' => EncounterPatmiddlenameType::class,
+            'entry_options' => array(
+                'form_custom_value' => $this->params
+            ),
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
@@ -129,7 +147,10 @@ class EncounterType extends AbstractType
         ));
 
         $builder->add('patsex', CollectionType::class, array(
-            'type' => new EncounterPatsexType($this->params, null),
+            'entry_type' => EncounterPatsexType::class,
+            'entry_options' => array(
+                'form_custom_value' => $this->params
+            ),
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
@@ -148,7 +169,14 @@ class EncounterType extends AbstractType
             'class'=>'Oleg\OrderformBundle\Entity\EncounterPatage',
             'type'=>'text');
         $builder->add('patage', CollectionType::class, array(
-            'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
+            //GenericFieldType($this->params, null, $gen_attr, $attr),
+            'entry_type' => GenericFieldType::class,
+            'entry_options' => array(
+                'data_class' => $gen_attr['class'],
+                'form_custom_value' => $this->params,
+                'form_custom_value_genAttr' => $gen_attr,
+                'form_custom_value_attr' => $attr
+            ),
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
@@ -162,7 +190,14 @@ class EncounterType extends AbstractType
         $attr = array('class'=>'textarea form-control encounterhistory-field');
         $gen_attr = array('label'=>"Clinical History (at the time of encounter):",'class'=>'Oleg\OrderformBundle\Entity\EncounterPathistory','type'=>null);
         $builder->add('pathistory', CollectionType::class, array(
-            'type' => new GenericFieldType($this->params, null, $gen_attr, $attr),
+            //GenericFieldType($this->params, null, $gen_attr, $attr),
+            'entry_type' => GenericFieldType::class,
+            'entry_options' => array(
+                'data_class' => $gen_attr['class'],
+                'form_custom_value' => $this->params,
+                'form_custom_value_genAttr' => $gen_attr,
+                'form_custom_value_attr' => $attr
+            ),
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
@@ -195,7 +230,10 @@ class EncounterType extends AbstractType
 
             //number and source
             $builder->add('number', CollectionType::class, array(
-                'type' => new EncounterNumberType($this->params, $this->entity),
+                'entry_type' => CalllogEncounterNumberType::class,
+                'entry_options' => array(
+                    'form_custom_value' => $this->params
+                ),
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,
@@ -206,7 +244,10 @@ class EncounterType extends AbstractType
             ));
 
             $builder->add('location', CollectionType::class, array(
-                'type' => new EncounterLocationType($this->params, null),
+                'entry_type' => EncounterLocationType::class,
+                'entry_options' => array(
+                    'form_custom_value' => $this->params
+                ),
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,
@@ -228,7 +269,10 @@ class EncounterType extends AbstractType
 //            ));
 
             $builder->add('inpatientinfo', CollectionType::class, array(
-                'type' => new EncounterInpatientinfoType($this->params, null),
+                'entry_type' => EncounterInpatientinfoType::class,
+                'entry_options' => array(
+                    'form_custom_value' => $this->params
+                ),
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,
@@ -304,7 +348,10 @@ class EncounterType extends AbstractType
             ));
 
             $builder->add('encounterInfoTypes', CollectionType::class, array(
-                'type' => new EncounterInfoTypeType($this->params, null),
+                'entry_type' => EncounterInfoTypeType::class,
+                'entry_options' => array(
+                    'form_custom_value' => $this->params,
+                ),
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,
@@ -315,7 +362,10 @@ class EncounterType extends AbstractType
 
             //Referring Provider for calllog new entry
             $builder->add('referringProviders', CollectionType::class, array(
-                'type' => new EncounterReferringProviderType($this->params, null),
+                'entry_type' => EncounterReferringProviderType::class,
+                'entry_options' => array(
+                    'form_custom_value' => $this->params,
+                ),
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,
@@ -325,7 +375,10 @@ class EncounterType extends AbstractType
             ));
 
             $builder->add('attendingPhysicians', CollectionType::class, array(
-                'type' => new EncounterAttendingPhysicianType($this->params, null),
+                'entry_type' => EncounterAttendingPhysicianType::class,
+                'entry_options' => array(
+                    'form_custom_value' => $this->params,
+                ),
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,
@@ -340,7 +393,11 @@ class EncounterType extends AbstractType
         //messages
         if( array_key_exists('datastructure',$this->params) && ($this->params['datastructure'] == 'datastructure' || $this->params['datastructure'] == 'datastructure-patient') ) {
             $builder->add('message', CollectionType::class, array(
-                'type' => new MessageObjectType($this->params),
+                'entry_type' => MessageObjectType::class,
+                'entry_options' => array(
+                    'form_custom_value' => $this->params,
+                    'form_custom_value_entity' => null
+                ),
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,
@@ -360,7 +417,7 @@ class EncounterType extends AbstractType
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_orderformbundle_encountertype';
     }

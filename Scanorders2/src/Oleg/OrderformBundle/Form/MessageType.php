@@ -77,8 +77,8 @@ class MessageType extends AbstractType
 
         //unmapped data quality form to record the MRN-Accession conflicts
         $builder->add('conflicts', CollectionType::class, array(
+            'entry_type' => DataQualityMrnAccType::class,
             'mapped' => false,
-            'type' => new DataQualityMrnAccType($this->params, null),
             'label' => false,
             'allow_add' => true,
             'allow_delete' => true,
@@ -93,7 +93,11 @@ class MessageType extends AbstractType
 
             //echo "message type: show patient <br>";
             $builder->add('patient', CollectionType::class, array(
-                'type' => new PatientType($this->params,$this->entity),    //$this->type),
+                'entry_type' => PatientType::class,
+                'entry_options' => array(
+                    'form_custom_value' => $this->params,
+                    'form_custom_value_entity' => $this->entity
+                ),
                 'label' => false,
                 'required' => false,
                 'allow_add' => true,
@@ -119,9 +123,15 @@ class MessageType extends AbstractType
 
         //echo "<br>type=".$this->type."<br>";
 
-        $builder->add( 'educational', new EducationalType($this->params,$this->entity), array('label'=>'Educational:') );
+        $builder->add('educational',EducationalType::class,array(
+            'form_custom_value' => $this->params,
+            'label'=>'Educational:'
+        ));
 
-        $builder->add( 'research', new ResearchType($this->params,$this->entity), array('label'=>'Research:') );
+        $builder->add('research',ResearchType::class,array(
+            'form_custom_value' => $this->params,
+            'label'=>'Research:'
+        ));
 
         //priority
         $priorityArr = array(
@@ -301,7 +311,10 @@ class MessageType extends AbstractType
         $this->params['endpoint.system'] = false;
         $this->params['endpoint.location.label'] = 'Return Slides to:';
         $builder->add('destinations', CollectionType::class, array(
-            'type' => new EndpointType($this->params,$this->entity),    //$this->type),
+            'entry_type' => EndpointType::class,
+            'entry_options' => array(
+                'form_custom_value' => $this->params
+            ),
             'label' => false,
             'required' => false,
             'allow_add' => true,
@@ -333,7 +346,10 @@ class MessageType extends AbstractType
 
         //Performing organization
         $builder->add('organizationRecipients', CollectionType::class, array(
-            'type' => new InstitutionalWrapperType($this->params,$this->entity),
+            'entry_type' => InstitutionalWrapperType::class,
+            'entry_options' => array(
+                'form_custom_value' => $this->params
+            ),
             'label' => "Organization Recipient",
             'required' => false,
             'allow_add' => true,
@@ -348,8 +364,9 @@ class MessageType extends AbstractType
 
         //Exception for scan order form, to avoid complications of changing html twig view
         if( $this->hasSpecificOrders($this->entity,'Scan Order') ) {
-            $builder->add('scanorder', new ScanOrderType($this->params), array(
+            $builder->add('scanorder', ScanOrderType::class, array(
                 'data_class' => 'Oleg\OrderformBundle\Entity\ScanOrder',
+                'form_custom_value' => $this->params,
                 'label' => false
             ));
         }
@@ -375,7 +392,7 @@ class MessageType extends AbstractType
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_orderformbundle_messagetype';
     }

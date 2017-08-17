@@ -24,17 +24,10 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 
 class ImportUsersType extends AbstractType {
 
-    private $params;
-
-    public function __construct( $params=null )
-    {
-        $this->params = $params;
-    }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {

@@ -31,13 +31,14 @@ class VacReqUserComboboxType extends UserType
 
     protected $params;
 
-    public function __construct( $params )
+    public function formConstructor( $params )
     {
         $this->params = $params;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
 
         $builder->add('users', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:User',
@@ -68,13 +69,14 @@ class VacReqUserComboboxType extends UserType
         $resolver->setDefaults(array(
             //'data_class' => 'Oleg\UserdirectoryBundle\Entity\User',
             'csrf_protection' => false,
+            'form_custom_value' => null
         ));
     }
 
     /**
      * @return string
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_vacreqbundle_user_participants';
     }

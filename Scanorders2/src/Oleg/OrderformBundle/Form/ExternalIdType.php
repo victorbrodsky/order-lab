@@ -24,16 +24,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ExternalIdType extends AbstractType
 {
-
-    protected $entity;
-    protected $params;
-
-    public function __construct( $params=null, $entity=null )
-    {
-        if( $params ) $this->params = $params;
-        if( $entity ) $this->entity = $entity;
-    }
-        
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -62,7 +52,7 @@ class ExternalIdType extends AbstractType
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_orderformbundle_externalidtype';
     }

@@ -31,7 +31,7 @@ class VacReqCalendarFilterType extends AbstractType
     private $params;
 
 
-    public function __construct( $params=null )
+    public function formConstructor( $params=null )
     {
         $this->params = $params;
     }
@@ -39,6 +39,7 @@ class VacReqCalendarFilterType extends AbstractType
     //Start Date, Start Time, End Date, End Time, User [Select2 dropdown), Event Type [Entity Updated], [Free Text Search value for Event column] [Filter Button]
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
 
         if( count($this->params['organizationalInstitutions']) > 1 || $this->params['supervisor'] ) {
 
@@ -92,10 +93,11 @@ class VacReqCalendarFilterType extends AbstractType
     {
         $resolver->setDefaults(array(
             'csrf_protection' => false,
+            'form_custom_value' => null
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'filter';
     }

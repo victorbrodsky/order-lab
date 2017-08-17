@@ -74,8 +74,9 @@ class AccessionAccessionType extends AbstractType
         $builder->add('keytype', 'custom_selector', $options);
 
 
-        $builder->add('others', new ArrayFieldType($this->params), array(
+        $builder->add('others', ArrayFieldType::class, array(
             'data_class' => 'Oleg\OrderformBundle\Entity\AccessionAccession',
+            'form_custom_value' => $this->params,
             'label' => false,
 			'attr' => array('style'=>'display:none;')
         ));
@@ -91,7 +92,7 @@ class AccessionAccessionType extends AbstractType
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_orderformbundle_accessionaccessiontype';
     }

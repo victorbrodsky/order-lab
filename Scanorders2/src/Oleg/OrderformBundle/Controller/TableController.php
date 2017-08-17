@@ -622,7 +622,7 @@ class TableController extends Controller {
 
         $form = $this->createForm(new MessageType($params,$entity), $entity);
 
-        //$form->bind($request);
+        //$form->submit($request);
         $form->handleRequest($request);
 
 //        if( $form->isValid() ) {

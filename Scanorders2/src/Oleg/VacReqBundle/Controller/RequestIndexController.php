@@ -419,9 +419,9 @@ class RequestIndexController extends Controller
         $params['supervisor'] = $supervisorRole;
 
         //create filter form
-        $filterform = $this->createForm(new VacReqFilterType($params), null);
+        $filterform = $this->createForm(VacReqFilterType::class, null, array('form_custom_value'=>$params));
 
-        $filterform->bind($request);
+        $filterform->submit($request);
         //echo "<pre>";
         //print_r($filterform['startdate']);
         //echo "</pre>";

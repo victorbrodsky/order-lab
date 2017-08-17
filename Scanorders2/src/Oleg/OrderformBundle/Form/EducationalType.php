@@ -30,18 +30,17 @@ use Symfony\Component\Form\FormEvents;
 class EducationalType extends AbstractType
 {
 
-    protected $entity;
     protected $params;
 
-    public function __construct( $params=null, $entity=null )
+    public function formConstructor( $params=null )
     {
         if( $params ) $this->params = $params;
-        if( $entity ) $this->entity = $entity;
     }
 
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
 
         //Display fields for Data Review
         if( $this->params['type'] == 'SingleObject' ) {
@@ -71,7 +70,10 @@ class EducationalType extends AbstractType
                 $this->params['user.label'] = 'Course Director:';
 
                 $form->add('userWrappers', CollectionType::class, array(
-                    'type' => new UserWrapperType($this->params),
+                    'entry_type' => UserWrapperType::class,
+                    'entry_options' => array(
+                        'form_custom_value' => $this->params,
+                    ),
                     'label' => false,
                     'required' => false,
                     'allow_add' => true,
@@ -171,11 +173,12 @@ class EducationalType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\Educational'
+            'data_class' => 'Oleg\OrderformBundle\Entity\Educational',
+            'form_custom_value' => null
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_orderformbundle_educationaltype';
     }

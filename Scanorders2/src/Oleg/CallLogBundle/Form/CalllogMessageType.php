@@ -46,7 +46,7 @@ class CalllogMessageType extends AbstractType
     //params: cycle: new, edit, show
     //params: service: pathology service
     //params: entity: entity itself
-    public function __construct( $params=null, $entity=null )
+    public function formConstructor( $params=null, $entity=null )
     {
         if( $params ) $this->params = $params;
         if( $entity ) $this->entity = $entity;
@@ -64,6 +64,7 @@ class CalllogMessageType extends AbstractType
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value'],$options['form_custom_value_entity']);
 
 //        echo "message params=";
         //echo "type=".$this->params['type']."<br>";
@@ -95,7 +96,11 @@ class CalllogMessageType extends AbstractType
 
         //echo "message type: show patient <br>";
         $builder->add('patient', CollectionType::class, array(
-            'type' => new CalllogPatientType($this->params, $patient),    //$this->type),
+            'entry_type' => CalllogPatientType::class,
+            'entry_options' => array(
+                'form_custom_value' => $this->params,
+                'form_custom_value_entity' => $patient
+            ),
             'label' => false,
             'required' => false,
             'allow_add' => true,
@@ -107,7 +112,11 @@ class CalllogMessageType extends AbstractType
 
         //if (count($this->entity->getPatient()) == 0) {
             $builder->add('encounter', CollectionType::class, array(
-                'type' => new CalllogEncounterType($this->params, $this->entity),
+                'entry_type' => CalllogEncounterType::class,
+                'entry_options' => array(
+                    'form_custom_value' => $this->params,
+                    'form_custom_value_entity' => $this->entity
+                ),
                 'required' => false,
                 'allow_add' => true,
                 'allow_delete' => true,
@@ -220,8 +229,10 @@ class CalllogMessageType extends AbstractType
         }
 
         ////////////////////////// Specific Orders //////////////////////////
-        $builder->add('calllogEntryMessage', new CalllogEntryMessageType($this->params), array(
+        $builder->add('calllogEntryMessage', CalllogEntryMessageType::class, array(
             'data_class' => 'Oleg\OrderformBundle\Entity\CalllogEntryMessage',
+            'form_custom_value' => $this->params,
+            'form_custom_value_entity' => null,
             'label' => false,
         ));
         ////////////////////////// EOF Specific Orders //////////////////////////
@@ -306,11 +317,13 @@ class CalllogMessageType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\Message'
+            'data_class' => 'Oleg\OrderformBundle\Entity\Message',
+            'form_custom_value' => null,
+            'form_custom_value_entity' => null
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_calllogformbundle_messagetype';
     }

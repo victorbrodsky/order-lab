@@ -27,29 +27,29 @@ class CalllogEncounterNumberType extends AbstractType
 {
 
     protected $params;
-    protected $entity;
 
-    public function __construct( $params=null, $entity = null )
+    public function formConstructor( $params=null )
     {
         $this->params = $params;
-        $this->entity = $entity;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-            $builder->add('keytype', 'entity', array(
-                'class' => 'OlegOrderformBundle:EncounterType',
-                'label' => 'Encounter Type:',
-                'required' => true,
-                'read_only' => true,
-                //'data' => 1,
-                'attr' => array('class' => 'combobox combobox-width encounter-keytype'),
-                'query_builder' => function(EntityRepository $er) {
-                        return $er->createQueryBuilder('list')
-                            ->orderBy("list.orderinlist","ASC");
-                            //->setMaxResults(1);
-                    },
-            ));
+        $this->formConstructor($options['form_custom_value']);
+
+        $builder->add('keytype', 'entity', array(
+            'class' => 'OlegOrderformBundle:EncounterType',
+            'label' => 'Encounter Type:',
+            'required' => true,
+            'read_only' => true,
+            //'data' => 1,
+            'attr' => array('class' => 'combobox combobox-width encounter-keytype'),
+            'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->orderBy("list.orderinlist","ASC");
+                        //->setMaxResults(1);
+                },
+        ));
 
 //        $builder->add('source', 'entity', array(
 //            'class' => 'OlegUserdirectoryBundle:SourceSystemList',
@@ -71,8 +71,9 @@ class CalllogEncounterNumberType extends AbstractType
         ));
 
 
-        $builder->add('others', new ArrayFieldType($this->params), array(
+        $builder->add('others', ArrayFieldType::class, array(
             'data_class' => 'Oleg\OrderformBundle\Entity\EncounterNumber',
+            'form_custom_value' => $this->params,
             'label' => false,
             'attr' => array('style'=>'display:none;')
         ));
@@ -83,10 +84,11 @@ class CalllogEncounterNumberType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\OrderformBundle\Entity\EncounterNumber',
+            'form_custom_value' => null
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_orderformbundle_encounternumbertype';
     }

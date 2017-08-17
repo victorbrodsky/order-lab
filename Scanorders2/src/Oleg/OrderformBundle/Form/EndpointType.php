@@ -25,13 +25,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class EndpointType extends AbstractType
 {
 
-    protected $entity;
     protected $params;
 
-    public function __construct( $params=null, $entity=null )
+    public function formConstructor( $params=null )
     {
         if( $params ) $this->params = $params;
-        if( $entity ) $this->entity = $entity;
 
         if( !array_key_exists('endpoint.location', $this->params) ) {
             $this->params['endpoint.location'] = true;
@@ -54,6 +52,7 @@ class EndpointType extends AbstractType
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->formConstructor($options['form_custom_value']);
 
         ////////////// Location //////////////////////
         //use Endpoint object: destination - location
@@ -106,11 +105,12 @@ class EndpointType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\OrderformBundle\Entity\Endpoint'
+            'data_class' => 'Oleg\OrderformBundle\Entity\Endpoint',
+            'form_custom_value' => null
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oleg_orderformbundle_endpointtype';
     }
