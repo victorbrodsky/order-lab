@@ -92,7 +92,6 @@ class VacReqRequestBaseType extends AbstractType
             $readOnly = true;
             if( $this->params['review'] === true || $this->params['roleAdmin'] || $this->params['roleApprover'] ) {
                 $readOnly = false;
-                echo "editable comment<br>";
             }
 
             $builder->add('status', 'choice', array(

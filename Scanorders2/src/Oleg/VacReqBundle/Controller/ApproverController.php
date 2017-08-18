@@ -1089,7 +1089,7 @@ class ApproverController extends Controller
                 'multiple' => true,
                 //'property' => 'name',
                 'attr' => array('class'=>'combobox combobox-width', 'placeholder'=>"Employee"),
-                //'read_only' => true,    //$readOnly,   //($this->params['review'] ? true : false),
+                //'disabled' => true,    //$readOnly,   //($this->params['review'] ? true : false),
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('user')
                         ->leftJoin("user.infos","infos")

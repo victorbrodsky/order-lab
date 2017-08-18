@@ -75,7 +75,7 @@ class CalllogPatientType extends AbstractType
             'entry_options' => array(
                 'form_custom_value' => $this->params
             ),
-            //'read_only' => $flag,
+            //'disabled' => $flag,
             //'allow_add' => true,
             //'allow_delete' => true,
             'required' => false,

@@ -44,7 +44,7 @@ class EncounterAttendingPhysicianType extends AbstractType
             'label' => 'Attending Physician:',
             'attr' => array('class' => 'combobox combobox-width ajax-combobox-encounterAttendingPhysician'),
             'required' => false,
-            'read_only' => $this->params['attendingPhysicians-readonly'],
+            'disabled' => $this->params['attendingPhysicians-readonly'],
             'classtype' => 'singleUserWrapper'
             //'classtype' => 'userWrapper'
         ));

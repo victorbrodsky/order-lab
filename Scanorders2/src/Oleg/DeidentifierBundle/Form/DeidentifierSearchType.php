@@ -83,7 +83,7 @@ class DeidentifierSearchType extends AbstractType
             'class' => 'OlegUserdirectoryBundle:Institution',
             'choices' => $this->params['permittedInstitutions'],
             'data' => $this->params['defaultInstitution'],
-            'read_only' => $readOnly,
+            'disabled' => $readOnly,
             'mapped' => false,
             'property' => 'getNodeNameWithRoot',
             'required' => true,

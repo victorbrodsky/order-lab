@@ -66,7 +66,7 @@ class EncounterReferringProviderType extends AbstractType
         $builder->add('field', 'custom_selector', array(
             'label' => 'Referring Provider Name:',
             'attr' => array('class' => 'combobox combobox-width ajax-combobox-encounterReferringProvider'),
-            'read_only' => $this->params['referringProviders-readonly'],
+            'disabled' => $this->params['referringProviders-readonly'],
             'required' => false,
             'classtype' => 'singleUserWrapper'
             //'classtype' => 'userWrapper'
@@ -75,21 +75,21 @@ class EncounterReferringProviderType extends AbstractType
         $builder->add('referringProviderSpecialty', 'custom_selector', array(
             'label' => 'Referring Provider Specialty:',
             'attr' => array('class' => 'combobox combobox-width ajax-combobox-referringProviderSpecialty'),
-            'read_only' => $this->params['referringProviders-readonly'],
+            'disabled' => $this->params['referringProviders-readonly'],
             'required' => false,
             'classtype' => 'referringProviderSpecialty'
         ));
 
         $builder->add('referringProviderPhone', null, array(
             'label' => 'Referring Provider Phone Number:',
-            'read_only' => $this->params['referringProviders-readonly'],
+            'disabled' => $this->params['referringProviders-readonly'],
             'attr' => array('class'=>'form-control')
         ));
 
         $builder->add('referringProviderEmail', null, array(
             'label' => 'Referring Provider E-Mail:',
             'attr' => array('class'=>'form-control'),
-            'read_only' => $this->params['referringProviders-readonly'],
+            'disabled' => $this->params['referringProviders-readonly'],
         ));
 
     }

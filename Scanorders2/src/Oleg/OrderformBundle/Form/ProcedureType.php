@@ -51,7 +51,7 @@ class ProcedureType extends AbstractType
             'entry_options' => array(
                 'form_custom_value' => $this->params
             ),
-            //'read_only' => $readonly,
+            //'disabled' => $readonly,
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
@@ -98,7 +98,7 @@ class ProcedureType extends AbstractType
                 'entry_options' => array(
                     'form_custom_value' => $this->params
                 ),
-                'read_only' => $readonly,
+                'disabled' => $readonly,
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,
@@ -113,7 +113,7 @@ class ProcedureType extends AbstractType
                 'entry_options' => array(
                     'form_custom_value' => $this->params
                 ),
-                //'read_only' => $readonly,
+                //'disabled' => $readonly,
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,
@@ -127,7 +127,7 @@ class ProcedureType extends AbstractType
                 'entry_options' => array(
                     'form_custom_value' => $this->params
                 ),
-                //'read_only' => $readonly,
+                //'disabled' => $readonly,
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,
@@ -138,7 +138,7 @@ class ProcedureType extends AbstractType
 
             $builder->add('provider', 'entity', array(
                 'class' => 'OlegUserdirectoryBundle:User',
-                //'read_only' => $readonly,
+                //'disabled' => $readonly,
                 'label' => 'Provider:',
                 'required' => false,
                 'attr' => array('class' => 'combobox combobox-width'),
@@ -170,7 +170,7 @@ class ProcedureType extends AbstractType
                 'entry_options' => array(
                     'form_custom_value' => $this->params
                 ),
-                //'read_only' => $readonly,
+                //'disabled' => $readonly,
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,

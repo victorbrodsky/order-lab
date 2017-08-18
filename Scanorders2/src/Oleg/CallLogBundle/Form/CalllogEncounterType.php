@@ -70,7 +70,7 @@ class CalllogEncounterType extends AbstractType
             'entry_options' => array(
                 'form_custom_value' => $this->params
             ),
-            'read_only' => $this->params['readonlyEncounter'],
+            'disabled' => $this->params['readonlyEncounter'],
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
@@ -99,7 +99,7 @@ class CalllogEncounterType extends AbstractType
                 'entry_options' => array(
                     'form_custom_value' => $this->params
                 ),
-                'read_only' => $this->params['readonlyEncounter'],
+                'disabled' => $this->params['readonlyEncounter'],
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,
@@ -112,7 +112,7 @@ class CalllogEncounterType extends AbstractType
                 'entry_options' => array(
                     'form_custom_value' => $this->params
                 ),
-                'read_only' => $this->params['readonlyEncounter'],
+                'disabled' => $this->params['readonlyEncounter'],
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,
@@ -125,7 +125,7 @@ class CalllogEncounterType extends AbstractType
                 'entry_options' => array(
                     'form_custom_value' => $this->params
                 ),
-                'read_only' => $this->params['readonlyEncounter'],
+                'disabled' => $this->params['readonlyEncounter'],
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,
@@ -138,7 +138,7 @@ class CalllogEncounterType extends AbstractType
                 'entry_options' => array(
                     'form_custom_value' => $this->params
                 ),
-                'read_only' => $this->params['readonlyEncounter'],
+                'disabled' => $this->params['readonlyEncounter'],
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,
@@ -152,7 +152,7 @@ class CalllogEncounterType extends AbstractType
                 'entry_options' => array(
                     'form_custom_value' => $this->params
                 ),
-                'read_only' => $this->params['readonlyEncounter'],
+                'disabled' => $this->params['readonlyEncounter'],
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,
@@ -242,7 +242,7 @@ class CalllogEncounterType extends AbstractType
             'class' => 'OlegUserdirectoryBundle:User',
             'label' => 'Provider:',
             'required' => false,
-            'read_only' => $this->params['readonlyEncounter'],
+            'disabled' => $this->params['readonlyEncounter'],
             'attr' => array('class' => 'combobox combobox-width'),
             'query_builder' => function (EntityRepository $er) {
                 return $er->createQueryBuilder('u')
@@ -283,7 +283,7 @@ class CalllogEncounterType extends AbstractType
             'entry_options' => array(
                 'form_custom_value' => $this->params,
             ),
-            'read_only' => $this->params['readonlyEncounter'],
+            'disabled' => $this->params['readonlyEncounter'],
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
@@ -297,7 +297,7 @@ class CalllogEncounterType extends AbstractType
             'entry_options' => array(
                 'form_custom_value' => $this->params,
             ),
-            'read_only' => $this->params['readonlyEncounter'],
+            'disabled' => $this->params['readonlyEncounter'],
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
@@ -323,7 +323,7 @@ class CalllogEncounterType extends AbstractType
             'label' => "Date of Birth:",
             'widget' => 'single_text',
             'required' => false,
-            'read_only' => $this->params['readonlyEncounter'],
+            'disabled' => $this->params['readonlyEncounter'],
             //'mapped' => false,
             'format' => 'MM/dd/yyyy',   //used for birth day only (no hours), so we don't need to set view_timezone
             'attr' => array('class' => 'datepicker form-control patient-dob-date'), //'style'=>'margin-top: 0;'
@@ -333,7 +333,7 @@ class CalllogEncounterType extends AbstractType
             //echo "show locationName <br>";
             $builder->add('locationName', 'employees_custom_selector', array(
                 'label' => "Location Name:",
-                'read_only' => $this->params['readonlyEncounter'],
+                'disabled' => $this->params['readonlyEncounter'],
                 'mapped' => false,
                 'required' => false,
                 'attr' => array('class' => 'combobox combobox-width ajax-combobox-locationName', 'type' => 'hidden'),
@@ -352,7 +352,7 @@ class CalllogEncounterType extends AbstractType
         $builder->add('tracker', TrackerType::class, array(
             'form_custom_value' => $this->params,
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\Tracker',
-            'read_only' => $this->params['readonlyEncounter'],
+            'disabled' => $this->params['readonlyEncounter'],
             'label' => false,
         ));
 

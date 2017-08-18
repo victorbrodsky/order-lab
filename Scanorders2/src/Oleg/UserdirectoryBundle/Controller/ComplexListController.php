@@ -584,7 +584,7 @@ class ComplexListController extends Controller
 
         $isAdmin = $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR');
 
-        $params = array('read_only'=>false,'admin'=>$isAdmin,'currentUser'=>false,'cycle'=>$cycle,'em'=>$em,'user'=>$user);
+        $params = array('disabled'=>false,'admin'=>$isAdmin,'currentUser'=>false,'cycle'=>$cycle,'em'=>$em,'user'=>$user);
 
         //exit($mapper['fullFormType']);
 //        $form = $this->createForm(new $mapper['fullFormType']($params,$entity), $entity, array(

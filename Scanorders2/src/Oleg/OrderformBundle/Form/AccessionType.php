@@ -64,7 +64,7 @@ class AccessionType extends AbstractType
             'entry_options' => array(
                 'form_custom_value' => $this->params,
             ),
-            'read_only' => $readonly,
+            'disabled' => $readonly,
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,

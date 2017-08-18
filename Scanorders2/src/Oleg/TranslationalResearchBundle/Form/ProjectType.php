@@ -41,7 +41,7 @@ class ProjectType extends AbstractType
 
             $builder->add('status',null, array(
                 'label' => 'Status:',
-                //'read_only' => true,
+                //'disabled' => true,
                 'required' => false,
                 'attr' => array('class' => 'form-control'),
             ));
@@ -49,7 +49,7 @@ class ProjectType extends AbstractType
             $builder->add('approvalDate', 'date', array(
                 'widget' => 'single_text',
                 'label' => "Approval Date:",
-                //'read_only' => true,
+                //'disabled' => true,
                 'format' => 'MM/dd/yyyy',
                 'attr' => array('class' => 'datepicker form-control'),
                 'required' => false,
@@ -60,7 +60,7 @@ class ProjectType extends AbstractType
             $builder->add('createDate', 'date', array(
                 'widget' => 'single_text',
                 'label' => "Create Date:",
-                'read_only' => true,
+                'disabled' => true,
                 'format' => 'MM/dd/yyyy',
                 'attr' => array('class' => 'datepicker form-control'),
                 'required' => false,
@@ -68,7 +68,7 @@ class ProjectType extends AbstractType
 
             $builder->add('submitter', null, array(
                 'label' => "Created By:",
-                'read_only' => true,
+                'disabled' => true,
                 'attr' => array('class'=>'combobox combobox-width')
             ));
         }
@@ -77,7 +77,7 @@ class ProjectType extends AbstractType
 //            $builder->add('updateDate', 'date', array(
 //                'widget' => 'single_text',
 //                'label' => "Update Date:",
-//                'read_only' => true,
+//                'disabled' => true,
 //                'format' => 'MM/dd/yyyy',
 //                'attr' => array('class' => 'datepicker form-control'),
 //                'required' => false,
@@ -86,7 +86,7 @@ class ProjectType extends AbstractType
 //        if( $this->project->getUpdateUser() ) {
 //            $builder->add('updateUser', null, array(
 //                'label' => "Updated By:",
-//                'read_only' => true,
+//                'disabled' => true,
 //            ));
 //        }
 

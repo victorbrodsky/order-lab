@@ -76,7 +76,7 @@ class CalllogMessageType extends AbstractType
         if ($this->params['cycle'] == 'show') {
             $builder->add('id', null, array(
                 'label' => 'Message ID:',
-                'read_only' => true,
+                'disabled' => true,
                 'required' => true,
                 'attr' => array('class' => 'form-control')
             ));
@@ -85,7 +85,7 @@ class CalllogMessageType extends AbstractType
 //        if( $this->params['cycle'] == 'edit' || $this->params['cycle'] == 'amend' ) {
 //            $builder->add('id', null, array( //'hidden'
 //                'label' => 'Message ID:',
-//                'read_only' => true,
+//                'disabled' => true,
 //                'required' => true,
 //                'attr' => array('class' => 'form-control')
 //            ));
@@ -159,8 +159,10 @@ class CalllogMessageType extends AbstractType
             $form->add('messageCategory', 'employees_custom_selector', array(
                 'label' => $label,
                 'required' => false,
-                'read_only' => true,
+                //'read_only' => true, //this depracted and replaced by readonly in attr
+                //'disabled' => true, //this disabled all children
                 'attr' => array(
+                    'readonly' => true,
                     'class' => 'ajax-combobox-compositetree combobox-without-add combobox-compositetree-postfix-level combobox-compositetree-read-only-exclusion ajax-combobox-messageCategory', //combobox-compositetree-readonly-parent
                     'type' => 'hidden',
                     'data-compositetree-bundlename' => 'OrderformBundle',
@@ -184,14 +186,14 @@ class CalllogMessageType extends AbstractType
 
         $builder->add('version', null, array(
             'label' => 'Message Version:',
-            'read_only' => true,
+            'disabled' => true,
             'required' => true,
             'attr' => array('class' => 'form-control')
         ));
 
         $builder->add('messageTitle', null, array(
             'label' => 'Form Title:',
-            'read_only' => true,
+            'disabled' => true,
             'required' => false,
             'attr' => array('class' => 'form-control')
         ));
@@ -213,7 +215,7 @@ class CalllogMessageType extends AbstractType
                 //'property' => 'name',
                 'label' => 'Message Status:',
                 'required' => false,
-                'read_only' => true,
+                'disabled' => true,
                 'multiple' => false,
                 'attr' => array('class' => 'combobox combobox-width'),
                 'query_builder' => function (EntityRepository $er) {

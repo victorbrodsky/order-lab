@@ -456,7 +456,7 @@ class FellowshipApplicationType extends AbstractType
         //echo "currentUser=".$currentUser."<br>";
 
 
-        $params = array('read_only'=>$readonly,'admin'=>$roleAdmin,'currentUser'=>$currentUser,'cycle'=>$this->params['cycle'],'em'=>$this->params['em'],'subjectUser'=>$this->params['user']);
+        $params = array('disabled'=>$readonly,'admin'=>$roleAdmin,'currentUser'=>$currentUser,'cycle'=>$this->params['cycle'],'em'=>$this->params['em'],'subjectUser'=>$this->params['user']);
 
         $builder->add('locations', CollectionType::class, array(
             'entry_type' => FellAppLocationType::class,
