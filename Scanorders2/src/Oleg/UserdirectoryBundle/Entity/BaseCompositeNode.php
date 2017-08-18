@@ -273,24 +273,33 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
     }
 
     //make select ID as "name_id"
-    public function printTreeSelectList($nodes=array(),$nameMethod="getNodeNameWithParent") {
+    public function printTreeSelectList($nodes=array(),$nameMethod="getNodeNameWithParent",$asLabelValue=true) {
         //echo $this;
         $name = $this->$nameMethod()."";
         //echo "id=".$this->getId().": ".$name."<br>";
         if( $name ) {
             //echo "id=".$this->getId().": ".$name."<br>";
-            $nodes[$this->getName()."_".$this->getId()] = $name;
+            if( $asLabelValue ) {
+                $nodes[$name] = $this->getName()."_".$this->getId();
+            } else {
+                $nodes[$this->getName()."_".$this->getId()] = $name;
+            }
+
         }
 
         foreach( $this->getChildren() as $subCategory ) {
 
             //echo "id=".$subCategory->getId().": ".$subCategory->getName()."<br>";
             if( count($subCategory->getChildren()) > 0 ) {
-                $nodes = $subCategory->printTreeSelectList($nodes,$nameMethod);
+                $nodes = $subCategory->printTreeSelectList($nodes,$nameMethod,$asLabelValue);
             } else {
                 $name = $subCategory->$nameMethod()."";
                 if( $name ) {
-                    $nodes[$subCategory->getName()."_".$subCategory->getId()] = $name;
+                    if( $asLabelValue ) {
+                        $nodes[$name] = $subCategory->getName() . "_" . $subCategory->getId(); //label => value
+                    } else {
+                        $nodes[$subCategory->getName() . "_" . $subCategory->getId()] = $name; //value => label
+                    }
                 }
             }
 

@@ -96,6 +96,7 @@ class FellAppController extends Controller {
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $fellappUtil = $this->container->get('fellapp_util');
+        $userServiceUtil = $this->get('user_service_utility');
 
         $searchFlag = false;
         $currentYear = date("Y")+2;
@@ -125,7 +126,7 @@ class FellAppController extends Controller {
 
         //create fellapp filter
         $params = array(
-            'fellTypes' => $fellowshipTypes,
+            'fellTypes' => $userServiceUtil->flipArrayLabelValue($fellowshipTypes), //flipped
         );
         $filterform = $this->createForm(FellAppFilterType::class, null,array('form_custom_value'=>$params));
 

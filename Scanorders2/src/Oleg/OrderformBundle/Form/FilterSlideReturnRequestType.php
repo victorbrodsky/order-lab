@@ -36,24 +36,36 @@ class FilterSlideReturnRequestType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        $choices = array(   'all' => 'All',
-                            'active' => 'Active',
-                            'All Scanned & All Returned' => 'All Scanned & All Returned',
-                            'Some Scanned & All Returned' => 'Some Scanned & All Returned',
-                            'Not Scanned & All Returned' => 'Not Scanned & All Returned',
-                            'Checked: Not Received' => 'Checked: Not Received',
-                            'Checked: Previously Returned' => 'Checked: Previously Returned',
-                            'Checked: Some Returned' => 'Checked: Some Returned',
-                            'cancel' => 'Canceled'
-                        );
+//        $choices = array(   'all' => 'All',
+//                            'active' => 'Active',
+//                            'All Scanned & All Returned' => 'All Scanned & All Returned',
+//                            'Some Scanned & All Returned' => 'Some Scanned & All Returned',
+//                            'Not Scanned & All Returned' => 'Not Scanned & All Returned',
+//                            'Checked: Not Received' => 'Checked: Not Received',
+//                            'Checked: Previously Returned' => 'Checked: Previously Returned',
+//                            'Checked: Some Returned' => 'Checked: Some Returned',
+//                            'cancel' => 'Canceled'
+//                        );
+        $choices = array(
+            'All' => 'all',
+            'Active' => 'active',
+            'All Scanned & All Returned' => 'All Scanned & All Returned',
+            'Some Scanned & All Returned' => 'Some Scanned & All Returned',
+            'Not Scanned & All Returned' => 'Not Scanned & All Returned',
+            'Checked: Not Received' => 'Checked: Not Received',
+            'Checked: Previously Returned' => 'Checked: Previously Returned',
+            'Checked: Some Returned' => 'Checked: Some Returned',
+            'Canceled' => 'cancel'
+        );
 
-        $builder->add('filter', ChoiceType::class,
+        $builder->add('filter', ChoiceType::class, //flipped
             array(
                 //'mapped' => false,
                 'label' => false,
                 //'preferred_choices' => array($this->status),
                 'attr' => array('class' => 'combobox combobox-width'),
-                'choices' => $choices
+                'choices' => $choices,
+                'choices_as_values' => true,
             )
         );
         

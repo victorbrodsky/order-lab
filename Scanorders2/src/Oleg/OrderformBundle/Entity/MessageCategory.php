@@ -190,8 +190,8 @@ class MessageCategory extends BaseCompositeNode {
     }
 
     //print this node and all children nodes
-    public function printTreeSelectListIncludingThis() {
-        return $this->printTreeSelectList(array(),"getNodeNameWithParentsUntilThisParent");
+    public function printTreeSelectListIncludingThis($asLabelValue=true) {
+        return $this->printTreeSelectList(array(),"getNodeNameWithParentsUntilThisParent",$asLabelValue);
     }
     public function getNodeNameWithParentsUntilThisParent() {
         return $this->getNodeNameWithParents(": ","Encounter Note");

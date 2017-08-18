@@ -1017,7 +1017,8 @@ class UserSecurityUtil {
         $roles = $this->getRolesBySite($sitename);
 
         foreach( $roles as $role ) {
-            $rolesArr[$role->getName()] = $role->getAlias();
+            //$rolesArr[$role->getName()] = $role->getAlias(); //Symfony <2.8
+            $rolesArr[$role->getAlias()] = $role->getName(); //Symfony >2.8
         }
         return $rolesArr;
     }

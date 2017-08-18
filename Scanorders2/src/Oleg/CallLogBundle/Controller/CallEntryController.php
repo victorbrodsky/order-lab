@@ -185,7 +185,8 @@ class CallEntryController extends Controller
         $messageStatuses = $em->getRepository('OlegOrderformBundle:MessageStatusList')->findBy(array('type'=>array('default','user-added')));
         $messageStatusesChoice = array();
         foreach( $messageStatuses as $messageStatuse ) {
-            $messageStatusesChoice[$messageStatuse->getId()] = $messageStatuse."";
+            //$messageStatusesChoice[$messageStatuse->getId()] = $messageStatuse."";
+            $messageStatusesChoice[$messageStatuse.""] = $messageStatuse->getId();
         }
         //add: "All except deleted" [this should show all except "Deleted"], "All", "All Signed Non-Drafts" [this should show both "Signed" and "Signed, Amended"]
         //"All Drafts" [this should show these four "Draft", "Post-signature Draft", "Post-amendment Draft", "Post-deletion draft"].
@@ -219,9 +220,12 @@ class CallEntryController extends Controller
             //$sort = false;
             if( $sort ) {
                 $messageCategoriesValue = array();
-                foreach ($messageCategories as $key => $row) {
-                    //echo "row:".$row."<br>";
-                    $messageCategoriesValue[$key] = $row;
+//                foreach ($messageCategories as $key => $row) {
+//                    //echo "row:".$row."<br>";
+//                    $messageCategoriesValue[$key] = $row;
+//                }
+                foreach ($messageCategories as $row => $key) {
+                    $messageCategoriesValue[$row] = $key;
                 }
                 array_multisort($messageCategoriesValue, SORT_ASC, $messageCategories);
             }
@@ -237,7 +241,7 @@ class CallEntryController extends Controller
 
         $defaultMrnType = $em->getRepository('OlegOrderformBundle:MrnType')->findOneByName("New York Hospital MRN");
 
-        $referringProviders = $calllogUtil->getReferringProviders();
+        $referringProviders = $calllogUtil->getReferringProvidersWithUserWrappers();
 
         ///////////////// search in navbar /////////////////
         $navbarParams = array();
@@ -275,7 +279,7 @@ class CallEntryController extends Controller
 
         $params = array(
             'messageStatuses' => $messageStatusesChoice,
-            'messageCategories' => $messageCategories,
+            'messageCategories' => $messageCategories, //for home to list all entries page
             //'messageCategoryDefault' => $messageCategoriePathCall->getId(),
             'mrntype' => $defaultMrnType->getId(),
             'referringProviders' => $referringProviders,

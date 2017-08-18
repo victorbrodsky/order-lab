@@ -200,12 +200,13 @@ class VacReqFilterType extends AbstractType
             }
 
             //Institutional Group name - ApproverName
-            $builder->add('organizationalInstitutions', ChoiceType::class, array(
+            $builder->add('organizationalInstitutions', ChoiceType::class, array( //flipped
                 'label' => false,   //"Organizational Group:",
                 'required' => $required,
                 'multiple' => false,
                 'attr' => array('class' => 'combobox combobox-width', 'placeholder' => 'Organizational Group'),
                 'choices' => $this->params['organizationalInstitutions'],
+                'choices_as_values' => true,
             ));
             $builder->get('organizationalInstitutions')
                 ->addModelTransformer(new CallbackTransformer(

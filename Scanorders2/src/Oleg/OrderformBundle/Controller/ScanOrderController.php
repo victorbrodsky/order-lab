@@ -130,7 +130,7 @@ class ScanOrderController extends Controller {
         //create filters
         $params = array();
         $params['services'] = $services;
-        $params['statuses'] = $this->getFilter($routeName);
+        $params['statuses'] = $this->getStatusFilter($routeName);
         $form = $this->createForm(FilterType::class, null, array ('form_custom_value'=>$params));
 
 
@@ -389,7 +389,7 @@ class ScanOrderController extends Controller {
             ));
     }
 
-    public function getFilter($routeName) {
+    public function getStatusFilter($routeName) {
         $em = $this->getDoctrine()->getManager();
 
 //        if( $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
@@ -434,7 +434,8 @@ class ScanOrderController extends Controller {
         );
 
         foreach( $specials as $key => $value ) {
-            $filterType[$key] = $value;
+            //$filterType[$key] = $value;
+            $filterType[$value] = $key; //flipped
             if( $value == "All Stat" ) {
                 $filterType["All Canceled"] = "All Canceled";   //add after Not Submitted
             }
@@ -443,7 +444,8 @@ class ScanOrderController extends Controller {
         //add statuses from DB
         foreach( $statuses as $status ) {
             //echo "type: id=".$status->getId().", name=".$status->getName()."<br>";
-            $filterType[$status->getId()] = $status->getName();
+            //$filterType[$status->getId()] = $status->getName(); //flipped
+            $filterType[$status->getName()] = $status->getId();
         }
 
         //add Data Review
@@ -454,7 +456,8 @@ class ScanOrderController extends Controller {
             );
 
             foreach( $dataReviews as $key => $value ) {
-                $filterType[$key] = $value;
+                //$filterType[$key] = $value;
+                $filterType[$value] = $key; //flipped
             }
         }
 

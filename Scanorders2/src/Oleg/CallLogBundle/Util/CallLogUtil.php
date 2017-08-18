@@ -1585,7 +1585,7 @@ class CallLogUtil
     }
 
     //real users + EncounterReferringProvider's wrappers without linked users
-    public function getReferringProviders() {
+    public function getReferringProvidersWithUserWrappers() {
         $em = $this->em;
 
         $output = array();
@@ -1607,7 +1607,8 @@ class CallLogUtil
         //echo "users count=".count($users)."<br>";
 
         foreach ($users as $user) {
-            $output[$user->getId()] = $user . "";
+            //$output[$user->getId()] = $user . "";
+            $output[$user . ""] = $user->getId();
         }
         ///////////// EOF 1) get all real users /////////////
 
@@ -1688,7 +1689,8 @@ class CallLogUtil
     public function getMessageTypeByString( $string, $messageCategories, $messageCategorieDefaultIdStr ) {
 
         //$messageCategories is array: "Incompatible crossmatch" => "Pathology Call Log Entry: Transfusion Medicine: Incompatible crossmatch"
-        foreach( $messageCategories as $name=>$fullname ) {
+        //foreach( $messageCategories as $name=>$fullname ) {
+        foreach( $messageCategories as $fullname=>$name ) {
             //echo $name." ?= ".$fullname."<br>";
             if( stripos ($fullname, $string) !== false ) {
                 return $name;

@@ -82,10 +82,15 @@ class BaseTitleType extends AbstractType
         $baseUserAttr = new $this->params['fullClassName']();
         $builder->add('status', ChoiceType::class, array(
             'disabled' => ($this->params['disabled'] ? true : false),
-            'choices'   => array(
-                $baseUserAttr::STATUS_UNVERIFIED => $baseUserAttr->getStatusStrByStatus($baseUserAttr::STATUS_UNVERIFIED),
-                $baseUserAttr::STATUS_VERIFIED => $baseUserAttr->getStatusStrByStatus($baseUserAttr::STATUS_VERIFIED)
+//            'choices'   => array(
+//                $baseUserAttr::STATUS_UNVERIFIED => $baseUserAttr->getStatusStrByStatus($baseUserAttr::STATUS_UNVERIFIED),
+//                $baseUserAttr::STATUS_VERIFIED => $baseUserAttr->getStatusStrByStatus($baseUserAttr::STATUS_VERIFIED)
+//            ),
+            'choices' => array(
+                $baseUserAttr->getStatusStrByStatus($baseUserAttr::STATUS_UNVERIFIED) => $baseUserAttr::STATUS_UNVERIFIED,
+                $baseUserAttr->getStatusStrByStatus($baseUserAttr::STATUS_VERIFIED) => $baseUserAttr::STATUS_VERIFIED
             ),
+            'choices_as_values' => true,
             'label' => "Status:",
             'required' => true,
             'attr' => array('class' => 'combobox combobox-width'),
@@ -95,9 +100,10 @@ class BaseTitleType extends AbstractType
         if( !$hasRoleSimpleView ) {
             $builder->add('priority', ChoiceType::class, array(
                 'choices' => array(
-                    '0' => 'Primary',
-                    '1' => 'Secondary'
+                    'Primary' => '0',
+                    'Secondary' => '1'
                 ),
+                'choices_as_values' => true,
                 'label' => $this->params['label'] . " Title Type:",
                 'required' => false,
                 'attr' => array('class' => 'combobox combobox-width'),

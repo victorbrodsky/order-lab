@@ -54,6 +54,7 @@ class CalendarController extends Controller
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
+        $userServiceUtil = $this->get('user_service_utility');
         $vacreqUtil = $this->get('vacreq_util');
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -94,7 +95,8 @@ class CalendarController extends Controller
 //            echo $id.": group=".$organizationalInstitution."<br>";
 //        }
 
-        $params['organizationalInstitutions'] = $organizationalInstitutions;
+        //$params['organizationalInstitutions'] = $organizationalInstitutions;
+        $params['organizationalInstitutions'] = $userServiceUtil->flipArrayLabelValue($organizationalInstitutions);   //flipped
 
         $groupId = $request->query->get('group');
         //echo "groupId=".$groupId."<br>";

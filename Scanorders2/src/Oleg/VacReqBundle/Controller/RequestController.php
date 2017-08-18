@@ -1239,6 +1239,7 @@ class RequestController extends Controller
     public function createRequestForm( $entity, $cycle, $request ) {
 
         $em = $this->getDoctrine()->getManager();
+        $userServiceUtil = $this->get('user_service_utility');
         $vacreqUtil = $this->get('vacreq_util');
         $routeName = $request->get('_route');
 
@@ -1370,8 +1371,8 @@ class RequestController extends Controller
             'roleAdmin' => $admin,
             'roleApprover' => $roleApprover,
             'roleCarryOverApprover' => $roleCarryOverApprover,
-            'organizationalInstitutions' => $organizationalInstitutions,
-            'tentativeInstitutions' => $tentativeInstitutions,
+            'organizationalInstitutions' => $userServiceUtil->flipArrayLabelValue($organizationalInstitutions),
+            'tentativeInstitutions' => $userServiceUtil->flipArrayLabelValue($tentativeInstitutions),
             'holidaysUrl' => $holidaysUrl
         );
 
@@ -1415,16 +1416,24 @@ class RequestController extends Controller
             //$previousPreviousYearRange = (date("Y")-2)."-".(date("Y")-1);
 
             //sourceYearRanges: current academic year and previous academic year
+//            $sourceYearRanges = array(
+//                (date("Y")-1) => $currentYearRange,     //THIS YEAR (default)
+//                (date("Y")-2) => $previousYearRange     //PREVIOUS YEAR
+//            );
             $sourceYearRanges = array(
-                (date("Y")-1) => $currentYearRange,     //THIS YEAR (default)
-                (date("Y")-2) => $previousYearRange     //PREVIOUS YEAR
+                $currentYearRange => (date("Y")-1),     //THIS YEAR (default)
+                $previousYearRange => (date("Y")-2)     //PREVIOUS YEAR
             );
             $params['sourceYearRanges'] = $sourceYearRanges;
 
             //destinationYearRanges: Current Academic Year and Next Academic year
+//            $destinationYearRanges = array(
+//                (date("Y")) => $nextYearRange,        //NEXT YEAR (default)
+//                (date("Y")-1) => $currentYearRange    //THIS YEAR
+//            );
             $destinationYearRanges = array(
-                (date("Y")) => $nextYearRange,        //NEXT YEAR (default)
-                (date("Y")-1) => $currentYearRange    //THIS YEAR
+                $nextYearRange => (date("Y")),        //NEXT YEAR (default)
+                $currentYearRange => (date("Y")-1)    //THIS YEAR
             );
             $params['destinationYearRanges'] = $destinationYearRanges;
         }

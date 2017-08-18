@@ -95,13 +95,19 @@ class VacReqRequestBaseType extends AbstractType
                 $readOnly = false;
             }
 
-            $builder->add('status', ChoiceType::class, array(
+            $builder->add('status', ChoiceType::class, array( //flipped
                 'disabled' => $readOnly,    //($this->params['roleAdmin'] ? false : true),
+//                'choices' => array(
+//                    'pending' => 'Pending',
+//                    'approved' => 'Approved',
+//                    'rejected' => 'Rejected'
+//                ),
                 'choices' => array(
-                    'pending' => 'Pending',
-                    'approved' => 'Approved',
-                    'rejected' => 'Rejected'
+                    'Pending' => 'pending',
+                    'Approved' => 'approved',
+                    'Rejected' => 'rejected'
                 ),
+                'choices_as_values' => true,
                 'label' => false,   //"Status:",
                 'expanded' => true,
                 'multiple' => false,

@@ -35,7 +35,7 @@ class TimeZoneUtil {
      * @return array
      * @link http://stackoverflow.com/a/9328760
      */
-    public function tz_list() {
+    public function tz_list( $asValueLabel=false ) {
         $zones_array = array();
 
         $dateTimeZoneUTC = new \DateTimeZone("UTC");
@@ -72,7 +72,11 @@ class TimeZoneUtil {
 //                echo $zone . ": timeOffset=" . $timeOffset . "<br>";
 //            }
 
-            $zones_array[$zone] = '(UTC/GMT ' . $timeOffset . ') '. $zone;
+            if( $asValueLabel ) {
+                $zones_array[$zone] = '(UTC/GMT ' . $timeOffset . ') ' . $zone;
+            } else {
+                $zones_array['(UTC/GMT ' . $timeOffset . ') ' . $zone] = $zone;
+            }
         }
         return $zones_array;
     }

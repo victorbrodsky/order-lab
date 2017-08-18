@@ -71,14 +71,20 @@ class VacReqRequestType extends AbstractType
                 $tentativereadOnly = false;
             }
 
-            $builder->add('tentativeStatus', ChoiceType::class, array(
+            $builder->add('tentativeStatus', ChoiceType::class, array( //flipped
                 'disabled' => $tentativereadOnly,    //($this->params['roleAdmin'] ? false : true),
                 //'disabled' => $tentativereadOnly,
+//                'choices' => array(
+//                    //'pending' => 'Pending',
+//                    'approved' => 'Approved',
+//                    'rejected' => 'Rejected'
+//                ),
                 'choices' => array(
                     //'pending' => 'Pending',
-                    'approved' => 'Approved',
-                    'rejected' => 'Rejected'
+                    'Approved' => 'approved',
+                    'Rejected' => 'rejected'
                 ),
+                'choices_as_values' => true,
                 'label' => false,   //"Status:",
                 'expanded' => true,
                 'multiple' => false,
@@ -94,13 +100,19 @@ class VacReqRequestType extends AbstractType
                 $readOnly = false;
             }
 
-            $builder->add('status', ChoiceType::class, array(
+            $builder->add('status', ChoiceType::class, array( //flipped
                 'disabled' => $readOnly,    //($this->params['roleAdmin'] ? false : true),
+//                'choices' => array(
+//                    //'pending' => 'Pending',
+//                    'approved' => 'Approved',
+//                    'rejected' => 'Rejected'
+//                ),
                 'choices' => array(
                     //'pending' => 'Pending',
-                    'approved' => 'Approved',
-                    'rejected' => 'Rejected'
+                    'Approved' => 'approved',
+                    'Rejected' => 'rejected'
                 ),
+                'choices_as_values' => true,
                 'label' => false,   //"Status:",
                 'expanded' => true,
                 'multiple' => false,
@@ -253,16 +265,18 @@ class VacReqRequestType extends AbstractType
 
     public function addCarryOverFields( $builder ) {
 
-        $builder->add('sourceYear', ChoiceType::class, array(
+        $builder->add('sourceYear', ChoiceType::class, array( //flipped
             'label' => "Source Academic Year:",
             'attr' => array('class' => 'combobox combobox-width vacreq-sourceYear'),
-            'choices' => $this->params['sourceYearRanges']
+            'choices' => $this->params['sourceYearRanges'],
+            'choices_as_values' => true,
         ));
 
-        $builder->add('destinationYear', ChoiceType::class, array(
+        $builder->add('destinationYear', ChoiceType::class, array( //flipped
             'label' => "Destination Academic Year:",
             'attr' => array('class' => 'combobox combobox-width vacreq-destinationYear'),
-            'choices' => $this->params['destinationYearRanges']
+            'choices' => $this->params['destinationYearRanges'],
+            'choices_as_values' => true,
         ));
 
         $builder->add('carryOverDays', null, array(
@@ -321,11 +335,12 @@ class VacReqRequestType extends AbstractType
 //        }
 
         //$requiredInst = true;
-        $builder->add('institution', ChoiceType::class, array(
+        $builder->add('institution', ChoiceType::class, array( //flipped
             'label' => "Organizational Group:",
             'required' => $requiredInst,
             'attr' => array('class' => 'combobox combobox-width vacreq-institution', 'placeholder' => 'Organizational Group'),
             'choices' => $this->params['organizationalInstitutions'],
+            'choices_as_values' => true,
             'disabled' => ($this->params['review'] ? true : false)
         ));
         $builder->get('institution')
@@ -363,11 +378,12 @@ class VacReqRequestType extends AbstractType
                 //$readonlyTentativeInstitution = false;
             }
             //$requiredTentInst = true;
-            $builder->add('tentativeInstitution', ChoiceType::class, array(
+            $builder->add('tentativeInstitution', ChoiceType::class, array( //flipped
                 'label' => "Tentative Approval:",
                 'required' => $requiredTentInst,
                 'attr' => array('class' => 'combobox combobox-width vacreq-tentativeInstitution', 'placeholder' => 'Organizational Group'),
                 'choices' => $this->params['tentativeInstitutions'],
+                'choices_as_values' => true,
                 'disabled' => ($this->params['review'] ? true : false)
             ));
             $builder->get('tentativeInstitution')

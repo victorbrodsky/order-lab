@@ -30,7 +30,7 @@ use Doctrine\ORM\EntityRepository;
 
 use Oleg\OrderformBundle\Entity\Message;
 use Oleg\UserdirectoryBundle\Form\AttachmentContainerType;
-use Oleg\OrderformBundle\Helper\FormHelper;
+//use Oleg\OrderformBundle\Helper\FormHelper;
 
 //This form includes only message object
 class MessageObjectType extends AbstractType
@@ -219,10 +219,11 @@ class MessageObjectType extends AbstractType
         }
 
         //priority
-        $helper = new FormHelper();
+        //$helper = new FormHelper();
         $priorityArr = array(
             'label' => $this->labels['priority'],
-            'choices' => $helper->getPriority(),
+            'choices' => array( 'Routine'=>'Routine', 'Stat'=>'Stat' ), //$helper->getPriority(),
+            'choices_as_values' => true,
             'required' => true,
             'multiple' => false,
             'expanded' => true,
@@ -231,7 +232,7 @@ class MessageObjectType extends AbstractType
         if($this->params['cycle'] == "" || $this->params['cycle'] == 'new' || $this->params['cycle'] == 'create' ) {
             $priorityArr['data'] = 'Routine';    //new
         }
-        $builder->add( 'priority', ChoiceType::class, $priorityArr);
+        $builder->add( 'priority', ChoiceType::class, $priorityArr); //flipped
 
         //deadline
         if( $this->params['cycle'] == 'new' ) {

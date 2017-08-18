@@ -30,9 +30,11 @@ class DataQualityMrnAccType extends AbstractType
 
         $type = 'text'; //'hidden';
 
-        $builder->add( 'btnoption', ChoiceType::class, array(
+        $builder->add( 'btnoption', ChoiceType::class, array( //flipped
             'label'=>'MRN-ACCESSION CONFLICT',
-            'choices' => array("OPTION1"=>"TEXT1", "OPTION2"=>"TEXT2", "OPTION3"=>"TEXT3"),
+            //'choices' => array("OPTION1"=>"TEXT1", "OPTION2"=>"TEXT2", "OPTION3"=>"TEXT3"),
+            'choices' => array("TEXT1"=>"OPTION1", "TEXT2"=>"OPTION2", "TEXT3"=>"OPTION3"),
+            'choices_as_values' => true,
             'multiple' => false,
             'expanded' => true,
             'mapped' => false,

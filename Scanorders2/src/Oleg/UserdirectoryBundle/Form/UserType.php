@@ -324,8 +324,9 @@ class UserType extends AbstractType
         //Roles
         if( $this->roles && ($this->cycle == "show" || $this->roleAdmin) ) {
             $attr = array('class' => 'combobox combobox-width');
-            $builder->add('roles', ChoiceType::class, array(
+            $builder->add('roles', ChoiceType::class, array( //flipped
                 'choices' => $this->roles,
+                'choices_as_values' => true,
                 'label' => 'Role(s):',
                 'attr' => $attr,
                 'multiple' => true,

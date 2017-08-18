@@ -59,12 +59,17 @@ class TrainingType extends AbstractType
 
         //status
         $baseUserAttr = new Training();
-        $builder->add('status', ChoiceType::class, array(
+        $builder->add('status', ChoiceType::class, array(   //flipped
             'disabled' => ($this->params['disabled'] ? true : false),
+//            'choices' => array(
+//                $baseUserAttr::STATUS_UNVERIFIED => $baseUserAttr->getStatusStrByStatus($baseUserAttr::STATUS_UNVERIFIED),
+//                $baseUserAttr::STATUS_VERIFIED => $baseUserAttr->getStatusStrByStatus($baseUserAttr::STATUS_VERIFIED)
+//            ),
             'choices' => array(
-                $baseUserAttr::STATUS_UNVERIFIED => $baseUserAttr->getStatusStrByStatus($baseUserAttr::STATUS_UNVERIFIED),
-                $baseUserAttr::STATUS_VERIFIED => $baseUserAttr->getStatusStrByStatus($baseUserAttr::STATUS_VERIFIED)
+                $baseUserAttr->getStatusStrByStatus($baseUserAttr::STATUS_UNVERIFIED) => $baseUserAttr::STATUS_UNVERIFIED,
+                $baseUserAttr->getStatusStrByStatus($baseUserAttr::STATUS_VERIFIED) => $baseUserAttr::STATUS_VERIFIED
             ),
+            'choices_as_values' => true,
             'label' => "Status:",
             'required' => true,
             'attr' => array('class' => 'combobox combobox-width'),

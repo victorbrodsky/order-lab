@@ -36,10 +36,11 @@ class FilterType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        $builder->add( 'filter', ChoiceType::class, array(
+        $builder->add( 'filter', ChoiceType::class, array( //flipped
             'label' => 'Filter by Order Status:',
             'max_length'=>50,
             'choices' => $this->params['statuses'],
+            'choices_as_values' => true,
             'required' => true,
             'attr' => array('class' => 'combobox combobox-width order-status-filter')
         ));                       
@@ -51,10 +52,11 @@ class FilterType extends AbstractType
             'attr' => array('class'=>'form-control form-control-modif limit-font-size submit-on-enter-field'),
         ));
 
-        $builder->add('service', ChoiceType::class, array(
+        $builder->add('service', ChoiceType::class, array( //flipped
             'label'     => 'Services',
             'required'  => true,
             'choices' => $this->params['services'],
+            'choices_as_values' => true,
             'attr' => array('class' => 'combobox combobox-width')
         ));
         

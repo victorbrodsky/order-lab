@@ -597,7 +597,7 @@ class CallLogPatientController extends PatientController {
 
         $params = array(
             'messageCategory' => $messageCategoryId,
-            'messageCategories' => $messageCategories
+            'messageCategories' => $messageCategories //for previous entries page
         );
         $filterform = $this->createForm(CalllogListPreviousEntriesFilterType::class, null, array('form_custom_value'=>$params));
         $filterform->submit($request);

@@ -97,9 +97,10 @@ class ListType extends AbstractType
             'attr' => array('class' => 'textarea form-control')
         ));
 
-        $builder->add('type',ChoiceType::class,array(
+        $builder->add('type',ChoiceType::class,array( //flipped
             'label'=>'Type:',
             'choices' => $this->types,
+            'choices_as_values' => true,
             'required' => true,
             'multiple' => false,
             'attr' => array('class'=>'combobox combobox-width select2-list-type')

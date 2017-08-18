@@ -30,7 +30,7 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 use Doctrine\ORM\EntityRepository;
 
-use Oleg\OrderformBundle\Helper\FormHelper;
+//use Oleg\OrderformBundle\Helper\FormHelper;
 
 
 //This form type is used strictly only for scan order: message (message) form has scan order
@@ -73,7 +73,7 @@ class MessageType extends AbstractType
         //echo "cycle=".$this->params['cycle']."<br>";
 //        echo "<br>";
 
-        $helper = new FormHelper();
+        //$helper = new FormHelper();
 
         $builder->add( 'oid' , 'hidden', array('attr'=>array('class'=>'message-id')) );
 
@@ -138,7 +138,8 @@ class MessageType extends AbstractType
         //priority
         $priorityArr = array(
             'label' => 'Priority:',
-            'choices' => $helper->getPriority(),
+            'choices' => array( 'Routine'=>'Routine', 'Stat'=>'Stat' ), //$helper->getPriority(),
+            'choices_as_values' => true,
             'required' => true,
             'multiple' => false,
             'expanded' => true,
@@ -147,7 +148,7 @@ class MessageType extends AbstractType
         if($this->params['cycle'] == "" || $this->params['cycle'] == 'new' || $this->params['cycle'] == 'create' ) {
             $priorityArr['data'] = 'Routine';    //new
         }
-        $builder->add( 'priority', ChoiceType::class, $priorityArr);
+        $builder->add( 'priority', ChoiceType::class, $priorityArr); //flipped
 
 //        //delivery
 //        $attr = array('class' => 'ajax-combobox-delivery', 'type' => 'hidden');
@@ -289,10 +290,14 @@ class MessageType extends AbstractType
                 },
         ));
 
-        $builder->add( 'purpose', ChoiceType::class, array(
+        $builder->add( 'purpose', ChoiceType::class, array( //flipped
             'label' => 'Purpose:',
             'required' => true,
-            'choices' => array("For Internal Use by WCMC Department of Pathology"=>"For Internal Use by WCMC Department of Pathology", "For External Use (Invoice Fund Number)"=>"For External Use (Invoice Fund Number)"),
+            'choices' => array(
+                "For Internal Use by WCMC Department of Pathology"=>"For Internal Use by WCMC Department of Pathology",
+                "For External Use (Invoice Fund Number)"=>"For External Use (Invoice Fund Number)"
+            ),
+            'choices_as_values' => true,
             'multiple' => false,
             'expanded' => true,
             'attr' => array('class' => 'horizontal_type')

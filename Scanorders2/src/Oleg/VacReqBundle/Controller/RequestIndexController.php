@@ -378,7 +378,8 @@ class RequestIndexController extends Controller
             );
         }
 
-        $params['organizationalInstitutions'] = $organizationalInstitutions;
+        $userServiceUtil = $this->get('user_service_utility');
+        $params['organizationalInstitutions'] = $userServiceUtil->flipArrayLabelValue($organizationalInstitutions); //flipped //$organizationalInstitutions;
 
         //tentative institutions
         $tentativeGroupParams = array(); //'asObject'=>true

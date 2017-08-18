@@ -40,8 +40,9 @@ class VacReqUserType extends UserType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        $builder->add('roles', ChoiceType::class, array(
+        $builder->add('roles', ChoiceType::class, array( //flipped
             'choices' => $this->params['roles'],
+            'choices_as_values' => true,
             'label' => 'Role(s):',
             'attr' => array('class' => 'combobox combobox-width vacreq-roles'),
             'multiple' => true,

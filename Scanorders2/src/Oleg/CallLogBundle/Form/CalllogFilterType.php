@@ -67,6 +67,7 @@ class CalllogFilterType extends AbstractType
             'label' => false,
             'required' => false,
             'choices' => $this->params['messageCategories'],
+            'choices_as_values' => true,
             //'data' => $this->params['messageCategoryDefault'],
             'empty_data' => $this->params['messageCategoryType'],
             'attr' => array('class' => 'combobox submit-on-enter-field', 'placeholder' => "Message Type"),
@@ -149,7 +150,8 @@ class CalllogFilterType extends AbstractType
             'label' => false,
             'required' => false,
             'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Referring Provider"),
-            'choices' => $this->params['referringProviders']
+            'choices' => $this->params['referringProviders'],
+            'choices_as_values' => true,
         ));
 
         $builder->add('referringProviderSpecialty', 'entity', array(
@@ -180,7 +182,8 @@ class CalllogFilterType extends AbstractType
             'label' => false,
             'required' => false,
             'attr' => array('class' => 'combobox', 'placeholder' => "Message Status"),
-            'choices' => $this->params['messageStatuses']
+            'choices' => $this->params['messageStatuses'],
+            'choices_as_values' => true,
         ));
 
         //Patient List

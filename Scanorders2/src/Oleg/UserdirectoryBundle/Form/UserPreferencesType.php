@@ -66,10 +66,11 @@ class UserPreferencesType extends AbstractType
             //timezone
             $tzUtil = new TimeZoneUtil();
 
-            $builder->add('timezone', ChoiceType::class, array(
+            $builder->add('timezone', ChoiceType::class, array( //flipped
                 'label' => 'Time Zone:',
                 //'label' => $translator->translate('timezone',$formtype,'Time Zone:'),
                 'choices' => $tzUtil->tz_list(),
+                'choices_as_values' => true,
                 'required' => true,
                 'preferred_choices' => array('America/New_York'),
                 'attr' => array('class' => 'combobox combobox-width')
@@ -132,8 +133,9 @@ class UserPreferencesType extends AbstractType
                 },
             ));
 
-            $builder->add('showToRoles', ChoiceType::class, array(
+            $builder->add('showToRoles', ChoiceType::class, array( //flipped
                 'choices' => $this->roles,
+                'choices_as_values' => true,
                 'label' => 'Only show this profile to users with the following roles:',
                 'attr' => array('class' => 'combobox combobox-width user-preferences-showToRoles'),
                 'multiple' => true,

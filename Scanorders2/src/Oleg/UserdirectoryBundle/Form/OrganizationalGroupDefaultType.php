@@ -67,8 +67,9 @@ class OrganizationalGroupDefaultType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
 
-        $builder->add('roles', ChoiceType::class, array(
+        $builder->add('roles', ChoiceType::class, array( //flipped
             'choices' => $this->params['roles'],
+            'choices_as_values' => true,
             'label' => 'Role(s):',
             'multiple' => true,
             'attr' => array('class' => 'combobox combobox-width'),
@@ -76,10 +77,11 @@ class OrganizationalGroupDefaultType extends AbstractType
 
         //timezone
         $tzUtil = new TimeZoneUtil();
-        $builder->add( 'timezone', ChoiceType::class, array(
+        $builder->add( 'timezone', ChoiceType::class, array( //flipped
             'label' => 'Time Zone:',
             //'label' => $translator->translate('timezone',$formtype,'Time Zone:'),
             'choices' => $tzUtil->tz_list(),
+            'choices_as_values' => true,
             'required' => true,
             'preferred_choices' => array('America/New_York'),
             'attr' => array('class' => 'combobox combobox-width')

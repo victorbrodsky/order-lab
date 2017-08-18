@@ -169,11 +169,11 @@ class FellAppUtil {
         $userSecUtil = $this->container->get('user_security_utility');
 
         if( $userSecUtil->hasGlobalUserRole( "ROLE_FELLAPP_ADMIN", $user ) ) {
-            return $this->getFellowshipTypesByInstitution();
+            return $this->getFellowshipTypesByInstitution(false);
         }
 
         $filterTypes = array();
-        $filterTypeIds = array();
+        //$filterTypeIds = array();
 
         foreach( $user->getRoles() as $rolename ) {
             $roleObject = $em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($rolename);
@@ -181,7 +181,7 @@ class FellAppUtil {
                 $fellowshipSubspecialty = $roleObject->getFellowshipSubspecialty();
                 if( $fellowshipSubspecialty ) {
                     $filterTypes[$fellowshipSubspecialty->getId()] = $fellowshipSubspecialty->getName();
-                    $filterTypeIds[] = $fellowshipSubspecialty->getId();
+                    //$filterTypeIds[] = $fellowshipSubspecialty->getId();
                 }
             }
         }
@@ -196,7 +196,7 @@ class FellAppUtil {
     }
 
     //get all fellowship application types (with WCMC Pathology) using role
-    public function getFellowshipTypesByInstitution($asEntities=false) {
+    public function getFellowshipTypesByInstitution( $asEntities=false ) {
         $em = $this->em;
 
         $mapper = array(
@@ -230,7 +230,7 @@ class FellAppUtil {
 
         //add statuses
         foreach( $fellTypes as $type ) {
-            //echo "type: id=".$status->getId().", name=".$status->getName()."<br>";
+            //echo "type: id=".$type->getId().", name=".$type->getName()."<br>";
             $filterType[$type->getId()] = $type->getName();
         }
 

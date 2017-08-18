@@ -56,6 +56,7 @@ class HierarchyFilterType extends AbstractType
         $params = array(
             'label'=>'Types:',
             'choices' => $types,
+            'choices_as_values' => true,
             'required' => false,
             'multiple' => true,
             'attr' => array('class'=>'combobox select2-hierarchy-types') //submit-on-enter-field
@@ -65,7 +66,7 @@ class HierarchyFilterType extends AbstractType
             $params['data'] = $this->params['types'];
         }
 
-        $builder->add('types',ChoiceType::class,$params);
+        $builder->add('types',ChoiceType::class,$params); //flipped
 
     }
 

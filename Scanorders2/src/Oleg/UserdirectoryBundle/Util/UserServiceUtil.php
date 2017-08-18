@@ -440,6 +440,18 @@ class UserServiceUtil {
         return null;
     }
 
+    //use it for deprecated choices secletion for Symfony>2.7
+    public function flipArrayLabelValue( $keyLabelArr ) {
+        $labelValueArr = array();
+        foreach( $keyLabelArr as $key=>$label ) {
+            //echo "[$key] => [$label] <br>";
+            if( $label ) {
+                $labelValueArr[$label.""] = $key;
+            }
+        }
+        return $labelValueArr;
+    }
+
 
 
 
