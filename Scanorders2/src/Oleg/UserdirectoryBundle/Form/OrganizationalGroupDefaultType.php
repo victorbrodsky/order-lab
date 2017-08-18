@@ -18,6 +18,7 @@
 namespace Oleg\UserdirectoryBundle\Form;
 
 
+use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Oleg\UserdirectoryBundle\Util\TimeZoneUtil;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -193,7 +194,7 @@ class OrganizationalGroupDefaultType extends AbstractType
             }
         ));
 
-        $builder->add('city', 'employees_custom_selector', array(
+        $builder->add('city', CustomSelectorType::class, array(
             'label' => 'Location City:',
             'required' => false,
             'attr' => array('class' => 'ajax-combobox-city', 'type' => 'hidden'),
@@ -321,7 +322,7 @@ class OrganizationalGroupDefaultType extends AbstractType
             }
 
             $targetPrefix = "Organizational Group for new user's default values in Employee Directory - ";
-            $form->add('institution', 'employees_custom_selector', array(
+            $form->add('institution', CustomSelectorType::class, array(
                 'label' => $targetPrefix." ".$label,
                 //'error_bubbling' => true,
                 'required' => false,
@@ -335,7 +336,7 @@ class OrganizationalGroupDefaultType extends AbstractType
                 'classtype' => 'institution'
             ));
 
-            $form->add('defaultInstitution', 'employees_custom_selector', array(
+            $form->add('defaultInstitution', CustomSelectorType::class, array(
                 'label' => 'Organizational Group ' . $label,
                 'required' => false,
                 'attr' => array(
@@ -349,7 +350,7 @@ class OrganizationalGroupDefaultType extends AbstractType
             ));
 
             //administrativeTitleInstitution
-            $form->add('administrativeTitleInstitution', 'employees_custom_selector', array(
+            $form->add('administrativeTitleInstitution', CustomSelectorType::class, array(
                 'label' => "Administrative Title ".$label,
                 'required' => false,
                 'attr' => array(
@@ -363,7 +364,7 @@ class OrganizationalGroupDefaultType extends AbstractType
             ));
 
             //academicTitleInstitution
-            $form->add('academicTitleInstitution', 'employees_custom_selector', array(
+            $form->add('academicTitleInstitution', CustomSelectorType::class, array(
                 'label' => "Academic Appointment Title ".$label,
                 'required' => false,
                 'attr' => array(
@@ -377,7 +378,7 @@ class OrganizationalGroupDefaultType extends AbstractType
             ));
 
             //medicalTitleInstitution
-            $form->add('medicalTitleInstitution', 'employees_custom_selector', array(
+            $form->add('medicalTitleInstitution', CustomSelectorType::class, array(
                 'label' => "Medical Appointment Title ".$label,
                 'required' => false,
                 'attr' => array(
@@ -390,7 +391,7 @@ class OrganizationalGroupDefaultType extends AbstractType
                 'classtype' => 'institution'
             ));
 
-            $form->add('locationInstitution', 'employees_custom_selector', array(
+            $form->add('locationInstitution', CustomSelectorType::class, array(
                 'label' => "Location ".$label,
                 'required' => false,
                 'attr' => array(

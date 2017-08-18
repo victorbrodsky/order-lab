@@ -18,6 +18,7 @@
 namespace Oleg\UserdirectoryBundle\Form;
 
 
+use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -56,7 +57,7 @@ class BaseTitleType extends AbstractType
 //            'required'=>false,
 //            'attr' => array('class' => 'form-control')
 //        ));
-        $builder->add('name', 'employees_custom_selector', array(
+        $builder->add('name', CustomSelectorType::class, array(
             'label'=>$this->params['label'].' Title:',
             'attr' => array('class' => 'ajax-combobox-'.$this->params['formname'], 'type' => 'hidden'),
             'required' => false,
@@ -201,12 +202,12 @@ class BaseTitleType extends AbstractType
 
             $treeFieldArray['attr'] = $attrArray;
 
-            $form->add('institution', 'employees_custom_selector', $treeFieldArray);
+            $form->add('institution', CustomSelectorType::class, $treeFieldArray);
         });
         ///////////////////////// EOF tree node /////////////////////////
 
         if( !$hasRoleSimpleView ) {
-            $builder->add('effort', 'employees_custom_selector', array(
+            $builder->add('effort', CustomSelectorType::class, array(
                 'label' => 'Percent Effort:',
                 'attr' => array('class' => 'ajax-combobox-effort', 'type' => 'hidden', "data-inputmask" => "'mask': '[o]', 'repeat': 10, 'greedy' : false"),
                 'required' => false,
@@ -273,7 +274,7 @@ class BaseTitleType extends AbstractType
                     },
             ));
 
-            $builder->add('fellowshipType', 'employees_custom_selector', array(
+            $builder->add('fellowshipType', CustomSelectorType::class, array(
                 'label' => "Fellowship Type:",
                 'required' => false,
                 'attr' => array('class' => 'combobox combobox-width ajax-combobox-fellowshiptype', 'type' => 'hidden'),

@@ -17,6 +17,7 @@
 
 namespace Oleg\OrderformBundle\Form;
 
+use Oleg\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
 use Oleg\UserdirectoryBundle\Form\InstitutionalWrapperType;
 use Oleg\UserdirectoryBundle\Form\InstitutionType;
 use Symfony\Component\Form\AbstractType;
@@ -173,7 +174,7 @@ class MessageObjectType extends AbstractType
         ));
 
         if( $this->keyInArrayAndTrue($this->params,'message.proxyuser') ) {
-            $builder->add('proxyuser', 'custom_selector', array(
+            $builder->add('proxyuser', ScanCustomSelectorType::class, array(
                 'label' => $this->labels['proxyuser'],
                 'attr' => array('class' => 'combobox combobox-width ajax-combobox-proxyuser'),
                 'required' => false,
@@ -182,7 +183,7 @@ class MessageObjectType extends AbstractType
         }
 
         if( $this->keyInArrayAndTrue($this->params,'message.orderRecipients') ) {
-            $builder->add('orderRecipients', 'custom_selector', array(
+            $builder->add('orderRecipients', ScanCustomSelectorType::class, array(
                 'label' => $this->labels['orderRecipients'],
                 'attr' => array('class' => 'combobox combobox-width ajax-combobox-proxyuser'),
                 'required' => false,
@@ -191,7 +192,7 @@ class MessageObjectType extends AbstractType
         }
 
         if( $this->keyInArrayAndTrue($this->params,'message.reportRecipients') ) {
-            $builder->add('reportRecipients', 'custom_selector', array(
+            $builder->add('reportRecipients', ScanCustomSelectorType::class, array(
                 'label' => $this->labels['reportRecipients'],
                 'attr' => array('class' => 'combobox combobox-width ajax-combobox-proxyuser'),
                 'required' => false,
@@ -379,7 +380,7 @@ if( 1 ) {
 
                 //Encounter Note
                 if( $messageCategory == "Encounter Note" ) {
-                    $form->add('proxyuser', 'custom_selector', array(
+                    $form->add('proxyuser', ScanCustomSelectorType::class, array(
                         'label' => $this->labels['proxyuser'],
                         'attr' => array('class' => 'combobox combobox-width ajax-combobox-proxyuser'),
                         'required' => false,
@@ -408,7 +409,7 @@ if( 1 ) {
                 //Referral Order
                 if( $messageCategory == "Referral Order" ) {
                     //overwrite orderRecipients with new title
-                    $form->add('orderRecipients', 'custom_selector', array(
+                    $form->add('orderRecipients', ScanCustomSelectorType::class, array(
                         'label' => 'Refer To Individual:',
                         'attr' => array('class' => 'combobox combobox-width ajax-combobox-proxyuser'),
                         'required' => false,
@@ -682,7 +683,7 @@ if( 1 ) {
 //        ));
 //
 //        if( array_key_exists('message.proxyuser', $this->params) && $this->params['message.proxyuser'] == true ) {
-//            $builder->add('proxyuser', 'custom_selector', array(
+//            $builder->add('proxyuser', ScanCustomSelectorType::class, array(
 //                'label' => $this->labels['proxyuser'],
 //                'attr' => array('class' => 'combobox combobox-width ajax-combobox-proxyuser'),
 //                'required' => false,
@@ -692,7 +693,7 @@ if( 1 ) {
 //        }
 //
 //        if( array_key_exists('message.orderRecipients', $this->params) && $this->params['message.orderRecipients'] == true ) {
-//            $builder->add('orderRecipients', 'custom_selector', array(
+//            $builder->add('orderRecipients', ScanCustomSelectorType::class, array(
 //                'label' => $this->labels['orderRecipients'],
 //                'attr' => array('class' => 'combobox combobox-width ajax-combobox-proxyuser'),
 //                'required' => false,
@@ -701,7 +702,7 @@ if( 1 ) {
 //        }
 //
 //        if( array_key_exists('message.reportRecipients', $this->params) && $this->params['message.reportRecipients'] == true ) {
-//            $builder->add('reportRecipients', 'custom_selector', array(
+//            $builder->add('reportRecipients', ScanCustomSelectorType::class, array(
 //                'label' => $this->labels['reportRecipients'],
 //                'attr' => array('class' => 'combobox combobox-width ajax-combobox-proxyuser'),
 //                'required' => false,

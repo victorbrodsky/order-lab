@@ -19,6 +19,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 
 
 
+use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -58,7 +59,7 @@ class GeoLocationType extends AbstractType
             'attr' => array('class'=>'form-control geo-field-street2')
         ));
 
-        $builder->add('city', 'employees_custom_selector', array(
+        $builder->add('city', CustomSelectorType::class, array(
             'label' => 'City:',
             'required' => false,
             'attr' => array('class' => 'combobox ajax-combobox-city', 'type' => 'hidden'),

@@ -17,6 +17,7 @@
 
 namespace Oleg\OrderformBundle\Form;
 
+use Oleg\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -58,7 +59,7 @@ class SpecialStainsType extends AbstractType
         //if($this->params['cycle'] == "" || $this->params['cycle'] == 'new' || $this->params['cycle'] == 'create') {
         //    $options['data'] = 1;
         //}
-        $builder->add('staintype', 'custom_selector', $options );
+        $builder->add('staintype', ScanCustomSelectorType::class, $options );
 
         //stainothers
         $builder->add('others', ArrayFieldType::class, array(

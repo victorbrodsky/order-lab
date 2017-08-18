@@ -18,6 +18,7 @@
 namespace Oleg\UserdirectoryBundle\Form;
 
 
+use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -82,7 +83,7 @@ class ResearchLabType extends AbstractType
             ));
         }
 
-        $builder->add('location', 'employees_custom_selector', array(
+        $builder->add('location', CustomSelectorType::class, array(
             'disabled' => $readonly,
             'label' => "Location:",
             'required' => false,

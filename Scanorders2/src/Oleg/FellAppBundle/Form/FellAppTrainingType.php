@@ -18,6 +18,7 @@
 namespace Oleg\FellAppBundle\Form;
 
 
+use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Oleg\UserdirectoryBundle\Form\GeoLocationType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -64,14 +65,14 @@ class FellAppTrainingType extends AbstractType
             'attr' => array('class'=>'combobox combobox-width ajax-combobox-trainingdegree')
         ));
 
-        $builder->add('majors', 'employees_custom_selector', array(
+        $builder->add('majors', CustomSelectorType::class, array(
             'label' => 'Major:',
             'attr' => array('class' => 'ajax-combobox-trainingmajors', 'type' => 'hidden'),
             'required' => false,
             'classtype' => 'trainingmajors'
         ));
 
-        $builder->add('institution', 'employees_custom_selector', array(
+        $builder->add('institution', CustomSelectorType::class, array(
             'label' => 'Educational Institution:',
             'attr' => array('class' => 'ajax-combobox-traininginstitution', 'type' => 'hidden'),
             'required' => false,
@@ -79,7 +80,7 @@ class FellAppTrainingType extends AbstractType
         ));
 
         //residencySpecialty
-        $builder->add('residencySpecialty', 'employees_custom_selector', array(
+        $builder->add('residencySpecialty', CustomSelectorType::class, array(
             'label' => 'Residency Specialty:',
             'attr' => array('class' => 'ajax-combobox-residencyspecialty', 'type' => 'hidden'),
             'required' => false,
@@ -87,7 +88,7 @@ class FellAppTrainingType extends AbstractType
         ));
 
         //jobTitle
-        $builder->add('jobTitle', 'employees_custom_selector', array(
+        $builder->add('jobTitle', CustomSelectorType::class, array(
             'label' => 'Job or Experience Title:',
             'attr' => array('class' => 'ajax-combobox-jobtitle', 'type' => 'hidden'),
             'required' => false,

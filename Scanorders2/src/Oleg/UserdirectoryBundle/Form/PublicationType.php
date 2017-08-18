@@ -18,6 +18,7 @@
 namespace Oleg\UserdirectoryBundle\Form;
 
 
+use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -48,7 +49,7 @@ class PublicationType extends AbstractType
         ));
 
 
-        $builder->add('publicationDate','employees_custom_selector', array(
+        $builder->add('publicationDate',CustomSelectorType::class, array(
             'label' => 'Publication Month and Year:',
             'required' => false,
             'attr' => array('class' => 'datepicker-exception form-control'),

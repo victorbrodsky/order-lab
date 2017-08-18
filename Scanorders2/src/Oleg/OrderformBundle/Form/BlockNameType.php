@@ -17,6 +17,7 @@
 
 namespace Oleg\OrderformBundle\Form;
 
+use Oleg\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -44,7 +45,7 @@ class BlockNameType extends AbstractType
 
         if( $this->params['cycle'] != "show" ) {
             $attr = array('class' => 'ajax-combobox ajax-combobox-blockname keyfield blockname-mask', 'type' => 'hidden');
-            $builder->add('field', 'custom_selector', array(
+            $builder->add('field', ScanCustomSelectorType::class, array(
                 'label' => $label,
                 'attr' => $attr,
                 'required'=>false,

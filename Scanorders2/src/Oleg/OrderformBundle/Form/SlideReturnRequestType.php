@@ -17,6 +17,7 @@
 
 namespace Oleg\OrderformBundle\Form;
 
+use Oleg\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -55,7 +56,7 @@ class SlideReturnRequestType extends AbstractType
 
 
 
-        $builder->add('urgency', 'custom_selector', array(
+        $builder->add('urgency', ScanCustomSelectorType::class, array(
             'label' => 'Urgency:',
             'attr' => array('class' => 'ajax-combobox-urgency', 'type' => 'hidden'),
             'required' => false,

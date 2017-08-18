@@ -17,6 +17,7 @@
 
 namespace Oleg\OrderformBundle\Form;
 
+use Oleg\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
 use Oleg\UserdirectoryBundle\Form\DocumentContainerType;
 use Oleg\UserdirectoryBundle\Form\DocumentType;
 use Oleg\UserdirectoryBundle\Form\UserWrapperType;
@@ -31,7 +32,7 @@ class ProcedureOrderType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add('type', 'custom_selector', array(
+        $builder->add('type', ScanCustomSelectorType::class, array(
             'label' => 'Procedure Type:',
             'required' => false,
             'attr' => array('class' => 'ajax-combobox ajax-combobox-procedure', 'type' => 'hidden'),

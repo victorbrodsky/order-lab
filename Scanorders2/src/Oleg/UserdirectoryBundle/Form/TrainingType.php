@@ -18,6 +18,7 @@
 namespace Oleg\UserdirectoryBundle\Form;
 
 
+use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -162,21 +163,21 @@ class TrainingType extends AbstractType
         ));
 
         if( !$this->hasRoleSimpleView ) {
-            $builder->add('majors', 'employees_custom_selector', array(
+            $builder->add('majors', CustomSelectorType::class, array(
                 'label' => 'Major:',
                 'attr' => array('class' => 'ajax-combobox-trainingmajors', 'type' => 'hidden'),
                 'required' => false,
                 'classtype' => 'trainingmajors'
             ));
 
-            $builder->add('minors', 'employees_custom_selector', array(
+            $builder->add('minors', CustomSelectorType::class, array(
                 'label' => 'Minor:',
                 'attr' => array('class' => 'ajax-combobox-trainingminors', 'type' => 'hidden'),
                 'required' => false,
                 'classtype' => 'trainingminors'
             ));
 
-            $builder->add('honors', 'employees_custom_selector', array(
+            $builder->add('honors', CustomSelectorType::class, array(
                 'label' => 'Honors:',
                 'attr' => array('class' => 'ajax-combobox-traininghonors', 'type' => 'hidden'),
                 'required' => false,
@@ -184,14 +185,14 @@ class TrainingType extends AbstractType
                 'classtype' => 'traininghonors'
             ));
 
-            $builder->add('institution', 'employees_custom_selector', array(
+            $builder->add('institution', CustomSelectorType::class, array(
                 'label' => 'Educational Institution:',
                 'attr' => array('class' => 'ajax-combobox-traininginstitution', 'type' => 'hidden'),
                 'required' => false,
                 'classtype' => 'traininginstitution'
             ));
 
-            $builder->add('fellowshipTitle', 'employees_custom_selector', array(
+            $builder->add('fellowshipTitle', CustomSelectorType::class, array(
                 'label' => 'Professional Fellowship Title:',
                 'attr' => array('class' => 'ajax-combobox-trainingfellowshiptitle', 'type' => 'hidden'),
                 'required' => false,
@@ -204,7 +205,7 @@ class TrainingType extends AbstractType
         }
 
         //residencySpecialty
-        $builder->add('residencySpecialty', 'employees_custom_selector', array(
+        $builder->add('residencySpecialty', CustomSelectorType::class, array(
             'label' => 'Residency Specialty:',
             'attr' => array('class' => 'ajax-combobox-residencyspecialty', 'type' => 'hidden'),
             'required' => false,
@@ -212,7 +213,7 @@ class TrainingType extends AbstractType
         ));
         //fellowshipSubspecialty
         $tooltip = "To select a Fellowship, please choose the the Residency Specialty category first.";
-        $builder->add('fellowshipSubspecialty', 'employees_custom_selector', array(
+        $builder->add('fellowshipSubspecialty', CustomSelectorType::class, array(
             'label' => "Fellowship Subspecialty:",
             'required' => false,
             'attr' => array('class' => 'combobox combobox-width ajax-combobox-fellowshipsubspecialty', 'type' => 'hidden', 'title'=>$tooltip), //'data-toggle'=>'tooltip'

@@ -17,6 +17,7 @@
 
 namespace Oleg\UserdirectoryBundle\Form;
 
+use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -136,7 +137,7 @@ class UserRequestType extends AbstractType
                 $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
             }
 
-            $form->add('requestedScanOrderInstitutionScope', 'employees_custom_selector', array(
+            $form->add('requestedScanOrderInstitutionScope', CustomSelectorType::class, array(
                 'label' => "Organizational Group (".$label."):",
                 'required' => true,
                 'attr' => array(

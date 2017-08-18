@@ -17,6 +17,7 @@
 
 namespace Oleg\OrderformBundle\Form;
 
+use Oleg\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
 use Oleg\UserdirectoryBundle\Form\DocumentContainerType;
 use Oleg\UserdirectoryBundle\Form\DocumentType;
 use Oleg\UserdirectoryBundle\Form\ListType;
@@ -47,7 +48,7 @@ class LabTestType extends AbstractType
             $standalone = true;
         }
 
-        $builder->add('labTestType', 'custom_selector', array(
+        $builder->add('labTestType', ScanCustomSelectorType::class, array(
             'label' => "Laboratory Test ID Type:",
             'required' => false,
             'attr' => array('class' => 'ajax-combobox-labtesttype', 'type' => 'hidden'),

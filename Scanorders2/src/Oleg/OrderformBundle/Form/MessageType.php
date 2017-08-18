@@ -18,6 +18,7 @@
 namespace Oleg\OrderformBundle\Form;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Oleg\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\UserWrapperTransformer;
 use Oleg\UserdirectoryBundle\Form\InstitutionalWrapperType;
 use Oleg\UserdirectoryBundle\Form\InstitutionType;
@@ -264,7 +265,7 @@ class MessageType extends AbstractType
 
         } else {
 
-            $builder->add('proxyuser', 'custom_selector', array(
+            $builder->add('proxyuser', ScanCustomSelectorType::class, array(
                 'label' => $this->params['message.proxyuser.label'],
                 'attr' => array('class' => 'combobox combobox-width ajax-combobox-proxyuser'),
                 'required' => false,
@@ -304,7 +305,7 @@ class MessageType extends AbstractType
         ));
 
         $attr = array('class' => 'ajax-combobox-account', 'type' => 'hidden');
-        $builder->add('account', 'custom_selector', array(
+        $builder->add('account', ScanCustomSelectorType::class, array(
             'label' => 'Debit Fund WBS Account Number:',
             'attr' => $attr,
             'required' => false,

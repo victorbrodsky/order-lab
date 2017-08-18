@@ -18,6 +18,7 @@
 namespace Oleg\UserdirectoryBundle\Form;
 
 
+use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -114,7 +115,7 @@ class GrantType extends AbstractType
             'attr' => array('class' => 'datepicker form-control grant-endDate-field'),
         ));
 
-        $builder->add('sourceOrganization', 'employees_custom_selector', array(
+        $builder->add('sourceOrganization', CustomSelectorType::class, array(
             'disabled' => $readonly,
             'label' => "Grant Source Organization (Sponsor):",
             'required' => false,
@@ -172,7 +173,7 @@ class GrantType extends AbstractType
                 $grant = $event->getData();
                 $form = $event->getForm();
 
-                $form->add('name', 'employees_custom_selector', array(
+                $form->add('name', CustomSelectorType::class, array(
                     'disabled' => ($grant && $grant->getId() ? true : false),
                     'label' => "Grant Title:",
                     'required' => false,
@@ -222,7 +223,7 @@ class GrantType extends AbstractType
                 'attr' => array('class'=>'textarea form-control grant-commentDummy-field')
             ));
 
-            $builder->add('effortDummy', 'employees_custom_selector', array(
+            $builder->add('effortDummy', CustomSelectorType::class, array(
                 //'mapped' => false,
                 'required' => false,
                 'label' => 'Percent Effort:',

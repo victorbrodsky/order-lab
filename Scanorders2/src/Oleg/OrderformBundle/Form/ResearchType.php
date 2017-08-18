@@ -17,6 +17,7 @@
 
 namespace Oleg\OrderformBundle\Form;
 
+use Oleg\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
 use Oleg\UserdirectoryBundle\Form\UserWrapperType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -141,7 +142,7 @@ class ResearchType extends AbstractType
                 }
                 //echo "label=".$label."<br>";
 
-                $form->add('projectTitle', 'custom_selector', array(
+                $form->add('projectTitle', ScanCustomSelectorType::class, array(
                     'label' => $label,
                     'required' => false,
                     'attr' => array(
@@ -157,7 +158,7 @@ class ResearchType extends AbstractType
             ///////////////////////// EOF tree node /////////////////////////
 
             //TODO: add mask: comma is not allowed
-            $builder->add('userWrappers', 'custom_selector', array(
+            $builder->add('userWrappers', ScanCustomSelectorType::class, array(
                 'label' => 'Principal Investigator(s):',
                 'disabled' => true,
                 'attr' => array('class' => 'combobox combobox-width combobox-optionaluser-research', 'type' => 'hidden'),

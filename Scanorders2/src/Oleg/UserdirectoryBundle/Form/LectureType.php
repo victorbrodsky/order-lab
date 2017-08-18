@@ -18,6 +18,7 @@
 namespace Oleg\UserdirectoryBundle\Form;
 
 
+use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -79,14 +80,14 @@ class LectureType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
 
-        $builder->add('organization', 'employees_custom_selector', array(
+        $builder->add('organization', CustomSelectorType::class, array(
             'label' => 'Institution:',
             'required' => false,
             'attr' => array('class' => 'ajax-combobox-organization', 'type' => 'hidden'),
             'classtype' => 'organization'
         ));
 
-        $builder->add('city', 'employees_custom_selector', array(
+        $builder->add('city', CustomSelectorType::class, array(
             'label' => 'Lecture City:',
             'required' => false,
             'attr' => array('class' => 'ajax-combobox-city', 'type' => 'hidden'),

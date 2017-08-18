@@ -18,6 +18,7 @@
 namespace Oleg\OrderformBundle\Form;
 
 use Oleg\OrderformBundle\Form\ArrayFieldType;
+use Oleg\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -40,7 +41,7 @@ class EncounterAttendingPhysicianType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        $builder->add('field', 'custom_selector', array(
+        $builder->add('field', ScanCustomSelectorType::class, array(
             'label' => 'Attending Physician:',
             'attr' => array('class' => 'combobox combobox-width ajax-combobox-encounterAttendingPhysician'),
             'required' => false,

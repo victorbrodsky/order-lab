@@ -25,6 +25,7 @@
 namespace Oleg\UserdirectoryBundle\Form;
 
 
+use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Oleg\UserdirectoryBundle\Form\FormNode\FormNodeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -68,7 +69,7 @@ class MessageCategoryFormNodeType extends FormNodeType
 
             //echo "show defaultInstitution label=".$label."<br>";
 
-            $form->add('messageCategory', 'employees_custom_selector', array(
+            $form->add('messageCategory', CustomSelectorType::class, array(
                 'label' => $label,
                 'required' => false,
                 'disabled' => true,

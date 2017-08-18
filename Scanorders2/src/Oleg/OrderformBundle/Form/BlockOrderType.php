@@ -17,6 +17,7 @@
 
 namespace Oleg\OrderformBundle\Form;
 
+use Oleg\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
 use Oleg\UserdirectoryBundle\Form\DocumentContainerType;
 use Oleg\UserdirectoryBundle\Form\DocumentType;
 use Oleg\UserdirectoryBundle\Form\UserWrapperType;
@@ -59,7 +60,7 @@ class BlockOrderType extends AbstractType
 //        ));
 
         //EmbedderInstructionList
-        $builder->add('embedderInstruction', 'custom_selector', array(
+        $builder->add('embedderInstruction', ScanCustomSelectorType::class, array(
             'label' => 'Instructions for Embedder:',
             'attr' => array('class' => 'ajax-combobox-embedderinstruction', 'type' => 'hidden'),
             'required'=>true,

@@ -13,11 +13,11 @@ twig:
 services:
 
     #Custom selector fields
-    order_form.type.custom_selector:
-        class: Oleg\OrderformBundle\Form\CustomType\CustomSelectorType
+    order_form.type.scan_custom_selector:
+        class: Oleg\OrderformBundle\Form\CustomType\ScanCustomSelectorType
         arguments: ["@doctrine.orm.entity_manager","@security.token_storage", "@service_container"]
         tags:
-            - { name: form.type, alias: custom_selector }
+            - { name: form.type, alias: scan_custom_selector }
 
     #Redirect admin to index
     authentication_handler:

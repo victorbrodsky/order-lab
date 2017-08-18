@@ -18,6 +18,7 @@
 namespace Oleg\UserdirectoryBundle\Form;
 
 use Oleg\UserdirectoryBundle\Entity\Identifier;
+use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -48,7 +49,7 @@ class IdentifierType extends AbstractType
         $this->formConstructor($options['form_custom_value']);
 
         //service. User should be able to add institution to administrative or appointment titles
-        $builder->add('keytype', 'employees_custom_selector', array(
+        $builder->add('keytype', CustomSelectorType::class, array(
             'label' => "Identifier Type:",
             'required' => false,
             'attr' => array('class' => 'combobox combobox-width ajax-combobox-identifierkeytype', 'type' => 'hidden'),

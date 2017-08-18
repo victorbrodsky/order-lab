@@ -18,6 +18,7 @@
 namespace Oleg\FellAppBundle\Form;
 
 use Oleg\UserdirectoryBundle\Entity\Identifier;
+use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Oleg\UserdirectoryBundle\Form\DocumentType;
 use Oleg\UserdirectoryBundle\Form\GeoLocationType;
 use Symfony\Component\Form\AbstractType;
@@ -64,7 +65,7 @@ class ReferenceType extends AbstractType
             'required' => false
         ));
 
-        $builder->add('institution', 'employees_custom_selector', array(
+        $builder->add('institution', CustomSelectorType::class, array(
             'label' => 'Institution:',
             'attr' => array('class' => 'ajax-combobox-traininginstitution', 'type' => 'hidden'),
             'required' => false,

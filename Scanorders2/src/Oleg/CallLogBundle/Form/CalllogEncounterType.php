@@ -28,6 +28,7 @@ use Oleg\OrderformBundle\Form\EncounterPatsuffixType;
 use Oleg\OrderformBundle\Form\EncounterReferringProviderType;
 use Oleg\OrderformBundle\Form\GenericFieldType;
 
+use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Oleg\UserdirectoryBundle\Form\TrackerType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -331,7 +332,7 @@ class CalllogEncounterType extends AbstractType
 
         if( $this->params['cycle'] != 'show' ) {
             //echo "show locationName <br>";
-            $builder->add('locationName', 'employees_custom_selector', array(
+            $builder->add('locationName', CustomSelectorType::class, array(
                 'label' => "Location Name:",
                 'disabled' => $this->params['readonlyEncounter'],
                 'mapped' => false,

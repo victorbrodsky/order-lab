@@ -17,6 +17,7 @@
 
 namespace Oleg\OrderformBundle\Form;
 
+use Oleg\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
 use Oleg\UserdirectoryBundle\Form\DocumentContainerType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -55,7 +56,7 @@ class ImagingType extends AbstractType
         if($this->params['cycle'] == "" || $this->params['cycle'] == 'new' || $this->params['cycle'] == 'create') {
             $options['data'] = 'Entire Slide';
         }
-        $builder->add('scanregion', 'custom_selector', $options);
+        $builder->add('scanregion', ScanCustomSelectorType::class, $options);
 
         //note
         $builder->add('note', 'textarea', array(

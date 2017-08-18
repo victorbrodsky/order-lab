@@ -17,6 +17,7 @@
 
 namespace Oleg\OrderformBundle\Form;
 
+use Oleg\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -97,7 +98,7 @@ class PartDiseaseTypeType extends AbstractType
 //                },
         ));
 
-        $builder->add('primaryOrgan', 'custom_selector', array(
+        $builder->add('primaryOrgan', ScanCustomSelectorType::class, array(
             'label' => 'Primary Site of Origin:',
             'attr' => array('class' => 'ajax-combobox ajax-combobox-organ', 'type' => 'hidden'),
             'required' => false,

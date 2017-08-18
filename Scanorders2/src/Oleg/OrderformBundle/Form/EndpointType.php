@@ -17,6 +17,7 @@
 
 namespace Oleg\OrderformBundle\Form;
 
+use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -80,7 +81,7 @@ class EndpointType extends AbstractType
                     'attr' => array('class' => 'combobox combobox-width')
                 ));
             } else {
-                $builder->add('location', 'employees_custom_selector', $destinationLocationsOptions);
+                $builder->add('location', CustomSelectorType::class, $destinationLocationsOptions);
             }
         }
         ////////////// EOF Location //////////////////////

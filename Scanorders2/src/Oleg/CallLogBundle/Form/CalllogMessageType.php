@@ -18,6 +18,8 @@
 namespace Oleg\CallLogBundle\Form;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Oleg\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
+use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Oleg\UserdirectoryBundle\Form\FormNode\FormNodeType;
 use Oleg\UserdirectoryBundle\Form\InstitutionType;
 use Oleg\UserdirectoryBundle\Form\FormNode\MessageCategoryFormNodeType;
@@ -156,7 +158,7 @@ class CalllogMessageType extends AbstractType
 
             //echo "show defaultInstitution label=".$label."<br>";
 
-            $form->add('messageCategory', 'employees_custom_selector', array(
+            $form->add('messageCategory', CustomSelectorType::class, array(
                 'label' => $label,
                 'required' => false,
                 //'read_only' => true, //this depracted and replaced by readonly in attr
@@ -201,7 +203,7 @@ class CalllogMessageType extends AbstractType
         if( $this->entity->getMessageStatus()->getName()."" != "Draft" || ($this->params['cycle'] != "edit" && $this->params['cycle'] != "amend" ) ) {
             //echo "status=".$this->entity->getMessageStatus()->getName().""."<br>";
             //echo "show amendmentReason<br>";
-            $builder->add('amendmentReason', 'custom_selector', array(
+            $builder->add('amendmentReason', ScanCustomSelectorType::class, array(
                 'label' => 'Amendment Reason:',
                 'required' => false,
                 'attr' => array('class' => 'ajax-combobox-amendmentReason', 'type' => 'hidden'),

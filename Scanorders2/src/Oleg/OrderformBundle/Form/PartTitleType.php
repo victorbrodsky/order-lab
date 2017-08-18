@@ -17,6 +17,7 @@
 
 namespace Oleg\OrderformBundle\Form;
 
+use Oleg\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -35,7 +36,7 @@ class PartTitleType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        $builder->add('field', 'custom_selector', array(
+        $builder->add('field', ScanCustomSelectorType::class, array(
             'label' => 'Part Title:',
             'attr' => array('class' => 'ajax-combobox ajax-combobox-parttitle', 'type' => 'hidden'),
             'required' => false,

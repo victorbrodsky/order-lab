@@ -18,6 +18,7 @@
 namespace Oleg\CallLogBundle\Form;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Oleg\UserdirectoryBundle\Form\FormNode\FormNodeType;
 use Oleg\UserdirectoryBundle\Form\InstitutionType;
 use Oleg\UserdirectoryBundle\Form\FormNode\MessageCategoryFormNodeType;
@@ -75,7 +76,7 @@ class CalllogEntryMessageType extends AbstractType
 //                'classtype' => 'patientList'
 //            ));
 
-            $form->add('patientLists', 'employees_custom_selector', array(
+            $form->add('patientLists', CustomSelectorType::class, array(
                 'label' => $label,
                 'required' => true,
                 'attr' => array('class' => 'ajax-combobox-patientlists', 'type' => 'hidden'),

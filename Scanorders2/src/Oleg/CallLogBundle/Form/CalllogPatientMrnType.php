@@ -18,6 +18,7 @@
 namespace Oleg\CallLogBundle\Form;
 
 use Oleg\OrderformBundle\Form\ArrayFieldType;
+use Oleg\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -40,7 +41,7 @@ class CalllogPatientMrnType extends AbstractType
         //echo "mrntype=".$this->params['mrntype']."<br>";
         //echo "mrn=".$this->params['mrn']."<br>";
 
-        $builder->add('keytype', 'custom_selector', array(
+        $builder->add('keytype', ScanCustomSelectorType::class, array(
             'label'=>'MRN Type:',
             'required' => true,
             //'multiple' => false,

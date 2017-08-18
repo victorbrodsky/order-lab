@@ -43,7 +43,7 @@ use Oleg\OrderformBundle\Form\DataTransformer\StainTransformer;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\StringTransformer;
 
-class CustomSelectorType extends AbstractType {
+class ScanCustomSelectorType extends AbstractType {
 
     /**
      * @var ObjectManager
@@ -172,7 +172,7 @@ class CustomSelectorType extends AbstractType {
 
     public function getBlockPrefix()
     {
-        return 'custom_selector';
+        return 'scan_custom_selector';
     }
     public function getName() {
         return $this->getBlockPrefix();

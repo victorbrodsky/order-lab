@@ -17,6 +17,8 @@
 
 namespace Oleg\OrderformBundle\Form;
 
+use Oleg\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
+use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -75,7 +77,7 @@ class ScanOrderType extends AbstractType
                 $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
             }
 
-            $form->add('scanOrderInstitutionScope', 'employees_custom_selector', array(
+            $form->add('scanOrderInstitutionScope', CustomSelectorType::class, array(
                 //'label' => 'ScanOrder' . ' ' . $label . ' Scope' . ':',
                 'label' => $label,  //"Originating Organizational Group ".$label,
                 'required' => false,
@@ -96,7 +98,7 @@ class ScanOrderType extends AbstractType
 
         //delivery
         $attr = array('class' => 'ajax-combobox-delivery', 'type' => 'hidden');
-        $builder->add('delivery', 'custom_selector', array(
+        $builder->add('delivery', ScanCustomSelectorType::class, array(
             'label' => 'Slide Delivery:',
             'attr' => $attr,
             'required'=>true,

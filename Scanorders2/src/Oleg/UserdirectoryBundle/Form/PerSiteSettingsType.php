@@ -18,6 +18,7 @@
 namespace Oleg\UserdirectoryBundle\Form;
 
 //use Oleg\UserdirectoryBundle\Form\InstitutionType;
+use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -149,7 +150,7 @@ class PerSiteSettingsType extends AbstractType
 
                     //echo "show defaultInstitution label=".$label."<br>";
 
-                    $form->add('defaultInstitution', 'employees_custom_selector', array(
+                    $form->add('defaultInstitution', CustomSelectorType::class, array(
                         'label' => 'Organizational Group ' . $label . ':',
                         'disabled' => !$this->roleAdmin,
                         'required' => false,
@@ -164,7 +165,7 @@ class PerSiteSettingsType extends AbstractType
                     ));
 
                     $prefix = "Organizational Group for new user's default values in Employee Directory - ";
-                    $form->add('organizationalGroupDefault', 'employees_custom_selector', array(
+                    $form->add('organizationalGroupDefault', CustomSelectorType::class, array(
                         'label' => $prefix." ".$label.':',
                         //'error_bubbling' => true,
                         'required' => false,
@@ -183,7 +184,7 @@ class PerSiteSettingsType extends AbstractType
 
         } //if simple form
 
-//        $builder->add('institution', 'employees_custom_selector', array(
+//        $builder->add('institution', CustomSelectorType::class, array(
 //            'label' => 'Default Institution:',
 //            'attr' => array('class' => 'ajax-combobox-compositetree combobox-without-add', 'type' => 'hidden'),
 //            'required' => false,
@@ -191,7 +192,7 @@ class PerSiteSettingsType extends AbstractType
 //        ));
 
         //department. User should be able to add institution to administrative or appointment titles
-//        $builder->add('defaultDepartment', 'employees_custom_selector', array(
+//        $builder->add('defaultDepartment', CustomSelectorType::class, array(
 //            'label' => "Default Department:",
 //            'required' => false,
 //            'attr' => array('class' => 'ajax-combobox-department combobox-without-add', 'type' => 'hidden'),
@@ -199,14 +200,14 @@ class PerSiteSettingsType extends AbstractType
 //        ));
 //
 //        //division. User should be able to add institution to administrative or appointment titles
-//        $builder->add('defaultDivision', 'employees_custom_selector', array(
+//        $builder->add('defaultDivision', CustomSelectorType::class, array(
 //            'label' => "Default Division:",
 //            'required' => false,
 //            'attr' => array('class' => 'ajax-combobox-division combobox-without-add', 'type' => 'hidden'),
 //            'classtype' => 'division'
 //        ));
 //
-//        $builder->add( 'defaultService', 'employees_custom_selector', array(
+//        $builder->add( 'defaultService', CustomSelectorType::class, array(
 //            'label'=>'Default Service:',
 //            'required'=>false,
 //            'attr' => array('class' => 'ajax-combobox-service combobox-without-add', 'type' => 'hidden'),

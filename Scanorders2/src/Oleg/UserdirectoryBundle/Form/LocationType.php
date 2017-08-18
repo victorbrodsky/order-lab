@@ -20,6 +20,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 
 
 use Oleg\UserdirectoryBundle\Entity\User;
+use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -89,28 +90,28 @@ class LocationType extends AbstractType
             'attr' => array('class' => 'form-control user-location-phone-field')
         ));
 
-        $builder->add('building', 'employees_custom_selector', array(
+        $builder->add('building', CustomSelectorType::class, array(
             'label' => 'Building:',
             'attr' => array('class' => 'combobox ajax-combobox-building', 'type' => 'hidden'),
             'required' => false,
             'classtype' => 'building'
         ));
 
-        $builder->add('room', 'employees_custom_selector', array(
+        $builder->add('room', CustomSelectorType::class, array(
             'label' => 'Room Number:',
             'attr' => array('class' => 'combobox ajax-combobox-room', 'type' => 'hidden'),
             'required' => false,
             'classtype' => 'room'
         ));
 
-        $builder->add('suite', 'employees_custom_selector', array(
+        $builder->add('suite', CustomSelectorType::class, array(
             'label' => 'Suite:',
             'attr' => array('class' => 'combobox ajax-combobox-suite', 'type' => 'hidden'),
             'required' => false,
             'classtype' => 'suite'
         ));
 
-        $builder->add('floor', 'employees_custom_selector', array(
+        $builder->add('floor', CustomSelectorType::class, array(
             'label' => 'Floor:',
             'attr' => array('class' => 'combobox ajax-combobox-floor', 'type' => 'hidden'),
             'required' => false,
@@ -209,7 +210,7 @@ class LocationType extends AbstractType
                 'attr' => array('class' => 'form-control')
             ));
 
-            $builder->add('mailbox', 'employees_custom_selector', array(
+            $builder->add('mailbox', CustomSelectorType::class, array(
                 'label' => 'Mailbox:',
                 'attr' => array('class' => 'ajax-combobox-mailbox', 'type' => 'hidden'),
                 'required' => false,
@@ -287,7 +288,7 @@ class LocationType extends AbstractType
 					$label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
 				}
 
-                $form->add('institution', 'employees_custom_selector', array(
+                $form->add('institution', CustomSelectorType::class, array(
                     'label' => $label,
                     'required' => false,
                     'attr' => array(
@@ -324,7 +325,7 @@ class LocationType extends AbstractType
         //add user (Inhabitant) for all stand alone location management by LocationController
         if( $standalone ) {
             //user
-            $builder->add('user', 'employees_custom_selector', array(
+            $builder->add('user', CustomSelectorType::class, array(
                 'label'=> "Inhabitant / Contact:",
                 'attr' => array('class' => 'combobox combobox-width combobox-without-add ajax-combobox-locationusers', 'type' => 'hidden'),
                 'required' => false,

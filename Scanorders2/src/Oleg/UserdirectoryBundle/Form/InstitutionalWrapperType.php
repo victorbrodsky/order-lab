@@ -18,6 +18,7 @@
 namespace Oleg\UserdirectoryBundle\Form;
 
 
+use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -55,7 +56,7 @@ class InstitutionalWrapperType extends AbstractType
                 $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
             }
 
-            $form->add('institution', 'employees_custom_selector', array(
+            $form->add('institution', CustomSelectorType::class, array(
                 'label' => $label,
                 'required' => false,
                 'attr' => array(

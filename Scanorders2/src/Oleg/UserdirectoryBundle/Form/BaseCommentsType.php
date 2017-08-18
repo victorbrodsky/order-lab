@@ -18,6 +18,7 @@
 namespace Oleg\UserdirectoryBundle\Form;
 
 
+use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Oleg\UserdirectoryBundle\Entity\PrivateComment;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -128,7 +129,7 @@ class BaseCommentsType extends AbstractType
                 $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:CommentTypeList')->getLevelLabels(null,$mapper) . ":";
             }
 
-            $form->add('commentType', 'employees_custom_selector', array(
+            $form->add('commentType', CustomSelectorType::class, array( //'employees_custom_selector'
                 'label' => $label,
                 'required' => false,
                 'attr' => array(

@@ -18,6 +18,7 @@
 namespace Oleg\OrderformBundle\Form;
 
 use Oleg\OrderformBundle\Form\ArrayFieldType;
+use Oleg\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -63,7 +64,7 @@ class EncounterReferringProviderType extends AbstractType
 //        ));
 
 
-        $builder->add('field', 'custom_selector', array(
+        $builder->add('field', ScanCustomSelectorType::class, array(
             'label' => 'Referring Provider Name:',
             'attr' => array('class' => 'combobox combobox-width ajax-combobox-encounterReferringProvider'),
             'disabled' => $this->params['referringProviders-readonly'],
@@ -72,7 +73,7 @@ class EncounterReferringProviderType extends AbstractType
             //'classtype' => 'userWrapper'
         ));
 
-        $builder->add('referringProviderSpecialty', 'custom_selector', array(
+        $builder->add('referringProviderSpecialty', ScanCustomSelectorType::class, array(
             'label' => 'Referring Provider Specialty:',
             'attr' => array('class' => 'combobox combobox-width ajax-combobox-referringProviderSpecialty'),
             'disabled' => $this->params['referringProviders-readonly'],

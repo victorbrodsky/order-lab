@@ -18,6 +18,7 @@
 namespace Oleg\VacReqBundle\Form;
 
 
+use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -60,7 +61,7 @@ class VacReqGroupType extends AbstractType
             }
             //echo "label=".$label."<br>";
 
-            $form->add('institution', 'employees_custom_selector', array(
+            $form->add('institution', CustomSelectorType::class, array(
                 'label' => $label,
                 'required' => false,
                 //'attr' => array('class' => 'ajax-combobox-institution', 'type' => 'hidden'),
