@@ -134,7 +134,7 @@ class LocationType extends AbstractType
         $builder->add('locationTypes','entity',array(
             'class' => 'OlegUserdirectoryBundle:LocationTypeList',
             'label' => "Location Type:",
-            'read_only' => $this->params['readonlyLocationType'],
+            'disabled' => $this->params['readonlyLocationType'],
             'multiple' => true,
             'attr' => array('class'=>'combobox combobox-width user-location-locationTypes'),
             'required' => false,
@@ -167,7 +167,7 @@ class LocationType extends AbstractType
             if( $this->params['cycle'] != "new_standalone" ) {
                 $baseUserAttr = new Location();
                 $builder->add('status', 'choice', array(
-                    'disabled' => ($this->params['read_only'] ? true : false),
+                    'disabled' => ($this->params['disabled'] ? true : false),
                     'choices' => array(
                         $baseUserAttr::STATUS_UNVERIFIED => $baseUserAttr->getStatusStrByStatus($baseUserAttr::STATUS_UNVERIFIED),
                         $baseUserAttr::STATUS_VERIFIED => $baseUserAttr->getStatusStrByStatus($baseUserAttr::STATUS_VERIFIED)

@@ -94,7 +94,7 @@ class BoardCertificationType extends AbstractType
         $params['document.showall'] = false;
         $params['document.imageId'] = false;
         $params['document.source'] = false;
-        //$params['read_only'] = $readonly;
+        //$params['disabled'] = $readonly;
         $builder->add('attachmentContainer', AttachmentContainerType::class, array(
             'form_custom_value' => $params,
             'required' => false,

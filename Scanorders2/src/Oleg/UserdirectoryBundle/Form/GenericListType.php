@@ -162,21 +162,21 @@ class GenericListType extends AbstractType
         if( method_exists($this->params['entity'],'getRoot') ) {
             $builder->add( 'root', null, array(
                 'label'=>'Root:',
-                'read_only' => true,
+                'disabled' => true,
                 'attr' => array('class'=>'form-control'),
             ));
         }
         if( method_exists($this->params['entity'],'getLft') ) {
             $builder->add( 'lft', null, array(
                 'label'=>'Left:',
-                'read_only' => true,
+                'disabled' => true,
                 'attr' => array('class'=>'form-control'),
             ));
         }
         if( method_exists($this->params['entity'],'getRgt') ) {
             $builder->add( 'rgt', null, array(
                 'label'=>'Right:',
-                'read_only' => true,
+                'disabled' => true,
                 'attr' => array('class'=>'form-control'),
             ));
         }
@@ -263,7 +263,7 @@ class GenericListType extends AbstractType
 
 //            $builder->add( 'collaborations', 'entity', array(
 //                'class' => 'OlegUserdirectoryBundle:Collaboration',
-//                //'read_only' => true,
+//                //'disabled' => true,
 //                //'property' => 'getTreeName',
 //                'label'=>'Collaborations:',
 //                'required'=> false,
@@ -458,7 +458,7 @@ class GenericListType extends AbstractType
             //always read only - do not allow to change level
             $builder->add('level',null,array(
                 'label'=>'Level:',
-                //'read_only' => true,
+                //'disabled' => true,
                 'attr' => array('class' => 'form-control')
             ));
             //always read only - do not allow to change parent

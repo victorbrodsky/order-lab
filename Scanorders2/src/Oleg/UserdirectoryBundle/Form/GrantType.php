@@ -61,43 +61,43 @@ class GrantType extends AbstractType
         ));
 
         $builder->add('grantid',null,array(
-            'read_only' => $readonly,
+            'disabled' => $readonly,
             'label'=>'Grant ID Number:',
             'attr' => array('class'=>'form-control grant-grantid-field')
         ));
 
         $builder->add('amount',null,array(
-            'read_only' => $readonly,
+            'disabled' => $readonly,
             'label'=>'Total Amount:',
             'attr' => array('class'=>'form-control grant-amount-field')
         ));
 
         $builder->add('currentYearDirectCost',null,array(
-            'read_only' => $readonly,
+            'disabled' => $readonly,
             'label'=>'Current Year Direct Cost:',
             'attr' => array('class'=>'form-control grant-currentYearDirectCost-field')
         ));
 
         $builder->add('currentYearIndirectCost',null,array(
-            'read_only' => $readonly,
+            'disabled' => $readonly,
             'label'=>'Current Year Indirect Cost:',
             'attr' => array('class'=>'form-control grant-currentYearIndirectCost-field')
         ));
 
         $builder->add('totalCurrentYearCost',null,array(
-            'read_only' => $readonly,
+            'disabled' => $readonly,
             'label'=>'Total Current Year Cost:',
             'attr' => array('class'=>'form-control grant-totalCurrentYearCost-field')
         ));
 
         $builder->add('amountLabSpace',null,array(
-            'read_only' => $readonly,
+            'disabled' => $readonly,
             'label'=>'Amount of Lab Space:',
             'attr' => array('class'=>'form-control grant-amountLabSpace-field')
         ));
 
         $builder->add('startDate', 'date', array(
-            'read_only' => $readonly,
+            'disabled' => $readonly,
             'label' => "Grant Support Start Date:",
             'widget' => 'single_text',
             'required' => false,
@@ -106,7 +106,7 @@ class GrantType extends AbstractType
         ));
 
         $builder->add('endDate', 'date', array(
-            'read_only' => $readonly,
+            'disabled' => $readonly,
             'label' => "Grant Support End Date:",
             'widget' => 'single_text',
             'required' => false,
@@ -115,7 +115,7 @@ class GrantType extends AbstractType
         ));
 
         $builder->add('sourceOrganization', 'employees_custom_selector', array(
-            'read_only' => $readonly,
+            'disabled' => $readonly,
             'label' => "Grant Source Organization (Sponsor):",
             'required' => false,
             'attr' => array('class' => 'combobox combobox-width ajax-combobox-sourceorganization', 'type' => 'hidden'),
@@ -123,7 +123,7 @@ class GrantType extends AbstractType
         ));
 
         $builder->add('grantLink', null, array(
-            'read_only' => $readonly,
+            'disabled' => $readonly,
             'label' => 'Link to a page with more information:',
             'attr' => array('class'=>'form-control grant-grantLink-field')
         ));
@@ -134,7 +134,7 @@ class GrantType extends AbstractType
         $params['document.showall'] = false;
         $params['document.imageId'] = false;
         $params['document.source'] = false;
-        //$params['read_only'] = $readonly;
+        //$params['disabled'] = $readonly;
         $builder->add('attachmentContainer', AttachmentContainerType::class, array(
             'form_custom_value' => $params,
             'required' => false,
@@ -173,7 +173,7 @@ class GrantType extends AbstractType
                 $form = $event->getForm();
 
                 $form->add('name', 'employees_custom_selector', array(
-                    'read_only' => ($grant && $grant->getId() ? true : false),
+                    'disabled' => ($grant && $grant->getId() ? true : false),
                     'label' => "Grant Title:",
                     'required' => false,
                     'attr' => array('class' => 'combobox combobox-width ajax-combobox-grant', 'type' => 'hidden'),

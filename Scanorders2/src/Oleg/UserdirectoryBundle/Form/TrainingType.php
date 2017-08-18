@@ -59,7 +59,7 @@ class TrainingType extends AbstractType
         //status
         $baseUserAttr = new Training();
         $builder->add('status', 'choice', array(
-            'disabled' => ($this->params['read_only'] ? true : false),
+            'disabled' => ($this->params['disabled'] ? true : false),
             'choices' => array(
                 $baseUserAttr::STATUS_UNVERIFIED => $baseUserAttr->getStatusStrByStatus($baseUserAttr::STATUS_UNVERIFIED),
                 $baseUserAttr::STATUS_VERIFIED => $baseUserAttr->getStatusStrByStatus($baseUserAttr::STATUS_VERIFIED)

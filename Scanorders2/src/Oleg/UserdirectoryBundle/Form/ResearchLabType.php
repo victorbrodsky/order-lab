@@ -64,7 +64,7 @@ class ResearchLabType extends AbstractType
 
         if (!$hasRoleSimpleView) {
             $builder->add('foundedDate', 'date', array(
-                'read_only' => $readonly,
+                'disabled' => $readonly,
                 'label' => "Founded on:",
                 'widget' => 'single_text',
                 'required' => false,
@@ -73,7 +73,7 @@ class ResearchLabType extends AbstractType
             ));
 
             $builder->add('dissolvedDate', 'date', array(
-                'read_only' => $readonly,
+                'disabled' => $readonly,
                 'label' => "Dissolved on:",
                 'widget' => 'single_text',
                 'required' => false,
@@ -83,7 +83,7 @@ class ResearchLabType extends AbstractType
         }
 
         $builder->add('location', 'employees_custom_selector', array(
-            'read_only' => $readonly,
+            'disabled' => $readonly,
             'label' => "Location:",
             'required' => false,
             'attr' => array('class' => 'combobox combobox-width ajax-combobox-location', 'type' => 'hidden'),
@@ -91,7 +91,7 @@ class ResearchLabType extends AbstractType
         ));
 
         $builder->add('weblink', null, array(
-            'read_only' => $readonly,
+            'disabled' => $readonly,
             'label' => 'Web page link:',
             'attr' => array('class'=>'form-control researchlab-weblink-field')
         ));
@@ -151,7 +151,7 @@ class ResearchLabType extends AbstractType
                 $form = $event->getForm();
 
 //                $form->add('name', 'employees_custom_selector', array(
-//                    'read_only' => ($lab && $lab->getId() ? true : false),
+//                    'disabled' => ($lab && $lab->getId() ? true : false),
 //                    'label' => "Research Lab Title:",
 //                    'required' => false,
 //                    'attr' => array('class' => 'combobox combobox-width ajax-combobox-researchlab', 'type' => 'hidden'),

@@ -57,7 +57,7 @@ class PublicationType extends AbstractType
 
         if( $this->params['cycle'] == "show" ) {
             $builder->add('updatedate', 'date', array(
-                'read_only' => true,
+                'disabled' => true,
                 'label' => 'Update Date:',
                 'widget' => 'single_text',
                 'required' => false,

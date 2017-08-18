@@ -41,7 +41,7 @@ class UserRequestType extends AbstractType
 
         $builder->add( 'siteName', 'hidden', array(
             'label'=> false,    //'Site Name:',
-            'read_only' => true,
+            'disabled' => true,
             'required'=> true,
             'attr' => array('class'=>'form-control'),
         ));

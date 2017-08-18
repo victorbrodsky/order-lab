@@ -43,13 +43,14 @@ class VacReqRequestBaseType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
+        //Symfony<2.8 read_only' => true, Symfony>2.8 'attr' => ['readonly' => true], or use disabled
         $builder->add('startDate', 'date', array(
             'label' => $this->requestTypeName.' - First Day Away:',
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
             'attr' => array('class' => 'datepicker form-control vacreq-startDate'), //datepicker-nocleardate datepicker-onclear-cleartooltip
-            'read_only' => ($this->params['review'] ? true : false)
+            'disabled' => ($this->params['review'] ? true : false)
         ));
 
         $builder->add('endDate', 'date', array(
@@ -58,14 +59,14 @@ class VacReqRequestBaseType extends AbstractType
             'required' => false,
             'format' => 'MM/dd/yyyy',
             'attr' => array('class' => 'datepicker form-control vacreq-endDate'),
-            'read_only' => ($this->params['review'] ? true : false)
+            'disabled' => ($this->params['review'] ? true : false)
         ));
 
 
         $builder->add('numberOfDays', null, array(
             'label' => $this->numberOfDaysLabelPrefix . ' (Please do not include '.$this->params['holidaysUrl'].'):',
             'attr' => array('class'=>'form-control vacreq-numberOfDays'),
-            'read_only' => ($this->params['review'] ? true : false)
+            'disabled' => ($this->params['review'] ? true : false)
         ));
 
 //        $builder->add('firstDayBackInOffice', 'date', array(
@@ -74,7 +75,7 @@ class VacReqRequestBaseType extends AbstractType
 //            'required' => false,
 //            'format' => 'MM/dd/yyyy',
 //            'attr' => array('class' => 'datepicker form-control vacreq-firstDayBackInOffice'),
-//            'read_only' => ($this->params['review'] ? true : false)
+//            'disabled' => ($this->params['review'] ? true : false)
 //        ));
 
 //        if( $this->params['cycle'] == 'edit' || $this->params['cycle'] == 'show' ) {
@@ -91,11 +92,11 @@ class VacReqRequestBaseType extends AbstractType
             $readOnly = true;
             if( $this->params['review'] === true || $this->params['roleAdmin'] || $this->params['roleApprover'] ) {
                 $readOnly = false;
+                echo "editable comment<br>";
             }
 
             $builder->add('status', 'choice', array(
-                //'disabled' => $readOnly,    //($this->params['roleAdmin'] ? false : true),
-                'read_only' => $readOnly,
+                'disabled' => $readOnly,    //($this->params['roleAdmin'] ? false : true),
                 'choices' => array(
                     'pending' => 'Pending',
                     'approved' => 'Approved',
@@ -111,7 +112,7 @@ class VacReqRequestBaseType extends AbstractType
 
             $builder->add('approverComment', 'textarea', array(
                 'label' => 'Approver Comment:',
-                'read_only' => $readOnly,
+                'disabled' => $readOnly,
                 'required' => false,
                 'attr' => array('class' => 'textarea form-control'),
             ));

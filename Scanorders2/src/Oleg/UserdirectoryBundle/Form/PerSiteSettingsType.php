@@ -151,7 +151,7 @@ class PerSiteSettingsType extends AbstractType
 
                     $form->add('defaultInstitution', 'employees_custom_selector', array(
                         'label' => 'Organizational Group ' . $label . ':',
-                        'read_only' => !$this->roleAdmin,
+                        'disabled' => !$this->roleAdmin,
                         'required' => false,
                         'attr' => array(
                             'class' => 'ajax-combobox-compositetree',

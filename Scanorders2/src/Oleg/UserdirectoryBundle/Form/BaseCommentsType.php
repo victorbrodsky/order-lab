@@ -21,6 +21,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 use Oleg\UserdirectoryBundle\Entity\PrivateComment;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -43,7 +44,7 @@ class BaseCommentsType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        $builder->add( 'id', 'hidden', array(
+        $builder->add( 'id', HiddenType::class, array(
             'label'=>false,
             'required'=>false,
             'attr' => array('class' => 'comment-field-id')
@@ -51,7 +52,7 @@ class BaseCommentsType extends AbstractType
 
         $builder->add( 'comment', 'textarea', array(
             'label'=>'Comment:',
-            'read_only' => $this->params['read_only'],
+            'disabled' => $this->params['disabled'],
             'required'=>false,
             'attr' => array('class' => 'textarea form-control')
         ));

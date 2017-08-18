@@ -114,7 +114,7 @@ class ListType extends AbstractType
             'label' => 'Creation Date:',
             'widget' => 'single_text',
             'required' => true,
-            'read_only' => true,
+            'disabled' => true,
             'format' => 'MM/dd/yyyy, H:mm:ss',
             'view_timezone' => $this->params['user']->getPreferences()->getTimezone(),
             'attr' => array('class' => 'form-control'),
@@ -128,7 +128,7 @@ class ListType extends AbstractType
 ////                $builder->add('updatedby',null,array(
 ////                    'label'=>'Updated by:',
 ////                    'required'=>false,
-////                    'read_only'=>true,
+////                    'disabled'=>true,
 ////                    'attr' => array('class'=>'combobox combobox-width select2-list-creator', 'readonly'=>'readonly')
 ////                ));
 //
@@ -136,7 +136,7 @@ class ListType extends AbstractType
 ////                    'label'=>'Updated on:',
 ////                    'widget' => 'single_text',
 ////                    'required'=>false,
-////                    'read_only'=>true,
+////                    'disabled'=>true,
 ////                    'format' => 'MM/dd/yyyy, H:mm:ss',
 ////                    'view_timezone' => $this->params['user']->getPreferences()->getTimezone(),
 ////                    'attr' => array('class' => 'form-control'),
@@ -148,7 +148,7 @@ class ListType extends AbstractType
         $builder->add('synonyms', 'entity', array(
             'class' => $this->mapper['bundleName'].':'.$this->mapper['className'],
             'label' => 'Synonyms:',
-            //'read_only' => true,
+            //'disabled' => true,
             'required' => false,
             'multiple' => true,
             //'by_reference' => false,

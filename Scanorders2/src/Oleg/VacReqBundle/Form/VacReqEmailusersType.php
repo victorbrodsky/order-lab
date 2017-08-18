@@ -50,7 +50,7 @@ class VacReqEmailusersType extends AbstractType
             'multiple' => true,
             //'property' => 'name',
             'attr' => array('class' => 'combobox vacreq-emailusers'),
-            //'read_only' => ($this->params['review'] ? true : false),
+            //'disabled' => ($this->params['review'] ? true : false),
             'query_builder' => function (EntityRepository $er) {
                 return $er->createQueryBuilder('user')
                     ->leftJoin("user.infos","infos")

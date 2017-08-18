@@ -221,7 +221,7 @@ class UserType extends AbstractType
         
         $builder->add('primaryPublicUserId', null, array(
             'label' => '* Primary Public User ID:',
-            'read_only' => $readOnly,   //($this->cycle == 'create' ? false : true ), //it is not possible to edit keytype for existed user
+            'disabled' => $readOnly,   //($this->cycle == 'create' ? false : true ), //it is not possible to edit keytype for existed user
             'attr' => array('class'=>'form-control form-control-modif')
         ));
 
@@ -289,7 +289,7 @@ class UserType extends AbstractType
         }
         $builder->add('keytype', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:UsernameType',
-            'read_only' => ($this->cycle == 'create' ? false : true ), //it is not possible to edit keytype for existed user
+            'disabled' => ($this->cycle == 'create' ? false : true ), //it is not possible to edit keytype for existed user
             'property' => 'name',
             'label' => $label,
             'required' => true,
@@ -380,7 +380,7 @@ class UserType extends AbstractType
 
     public function titlesSections($builder) {
         //Administrative Titles
-        $params = array('read_only'=>$this->readonly,'label'=>'Administrative','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\AdministrativeTitle','formname'=>'administrativetitletype','cycle'=>$this->cycle);
+        $params = array('disabled'=>$this->readonly,'label'=>'Administrative','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\AdministrativeTitle','formname'=>'administrativetitletype','cycle'=>$this->cycle);
         $params = array_merge($this->params, $params);
         //BaseTitleType($params)
         $builder->add('administrativeTitles', CollectionType::class, array(
@@ -397,7 +397,7 @@ class UserType extends AbstractType
             'prototype_name' => '__administrativetitles__',
         ));
 
-        $params = array('read_only'=>$this->readonly,'label'=>'Academic Appointment','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\AppointmentTitle','formname'=>'appointmenttitletype','cycle'=>$this->cycle);
+        $params = array('disabled'=>$this->readonly,'label'=>'Academic Appointment','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\AppointmentTitle','formname'=>'appointmenttitletype','cycle'=>$this->cycle);
         $params = array_merge($this->params, $params);
         $builder->add('appointmentTitles', CollectionType::class, array(
             'entry_type' => AppointmentTitleType::class,
@@ -413,7 +413,7 @@ class UserType extends AbstractType
             'prototype_name' => '__appointmenttitles__',
         ));
 
-        $params = array('read_only'=>$this->readonly,'label'=>'Medical Appointment','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\MedicalTitle','formname'=>'medicaltitletype','cycle'=>$this->cycle);
+        $params = array('disabled'=>$this->readonly,'label'=>'Medical Appointment','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\MedicalTitle','formname'=>'medicaltitletype','cycle'=>$this->cycle);
         $params = array_merge($this->params, $params);
         $builder->add('medicalTitles', CollectionType::class, array(
             'entry_type' => MedicalTitleType::class,
@@ -433,7 +433,7 @@ class UserType extends AbstractType
     }
 
     public function userTrainings($builder) {
-        $params = array('read_only'=>$this->readonly,'admin'=>$this->roleAdmin,'currentUser'=>$this->currentUser,'cycle'=>$this->cycle,'em'=>$this->em,'subjectUser'=>$this->subjectUser,'container'=>$this->container);
+        $params = array('disabled'=>$this->readonly,'admin'=>$this->roleAdmin,'currentUser'=>$this->currentUser,'cycle'=>$this->cycle,'em'=>$this->em,'subjectUser'=>$this->subjectUser,'container'=>$this->container);
         $builder->add('trainings', CollectionType::class, array(
             'entry_type' => TrainingType::class,
             'entry_options' => array(
@@ -454,7 +454,7 @@ class UserType extends AbstractType
 
     public function userLocations($builder) {
         $params = array(
-            'read_only'=>$this->readonly,
+            'disabled'=>$this->readonly,
             'admin'=>$this->roleAdmin,
             'currentUser'=>$this->currentUser,
             'cycle'=>$this->cycle,
@@ -481,7 +481,7 @@ class UserType extends AbstractType
 
     public function employmentStatus($builder) {
         if( $this->roleAdmin || ($this->currentUser == false && $this->cycle == "show") ) {
-            $params = array('em'=>$this->params['em'],'read_only'=>$this->readonly,'currentUser'=>$this->currentUser,'admin'=>$this->roleAdmin);
+            $params = array('em'=>$this->params['em'],'disabled'=>$this->readonly,'currentUser'=>$this->currentUser,'admin'=>$this->roleAdmin);
             $builder->add('employmentStatus', CollectionType::class, array(
                 'entry_type' => EmploymentStatusType::class,
                 'entry_options' => array(
@@ -504,7 +504,7 @@ class UserType extends AbstractType
         
 if(1){    
         //it takes 4 seconds to load
-        $params = array('read_only'=>$this->readonly,'admin'=>$this->roleAdmin,'subjectUser'=>$this->subjectUser,'cycle'=>$this->cycle,'em'=>$this->em,'container'=>$this->container);
+        $params = array('disabled'=>$this->readonly,'admin'=>$this->roleAdmin,'subjectUser'=>$this->subjectUser,'cycle'=>$this->cycle,'em'=>$this->em,'container'=>$this->container);
         $builder->add('researchLabs', CollectionType::class, array(
             'entry_type' => ResearchLabType::class,
             'entry_options' => array(
@@ -521,7 +521,7 @@ if(1){
 }
         if( !$this->hasRoleSimpleView ) {
             //it takes 7 seconds to load
-            $params = array('read_only'=>$this->readonly,'admin'=>$this->roleAdmin,'subjectUser'=>$this->subjectUser,'cycle'=>$this->cycle,'em'=>$this->em);
+            $params = array('disabled'=>$this->readonly,'admin'=>$this->roleAdmin,'subjectUser'=>$this->subjectUser,'cycle'=>$this->cycle,'em'=>$this->em);
             $builder->add('grants', CollectionType::class, array(
                 'entry_type' => GrantType::class,
                 'entry_options' => array(
@@ -536,7 +536,7 @@ if(1){
                 'prototype_name' => '__grants__',
             ));
 
-            $params = array('read_only'=>$this->readonly,'admin'=>$this->roleAdmin,'currentUser'=>$this->currentUser,'cycle'=>$this->cycle,'em'=>$this->em,'subjectUser'=>$this->subjectUser);
+            $params = array('disabled'=>$this->readonly,'admin'=>$this->roleAdmin,'currentUser'=>$this->currentUser,'cycle'=>$this->cycle,'em'=>$this->em,'subjectUser'=>$this->subjectUser);
             $builder->add('publications', CollectionType::class, array(
                 'entry_type' => PublicationType::class,
                 'entry_options' => array(
@@ -551,7 +551,7 @@ if(1){
                 'prototype_name' => '__publications__',
             ));
 
-            $params = array('read_only'=>$this->readonly,'admin'=>$this->roleAdmin,'currentUser'=>$this->currentUser,'cycle'=>$this->cycle,'em'=>$this->em,'subjectUser'=>$this->subjectUser);
+            $params = array('disabled'=>$this->readonly,'admin'=>$this->roleAdmin,'currentUser'=>$this->currentUser,'cycle'=>$this->cycle,'em'=>$this->em,'subjectUser'=>$this->subjectUser);
             $builder->add('books', CollectionType::class, array(
                 'entry_type' => BookType::class,
                 'entry_options' => array(
@@ -566,7 +566,7 @@ if(1){
                 'prototype_name' => '__books__',
             ));
 
-            $params = array('read_only'=>$this->readonly,'admin'=>$this->roleAdmin,'currentUser'=>$this->currentUser,'cycle'=>$this->cycle,'em'=>$this->em,'subjectUser'=>$this->subjectUser);
+            $params = array('disabled'=>$this->readonly,'admin'=>$this->roleAdmin,'currentUser'=>$this->currentUser,'cycle'=>$this->cycle,'em'=>$this->em,'subjectUser'=>$this->subjectUser);
             $builder->add('lectures', CollectionType::class, array(
                 'entry_type' => LectureType::class,
                 'entry_options' => array(
@@ -605,7 +605,7 @@ if(1){
             $readOnlyComment = false;
         }
 
-        $params = array('read_only'=>$readOnlyComment,'label'=>'Public','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\PublicComment','formname'=>'publiccomments','em'=>$this->params['em']);
+        $params = array('disabled'=>$readOnlyComment,'label'=>'Public','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\PublicComment','formname'=>'publiccomments','em'=>$this->params['em']);
         $builder->add('publicComments', CollectionType::class, array(
             'entry_type' => PublicCommentType::class,
             'entry_options' => array(
@@ -621,7 +621,7 @@ if(1){
         ));
 
         if( $this->roleAdmin || $this->currentUser ) {
-            $params = array('roleAdmin'=>$this->roleAdmin,'read_only'=>$readOnlyComment,'label'=>'Private','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\PrivateComment','formname'=>'privatecomments','em'=>$this->params['em']);
+            $params = array('roleAdmin'=>$this->roleAdmin,'disabled'=>$readOnlyComment,'label'=>'Private','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\PrivateComment','formname'=>'privatecomments','em'=>$this->params['em']);
             $builder->add('privateComments', CollectionType::class, array(
                 'entry_type' => PrivateCommentType::class,
                 'entry_options' => array(
@@ -638,7 +638,7 @@ if(1){
         }
 
         if( $this->roleAdmin ) {
-            $params = array('read_only'=>$this->readonly,'label'=>'Administrative','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\AdminComment','formname'=>'admincomments','em'=>$this->params['em']);
+            $params = array('disabled'=>$this->readonly,'label'=>'Administrative','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\AdminComment','formname'=>'admincomments','em'=>$this->params['em']);
             $builder->add('adminComments', CollectionType::class, array(
                 'entry_type' => AdminCommentType::class,
                 'entry_options' => array(
@@ -655,7 +655,7 @@ if(1){
         }
 
         if( $this->roleAdmin || ($this->currentUser && $this->cycle == 'show') ) {
-            $params = array('read_only'=>$this->readonly,'label'=>'Confidential','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\ConfidentialComment','formname'=>'confidentialcomments','em'=>$this->params['em']);
+            $params = array('disabled'=>$this->readonly,'label'=>'Confidential','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\ConfidentialComment','formname'=>'confidentialcomments','em'=>$this->params['em']);
             $builder->add('confidentialComments', CollectionType::class, array(
                 'entry_type' => ConfidentialCommentType::class,
                 'entry_options' => array(

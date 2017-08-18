@@ -84,7 +84,7 @@ class LoggerFilterType extends AbstractType
 
         $builder->add('user', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:User',
-            //'read_only' => $this->hideUser,
+            //'disabled' => $this->hideUser,
             'property' => 'getUserNameStr',
             'label' => false,
             'required' => false,
@@ -97,7 +97,7 @@ class LoggerFilterType extends AbstractType
         $builder->add('eventType', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:EventTypeList',
             //'placeholder' => 'Fellowship Type',
-            //'read_only' => $this->hideEventType,
+            //'disabled' => $this->hideEventType,
             'property' => 'name',
             'label' => false,
             'required' => false,
@@ -181,7 +181,7 @@ class LoggerFilterType extends AbstractType
         //objectType
         $builder->add('objectType', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:EventObjectTypeList',
-            //'read_only' => $this->hideObjectType,
+            //'disabled' => $this->hideObjectType,
             //'placeholder' => 'Fellowship Type',
             'property' => 'name',
             'label' => false,
@@ -200,7 +200,7 @@ class LoggerFilterType extends AbstractType
         ));
 
         $builder->add('objectId', 'text', array(
-            //'read_only' => $this->hideObjectId,
+            //'disabled' => $this->hideObjectId,
             'required' => false,
             'label' => false,
             'attr' => array('class' => 'form-control form-control-modif limit-font-size submit-on-enter-field'),

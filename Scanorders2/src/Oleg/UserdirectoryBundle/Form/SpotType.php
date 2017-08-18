@@ -59,7 +59,7 @@ class SpotType extends AbstractType
         $complexLocation = $this->params['complexLocation'];
 
         $params = array(
-            'read_only' => $read_only,
+            'disabled' => $read_only,
             'admin' => $roleAdmin,
             'currentUser' => $currentUser,
             'cycle' => $cycle,

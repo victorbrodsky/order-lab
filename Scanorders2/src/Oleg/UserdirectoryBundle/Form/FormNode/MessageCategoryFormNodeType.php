@@ -71,7 +71,7 @@ class MessageCategoryFormNodeType extends FormNodeType
             $form->add('messageCategory', 'employees_custom_selector', array(
                 'label' => $label,
                 'required' => false,
-                'read_only' => true,
+                'disabled' => true,
                 'attr' => array(
                     'class' => 'ajax-combobox-compositetree combobox-compositetree-read-only-exclusion', //combobox-compositetree-readonly-parent
                     'type' => 'hidden',

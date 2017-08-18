@@ -45,20 +45,20 @@ class VacReqRequestBusinessType extends VacReqRequestBaseType {
         $builder->add('expenses', 'text', array(
             'label' => 'Estimated Expenses:',
             'attr' => array('class'=>'form-control vacreq-expenses'),
-            'read_only' => ($this->params['review'] ? true : false)
+            'disabled' => ($this->params['review'] ? true : false)
         ));
 
         $builder->add('description', 'textarea', array(
             'label' => 'Description:',
             'attr' => array('class'=>'textarea form-control vacreq-description'),
-            'read_only' => ($this->params['review'] ? true : false)
+            'disabled' => ($this->params['review'] ? true : false)
         ));
 
         $builder->add('paidByOutsideOrganization', 'checkbox', array(
             'label' => 'Paid by Outside Organization:',
             'required' => false,
             //'attr' => array('class' => 'form-control'),
-            'read_only' => ($this->params['review'] ? true : false)
+            'disabled' => ($this->params['review'] ? true : false)
         ));
 
 

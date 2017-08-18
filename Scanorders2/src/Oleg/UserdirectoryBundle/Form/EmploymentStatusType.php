@@ -48,7 +48,7 @@ class EmploymentStatusType extends AbstractType
         }
 
         $builder->add('hireDate',null,array(
-            'read_only' => $readonly,
+            'disabled' => $readonly,
             'label'=>"Date of Hire:",
             'widget' => 'single_text',
             'required' => false,
@@ -57,14 +57,14 @@ class EmploymentStatusType extends AbstractType
         ));
 
         $builder->add('employmentType',null,array(
-            'read_only' => $readonly,
+            'disabled' => $readonly,
             'label'=>"Employee Type:",
             'required' => false,
             'attr' => array('class' => 'combobox combobox-width')
         ));
 
         $builder->add('terminationDate',null,array(
-            'read_only' => $readonly,
+            'disabled' => $readonly,
             'label'=>"End of Employment Date:",
             'widget' => 'single_text',
             'required' => false,
@@ -78,7 +78,7 @@ class EmploymentStatusType extends AbstractType
             $attr = array('class'=>'combobox combobox-width');
         }
         $builder->add( 'terminationType', 'entity', array(
-            'disabled' => ($this->params['read_only'] ? true : false),
+            'disabled' => ($this->params['disabled'] ? true : false),
             'class' => 'OlegUserdirectoryBundle:EmploymentTerminationType',
             'property' => 'name',
             'label'=>'Type of End of Employment:',
@@ -106,14 +106,14 @@ class EmploymentStatusType extends AbstractType
 
         $builder->add( 'jobDescriptionSummary', 'textarea', array(
             'label'=>'Job Description Summary:',
-            'read_only' => $readonly,
+            'disabled' => $readonly,
             'required'=>false,
             'attr' => array('class' => 'textarea form-control')
         ));
 
         $builder->add( 'jobDescription', 'textarea', array(
             'label'=>'Job Description (official, as posted):',
-            'read_only' => $readonly,
+            'disabled' => $readonly,
             'required'=>false,
             'attr' => array('class' => 'textarea form-control')
         ));
@@ -123,7 +123,7 @@ class EmploymentStatusType extends AbstractType
         $params['document.showall'] = false;
         $params['document.imageId'] = false;
         $params['document.source'] = false;
-        //$params['read_only'] = $readonly;
+        //$params['disabled'] = $readonly;
         $builder->add('attachmentContainer', AttachmentContainerType::class, array(
             'form_custom_value' => $params,
             'required' => false,

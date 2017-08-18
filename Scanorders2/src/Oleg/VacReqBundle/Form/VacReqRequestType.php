@@ -72,7 +72,7 @@ class VacReqRequestType extends AbstractType
 
             $builder->add('tentativeStatus', 'choice', array(
                 'disabled' => $tentativereadOnly,    //($this->params['roleAdmin'] ? false : true),
-                //'read_only' => $tentativereadOnly,
+                //'disabled' => $tentativereadOnly,
                 'choices' => array(
                     //'pending' => 'Pending',
                     'approved' => 'Approved',
@@ -95,7 +95,6 @@ class VacReqRequestType extends AbstractType
 
             $builder->add('status', 'choice', array(
                 'disabled' => $readOnly,    //($this->params['roleAdmin'] ? false : true),
-                //'read_only' => $readOnly,
                 'choices' => array(
                     //'pending' => 'Pending',
                     'approved' => 'Approved',
@@ -114,7 +113,7 @@ class VacReqRequestType extends AbstractType
         if( $this->params['requestType']->getAbbreviation() == "carryover" ) {
             $builder->add('comment', 'textarea', array(
                 'label' => 'Comment:',
-                //'read_only' => $readOnly,
+                //'disabled' => $readOnly,
                 'required' => false,
                 'attr' => array('class' => 'textarea form-control'),
             ));
@@ -140,7 +139,7 @@ class VacReqRequestType extends AbstractType
         $builder->add('phone', null, array(
             'label' => "Phone Number for the person away:",
             'attr' => array('class' => 'form-control vacreq-phone'),
-            'read_only' => ($this->params['review'] ? true : false)
+            'disabled' => ($this->params['review'] ? true : false)
         ));
 
         //Business Travel
@@ -175,7 +174,7 @@ class VacReqRequestType extends AbstractType
                 'multiple' => false,
                 //'property' => 'name',
                 'attr' => array('class' => 'combobox combobox-width'),
-                'read_only' => true,    //$readOnly,   //($this->params['review'] ? true : false),
+                'disabled' => true,    //$readOnly,   //($this->params['review'] ? true : false),
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('user')
                         ->leftJoin("user.infos","infos")
@@ -200,43 +199,43 @@ class VacReqRequestType extends AbstractType
         $builder->add('availableViaEmail', null, array(
             'label' => "Available via E-Mail:",
             'attr' => $attrArr, //array('class' => 'vacreq-availableViaEmail'),
-            //'read_only' => ($this->params['review'] ? true : false)
+            //'disabled' => ($this->params['review'] ? true : false)
         ));
         $builder->add('availableEmail', null, array(
             'label' => "E-Mail address while away on this trip:",
             'attr' => array('class' => 'form-control vacreq-availableEmail'),
-            'read_only' => ($this->params['review'] ? true : false)
+            'disabled' => ($this->params['review'] ? true : false)
         ));
 
         $attrArr['class'] = 'vacreq-availableViaCellPhone';
         $builder->add('availableViaCellPhone', null, array(
             'label' => "Available via Cell Phone:",
             'attr' => $attrArr, //array('class' => 'vacreq-availableViaCellPhone'),
-            //'read_only' => ($this->params['review'] ? true : false)
+            //'disabled' => ($this->params['review'] ? true : false)
         ));
         $builder->add('availableCellPhone', null, array(
             'label' => "Cell Phone number while away on this trip:",
             'attr' => array('class' => 'form-control vacreq-availableCellPhone'),
-            'read_only' => ($this->params['review'] ? true : false)
+            'disabled' => ($this->params['review'] ? true : false)
         ));
 
         $attrArr['class'] = 'vacreq-availableViaOther';
         $builder->add('availableViaOther', null, array(
             'label' => "Available via another method:",
             'attr' => $attrArr, //array('class' => 'vacreq-availableViaOther', 'disabled'=>$disableCheckbox),
-            //'read_only' => ($this->params['review'] ? true : false)
+            //'disabled' => ($this->params['review'] ? true : false)
         ));
         $builder->add('availableOther', null, array(
             'label' => "Other:",
             'attr' => array('class' => 'form-control vacreq-availableOther'),
-            'read_only' => ($this->params['review'] ? true : false),
+            'disabled' => ($this->params['review'] ? true : false),
         ));
 
         $attrArr['class'] = 'vacreq-availableNone';
         $builder->add('availableNone', null, array(
             'label' => "Not Available:",
             'attr' => $attrArr, //array('class' => 'vacreq-availableNone'),
-            //'read_only' => ($this->params['review'] ? true : false)
+            //'disabled' => ($this->params['review'] ? true : false)
         ));
 
 
@@ -246,7 +245,7 @@ class VacReqRequestType extends AbstractType
             'required' => false,
             'format' => 'MM/dd/yyyy',
             'attr' => array('class' => 'datepicker form-control allow-future-date vacreq-firstDayBackInOffice'),
-            'read_only' => ($this->params['review'] ? true : false)
+            'disabled' => ($this->params['review'] ? true : false)
         ));
     }
 
@@ -281,7 +280,7 @@ class VacReqRequestType extends AbstractType
                 'class' => 'OlegUserdirectoryBundle:User',
                 'label' => "Approver:",
                 'required' => false,
-                'read_only' => true,
+                'disabled' => true,
                 'attr' => array('class' => 'combobox combobox-width'),
             ));
         }
@@ -294,7 +293,7 @@ class VacReqRequestType extends AbstractType
                 'multiple' => false,
                 //'property' => 'name',
                 'attr' => array('class' => 'combobox combobox-width'),
-                //'read_only' => $readOnly,   //($this->params['review'] ? true : false),
+                //'disabled' => $readOnly,   //($this->params['review'] ? true : false),
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('user')
                         ->leftJoin("user.infos","infos")
@@ -326,7 +325,7 @@ class VacReqRequestType extends AbstractType
             'required' => $requiredInst,
             'attr' => array('class' => 'combobox combobox-width vacreq-institution', 'placeholder' => 'Organizational Group'),
             'choices' => $this->params['organizationalInstitutions'],
-            'read_only' => ($this->params['review'] ? true : false)
+            'disabled' => ($this->params['review'] ? true : false)
         ));
         $builder->get('institution')
             ->addModelTransformer(new CallbackTransformer(
@@ -368,7 +367,7 @@ class VacReqRequestType extends AbstractType
                 'required' => $requiredTentInst,
                 'attr' => array('class' => 'combobox combobox-width vacreq-tentativeInstitution', 'placeholder' => 'Organizational Group'),
                 'choices' => $this->params['tentativeInstitutions'],
-                'read_only' => ($this->params['review'] ? true : false)
+                'disabled' => ($this->params['review'] ? true : false)
             ));
             $builder->get('tentativeInstitution')
                 ->addModelTransformer(new CallbackTransformer(

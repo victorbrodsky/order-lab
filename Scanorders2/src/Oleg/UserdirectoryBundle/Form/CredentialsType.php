@@ -90,7 +90,7 @@ class CredentialsType extends AbstractType
         $params['document.showall'] = false;
         $params['document.imageId'] = false;
         $params['document.source'] = false;
-        //$params['read_only'] = $readonly;
+        //$params['disabled'] = $readonly;
         $builder->add('cliaAttachmentContainer', AttachmentContainerType::class, array(
             'form_custom_value' => $params,
             'required' => false,
@@ -125,7 +125,7 @@ class CredentialsType extends AbstractType
         $params['document.showall'] = false;
         $params['document.imageId'] = false;
         $params['document.source'] = false;
-        //$params['read_only'] = $readonly;
+        //$params['disabled'] = $readonly;
         $builder->add('coqAttachmentContainer', AttachmentContainerType::class, array(
             'form_custom_value' => $params,
             'required' => false,

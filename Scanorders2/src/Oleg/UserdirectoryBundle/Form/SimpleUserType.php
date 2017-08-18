@@ -57,7 +57,7 @@ class SimpleUserType extends UserType {
 
         $builder->add('primaryPublicUserId', null, array(
             'label' => 'Primary Public User ID:',
-            //'read_only' => $this->readonly,
+            //'disabled' => $this->readonly,
             'attr' => array('class'=>'form-control submit-on-enter-field')
         ));
 
