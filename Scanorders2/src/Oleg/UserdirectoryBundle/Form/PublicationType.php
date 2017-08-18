@@ -87,7 +87,7 @@ class PublicationType extends AbstractType
             'label'=> "Importance:",
             'required'=> false,
             'multiple' => false,
-            'property' => 'name',
+            'choice_label' => 'name',
             'attr' => array('class'=>'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('list')

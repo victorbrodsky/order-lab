@@ -79,7 +79,7 @@ class UserPreferencesType extends AbstractType
                 'label' => "Language(s):",
                 'required' => false,
                 'multiple' => true,
-                'property' => 'fulltitle',
+                'choice_label' => 'fulltitle',
                 'attr' => array('class' => 'combobox combobox-width'),
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('list')
@@ -97,7 +97,7 @@ class UserPreferencesType extends AbstractType
                 'label' => "Locale:",
                 'required' => false,
                 'multiple' => false,
-                'property' => 'fulltitle',
+                'choice_label' => 'fulltitle',
                 'attr' => array('class' => 'combobox combobox-width'),
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('list')
@@ -112,8 +112,8 @@ class UserPreferencesType extends AbstractType
 
             $builder->add( 'showToInstitutions', 'entity', array(
                 'class' => 'OlegUserdirectoryBundle:Institution',
-                //'property' => 'name',
-                'property' => 'getTreeName',
+                //'choice_label' => 'name',
+                'choice_label' => 'getTreeName',
                 'label'=>'Only show this profile to members of the following institution(s):',
                 'required'=> false,
                 'multiple' => true,
@@ -152,7 +152,7 @@ class UserPreferencesType extends AbstractType
 
             $builder->add('lifeForm', 'entity', array(
                 'class' => 'OlegUserdirectoryBundle:LifeFormList',
-                'property' => 'name',
+                'choice_label' => 'name',
                 'label' => "Life Form:",
                 'required'=> false,
                 'multiple' => false,

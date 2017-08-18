@@ -85,7 +85,7 @@ class LoggerFilterType extends AbstractType
         $builder->add('user', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:User',
             //'disabled' => $this->hideUser,
-            'property' => 'getUserNameStr',
+            'choice_label' => 'getUserNameStr',
             'label' => false,
             'required' => false,
             'multiple' => true,
@@ -98,7 +98,7 @@ class LoggerFilterType extends AbstractType
             'class' => 'OlegUserdirectoryBundle:EventTypeList',
             //'placeholder' => 'Fellowship Type',
             //'disabled' => $this->hideEventType,
-            'property' => 'name',
+            'choice_label' => 'name',
             'label' => false,
             'required' => false,
             'multiple' => true,
@@ -156,7 +156,7 @@ class LoggerFilterType extends AbstractType
 
         $builder->add('roles', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:Roles',
-            'property' => 'alias',
+            'choice_label' => 'alias',
             'label' => false,
             'required' => false,
             'multiple' => true,
@@ -183,7 +183,7 @@ class LoggerFilterType extends AbstractType
             'class' => 'OlegUserdirectoryBundle:EventObjectTypeList',
             //'disabled' => $this->hideObjectType,
             //'placeholder' => 'Fellowship Type',
-            'property' => 'name',
+            'choice_label' => 'name',
             'label' => false,
             'required' => false,
             'multiple' => true,

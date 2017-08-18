@@ -50,8 +50,8 @@ class PerSiteSettingsType extends AbstractType
 
             $builder->add( 'permittedInstitutionalPHIScope', 'entity', array(
                 'class' => 'OlegUserdirectoryBundle:Institution',
-                //'property' => 'name',
-                'property' => 'getTreeName',
+                //'choice_label' => 'name',
+                'choice_label' => 'getTreeName',
                 'label'=>'Order data visible to members of (Institutional PHI Scope):',
                 'required' => false,
                 'multiple' => true,
@@ -85,8 +85,8 @@ class PerSiteSettingsType extends AbstractType
             //ScanOrdersServicesScope
             $builder->add( 'scanOrdersServicesScope', 'entity', array(
                 'class' => 'OlegUserdirectoryBundle:Institution',
-                //'property' => 'name',
-                'property' => 'getTreeName',
+                //'choice_label' => 'name',
+                'choice_label' => 'getTreeName',
                 'label'=>'Service(s) Scope:',
                 'required'=> false,
                 'multiple' => true,
@@ -109,8 +109,8 @@ class PerSiteSettingsType extends AbstractType
             //chiefServices
             $builder->add( 'chiefServices', 'entity', array(
                 'class' => 'OlegUserdirectoryBundle:Institution',
-                //'property' => 'name',
-                'property' => 'getTreeName',
+                //'choice_label' => 'name',
+                'choice_label' => 'getTreeName',
                 'label'=>'Chief of the following Service(s) for Scope:',
                 'required'=> false,
                 'multiple' => true,

@@ -172,7 +172,7 @@ class VacReqRequestType extends AbstractType
                 'label' => "Request Submitter:",
                 'required' => true,
                 'multiple' => false,
-                //'property' => 'name',
+                //'choice_label' => 'name',
                 'attr' => array('class' => 'combobox combobox-width'),
                 'disabled' => true,    //$readOnly,   //($this->params['review'] ? true : false),
                 'query_builder' => function (EntityRepository $er) {
@@ -291,7 +291,7 @@ class VacReqRequestType extends AbstractType
                 'label' => "Person Away:",
                 'required' => true,
                 'multiple' => false,
-                //'property' => 'name',
+                //'choice_label' => 'name',
                 'attr' => array('class' => 'combobox combobox-width'),
                 //'disabled' => $readOnly,   //($this->params['review'] ? true : false),
                 'query_builder' => function (EntityRepository $er) {

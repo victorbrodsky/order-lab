@@ -45,7 +45,7 @@ class OrganizationalGroupDefaultType extends AbstractType
 
         $builder->add('primaryPublicUserIdType', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:UsernameType',
-            'property' => 'name',
+            'choice_label' => 'name',
             'label' => "Primary Public User ID Type:",
             'required' => false,
             'multiple' => false,
@@ -89,7 +89,7 @@ class OrganizationalGroupDefaultType extends AbstractType
             'label'=> "Language(s):",
             'required'=> false,
             'multiple' => true,
-            'property' => 'fulltitle',
+            'choice_label' => 'fulltitle',
             'attr' => array('class'=>'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
                 return $er->createQueryBuilder('list')
@@ -107,7 +107,7 @@ class OrganizationalGroupDefaultType extends AbstractType
             'label'=> "Locale:",
             'required'=> false,
             'multiple' => false,
-            'property' => 'fulltitle',
+            'choice_label' => 'fulltitle',
             'attr' => array('class'=>'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
                 return $er->createQueryBuilder('list')
@@ -122,8 +122,8 @@ class OrganizationalGroupDefaultType extends AbstractType
 
         $builder->add( 'showToInstitutions', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:Institution',
-            //'property' => 'name',
-            'property' => 'getTreeName',
+            //'choice_label' => 'name',
+            'choice_label' => 'getTreeName',
             'label'=>'Only show this profile to members of the following institution(s):',
             'required'=> false,
             'multiple' => true,
@@ -149,8 +149,8 @@ class OrganizationalGroupDefaultType extends AbstractType
 
         $builder->add( 'permittedInstitutionalPHIScope', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:Institution',
-            //'property' => 'name',
-            'property' => 'getTreeName',
+            //'choice_label' => 'name',
+            'choice_label' => 'getTreeName',
             'label'=>'Order data visible to members of (Institutional PHI Scope):',
             'required' => false,
             'multiple' => true,
@@ -200,7 +200,7 @@ class OrganizationalGroupDefaultType extends AbstractType
         //state
         $builder->add( 'state', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:States',
-            //'property' => 'name',
+            //'choice_label' => 'name',
             'label'=>'Location State:',
             'required'=> false,
             'multiple' => false,
@@ -225,7 +225,7 @@ class OrganizationalGroupDefaultType extends AbstractType
         //country
         $builder->add( 'country', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:Countries',
-            'property' => 'name',
+            'choice_label' => 'name',
             'label'=>'Location Country:',
             'required'=> false,
             'multiple' => false,
@@ -245,7 +245,7 @@ class OrganizationalGroupDefaultType extends AbstractType
 
         $builder->add( 'state', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:States',
-            //'property' => 'name',
+            //'choice_label' => 'name',
             'label'=>'Location State:',
             'required'=> false,
             'multiple' => false,
@@ -264,7 +264,7 @@ class OrganizationalGroupDefaultType extends AbstractType
 
         $builder->add( 'medicalLicenseCountry', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:Countries',
-            'property' => 'name',
+            'choice_label' => 'name',
             'label'=>'Medical License Country:',
             'required'=> false,
             'multiple' => false,
@@ -284,7 +284,7 @@ class OrganizationalGroupDefaultType extends AbstractType
 
         $builder->add( 'medicalLicenseState', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:States',
-            //'property' => 'name',
+            //'choice_label' => 'name',
             'label'=>'Medical License State:',
             'required'=> false,
             'multiple' => false,

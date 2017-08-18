@@ -81,7 +81,7 @@ class SpotType extends AbstractType
 
 //        $builder->add( 'mrnType', 'entity', array(
 //            'class' => 'OlegOrderformBundle:MrnType',
-//            'property' => 'name',
+//            'choice_label' => 'name',
 //            'label' => "Patient's MRN Type:",
 //            'required'=> false,
 //            'multiple' => false,

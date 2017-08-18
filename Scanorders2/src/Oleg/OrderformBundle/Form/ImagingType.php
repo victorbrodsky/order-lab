@@ -72,7 +72,7 @@ class ImagingType extends AbstractType
 
         $builder->add('magnification', 'entity', array(
             'class' => 'OlegOrderformBundle:Magnification',
-            'property' => 'name',
+            'choice_label' => 'name',
             'label'=>'Magnification:',
             'required'=> true,
             'multiple' => false,

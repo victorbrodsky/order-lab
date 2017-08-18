@@ -330,7 +330,7 @@ class EncounterType extends AbstractType
 
             $builder->add( 'encounterStatus', 'entity', array(
                 'class' => 'OlegOrderformBundle:EncounterStatusList',
-                //'property' => 'name',
+                //'choice_label' => 'name',
                 'label'=>'Encounter Status:',
                 'required'=> false,
                 'multiple' => false,

@@ -68,7 +68,7 @@ class GeoLocationType extends AbstractType
         //state
         $stateArray = array(
             'class' => 'OlegUserdirectoryBundle:States',
-            //'property' => 'name',
+            //'choice_label' => 'name',
             'label'=>'State:',
             'required'=> false,
             'multiple' => false,
@@ -91,7 +91,7 @@ class GeoLocationType extends AbstractType
         //country
         $countryArray = array(
             'class' => 'OlegUserdirectoryBundle:Countries',
-            'property' => 'name',
+            'choice_label' => 'name',
             'label'=>'Country:',
             'required'=> false,
             'multiple' => false,

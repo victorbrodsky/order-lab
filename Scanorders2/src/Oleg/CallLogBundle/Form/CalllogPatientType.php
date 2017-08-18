@@ -87,7 +87,7 @@ class CalllogPatientType extends AbstractType
 
 //        $builder->add( 'patientRecordStatus', 'entity', array(
 //            'class' => 'OlegOrderformBundle:PatientRecordStatusList',
-//            //'property' => 'name',
+//            //'choice_label' => 'name',
 //            'label'=>'Patient Record Status:',
 //            'required'=> false,
 //            'multiple' => false,

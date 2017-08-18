@@ -156,7 +156,7 @@ class DocumentContainerType extends AbstractType
                 if( array_key_exists('device.types', $this->params) && is_array($this->params['device.types']) && $this->params['device.types'] != false ) {
                     $builder->add( 'device', 'entity', array(
                         'class' => 'OlegUserdirectoryBundle:Equipment',
-                        'property' => 'name',
+                        'choice_label' => 'name',
                         'label' => $this->params['document.device.label'],
                         'required'=> true,
                         'multiple' => false,

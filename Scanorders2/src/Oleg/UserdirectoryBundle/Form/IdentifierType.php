@@ -90,7 +90,7 @@ class IdentifierType extends AbstractType
         //keytypemrn
         $builder->add('keytypemrn', 'entity', array(
             'class' => 'OlegOrderformBundle:MrnType',
-            'property' => 'name',
+            'choice_label' => 'name',
             'label'=>'MRN Type:',
             'required'=> false,
             'multiple' => false,

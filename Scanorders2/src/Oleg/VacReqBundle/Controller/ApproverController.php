@@ -1087,7 +1087,7 @@ class ApproverController extends Controller
                 'label' => false,
                 'required' => false,
                 'multiple' => true,
-                //'property' => 'name',
+                //'choice_label' => 'name',
                 'attr' => array('class'=>'combobox combobox-width', 'placeholder'=>"Employee"),
                 //'disabled' => true,    //$readOnly,   //($this->params['review'] ? true : false),
                 'query_builder' => function (EntityRepository $er) {

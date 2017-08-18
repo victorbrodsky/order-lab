@@ -41,7 +41,7 @@ class ImageAnalysisOrderType extends AbstractType
 
         $builder->add('imageAnalysisAlgorithm', 'entity', array(
             'class' => 'OlegOrderformBundle:ImageAnalysisAlgorithmList',
-            'property' => 'name',
+            'choice_label' => 'name',
             'label' => 'Image Analysis Algorithm:',
             'required'=> true,
             'multiple' => false,

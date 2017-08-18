@@ -125,7 +125,7 @@ class UserPositionType extends AbstractType
         //visible as positionType combobox attached to an institution node
         $builder->add( 'positionTypes', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:PositionTypeList',
-            'property' => 'name',
+            'choice_label' => 'name',
             'label' => false,
             'required'=> false,
             'multiple' => true,
@@ -168,7 +168,7 @@ class UserPositionType extends AbstractType
 //            }
 //            $form->add( 'positionTypes', 'entity', array(
 //                'class' => 'OlegUserdirectoryBundle:PositionTypeList',
-//                'property' => 'name',
+//                'choice_label' => 'name',
 //                'label'=>'Position Type:',
 //                'required'=> false,
 //                'multiple' => true,

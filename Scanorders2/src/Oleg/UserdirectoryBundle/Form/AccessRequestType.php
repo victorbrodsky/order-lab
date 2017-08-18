@@ -80,7 +80,7 @@ class AccessRequestType extends AbstractType
             'label' => 'Organizational Group:',
             'required' => false,
             'multiple' => false,
-            'property' => 'getNodeNameWithRoot',
+            'choice_label' => 'getNodeNameWithRoot',
             'class' => 'OlegUserdirectoryBundle:Institution',
             'choices' => $requestedScanOrderInstitutionScope,
             'attr' => array('class' => 'combobox combobox-width combobox-institution')
@@ -100,7 +100,7 @@ class AccessRequestType extends AbstractType
 //            'required' => false,
 //            'multiple' => false,
 //            //'empty_value' => false,
-//            'property' => 'getNodeNameWithRoot',
+//            'choice_label' => 'getNodeNameWithRoot',
 //            'class' => 'OlegUserdirectoryBundle:Institution',
 //            'choices' => $requestedScanOrderInstitutionScope,
 //            'attr' => array('class' => 'combobox combobox-width combobox-institution')

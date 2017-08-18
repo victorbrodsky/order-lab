@@ -38,7 +38,7 @@ class EncounterInfoTypeType extends AbstractType
 
         $builder->add( 'field', 'entity', array(
             'class' => 'OlegOrderformBundle:EncounterInfoTypeList',
-            'property' => 'name',
+            'choice_label' => 'name',
             'label' => "Encounter Type:",
             'required'=> false,
             'multiple' => false,

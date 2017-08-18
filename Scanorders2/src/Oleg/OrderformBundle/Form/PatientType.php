@@ -263,7 +263,7 @@ class PatientType extends AbstractType
         if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure-patient' ) {
 //            $builder->add('patientRecordStatus', 'entity', array(
 //                'class' => 'OlegOrderformBundle:PatientRecordStatusList',
-//                //'property' => 'name',
+//                //'choice_label' => 'name',
 //                'label' => 'Patient Record Status:',
 //                'required' => false,
 //                'multiple' => false,
@@ -281,7 +281,7 @@ class PatientType extends AbstractType
 
             $builder->add('lifeForm', 'entity', array(
                 'class' => 'OlegUserdirectoryBundle:LifeFormList',
-                'property' => 'name',
+                'choice_label' => 'name',
                 'label' => "Life Form:",
                 'required'=> false,
                 'multiple' => false,
@@ -304,7 +304,7 @@ class PatientType extends AbstractType
 
                 $statusParams = array(
                     'class' => 'OlegOrderformBundle:PatientRecordStatusList',
-                    //'property' => 'name',
+                    //'choice_label' => 'name',
                     'label' => 'Patient Record Status:',
                     'required' => false,
                     'multiple' => false,

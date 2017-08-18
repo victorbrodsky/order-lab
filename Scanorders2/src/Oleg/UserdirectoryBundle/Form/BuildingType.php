@@ -81,7 +81,7 @@ class BuildingType extends AbstractType
 
         $builder->add( 'institutions', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:Institution',
-            'property' => 'name',
+            'choice_label' => 'name',
             'label'=>'Institution(s):',
             'required'=> false,
             'multiple' => true,

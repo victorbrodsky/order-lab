@@ -42,7 +42,7 @@ class LinkType extends AbstractType
 
         $builder->add( 'linktype', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:LinkTypeList',
-            'property' => 'name',
+            'choice_label' => 'name',
             'label'=>'Image Link Type:',
             'required'=> false,
             'multiple' => false,

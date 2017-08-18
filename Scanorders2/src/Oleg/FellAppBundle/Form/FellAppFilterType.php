@@ -51,7 +51,7 @@ class FellAppFilterType extends AbstractType
 //        $builder->add('filter', 'entity', array(
 //            'class' => 'OlegUserdirectoryBundle:FellowshipSubspecialty',
 //            //'placeholder' => 'Fellowship Type',
-//            'property' => 'name',
+//            'choice_label' => 'name',
 //            'label' => false,
 //            'required'=> false,
 //            'multiple' => false,

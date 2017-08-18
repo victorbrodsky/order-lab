@@ -114,7 +114,7 @@ class StateLicenseType extends AbstractType
             //state
             $stateParams = array(
                 'class' => 'OlegUserdirectoryBundle:States',
-                //'property' => 'name',
+                //'choice_label' => 'name',
                 'label'=>'State:',
                 'required'=> false,
                 'multiple' => false,
@@ -145,7 +145,7 @@ class StateLicenseType extends AbstractType
 
             $countryParams = array(
                 'class' => 'OlegUserdirectoryBundle:Countries',
-                'property' => 'name',
+                'choice_label' => 'name',
                 'label'=>'Country:',
                 'required'=> false,
                 'multiple' => false,

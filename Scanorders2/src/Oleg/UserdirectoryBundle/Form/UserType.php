@@ -290,7 +290,7 @@ class UserType extends AbstractType
         $builder->add('keytype', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:UsernameType',
             'disabled' => ($this->cycle == 'create' ? false : true ), //it is not possible to edit keytype for existed user
-            'property' => 'name',
+            'choice_label' => 'name',
             'label' => $label,
             'required' => true,
             'multiple' => false,

@@ -70,7 +70,7 @@ class LabelType extends AbstractType
             $builder->add('users', EntityType::class, array(
                 'class' => 'OlegUserdirectoryBundle:User',
                 'label' => "Users:",
-                'property' => "getUsernameOptimal",
+                'choice_label' => "getUsernameOptimal",
                 'multiple' => true,
                 'required' => true,
                 'attr' => array('class' => 'combobox combobox-width users', 'placeholder' => 'Users'),

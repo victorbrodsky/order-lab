@@ -253,7 +253,7 @@ class MessageType extends AbstractType
 
             $builder->add( 'proxyuser', 'entity', array(
                 'class' => 'OlegUserdirectoryBundle:UserWrapper',
-                //'property' => 'getEntity',
+                //'choice_label' => 'getEntity',
                 'label' => $this->params['message.proxyuser.label'],
                 'required' => false,
                 'multiple' => true,
@@ -275,7 +275,7 @@ class MessageType extends AbstractType
 
         $builder->add( 'equipment', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:Equipment',
-            'property' => 'name',
+            'choice_label' => 'name',
             'label' => 'Scanner:',
             'required'=> true,
             'multiple' => false,
@@ -336,7 +336,7 @@ class MessageType extends AbstractType
         //}
         $builder->add('institution', 'entity', array(
             'label' => 'Order data visible to members of (Institutional PHI Scope):',
-            'property' => 'getNodeNameWithRoot',
+            'choice_label' => 'getNodeNameWithRoot',
             'required' => true,
             'multiple' => false,
             'empty_value' => false,

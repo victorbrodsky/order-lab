@@ -56,7 +56,7 @@ class CredentialsType extends AbstractType
 
         $builder->add('sex', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:SexList',
-            'property' => 'name',
+            'choice_label' => 'name',
             'label' => "Gender:",
             'required'=> false,
             'multiple' => false,

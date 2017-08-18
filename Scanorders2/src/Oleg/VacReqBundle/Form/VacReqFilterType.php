@@ -45,7 +45,7 @@ class VacReqFilterType extends AbstractType
         if( $this->params['routeName'] == 'vacreq_myrequests' || $this->params['supervisor'] || $this->params['approverRole'] ) {
             $builder->add('requestType', 'entity', array(
                 'class' => 'OlegVacReqBundle:VacReqRequestTypeList',
-                'property' => 'name',
+                'choice_label' => 'name',
                 'label' => false,
                 'required' => true,
                 'multiple' => false,
@@ -57,7 +57,7 @@ class VacReqFilterType extends AbstractType
         if ($this->params['filterShowUser']) {
             $builder->add('user', 'entity', array(
                 'class' => 'OlegUserdirectoryBundle:User',
-                'property' => 'getUserNameStr',
+                'choice_label' => 'getUserNameStr',
                 'label' => false,
                 'required' => false,
                 'multiple' => false,
@@ -67,7 +67,7 @@ class VacReqFilterType extends AbstractType
 
             $builder->add('submitter', 'entity', array(
                 'class' => 'OlegUserdirectoryBundle:User',
-                'property' => 'getUserNameStr',
+                'choice_label' => 'getUserNameStr',
                 'label' => false,
                 'required' => false,
                 'multiple' => false,

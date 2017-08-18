@@ -112,7 +112,7 @@ class UserRequestType extends AbstractType
             'required' => false,
             'multiple' => false,
             //'empty_value' => false,
-            'property' => 'getNodeNameWithRoot',
+            'choice_label' => 'getNodeNameWithRoot',
             'class' => 'OlegUserdirectoryBundle:Institution',
             'choices' => $requestedScanOrderInstitutionScope,
             'attr' => array('class' => 'combobox combobox-width combobox-institution')
@@ -193,7 +193,7 @@ class UserRequestType extends AbstractType
         ));
         $builder->add( 'systemAccountRequest', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:SourceSystemList',
-            //'property' => 'name',
+            //'choice_label' => 'name',
             'label' => 'System for which the account is being requested:',
             'required'=> false,
             'attr' => array('class' => 'combobox combobox-width'),

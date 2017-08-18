@@ -212,7 +212,7 @@ class CalllogMessageType extends AbstractType
         if( $this->params['cycle'] != "new" ) {
             $builder->add('messageStatus', 'entity', array(
                 'class' => 'OlegOrderformBundle:MessageStatusList',
-                //'property' => 'name',
+                //'choice_label' => 'name',
                 'label' => 'Message Status:',
                 'required' => false,
                 'disabled' => true,
@@ -304,7 +304,7 @@ class CalllogMessageType extends AbstractType
 //            //}
 //            $builder->add('institution', 'entity', array(
 //                'label' => 'Order data visible to members of (Institutional PHI Scope):',
-//                'property' => 'getNodeNameWithRoot',
+//                'choice_label' => 'getNodeNameWithRoot',
 //                'required' => true,
 //                'multiple' => false,
 //                'empty_value' => false,

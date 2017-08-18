@@ -80,7 +80,7 @@ class EmploymentStatusType extends AbstractType
         $builder->add( 'terminationType', 'entity', array(
             'disabled' => ($this->params['disabled'] ? true : false),
             'class' => 'OlegUserdirectoryBundle:EmploymentTerminationType',
-            'property' => 'name',
+            'choice_label' => 'name',
             'label'=>'Type of End of Employment:',
             'required'=> false,
             'multiple' => false,

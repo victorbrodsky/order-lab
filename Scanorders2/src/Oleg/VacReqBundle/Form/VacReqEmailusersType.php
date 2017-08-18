@@ -48,7 +48,7 @@ class VacReqEmailusersType extends AbstractType
             'label' => "E-Mail all requests and responses to:",
             'required' => false,
             'multiple' => true,
-            //'property' => 'name',
+            //'choice_label' => 'name',
             'attr' => array('class' => 'combobox vacreq-emailusers'),
             //'disabled' => ($this->params['review'] ? true : false),
             'query_builder' => function (EntityRepository $er) {

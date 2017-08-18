@@ -49,7 +49,7 @@ class DeidentifierSearchType extends AbstractType
             'mapped' => false,
             'required'=> true,
             'multiple' => false,
-            'property' => 'name',
+            'choice_label' => 'name',
             'attr' => array('class'=>'combobox combobox-width accessiontype-combobox skip-server-populate'),
             'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('list')
@@ -85,7 +85,7 @@ class DeidentifierSearchType extends AbstractType
             'data' => $this->params['defaultInstitution'],
             'disabled' => $readOnly,
             'mapped' => false,
-            'property' => 'getNodeNameWithRoot',
+            'choice_label' => 'getNodeNameWithRoot',
             'required' => true,
             'multiple' => false,
             'empty_value' => false,

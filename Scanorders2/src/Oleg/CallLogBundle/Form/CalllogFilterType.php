@@ -102,7 +102,7 @@ class CalllogFilterType extends AbstractType
             'class' => 'OlegUserdirectoryBundle:User',
             'label' => false,
             'required' => false,
-            'property' => 'getUsernameOptimal',
+            'choice_label' => 'getUsernameOptimal',
             'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Author"),
             'query_builder' => function (EntityRepository $er) {
                 return $er->createQueryBuilder('u')
@@ -122,7 +122,7 @@ class CalllogFilterType extends AbstractType
 //            'class' => 'OlegUserdirectoryBundle:User',
 //            'label' => false,
 //            'required' => false,
-//            'property' => 'getUsernameOptimal',
+//            'choice_label' => 'getUsernameOptimal',
 //            'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Referring Provider"),
 //            'query_builder' => function (EntityRepository $er) {
 //                return $er->createQueryBuilder('u')
@@ -187,7 +187,7 @@ class CalllogFilterType extends AbstractType
             'class' => 'OlegOrderformBundle:PatientListHierarchy',
             'label' => false,
             'required' => false,
-            'property' => 'name',    //'getNodeNameWithParent',
+            'choice_label' => 'name',    //'getNodeNameWithParent',
             'attr' => array('class' => 'combobox', 'placeholder' => "Patient List"),
             'query_builder' => function (EntityRepository $er) {
                 return $er->createQueryBuilder('u')
@@ -209,7 +209,7 @@ class CalllogFilterType extends AbstractType
             'class' => 'OlegUserdirectoryBundle:User',
             'label' => false,
             'required' => false,
-            'property' => 'getUsernameOptimal',
+            'choice_label' => 'getUsernameOptimal',
             'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Attending"),
             'query_builder' => function (EntityRepository $er) {
                 return $er->createQueryBuilder('u')

@@ -45,7 +45,7 @@ class VacReqUserComboboxType extends UserType
             'label' => $this->params['btnName'].":",    //"New Submitters:",
             'required' => false,
             'multiple' => true,
-            //'property' => 'name',
+            //'choice_label' => 'name',
             'attr' => array('class' => 'combobox vacreq-emailusers'),
             //'disabled' => ($this->params['review'] ? true : false),
             'query_builder' => function (EntityRepository $er) {

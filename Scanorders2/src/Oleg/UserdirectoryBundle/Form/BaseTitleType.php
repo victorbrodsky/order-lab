@@ -232,7 +232,7 @@ class BaseTitleType extends AbstractType
 //            ));
             $builder->add( 'positions', 'entity', array(
                 'class' => 'OlegUserdirectoryBundle:PositionTrackTypeList',
-                'property' => 'name',
+                'choice_label' => 'name',
                 'label'=>'Position Track Type(s):',
                 'required'=> false,
                 'multiple' => true,
@@ -250,7 +250,7 @@ class BaseTitleType extends AbstractType
 
             $builder->add( 'residencyTrack', 'entity', array(
                 'class' => 'OlegUserdirectoryBundle:ResidencyTrackList',
-                'property' => 'name',
+                'choice_label' => 'name',
                 'label'=>'Residency Track:',
                 'required'=> false,
                 'multiple' => false,
@@ -365,7 +365,7 @@ class BaseTitleType extends AbstractType
 
             $builder->add( 'specialties', 'entity', array(
                 'class' => 'OlegUserdirectoryBundle:MedicalSpecialties',
-                'property' => 'name',
+                'choice_label' => 'name',
                 'label'=>'Specialty(s):',
                 'required'=> false,
                 'multiple' => true,

@@ -31,7 +31,7 @@ class CitizenshipType extends AbstractType
 
         $builder->add( 'country', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:Countries',
-            'property' => 'name',
+            'choice_label' => 'name',
             'label'=>'Country of Citizenship:',
             'required'=> false,
             'multiple' => false,

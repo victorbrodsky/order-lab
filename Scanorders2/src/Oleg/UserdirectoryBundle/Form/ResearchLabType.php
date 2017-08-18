@@ -123,7 +123,7 @@ class ResearchLabType extends AbstractType
             'label'=> "Research Lab Title:",
             'required'=> false,
             'multiple' => false,
-            //'property' => 'getTreeName', //getNodeNameWithRoot
+            //'choice_label' => 'getTreeName', //getNodeNameWithRoot
             'attr' => array('class'=>'combobox combobox-width ajax-combobox-researchlab'),
             'query_builder' => function(EntityRepository $er) {
                 return $er->createQueryBuilder('list')

@@ -30,7 +30,7 @@ class BoardCertificationType extends AbstractType
 
         $builder->add( 'certifyingBoardOrganization', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:CertifyingBoardOrganization',
-            'property' => 'name',
+            'choice_label' => 'name',
             'label'=>'Certifying Board Organization:',
             'required'=> false,
             'multiple' => false,
@@ -49,7 +49,7 @@ class BoardCertificationType extends AbstractType
 
         $builder->add( 'specialty', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:BoardCertifiedSpecialties',
-            'property' => 'name',
+            'choice_label' => 'name',
             'label'=>'Specialty:',
             'required'=> false,
             'multiple' => false,

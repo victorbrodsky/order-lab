@@ -41,7 +41,7 @@ class PermissionType extends AbstractType
             'label'=> "Permission:",
             'required'=> false,
             'multiple' => false,
-            'property' => 'fulltitle',
+            'choice_label' => 'fulltitle',
             'attr' => array('class'=>'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('list')
@@ -57,7 +57,7 @@ class PermissionType extends AbstractType
 
         $builder->add( 'institutions', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:Institution',
-            'property' => 'getTreeName',
+            'choice_label' => 'getTreeName',
             'label'=>'Institution(s):',
             'required'=> false,
             'multiple' => true,

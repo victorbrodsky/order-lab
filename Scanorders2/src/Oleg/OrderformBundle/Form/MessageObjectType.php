@@ -263,7 +263,7 @@ class MessageObjectType extends AbstractType
             //Message Status
             $builder->add('messageStatus', 'entity', array(
                 'class' => 'OlegOrderformBundle:MessageStatusList',
-                //'property' => 'name',
+                //'choice_label' => 'name',
                 'label'=>'Message Status:',
                 'required'=> false,
                 'multiple' => false,
@@ -338,7 +338,7 @@ class MessageObjectType extends AbstractType
         if(  $this->keyInArrayAndTrue($this->params,'message.associations') ) {
             $builder->add('associations', 'entity', array(
                 'class' => 'OlegOrderformBundle:Message',
-                'property' => 'getFullName',
+                'choice_label' => 'getFullName',
                 'label' => "Association(s):",
                 'attr' => array('class' => 'combobox combobox-width'),
                 'required'=>false,
@@ -348,7 +348,7 @@ class MessageObjectType extends AbstractType
         if( $this->keyInArrayAndTrue($this->params,'message.backAssociations') ) {
             $builder->add('backAssociations', 'entity', array(
                 'class' => 'OlegOrderformBundle:Message',
-                'property' => 'getFullName',
+                'choice_label' => 'getFullName',
                 'label' => "Reciprocal Association(s):",
                 'attr' => array('class' => 'combobox combobox-width'),
                 'required'=>false,
@@ -551,7 +551,7 @@ if( 1 ) {
 
                     $form->add('equipment', 'entity', array(
                         'class' => 'OlegUserdirectoryBundle:Equipment',
-                        'property' => 'name',
+                        'choice_label' => 'name',
                         'label' => 'Microtome Device:',
                         'required'=> true,
                         'multiple' => false,
@@ -582,7 +582,7 @@ if( 1 ) {
 
                     $form->add('equipment', 'entity', array(
                         'class' => 'OlegUserdirectoryBundle:Equipment',
-                        'property' => 'name',
+                        'choice_label' => 'name',
                         'label' => 'Slide Stainer Device:',
                         'required'=> true,
                         'multiple' => false,
@@ -805,7 +805,7 @@ if( 1 ) {
 //        if( array_key_exists('message.associations', $this->params) && $this->params['message.associations'] == true ) {
 //            $builder->add('associations', 'entity', array(
 //                'class' => 'OlegOrderformBundle:Message',
-//                'property' => 'getFullName',
+//                'choice_label' => 'getFullName',
 //                'label' => "Association(s):",
 //                'attr' => array('class' => 'combobox combobox-width'),
 //                'required'=>false,
@@ -815,7 +815,7 @@ if( 1 ) {
 //        if( array_key_exists('message.backAssociations', $this->params) && $this->params['message.backAssociations'] == true ) {
 //            $builder->add('backAssociations', 'entity', array(
 //                'class' => 'OlegOrderformBundle:Message',
-//                'property' => 'getFullName',
+//                'choice_label' => 'getFullName',
 //                'label' => "Reciprocal Association(s):",
 //                'attr' => array('class' => 'combobox combobox-width'),
 //                'required'=>false,
@@ -951,7 +951,7 @@ if( 1 ) {
 //
 //                    $form->add('equipment', 'entity', array(
 //                        'class' => 'OlegUserdirectoryBundle:Equipment',
-//                        'property' => 'name',
+//                        'choice_label' => 'name',
 //                        'label' => 'Microtome Device:',
 //                        'required'=> true,
 //                        'multiple' => false,
@@ -982,7 +982,7 @@ if( 1 ) {
 //
 //                    $form->add('equipment', 'entity', array(
 //                        'class' => 'OlegUserdirectoryBundle:Equipment',
-//                        'property' => 'name',
+//                        'choice_label' => 'name',
 //                        'label' => 'Slide Stainer Device:',
 //                        'required'=> true,
 //                        'multiple' => false,
