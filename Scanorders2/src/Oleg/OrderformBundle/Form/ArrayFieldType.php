@@ -20,6 +20,7 @@ namespace Oleg\OrderformBundle\Form;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -76,7 +77,7 @@ class ArrayFieldType extends AbstractType
 
             //$builder->add('source','hidden');
 
-            $builder->add('status', 'choice', array(
+            $builder->add('status', ChoiceType::class, array(
                 'choices'   => array(
                     'valid' => 'valid',
                     'invalid' => 'invalid'

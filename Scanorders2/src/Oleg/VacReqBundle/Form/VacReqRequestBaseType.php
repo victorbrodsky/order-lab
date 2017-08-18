@@ -20,6 +20,7 @@ namespace Oleg\VacReqBundle\Form;
 
 use Oleg\UserdirectoryBundle\Form\GeoLocationType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -94,7 +95,7 @@ class VacReqRequestBaseType extends AbstractType
                 $readOnly = false;
             }
 
-            $builder->add('status', 'choice', array(
+            $builder->add('status', ChoiceType::class, array(
                 'disabled' => $readOnly,    //($this->params['roleAdmin'] ? false : true),
                 'choices' => array(
                     'pending' => 'Pending',

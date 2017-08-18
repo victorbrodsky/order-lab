@@ -20,6 +20,7 @@ namespace Oleg\VacReqBundle\Form;
 
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -70,7 +71,7 @@ class VacReqRequestType extends AbstractType
                 $tentativereadOnly = false;
             }
 
-            $builder->add('tentativeStatus', 'choice', array(
+            $builder->add('tentativeStatus', ChoiceType::class, array(
                 'disabled' => $tentativereadOnly,    //($this->params['roleAdmin'] ? false : true),
                 //'disabled' => $tentativereadOnly,
                 'choices' => array(
@@ -93,7 +94,7 @@ class VacReqRequestType extends AbstractType
                 $readOnly = false;
             }
 
-            $builder->add('status', 'choice', array(
+            $builder->add('status', ChoiceType::class, array(
                 'disabled' => $readOnly,    //($this->params['roleAdmin'] ? false : true),
                 'choices' => array(
                     //'pending' => 'Pending',
@@ -252,13 +253,13 @@ class VacReqRequestType extends AbstractType
 
     public function addCarryOverFields( $builder ) {
 
-        $builder->add('sourceYear', 'choice', array(
+        $builder->add('sourceYear', ChoiceType::class, array(
             'label' => "Source Academic Year:",
             'attr' => array('class' => 'combobox combobox-width vacreq-sourceYear'),
             'choices' => $this->params['sourceYearRanges']
         ));
 
-        $builder->add('destinationYear', 'choice', array(
+        $builder->add('destinationYear', ChoiceType::class, array(
             'label' => "Destination Academic Year:",
             'attr' => array('class' => 'combobox combobox-width vacreq-destinationYear'),
             'choices' => $this->params['destinationYearRanges']
@@ -320,7 +321,7 @@ class VacReqRequestType extends AbstractType
 //        }
 
         //$requiredInst = true;
-        $builder->add('institution', 'choice', array(
+        $builder->add('institution', ChoiceType::class, array(
             'label' => "Organizational Group:",
             'required' => $requiredInst,
             'attr' => array('class' => 'combobox combobox-width vacreq-institution', 'placeholder' => 'Organizational Group'),
@@ -362,7 +363,7 @@ class VacReqRequestType extends AbstractType
                 //$readonlyTentativeInstitution = false;
             }
             //$requiredTentInst = true;
-            $builder->add('tentativeInstitution', 'choice', array(
+            $builder->add('tentativeInstitution', ChoiceType::class, array(
                 'label' => "Tentative Approval:",
                 'required' => $requiredTentInst,
                 'attr' => array('class' => 'combobox combobox-width vacreq-tentativeInstitution', 'placeholder' => 'Organizational Group'),

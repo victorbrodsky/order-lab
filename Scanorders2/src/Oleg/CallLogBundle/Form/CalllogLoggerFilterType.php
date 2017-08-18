@@ -21,6 +21,7 @@ use Doctrine\ORM\EntityRepository;
 use Oleg\UserdirectoryBundle\Entity\User;
 use Oleg\UserdirectoryBundle\Form\LoggerFilterType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -41,7 +42,7 @@ class CalllogLoggerFilterType extends LoggerFilterType
                 "Submitter" => "Submitter",
                 "Attending" => "Attending"
             );
-            $builder->add('capacity', 'choice', array(
+            $builder->add('capacity', ChoiceType::class, array(
                 'label' => false,
                 'required'=> false,
                 'choices' => $capacities,

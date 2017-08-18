@@ -18,6 +18,7 @@
 namespace Oleg\OrderformBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -35,7 +36,7 @@ class FilterType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        $builder->add( 'filter', 'choice', array(  
+        $builder->add( 'filter', ChoiceType::class, array(
             'label' => 'Filter by Order Status:',
             'max_length'=>50,
             'choices' => $this->params['statuses'],
@@ -50,7 +51,7 @@ class FilterType extends AbstractType
             'attr' => array('class'=>'form-control form-control-modif limit-font-size submit-on-enter-field'),
         ));
 
-        $builder->add('service', 'choice', array(
+        $builder->add('service', ChoiceType::class, array(
             'label'     => 'Services',
             'required'  => true,
             'choices' => $this->params['services'],

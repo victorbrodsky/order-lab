@@ -22,6 +22,7 @@ use Oleg\UserdirectoryBundle\Form\DataTransformer\UserWrapperTransformer;
 use Oleg\UserdirectoryBundle\Form\InstitutionalWrapperType;
 use Oleg\UserdirectoryBundle\Form\InstitutionType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -146,7 +147,7 @@ class MessageType extends AbstractType
         if($this->params['cycle'] == "" || $this->params['cycle'] == 'new' || $this->params['cycle'] == 'create' ) {
             $priorityArr['data'] = 'Routine';    //new
         }
-        $builder->add( 'priority', 'choice', $priorityArr);
+        $builder->add( 'priority', ChoiceType::class, $priorityArr);
 
 //        //delivery
 //        $attr = array('class' => 'ajax-combobox-delivery', 'type' => 'hidden');
@@ -288,7 +289,7 @@ class MessageType extends AbstractType
                 },
         ));
 
-        $builder->add( 'purpose', 'choice', array(
+        $builder->add( 'purpose', ChoiceType::class, array(
             'label' => 'Purpose:',
             'required' => true,
             'choices' => array("For Internal Use by WCMC Department of Pathology"=>"For Internal Use by WCMC Department of Pathology", "For External Use (Invoice Fund Number)"=>"For External Use (Invoice Fund Number)"),

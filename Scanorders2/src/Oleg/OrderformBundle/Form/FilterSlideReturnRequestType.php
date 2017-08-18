@@ -18,6 +18,7 @@
 namespace Oleg\OrderformBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -46,7 +47,7 @@ class FilterSlideReturnRequestType extends AbstractType
                             'cancel' => 'Canceled'
                         );
 
-        $builder->add('filter', 'choice',
+        $builder->add('filter', ChoiceType::class,
             array(
                 //'mapped' => false,
                 'label' => false,

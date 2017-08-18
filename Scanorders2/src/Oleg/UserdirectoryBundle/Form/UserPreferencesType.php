@@ -19,6 +19,7 @@
 namespace Oleg\UserdirectoryBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -65,7 +66,7 @@ class UserPreferencesType extends AbstractType
             //timezone
             $tzUtil = new TimeZoneUtil();
 
-            $builder->add('timezone', 'choice', array(
+            $builder->add('timezone', ChoiceType::class, array(
                 'label' => 'Time Zone:',
                 //'label' => $translator->translate('timezone',$formtype,'Time Zone:'),
                 'choices' => $tzUtil->tz_list(),
@@ -131,7 +132,7 @@ class UserPreferencesType extends AbstractType
                 },
             ));
 
-            $builder->add('showToRoles', 'choice', array(
+            $builder->add('showToRoles', ChoiceType::class, array(
                 'choices' => $this->roles,
                 'label' => 'Only show this profile to users with the following roles:',
                 'attr' => array('class' => 'combobox combobox-width user-preferences-showToRoles'),

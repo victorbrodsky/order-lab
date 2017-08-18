@@ -21,6 +21,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 use Doctrine\ORM\EntityRepository;
 use Oleg\UserdirectoryBundle\Form\PerSiteSettingsType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -41,7 +42,7 @@ class AuthorizitaionUserType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        $builder->add('roles', 'choice', array(
+        $builder->add('roles', ChoiceType::class, array(
             'choices' => $this->params['roles'],
             'label' => ucfirst($this->params['sitename']) . ' Role(s):',
             'attr' => array('class' => 'combobox combobox-width'),

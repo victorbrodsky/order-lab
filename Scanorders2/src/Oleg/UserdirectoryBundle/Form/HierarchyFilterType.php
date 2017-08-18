@@ -20,6 +20,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 use Doctrine\ORM\EntityRepository;
 use Oleg\UserdirectoryBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -64,7 +65,7 @@ class HierarchyFilterType extends AbstractType
             $params['data'] = $this->params['types'];
         }
 
-        $builder->add('types','choice',$params);
+        $builder->add('types',ChoiceType::class,$params);
 
     }
 

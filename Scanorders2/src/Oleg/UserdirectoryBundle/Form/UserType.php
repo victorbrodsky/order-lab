@@ -21,6 +21,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -323,7 +324,7 @@ class UserType extends AbstractType
         //Roles
         if( $this->roles && ($this->cycle == "show" || $this->roleAdmin) ) {
             $attr = array('class' => 'combobox combobox-width');
-            $builder->add('roles', 'choice', array(
+            $builder->add('roles', ChoiceType::class, array(
                 'choices' => $this->roles,
                 'label' => 'Role(s):',
                 'attr' => $attr,

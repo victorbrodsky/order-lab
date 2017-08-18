@@ -21,6 +21,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 
 use Oleg\UserdirectoryBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -166,7 +167,7 @@ class LocationType extends AbstractType
 
             if( $this->params['cycle'] != "new_standalone" ) {
                 $baseUserAttr = new Location();
-                $builder->add('status', 'choice', array(
+                $builder->add('status', ChoiceType::class, array(
                     'disabled' => ($this->params['disabled'] ? true : false),
                     'choices' => array(
                         $baseUserAttr::STATUS_UNVERIFIED => $baseUserAttr->getStatusStrByStatus($baseUserAttr::STATUS_UNVERIFIED),

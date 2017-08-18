@@ -18,6 +18,7 @@
 namespace Oleg\UserdirectoryBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -96,7 +97,7 @@ class ListType extends AbstractType
             'attr' => array('class' => 'textarea form-control')
         ));
 
-        $builder->add('type','choice',array(
+        $builder->add('type',ChoiceType::class,array(
             'label'=>'Type:',
             'choices' => $this->types,
             'required' => true,

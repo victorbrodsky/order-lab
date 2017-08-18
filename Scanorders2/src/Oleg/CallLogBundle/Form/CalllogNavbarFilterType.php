@@ -19,6 +19,7 @@ namespace Oleg\CallLogBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -47,7 +48,7 @@ class CalllogNavbarFilterType extends AbstractType
         if( array_key_exists('calllogsearchtype',$this->params) && $this->params['calllogsearchtype'] ) {
             $searchTypeArray['data'] = $this->params['calllogsearchtype'];
         }
-        $builder->add('searchtype', 'choice', $searchTypeArray);
+        $builder->add('searchtype', ChoiceType::class, $searchTypeArray);
 
         //search
         $searchArray = array(

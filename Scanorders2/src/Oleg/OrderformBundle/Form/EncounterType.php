@@ -17,6 +17,7 @@
 
 namespace Oleg\OrderformBundle\Form;
 
+use Oleg\CallLogBundle\Form\CalllogEncounterNumberType;
 use Oleg\OrderformBundle\Form\EncounterAttendingPhysicianType;
 use Oleg\OrderformBundle\Form\EncounterReferringProviderType;
 use Symfony\Component\Form\AbstractType;

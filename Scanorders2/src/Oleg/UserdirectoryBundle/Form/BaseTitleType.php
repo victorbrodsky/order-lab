@@ -19,6 +19,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -79,7 +80,7 @@ class BaseTitleType extends AbstractType
         ));
 
         $baseUserAttr = new $this->params['fullClassName']();
-        $builder->add('status', 'choice', array(
+        $builder->add('status', ChoiceType::class, array(
             'disabled' => ($this->params['disabled'] ? true : false),
             'choices'   => array(
                 $baseUserAttr::STATUS_UNVERIFIED => $baseUserAttr->getStatusStrByStatus($baseUserAttr::STATUS_UNVERIFIED),
@@ -92,7 +93,7 @@ class BaseTitleType extends AbstractType
 
         //priority
         if( !$hasRoleSimpleView ) {
-            $builder->add('priority', 'choice', array(
+            $builder->add('priority', ChoiceType::class, array(
                 'choices' => array(
                     '0' => 'Primary',
                     '1' => 'Secondary'

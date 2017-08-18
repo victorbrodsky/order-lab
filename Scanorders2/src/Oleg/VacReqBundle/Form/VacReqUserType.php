@@ -21,6 +21,7 @@ namespace Oleg\VacReqBundle\Form;
 use Doctrine\ORM\EntityRepository;
 use Oleg\UserdirectoryBundle\Form\UserType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -39,7 +40,7 @@ class VacReqUserType extends UserType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        $builder->add('roles', 'choice', array(
+        $builder->add('roles', ChoiceType::class, array(
             'choices' => $this->params['roles'],
             'label' => 'Role(s):',
             'attr' => array('class' => 'combobox combobox-width vacreq-roles'),

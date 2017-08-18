@@ -18,6 +18,7 @@
 namespace Oleg\UserdirectoryBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -64,7 +65,7 @@ class UserRequestApproveType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width combobox-institution')
         ));
 
-        $builder->add('roles', 'choice', array(
+        $builder->add('roles', ChoiceType::class, array(
             'choices' => $this->params['roles'],
             'label' => false,   //ucfirst($this->params['sitename']) . ' Role(s):',
             'attr' => array('class' => 'combobox combobox-width'),

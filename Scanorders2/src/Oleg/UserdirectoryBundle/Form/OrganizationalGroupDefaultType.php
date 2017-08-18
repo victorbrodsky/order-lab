@@ -20,6 +20,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 
 use Oleg\UserdirectoryBundle\Util\TimeZoneUtil;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
@@ -66,7 +67,7 @@ class OrganizationalGroupDefaultType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
 
-        $builder->add('roles', 'choice', array(
+        $builder->add('roles', ChoiceType::class, array(
             'choices' => $this->params['roles'],
             'label' => 'Role(s):',
             'multiple' => true,
@@ -75,7 +76,7 @@ class OrganizationalGroupDefaultType extends AbstractType
 
         //timezone
         $tzUtil = new TimeZoneUtil();
-        $builder->add( 'timezone', 'choice', array(
+        $builder->add( 'timezone', ChoiceType::class, array(
             'label' => 'Time Zone:',
             //'label' => $translator->translate('timezone',$formtype,'Time Zone:'),
             'choices' => $tzUtil->tz_list(),

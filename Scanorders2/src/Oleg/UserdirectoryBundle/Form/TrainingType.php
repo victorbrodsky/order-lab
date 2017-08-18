@@ -19,6 +19,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -58,7 +59,7 @@ class TrainingType extends AbstractType
 
         //status
         $baseUserAttr = new Training();
-        $builder->add('status', 'choice', array(
+        $builder->add('status', ChoiceType::class, array(
             'disabled' => ($this->params['disabled'] ? true : false),
             'choices' => array(
                 $baseUserAttr::STATUS_UNVERIFIED => $baseUserAttr->getStatusStrByStatus($baseUserAttr::STATUS_UNVERIFIED),

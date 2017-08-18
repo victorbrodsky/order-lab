@@ -18,6 +18,7 @@
 namespace Oleg\OrderformBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -29,7 +30,7 @@ class DataQualityMrnAccType extends AbstractType
 
         $type = 'text'; //'hidden';
 
-        $builder->add( 'btnoption', 'choice', array(
+        $builder->add( 'btnoption', ChoiceType::class, array(
             'label'=>'MRN-ACCESSION CONFLICT',
             'choices' => array("OPTION1"=>"TEXT1", "OPTION2"=>"TEXT2", "OPTION3"=>"TEXT3"),
             'multiple' => false,

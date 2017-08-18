@@ -19,6 +19,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 
 use Oleg\UserdirectoryBundle\Entity\Identifier;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -76,7 +77,7 @@ class IdentifierType extends AbstractType
 
         //status
         $baseUserAttr = new Identifier();
-        $builder->add('status', 'choice', array(
+        $builder->add('status', ChoiceType::class, array(
             'disabled' => ($this->rolePlatformAdmin ? false : true),
             'choices'   => array(
                 $baseUserAttr::STATUS_UNVERIFIED => $baseUserAttr->getStatusStrByStatus($baseUserAttr::STATUS_UNVERIFIED),

@@ -22,6 +22,7 @@ use Oleg\UserdirectoryBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -199,7 +200,7 @@ class VacReqFilterType extends AbstractType
             }
 
             //Institutional Group name - ApproverName
-            $builder->add('organizationalInstitutions', 'choice', array(
+            $builder->add('organizationalInstitutions', ChoiceType::class, array(
                 'label' => false,   //"Organizational Group:",
                 'required' => $required,
                 'multiple' => false,

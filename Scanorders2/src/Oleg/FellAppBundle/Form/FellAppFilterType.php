@@ -19,6 +19,7 @@ namespace Oleg\FellAppBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -67,7 +68,7 @@ class FellAppFilterType extends AbstractType
 //                },
 //        ));
 
-        $builder->add('filter', 'choice', array(
+        $builder->add('filter', ChoiceType::class, array(
             'label' => false,
             'required'=> false,
             //'multiple' => false,

@@ -18,6 +18,7 @@
 namespace Oleg\UserdirectoryBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -53,7 +54,7 @@ class UserRequestType extends AbstractType
         ));
 
         //hascwid
-        $builder->add( 'hascwid', 'choice', array(
+        $builder->add( 'hascwid', ChoiceType::class, array(
             'label' => 'Do you (the person for whom the account is being requested) have a CWID username?',
             'choices' => array("Yes"=>"Yes", "No"=>"No"),
             'multiple' => false,

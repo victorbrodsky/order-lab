@@ -19,6 +19,7 @@ namespace Oleg\CallLogBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -62,7 +63,7 @@ class CalllogFilterType extends AbstractType
 
         //echo "def=".$this->params['messageCategoryDefault']."<br>";
         //print_r($this->params['messageCategories']);
-        $builder->add('messageCategory', 'choice', array(
+        $builder->add('messageCategory', ChoiceType::class, array(
             'label' => false,
             'required' => false,
             'choices' => $this->params['messageCategories'],
@@ -144,7 +145,7 @@ class CalllogFilterType extends AbstractType
 //            'classtype' => 'singleUserWrapper'
 //            //'classtype' => 'userWrapper'
 //        ));
-        $builder->add('referringProvider', 'choice', array(
+        $builder->add('referringProvider', ChoiceType::class, array(
             'label' => false,
             'required' => false,
             'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Referring Provider"),
@@ -175,7 +176,7 @@ class CalllogFilterType extends AbstractType
             },
         ));
 
-        $builder->add('messageStatus', 'choice', array(
+        $builder->add('messageStatus', ChoiceType::class, array(
             'label' => false,
             'required' => false,
             'attr' => array('class' => 'combobox', 'placeholder' => "Message Status"),

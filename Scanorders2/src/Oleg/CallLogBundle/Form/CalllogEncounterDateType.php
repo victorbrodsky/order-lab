@@ -20,6 +20,7 @@ namespace Oleg\CallLogBundle\Form;
 use Oleg\OrderformBundle\Form\ArrayFieldType;
 use Oleg\UserdirectoryBundle\Util\TimeZoneUtil;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -63,7 +64,7 @@ class CalllogEncounterDateType extends AbstractType
 
         //timezone 'choice'
         $tzUtil = new TimeZoneUtil();
-        $builder->add('timezone', 'choice', array(
+        $builder->add('timezone', ChoiceType::class, array(
             'label' => false,
             'choices' => $tzUtil->tz_list(),
             'required' => true,

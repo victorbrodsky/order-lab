@@ -18,6 +18,7 @@
 namespace Oleg\UserdirectoryBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -56,7 +57,7 @@ class SiteParametersType extends AbstractType
         ));
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'environment' )
-        $builder->add('environment','choice',array(
+        $builder->add('environment',ChoiceType::class,array(
             'label'=>'Environment:',
             'choices' => array("live"=>"live", "test"=>"test", "dev"=>"dev"),
             'attr' => array('class'=>'form-control')

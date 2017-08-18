@@ -21,6 +21,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 
 use Oleg\UserdirectoryBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -34,7 +35,7 @@ class InitialConfigurationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add('environment','choice',array(
+        $builder->add('environment',ChoiceType::class,array(
             'label'=>'Environment:',
             'choices' => array("live"=>"live", "test"=>"test", "dev"=>"dev"),
             'attr' => array('class'=>'form-control')
