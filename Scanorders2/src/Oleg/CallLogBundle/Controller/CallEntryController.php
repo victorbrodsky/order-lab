@@ -1043,14 +1043,14 @@ class CallEntryController extends Controller
 
 
         //testing
-        foreach($message->getPatient() as $pat ) {
-            foreach($pat->getEncounter() as $enc) {
-                echo "keys=".count($enc->obtainKeyField())."<br>";
-                foreach($enc->obtainKeyField() as $key) {
-                    echo "key=".$key."<br>";
-                }
-            }
-        }
+//        foreach($message->getPatient() as $pat ) {
+//            foreach($pat->getEncounter() as $enc) {
+//                echo "keys=".count($enc->obtainKeyField())."<br>";
+//                foreach($enc->obtainKeyField() as $key) {
+//                    echo "key=".$key."<br>";
+//                }
+//            }
+//        }
 //        echo "loc errors:<br>";
 //        print_r($form->getErrors());
 //        echo "<br>loc string errors:<br>";
@@ -1112,7 +1112,7 @@ class CallEntryController extends Controller
             $newEncounter = null;
             //get a new encounter without id
             foreach( $patient->getEncounter() as $encounter ) {
-                echo "encounter ID=".$encounter->getId()."; status=".$encounter->getStatus()."<br>";
+                //echo "encounter ID=".$encounter->getId()."; status=".$encounter->getStatus()."<br>";
                 //if( !$encounter->getId() ) {
                     if( $encounter->getStatus() == 'valid' ) {
                         $newEncounter = $encounter;
