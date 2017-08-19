@@ -305,7 +305,7 @@ class SiteParametersController extends Controller
         }
 
         //Roles
-        $rolesArr = $this->getUserRoles();
+        $rolesArr = $this->getUserRoles(); //site settings org group form SiteParametersType
 
         $params = array(
             'sitename'=>$sitename,
@@ -426,7 +426,7 @@ class SiteParametersController extends Controller
         }
 
         //Roles
-        $rolesArr = $this->getUserRoles();
+        $rolesArr = $this->getUserRoles(); //site setting edit form SiteParametersType
 
         $params = array(
             'sitename'=>$sitename,
@@ -459,7 +459,8 @@ class SiteParametersController extends Controller
             array('orderinlist' => 'ASC')
         );  //findAll();
         foreach( $roles as $role ) {
-            $rolesArr[$role->getName()] = $role->getAlias();
+            //$rolesArr[$role->getName()] = $role->getAlias();
+            $rolesArr[$role->getAlias()] = $role->getName();
         }
         return $rolesArr;
     }

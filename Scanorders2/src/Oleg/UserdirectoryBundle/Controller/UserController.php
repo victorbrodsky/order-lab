@@ -410,8 +410,6 @@ class UserController extends Controller
             }
         }
 
-        $rolesArr = $this->getUserRoles();
-
         $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:User');
         $dql =  $repository->createQueryBuilder("user");
         $dql->select('user');
@@ -555,10 +553,11 @@ class UserController extends Controller
         }
 
         //exit("count=".count($pagination));//testing
+        $rolesArr = $this->getUserRoles(); //index user (search result list)
 
         return array(
             'entities' => $pagination,
-            'roles' => $rolesArr
+            'roles' => $rolesArr //it's used to get user role alias using {{ attribute(roles, role) }} , where role is a current user role name
         );
     }
 
@@ -1524,7 +1523,7 @@ class UserController extends Controller
         $user->getCredentials()->addIdentifier($identNpi);
 
         //Roles
-        $rolesArr = $this->getUserRoles();
+        $rolesArr = $this->getUserRoles(); //new user form
 
         $params = array(
             'cycle' => 'create',
@@ -1586,7 +1585,7 @@ class UserController extends Controller
         $user->setCreatedby('manual');
 
         //Roles
-        $rolesArr = $this->getUserRoles();
+        $rolesArr = $this->getUserRoles(); //create user form
 
         $params = array(
             'cycle' => 'create',
@@ -1992,7 +1991,7 @@ class UserController extends Controller
         $this->addHookFields($entity);
 
         //Roles
-        $rolesArr = $this->getUserRoles();
+        $rolesArr = $this->getUserRoles(); //show user form
 
         $params = array(
             'cycle' => 'show',
@@ -2084,7 +2083,7 @@ class UserController extends Controller
         $this->addHookFields($entity);
 
         //Roles
-        $rolesArr = $this->getUserRoles();
+        $rolesArr = $this->getUserRoles(); //edit user form
 
         $params = array(
             'cycle' => 'edit',
@@ -2441,7 +2440,7 @@ class UserController extends Controller
         }
 
         //Roles
-        $rolesArr = $this->getUserRoles();
+        $rolesArr = $this->getUserRoles(); //update user form
 
         $params = array(
             'cycle' => 'edit',
@@ -3327,7 +3326,7 @@ class UserController extends Controller
         return $this->redirect($this->generateUrl('employees_listusers'));
     }
 
-    public function getUserRoles() {
+    public function getUserRoles( $asLabelValue=true ) {
         $rolesArr = array();
         $em = $this->getDoctrine()->getManager();
         $roles = $em->getRepository('OlegUserdirectoryBundle:Roles')->findBy(
@@ -3335,7 +3334,11 @@ class UserController extends Controller
             array('orderinlist' => 'ASC')
         );  //findAll();
         foreach( $roles as $role ) {
-            $rolesArr[$role->getName()] = $role->getAlias();
+            if( $asLabelValue ) {
+                $rolesArr[$role->getAlias()] = $role->getName();
+            } else {
+                $rolesArr[$role->getName()] = $role->getAlias();
+            }
         }
         return $rolesArr;
     }
