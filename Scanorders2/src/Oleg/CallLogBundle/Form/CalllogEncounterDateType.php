@@ -59,7 +59,8 @@ class CalllogEncounterDateType extends AbstractType
             'input' => 'datetime',
             'widget' => 'choice',
             'label' => 'Encounter Time:',
-            'disabled' => $this->params['readonlyEncounter']
+            //'disabled' => $this->params['readonlyEncounter']
+            'attr' => array('readonly'=>$this->params['readonlyEncounter'])
         ));
 
         //timezone 'choice'

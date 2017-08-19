@@ -41,9 +41,9 @@ class CalllogEncounterNumberType extends AbstractType
             'class' => 'OlegOrderformBundle:EncounterType',
             'label' => 'Encounter Type:',
             'required' => true,
-            'disabled' => true,
+            //'disabled' => true,
             //'data' => 1,
-            'attr' => array('class' => 'combobox combobox-width encounter-keytype'),
+            'attr' => array('class' => 'combobox combobox-width encounter-keytype', 'readonly'=>true), //Use readonly for pre-filled readonly fields!
             'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('list')
                         ->orderBy("list.orderinlist","ASC");
@@ -66,8 +66,8 @@ class CalllogEncounterNumberType extends AbstractType
 
         $builder->add('field', null, array(
             'label'=>'Encounter Number',
-            'disabled' => true,
-            'attr' => array('class'=>'form-control encounter-id')
+            //'disabled' => true,
+            'attr' => array('class'=>'form-control encounter-id', 'readonly'=>true)
         ));
 
 

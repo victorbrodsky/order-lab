@@ -1145,15 +1145,16 @@ class CallEntryController extends Controller
 
                 //assign generated encounter number ID
                 $key = $newEncounter->obtainAllKeyfield()->first();
-                //echo "key=".$key."<br>"; //TODO: test - why key count($newEncounter->obtainAllKeyfield()) == 0 after deprecated removed?
+                //echo "key=".$key."<br>"; //TODO: test - why key count($newEncounter->obtainAllKeyfield()) == 0 after deprecated removed? because disabled!?
                 //exit('1');
                 if( !$key ) {
-                    $newKeys = $newEncounter->createKeyField();
-                    if( count($newKeys) > 0 ) {
-                        $key = $newKeys->first();
-                    } else {
-                        throw new \Exception( "CallLog save new Entry Action: Encounter does not have any keys." );
-                    }
+                    //$newKeys = $newEncounter->createKeyField();
+                    //if( count($newKeys) > 0 ) {
+                    //    $key = $newKeys->first();
+                    //} else {
+                    //    throw new \Exception( "CallLog save new Entry Action: Encounter does not have any keys." );
+                    //}
+                    throw new \Exception( "CallLog save new Entry Action: Encounter does not have a key." );
                 }
                 $em->getRepository('OlegOrderformBundle:Encounter')->setEncounterKey($key, $newEncounter, $user);
 
