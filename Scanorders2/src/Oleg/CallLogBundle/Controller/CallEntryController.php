@@ -1041,6 +1041,16 @@ class CallEntryController extends Controller
 
         $form->handleRequest($request);
 
+
+        //testing
+        foreach($message->getPatient() as $pat ) {
+            foreach($pat->getEncounter() as $enc) {
+                echo "keys=".count($enc->obtainKeyField())."<br>";
+                foreach($enc->obtainKeyField() as $key) {
+                    echo "key=".$key."<br>";
+                }
+            }
+        }
 //        echo "loc errors:<br>";
 //        print_r($form->getErrors());
 //        echo "<br>loc string errors:<br>";
@@ -1135,6 +1145,16 @@ class CallEntryController extends Controller
 
                 //assign generated encounter number ID
                 $key = $newEncounter->obtainAllKeyfield()->first();
+                //echo "key=".$key."<br>"; //TODO: test - why key count($newEncounter->obtainAllKeyfield()) == 0 after deprecated removed?
+                //exit('1');
+                if( !$key ) {
+                    $newKeys = $newEncounter->createKeyField();
+                    if( count($newKeys) > 0 ) {
+                        $key = $newKeys->first();
+                    } else {
+                        throw new \Exception( "CallLog save new Entry Action: Encounter does not have any keys." );
+                    }
+                }
                 $em->getRepository('OlegOrderformBundle:Encounter')->setEncounterKey($key, $newEncounter, $user);
 
                 //Remove tracker if spots/location is empty
