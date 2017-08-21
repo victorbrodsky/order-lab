@@ -21,6 +21,7 @@ use Oleg\UserdirectoryBundle\Form\DocumentContainerType;
 use Oleg\UserdirectoryBundle\Form\DocumentType;
 use Oleg\UserdirectoryBundle\Form\UserWrapperType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -31,7 +32,7 @@ class ReportBlockType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add('issuedDate', 'date', array(
+        $builder->add('issuedDate', DateType::class, array(
             'label' => "Issued Date & Time:",
             'widget' => 'single_text',
             'required' => false,
@@ -39,7 +40,7 @@ class ReportBlockType extends AbstractType
             'attr' => array('class' => 'datepicker form-control'),
         ));
 
-        $builder->add('receivedDate', 'date', array(
+        $builder->add('receivedDate', DateType::class, array(
             'label' => "Received Date & Time:",
             'widget' => 'single_text',
             'required' => false,
@@ -47,7 +48,7 @@ class ReportBlockType extends AbstractType
             'attr' => array('class' => 'datepicker form-control'),
         ));
 
-        $builder->add('signatureDate', 'date', array(
+        $builder->add('signatureDate', DateType::class, array(
             'label' => "Signature Date & Time:",
             'widget' => 'single_text',
             'required' => false,
@@ -55,7 +56,7 @@ class ReportBlockType extends AbstractType
             'attr' => array('class' => 'datepicker form-control'),
         ));
 
-        $builder->add('processedDate', 'date', array(
+        $builder->add('processedDate', DateType::class, array(
             'label' => "Processed Date:",
             'widget' => 'single_text',
             'required' => false,
@@ -68,7 +69,7 @@ class ReportBlockType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width'),
         ));
 
-        $builder->add('embeddedDate', 'date', array(
+        $builder->add('embeddedDate', DateType::class, array(
             'label' => "Embedded Date:",
             'widget' => 'single_text',
             'required' => false,

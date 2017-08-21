@@ -21,6 +21,7 @@ namespace Oleg\VacReqBundle\Form;
 use Oleg\UserdirectoryBundle\Form\GeoLocationType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -46,7 +47,7 @@ class VacReqRequestBaseType extends AbstractType
         $this->formConstructor($options['form_custom_value']);
 
         //Symfony<2.8 read_only' => true, Symfony>2.8 'attr' => ['readonly' => true], or use disabled
-        $builder->add('startDate', 'date', array(
+        $builder->add('startDate', DateType::class, array(
             'label' => $this->requestTypeName.' - First Day Away:',
             'widget' => 'single_text',
             'required' => false,
@@ -55,7 +56,7 @@ class VacReqRequestBaseType extends AbstractType
             'disabled' => ($this->params['review'] ? true : false)
         ));
 
-        $builder->add('endDate', 'date', array(
+        $builder->add('endDate', DateType::class, array(
             'label' => $this->requestTypeName.' - Last Day Away:',
             'widget' => 'single_text',
             'required' => false,

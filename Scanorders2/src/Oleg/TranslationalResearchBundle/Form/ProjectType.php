@@ -5,6 +5,7 @@ namespace Oleg\TranslationalResearchBundle\Form;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -47,7 +48,7 @@ class ProjectType extends AbstractType
                 'attr' => array('class' => 'form-control'),
             ));
 
-            $builder->add('approvalDate', 'date', array(
+            $builder->add('approvalDate', DateType::class, array(
                 'widget' => 'single_text',
                 'label' => "Approval Date:",
                 //'disabled' => true,
@@ -58,7 +59,7 @@ class ProjectType extends AbstractType
         }
 
         if( $this->project->getCreateDate() ) {
-            $builder->add('createDate', 'date', array(
+            $builder->add('createDate', DateType::class, array(
                 'widget' => 'single_text',
                 'label' => "Create Date:",
                 //'disabled' => true,

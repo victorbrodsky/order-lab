@@ -24,6 +24,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -104,7 +105,7 @@ class VacReqFilterType extends AbstractType
 //            'attr' => array('class' => 'form-control form-control-modif limit-font-size submit-on-enter-field'),
 //        ));
 
-        $builder->add('startdate', 'date', array(
+        $builder->add('startdate', DateType::class, array(
             'label' => false, //'Start Date/Time:',
             'required' => false,
             'widget' => 'single_text',
@@ -112,7 +113,7 @@ class VacReqFilterType extends AbstractType
             'attr' => array('class' => 'form-control datetimepicker', 'placeholder' => 'Start Date', 'title'=>'Start Date of Request Submission', 'data-toggle'=>'tooltip')
         ));
 
-        $builder->add('enddate', 'date', array(
+        $builder->add('enddate', DateType::class, array(
             'label' => false, //'End Date/Time:',
             'required' => false,
             'widget' => 'single_text',

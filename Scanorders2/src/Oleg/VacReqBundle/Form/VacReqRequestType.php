@@ -22,6 +22,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -254,7 +255,7 @@ class VacReqRequestType extends AbstractType
         ));
 
 
-        $builder->add('firstDayBackInOffice', 'date', array(
+        $builder->add('firstDayBackInOffice', DateType::class, array(
             'label' => 'First Day Back in Office:',
             'widget' => 'single_text',
             'required' => false,

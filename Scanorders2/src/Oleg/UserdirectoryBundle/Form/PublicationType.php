@@ -21,6 +21,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -60,7 +61,7 @@ class PublicationType extends AbstractType
         ));
 
         if( $this->params['cycle'] == "show" ) {
-            $builder->add('updatedate', 'date', array(
+            $builder->add('updatedate', DateType::class, array(
                 //'disabled' => true,
                 'label' => 'Update Date:',
                 'widget' => 'single_text',

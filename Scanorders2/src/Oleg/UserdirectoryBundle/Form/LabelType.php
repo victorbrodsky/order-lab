@@ -22,6 +22,7 @@ use Oleg\UserdirectoryBundle\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -51,7 +52,7 @@ class LabelType extends AbstractType
                 'attr' => array('class' => 'textarea form-control'),
             ));
 
-            $builder->add('labelcount', 'integer', array(
+            $builder->add('labelcount', IntegerType::class, array(
                 'required' => true,
                 'label' => "Number of labels to print (0 - for a whole page):",
                 'data' => 1,
@@ -81,14 +82,14 @@ class LabelType extends AbstractType
 
         }
 
-        $builder->add('startrow', 'integer', array(
+        $builder->add('startrow', IntegerType::class, array(
             'required' => true,
             'label' => "Start row index (from 1 to 10):",
             'data' => 1,
             'attr' => array('class' => 'form-control'),
         ));
 
-        $builder->add('startcolumn', 'integer', array(
+        $builder->add('startcolumn', IntegerType::class, array(
             'required' => true,
             'label' => "Start column index (from 1 to 3):",
             'data' => 1,

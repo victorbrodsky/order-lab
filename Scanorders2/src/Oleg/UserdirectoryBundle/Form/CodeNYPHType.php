@@ -18,6 +18,7 @@
 namespace Oleg\UserdirectoryBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -34,7 +35,7 @@ class CodeNYPHType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
 
-        $builder->add('startDate', 'date', array(
+        $builder->add('startDate', DateType::class, array(
             'label' => "NYPH Code Start Date:",
             'widget' => 'single_text',
             'required' => false,
@@ -42,7 +43,7 @@ class CodeNYPHType extends AbstractType
             'attr' => array('class' => 'datepicker form-control allow-future-date'),
         ));
 
-        $builder->add('endDate', 'date', array(
+        $builder->add('endDate', DateType::class, array(
             'label' => "NYPH Code End Date:",
             'widget' => 'single_text',
             'required' => false,

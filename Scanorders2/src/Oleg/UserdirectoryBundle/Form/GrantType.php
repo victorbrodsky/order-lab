@@ -20,6 +20,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 
 use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -99,7 +100,7 @@ class GrantType extends AbstractType
             'attr' => array('class'=>'form-control grant-amountLabSpace-field', 'readonly'=>$readonly)
         ));
 
-        $builder->add('startDate', 'date', array(
+        $builder->add('startDate', DateType::class, array(
             //'disabled' => $readonly,
             'label' => "Grant Support Start Date:",
             'widget' => 'single_text',
@@ -108,7 +109,7 @@ class GrantType extends AbstractType
             'attr' => array('class' => 'datepicker form-control grant-startDate-field', 'readonly'=>$readonly),
         ));
 
-        $builder->add('endDate', 'date', array(
+        $builder->add('endDate', DateType::class, array(
             //'disabled' => $readonly,
             'label' => "Grant Support End Date:",
             'widget' => 'single_text',

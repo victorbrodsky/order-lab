@@ -20,6 +20,7 @@ namespace Oleg\OrderformBundle\Form;
 use Oleg\UserdirectoryBundle\Form\DocumentContainerType;
 use Oleg\UserdirectoryBundle\Form\DocumentType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -44,7 +45,7 @@ class InstructionType extends AbstractType
             'attr' => array('class' => 'textarea form-control'),
         ));
 
-        $builder->add('createdate', 'date', array(
+        $builder->add('createdate', DateType::class, array(
             'label' => 'Instruction'.$this->params['labelPrefix'].' On:',
             'widget' => 'single_text',
             'required' => false,

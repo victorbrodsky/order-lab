@@ -26,6 +26,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -173,7 +174,7 @@ class MessageType extends AbstractType
             $deadline = $this->entity->getDeadline();
         }
 
-        $builder->add('deadline','date',array(
+        $builder->add('deadline', DateType::class,array(
             'widget' => 'single_text',
             'format' => 'MM/dd/yyyy',   //used for day dateline (no hours), so we don't need to set view_timezone
             'attr' => array('class' => 'datepicker form-control', 'style'=>'margin-top: 0;'),

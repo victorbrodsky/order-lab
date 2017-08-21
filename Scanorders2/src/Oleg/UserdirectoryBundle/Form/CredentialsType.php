@@ -22,6 +22,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -47,7 +48,7 @@ class CredentialsType extends AbstractType
             $hasRoleSimpleView = $this->params['container']->get('security.token_storage')->getToken()->getUser()->hasRole("ROLE_USERDIRECTORY_SIMPLEVIEW");
         }
 
-        $builder->add('dob', 'date', array(
+        $builder->add('dob', DateType::class, array(
             'label' => 'Date of Birth:',
             'widget' => 'single_text',
             'required' => false,
@@ -78,7 +79,7 @@ class CredentialsType extends AbstractType
             'attr' => array('class'=>'form-control form-control-modif')
         ));
 
-        $builder->add('cliaExpirationDate', 'date', array(
+        $builder->add('cliaExpirationDate', DateType::class, array(
             'label' => 'CLIA Expiration Date:',
             'widget' => 'single_text',
             'required' => false,
@@ -113,7 +114,7 @@ class CredentialsType extends AbstractType
             'attr' => array('class'=>'form-control form-control-modif')
         ));
 
-        $builder->add('coqExpirationDate', 'date', array(
+        $builder->add('coqExpirationDate', DateType::class, array(
             'label' => 'COQ Expiration Date:',
             'widget' => 'single_text',
             'required' => false,

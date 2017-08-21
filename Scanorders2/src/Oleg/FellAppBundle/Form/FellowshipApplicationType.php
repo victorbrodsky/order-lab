@@ -28,6 +28,7 @@ use Oleg\UserdirectoryBundle\Form\StateLicenseType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -85,7 +86,7 @@ class FellowshipApplicationType extends AbstractType
         ));
 
         if( $this->params['cycle'] == "new" ) {
-            $builder->add('timestamp','date',array(
+            $builder->add('timestamp', DateType::class,array(
                 'widget' => 'single_text',
                 'label' => "Application Receipt Date:",
                 //'format' => 'MM/dd/yyyy, H:mm:ss',
@@ -95,7 +96,7 @@ class FellowshipApplicationType extends AbstractType
             ));
         }
 
-        $builder->add('startDate','date',array(
+        $builder->add('startDate', DateType::class, array(
             'widget' => 'single_text',
             'label' => "Start Date:",
             'format' => 'MM/dd/yyyy',  //'MM/dd/yyyy, H:mm:ss',
@@ -103,7 +104,7 @@ class FellowshipApplicationType extends AbstractType
             'required' => false,
         ));
 
-        $builder->add('endDate','date',array(
+        $builder->add('endDate', DateType::class,array(
             'widget' => 'single_text',
             'label' => "End Date:",
             'format' => 'MM/dd/yyyy',

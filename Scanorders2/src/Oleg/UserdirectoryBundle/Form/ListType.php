@@ -20,6 +20,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -114,7 +115,7 @@ class ListType extends AbstractType
             'attr' => array('class'=>'combobox combobox-width select2-list-creator', 'readonly'=>'readonly')
         ));
 
-        $builder->add('createdate', 'date', array(
+        $builder->add('createdate', DateType::class, array(
             'label' => 'Creation Date:',
             'widget' => 'single_text',
             'required' => true,

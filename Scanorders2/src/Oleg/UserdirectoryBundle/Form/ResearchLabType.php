@@ -21,6 +21,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -67,7 +68,7 @@ class ResearchLabType extends AbstractType
         ));
 
         if (!$hasRoleSimpleView) {
-            $builder->add('foundedDate', 'date', array(
+            $builder->add('foundedDate', DateType::class, array(
                 'disabled' => $readonly,
                 'label' => "Founded on:",
                 'widget' => 'single_text',
@@ -76,7 +77,7 @@ class ResearchLabType extends AbstractType
                 'attr' => array('class' => 'datepicker form-control researchlab-foundedDate-field')
             ));
 
-            $builder->add('dissolvedDate', 'date', array(
+            $builder->add('dissolvedDate', DateType::class, array(
                 'disabled' => $readonly,
                 'label' => "Dissolved on:",
                 'widget' => 'single_text',

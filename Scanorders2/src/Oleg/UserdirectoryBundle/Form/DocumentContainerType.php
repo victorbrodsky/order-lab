@@ -22,6 +22,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -207,7 +208,7 @@ class DocumentContainerType extends AbstractType
             }
 
             if( $this->params['document.datetime'] ) {
-                $builder->add('datetime','date',array(
+                $builder->add('datetime', DateType::class, array(
                     'widget' => 'single_text',
                     'format' => 'MM/dd/yyyy',   //used for day dateline (no hours), so we don't need to set view_timezone
                     'attr' => array('class' => 'datepicker form-control', 'style'=>'margin-top: 0;'),

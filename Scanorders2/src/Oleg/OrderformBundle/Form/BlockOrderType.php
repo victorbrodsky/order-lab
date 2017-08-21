@@ -22,6 +22,7 @@ use Oleg\UserdirectoryBundle\Form\DocumentContainerType;
 use Oleg\UserdirectoryBundle\Form\DocumentType;
 use Oleg\UserdirectoryBundle\Form\UserWrapperType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -32,7 +33,7 @@ class BlockOrderType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add('processedDate', 'date', array(
+        $builder->add('processedDate', DateType::class, array(
             'label' => "Processed Date:",
             'widget' => 'single_text',
             'required' => false,

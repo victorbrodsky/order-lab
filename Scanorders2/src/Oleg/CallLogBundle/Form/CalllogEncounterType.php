@@ -33,6 +33,7 @@ use Oleg\UserdirectoryBundle\Form\TrackerType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -342,7 +343,7 @@ class CalllogEncounterType extends AbstractType
         ));
 
         //$this->params['readonlyEncounter'] = true;
-        $builder->add('patientDob', 'date', array(
+        $builder->add('patientDob', DateType::class, array(
             'label' => "Date of Birth:",
             'widget' => 'single_text',
             'required' => false,

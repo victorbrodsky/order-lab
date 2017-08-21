@@ -21,6 +21,7 @@ use Oleg\OrderformBundle\Form\ArrayFieldType;
 use Oleg\UserdirectoryBundle\Util\TimeZoneUtil;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -38,7 +39,7 @@ class CalllogEncounterDateType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        $builder->add('field', 'date', array(
+        $builder->add('field', DateType::class, array(
             'label' => "Encounter Date:",
             'widget' => 'single_text',
             'required' => false,

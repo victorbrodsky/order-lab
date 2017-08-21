@@ -18,6 +18,7 @@
 namespace Oleg\OrderformBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -38,7 +39,7 @@ class AdministrativeTitleType extends AbstractType
             'attr' => array('class' => 'form-control')
         ));
 
-        $builder->add('startDate', 'date', array(
+        $builder->add('startDate', DateType::class, array(
             'label' => "Administrative Title Start Date:",
             'widget' => 'single_text',
             'required' => false,
@@ -46,7 +47,7 @@ class AdministrativeTitleType extends AbstractType
             'attr' => array('class' => 'datepicker form-control'),
         ));
 
-        $builder->add('endDate', 'date', array(
+        $builder->add('endDate', DateType::class, array(
             'label' => "Administrative Title End Date:",
             'widget' => 'single_text',
             'required' => false,

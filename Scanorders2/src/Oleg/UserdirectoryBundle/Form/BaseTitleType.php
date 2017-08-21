@@ -22,7 +22,9 @@ use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -66,7 +68,7 @@ class BaseTitleType extends AbstractType
             'classtype' => $this->params['formname']
         ));
 
-        $builder->add('startDate', 'date', array(
+        $builder->add('startDate', DateType::class, array(
             'label' => $this->params['label']." Title Start Date:",
             'widget' => 'single_text',
             'required' => false,
@@ -74,7 +76,7 @@ class BaseTitleType extends AbstractType
             'attr' => array('class' => 'datepicker form-control allow-future-date'),
         ));
 
-        $builder->add('endDate', 'date', array(
+        $builder->add('endDate', DateType::class, array(
             'label' => $this->params['label']." Title End Date:",
             'widget' => 'single_text',
             'required' => false,
@@ -287,7 +289,7 @@ class BaseTitleType extends AbstractType
                 'classtype' => 'fellowshiptype'
             ));
 
-            $builder->add('pgystart', 'date', array(
+            $builder->add('pgystart', DateType::class, array(
                 'label' => "During academic year that started on:",
                 'widget' => 'single_text',
                 'required' => false,
@@ -301,7 +303,7 @@ class BaseTitleType extends AbstractType
                 'attr' => array('class'=>'form-control pgylevel-field')
             ));
 
-            $builder->add('pgylevelexpected','integer',array(
+            $builder->add('pgylevelexpected', IntegerType::class, array(
                 'label' => 'Expected Current Post Graduate Year (PGY) level:',
                 'mapped' => false,
                 'required' => false,

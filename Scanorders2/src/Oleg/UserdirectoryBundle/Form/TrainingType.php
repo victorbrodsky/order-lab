@@ -21,6 +21,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -82,7 +83,7 @@ class TrainingType extends AbstractType
         ));
 
 
-        $builder->add('startDate', 'date', array(
+        $builder->add('startDate', DateType::class, array(
             'label' => 'Start Date:',
             'widget' => 'single_text',
             'required' => false,
@@ -107,7 +108,7 @@ class TrainingType extends AbstractType
                 if( $completionReason == "Graduated" ) {
 
                     if( !$this->hasRoleSimpleView ) {
-                        $form->add('completionDate', 'date', array(
+                        $form->add('completionDate', DateType::class, array(
                             'label' => 'Graduation Date:',
                             'widget' => 'single_text',
                             'required' => false,
@@ -119,7 +120,7 @@ class TrainingType extends AbstractType
                 } else {
 
                     if( !$this->hasRoleSimpleView ) {
-                        $form->add('completionDate', 'date', array(
+                        $form->add('completionDate', DateType::class, array(
                             'label' => 'Completion Date:',
                             'widget' => 'single_text',
                             'required' => false,
@@ -140,7 +141,7 @@ class TrainingType extends AbstractType
         } else {
 
             if( !$this->hasRoleSimpleView ) {
-                $builder->add('completionDate', 'date', array(
+                $builder->add('completionDate', DateType::class, array(
                     'label' => 'Completion Date:',
                     'widget' => 'single_text',
                     'required' => false,

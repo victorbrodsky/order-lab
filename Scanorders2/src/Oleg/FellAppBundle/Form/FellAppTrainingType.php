@@ -21,6 +21,7 @@ namespace Oleg\FellAppBundle\Form;
 use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Oleg\UserdirectoryBundle\Form\GeoLocationType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -44,7 +45,7 @@ class FellAppTrainingType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        $builder->add('startDate', 'date', array(
+        $builder->add('startDate', DateType::class, array(
             'label' => 'Start Date:',
             'widget' => 'single_text',
             'required' => false,
@@ -52,7 +53,7 @@ class FellAppTrainingType extends AbstractType
             'attr' => array('class' => 'datepicker form-control'),
         ));
 
-        $builder->add('completionDate', 'date', array(
+        $builder->add('completionDate', DateType::class, array(
             'label' => 'Completion Date:',
             'widget' => 'single_text',
             'required' => false,

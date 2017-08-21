@@ -18,6 +18,7 @@
 namespace Oleg\OrderformBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -35,7 +36,7 @@ class ProcedureDateType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        $builder->add('field', 'date', array(
+        $builder->add('field', DateType::class, array(
             'label' => "Procedure Date:",
             'widget' => 'single_text',
             'required' => false,
