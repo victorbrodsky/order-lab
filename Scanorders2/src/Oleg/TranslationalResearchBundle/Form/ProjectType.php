@@ -60,16 +60,16 @@ class ProjectType extends AbstractType
             $builder->add('createDate', 'date', array(
                 'widget' => 'single_text',
                 'label' => "Create Date:",
-                'disabled' => true,
+                //'disabled' => true,
                 'format' => 'MM/dd/yyyy',
-                'attr' => array('class' => 'datepicker form-control'),
+                'attr' => array('class' => 'datepicker form-control', 'readonly'=>true),
                 'required' => false,
             ));
 
             $builder->add('submitter', null, array(
                 'label' => "Created By:",
-                'disabled' => true,
-                'attr' => array('class'=>'combobox combobox-width')
+                //'disabled' => true,
+                'attr' => array('class'=>'combobox combobox-width', 'readonly'=>true)
             ));
         }
 

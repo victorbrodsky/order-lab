@@ -78,9 +78,9 @@ class CalllogMessageType extends AbstractType
         if ($this->params['cycle'] == 'show') {
             $builder->add('id', null, array(
                 'label' => 'Message ID:',
-                'disabled' => true,
+                //'disabled' => true,
                 'required' => true,
-                'attr' => array('class' => 'form-control')
+                'attr' => array('class' => 'form-control', 'readonly'=>true)
             ));
         }
 
@@ -188,16 +188,16 @@ class CalllogMessageType extends AbstractType
 
         $builder->add('version', null, array(
             'label' => 'Message Version:',
-            'disabled' => true,
+            //'disabled' => true,
             'required' => true,
-            'attr' => array('class' => 'form-control')
+            'attr' => array('class' => 'form-control', 'readonly'=>true)
         ));
 
         $builder->add('messageTitle', null, array(
             'label' => 'Form Title:',
-            'disabled' => true,
+            //'disabled' => true,
             'required' => false,
-            'attr' => array('class' => 'form-control')
+            'attr' => array('class' => 'form-control', 'readonly'=>true)
         ));
 
         if( $this->entity->getMessageStatus()->getName()."" != "Draft" || ($this->params['cycle'] != "edit" && $this->params['cycle'] != "amend" ) ) {
@@ -217,9 +217,9 @@ class CalllogMessageType extends AbstractType
                 //'choice_label' => 'name',
                 'label' => 'Message Status:',
                 'required' => false,
-                'disabled' => true,
+                //'disabled' => true,
                 'multiple' => false,
-                'attr' => array('class' => 'combobox combobox-width'),
+                'attr' => array('class' => 'combobox combobox-width', 'readonly'=>true),
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('list')
                         ->where("list.type = :typedef OR list.type = :typeadd")

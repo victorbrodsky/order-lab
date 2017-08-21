@@ -72,8 +72,7 @@ class VacReqRequestType extends AbstractType
             }
 
             $builder->add('tentativeStatus', ChoiceType::class, array( //flipped
-                'disabled' => $tentativereadOnly,    //($this->params['roleAdmin'] ? false : true),
-                //'disabled' => $tentativereadOnly,
+                //'disabled' => $tentativereadOnly,    //($this->params['roleAdmin'] ? false : true),
 //                'choices' => array(
 //                    //'pending' => 'Pending',
 //                    'approved' => 'Approved',
@@ -90,7 +89,7 @@ class VacReqRequestType extends AbstractType
                 'multiple' => false,
                 'required' => true,
                 //'data' => 'pending',
-                'attr' => array('class' => 'horizontal_type_wide'), //horizontal_type
+                'attr' => array('class' => 'horizontal_type_wide', 'readonly'=>$tentativereadOnly), //horizontal_type
             ));
 
             //enable status radio only for admin or for reviewer
@@ -101,7 +100,7 @@ class VacReqRequestType extends AbstractType
             }
 
             $builder->add('status', ChoiceType::class, array( //flipped
-                'disabled' => $readOnly,    //($this->params['roleAdmin'] ? false : true),
+                //'disabled' => $readOnly,    //($this->params['roleAdmin'] ? false : true),
 //                'choices' => array(
 //                    //'pending' => 'Pending',
 //                    'approved' => 'Approved',
@@ -118,7 +117,7 @@ class VacReqRequestType extends AbstractType
                 'multiple' => false,
                 'required' => true,
                 //'data' => 'pending',
-                'attr' => array('class' => 'horizontal_type_wide'), //horizontal_type
+                'attr' => array('class' => 'horizontal_type_wide', 'readonly' => $readOnly), //horizontal_type
             ));
 
         }
@@ -186,8 +185,8 @@ class VacReqRequestType extends AbstractType
                 'required' => true,
                 'multiple' => false,
                 //'choice_label' => 'name',
-                'attr' => array('class' => 'combobox combobox-width'),
-                'disabled' => true,    //$readOnly,   //($this->params['review'] ? true : false),
+                'attr' => array('class' => 'combobox combobox-width', 'readonly' => true),
+                //'disabled' => true,    //$readOnly,   //($this->params['review'] ? true : false),
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('user')
                         ->leftJoin("user.infos","infos")
@@ -224,7 +223,7 @@ class VacReqRequestType extends AbstractType
         $builder->add('availableViaCellPhone', null, array(
             'label' => "Available via Cell Phone:",
             'attr' => $attrArr, //array('class' => 'vacreq-availableViaCellPhone'),
-            //'disabled' => ($this->params['review'] ? true : false)
+            'disabled' => ($this->params['review'] ? true : false)
         ));
         $builder->add('availableCellPhone', null, array(
             'label' => "Cell Phone number while away on this trip:",
@@ -295,19 +294,23 @@ class VacReqRequestType extends AbstractType
                 'class' => 'OlegUserdirectoryBundle:User',
                 'label' => "Approver:",
                 'required' => false,
-                'disabled' => true,
-                'attr' => array('class' => 'combobox combobox-width'),
+                //'disabled' => true,
+                'attr' => array('class' => 'combobox combobox-width', 'readonly' => true),
             ));
         }
 
         if( $this->params['cycle'] != 'show' && !$this->params['review'] ) {
+            $userAttr = array('class' => 'combobox combobox-width');
+            if( $this->params['review'] ) {
+                $userAttr['readonly'] = true;
+            }
             $builder->add('user', 'entity', array(
                 'class' => 'OlegUserdirectoryBundle:User',
                 'label' => "Person Away:",
                 'required' => true,
                 'multiple' => false,
                 //'choice_label' => 'name',
-                'attr' => array('class' => 'combobox combobox-width'),
+                'attr' => $userAttr,    //array('class' => 'combobox combobox-width'),
                 //'disabled' => $readOnly,   //($this->params['review'] ? true : false),
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('user')
@@ -335,13 +338,17 @@ class VacReqRequestType extends AbstractType
 //        }
 
         //$requiredInst = true;
+        $institutionAttr = array('class' => 'combobox combobox-width vacreq-institution', 'placeholder' => 'Organizational Group');
+        if( $this->params['review'] ) {
+            $institutionAttr['readonly'] = true;
+        }
         $builder->add('institution', ChoiceType::class, array( //flipped
             'label' => "Organizational Group:",
             'required' => $requiredInst,
-            'attr' => array('class' => 'combobox combobox-width vacreq-institution', 'placeholder' => 'Organizational Group'),
+            'attr' => $institutionAttr, //array('class' => 'combobox combobox-width vacreq-institution', 'placeholder' => 'Organizational Group'),
             'choices' => $this->params['organizationalInstitutions'],
             'choices_as_values' => true,
-            'disabled' => ($this->params['review'] ? true : false)
+            //'disabled' => ($this->params['review'] ? true : false)
         ));
         $builder->get('institution')
             ->addModelTransformer(new CallbackTransformer(
@@ -378,13 +385,17 @@ class VacReqRequestType extends AbstractType
                 //$readonlyTentativeInstitution = false;
             }
             //$requiredTentInst = true;
+            $tentativeInstitutionAttr = array('class' => 'combobox combobox-width vacreq-tentativeInstitution', 'placeholder' => 'Organizational Group');
+            if( $this->params['review'] ) {
+                $tentativeInstitutionAttr['readonly'] = true;
+            }
             $builder->add('tentativeInstitution', ChoiceType::class, array( //flipped
                 'label' => "Tentative Approval:",
                 'required' => $requiredTentInst,
-                'attr' => array('class' => 'combobox combobox-width vacreq-tentativeInstitution', 'placeholder' => 'Organizational Group'),
+                'attr' => $tentativeInstitutionAttr, //array('class' => 'combobox combobox-width vacreq-tentativeInstitution', 'placeholder' => 'Organizational Group'),
                 'choices' => $this->params['tentativeInstitutions'],
                 'choices_as_values' => true,
-                'disabled' => ($this->params['review'] ? true : false)
+                //'disabled' => ($this->params['review'] ? true : false)
             ));
             $builder->get('tentativeInstitution')
                 ->addModelTransformer(new CallbackTransformer(

@@ -78,18 +78,23 @@ class DeidentifierSearchType extends AbstractType
             $readOnly = false;
         }
 
+        $institutionAttr = array('class' => 'combobox combobox-width combobox-institution');
+        if( $this->params['attendingPhysicians-readonly'] ) {
+            $institutionAttr['readonly'] = true;
+        }
         $builder->add('institution', 'entity', array(
             'label' => 'Organizational Group (Institutional PHI Scope):',
             'class' => 'OlegUserdirectoryBundle:Institution',
             'choices' => $this->params['permittedInstitutions'],
             'data' => $this->params['defaultInstitution'],
-            'disabled' => $readOnly,
+            //'disabled' => $readOnly,
             'mapped' => false,
             'choice_label' => 'getNodeNameWithRoot',
             'required' => true,
             'multiple' => false,
             'empty_value' => false,
-            'attr' => array('class' => 'combobox combobox-width combobox-institution')
+            //'attr' => array('class' => 'combobox combobox-width combobox-institution')
+            'attr' => $institutionAttr
         ));
 
 //        $builder->add('generate', 'submit', array(

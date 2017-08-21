@@ -41,11 +41,16 @@ class EncounterAttendingPhysicianType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
+        $fieldAttr = array('class' => 'combobox combobox-width ajax-combobox-encounterAttendingPhysician');
+        if( $this->params['attendingPhysicians-readonly'] ) {
+            $fieldAttr['readonly'] = true;
+        }
         $builder->add('field', ScanCustomSelectorType::class, array(
             'label' => 'Attending Physician:',
-            'attr' => array('class' => 'combobox combobox-width ajax-combobox-encounterAttendingPhysician'),
+            //'attr' => array('class' => 'combobox combobox-width ajax-combobox-encounterAttendingPhysician', 'readonly' => $this->params['attendingPhysicians-readonly']),
+            'attr' => $fieldAttr,
             'required' => false,
-            'disabled' => $this->params['attendingPhysicians-readonly'],
+            //'disabled' => $this->params['attendingPhysicians-readonly'],
             'classtype' => 'singleUserWrapper'
             //'classtype' => 'userWrapper'
         ));

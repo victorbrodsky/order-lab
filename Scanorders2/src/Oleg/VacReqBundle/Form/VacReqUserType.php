@@ -44,9 +44,9 @@ class VacReqUserType extends UserType
             'choices' => $this->params['roles'],
             'choices_as_values' => true,
             'label' => 'Role(s):',
-            'attr' => array('class' => 'combobox combobox-width vacreq-roles'),
+            'attr' => array('class' => 'combobox combobox-width vacreq-roles', 'readonly' => true),
             'multiple' => true,
-            'disabled' => true
+            //'disabled' => true
         ));
 
     }
