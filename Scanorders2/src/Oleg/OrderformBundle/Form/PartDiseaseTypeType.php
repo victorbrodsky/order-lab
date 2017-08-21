@@ -18,6 +18,7 @@
 namespace Oleg\OrderformBundle\Form;
 
 use Oleg\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -50,7 +51,7 @@ class PartDiseaseTypeType extends AbstractType
         //echo "count items=".count($diseaseTypesArr)."<br>";
         //exit();
 
-        $builder->add( 'diseaseTypes', 'entity', array(
+        $builder->add( 'diseaseTypes', EntityType::class, array(
             'class' => 'OlegOrderformBundle:DiseaseTypeList',
             'label'=>'Type of Disease:',
             'required'=>false,
@@ -84,7 +85,7 @@ class PartDiseaseTypeType extends AbstractType
             $DiseaseOriginListArr[] = $item;
         }
 
-        $builder->add( 'diseaseOrigins', 'entity', array(
+        $builder->add( 'diseaseOrigins', EntityType::class, array(
             'class' => 'OlegOrderformBundle:DiseaseOriginList',
             'label'=>'Origin:',
             'required'=>false,

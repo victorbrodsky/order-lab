@@ -18,6 +18,7 @@
 namespace Oleg\VacReqBundle\Form;
 
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -43,7 +44,7 @@ class VacReqEmailusersType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        $builder->add('emailUsers', 'entity', array(
+        $builder->add('emailUsers', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
             'label' => "E-Mail all requests and responses to:",
             'required' => false,

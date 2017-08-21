@@ -19,6 +19,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 
 use Oleg\UserdirectoryBundle\Entity\Identifier;
 use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -99,7 +100,7 @@ class IdentifierType extends AbstractType
         ));
 
         //keytypemrn
-        $builder->add('keytypemrn', 'entity', array(
+        $builder->add('keytypemrn', EntityType::class, array(
             'class' => 'OlegOrderformBundle:MrnType',
             'choice_label' => 'name',
             'label'=>'MRN Type:',

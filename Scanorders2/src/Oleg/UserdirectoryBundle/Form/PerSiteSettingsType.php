@@ -19,6 +19,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 
 //use Oleg\UserdirectoryBundle\Form\InstitutionType;
 use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -49,7 +50,7 @@ class PerSiteSettingsType extends AbstractType
 
         if( $this->roleAdmin ) {
 
-            $builder->add( 'permittedInstitutionalPHIScope', 'entity', array(
+            $builder->add( 'permittedInstitutionalPHIScope', EntityType::class, array(
                 'class' => 'OlegUserdirectoryBundle:Institution',
                 //'choice_label' => 'name',
                 'choice_label' => 'getTreeName',
@@ -84,7 +85,7 @@ class PerSiteSettingsType extends AbstractType
 
 
             //ScanOrdersServicesScope
-            $builder->add( 'scanOrdersServicesScope', 'entity', array(
+            $builder->add( 'scanOrdersServicesScope', EntityType::class, array(
                 'class' => 'OlegUserdirectoryBundle:Institution',
                 //'choice_label' => 'name',
                 'choice_label' => 'getTreeName',
@@ -108,7 +109,7 @@ class PerSiteSettingsType extends AbstractType
             ));
 
             //chiefServices
-            $builder->add( 'chiefServices', 'entity', array(
+            $builder->add( 'chiefServices', EntityType::class, array(
                 'class' => 'OlegUserdirectoryBundle:Institution',
                 //'choice_label' => 'name',
                 'choice_label' => 'getTreeName',

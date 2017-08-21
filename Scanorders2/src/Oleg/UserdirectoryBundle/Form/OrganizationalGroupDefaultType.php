@@ -20,6 +20,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 
 use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Oleg\UserdirectoryBundle\Util\TimeZoneUtil;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -46,7 +47,7 @@ class OrganizationalGroupDefaultType extends AbstractType
 
         $builder->add('id',HiddenType::class,array('label'=>false));
 
-        $builder->add('primaryPublicUserIdType', 'entity', array(
+        $builder->add('primaryPublicUserIdType', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:UsernameType',
             'choice_label' => 'name',
             'label' => "Primary Public User ID Type:",
@@ -89,7 +90,7 @@ class OrganizationalGroupDefaultType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width')
         ));
 
-        $builder->add( 'languages', 'entity', array(
+        $builder->add( 'languages', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:LanguageList',
             'label'=> "Language(s):",
             'required'=> false,
@@ -107,7 +108,7 @@ class OrganizationalGroupDefaultType extends AbstractType
             },
         ));
 
-        $builder->add( 'locale', 'entity', array(
+        $builder->add( 'locale', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:LocaleList',
             'label'=> "Locale:",
             'required'=> false,
@@ -125,7 +126,7 @@ class OrganizationalGroupDefaultType extends AbstractType
             },
         ));
 
-        $builder->add( 'showToInstitutions', 'entity', array(
+        $builder->add( 'showToInstitutions', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:Institution',
             //'choice_label' => 'name',
             'choice_label' => 'getTreeName',
@@ -152,7 +153,7 @@ class OrganizationalGroupDefaultType extends AbstractType
             'attr' => array('class'=>'form-control', 'style'=>'margin:0')
         ));
 
-        $builder->add( 'permittedInstitutionalPHIScope', 'entity', array(
+        $builder->add( 'permittedInstitutionalPHIScope', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:Institution',
             //'choice_label' => 'name',
             'choice_label' => 'getTreeName',
@@ -180,7 +181,7 @@ class OrganizationalGroupDefaultType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width')
         ));
 
-        $builder->add('locationTypes','entity',array(
+        $builder->add('locationTypes',EntityType::class,array(
             'class' => 'OlegUserdirectoryBundle:LocationTypeList',
             'label' => "Location Type:",
             'multiple' => true,
@@ -203,7 +204,7 @@ class OrganizationalGroupDefaultType extends AbstractType
         ));
 
         //state
-        $builder->add( 'state', 'entity', array(
+        $builder->add( 'state', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:States',
             //'choice_label' => 'name',
             'label'=>'Location State:',
@@ -228,7 +229,7 @@ class OrganizationalGroupDefaultType extends AbstractType
         ));
 
         //country
-        $builder->add( 'country', 'entity', array(
+        $builder->add( 'country', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:Countries',
             'choice_label' => 'name',
             'label'=>'Location Country:',
@@ -248,7 +249,7 @@ class OrganizationalGroupDefaultType extends AbstractType
             },
         ));
 
-        $builder->add( 'state', 'entity', array(
+        $builder->add( 'state', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:States',
             //'choice_label' => 'name',
             'label'=>'Location State:',
@@ -267,7 +268,7 @@ class OrganizationalGroupDefaultType extends AbstractType
         ));
 
 
-        $builder->add( 'medicalLicenseCountry', 'entity', array(
+        $builder->add( 'medicalLicenseCountry', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:Countries',
             'choice_label' => 'name',
             'label'=>'Medical License Country:',
@@ -287,7 +288,7 @@ class OrganizationalGroupDefaultType extends AbstractType
             },
         ));
 
-        $builder->add( 'medicalLicenseState', 'entity', array(
+        $builder->add( 'medicalLicenseState', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:States',
             //'choice_label' => 'name',
             'label'=>'Medical License State:',

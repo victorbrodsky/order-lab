@@ -17,6 +17,7 @@
 
 namespace Oleg\OrderformBundle\Form;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -38,7 +39,7 @@ class EncounterNumberType extends AbstractType
         $this->formConstructor($options['form_custom_value']);
 
         if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure' ) {
-            $builder->add('keytype', 'entity', array(
+            $builder->add('keytype', EntityType::class, array(
                 'class' => 'OlegOrderformBundle:EncounterType',
                 'label' => 'Encounter Type:',
                 'required' => false,

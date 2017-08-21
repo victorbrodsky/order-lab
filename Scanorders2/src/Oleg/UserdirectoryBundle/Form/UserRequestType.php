@@ -18,6 +18,7 @@
 namespace Oleg\UserdirectoryBundle\Form;
 
 use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -112,7 +113,7 @@ class UserRequestType extends AbstractType
             $requestedScanOrderInstitutionScope = null;
         }
         //echo "choices=".count($requestedScanOrderInstitutionScope)."<br>";
-        $builder->add('requestedScanOrderInstitutionScope', 'entity', array(
+        $builder->add('requestedScanOrderInstitutionScope', EntityType::class, array(
             'label' => '* Organizational Group:',
             'required' => false,
             'multiple' => false,
@@ -188,7 +189,7 @@ class UserRequestType extends AbstractType
             'attr' => array('class'=>'form-control form-control-modif'),
         ));
 
-        $builder->add('systemAccountRequest', 'entity', array(
+        $builder->add('systemAccountRequest', EntityType::class, array(
             'label' => 'System for which the account is being requested:',
             'required'=> true,
             //'multiple' => true,
@@ -196,7 +197,7 @@ class UserRequestType extends AbstractType
             'class' => 'OlegUserdirectoryBundle:SourceSystemList',
             'attr' => array('class' => 'combobox combobox-width')
         ));
-        $builder->add( 'systemAccountRequest', 'entity', array(
+        $builder->add( 'systemAccountRequest', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:SourceSystemList',
             //'choice_label' => 'name',
             'label' => 'System for which the account is being requested:',

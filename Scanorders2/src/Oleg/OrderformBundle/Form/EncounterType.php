@@ -20,6 +20,7 @@ namespace Oleg\OrderformBundle\Form;
 use Oleg\CallLogBundle\Form\CalllogEncounterNumberType;
 use Oleg\OrderformBundle\Form\EncounterAttendingPhysicianType;
 use Oleg\OrderformBundle\Form\EncounterReferringProviderType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -214,7 +215,7 @@ class EncounterType extends AbstractType
 
             //echo "flag datastructure=".$this->params['datastructure']."<br>";
 
-//            $builder->add('keytype', 'entity', array(
+//            $builder->add('keytype', EntityType::class, array(
 //                'class' => 'OlegOrderformBundle:EncounterType',
 //                'label' => 'Encounter Type:',
 //                'required' => true,
@@ -281,7 +282,7 @@ class EncounterType extends AbstractType
                 'prototype_name' => '__encounterinpatientinfo__',
             ));
 
-            $builder->add('provider', 'entity', array(
+            $builder->add('provider', EntityType::class, array(
                 'class' => 'OlegUserdirectoryBundle:User',
                 'label' => 'Provider:',
                 'required' => false,
@@ -309,7 +310,7 @@ class EncounterType extends AbstractType
 
             //echo "flag datastructure=".$this->params['datastructure']."<br>";
 
-            $builder->add('provider', 'entity', array(
+            $builder->add('provider', EntityType::class, array(
                 'class' => 'OlegUserdirectoryBundle:User',
                 'label' => 'Provider:',
                 'required' => false,
@@ -329,7 +330,7 @@ class EncounterType extends AbstractType
                 },
             ));
 
-            $builder->add( 'encounterStatus', 'entity', array(
+            $builder->add( 'encounterStatus', EntityType::class, array(
                 'class' => 'OlegOrderformBundle:EncounterStatusList',
                 //'choice_label' => 'name',
                 'label'=>'Encounter Status:',

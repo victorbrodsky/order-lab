@@ -17,6 +17,7 @@
 
 namespace Oleg\DeidentifierBundle\Form;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -43,7 +44,7 @@ class DeidentifierSearchType extends AbstractType
 //            'attr' => array('class' => 'combobox')
 //        ));
 
-        $builder->add('accessionType', 'entity', array(
+        $builder->add('accessionType', EntityType::class, array(
             'class' => 'OlegOrderformBundle:AccessionType',
             'label'=> "Accession Type:",
             'mapped' => false,
@@ -82,7 +83,7 @@ class DeidentifierSearchType extends AbstractType
         if( $this->params['attendingPhysicians-readonly'] ) {
             $institutionAttr['readonly'] = true;
         }
-        $builder->add('institution', 'entity', array(
+        $builder->add('institution', EntityType::class, array(
             'label' => 'Organizational Group (Institutional PHI Scope):',
             'class' => 'OlegUserdirectoryBundle:Institution',
             'choices' => $this->params['permittedInstitutions'],

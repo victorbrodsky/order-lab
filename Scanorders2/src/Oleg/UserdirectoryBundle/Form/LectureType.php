@@ -19,6 +19,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 
 
 use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -58,7 +59,7 @@ class LectureType extends AbstractType
         ));
 
 
-        $builder->add( 'importance', 'entity', array(
+        $builder->add( 'importance', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:ImportanceList',
             'label'=> "Importance:",
             'required'=> false,
@@ -98,7 +99,7 @@ class LectureType extends AbstractType
         //state
         //$defaultState = null;
         //$defaultState = $this->params['em']->getRepository('OlegUserdirectoryBundle:States')->findOneByName('New York');
-        $builder->add( 'state', 'entity', array(
+        $builder->add( 'state', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:States',
             //'choice_label' => 'name',
             'label'=>'Lecture State:',
@@ -121,7 +122,7 @@ class LectureType extends AbstractType
         //$defaultCountry = null;
         //$defaultCountry = $this->params['em']->getRepository('OlegUserdirectoryBundle:Countries')->findOneByName('United States');
         $preferredCountries = $this->params['em']->getRepository('OlegUserdirectoryBundle:Countries')->findByName(array('United States'));
-        $builder->add( 'country', 'entity', array(
+        $builder->add( 'country', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:Countries',
             'choice_label' => 'name',
             'label'=>'Lecture Country:',

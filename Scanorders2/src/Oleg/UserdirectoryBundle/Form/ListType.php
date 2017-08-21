@@ -17,6 +17,7 @@
 
 namespace Oleg\UserdirectoryBundle\Form;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -147,7 +148,7 @@ class ListType extends AbstractType
 //        }
 
 
-        $builder->add('synonyms', 'entity', array(
+        $builder->add('synonyms', EntityType::class, array(
             'class' => $this->mapper['bundleName'].':'.$this->mapper['className'],
             'label' => 'Synonyms:',
             //'disabled' => true,
@@ -162,7 +163,7 @@ class ListType extends AbstractType
             },
         ));
 
-        $builder->add('original', 'entity', array(
+        $builder->add('original', EntityType::class, array(
             'class' => $this->mapper['bundleName'].':'.$this->mapper['className'],
             'label'=>'Original (Canonical) Synonymous Term:',
             'required' => false,

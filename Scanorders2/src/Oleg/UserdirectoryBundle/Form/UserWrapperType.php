@@ -18,6 +18,7 @@
 namespace Oleg\UserdirectoryBundle\Form;
 
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -56,7 +57,7 @@ class UserWrapperType extends AbstractType
             'attr' => array('class' => 'form-control'),
         ));
 
-        $builder->add( 'user', 'entity', array(
+        $builder->add( 'user', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
             'label' => $this->params['user.label'],
             'required'=> false,

@@ -18,6 +18,7 @@
 
 namespace Oleg\UserdirectoryBundle\Form;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -76,7 +77,7 @@ class UserPreferencesType extends AbstractType
                 'attr' => array('class' => 'combobox combobox-width')
             ));
 
-            $builder->add('languages', 'entity', array(
+            $builder->add('languages', EntityType::class, array(
                 'class' => 'OlegUserdirectoryBundle:LanguageList',
                 'label' => "Language(s):",
                 'required' => false,
@@ -94,7 +95,7 @@ class UserPreferencesType extends AbstractType
                 },
             ));
 
-            $builder->add('locale', 'entity', array(
+            $builder->add('locale', EntityType::class, array(
                 'class' => 'OlegUserdirectoryBundle:LocaleList',
                 'label' => "Locale:",
                 'required' => false,
@@ -112,7 +113,7 @@ class UserPreferencesType extends AbstractType
                 },
             ));
 
-            $builder->add( 'showToInstitutions', 'entity', array(
+            $builder->add( 'showToInstitutions', EntityType::class, array(
                 'class' => 'OlegUserdirectoryBundle:Institution',
                 //'choice_label' => 'name',
                 'choice_label' => 'getTreeName',
@@ -153,7 +154,7 @@ class UserPreferencesType extends AbstractType
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
 
-            $builder->add('lifeForm', 'entity', array(
+            $builder->add('lifeForm', EntityType::class, array(
                 'class' => 'OlegUserdirectoryBundle:LifeFormList',
                 'choice_label' => 'name',
                 'label' => "Life Form:",

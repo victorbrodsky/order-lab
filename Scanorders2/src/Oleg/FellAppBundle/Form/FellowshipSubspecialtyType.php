@@ -18,6 +18,7 @@
 namespace Oleg\FellAppBundle\Form;
 
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -31,7 +32,7 @@ class FellowshipSubspecialtyType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add('coordinators', 'entity', array(
+        $builder->add('coordinators', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
             'label' => "Coordinator(s):",
             'required' => false,
@@ -48,7 +49,7 @@ class FellowshipSubspecialtyType extends AbstractType
         ));
 
 
-        $builder->add('directors', 'entity', array(
+        $builder->add('directors', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
             'label' => "Director(s):",
             'required' => false,
@@ -64,7 +65,7 @@ class FellowshipSubspecialtyType extends AbstractType
                 }
         ));
 
-        $builder->add('interviewers', 'entity', array(
+        $builder->add('interviewers', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
             'label' => "Default Interviewer(s):",
             'required' => false,

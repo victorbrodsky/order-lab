@@ -17,6 +17,7 @@
 
 namespace Oleg\UserdirectoryBundle\Form;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -55,7 +56,7 @@ class UserRequestApproveType extends AbstractType
             $requestedScanOrderInstitutionScope = null;
         }
         //echo "choices=".count($requestedScanOrderInstitutionScope)."<br>";
-        $builder->add('requestedScanOrderInstitutionScope', 'entity', array(
+        $builder->add('requestedScanOrderInstitutionScope', EntityType::class, array(
             'label' => 'Organizational Group:',
             'required'=> false,
             'multiple' => false,

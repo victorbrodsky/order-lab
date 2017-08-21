@@ -19,6 +19,7 @@
 namespace Oleg\UserdirectoryBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -54,7 +55,7 @@ class CredentialsType extends AbstractType
             'attr' => array('class' => 'datepicker form-control'),
         ));
 
-        $builder->add('sex', 'entity', array(
+        $builder->add('sex', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:SexList',
             'choice_label' => 'name',
             'label' => "Gender:",

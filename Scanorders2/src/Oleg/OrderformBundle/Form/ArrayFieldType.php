@@ -178,7 +178,7 @@ class ArrayFieldType extends AbstractType
 //                    $form->add('provider', 'hidden', array(
 //                        'empty_data' => $provider
 //                    ));
-                    $form->add('provider', 'entity', array(
+                    $form->add('provider', EntityType::class, array(
                         'class'       => 'OlegUserdirectoryBundle:User',    //'AppBundle:Position',
                         'data'     => $provider->getId(),
                         'empty_data' => $provider->getId()

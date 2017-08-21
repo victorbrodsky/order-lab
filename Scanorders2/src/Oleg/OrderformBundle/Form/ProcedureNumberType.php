@@ -17,6 +17,7 @@
 
 namespace Oleg\OrderformBundle\Form;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -42,7 +43,7 @@ class ProcedureNumberType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
 
-        $builder->add('keytype', 'entity', array(
+        $builder->add('keytype', EntityType::class, array(
             'class' => 'OlegOrderformBundle:ProcedureType',
             'label'=>false,
             'required' => true,

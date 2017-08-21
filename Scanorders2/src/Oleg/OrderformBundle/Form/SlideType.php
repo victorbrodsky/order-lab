@@ -18,6 +18,7 @@
 namespace Oleg\OrderformBundle\Form;
 
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -110,7 +111,7 @@ class SlideType extends AbstractType
         ));
 
         $attr = array('class' => 'combobox combobox-width slidetype-combobox');
-        $builder->add('slidetype', 'entity', array(
+        $builder->add('slidetype', EntityType::class, array(
             'class' => 'OlegOrderformBundle:SlideType',
             'label'=>'Slide Type:',
             'required' => true,

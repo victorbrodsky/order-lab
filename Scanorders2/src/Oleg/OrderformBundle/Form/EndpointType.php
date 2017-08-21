@@ -18,6 +18,7 @@
 namespace Oleg\OrderformBundle\Form;
 
 use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -73,7 +74,7 @@ class EndpointType extends AbstractType
 
         if( $this->params['endpoint.location'] == true ) {
             if( $this->params['cycle'] == 'show' ) {
-                $builder->add('location', 'entity', array(
+                $builder->add('location', EntityType::class, array(
                     'label' => $this->params['endpoint.location.label'],
                     'required'=> false,
                     'multiple' => false,
@@ -91,7 +92,7 @@ class EndpointType extends AbstractType
 
         ////////////// System //////////////////////
         if( $this->params['endpoint.system'] == true ) {
-            $builder->add('system', 'entity', array(
+            $builder->add('system', EntityType::class, array(
                 'label' => $this->params['endpoint.system.label'],
                 'required'=> false,
                 'multiple' => false,

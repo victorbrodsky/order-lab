@@ -19,6 +19,7 @@ namespace Oleg\VacReqBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
 use Oleg\UserdirectoryBundle\Entity\User;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -44,7 +45,7 @@ class VacReqFilterType extends AbstractType
 
         //visible only for my request and incoming requests for SUPERVISOR users
         if( $this->params['routeName'] == 'vacreq_myrequests' || $this->params['supervisor'] || $this->params['approverRole'] ) {
-            $builder->add('requestType', 'entity', array(
+            $builder->add('requestType', EntityType::class, array(
                 'class' => 'OlegVacReqBundle:VacReqRequestTypeList',
                 'choice_label' => 'name',
                 'label' => false,
@@ -56,7 +57,7 @@ class VacReqFilterType extends AbstractType
         }
 
         if ($this->params['filterShowUser']) {
-            $builder->add('user', 'entity', array(
+            $builder->add('user', EntityType::class, array(
                 'class' => 'OlegUserdirectoryBundle:User',
                 'choice_label' => 'getUserNameStr',
                 'label' => false,
@@ -66,7 +67,7 @@ class VacReqFilterType extends AbstractType
                 'choices' => $this->params['filterUsers'],
             ));
 
-            $builder->add('submitter', 'entity', array(
+            $builder->add('submitter', EntityType::class, array(
                 'class' => 'OlegUserdirectoryBundle:User',
                 'choice_label' => 'getUserNameStr',
                 'label' => false,

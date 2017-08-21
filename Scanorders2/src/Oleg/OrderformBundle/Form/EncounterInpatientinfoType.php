@@ -17,6 +17,7 @@
 
 namespace Oleg\OrderformBundle\Form;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -36,7 +37,7 @@ class EncounterInpatientinfoType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        $builder->add('source', 'entity', array(
+        $builder->add('source', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:SourceSystemList',
             'label' => 'Inpatient Info Source System:',
             'required' => false,

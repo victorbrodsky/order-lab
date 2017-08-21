@@ -19,6 +19,7 @@ namespace Oleg\FellAppBundle\Form;
 
 
 use Oleg\UserdirectoryBundle\Form\GeoLocationType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -36,7 +37,7 @@ class FellAppFellowshipApplicationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add( 'fellowshipsubspecialtytype', 'entity', array(
+        $builder->add( 'fellowshipsubspecialtytype', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:FellowshipSubspecialty',
             'label'=> "Fellowship Subspecialty:",
             'required'=> false,

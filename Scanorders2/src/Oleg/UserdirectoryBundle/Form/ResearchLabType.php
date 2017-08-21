@@ -19,6 +19,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 
 
 use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -124,7 +125,7 @@ class ResearchLabType extends AbstractType
 
         //echo "subjectUser=".$this->params['subjectUser']."<br>";
 
-        $builder->add( 'institution', 'entity', array(
+        $builder->add( 'institution', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:Institution',
             'label'=> "Research Lab Title:",
             'required'=> false,

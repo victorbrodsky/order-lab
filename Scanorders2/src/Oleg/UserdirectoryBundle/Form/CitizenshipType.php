@@ -18,6 +18,7 @@
 namespace Oleg\UserdirectoryBundle\Form;
 
 use Oleg\UserdirectoryBundle\Entity\Identifier;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -29,7 +30,7 @@ class CitizenshipType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add( 'country', 'entity', array(
+        $builder->add( 'country', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:Countries',
             'choice_label' => 'name',
             'label'=>'Country of Citizenship:',

@@ -19,6 +19,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 
 
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -40,7 +41,7 @@ class LinkType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
 
-        $builder->add( 'linktype', 'entity', array(
+        $builder->add( 'linktype', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:LinkTypeList',
             'choice_label' => 'name',
             'label'=>'Image Link Type:',

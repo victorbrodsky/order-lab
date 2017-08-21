@@ -19,6 +19,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
 use Oleg\UserdirectoryBundle\Entity\User;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -82,7 +83,7 @@ class LoggerFilterType extends AbstractType
 
         $this->formConstructor($options['form_custom_value']);
 
-        $builder->add('user', 'entity', array(
+        $builder->add('user', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
             //'disabled' => $this->hideUser,
             'choice_label' => 'getUserNameStr',
@@ -94,7 +95,7 @@ class LoggerFilterType extends AbstractType
         ));
 
         //Event Type
-        $builder->add('eventType', 'entity', array(
+        $builder->add('eventType', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:EventTypeList',
             //'placeholder' => 'Fellowship Type',
             //'disabled' => $this->hideEventType,
@@ -154,7 +155,7 @@ class LoggerFilterType extends AbstractType
             'attr' => array('class' => 'form-control form-control-modif limit-font-size submit-on-enter-field'),
         ));
 
-        $builder->add('roles', 'entity', array(
+        $builder->add('roles', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:Roles',
             'choice_label' => 'alias',
             'label' => false,
@@ -179,7 +180,7 @@ class LoggerFilterType extends AbstractType
 //        ));
 
         //objectType
-        $builder->add('objectType', 'entity', array(
+        $builder->add('objectType', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:EventObjectTypeList',
             //'disabled' => $this->hideObjectType,
             //'placeholder' => 'Fellowship Type',

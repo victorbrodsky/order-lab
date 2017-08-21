@@ -18,6 +18,7 @@
 namespace Oleg\CallLogBundle\Form;
 
 use Oleg\OrderformBundle\Form\ArrayFieldType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -37,7 +38,7 @@ class CalllogEncounterNumberType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        $builder->add('keytype', 'entity', array(
+        $builder->add('keytype', EntityType::class, array(
             'class' => 'OlegOrderformBundle:EncounterType',
             'label' => 'Encounter Type:',
             'required' => true,

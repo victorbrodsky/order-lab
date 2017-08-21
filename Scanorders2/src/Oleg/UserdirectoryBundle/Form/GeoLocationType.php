@@ -20,6 +20,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 
 
 use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -87,7 +88,7 @@ class GeoLocationType extends AbstractType
         if( $this->params['cycle'] == 'new_standalone' ) {
             $stateArray['data'] = $this->params['em']->getRepository('OlegUserdirectoryBundle:States')->findOneByName('New York');
         }
-        $builder->add( 'state', 'entity', $stateArray);
+        $builder->add( 'state', EntityType::class, $stateArray);
 
         //country
         $countryArray = array(
@@ -112,7 +113,7 @@ class GeoLocationType extends AbstractType
         if( $this->params['cycle'] == 'new_standalone' ) {
             $countryArray['data'] = $this->params['em']->getRepository('OlegUserdirectoryBundle:Countries')->findOneByName('United States');
         }
-        $builder->add( 'country', 'entity', $countryArray);
+        $builder->add( 'country', EntityType::class, $countryArray);
 
         if( !$hasRoleSimpleView ) {
             $builder->add('county', null, array(

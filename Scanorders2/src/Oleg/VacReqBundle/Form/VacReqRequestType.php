@@ -18,6 +18,7 @@
 namespace Oleg\VacReqBundle\Form;
 
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -179,7 +180,7 @@ class VacReqRequestType extends AbstractType
                 $readOnly = false;
             }
 
-            $builder->add('submitter', 'entity', array(
+            $builder->add('submitter', EntityType::class, array(
                 'class' => 'OlegUserdirectoryBundle:User',
                 'label' => "Request Submitter:",
                 'required' => true,
@@ -291,7 +292,7 @@ class VacReqRequestType extends AbstractType
 
         if( $this->params['cycle'] == 'show' ) {
             //approver
-            $builder->add('approver', 'entity', array(
+            $builder->add('approver', EntityType::class, array(
                 'class' => 'OlegUserdirectoryBundle:User',
                 'label' => "Approver:",
                 'required' => false,
@@ -305,7 +306,7 @@ class VacReqRequestType extends AbstractType
             if( $this->params['review'] ) {
                 $userAttr['readonly'] = true;
             }
-            $builder->add('user', 'entity', array(
+            $builder->add('user', EntityType::class, array(
                 'class' => 'OlegUserdirectoryBundle:User',
                 'label' => "Person Away:",
                 'required' => true,

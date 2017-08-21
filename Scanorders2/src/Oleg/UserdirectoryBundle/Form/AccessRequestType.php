@@ -17,6 +17,7 @@
 
 namespace Oleg\UserdirectoryBundle\Form;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -77,7 +78,7 @@ class AccessRequestType extends AbstractType
         } else {
             $requestedScanOrderInstitutionScope = null;
         }
-        $builder->add('organizationalGroup', 'entity', array(
+        $builder->add('organizationalGroup', EntityType::class, array(
             'label' => 'Organizational Group:',
             'required' => false,
             'multiple' => false,

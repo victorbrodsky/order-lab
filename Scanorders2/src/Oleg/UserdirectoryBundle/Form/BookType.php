@@ -19,6 +19,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 
 
 use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -90,7 +91,7 @@ class BookType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
 
-        $builder->add( 'authorshipRole', 'entity', array(
+        $builder->add( 'authorshipRole', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:AuthorshipRoles',
             'label'=> "Authorship Role:",
             'required'=> false,

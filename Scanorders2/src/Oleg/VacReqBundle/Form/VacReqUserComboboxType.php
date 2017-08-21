@@ -20,6 +20,7 @@ namespace Oleg\VacReqBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
 use Oleg\UserdirectoryBundle\Form\UserType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -40,7 +41,7 @@ class VacReqUserComboboxType extends UserType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        $builder->add('users', 'entity', array(
+        $builder->add('users', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
             'label' => $this->params['btnName'].":",    //"New Submitters:",
             'required' => false,

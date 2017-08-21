@@ -17,6 +17,7 @@
 
 namespace Oleg\OrderformBundle\Form;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -37,7 +38,7 @@ class ProcedureLocationType extends AbstractType
         $this->formConstructor($options['form_custom_value']);
 
         //Location Source System - array field location source
-        $builder->add('source', 'entity', array(
+        $builder->add('source', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:SourceSystemList',
             'label' => 'Location Source System:',
             'required' => false,
@@ -53,7 +54,7 @@ class ProcedureLocationType extends AbstractType
         //Location Provider - property of location object
         //Location Role - property of location object (use as a filter)
 
-        $builder->add('field', 'entity', array(
+        $builder->add('field', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:Location',
             'label' => 'Procedure Location',
             'required' => false,

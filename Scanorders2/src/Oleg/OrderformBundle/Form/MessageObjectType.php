@@ -20,6 +20,7 @@ namespace Oleg\OrderformBundle\Form;
 use Oleg\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
 use Oleg\UserdirectoryBundle\Form\InstitutionalWrapperType;
 use Oleg\UserdirectoryBundle\Form\InstitutionType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -154,7 +155,7 @@ class MessageObjectType extends AbstractType
             ));
         }
 
-        $builder->add('provider', 'entity', array(
+        $builder->add('provider', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
             'label' => $this->labels['provider'],
             'required' => false,
@@ -264,7 +265,7 @@ class MessageObjectType extends AbstractType
         //if( array_key_exists('datastructure',$this->params) && ($this->params['datastructure'] == 'datastructure-patient') ) {
 
             //Message Status
-            $builder->add('messageStatus', 'entity', array(
+            $builder->add('messageStatus', EntityType::class, array(
                 'class' => 'OlegOrderformBundle:MessageStatusList',
                 //'choice_label' => 'name',
                 'label'=>'Message Status:',
@@ -311,7 +312,7 @@ class MessageObjectType extends AbstractType
         } else {
             $institutions = null;
         }
-        $builder->add('institution', 'entity', array(
+        $builder->add('institution', EntityType::class, array(
             'label' => 'Order data visible to members of (Institutional PHI Scope):',
             'required'=> true,
             'multiple' => false,
@@ -339,7 +340,7 @@ class MessageObjectType extends AbstractType
 
         //Associations
         if(  $this->keyInArrayAndTrue($this->params,'message.associations') ) {
-            $builder->add('associations', 'entity', array(
+            $builder->add('associations', EntityType::class, array(
                 'class' => 'OlegOrderformBundle:Message',
                 'choice_label' => 'getFullName',
                 'label' => "Association(s):",
@@ -349,7 +350,7 @@ class MessageObjectType extends AbstractType
             ));
         }
         if( $this->keyInArrayAndTrue($this->params,'message.backAssociations') ) {
-            $builder->add('backAssociations', 'entity', array(
+            $builder->add('backAssociations', EntityType::class, array(
                 'class' => 'OlegOrderformBundle:Message',
                 'choice_label' => 'getFullName',
                 'label' => "Reciprocal Association(s):",
@@ -552,7 +553,7 @@ if( 1 ) {
                         'label' => false
                     ));
 
-                    $form->add('equipment', 'entity', array(
+                    $form->add('equipment', EntityType::class, array(
                         'class' => 'OlegUserdirectoryBundle:Equipment',
                         'choice_label' => 'name',
                         'label' => 'Microtome Device:',
@@ -583,7 +584,7 @@ if( 1 ) {
                         'label' => false
                     ));
 
-                    $form->add('equipment', 'entity', array(
+                    $form->add('equipment', EntityType::class, array(
                         'class' => 'OlegUserdirectoryBundle:Equipment',
                         'choice_label' => 'name',
                         'label' => 'Slide Stainer Device:',
@@ -670,7 +671,7 @@ if( 1 ) {
 //        }
 //
 //        //echo "provider show=".$this->params['message.provider']."<br>";
-//        $builder->add('provider', 'entity', array(
+//        $builder->add('provider', EntityType::class, array(
 //            'class' => 'OlegUserdirectoryBundle:User',
 //            'label' => $this->labels['provider'],
 //            'required' => false,
@@ -779,7 +780,7 @@ if( 1 ) {
 //            $institutions = null;
 //        }
 //
-//        $builder->add('institution', 'entity', array(
+//        $builder->add('institution', EntityType::class, array(
 //            'label' => $this->labels['institution'],
 //            'required'=> true,
 //            'multiple' => false,
@@ -806,7 +807,7 @@ if( 1 ) {
 //
 //        //Associations
 //        if( array_key_exists('message.associations', $this->params) && $this->params['message.associations'] == true ) {
-//            $builder->add('associations', 'entity', array(
+//            $builder->add('associations', EntityType::class, array(
 //                'class' => 'OlegOrderformBundle:Message',
 //                'choice_label' => 'getFullName',
 //                'label' => "Association(s):",
@@ -816,7 +817,7 @@ if( 1 ) {
 //            ));
 //        }
 //        if( array_key_exists('message.backAssociations', $this->params) && $this->params['message.backAssociations'] == true ) {
-//            $builder->add('backAssociations', 'entity', array(
+//            $builder->add('backAssociations', EntityType::class, array(
 //                'class' => 'OlegOrderformBundle:Message',
 //                'choice_label' => 'getFullName',
 //                'label' => "Reciprocal Association(s):",
@@ -952,7 +953,7 @@ if( 1 ) {
 //                        'label' => false
 //                    ));
 //
-//                    $form->add('equipment', 'entity', array(
+//                    $form->add('equipment', EntityType::class, array(
 //                        'class' => 'OlegUserdirectoryBundle:Equipment',
 //                        'choice_label' => 'name',
 //                        'label' => 'Microtome Device:',
@@ -983,7 +984,7 @@ if( 1 ) {
 //                        'label' => false
 //                    ));
 //
-//                    $form->add('equipment', 'entity', array(
+//                    $form->add('equipment', EntityType::class, array(
 //                        'class' => 'OlegUserdirectoryBundle:Equipment',
 //                        'choice_label' => 'name',
 //                        'label' => 'Slide Stainer Device:',

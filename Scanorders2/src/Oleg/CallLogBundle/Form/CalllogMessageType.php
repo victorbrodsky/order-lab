@@ -23,6 +23,7 @@ use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Oleg\UserdirectoryBundle\Form\FormNode\FormNodeType;
 use Oleg\UserdirectoryBundle\Form\InstitutionType;
 use Oleg\UserdirectoryBundle\Form\FormNode\MessageCategoryFormNodeType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -212,7 +213,7 @@ class CalllogMessageType extends AbstractType
         }
 
         if( $this->params['cycle'] != "new" ) {
-            $builder->add('messageStatus', 'entity', array(
+            $builder->add('messageStatus', EntityType::class, array(
                 'class' => 'OlegOrderformBundle:MessageStatusList',
                 //'choice_label' => 'name',
                 'label' => 'Message Status:',

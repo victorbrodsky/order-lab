@@ -19,6 +19,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 
 
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -155,7 +156,7 @@ class DocumentContainerType extends AbstractType
 
             if( $this->params['document.device'] ) {
                 if( array_key_exists('device.types', $this->params) && is_array($this->params['device.types']) && $this->params['device.types'] != false ) {
-                    $builder->add( 'device', 'entity', array(
+                    $builder->add( 'device', EntityType::class, array(
                         'class' => 'OlegUserdirectoryBundle:Equipment',
                         'choice_label' => 'name',
                         'label' => $this->params['document.device.label'],

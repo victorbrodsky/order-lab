@@ -30,6 +30,7 @@ use Oleg\OrderformBundle\Form\GenericFieldType;
 
 use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Oleg\UserdirectoryBundle\Form\TrackerType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -257,7 +258,7 @@ class CalllogEncounterType extends AbstractType
         if( $this->params['readonlyEncounter'] ) {
             $providerAttr['readonly'] = true;
         }
-        $builder->add('provider', 'entity', array(
+        $builder->add('provider', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
             'label' => 'Provider:',
             'required' => false,
@@ -399,7 +400,7 @@ class CalllogEncounterType extends AbstractType
 //            }
 //        });
 
-        $builder->add( 'encounterStatus', 'entity', array(
+        $builder->add( 'encounterStatus', EntityType::class, array(
             'class' => 'OlegOrderformBundle:EncounterStatusList',
             //'choice_label' => 'name',
             'label'=>'Encounter Status:',

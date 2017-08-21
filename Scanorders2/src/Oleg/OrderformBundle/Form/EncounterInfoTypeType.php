@@ -17,6 +17,7 @@
 
 namespace Oleg\OrderformBundle\Form;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -36,7 +37,7 @@ class EncounterInfoTypeType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        $builder->add( 'field', 'entity', array(
+        $builder->add( 'field', EntityType::class, array(
             'class' => 'OlegOrderformBundle:EncounterInfoTypeList',
             'choice_label' => 'name',
             'label' => "Encounter Type:",

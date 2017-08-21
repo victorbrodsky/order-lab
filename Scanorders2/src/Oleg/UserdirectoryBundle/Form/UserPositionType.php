@@ -17,6 +17,7 @@
 
 namespace Oleg\UserdirectoryBundle\Form;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\AbstractType;
@@ -102,7 +103,7 @@ class UserPositionType extends AbstractType
 //            'required' => false,
 //            'data' => $this->params['user']
 //        ));
-        $builder->add( 'user', 'entity', array(
+        $builder->add( 'user', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
             'label' => false,
             'required'=> true,
@@ -123,7 +124,7 @@ class UserPositionType extends AbstractType
         }
 
         //visible as positionType combobox attached to an institution node
-        $builder->add( 'positionTypes', 'entity', array(
+        $builder->add( 'positionTypes', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:PositionTypeList',
             'choice_label' => 'name',
             'label' => false,

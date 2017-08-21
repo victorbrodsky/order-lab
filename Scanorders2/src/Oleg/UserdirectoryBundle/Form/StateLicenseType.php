@@ -17,6 +17,7 @@
 
 namespace Oleg\UserdirectoryBundle\Form;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\AbstractType;
@@ -136,7 +137,7 @@ class StateLicenseType extends AbstractType
                 }
             }
 
-            $form->add('state','entity',$stateParams);
+            $form->add('state', EntityType::class, $stateParams);
 
             //country
             //$preferredCountries = $this->params['em']->getRepository('OlegUserdirectoryBundle:Countries')->findByName(array('United States'));
@@ -168,7 +169,7 @@ class StateLicenseType extends AbstractType
                 }
             }
 
-            $form->add('country','entity',$countryParams);
+            $form->add('country', EntityType::class, $countryParams);
 
         });
 

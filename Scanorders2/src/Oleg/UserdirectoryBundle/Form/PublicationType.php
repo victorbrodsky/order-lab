@@ -19,6 +19,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 
 
 use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -84,7 +85,7 @@ class PublicationType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
 
-        $builder->add( 'importance', 'entity', array(
+        $builder->add( 'importance', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:ImportanceList',
             'label'=> "Importance:",
             'required'=> false,

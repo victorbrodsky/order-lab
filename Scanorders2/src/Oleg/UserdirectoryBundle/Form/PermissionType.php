@@ -18,6 +18,7 @@
 
 namespace Oleg\UserdirectoryBundle\Form;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -37,7 +38,7 @@ class PermissionType extends AbstractType
             'attr' => array('class'=>'user-object-id-field')
         ));
 
-        $builder->add( 'permission', 'entity', array(
+        $builder->add( 'permission', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:PermissionList',
             'label'=> "Permission:",
             'required'=> false,
@@ -56,7 +57,7 @@ class PermissionType extends AbstractType
         ));
 
 
-        $builder->add( 'institutions', 'entity', array(
+        $builder->add( 'institutions', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:Institution',
             'choice_label' => 'getTreeName',
             'label'=>'Institution(s):',

@@ -17,6 +17,7 @@
 
 namespace Oleg\OrderformBundle\Form;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -137,7 +138,7 @@ class ProcedureType extends AbstractType
                 'prototype_name' => '__procedurelocation__',
             ));
 
-            $builder->add('provider', 'entity', array(
+            $builder->add('provider', EntityType::class, array(
                 'class' => 'OlegUserdirectoryBundle:User',
                 //'disabled' => $readonly,
                 'label' => 'Provider:',

@@ -19,6 +19,7 @@ namespace Oleg\OrderformBundle\Form;
 
 use Oleg\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
 use Oleg\UserdirectoryBundle\Form\DocumentContainerType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -71,7 +72,7 @@ class ImagingType extends AbstractType
             "Some of the slides (about 7% of the batch) may have to be rescanned the following week in order to obtain sufficient image quality. ".
             "We will do our best to expedite the process.";
 
-        $builder->add('magnification', 'entity', array(
+        $builder->add('magnification', EntityType::class, array(
             'class' => 'OlegOrderformBundle:Magnification',
             'choice_label' => 'name',
             'label'=>'Magnification:',

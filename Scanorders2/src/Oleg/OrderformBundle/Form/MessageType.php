@@ -22,6 +22,7 @@ use Oleg\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\UserWrapperTransformer;
 use Oleg\UserdirectoryBundle\Form\InstitutionalWrapperType;
 use Oleg\UserdirectoryBundle\Form\InstitutionType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -187,7 +188,7 @@ class MessageType extends AbstractType
         ));
 
         if( array_key_exists('message.provider', $this->params) &&  $this->params['message.provider'] == true ) {
-            $builder->add('provider', 'entity', array(
+            $builder->add('provider', EntityType::class, array(
                 'class' => 'OlegUserdirectoryBundle:User',
                 'label' => 'Submitter:',
                 'required' => false,
@@ -209,7 +210,7 @@ class MessageType extends AbstractType
         }
 
 
-//        $builder->add('proxyuser', 'entity', array(
+//        $builder->add('proxyuser', EntityType::class, array(
 //            'class' => 'OlegUserdirectoryBundle:User',
 //            'label'=>'Ordering Provider:',
 //            'required' => false,
@@ -239,7 +240,7 @@ class MessageType extends AbstractType
 //                ->addModelTransformer($transformer)
 //        );
 //        $builder->add(
-//            $builder->create('proxyuser', 'entity', array(
+//            $builder->create('proxyuser', EntityType::class, array(
 //                'class' => 'OlegUserdirectoryBundle:UserWrapper',
 //                //'choices' => array(1,2,3),
 //                'multiple' => true,
@@ -255,7 +256,7 @@ class MessageType extends AbstractType
 
             //$builder->add( 'proxyuser', null);
 
-            $builder->add( 'proxyuser', 'entity', array(
+            $builder->add( 'proxyuser', EntityType::class, array(
                 'class' => 'OlegUserdirectoryBundle:UserWrapper',
                 //'choice_label' => 'getEntity',
                 'label' => $this->params['message.proxyuser.label'],
@@ -277,7 +278,7 @@ class MessageType extends AbstractType
         }
 
 
-        $builder->add( 'equipment', 'entity', array(
+        $builder->add( 'equipment', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:Equipment',
             'choice_label' => 'name',
             'label' => 'Scanner:',
@@ -342,7 +343,7 @@ class MessageType extends AbstractType
         //foreach( $institutions as $inst ) {
         //    echo "form inst=".$inst."<br>";
         //}
-        $builder->add('institution', 'entity', array(
+        $builder->add('institution', EntityType::class, array(
             'label' => 'Order data visible to members of (Institutional PHI Scope):',
             'choice_label' => 'getNodeNameWithRoot',
             'required' => true,

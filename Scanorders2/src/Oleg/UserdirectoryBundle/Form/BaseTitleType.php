@@ -19,6 +19,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 
 
 use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -243,7 +244,7 @@ class BaseTitleType extends AbstractType
 //                'required' => false,
 //                'attr' => array('class' => 'combobox combobox-width appointmenttitle-position-field', 'onchange'=>'positionTypeAction(this)'),
 //            ));
-            $builder->add( 'positions', 'entity', array(
+            $builder->add( 'positions', EntityType::class, array(
                 'class' => 'OlegUserdirectoryBundle:PositionTrackTypeList',
                 'choice_label' => 'name',
                 'label'=>'Position Track Type(s):',
@@ -261,7 +262,7 @@ class BaseTitleType extends AbstractType
                     },
             ));
 
-            $builder->add( 'residencyTrack', 'entity', array(
+            $builder->add( 'residencyTrack', EntityType::class, array(
                 'class' => 'OlegUserdirectoryBundle:ResidencyTrackList',
                 'choice_label' => 'name',
                 'label'=>'Residency Track:',
@@ -321,7 +322,7 @@ class BaseTitleType extends AbstractType
 //                'attr' => array('class'=>'combobox combobox-width'),
 //                'required' => false
 //            ));
-            $builder->add( 'boss', 'entity', array(
+            $builder->add( 'boss', EntityType::class, array(
                 'class' => 'OlegUserdirectoryBundle:User',
                 'label'=>'Reports to:',
                 'required'=> false,
@@ -338,7 +339,7 @@ class BaseTitleType extends AbstractType
                     },
             ));
 
-            $builder->add('userPositions','entity',array(
+            $builder->add('userPositions',EntityType::class,array(
                 'class' => 'OlegUserdirectoryBundle:PositionTypeList',
                 'label' => "Position Type:",
                 'multiple' => true,
@@ -376,7 +377,7 @@ class BaseTitleType extends AbstractType
         //specialties for Medical Appointment Title)
         if( $this->params['fullClassName'] == "Oleg\UserdirectoryBundle\Entity\MedicalTitle" ) {
 
-            $builder->add( 'specialties', 'entity', array(
+            $builder->add( 'specialties', EntityType::class, array(
                 'class' => 'OlegUserdirectoryBundle:MedicalSpecialties',
                 'choice_label' => 'name',
                 'label'=>'Specialty(s):',
@@ -394,7 +395,7 @@ class BaseTitleType extends AbstractType
                     },
             ));
 
-            $builder->add('userPositions','entity',array(
+            $builder->add('userPositions', EntityType::class, array(
                 'class' => 'OlegUserdirectoryBundle:PositionTypeList',
                 'label' => "Position Type:",
                 'multiple' => true,

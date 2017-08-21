@@ -25,6 +25,7 @@ use Oleg\UserdirectoryBundle\Form\DocumentType;
 use Oleg\UserdirectoryBundle\Form\ExaminationType;
 use Oleg\UserdirectoryBundle\Form\LocationType;
 use Oleg\UserdirectoryBundle\Form\StateLicenseType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -75,7 +76,7 @@ class FellowshipApplicationType extends AbstractType
         //get subfellowship types as for ROLE_FELLAPP_ADMIN
         $fellappUtil = $this->params['container']->get('fellapp_util');
         $fellTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
-        $builder->add('fellowshipSubspecialty', 'entity', array(
+        $builder->add('fellowshipSubspecialty', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:FellowshipSubspecialty',
             'label' => "* Fellowship Application Type:",
             'required'=> false,
@@ -321,7 +322,7 @@ class FellowshipApplicationType extends AbstractType
             'prototype_name' => '__interviews__',
         ));
 
-        $builder->add( 'observers', 'entity', array(
+        $builder->add( 'observers', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
             'label'=> "Observer(s):",
             'required'=> false,

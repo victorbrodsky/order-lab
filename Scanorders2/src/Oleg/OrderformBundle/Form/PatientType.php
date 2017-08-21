@@ -19,6 +19,7 @@ namespace Oleg\OrderformBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
 use Oleg\UserdirectoryBundle\Form\TrackerType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -285,7 +286,7 @@ class PatientType extends AbstractType
 //                },
 //            ));
 
-            $builder->add('lifeForm', 'entity', array(
+            $builder->add('lifeForm', EntityType::class, array(
                 'class' => 'OlegUserdirectoryBundle:LifeFormList',
                 'choice_label' => 'name',
                 'label' => "Life Form:",
@@ -339,7 +340,7 @@ class PatientType extends AbstractType
                     }
                 }
 
-                $form->add('patientRecordStatus', 'entity', $statusParams);
+                $form->add('patientRecordStatus', EntityType::class, $statusParams);
 
             });
             /////////////////////////////////////// EOF patientRecordStatus ///////////////////////////////////////

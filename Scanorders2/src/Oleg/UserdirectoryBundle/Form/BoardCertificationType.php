@@ -17,6 +17,7 @@
 
 namespace Oleg\UserdirectoryBundle\Form;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -28,7 +29,7 @@ class BoardCertificationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add( 'certifyingBoardOrganization', 'entity', array(
+        $builder->add( 'certifyingBoardOrganization', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:CertifyingBoardOrganization',
             'choice_label' => 'name',
             'label'=>'Certifying Board Organization:',
@@ -47,7 +48,7 @@ class BoardCertificationType extends AbstractType
         ));
 
 
-        $builder->add( 'specialty', 'entity', array(
+        $builder->add( 'specialty', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:BoardCertifiedSpecialties',
             'choice_label' => 'name',
             'label'=>'Specialty:',

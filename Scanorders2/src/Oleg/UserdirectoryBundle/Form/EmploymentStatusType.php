@@ -20,6 +20,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 
 
 use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -78,7 +79,7 @@ class EmploymentStatusType extends AbstractType
         } else {
             $attr = array('class'=>'combobox combobox-width');
         }
-        $builder->add( 'terminationType', 'entity', array(
+        $builder->add( 'terminationType', EntityType::class, array(
             'disabled' => ($this->params['disabled'] ? true : false),
             'class' => 'OlegUserdirectoryBundle:EmploymentTerminationType',
             'choice_label' => 'name',

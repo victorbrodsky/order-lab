@@ -17,6 +17,7 @@
 
 namespace Oleg\OrderformBundle\Form;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -52,7 +53,7 @@ class EncounterPatsexType extends AbstractType
 //            'attr' => array('class' => 'combobox combobox-width encountersex-field')
 //        ));
 
-        $builder->add( 'field', 'entity', array(
+        $builder->add( 'field', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:SexList',
             'choice_label' => 'name',
             'label' => "Patient's Gender (at the time of encounter):",

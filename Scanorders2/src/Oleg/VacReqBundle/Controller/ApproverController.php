@@ -31,6 +31,7 @@ use Oleg\VacReqBundle\Form\VacReqRequestType;
 use Oleg\VacReqBundle\Form\VacReqUserCarryOverType;
 use Oleg\VacReqBundle\Form\VacReqUserComboboxType;
 use Oleg\VacReqBundle\Form\VacReqUserType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -1083,7 +1084,7 @@ class ApproverController extends Controller
 
         /////////////// users filter form ///////////////////
         $filterform = $this->createFormBuilder()
-            ->add('filterusers', 'entity', array(
+            ->add('filterusers', EntityType::class, array(
                 'class' => 'OlegUserdirectoryBundle:User',
                 'label' => false,
                 'required' => false,

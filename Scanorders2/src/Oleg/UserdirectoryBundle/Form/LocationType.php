@@ -21,6 +21,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 
 use Oleg\UserdirectoryBundle\Entity\User;
 use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -138,7 +139,7 @@ class LocationType extends AbstractType
         if( $this->params['readonlyLocationType'] ) {
             $locationTypesAttr['readonly'] = true;
         }
-        $builder->add('locationTypes','entity',array(
+        $builder->add('locationTypes', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:LocationTypeList',
             'label' => "Location Type:",
             //'disabled' => $this->params['readonlyLocationType'],
@@ -254,7 +255,7 @@ class LocationType extends AbstractType
 
             //assistant
             if( $this->params['cycle'] != "new_standalone" ) {
-                $builder->add( 'assistant', 'entity', array(
+                $builder->add( 'assistant', EntityType::class, array(
                     'class' => 'OlegUserdirectoryBundle:User',
                     'label'=> "Assistant(s):",
                     'required'=> false,
@@ -328,7 +329,7 @@ class LocationType extends AbstractType
             $arrayOptions['data'] = $defaultPrivacy;
         }
 
-        $builder->add('privacy','entity',$arrayOptions);
+        $builder->add('privacy', EntityType::class, $arrayOptions);
 
 
         //add user (Inhabitant) for all stand alone location management by LocationController

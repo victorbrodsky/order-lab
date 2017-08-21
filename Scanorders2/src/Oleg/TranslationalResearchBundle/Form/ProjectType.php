@@ -3,6 +3,7 @@
 namespace Oleg\TranslationalResearchBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -175,7 +176,7 @@ class ProjectType extends AbstractType
             'attr' => array('class' => 'form-control')
         ));
 
-        $builder->add( 'principalInvestigators', 'entity', array(
+        $builder->add( 'principalInvestigators', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
             'label'=> "Principal Investigator(s):",
             'required'=> false,
@@ -191,7 +192,7 @@ class ProjectType extends AbstractType
             },
         ));
 
-        $builder->add( 'coInvestigators', 'entity', array(
+        $builder->add( 'coInvestigators', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
             'label'=> "Co-Investigator(s):",
             'required'=> false,
@@ -207,7 +208,7 @@ class ProjectType extends AbstractType
             },
         ));
 
-        $builder->add( 'irbSubmitter', 'entity', array(
+        $builder->add( 'irbSubmitter', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
             'label'=> "Name of PI Who Submitted the IRB:",
             'required'=> false,
@@ -223,7 +224,7 @@ class ProjectType extends AbstractType
             },
         ));
 
-        $builder->add( 'pathologists', 'entity', array(
+        $builder->add( 'pathologists', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
             'label'=> "WCMC Pathologist Involved:",
             'required'=> false,
@@ -239,7 +240,7 @@ class ProjectType extends AbstractType
             },
         ));
 
-        $builder->add( 'contact', 'entity', array(
+        $builder->add( 'contact', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
             'label'=> "Contact:",
             'required'=> false,

@@ -20,6 +20,7 @@ namespace Oleg\OrderformBundle\Form;
 use Oleg\UserdirectoryBundle\Form\DocumentContainerType;
 use Oleg\UserdirectoryBundle\Form\DocumentType;
 use Oleg\UserdirectoryBundle\Form\UserWrapperType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -39,7 +40,7 @@ class ImageAnalysisOrderType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        $builder->add('imageAnalysisAlgorithm', 'entity', array(
+        $builder->add('imageAnalysisAlgorithm', EntityType::class, array(
             'class' => 'OlegOrderformBundle:ImageAnalysisAlgorithmList',
             'choice_label' => 'name',
             'label' => 'Image Analysis Algorithm:',

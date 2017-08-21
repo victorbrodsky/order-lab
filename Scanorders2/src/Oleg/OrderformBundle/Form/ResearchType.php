@@ -19,6 +19,7 @@ namespace Oleg\OrderformBundle\Form;
 
 use Oleg\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
 use Oleg\UserdirectoryBundle\Form\UserWrapperType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -104,7 +105,7 @@ class ResearchType extends AbstractType
                     }
                 }
 
-                $form->add( 'primaryPrincipal', 'entity', array(
+                $form->add( 'primaryPrincipal', EntityType::class, array(
                     'class' => 'OlegUserdirectoryBundle:UserWrapper',
                     'label'=>'Primary Principal Investigator (as entered by user'.$comment.'):',
                     'required'=> false,

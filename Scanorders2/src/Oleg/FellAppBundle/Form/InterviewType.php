@@ -18,6 +18,7 @@
 namespace Oleg\FellAppBundle\Form;
 
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -47,7 +48,7 @@ class InterviewType extends AbstractType
 
         if( $this->params['showFull'] ) {
 
-            $builder->add('interviewer', 'entity', array(
+            $builder->add('interviewer', EntityType::class, array(
                 'class' => 'OlegUserdirectoryBundle:User',
                 'label' => "Interviewer:",
                 'required' => false,
