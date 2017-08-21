@@ -21,6 +21,7 @@ use Doctrine\ORM\EntityRepository;
 use Oleg\UserdirectoryBundle\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -123,7 +124,7 @@ class LoggerFilterType extends AbstractType
 //            'attr' => array('class' => 'combobox combobox-width fellapp-fellowshipSubspecialty-filter'),
 //        ));
 
-        $builder->add('search', 'text', array(
+        $builder->add('search', TextType::class, array(
             //'placeholder' => 'Search',
             'max_length' => 200,
             'required' => false,
@@ -148,7 +149,7 @@ class LoggerFilterType extends AbstractType
             'attr' => array('class' => 'form-control datetimepicker', 'placeholder' => 'End Date/Time')
         ));
 
-        $builder->add('ip', 'text', array(
+        $builder->add('ip', TextType::class, array(
             //'placeholder' => 'Search',
             'required' => false,
             'label' => false,
@@ -173,7 +174,7 @@ class LoggerFilterType extends AbstractType
             },
         ));
 
-//        $builder->add('objectName', 'text', array(
+//        $builder->add('objectName', TextType::class, array(
 //            'required'=>false,
 //            'label' => false,
 //            'attr' => array('class'=>'form-control form-control-modif limit-font-size submit-on-enter-field'),
@@ -200,7 +201,7 @@ class LoggerFilterType extends AbstractType
             },
         ));
 
-        $builder->add('objectId', 'text', array(
+        $builder->add('objectId', TextType::class, array(
             //'disabled' => $this->hideObjectId,
             'required' => false,
             'label' => false,

@@ -20,6 +20,7 @@ namespace Oleg\OrderformBundle\Form;
 use Oleg\UserdirectoryBundle\Form\DocumentContainerType;
 use Oleg\UserdirectoryBundle\Form\DocumentType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -38,7 +39,7 @@ class InstructionType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        $builder->add('instruction', 'text', array(
+        $builder->add('instruction', TextType::class, array(
             'label' => 'Instruction'.$this->params['labelPrefix'].':',
             'attr' => array('class' => 'textarea form-control'),
         ));

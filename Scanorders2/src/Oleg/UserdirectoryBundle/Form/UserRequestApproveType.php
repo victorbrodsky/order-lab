@@ -21,6 +21,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -43,7 +44,7 @@ class UserRequestApproveType extends AbstractType
 
         $builder->add( 'id', HiddenType::class );
 
-        $builder->add( 'username', 'text', array(
+        $builder->add( 'username', TextType::class, array(
             'label'=>false,
             'required'=> true,
             'attr' => array('class'=>'username'),

@@ -18,6 +18,7 @@
 namespace Oleg\OrderformBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -35,7 +36,7 @@ class EncounterPatmiddlenameType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        $builder->add( 'field', 'text', array(
+        $builder->add( 'field', TextType::class, array(
             'label'=>"Patient's Middle Name (at the time of encounter):",
             'required' => false,
             'attr' => array('class' => 'form-control form-control-modif encounter-middleName')

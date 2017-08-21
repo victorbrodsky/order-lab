@@ -21,6 +21,7 @@ namespace Oleg\VacReqBundle\Form;
 use Oleg\UserdirectoryBundle\Form\GeoLocationType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -80,7 +81,7 @@ class VacReqRequestBaseType extends AbstractType
 //        ));
 
 //        if( $this->params['cycle'] == 'edit' || $this->params['cycle'] == 'show' ) {
-//            $builder->add('approverComment', 'textarea', array(
+//            $builder->add('approverComment', TextareaType::class, array(
 //                'label' => 'Approver Comment:',
 //                'required' => false,
 //                'attr' => array('class' => 'textarea form-control'),
@@ -116,7 +117,7 @@ class VacReqRequestBaseType extends AbstractType
                 'attr' => array('class' => 'horizontal_type_wide'), //horizontal_type
             ));
 
-            $builder->add('approverComment', 'textarea', array(
+            $builder->add('approverComment', TextareaType::class, array(
                 'label' => 'Approver Comment:',
                 'disabled' => $readOnly,
                 'required' => false,

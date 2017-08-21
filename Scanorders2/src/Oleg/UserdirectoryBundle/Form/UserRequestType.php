@@ -23,6 +23,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -51,7 +53,7 @@ class UserRequestType extends AbstractType
             'attr' => array('class'=>'form-control', 'readonly'=>true),
         ));
 
-        $builder->add( 'cwid', 'text', array(
+        $builder->add( 'cwid', TextType::class, array(
                 'label'=>'WCMC CWID:',
                 'required'=> false,
                 'attr' => array('class'=>'form-control form-control-modif cwid'),
@@ -74,13 +76,13 @@ class UserRequestType extends AbstractType
             'attr' => array('class' => 'form-control form-control-modif cwid-password')
         ));
 
-        $builder->add( 'firstName', 'text', array(
+        $builder->add( 'firstName', TextType::class, array(
             'label'=>'* First Name:',
             'required'=> false,
             'attr' => array('class'=>'form-control form-control-modif'),
         ));
 
-        $builder->add( 'name', 'text', array(
+        $builder->add( 'name', TextType::class, array(
                 'label'=>'* Last Name:',
                 'required'=> false,
                 'attr' => array('class'=>'form-control form-control-modif'),
@@ -92,13 +94,13 @@ class UserRequestType extends AbstractType
                 'attr' => array('class'=>'form-control form-control-modif email-mask', 'required'=>'required'), //'required'=>'required' does not work here
         ));
         
-        $builder->add( 'phone', 'text', array(
+        $builder->add( 'phone', TextType::class, array(
                 'label'=>'Phone Number:',
                 'required'=> false,
                 'attr' => array('class'=>'form-control form-control-modif phone-mask'),
         ));
         
-        $builder->add( 'job', 'text', array(
+        $builder->add( 'job', TextType::class, array(
                 'label'=>'Job title:',
                 'required'=> false,
                 'attr' => array('class'=>'form-control form-control-modif'),
@@ -157,7 +159,7 @@ class UserRequestType extends AbstractType
 
 
         
-        $builder->add('request', 'textarea', array(
+        $builder->add('request', TextareaType::class, array(
             'label'=>'Reason for account request:',
             'required'=> false,
             'attr' => array('class'=>'textarea form-control form-control-modif'),
@@ -165,25 +167,25 @@ class UserRequestType extends AbstractType
 
 
         //$refLabel = "For reference, please provide the name and contact information of your supervisor or of the person who can confirm the validity of your request below.\r\nAccess permissions similar to (user name):";
-        $builder->add( 'similaruser', 'text', array(
+        $builder->add( 'similaruser', TextType::class, array(
             'label' => "Access permissions similar to (user name):",
             'required' => false,
             'attr' => array('class'=>'form-control form-control-modif'),
         ));
 
-        $builder->add( 'referencename', 'text', array(
+        $builder->add( 'referencename', TextType::class, array(
             'label'=>'Reference Name:',
             'required'=> false,
             'attr' => array('class'=>'form-control form-control-modif'),
         ));
 
-        $builder->add( 'referenceemail', 'text', array(
+        $builder->add( 'referenceemail', TextType::class, array(
             'label'=>'Reference Email:',
             'required'=> false,
             'attr' => array('class'=>'form-control form-control-modif'),
         ));
 
-        $builder->add( 'referencephone', 'text', array(
+        $builder->add( 'referencephone', TextType::class, array(
             'label'=>'Reference Phone Number:',
             'required'=> false,
             'attr' => array('class'=>'form-control form-control-modif'),

@@ -21,6 +21,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -92,7 +93,7 @@ class CalllogFilterType extends AbstractType
         ));
 
         //echo "formtype: search=".$this->params['search']."<br>";
-        $builder->add('search', 'text', array(
+        $builder->add('search', TextType::class, array(
             //'max_length'=>200,
             'required'=>false,
             'label' => false,
@@ -202,7 +203,7 @@ class CalllogFilterType extends AbstractType
         ));
 
         //Entry Body
-        $builder->add('entryBodySearch', 'text', array(
+        $builder->add('entryBodySearch', TextType::class, array(
             'required'=>false,
             'label' => false,
             'empty_data' => $this->params['entryBodySearch'],

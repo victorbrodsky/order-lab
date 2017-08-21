@@ -18,6 +18,7 @@
 namespace Oleg\UserdirectoryBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -42,7 +43,7 @@ class LoggerType extends AbstractType
             ->add('entityId')
             ->add('entityName')
             ->add('user')
-            ->add('serverresponse','textarea',array('attr' => array('class'=>'textarea form-control')))
+            ->add('serverresponse', TextareaType::class, array('attr' => array('class'=>'textarea form-control')))
         ;
     }
     

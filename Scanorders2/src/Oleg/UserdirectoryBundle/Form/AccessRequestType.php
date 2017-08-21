@@ -20,6 +20,8 @@ namespace Oleg\UserdirectoryBundle\Form;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 //use Symfony\Component\OptionsResolver\OptionsResolver;
 //use Doctrine\ORM\EntityRepository;
@@ -42,13 +44,13 @@ class AccessRequestType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        $builder->add( 'firstName', 'text', array(
+        $builder->add( 'firstName', TextType::class, array(
             'label'=>'First Name:',
             'required'=> false,
             'attr' => array('class'=>'form-control'),
         ));
 
-        $builder->add( 'lastName', 'text', array(
+        $builder->add( 'lastName', TextType::class, array(
             'label'=>'Last Name:',
             'required'=> false,
             'attr' => array('class'=>'form-control'),
@@ -60,13 +62,13 @@ class AccessRequestType extends AbstractType
                 'attr' => array('class'=>'form-control email-mask', 'required'=>'required'), //'required'=>'required' does not work here
         ));
         
-        $builder->add( 'phone', 'text', array(
+        $builder->add( 'phone', TextType::class, array(
                 'label'=>'Phone Number:',
                 'required'=> false,
                 'attr' => array('class'=>'form-control phone-mask'),
         ));
         
-        $builder->add( 'job', 'text', array(
+        $builder->add( 'job', TextType::class, array(
                 'label'=>'Job title:',
                 'required'=> false,
                 'attr' => array('class'=>'form-control'),
@@ -141,7 +143,7 @@ class AccessRequestType extends AbstractType
 
 
         
-        $builder->add('reason', 'textarea', array(
+        $builder->add('reason', TextareaType::class, array(
             'label'=>'Reason for access request:',
             'required'=> false,
             'attr' => array('class'=>'textarea form-control'),
@@ -149,7 +151,7 @@ class AccessRequestType extends AbstractType
 
 
         //$refLabel = "For reference, please provide the name and contact information of your supervisor or of the person who can confirm the validity of your request below.\r\nAccess permissions similar to (user name):";
-        $builder->add( 'similaruser', 'text', array(
+        $builder->add( 'similaruser', TextType::class, array(
             'label' => "Access permissions similar to (user name):",
             'required' => false,
             'attr' => array('class'=>'form-control'),

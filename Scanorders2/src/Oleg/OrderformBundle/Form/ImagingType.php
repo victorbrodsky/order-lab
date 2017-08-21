@@ -22,6 +22,8 @@ use Oleg\UserdirectoryBundle\Form\DocumentContainerType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormEvents;
@@ -60,7 +62,7 @@ class ImagingType extends AbstractType
         $builder->add('scanregion', ScanCustomSelectorType::class, $options);
 
         //note
-        $builder->add('note', 'textarea', array(
+        $builder->add('note', TextareaType::class, array(
                 'max_length'=>5000,
                 'required'=>false,
                 'label'=>'Reason for Scan/Note:',
@@ -92,7 +94,7 @@ class ImagingType extends AbstractType
 
         if( array_key_exists('datastructure', $this->params) &&  $this->params['datastructure'] == true ) {
 
-            $builder->add('imageId', 'text', array(
+            $builder->add('imageId', TextType::class, array(
                 'required'=>false,
                 'label'=>'Image ID:',
                 'attr' => array('class'=>'form-control'),

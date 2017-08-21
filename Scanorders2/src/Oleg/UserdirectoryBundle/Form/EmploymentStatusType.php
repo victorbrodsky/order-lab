@@ -22,6 +22,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -106,14 +107,14 @@ class EmploymentStatusType extends AbstractType
             ));
         }
 
-        $builder->add( 'jobDescriptionSummary', 'textarea', array(
+        $builder->add( 'jobDescriptionSummary', TextareaType::class, array(
             'label'=>'Job Description Summary:',
             'disabled' => $readonly,
             'required'=>false,
             'attr' => array('class' => 'textarea form-control')
         ));
 
-        $builder->add( 'jobDescription', 'textarea', array(
+        $builder->add( 'jobDescription', TextareaType::class, array(
             'label'=>'Job Description (official, as posted):',
             'disabled' => $readonly,
             'required'=>false,

@@ -23,16 +23,18 @@ use Doctrine\ORM\EntityRepository;
 class DocumentRepository extends EntityRepository {
 
     //set document type according to the holder entity. For example, for Comment entity, type is "Comment Document"
-    public function processDocuments($documentHolder, $docfieldname=null, $docType=null) {
+    //$attachmentHolder is the holder that can have many $documentHolder
+    public function processDocuments($documentHolder, $docfieldname=null, $docType=null, $attachmentHolder=null) {
 
         if( $documentHolder == null ) {
            // echo "not exists: document=".$documentHolder."<br>";
             return $documentHolder;
         }
 
-        //$class = new \ReflectionClass($documentHolder);
-        //$className = $class->getShortName();
-        //echo "<br><br>className=".$className."<br>";
+        //testing
+//        $class = new \ReflectionClass($documentHolder);
+//        $className = $class->getShortName();
+//        echo "<br><br>className=".$className."<br>";
 
         if( $docfieldname ) {
 
@@ -47,7 +49,23 @@ class DocumentRepository extends EntityRepository {
 
         if( count($documentHolder->$getMethod()) == 0 ) {
             //echo "return: no documents<br>";
-            return $documentHolder;
+
+            //prvenet create an empty DocumentContainer and AttachmentContainer: remove DocumentContainer from AttachmentContainer
+            //$attachmentContainer = null;
+            //if( $documentHolder->getAttachmentContainer() )
+            if( $documentHolder && method_exists($documentHolder, 'getAttachmentContainer') ) {
+                $attachmentContainer = $documentHolder->getAttachmentContainer();
+                if( $attachmentContainer && method_exists($attachmentContainer, 'removeDocumentContainer') ) {
+                    $attachmentContainer->removeDocumentContainer($documentHolder);
+                }
+            }
+
+            if( $attachmentHolder ) {
+                $attachmentHolder->setAttachmentContainer(null);
+            }
+
+            return null;
+            //return $documentHolder;
         }
 
         //echo get_class($documentHolder).": holder id=".$documentHolder->getId()."<br>";
@@ -72,6 +90,7 @@ class DocumentRepository extends EntityRepository {
                 $docDb = $this->_em->getRepository('OlegUserdirectoryBundle:Document')->find($doc->getId());
                 if( $docDb ) {
 
+                    //echo "docDb id=".$docDb->getId()."<br>";
                     //set type if not set
                     if (!$docDb->getType() && $docType) {
                         $docDb->setType($docType);

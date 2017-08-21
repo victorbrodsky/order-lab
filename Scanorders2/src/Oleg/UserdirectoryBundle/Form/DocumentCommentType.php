@@ -20,6 +20,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 
 use Oleg\UserdirectoryBundle\Entity\PrivateComment;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -44,7 +45,7 @@ class DocumentCommentType extends AbstractType
             $label = $this->params['documentContainer.comments.comment.label'] . " " . $label;
         }
 
-        $builder->add( 'comment', 'textarea', array(
+        $builder->add( 'comment', TextareaType::class, array(
             'label' => $label,
             'required'=>false,
             'attr' => array('class' => 'textarea form-control')

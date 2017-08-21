@@ -22,6 +22,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -124,7 +125,7 @@ class VacReqRequestType extends AbstractType
         }
 
         if( $this->params['requestType']->getAbbreviation() == "carryover" ) {
-            $builder->add('comment', 'textarea', array(
+            $builder->add('comment', TextareaType::class, array(
                 'label' => 'Comment:',
                 //'disabled' => $readOnly,
                 'required' => false,

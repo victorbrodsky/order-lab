@@ -18,6 +18,8 @@
 namespace Oleg\VacReqBundle\Form;
 
 
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -42,13 +44,13 @@ class VacReqRequestBusinessType extends VacReqRequestBaseType {
         parent::buildForm($builder,$options);
 
 
-        $builder->add('expenses', 'text', array(
+        $builder->add('expenses', TextType::class, array(
             'label' => 'Estimated Expenses:',
             'attr' => array('class'=>'form-control vacreq-expenses'),
             'disabled' => ($this->params['review'] ? true : false)
         ));
 
-        $builder->add('description', 'textarea', array(
+        $builder->add('description', TextareaType::class, array(
             'label' => 'Description:',
             'attr' => array('class'=>'textarea form-control vacreq-description'),
             'disabled' => ($this->params['review'] ? true : false)

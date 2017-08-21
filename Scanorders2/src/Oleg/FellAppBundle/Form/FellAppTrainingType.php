@@ -21,6 +21,7 @@ namespace Oleg\FellAppBundle\Form;
 use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Oleg\UserdirectoryBundle\Form\GeoLocationType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -95,7 +96,7 @@ class FellAppTrainingType extends AbstractType
             'classtype' => 'jobTitle'
         ));
 
-        $builder->add( 'description', 'textarea', array(
+        $builder->add( 'description', TextareaType::class, array(
             'label'=>'Description:',
             'required'=>false,
             'attr' => array('class' => 'textarea form-control')

@@ -26,6 +26,7 @@ use Oleg\UserdirectoryBundle\Form\FormNode\MessageCategoryFormNodeType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormEvents;
@@ -394,7 +395,7 @@ class CalllogMessageType extends AbstractType
 
         if( $formNodeType == "Form Field - Free Text" ) {
             echo "added text <br>";
-            $form->add('formNode','text',array(
+            $form->add('formNode', TextType::class, array(
                 'label' => $formNode->getName()."",
                 'mapped' => false,
                 'attr' => array('class' => 'form-control textarea')

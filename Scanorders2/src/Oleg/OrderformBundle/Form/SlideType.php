@@ -22,6 +22,8 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -80,7 +82,7 @@ class SlideType extends AbstractType
             ));
         }
         
-        $builder->add('microscopicdescr', 'textarea', array(
+        $builder->add('microscopicdescr', TextareaType::class, array(
                 'max_length'=>10000,
                 'required'=>false,
                 'label'=>'Microscopic Description:',
@@ -104,7 +106,7 @@ class SlideType extends AbstractType
         
         //$builder->add('barcode', 'text', array('max_length'=>200,'required'=>false));
 
-        $builder->add('title', 'text', array(
+        $builder->add('title', TextType::class, array(
             'required'=>false,
             'label'=>'Title:',
             'attr' => array('class'=>'form-control form-control-modif'),

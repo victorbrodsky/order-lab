@@ -24,6 +24,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormEvents;
@@ -387,7 +388,7 @@ if( 1 ) {
                         'required' => false,
                         'classtype' => 'userWrapper'
                     ));
-                    $form->add('comment', 'text', array(
+                    $form->add('comment', TextType::class, array(
                         'required' => false,
                         'label' => 'Note:',
                         'attr' => array('class' => 'textarea form-control'),
@@ -400,7 +401,7 @@ if( 1 ) {
                         'required' => false,
                         'label' => false
                     ));
-                    $form->add('comment', 'text', array(
+                    $form->add('comment', TextType::class, array(
                         'required' => false,
                         'label' => 'Indication:',
                         'attr' => array('class' => 'textarea form-control'),
@@ -422,7 +423,7 @@ if( 1 ) {
                     $this->addFormOrganizationRecipients('organizationRecipients',$form,$this->params);
 
                     //show the "Note" field with the title of "Indication"
-                    $form->add('comment', 'text', array(
+                    $form->add('comment', TextType::class, array(
                         'required' => false,
                         'label' => 'Indication:',
                         'attr' => array('class' => 'textarea form-control'),
@@ -431,7 +432,7 @@ if( 1 ) {
 
                 //Procedure Note
                 if( $messageCategory == "Procedure Note" ) {
-                    $form->add('comment', 'text', array(
+                    $form->add('comment', TextType::class, array(
                         'required' => false,
                         'label' => 'Note:',
                         'attr' => array('class' => 'textarea form-control'),
@@ -489,7 +490,7 @@ if( 1 ) {
                         'label' => false
                     ));
 
-                    $form->add('comment', 'text', array(
+                    $form->add('comment', TextType::class, array(
                         'required' => false,
                         'label' => 'Comment:',
                         'attr' => array('class' => 'textarea form-control'),
@@ -519,7 +520,7 @@ if( 1 ) {
                         'label' => false
                     ));
 
-                    $form->add('comment', 'text', array(
+                    $form->add('comment', TextType::class, array(
                         'required' => false,
                         'label' => 'Comment:',
                         'attr' => array('class' => 'textarea form-control'),
@@ -851,7 +852,7 @@ if( 1 ) {
 //
 //                //Encounter Note
 //                if( $dataEntity->getMessageCategory()->getName() == "Encounter Note" ) {
-//                    $form->add('comment', 'text', array(
+//                    $form->add('comment', TextType::class, array(
 //                        'required' => false,
 //                        'label' => 'Note:',
 //                        'attr' => array('class' => 'textarea form-control'),
@@ -860,7 +861,7 @@ if( 1 ) {
 //
 //                //Procedure Note
 //                if( $dataEntity->getMessageCategory()->getName() == "Procedure Note" ) {
-//                    $form->add('comment', 'text', array(
+//                    $form->add('comment', TextType::class, array(
 //                        'required' => false,
 //                        'label' => 'Note:',
 //                        'attr' => array('class' => 'textarea form-control'),

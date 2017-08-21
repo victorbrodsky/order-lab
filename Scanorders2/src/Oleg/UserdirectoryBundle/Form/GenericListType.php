@@ -25,6 +25,7 @@ use Oleg\UserdirectoryBundle\Entity\PlatformListManagerRootList;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
@@ -510,7 +511,7 @@ class GenericListType extends AbstractType
                 'required' => false,
                 'attr' => array('class'=>'form-control', 'style'=>'margin:0')
             ));
-            $builder->add('placeholder', 'text', array(
+            $builder->add('placeholder', TextType::class, array(
                 'label' => 'Placeholder:',
                 'required' => false,
                 'attr' => array('class'=>'form-control')

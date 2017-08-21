@@ -25,6 +25,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -127,7 +128,7 @@ class LocationType extends AbstractType
             ));
         }
 
-        $builder->add('comment', 'textarea', array(
+        $builder->add('comment', TextareaType::class, array(
             'max_length'=>5000,
             'required'=>false,
             'label'=>'Comment:',

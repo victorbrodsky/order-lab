@@ -20,6 +20,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 use Doctrine\ORM\EntityRepository;
 use Oleg\UserdirectoryBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -31,7 +32,7 @@ class ListFilterType extends AbstractType
     {
 
 
-        $builder->add('search', 'text', array(
+        $builder->add('search', TextType::class, array(
             //'placeholder' => 'Search',
             'max_length' => 200,
             'required' => false,

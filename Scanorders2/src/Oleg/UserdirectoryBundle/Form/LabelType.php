@@ -22,6 +22,7 @@ use Oleg\UserdirectoryBundle\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -41,7 +42,7 @@ class LabelType extends AbstractType
         $this->formConstructor($options['form_custom_value']);
 
         if( $this->params['singleUser'] ) {
-            $builder->add('userlabel', 'textarea', array(
+            $builder->add('userlabel', TextareaType::class, array(
                 //'placeholder' => 'Enter Label Text',
                 //'max_length' => 200,
                 'required' => false,

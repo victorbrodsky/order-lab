@@ -478,11 +478,13 @@ class Grant extends ListAbstract
         $empty = true;
 
         if( $this->getName() ) {
+            //echo "name <br>";
             $empty = false;
         }
 
         foreach( $this->getComments() as $comment ) {
             if( $comment->getComment() ) {
+                //echo "comment <br>";
                 $empty = false;
             }
         }
@@ -490,6 +492,7 @@ class Grant extends ListAbstract
         $attachmentContainer = $this->getAttachmentContainer();
         if( $attachmentContainer ) {
             if( count($attachmentContainer->getDocumentContainers()) > 0 ) {
+                //echo "getDocumentContainers count=".count($attachmentContainer->getDocumentContainers())."<br>";
                 $empty = false;
             }
         }

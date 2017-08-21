@@ -18,6 +18,7 @@
 namespace Oleg\UserdirectoryBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -43,7 +44,7 @@ class SearchType extends AbstractType
 //            'attr' => array('class' => 'combobox combobox-width order-status-filter')
 //        ));
         
-        $builder->add('search', 'text', array(
+        $builder->add('search', TextType::class, array(
             'max_length'=>200,
             'required'=>false,
             'label'=>'Search:',

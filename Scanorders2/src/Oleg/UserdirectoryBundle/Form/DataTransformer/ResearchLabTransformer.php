@@ -97,7 +97,7 @@ class ResearchLabTransformer implements DataTransformerInterface
             $entity = $this->em->getRepository('OlegUserdirectoryBundle:'.$this->className)->findOneById($text);
 
             if( $entity ) {
-                return $entity->getBlockPrefix();
+                return $entity->getName();
             }
         }
 

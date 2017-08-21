@@ -23,6 +23,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -190,7 +191,7 @@ class DocumentContainerType extends AbstractType
             }
 
             if( $this->params['document.imageId'] ) {
-                $builder->add('imageId', 'text', array(
+                $builder->add('imageId', TextType::class, array(
                     'required'=>false,
                     'label'=>'Image ID:',
                     'attr' => array('class'=>'form-control'),

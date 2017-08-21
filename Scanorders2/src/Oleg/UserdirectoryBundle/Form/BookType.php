@@ -22,6 +22,7 @@ use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -69,13 +70,13 @@ class BookType extends AbstractType
             ));
         }
 
-        $builder->add('citation','textarea',array(
+        $builder->add('citation', TextareaType::class, array(
             'required' => false,
             'label'=>'Citation / Reference:',
             'attr' => array('class'=>'textarea form-control')
         ));
 
-        $builder->add('comment','textarea',array(
+        $builder->add('comment', TextareaType::class, array(
             'required' => false,
             'label'=>'Comment:',
             'attr' => array('class'=>'textarea form-control')

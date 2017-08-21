@@ -19,6 +19,7 @@ namespace Oleg\DeidentifierBundle\Form;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -64,7 +65,7 @@ class DeidentifierSearchType extends AbstractType
             },
         ));
         
-        $builder->add('accessionNumber', 'text', array(
+        $builder->add('accessionNumber', TextType::class, array(
             'label'=>'Accession Number:',
             'mapped' => false,
             'required'=>false,

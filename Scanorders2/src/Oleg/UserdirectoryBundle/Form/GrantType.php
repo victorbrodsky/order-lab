@@ -21,6 +21,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -187,6 +188,7 @@ class GrantType extends AbstractType
                     'label' => "Grant Title:",
                     'required' => false,
                     'attr' => $nameAttr,    //array('class' => 'combobox combobox-width ajax-combobox-grant', 'type' => 'hidden'),
+                    //'attr' => array('class' => 'combobox combobox-width ajax-combobox-grant', 'type' => 'hidden'),
                     'classtype' => 'grant'
                 ));
 
@@ -225,7 +227,7 @@ class GrantType extends AbstractType
 
             //exit('this->commentData='.$this->commentData);
 
-            $builder->add('commentDummy','textarea',array(
+            $builder->add('commentDummy', TextareaType::class, array(
                 //'mapped' => false,
                 'required' => false,
                 'label'=>'Comment:',

@@ -121,14 +121,23 @@ class GrantRepository extends EntityRepository {
             //echo "comments 2=".count($grantFinal->getComments())."<br>";
 
             //foreach( $grantFinal->getComments() as $comment ) {
-            //    echo $comment;
+            //    //echo $comment;
             //}
 
 
             //process attachment documents
             if( $grantFinal->getAttachmentContainer() ) {
                 foreach( $grantFinal->getAttachmentContainer()->getDocumentContainers() as $documentContainer) {
-                    $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $documentContainer );
+                    //echo "Doc Container ID=".$documentContainer->getId()."<br>";
+                    $res = $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $documentContainer, null, null, $grantFinal );
+                    if( $res === null ) {
+                        //if res is null (no documents and attachmentContainer is empty), check for empty again.
+                        if( $grant->isEmpty() ) {
+                            $user->removeGrant($grant);
+                            //echo "Remove empty Grant: ".$grant."<br>";
+                            continue;
+                        }
+                    }
                 }
             }
 
@@ -136,7 +145,7 @@ class GrantRepository extends EntityRepository {
 
         } //foreach grant
 
-        //echo "grants final count=".count($user->getGrants())."<br>";
+        //echo "###grants final count=".count($user->getGrants())."<br>";
         //echo "effort count=".count($user->getGrants()->first()->getEfforts())."<br>";
         //exit('process grant');
 

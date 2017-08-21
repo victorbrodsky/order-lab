@@ -2608,7 +2608,7 @@ class UserController extends Controller
             $entity = $em->getRepository('OlegUserdirectoryBundle:ResearchLab')->processResearchLab( $entity );
 
             //process grants
-            $em->getRepository('OlegUserdirectoryBundle:Grant')->processGrant($entity);
+            $em->getRepository('OlegUserdirectoryBundle:Grant')->processGrant($entity); //update user
 
             //process employmentstatus attachments
             $this->processEmploymentStatus($entity);

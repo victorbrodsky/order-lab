@@ -20,6 +20,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -92,7 +93,7 @@ class ListType extends AbstractType
                 $descriptionLabel = $this->mapper['labels']['description'];
             }
         }
-        $builder->add('description','textarea',array(
+        $builder->add('description', TextareaType::class, array(
             'label' => $descriptionLabel,
             'required' => false,
             'attr' => array('class' => 'textarea form-control')

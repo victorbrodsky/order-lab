@@ -20,6 +20,7 @@ namespace Oleg\FellAppBundle\Form;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -134,7 +135,7 @@ class InterviewType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width interview-rank interview-potentialRank'),
         ));
 
-        $builder->add('totalRank','text', array(
+        $builder->add('totalRank', TextType::class, array(
             'label' => 'Total Rank:',
             'required' => false,
             //'disabled' => true,

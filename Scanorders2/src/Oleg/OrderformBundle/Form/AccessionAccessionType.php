@@ -19,6 +19,7 @@ namespace Oleg\OrderformBundle\Form;
 
 use Oleg\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -52,7 +53,7 @@ class AccessionAccessionType extends AbstractType
             //$gen_attr = array('label'=>'Accession Number [or Label]','class'=>'Oleg\OrderformBundle\Entity\AccessionAccession','type'=>null);
         }
 
-        $builder->add( 'field', 'text', array(
+        $builder->add( 'field', TextType::class, array(
             'label'=>'Accession Number [or Label]:',
             'required'=>false,
             'attr' => $attr

@@ -20,6 +20,7 @@ namespace Oleg\FellAppBundle\Form;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -77,7 +78,7 @@ class FellAppFilterType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width fellapp-fellowshipSubspecialty-filter'),
         ));
         
-        $builder->add('search', 'text', array(
+        $builder->add('search', TextType::class, array(
             //'placeholder' => 'Search',
             'max_length'=>200,
             'required'=>false,

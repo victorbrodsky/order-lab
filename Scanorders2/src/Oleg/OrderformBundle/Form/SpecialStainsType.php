@@ -19,6 +19,7 @@ namespace Oleg\OrderformBundle\Form;
 
 use Oleg\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormEvents;
@@ -41,7 +42,7 @@ class SpecialStainsType extends AbstractType
         $this->formConstructor($options['form_custom_value']);
 
         //field
-        $builder->add('field', 'textarea', array(
+        $builder->add('field', TextareaType::class, array(
             'label' => 'Associated Special Stain Result:',
             'required' => false,
             'attr' => array('class'=>'textarea form-control form-control-modif')

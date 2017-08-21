@@ -24,6 +24,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -52,7 +53,7 @@ class BaseCommentsType extends AbstractType
             'attr' => array('class' => 'comment-field-id')
         ));
 
-        $builder->add( 'comment', 'textarea', array(
+        $builder->add( 'comment', TextareaType::class, array(
             'label'=>'Comment:',
             'disabled' => $this->params['disabled'],
             'required'=>false,

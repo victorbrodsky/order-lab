@@ -18,6 +18,7 @@
 namespace Oleg\OrderformBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -31,7 +32,7 @@ class AdministrativeTitleType extends AbstractType
 
 
 
-        $builder->add( 'name', 'text', array(
+        $builder->add( 'name', TextType::class, array(
             'label'=>'Admnistrative Title:',
             'required'=>false,
             'attr' => array('class' => 'form-control')
