@@ -19,6 +19,7 @@ namespace Oleg\OrderformBundle\Form;
 
 use Oleg\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -73,7 +74,7 @@ class SlideReturnRequestType extends AbstractType
                 'required'  => false,
             ));
 
-            $builder->add('datalocker','hidden', array(
+            $builder->add('datalocker',HiddenType::class, array(
                 'mapped' => false,
                 'label' => false,
                 'attr' => array('class' => 'slidereturnrequest-datalocker-field')

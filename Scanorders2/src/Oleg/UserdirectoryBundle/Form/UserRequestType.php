@@ -20,6 +20,8 @@ namespace Oleg\UserdirectoryBundle\Form;
 use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -41,7 +43,7 @@ class UserRequestType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        $builder->add( 'siteName', 'hidden', array(
+        $builder->add( 'siteName', HiddenType::class, array(
             'label'=> false,    //'Site Name:',
             //'disabled' => true,
             'required'=> true,
@@ -83,7 +85,7 @@ class UserRequestType extends AbstractType
                 'attr' => array('class'=>'form-control form-control-modif'),
         ));
         
-        $builder->add( 'email', 'email', array(
+        $builder->add( 'email', EmailType::class, array(
                 'label'=>'* Email:',
                 'required'=> true, //does not work here
                 'attr' => array('class'=>'form-control form-control-modif email-mask', 'required'=>'required'), //'required'=>'required' does not work here

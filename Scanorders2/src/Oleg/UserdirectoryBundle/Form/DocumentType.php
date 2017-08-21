@@ -20,6 +20,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -33,13 +34,13 @@ class DocumentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add('id', 'hidden', array(
+        $builder->add('id', HiddenType::class, array(
             'label' => false,
             'attr' => array('class' => 'file-upload-id')
         ));
 
         //use dummyprototypefield to get id and name prototype for adding new document
-        $builder->add('dummyprototypefield', 'hidden', array(
+        $builder->add('dummyprototypefield', HiddenType::class, array(
             'mapped' => false,
             //'disabled' => true,
             'label' => false,

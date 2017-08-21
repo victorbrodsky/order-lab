@@ -19,6 +19,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -45,7 +46,7 @@ class UserInfoType extends AbstractType
             'label' => '* Last Name:',
             'attr' => array('class'=>'form-control user-lastName') //'required'=>'required'
         ));
-        $builder->add('email', 'email', array(
+        $builder->add('email', EmailType::class, array(
             'label' => '* Preferred Email:',
             'attr' => array('class'=>'form-control user-email')
         ));

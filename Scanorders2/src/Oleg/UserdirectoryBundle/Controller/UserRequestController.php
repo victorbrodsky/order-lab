@@ -18,6 +18,7 @@
 namespace Oleg\UserdirectoryBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -617,7 +618,7 @@ class UserRequestController extends Controller
     private function createDeleteForm($id)
     {
         return $this->createFormBuilder(array('id' => $id))
-            ->add('id', 'hidden')
+            ->add('id', HiddenType::class)
             ->getForm()
             ;
     }

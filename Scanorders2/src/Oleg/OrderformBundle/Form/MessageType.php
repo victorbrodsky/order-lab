@@ -25,6 +25,7 @@ use Oleg\UserdirectoryBundle\Form\InstitutionType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormEvents;
@@ -76,7 +77,7 @@ class MessageType extends AbstractType
 
         //$helper = new FormHelper();
 
-        $builder->add( 'oid' , 'hidden', array('attr'=>array('class'=>'message-id')) );
+        $builder->add( 'oid' , HiddenType::class, array('attr'=>array('class'=>'message-id')) );
 
         //unmapped data quality form to record the MRN-Accession conflicts
         $builder->add('conflicts', CollectionType::class, array(
@@ -114,11 +115,11 @@ class MessageType extends AbstractType
 
             //echo "message type: show datalocker <br>";
 
-            $builder->add('datalocker','hidden', array(
+            $builder->add('datalocker',HiddenType::class, array(
                 "mapped" => false
             ));
 
-            $builder->add('clickedbtn','hidden', array(
+            $builder->add('clickedbtn',HiddenType::class, array(
                 "mapped" => false
             ));
 

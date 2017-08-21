@@ -18,6 +18,7 @@
 namespace Oleg\UserdirectoryBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormBuilderInterface;
 //use Symfony\Component\OptionsResolver\OptionsResolver;
 //use Doctrine\ORM\EntityRepository;
@@ -52,7 +53,7 @@ class AccessRequestType extends AbstractType
             'attr' => array('class'=>'form-control'),
         ));
         
-        $builder->add( 'email', 'email', array(
+        $builder->add( 'email', EmailType::class, array(
                 'label'=>'* Email:',
                 'required'=> true, //does not work here
                 'attr' => array('class'=>'form-control email-mask', 'required'=>'required'), //'required'=>'required' does not work here

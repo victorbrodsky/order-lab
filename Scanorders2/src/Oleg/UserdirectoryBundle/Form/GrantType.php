@@ -20,6 +20,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 
 use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -56,7 +57,7 @@ class GrantType extends AbstractType
             $standalone = true;
         }
 
-        $builder->add('id','hidden',array(
+        $builder->add('id',HiddenType::class,array(
             'label'=>false,
             'attr' => array('class'=>'grant-id-field')
         ));

@@ -20,6 +20,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -65,7 +66,7 @@ class SiteParametersType extends AbstractType
         ));
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'siteEmail' )
-        $builder->add('siteEmail','email',array(
+        $builder->add('siteEmail',EmailType::class,array(
             'label'=>'Site Email:',
             'attr' => array('class'=>'form-control')
         ));

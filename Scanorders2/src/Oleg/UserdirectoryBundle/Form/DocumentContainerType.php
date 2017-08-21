@@ -21,6 +21,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -113,7 +114,7 @@ class DocumentContainerType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        $builder->add('id', 'hidden', array(
+        $builder->add('id', HiddenType::class, array(
             'attr' => array('class' => 'documentcontainer-field-id'),
         ));
 

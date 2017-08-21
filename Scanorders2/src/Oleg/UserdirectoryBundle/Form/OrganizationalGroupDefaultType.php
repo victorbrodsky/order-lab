@@ -22,6 +22,7 @@ use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Oleg\UserdirectoryBundle\Util\TimeZoneUtil;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
@@ -43,7 +44,7 @@ class OrganizationalGroupDefaultType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        $builder->add('id','hidden',array('label'=>false));
+        $builder->add('id',HiddenType::class,array('label'=>false));
 
         $builder->add('primaryPublicUserIdType', 'entity', array(
             'class' => 'OlegUserdirectoryBundle:UsernameType',

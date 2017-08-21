@@ -26,6 +26,7 @@ use Oleg\UserdirectoryBundle\Form\TrackerType;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 //use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -50,7 +51,7 @@ class CalllogPatientType extends AbstractType
 
         //echo "calllog patient: type=".$this->params['type']."<br>";
 
-        $builder->add('id', 'hidden', array(
+        $builder->add('id', HiddenType::class, array(
             'label' => false,
             'required' => false,
             'attr' => array('class' => 'form-control patienttype-patient-id', 'type' => 'hidden'),

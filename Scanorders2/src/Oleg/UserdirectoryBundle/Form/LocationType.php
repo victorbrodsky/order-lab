@@ -23,6 +23,7 @@ use Oleg\UserdirectoryBundle\Entity\User;
 use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -75,7 +76,7 @@ class LocationType extends AbstractType
             $standalone = true;
         }
 
-        $builder->add('id', 'hidden', array(
+        $builder->add('id', HiddenType::class, array(
             'label' => false,
             'attr' => array('class' => 'user-object-id-field')
         ));

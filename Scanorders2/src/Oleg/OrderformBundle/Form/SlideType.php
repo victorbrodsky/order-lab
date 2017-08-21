@@ -20,6 +20,7 @@ namespace Oleg\OrderformBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -45,7 +46,7 @@ class SlideType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        $builder->add( 'id', 'hidden' );
+        $builder->add( 'id', HiddenType::class );
 
         $builder->add('stain', CollectionType::class, array(
             'entry_type' => StainType::class,

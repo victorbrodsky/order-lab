@@ -22,6 +22,8 @@ namespace Oleg\UserdirectoryBundle\Form;
 use Oleg\UserdirectoryBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -73,7 +75,7 @@ class InitialConfigurationType extends AbstractType
         ));
 
         //New password for the Administrator account: [ ]
-        $builder->add('password', 'repeated', array(
+        $builder->add('password', RepeatedType::class, array(
             'invalid_message' => 'Please make sure the passwords match',
             'options' => array('attr' => array('class' => 'password-field form-control')),
             'required' => true,
@@ -84,7 +86,7 @@ class InitialConfigurationType extends AbstractType
         ));
 
         //E-Mail address for the Administrator account: [ ]
-        $builder->add('siteEmail','email',array(
+        $builder->add('siteEmail',EmailType::class,array(
             'label'=>'E-Mail address for the Administrator account:',
             'attr' => array('class'=>'form-control user-email')
         ));

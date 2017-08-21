@@ -18,6 +18,7 @@
 namespace Oleg\OrderformBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -39,7 +40,7 @@ class EncounterNameType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        $builder->add('field', 'hidden', array('label'=>false));
+        $builder->add('field', HiddenType::class, array('label'=>false));
 
         $builder->add('others', ArrayFieldType::class, array(
             'data_class' => 'Oleg\OrderformBundle\Entity\EncounterName',

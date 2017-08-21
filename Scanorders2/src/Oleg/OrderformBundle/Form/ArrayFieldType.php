@@ -21,6 +21,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -43,7 +44,7 @@ class ArrayFieldType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        $builder->add('id', 'hidden');
+        $builder->add('id', HiddenType::class);
 
         if( $this->params && $this->params['cycle'] == "show") {
             $builder->add('creationdate');
@@ -52,8 +53,8 @@ class ArrayFieldType extends AbstractType
 
         if( $this->params && array_key_exists('datastructure', $this->params) && $this->params['datastructure'] == 'datastructure-patient') {
 
-            $builder->add('provider','hidden');
-            $builder->add('source','hidden');
+            $builder->add('provider',HiddenType::class);
+            $builder->add('source',HiddenType::class);
 
             //$builder->add('provider');
             //$builder->add('source');
@@ -205,7 +206,7 @@ class ArrayFieldType extends AbstractType
                 );
 
                 $formSourceModifier = function (FormInterface $form, $source = null) {
-                    $form->add('source', 'hidden', array(
+                    $form->add('source', HiddenType::class, array(
                         'empty_data' => $source
                     ));
                 };

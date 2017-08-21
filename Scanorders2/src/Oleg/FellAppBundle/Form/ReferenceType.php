@@ -23,6 +23,7 @@ use Oleg\UserdirectoryBundle\Form\DocumentType;
 use Oleg\UserdirectoryBundle\Form\GeoLocationType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -85,7 +86,7 @@ class ReferenceType extends AbstractType
             'prototype_name' => '__documentsid__',
         ));
 
-        $builder->add('email', 'email', array(
+        $builder->add('email', EmailType::class, array(
             'label' => 'E-Mail:',
             'attr' => array('class'=>'form-control')
         ));

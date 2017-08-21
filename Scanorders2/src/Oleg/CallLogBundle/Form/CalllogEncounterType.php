@@ -32,6 +32,7 @@ use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Oleg\UserdirectoryBundle\Form\TrackerType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -62,9 +63,9 @@ class CalllogEncounterType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value'],$options['form_custom_value_entity']);
 
-        $builder->add('id', 'hidden');
+        $builder->add('id', HiddenType::class);
 
-        $builder->add('status', 'hidden');
+        $builder->add('status', HiddenType::class);
 
         $builder->add('date', CollectionType::class, array(
             'entry_type' => CalllogEncounterDateType::class,

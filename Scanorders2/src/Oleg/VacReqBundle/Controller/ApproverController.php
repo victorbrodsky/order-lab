@@ -336,7 +336,8 @@ class ApproverController extends Controller
         $roles = $em->getRepository('OlegUserdirectoryBundle:Roles')->findById($roleId);
         $rolesArr = array();
         foreach( $roles as $role ) {
-            $rolesArr[$role->getName()] = $role->getAlias();
+            //$rolesArr[$role->getName()] = $role->getAlias();
+            $rolesArr[$role->getAlias()] = $role->getName(); //flipped
         }
 
         $params = array('roles'=>$rolesArr);

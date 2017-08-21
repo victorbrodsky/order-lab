@@ -21,6 +21,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -50,7 +51,7 @@ class BaseTitleType extends AbstractType
             $hasRoleSimpleView = $this->params['container']->get('security.token_storage')->getToken()->getUser()->hasRole("ROLE_USERDIRECTORY_SIMPLEVIEW");
         }
 
-        $builder->add('id','hidden',array('label'=>false));
+        $builder->add('id',HiddenType::class,array('label'=>false));
 
 //        $builder->add( 'name', 'text', array(
 //            'label'=>$this->params['label'].' Title:',   //'Admnistrative Title:',

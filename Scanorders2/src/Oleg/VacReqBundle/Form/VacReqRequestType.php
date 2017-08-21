@@ -185,7 +185,7 @@ class VacReqRequestType extends AbstractType
                 'required' => true,
                 'multiple' => false,
                 //'choice_label' => 'name',
-                'attr' => array('class' => 'combobox combobox-width', 'readonly' => true),
+                'attr' => array('class' => 'combobox combobox-width', 'readonly'=>true),
                 //'disabled' => true,    //$readOnly,   //($this->params['review'] ? true : false),
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('user')
@@ -296,7 +296,7 @@ class VacReqRequestType extends AbstractType
                 'label' => "Approver:",
                 'required' => false,
                 //'disabled' => true,
-                'attr' => array('class' => 'combobox combobox-width', 'readonly' => true),
+                'attr' => array('class' => 'combobox combobox-width', 'readonly'=>true),
             ));
         }
 
