@@ -116,10 +116,10 @@ class ListType extends AbstractType
             'label' => 'Creation Date:',
             'widget' => 'single_text',
             'required' => true,
-            'disabled' => true,
+            //'disabled' => true,
             'format' => 'MM/dd/yyyy, H:mm:ss',
             'view_timezone' => $this->params['user']->getPreferences()->getTimezone(),
-            'attr' => array('class' => 'form-control'),
+            'attr' => array('class' => 'form-control', 'readonly'=>true),
         ));
 
 

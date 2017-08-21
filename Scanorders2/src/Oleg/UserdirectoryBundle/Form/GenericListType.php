@@ -162,22 +162,22 @@ class GenericListType extends AbstractType
         if( method_exists($this->params['entity'],'getRoot') ) {
             $builder->add( 'root', null, array(
                 'label'=>'Root:',
-                'disabled' => true,
-                'attr' => array('class'=>'form-control'),
+                //'disabled' => true,
+                'attr' => array('class'=>'form-control', 'readonly'=>true),
             ));
         }
         if( method_exists($this->params['entity'],'getLft') ) {
             $builder->add( 'lft', null, array(
                 'label'=>'Left:',
-                'disabled' => true,
-                'attr' => array('class'=>'form-control'),
+                //'disabled' => true,
+                'attr' => array('class'=>'form-control', 'readonly'=>true),
             ));
         }
         if( method_exists($this->params['entity'],'getRgt') ) {
             $builder->add( 'rgt', null, array(
                 'label'=>'Right:',
-                'disabled' => true,
-                'attr' => array('class'=>'form-control'),
+                //'disabled' => true,
+                'attr' => array('class'=>'form-control', 'readonly'=>true),
             ));
         }
 
@@ -590,8 +590,8 @@ class GenericListType extends AbstractType
                 'label'=>'Suite(s):',
                 'required'=> false,
                 'multiple' => true,
-                'disabled' => true,
-                'attr' => array('class' => 'combobox combobox-width')
+                //'disabled' => true,
+                'attr' => array('class' => 'combobox combobox-width', 'readonly'=>true)
             ));
 
             $builder->add('rooms','entity',array(
@@ -600,8 +600,8 @@ class GenericListType extends AbstractType
                 'label'=>'Room(s):',
                 'required'=> false,
                 'multiple' => true,
-                'disabled' => true,
-                'attr' => array('class' => 'combobox combobox-width')
+                //'disabled' => true,
+                'attr' => array('class' => 'combobox combobox-width', 'readonly'=>true)
             ));
         }
 
@@ -614,8 +614,8 @@ class GenericListType extends AbstractType
                 'label'=>'Suite(s):',
                 'required'=> false,
                 'multiple' => true,
-                'disabled' => true,
-                'attr' => array('class' => 'combobox combobox-width')
+                //'disabled' => true,
+                'attr' => array('class' => 'combobox combobox-width', 'readonly'=>true)
             ));
 
             $builder->add('rooms','entity',array(
@@ -624,8 +624,8 @@ class GenericListType extends AbstractType
                 'label'=>'Room(s):',
                 'required'=> false,
                 'multiple' => true,
-                'disabled' => true,
-                'attr' => array('class' => 'combobox combobox-width')
+                //'disabled' => true,
+                'attr' => array('class' => 'combobox combobox-width', 'readonly'=>true)
             ));
         }
 

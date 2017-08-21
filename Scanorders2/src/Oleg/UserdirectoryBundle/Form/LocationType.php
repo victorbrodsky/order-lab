@@ -133,12 +133,16 @@ class LocationType extends AbstractType
         ));
 
         //locationTypes
+        $locationTypesAttr = array('class'=>'combobox combobox-width user-location-locationTypes');
+        if( $this->params['readonlyLocationType'] ) {
+            $locationTypesAttr['readonly'] = true;
+        }
         $builder->add('locationTypes','entity',array(
             'class' => 'OlegUserdirectoryBundle:LocationTypeList',
             'label' => "Location Type:",
-            'disabled' => $this->params['readonlyLocationType'],
+            //'disabled' => $this->params['readonlyLocationType'],
             'multiple' => true,
-            'attr' => array('class'=>'combobox combobox-width user-location-locationTypes'),
+            'attr' => $locationTypesAttr,   //array('class'=>'combobox combobox-width user-location-locationTypes'),
             'required' => false,
             'query_builder' => function(EntityRepository $er) {
                 return $er->createQueryBuilder('list')
@@ -168,6 +172,10 @@ class LocationType extends AbstractType
 
             if( $this->params['cycle'] != "new_standalone" ) {
                 $baseUserAttr = new Location();
+                $statusAttr = array('class' => 'combobox combobox-width');
+                if( $this->params['disabled'] ) {
+                    $statusAttr['readonly'] = true;
+                }
                 $builder->add('status', ChoiceType::class, array( //flipped
                     'disabled' => ($this->params['disabled'] ? true : false),
 //                    'choices' => array(
@@ -181,7 +189,7 @@ class LocationType extends AbstractType
                     'choices_as_values' => true,
                     'label' => "Status:",
                     'required' => true,
-                    'attr' => array('class' => 'combobox combobox-width'),
+                    'attr' => $statusAttr,  //array('class' => 'combobox combobox-width'),
                 ));
             }
 

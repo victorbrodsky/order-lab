@@ -81,8 +81,12 @@ class BaseTitleType extends AbstractType
         ));
 
         $baseUserAttr = new $this->params['fullClassName']();
+        $statusAttr = array('class' => 'combobox combobox-width');
+        if( $this->params['disabled'] ) {
+            $statusAttr['readonly'] = true;
+        }
         $builder->add('status', ChoiceType::class, array(
-            'disabled' => ($this->params['disabled'] ? true : false),
+            //'disabled' => ($this->params['disabled'] ? true : false),
 //            'choices'   => array(
 //                $baseUserAttr::STATUS_UNVERIFIED => $baseUserAttr->getStatusStrByStatus($baseUserAttr::STATUS_UNVERIFIED),
 //                $baseUserAttr::STATUS_VERIFIED => $baseUserAttr->getStatusStrByStatus($baseUserAttr::STATUS_VERIFIED)
@@ -94,7 +98,7 @@ class BaseTitleType extends AbstractType
             'choices_as_values' => true,
             'label' => "Status:",
             'required' => true,
-            'attr' => array('class' => 'combobox combobox-width'),
+            'attr' => $statusAttr,  //array('class' => 'combobox combobox-width'),
         ));
 
         //priority
@@ -299,8 +303,8 @@ class BaseTitleType extends AbstractType
                 'label' => 'Expected Current Post Graduate Year (PGY) level:',
                 'mapped' => false,
                 'required' => false,
-                'disabled' => true,
-                'attr' => array('class'=>'form-control pgylevelexpected-field')
+                //'disabled' => true,
+                'attr' => array('class'=>'form-control pgylevelexpected-field', 'readonly'=>true)
             ));
 
         }

@@ -58,12 +58,12 @@ class BookType extends AbstractType
 
         if( $this->params['cycle'] == "show" ) {
             $builder->add('updatedate', 'date', array(
-                'disabled' => true,
+                //'disabled' => true,
                 'label' => 'Update Date:',
                 'widget' => 'single_text',
                 'required' => false,
                 'format' => 'MM/dd/yyyy',
-                'attr' => array('class' => 'datepicker form-control'),
+                'attr' => array('class' => 'datepicker form-control', 'readonly'=>true),
             ));
         }
 

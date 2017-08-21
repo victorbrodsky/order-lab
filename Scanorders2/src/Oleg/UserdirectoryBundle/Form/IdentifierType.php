@@ -78,8 +78,12 @@ class IdentifierType extends AbstractType
 
         //status
         $baseUserAttr = new Identifier();
+        $statusAttr = array('class' => 'combobox combobox-width');
+        if( !$this->rolePlatformAdmin ) {
+            $statusAttr['readonly'] = true;
+        }
         $builder->add('status', ChoiceType::class, array(   //flipped
-            'disabled' => ($this->rolePlatformAdmin ? false : true),
+            //'disabled' => ($this->rolePlatformAdmin ? false : true),
 //            'choices'   => array(
 //                $baseUserAttr::STATUS_UNVERIFIED => $baseUserAttr->getStatusStrByStatus($baseUserAttr::STATUS_UNVERIFIED),
 //                $baseUserAttr::STATUS_VERIFIED => $baseUserAttr->getStatusStrByStatus($baseUserAttr::STATUS_VERIFIED)
@@ -91,7 +95,7 @@ class IdentifierType extends AbstractType
             'choices_as_values' => true,
             'label' => "Status:",
             'required' => true,
-            'attr' => array('class' => 'combobox combobox-width'),
+            'attr' => $statusAttr,  //array('class' => 'combobox combobox-width'),
         ));
 
         //keytypemrn

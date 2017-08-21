@@ -54,7 +54,7 @@ class EmploymentStatusType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
-            'attr' => array('class' => 'datepicker form-control')
+            'attr' => array('class' => 'datepicker form-control') //'readonly'=>$readonly
         ));
 
         $builder->add('employmentType',null,array(

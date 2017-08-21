@@ -62,71 +62,75 @@ class GrantType extends AbstractType
         ));
 
         $builder->add('grantid',null,array(
-            'disabled' => $readonly,
+            //'disabled' => $readonly,
             'label'=>'Grant ID Number:',
-            'attr' => array('class'=>'form-control grant-grantid-field')
+            'attr' => array('class'=>'form-control grant-grantid-field', 'readonly'=>$readonly)
         ));
 
         $builder->add('amount',null,array(
-            'disabled' => $readonly,
+            //'disabled' => $readonly,
             'label'=>'Total Amount:',
-            'attr' => array('class'=>'form-control grant-amount-field')
+            'attr' => array('class'=>'form-control grant-amount-field', 'readonly'=>$readonly)
         ));
 
         $builder->add('currentYearDirectCost',null,array(
-            'disabled' => $readonly,
+            //'disabled' => $readonly,
             'label'=>'Current Year Direct Cost:',
-            'attr' => array('class'=>'form-control grant-currentYearDirectCost-field')
+            'attr' => array('class'=>'form-control grant-currentYearDirectCost-field', 'readonly'=>$readonly)
         ));
 
         $builder->add('currentYearIndirectCost',null,array(
-            'disabled' => $readonly,
+            //'disabled' => $readonly,
             'label'=>'Current Year Indirect Cost:',
-            'attr' => array('class'=>'form-control grant-currentYearIndirectCost-field')
+            'attr' => array('class'=>'form-control grant-currentYearIndirectCost-field', 'readonly'=>$readonly)
         ));
 
         $builder->add('totalCurrentYearCost',null,array(
-            'disabled' => $readonly,
+            //'disabled' => $readonly,
             'label'=>'Total Current Year Cost:',
-            'attr' => array('class'=>'form-control grant-totalCurrentYearCost-field')
+            'attr' => array('class'=>'form-control grant-totalCurrentYearCost-field', 'readonly'=>$readonly)
         ));
 
         $builder->add('amountLabSpace',null,array(
-            'disabled' => $readonly,
+            //'disabled' => $readonly,
             'label'=>'Amount of Lab Space:',
-            'attr' => array('class'=>'form-control grant-amountLabSpace-field')
+            'attr' => array('class'=>'form-control grant-amountLabSpace-field', 'readonly'=>$readonly)
         ));
 
         $builder->add('startDate', 'date', array(
-            'disabled' => $readonly,
+            //'disabled' => $readonly,
             'label' => "Grant Support Start Date:",
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',    //'MM/dd/yyyy',
-            'attr' => array('class' => 'datepicker form-control grant-startDate-field'),
+            'attr' => array('class' => 'datepicker form-control grant-startDate-field', 'readonly'=>$readonly),
         ));
 
         $builder->add('endDate', 'date', array(
-            'disabled' => $readonly,
+            //'disabled' => $readonly,
             'label' => "Grant Support End Date:",
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
-            'attr' => array('class' => 'datepicker form-control grant-endDate-field'),
+            'attr' => array('class' => 'datepicker form-control grant-endDate-field', 'readonly'=>$readonly),
         ));
 
+        $sourceOrganizationAttr = array('class' => 'combobox combobox-width ajax-combobox-sourceorganization', 'type' => 'hidden');
+        if( $readonly ) {
+            $sourceOrganizationAttr['readonly'] = true;
+        }
         $builder->add('sourceOrganization', CustomSelectorType::class, array(
-            'disabled' => $readonly,
+            //'disabled' => $readonly,
             'label' => "Grant Source Organization (Sponsor):",
             'required' => false,
-            'attr' => array('class' => 'combobox combobox-width ajax-combobox-sourceorganization', 'type' => 'hidden'),
+            'attr' => $sourceOrganizationAttr,  //array('class' => 'combobox combobox-width ajax-combobox-sourceorganization', 'type' => 'hidden'),
             'classtype' => 'sourceorganization'
         ));
 
         $builder->add('grantLink', null, array(
-            'disabled' => $readonly,
+            //'disabled' => $readonly,
             'label' => 'Link to a page with more information:',
-            'attr' => array('class'=>'form-control grant-grantLink-field')
+            'attr' => array('class'=>'form-control grant-grantLink-field', 'readonly'=>$readonly)
         ));
 
 
@@ -173,11 +177,15 @@ class GrantType extends AbstractType
                 $grant = $event->getData();
                 $form = $event->getForm();
 
+                $nameAttr = array('class' => 'combobox combobox-width ajax-combobox-grant', 'type' => 'hidden');
+                if( $grant && $grant->getId() ) {
+                    $nameAttr['readonly'] = true;
+                }
                 $form->add('name', CustomSelectorType::class, array(
-                    'disabled' => ($grant && $grant->getId() ? true : false),
+                    //'disabled' => ($grant && $grant->getId() ? true : false),
                     'label' => "Grant Title:",
                     'required' => false,
-                    'attr' => array('class' => 'combobox combobox-width ajax-combobox-grant', 'type' => 'hidden'),
+                    'attr' => $nameAttr,    //array('class' => 'combobox combobox-width ajax-combobox-grant', 'type' => 'hidden'),
                     'classtype' => 'grant'
                 ));
 
@@ -220,14 +228,14 @@ class GrantType extends AbstractType
                 //'mapped' => false,
                 'required' => false,
                 'label'=>'Comment:',
-                'attr' => array('class'=>'textarea form-control grant-commentDummy-field')
+                'attr' => array('class'=>'textarea form-control grant-commentDummy-field', 'readonly'=>$readonly)
             ));
 
             $builder->add('effortDummy', CustomSelectorType::class, array(
                 //'mapped' => false,
                 'required' => false,
                 'label' => 'Percent Effort:',
-                'attr' => array('class'=>'ajax-combobox-effort grant-effortDummy-field'),
+                'attr' => array('class'=>'ajax-combobox-effort grant-effortDummy-field', 'readonly'=>$readonly),
                 //'attr' => array('class' => 'ajax-combobox-effort grant-effortDummy-field', 'type' => 'hidden', "data-inputmask"=>"'mask': '[o]', 'repeat': 10, 'greedy' : false"),
                 'classtype' => 'effort'
             ));

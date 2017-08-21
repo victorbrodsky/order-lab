@@ -72,10 +72,11 @@ class MessageCategoryFormNodeType extends FormNodeType
             $form->add('messageCategory', CustomSelectorType::class, array(
                 'label' => $label,
                 'required' => false,
-                'disabled' => true,
+                //'disabled' => true,
                 'attr' => array(
                     'class' => 'ajax-combobox-compositetree combobox-compositetree-read-only-exclusion', //combobox-compositetree-readonly-parent
                     'type' => 'hidden',
+                    'readonly' => true,
                     'data-compositetree-bundlename' => 'OrderformBundle',
                     'data-compositetree-classname' => 'MessageCategory',
                     'data-label-prefix' => '',

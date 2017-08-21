@@ -214,16 +214,24 @@ class UserType extends AbstractType
 
 
     public function userNamePreferredContactInfo($builder) {
-        
+
+        //echo "cycle=".$this->cycle."<br>";
         $readOnly = true;
-        if( $this->cycle == 'create' || $this->secAuthChecker->isGranted('ROLE_PLATFORM_ADMIN') ) {
+        //if( $this->cycle == 'create' || $this->secAuthChecker->isGranted('ROLE_PLATFORM_ADMIN') ) {
+        if( $this->cycle == 'create' ) {
+            //echo "readOnly false<br>";
             $readOnly = false;
         }
-        
+
+        $primaryPublicUserIdAttr = array('class'=>'form-control form-control-modif');
+        if( $this->cycle != 'create' ) {
+            $primaryPublicUserIdAttr['readonly'] = true;
+        }
         $builder->add('primaryPublicUserId', null, array(
             'label' => '* Primary Public User ID:',
-            'disabled' => $readOnly,   //($this->cycle == 'create' ? false : true ), //it is not possible to edit keytype for existed user
-            'attr' => array('class'=>'form-control form-control-modif')
+            //'disabled' => $readOnly,   //($this->cycle == 'create' ? false : true ), //it is not possible to edit keytype for existed user
+            //'attr' => array('class'=>'form-control', 'readonly'=>$readOnly),
+            'attr' => $primaryPublicUserIdAttr
         ));
 
         $builder->add('avatar', DocumentType::class, array(
@@ -286,11 +294,16 @@ class UserType extends AbstractType
     public function addKeytype($builder,$label='* Primary Public User ID Type:',$class='combobox combobox-width user-keytype-field') {
         $attr = array('class'=>$class);
         if( $this->readonly ) {
-            $attr['readonly'] = 'readonly';
+            $attr['readonly'] = true;
         }
+        if( $this->cycle != 'create' ) {
+            $attr['readonly'] = true;
+        }
+        //echo $this->cycle.": attr="."<br>";
+        //print_r($attr);
         $builder->add('keytype', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:UsernameType',
-            'disabled' => ($this->cycle == 'create' ? false : true ), //it is not possible to edit keytype for existed user
+            //'disabled' => ($this->cycle == 'create' ? false : true ), //it is not possible to edit keytype for existed user
             'choice_label' => 'name',
             'label' => $label,
             'required' => true,

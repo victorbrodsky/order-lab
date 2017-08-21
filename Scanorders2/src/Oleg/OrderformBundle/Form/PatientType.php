@@ -63,7 +63,8 @@ class PatientType extends AbstractType
             'entry_options' => array(
                 'form_custom_value' => $this->params
             ),
-            'disabled' => $readonly,
+            //'disabled' => $readonly,
+            'attr' => array('readonly'=>$readonly),
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
@@ -139,7 +140,8 @@ class PatientType extends AbstractType
                     'form_custom_value_genAttr' => $gen_attr,
                     'form_custom_value_attr' => $attr
                 ),
-                'disabled' => $flag,
+                //'disabled' => $flag,
+                'attr' => array('readonly'=>$flag),
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,
@@ -154,7 +156,8 @@ class PatientType extends AbstractType
                 'entry_options' => array(
                     'form_custom_value' => $this->params,
                 ),
-                'disabled' => $flag,
+                //'disabled' => $flag,
+                'attr' => array('readonly'=>$flag),
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,
@@ -177,7 +180,8 @@ class PatientType extends AbstractType
                 'entry_options' => array(
                     'form_custom_value' => $this->params,
                 ),
-                'disabled' => $flag,
+                //'disabled' => $flag,
+                'attr' => array('readonly'=>$flag),
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,
@@ -191,7 +195,8 @@ class PatientType extends AbstractType
                 'entry_options' => array(
                     'form_custom_value' => $this->params,
                 ),
-                'disabled' => $flag,
+                //'disabled' => $flag,
+                'attr' => array('readonly'=>$flag),
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,
@@ -221,7 +226,8 @@ class PatientType extends AbstractType
                 'entry_options' => array(
                     'form_custom_value' => $this->params,
                 ),
-                'disabled' => $flag,
+                //'disabled' => $flag,
+                'attr' => array('readonly'=>$flag),
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,

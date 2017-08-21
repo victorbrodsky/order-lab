@@ -117,7 +117,7 @@ class VacReqRequestType extends AbstractType
                 'multiple' => false,
                 'required' => true,
                 //'data' => 'pending',
-                'attr' => array('class' => 'horizontal_type_wide', 'readonly' => $readOnly), //horizontal_type
+                'attr' => array('class' => 'horizontal_type_wide', 'readonly'=>$readOnly), //horizontal_type
             ));
 
         }
@@ -205,6 +205,7 @@ class VacReqRequestType extends AbstractType
         $attrArr = array();
         if( $this->params['review'] ) {
             $attrArr['disabled'] = 'disabled';
+            //$attrArr['readonly'] = true;
         }
 
         $attrArr['class'] = 'vacreq-availableViaEmail';
@@ -223,7 +224,7 @@ class VacReqRequestType extends AbstractType
         $builder->add('availableViaCellPhone', null, array(
             'label' => "Available via Cell Phone:",
             'attr' => $attrArr, //array('class' => 'vacreq-availableViaCellPhone'),
-            'disabled' => ($this->params['review'] ? true : false)
+            //'disabled' => ($this->params['review'] ? true : false)
         ));
         $builder->add('availableCellPhone', null, array(
             'label' => "Cell Phone number while away on this trip:",

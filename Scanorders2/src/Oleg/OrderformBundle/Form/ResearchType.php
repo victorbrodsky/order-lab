@@ -160,8 +160,8 @@ class ResearchType extends AbstractType
             //TODO: add mask: comma is not allowed
             $builder->add('userWrappers', ScanCustomSelectorType::class, array(
                 'label' => 'Principal Investigator(s):',
-                'disabled' => true,
-                'attr' => array('class' => 'combobox combobox-width combobox-optionaluser-research', 'type' => 'hidden'),
+                //'disabled' => true,
+                'attr' => array('class' => 'combobox combobox-width combobox-optionaluser-research', 'type' => 'hidden', 'readonly'=>true),
                 'required'=>false,
                 'classtype' => 'optionalUserResearch'
             ));

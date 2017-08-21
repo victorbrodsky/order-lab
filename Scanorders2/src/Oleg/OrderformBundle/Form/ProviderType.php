@@ -31,8 +31,8 @@ class ProviderType extends AbstractType
         $builder->add('username', null, array(
             'required' => true,
             'label' => false,
-            'disabled' => true,
-            'attr' => array('class'=>'form-control form-control-modif', 'style'=>'height:27px')
+            //'disabled' => true,
+            'attr' => array('class'=>'form-control form-control-modif', 'style'=>'height:27px', 'readonly'=>true)
         ));
 
     }

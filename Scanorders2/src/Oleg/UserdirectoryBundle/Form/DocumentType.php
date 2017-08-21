@@ -41,9 +41,9 @@ class DocumentType extends AbstractType
         //use dummyprototypefield to get id and name prototype for adding new document
         $builder->add('dummyprototypefield', 'hidden', array(
             'mapped' => false,
-            'disabled' => true,
+            //'disabled' => true,
             'label' => false,
-            'attr' => array('class' => 'dummyprototypefield')
+            'attr' => array('class' => 'dummyprototypefield', 'readonly'=>true)
         ));
 
     }

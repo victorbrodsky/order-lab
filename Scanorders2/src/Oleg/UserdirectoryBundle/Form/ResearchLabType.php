@@ -83,11 +83,15 @@ class ResearchLabType extends AbstractType
             ));
         }
 
+        $locationAttr = array('class' => 'combobox combobox-width ajax-combobox-location', 'type' => 'hidden');
+        if( $readonly ) {
+            $locationAttr['readonly'] = true;
+        }
         $builder->add('location', CustomSelectorType::class, array(
-            'disabled' => $readonly,
+            //'disabled' => $readonly,
             'label' => "Location:",
             'required' => false,
-            'attr' => array('class' => 'combobox combobox-width ajax-combobox-location', 'type' => 'hidden'),
+            'attr' => $locationAttr,    //array('class' => 'combobox combobox-width ajax-combobox-location', 'type' => 'hidden'),
             'classtype' => 'location'
         ));
 

@@ -98,7 +98,8 @@ class ProcedureType extends AbstractType
                 'entry_options' => array(
                     'form_custom_value' => $this->params
                 ),
-                'disabled' => $readonly,
+                //'disabled' => $readonly,
+                'attr' => array('readonly'=>$readonly),
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,
