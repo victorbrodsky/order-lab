@@ -314,16 +314,16 @@ class AccessRequestController extends Controller
       * @Method("POST")
       * @Template("OlegUserdirectoryBundle:AccessRequest:access_request.html.twig")
       */
-    public function accessRequestAction()
+    public function accessRequestAction(Request $request)
     {
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $id = $user->getId();
         $sitename = $this->siteName;
 
-        return $this->accessRequestCreate($id,$sitename);
+        return $this->accessRequestCreate($request,$id,$sitename);
 
     }
-    public function accessRequestCreate($id,$sitename) {
+    public function accessRequestCreate($request,$id,$sitename) {
 
         //echo "create new accreq, post <br>";
 
@@ -376,7 +376,7 @@ class AccessRequestController extends Controller
         $params = $this->getParams();
         $form = $this->createForm(AccessRequestType::class, $accReq, array('form_custom_value'=>$params));
 
-        $request = $this->get('request');
+        //$request = $this->get('request');
         $form->handleRequest($request);
 
         if( $form->isSubmitted() && $form->isValid() ) {
@@ -469,7 +469,7 @@ class AccessRequestController extends Controller
         //Differentiate between the two situations:
         //A- User just logged in and requested access
         //B- User logged in to use another site, then clicked on a site they have no access to and "requested access"...
-        $request = $this->get('request');
+        //$request = $this->get('request');
         $session = $request->getSession();
         if( $session->get('sitename') == $sitename ) {
             $this->get('session')->getFlashBag()->add(
@@ -518,15 +518,15 @@ class AccessRequestController extends Controller
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:AccessRequest:access_request_list.html.twig")
      */
-    public function accessRequestIndexAction()
+    public function accessRequestIndexAction(Request $request)
     {
         if( false === $this->get('security.authorization_checker')->isGranted($this->roleEditor) ) {
             return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
         }
 
-        return $this->accessRequestIndexList($this->siteName);
+        return $this->accessRequestIndexList($request,$this->siteName);
     }
-    public function accessRequestIndexList( $sitename ) {
+    public function accessRequestIndexList( $request, $sitename ) {
 
         $em = $this->getDoctrine()->getManager();
 
@@ -547,7 +547,7 @@ class AccessRequestController extends Controller
         $dql->where("accreq.siteName = '" . $sitename . "'" );
         //$dql->where("accreq.status = ".AccessRequest::STATUS_ACTIVE." OR accreq.status = ".AccessRequest::STATUS_DECLINED." OR accreq.status = ".AccessRequest::STATUS_APPROVED);
         
-		$request = $this->get('request');
+		//$request = $this->get('request');
 		$postData = $request->query->all();
 		
 		if( !isset($postData['sort']) ) { 
@@ -564,7 +564,7 @@ class AccessRequestController extends Controller
         $paginator  = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
             $query,
-            $this->get('request')->query->get('page', 1), /*page number*/
+            $request->query->get('page', 1), /*page number*/
             $limit,     /*limit per page*/
             array(
                 'defaultSortFieldName' => 'accreq.createdate',

@@ -123,6 +123,8 @@
 
     {% if block('addcontent') is defined %}
         {% include 'OlegUserdirectoryBundle:Profile:edit_user_form.html.twig' with {addcontent: block('addcontent')} %}
+    {% else %}
+        {% include 'OlegUserdirectoryBundle:Profile:edit_user_form.html.twig' %}
     {% endif %}
 
 

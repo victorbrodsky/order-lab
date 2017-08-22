@@ -68,9 +68,9 @@ class FellAppAccessRequestController extends AccessRequestController
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:AccessRequest:access_request.html.twig")
      */
-    public function accessRequestAction()
+    public function accessRequestAction(Request $request)
     {
-        return parent::accessRequestAction();
+        return parent::accessRequestAction($request);
     }
 
     /**

@@ -118,14 +118,14 @@ class ScanAccessRequestController extends AccessRequestController
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:AccessRequest:access_request.html.twig")
      */
-    public function accessRequestAction()
+    public function accessRequestAction(Request $request)
     {
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $id = $user->getId();
         $sitename = $this->container->getParameter('scan.sitename');
 
-        return $this->accessRequestCreate($id,$sitename);
+        return $this->accessRequestCreate($request,$id,$sitename);
     }
 
 
