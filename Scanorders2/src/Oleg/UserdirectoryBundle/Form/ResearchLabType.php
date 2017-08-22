@@ -21,6 +21,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -197,7 +198,7 @@ class ResearchLabType extends AbstractType
                 ));
             }
 
-            $builder->add('piDummy', 'checkbox', array(
+            $builder->add('piDummy', CheckboxType::class, array(
                 //'mapped' => false,
                 'required' => false,
                 'label' => 'Principal Investigator of this Lab:',

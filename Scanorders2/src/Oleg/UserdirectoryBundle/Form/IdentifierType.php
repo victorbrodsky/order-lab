@@ -21,6 +21,7 @@ use Oleg\UserdirectoryBundle\Entity\Identifier;
 use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -67,12 +68,12 @@ class IdentifierType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
 
-        $builder->add('publiclyVisible', 'checkbox', array(
+        $builder->add('publiclyVisible', CheckboxType::class, array(
             'required' => false,
             'label' => 'Publicly visible:',
         ));
 
-        $builder->add('enableAccess', 'checkbox', array(
+        $builder->add('enableAccess', CheckboxType::class, array(
             'required' => false,
             'label' => 'Identifier enables system/service access:',
         ));

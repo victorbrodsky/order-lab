@@ -19,6 +19,7 @@ namespace Oleg\OrderformBundle\Form;
 
 use Oleg\OrderformBundle\Form\CustomType\ScanCustomSelectorType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -69,7 +70,7 @@ class SlideReturnRequestType extends AbstractType
 
             //echo "type=table <br>";
 
-            $builder->add('returnoption', 'checkbox', array(
+            $builder->add('returnoption', CheckboxType::class, array(
                 'label'     => 'Return all slides that belong to listed accession numbers:',
                 'required'  => false,
             ));

@@ -20,6 +20,7 @@ namespace Oleg\CallLogBundle\Form;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -241,7 +242,7 @@ class CalllogFilterType extends AbstractType
         if( $this->params['metaphone'] ) {
             $mateaphoneArr['empty_data'] = $this->params['metaphone'];
         }
-        $builder->add('metaphone', 'checkbox', $mateaphoneArr);
+        $builder->add('metaphone', CheckboxType::class, $mateaphoneArr);
 
     }
 

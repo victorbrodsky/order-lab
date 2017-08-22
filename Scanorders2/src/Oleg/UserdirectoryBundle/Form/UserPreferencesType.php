@@ -20,6 +20,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -142,13 +143,13 @@ class UserPreferencesType extends AbstractType
                 'multiple' => true,
             ));
 
-            $builder->add('excludeFromSearch', 'checkbox', array(
+            $builder->add('excludeFromSearch', CheckboxType::class, array(
                 'required' => false,
                 'label' => 'Exclude from Employee Directory search results:',
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
 
-            $builder->add('noAttendingEmail', 'checkbox', array(
+            $builder->add('noAttendingEmail', CheckboxType::class, array(
                 'required' => false,
                 'label' => 'Do not send a notification email if listed as an "attending" in a Call Log Book Entry:',
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
@@ -172,7 +173,7 @@ class UserPreferencesType extends AbstractType
                 },
             ));
 
-            $builder->add('hide', 'checkbox', array(
+            $builder->add('hide', CheckboxType::class, array(
                 'required' => false,
                 'label' => 'Hide this profile:',
                 'attr' => array('class'=>'form-control form-control-modif user-preferences-hide', 'style'=>'margin:0')

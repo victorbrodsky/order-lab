@@ -20,6 +20,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 
 use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -162,7 +163,7 @@ class TrainingType extends AbstractType
             'attr' => array('class'=>'combobox combobox-width ajax-combobox-trainingdegree')
         ));
 
-        $builder->add('appendDegreeToName', 'checkbox', array(
+        $builder->add('appendDegreeToName', CheckboxType::class, array(
             'label'     => 'Append degree to name:',
             'attr' => array('class'=>'training-field-appenddegreetoname'),
             'required'  => false,
@@ -204,7 +205,7 @@ class TrainingType extends AbstractType
                 'required' => false,
                 'classtype' => 'trainingfellowshiptitle'
             ));
-            $builder->add('appendFellowshipTitleToName', 'checkbox', array(
+            $builder->add('appendFellowshipTitleToName', CheckboxType::class, array(
                 'label'     => 'Append professional fellowship to name:',
                 'required'  => false,
             ));

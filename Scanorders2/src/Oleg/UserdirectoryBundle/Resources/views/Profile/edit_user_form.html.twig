@@ -439,8 +439,10 @@
         {#EOF per site settings#}
 
         {#{% block addcontent %}{% endblock %}#}
-        {% if addcontent is defined and addcontent %}
-            {{ addcontent|raw }}
+        {#and addcontent#}
+        {% if block('addcontent') is defined %}
+            {#{{ addcontent|raw }}#}
+            {{ block('addcontent')|raw }}
         {% endif %}
 
 

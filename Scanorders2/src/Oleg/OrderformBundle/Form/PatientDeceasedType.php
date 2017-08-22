@@ -18,6 +18,7 @@
 namespace Oleg\OrderformBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -37,7 +38,7 @@ class PatientDeceasedType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        $builder->add('deceased', 'checkbox', array(
+        $builder->add('deceased', CheckboxType::class, array(
             'label'     => 'Deceased:',
             'required'  => false,
         ));

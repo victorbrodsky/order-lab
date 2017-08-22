@@ -128,43 +128,43 @@ class VacReqFilterType extends AbstractType
 //        ));
 
         if( $this->params['requestTypeAbbreviation'] == "business-vacation" ) {
-            $builder->add('vacationRequest', 'checkbox', array(
+            $builder->add('vacationRequest', CheckboxType::class, array(
                 'label' => 'Vacation Requests',
                 'required' => false,
             ));
-            $builder->add('businessRequest', 'checkbox', array(
+            $builder->add('businessRequest', CheckboxType::class, array(
                 'label' => 'Business Travel Requests',
                 'required' => false,
             ));
         }
 
-//        $builder->add('completed', 'checkbox', array(
+//        $builder->add('completed', CheckboxType::class, array(
 //            'label' => 'Completed Requests',
 //            'required' => false,
 //        ));
-        $builder->add('pending', 'checkbox', array(
+        $builder->add('pending', CheckboxType::class, array(
             'label' => 'Pending Requests',
             'required' => false,
         ));
-        $builder->add('approved', 'checkbox', array(
+        $builder->add('approved', CheckboxType::class, array(
             'label' => 'Approved Requests',
             'required' => false,
         ));
-        $builder->add('rejected', 'checkbox', array(
+        $builder->add('rejected', CheckboxType::class, array(
             'label' => 'Rejected Requests',
             'required' => false,
         ));
 
         //cancellation request
-        $builder->add('cancellationRequest', 'checkbox', array(
+        $builder->add('cancellationRequest', CheckboxType::class, array(
             'label' => 'Requested Cancellations',
             'required' => false,
         ));
-        $builder->add('cancellationRequestApproved', 'checkbox', array(
+        $builder->add('cancellationRequestApproved', CheckboxType::class, array(
             'label' => 'Approved Cancellations',
             'required' => false,
         ));
-        $builder->add('cancellationRequestRejected', 'checkbox', array(
+        $builder->add('cancellationRequestRejected', CheckboxType::class, array(
             'label' => 'Rejected Cancellations',
             'required' => false,
         ));

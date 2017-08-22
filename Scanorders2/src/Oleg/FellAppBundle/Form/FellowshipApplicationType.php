@@ -27,6 +27,7 @@ use Oleg\UserdirectoryBundle\Form\LocationType;
 use Oleg\UserdirectoryBundle\Form\StateLicenseType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -151,7 +152,7 @@ class FellowshipApplicationType extends AbstractType
     //            'choices' => array('Yes'=>'Yes','No'=>'No'),
     //            'attr' => array('class' => 'combobox'),
     //        ));
-        $builder->add('reprimand', 'checkbox', array(
+        $builder->add('reprimand', CheckboxType::class, array(
             'label' => 'Have you ever been reprimanded, or had your license suspended or revoked in any of these states?',
             'required' => false,
             'attr' => array('class' => 'form-control fellapp-reprimand-field', 'onclick' => 'showHideWell(this)'),
@@ -174,7 +175,7 @@ class FellowshipApplicationType extends AbstractType
     //            'choices' => array('Yes'=>'Yes','No'=>'No'),
     //            'attr' => array('class' => 'combobox'),
     //        ));
-        $builder->add('lawsuit', 'checkbox', array(
+        $builder->add('lawsuit', CheckboxType::class, array(
             'label' => 'Have you ever been named in (and/or had a judgment against you) in a medical malpractice legal suit?',
             'required' => false,
             'attr' => array('class' => 'form-control fellapp-lawsuit-field', 'onclick' => 'showHideWell(this)'),

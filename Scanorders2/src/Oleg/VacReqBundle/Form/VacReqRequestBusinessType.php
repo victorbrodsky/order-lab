@@ -18,6 +18,7 @@
 namespace Oleg\VacReqBundle\Form;
 
 
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -56,7 +57,7 @@ class VacReqRequestBusinessType extends VacReqRequestBaseType {
             'disabled' => ($this->params['review'] ? true : false)
         ));
 
-        $builder->add('paidByOutsideOrganization', 'checkbox', array(
+        $builder->add('paidByOutsideOrganization', CheckboxType::class, array(
             'label' => 'Paid by Outside Organization:',
             'required' => false,
             //'attr' => array('class' => 'form-control'),

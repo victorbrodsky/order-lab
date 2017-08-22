@@ -24,6 +24,7 @@ use Oleg\UserdirectoryBundle\Form\InstitutionalWrapperType;
 use Oleg\UserdirectoryBundle\Form\InstitutionType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -183,7 +184,7 @@ class MessageType extends AbstractType
             'label' => 'Scan Deadline:',
         ));
 
-        $builder->add('returnoption', 'checkbox', array(
+        $builder->add('returnoption', CheckboxType::class, array(
             'label'     => 'Return slide(s) by this date even if not scanned:',
             'required'  => false,
         ));

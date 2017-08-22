@@ -29,6 +29,7 @@ namespace Oleg\OrderformBundle\Form\CustomType;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\SingleUserWrapperTransformer;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\UserWrapperTransformer;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -167,7 +168,8 @@ class ScanCustomSelectorType extends AbstractType {
 
     public function getParent()
     {
-        return 'text';
+        return TextType::class;
+        //return 'text';
     }
 
     public function getBlockPrefix()

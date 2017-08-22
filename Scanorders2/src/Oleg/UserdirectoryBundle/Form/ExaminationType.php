@@ -19,6 +19,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 
 use Oleg\UserdirectoryBundle\Entity\Identifier;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -119,7 +120,7 @@ class ExaminationType extends AbstractType
             'format' => 'MM/dd/yyyy',
             'attr' => array('class' => 'datepicker form-control'),
         ));
-        $builder->add('ECFMGCertificate', 'checkbox', array(
+        $builder->add('ECFMGCertificate', CheckboxType::class, array(
             'label' => false,
             'attr' => array('class'=>'form-control fellapp-ecfmgcertificate-field', 'onclick'=>'showHideWell(this)')
         ));

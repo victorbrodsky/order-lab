@@ -22,6 +22,7 @@ use Oleg\UserdirectoryBundle\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -108,7 +109,7 @@ class LabelType extends AbstractType
             'attr' => array('class' => 'btn btn-success'),
         ));
 
-        $builder->add('dotborders', 'checkbox', array(
+        $builder->add('dotborders', CheckboxType::class, array(
             'required' => false,
             'label' => "Include dot borders (use it for a full page preview):",
             'data' => false,

@@ -19,6 +19,7 @@ namespace Oleg\FellAppBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -87,42 +88,42 @@ class FellAppFilterType extends AbstractType
         ));
 
 
-        $builder->add('hidden', 'checkbox', array(
+        $builder->add('hidden', CheckboxType::class, array(
             'required'=>false,
             'label' => 'Hidden',
         ));
 
-        $builder->add('archived', 'checkbox', array(
+        $builder->add('archived', CheckboxType::class, array(
             'required'=>false,
             'label' => 'Archived',
         ));
 
-        $builder->add('complete', 'checkbox', array(
+        $builder->add('complete', CheckboxType::class, array(
             'required'=>false,
             'label' => 'Complete',
         ));
 
-        $builder->add('interviewee', 'checkbox', array(
+        $builder->add('interviewee', CheckboxType::class, array(
             'required'=>false,
             'label' => 'Interviewee',
         ));
 
-        $builder->add('active', 'checkbox', array(
+        $builder->add('active', CheckboxType::class, array(
             'required'=>false,
             'label' => 'Active',
         ));
 
-        $builder->add('reject', 'checkbox', array(
+        $builder->add('reject', CheckboxType::class, array(
             'required'=>false,
             'label' => 'Rejected',
         ));
 
-//        $builder->add('onhold', 'checkbox', array(
+//        $builder->add('onhold', CheckboxType::class, array(
 //            'required'=>false,
 //            'label' => 'On Hold',
 //        ));
 
-        $builder->add('priority', 'checkbox', array(
+        $builder->add('priority', CheckboxType::class, array(
             'required'=>false,
             'label' => 'Priority',
         ));

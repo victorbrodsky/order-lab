@@ -21,6 +21,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 use Doctrine\ORM\EntityRepository;
 use Oleg\UserdirectoryBundle\Form\PerSiteSettingsType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -61,7 +62,7 @@ class AuthorizitaionUserType extends AbstractType
             'required' => false,
         ));
 
-        $builder->add('emailNotification','checkbox', array(
+        $builder->add('emailNotification',CheckboxType::class, array(
             'label' => 'Inform authorized user by email:',
             'mapped' => false,
             'required' => false,

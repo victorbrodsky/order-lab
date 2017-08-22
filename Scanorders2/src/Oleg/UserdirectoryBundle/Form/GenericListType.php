@@ -24,6 +24,7 @@ use Oleg\UserdirectoryBundle\Entity\Institution;
 use Oleg\UserdirectoryBundle\Entity\PlatformListManagerRootList;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -506,7 +507,7 @@ class GenericListType extends AbstractType
 
         //FormNode
         if( $this->params['entity'] instanceof FormNode ) {
-            $builder->add('showLabel', 'checkbox', array(
+            $builder->add('showLabel', CheckboxType::class, array(
                 'label' => 'Show Field Label:',
                 'required' => false,
                 'attr' => array('class'=>'form-control', 'style'=>'margin:0')
@@ -516,7 +517,7 @@ class GenericListType extends AbstractType
                 'required' => false,
                 'attr' => array('class'=>'form-control')
             ));
-            $builder->add('visible', 'checkbox', array(
+            $builder->add('visible', CheckboxType::class, array(
                 'label' => 'Visible:',
                 'required' => false,
                 'attr' => array('class'=>'form-control', 'style'=>'margin:0')

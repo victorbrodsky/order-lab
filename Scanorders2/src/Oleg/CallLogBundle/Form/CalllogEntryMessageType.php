@@ -23,6 +23,7 @@ use Oleg\UserdirectoryBundle\Form\FormNode\FormNodeType;
 use Oleg\UserdirectoryBundle\Form\InstitutionType;
 use Oleg\UserdirectoryBundle\Form\FormNode\MessageCategoryFormNodeType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormEvents;
@@ -48,7 +49,7 @@ class CalllogEntryMessageType extends AbstractType
 
         $this->formConstructor($options['form_custom_value'],$options['form_custom_value_entity']);
 
-        $builder->add('addPatientToList', 'checkbox', array(
+        $builder->add('addPatientToList', CheckboxType::class, array(
             'label' => 'Add patient to the list:',
             'required' => false,
             'attr' => array('class' => 'form-control')

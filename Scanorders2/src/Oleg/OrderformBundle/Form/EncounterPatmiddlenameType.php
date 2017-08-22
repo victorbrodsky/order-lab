@@ -18,6 +18,7 @@
 namespace Oleg\OrderformBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -43,7 +44,7 @@ class EncounterPatmiddlenameType extends AbstractType
         ));
 
         if( $this->params['alias'] ) {
-            $builder->add('alias', 'checkbox', array(
+            $builder->add('alias', CheckboxType::class, array(
                 'required' => false,
                 'label' => 'Alias',
             ));

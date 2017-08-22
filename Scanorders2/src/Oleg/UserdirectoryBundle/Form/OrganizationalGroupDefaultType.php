@@ -22,6 +22,7 @@ use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Oleg\UserdirectoryBundle\Util\TimeZoneUtil;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -147,7 +148,7 @@ class OrganizationalGroupDefaultType extends AbstractType
             },
         ));
 
-        $builder->add('tooltip', 'checkbox', array(
+        $builder->add('tooltip', CheckboxType::class, array(
             'required' => false,
             'label' => 'Show tool tips for locked fields:',
             'attr' => array('class'=>'form-control', 'style'=>'margin:0')

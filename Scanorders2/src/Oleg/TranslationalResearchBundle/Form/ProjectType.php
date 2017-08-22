@@ -5,6 +5,7 @@ namespace Oleg\TranslationalResearchBundle\Form;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -120,7 +121,7 @@ class ProjectType extends AbstractType
 //            'required' => false,
 //        ));
 
-        $builder->add('funded','checkbox',array(
+        $builder->add('funded',CheckboxType::class,array(
             'required' => false,
             'label'=>"Is this Research Project Funded:",
             'attr' => array('class'=>'form-control')
@@ -171,7 +172,7 @@ class ProjectType extends AbstractType
             'attr' => array('class'=>'textarea form-control')
         ));
 
-        $builder->add('readyForReview', 'checkbox', array(
+        $builder->add('readyForReview', CheckboxType::class, array(
             'required' => false,
             'label' => "Please check the box if this project is ready for committee to review:",
             'attr' => array('class' => 'form-control')
