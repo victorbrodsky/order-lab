@@ -19,7 +19,7 @@
 {% block body -%}
     <h1>Accession creation</h1>
 
-    <form action="{{ path('accession_create') }}" method="post" {{ form_enctype(form) }}>
+    <form action="{{ path('accession_create') }}" method="post">
         {{ form_widget(form) }}
         <p>
             <button type="submit">Create</button>

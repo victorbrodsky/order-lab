@@ -158,7 +158,7 @@
                         <li id="nav-bar-calllogsearch">
                             {% set navbarfilterform = calllog_util.getNavbarFilterForm(app.request) %}
                             <form class="navbar-form navbar-left form-inline" role="search" id="calllogsearchform"
-                                  name="calllogsearchform" method="get" {{ form_enctype(navbarfilterform) }} action="{{ path('calllog_home') }}">
+                                  name="calllogsearchform" method="get" action="{{ path('calllog_home') }}">
                                 <div class="input-group">
                                     {{ form_widget(navbarfilterform.searchtype) }}
                                     <div class="form-group has-feedback">

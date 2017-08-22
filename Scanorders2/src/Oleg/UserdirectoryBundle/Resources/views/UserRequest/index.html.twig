@@ -163,7 +163,7 @@
         <tbody>
         {% for entity in entities %}
 
-            <form id="userrequestform-{{ loop.index0 }}" action="{{ path(sitename~'_accountrequest_approve') }}" method="post" {{ form_enctype(forms[loop.index0]) }}>
+            <form id="userrequestform-{{ loop.index0 }}" action="{{ path(sitename~'_accountrequest_approve') }}" method="post">
 
             {{ form_widget(forms[loop.index0].id) }}
 

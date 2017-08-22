@@ -19,6 +19,7 @@ namespace Oleg\OrderformBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -55,7 +56,7 @@ class EncounterDateType extends AbstractType
         //extra data-structure fields
         if( array_key_exists('datastructure',$this->params) && $this->params['datastructure'] == 'datastructure' ) {
             //echo "datastructure time <br>";
-            $builder->add('time', 'time', array(
+            $builder->add('time', TimeType::class, array(
                 'input'  => 'datetime',
                 'widget' => 'choice',
                 'label'=>'Encounter Time:'

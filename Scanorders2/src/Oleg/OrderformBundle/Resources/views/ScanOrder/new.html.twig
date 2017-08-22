@@ -36,7 +36,7 @@
 
     <input type="hidden" id="formtype" value="single" />
     
-    <form action="{{ path('singleorder_create') }}" method="post" {{ form_enctype(form_part) }}>
+    <form action="{{ path('singleorder_create') }}" method="post">
     {{ form_start(form) }}
         
         {{ form_errors(form) }}

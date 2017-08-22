@@ -25,6 +25,7 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -216,7 +217,7 @@ class DocumentContainerType extends AbstractType
                     'label' => $this->params['document.datetime.label'],
                 ));
 
-                $builder->add('time', 'time', array(
+                $builder->add('time', TimeType::class, array(
                     'input'  => 'datetime',
                     'widget' => 'choice',
                     'label' => $this->params['document.time.label']

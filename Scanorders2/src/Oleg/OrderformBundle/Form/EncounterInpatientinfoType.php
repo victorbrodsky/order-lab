@@ -20,6 +20,7 @@ namespace Oleg\OrderformBundle\Form;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -60,7 +61,7 @@ class EncounterInpatientinfoType extends AbstractType
             'label'=>'Admission Date:',
         ));
 
-        $builder->add('admissiontime', 'time', array(
+        $builder->add('admissiontime', TimeType::class, array(
             'input'  => 'datetime',
             'widget' => 'choice',
             'label'=>'Admission Time:'
@@ -81,7 +82,7 @@ class EncounterInpatientinfoType extends AbstractType
             'label'=>'Discharge Date:',
         ));
 
-        $builder->add('dischargetime', 'time', array(
+        $builder->add('dischargetime', TimeType::class, array(
             'input'  => 'datetime',
             'widget' => 'choice',
             'label'=>'Discharge Time:'

@@ -22,6 +22,7 @@ use Oleg\UserdirectoryBundle\Util\TimeZoneUtil;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -56,7 +57,7 @@ class CalllogEncounterDateType extends AbstractType
 
         //extra data-structure fields
         //echo "encounter time <br>";
-        $builder->add('time', 'time', array(
+        $builder->add('time', TimeType::class, array(
             'input' => 'datetime',
             'widget' => 'choice',
             'label' => 'Encounter Time:',

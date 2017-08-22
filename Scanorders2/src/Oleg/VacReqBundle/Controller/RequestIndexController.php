@@ -422,7 +422,10 @@ class RequestIndexController extends Controller
         //create filter form
         $filterform = $this->createForm(VacReqFilterType::class, null, array('form_custom_value'=>$params));
 
+        //Use the Symfony\Component\Form\Form::handleRequest method instead. If you want to test whether the form was submitted separately, you can use the Symfony\Component\Form\Form::isSubmitted method
         $filterform->submit($request);
+        //$filterform->handleRequest($request);
+
         //echo "<pre>";
         //print_r($filterform['startdate']);
         //echo "</pre>";
@@ -452,6 +455,7 @@ class RequestIndexController extends Controller
         } else {
             $subjectUser = null;
         }
+        //echo "user=".$subjectUser."<br>";
 
         if( $filterform->has('submitter') ) {
             $submitter = $filterform['submitter']->getData();

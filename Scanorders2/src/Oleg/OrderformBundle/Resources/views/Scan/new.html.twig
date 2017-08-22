@@ -25,7 +25,7 @@
 
     <h2>Scan creation</h2>
 
-    <form action="{{ path('scan_create') }}" method="post" {{ form_enctype(form) }}>
+    <form action="{{ path('scan_create') }}" method="post">
         {{ form_errors(form) }}
              
         {{ form_label(form.slide.accession, '* Accession + Part + Block (i.e. S12-99998 B1)') }} 
