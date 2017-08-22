@@ -86,12 +86,11 @@ class ScanUtilController extends UtilController {
      * @Route("/stain", name="get-stain")
      * @Method("GET")
      */
-    public function getStainsAction() {
+    public function getStainsAction(Request $request) {
 
         $em = $this->getDoctrine()->getManager();
         //$addwhere = "";
 
-        $request = $this->get('request');
         $opt = trim( $request->get('opt') );
 
         //echo "opt=".$opt."<br>";
@@ -134,7 +133,7 @@ class ScanUtilController extends UtilController {
      * @Route("/procedure", name="get-procedure")
      * @Method("GET")
      */
-    public function getProcedureAction() {
+    public function getProcedureAction(Request $request) {
 
         $em = $this->getDoctrine()->getManager();
 
@@ -147,7 +146,6 @@ class ScanUtilController extends UtilController {
 //        $output = $query->getResult();
 //        //array_unshift($output, $empty);
 
-        $request = $this->get('request');
         $opt = trim( $request->get('opt') );
 
         $query = $em->createQueryBuilder()
@@ -175,7 +173,7 @@ class ScanUtilController extends UtilController {
      * @Route("/organ", name="get-organ")
      * @Method("GET")
      */
-    public function getOrgansAction() {
+    public function getOrgansAction(Request $request) {
 
         $em = $this->getDoctrine()->getManager();
 
@@ -188,7 +186,6 @@ class ScanUtilController extends UtilController {
 //        $output = $query->getResult();
 //        //array_unshift($output, $empty);
 
-        $request = $this->get('request');
         $opt = trim( $request->get('opt') );
 
         $query = $em->createQueryBuilder()
@@ -214,7 +211,7 @@ class ScanUtilController extends UtilController {
      * @Route("/scanregion", name="get-scanregion")
      * @Method("GET")
      */
-    public function getScanRegionAction() {
+    public function getScanRegionAction(Request $request) {
 
 //        $em = $this->getDoctrine()->getManager();
 //        $query = $em->createQuery(
@@ -270,7 +267,6 @@ class ScanUtilController extends UtilController {
 //        }
 
         //////////////// 3) add custom added values by order id (if id is set) //////////////////////
-        $request = $this->get('request');
         $id = trim( $request->get('opt') );
 
         if( $id && $id != "undefined" ) {
@@ -330,7 +326,7 @@ class ScanUtilController extends UtilController {
      * @Route("/delivery", name="get-orderdelivery")
      * @Method("GET")
      */
-    public function getOrderDeliveryAction() {
+    public function getOrderDeliveryAction(Request $request) {
 
         $arr = array();
 
@@ -372,7 +368,6 @@ class ScanUtilController extends UtilController {
         //////////////////////////////////// END OF 2 ///////////////////////////////////////////
 
         //////////////// 3) add custom added values by order id (if id is set) //////////////////////
-        $request = $this->get('request');
         $id = trim( $request->get('opt') );
 
         if( $id && $id != "undefined" ) {
@@ -425,13 +420,12 @@ class ScanUtilController extends UtilController {
      * @Route("/partname", name="get-partname")
      * @Method("GET")
      */
-    public function getPartnameAction() {
+    public function getPartnameAction(Request $request) {
 
         $formHelper = new FormHelper();
         $arr = $formHelper->getPart();
 
         //add custom added values by order id
-        $request = $this->get('request');
         $id = trim( $request->get('opt') );
 
         if( $id && $id != "undefined" ) {
@@ -463,13 +457,12 @@ class ScanUtilController extends UtilController {
      * @Route("/blockname", name="get-blockname")
      * @Method("GET")
      */
-    public function getBlocknameAction() {
+    public function getBlocknameAction(Request $request) {
 
         $formHelper = new FormHelper();
         $arr = $formHelper->getBlock();
 
         //add custom added values by order id
-        $request = $this->get('request');
         $id = trim( $request->get('opt') );
 
         if( $id && $id != "undefined" ) {
@@ -501,11 +494,10 @@ class ScanUtilController extends UtilController {
      * @Route("/accessiontype", name="get-accessiontype")
      * @Method("GET")
      */
-    public function getAccessionTypeAction() {
+    public function getAccessionTypeAction(Request $request) {
 
         $em = $this->getDoctrine()->getManager();
 
-        $request = $this->get('request');
         $opt = trim( $request->get('opt') );
         $type = trim( $request->get('type') );
 
@@ -546,12 +538,11 @@ class ScanUtilController extends UtilController {
      * @Route("/mrntype", name="get-mrntype")
      * @Method("GET")
      */
-    public function getMrnTypeAction() {
+    public function getMrnTypeAction(Request $request) {
 
         $simple = false;
         $em = $this->getDoctrine()->getManager();
 
-        $request = $this->get('request');
         $opt = trim( $request->get('opt') );
         $type = trim( $request->get('type') );
         $exception = trim( $request->get('exception') );
@@ -608,11 +599,9 @@ class ScanUtilController extends UtilController {
      * @Route("/slidetype", name="get-slidetype")
      * @Method("GET")
      */
-    public function getSlideTypesAction() {
+    public function getSlideTypesAction(Request $request) {
 
         $em = $this->getDoctrine()->getManager();
-
-        $request = $this->get('request');
 
         $query = $em->createQueryBuilder()
             ->from('OlegOrderformBundle:SlideType', 'list')
@@ -637,11 +626,10 @@ class ScanUtilController extends UtilController {
      * @Route("/optionaluserresearch", name="get-optionaluserresearch")
      * @Method("GET")
      */
-    public function getOptionalUserAction() {
+    public function getOptionalUserAction(Request $request) {
 
         $em = $this->getDoctrine()->getManager();
 
-        $request = $this->get('request');
         $holderId = trim( $request->get('opt') ); //associated object ProjectTitleTree id
         $routeName = $request->get('_route');
 
@@ -723,13 +711,12 @@ class ScanUtilController extends UtilController {
      * @Route("/account", name="get-account")
      * @Method("GET")
      */
-    public function getAccountAction() {
+    public function getAccountAction(Request $request) {
 
         $whereServicesList = "";
 
         $em = $this->getDoctrine()->getManager();
 
-        $request = $this->get('request');
         $opt = trim( $request->get('opt') );
 
         $query = $em->createQueryBuilder()
@@ -758,12 +745,11 @@ class ScanUtilController extends UtilController {
      * @Route("/urgency", name="get-urgency")
      * @Method("GET")
      */
-    public function getUrgencyAction() {
+    public function getUrgencyAction(Request $request) {
 
 
         $em = $this->getDoctrine()->getManager();
 
-        $request = $this->get('request');
         $opt = trim( $request->get('opt') );
 
         $query = $em->createQueryBuilder()

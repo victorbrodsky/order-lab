@@ -823,19 +823,18 @@ class ScanOrderController extends Controller {
 
         //echo "routename=".$routename.", search=".$search.", searchObject=".$searchObject."<br>";
 
-        return $this->getSearchViewAction( $routename, $service, $filter, $search, $searchObject, $page );
+        return $this->getSearchViewAction( $request, $routename, $service, $filter, $search, $searchObject, $page );
     }
 
     //render the search result a single search objects
-    public function getSearchViewAction( $routeName, $service, $filter, $search, $searchObject, $page ) {
-        $viewArr = $this->getSearchViewArray( $routeName, $service, $filter, $search, $searchObject, $page );
+    public function getSearchViewAction( $request, $routeName, $service, $filter, $search, $searchObject, $page ) {
+        $viewArr = $this->getSearchViewArray( $request, $routeName, $service, $filter, $search, $searchObject, $page );
 
         //////// record to EventLog ////////
         if( !$page || $page == "" ) {
             $em = $this->getDoctrine()->getManager();
             $user = $this->get('security.token_storage')->getToken()->getUser();
             $roles = $user->getRoles();
-            $request = $this->get('request');
 
             $count = count($viewArr['pagination']);
             if( $count == $viewArr['limit'] ) {
@@ -867,14 +866,14 @@ class ScanOrderController extends Controller {
 
 
     //render the search results for all search objects
-    public function getSearchAllViewAction( $routeName, $service, $filter, $search, $searchObjects, $page ) {
+    public function getSearchAllViewAction( $request, $routeName, $service, $filter, $search, $searchObjects, $page ) {
 
         $renderedViewArr = array();
 
         $resArr = array();
 
         foreach( $searchObjects as $searchObject ) {
-            $viewArr = $this->getSearchViewArray( $routeName, $service, $filter, $search, $searchObject, $page );
+            $viewArr = $this->getSearchViewArray( $request, $routeName, $service, $filter, $search, $searchObject, $page );
 
             //$renderedView = $this->render('OlegOrderformBundle:ScanOrder:one-search-result.html.twig', $viewArr);
             $renderedView = $this->renderView('OlegOrderformBundle:ScanOrder:one-search-result.html.twig', $viewArr);
@@ -889,7 +888,6 @@ class ScanOrderController extends Controller {
             $em = $this->getDoctrine()->getManager();
             $user = $this->get('security.token_storage')->getToken()->getUser();
             $roles = $user->getRoles();
-            $request = $this->get('request');
 
             $count = count($viewArr['pagination']);
             if( $count == $viewArr['limit'] ) {
@@ -921,7 +919,7 @@ class ScanOrderController extends Controller {
         return $this->render('OlegOrderformBundle:ScanOrder:all-search-result.html.twig', array('views'=>$renderedViewArr));
     }
 
-    public function getSearchViewArray( $routeName, $service, $filter, $search, $searchObject, $page ) {
+    public function getSearchViewArray( $request, $routeName, $service, $filter, $search, $searchObject, $page ) {
 
         $securityUtil = $this->get('order_security_utility');
         $filter = $securityUtil->mysql_escape_mimic($filter);
@@ -1168,7 +1166,7 @@ class ScanOrderController extends Controller {
 
         $pagination = $paginator->paginate(
             $query,
-            $this->get('request')->query->get('page', $page), /*page number*/
+            $request->query->get('page', $page), /*page number*/
             $limit  /*limit per page*/
         );
 

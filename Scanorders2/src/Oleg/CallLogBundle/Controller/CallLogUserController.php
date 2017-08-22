@@ -42,14 +42,14 @@ class CallLogUserController extends UserController
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:Profile:edit_user.html.twig")
      */
-    public function editUserAction($id)
+    public function editUserAction(Request $request, $id)
     {
         $secUtil = $this->get('user_security_utility');
         if( !$secUtil->isCurrentUser($id) && false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
-        $editUser = $this->editUser($id, $this->container->getParameter('calllog.sitename'));
+        $editUser = $this->editUser($request,$id, $this->container->getParameter('calllog.sitename'));
 
         if( $editUser === false ) {
             return $this->redirect( $this->generateUrl('calllog-nopermission') );

@@ -775,14 +775,13 @@ class AccessRequestController extends Controller
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
      */
-    public function accessRequestManagementAction( $id )
+    public function accessRequestManagementAction( Request $request, $id )
     {
 
         if (false === $this->get('security.authorization_checker')->isGranted($this->roleEditor)) {
             return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
         }
 
-        $request = $this->get('request');
         $em = $this->getDoctrine()->getManager();
 
         //$entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
@@ -1028,14 +1027,13 @@ class AccessRequestController extends Controller
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
      */
-    public function authorizationManagementAction( $id )
+    public function authorizationManagementAction( Request $request, $id )
     {
 
         if (false === $this->get('security.authorization_checker')->isGranted($this->roleEditor)) {
             return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
         }
 
-        $request = $this->get('request');
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);

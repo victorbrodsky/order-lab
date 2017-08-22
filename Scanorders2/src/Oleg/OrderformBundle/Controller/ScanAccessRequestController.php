@@ -136,13 +136,13 @@ class ScanAccessRequestController extends AccessRequestController
      * @Method("GET")
      * @Template("OlegOrderformBundle:AccessRequest:access_request_list.html.twig")
      */
-    public function accessRequestIndexAction()
+    public function accessRequestIndexAction(Request $request)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_PROCESSOR') ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
-        return $this->accessRequestIndexList($this->container->getParameter('scan.sitename'));
+        return $this->accessRequestIndexList($request,$this->container->getParameter('scan.sitename'));
     }
 
 
@@ -243,9 +243,9 @@ class ScanAccessRequestController extends AccessRequestController
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
      */
-    public function accessRequestManagementAction($id )
+    public function accessRequestManagementAction(Request $request, $id )
     {
-        return parent::accessRequestManagementAction($id);
+        return parent::accessRequestManagementAction($request,$id);
     }
 
     /**
@@ -283,9 +283,9 @@ class ScanAccessRequestController extends AccessRequestController
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
      */
-    public function authorizationManagementAction( $id )
+    public function authorizationManagementAction( Request $request, $id )
     {
-        return parent::authorizationManagementAction($id);
+        return parent::authorizationManagementAction($request,$id);
     }
 
     /**

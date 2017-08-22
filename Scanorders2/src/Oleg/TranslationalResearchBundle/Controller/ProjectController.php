@@ -34,7 +34,7 @@ class ProjectController extends Controller
      * @Template("OlegTranslationalResearchBundle:Project:index.html.twig")
      * @Method("GET")
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -58,7 +58,7 @@ class ProjectController extends Controller
         $paginator  = $this->get('knp_paginator');
         $projects = $paginator->paginate(
             $query,
-            $this->get('request')->query->get('page', 1),   /*page number*/
+            $request->query->get('page', 1),   /*page number*/
             $limit,                                         /*limit per page*/
             $paginationParams
         );

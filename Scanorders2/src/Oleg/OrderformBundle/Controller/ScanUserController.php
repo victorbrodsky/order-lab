@@ -58,7 +58,7 @@ class ScanUserController extends UserController
         }
 
         $params = array('filter'=>$filter,'time'=>$time);
-        $res = $this->indexUser($params);
+        $res = $this->indexUser($request,$params);
         $res['filter'] = $filter;
 
         return $res;
@@ -70,14 +70,14 @@ class ScanUserController extends UserController
      * @Method("GET")
      * @Template("OlegOrderformBundle:Profile:edit_user.html.twig")
      */
-    public function showUserAction($id)
+    public function showUserAction(Request $request, $id)
     {
         //$secUtil = $this->get('user_security_utility');
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USER') ) {    //!$secUtil->isCurrentUser($id) &&
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
-        $userViewArr = $this->showUser($id,$this->container->getParameter('scan.sitename'));
+        $userViewArr = $this->showUser($request,$id,$this->container->getParameter('scan.sitename'));
 
         if( $userViewArr === false ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
@@ -104,14 +104,14 @@ class ScanUserController extends UserController
      * @Method("GET")
      * @Template("OlegOrderformBundle:Profile:edit_user.html.twig")
      */
-    public function editUserAction($id)
+    public function editUserAction(Request $request, $id)
     {
         $secUtil = $this->get('user_security_utility');
         if( !$secUtil->isCurrentUser($id) && false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_ADMIN') ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
-        $userViewArr = $this->editUser($id,$this->container->getParameter('scan.sitename'));
+        $userViewArr = $this->editUser($request,$id,$this->container->getParameter('scan.sitename'));
 
         if( $userViewArr === false ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
@@ -282,13 +282,13 @@ class ScanUserController extends UserController
      * @Method("GET")
      * @Template()
      */
-    public function lockUnlockChangeAction($id, $status) {
+    public function lockUnlockChangeAction(Request $request, $id, $status) {
 
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_ADMIN') ) {
             return $this->redirect( $this->generateUrl('scan-nopermission') );
         }
 
-        $this->lockUnlock($id, $status, $this->container->getParameter('scan.sitename'));
+        $this->lockUnlock($request, $id, $status, $this->container->getParameter('scan.sitename'));
 
         return $this->redirect($this->generateUrl($this->container->getParameter('scan.sitename').'_listusers'));
     }

@@ -42,11 +42,10 @@ class EducationalResearchController extends Controller {
      * @Route("/research/{id}/edit", name="research_edit")
      * @Method("GET")
      */
-    public function editAction($id)
+    public function editAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $request = $this->container->get('request');
         $routeName = $request->get('_route');
         //echo "routeName=".$routeName; //mrntype
 
@@ -82,7 +81,6 @@ class EducationalResearchController extends Controller {
     {
         $em = $this->getDoctrine()->getManager();
 
-        $request = $this->container->get('request');
         $routeName = $request->get('_route');
         $pieces = explode("_", $routeName);
         $type = $pieces[0];

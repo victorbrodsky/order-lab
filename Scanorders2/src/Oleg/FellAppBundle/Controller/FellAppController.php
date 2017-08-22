@@ -308,7 +308,7 @@ class FellAppController extends Controller {
         $paginator  = $this->get('knp_paginator');
         $fellApps = $paginator->paginate(
             $query,
-            $this->get('request')->query->get('page', 1), /*page number*/
+            $request->query->get('page', 1), /*page number*/
             //$request->query->getInt('page', 1),
             $limit      /*limit per page*/
         );

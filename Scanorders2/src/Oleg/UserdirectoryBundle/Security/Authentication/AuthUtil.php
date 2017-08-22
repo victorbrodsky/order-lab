@@ -26,6 +26,8 @@ namespace Oleg\UserdirectoryBundle\Security\Authentication;
 
 
 use Oleg\OrderformBundle\Security\Util\AperioUtil;
+use Symfony\Component\HttpFoundation\RequestStack;
+
 //use Symfony\Component\Security\Core\Util\StringUtils;
 
 class AuthUtil {
@@ -33,15 +35,17 @@ class AuthUtil {
     private $container;        //container
     private $em;        //entity manager
     private $logger;
+    protected $requestStack;
 
     private $supportedUsertypesAperio = array('aperio');
     private $supportedUsertypesLdap = array('wcmc-cwid');
     private $supportedUsertypesLocal = array('local-user');
 
-    public function __construct($container,$em)
+    public function __construct( $container, $em, RequestStack $requestStack=null )
     {
         $this->container = $container;
         $this->em = $em;
+        $this->requestStack = $requestStack;
         $this->logger = $container->get('logger');
     }
 
@@ -431,7 +435,9 @@ class AuthUtil {
     public function addEventLog( $subjectUser, $identifierKeytypeStr, $identifierUsername ) {
         //record edit user to Event Log
         $event = "Logged in using identifier keytype '$identifierKeytypeStr' and username '$identifierUsername'";
-        $request = $this->container->get('request'); //http://localhost/order/directory/login_check
+
+        //$request = $this->container->get('request'); //http://localhost/order/directory/login_check
+        $request = $this->requestStack->getCurrentRequest();
 
         //get sitename as "fellowship-applications" or "directory"
         $currentUrl = $request->getUri();

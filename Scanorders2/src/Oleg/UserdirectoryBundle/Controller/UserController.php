@@ -92,7 +92,7 @@ class UserController extends Controller
 //
 //        //user search
 //        $params = array('time'=>'current_only','objectname'=>'usersbyids','objectid'=>$idsArr,'excludeCurrentUser'=>true);
-//        $res = $this->indexUser( $params );
+//        $res = $this->indexUser($request,$params);
 //        $pagination = $res['entities'];
 //
 //        return $this->render('OlegUserdirectoryBundle::Admin/users-content.html.twig',
@@ -121,7 +121,7 @@ class UserController extends Controller
 
         //user search
         $params = array('time'=>'current_only','objectname'=>$tablename,'objectid'=>$objectid,'excludeCurrentUser'=>false,'subjectUserId'=>$subjectUserId);
-        $res = $this->indexUser( $params ); //use function getTheSameObject
+        $res = $this->indexUser($request,$params); //use function getTheSameObject
         $pagination = $res['entities'];
 
         //echo "pagination count=".count($pagination)."<br>";
@@ -193,7 +193,7 @@ class UserController extends Controller
 
         //user search
         $params = array('time'=>'current_only','objectname'=>$tablename,'objectid'=>$objectid);
-        $res = $this->indexUser( $params );
+        $res = $this->indexUser($request,$params);
         $pagination = $res['entities'];
 
         $title = "Current employees: ".$tablename." ".$objectname;
@@ -307,7 +307,7 @@ class UserController extends Controller
 
             //user search
             $params = array('time'=>'current_only','search'=>$search,'userid'=>$userid);
-            $res = $this->indexUser($params);
+            $res = $this->indexUser($request,$params);
             $pagination = $res['entities'];
             $roles = $res['roles'];
         }
@@ -361,7 +361,7 @@ class UserController extends Controller
         }
 
         $params = array('filter'=>$filter,'time'=>$time,'limitFlag'=>100);
-        $res = $this->indexUser($params);
+        $res = $this->indexUser($request,$params);
 
         if( $filter == "" ) {
             if( $routeName == "employees_listusers_previous" ) {
@@ -380,7 +380,7 @@ class UserController extends Controller
 
     //$time: 'current_only' - search only current, 'past_only' - search only past, 'all' - search current and past (no filter)
     //public function indexUser( $filter=null, $time='all', $limitFlag=true, $search=null, $userid=null ) {
-    public function indexUser( $params ) {
+    public function indexUser( $request, $params ) {
 
         $filter = ( array_key_exists('filter', $params) ? $params['filter'] : null);
         $time = ( array_key_exists('time', $params) ? $params['time'] : 'all');
@@ -398,7 +398,7 @@ class UserController extends Controller
         //echo "filter=".$filter."<br>";
         //echo "search=".$search."<br>";
 
-        $request = $this->get('request');
+        //$request = $this->get('request');
         $postData = $request->query->all();
 
         $sort = null;
@@ -543,7 +543,7 @@ class UserController extends Controller
             $paginator  = $this->get('knp_paginator');
             $pagination = $paginator->paginate(
                 $query,
-                $this->get('request')->query->get('page', 1), /*page number*/
+                $request->query->get('page', 1), /*page number*/
                 $limit /*limit per page*/
                 //array('wrap-queries'=>true) //don't need it with "doctrine/orm": "v2.4.8"
             );
@@ -1355,7 +1355,7 @@ class UserController extends Controller
 
         //$filter=null, $time='all', $limitFlag=true, $search=null, $userid=null
 //        $params = array('filter'=>'Pending Administrative Review','time'=>'current_only','limitFlag'=>$limitFlag);
-//        $res = $this->indexUser( $params );
+//        $res = $this->indexUser($request,$params);
 //        $pendingOld = count($res['entities']);
 //        echo "pendingOld=".$pendingOld."<br>";
         
@@ -1894,7 +1894,7 @@ class UserController extends Controller
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:Profile:edit_user_only.html.twig")
      */
-    public function showOnlyUserAction($id)
+    public function showOnlyUserAction(Request $request, $id)
     {
         //$secUtil = $this->get('user_security_utility');
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USER') ) { //!$secUtil->isCurrentUser($id) &&
@@ -1902,7 +1902,7 @@ class UserController extends Controller
         }
 
         //echo "id=".$id."<br>";
-        $showUser = $this->showUser($id,$this->container->getParameter('employees.sitename'),false);
+        $showUser = $this->showUser($request,$id,$this->container->getParameter('employees.sitename'),false);
 
         if( $showUser === false ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
@@ -1926,7 +1926,7 @@ class UserController extends Controller
         $userid = $request->query->get('userid');
         //echo "userid=".$userid."<br>";
 
-        $showUserArr = $this->showUser($userid,$this->container->getParameter('employees.sitename'),false);
+        $showUserArr = $this->showUser($request,$userid,$this->container->getParameter('employees.sitename'),false);
 
         $template = $this->render('OlegUserdirectoryBundle:Profile:edit_user_only.html.twig',$showUserArr)->getContent();
 
@@ -1944,14 +1944,14 @@ class UserController extends Controller
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:Profile:edit_user.html.twig")
      */
-    public function showUserAction($id)
+    public function showUserAction(Request $request, $id)
     {
         //$secUtil = $this->get('user_security_utility');
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USER') ) { //!$secUtil->isCurrentUser($id) &&
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
-        $showUser = $this->showUser($id,$this->container->getParameter('employees.sitename'));
+        $showUser = $this->showUser($request,$id,$this->container->getParameter('employees.sitename'));
 
         if( $showUser === false ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
@@ -1959,12 +1959,12 @@ class UserController extends Controller
 
         return $showUser;
     }
-    public function showUser($id, $sitename=null, $fulluser=true) {
+    public function showUser($request, $id, $sitename=null, $fulluser=true) {
 
         ini_set('max_execution_time', 300); //300 seconds = 5 minutes
         ini_set('memory_limit', '3072M');
 
-        $request = $this->container->get('request');
+        //$request = $this->container->get('request');
         $em = $this->getDoctrine()->getManager();
 
         //echo "id=".$id."<br>";
@@ -2040,14 +2040,14 @@ class UserController extends Controller
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:Profile:edit_user.html.twig")
      */
-    public function editUserAction($id)
+    public function editUserAction(Request $request, $id)
     {
         $secUtil = $this->get('user_security_utility');
         if( !$secUtil->isCurrentUser($id) && false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
-        $editUser = $this->editUser($id, $this->container->getParameter('employees.sitename'));
+        $editUser = $this->editUser($request,$id, $this->container->getParameter('employees.sitename'));
 
         if( $editUser === false ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
@@ -2056,12 +2056,10 @@ class UserController extends Controller
         return $editUser;
     }
 
-    public function editUser($id,$sitename=null) {
+    public function editUser( $request, $id, $sitename=null ) {
 
         ini_set('max_execution_time', 300); //300 seconds = 5 minutes
         ini_set('memory_limit', '3072M');
-
-        $request = $this->container->get('request');
 
         $em = $this->getDoctrine()->getManager();
 
@@ -3349,18 +3347,18 @@ class UserController extends Controller
      * @Method("GET")
      * @Template()
      */
-    public function lockUnlockChangeAction($id, $status) {
+    public function lockUnlockChangeAction(Request $request, $id, $status) {
 
         if (false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR')) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
-        $this->lockUnlock($id, $status, $this->container->getParameter('employees.sitename'));
+        $this->lockUnlock($request, $id, $status, $this->container->getParameter('employees.sitename'));
 
         return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename').'_listusers'));
     }
 
-    public function lockUnlock($id, $status, $sitename) {
+    public function lockUnlock($request, $id, $status, $sitename) {
 
         $em = $this->getDoctrine()->getManager();
 
@@ -3379,7 +3377,6 @@ class UserController extends Controller
         }
 
         //record edit user to Event Log
-        $request = $this->container->get('request');
         $userAdmin = $this->get('security.token_storage')->getToken()->getUser();
         $event = "User information of ".$user." has been changed by ".$userAdmin.":"."<br>";
         $event = $event . "User status changed to ".$status;
@@ -3961,28 +3958,28 @@ class UserController extends Controller
         ////////////// WCM Pathology Employees //////////////
         $filter = "WCM Pathology Employees";
         $params = array('filter'=>$filter,'time'=>'current_only','limitFlag'=>null);
-        $res = $this->indexUser($params);
+        $res = $this->indexUser($request,$params);
         $users = $res['entities'];
         ////////////// EOF WCM Pathology Employees //////////////
 
         ////////////// WCM Pathology Employees Download Faculty //////////////
         $filterFaculty = "WCM Pathology Employees Download Faculty";
         $paramsFaculty = array('filter'=>$filterFaculty,'time'=>'current_only','limitFlag'=>null);
-        $res = $this->indexUser($paramsFaculty);
+        $res = $this->indexUser($request,$paramsFaculty);
         $usersFaculty = $res['entities'];
         ////////////// EOF WCM Pathology Employees //////////////
 
         ////////////// With Administrative Title /////////////
         $filterAdmin = "With Administrative Title";
         $adminParams = array('filter'=>$filterAdmin,'time'=>'current_only','limitFlag'=>null);
-        $resAdmin = $this->indexUser($adminParams);
+        $resAdmin = $this->indexUser($request,$adminParams);
         $administrativeUsers = $resAdmin['entities'];
         ////////////// EOF With Administrative Title /////////////
 
         ////////////// Administrative /////////////
 //        $filterAdminDivision = "Administration Division";
 //        $adminDivisionParams = array('filter'=>$filterAdminDivision,'time'=>'current_only','limitFlag'=>null);
-//        $resAdminDivision = $this->indexUser($adminDivisionParams);
+//        $resAdminDivision = $this->indexUser($request,$adminDivisionParams);
 //        $administrationDivisionUsers = $resAdminDivision['entities'];
         ////////////// EOF Administrative /////////////
 
@@ -4023,14 +4020,14 @@ class UserController extends Controller
         ///////////////////// Housestaff - Residents //////////////////////////
         $filterHousestaffResidents = "WCM or NYP Pathology Residents";
         $housestaffResidentsParams = array('filter'=>$filterHousestaffResidents,'time'=>'current_only','limitFlag'=>null);
-        $resHousestaffResidents = $this->indexUser($housestaffResidentsParams);
+        $resHousestaffResidents = $this->indexUser($request,$housestaffResidentsParams);
         $housestaffResidents = $resHousestaffResidents['entities'];
         ///////////////////// EOF Housestaff //////////////////////////
 
         ///////////////////// Housestaff - Fellows //////////////////////////
         $filterHousestaffFellows = "WCM or NYP Pathology Fellows";
         $housestaffFellowsParams = array('filter'=>$filterHousestaffFellows,'time'=>'current_only','limitFlag'=>null);
-        $resHousestaffFellows = $this->indexUser($housestaffFellowsParams);
+        $resHousestaffFellows = $this->indexUser($request,$housestaffFellowsParams);
         $housestaffFellows = $resHousestaffFellows['entities'];
         ///////////////////// EOF Housestaff //////////////////////////
 
@@ -4196,7 +4193,7 @@ class UserController extends Controller
         ////////////// WCM Pathology Employees Download Faculty //////////////
         $filterFaculty = "WCM Pathology Employees Download Faculty";
         $paramsFaculty = array('filter'=>$filterFaculty,'time'=>'current_only','limitFlag'=>null);
-        $res = $this->indexUser($paramsFaculty);
+        $res = $this->indexUser($request,$paramsFaculty);
         $facultyUsers = $res['entities'];
         //echo "facultyUsers count=".count($facultyUsers)."<br>";
         ////////////// EOF WCM Pathology Employees //////////////
@@ -4204,7 +4201,7 @@ class UserController extends Controller
         ////////////// WCM Pathology Employees //////////////
         $filter = "WCM Pathology Employees";
         $params = array('filter'=>$filter,'time'=>'current_only','limitFlag'=>null);
-        $res = $this->indexUser($params);
+        $res = $this->indexUser($request,$params);
         $users = $res['entities'];
         ////////////// EOF WCM Pathology Employees //////////////
 

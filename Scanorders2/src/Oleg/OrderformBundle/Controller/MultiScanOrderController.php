@@ -104,7 +104,6 @@ class MultiScanOrderController extends Controller {
             return $this->redirect( $this->generateUrl('scan_home') );
         }
 
-        $request = $this->container->get('request');
         $routeName = $request->get('_route');
         //echo "routeName=".$routeName;
 
@@ -342,7 +341,7 @@ class MultiScanOrderController extends Controller {
      * @Method("GET")
      * @Template("OlegOrderformBundle:MultiScanOrder:new.html.twig")
      */
-    public function newMultyAction()
+    public function newMultyAction(Request $request)
     {
 
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_SUBMITTER') ) {
@@ -421,7 +420,6 @@ class MultiScanOrderController extends Controller {
         $res = new Research();
         $entity->setResearch($res);
 
-        $request = $this->container->get('request');
         $routeName = $request->get('_route');
         //echo "newMultyAction: routeName=".$routeName."<br>";
 

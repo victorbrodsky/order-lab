@@ -164,7 +164,7 @@ class ComplexListController extends Controller
         $paginator  = $this->get('knp_paginator');
         $entities = $paginator->paginate(
             $query,
-            $this->get('request')->query->get('page', 1), /*page number*/
+            $request->query->get('page', 1), /*page number*/
             $limit /*limit per page*/
             ,array('defaultSortFieldName' => 'ent.orderinlist', 'defaultSortDirection' => 'asc')
         );

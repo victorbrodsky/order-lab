@@ -80,9 +80,9 @@ class FellAppAccessRequestController extends AccessRequestController
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:AccessRequest:access_request_list.html.twig")
      */
-    public function accessRequestIndexAction()
+    public function accessRequestIndexAction(Request $request)
     {
-        return parent::accessRequestIndexAction();
+        return parent::accessRequestIndexAction($request);
     }
 
     /**
@@ -100,9 +100,9 @@ class FellAppAccessRequestController extends AccessRequestController
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
      */
-    public function accessRequestManagementAction($id )
+    public function accessRequestManagementAction(Request $request, $id )
     {
-        return parent::accessRequestManagementAction($id);
+        return parent::accessRequestManagementAction($request,$id);
     }
 
     /**
@@ -140,9 +140,9 @@ class FellAppAccessRequestController extends AccessRequestController
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:AccessRequest:access_request_management.html.twig")
      */
-    public function authorizationManagementAction( $id )
+    public function authorizationManagementAction( Request $request, $id )
     {
-        return parent::authorizationManagementAction($id);
+        return parent::authorizationManagementAction($request,$id);
     }
 
     /**

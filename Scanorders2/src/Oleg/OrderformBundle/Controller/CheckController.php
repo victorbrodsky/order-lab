@@ -132,11 +132,10 @@ class CheckController extends Controller {
      * @Route("/patient/check", name="get-patientdata")
      * @Method("GET")   //TODO: use POST?
      */
-    public function getPatientAction() {
+    public function getPatientAction(Request $request) {
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        $request = $this->get('request');
         $key = trim( $request->get('key') );
         $keytype = trim( $request->get('extra') );
         $inst = trim( $request->get('inst') );
@@ -210,13 +209,12 @@ class CheckController extends Controller {
      * @Route("/patient/generate", name="create-mrn")
      * @Method("GET")
      */
-    public function createPatientAction() {
+    public function createPatientAction(Request $request) {
 
 //        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
 //            return $this->render('OlegOrderformBundle:Security:login.html.twig');
 //        }
 
-        $request = $this->get('request');
         $inst = trim( $request->get('inst') );
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -297,11 +295,10 @@ class CheckController extends Controller {
      * @Route("/accession/check", name="get-accession")
      * @Method("GET")
      */
-    public function getAccessionAction() {
+    public function getAccessionAction(Request $request) {
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        $request = $this->get('request');
         $key = trim( $request->get('key') );
         $keytype = trim( $request->get('extra') );  //id or string of accession type
         $inst = trim( $request->get('inst') );
@@ -467,13 +464,12 @@ class CheckController extends Controller {
      * @Route("/accession/generate", name="create-accession")
      * @Method("GET")
      */
-    public function createAccessionAction() {
+    public function createAccessionAction(Request $request) {
 
 //        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
 //            return $this->render('OlegOrderformBundle:Security:login.html.twig');
 //        }
 
-        $request = $this->get('request');
         $inst = trim( $request->get('inst') );
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -550,9 +546,8 @@ class CheckController extends Controller {
      * @Route("/part/check", name="get-part")
      * @Method("GET")
      */
-    public function getPartAction() {
+    public function getPartAction(Request $request) {
 
-        $request = $this->get('request');
         $key = trim( $request->get('key') );
         $accession = trim( $request->get('parentkey') ); //need accession number to check if part exists in DB
         $keytype = trim( $request->get('parentextra') );
@@ -613,9 +608,8 @@ class CheckController extends Controller {
      * @Route("/part/generate", name="create-part")
      * @Method("GET")
      */
-    public function createPartAction() {
+    public function createPartAction(Request $request) {
 
-        $request = $this->get('request');
         $accession = trim( $request->get('parentkey') );
         $keytype = trim( $request->get('parentextra') );
         $inst = trim( $request->get('inst') );
@@ -688,10 +682,9 @@ class CheckController extends Controller {
      * @Route("/block/check", name="get-block")
      * @Method("GET")
      */
-    public function getBlockAction() {
+    public function getBlockAction(Request $request) {
 
-        $request = $this->get('request');
-        $key = trim($request->get('key'));       
+        $key = trim($request->get('key'));
         $partname = trim($request->get('parentkey')); //need partname to check if part exists in DB
         $accession = trim($request->get('grandparentkey')); //need accession number to check if part exists in DB 
         $keytype = trim($request->get('grandparentextra'));    
@@ -751,10 +744,7 @@ class CheckController extends Controller {
      * @Route("/block/generate", name="create-block")
      * @Method("GET")
      */
-    public function createBlockAction() {
-
-
-        $request = $this->get('request');           
+    public function createBlockAction(Request $request) {
         $partname = trim($request->get('parentkey'));
         $accession = trim($request->get('grandparentkey')); //need accession number to check if part exists in DB 
         $keytype = trim( $request->get('grandparentextra') );

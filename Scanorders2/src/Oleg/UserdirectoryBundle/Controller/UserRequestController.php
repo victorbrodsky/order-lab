@@ -95,7 +95,7 @@ class UserRequestController extends Controller
         $paginator  = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
             $query,
-            $this->get('request')->query->get('page', 1), /*page number*/
+            $request->query->get('page', 1), /*page number*/
             $limit/*limit per page*/
         );
 
