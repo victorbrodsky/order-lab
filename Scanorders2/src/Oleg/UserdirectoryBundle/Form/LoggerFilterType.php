@@ -21,6 +21,7 @@ use Doctrine\ORM\EntityRepository;
 use Oleg\UserdirectoryBundle\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -133,7 +134,7 @@ class LoggerFilterType extends AbstractType
         ));
 
 
-        $builder->add('startdate', 'datetime', array(
+        $builder->add('startdate', DateTimeType::class, array(
             'label' => false, //'Start Date/Time:',
             'required' => false,
             'widget' => 'single_text',
@@ -141,7 +142,7 @@ class LoggerFilterType extends AbstractType
             'attr' => array('class' => 'form-control datetimepicker', 'placeholder' => 'Start Date/Time')
         ));
 
-        $builder->add('enddate', 'datetime', array(
+        $builder->add('enddate', DateTimeType::class, array(
             'label' => false, //'End Date/Time:',
             'required' => false,
             'widget' => 'single_text',

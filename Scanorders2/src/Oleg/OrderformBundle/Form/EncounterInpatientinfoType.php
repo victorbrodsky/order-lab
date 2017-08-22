@@ -19,6 +19,7 @@ namespace Oleg\OrderformBundle\Form;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
@@ -51,7 +52,7 @@ class EncounterInpatientinfoType extends AbstractType
                 },
         ));
 
-        $builder->add('admissiondate','datetime',array(
+        $builder->add('admissiondate',DateTimeType::class,array(
             'widget' => 'single_text',
             'format' => 'MM/dd/yyyy',
             'attr' => array('class' => 'datepicker form-control', 'style'=>'margin-top: 0;'),
@@ -72,7 +73,7 @@ class EncounterInpatientinfoType extends AbstractType
             'attr' => array('class'=>'textarea form-control')
         ));
 
-        $builder->add('dischargedate','datetime',array(
+        $builder->add('dischargedate',DateTimeType::class,array(
             'widget' => 'single_text',
             'format' => 'MM/dd/yyyy',
             'attr' => array('class' => 'datepicker form-control', 'style'=>'margin-top: 0;'),

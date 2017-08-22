@@ -21,6 +21,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -39,7 +40,7 @@ class FellAppFilterType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        $builder->add('startDate', 'datetime', array(
+        $builder->add('startDate', DateTimeType::class, array(
             'label' => false, //'Start Date',
             'widget' => 'single_text',
             //'placeholder' => 'Start Date',

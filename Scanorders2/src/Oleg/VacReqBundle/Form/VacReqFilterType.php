@@ -24,6 +24,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -82,7 +83,7 @@ class VacReqFilterType extends AbstractType
         $this->addGroup($builder);
 
         if( $this->params['requestTypeAbbreviation'] == "business-vacation" ) {
-            $builder->add('academicYear', 'datetime', array(
+            $builder->add('academicYear', DateTimeType::class, array(
                 'label' => false,
                 'widget' => 'single_text',
                 'required' => false,

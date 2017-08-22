@@ -22,6 +22,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -40,7 +41,7 @@ class CalllogFilterType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        $builder->add('startDate', 'datetime', array(
+        $builder->add('startDate', DateTimeType::class, array(
             'label' => false,
             'widget' => 'single_text',
             'required' => false,
@@ -48,7 +49,7 @@ class CalllogFilterType extends AbstractType
             'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'Start Date'), //'title'=>'Start Year', 'data-toggle'=>'tooltip',
         ));
 
-        $builder->add('endDate', 'datetime', array(
+        $builder->add('endDate', DateTimeType::class, array(
             'label' => false,
             'widget' => 'single_text',
             'required' => false,
