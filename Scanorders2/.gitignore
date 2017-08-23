@@ -6,6 +6,9 @@
 /web/Uploaded/
 #/app/bootstrap.php.cache
 /app/cache/*
+/var/*
+#/var/cache/*
+#/var/logs/*
 /app/config/parameters.yml
 /app/logs/*
 /build/

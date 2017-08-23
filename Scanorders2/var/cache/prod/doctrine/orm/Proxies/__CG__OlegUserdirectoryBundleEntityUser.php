@@ -1181,6 +1181,17 @@ class User extends \Oleg\UserdirectoryBundle\Entity\User implements \Doctrine\OR
     /**
      * {@inheritDoc}
      */
+    public function getLocked()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getLocked', []);
+
+        return parent::getLocked();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function setSuffix($suffix)
     {
 
