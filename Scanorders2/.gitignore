@@ -6,7 +6,24 @@
 /web/Uploaded/
 #/app/bootstrap.php.cache
 /app/cache/*
+
+#Symfony 3
+/node_modules/
+/phpunit.xml
+/.php_cs
 /var/*
+!/var/cache
+/var/cache/*
+!var/cache/.gitkeep
+!/var/data
+!/var/logs
+/var/logs/*
+!var/logs/.gitkeep
+!/var/sessions
+/var/sessions/*
+!var/sessions/.gitkeep
+!var/SymfonyRequirements.php
+
 #/var/cache/*
 #/var/logs/*
 /app/config/parameters.yml

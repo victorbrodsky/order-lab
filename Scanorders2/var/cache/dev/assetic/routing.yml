@@ -1,5 +1,0 @@
-_assetic:
-    resource: .
-    type: assetic
-_app:
-    resource: 'C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2\app/config/routing_dev.yml'

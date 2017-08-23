@@ -1,3 +1,0 @@
-1535057395
-%255BOleg%255CUserdirectoryBundle%255CEntity%255CListAbstract%255D%255B1%255D
-a:2:{i:0;O:37:"Doctrine\ORM\Mapping\MappedSuperclass":1:{s:15:"repositoryClass";N;}i:1;O:42:"Doctrine\ORM\Mapping\HasLifecycleCallbacks":0:{}}

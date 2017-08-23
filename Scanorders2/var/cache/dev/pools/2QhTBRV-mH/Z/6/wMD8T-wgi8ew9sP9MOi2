@@ -1,3 +1,0 @@
-1535063049
-%255BOleg%255CUserdirectoryBundle%255CEntity%255CUser%2524medicalTitles%255D%255B1%255D
-a:2:{i:0;O:30:"Doctrine\ORM\Mapping\OneToMany":6:{s:8:"mappedBy";s:4:"user";s:12:"targetEntity";s:12:"MedicalTitle";s:7:"cascade";a:2:{i:0;s:7:"persist";i:1;s:6:"remove";}s:5:"fetch";s:4:"LAZY";s:13:"orphanRemoval";b:0;s:7:"indexBy";N;}i:1;O:28:"Doctrine\ORM\Mapping\OrderBy":1:{s:5:"value";a:3:{s:11:"orderinlist";s:3:"ASC";s:8:"priority";s:3:"ASC";s:7:"endDate";s:3:"ASC";}}}
