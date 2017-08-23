@@ -53,8 +53,8 @@ class AuthUtil {
 
     public function LocalAuthentication($token, $userProvider) {
 
-        echo "LocalAuthentication<br>";
-        echo "username=".$token->getUsername()."<br>";
+        //echo "LocalAuthentication<br>";
+        //echo "username=".$token->getUsername()."<br>";
         //exit();
         //return NULL;
 
@@ -63,7 +63,7 @@ class AuthUtil {
         $usernameClean = $userSecUtil->createCleanUsername($token->getUsername());
 
         $usernamePrefix = $userSecUtil->getUsernamePrefix($token->getUsername());
-        echo "usernamePrefix=".$usernamePrefix."<br>";
+        //echo "usernamePrefix=".$usernamePrefix."<br>";
         if( in_array($usernamePrefix, $this->supportedUsertypesLocal) == false ) {
             $this->logger->notice('Local Authentication: the '.$token->getUsername().' with usertype '.$usernamePrefix.' can not be authenticated by ' . implode(', ',$this->supportedUsertypesLocal));
             return NULL;
@@ -72,7 +72,7 @@ class AuthUtil {
 
         //check if user already exists in DB
         $user = $this->findUserByUsername($token->getUsername());
-        echo "Local DB user =".$user."<br>";
+        //echo "Local DB user =".$user."<br>";
         //exit();
 
         if( $user ) {
@@ -83,9 +83,9 @@ class AuthUtil {
             //check password
             $encoder = $this->container->get('security.password_encoder');
             $encoded = $encoder->encodePassword($user, $token->getCredentials());
-            echo "token getPassword=".$token->getCredentials()."<br>";
-            echo "getPassword=".$user->getPassword()."<br>";
-            echo "encoded=".$encoded."<br>";
+            //echo "token getPassword=".$token->getCredentials()."<br>";
+            //echo "getPassword=".$user->getPassword()."<br>";
+            //echo "encoded=".$encoded."<br>";
             //exit();
             //echo "compare: [".$user->getPassword()."] == [$encoded] <br>";
             //if( StringUtils::equals($user->getPassword(), $encoded) ) { //depreciated

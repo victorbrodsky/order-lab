@@ -32,3 +32,4 @@ c70eae,::1,GET,http://localhost/order/app_dev.php/js/91e40db_jquery-ui_2.js,1503
 ff2b10,::1,GET,http://localhost/order/app_dev.php/directory/util/common/user-data-search/user/100/prefetchmin,1503504351,,200
 fb3ea0,::1,GET,http://localhost/order/app_dev.php/directory/util/common/user-data-search/cwid/100/prefetchmin,1503504353,,200
 8c390a,::1,GET,http://localhost/order/app_dev.php/directory/util/common/user-data-search/admintitle/100/prefetchmin,1503504354,,200
+7b471e,::1,GET,http://localhost/order/app_dev.php/directory/common/setserveractive,1503504591,,200
