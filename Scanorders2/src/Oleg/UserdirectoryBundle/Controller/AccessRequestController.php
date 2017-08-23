@@ -901,7 +901,8 @@ class AccessRequestController extends Controller
             $originalRoles[] = $item;
         }
 
-        $form->submit($request);
+//        $form->submit($request);
+        $form->handleRequest($request);
 
         if( $form->isValid() ) {
 
@@ -1191,7 +1192,8 @@ class AccessRequestController extends Controller
         $users = $paginator->paginate(
             $query,
             $request->query->get('page', 1),   /*page number*/
-            $limit                             /*limit per page*/
+            $limit,                             /*limit per page*/
+            array('wrap-queries'=>true)         //don't need it with "doctrine/orm": "v2.4.8"
             //array('defaultSortFieldName' => 'infos.displayName', 'defaultSortDirection' => 'asc')
         );
 

@@ -544,8 +544,8 @@ class UserController extends Controller
             $pagination = $paginator->paginate(
                 $query,
                 $request->query->get('page', 1), /*page number*/
-                $limit /*limit per page*/
-                //array('wrap-queries'=>true) //don't need it with "doctrine/orm": "v2.4.8"
+                $limit, /*limit per page*/
+                array('wrap-queries'=>true) //don't need it with "doctrine/orm": "v2.4.8"
             );
         } else {
             //echo "dont use paginator <br>";

@@ -74,8 +74,8 @@ function prep()
     php $PROJECT_LOCAL_PATH/bin/console assetic:dump --env=prod --no-debug
 
     echo "*** Set permissions ***"
-    chown -R www-data:www-data $PROJECT_LOCAL_PATH/app/cache
-    chown -R www-data:www-data $PROJECT_LOCAL_PATH/app/logs
+    chown -R www-data:www-data $PROJECT_LOCAL_PATH/var/cache
+    chown -R www-data:www-data $PROJECT_LOCAL_PATH/var/logs
 }
 
 

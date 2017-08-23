@@ -21,7 +21,8 @@
 
     {% if filterform is defined and filterform and routename is defined and routename %}
         <p>
-        <form action="{{ path(routename) }}" method="get" class="well form-search" name="form-search">
+        {#<form action="{{ path(routename) }}" method="get" class="well form-search" name="form-search">#}
+        {{ form_start(filterform, {'class':"well form-search", 'name':"form-search", 'action': path(routename), 'method': 'GET'}) }}
             <div class="row">
                 <div class="col-xs-3"></div>
 
@@ -36,7 +37,8 @@
                 <div class="col-xs-3"></div>
             </div>
             {{ form_rest(filterform) }}
-        </form>
+        {#</form>#}
+        {{ form_end(filterform) }}
         </p>
     <br>
     {% endif %}

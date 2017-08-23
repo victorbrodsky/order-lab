@@ -115,7 +115,8 @@
     {% endif %}
 
 
-    <form id="accessrequest_management" action="{{ actionPath }}" method="POST">
+    {#<form id="accessrequest_management" action="{{ actionPath }}" method="POST">#}
+    {{ form_start(form, {'id': 'accessrequest_management', 'action': actionPath, 'method': 'POST'}) }}
 
         {#{% if routename == sitename~'_accessrequest_management' %}#}
             {#<div style="display: none">#}
@@ -167,8 +168,8 @@
 
         </div>
 
-    </form>
-
+    {#</form>#}
+    {{ form_end(form) }}
 
 
 {% endblock %}

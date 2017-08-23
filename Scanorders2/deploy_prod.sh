@@ -67,8 +67,8 @@ function prep(){
     #php $PROJECT_LOCAL_PATH/app/console assetic:watch
 
     echo "*** Set permissions ***"
-    chown -R www-data:www-data $PROJECT_LOCAL_PATH/app/cache
-    chown -R www-data:www-data $PROJECT_LOCAL_PATH/app/logs
+    chown -R www-data:www-data $PROJECT_LOCAL_PATH/var/cache
+    chown -R www-data:www-data $PROJECT_LOCAL_PATH/var/logs
 }
 
 

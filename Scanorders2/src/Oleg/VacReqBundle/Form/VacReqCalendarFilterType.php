@@ -55,7 +55,7 @@ class VacReqCalendarFilterType extends AbstractType
                 'multiple' => false,
                 'attr' => array('class' => 'combobox combobox-width organizationalInstitutions', 'placeholder' => 'Organizational Group'),
                 'choices' => $this->params['organizationalInstitutions'],
-                'choices_as_values' => true,
+                //'choices_as_values' => true,
             );
 
             if( $this->params['groupId'] ) {

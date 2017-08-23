@@ -39,6 +39,7 @@ use Oleg\UserdirectoryBundle\Util\ErrorHelper;
 class ListController extends Controller
 {
 
+    //@Method("GET") //TODO: why method GET does not work for handleRequest https://symfony.com/doc/current/form/action_method.html
     /**
      * Lists all entities.
      *
@@ -144,7 +145,6 @@ class ListController extends Controller
      * @Route("/list/life-forms/", name="lifeforms-list")
      * @Route("/list/position-track-types/", name="positiontracktypes-list")
      *
-     * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
      */
     public function indexAction(Request $request)
@@ -265,9 +265,12 @@ class ListController extends Controller
         $dqlParameters = array();
         $filterform = $this->createForm(ListFilterType::class, null);
         //$filterform->submit($request);
-        $filterform->submit($request);
+        $filterform->handleRequest($request);
         $search = $filterform['search']->getData();
-        //echo "search=".$search."<br>";
+        echo "search=".$search."<br>";
+        //$search = $request->request->get('filter')['search'];
+        //$search = $request->query->get('search');
+        //echo "2search=".$search."<br>";
 
         if( $search ) {
             $searchStr = "ent.id LIKE :search OR ent.name LIKE :search OR ent.abbreviation LIKE :search OR ent.shortname LIKE :search OR ent.description LIKE :search";

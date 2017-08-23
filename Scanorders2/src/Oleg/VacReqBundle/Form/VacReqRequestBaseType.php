@@ -109,7 +109,7 @@ class VacReqRequestBaseType extends AbstractType
                     'Approved' => 'approved',
                     'Rejected' => 'rejected'
                 ),
-                'choices_as_values' => true,
+                //'choices_as_values' => true,
                 'label' => false,   //"Status:",
                 'expanded' => true,
                 'multiple' => false,

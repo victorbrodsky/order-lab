@@ -86,7 +86,7 @@ class VacReqRequestType extends AbstractType
                     'Approved' => 'approved',
                     'Rejected' => 'rejected'
                 ),
-                'choices_as_values' => true,
+                //'choices_as_values' => true,
                 'label' => false,   //"Status:",
                 'expanded' => true,
                 'multiple' => false,
@@ -114,7 +114,7 @@ class VacReqRequestType extends AbstractType
                     'Approved' => 'approved',
                     'Rejected' => 'rejected'
                 ),
-                'choices_as_values' => true,
+                //'choices_as_values' => true,
                 'label' => false,   //"Status:",
                 'expanded' => true,
                 'multiple' => false,
@@ -272,14 +272,14 @@ class VacReqRequestType extends AbstractType
             'label' => "Source Academic Year:",
             'attr' => array('class' => 'combobox combobox-width vacreq-sourceYear'),
             'choices' => $this->params['sourceYearRanges'],
-            'choices_as_values' => true,
+            //'choices_as_values' => true,
         ));
 
         $builder->add('destinationYear', ChoiceType::class, array( //flipped
             'label' => "Destination Academic Year:",
             'attr' => array('class' => 'combobox combobox-width vacreq-destinationYear'),
             'choices' => $this->params['destinationYearRanges'],
-            'choices_as_values' => true,
+            //'choices_as_values' => true,
         ));
 
         $builder->add('carryOverDays', null, array(
@@ -351,7 +351,7 @@ class VacReqRequestType extends AbstractType
             'required' => $requiredInst,
             'attr' => $institutionAttr, //array('class' => 'combobox combobox-width vacreq-institution', 'placeholder' => 'Organizational Group'),
             'choices' => $this->params['organizationalInstitutions'],
-            'choices_as_values' => true,
+            //'choices_as_values' => true,
             //'disabled' => ($this->params['review'] ? true : false)
         ));
         $builder->get('institution')
@@ -398,7 +398,7 @@ class VacReqRequestType extends AbstractType
                 'required' => $requiredTentInst,
                 'attr' => $tentativeInstitutionAttr, //array('class' => 'combobox combobox-width vacreq-tentativeInstitution', 'placeholder' => 'Organizational Group'),
                 'choices' => $this->params['tentativeInstitutions'],
-                'choices_as_values' => true,
+                //'choices_as_values' => true,
                 //'disabled' => ($this->params['review'] ? true : false)
             ));
             $builder->get('tentativeInstitution')

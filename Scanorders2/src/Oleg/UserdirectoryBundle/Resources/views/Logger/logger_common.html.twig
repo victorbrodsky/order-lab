@@ -24,7 +24,8 @@
 
 
     <p>
-    <form action="{{ path(routename,{'id':userid}) }}" method="get" class="well form-search">
+    {#<form action="{{ path(routename,{'id':userid}) }}" method="get" class="well form-search">#}
+    {{ form_start(loggerfilter, {'class':"well form-search", 'action': path(routename,{'id':userid}), 'method': 'GET'}) }}
 
         <div class="row">
 
@@ -129,7 +130,8 @@
         </div>
 
         {{ form_rest(loggerfilter) }}
-    </form>
+    {#</form>#}
+    {{ form_end(loggerfilter) }}
     </p>
 
 

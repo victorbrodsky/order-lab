@@ -384,7 +384,8 @@ class LoggerController extends Controller
         //$filterform = $this->createForm(new LoggerFilterType($params), null);
         $filterform = $this->createLoggerFilter($params);
 
-        $filterform->submit($request);
+        //$filterform->submit($request);
+        $filterform->handleRequest($request);
 
         $startdate = $filterform['startdate']->getData();
         $enddate = $filterform['enddate']->getData();

@@ -163,7 +163,8 @@
         <tbody>
         {% for entity in entities %}
 
-            <form id="userrequestform-{{ loop.index0 }}" action="{{ path(sitename~'_accountrequest_approve') }}" method="post">
+            {#<form id="userrequestform-{{ loop.index0 }}" action="{{ path(sitename~'_accountrequest_approve') }}" method="post">#}
+            {{ form_start(form, {'id':"userrequestform-"~loop.index0, 'action': path(sitename~'_accountrequest_approve'), 'method': 'POST'}) }}
 
             {{ form_widget(forms[loop.index0].id) }}
 
@@ -250,7 +251,8 @@
                     {% endif %}
                 </td>
             </tr>
-            </form>
+            {#</form>#}
+            {{ form_end(forms[loop.index0]) }}
         {% endfor %}
         </tbody>
     </table>

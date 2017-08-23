@@ -67,7 +67,8 @@
 
             <br><br>
 
-            <form action="{{ path(sitename~'_access_request_create') }}" method="post">
+            {#<form action="{{ path(sitename~'_access_request_create') }}" method="post">#}
+            {{ form_start(form, {'action': path(sitename~'_access_request_create'), 'method': 'POST'}) }}
 
                 <div id="confirm-div">
                 <p>
@@ -133,7 +134,8 @@
 
                 {{ form_rest(form) }}
 
-            </form>
+            {#</form>#}
+            {{ form_end(form) }}
 
             {% include 'OlegUserdirectoryBundle::Default/footer.html.twig' %}
 

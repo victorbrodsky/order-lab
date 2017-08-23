@@ -34,8 +34,9 @@
     {% endif %}
 
 
-    <p>
-    <form action="{{ path(routename) }}" method="get" class="well form-search">
+    <div class="well form-search">
+    {#<form action="{{ path(routename) }}" method="get" class="well form-search">#}
+    {{ form_start(filterform, {'action': path(routename)}) }}
         <div class="row">
             <div class="col-xs-12">
 
@@ -50,8 +51,9 @@
             </div>
         </div>
         {{ form_rest(filterform) }}
-    </form>
-    </p>
+    {#</form>#}
+    {{ form_end(filterform) }}
+    </div>
 
     {{ listmacros.listIndex( entities, pathbase, withCreateNewEntityLink, linkToListId ) }}
 

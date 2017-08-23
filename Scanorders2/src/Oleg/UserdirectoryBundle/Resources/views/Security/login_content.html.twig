@@ -60,6 +60,7 @@
 
 
 <form id="login-form" class="form-signin" action="{{ path(sitename~'_login_check') }}" method="post">
+{#{{ form_start(form, {'id':"login-form", 'class':"form-signin" 'action': path(sitename~'_login_check'), 'method': 'POST'}) }}#}
 
     <div class="row">
     <div class="col-xs-12">
@@ -94,7 +95,7 @@
     <button class="btn btn-lg btn-primary btn-block" type="submit" >Log In</button>
 
 </form>
-
+{#{{ form_end(form) }}#}
 
 <div class="text-center">
 

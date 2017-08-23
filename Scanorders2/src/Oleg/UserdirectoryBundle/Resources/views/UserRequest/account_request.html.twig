@@ -84,7 +84,8 @@
 
         <br>
 
-        <form id="accountrequestform" action="{{ path(sitename~'_accountrequest_create') }}" method="post">
+        {#<form id="accountrequestform" action="{{ path(sitename~'_accountrequest_create') }}" method="post">#}
+        {{ form_start(form, {'id': "accountrequestform",'action': path(sitename~'_accountrequest_create'), 'method': 'POST'}) }}
 
             {{ form_errors(form) }}
 
@@ -201,7 +202,8 @@
                 <a href="{{ path(employees_sitename~'_login') }}">Return to Log In page</a>
             </p>
 
-        </form>
+        {#</form>#}
+        {{ form_end(form) }}
 
         {#dummy login form with style="display:none"#}
         <form id="loginform" action="{{ path(employees_sitename~'_login_check') }}" method="post" style="display:none">

@@ -1620,7 +1620,7 @@ class CallLogUtil
             ->select("list")
             ->leftJoin("list.user", "user")
             ->leftJoin("user.infos", "infos")
-            ->where("user IS NULL")
+            ->where("user.id IS NULL")
             ->orderBy("infos.displayName", "ASC");
 
         //echo "query=".$query." <br><br>";

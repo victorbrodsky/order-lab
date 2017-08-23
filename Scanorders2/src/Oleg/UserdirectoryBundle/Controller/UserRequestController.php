@@ -59,7 +59,7 @@ class UserRequestController extends Controller
      */
     public function indexAction( Request $request )
     {
-        if (false === $this->get('security.context')->isGranted($this->roleEditor)) {
+        if (false === $this->get('security.authorization_checker')->isGranted($this->roleEditor)) {
             return $this->redirect( $this->generateUrl($this->siteName.'-nopermission') );
         }
         
@@ -222,7 +222,7 @@ class UserRequestController extends Controller
      */
     public function showAction($id)
     {
-        if (false === $this->get('security.context')->isGranted($this->roleEditor)) {
+        if (false === $this->get('security.authorization_checker')->isGranted($this->roleEditor)) {
             return $this->redirect( $this->generateUrl($this->siteName.'-nopermission') );
         }
 
@@ -254,7 +254,7 @@ class UserRequestController extends Controller
     public function statusAction($id, $status)
     {
         
-        if (false === $this->get('security.context')->isGranted($this->roleEditor)) {
+        if (false === $this->get('security.authorization_checker')->isGranted($this->roleEditor)) {
             return $this->redirect( $this->generateUrl($this->siteName.'-nopermission') );
         }
         
@@ -283,7 +283,7 @@ class UserRequestController extends Controller
     public function approveUserAccountRequestAction(Request $request)
     {
 
-        if (false === $this->get('security.context')->isGranted($this->roleEditor)) {
+        if (false === $this->get('security.authorization_checker')->isGranted($this->roleEditor)) {
             return $this->redirect( $this->generateUrl($this->siteName.'-nopermission') );
         }
 
@@ -504,7 +504,7 @@ class UserRequestController extends Controller
      */
     public function editAction($id)
     {
-        if (false === $this->get('security.context')->isGranted($this->roleEditor)) {
+        if (false === $this->get('security.authorization_checker')->isGranted($this->roleEditor)) {
             return $this->redirect( $this->generateUrl($this->siteName.'-nopermission') );
         }
 
@@ -540,7 +540,7 @@ class UserRequestController extends Controller
     public function updateAction(Request $request, $id)
     {
 
-        if (false === $this->get('security.context')->isGranted($this->roleEditor)) {
+        if (false === $this->get('security.authorization_checker')->isGranted($this->roleEditor)) {
             return $this->redirect( $this->generateUrl($this->siteName.'-nopermission') );
         }
 
@@ -586,7 +586,7 @@ class UserRequestController extends Controller
     public function deleteAction(Request $request, $id)
     {
 
-        if (false === $this->get('security.context')->isGranted($this->roleEditor)) {
+        if (false === $this->get('security.authorization_checker')->isGranted($this->roleEditor)) {
             return $this->redirect( $this->generateUrl($this->siteName.'-nopermission') );
         }
 
