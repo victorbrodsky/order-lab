@@ -6,8 +6,9 @@ security:
         strategy: affirmative
 
     encoders:
-        FOS\UserBundle\Model\UserInterface:
-            id: security.encoder.scrypt
+        FOS\UserBundle\Model\UserInterface: sha512
+#        FOS\UserBundle\Model\UserInterface:
+#            id: security.encoder.scrypt
 #        FOS\UserBundle\Model\UserInterface: bcrypt
 #        Symfony\Component\Security\Core\User\User: plaintext
 #        FOS\UserBundle\Model\UserInterface: sha512
@@ -115,7 +116,7 @@ security:
             anonymous:  true
             access_denied_url: /scan/access-requests/new/create  #/scan/scan-order/no-permission
             remember_me:
-                key:      "%secret%"
+                secret:      "%secret%"
                 lifetime: 604800 # 1 week in seconds
                 path:     /scan
 #                always_remember_me: true
@@ -143,7 +144,7 @@ security:
             anonymous:  true
             access_denied_url: /directory/access-requests/new/create
             remember_me:
-                key:      "%secret%"
+                secret:      "%secret%"
                 lifetime: 604800 # 1 week in seconds
                 path:     /directory
 #                always_remember_me: true
@@ -166,7 +167,7 @@ security:
             anonymous:  true
             access_denied_url: /fellowship-applications/access-requests/new/create
             remember_me:
-                key:      "%secret%"
+                secret:      "%secret%"
                 lifetime: 604800 # 1 week in seconds
                 path:     /fellowship-applications
 #                always_remember_me: true
@@ -188,7 +189,7 @@ security:
             anonymous:  true
             access_denied_url: /deidentifier/access-requests/new/create
             remember_me:
-                key:      "%secret%"
+                secret:      "%secret%"
                 lifetime: 604800 # 1 week in seconds
                 path:     /deidentifier
 #                always_remember_me: true
@@ -210,7 +211,7 @@ security:
             anonymous:  true
             access_denied_url: /vacation-request/access-requests/new/create
             remember_me:
-                key:      "%secret%"
+                secret:      "%secret%"
                 lifetime: 604800 # 1 week in seconds
                 path:     /vacation-request
 #                always_remember_me: true
@@ -232,7 +233,7 @@ security:
             anonymous:  true
             access_denied_url: /call-log-book/access-requests/new/create
             remember_me:
-                key:      "%secret%"
+                secret:      "%secret%"
                 lifetime: 604800 # 1 week in seconds
                 path:     /call-log-book
 #                always_remember_me: true
@@ -254,7 +255,7 @@ security:
             anonymous:  true
             access_denied_url: /translational-research/access-requests/new/create
             remember_me:
-                key:      "%secret%"
+                secret:      "%secret%"
                 lifetime: 604800 # 1 week in seconds
                 path:     /translational-research
 #                always_remember_me: true

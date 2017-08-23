@@ -996,6 +996,13 @@ class User extends BaseUser {
         return $this->infos;
     }
 
+    public function setLocked( $value ) {
+        $this->setEnabled($value);
+    }
+    public function getLocked() {
+        return $this->getEnabled();
+    }
+
     /////////////////////////// user's info mapper 7+2: //////////////////////////////////////
     /// suffix, firstName, middleName, lastName, displayName, initials, preferredPhone, preferredEmail/emailCanonical (used instead of extended user's email) ///
     /**

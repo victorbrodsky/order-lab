@@ -1,0 +1,3 @@
+1535056917
+%255BOleg%255COrderformBundle%255CEntity%255CProcedureArrayFieldAbstract%255D%255B1%255D
+a:1:{i:0;O:37:"Doctrine\ORM\Mapping\MappedSuperclass":1:{s:15:"repositoryClass";N;}}

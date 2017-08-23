@@ -14,8 +14,11 @@
 $container->loadFromExtension('framework', array(
     'templating' => array(
         'engines' => array('twig'),
-        'assets_version' => time(),    //exec('git rev-parse --short HEAD'),
+        //'assets_version' => time(),    //exec('git rev-parse --short HEAD'),
     ),
+    'assets' => array(
+        'version' => time()
+    )
 ));
 
 

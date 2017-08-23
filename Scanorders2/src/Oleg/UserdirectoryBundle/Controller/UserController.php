@@ -2021,6 +2021,11 @@ class UserController extends Controller
             }
         }
 
+//        exit('111');
+//        echo "<pre>";
+//        var_dump($request->query);
+//        echo "</pre>";
+
         //return $this->container->get('templating')->renderResponse('FOSUserBundle:Profile:show.html.'.$this->container->getParameter('fos_user.template.engine'), array('user' => $user));
         return array(
             'entity' => $entity,

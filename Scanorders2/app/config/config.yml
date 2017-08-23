@@ -40,8 +40,8 @@ framework:
 
 # Twig Configuration
 twig:
-    form:
-        resources: ['form_div_layout.html.twig']
+#    form:
+#        resources: ['form_div_layout.html.twig']
         #resources: ['bootstrap_3_horizontal_layout.html.twig']
     form_themes:
         - 'form_div_layout.html.twig'

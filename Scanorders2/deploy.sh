@@ -43,20 +43,20 @@ function prep()
     #git pull
 
     echo "*** Update tables in Doctrine DB ***"
-    php $PROJECT_LOCAL_PATH/app/console doctrine:schema:update --force
+    php $PROJECT_LOCAL_PATH/bin/console doctrine:schema:update --force
 
     echo "*** Install assets ***"
-    php $PROJECT_LOCAL_PATH/app/console assets:install
+    php $PROJECT_LOCAL_PATH/bin/console assets:install
 
 
 
     echo "********* Prepare development/testing *********"
 
     echo "*** Clear cache ***"
-    php $PROJECT_LOCAL_PATH/app/console cache:clear
+    php $PROJECT_LOCAL_PATH/bin/console cache:clear
 
     echo "*** Dump assets ***"
-    php $PROJECT_LOCAL_PATH/app/console assetic:dump
+    php $PROJECT_LOCAL_PATH/bin/console assetic:dump
 
 
 
@@ -64,10 +64,14 @@ function prep()
 
     echo "*** Clear cache ***"
     #php $PROJECT_LOCAL_PATH/app/console cache:clear --env=prod --no-debug --no-warmup
-    php $PROJECT_LOCAL_PATH/app/console cache:clear --env=prod --no-debug
+    #php $PROJECT_LOCAL_PATH/app/console cache:clear --env=prod --no-debug
+    php $PROJECT_LOCAL_PATH/bin/console cache:clear --no-warmup --env=prod
+
+    #echo "*** Warmup cache ***"
+    #php $PROJECT_LOCAL_PATH/bin/console cache:warmup --env=prod
 
     echo "*** Dump assets for production***"
-    php $PROJECT_LOCAL_PATH/app/console assetic:dump --env=prod --no-debug
+    php $PROJECT_LOCAL_PATH/bin/console assetic:dump --env=prod --no-debug
 
     echo "*** Set permissions ***"
     chown -R www-data:www-data $PROJECT_LOCAL_PATH/app/cache

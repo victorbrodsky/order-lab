@@ -46,20 +46,24 @@ function prep(){
     chown -R www-data:www-data $PROJECT_LOCAL_PATH/web
 
     echo "*** Update tables in Doctrine DB ***"
-    php $PROJECT_LOCAL_PATH/app/console doctrine:schema:update --force
+    php $PROJECT_LOCAL_PATH/bin/console doctrine:schema:update --force
 
     #echo "*** Create LEVENSHTEIN functions for fuzzy search ***"
     #php $PROJECT_LOCAL_PATH/app/console jrk:levenshtein:install
 
     echo "*** Install assets ***"
-    php $PROJECT_LOCAL_PATH/app/console assets:install
+    php $PROJECT_LOCAL_PATH/bin/console assets:install
 
     echo "*** Clear cache ***"
-    php $PROJECT_LOCAL_PATH/app/console cache:clear --env=prod --no-debug
+    php $PROJECT_LOCAL_PATH/bin/console cache:clear --no-warmup --env=prod
+    #php $PROJECT_LOCAL_PATH/app/console cache:clear --env=prod --no-debug
     #php $PROJECT_LOCAL_PATH/app/console cache:clear --env=prod --no-debug --no-warmup
 
+    echo "*** Warmup cache ***"
+    php $PROJECT_LOCAL_PATH/bin/console cache:warmup --env=prod
+
     echo "*** Dump assets ***"
-    php $PROJECT_LOCAL_PATH/app/console assetic:dump --env=prod --no-debug
+    php $PROJECT_LOCAL_PATH/bin/console assetic:dump --env=prod --no-debug
     #php $PROJECT_LOCAL_PATH/app/console assetic:watch
 
     echo "*** Set permissions ***"

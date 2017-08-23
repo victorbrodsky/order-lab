@@ -50,6 +50,9 @@ fos_user:
 #    model_manager_name: default
     firewall_name: main
     user_class: Oleg\UserdirectoryBundle\Entity\User
+    from_email:
+        address: oli2002@med.cornell.edu
+        sender_name: Oleg Ivanov
 
 
 services:
