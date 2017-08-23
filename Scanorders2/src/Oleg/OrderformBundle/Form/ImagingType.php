@@ -52,7 +52,7 @@ class ImagingType extends AbstractType
         $attr = array('class' => 'ajax-combobox-scanregion', 'type' => 'hidden');
         $options = array(
             'label' => 'Region to scan:',
-            'max_length'=>500,
+            //'max_length'=>500,
             'attr' => $attr,
             'classtype' => 'scanRegion'
         );
@@ -63,7 +63,7 @@ class ImagingType extends AbstractType
 
         //note
         $builder->add('note', TextareaType::class, array(
-                'max_length'=>5000,
+                //'max_length'=>5000,
                 'required'=>false,
                 'label'=>'Reason for Scan/Note:',
                 'attr' => array('class'=>'textarea form-control'),   //form-control

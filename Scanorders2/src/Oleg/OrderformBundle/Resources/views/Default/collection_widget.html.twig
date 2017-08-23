@@ -36,7 +36,7 @@
 {#'required' is fixed in master and v2.3 of symfony#}
 {% block widget_attributes %}
     {% spaceless %}
-        id="{{ id }}" name="{{ full_name }}"{% if read_only %} readonly="readonly"{% endif %}{% if disabled %} disabled="disabled"{% endif %}
+        id="{{ id }}" name="{{ full_name }}"{% if disabled %} disabled="disabled"{% endif %}
 
         {% if required == 'none' %}
             {#not !!!!!!!!!#}
@@ -47,7 +47,7 @@
             {% endif %}
         {% endif %}
 
-        {% if max_length %} maxlength="{{ max_length }}"{% endif %}{% if pattern %} pattern="{{ pattern }}"{% endif %}
+        {#{% if pattern %} pattern="{{ pattern }}"{% endif %}#}
 
         {#{% for attrname, attrvalue in attr %}{% if attrname in ['placeholder', 'title'] %}{{ attrname }}="{{ attrvalue|trans({}, translation_domain) }}" {% else %}{{ attrname }}="{{ attrvalue }}" {% endif %}{% endfor %}#}
 

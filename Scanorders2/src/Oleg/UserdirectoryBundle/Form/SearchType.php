@@ -45,7 +45,7 @@ class SearchType extends AbstractType
 //        ));
         
         $builder->add('search', TextType::class, array(
-            'max_length'=>200,
+            //'max_length'=>200,
             'required'=>false,
             'label'=>'Search:',
             'attr' => array('class'=>'form-control form-control-modif'),

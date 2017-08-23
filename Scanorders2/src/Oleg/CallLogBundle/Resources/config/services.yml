@@ -6,7 +6,7 @@ parameters:
 
 twig:
     globals:
-        calllog_sitename: %calllog.sitename%
+        calllog_sitename: '%calllog.sitename%'
         #service
         calllog_util: "@calllog_util"
 

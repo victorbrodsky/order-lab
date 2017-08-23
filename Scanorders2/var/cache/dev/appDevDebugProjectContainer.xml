@@ -546,6 +546,7 @@
         <parameter>ROLE_SCANORDER_SUBMITTER</parameter>
         <parameter>ROLE_SCANORDER_ORDERING_PROVIDER</parameter>
         <parameter>ROLE_SCANORDER_ALL_PATHOLOGY</parameter>
+        <parameter>ROLE_EDITOR</parameter>
       </parameter>
       <parameter key="ROLE_SCANORDER_ADMIN" type="collection">
         <parameter>ROLE_USER</parameter>
@@ -553,8 +554,10 @@
         <parameter>ROLE_SCANORDER_SUBMITTER</parameter>
         <parameter>ROLE_SCANORDER_ORDERING_PROVIDER</parameter>
         <parameter>ROLE_SCANORDER_ALL_PATHOLOGY</parameter>
+        <parameter>ROLE_EDITOR</parameter>
       </parameter>
       <parameter key="ROLE_USERDIRECTORY_EDITOR" type="collection">
+        <parameter>ROLE_EDITOR</parameter>
         <parameter>ROLE_USER</parameter>
         <parameter>ROLE_USERDIRECTORY_OBSERVER</parameter>
       </parameter>
@@ -589,9 +592,11 @@
         <parameter>ROLE_CALLLOG_PATHOLOGY_RESIDENT</parameter>
         <parameter>ROLE_CALLLOG_PATHOLOGY_FELLOW</parameter>
         <parameter>ROLE_CALLLOG_DATA_QUALITY</parameter>
+        <parameter>ROLE_EDITOR</parameter>
       </parameter>
       <parameter key="ROLE_TRANSLATIONALRESEARCH_ADMIN" type="collection">
         <parameter>ROLE_TRANSLATIONALRESEARCH_USER</parameter>
+        <parameter>ROLE_EDITOR</parameter>
       </parameter>
       <parameter key="ROLE_PLATFORM_DEPUTY_ADMIN" type="collection">
         <parameter>ROLE_ALLOWED_TO_SWITCH</parameter>
@@ -1781,7 +1786,7 @@
       <tag name="monolog.logger" channel="cache"/>
       <argument></argument>
       <argument>0</argument>
-      <argument>Ip6Ca8gWgG3VfF27yFObv3</argument>
+      <argument>iMVxxS3A7m2OslZxnASj9m</argument>
       <argument>C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2\var\cache\dev/pools</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
@@ -1791,7 +1796,7 @@
       <tag name="monolog.logger" channel="cache"/>
       <argument></argument>
       <argument>0</argument>
-      <argument>Ip6Ca8gWgG3VfF27yFObv3</argument>
+      <argument>iMVxxS3A7m2OslZxnASj9m</argument>
       <call method="setLogger">
         <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       </call>
@@ -3213,6 +3218,7 @@
           <argument>ROLE_SCANORDER_SUBMITTER</argument>
           <argument>ROLE_SCANORDER_ORDERING_PROVIDER</argument>
           <argument>ROLE_SCANORDER_ALL_PATHOLOGY</argument>
+          <argument>ROLE_EDITOR</argument>
         </argument>
         <argument key="ROLE_SCANORDER_ADMIN" type="collection">
           <argument>ROLE_USER</argument>
@@ -3220,8 +3226,10 @@
           <argument>ROLE_SCANORDER_SUBMITTER</argument>
           <argument>ROLE_SCANORDER_ORDERING_PROVIDER</argument>
           <argument>ROLE_SCANORDER_ALL_PATHOLOGY</argument>
+          <argument>ROLE_EDITOR</argument>
         </argument>
         <argument key="ROLE_USERDIRECTORY_EDITOR" type="collection">
+          <argument>ROLE_EDITOR</argument>
           <argument>ROLE_USER</argument>
           <argument>ROLE_USERDIRECTORY_OBSERVER</argument>
         </argument>
@@ -3256,9 +3264,11 @@
           <argument>ROLE_CALLLOG_PATHOLOGY_RESIDENT</argument>
           <argument>ROLE_CALLLOG_PATHOLOGY_FELLOW</argument>
           <argument>ROLE_CALLLOG_DATA_QUALITY</argument>
+          <argument>ROLE_EDITOR</argument>
         </argument>
         <argument key="ROLE_TRANSLATIONALRESEARCH_ADMIN" type="collection">
           <argument>ROLE_TRANSLATIONALRESEARCH_USER</argument>
+          <argument>ROLE_EDITOR</argument>
         </argument>
         <argument key="ROLE_PLATFORM_DEPUTY_ADMIN" type="collection">
           <argument>ROLE_ALLOWED_TO_SWITCH</argument>
@@ -4370,12 +4380,12 @@
     </service>
     <service id="security.authentication.listener.anonymous.aperio_ldap_firewall" class="Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener" public="false">
       <argument type="service" id="security.token_storage"/>
-      <argument>599da2d5f00676.47037159</argument>
+      <argument>599db05a161ef7.25162865</argument>
       <argument type="service" id="monolog.logger.security" on-invalid="null"/>
       <argument type="service" id="security.authentication.manager"/>
     </service>
     <service id="security.authentication.provider.anonymous.aperio_ldap_firewall" class="Symfony\Component\Security\Core\Authentication\Provider\AnonymousAuthenticationProvider" public="false">
-      <argument>599da2d5f00676.47037159</argument>
+      <argument>599db05a161ef7.25162865</argument>
     </service>
     <service id="security.authentication.switchuser_listener.aperio_ldap_firewall" class="Symfony\Component\Security\Http\Firewall\SwitchUserListener" public="false">
       <argument type="service" id="security.token_storage"/>
@@ -4554,12 +4564,12 @@
     </service>
     <service id="security.authentication.listener.anonymous.ldap_employees_firewall" class="Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener" public="false">
       <argument type="service" id="security.token_storage"/>
-      <argument>599da2d5f00676.47037159</argument>
+      <argument>599db05a161ef7.25162865</argument>
       <argument type="service" id="monolog.logger.security" on-invalid="null"/>
       <argument type="service" id="security.authentication.manager"/>
     </service>
     <service id="security.authentication.provider.anonymous.ldap_employees_firewall" class="Symfony\Component\Security\Core\Authentication\Provider\AnonymousAuthenticationProvider" public="false">
-      <argument>599da2d5f00676.47037159</argument>
+      <argument>599db05a161ef7.25162865</argument>
     </service>
     <service id="security.authentication.switchuser_listener.ldap_employees_firewall" class="Symfony\Component\Security\Http\Firewall\SwitchUserListener" public="false">
       <argument type="service" id="security.token_storage"/>
@@ -4738,12 +4748,12 @@
     </service>
     <service id="security.authentication.listener.anonymous.ldap_fellapp_firewall" class="Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener" public="false">
       <argument type="service" id="security.token_storage"/>
-      <argument>599da2d5f00676.47037159</argument>
+      <argument>599db05a161ef7.25162865</argument>
       <argument type="service" id="monolog.logger.security" on-invalid="null"/>
       <argument type="service" id="security.authentication.manager"/>
     </service>
     <service id="security.authentication.provider.anonymous.ldap_fellapp_firewall" class="Symfony\Component\Security\Core\Authentication\Provider\AnonymousAuthenticationProvider" public="false">
-      <argument>599da2d5f00676.47037159</argument>
+      <argument>599db05a161ef7.25162865</argument>
     </service>
     <service id="security.authentication.switchuser_listener.ldap_fellapp_firewall" class="Symfony\Component\Security\Http\Firewall\SwitchUserListener" public="false">
       <argument type="service" id="security.token_storage"/>
@@ -4922,12 +4932,12 @@
     </service>
     <service id="security.authentication.listener.anonymous.ldap_deidentifier_firewall" class="Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener" public="false">
       <argument type="service" id="security.token_storage"/>
-      <argument>599da2d5f00676.47037159</argument>
+      <argument>599db05a161ef7.25162865</argument>
       <argument type="service" id="monolog.logger.security" on-invalid="null"/>
       <argument type="service" id="security.authentication.manager"/>
     </service>
     <service id="security.authentication.provider.anonymous.ldap_deidentifier_firewall" class="Symfony\Component\Security\Core\Authentication\Provider\AnonymousAuthenticationProvider" public="false">
-      <argument>599da2d5f00676.47037159</argument>
+      <argument>599db05a161ef7.25162865</argument>
     </service>
     <service id="security.authentication.switchuser_listener.ldap_deidentifier_firewall" class="Symfony\Component\Security\Http\Firewall\SwitchUserListener" public="false">
       <argument type="service" id="security.token_storage"/>
@@ -5106,12 +5116,12 @@
     </service>
     <service id="security.authentication.listener.anonymous.ldap_vacreq_firewall" class="Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener" public="false">
       <argument type="service" id="security.token_storage"/>
-      <argument>599da2d5f00676.47037159</argument>
+      <argument>599db05a161ef7.25162865</argument>
       <argument type="service" id="monolog.logger.security" on-invalid="null"/>
       <argument type="service" id="security.authentication.manager"/>
     </service>
     <service id="security.authentication.provider.anonymous.ldap_vacreq_firewall" class="Symfony\Component\Security\Core\Authentication\Provider\AnonymousAuthenticationProvider" public="false">
-      <argument>599da2d5f00676.47037159</argument>
+      <argument>599db05a161ef7.25162865</argument>
     </service>
     <service id="security.authentication.switchuser_listener.ldap_vacreq_firewall" class="Symfony\Component\Security\Http\Firewall\SwitchUserListener" public="false">
       <argument type="service" id="security.token_storage"/>
@@ -5290,12 +5300,12 @@
     </service>
     <service id="security.authentication.listener.anonymous.ldap_calllog_firewall" class="Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener" public="false">
       <argument type="service" id="security.token_storage"/>
-      <argument>599da2d5f00676.47037159</argument>
+      <argument>599db05a161ef7.25162865</argument>
       <argument type="service" id="monolog.logger.security" on-invalid="null"/>
       <argument type="service" id="security.authentication.manager"/>
     </service>
     <service id="security.authentication.provider.anonymous.ldap_calllog_firewall" class="Symfony\Component\Security\Core\Authentication\Provider\AnonymousAuthenticationProvider" public="false">
-      <argument>599da2d5f00676.47037159</argument>
+      <argument>599db05a161ef7.25162865</argument>
     </service>
     <service id="security.authentication.switchuser_listener.ldap_calllog_firewall" class="Symfony\Component\Security\Http\Firewall\SwitchUserListener" public="false">
       <argument type="service" id="security.token_storage"/>
@@ -5474,12 +5484,12 @@
     </service>
     <service id="security.authentication.listener.anonymous.ldap_translationalresearch_firewall" class="Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener" public="false">
       <argument type="service" id="security.token_storage"/>
-      <argument>599da2d5f00676.47037159</argument>
+      <argument>599db05a161ef7.25162865</argument>
       <argument type="service" id="monolog.logger.security" on-invalid="null"/>
       <argument type="service" id="security.authentication.manager"/>
     </service>
     <service id="security.authentication.provider.anonymous.ldap_translationalresearch_firewall" class="Symfony\Component\Security\Core\Authentication\Provider\AnonymousAuthenticationProvider" public="false">
-      <argument>599da2d5f00676.47037159</argument>
+      <argument>599db05a161ef7.25162865</argument>
     </service>
     <service id="security.authentication.switchuser_listener.ldap_translationalresearch_firewall" class="Symfony\Component\Security\Http\Firewall\SwitchUserListener" public="false">
       <argument type="service" id="security.token_storage"/>
@@ -8569,7 +8579,7 @@
     <service id="cache.system.recorder_inner" class="Symfony\Component\Cache\Adapter\AdapterInterface" public="false" lazy="true">
       <argument>PKf3Ilb6Qh</argument>
       <argument>0</argument>
-      <argument>Ip6Ca8gWgG3VfF27yFObv3</argument>
+      <argument>iMVxxS3A7m2OslZxnASj9m</argument>
       <argument>C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2\var\cache\dev/pools</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
@@ -8577,7 +8587,7 @@
     <service id="cache.validator.recorder_inner" class="Symfony\Component\Cache\Adapter\AdapterInterface" public="false" lazy="true">
       <argument>5cNJKRS0CQ</argument>
       <argument>0</argument>
-      <argument>Ip6Ca8gWgG3VfF27yFObv3</argument>
+      <argument>iMVxxS3A7m2OslZxnASj9m</argument>
       <argument>C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2\var\cache\dev/pools</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
@@ -8585,7 +8595,7 @@
     <service id="cache.serializer.recorder_inner" class="Symfony\Component\Cache\Adapter\AdapterInterface" public="false" lazy="true">
       <argument>HgJu3oOurV</argument>
       <argument>0</argument>
-      <argument>Ip6Ca8gWgG3VfF27yFObv3</argument>
+      <argument>iMVxxS3A7m2OslZxnASj9m</argument>
       <argument>C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2\var\cache\dev/pools</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
@@ -8593,7 +8603,7 @@
     <service id="cache.annotations.recorder_inner" class="Symfony\Component\Cache\Adapter\AdapterInterface" public="false" lazy="true">
       <argument>2QhTBRV-mH</argument>
       <argument>0</argument>
-      <argument>Ip6Ca8gWgG3VfF27yFObv3</argument>
+      <argument>iMVxxS3A7m2OslZxnASj9m</argument>
       <argument>C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2\var\cache\dev/pools</argument>
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>

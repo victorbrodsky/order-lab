@@ -1000,7 +1000,10 @@ class User extends BaseUser {
         $this->setEnabled($value);
     }
     public function getLocked() {
-        return $this->getEnabled();
+        return $this->isEnabled();
+    }
+    public function isLocked() {
+        return $this->isEnabled();
     }
 
     /////////////////////////// user's info mapper 7+2: //////////////////////////////////////

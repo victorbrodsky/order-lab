@@ -95,7 +95,7 @@ services:
     #twig listener
     twigdate.listener.request:
         class: Oleg\UserdirectoryBundle\Services\TwigDateRequestListener
-        arguments: ["@twig", "@security.token_storage", %default_time_zone%]
+        arguments: ["@twig", "@security.token_storage", '%default_time_zone%']
         tags:
               - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 

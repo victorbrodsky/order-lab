@@ -83,7 +83,7 @@ class SlideType extends AbstractType
         }
         
         $builder->add('microscopicdescr', TextareaType::class, array(
-                'max_length'=>10000,
+                //'max_length'=>10000,
                 'required'=>false,
                 'label'=>'Microscopic Description:',
                 'attr' => array('class'=>'textarea form-control'),

@@ -130,7 +130,7 @@ class LocationType extends AbstractType
         }
 
         $builder->add('comment', TextareaType::class, array(
-            'max_length'=>5000,
+            //'max_length'=>5000,
             'required'=>false,
             'label'=>'Comment:',
             'attr' => array('class'=>'textarea form-control'),

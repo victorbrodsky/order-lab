@@ -3,7 +3,7 @@ parameters:
 
 twig:
     globals:
-        deidentifier_sitename: %deidentifier.sitename%
+        deidentifier_sitename: '%deidentifier.sitename%'
 
 services:
 #    oleg_deidentifier.example:

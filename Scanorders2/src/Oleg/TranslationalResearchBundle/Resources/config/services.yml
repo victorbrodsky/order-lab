@@ -6,7 +6,7 @@ parameters:
 
 twig:
     globals:
-        translationalresearch_sitename: %translationalresearch.sitename%
+        translationalresearch_sitename: '%translationalresearch.sitename%'
         #service
 #        translationalresearch_util: "@translationalresearch_util"
 

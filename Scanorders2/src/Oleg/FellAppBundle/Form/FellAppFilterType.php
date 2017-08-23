@@ -82,7 +82,7 @@ class FellAppFilterType extends AbstractType
         
         $builder->add('search', TextType::class, array(
             //'placeholder' => 'Search',
-            'max_length'=>200,
+            //'max_length'=>200,
             'required'=>false,
             'label' => false,
             'attr' => array('class'=>'form-control form-control-modif limit-font-size submit-on-enter-field'),

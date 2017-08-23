@@ -21,7 +21,7 @@ framework:
     #esi:             ~
     #translator:      { fallback: %locale% }
     #translator: ~
-    secret:          %secret%
+    secret:          '%secret%'
     router:
         resource: "%kernel.root_dir%/config/routing.yml"
         strict_requirements: ~
@@ -32,7 +32,7 @@ framework:
         engines: ['twig']        
 #        assets_version: SomeVersionScheme
     default_locale:  "%locale%"
-    trusted_proxies: ~
+#    trusted_proxies: ~
     session:         ~
 #        save_path: ~
     fragments:       ~
@@ -46,32 +46,32 @@ twig:
     form_themes:
         - 'form_div_layout.html.twig'
         #- 'form/form_errors.html.twig'
-    debug:            %kernel.debug%
-    strict_variables: %kernel.debug%
+    debug:            '%kernel.debug%'
+    strict_variables: '%kernel.debug%'
     globals:
-        institution_url: %institution_url%
-        institution_name: %institution_name%
-        subinstitution_url: %subinstitution_url%
-        subinstitution_name: %subinstitution_name%
-        department_url: %department_url%
-        department_name: %department_name%
-        employees_sitename: %employees.sitename%
-        default_system_email: %default_system_email%
+        institution_url: '%institution_url%'
+        institution_name: '%institution_name%'
+        subinstitution_url: '%subinstitution_url%'
+        subinstitution_name: '%subinstitution_name%'
+        department_url: '%department_url%'
+        department_name: '%department_name%'
+        employees_sitename: '%employees.sitename%'
+        default_system_email: '%default_system_email%'
 
         #titles and messages
-        mainhome_title: %mainhome_title%
-        listmanager_title: %listmanager_title%
-        eventlog_title: %eventlog_title%
-        sitesettings_title: %sitesettings_title%
-        contentabout_page: %contentabout_page%
+        mainhome_title: '%mainhome_title%'
+        listmanager_title: '%listmanager_title%'
+        eventlog_title: '%eventlog_title%'
+        sitesettings_title: '%sitesettings_title%'
+        contentabout_page: '%contentabout_page%'
 #        underlogin_msg_user: %underlogin_msg_user%
 #        underlogin_msg_scan: %underlogin_msg_scan%
 
         #relative upload folder
-        employees_uploadpath: Uploaded/%employees.uploadpath%
-        scan_uploadpath: Uploaded/%scan.uploadpath%
-        fellapp_uploadpath: Uploaded/%fellapp.uploadpath%
-        vacreq_uploadpath: Uploaded/%vacreq.uploadpath%
+        employees_uploadpath: 'Uploaded/%employees.uploadpath%'
+        scan_uploadpath: 'Uploaded/%scan.uploadpath%'
+        fellapp_uploadpath: 'Uploaded/%fellapp.uploadpath%'
+        vacreq_uploadpath: 'Uploaded/%vacreq.uploadpath%'
 
         #service
         user_security_utility: "@user_security_utility"
@@ -84,7 +84,7 @@ twig:
 
 # Assetic Configuration
 assetic:
-    debug:          %kernel.debug%
+    debug:          '%kernel.debug%'
     use_controller: false
     bundles:        ['OlegUserdirectoryBundle','OlegOrderformBundle','OlegFellAppBundle','OlegDeidentifierBundle','OlegVacReqBundle','OlegCallLogBundle','OlegTranslationalResearchBundle']
     #java: /usr/bin/java
@@ -108,27 +108,27 @@ doctrine:
         default_connection: default
         connections:
             default:
-                driver:   %database_driver%
-                host:     %database_host%
-                port:     %database_port%
-                dbname:   %database_name%
-                user:     %database_user%
-                password: %database_password%
+                driver:   '%database_driver%'
+                host:     '%database_host%'
+                port:     '%database_port%'
+                dbname:   '%database_name%'
+                user:     '%database_user%'
+                password: '%database_password%'
                 charset:  UTF8
                 # if using pdo_sqlite as your database driver, add the path in parameters.yml
                 # e.g. database_path: %kernel.root_dir%/data/data.db3
                 # path:     %database_path%
             aperio:
-                driver:   %database_driver_aperio%
-                host:     %database_host_aperio%
-                port:     %database_port_aperio%
-                dbname:   %database_name_aperio%
-                user:     %database_user_aperio%
-                password: %database_password_aperio%
+                driver:   '%database_driver_aperio%'
+                host:     '%database_host_aperio%'
+                port:     '%database_port_aperio%'
+                dbname:   '%database_name_aperio%'
+                user:     '%database_user_aperio%'
+                password: '%database_password_aperio%'
                 charset:  UTF8
 
     orm:
-        auto_generate_proxy_classes: %kernel.debug%
+        auto_generate_proxy_classes: '%kernel.debug%'
 #        auto_mapping: true
         default_entity_manager: default
         entity_managers:
@@ -181,11 +181,11 @@ monolog:
 
 # Swiftmailer Configuration
 swiftmailer:
-    transport: %mailer_transport%
-    host:      %mailer_host%
-    username:  %mailer_user%
-    password:  %mailer_password%
-    delivery_addresses: %swift_delivery_addresses% #disable it for production
+    transport: '%mailer_transport%'
+    host:      '%mailer_host%'
+    username:  '%mailer_user%'
+    password:  '%mailer_password%'
+    delivery_addresses: '%swift_delivery_addresses%' #disable it for production
     #disable_delivery: %swift_disable_delivery%
     logging: '%kernel.debug%'
     spool:
@@ -211,19 +211,19 @@ oneup_uploader:
         employees_gallery:
             frontend: dropzone
             storage:
-                directory: Uploaded/%employees.uploadpath%
+                directory: 'Uploaded/%employees.uploadpath%'
         scan_gallery:
             frontend: dropzone
             storage:
-                directory: Uploaded/%scan.uploadpath%
+                directory: 'Uploaded/%scan.uploadpath%'
         fellapp_gallery:
             frontend: dropzone
             storage:
-                directory: Uploaded/%fellapp.uploadpath%
+                directory: 'Uploaded/%fellapp.uploadpath%'
         vacreq_gallery:
             frontend: dropzone
             storage:
-                directory: Uploaded/%vacreq.uploadpath%
+                directory: 'Uploaded/%vacreq.uploadpath%'
 #    orphanage:
 #        maxage: 86400
 #        directory: Uploaded/orphanage

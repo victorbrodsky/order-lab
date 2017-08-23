@@ -39,7 +39,7 @@ class FilterType extends AbstractType
 
         $builder->add( 'filter', ChoiceType::class, array( //flipped
             'label' => 'Filter by Order Status:',
-            'max_length'=>50,
+            //'max_length'=>50,
             'choices' => $this->params['statuses'],
             'choices_as_values' => true,
             'required' => true,
@@ -47,7 +47,7 @@ class FilterType extends AbstractType
         ));                       
         
         $builder->add('search', TextType::class, array(
-            'max_length'=>200,
+            //'max_length'=>200,
             'required'=>false,
             'label'=>'Search:',
             'attr' => array('class'=>'form-control form-control-modif limit-font-size submit-on-enter-field'),

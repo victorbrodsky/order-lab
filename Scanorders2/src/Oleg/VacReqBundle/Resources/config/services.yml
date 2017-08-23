@@ -6,7 +6,7 @@ parameters:
 
 twig:
     globals:
-        vacreq_sitename: %vacreq.sitename%
+        vacreq_sitename: '%vacreq.sitename%'
         #service
         vacreq_util: "@vacreq_util"
 
