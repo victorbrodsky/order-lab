@@ -22,7 +22,12 @@
 # ./deploy1
 
 echo
-echo "************* Start deploy *************"
+if [ $1 == "-fast" ]
+then
+    echo "************* Start deploy fast (no cache warmup) *************"
+else
+    echo "************* Start deploy with cache warmup  *************"
+fi
 echo
 
 ##### Constants #####
@@ -59,8 +64,11 @@ function prep(){
     #php $PROJECT_LOCAL_PATH/app/console cache:clear --env=prod --no-debug
     #php $PROJECT_LOCAL_PATH/app/console cache:clear --env=prod --no-debug --no-warmup
 
-    echo "*** Warmup cache ***"
-    php $PROJECT_LOCAL_PATH/bin/console cache:warmup --env=prod
+    if [ $1 != "-fast" ]
+    then
+        echo "*** Warmup cache ***"
+        php -d memory_limit=512M $PROJECT_LOCAL_PATH/bin/console cache:warmup --env=prod
+    fi
 
     echo "*** Dump assets ***"
     php $PROJECT_LOCAL_PATH/bin/console assetic:dump --env=prod --no-debug

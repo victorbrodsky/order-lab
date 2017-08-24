@@ -55,7 +55,7 @@
     <hr>
 
     {#<form id="add_authorized_user_form" action="{{ path(sitename~'_add_authorized_user') }}" method="GET">#}
-    {{ form_start(form, {'id': 'add_authorized_user_form', 'action': path(sitename~'_add_authorized_user'), 'method': 'GET'}) }}
+    {{ form_start(form, {'action': path(sitename~'_add_authorized_user'), 'method': 'GET', 'attr': {'id': 'add_authorized_user_form'}}) }}
         {{ formmacros.field(form.keytype) }}
         {{ formmacros.field(form.primaryPublicUserId) }}
         <p>

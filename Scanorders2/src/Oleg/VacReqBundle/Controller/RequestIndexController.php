@@ -420,11 +420,14 @@ class RequestIndexController extends Controller
         $params['supervisor'] = $supervisorRole;
 
         //create filter form
-        $filterform = $this->createForm(VacReqFilterType::class, null, array('form_custom_value'=>$params));
+        $filterform = $this->createForm(VacReqFilterType::class, null, array(
+            'method' => 'GET',
+            'form_custom_value' => $params
+        ));
 
         //Use the Symfony\Component\Form\Form::handleRequest method instead. If you want to test whether the form was submitted separately, you can use the Symfony\Component\Form\Form::isSubmitted method
-        $filterform->submit($request);
-        //$filterform->handleRequest($request);
+        //$filterform->submit($request);
+        $filterform->handleRequest($request);
 
         //echo "<pre>";
         //print_r($filterform['startdate']);

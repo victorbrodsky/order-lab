@@ -123,7 +123,8 @@ class CallEntryController extends Controller
             $query,
             $request->query->get('page', 1), /*page number*/
             //$request->query->getInt('page', 1),
-            $limit      /*limit per page*/
+            $limit,      /*limit per page*/
+            array('wrap-queries'=>true)
         );
         //echo "messages count=".count($messages)."<br>";
 
@@ -247,8 +248,12 @@ class CallEntryController extends Controller
         $navbarParams = array();
         $navbarParams['navbarSearchTypes'] = $calllogUtil->getNavbarSearchTypes();
         $navbarParams['container'] = $this->container;
-        $navbarfilterform = $this->createForm(CalllogNavbarFilterType::class, null, array('form_custom_value'=>$navbarParams));
-        $navbarfilterform->submit($request);
+        $navbarfilterform = $this->createForm(CalllogNavbarFilterType::class, null, array(
+            //'action' => $this->generateUrl('calllog_home'),
+            'method'=>'GET',
+            'form_custom_value'=>$navbarParams
+        ));
+        $navbarfilterform->handleRequest($request);
         $calllogsearchtype = $navbarfilterform['searchtype']->getData();
         $calllogsearch = $navbarfilterform['search']->getData();
         //$metaphone = $navbarfilterform['metaphone']->getData();
@@ -288,9 +293,12 @@ class CallEntryController extends Controller
             'messageCategoryType' => $messageCategoryTypeId,
             'metaphone' => $metaphone
         );
-        $filterform = $this->createForm(CalllogFilterType::class, null, array('form_custom_value'=>$params));
+        $filterform = $this->createForm(CalllogFilterType::class, null, array(
+            'method'=>'GET',
+            'form_custom_value'=>$params
+        ));
 
-        $filterform->submit($request);
+        $filterform->handleRequest($request);
 
         $messageStatusFilter = $filterform['messageStatus']->getData();
         $mrntypeFilter = $filterform['mrntype']->getData();
@@ -727,10 +735,14 @@ class CallEntryController extends Controller
 
     }
     public function isFilterEmpty($filterform) {
+        $data = $filterform->getData();
+        if( !$data ) {
+            return true;
+        }
 //        echo "<pre>";
-//        print_r($filterform->getData());
+//        print_r($data);
 //        echo "</pre>";
-        foreach( $filterform->getData() as $key=>$value ) {
+        foreach( $data as $key=>$value ) {
             if( $value ) {
                 //echo $key.": value=".$value."<br>";
                 if( is_array($value) || $value instanceof ArrayCollection ) {

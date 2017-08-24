@@ -41,9 +41,10 @@
     <div id="calllog-previous-entries" class="panel-collapse collapse in">
         <div class="panel-body">
 
-
+        {% if filterform is defined and filterform %}
         <p>
         {#<form action="{{ path(route_path) }}" method="get" class="well form-search">#}
+        {{ form_start(filterform, {'action': path(route_path), 'attr': {'class': 'well form-search'}}) }}
             {#<div class="well">#}
 
                 {#basic search#}
@@ -68,8 +69,9 @@
                 {#{{ form_rest(filterform) }}#}
             {#</div>#}
         {#</form>#}
+        {{ form_end(filterform) }}
         </p>
-
+        {% endif %}
 
         {#Messages List#}
 

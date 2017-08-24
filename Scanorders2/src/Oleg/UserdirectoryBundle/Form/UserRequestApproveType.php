@@ -44,11 +44,13 @@ class UserRequestApproveType extends AbstractType
 
         $builder->add( 'id', HiddenType::class );
 
-        $builder->add( 'username', TextType::class, array(
-            'label'=>false,
-            'required'=> true,
-            'attr' => array('class'=>'username'),
-        ));
+        if( $this->params['sitename'] == "scan" ) {
+            $builder->add('username', TextType::class, array(
+                'label' => false,
+                'required' => true,
+                'attr' => array('class' => 'username'),
+            ));
+        }
 
 
         if( array_key_exists('requestedScanOrderInstitutionScope', $this->params) ) {

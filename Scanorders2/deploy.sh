@@ -68,7 +68,7 @@ function prep()
     php $PROJECT_LOCAL_PATH/bin/console cache:clear --no-warmup --env=prod
 
     #echo "*** Warmup cache ***"
-    #php $PROJECT_LOCAL_PATH/bin/console cache:warmup --env=prod
+    #php -d memory_limit=512M $PROJECT_LOCAL_PATH/bin/console cache:warmup --env=prod
 
     echo "*** Dump assets for production***"
     php $PROJECT_LOCAL_PATH/bin/console assetic:dump --env=prod --no-debug

@@ -1228,8 +1228,13 @@ class CallLogUtil
         $params['container'] = $this->container;
 
         //get submitted parameters
-        $navbarfilterform = $this->createForm(CalllogNavbarFilterType::class, null, array('form_custom_value'=>$params));
-        $navbarfilterform->submit($request);
+        $navbarfilterform = $this->createForm(CalllogNavbarFilterType::class, null, array(
+            //'action' => $this->generateUrl('calllog_home'),
+            'method'=>'GET',
+            'form_custom_value'=>$params
+        ));
+        //$navbarfilterform->submit($request);
+        $navbarfilterform->handleRequest($request);
         $calllogsearchtype = $navbarfilterform['searchtype']->getData();
         $calllogsearch = $navbarfilterform['search']->getData();
 
@@ -1237,7 +1242,10 @@ class CallLogUtil
         $params['calllogsearch'] = $calllogsearch;
 
         //build final filter form
-        $navbarfilterform = $this->createForm(CalllogNavbarFilterType::class, null, array('form_custom_value'=>$params));
+        $navbarfilterform = $this->createForm(CalllogNavbarFilterType::class, null, array(
+            'method'=>'GET',
+            'form_custom_value'=>$params
+        ));
 
         //echo "calllogsearchtype=".$calllogsearchtype."; calllogsearch=".$calllogsearch."<br>";
         return $navbarfilterform->createView();

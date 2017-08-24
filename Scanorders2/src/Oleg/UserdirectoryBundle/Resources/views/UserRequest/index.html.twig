@@ -164,7 +164,7 @@
         {% for entity in entities %}
 
             {#<form id="userrequestform-{{ loop.index0 }}" action="{{ path(sitename~'_accountrequest_approve') }}" method="post">#}
-            {{ form_start(form, {'id':"userrequestform-"~loop.index0, 'action': path(sitename~'_accountrequest_approve'), 'method': 'POST'}) }}
+            {{ form_start(forms[loop.index0], {'action': path(sitename~'_accountrequest_approve'), 'method': 'POST', 'attr': {'id': "userrequestform-"~loop.index0}}) }}
 
             {{ form_widget(forms[loop.index0].id) }}
 

@@ -128,7 +128,10 @@ class FellAppController extends Controller {
         $params = array(
             'fellTypes' => $userServiceUtil->flipArrayLabelValue($fellowshipTypes), //flipped
         );
-        $filterform = $this->createForm(FellAppFilterType::class, null,array('form_custom_value'=>$params));
+        $filterform = $this->createForm(FellAppFilterType::class, null,array(
+            'method' => 'GET',
+            'form_custom_value'=>$params
+        ));
 
         //$filterform->submit($request);  //use bind instead of handleRequest. handleRequest does not get filter data
         $filterform->handleRequest($request);

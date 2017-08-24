@@ -595,12 +595,22 @@ class CallLogPatientController extends PatientController {
         }
         //print_r($messageCategories);
 
-        $params = array(
-            'messageCategory' => $messageCategoryId,
-            'messageCategories' => $messageCategories //for previous entries page
-        );
-        $filterform = $this->createForm(CalllogListPreviousEntriesFilterType::class, null, array('form_custom_value'=>$params));
-        $filterform->submit($request);
+        $filterform = null;
+        if(0) {
+            $params = array(
+                'messageCategory' => $messageCategoryId,
+                'messageCategories' => $messageCategories //for previous entries page
+            );
+            $filterform = $this->createForm(CalllogListPreviousEntriesFilterType::class, null, array(
+                'method' => 'GET',
+                'form_custom_value' => $params
+            ));
+            //$filterform->submit($request);
+            $filterform->handleRequest($request);
+
+            //$messageCategoryId = $filterform['messageCategory']->getData();
+            //echo "messageCategoryId=".$messageCategoryId."<br>";
+        }
 
         //////////////// find messages ////////////////
         //$this->testSelectMessagesWithMaxVersion($patientid);
@@ -699,7 +709,7 @@ class CallLogPatientController extends PatientController {
         }
 
         $params = array(
-            'filterform' => $filterform->createView(),
+            'filterform' =>  ($filterform ? $filterform->createView() : null), //$filterform->createView(),
             'route_path' => $request->get('_route'),
             'messages' => $messages,
             'title' => $title,

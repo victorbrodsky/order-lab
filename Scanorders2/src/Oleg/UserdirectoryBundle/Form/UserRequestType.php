@@ -23,6 +23,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -69,8 +71,8 @@ class UserRequestType extends AbstractType
             'attr' => array('class' => 'horizontal_type hascwid')
         ));
 
-        //password
-        $builder->add( 'password', 'password', array(
+        //password RepeatedType::class
+        $builder->add( 'password', PasswordType::class, array(
             'mapped' => false,
             'label'=>'Password:',
             'attr' => array('class' => 'form-control form-control-modif cwid-password')

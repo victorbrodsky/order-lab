@@ -36,7 +36,8 @@
 
     <div class="well form-search">
     {#<form action="{{ path(routename) }}" method="get" class="well form-search">#}
-    {{ form_start(filterform, {'action': path(routename)}) }}
+    {#{{ form_start(filterform, {'action': path(routename)}) }}#}
+    {{ form_start(filterform) }}
         <div class="row">
             <div class="col-xs-12">
 

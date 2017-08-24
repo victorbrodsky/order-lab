@@ -31,3 +31,83 @@ services:
         tags:
             - { name: security.voter }
 
+
+framework:
+    workflows:
+        transres_project:
+            type: 'state_machine'
+            supports:
+                - Oleg\TranslationalResearchBundle\Entity\Project
+            places:
+                - start
+                - draft
+                - complete
+                - irb_review
+                - irb_rejected
+                - admin_review
+                - admin_rejected
+                - committee_review
+                - committee_rejected
+                - final_approval
+                - approved
+                - not_approved
+                - closed
+            transitions:
+                draft:
+                    from: start
+                    to: draft
+                submit:
+                    from: [start, draft]
+                    to: complete
+                #Re-submit after rejected
+                resubmit_irb_rejected:
+                   from: irb_rejected
+                   to: irb_review
+                resubmit_admin_rejected:
+                   from: admin_rejected
+                   to: admin_review
+                resubmit_committee_rejected:
+                   from: committee_rejected
+                   to: committee_review
+                #IRB Review
+                wait_for_irb_review:
+                    from: complete
+                    to: irb_review
+                wait_for_admin_review:
+                    from: irb_review
+                    to: admin_review
+                irb_review_no:
+                    from: irb_review
+                    to: irb_rejected
+                #ADMIN Review
+                wait_for_admin_review:
+                    from: irb_review
+                    to: admin_review
+                admin_review_no:
+                    from: admin_review
+                    to: admin_rejected
+                #COMMITTEE Review
+                wait_for_committee_review:
+                    from: admin_review
+                    to: committee_review
+                committee_review_no:
+                    from: committee_review
+                    to: committee_rejected
+                #FINAL approval
+                wait_for_final_approval:
+                    from: committee_review
+                    to: final_approval
+                final_approval_yes:
+                    from: final_approval
+                    to: approved
+                final_approval_no:
+                    from: final_approval
+                    to: not_approved
+                #Closed
+                approved_closed:
+                    from: approved
+                    to: closed
+                #Un-Closed
+                closed_approved:
+                    from: closed
+                    to: approved

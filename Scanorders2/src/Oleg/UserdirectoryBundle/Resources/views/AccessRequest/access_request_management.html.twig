@@ -116,7 +116,7 @@
 
 
     {#<form id="accessrequest_management" action="{{ actionPath }}" method="POST">#}
-    {{ form_start(form, {'id': 'accessrequest_management', 'action': actionPath, 'method': 'POST'}) }}
+    {{ form_start(form, {'action': actionPath, 'method': 'POST', 'attr': {'id': 'accessrequest_management'}}) }}
 
         {#{% if routename == sitename~'_accessrequest_management' %}#}
             {#<div style="display: none">#}

@@ -35,8 +35,10 @@
 
 
     {#Search Form#}
-    <p>
-    <form action="{{ path(route_path) }}" method="get" class="well form-search">
+    <div class="well form-search">
+    {#<form action="{{ path(route_path) }}" method="get" class="well form-search">#}
+    {#{{ form_start(filterform, {'action': route_path, 'method': 'GET', 'attr': {'class': 'well form-search'}}) }}#}
+    {{ form_start(filterform) }}
 
         {#basic search#}
         <div class="row">
@@ -148,8 +150,9 @@
         </div> <!-- panel-collapse -->
 
         {#{{ form_rest(filterform) }}#}
-    </form>
-    </p>
+    {#</form>#}
+    {{ form_end(filterform) }}
+    </div>
 
 
     {#Call Case List#}

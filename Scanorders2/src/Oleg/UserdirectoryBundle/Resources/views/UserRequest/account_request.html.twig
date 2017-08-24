@@ -85,7 +85,7 @@
         <br>
 
         {#<form id="accountrequestform" action="{{ path(sitename~'_accountrequest_create') }}" method="post">#}
-        {{ form_start(form, {'id': "accountrequestform",'action': path(sitename~'_accountrequest_create'), 'method': 'POST'}) }}
+        {{ form_start(form, { 'action': path(sitename~'_accountrequest_create'), 'method': 'POST', 'attr': {'id': 'accountrequestform'} }) }}
 
             {{ form_errors(form) }}
 
@@ -288,9 +288,10 @@
         function submitRequestForm() {
 
             var checkedValue = $("#accountrequestform input[type='radio']:checked").val();
+            console.log('checkedValue='+checkedValue);
 
             if( checkedValue == "Yes" ) {
-
+                console.log('checkedValue Yes');
                 //copy fields
                 var cwid = $('.cwid').val();
                 //add usertype
@@ -312,7 +313,7 @@
                 $('#loginform').submit();
 
             } else {
-
+                console.log('checkedValue No');
                 $('#accountrequestform').submit();
 
             }
