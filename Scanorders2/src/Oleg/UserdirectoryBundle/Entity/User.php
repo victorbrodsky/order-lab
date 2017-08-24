@@ -997,6 +997,7 @@ class User extends BaseUser {
         return $this->infos;
     }
 
+    //for "friendsofsymfony/user-bundle" > "v2.0.0-alpha3" => locked field is removed
     public function setLocked( $value ) {
         $this->setEnabled($value);
     }
