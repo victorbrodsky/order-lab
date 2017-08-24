@@ -244,6 +244,10 @@ function setTranslationalResearchNavBar() {
         id = 'translationalresearch-my-projects';
     }
 
+    if( full.indexOf("/translational-research/workflow") !== -1 ) {
+        id = 'translationalresearch-project-workflow';
+    }
+
     id = commonNavBar(full,id);
 
     //if( full.indexOf("/translational-research/event-log/event-log-per-user-per-event-type/") !== -1 ) {
