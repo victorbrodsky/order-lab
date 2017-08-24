@@ -60,7 +60,7 @@ function prep(){
     chown -R www-data:www-data $PROJECT_LOCAL_PATH/web
 
     echo "*** Update tables in Doctrine DB ***"
-    php $PROJECT_LOCAL_PATH/bin/console doctrine:schema:update --force
+    php -d memory_limit=512M $PROJECT_LOCAL_PATH/bin/console doctrine:schema:update --force
 
     #echo "*** Create LEVENSHTEIN functions for fuzzy search ***"
     #php $PROJECT_LOCAL_PATH/app/console jrk:levenshtein:install
