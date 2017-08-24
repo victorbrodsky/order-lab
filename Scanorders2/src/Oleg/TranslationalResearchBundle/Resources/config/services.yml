@@ -70,31 +70,28 @@ framework:
                    from: committee_rejected
                    to: committee_review
                 #IRB Review
-                wait_for_irb_review:
+                to_irb_review:
                     from: complete
                     to: irb_review
-                wait_for_admin_review:
-                    from: irb_review
-                    to: admin_review
                 irb_review_no:
                     from: irb_review
                     to: irb_rejected
                 #ADMIN Review
-                wait_for_admin_review:
+                to_admin_review:
                     from: irb_review
                     to: admin_review
                 admin_review_no:
                     from: admin_review
                     to: admin_rejected
                 #COMMITTEE Review
-                wait_for_committee_review:
+                to_committee_review:
                     from: admin_review
                     to: committee_review
                 committee_review_no:
                     from: committee_review
                     to: committee_rejected
                 #FINAL approval
-                wait_for_final_approval:
+                to_final_approval:
                     from: committee_review
                     to: final_approval
                 final_approval_yes:
