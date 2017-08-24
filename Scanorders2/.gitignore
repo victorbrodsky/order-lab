@@ -30,7 +30,7 @@
 /app/logs/*
 /build/
 /vendor/*
-/bin/
+#/bin/
 /composer.phar
 /src/Oleg/OrderformBundle/Entity/*.php~
 /.idea/
