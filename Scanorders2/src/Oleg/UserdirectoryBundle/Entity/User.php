@@ -39,6 +39,8 @@ use FOS\UserBundle\Model\User as BaseUser;
 //Make username and email length compatible with actual database limitations regarding key and index length
 //So use "friendsofsymfony/user-bundle": "v2.0.0-alpha3"
 
+// *      @ORM\Index( name="username_idx", columns={"username"} )
+
 /**
  * @ORM\Entity(repositoryClass="Oleg\UserdirectoryBundle\Repository\UserRepository")
  * @UniqueEntity(
@@ -50,8 +52,7 @@ use FOS\UserBundle\Model\User as BaseUser;
  * @ORM\Table(name="user_fosuser",
  *  indexes={
  *      @ORM\Index( name="keytype_idx", columns={"keytype"} ),
- *      @ORM\Index( name="primaryPublicUserId_idx", columns={"primaryPublicUserId"} ),
- *      @ORM\Index( name="username_idx", columns={"username"} )
+ *      @ORM\Index( name="primaryPublicUserId_idx", columns={"primaryPublicUserId"} )
  *  }
  * )
  * @ORM\AttributeOverrides({
