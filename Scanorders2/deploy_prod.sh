@@ -21,6 +21,12 @@
 # cd /path/to/simple
 # ./deploy1
 
+if [ $# -eq 0 ]
+  then
+    echo "No arguments supplied"
+    $1 = "-full"
+fi
+
 echo
 if [ $1 == "-fast" ]
 then
