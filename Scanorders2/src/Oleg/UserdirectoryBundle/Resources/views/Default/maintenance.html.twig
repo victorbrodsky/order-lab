@@ -56,7 +56,7 @@
         <br>
 
         <p>
-        {% for flashMessage in app.session.flashbag.get('notice') %}
+        {% for flashMessage in app.flashes('notice') %}
             <div class="flash-notice">
                 {{ flashMessage }}
             </div>

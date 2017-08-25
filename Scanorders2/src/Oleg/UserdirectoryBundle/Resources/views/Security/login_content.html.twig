@@ -22,19 +22,19 @@
 
 <br>
 
-{% for flashMessage in app.session.flashbag.get('notice') %}
+{% for flashMessage in app.flashes('notice') %}
     <div class="flash-notice" align="center">
         {{ flashMessage|raw }}
     </div>
 {% endfor %}
 
-{% for flashMessage in app.session.flashbag.get('pnotify') %}
+{% for flashMessage in app.flashes('pnotify') %}
     <input type="hidden" id="pnotify-notice" value="{{ flashMessage|raw }}" />
 {% endfor %}
-{% for flashMessage in app.session.flashbag.get('pnotify-error') %}
+{% for flashMessage in app.flashes('pnotify-error') %}
     <input type="hidden" id="pnotify-notice" class="pnotify-notice-error" value="{{ flashMessage|raw }}" />
 {% endfor %}
-{% for flashMessage in app.session.flashbag.get('pnotify-success') %}
+{% for flashMessage in app.flashes('pnotify-success') %}
     <input type="hidden" id="pnotify-notice" class="pnotify-notice-success" value="{{ flashMessage|raw }}" />
 {% endfor %}
 

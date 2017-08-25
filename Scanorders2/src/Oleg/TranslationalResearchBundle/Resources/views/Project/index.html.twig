@@ -90,9 +90,15 @@
                             </li>
 
                             {#TODO: use util to get url for available action#}
-                            <li>
-                                <a href="{{ path(translationalresearch_sitename~'_to_irb_review', { 'id': project.id }) }}" target="_blank">To IRB Review</a>
-                            </li>
+                            {#<li>#}
+                                {#<a href="{{ path(translationalresearch_sitename~'_to_irb_review', { 'id': project.id }) }}" target="_blank">To IRB Review</a>#}
+                            {#</li>#}
+                            {% set actionLinks = transres_util.getEnabledLinkActions(project,app.user) %}
+                            {% for actionLink in actionLinks %}
+                                <li>
+                                    {{ actionLink|raw }}
+                                </li>
+                            {% endfor %}
 
                         </ul>
 

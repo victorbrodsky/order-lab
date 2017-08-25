@@ -208,7 +208,7 @@ class Project {
 
     public function __construct($user=null) {
         $this->setSubmitter($user);
-        $this->setStatus('pending');
+        $this->setStatus('draft');
         $this->setCreateDate(new \DateTime());
 
         $this->principalInvestigators = new ArrayCollection();

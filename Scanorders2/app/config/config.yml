@@ -78,6 +78,7 @@ twig:
         user_formnode_utility: "@user_formnode_utility"
         user_service_utility: "@user_service_utility"
         calllog_util_form: "@calllog_util_form"
+        transres_util: "@transres_util"
 
 #    form:
 #      resources: ['form_table_layout.html.twig']

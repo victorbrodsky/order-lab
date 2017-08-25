@@ -54,7 +54,7 @@
 
         <br>
 
-        {% for flashMessage in app.session.flashbag.get('warning') %}
+        {% for flashMessage in app.flashes('warning') %}
             <div style="height: 1%;">&nbsp;</div>
             <p class="alert alert-danger center-block" align="middle" style="width: 70%;">{{ flashMessage|raw }}</p>
         {% endfor %}

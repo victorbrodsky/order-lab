@@ -31,19 +31,28 @@ services:
         tags:
             - { name: security.voter }
 
+    transres_util:
+        class: Oleg\TranslationalResearchBundle\Util\TransResUtil
+        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+
 
 framework:
     workflows:
         transres_project:
             type: 'state_machine'
+            marking_store:
+                type: 'single_state' # 'multiple_state' or 'single_state'
+                arguments:
+                    - 'status' #status keeps the marking state
             supports:
                 - Oleg\TranslationalResearchBundle\Entity\Project
+            #Project has status which is equal to this place
             places:
                 - start
                 - draft
                 - complete
-                - irb_review
-                - irb_rejected
+                - irb_review      #available for IRB review
+                - irb_rejected    #rejected by IRB review. User can re-submit the project -resubmit_irb_rejected-> irb_review
                 - admin_review
                 - admin_rejected
                 - committee_review
@@ -56,6 +65,7 @@ framework:
                 draft:
                     from: start
                     to: draft
+                #submit to IRB review
                 submit:
                     from: [start, draft]
                     to: complete

@@ -88,8 +88,9 @@ class WorkflowController extends Controller
      * @Route("/to-irb-review/{id}", name="translationalresearch_to_irb_review")
      * @Method("GET")
      */
-    public function homeAction( Project $project )
+    public function toIrbReviewAction( Project $project )
     {
+        $transresUtil = $this->container->get('transres_util');
         $workflow = $this->container->get('state_machine.transres_project');
 
         $workflow->can($project, 'to_irb_review'); // True
@@ -117,10 +118,93 @@ class WorkflowController extends Controller
         $transitions = $workflow->getEnabledTransitions($project);
         echo "<pre>";
         print_r($transitions);
-        echo "</pre>";
+        echo "</pre><br><br>";
 
+        foreach( $transitions as $transition ) {
+//            echo $transition->getName().": ";
+//            $froms = $transition->getFroms();
+//            foreach( $froms as $from ) {
+//                echo "from=".$from.", ";
+//            }
+//            $tos = $transition->getTos();
+//            foreach( $tos as $to ) {
+//                echo "to=".$to.", ";
+//            }
+//            echo "<br>";
+            $transresUtil->printTransition($transition);
+        }
+
+        exit();
         return $this->redirectToRoute('translationalresearch_home');
     }
 
+
+    /**
+     * https://symfony.com/doc/current/workflow/usage.html
+     *
+     * @Route("/project-transition-status/{transitionName}/{to}/{id}", name="translationalresearch_transition_status_action")
+     * @Method("GET")
+     */
+    public function transitionStatusAction( $transitionName, $to, Project $project )
+    {
+        $transresUtil = $this->container->get('transres_util');
+        $workflow = $this->container->get('state_machine.transres_project');
+
+        //$workflow->can($project, 'to_irb_review'); // True
+        //$workflow->can($project, 'to_admin_review'); // False
+
+//        //Get Transition and $to
+//        $transition = $transresUtil->getTransitionByName($project,$transitionName);
+//        $tos = $transition->getTos();
+//        if( count($tos) != 1 ) {
+//            throw $this->createNotFoundException('Available to state is not a single state; count='.$tos.": ".implode(",",$tos));
+//        }
+//        $to = $tos[0];
+
+        // Update the currentState on the post
+        if( $workflow->can($project, $transitionName) ) {
+            try {
+                $workflow->apply($project, $transitionName);
+                //change status
+                $project->setStatus($to); //i.e. 'irb_review'
+                $this->addFlash(
+                    'error',
+                    "Successfully changed status to $to"
+                );
+            } catch (LogicException $e) {
+                $this->addFlash(
+                    'error',
+                    "Change status to $to failed"
+                );
+            }
+        }
+
+        // See all the available transition for the post in the current state
+//        $transitions = $workflow->getEnabledTransitions($project);
+//        echo "<pre>";
+//        print_r($transitions);
+//        echo "</pre><br><br>";
+//        foreach( $transitions as $transition ) {
+//            $transresUtil->printTransition($transition);
+//        }
+
+        //exit();
+        return $this->redirectToRoute('translationalresearch_home');
+    }
+
+    /**
+     * https://symfony.com/doc/current/workflow/usage.html
+     *
+     * @Route("/project-transition/{transitionName}/{id}", name="translationalresearch_transition_action")
+     * @Method("GET")
+     */
+    public function transitionAction( $transitionName, Project $project )
+    {
+        $transresUtil = $this->container->get('transres_util');
+        $transresUtil->setTransition($project,$transitionName);
+
+        //exit();
+        return $this->redirectToRoute('translationalresearch_home');
+    }
 
 }
