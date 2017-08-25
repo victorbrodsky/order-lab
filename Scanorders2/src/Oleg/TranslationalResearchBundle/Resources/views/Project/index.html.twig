@@ -57,7 +57,8 @@
                 </td>
 
                 <td>
-                    {{ project.status }}
+                    {#{{ project.status }}#}
+                    {{ transres_util.getStatusLabelByName(project.status) }}
                 </td>
 
                 <td>
@@ -94,6 +95,9 @@
                                 {#<a href="{{ path(translationalresearch_sitename~'_to_irb_review', { 'id': project.id }) }}" target="_blank">To IRB Review</a>#}
                             {#</li>#}
                             {% set actionLinks = transres_util.getEnabledLinkActions(project,app.user) %}
+                            {% if actionLinks|length > 0 %}
+                                <li class="divider"></li>
+                            {% endif %}
                             {% for actionLink in actionLinks %}
                                 <li>
                                     {{ actionLink|raw }}

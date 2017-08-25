@@ -65,11 +65,11 @@ framework:
                 draft:
                     from: start
                     to: draft
-                #submit to IRB review
+                #Complete submittion
                 submit:
                     from: [start, draft]
                     to: complete
-                #Re-submit after rejected
+                ### Re-submit after rejected ###
                 resubmit_irb_rejected:
                    from: irb_rejected
                    to: irb_review
@@ -79,6 +79,8 @@ framework:
                 resubmit_committee_rejected:
                    from: committee_rejected
                    to: committee_review
+
+                ### Main Actions ###
                 #IRB Review
                 to_irb_review:
                     from: complete

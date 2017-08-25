@@ -75,7 +75,10 @@ class TransResUtil
                     UrlGeneratorInterface::ABSOLUTE_URL
                 );
 
-                $thisLink = "<a href=".$thisUrl.">".ucfirst($transitionName)." (mark as ".ucfirst($to).")</a>";
+                //$label = ucfirst($transitionName)." (mark as ".ucfirst($to);
+                $label = $this->getTransitionLabelByName($transitionName);
+
+                $thisLink = "<a href=".$thisUrl.">".$label."</a>";
                 $links[] = $thisLink;
             }
         }
@@ -120,6 +123,8 @@ class TransResUtil
             $to = $tos[0];
         }
 
+        $label = $this->getTransitionLabelByName($transitionName);
+
         // Update the currentState on the post
         if( $workflow->can($project, $transitionName) ) {
             try {
@@ -134,17 +139,136 @@ class TransResUtil
 
                 $this->container->get('session')->getFlashBag()->add(
                     'notice',
-                    "Successfully changed status to $to"
+                    "Successful action: ".$label
                 );
                 return true;
             } catch (LogicException $e) {
                 $this->container->get('session')->getFlashBag()->add(
                     'warning',
-                    "Change status to $to failed"
+                    "Action failed: ".$label
                 );
                 return false;
             }//try
         }
+    }
+
+    public function getTransitionLabelByName( $transitionName ) {
+
+        switch ($transitionName) {
+            case "draft":
+                $label = "Save Project as Draft";
+                break;
+            case "submit":
+                $label = "Complete Submission";
+                break;
+
+            ///// Re-Submit after rejected /////
+            case "resubmit_irb_rejected":
+                $label = "Re-Submit to IRB Review";
+                break;
+            case "resubmit_admin_rejected":
+                $label = "Re-Submit to Admin Review";
+                break;
+            case "resubmit_committee_rejected":
+                $label = "Re-Submit to Committee Review";
+                break;
+
+            ///// Main Actions /////
+            //IRB Review
+            case "to_irb_review":
+                $label = "Submit to IRB Review";
+                break;
+            case "irb_review_no":
+                $label = "Reject IRB Review";
+                break;
+            //ADMIN Review
+            case "to_admin_review":
+                $label = "Submit to Admin Review";
+                break;
+            case "admin_review_no":
+                $label = "Reject Admin Review";
+                break;
+            //COMMITTEE Review
+            case "to_committee_review":
+                $label = "Submit to Committee Review";
+                break;
+            case "committee_review_no":
+                $label = "Reject Committee Review";
+                break;
+            //FINAL approval
+            case "to_final_approval":
+                $label = "Submit to Final Approval";
+                break;
+            case "final_approval_yes":
+                $label = "Final Approve";
+                break;
+            case "final_approval_no":
+                $label = "Reject Final Approval";
+                break;
+
+            case "approved_closed":
+                $label = "Close Approved Project";
+                break;
+            case "closed_approved":
+                $label = "Re-Open Approved Project";
+                break;
+
+            default:
+                $label = "<$transitionName>";
+
+        }
+        return $label;
+    }
+
+    public function getStatusLabelByName( $statusName ) {
+        switch ($statusName) {
+            case "draft":
+                $status = "Draft";
+                break;
+            case "complete":
+                $status = "Completed";
+                break;
+            case "submit":
+                $status = "Completed";
+                break;
+            case "irb_review":
+                $status = "In IRB Review";
+                break;
+            case "irb_rejected":
+                $status = "IRB Review Rejected";
+                break;
+            case "admin_review":
+                $status = "In Admin Review";
+                break;
+            case "admin_rejected":
+                $status = "Admin Review Rejected";
+                break;
+            case "committee_review":
+                $status = "In Committee Review";
+                break;
+            case "committee_rejected":
+                $status = "Committee Review Rejected";
+                break;
+
+            case "final_approval":
+                $status = "In Final Approval";
+                break;
+            case "approved":
+                $status = "Approved";
+                break;
+            case "not_approved":
+                $status = "Final Approval Rejected";
+                break;
+
+            case "closed":
+                $status = "Closed";
+                break;
+
+            default:
+                $status = "<$statusName>";
+
+        }
+        return $status;
     }
 
 }
