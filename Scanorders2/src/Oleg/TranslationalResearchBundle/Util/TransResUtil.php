@@ -43,17 +43,16 @@ class TransResUtil
         $this->secToken = $container->get('security.token_storage')->getToken(); //$user = $this->secToken->getUser();
     }
 
-    public function getEnabledLinkActions( $project, $user=null ) {
+    public function getEnabledLinkActions( $project, $user=null, $classEdit=null, $classTransition=null ) {
         $workflow = $this->container->get('state_machine.transres_project');
         $transitions = $workflow->getEnabledTransitions($project);
 
         $links = array();
         foreach( $transitions as $transition ) {
             //$this->printTransition($transition);
+            $transitionName = $transition->getName();
             $tos = $transition->getTos();
             foreach( $tos as $to ) {
-                $transitionName = $transition->getName();
-
                 //sent status $to
 //                $thisUrl = $this->container->get('router')->generate(
 //                    'translationalresearch_transition_status_action',
@@ -78,10 +77,34 @@ class TransResUtil
                 //$label = ucfirst($transitionName)." (mark as ".ucfirst($to);
                 $label = $this->getTransitionLabelByName($transitionName);
 
-                $thisLink = "<a href=".$thisUrl.">".$label."</a>";
+                $thisLink = "<a ".
+                    "general-data-confirm='Are you sure you want to $label?'".
+                    "href=".$thisUrl." class='".$classTransition."'>".$label."</a>";
                 $links[] = $thisLink;
             }
+
         }
+
+        //add links to edit if the current status is "_rejected"
+        $froms = $transition->getFroms();
+        $fromStatus = $froms[0];
+        if( strpos($fromStatus, '_rejected') !== false || $fromStatus == 'draft' || $fromStatus == 'complete' ) {
+            $label = "Edit Project";
+            $thisUrl = $this->container->get('router')->generate(
+                'translationalresearch_project_edit',
+                array(
+                    'id'=>$project->getId()
+                ),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $editLink = "<a ".
+                //"general-data-confirm='Are you sure you want to $label?'".
+                "href=".$thisUrl." class='".$classEdit."'>".$label."</a>";
+            //$links[] = $editLink;
+            array_unshift($links,$editLink);
+        }
+
+        //echo "count=".count($links)."<br>";
 
         return $links;
     }
@@ -161,6 +184,9 @@ class TransResUtil
             case "submit":
                 $label = "Complete Submission";
                 break;
+            case "edit":
+                $label = "Edit Project";
+                break;
 
             ///// Re-Submit after rejected /////
             case "resubmit_irb_rejected":
@@ -220,8 +246,14 @@ class TransResUtil
         return $label;
     }
 
+    public function getStatusLabelByProject( $project ) {
+        return $this->getStatusLabelByName($project->getStatus());
+    }
     public function getStatusLabelByName( $statusName ) {
         switch ($statusName) {
+            case "start":
+                $status = "Edit Project";
+                break;
             case "draft":
                 $status = "Draft";
                 break;

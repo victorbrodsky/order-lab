@@ -16,6 +16,7 @@
     </h4>
     <br>
 
+    {{ transres.projectHeader(project) }}
 
     {{ form_start(form) }}
     {#{{ form_widget(form) }}#}
@@ -63,9 +64,10 @@
 
 
     <br>
-    <p>
-        <a class="btn btn-warning" href="{{ path(translationalresearch_sitename~'_project_edit', { 'id': project.id }) }}">Edit project</a>
-    </p>
+    {#<p>#}
+        {#<a class="btn btn-warning" href="{{ path(translationalresearch_sitename~'_project_edit', { 'id': project.id }) }}">Edit project</a>#}
+    {#</p>#}
+    {{ transres.projectHeader(project) }}
 
     <br>
     <br>
