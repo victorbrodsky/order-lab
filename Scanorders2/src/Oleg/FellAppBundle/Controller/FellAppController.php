@@ -789,7 +789,8 @@ class FellAppController extends Controller {
             //var_dump($form->getErrors());die;
         }
 
-        $force = false; //true;
+        $force = false;
+        //$force = true;
         if( $form->isValid() || $force ) {
 
             //exit('form valid');
@@ -868,13 +869,11 @@ class FellAppController extends Controller {
 
             return $this->redirect($this->generateUrl('fellapp_show',array('id' => $entity->getId())));
         } else {
-            $msg = 'Fellowship Form has an error (ID# '.$entity->getId().'): '.$form->getErrors(true)." Notification email has been sent to the system administrator.";
-            //$emailUtil = $this->container->get('user_mailer_utility');
-            //$emailUtil->sendEmail( $responsibleEmails, "Fellowship Form has an error", $msg );
+            $msg = 'Fellowship Form has an error (ID# '.$entity->getId().'): '.$form->getErrors(true);
             $userSecUtil = $this->container->get('user_security_utility');
-            $userSecUtil->sendEmailToSystemEmail("Fellowship Form has an error (".$entity->getId().")", $msg);
-            exit($msg);
-            throw new \Exception($msg);
+            $userSecUtil->sendEmailToSystemEmail("Fellowship Form has an error (ID# ".$entity->getId().")", $msg);
+            exit($msg."<br>Notification email has been sent to the system administrator.");
+            //throw new \Exception($msg);
         }
 
         //echo 'form invalid <br>';
