@@ -868,7 +868,10 @@ class FellAppController extends Controller {
 
             return $this->redirect($this->generateUrl('fellapp_show',array('id' => $entity->getId())));
         } else {
-            throw new \Exception('Fellowship Form has an error: '.$form->getErrors(true));
+            $msg = 'Fellowship Form has an error: '.$form->getErrors(true);
+            //$emailUtil->sendEmail( $responsibleEmails, "Fellowship Form has an error", $msg );
+            //exit($msg);
+            throw new \Exception($msg);
         }
 
         //echo 'form invalid <br>';
