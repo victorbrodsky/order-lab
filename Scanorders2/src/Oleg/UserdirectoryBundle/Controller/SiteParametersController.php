@@ -20,6 +20,7 @@ namespace Oleg\UserdirectoryBundle\Controller;
 use Doctrine\Common\Collections\ArrayCollection;
 use Oleg\UserdirectoryBundle\Entity\OrganizationalGroupDefault;
 use Oleg\UserdirectoryBundle\Form\InitialConfigurationType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -322,7 +323,7 @@ class SiteParametersController extends Controller
             'disabled' => false,
         ));
 
-        $form->add('save', 'submit', array(
+        $form->add('save', SubmitType::class, array(
             'label' => 'Update',
             'attr' => array('class'=>'btn btn-primary')
         ));
@@ -445,7 +446,7 @@ class SiteParametersController extends Controller
         ));
 
         if( $disabled === false ) {
-            $form->add('submit', 'submit', array('label' => 'Update', 'attr'=>array('class'=>'btn btn-warning','style'=>'margin-top: 15px;')));
+            $form->add('submit', SubmitType::class, array('label' => 'Update', 'attr'=>array('class'=>'btn btn-warning','style'=>'margin-top: 15px;')));
         }
 
         return $form;

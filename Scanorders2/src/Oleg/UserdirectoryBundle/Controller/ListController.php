@@ -21,6 +21,7 @@ use Oleg\OrderformBundle\Controller\ScanListController;
 use Oleg\UserdirectoryBundle\Entity\CompositeNodeInterface;
 use Oleg\UserdirectoryBundle\Entity\Permission;
 use Oleg\UserdirectoryBundle\Form\ListFilterType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -523,7 +524,7 @@ class ListController extends Controller
             'form_custom_value_mapper' => $mapper
         ));
 
-        $form->add('submit', 'submit', array('label' => 'Create','attr'=>array('class'=>'btn btn-warning')));
+        $form->add('submit', SubmitType::class, array('label' => 'Create','attr'=>array('class'=>'btn btn-warning')));
 
         return $form;
     }
@@ -1016,7 +1017,7 @@ class ListController extends Controller
         ));
 
         if( !$disabled ) {
-            $form->add('submit', 'submit', array('label' => 'Update', 'attr'=>array('class'=>'btn btn-warning')));
+            $form->add('submit', SubmitType::class, array('label' => 'Update', 'attr'=>array('class'=>'btn btn-warning')));
         }
 
         return $form;
@@ -2079,7 +2080,7 @@ class ListController extends Controller
         return $this->createFormBuilder()
             ->setAction($this->generateUrl($pathbase.'_delete', array('id' => $id)))
             ->setMethod('DELETE')
-            ->add('submit', 'submit', array('label' => 'Delete','attr'=>array('class'=>'btn btn-danger')))
+            ->add('submit', SubmitType::class, array('label' => 'Delete','attr'=>array('class'=>'btn btn-danger')))
             ->getForm()
         ;
     }
