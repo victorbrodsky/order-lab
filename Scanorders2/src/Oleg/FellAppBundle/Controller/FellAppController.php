@@ -615,6 +615,13 @@ class FellAppController extends Controller {
             $action = $this->generateUrl('fellapp_update', array('id' => $entity->getId()));
         }
 
+        if( $routeName == "fellapp_update" ) {
+            $cycle = 'edit';
+            $disabled = false;
+            $method = "PUT";
+            $action = $this->generateUrl('fellapp_update', array('id' => $entity->getId()));
+        }
+
         if( $routeName == "fellapp_edit_default_interviewers" ) {
             $cycle = 'edit';
             $disabled = false;
@@ -655,7 +662,7 @@ class FellAppController extends Controller {
 //            )
 //        );
         $form = $this->createForm(
-            FellowshipApplicationType::class,
+            FellowshipApplicationType::class, //method: get Show Parameters
             $entity,
             array(
                 'disabled' => $disabled,
@@ -670,6 +677,7 @@ class FellAppController extends Controller {
         $em->clear();
 
         return array(
+            'form_pure' => $form,
             'form' => $form->createView(),
             'entity' => $entity,
             'pathbase' => 'fellapp',
@@ -737,11 +745,13 @@ class FellAppController extends Controller {
             'user' => $entity->getUser(),
             'cloneuser' => null,
             'roles' => $user->getRoles(),
-            'container' => $this->container
+            'container' => $this->container,
+            'cycle_type' => "update"
         );
-
-        //$form = $this->createForm( new FellowshipApplicationType($params), $entity );
-        $form = $this->createForm( FellowshipApplicationType::class, $entity, array('form_custom_value' => $params) );
+        $form = $this->createForm( FellowshipApplicationType::class, $entity, array('form_custom_value' => $params) ); //update
+        //$routeName = $request->get('_route');
+        //$args = $this->getShowParameters($routeName,null,$entity);
+        //$form = $args['form_pure'];
 
         $form->handleRequest($request);
 
@@ -768,11 +778,14 @@ class FellAppController extends Controller {
 //        echo "<br>";
 //        exit();
 
-        if(0) {
+        if(1) {
             $errorHelper = new ErrorHelper();
             $errors = $errorHelper->getErrorMessages($form);
             echo "<br>form errors:<br>";
             print_r($errors);
+
+            //echo "<br><br>getErrors:<br>";
+            //var_dump($form->getErrors());die;
         }
 
         if( $form->isValid() ) {
@@ -1053,7 +1066,7 @@ class FellAppController extends Controller {
             'container' => $this->container
         );
         //$form = $this->createForm( new FellowshipApplicationType($params), $fellowshipApplication );
-        $form = $this->createForm( FellowshipApplicationType::class, $fellowshipApplication, array('form_custom_value' => $params) );
+        $form = $this->createForm( FellowshipApplicationType::class, $fellowshipApplication, array('form_custom_value' => $params) ); //new
 
         $form->handleRequest($request);
 

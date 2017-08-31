@@ -45,6 +45,13 @@ class FellowshipApplicationType extends AbstractType
     public function formConstructor( $params=null )
     {
         $this->params = $params;
+//        foreach($params as $key=>$value) {
+//            if( $key != "user" && $key != "em" && $key != "container" ) {
+//                echo $key.": value=".$value."<br>";
+//                print_r($value);
+//            }
+//        }
+        //exit();
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -78,13 +85,26 @@ class FellowshipApplicationType extends AbstractType
         //get subfellowship types as for ROLE_FELLAPP_ADMIN
         $fellappUtil = $this->params['container']->get('fellapp_util');
         $fellTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
-        $builder->add('fellowshipSubspecialty', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:FellowshipSubspecialty',
-            'label' => "* Fellowship Application Type:",
-            'required'=> false,
-            'choices' => $fellTypes,
-            'attr' => array('class' => 'combobox combobox-width fellapp-fellowshipSubspecialty'),
-        ));
+        if( array_key_exists('cycle_type', $this->params) && $this->params['cycle_type'] == "update" ) {
+            $builder->add('fellowshipSubspecialty', EntityType::class, array(
+                'class' => 'OlegUserdirectoryBundle:FellowshipSubspecialty',
+                'label' => "* Fellowship Application Type:",
+                'required'=> false,
+                //'choices' => $fellTypes,
+                //'choices_as_values' => true,
+                'attr' => array('class' => 'combobox combobox-width fellapp-fellowshipSubspecialty'),
+            ));
+        } else {
+            $builder->add('fellowshipSubspecialty', EntityType::class, array(
+                'class' => 'OlegUserdirectoryBundle:FellowshipSubspecialty',
+                'label' => "* Fellowship Application Type:",
+                'required'=> false,
+                'choices' => $fellTypes,
+                //'choices_as_values' => true,
+                'attr' => array('class' => 'combobox combobox-width fellapp-fellowshipSubspecialty'),
+            ));
+        }
+
 
         if( $this->params['cycle'] == "new" ) {
             $builder->add('timestamp', DateType::class,array(

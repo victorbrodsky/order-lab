@@ -31,7 +31,7 @@ if [ $# -eq 0 ]
 fi
 
 echo
-if [ PARAM1 == "-fast" ]
+if [ $PARAM1 == "-fast" ]
 then
     echo "************* Start deploy fast (no cache warmup) *************"
 else
@@ -73,7 +73,7 @@ function prep(){
     #php $PROJECT_LOCAL_PATH/app/console cache:clear --env=prod --no-debug
     #php $PROJECT_LOCAL_PATH/app/console cache:clear --env=prod --no-debug --no-warmup
 
-    if [ PARAM1 != "-fast" ]
+    if [ $PARAM1 != "-fast" ]
     then
         echo "*** Warmup cache ***"
         php -d memory_limit=512M $PROJECT_LOCAL_PATH/bin/console cache:warmup --env=prod
