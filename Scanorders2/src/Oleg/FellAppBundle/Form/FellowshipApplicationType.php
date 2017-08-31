@@ -85,25 +85,15 @@ class FellowshipApplicationType extends AbstractType
         //get subfellowship types as for ROLE_FELLAPP_ADMIN
         $fellappUtil = $this->params['container']->get('fellapp_util');
         $fellTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
-        if( array_key_exists('cycle_type', $this->params) && $this->params['cycle_type'] == "update" ) {
-            $builder->add('fellowshipSubspecialty', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:FellowshipSubspecialty',
-                'label' => "* Fellowship Application Type:",
-                'required'=> false,
-                //'choices' => $fellTypes,
-                //'choices_as_values' => true,
-                'attr' => array('class' => 'combobox combobox-width fellapp-fellowshipSubspecialty'),
-            ));
-        } else {
-            $builder->add('fellowshipSubspecialty', EntityType::class, array(
-                'class' => 'OlegUserdirectoryBundle:FellowshipSubspecialty',
-                'label' => "* Fellowship Application Type:",
-                'required'=> false,
-                'choices' => $fellTypes,
-                //'choices_as_values' => true,
-                'attr' => array('class' => 'combobox combobox-width fellapp-fellowshipSubspecialty'),
-            ));
-        }
+        $builder->add('fellowshipSubspecialty', EntityType::class, array(
+            'class' => 'OlegUserdirectoryBundle:FellowshipSubspecialty',
+            'label' => "* Fellowship Application Type:",
+            'required'=> false,
+            'choices' => $fellTypes,
+            'invalid_message' => 'fellowshipSubspecialty invalid value',
+            //'choices_as_values' => true,
+            'attr' => array('class' => 'combobox combobox-width fellapp-fellowshipSubspecialty'),
+        ));
 
 
         if( $this->params['cycle'] == "new" ) {

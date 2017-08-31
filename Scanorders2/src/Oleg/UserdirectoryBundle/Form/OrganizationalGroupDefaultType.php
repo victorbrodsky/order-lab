@@ -86,6 +86,7 @@ class OrganizationalGroupDefaultType extends AbstractType
             //'label' => $translator->translate('timezone',$formtype,'Time Zone:'),
             'choices' => $tzUtil->tz_list(),
             'choices_as_values' => true,
+            'invalid_message' => 'invalid value: timezone',
             'required' => true,
             'preferred_choices' => array('America/New_York'),
             'attr' => array('class' => 'combobox combobox-width')

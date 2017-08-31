@@ -763,6 +763,7 @@ class FellAppController extends Controller {
 
 //        if ($form->isDisabled()) {
 //            echo "form is disabled<br>";
+//            exit();
 //        }
 //        if (count($form->getErrors(true)) > 0) {
 //            echo "form has errors<br>";
@@ -771,14 +772,14 @@ class FellAppController extends Controller {
 //        $string = (string) $form->getErrors(true);
 //        echo "string errors=".$string."<br>";
 //        echo "getErrors count=".count($form->getErrors())."<br>";
-//        echo "getErrorsAsString()=".$form->getErrorsAsString()."<br>";
+        //echo "getErrorsAsString()=".$form->getErrorsAsString()."<br>";
 //        print_r($form->getErrors());
 //        echo "<br>string errors:<br>";
 //        print_r($form->getErrorsAsString());
 //        echo "<br>";
 //        exit();
 
-        if(1) {
+        if(0) {
             $errorHelper = new ErrorHelper();
             $errors = $errorHelper->getErrorMessages($form);
             echo "<br>form errors:<br>";
@@ -788,7 +789,8 @@ class FellAppController extends Controller {
             //var_dump($form->getErrors());die;
         }
 
-        if( $form->isValid() ) {
+        $force = false; //true;
+        if( $form->isValid() || $force ) {
 
             //exit('form valid');
 
@@ -865,6 +867,8 @@ class FellAppController extends Controller {
             //exit('event='.$event);
 
             return $this->redirect($this->generateUrl('fellapp_show',array('id' => $entity->getId())));
+        } else {
+            throw new \Exception('Fellowship Form has an error: '.$form->getErrors(true));
         }
 
         //echo 'form invalid <br>';

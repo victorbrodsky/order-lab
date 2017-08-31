@@ -95,6 +95,7 @@ class IdentifierType extends AbstractType
                 $baseUserAttr->getStatusStrByStatus($baseUserAttr::STATUS_VERIFIED) => $baseUserAttr::STATUS_VERIFIED
             ),
             'choices_as_values' => true,
+            'invalid_message' => 'invalid value: identifier status',
             'label' => "Status:",
             'required' => true,
             'attr' => $statusAttr,  //array('class' => 'combobox combobox-width'),

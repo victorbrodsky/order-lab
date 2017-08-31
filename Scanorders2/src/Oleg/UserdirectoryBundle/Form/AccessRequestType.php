@@ -87,6 +87,7 @@ class AccessRequestType extends AbstractType
             'choice_label' => 'getNodeNameWithRoot',
             'class' => 'OlegUserdirectoryBundle:Institution',
             'choices' => $requestedScanOrderInstitutionScope,
+            'invalid_message' => 'organizationalGroup invalid value',
             'attr' => array('class' => 'combobox combobox-width combobox-institution')
         ));
 
