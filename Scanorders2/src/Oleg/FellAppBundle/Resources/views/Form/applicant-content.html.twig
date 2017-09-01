@@ -88,19 +88,22 @@
 
 {{ form_errors(form) }}
 
-
+{% if 0 %}
 <div id="form-prototype-data"
      data-prototype-fellapp-interviews = "{{ fellappmacros.interviewForm(form.interviews,cycle,'fellapp-interviews','prototype', sitename,1)|e }}"
      data-userurllink = "{{ usermacros.userUrlLink()|e }}"
      data-uploadurl = "{{ oneup_uploader_endpoint('fellapp_gallery') }}"
      data-userid = "{{ entity.user.id }}"
 ></div>
+{% endif %}
 
     <input type="hidden" id="fellapp_id" value="{{ entity.id }}" />
     <input type="hidden" id="user_id" value="{{ form.vars.value.user.id }}" />
     <input type="hidden" id="user_name" value="{{ form.vars.value.user.username }}" />
     <input type="hidden" id="formcycle" value="{{ cycle }}" />
     <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
+
+{% if 0 %}
 
 {% if form.timestamp is defined %}
     <div class="row">
@@ -164,6 +167,8 @@
 <!-- Signature -->
 {% include 'OlegFellAppBundle:Form:Signature.html.twig' %}
 
+{% endif %}
+
 </div>
 
 {#{% do form.setRendered %}#}
@@ -191,8 +196,8 @@
     </p>
 {% endif %}
 
-{#{{ form_end(form) }}#}
-{{ form_end(form, {'render_rest': false}) }}
+{{ form_end(form) }}
+{#{{ form_end(form, {'render_rest': false}) }}#}
 
 <br>
 

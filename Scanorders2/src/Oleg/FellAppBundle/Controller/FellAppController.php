@@ -756,7 +756,7 @@ class FellAppController extends Controller {
         $form->handleRequest($request);
 
         if( !$form->isSubmitted() ) {
-            //echo "form is not submitted<br>";
+            echo "form is not submitted<br>";
             $form->submit($request);
         }
 
@@ -788,6 +788,8 @@ class FellAppController extends Controller {
             //echo "<br><br>getErrors:<br>";
             //var_dump($form->getErrors());die;
         }
+
+
 
         $force = false;
         //$force = true;
@@ -869,6 +871,12 @@ class FellAppController extends Controller {
 
             return $this->redirect($this->generateUrl('fellapp_show',array('id' => $entity->getId())));
         } else {
+            echo "getErrors count=".count($form->getErrors())."<br>";
+            $string = (string) $form->getErrors(true);
+            echo "Error:<br>$string<br><br><pre>";
+            //print_r($form->getErrors());
+            //echo "</pre>";
+
             $msg = 'Fellowship Form has an error (ID# '.$entity->getId().'): '.$form->getErrors(true);
             $userSecUtil = $this->container->get('user_security_utility');
             $userSecUtil->sendEmailToSystemEmail("Fellowship Form has an error (ID# ".$entity->getId().")", $msg);

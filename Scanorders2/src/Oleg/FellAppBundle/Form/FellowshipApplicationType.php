@@ -82,78 +82,80 @@ class FellowshipApplicationType extends AbstractType
 //                    ));
 //            },
 //        ));
-        //get subfellowship types as for ROLE_FELLAPP_ADMIN
-        $fellappUtil = $this->params['container']->get('fellapp_util');
-        $fellTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
-        $builder->add('fellowshipSubspecialty', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:FellowshipSubspecialty',
-            'label' => "* Fellowship Application Type:",
-            'required'=> false,
-            'choices' => $fellTypes,
-            'invalid_message' => 'fellowshipSubspecialty invalid value',
-            //'choices_as_values' => true,
-            'attr' => array('class' => 'combobox combobox-width fellapp-fellowshipSubspecialty'),
-        ));
+
+if(0) {
+    //get subfellowship types as for ROLE_FELLAPP_ADMIN
+    $fellappUtil = $this->params['container']->get('fellapp_util');
+    $fellTypes = $fellappUtil->getFellowshipTypesByInstitution(true);
+    $builder->add('fellowshipSubspecialty', EntityType::class, array(
+        'class' => 'OlegUserdirectoryBundle:FellowshipSubspecialty',
+        'label' => "* Fellowship Application Type:",
+        'required' => false,
+        'choices' => $fellTypes,
+        'invalid_message' => 'fellowshipSubspecialty invalid value',
+        //'choices_as_values' => true,
+        'attr' => array('class' => 'combobox combobox-width fellapp-fellowshipSubspecialty'),
+    ));
 
 
-        if( $this->params['cycle'] == "new" ) {
-            $builder->add('timestamp', DateType::class,array(
-                'widget' => 'single_text',
-                'label' => "Application Receipt Date:",
-                //'format' => 'MM/dd/yyyy, H:mm:ss',
-                'format' => 'MM/dd/yyyy',
-                'attr' => array('class' => 'datepicker form-control'),
-                'required' => false,
-            ));
-        }
-
-        $builder->add('startDate', DateType::class, array(
+    if ($this->params['cycle'] == "new") {
+        $builder->add('timestamp', DateType::class, array(
             'widget' => 'single_text',
-            'label' => "Start Date:",
-            'format' => 'MM/dd/yyyy',  //'MM/dd/yyyy, H:mm:ss',
-            'attr' => array('class' => 'datepicker form-control fellapp-startDate'),
-            'required' => false,
-        ));
-
-        $builder->add('endDate', DateType::class,array(
-            'widget' => 'single_text',
-            'label' => "End Date:",
+            'label' => "Application Receipt Date:",
+            //'format' => 'MM/dd/yyyy, H:mm:ss',
             'format' => 'MM/dd/yyyy',
-            'attr' => array('class' => 'datepicker form-control fellapp-endDate'),
+            'attr' => array('class' => 'datepicker form-control'),
             'required' => false,
         ));
+    }
 
-        //FellAppUserType($this->params)
-        $builder->add('user', FellAppUserType::class, array(
-            'form_custom_value' => $this->params,
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\User',
-            'label' => false,
-            'required' => false,
-        ));
+    $builder->add('startDate', DateType::class, array(
+        'widget' => 'single_text',
+        'label' => "Start Date:",
+        'format' => 'MM/dd/yyyy',  //'MM/dd/yyyy, H:mm:ss',
+        'attr' => array('class' => 'datepicker form-control fellapp-startDate'),
+        'required' => false,
+    ));
+
+    $builder->add('endDate', DateType::class, array(
+        'widget' => 'single_text',
+        'label' => "End Date:",
+        'format' => 'MM/dd/yyyy',
+        'attr' => array('class' => 'datepicker form-control fellapp-endDate'),
+        'required' => false,
+    ));
+
+    //FellAppUserType($this->params)
+    $builder->add('user', FellAppUserType::class, array(
+        'form_custom_value' => $this->params,
+        'data_class' => 'Oleg\UserdirectoryBundle\Entity\User',
+        'label' => false,
+        'required' => false,
+    ));
 
 
-        $builder->add('coverLetters', CollectionType::class, array(
-            //'type' => new DocumentType($this->params),
-            'entry_type' => DocumentType::class,
-            'label' => 'Cover Letter(s):',
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__documentsid__',
-        ));
+    $builder->add('coverLetters', CollectionType::class, array(
+        //'type' => new DocumentType($this->params),
+        'entry_type' => DocumentType::class,
+        'label' => 'Cover Letter(s):',
+        'allow_add' => true,
+        'allow_delete' => true,
+        'required' => false,
+        'by_reference' => false,
+        'prototype' => true,
+        'prototype_name' => '__documentsid__',
+    ));
 
-        $builder->add('cvs', CollectionType::class, array(
-            'entry_type' => DocumentType::class,
-            'label' => 'Curriculum Vitae (CV):',
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__documentsid__',
-        ));
+    $builder->add('cvs', CollectionType::class, array(
+        'entry_type' => DocumentType::class,
+        'label' => 'Curriculum Vitae (CV):',
+        'allow_add' => true,
+        'allow_delete' => true,
+        'required' => false,
+        'by_reference' => false,
+        'prototype' => true,
+        'prototype_name' => '__documentsid__',
+    ));
 
 
     //        $builder->add('reprimand','choice', array(
@@ -162,22 +164,22 @@ class FellowshipApplicationType extends AbstractType
     //            'choices' => array('Yes'=>'Yes','No'=>'No'),
     //            'attr' => array('class' => 'combobox'),
     //        ));
-        $builder->add('reprimand', CheckboxType::class, array(
-            'label' => 'Have you ever been reprimanded, or had your license suspended or revoked in any of these states?',
-            'required' => false,
-            'attr' => array('class' => 'form-control fellapp-reprimand-field', 'onclick' => 'showHideWell(this)'),
-        ));
-        $builder->get('reprimand')->addModelTransformer(new StringToBooleanTransformer());
-        $builder->add('reprimandDocuments', CollectionType::class, array(
-            'entry_type' => DocumentType::class,
-            'label' => 'Upload Reprimand Explanation(s):',
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__documentsid__',
-        ));
+    $builder->add('reprimand', CheckboxType::class, array(
+        'label' => 'Have you ever been reprimanded, or had your license suspended or revoked in any of these states?',
+        'required' => false,
+        'attr' => array('class' => 'form-control fellapp-reprimand-field', 'onclick' => 'showHideWell(this)'),
+    ));
+    $builder->get('reprimand')->addModelTransformer(new StringToBooleanTransformer());
+    $builder->add('reprimandDocuments', CollectionType::class, array(
+        'entry_type' => DocumentType::class,
+        'label' => 'Upload Reprimand Explanation(s):',
+        'allow_add' => true,
+        'allow_delete' => true,
+        'required' => false,
+        'by_reference' => false,
+        'prototype' => true,
+        'prototype_name' => '__documentsid__',
+    ));
 
     //        $builder->add('lawsuit','choice', array(
     //            'label' => 'Have you ever been reprimanded, or had your license suspended or revoked in any of these states?',
@@ -185,250 +187,250 @@ class FellowshipApplicationType extends AbstractType
     //            'choices' => array('Yes'=>'Yes','No'=>'No'),
     //            'attr' => array('class' => 'combobox'),
     //        ));
-        $builder->add('lawsuit', CheckboxType::class, array(
-            'label' => 'Have you ever been named in (and/or had a judgment against you) in a medical malpractice legal suit?',
-            'required' => false,
-            'attr' => array('class' => 'form-control fellapp-lawsuit-field', 'onclick' => 'showHideWell(this)'),
-        ));
-        $builder->get('lawsuit')->addModelTransformer(new StringToBooleanTransformer());
-        $builder->add('lawsuitDocuments', CollectionType::class, array(
-            'entry_type' => DocumentType::class,
-            'label' => 'Upload Legal Explanation(s):',
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__documentsid__',
-        ));
+    $builder->add('lawsuit', CheckboxType::class, array(
+        'label' => 'Have you ever been named in (and/or had a judgment against you) in a medical malpractice legal suit?',
+        'required' => false,
+        'attr' => array('class' => 'form-control fellapp-lawsuit-field', 'onclick' => 'showHideWell(this)'),
+    ));
+    $builder->get('lawsuit')->addModelTransformer(new StringToBooleanTransformer());
+    $builder->add('lawsuitDocuments', CollectionType::class, array(
+        'entry_type' => DocumentType::class,
+        'label' => 'Upload Legal Explanation(s):',
+        'allow_add' => true,
+        'allow_delete' => true,
+        'required' => false,
+        'by_reference' => false,
+        'prototype' => true,
+        'prototype_name' => '__documentsid__',
+    ));
 
 
-        $builder->add('references', CollectionType::class, array(
-            'entry_type' => ReferenceType::class,
-            'entry_options' => array(
-                'form_custom_value' => $this->params
-            ),
-            'label' => 'Reference(s):',
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__references__',
-        ));
+    $builder->add('references', CollectionType::class, array(
+        'entry_type' => ReferenceType::class,
+        'entry_options' => array(
+            'form_custom_value' => $this->params
+        ),
+        'label' => 'Reference(s):',
+        'allow_add' => true,
+        'allow_delete' => true,
+        'required' => false,
+        'by_reference' => false,
+        'prototype' => true,
+        'prototype_name' => '__references__',
+    ));
 
 
-        $builder->add('honors',null,array(
-            'required' => false,
-            'label'=>false,
-            'attr' => array('class'=>'textarea form-control')
-        ));
+    $builder->add('honors', null, array(
+        'required' => false,
+        'label' => false,
+        'attr' => array('class' => 'textarea form-control')
+    ));
 
-        $builder->add('publications',null,array(
-            'required' => false,
-            'label'=>false,
-            'attr' => array('class'=>'textarea form-control')
-        ));
+    $builder->add('publications', null, array(
+        'required' => false,
+        'label' => false,
+        'attr' => array('class' => 'textarea form-control')
+    ));
 
-        $builder->add('memberships',null,array(
-            'required' => false,
-            'label'=>false,
-            'attr' => array('class'=>'textarea form-control')
-        ));
-
-
-
-        $builder->add('signatureName',null, array(
-            'label' => 'Signature:',
-            'required' => false,
-            'attr' => array('class' => 'form-control'),
-        ));
-
-        $builder->add('signatureDate', null, array(
-            'label' => 'Date:',
-            'widget' => 'single_text',
-            'required' => false,
-            'format' => 'MM/dd/yyyy',
-            'attr' => array('class' => 'datepicker form-control'),
-        ));
+    $builder->add('memberships', null, array(
+        'required' => false,
+        'label' => false,
+        'attr' => array('class' => 'textarea form-control')
+    ));
 
 
-        $builder->add('reports', CollectionType::class, array(
-            'entry_type' => DocumentType::class,
-            'label' => 'Report(s):',
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__documentsid__',
-        ));
+    $builder->add('signatureName', null, array(
+        'label' => 'Signature:',
+        'required' => false,
+        'attr' => array('class' => 'form-control'),
+    ));
 
-        $builder->add('formReports', CollectionType::class, array(
-            'entry_type' => DocumentType::class,
-            'label' => 'Form Report(s):',
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__documentsid__',
-        ));
+    $builder->add('signatureDate', null, array(
+        'label' => 'Date:',
+        'widget' => 'single_text',
+        'required' => false,
+        'format' => 'MM/dd/yyyy',
+        'attr' => array('class' => 'datepicker form-control'),
+    ));
 
 
-        $builder->add('oldReports', CollectionType::class, array(
-            'entry_type' => DocumentType::class,
-            'label' => 'Old Report(s):',
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__documentsid__',
-        ));
+    $builder->add('reports', CollectionType::class, array(
+        'entry_type' => DocumentType::class,
+        'label' => 'Report(s):',
+        'allow_add' => true,
+        'allow_delete' => true,
+        'required' => false,
+        'by_reference' => false,
+        'prototype' => true,
+        'prototype_name' => '__documentsid__',
+    ));
+
+    $builder->add('formReports', CollectionType::class, array(
+        'entry_type' => DocumentType::class,
+        'label' => 'Form Report(s):',
+        'allow_add' => true,
+        'allow_delete' => true,
+        'required' => false,
+        'by_reference' => false,
+        'prototype' => true,
+        'prototype_name' => '__documentsid__',
+    ));
 
 
-        //other documents
-        $builder->add('documents', CollectionType::class, array(
-            'entry_type' => DocumentType::class,
-            'label' => 'Other Document(s):',
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__documentsid__',
-        ));
-
-        $builder->add('itinerarys', CollectionType::class, array(
-            'entry_type' => DocumentType::class,
-            'label' => 'Itinerary / Interview Schedule(s):',
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__documentsid__',
-        ));
+    $builder->add('oldReports', CollectionType::class, array(
+        'entry_type' => DocumentType::class,
+        'label' => 'Old Report(s):',
+        'allow_add' => true,
+        'allow_delete' => true,
+        'required' => false,
+        'by_reference' => false,
+        'prototype' => true,
+        'prototype_name' => '__documentsid__',
+    ));
 
 
-        $builder->add('interviewDate', null, array(
-            'label' => 'Interview Date:',
-            'widget' => 'single_text',
-            'required' => false,
-            'format' => 'MM/dd/yyyy',
-            'attr' => array('class' => 'datepicker form-control'),
-        ));
+    //other documents
+    $builder->add('documents', CollectionType::class, array(
+        'entry_type' => DocumentType::class,
+        'label' => 'Other Document(s):',
+        'allow_add' => true,
+        'allow_delete' => true,
+        'required' => false,
+        'by_reference' => false,
+        'prototype' => true,
+        'prototype_name' => '__documentsid__',
+    ));
 
-        $builder->add('interviews', CollectionType::class, array(
-            'entry_type' => InterviewType::class,
-            'entry_options' => array(
-                'form_custom_value' => $this->params
-            ),
-            'label' => 'Interview(s):',
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__interviews__',
-        ));
-
-        $builder->add( 'observers', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:User',
-            'label'=> "Observer(s):",
-            'required'=> false,
-            'multiple' => true,
-            'attr' => array('class'=>'combobox combobox-width'),
-            'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->leftJoin("list.employmentStatus", "employmentStatus")
-                    ->leftJoin("employmentStatus.employmentType", "employmentType")
-                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
-                    ->leftJoin("list.infos", "infos")
-                    ->orderBy("infos.displayName","ASC");
-            },
-        ));
+    $builder->add('itinerarys', CollectionType::class, array(
+        'entry_type' => DocumentType::class,
+        'label' => 'Itinerary / Interview Schedule(s):',
+        'allow_add' => true,
+        'allow_delete' => true,
+        'required' => false,
+        'by_reference' => false,
+        'prototype' => true,
+        'prototype_name' => '__documentsid__',
+    ));
 
 
-        /////////////////// user objects ////////////////////////////
+    $builder->add('interviewDate', null, array(
+        'label' => 'Interview Date:',
+        'widget' => 'single_text',
+        'required' => false,
+        'format' => 'MM/dd/yyyy',
+        'attr' => array('class' => 'datepicker form-control'),
+    ));
 
-        $builder->add('avatars', CollectionType::class, array(
-            'entry_type' => DocumentType::class,
-            'label' => 'Applicant Photo(s):',
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__documentsid__',
-        ));
+    $builder->add('interviews', CollectionType::class, array(
+        'entry_type' => InterviewType::class,
+        'entry_options' => array(
+            'form_custom_value' => $this->params
+        ),
+        'label' => 'Interview(s):',
+        'allow_add' => true,
+        'allow_delete' => true,
+        'required' => false,
+        'by_reference' => false,
+        'prototype' => true,
+        'prototype_name' => '__interviews__',
+    ));
 
-        $builder->add('trainings', CollectionType::class, array(
-            'entry_type' => FellAppTrainingType::class,
-            'entry_options' => array(
-                'form_custom_value' => $this->params
-            ),
-            'label' => false,
-            'required' => false,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__trainings__',
-        ));
+    $builder->add('observers', EntityType::class, array(
+        'class' => 'OlegUserdirectoryBundle:User',
+        'label' => "Observer(s):",
+        'required' => false,
+        'multiple' => true,
+        'attr' => array('class' => 'combobox combobox-width'),
+        'query_builder' => function (EntityRepository $er) {
+            return $er->createQueryBuilder('list')
+                ->leftJoin("list.employmentStatus", "employmentStatus")
+                ->leftJoin("employmentStatus.employmentType", "employmentType")
+                ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+                ->leftJoin("list.infos", "infos")
+                ->orderBy("infos.displayName", "ASC");
+        },
+    ));
 
-        $this->userLocations($builder);
 
-        $builder->add('citizenships', CollectionType::class, array(
-            'entry_type' => CitizenshipType::class,
-            'label' => false,
-            'required' => false,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__citizenships__',
-        ));
+    /////////////////// user objects ////////////////////////////
 
-        $builder->add('examinations', CollectionType::class, array(
-            'entry_type' => ExaminationType::class,
-            'label' => false,
-            'required' => false,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__examinations__',
-        ));
+    $builder->add('avatars', CollectionType::class, array(
+        'entry_type' => DocumentType::class,
+        'label' => 'Applicant Photo(s):',
+        'allow_add' => true,
+        'allow_delete' => true,
+        'required' => false,
+        'by_reference' => false,
+        'prototype' => true,
+        'prototype_name' => '__documentsid__',
+    ));
 
-        $builder->add('stateLicenses', CollectionType::class, array(
-            'entry_type' => StateLicenseType::class,
-            'entry_options' => array(
-                'form_custom_value' => $this->params
-            ),
-            'label' => false,
-            'required' => false,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__statelicenses__',
-        ));
+    $builder->add('trainings', CollectionType::class, array(
+        'entry_type' => FellAppTrainingType::class,
+        'entry_options' => array(
+            'form_custom_value' => $this->params
+        ),
+        'label' => false,
+        'required' => false,
+        'allow_add' => true,
+        'allow_delete' => true,
+        'by_reference' => false,
+        'prototype' => true,
+        'prototype_name' => '__trainings__',
+    ));
 
-        $builder->add('boardCertifications', CollectionType::class, array(
-            'entry_type' => BoardCertificationType::class,
-            'label' => false,
-            'required' => false,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__boardcertifications__',
-        ));
+    $this->userLocations($builder);
 
-        //////////////////////////////////////////////////////////////
+    $builder->add('citizenships', CollectionType::class, array(
+        'entry_type' => CitizenshipType::class,
+        'label' => false,
+        'required' => false,
+        'allow_add' => true,
+        'allow_delete' => true,
+        'by_reference' => false,
+        'prototype' => true,
+        'prototype_name' => '__citizenships__',
+    ));
 
+    $builder->add('examinations', CollectionType::class, array(
+        'entry_type' => ExaminationType::class,
+        'label' => false,
+        'required' => false,
+        'allow_add' => true,
+        'allow_delete' => true,
+        'by_reference' => false,
+        'prototype' => true,
+        'prototype_name' => '__examinations__',
+    ));
+
+    $builder->add('stateLicenses', CollectionType::class, array(
+        'entry_type' => StateLicenseType::class,
+        'entry_options' => array(
+            'form_custom_value' => $this->params
+        ),
+        'label' => false,
+        'required' => false,
+        'allow_add' => true,
+        'allow_delete' => true,
+        'by_reference' => false,
+        'prototype' => true,
+        'prototype_name' => '__statelicenses__',
+    ));
+
+    $builder->add('boardCertifications', CollectionType::class, array(
+        'entry_type' => BoardCertificationType::class,
+        'label' => false,
+        'required' => false,
+        'allow_add' => true,
+        'allow_delete' => true,
+        'by_reference' => false,
+        'prototype' => true,
+        'prototype_name' => '__boardcertifications__',
+    ));
+
+    //////////////////////////////////////////////////////////////
+
+}//if
 
     }
 
