@@ -1006,7 +1006,7 @@ class FellAppController extends Controller {
             //echo "reportsDiffInfoStr=".$reportsDiffInfoStr."<br>";
             if( count($entity->getReports()) == 0 || $reportsDiffInfoStr == "" ) {
                 $fellappRepGen = $this->container->get('fellapp_reportgenerator');
-                $fellappRepGen->addFellAppReportToQueue( $id, 'overwrite' );
+                $fellappRepGen->addFellAppReportToQueue( $entity->getId(), 'overwrite' );
                 $this->get('session')->getFlashBag()->add(
                     'notice',
                     'A new Complete Fellowship Application PDF will be generated.'
