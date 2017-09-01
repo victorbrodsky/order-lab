@@ -429,11 +429,10 @@ class FellAppController extends Controller {
 
 
 
-
+    //@Route("/edit/{id}", name="fellapp_edit")
+    //@Route("/edit-with-default-interviewers/{id}", name="fellapp_edit_default_interviewers")
     /**
      * @Route("/show/{id}", name="fellapp_show")
-     * //@Route("/edit/{id}", name="fellapp_edit")
-     * @Route("/edit-with-default-interviewers/{id}", name="fellapp_edit_default_interviewers")
      * @Route("/download/{id}", name="fellapp_download")
      *
      * @Template("OlegFellAppBundle:Form:new.html.twig")
@@ -690,7 +689,8 @@ class FellAppController extends Controller {
 
 
     /**
-     * @Route("/update/{id}", name="fellapp_update")
+     * -NOT-USED
+     * @Route("/update-NOT-USED/{id}", name="fellapp_update-NOT-USED")
      * @Method("PUT")
      * @Template("OlegFellAppBundle:Form:new.html.twig")
      */
@@ -902,6 +902,7 @@ class FellAppController extends Controller {
      * Displays a form to edit an existing fellapp entity.
      *
      * @Route("/edit/{id}", name="fellapp_edit")
+     * @Route("/edit-with-default-interviewers/{id}", name="fellapp_edit_default_interviewers")
      * @Template("OlegFellAppBundle:Form:edit.html.twig")
      * @Method({"GET", "POST"})
      */
@@ -912,9 +913,9 @@ class FellAppController extends Controller {
         }
         $id = $entity->getId();
 
+        $userSecUtil = $this->container->get('user_security_utility');
         $user = $this->get('security.token_storage')->getToken()->getUser();
-
-
+        $routeName = $request->get('_route');
 
         //user who has the same fell type can view or edit
         $fellappUtil = $this->container->get('fellapp_util');
@@ -938,6 +939,10 @@ class FellAppController extends Controller {
             $originalReports->add($report);
         }
         ////// EOF PRE Update INFO //////
+
+        if( $routeName == "fellapp_edit_default_interviewers" ) {
+            $fellappUtil->addDefaultInterviewers($entity);
+        }
 
         $cycle = "edit";
 
@@ -987,7 +992,6 @@ class FellAppController extends Controller {
                 $event = $event . "<br>" . implode("<br>", $removedCollections);
                 $event = $event . $reportsDiffInfoStr;
                 //echo "Diff event=".$event."<br>";
-                $userSecUtil = $this->get('user_security_utility');
                 $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$entity,$request,'Fellowship Application Updated');
             }
 
@@ -1013,9 +1017,6 @@ class FellAppController extends Controller {
             //exit('report regen');
 
             //set logger for update
-            //$logger = $this->container->get('logger');
-            //$logger->notice("update: timezone=".date_default_timezone_get());
-            $userSecUtil = $this->container->get('user_security_utility');
             $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId()); //fetch user from DB otherwise keytype is null
             $event = "Fellowship Application with ID " . $id . " has been updated by " . $user;
             $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$entity,$request,'Fellowship Application Updated');
@@ -1031,6 +1032,22 @@ class FellAppController extends Controller {
 //            if( !$form->isValid() ){
 //                echo "form is not valid<br>";
 //            }
+
+            if( $routeName == "fellapp_edit_default_interviewers" ) {
+                $this->get('session')->getFlashBag()->add(
+                    'pnotify',
+                    "Important Note: Please manually review added default interviewers in the 'Interviews' section and click 'Update' button to save the changes!"
+                );
+            }
+
+            //event log
+            $em = $this->getDoctrine()->getManager();
+            $actionStr = "viewed on edit page";
+            $eventType = 'Fellowship Application Page Viewed';
+            $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId()); //fetch user from DB otherwise keytype is null
+            $event = "Fellowship Application with ID".$id." has been ".$actionStr." by ".$user;
+
+            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$entity,$request,$eventType);
         }
 
         return array(
