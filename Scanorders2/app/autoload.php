@@ -6,7 +6,7 @@ use Composer\Autoload\ClassLoader;
 ini_set('memory_limit', '3072M');   //2048M 1024M 512M 128M
 
 ini_set('max_execution_time', 360);  //in sec
-exit('111');
+//exit('111');
 
 /**
  * @var $loader ClassLoader

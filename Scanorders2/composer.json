@@ -17,13 +17,13 @@
         "stof/doctrine-extensions-bundle": "~1.1@dev",
 
         "symfony/symfony": "3.3.*",
-        "symfony/swiftmailer-bundle": "~2.3",
+        "symfony/swiftmailer-bundle": "v3.0.3",
         "symfony/monolog-bundle": "~2.4",
         "symfony/security-bundle": "3.3.*",
         "sensio/distribution-bundle": "^5.0",
-        "sensio/framework-extra-bundle": "^3.0.2",
+        "sensio/framework-extra-bundle": "^3.0",
         "incenteev/composer-parameter-handler": "~2.0",
-        "symfony/assetic-bundle": "dev-master",
+        "symfony/assetic-bundle": "^2.8",
         "twig/twig": "^1.28 || ^2.0",
         "twig/extensions": "^1.5",
         "symfony/workflow": "v3.3.6",
@@ -49,7 +49,8 @@
         "sinergi/browser-detector": "6.1.2"
     },
     "require-dev": {
-        "sensio/generator-bundle": "^3.0"
+        "sensio/generator-bundle": "^3.0",
+        "symfony/phpunit-bridge" : "^3.0"
     },
     "scripts": {
         "post-install-cmd": [
@@ -75,14 +76,16 @@
     "minimum-stability": "stable",
     "extra": {
         "symfony-app-dir": "app",
+        "symfony-bin-dir": "bin",
         "symfony-web-dir": "web",
+        "symfony-tests-dir": "tests",
         "symfony-assets-install": "relative",
         "incenteev-parameters": {
             "file": "app/config/parameters.yml",
-			"keep-outdated": true
-        },
-        "branch-alias": {
-            "dev-master": "3.3.6"
+            "env-map": {
+                "database_url": "DATABASE_URL",
+                "secret": "SYMFONY_SECRET"
+            }
         }
     }
 }
