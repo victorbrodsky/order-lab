@@ -191,7 +191,7 @@ swiftmailer:
     logging: '%kernel.debug%'
     spool:
             type: file
-            path: '%kernel.root_dir%/spool'
+            path: '%kernel.project_dir%/app/spool'
 #    spool: { type: memory }
 
 
