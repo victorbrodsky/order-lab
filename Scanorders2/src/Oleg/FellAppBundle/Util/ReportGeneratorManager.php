@@ -205,7 +205,7 @@ class ReportGeneratorManager {
             $res = $fellappRepGen->generateFellAppReport( $currentQueueElement['id'] );
             //////////////// run by process component ////////////////
 //            try {
-//                $process = new Process( 'php ../app/console fellapp:generatereport ' . $currentQueueElement['id'] );
+//                $process = new Process( 'php ../bin/console fellapp:generatereport ' . $currentQueueElement['id'] );
 //                $process->setTimeout(1200); //secs => 20 min
 //                $process->run();
 //                $this->currentQueueElementId = $process->getPid();
