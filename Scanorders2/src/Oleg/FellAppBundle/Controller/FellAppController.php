@@ -21,6 +21,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityNotFoundException;
 use Oleg\FellAppBundle\Entity\FellowshipApplication;
 use Oleg\FellAppBundle\Entity\Interview;
+use Oleg\FellAppBundle\Form\FellAppIndependentType;
 use Oleg\FellAppBundle\Form\InterviewType;
 use Oleg\UserdirectoryBundle\Entity\User;
 use Oleg\OrderformBundle\Helper\ErrorHelper;
@@ -431,7 +432,7 @@ class FellAppController extends Controller {
 
     /**
      * @Route("/show/{id}", name="fellapp_show")
-     * @Route("/edit/{id}", name="fellapp_edit")
+     * //@Route("/edit/{id}", name="fellapp_edit")
      * @Route("/edit-with-default-interviewers/{id}", name="fellapp_edit_default_interviewers")
      * @Route("/download/{id}", name="fellapp_download")
      *
@@ -871,15 +872,15 @@ class FellAppController extends Controller {
 
             return $this->redirect($this->generateUrl('fellapp_show',array('id' => $entity->getId())));
         } else {
-            echo "getErrors count=".count($form->getErrors())."<br>";
+            echo "getErrors count=".count($form->getErrors(true))."<br>";
             $string = (string) $form->getErrors(true);
-            echo "Error:<br>$string<br><br><pre>";
+            //echo "Error:<br>$string<br><br><pre>";
             //print_r($form->getErrors());
             //echo "</pre>";
 
             $msg = 'Fellowship Form has an error (ID# '.$entity->getId().'): '.$form->getErrors(true);
             $userSecUtil = $this->container->get('user_security_utility');
-            $userSecUtil->sendEmailToSystemEmail("Fellowship Form has an error (ID# ".$entity->getId().")", $msg);
+            //$userSecUtil->sendEmailToSystemEmail("Fellowship Form has an error (ID# ".$entity->getId().")", $msg);
             exit($msg."<br>Notification email has been sent to the system administrator.");
             //throw new \Exception($msg);
         }
@@ -895,6 +896,69 @@ class FellAppController extends Controller {
             'sitename' => $this->container->getParameter('fellapp.sitename')
         );
     }
+
+    /**
+     * TESTING
+     * Displays a form to edit an existing project entity.
+     *
+     * @Route("/edit/{id}", name="fellapp_edit")
+     * @Template("OlegFellAppBundle:Form:edit.html.twig")
+     * @Method({"GET", "POST"})
+     */
+    public function editAction(Request $request, FellowshipApplication $entity)
+    {
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
+
+        $cycle = "edit";
+
+        $form = $this->createFellAppEditForm($entity,$cycle);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid() ) {
+
+            //$entity->setUpdateUser($user);
+
+            $this->getDoctrine()->getManager()->flush();
+
+            //return $this->redirectToRoute('translationalresearch_project_show', array('id' => $entity->getId()));
+            return $this->redirect($this->generateUrl('fellapp_show',array('id' => $entity->getId())));
+        } else {
+            if( !$form->isSubmitted() ){
+                echo "form is not submitted<br>";
+            }
+            if( !$form->isValid() ){
+                echo "form is not valid<br>";
+            }
+        }
+
+        return array(
+            'form' => $form->createView(),
+            'entity' => $entity,
+            'pathbase' => 'fellapp',
+            'cycle' => $cycle,
+            'sitename' => $this->container->getParameter('fellapp.sitename')
+        );
+    }
+    private function createFellAppEditForm( FellowshipApplication $entity, $cycle )
+    {
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        $params = array(
+            'cycle' => $cycle,
+            'em' => $this->getDoctrine()->getManager(),
+            'user' => $entity->getUser(),
+            'cloneuser' => null,
+            'roles' => $user->getRoles(),
+            'container' => $this->container,
+            'cycle_type' => "update"
+        );
+        $form = $this->createForm( FellowshipApplicationType::class, $entity, array(
+            'form_custom_value' => $params
+        )); //update
+
+        return $form;
+    }
+
 
     public function calculateScore($entity) {
         $count = 0;

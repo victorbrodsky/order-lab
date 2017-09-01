@@ -22,23 +22,7 @@
 
 
 {% block content %}
+
     {% include 'OlegFellAppBundle:Form:applicant-content.html.twig' %}
 
-    {#{{ form_start(form,{'attr': {'id': 'fellapp-applicant-form'}}) }}#}
-    {#{{ form_errors(form) }}#}
-    {#<button class="btn btn-warning" type="submit">Update</button>#}
-    {#{{ form_end(form) }}#}
-
-    {#{{ form_start(form) }}#}
-    {#{{ form_widget(form) }}#}
-    {#<button class="btn btn-warning" type="submit">Update</button>#}
-    {#{{ form_end(form) }}#}
-
 {% endblock %}
-
-
-{% block additionaljs %}
-    {% include 'OlegFellAppBundle:Form:applicant-content-js.html.twig' %}
-{% endblock %}
-
-
