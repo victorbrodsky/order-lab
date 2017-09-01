@@ -898,8 +898,8 @@ class FellAppController extends Controller {
     }
 
     /**
-     * TESTING
-     * Displays a form to edit an existing project entity.
+     * Separate edit/update controller action to insure csrf token is valid
+     * Displays a form to edit an existing fellapp entity.
      *
      * @Route("/edit/{id}", name="fellapp_edit")
      * @Template("OlegFellAppBundle:Form:edit.html.twig")
@@ -907,7 +907,37 @@ class FellAppController extends Controller {
      */
     public function editAction(Request $request, FellowshipApplication $entity)
     {
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        if( !$entity ) {
+            throw $this->createNotFoundException('Unable to find Fellowship Application');
+        }
+        $id = $entity->getId();
+
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+
+
+        //user who has the same fell type can view or edit
+        $fellappUtil = $this->container->get('fellapp_util');
+        if( $fellappUtil->hasFellappPermission($user,$entity) == false ) {
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
+        if( false == $this->get('security.authorization_checker')->isGranted("update",$entity) ){
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
+        ////// PRE Update INFO //////
+        // Create an ArrayCollection of the current interviews
+        $originalInterviews = new ArrayCollection();
+        foreach( $entity->getInterviews() as $interview) {
+            $originalInterviews->add($interview);
+        }
+
+        $originalReports = new ArrayCollection();
+        foreach( $entity->getReports() as $report ) {
+            $originalReports->add($report);
+        }
+        ////// EOF PRE Update INFO //////
 
         $cycle = "edit";
 
@@ -916,19 +946,91 @@ class FellAppController extends Controller {
 
         if ($form->isSubmitted() && $form->isValid() ) {
 
-            //$entity->setUpdateUser($user);
+            //$this->getDoctrine()->getManager()->flush();
+            //return $this->redirect($this->generateUrl('fellapp_show',array('id' => $entity->getId())));
 
-            $this->getDoctrine()->getManager()->flush();
+            /////////////// Process Removed Collections ///////////////
+            $removedCollections = array();
 
-            //return $this->redirectToRoute('translationalresearch_project_show', array('id' => $entity->getId()));
+            $removedInfo = $this->removeCollection($originalInterviews,$entity->getInterviews(),$entity);
+            if( $removedInfo ) {
+                $removedCollections[] = $removedInfo;
+            }
+            /////////////// EOF Process Removed Collections ///////////////
+
+            $this->calculateScore($entity);
+
+            $this->processDocuments($entity);
+
+            $this->assignFellAppAccessRoles($entity);
+
+            //set update author application
+            $em = $this->getDoctrine()->getManager();
+            $userUtil = new UserUtil();
+            $secTokenStorage = $this->get('security.token_storage');
+            $userUtil->setUpdateInfo($entity,$em,$secTokenStorage);
+
+
+            /////////////// Add event log on edit (edit or add collection) ///////////////
+            /////////////// Must run before flash DB. When DB is flashed getEntityChangeSet() will not work ///////////////
+            $changedInfoArr = $this->setEventLogChanges($entity);
+
+            //report (Complete Application PDF) diff
+            $reportsDiffInfoStr = $this->recordToEvenLogDiffCollection($originalReports,$entity->getReports(),"Report");
+            //echo "reportsDiffInfoStr=".$reportsDiffInfoStr."<br>";
+            //exit('report');
+
+            //set Edit event log for removed collection and changed fields or added collection
+            if( count($changedInfoArr) > 0 || count($removedCollections) > 0 || $reportsDiffInfoStr ) {
+                $event = "Fellowship Application ".$entity->getId()." information has been changed by ".$user.":"."<br>";
+                $event = $event . implode("<br>", $changedInfoArr);
+                $event = $event . "<br>" . implode("<br>", $removedCollections);
+                $event = $event . $reportsDiffInfoStr;
+                //echo "Diff event=".$event."<br>";
+                $userSecUtil = $this->get('user_security_utility');
+                $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$entity,$request,'Fellowship Application Updated');
+            }
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($entity);
+            $em->flush();
+
+            //don't regenerate report if it was added.
+            //Regenerate if: report does not exists (reports count == 0) or if original reports are the same as current reports
+            //echo "report count=".count($entity->getReports())."<br>";
+            //echo "reportsDiffInfoStr=".$reportsDiffInfoStr."<br>";
+            if( count($entity->getReports()) == 0 || $reportsDiffInfoStr == "" ) {
+                $fellappRepGen = $this->container->get('fellapp_reportgenerator');
+                $fellappRepGen->addFellAppReportToQueue( $id, 'overwrite' );
+                $this->get('session')->getFlashBag()->add(
+                    'notice',
+                    'A new Complete Fellowship Application PDF will be generated.'
+                );
+                //echo "Regenerate!!!! <br>";
+            } else {
+                //echo "NO Regenerate!!!! <br>";
+            }
+            //exit('report regen');
+
+            //set logger for update
+            //$logger = $this->container->get('logger');
+            //$logger->notice("update: timezone=".date_default_timezone_get());
+            $userSecUtil = $this->container->get('user_security_utility');
+            $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId()); //fetch user from DB otherwise keytype is null
+            $event = "Fellowship Application with ID " . $id . " has been updated by " . $user;
+            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$user,$entity,$request,'Fellowship Application Updated');
+            //exit('event='.$event);
+
             return $this->redirect($this->generateUrl('fellapp_show',array('id' => $entity->getId())));
+
+
         } else {
-            if( !$form->isSubmitted() ){
-                echo "form is not submitted<br>";
-            }
-            if( !$form->isValid() ){
-                echo "form is not valid<br>";
-            }
+//            if( !$form->isSubmitted() ){
+//                echo "form is not submitted<br>";
+//            }
+//            if( !$form->isValid() ){
+//                echo "form is not valid<br>";
+//            }
         }
 
         return array(
