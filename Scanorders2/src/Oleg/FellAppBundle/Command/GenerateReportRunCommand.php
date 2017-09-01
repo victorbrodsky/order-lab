@@ -49,7 +49,7 @@ class GenerateReportRunCommand extends ContainerAwareCommand {
             ;
     }
 
-    //php app/console fellapp:generatereportrun
+    //php bin/console fellapp:generatereportrun
     protected function execute(InputInterface $input, OutputInterface $output) {
 
         $logger = $this->getContainer()->get('logger');
