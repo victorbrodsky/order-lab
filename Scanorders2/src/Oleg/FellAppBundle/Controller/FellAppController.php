@@ -21,7 +21,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityNotFoundException;
 use Oleg\FellAppBundle\Entity\FellowshipApplication;
 use Oleg\FellAppBundle\Entity\Interview;
-use Oleg\FellAppBundle\Form\FellAppIndependentType;
 use Oleg\FellAppBundle\Form\InterviewType;
 use Oleg\UserdirectoryBundle\Entity\User;
 use Oleg\OrderformBundle\Helper\ErrorHelper;

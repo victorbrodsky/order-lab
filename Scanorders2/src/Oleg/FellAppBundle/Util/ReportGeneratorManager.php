@@ -130,7 +130,7 @@ class ReportGeneratorManager {
         self::$queue[] = $newQueueElement;
         
         //Running Processes Asynchronously
-        $process = new Process('php ../app/console fellapp:generatereportrun');       
+        $process = new Process('php ../bin/console fellapp:generatereportrun');
         $process->mustRun();             
         
         $this->processes[] = $process;

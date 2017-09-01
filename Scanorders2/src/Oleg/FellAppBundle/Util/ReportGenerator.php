@@ -67,7 +67,7 @@ class ReportGenerator {
 
         $this->uploadDir = 'Uploaded';
 
-        $this->generatereportrunCmd = 'php ../app/console fellapp:generatereportrun --env=prod';
+        $this->generatereportrunCmd = 'php ../bin/console fellapp:generatereportrun --env=prod';
 
         $this->runningGenerationReport = false;
 
