@@ -642,7 +642,9 @@ class ReportGenerator {
         //$pageUrl = "http://localhost/scanorder/Scanorders2/web/fellowship-applications/download/".$applicationId;
 
         //fellapp_download
+        //TODO: chek this url
         $pageUrl = $router->generate('fellapp_download',array('id' => $applicationId),true); //this does not work from console: 'order' is missing
+        $logger->notice("### pageUrl=".$pageUrl);
         //echo "pageurl=". $pageUrl . "<br>";
 
         //save session        
