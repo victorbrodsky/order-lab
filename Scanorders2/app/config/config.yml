@@ -23,7 +23,7 @@ framework:
     #translator: ~
     secret:          '%secret%'
     router:
-        resource: "%kernel.root_dir%/config/routing.yml"
+        resource: "%kernel.project_dir%/app/config/routing.yml"
         strict_requirements: ~
     form: 
     csrf_protection: ~
@@ -146,7 +146,7 @@ doctrine:
                     gedmo_tree:
                         type: annotation
                         prefix: Gedmo\Tree\Entity
-                        dir: "%kernel.root_dir%/../vendor/gedmo/doctrine-extensions/lib/Gedmo/Tree/Entity"
+                        dir: "%kernel.project_dir%/vendor/gedmo/doctrine-extensions/lib/Gedmo/Tree/Entity"
                         alias: GedmoTree # this one is optional and will default to the name set for the mapping
                         is_bundle: false
                 hydrators:
