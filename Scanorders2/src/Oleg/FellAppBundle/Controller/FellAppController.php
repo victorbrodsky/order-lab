@@ -694,7 +694,7 @@ class FellAppController extends Controller {
      * @Method("PUT")
      * @Template("OlegFellAppBundle:Form:new.html.twig")
      */
-    public function updateAction(Request $request, $id) {
+    public function updateNotUsedAction(Request $request, $id) {
 
 //        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_DIRECTOR') ){
 //            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
@@ -896,6 +896,7 @@ class FellAppController extends Controller {
             'sitename' => $this->container->getParameter('fellapp.sitename')
         );
     }
+    //EOF -NOT-USED
 
     /**
      * Separate edit/update controller action to insure csrf token is valid
