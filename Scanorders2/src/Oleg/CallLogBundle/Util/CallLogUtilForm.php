@@ -25,6 +25,8 @@
 namespace Oleg\CallLogBundle\Util;
 
 
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+
 class CallLogUtilForm
 {
     protected $em;
@@ -258,7 +260,7 @@ class CallLogUtilForm
 
         //Submitter
         if( $message->getProvider() ) {
-            $providerUrl = $router->generate($sitename . '_showuser', array('id' => $message->getProvider()->getId()), true);
+            $providerUrl = $router->generate($sitename . '_showuser', array('id' => $message->getProvider()->getId()), UrlGeneratorInterface::ABSOLUTE_URL);
             $hreflink = '<a target="_blank" href="'.$providerUrl.'">'.$message->getProvider()->getUsernameOptimal().'</a>';
             $html .= $this->getTrField("Submitter ", $hreflink);
         }
@@ -285,7 +287,7 @@ class CallLogUtilForm
         $messageSigneeInfo = $message->getSigneeInfo();
         if( strpos($messageStatus, 'Signed') !== false && $messageSigneeInfo ) {
             if ($messageSigneeInfo->getModifiedBy()) {
-                $authorHref = $router->generate($sitename . '_showuser', array('id' => $messageSigneeInfo->getModifiedBy()->getId()), true);
+                $authorHref = $router->generate($sitename . '_showuser', array('id' => $messageSigneeInfo->getModifiedBy()->getId()), UrlGeneratorInterface::ABSOLUTE_URL);
                 $hreflink = '<a target="_blank" href="' . $authorHref . '">' . $messageSigneeInfo->getModifiedBy()->getUsernameOptimal() . '</a>';
                 $html .= $this->getTrField("Signed by ", $hreflink);
             }
@@ -309,7 +311,7 @@ class CallLogUtilForm
             if( $lastEditorInfo ) {
                 $modifiedBy = $lastEditorInfo->getModifiedBy();
                 if( $modifiedBy ) {
-                    $authorHref = $router->generate($sitename . '_showuser', array('id' => $modifiedBy->getId()), true);
+                    $authorHref = $router->generate($sitename . '_showuser', array('id' => $modifiedBy->getId()), UrlGeneratorInterface::ABSOLUTE_URL);
                     $hreflink = '<a target="_blank" href="' . $authorHref . '">' . $modifiedBy->getUsernameOptimal() . '</a>';
                     $html .= $this->getTrField("Last edited by ", $hreflink);
                 }

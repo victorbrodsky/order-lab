@@ -20,6 +20,7 @@ namespace Oleg\OrderformBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Oleg\UserdirectoryBundle\Entity\GeneralEntity;
 use Oleg\UserdirectoryBundle\Entity\UserWrapper;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -1675,7 +1676,7 @@ class Message {
     public function getUrl($generator,$urlname,$oid) {
         $url = null;
         if( $generator && $oid && $urlname ) {
-            $url = $generator->generate($urlname, array('id' => $oid), true);
+            $url = $generator->generate($urlname, array('id' => $oid), UrlGeneratorInterface::ABSOLUTE_URL);
         }
         return $url;
     }

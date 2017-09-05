@@ -28,6 +28,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -277,8 +278,7 @@ class MultiScanOrderController extends Controller {
                     $submitStatusStr = "is saved but not submitted";
                 }
 
-                $orderurl = $this->generateUrl( 'multy_show',array('id'=>$entity->getOid()), true ); //was $entity->getId()
-
+                //$orderurl = $this->generateUrl( 'multy_show',array('id'=>$entity->getOid()), UrlGeneratorInterface::ABSOLUTE_URL ); //was $entity->getId()
                 //$scanEmailUtil->sendEmail( $email, $entity, $orderurl, null, $conflictStr, $submitStatusStr );
 
                 if( isset($_POST['btnSaveOnIdleTimeout']) ) {

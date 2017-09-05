@@ -112,6 +112,7 @@ use Oleg\OrderformBundle\Entity\ProcedureDate;
 use Oleg\OrderformBundle\Entity\ProcedureNumber;
 use Oleg\OrderformBundle\Entity\EncounterPatage;
 use Oleg\OrderformBundle\Entity\ScanOrder;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
 class TableController extends Controller {
@@ -743,7 +744,7 @@ class TableController extends Controller {
                 $submitStatusStr = "is saved but not submitted";
             }
 
-        $orderurl = $this->generateUrl( 'multy_show',array('id'=>$entity->getOid()), true );    //was $entity->getId()
+        $orderurl = $this->generateUrl( 'multy_show',array('id'=>$entity->getOid()), UrlGeneratorInterface::ABSOLUTE_URL );    //was $entity->getId()
 
         //email
         $scanEmailUtil = new ScanEmailUtil($em,$this->container);

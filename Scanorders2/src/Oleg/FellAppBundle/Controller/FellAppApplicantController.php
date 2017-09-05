@@ -35,6 +35,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 use Oleg\FellAppBundle\Entity\FellowshipApplication;
 use Oleg\UserdirectoryBundle\Entity\User;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
 class FellAppApplicantController extends Controller {
@@ -288,7 +289,7 @@ class FellAppApplicantController extends Controller {
         }
 
         if( !$fellapp->getRecentItinerary() ) {
-            $appLink = $this->generateUrl( 'fellapp_show', array("id"=>$fellapp->getId()), true );
+            $appLink = $this->generateUrl( 'fellapp_show', array("id"=>$fellapp->getId()), UrlGeneratorInterface::ABSOLUTE_URL );
             $appHref = '<a href="'.$appLink.'">'.$applicant->getUsernameOptimal().' (fellowship application ID# '.$fellapp->getId().')'.'</a>';
             $this->get('session')->getFlashBag()->add(
                 'warning',
@@ -310,13 +311,13 @@ class FellAppApplicantController extends Controller {
         //fellapp_file_download
         //$scheduleDocumentId = $fellapp->getRecentItinerary()->getId();
         //$scheduleLink = $this->generateUrl( 'fellapp_file_download', array("id"=>$scheduleDocumentId), true );
-        $scheduleLink = $this->generateUrl( 'fellapp_download_itinerary_pdf', array("id"=>$fellapp->getId()), true );
+        $scheduleLink = $this->generateUrl( 'fellapp_download_itinerary_pdf', array("id"=>$fellapp->getId()), UrlGeneratorInterface::ABSOLUTE_URL );
 
         //fellapp_interview_edit
-        $interviewFormLink = $this->generateUrl( 'fellapp_interview_edit', array("id"=>$interview->getId()), true );
+        $interviewFormLink = $this->generateUrl( 'fellapp_interview_edit', array("id"=>$interview->getId()), UrlGeneratorInterface::ABSOLUTE_URL );
 
         //$pdfLink = $this->generateUrl( 'fellapp_file_download', array("id"=>$fellapp->getRecentReport()->getId()), true );
-        $pdfLink = $this->generateUrl( 'fellapp_download_pdf', array("id"=>$fellapp->getId()), true );
+        $pdfLink = $this->generateUrl( 'fellapp_download_pdf', array("id"=>$fellapp->getId()), UrlGeneratorInterface::ABSOLUTE_URL );
 
         $break = "\r\n";
 
@@ -429,14 +430,14 @@ class FellAppApplicantController extends Controller {
 
         foreach( $entity->getObservers() as $observer ) {
             //$pdfLink = $this->generateUrl( 'fellapp_file_download', array("id"=>$entity->getRecentReport()->getId()), true );
-            $pdfLink = $this->generateUrl( 'fellapp_download_pdf', array("id"=>$entity->getId()), true );
+            $pdfLink = $this->generateUrl( 'fellapp_download_pdf', array("id"=>$entity->getId()), UrlGeneratorInterface::ABSOLUTE_URL );
 
             //fellapp_file_download
             $scheduleLink = null;
             if( $entity->getRecentItinerary() ) {
                 //$scheduleDocumentId = $entity->getRecentItinerary()->getId();
                 //$scheduleLink = $this->generateUrl( 'fellapp_file_download', array("id"=>$scheduleDocumentId), true );
-                $scheduleLink = $this->generateUrl( 'fellapp_download_itinerary_pdf', array("id"=>$entity->getId()), true );
+                $scheduleLink = $this->generateUrl( 'fellapp_download_itinerary_pdf', array("id"=>$entity->getId()), UrlGeneratorInterface::ABSOLUTE_URL );
             }
 
             //get email
@@ -519,7 +520,7 @@ class FellAppApplicantController extends Controller {
 
     if( 1 ) {
 
-        $pageUrl = $this->generateUrl('fellapp_interview_applicants_list', array('fellappIds'=>$fellappIds), true); // use absolute path!
+        $pageUrl = $this->generateUrl('fellapp_interview_applicants_list', array('fellappIds'=>$fellappIds), UrlGeneratorInterface::ABSOLUTE_URL); // use absolute path!
 
         $output = $this->get('knp_snappy.pdf')->getOutput($pageUrl, array(
             'cookie' => array(

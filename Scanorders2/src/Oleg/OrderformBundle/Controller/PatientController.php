@@ -72,6 +72,7 @@ use Oleg\UserdirectoryBundle\Entity\DocumentContainer;
 use Oleg\UserdirectoryBundle\Entity\Document;
 use Oleg\UserdirectoryBundle\Entity\Institution;
 use Oleg\UserdirectoryBundle\Entity\UserWrapper;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Patient controller.
@@ -1831,7 +1832,7 @@ class PatientController extends Controller
 
         //add link Via WebScope
         //use http://c.med.cornell.edu/imageserver/@@D5a3Yrn7dI2BGAKr0BEOxigCkxFErp2QJNfGJrBmWo68tr-locAr0Q==/@73660/view.apml
-        $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystemAperioClean,'type'=>$linkTypeWebScopeClean,'tablename'=>'Slide','imageid'=>$slideId),true);
+        $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystemAperioClean,'type'=>$linkTypeWebScopeClean,'tablename'=>'Slide','imageid'=>$slideId),UrlGeneratorInterface::ABSOLUTE_URL);
         $link = new Link($user);
         $link->setLinktype($linkTypeWebScope);
         $link->setLink($linklink);
@@ -1839,28 +1840,28 @@ class PatientController extends Controller
 
         //add link Via ImageScope
         //use sis file containing url to image from Aperio DB \\win-vtbcq31qg86\images\1376592217_1368_3005ER.svs
-        $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystemAperioClean,'type'=>$linkTypeImageScopeClean,'tablename'=>'Slide','imageid'=>$slideId),true);
+        $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystemAperioClean,'type'=>$linkTypeImageScopeClean,'tablename'=>'Slide','imageid'=>$slideId),UrlGeneratorInterface::ABSOLUTE_URL);
         $link = new Link($user);
         $link->setLinktype($linkTypeImageScope);
         $link->setLink($linklink);
         $docContainer->addLink($link);
 
         //add Thumbnail
-        $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystemAperioClean,'type'=>$linkTypeThumbnailClean,'tablename'=>'Slide','imageid'=>$slideId),true);
+        $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystemAperioClean,'type'=>$linkTypeThumbnailClean,'tablename'=>'Slide','imageid'=>$slideId),UrlGeneratorInterface::ABSOLUTE_URL);
         $link = new Link($user);
         $link->setLinktype($linkTypeThumbnail);
         $link->setLink($linklink);
         $docContainer->addLink($link);
 
         //add Label
-        $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystemAperioClean,'type'=>$linkTypeLabelClean,'tablename'=>'Slide','imageid'=>$slideId),true);
+        $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystemAperioClean,'type'=>$linkTypeLabelClean,'tablename'=>'Slide','imageid'=>$slideId),UrlGeneratorInterface::ABSOLUTE_URL);
         $link = new Link($user);
         $link->setLinktype($linkTypeLabel);
         $link->setLink($linklink);
         $docContainer->addLink($link);
 
         //add download
-        $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystemAperioClean,'type'=>$linkTypeDownloadClean,'tablename'=>'Slide','imageid'=>$slideId),true);
+        $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystemAperioClean,'type'=>$linkTypeDownloadClean,'tablename'=>'Slide','imageid'=>$slideId),UrlGeneratorInterface::ABSOLUTE_URL);
         $link = new Link($user);
         $link->setLinktype($linkTypeDownload);
         $link->setLink($linklink);

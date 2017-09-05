@@ -35,6 +35,7 @@ use Oleg\OrderformBundle\Entity\History;
 use Oleg\OrderformBundle\Entity\DataQualityMrnAcc;
 
 use Oleg\UserdirectoryBundle\Entity\User;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
 class OrderUtil {
@@ -701,8 +702,8 @@ class OrderUtil {
     public function setWarningMessageNoInstitution( $user ) {
 
         $router = $this->container->get('router');
-        $userUrl = $router->generate('scan_showuser', array('id' => $user->getId()),true);
-        $homeUrl = $router->generate('main_common_home',array(),true);
+        $userUrl = $router->generate('scan_showuser', array('id' => $user->getId()),UrlGeneratorInterface::ABSOLUTE_URL);
+        $homeUrl = $router->generate('main_common_home',array(),UrlGeneratorInterface::ABSOLUTE_URL);
         $sysemail = $this->container->getParameter('default_system_email');
         $flashBag = $this->container->get('session')->getFlashBag();
 
