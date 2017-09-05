@@ -37,6 +37,7 @@ use Symfony\Bundle\FrameworkBundle\Tests\Functional\WebTestCase;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 //use Symfony\Component\Process\Exception\ProcessFailedException;
@@ -643,16 +644,16 @@ class ReportGenerator {
 
         //fellapp_download
         //TODO: chek this url
-        $pageUrl = $router->generate('fellapp_download',array('id' => $applicationId),true); //this does not work from console: 'order' is missing
+        $pageUrl = $router->generate('fellapp_download',array('id' => $applicationId),UrlGeneratorInterface::ABSOLUTE_URL); //this does not work from console: 'order' is missing
         $logger->notice("### pageUrl=".$pageUrl);
         //echo "pageurl=". $pageUrl . "<br>";
+        //exit();
 
         //save session        
         //$session = $this->container->get('session');
         //$session->save();
         //session_write_close();
-        //echo "seesion name=".$session->getName().", id=".$session->getId()."<br>";       
-
+        //echo "seesion name=".$session->getName().", id=".$session->getId()."<br>";
         //$logger->notice("before knp_snappy generate: pageUrl=".$pageUrl);
 
         //$application =
