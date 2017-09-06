@@ -200,9 +200,23 @@ class Project {
      */
     private $approvalDate;
 
-    //TODO:
+    //TODO (?):
     //Click on the "View Biostatistical Request" button to view the biostatistical request form
     //Click on the "View Master Request" button to view the master request form
+
+
+    //IrbReviews (one-to-many, but only one review is valid)
+    /**
+     * @ORM\OneToMany(targetEntity="IrbReview", mappedBy="project", cascade={"persist","remove"})
+     */
+    private $irbReviews;
+
+    //AdminReviews (one-to-many, but only one review is valid)
+
+    //CommitteeReviews (one-to-many)
+
+    //FinalReviews (one-to-many, but only one review is valid)
+
 
 
 
@@ -214,6 +228,8 @@ class Project {
         $this->principalInvestigators = new ArrayCollection();
         $this->coInvestigators = new ArrayCollection();
         $this->pathologists = new ArrayCollection();
+
+        $this->irbReviews = new ArrayCollection();
     }
 
 
@@ -646,6 +662,21 @@ class Project {
     }
 
 
+    public function getIrbReviews()
+    {
+        return $this->irbReviews;
+    }
+    public function addIrbReview($item)
+    {
+        if( $item && !$this->irbReviews->contains($item) ) {
+            $this->irbReviews->add($item);
+        }
+        return $this;
+    }
+    public function removeIrbReview($item)
+    {
+        $this->irbReviews->removeElement($item);
+    }
 
 
 }
