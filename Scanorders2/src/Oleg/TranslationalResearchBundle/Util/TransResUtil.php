@@ -178,7 +178,6 @@ class TransResUtil
 
     //get url to the review page according to the project's current status (i.e. IRB Review Page)
     public function getReviewLink( $project, $user=null ) {
-        $links = array();
 
         //$workflow = $this->container->get('state_machine.transres_project');
         //$transitions = $workflow->getEnabledTransitions($project);
@@ -186,9 +185,26 @@ class TransResUtil
         //    echo "transition=".$this->printTransition($transition)."<br>";
         //}
 
-        echo "project status=".$project->getStatus()."<br>";
+        $class = "btn btn-default";
 
-        return $links;
+        //echo "project status=".$project->getStatus()."<br>";
+
+        switch( $project->getStatus() ) {
+            case "irb_review":
+                $thisUrl = $this->container->get('router')->generate(
+                    'translationalresearch_irb-review_new',
+                    array(
+                        //'id'=>$project->getId()
+                    ),
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                $link = "<a href=".$thisUrl." class='".$class."' target='_blank'>"."IRB Review"."</a>";
+                break;
+            default:
+                $link = "Not Available for ".$project->getStatus();
+        }
+
+        return $link;
     }
 
     public function getTransitionLabelByName( $transitionName ) {
