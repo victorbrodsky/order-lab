@@ -340,10 +340,6 @@ class FellAppApplicantController extends Controller {
 
         //get interview date string
         $interviewDateStr = $interview->getInterviewDateStr();
-//        $interviewDate = $fellapp->getInterviewDate();
-//        if( $interviewDate ) {
-//            $interviewDateStr = " , Interview date ".$interviewDate->format('m/d/Y','UTC');
-//        }
 
         $cc = null; //"oli2002@med.cornell.edu";
         $emailUtil->sendEmail( $email, "Fellowship Candidate (".$applicant->getUsernameOptimal().$interviewDateStr.") Interview Application and Evaluation Form", $text, $cc, $senderEmail );
@@ -402,7 +398,8 @@ class FellAppApplicantController extends Controller {
         $interviewDateStr = "";
         $interviewDate = $fellapp->getInterviewDate();
         if( $interviewDate ) {
-            $interviewDateStr = " , Interview date ".$interviewDate->format('m/d/Y','UTC');
+            //$interviewDate->setTimezone(new DateTimeZone("UTC"));
+            $interviewDateStr = " , Interview date ".$interviewDate->format('m/d/Y');
         }
 
         $applicant = $fellapp->getUser();

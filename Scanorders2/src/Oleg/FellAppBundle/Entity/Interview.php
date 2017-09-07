@@ -344,14 +344,15 @@ class Interview {
         $fellapp = $this->getFellapp();
         if( $fellapp ) {
             $fellappInterviewDate = $fellapp->getInterviewDate();
-            $interviewDateStr = " , Interview date " . $fellappInterviewDate->format('m/d/Y', 'UTC');
+            //$fellappInterviewDate->setTimezone(new DateTimeZone("UTC"));
+            $interviewDateStr = " , Interview date " . $fellappInterviewDate->format('m/d/Y');
             if( $fellappInterviewDate && $interviewDate && $fellappInterviewDate != $interviewDate ) {
-                $interviewDateStr = " , General Interview date " . $fellappInterviewDate->format('m/d/Y', 'UTC') .
-                    ", your Interview date " . $interviewDate->format('m/d/Y', 'UTC');
+                $interviewDateStr = " , General Interview date " . $fellappInterviewDate->format('m/d/Y') .
+                    ", your Interview date " . $interviewDate->format('m/d/Y');
             }
         } else {
             if( $interviewDate ) {
-                $interviewDateStr = " , Interview date " . $interviewDate->format('m/d/Y', 'UTC');
+                $interviewDateStr = " , Interview date " . $interviewDate->format('m/d/Y');
             }
         }
 
