@@ -337,5 +337,25 @@ class Interview {
         return $res;
     }
 
+    public function getInterviewDateStr()
+    {
+        $interviewDateStr = "";
+        $interviewDate = $this->getInterviewDate();
+        $fellapp = $this->getFellapp();
+        if( $fellapp ) {
+            $fellappInterviewDate = $fellapp->getInterviewDate();
+            $interviewDateStr = " , Interview date " . $fellappInterviewDate->format('m/d/Y', 'UTC');
+            if( $fellappInterviewDate && $interviewDate && $fellappInterviewDate != $interviewDate ) {
+                $interviewDateStr = " , General Interview date " . $fellappInterviewDate->format('m/d/Y', 'UTC') .
+                    ", your Interview date " . $interviewDate->format('m/d/Y', 'UTC');
+            }
+        } else {
+            if( $interviewDate ) {
+                $interviewDateStr = " , Interview date " . $interviewDate->format('m/d/Y', 'UTC');
+            }
+        }
+
+        return $interviewDateStr;
+    }
 
 } 

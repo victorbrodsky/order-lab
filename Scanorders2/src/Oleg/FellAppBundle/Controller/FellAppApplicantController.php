@@ -338,10 +338,17 @@ class FellAppApplicantController extends Controller {
             $emailUtil = $this->get('user_mailer_utility');
         }
 
-        $cc = null; //"oli2002@med.cornell.edu";
-        $emailUtil->sendEmail( $email, "Fellowship Candidate (".$applicant->getUsernameOptimal().") Interview Application and Evaluation Form", $text, $cc, $senderEmail );
+        //get interview date
+        $interviewDateStr = $interview->getInterviewDateStr();
+//        $interviewDate = $fellapp->getInterviewDate();
+//        if( $interviewDate ) {
+//            $interviewDateStr = " , Interview date ".$interviewDate->format('m/d/Y','UTC');
+//        }
 
-        $logger->notice("sendInvitationEmail: Email has been sent to " . $email);
+        $cc = null; //"oli2002@med.cornell.edu";
+        $emailUtil->sendEmail( $email, "Fellowship Candidate (".$applicant->getUsernameOptimal().$interviewDateStr.") Interview Application and Evaluation Form", $text, $cc, $senderEmail );
+
+        $logger->notice("sendInvitationEmail: Email has been sent to " . $email . $interviewDateStr);
 
         return $email;
     }
@@ -391,10 +398,17 @@ class FellAppApplicantController extends Controller {
             $emailUtil = $this->get('user_mailer_utility');
         }
 
-        $applicant = $fellapp->getUser();
-        $emailUtil->sendEmail( $coordinatorEmails, "Fellowship Candidate (ID# ".$fellapp->getId()." ".$applicant->getUsernameOptimal().") Interview Application and Evaluation Form", $event, null, $senderEmail );
+        //get interview date
+        $interviewDateStr = "";
+        $interviewDate = $fellapp->getInterviewDate();
+        if( $interviewDate ) {
+            $interviewDateStr = " , Interview date ".$interviewDate->format('m/d/Y','UTC');
+        }
 
-        $logger->notice("sendConfirmationEmail: "."Fellowship Candidate (ID# ".$fellapp->getId()." ".$applicant->getUsernameOptimal().": Send confirmation email from " . $senderEmail . " to coordinators:".implode(", ",$coordinatorEmails));
+        $applicant = $fellapp->getUser();
+        $emailUtil->sendEmail( $coordinatorEmails, "Fellowship Candidate (ID# ".$fellapp->getId()." ".$applicant->getUsernameOptimal().$interviewDateStr.") Interview Application and Evaluation Form", $event, null, $senderEmail );
+
+        $logger->notice("sendConfirmationEmail: "."Fellowship Candidate (ID# ".$fellapp->getId()." ".$applicant->getUsernameOptimal().$interviewDateStr.": Send confirmation email from " . $senderEmail . " to coordinators:".implode(", ",$coordinatorEmails));
     }
 
 
