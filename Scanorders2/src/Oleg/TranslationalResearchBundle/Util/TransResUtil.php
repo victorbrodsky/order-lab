@@ -108,6 +108,7 @@ class TransResUtil
 
         return $links;
     }
+
     public function printTransition($transition) {
         echo $transition->getName().": ";
         $froms = $transition->getFroms();
@@ -173,6 +174,21 @@ class TransResUtil
                 return false;
             }//try
         }
+    }
+
+    public function getEnabledLinkReview( $project, $user=null, $classEdit=null, $classTransition=null ) {
+        $links = array();
+
+        $workflow = $this->container->get('state_machine.transres_project');
+        $transitions = $workflow->getEnabledTransitions($project);
+
+        echo "project status=".$project->getStatus()."<br>";
+
+        foreach($transitions as $transition) {
+            echo "transition=".$this->printTransition($transition)."<br>";
+        }
+
+        return $links;
     }
 
     public function getTransitionLabelByName( $transitionName ) {

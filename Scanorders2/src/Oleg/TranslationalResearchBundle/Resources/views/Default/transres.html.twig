@@ -126,12 +126,22 @@
     {% endif %}
 {% endmacro %}
 
-{% macro projectHeader(project) %}
+{% macro projectEnabledLinkActionsHeader(project) %}
     {% set actionLinks = transres_util.getEnabledLinkActions(project,app.user,"btn btn-default","btn btn-warning") %}
     <div class="well">
         <p>Project Status: <strong>{{ transres_util.getStatusLabelByProject(project) }}</strong></p>
         {% for actionLink in actionLinks %}
                 {{ actionLink|raw }}
+        {% endfor %}
+    </div>
+{% endmacro %}
+
+{% macro projectHeader(project) %}
+    {% set reviewLinks = transres_util.getEnabledLinkReview(project,app.user,"btn btn-default","btn btn-warning") %}
+    <div class="well">
+        <p>Project Status: <strong>{{ transres_util.getStatusLabelByProject(project) }}</strong></p>
+        {% for reviewLink in reviewLinks %}
+            {{ reviewLink|raw }}
         {% endfor %}
     </div>
 {% endmacro %}
