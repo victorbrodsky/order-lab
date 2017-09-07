@@ -137,11 +137,8 @@
 {% endmacro %}
 
 {% macro projectHeader(project) %}
-    {% set reviewLinks = transres_util.getEnabledLinkReview(project,app.user,"btn btn-default","btn btn-warning") %}
     <div class="well">
         <p>Project Status: <strong>{{ transres_util.getStatusLabelByProject(project) }}</strong></p>
-        {% for reviewLink in reviewLinks %}
-            {{ reviewLink|raw }}
-        {% endfor %}
+        {{ transres_util.getReviewLink(project,app.user)|raw }}
     </div>
 {% endmacro %}

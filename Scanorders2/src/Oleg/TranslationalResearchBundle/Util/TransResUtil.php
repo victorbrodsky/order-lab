@@ -176,17 +176,17 @@ class TransResUtil
         }
     }
 
-    public function getEnabledLinkReview( $project, $user=null, $classEdit=null, $classTransition=null ) {
+    //get url to the review page according to the project's current status (i.e. IRB Review Page)
+    public function getReviewLink( $project, $user=null ) {
         $links = array();
 
-        $workflow = $this->container->get('state_machine.transres_project');
-        $transitions = $workflow->getEnabledTransitions($project);
+        //$workflow = $this->container->get('state_machine.transres_project');
+        //$transitions = $workflow->getEnabledTransitions($project);
+        //foreach($transitions as $transition) {
+        //    echo "transition=".$this->printTransition($transition)."<br>";
+        //}
 
         echo "project status=".$project->getStatus()."<br>";
-
-        foreach($transitions as $transition) {
-            echo "transition=".$this->printTransition($transition)."<br>";
-        }
 
         return $links;
     }
