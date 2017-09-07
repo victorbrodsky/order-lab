@@ -399,7 +399,7 @@ class FellAppApplicantController extends Controller {
         $interviewDate = $fellapp->getInterviewDate();
         if( $interviewDate ) {
             //$interviewDate->setTimezone(new DateTimeZone("UTC"));
-            $interviewDateStr = " , Interview date ".$interviewDate->format('m/d/Y');
+            $interviewDateStr = ", interview date ".$interviewDate->format('m/d/Y');
         }
 
         $applicant = $fellapp->getUser();
