@@ -338,7 +338,7 @@ class FellAppApplicantController extends Controller {
             $emailUtil = $this->get('user_mailer_utility');
         }
 
-        //get interview date
+        //get interview date string
         $interviewDateStr = $interview->getInterviewDateStr();
 //        $interviewDate = $fellapp->getInterviewDate();
 //        if( $interviewDate ) {
@@ -398,7 +398,7 @@ class FellAppApplicantController extends Controller {
             $emailUtil = $this->get('user_mailer_utility');
         }
 
-        //get interview date
+        //get interview date string
         $interviewDateStr = "";
         $interviewDate = $fellapp->getInterviewDate();
         if( $interviewDate ) {
