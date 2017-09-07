@@ -1359,7 +1359,8 @@ class User extends BaseUser {
     //and start with the first and last name combo; if the user has no first name, use just the last name;
     //if the user has no last name, use the first name; if the user has none of the three names, start with the User ID:
     //FirstName LastName, MD
-    public function getUsernameOptimal() {
+    //if $inverted is true => LastName FirstName
+    public function getUsernameOptimal( $inverted=false ) {
 
         $degrees = array();
         $titles = array();
@@ -1394,7 +1395,11 @@ class User extends BaseUser {
         }
 
         if( $this->getLastName() && $this->getFirstName() ) {
-            return $this->getLastName() . " " . $this->getFirstName() . $degreesAndTitlesStr;
+            if( $inverted ) {
+                return $this->getLastName() . " " . $this->getFirstName() . $degreesAndTitlesStr;
+            } else {
+                return $this->getFirstName() . " " . $this->getLastName() . $degreesAndTitlesStr;
+            }
         }
 
         if( $this->getLastName() ) {

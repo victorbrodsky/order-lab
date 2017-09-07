@@ -24,7 +24,13 @@
 
 namespace Oleg\TranslationalResearchBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
 
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="transres_irbreview")
+ */
 class IrbReview extends ReviewBase
 {
 
@@ -33,6 +39,47 @@ class IrbReview extends ReviewBase
      * @ORM\JoinColumn(name="project_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      */
     private $project;
+
+
+    //Claim/Assignment
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $assignment;
+
+
+    /**
+     * @return mixed
+     */
+    public function getProject()
+    {
+        return $this->project;
+    }
+
+    /**
+     * @param mixed $project
+     */
+    public function setProject($project)
+    {
+        $this->project = $project;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAssignment()
+    {
+        return $this->assignment;
+    }
+
+    /**
+     * @param mixed $assignment
+     */
+    public function setAssignment($assignment)
+    {
+        $this->assignment = $assignment;
+    }
+
 
 
 }

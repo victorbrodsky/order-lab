@@ -92,6 +92,7 @@ class ReviewBase
     public function __construct($author=null) {
         $this->setAuthor($author);
         $this->setType('valid');
+        $this->setCreatedate(new \DateTime());
     }
 
 
@@ -186,11 +187,11 @@ class ReviewBase
     }
 
     /**
-     * @param \DateTime $updatedate
+     * @ORM\PreUpdate
      */
-    public function setUpdatedate($updatedate)
+    public function setUpdatedate()
     {
-        $this->updatedate = $updatedate;
+        $this->updatedate = new \DateTime();
     }
 
     /**
