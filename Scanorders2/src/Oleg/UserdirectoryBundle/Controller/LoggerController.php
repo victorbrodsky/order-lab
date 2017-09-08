@@ -383,7 +383,8 @@ class LoggerController extends Controller
 
         //Start Date, Start Time, End Date, End Time, User [Select2 dropdown), Event Type [Entity Updated], [Free Text Search value for Event column] [Filter Button]
         //$filterform = $this->createForm(new LoggerFilterType($params), null);
-        $filterform = $this->createLoggerFilter($params);
+        $filterform = $this->createLoggerFilter($request,$params);
+        //exit('after createLoggerFilter');
 
         //$filterform->submit($request);
         $filterform->handleRequest($request);
@@ -400,10 +401,11 @@ class LoggerController extends Controller
 
         $currentUser = $this->get('security.token_storage')->getToken()->getUser();
 
-//        foreach( $users as $user ) {
-//            echo "user=".$user."<br>";
-//        }
-//        exit("process loger filter");
+        //echo "eventTypes=".$eventTypes."<br>";
+        //foreach( $eventTypes as $eventType ) {
+        //    echo "eventType=".$eventType."<br>";
+        //}
+        //exit("process loger filter");
 
         if( $search ) {
             $dql->andWhere("logger.event LIKE :searchEvent");
@@ -529,9 +531,18 @@ class LoggerController extends Controller
         return $filterRes;
     }
 
-    public function createLoggerFilter($params) {
+    public function createLoggerFilter($request,$params) {
+        $userid = $params['entityId'];
+        //echo "userid=".$userid."<br>";
+        $routename = $request->get('_route');
+        //echo "route=".$routename."<br>";
         //Start Date, Start Time, End Date, End Time, User [Select2 dropdown), Event Type [Entity Updated], [Free Text Search value for Event column] [Filter Button]
-        return $this->createForm(LoggerFilterType::class,null,array('form_custom_value'=>$params));
+        return $this->createForm(LoggerFilterType::class, null, array(
+            'method'=>'GET',
+            'action' => $this->generateUrl($routename, array('id' => $userid)),
+            'attr' => array('class'=>'well form-search'),
+            'form_custom_value'=>$params,
+        ));
     }
     public function processOptionalFields( $dql, &$dqlParameters, $filterform, $filtered ) {
         $users = $filterform['user']->getData();

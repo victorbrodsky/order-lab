@@ -143,8 +143,12 @@ class CallLogLoggerController extends LoggerController
             $users = $filter['user'];
             $objectTypes = $filter['objectType'];
         }
-        //echo 'eventType count='.count($eventTypes).'<br>';
-        //echo 'users count='.count($users).'<br>';
+
+//        echo 'eventType count='.count($eventTypes).'<br>';
+//        foreach( $eventTypes as $eventType ) {
+//            echo "eventType=".$eventType."<br>";
+//        }
+//        echo 'users count='.count($users).'<br>';
         //exit('1');
 
         //a user without Admin level role (ROLE_CALLLOG_ADMIN) can NOT change the filter in the URL to a user not equal to the currently logged in user.
@@ -171,7 +175,8 @@ class CallLogLoggerController extends LoggerController
         ///////////// EOF make sure eventTypes and users are set /////////////
         $params = array(
             'sitename' => $this->container->getParameter('calllog.sitename'),
-            'showCapacity' => true
+            'showCapacity' => true,
+            'entityId' => $user->getId()
             //'hideObjectType' => true,
             //'hideObjectId' => true,
             //'hideUser' => true,
@@ -199,6 +204,11 @@ class CallLogLoggerController extends LoggerController
         $objectTypes = $filterform['objectType']->getData();
         $users = $filterform['user']->getData();
 
+        //print_r($eventTypes);
+        //print_r($objectTypes);
+        //echo "eventTypes=".$eventTypes."<br>";
+        //exit();
+
         $em = $this->getDoctrine()->getManager();
         $eventType = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->find($eventTypes[0]);
         $objectType = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->find($objectTypes[0]);
@@ -217,9 +227,18 @@ class CallLogLoggerController extends LoggerController
 
     }
 
-    public function createLoggerFilter($params) {
+    public function createLoggerFilter($request,$params) {
+        $userid = $params['entityId'];
+        //echo "userid=".$userid."<br>";
+        $routename = $request->get('_route');
+        //echo "route=".$routename."<br>";
         //Start Date, Start Time, End Date, End Time, User [Select2 dropdown), Event Type [Entity Updated], [Free Text Search value for Event column] [Filter Button]
-        return $this->createForm(CalllogLoggerFilterType::class, null, array('form_custom_value'=>$params));
+        return $this->createForm(CalllogLoggerFilterType::class, null, array(
+            'method'=>'GET',
+            'action' => $this->generateUrl($routename, array('id' => $userid)),
+            'attr' => array('class'=>'well form-search'),
+            'form_custom_value'=>$params,
+        ));
     }
 
     //For calllog, for "My Entrees" page when $filterform has $capacity: add AND filter by $capacity (Submitter or Attending)
