@@ -384,7 +384,6 @@ class LoggerController extends Controller
         //Start Date, Start Time, End Date, End Time, User [Select2 dropdown), Event Type [Entity Updated], [Free Text Search value for Event column] [Filter Button]
         //$filterform = $this->createForm(new LoggerFilterType($params), null);
         $filterform = $this->createLoggerFilter($request,$params);
-        //exit('after createLoggerFilter');
 
         //$filterform->submit($request);
         $filterform->handleRequest($request);
