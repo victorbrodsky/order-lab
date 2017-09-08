@@ -83,6 +83,7 @@ class WorkflowController extends Controller
 
 
     /**
+     * NOT USED - this is a particulra case for testing
      * https://symfony.com/doc/current/workflow/usage.html
      *
      * @Route("/to-irb-review/{id}", name="translationalresearch_to_irb_review")
@@ -140,6 +141,7 @@ class WorkflowController extends Controller
 
 
     /**
+     * NOT USED
      * https://symfony.com/doc/current/workflow/usage.html
      *
      * @Route("/project-transition-status/{transitionName}/{to}/{id}", name="translationalresearch_transition_status_action")
@@ -193,6 +195,7 @@ class WorkflowController extends Controller
     }
 
     /**
+     * Change status of the project (by id) and make transition to this place indicated by transitionName
      * https://symfony.com/doc/current/workflow/usage.html
      *
      * @Route("/project-transition/{transitionName}/{id}", name="translationalresearch_transition_action")

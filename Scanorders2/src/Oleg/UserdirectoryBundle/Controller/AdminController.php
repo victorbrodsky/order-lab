@@ -1406,11 +1406,42 @@ class AdminController extends Controller
                 30
             ),
 
-            "ROLE_TRANSLATIONALRESEARCH_ADMIN" => array(
+            //TRANSRES
+            "ROLE_TRANSRES_ADMIN" => array(
                 "Translational Research Admin",
                 "Full Access for Translational Research site",
-                90
+                90,
+                "translational-research"
             ),
+
+            "ROLE_TRANSRES_IRB_REVIEWER" => array(
+                "Translational Research IRB Reviewer",
+                "IRB Review",
+                50,
+                "translational-research"
+            ),
+
+            "ROLE_TRANSRES_IRB_REVIEWER_DELEGATE" => array(
+                "Translational Research IRB Reviewer Delegate",
+                "Delegate IRB Review",
+                50,
+                "translational-research"
+            ),
+
+            "ROLE_TRANSRES_COMMITTEE_REVIEWER" => array(
+                "Translational Research Committee Reviewer",
+                "Committee Review",
+                50,
+                "translational-research"
+            ),
+
+            "ROLE_TRANSRES_COMMITTEE_DELEGATE" => array(
+                "Translational Research Committee Reviewer Delegate",
+                "Committee Review Delegate",
+                50,
+                "translational-research"
+            ),
+
 
         );
 
@@ -1439,10 +1470,23 @@ class AdminController extends Controller
                 $this->setDefaultList($entity,$count,$username,null);
             }
 
-            $entity->setName( trim($role) );
+            $entity->setName( $role );
             $entity->setAlias( trim($alias) );
             $entity->setDescription( trim($description) );
             $entity->setLevel($level);
+
+            //set sitename
+            if( isset($aliasDescription[3]) ) {
+                //the element exists in the array. write your code here.
+                //i.e. $aliasDescription[3] === 'translational-research'
+                //$input = array("a", "b", "c", "d", "e");
+                //$output = array_slice($input, 0, 3);   // returns "a", "b", and "c"
+                $roleParts = explode('_', $role); //ROLE TRANSRES IRB ...
+                $rolePartSecondArr = array_slice($roleParts, 1, 1);
+                $rolePartSecond = "_".$rolePartSecondArr[0]."_"; //_TRANSRES_
+                //exit("rolePartSecond=".$rolePartSecond);
+                $this->addSingleSite($entity,$rolePartSecond,$aliasDescription[3]);
+            }
 
             $attrName = "Call Pager";
 
@@ -6626,6 +6670,18 @@ class AdminController extends Controller
             $em = $this->getDoctrine()->getManager();
             $site = $em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByName($sitename);
             if( $role->getSites() && !$role->getSites()->contains($site) ) {
+                $role->addSite($site);
+                $count++;
+            }
+        }
+        return $count;
+    }
+    public function addSingleSite( $role, $roleStr, $sitename ) {
+        $count = 0;
+        if( strpos($role, $roleStr) !== false ) {
+            $em = $this->getDoctrine()->getManager();
+            $site = $em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByName($sitename);
+            if( !$role->getSites()->contains($site) ) {
                 $role->addSite($site);
                 $count++;
             }

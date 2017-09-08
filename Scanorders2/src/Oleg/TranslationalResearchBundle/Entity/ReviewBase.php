@@ -46,15 +46,15 @@ class ReviewBase
 
     /**
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(name="author", referencedColumnName="id")
+     * @ORM\JoinColumn(name="reviewer", referencedColumnName="id")
      */
-    protected $author;
+    protected $reviewer;
 
     /**
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(name="updateAuthor", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="reviewerDelegate", referencedColumnName="id", nullable=true)
      */
-    protected $updateAuthor;
+    protected $reviewerDelegate;
 
     /**
      * valid, invalid
@@ -89,8 +89,8 @@ class ReviewBase
 
 
 
-    public function __construct($author=null) {
-        $this->setAuthor($author);
+    public function __construct($reviewer=null) {
+        $this->setReviewer($reviewer);
         $this->setType('valid');
         $this->setCreatedate(new \DateTime());
     }
@@ -117,34 +117,35 @@ class ReviewBase
     /**
      * @return mixed
      */
-    public function getAuthor()
+    public function getReviewer()
     {
-        return $this->author;
+        return $this->reviewer;
     }
 
     /**
-     * @param mixed $author
+     * @param mixed $reviewer
      */
-    public function setAuthor($author)
+    public function setReviewer($reviewer)
     {
-        $this->author = $author;
+        $this->reviewer = $reviewer;
     }
 
     /**
      * @return mixed
      */
-    public function getUpdateAuthor()
+    public function getReviewerDelegate()
     {
-        return $this->updateAuthor;
+        return $this->reviewerDelegate;
     }
 
     /**
-     * @param mixed $updateAuthor
+     * @param mixed $reviewerDelegate
      */
-    public function setUpdateAuthor($updateAuthor)
+    public function setReviewerDelegate($reviewerDelegate)
     {
-        $this->updateAuthor = $updateAuthor;
+        $this->reviewerDelegate = $reviewerDelegate;
     }
+
 
     /**
      * @return mixed

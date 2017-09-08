@@ -412,7 +412,7 @@ class UserSecurityUtil {
             }
 
             if( $sitename == $this->container->getParameter('translationalresearch.sitename') ) {
-                $roles = array("ROLE_TRANSLATIONALRESEARCH_ADMIN");
+                $roles = array("ROLE_TRANSRES_ADMIN");
             }
 
         } else {

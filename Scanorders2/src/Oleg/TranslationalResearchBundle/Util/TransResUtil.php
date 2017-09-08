@@ -19,6 +19,7 @@ namespace Oleg\TranslationalResearchBundle\Util;
 
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Oleg\TranslationalResearchBundle\Entity\IrbReview;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
@@ -133,6 +134,7 @@ class TransResUtil
         return null;
     }
 
+    //change transition (by the $transitionName) of the project
     public function setTransition( $project, $transitionName, $to=null ) {
         $transresUtil = $this->container->get('transres_util');
         $workflow = $this->container->get('state_machine.transres_project');
@@ -156,6 +158,9 @@ class TransResUtil
                 //change status
                 $project->setStatus($to); //i.e. 'irb_review'
 
+                //check and add reviewers for this place by role? Do it when project is created?
+                $this->addPlaceReviewers($project);
+
                 //write to DB
                 $this->em->flush($project);
 
@@ -174,6 +179,29 @@ class TransResUtil
                 return false;
             }//try
         }
+    }
+
+    //TODO: create default reviewers object: set reviewer and delegate reviewer for each review.
+    //add reviewers according to their roles and place
+    //for example, place(status)=irb_review => roles=ROLE_TRANSRES_IRB_REVIEWER, ROLE_TRANSRES_IRB_REVIEWER_DELEGATE
+    public function addPlaceReviewers( $project ) {
+        //echo "project status=".$project->getStatus()."<br>";
+        switch( $project->getStatus() ) {
+            case "irb_review":
+
+                $reviewers = $this->em->getRepository('OlegUserdirectoryBundle:User')->findByRoles( array("ROLE_TRANSRES_IRB_REVIEWER") );
+                //reviewer delegate should be added to the specific reviewer => no delegate role is required?
+                foreach($reviewers as $reviewer) {
+                    //1) create IrbReview entity
+                    $irbReview = new IrbReview($reviewer);
+                }
+
+                break;
+            default:
+                //
+        }
+
+        return $project;
     }
 
     //get url to the review page according to the project's current status (i.e. IRB Review Page)
