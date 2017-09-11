@@ -363,4 +363,58 @@ class TransResUtil
         return $state;
     }
 
+    public function getStateSimpleLabelByName( $stateName ) {
+        switch ($stateName) {
+            case "start":
+                $state = "Edit Project";
+                break;
+            case "draft":
+                $state = "Draft";
+                break;
+            case "complete":
+                $state = "Completed";
+                break;
+            case "submit":
+                $state = "Completed";
+                break;
+            case "irb_review":
+                $state = "IRB Review";
+                break;
+            case "irb_rejected":
+                $state = "IRB Review Rejected";
+                break;
+            case "admin_review":
+                $state = "Admin Review";
+                break;
+            case "admin_rejected":
+                $state = "Admin Review Rejected";
+                break;
+            case "committee_review":
+                $state = "Committee Review";
+                break;
+            case "committee_rejected":
+                $state = "Committee Review Rejected";
+                break;
+
+            case "final_approval":
+                $state = "Final Approval";
+                break;
+            case "approved":
+                $state = "Approved";
+                break;
+            case "not_approved":
+                $state = "Final Approval Rejected";
+                break;
+
+            case "closed":
+                $state = "Closed";
+                break;
+
+            default:
+                $state = "<$stateName>";
+
+        }
+        return $state;
+    }
+
 }

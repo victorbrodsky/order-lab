@@ -1,0 +1,23 @@
+{% extends "OlegTranslationalResearchBundle::Default/base.html.twig" %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block content %}
+
+    <h4 class="text-info" align="center">
+        {{ title }}
+    </h4>
+
+    {% for state in states %}
+        <p>
+            {#{{ render(controller('OlegTranslationalResearchBundleBundle:DefaultReviewer:stateDefaultReviewerIndex', { 'stateStr': state })) }}#}
+            <a href="{{ path(translationalresearch_sitename~'_state-default-reviewer_index',{'stateStr':state}) }}"
+            >Default Reviewers for {{ transres_util.getStateSimpleLabelByName(state) }}</a>
+        </p>
+    {% endfor %}
+
+
+{% endblock %}

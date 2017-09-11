@@ -248,6 +248,10 @@ function setTranslationalResearchNavBar() {
         id = 'translationalresearch-project-workflow';
     }
 
+    if( full.indexOf("/default-reviewers/") !== -1 ) {
+        id = 'translationalresearch-default-reviewers';
+    }
+
     id = commonNavBar(full,id);
 
     //if( full.indexOf("/translational-research/event-log/event-log-per-user-per-event-type/") !== -1 ) {

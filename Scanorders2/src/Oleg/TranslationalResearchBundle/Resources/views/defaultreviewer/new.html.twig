@@ -1,0 +1,41 @@
+{% extends "OlegTranslationalResearchBundle::Default/base.html.twig" %}
+
+{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block content %}
+
+    <h4 class="text-info" align="center">
+        {{ title }}
+    </h4>
+
+    <br><br>
+
+    {{ form_start(form) }}
+        {#{{ form_widget(form) }}#}
+
+        {% if form.reviewer is defined %}
+            {{ formmacros.field(form.reviewer) }}
+        {% endif %}
+
+        {% if form.reviewerDelegate is defined %}
+            {{ formmacros.field(form.reviewerDelegate) }}
+        {% endif %}
+
+        <br>
+        <p>
+        <input class="btn btn-primary" type="submit" value="Create" />
+        </p>
+
+    {{ form_end(form) }}
+
+    <br>
+    <p>
+        <a href="{{ path('translationalresearch_default-reviewer_index') }}">Back to the list</a>
+    </p>
+{% endblock %}
