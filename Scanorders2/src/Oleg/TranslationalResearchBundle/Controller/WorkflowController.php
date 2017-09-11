@@ -101,16 +101,16 @@ class WorkflowController extends Controller
         if( $workflow->can($project, 'to_irb_review') ) {
             try {
                 $workflow->apply($project, 'to_irb_review');
-                //change status
-                $project->setStatus('irb_review');
+                //change state
+                $project->setState('irb_review');
                 $this->addFlash(
                     'error',
-                    'change status to IRB Review OK.'
+                    'change state to IRB Review OK.'
                 );
             } catch (LogicException $e) {
                 $this->addFlash(
                     'error',
-                    'change status to IRB Review failed.'
+                    'change state to IRB Review failed.'
                 );
             }
         }
@@ -144,10 +144,10 @@ class WorkflowController extends Controller
      * NOT USED
      * https://symfony.com/doc/current/workflow/usage.html
      *
-     * @Route("/project-transition-status/{transitionName}/{to}/{id}", name="translationalresearch_transition_status_action")
+     * @Route("/project-transition-state/{transitionName}/{to}/{id}", name="translationalresearch_transition_state_action")
      * @Method("GET")
      */
-    public function transitionStatusAction( $transitionName, $to, Project $project )
+    public function transitionStateAction( $transitionName, $to, Project $project )
     {
         $transresUtil = $this->container->get('transres_util');
         $workflow = $this->container->get('state_machine.transres_project');
@@ -167,16 +167,16 @@ class WorkflowController extends Controller
         if( $workflow->can($project, $transitionName) ) {
             try {
                 $workflow->apply($project, $transitionName);
-                //change status
-                $project->setStatus($to); //i.e. 'irb_review'
+                //change state
+                $project->setState($to); //i.e. 'irb_review'
                 $this->addFlash(
                     'error',
-                    "Successfully changed status to $to"
+                    "Successfully changed state to $to"
                 );
             } catch (LogicException $e) {
                 $this->addFlash(
                     'error',
-                    "Change status to $to failed"
+                    "Change state to $to failed"
                 );
             }
         }
@@ -195,7 +195,7 @@ class WorkflowController extends Controller
     }
 
     /**
-     * Change status of the project (by id) and make transition to this place indicated by transitionName
+     * Change state of the project (by id) and make transition to this place indicated by transitionName
      * https://symfony.com/doc/current/workflow/usage.html
      *
      * @Route("/project-transition/{transitionName}/{id}", name="translationalresearch_transition_action")

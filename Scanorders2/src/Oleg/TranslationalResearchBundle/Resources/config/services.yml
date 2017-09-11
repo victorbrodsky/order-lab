@@ -43,10 +43,10 @@ framework:
             marking_store:
                 type: 'single_state' # 'multiple_state' or 'single_state'
                 arguments:
-                    - 'status' #status keeps the marking state
+                    - 'state' #state keeps the marking state
             supports:
                 - Oleg\TranslationalResearchBundle\Entity\Project
-            #Project has status which is equal to this place
+            #Project has state which is equal to this place
             places:
                 - start
                 - draft

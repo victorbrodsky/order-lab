@@ -60,7 +60,7 @@ class ReviewBase
      * valid, invalid
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $type;
+    protected $status;
 
     /**
      * @var \DateTime
@@ -74,12 +74,11 @@ class ReviewBase
      */
     protected $updatedate;
 
-
     /**
      * approved, rejected
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $status;
+    protected $decision;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -91,7 +90,7 @@ class ReviewBase
 
     public function __construct($reviewer=null) {
         $this->setReviewer($reviewer);
-        $this->setType('valid');
+        $this->setStatus('valid');
         $this->setCreatedate(new \DateTime());
     }
 
@@ -146,22 +145,6 @@ class ReviewBase
         $this->reviewerDelegate = $reviewerDelegate;
     }
 
-
-    /**
-     * @return mixed
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
-     * @param mixed $type
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-    }
 
     /**
      * @return \DateTime
@@ -225,6 +208,22 @@ class ReviewBase
     public function setComment($comment)
     {
         $this->comment = $comment;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDecision()
+    {
+        return $this->decision;
+    }
+
+    /**
+     * @param mixed $decision
+     */
+    public function setDecision($decision)
+    {
+        $this->decision = $decision;
     }
 
 

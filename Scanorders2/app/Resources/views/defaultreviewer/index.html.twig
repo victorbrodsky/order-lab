@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Defaultreviewers list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Createdate</th>
+                <th>Updatedate</th>
+                <th>State</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for defaultReviewer in defaultReviewers %}
+            <tr>
+                <td><a href="{{ path('translationalresearch_default-reviewer_show', { 'id': defaultReviewer.id }) }}">{{ defaultReviewer.id }}</a></td>
+                <td>{% if defaultReviewer.createDate %}{{ defaultReviewer.createDate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if defaultReviewer.updateDate %}{{ defaultReviewer.updateDate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{{ defaultReviewer.state }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('translationalresearch_default-reviewer_show', { 'id': defaultReviewer.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('translationalresearch_default-reviewer_edit', { 'id': defaultReviewer.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('translationalresearch_default-reviewer_new') }}">Create a new defaultReviewer</a>
+        </li>
+    </ul>
+{% endblock %}

@@ -18,8 +18,6 @@
 namespace Oleg\TranslationalResearchBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Oleg\UserdirectoryBundle\Entity\GeneralEntity;
-use Oleg\UserdirectoryBundle\Entity\UserWrapper;
 use Symfony\Component\Validator\Constraints as Assert;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -49,7 +47,7 @@ class Project {
 
     /**
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(name="updateAuthor", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="updateUser", referencedColumnName="id", nullable=true)
      */
     private $updateUser;
 
@@ -66,9 +64,11 @@ class Project {
     private $updateDate;
 
     /**
+     * State of the project (state machine variable)
+     *
      * @ORM\Column(type="string", nullable=true)
      */
-    private $status;
+    private $state;
 
     // Project fields
     /**
@@ -222,7 +222,7 @@ class Project {
 
     public function __construct($user=null) {
         $this->setSubmitter($user);
-        $this->setStatus('draft');
+        $this->setState('draft');
         $this->setCreateDate(new \DateTime());
 
         $this->principalInvestigators = new ArrayCollection();
@@ -323,21 +323,24 @@ class Project {
 //        }
 //    }
 
+
     /**
      * @return mixed
      */
-    public function getStatus()
+    public function getState()
     {
-        return $this->status;
+        return $this->state;
     }
 
     /**
-     * @param mixed $status
+     * @param mixed $state
      */
-    public function setStatus($status)
+    public function setState($state)
     {
-        $this->status = $status;
+        $this->state = $state;
     }
+
+
 
     /**
      * @return mixed

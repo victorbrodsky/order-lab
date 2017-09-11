@@ -30,7 +30,7 @@ class ProjectType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        //$builder->add('createDate')->add('updateDate')->add('status')->add('title')->add('irbNumber')->add('startDate')->add('expirationDate')
+        //$builder->add('createDate')->add('updateDate')->add('state')->add('title')->add('irbNumber')->add('startDate')->add('expirationDate')
         //->add('funded')->add('fundedAccountNumber')->add('description')->add('budgetSummary')->add('totalCost')->add('projectType')
         //->add('biostatisticalComment')->add('administratorComment')->add('primaryReviewerComment')->add('submitter')->add('updateUser')
         //->add('principalInvestigators')->add('coInvestigators')->add('pathologists')->add('irbSubmitter')->add('contact');
@@ -42,8 +42,8 @@ class ProjectType extends AbstractType
                 'attr' => array('class'=>'textarea form-control')
             ));
 
-            $builder->add('status',null, array(
-                'label' => 'Status:',
+            $builder->add('state',null, array(
+                'label' => 'State:',
                 //'disabled' => true,
                 'required' => false,
                 'attr' => array('class' => 'form-control'),

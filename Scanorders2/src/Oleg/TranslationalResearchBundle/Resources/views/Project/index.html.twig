@@ -20,7 +20,7 @@
                 <th>{{ knp_pagination_sortable(projects, 'Principal Investigator(s)', 'principalInvestigatorsInfos.displayName') }}</th>
                 <th>{{ knp_pagination_sortable(projects, 'Project Title', 'project.title') }}</th>
                 <th>{{ knp_pagination_sortable(projects, 'Project Funded', 'project.funded') }}</th>
-                <th>{{ knp_pagination_sortable(projects, 'Status', 'project.status') }}</th>
+                <th>{{ knp_pagination_sortable(projects, 'State', 'project.state') }}</th>
                 <th>{{ knp_pagination_sortable(projects, 'Approval Date', 'project.approvalDate') }}</th>
                 {#<th>{{ knp_pagination_sortable(projects, 'Expiration Date', 'project.expirationDate') }}</th>#}
                 <th>Actions</th>
@@ -57,8 +57,8 @@
                 </td>
 
                 <td>
-                    {#{{ project.status }}#}
-                    {{ transres_util.getStatusLabelByName(project.status) }}
+                    {#{{ project.state }}#}
+                    {{ transres_util.getStateLabelByName(project.state) }}
                 </td>
 
                 <td>

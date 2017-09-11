@@ -3,8 +3,8 @@
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
 
-    {% if form.status is defined %}
-        {{ formmacros.field(form.status) }}
+    {% if form.state is defined %}
+        {{ formmacros.field(form.state) }}
     {% endif %}
 
     {% if form.approvalDate is defined %}
@@ -129,7 +129,7 @@
 {% macro projectEnabledLinkActionsHeader(project) %}
     {% set actionLinks = transres_util.getEnabledLinkActions(project,app.user,"btn btn-default","btn btn-warning") %}
     <div class="well">
-        <p>Project Status: <strong>{{ transres_util.getStatusLabelByProject(project) }}</strong></p>
+        <p>Project State: <strong>{{ transres_util.getStateLabelByProject(project) }}</strong></p>
         {% for actionLink in actionLinks %}
                 {{ actionLink|raw }}
         {% endfor %}
@@ -138,7 +138,7 @@
 
 {% macro projectHeader(project) %}
     <div class="well">
-        <p>Project Status: <strong>{{ transres_util.getStatusLabelByProject(project) }}</strong></p>
+        <p>Project State: <strong>{{ transres_util.getStateLabelByProject(project) }}</strong></p>
         {{ transres_util.getReviewLink(project,app.user)|raw }}
     </div>
 {% endmacro %}

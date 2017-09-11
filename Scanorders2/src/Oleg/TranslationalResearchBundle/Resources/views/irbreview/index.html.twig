@@ -11,7 +11,7 @@
                 <th>Type</th>
                 <th>Createdate</th>
                 <th>Updatedate</th>
-                <th>Status</th>
+                <th>Decision</th>
                 <th>Comment</th>
                 <th>Actions</th>
             </tr>
@@ -24,7 +24,7 @@
                 <td>{{ irbReview.type }}</td>
                 <td>{% if irbReview.createdate %}{{ irbReview.createdate|date('Y-m-d H:i:s') }}{% endif %}</td>
                 <td>{% if irbReview.updatedate %}{{ irbReview.updatedate|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>{{ irbReview.status }}</td>
+                <td>{{ irbReview.decision }}</td>
                 <td>{{ irbReview.comment }}</td>
                 <td>
                     <ul>

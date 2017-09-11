@@ -1,3 +1,7 @@
+oleg_translational_research_default_reviewer:
+    resource: "@OlegTranslationalResearchBundle/Controller/DefaultReviewerController.php"
+    type:     annotation
+
 oleg_translational_research_irb_review:
     resource: "@OlegTranslationalResearchBundle/Controller/IrbReviewController.php"
     type:     annotation

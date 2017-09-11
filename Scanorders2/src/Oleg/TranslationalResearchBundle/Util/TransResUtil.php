@@ -54,9 +54,9 @@ class TransResUtil
             $transitionName = $transition->getName();
             $tos = $transition->getTos();
             foreach( $tos as $to ) {
-                //sent status $to
+                //sent state $to
 //                $thisUrl = $this->container->get('router')->generate(
-//                    'translationalresearch_transition_status_action',
+//                    'translationalresearch_transition_state_action',
 //                    array(
 //                        'transitionName'=>$transitionName,
 //                        'to'=>$to,
@@ -65,7 +65,7 @@ class TransResUtil
 //                    UrlGeneratorInterface::ABSOLUTE_URL
 //                );
 
-                //don't sent status $to (get it from transition object)
+                //don't sent state $to (get it from transition object)
                 $thisUrl = $this->container->get('router')->generate(
                     'translationalresearch_transition_action',
                     array(
@@ -86,10 +86,10 @@ class TransResUtil
 
         }
 
-        //add links to edit if the current status is "_rejected"
+        //add links to edit if the current state is "_rejected"
         $froms = $transition->getFroms();
-        $fromStatus = $froms[0];
-        if( strpos($fromStatus, '_rejected') !== false || $fromStatus == 'draft' || $fromStatus == 'complete' ) {
+        $fromState = $froms[0];
+        if( strpos($fromState, '_rejected') !== false || $fromState == 'draft' || $fromState == 'complete' ) {
             $label = "Edit Project";
             $thisUrl = $this->container->get('router')->generate(
                 'translationalresearch_project_edit',
@@ -155,8 +155,8 @@ class TransResUtil
         if( $workflow->can($project, $transitionName) ) {
             try {
                 $workflow->apply($project, $transitionName);
-                //change status
-                $project->setStatus($to); //i.e. 'irb_review'
+                //change state
+                $project->setState($to); //i.e. 'irb_review'
 
                 //check and add reviewers for this place by role? Do it when project is created?
                 $this->addPlaceReviewers($project);
@@ -183,10 +183,10 @@ class TransResUtil
 
     //TODO: create default reviewers object: set reviewer and delegate reviewer for each review.
     //add reviewers according to their roles and place
-    //for example, place(status)=irb_review => roles=ROLE_TRANSRES_IRB_REVIEWER, ROLE_TRANSRES_IRB_REVIEWER_DELEGATE
+    //for example, place(state)=irb_review => roles=ROLE_TRANSRES_IRB_REVIEWER, ROLE_TRANSRES_IRB_REVIEWER_DELEGATE
     public function addPlaceReviewers( $project ) {
-        //echo "project status=".$project->getStatus()."<br>";
-        switch( $project->getStatus() ) {
+        //echo "project state=".$project->getState()."<br>";
+        switch( $project->getState() ) {
             case "irb_review":
 
                 $reviewers = $this->em->getRepository('OlegUserdirectoryBundle:User')->findByRoles( array("ROLE_TRANSRES_IRB_REVIEWER") );
@@ -204,7 +204,7 @@ class TransResUtil
         return $project;
     }
 
-    //get url to the review page according to the project's current status (i.e. IRB Review Page)
+    //get url to the review page according to the project's current state (i.e. IRB Review Page)
     public function getReviewLink( $project, $user=null ) {
 
         //$workflow = $this->container->get('state_machine.transres_project');
@@ -215,9 +215,9 @@ class TransResUtil
 
         $class = "btn btn-default";
 
-        //echo "project status=".$project->getStatus()."<br>";
+        //echo "project state=".$project->getState()."<br>";
 
-        switch( $project->getStatus() ) {
+        switch( $project->getState() ) {
             case "irb_review":
                 $thisUrl = $this->container->get('router')->generate(
                     'translationalresearch_irb-review_new',
@@ -229,7 +229,7 @@ class TransResUtil
                 $link = "<a href=".$thisUrl." class='".$class."' target='_blank'>"."IRB Review"."</a>";
                 break;
             default:
-                $link = "Not Available for ".$project->getStatus();
+                $link = "Not Available for ".$project->getState();
         }
 
         return $link;
@@ -306,61 +306,61 @@ class TransResUtil
         return $label;
     }
 
-    public function getStatusLabelByProject( $project ) {
-        return $this->getStatusLabelByName($project->getStatus());
+    public function getStateLabelByProject( $project ) {
+        return $this->getStateLabelByName($project->getState());
     }
-    public function getStatusLabelByName( $statusName ) {
-        switch ($statusName) {
+    public function getStateLabelByName( $stateName ) {
+        switch ($stateName) {
             case "start":
-                $status = "Edit Project";
+                $state = "Edit Project";
                 break;
             case "draft":
-                $status = "Draft";
+                $state = "Draft";
                 break;
             case "complete":
-                $status = "Completed";
+                $state = "Completed";
                 break;
             case "submit":
-                $status = "Completed";
+                $state = "Completed";
                 break;
             case "irb_review":
-                $status = "In IRB Review";
+                $state = "In IRB Review";
                 break;
             case "irb_rejected":
-                $status = "IRB Review Rejected";
+                $state = "IRB Review Rejected";
                 break;
             case "admin_review":
-                $status = "In Admin Review";
+                $state = "In Admin Review";
                 break;
             case "admin_rejected":
-                $status = "Admin Review Rejected";
+                $state = "Admin Review Rejected";
                 break;
             case "committee_review":
-                $status = "In Committee Review";
+                $state = "In Committee Review";
                 break;
             case "committee_rejected":
-                $status = "Committee Review Rejected";
+                $state = "Committee Review Rejected";
                 break;
 
             case "final_approval":
-                $status = "In Final Approval";
+                $state = "In Final Approval";
                 break;
             case "approved":
-                $status = "Approved";
+                $state = "Approved";
                 break;
             case "not_approved":
-                $status = "Final Approval Rejected";
+                $state = "Final Approval Rejected";
                 break;
 
             case "closed":
-                $status = "Closed";
+                $state = "Closed";
                 break;
 
             default:
-                $status = "<$statusName>";
+                $state = "<$stateName>";
 
         }
-        return $status;
+        return $state;
     }
 
 }

@@ -1414,6 +1414,20 @@ class AdminController extends Controller
                 "translational-research"
             ),
 
+            "ROLE_TRANSRES_PRIMARY_REVIEWER" => array(
+                "Translational Research Primary Reviewer",
+                "Review for all states",
+                70,
+                "translational-research"
+            ),
+
+            "ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE" => array(
+                "Translational Research Committee Reviewer Delegate",
+                "Translational Research Primary Reviewer Delegate",
+                50,
+                "translational-research"
+            ),
+
             "ROLE_TRANSRES_IRB_REVIEWER" => array(
                 "Translational Research IRB Reviewer",
                 "IRB Review",
@@ -1423,7 +1437,7 @@ class AdminController extends Controller
 
             "ROLE_TRANSRES_IRB_REVIEWER_DELEGATE" => array(
                 "Translational Research IRB Reviewer Delegate",
-                "Delegate IRB Review",
+                "IRB Review Delegate",
                 50,
                 "translational-research"
             ),
@@ -1435,7 +1449,7 @@ class AdminController extends Controller
                 "translational-research"
             ),
 
-            "ROLE_TRANSRES_COMMITTEE_DELEGATE" => array(
+            "ROLE_TRANSRES_COMMITTEE_REVIEWER_DELEGATE" => array(
                 "Translational Research Committee Reviewer Delegate",
                 "Committee Review Delegate",
                 50,
