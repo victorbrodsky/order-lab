@@ -29,23 +29,17 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="transres_irbReview")
+ * @ORM\Table(name="transres_committeeReview")
  */
-class IrbReview extends ReviewBase
+class CommitteeReview extends ReviewBase
 {
 
     /**
-     * @ORM\ManyToOne(targetEntity="Project", inversedBy="irbReviews")
+     * @ORM\ManyToOne(targetEntity="Project", inversedBy="committeeReviews")
      * @ORM\JoinColumn(name="project_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
      */
     private $project;
 
-
-    //Claim/Assignment
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $assignment;
 
 
     /**
@@ -63,23 +57,6 @@ class IrbReview extends ReviewBase
     {
         $this->project = $project;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getAssignment()
-    {
-        return $this->assignment;
-    }
-
-    /**
-     * @param mixed $assignment
-     */
-    public function setAssignment($assignment)
-    {
-        $this->assignment = $assignment;
-    }
-
 
 
 }

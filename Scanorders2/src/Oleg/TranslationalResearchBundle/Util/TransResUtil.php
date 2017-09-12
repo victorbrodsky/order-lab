@@ -19,6 +19,8 @@ namespace Oleg\TranslationalResearchBundle\Util;
 
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Oleg\TranslationalResearchBundle\Entity\CommitteeReview;
+use Oleg\TranslationalResearchBundle\Entity\FinalReview;
 use Oleg\TranslationalResearchBundle\Entity\IrbReview;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -158,8 +160,8 @@ class TransResUtil
                 //change state
                 $project->setState($to); //i.e. 'irb_review'
 
-                //check and add reviewers for this place by role? Do it when project is created?
-                $this->addPlaceReviewers($project);
+                //check and add reviewers for this state by role? Do it when project is created?
+                $this->addStateReviewers($project);
 
                 //write to DB
                 $this->em->flush($project);
@@ -181,27 +183,95 @@ class TransResUtil
         }
     }
 
-    //TODO: create default reviewers object: set reviewer and delegate reviewer for each review.
-    //add reviewers according to their roles and place
-    //for example, place(state)=irb_review => roles=ROLE_TRANSRES_IRB_REVIEWER, ROLE_TRANSRES_IRB_REVIEWER_DELEGATE
-    public function addPlaceReviewers( $project ) {
+    //TODO: create default reviewers object: set reviewer and delegate reviewer for each review state.
+    //add reviewers according to their roles and state
+    //for example, state=irb_review => roles=ROLE_TRANSRES_IRB_REVIEWER, ROLE_TRANSRES_IRB_REVIEWER_DELEGATE
+    public function addStateReviewers( $project ) {
         //echo "project state=".$project->getState()."<br>";
         switch( $project->getState() ) {
-            case "irb_review":
 
-                $reviewers = $this->em->getRepository('OlegUserdirectoryBundle:User')->findByRoles( array("ROLE_TRANSRES_IRB_REVIEWER") );
+            case "irb_review":
+                $defaultReviewers = $this->em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findByState($project->getState());
                 //reviewer delegate should be added to the specific reviewer => no delegate role is required?
-                foreach($reviewers as $reviewer) {
+                foreach($defaultReviewers as $defaultReviewer) {
                     //1) create IrbReview entity
-                    $irbReview = new IrbReview($reviewer);
+                    $reviewer = $defaultReviewer->getReviewer();
+                    if( $reviewer ) {
+                        $reviewEntity = new IrbReview($reviewer);
+                        $reviewerDelegate = $defaultReviewer->getReviewerDelegate();
+                        if( $reviewerDelegate ) {
+                            $reviewEntity->setReviewerDelegate($reviewerDelegate);
+                        }
+                    }
+                }
+                break;
+
+            case "committee_review":
+
+                $defaultReviewers = $this->em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findByState($project->getState());
+                //reviewer delegate should be added to the specific reviewer => no delegate role is required?
+                foreach($defaultReviewers as $defaultReviewer) {
+                    //1) create CommitteeReview entity
+                    $reviewer = $defaultReviewer->getReviewer();
+                    if( $reviewer ) {
+                        $reviewEntity = new CommitteeReview($reviewer);
+                        $reviewerDelegate = $defaultReviewer->getReviewerDelegate();
+                        if( $reviewerDelegate ) {
+                            $reviewEntity->setReviewerDelegate($reviewerDelegate);
+                        }
+                    }
                 }
 
                 break;
+
+            case "final_approval":
+
+                $defaultReviewers = $this->em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findByState($project->getState());
+                //reviewer delegate should be added to the specific reviewer => no delegate role is required?
+                foreach($defaultReviewers as $defaultReviewer) {
+                    //1) create FinalReview entity
+                    $reviewer = $defaultReviewer->getReviewer();
+                    if( $reviewer ) {
+                        $reviewEntity = new FinalReview($reviewer);
+                        $reviewerDelegate = $defaultReviewer->getReviewerDelegate();
+                        if( $reviewerDelegate ) {
+                            $reviewEntity->setReviewerDelegate($reviewerDelegate);
+                        }
+                    }
+                }
+
+                break;
+
             default:
                 //
         }
 
         return $project;
+    }
+
+    public function processDefaultReviewersRole( $defaultReviewer, $originalReviewer=null, $originalReviewerDelegate=null ) {
+
+        $roles = $defaultReviewer->getRoleByState();
+        $reviewerRole = $roles['reviewer'];
+        $reviewerDelegateRole = $roles['reviewerDelegate'];
+
+        $reviewer = $defaultReviewer->getReviewer();
+        if( $reviewer ) {
+            $reviewer->addRole($reviewerRole);
+        }
+        if( $originalReviewer && $originalReviewer != $reviewer ) {
+            $originalReviewer->removeRole($reviewerRole);
+        }
+
+        $reviewerDelegate = $defaultReviewer->getReviewerDelegate();
+        if( $reviewerDelegate ) {
+            $reviewerDelegate->addRole($reviewerDelegateRole);
+        }
+        if( $originalReviewerDelegate && $originalReviewerDelegate != $reviewerDelegate ) {
+            $originalReviewerDelegate->removeRole($reviewerDelegateRole);
+        }
+
+        return $defaultReviewer;
     }
 
     //get url to the review page according to the project's current state (i.e. IRB Review Page)

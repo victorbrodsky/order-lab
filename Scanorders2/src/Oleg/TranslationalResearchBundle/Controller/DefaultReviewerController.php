@@ -104,13 +104,17 @@ class DefaultReviewerController extends Controller
      */
     public function newAction(Request $request, $stateStr)
     {
-        //exit('new');
+        $transresUtil = $this->container->get('transres_util');
+        $cycle = "new";
         $defaultReviewer = new Defaultreviewer();
-        $form = $this->createForm('Oleg\TranslationalResearchBundle\Form\DefaultReviewerType', $defaultReviewer);
+        //$form = $this->createForm('Oleg\TranslationalResearchBundle\Form\DefaultReviewerType', $defaultReviewer);
+        $form = $this->createDefaultReviewForm($cycle,$defaultReviewer);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $defaultReviewer->setState($stateStr);
+            $transresUtil->processDefaultReviewersRole($defaultReviewer);
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($defaultReviewer);
             $em->flush();
@@ -123,6 +127,7 @@ class DefaultReviewerController extends Controller
         $stateLabel = $transresUtil->getStateSimpleLabelByName($stateStr);
 
         return array(
+            'cycle' => $cycle,
             'defaultReviewer' => $defaultReviewer,
             'form' => $form->createView(),
             'title' => "Create a new Default Reviewer for ".$stateLabel
@@ -133,15 +138,22 @@ class DefaultReviewerController extends Controller
      * Finds and displays a defaultReviewer entity.
      *
      * @Route("/{id}", name="translationalresearch_default-reviewer_show")
-     * @Template("OlegTranslationalResearchBundle:DefaultReviewer:show.html.twig")
+     * @Template("OlegTranslationalResearchBundle:DefaultReviewer:new.html.twig")
      * @Method("GET")
      */
     public function showAction(DefaultReviewer $defaultReviewer)
     {
+        $cycle = "show";
+
         $deleteForm = $this->createDeleteForm($defaultReviewer);
 
+        $form = $this->createDefaultReviewForm($cycle,$defaultReviewer);
+
         return array(
+            'cycle' => $cycle,
+            'form' => $form->createView(),
             'defaultReviewer' => $defaultReviewer,
+            'title' => "Default Reviewer ".$defaultReviewer->getReviewer(),
             'delete_form' => $deleteForm->createView(),
         );
 //        return $this->render('defaultreviewer/show.html.twig', array(
@@ -154,24 +166,36 @@ class DefaultReviewerController extends Controller
      * Displays a form to edit an existing defaultReviewer entity.
      *
      * @Route("/{id}/edit", name="translationalresearch_default-reviewer_edit")
-     * @Template("OlegTranslationalResearchBundle:DefaultReviewer:edit.html.twig")
+     * @Template("OlegTranslationalResearchBundle:DefaultReviewer:new.html.twig")
      * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, DefaultReviewer $defaultReviewer)
     {
-        $deleteForm = $this->createDeleteForm($defaultReviewer);
-        $editForm = $this->createForm('Oleg\TranslationalResearchBundle\Form\DefaultReviewerType', $defaultReviewer);
-        $editForm->handleRequest($request);
+        $transresUtil = $this->container->get('transres_util');
+        $cycle = "edit";
 
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
+        $originalReviewer = $defaultReviewer->getReviewer();
+        $originalReviewerDelegate = $defaultReviewer->getReviewerDelegate();
+
+        $deleteForm = $this->createDeleteForm($defaultReviewer);
+        //$editForm = $this->createForm('Oleg\TranslationalResearchBundle\Form\DefaultReviewerType', $defaultReviewer);
+        $form = $this->createDefaultReviewForm($cycle,$defaultReviewer);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $transresUtil->processDefaultReviewersRole($defaultReviewer,$originalReviewer,$originalReviewerDelegate);
+
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('translationalresearch_default-reviewer_edit', array('id' => $defaultReviewer->getId()));
+            return $this->redirectToRoute('translationalresearch_default-reviewer_show', array('id' => $defaultReviewer->getId()));
         }
 
         return array(
+            'cycle' => $cycle,
             'defaultReviewer' => $defaultReviewer,
-            'edit_form' => $editForm->createView(),
+            'form' => $form->createView(),
+            'title' => "Default Reviewer ".$defaultReviewer->getReviewer(),
             'delete_form' => $deleteForm->createView(),
         );
     }
@@ -179,7 +203,7 @@ class DefaultReviewerController extends Controller
     /**
      * Deletes a defaultReviewer entity.
      *
-     * @Route("/{id}", name="translationalresearch_default-reviewer_delete")
+     * @Route("/delete/{id}", name="translationalresearch_default-reviewer_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, DefaultReviewer $defaultReviewer)
@@ -188,6 +212,20 @@ class DefaultReviewerController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            //remove roles
+            $roles = $defaultReviewer->getRoleByState();
+            $reviewerRole = $roles['reviewer'];
+            $reviewerDelegateRole = $roles['reviewerDelegate'];
+            $reviewer = $defaultReviewer->getReviewer();
+            if( $reviewer ) {
+                $reviewer->removeRole($reviewerRole);
+            }
+            $reviewerDelegate = $defaultReviewer->getReviewerDelegate();
+            if( $reviewerDelegate ) {
+                $reviewerDelegate->removeRole($reviewerDelegateRole);
+            }
+
             $em = $this->getDoctrine()->getManager();
             $em->remove($defaultReviewer);
             $em->flush();
@@ -210,5 +248,24 @@ class DefaultReviewerController extends Controller
             ->setMethod('DELETE')
             ->getForm()
         ;
+    }
+
+    private function createDefaultReviewForm($cycle,$defaultReviewer) {
+
+        if( $cycle == "new" ) {
+            $disabled = false;
+        }
+        if( $cycle == "show" ) {
+            $disabled = true;
+        }
+        if( $cycle == "edit" ) {
+            $disabled = false;
+        }
+
+        $form = $this->createForm('Oleg\TranslationalResearchBundle\Form\DefaultReviewerType', $defaultReviewer, array(
+            'disabled' => $disabled
+        ));
+
+        return $form;
     }
 }

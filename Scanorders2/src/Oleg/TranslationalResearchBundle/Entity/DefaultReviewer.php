@@ -231,4 +231,24 @@ class DefaultReviewer
     }
 
 
+    public function getRoleByState() {
+        $roles = array();
+
+        if( $this->getState() == "irb_review" ) {
+            $roles['reviewer'] = "ROLE_TRANSRES_IRB_REVIEWER";
+            $roles['reviewerDelegate'] = "ROLE_TRANSRES_IRB_REVIEWER_DELEGATE";
+        }
+        if( $this->getState() == "committee_review" ) {
+            $roles['reviewer'] = "ROLE_TRANSRES_COMMITTEE_REVIEWER";
+            $roles['reviewerDelegate'] = "ROLE_TRANSRES_COMMITTEE_REVIEWER_DELEGATE";
+        }
+        if( $this->getState() == "final_approval" ) {
+            $roles['reviewer'] = "ROLE_TRANSRES_PRIMARY_REVIEWER";
+            $roles['reviewerDelegate'] = "ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE";
+        }
+
+        return $roles;
+    }
+
+
 }

@@ -6,6 +6,8 @@
 
 {% block content %}
 
+    {% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+
     <h4 class="text-info" align="center">
         {{ title }}
     </h4>
@@ -16,22 +18,30 @@
                 <th>{{ knp_pagination_sortable(defaultReviewers, 'Reviewer', 'reviewerInfos.displayName') }}</th>
                 <th>{{ knp_pagination_sortable(defaultReviewers, 'reviewer Delegate', 'reviewerDelegate.displayName') }}</th>
                 <th>{{ knp_pagination_sortable(defaultReviewers, 'Created', 'defaultReviewer.createDate') }}</th>
-                <th>{{ knp_pagination_sortable(defaultReviewers, 'Review Stage', 'defaultReviewer.state') }}</th>
+                {#<th>{{ knp_pagination_sortable(defaultReviewers, 'Review Stage', 'defaultReviewer.state') }}</th>#}
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
         {% for defaultReviewer in defaultReviewers %}
             <tr>
-                <td style="display: none"><a href="{{ path(translationalresearch_sitename~'_default-reviewer_show', { 'id': defaultReviewer.id }) }}">{{ defaultReviewer.id }}</a></td>
-                <td>{{ defaultReviewer.reviewer }}</td>
-                <td>{{ defaultReviewer.reviewerDelegate }}</td>
+                {#<td style="display: none"><a href="{{ path(translationalresearch_sitename~'_default-reviewer_show', { 'id': defaultReviewer.id }) }}">{{ defaultReviewer.id }}</a></td>#}
+                <td>
+                    {#{{ defaultReviewer.reviewer }}#}
+                    {{ transres.userHtml(defaultReviewer.reviewer) }}
+                </td>
+
+                <td>
+                    {#{{ defaultReviewer.reviewerDelegate }}#}
+                    {{ transres.userHtml(defaultReviewer.reviewerDelegate) }}
+                </td>
+
                 <td>
                     {% if defaultReviewer.createDate %}
                         {{ defaultReviewer.createDate|date('Y-m-d H:i:s') }}
                     {% endif %}
                 </td>
-                <td>{{ defaultReviewer.state }}</td>
+                {#<td>{{ transres_util.getStateSimpleLabelByName(defaultReviewer.state) }}</td>#}
 
                 <td class="rowlink-skip">
                     <div class="btn-group">
@@ -40,11 +50,14 @@
                         </button>
                         <ul class="dropdown-menu dropdown-menu-right">
                             <li>
-                                <a href="{{ path(translationalresearch_sitename~'_default-reviewer_show', { 'id': defaultReviewer.id }) }}" target="_blank">Show Default Reviewer</a>
+                                <a href="{{ path(translationalresearch_sitename~'_default-reviewer_show', { 'id': defaultReviewer.id }) }}" target="_blank">Show</a>
                             </li>
                             <li>
-                                <a href="{{ path(translationalresearch_sitename~'_default-reviewer_edit', { 'id': defaultReviewer.id }) }}">Edit Default Reviewer</a>
+                                <a href="{{ path(translationalresearch_sitename~'_default-reviewer_edit', { 'id': defaultReviewer.id }) }}">Edit</a>
                             </li>
+                            {#<li>#}
+                                {#<a href="{{ path(translationalresearch_sitename~'_default-reviewer_delete', { 'id': defaultReviewer.id }) }}">Delete</a>#}
+                            {#</li>#}
                         </ul>
                     </div>
                 </td>

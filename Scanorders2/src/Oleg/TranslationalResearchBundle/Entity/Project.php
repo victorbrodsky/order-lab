@@ -212,10 +212,22 @@ class Project {
     private $irbReviews;
 
     //AdminReviews (one-to-many, but only one review is valid)
+//    /**
+//     * @ORM\OneToMany(targetEntity="adminReview", mappedBy="project", cascade={"persist","remove"})
+//     */
+//    private $adminReviews;
 
     //CommitteeReviews (one-to-many)
+    /**
+     * @ORM\OneToMany(targetEntity="CommitteeReview", mappedBy="project", cascade={"persist","remove"})
+     */
+    private $committeeReviews;
 
     //FinalReviews (one-to-many, but only one review is valid)
+    /**
+     * @ORM\OneToMany(targetEntity="FinalReview", mappedBy="project", cascade={"persist","remove"})
+     */
+    private $finalReviews;
 
 
 
@@ -230,6 +242,8 @@ class Project {
         $this->pathologists = new ArrayCollection();
 
         $this->irbReviews = new ArrayCollection();
+        $this->committeeReviews = new ArrayCollection();
+        $this->finalReviews = new ArrayCollection();
     }
 
 
@@ -679,6 +693,38 @@ class Project {
     public function removeIrbReview($item)
     {
         $this->irbReviews->removeElement($item);
+    }
+
+    public function getCommitteeReviews()
+    {
+        return $this->committeeReviews;
+    }
+    public function addCommitteeReview($item)
+    {
+        if( $item && !$this->committeeReviews->contains($item) ) {
+            $this->committeeReviews->add($item);
+        }
+        return $this;
+    }
+    public function removeCommitteeReview($item)
+    {
+        $this->committeeReviews->removeElement($item);
+    }
+
+    public function getFinalReviews()
+    {
+        return $this->finalReviews;
+    }
+    public function addFinalReview($item)
+    {
+        if( $item && !$this->finalReviews->contains($item) ) {
+            $this->finalReviews->add($item);
+        }
+        return $this;
+    }
+    public function removeFinalReview($item)
+    {
+        $this->finalReviews->removeElement($item);
     }
 
 

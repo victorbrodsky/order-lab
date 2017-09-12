@@ -142,3 +142,12 @@
         {{ transres_util.getReviewLink(project,app.user)|raw }}
     </div>
 {% endmacro %}
+
+{% macro userHtml(user) %}
+    {% if user %}
+        {% set personurl = path(translationalresearch_sitename~'_showuser',{'id':user.id}) %}
+        {% set personlink = '<a href="'~personurl~'" target="_blank">'~user.getUsernameOptimal()~'</a>'  %}
+        {{ personlink|raw }}
+    {% endif %}
+{% endmacro %}
+
