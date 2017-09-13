@@ -130,11 +130,20 @@ class ProjectController extends Controller
      */
     public function showAction(Project $project)
     {
+        $transresUtil = $this->container->get('transres_util');
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
         $cycle = "show";
 
         $form = $this->createProjectForm($project,$cycle);
 
         $deleteForm = $this->createDeleteForm($project);
+
+        //create a review form (for example, IrbReview form if logged in user is a reviewer or reviewer delegate)
+        //1) if project is in the review state: irb_review, admin_review, committee_review or final_approval
+        //2) if the current user is added to this project as the reviewer for the state above
+        $reviewFormViews = $transresUtil->getReviewForm($project,$user);
 
         return array(
             'project' => $project,
@@ -142,6 +151,7 @@ class ProjectController extends Controller
             'cycle' => $cycle,
             'title' => "Project ID ".$project->getId(),
             'delete_form' => $deleteForm->createView(),
+            'review_forms' => $reviewFormViews
         );
 
 //        return array(

@@ -19,7 +19,7 @@
         <tbody>
         {% for irbReview in irbReviews %}
             <tr>
-                <td><a href="{{ path('translationalresearch_irb-review_show', { 'id': irbReview.id }) }}">{{ irbReview.assignment }}</a></td>
+                <td><a href="{{ path('translationalresearch_review_show', { 'id': irbReview.id }) }}">{{ irbReview.assignment }}</a></td>
                 <td>{{ irbReview.id }}</td>
                 <td>{{ irbReview.type }}</td>
                 <td>{% if irbReview.createdate %}{{ irbReview.createdate|date('Y-m-d H:i:s') }}{% endif %}</td>
@@ -29,10 +29,10 @@
                 <td>
                     <ul>
                         <li>
-                            <a href="{{ path('translationalresearch_irb-review_show', { 'id': irbReview.id }) }}">show</a>
+                            <a href="{{ path('translationalresearch_review_show', { 'id': irbReview.id }) }}">show</a>
                         </li>
                         <li>
-                            <a href="{{ path('translationalresearch_irb-review_edit', { 'id': irbReview.id }) }}">edit</a>
+                            <a href="{{ path('translationalresearch_review_edit', { 'id': irbReview.id }) }}">edit</a>
                         </li>
                     </ul>
                 </td>
@@ -43,7 +43,7 @@
 
     <ul>
         <li>
-            <a href="{{ path('translationalresearch_irb-review_new') }}">Create a new irbReview</a>
+            <a href="{{ path('translationalresearch_review_new') }}">Create a new irbReview</a>
         </li>
     </ul>
 {% endblock %}

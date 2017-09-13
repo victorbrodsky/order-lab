@@ -56,19 +56,23 @@ class ReviewBase
      */
     protected $reviewerDelegate;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(name="reviewerAdmin", referencedColumnName="id", nullable=true)
-     */
-    protected $reviewerAdmin;
+//    /**
+//     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+//     * @ORM\JoinColumn(name="reviewerAdmin", referencedColumnName="id", nullable=true)
+//     */
+//    protected $reviewerAdmin;
+
+//    /**
+//     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+//     * @ORM\JoinColumn(name="reviewerPrimary", referencedColumnName="id", nullable=true)
+//     */
+//    protected $reviewerPrimary;
 
     /**
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(name="reviewerPrimary", referencedColumnName="id", nullable=true)
      */
-    protected $reviewerPrimary;
-
-    //TODO: add reviewedBy?
+    protected $reviewedBy;
 
     /**
      * valid, invalid
@@ -162,34 +166,20 @@ class ReviewBase
     /**
      * @return mixed
      */
-    public function getReviewerAdmin()
+    public function getReviewedBy()
     {
-        return $this->reviewerAdmin;
+        return $this->reviewedBy;
     }
 
     /**
-     * @param mixed $reviewerAdmin
+     * @param mixed $reviewedBy
      */
-    public function setReviewerAdmin($reviewerAdmin)
+    public function setReviewedBy($reviewedBy)
     {
-        $this->reviewerAdmin = $reviewerAdmin;
+        $this->reviewedBy = $reviewedBy;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getReviewerPrimary()
-    {
-        return $this->reviewerPrimary;
-    }
 
-    /**
-     * @param mixed $reviewerPrimary
-     */
-    public function setReviewerPrimary($reviewerPrimary)
-    {
-        $this->reviewerPrimary = $reviewerPrimary;
-    }
 
     /**
      * @return \DateTime

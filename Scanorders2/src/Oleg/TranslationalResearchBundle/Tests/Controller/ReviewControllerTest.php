@@ -4,7 +4,7 @@ namespace Oleg\TranslationalResearchBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class IrbReviewControllerTest extends WebTestCase
+class ReviewControllerTest extends WebTestCase
 {
     /*
     public function testCompleteScenario()

@@ -12,18 +12,18 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Irbreview controller.
  *
- * @Route("irb-review")
+ * @Route("review")
  */
-class IrbReviewController extends Controller
+class ReviewBaseController extends Controller
 {
     /**
      * Lists all irbReview entities.
      *
-     * @Route("/", name="translationalresearch_irb-review_index")
+     * @Route("/{stateStr}", name="translationalresearch_review_index")
      * @Template("OlegTranslationalResearchBundle:IrbReview:index.html.twig")
      * @Method("GET")
      */
-    public function indexAction()
+    public function indexAction(Request $request, $stateStr)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -37,7 +37,7 @@ class IrbReviewController extends Controller
     /**
      * Creates a new irbReview entity.
      *
-     * @Route("/new", name="translationalresearch_irb-review_new")
+     * @Route("/new", name="translationalresearch_review_new")
      * @Template("OlegTranslationalResearchBundle:IrbReview:new.html.twig")
      * @Method({"GET", "POST"})
      */
@@ -52,7 +52,7 @@ class IrbReviewController extends Controller
             $em->persist($irbReview);
             $em->flush();
 
-            return $this->redirectToRoute('translationalresearch_irb-review_show', array('id' => $irbReview->getId()));
+            return $this->redirectToRoute('translationalresearch_review_show', array('id' => $irbReview->getId()));
         }
 
         return array(
@@ -64,7 +64,7 @@ class IrbReviewController extends Controller
     /**
      * Finds and displays a irbReview entity.
      *
-     * @Route("/{id}", name="translationalresearch_irb-review_show")
+     * @Route("/{id}", name="translationalresearch_review_show")
      * @Template("OlegTranslationalResearchBundle:IrbReview:show.html.twig")
      * @Method("GET")
      */
@@ -81,7 +81,7 @@ class IrbReviewController extends Controller
     /**
      * Displays a form to edit an existing irbReview entity.
      *
-     * @Route("/{id}/edit", name="translationalresearch_irb-review_edit")
+     * @Route("/{id}/edit", name="translationalresearch_review_edit")
      * @Template("OlegTranslationalResearchBundle:IrbReview:edit.html.twig")
      * @Method({"GET", "POST"})
      */
@@ -94,7 +94,7 @@ class IrbReviewController extends Controller
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('translationalresearch_irb-review_edit', array('id' => $irbReview->getId()));
+            return $this->redirectToRoute('translationalresearch_review_edit', array('id' => $irbReview->getId()));
         }
 
         return array(
@@ -107,7 +107,7 @@ class IrbReviewController extends Controller
     /**
      * Deletes a irbReview entity.
      *
-     * @Route("/{id}", name="translationalresearch_irb-review_delete")
+     * @Route("/{id}", name="translationalresearch_review_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, IrbReview $irbReview)
@@ -121,7 +121,7 @@ class IrbReviewController extends Controller
             $em->flush();
         }
 
-        return $this->redirectToRoute('translationalresearch_irb-review_index');
+        return $this->redirectToRoute('translationalresearch_review_index');
     }
 
     /**
@@ -134,7 +134,7 @@ class IrbReviewController extends Controller
     private function createDeleteForm(IrbReview $irbReview)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('translationalresearch_irb-review_delete', array('id' => $irbReview->getId())))
+            ->setAction($this->generateUrl('translationalresearch_review_delete', array('id' => $irbReview->getId())))
             ->setMethod('DELETE')
             ->getForm()
         ;

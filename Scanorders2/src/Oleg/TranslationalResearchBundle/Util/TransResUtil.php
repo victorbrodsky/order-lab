@@ -290,7 +290,7 @@ class TransResUtil
         switch( $project->getState() ) {
             case "irb_review":
                 $thisUrl = $this->container->get('router')->generate(
-                    'translationalresearch_irb-review_new',
+                    'translationalresearch_review_new',
                     array(
                         //'id'=>$project->getId()
                     ),
@@ -487,4 +487,72 @@ class TransResUtil
         return $state;
     }
 
+    //create a review form (for example, IrbReview form if logged in user is a reviewer or reviewer delegate)
+    //1) if project is in the review state: irb_review, admin_review, committee_review or final_approval
+    //2) if the current user is added to this project as the reviewer for the state above
+    public function getReviewForm($project, $user) {
+
+        switch( $project->getState() ) {
+
+            case "irb_review":
+                $reviewEntityName = "IrbReview";
+                $reviewObject = $this->findReviewObjectByAnyReviewer($reviewEntityName,$user);
+                if( $reviewObject ) {
+                    $reviewForm = $this->createForm(ReviewBaseType::class, $reviewObject, array(
+                        //'form_custom_value' => $params,
+                        'data_class' => 'Oleg\\TranslationalResearchBundle\\Entity\\'.$reviewEntityName
+                    ));
+                }
+                break;
+
+            case "admin_review":
+                $reviewEntityName = "AdminReview";
+                $reviewObject = $this->findReviewObjectByAnyReviewer($reviewEntityName,$user);
+                if( $reviewObject ) {
+                    $reviewForm = $this->createForm(ReviewBaseType::class, $reviewObject, array(
+                        //'form_custom_value' => $params,
+                        'data_class' => 'Oleg\\TranslationalResearchBundle\\Entity\\'.$reviewEntityName
+                    ));
+                }
+                break;
+
+            case "committee_review":
+                $reviewEntityName = "CommitteeReview";
+                $reviewObject = $this->findReviewObjectByAnyReviewer($reviewEntityName,$user);
+                if( $reviewObject ) {
+                    $reviewForm = $this->createForm(ReviewBaseType::class, $reviewObject, array(
+                        //'form_custom_value' => $params,
+                        'data_class' => 'Oleg\\TranslationalResearchBundle\\Entity\\'.$reviewEntityName
+                    ));
+                }
+                break;
+
+            case "final_approval":
+                $reviewEntityName = "FinalReview";
+                $reviewObject = $this->findReviewObjectByAnyReviewer($reviewEntityName,$user);
+                if( $reviewObject ) {
+                    $reviewForm = $this->createForm(ReviewBaseType::class, $reviewObject, array(
+                        //'form_custom_value' => $params,
+                        'data_class' => 'Oleg\\TranslationalResearchBundle\\Entity\\'.$reviewEntityName
+                    ));
+                }
+                break;
+
+            default:
+                //
+        }
+
+        return $reviewForm;
+    }
+    //$reviewObjectClassName - review entity class name (i.e. "IrbReview")
+    public function findReviewObjectByAnyReviewer( $reviewObjectClassName, $reviewer ) {
+        $reviewObject = null;
+        if( $reviewObjectClassName && $reviewer ) {
+            $reviewObject = $this->em->getRepository('OlegTranslationalResearchBundle:' . $reviewObjectClassName)->findByReviewer($reviewer);
+            if (!$reviewObject) {
+                $reviewObject = $this->em->getRepository('OlegTranslationalResearchBundle:' . $reviewObjectClassName)->findByReviewerDelegate($reviewer);
+            }
+        }
+        return $reviewObject;
+    }
 }

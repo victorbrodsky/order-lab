@@ -212,10 +212,10 @@ class Project {
     private $irbReviews;
 
     //AdminReviews (one-to-many, but only one review is valid)
-//    /**
-//     * @ORM\OneToMany(targetEntity="adminReview", mappedBy="project", cascade={"persist","remove"})
-//     */
-//    private $adminReviews;
+    /**
+     * @ORM\OneToMany(targetEntity="AdminReview", mappedBy="project", cascade={"persist","remove"})
+     */
+    private $adminReviews;
 
     //CommitteeReviews (one-to-many)
     /**
@@ -242,6 +242,7 @@ class Project {
         $this->pathologists = new ArrayCollection();
 
         $this->irbReviews = new ArrayCollection();
+        $this->adminReviews = new ArrayCollection();
         $this->committeeReviews = new ArrayCollection();
         $this->finalReviews = new ArrayCollection();
     }
@@ -727,6 +728,21 @@ class Project {
         $this->finalReviews->removeElement($item);
     }
 
+    public function getAdminReviews()
+    {
+        return $this->adminReviews;
+    }
+    public function addAdminReview($item)
+    {
+        if( $item && !$this->adminReviews->contains($item) ) {
+            $this->adminReviews->add($item);
+        }
+        return $this;
+    }
+    public function removeAdminReview($item)
+    {
+        $this->adminReviews->removeElement($item);
+    }
 
     public function __toString() {
         return "Project id=".$this->getId();
