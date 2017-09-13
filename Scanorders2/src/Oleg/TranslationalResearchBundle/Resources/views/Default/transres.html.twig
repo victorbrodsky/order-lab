@@ -139,7 +139,8 @@
 {% macro projectHeader(project) %}
     <div class="well">
         <p>Project State: <strong>{{ transres_util.getStateLabelByProject(project) }}</strong></p>
-        {{ transres_util.getReviewLink(project,app.user)|raw }}
+        {#{{ transres_util.getReviewLink(project,app.user)|raw }}#}
+        {{ transres_util.getReviewFormsHtml(project,app.user)|raw }}
     </div>
 {% endmacro %}
 

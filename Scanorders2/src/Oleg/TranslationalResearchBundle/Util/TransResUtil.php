@@ -274,7 +274,7 @@ class TransResUtil
         return $defaultReviewer;
     }
 
-    //get url to the review page according to the project's current state (i.e. IRB Review Page)
+    //get the review's form page according to the project's current state (i.e. IRB Review Page) and the logged in user
     public function getReviewLink( $project, $user=null ) {
 
         //$workflow = $this->container->get('state_machine.transres_project');
@@ -303,6 +303,69 @@ class TransResUtil
         }
 
         return $link;
+    }
+
+    //get all reviewers forms, starting with the user's review form
+    public function getReviewFormsHtml($project, $user) {
+        $html = null;
+        switch( $project->getState() ) {
+
+            case "irb_review":
+                $reviewEntityName = "IrbReview";
+                $reviewObjects = $this->findReviewObjectsByProjectAndAnyReviewers($reviewEntityName,$project,$user);
+                foreach($reviewObjects as $reviewObject) {
+                    $disabled = true;
+                    if( $reviewObject->getReviewer() == $user || $reviewObject->getReviewerDelegate() == $user ) {
+                        $disabled = false;
+                    }
+                    $reviewForm = $this->createForm(ReviewBaseType::class, $reviewObject, array(
+                        //'form_custom_value' => $params,
+                        'data_class' => 'Oleg\\TranslationalResearchBundle\\Entity\\'.$reviewEntityName,
+                        'disabled' => $disabled
+                    ));
+                    //$reviewHtml = $this->render('OlegTranslationalResearchBundle:ReviewBaseController:Some.html.twig', array())->getContent();
+                    //$reviewHtml = $this->redirectToRoute('translationalresearch_project_show', array('id' => $project->getId()));
+                    //TODO: use include form translationalresearch_review_edit in twig
+                }
+                break;
+
+            case "admin_review":
+                $reviewEntityName = "AdminReview";
+                $reviewObjects = $this->findReviewObjectsByProjectAndAnyReviewers($reviewEntityName,$project,$user);
+                foreach($reviewObjects as $reviewObject) {
+                    $reviewForm = $this->createForm(ReviewBaseType::class, $reviewObject, array(
+                        //'form_custom_value' => $params,
+                        'data_class' => 'Oleg\\TranslationalResearchBundle\\Entity\\'.$reviewEntityName
+                    ));
+                }
+                break;
+
+            case "committee_review":
+                $reviewEntityName = "CommitteeReview";
+                $reviewObjects = $this->findReviewObjectsByProjectAndAnyReviewers($reviewEntityName,$project,$user);
+                foreach($reviewObjects as $reviewObject) {
+                    $reviewForm = $this->createForm(ReviewBaseType::class, $reviewObject, array(
+                        //'form_custom_value' => $params,
+                        'data_class' => 'Oleg\\TranslationalResearchBundle\\Entity\\'.$reviewEntityName
+                    ));
+                }
+                break;
+
+            case "final_approval":
+                $reviewEntityName = "FinalReview";
+                $reviewObjects = $this->findReviewObjectsByProjectAndAnyReviewers($reviewEntityName,$project,$user);
+                foreach($reviewObjects as $reviewObject) {
+                    $reviewForm = $this->createForm(ReviewBaseType::class, $reviewObject, array(
+                        //'form_custom_value' => $params,
+                        'data_class' => 'Oleg\\TranslationalResearchBundle\\Entity\\'.$reviewEntityName
+                    ));
+                }
+                break;
+
+            default:
+                //
+        }
+        return $html;
     }
 
     public function getTransitionLabelByName( $transitionName ) {
@@ -496,9 +559,9 @@ class TransResUtil
 
             case "irb_review":
                 $reviewEntityName = "IrbReview";
-                $reviewObject = $this->findReviewObjectByAnyReviewer($reviewEntityName,$user);
-                if( $reviewObject ) {
-                    $reviewForm = $this->createForm(ReviewBaseType::class, $reviewObject, array(
+                $reviewObjects = $this->findReviewObjectsByProjectAndAnyReviewers($reviewEntityName,$project,$user);
+                if( count($reviewObjects) > 0 ) {
+                    $reviewForm = $this->createForm(ReviewBaseType::class, $reviewObjects[0], array(
                         //'form_custom_value' => $params,
                         'data_class' => 'Oleg\\TranslationalResearchBundle\\Entity\\'.$reviewEntityName
                     ));
@@ -507,9 +570,9 @@ class TransResUtil
 
             case "admin_review":
                 $reviewEntityName = "AdminReview";
-                $reviewObject = $this->findReviewObjectByAnyReviewer($reviewEntityName,$user);
-                if( $reviewObject ) {
-                    $reviewForm = $this->createForm(ReviewBaseType::class, $reviewObject, array(
+                $reviewObjects = $this->findReviewObjectsByProjectAndAnyReviewers($reviewEntityName,$project,$user);
+                if( count($reviewObjects) > 0 ) {
+                    $reviewForm = $this->createForm(ReviewBaseType::class, $reviewObjects[0], array(
                         //'form_custom_value' => $params,
                         'data_class' => 'Oleg\\TranslationalResearchBundle\\Entity\\'.$reviewEntityName
                     ));
@@ -518,9 +581,9 @@ class TransResUtil
 
             case "committee_review":
                 $reviewEntityName = "CommitteeReview";
-                $reviewObject = $this->findReviewObjectByAnyReviewer($reviewEntityName,$user);
-                if( $reviewObject ) {
-                    $reviewForm = $this->createForm(ReviewBaseType::class, $reviewObject, array(
+                $reviewObjects = $this->findReviewObjectsByProjectAndAnyReviewers($reviewEntityName,$project,$user);
+                if( count($reviewObjects) > 0 ) {
+                    $reviewForm = $this->createForm(ReviewBaseType::class, $reviewObjects[0], array(
                         //'form_custom_value' => $params,
                         'data_class' => 'Oleg\\TranslationalResearchBundle\\Entity\\'.$reviewEntityName
                     ));
@@ -529,9 +592,9 @@ class TransResUtil
 
             case "final_approval":
                 $reviewEntityName = "FinalReview";
-                $reviewObject = $this->findReviewObjectByAnyReviewer($reviewEntityName,$user);
-                if( $reviewObject ) {
-                    $reviewForm = $this->createForm(ReviewBaseType::class, $reviewObject, array(
+                $reviewObjects = $this->findReviewObjectsByProjectAndAnyReviewers($reviewEntityName,$project,$user);
+                if( count($reviewObjects) > 0 ) {
+                    $reviewForm = $this->createForm(ReviewBaseType::class, $reviewObjects[0], array(
                         //'form_custom_value' => $params,
                         'data_class' => 'Oleg\\TranslationalResearchBundle\\Entity\\'.$reviewEntityName
                     ));
@@ -545,14 +608,40 @@ class TransResUtil
         return $reviewForm;
     }
     //$reviewObjectClassName - review entity class name (i.e. "IrbReview")
-    public function findReviewObjectByAnyReviewer( $reviewObjectClassName, $reviewer ) {
-        $reviewObject = null;
-        if( $reviewObjectClassName && $reviewer ) {
-            $reviewObject = $this->em->getRepository('OlegTranslationalResearchBundle:' . $reviewObjectClassName)->findByReviewer($reviewer);
-            if (!$reviewObject) {
-                $reviewObject = $this->em->getRepository('OlegTranslationalResearchBundle:' . $reviewObjectClassName)->findByReviewerDelegate($reviewer);
-            }
+    public function findReviewObjectsByProjectAndAnyReviewers( $reviewObjectClassName, $project, $reviewer=null ) {
+//        $reviewObject = null;
+//        if( $reviewObjectClassName && $reviewer ) {
+//            $reviewObject = $this->em->getRepository('OlegTranslationalResearchBundle:' . $reviewObjectClassName)->findBy(array(
+//                'reviewer' => $reviewer->getId(),
+//                'project' => $project->getId()
+//            ));
+//            if (!$reviewObject) {
+//                $reviewObject = $this->em->getRepository('OlegTranslationalResearchBundle:' . $reviewObjectClassName)->findByReviewerDelegate($reviewer);
+//            }
+//        }
+        $repository = $this->em->getRepository('OlegTranslationalResearchBundle:' . $reviewObjectClassName);
+        $dql =  $repository->createQueryBuilder("review");
+        $dql->select('review');
+        $dql->GroupBy('review');
+        $dql->leftJoin("review.project", "project");
+        $dql->leftJoin("review.reviewer", "reviewer");
+        $dql->leftJoin("review.reviewerDelegate", "reviewerDelegate");
+
+        $dql->where("project.id=:projectId");
+
+        $parameters = array("projectId"=>$project->getId());
+
+        if( $reviewer ) {
+            $dql->andWhere("reviewer.id=:reviewerId OR reviewerDelegate.id=:reviewerId");
+            $parameters['reviewerId'] = $reviewer->getId();
         }
+
+        $query = $dql->getQuery();
+
+        $query->setParameters($parameters);
+
+        $reviewObjects = $query->getResult();
+
         return $reviewObject;
     }
 }
