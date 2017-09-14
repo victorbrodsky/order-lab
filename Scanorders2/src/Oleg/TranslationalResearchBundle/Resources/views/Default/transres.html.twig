@@ -140,7 +140,207 @@
     <div class="well">
         <p>Project State: <strong>{{ transres_util.getStateLabelByProject(project) }}</strong></p>
         {#{{ transres_util.getReviewLink(project,app.user)|raw }}#}
-        {{ transres_util.getReviewFormsHtml(project,app.user)|raw }}
+        {#{{ transres_util.getReviewFormsHtml(project,app.user)|raw }}#}
+        {#{% set reviewIds = transres_util.getReviewIds(project,app.user) %}#}
+        {#{% for reviewId in reviewIds %}#}
+            {#{{ render(controller(#}
+                {#'OlegTranslationalResearchBundle:ReviewBase:edit',#}
+                {#{ 'stateStr':project.getState(), 'id': reviewId }#}
+            {#)) }}#}
+        {#{% endfor %}#}
+    </div>
+{% endmacro %}
+
+{% macro projectReviews(project, cycle, sitename) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
+    {% if showAddDeleteBtn is not defined %}
+        {% set showAddDeleteBtn = 0 %}
+    {% endif %}
+
+    {% if prototype == "prototype" %}
+        {% set forminterview = reviews.vars.prototype %}
+    {% else %}
+        {% set forminterview = reviews %}
+    {% endif %}
+
+    {#{% if project.state.vars.value == "irb_review" %}#}
+        {#{% set reviews = project.irbReviews %}#}
+    {#{% endif %}#}
+    {#{% if project.state.vars.value == "admin_review" %}#}
+        {#{% set reviews = project.adminReviews %}#}
+    {#{% endif %}#}
+    {#{% if project.state.vars.value == "committee_review" %}#}
+        {#{% set reviews = project.committeeReviews %}#}
+    {#{% endif %}#}
+    {#{% if project.state.vars.value == "final_approval" %}#}
+        {#{% set reviews = project.finalReviews %}#}
+    {#{% endif %}#}
+
+    {% set showIrbReview = 1 %}
+    {% set showAdminReview = 1 %}
+    {% set showCommiteeReview = 1 %}
+    {% set showFinalReview = 1 %}
+
+    {% if showIrbReview %}
+        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+            <div class="panel panel-primary">
+                <div class="panel-heading" role="tab" id="headingOne">
+                    <h4 class="panel-title">
+                        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#irbreview" aria-expanded="true" aria-controls="reviewBase">
+                            {{ transres_util.getStateSimpleLabelByName(project.state.vars.value) }}
+                        </a>
+                    </h4>
+                </div>
+            <div id="irbreview" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                <div class="panel-body">
+                    <div class="transres-reviews-holder">
+
+                        {% for review in project.irbReviews %}
+                            {{ transres.projectSingleReview(project,review,cycle,'transres-irbreviews','noprototype',sitename,1) }}
+                        {% endfor %}
+
+                        {% if cycle != "show" %}
+                            {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_PRIMARY_REVIEWER') or is_granted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE') %}
+                                {{ usermacros.addNewObjectBtn(cycle,'transres-irbreviews','Add IRB Reviewer') }}
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if showAdminReview %}
+        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+            <div class="panel panel-primary">
+                <div class="panel-heading" role="tab" id="headingOne">
+                    <h4 class="panel-title">
+                        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#adminreview" aria-expanded="true" aria-controls="reviewBase">
+                            {{ transres_util.getStateSimpleLabelByName(project.state.vars.value) }}
+                        </a>
+                    </h4>
+                </div>
+                <div id="adminreview" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                    <div class="panel-body">
+                        <div class="transres-reviews-holder">
+
+                            {% for review in project.adminReviews %}
+                                {{ transres.projectSingleReview(project,review,cycle,'transres-adminreviews','noprototype',sitename,1) }}
+                            {% endfor %}
+
+                            {% if cycle != "show" %}
+                                {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_PRIMARY_REVIEWER') or is_granted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE') %}
+                                    {{ usermacros.addNewObjectBtn(cycle,'transres-adminreviews','Add Admin Reviewer') }}
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if showCommiteeReview %}
+        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+            <div class="panel panel-primary">
+                <div class="panel-heading" role="tab" id="headingOne">
+                    <h4 class="panel-title">
+                        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#committeereview" aria-expanded="true" aria-controls="reviewBase">
+                            {{ transres_util.getStateSimpleLabelByName(project.state.vars.value) }}
+                        </a>
+                    </h4>
+                </div>
+                <div id="committeereview" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                    <div class="panel-body">
+                        <div class="transres-reviews-holder">
+
+                            {% for review in project.committeeReviews %}
+                                {{ transres.projectSingleReview(project,review,cycle,'transres-committeereviews','noprototype',sitename,1) }}
+                            {% endfor %}
+
+                            {% if cycle != "show" %}
+                                {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_PRIMARY_REVIEWER') or is_granted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE') %}
+                                    {{ usermacros.addNewObjectBtn(cycle,'transres-committeereviews','Add Committee Reviewer') }}
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if showFinalReview %}
+        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+            <div class="panel panel-primary">
+                <div class="panel-heading" role="tab" id="headingOne">
+                    <h4 class="panel-title">
+                        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#finalreview" aria-expanded="true" aria-controls="reviewBase">
+                            {{ transres_util.getStateSimpleLabelByName(project.state.vars.value) }}
+                        </a>
+                    </h4>
+                </div>
+                <div id="finalreview" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                    <div class="panel-body">
+                        <div class="transres-reviews-holder">
+
+                            {% for review in project.finalReviews %}
+                                {{ transres.projectSingleReview(project,review,cycle,'transres-finalreviews','noprototype',sitename,1) }}
+                            {% endfor %}
+
+                            {% if cycle != "show" %}
+                                {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_PRIMARY_REVIEWER') or is_granted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE') %}
+                                    {{ usermacros.addNewObjectBtn(cycle,'transres-finalreviews','Add Final Reviewer') }}
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+{% endmacro %}
+
+{% macro projectSingleReview( project, review, cycle, classname, prototype, sitename, showAddDeleteBtn ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    {% if showAddDeleteBtn is not defined %}
+        {% set showAddDeleteBtn = 0 %}
+    {% endif %}
+
+    {% if prototype == "prototype" %}
+        {% set forminterview = reviews.vars.prototype %}
+    {% else %}
+        {% set forminterview = reviews %}
+    {% endif %}
+
+
+    {% set wellclass = "alert-default well well-sm" %}
+
+    <div class="user-collection-holder alert {{ classname }} {{ wellclass }}">
+
+        {% if cycle != "show" and showAddDeleteBtn %}
+            <div class="text-right">
+                <button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
+            </div>
+            <br>
+        {% else %}
+
+        {% endif %}
+
+        {{ formmacros.field(review.reviewer) }}
+        {% if review.reviewerDelegate is defined %}
+            {{ formmacros.field(review.reviewerDelegate) }}
+        {% endif %}
+        {% if review.decision is defined %}
+            {{ formmacros.field(review.decision) }}
+        {% endif %}
+        {% if review.comment is defined %}
+            {{ formmacros.field(review.comment) }}
+        {% endif %}
     </div>
 {% endmacro %}
 

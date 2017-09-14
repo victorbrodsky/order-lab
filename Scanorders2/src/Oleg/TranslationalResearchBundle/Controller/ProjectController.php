@@ -172,8 +172,11 @@ class ProjectController extends Controller
     public function editAction(Request $request, Project $project)
     {
         $user = $this->get('security.token_storage')->getToken()->getUser();
+        $transresUtil = $this->container->get('transres_util');
 
         $cycle = "edit";
+
+        $transresUtil->addStateReviewers($project);
 
         $deleteForm = $this->createDeleteForm($project);
         //$editForm = $this->createForm('Oleg\TranslationalResearchBundle\Form\ProjectType', $project);

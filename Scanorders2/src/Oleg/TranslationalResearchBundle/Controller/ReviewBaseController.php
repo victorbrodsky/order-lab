@@ -81,14 +81,36 @@ class ReviewBaseController extends Controller
     /**
      * Displays a form to edit an existing irbReview entity.
      *
-     * @Route("/{id}/edit", name="translationalresearch_review_edit")
+     * @Route("/{stateStr}/{id}/edit", name="translationalresearch_review_edit")
      * @Template("OlegTranslationalResearchBundle:IrbReview:edit.html.twig")
      * @Method({"GET", "POST"})
      */
-    public function editAction(Request $request, IrbReview $irbReview)
+    public function editAction(Request $request, $stateStr, IrbReview $irbReview)
     {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSLATIONALRESEARCH_USER') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-order-nopermission') );
+        }
+
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        $disabled = true;
+        if(
+            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ||
+            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') ||
+            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE')
+        ) {
+            $disabled = false;
+        }
+
+        //can be edited if the logged in user is a reviewer or reviewerDelegate for this review object
+        if( $user == $irbReview->getReviewer() || $user == $irbReview->getReviewerDelegate() ) {
+            $disabled = false;
+        }
+
         $deleteForm = $this->createDeleteForm($irbReview);
-        $editForm = $this->createForm('Oleg\TranslationalResearchBundle\Form\IrbReviewType', $irbReview);
+        $editForm = $this->createForm('Oleg\TranslationalResearchBundle\Form\IrbReviewType', $irbReview, array(
+            'disabled' => $disabled
+        ));
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {

@@ -19,6 +19,7 @@ namespace Oleg\TranslationalResearchBundle\Util;
 
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Oleg\TranslationalResearchBundle\Entity\AdminReview;
 use Oleg\TranslationalResearchBundle\Entity\CommitteeReview;
 use Oleg\TranslationalResearchBundle\Entity\FinalReview;
 use Oleg\TranslationalResearchBundle\Entity\IrbReview;
@@ -202,6 +203,24 @@ class TransResUtil
                         if( $reviewerDelegate ) {
                             $reviewEntity->setReviewerDelegate($reviewerDelegate);
                         }
+                        $project->addIrbReview($reviewEntity);
+                    }
+                }
+                break;
+
+            case "admin_review":
+                $defaultReviewers = $this->em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findByState($project->getState());
+                //reviewer delegate should be added to the specific reviewer => no delegate role is required?
+                foreach($defaultReviewers as $defaultReviewer) {
+                    //1) create IrbReview entity
+                    $reviewer = $defaultReviewer->getReviewer();
+                    if( $reviewer ) {
+                        $reviewEntity = new AdminReview($reviewer);
+                        $reviewerDelegate = $defaultReviewer->getReviewerDelegate();
+                        if( $reviewerDelegate ) {
+                            $reviewEntity->setReviewerDelegate($reviewerDelegate);
+                        }
+                        $project->addAdminReview($reviewEntity);
                     }
                 }
                 break;
@@ -219,6 +238,7 @@ class TransResUtil
                         if( $reviewerDelegate ) {
                             $reviewEntity->setReviewerDelegate($reviewerDelegate);
                         }
+                        $project->addCommitteeReview($reviewEntity);
                     }
                 }
 
@@ -237,6 +257,7 @@ class TransResUtil
                         if( $reviewerDelegate ) {
                             $reviewEntity->setReviewerDelegate($reviewerDelegate);
                         }
+                        $project->addFinalReview($reviewEntity);
                     }
                 }
 
@@ -275,98 +296,129 @@ class TransResUtil
     }
 
     //get the review's form page according to the project's current state (i.e. IRB Review Page) and the logged in user
-    public function getReviewLink( $project, $user=null ) {
-
-        //$workflow = $this->container->get('state_machine.transres_project');
-        //$transitions = $workflow->getEnabledTransitions($project);
-        //foreach($transitions as $transition) {
-        //    echo "transition=".$this->printTransition($transition)."<br>";
-        //}
-
-        $class = "btn btn-default";
-
-        //echo "project state=".$project->getState()."<br>";
-
-        switch( $project->getState() ) {
-            case "irb_review":
-                $thisUrl = $this->container->get('router')->generate(
-                    'translationalresearch_review_new',
-                    array(
-                        //'id'=>$project->getId()
-                    ),
-                    UrlGeneratorInterface::ABSOLUTE_URL
-                );
-                $link = "<a href=".$thisUrl." class='".$class."' target='_blank'>"."IRB Review"."</a>";
-                break;
-            default:
-                $link = "Not Available for ".$project->getState();
-        }
-
-        return $link;
-    }
+//    public function getReviewLink( $project, $user=null ) {
+//
+//        //$workflow = $this->container->get('state_machine.transres_project');
+//        //$transitions = $workflow->getEnabledTransitions($project);
+//        //foreach($transitions as $transition) {
+//        //    echo "transition=".$this->printTransition($transition)."<br>";
+//        //}
+//
+//        $class = "btn btn-default";
+//
+//        //echo "project state=".$project->getState()."<br>";
+//
+//        switch( $project->getState() ) {
+//            case "irb_review":
+//                $thisUrl = $this->container->get('router')->generate(
+//                    'translationalresearch_review_new',
+//                    array(
+//                        //'id'=>$project->getId()
+//                    ),
+//                    UrlGeneratorInterface::ABSOLUTE_URL
+//                );
+//                $link = "<a href=".$thisUrl." class='".$class."' target='_blank'>"."IRB Review"."</a>";
+//                break;
+//            default:
+//                $link = "Not Available for ".$project->getState();
+//        }
+//
+//        return $link;
+//    }
 
     //get all reviewers forms, starting with the user's review form
-    public function getReviewFormsHtml($project, $user) {
-        $html = null;
-        switch( $project->getState() ) {
+//    public function getReviewFormsHtml($project, $user) {
+//        $html = null;
+//        switch( $project->getState() ) {
+//
+//            case "irb_review":
+//                $reviewEntityName = "IrbReview";
+//                $reviewObjects = $this->findReviewObjectsByProjectAndAnyReviewers($reviewEntityName,$project,$user);
+//                foreach($reviewObjects as $reviewObject) {
+//                    $disabled = true;
+//                    if( $reviewObject->getReviewer() == $user || $reviewObject->getReviewerDelegate() == $user ) {
+//                        $disabled = false;
+//                    }
+//                    $reviewForm = $this->createForm(ReviewBaseType::class, $reviewObject, array(
+//                        //'form_custom_value' => $params,
+//                        'data_class' => 'Oleg\\TranslationalResearchBundle\\Entity\\'.$reviewEntityName,
+//                        'disabled' => $disabled
+//                    ));
+//                    //$reviewHtml = $this->render('OlegTranslationalResearchBundle:ReviewBaseController:Some.html.twig', array())->getContent();
+//                    //$reviewHtml = $this->redirectToRoute('translationalresearch_project_show', array('id' => $project->getId()));
+//                    //TODO: use include form translationalresearch_review_edit in twig
+//                }
+//                break;
+//
+////            case "admin_review":
+////                $reviewEntityName = "AdminReview";
+////                $reviewObjects = $this->findReviewObjectsByProjectAndAnyReviewers($reviewEntityName,$project,$user);
+////                foreach($reviewObjects as $reviewObject) {
+////                    $reviewForm = $this->createForm(ReviewBaseType::class, $reviewObject, array(
+////                        //'form_custom_value' => $params,
+////                        'data_class' => 'Oleg\\TranslationalResearchBundle\\Entity\\'.$reviewEntityName
+////                    ));
+////                }
+////                break;
+////
+////            case "committee_review":
+////                $reviewEntityName = "CommitteeReview";
+////                $reviewObjects = $this->findReviewObjectsByProjectAndAnyReviewers($reviewEntityName,$project,$user);
+////                foreach($reviewObjects as $reviewObject) {
+////                    $reviewForm = $this->createForm(ReviewBaseType::class, $reviewObject, array(
+////                        //'form_custom_value' => $params,
+////                        'data_class' => 'Oleg\\TranslationalResearchBundle\\Entity\\'.$reviewEntityName
+////                    ));
+////                }
+////                break;
+////
+////            case "final_approval":
+////                $reviewEntityName = "FinalReview";
+////                $reviewObjects = $this->findReviewObjectsByProjectAndAnyReviewers($reviewEntityName,$project,$user);
+////                foreach($reviewObjects as $reviewObject) {
+////                    $reviewForm = $this->createForm(ReviewBaseType::class, $reviewObject, array(
+////                        //'form_custom_value' => $params,
+////                        'data_class' => 'Oleg\\TranslationalResearchBundle\\Entity\\'.$reviewEntityName
+////                    ));
+////                }
+////                break;
+//
+//            default:
+//                //
+//        }
+//        return $html;
+//    }
 
-            case "irb_review":
-                $reviewEntityName = "IrbReview";
-                $reviewObjects = $this->findReviewObjectsByProjectAndAnyReviewers($reviewEntityName,$project,$user);
-                foreach($reviewObjects as $reviewObject) {
-                    $disabled = true;
-                    if( $reviewObject->getReviewer() == $user || $reviewObject->getReviewerDelegate() == $user ) {
-                        $disabled = false;
-                    }
-                    $reviewForm = $this->createForm(ReviewBaseType::class, $reviewObject, array(
-                        //'form_custom_value' => $params,
-                        'data_class' => 'Oleg\\TranslationalResearchBundle\\Entity\\'.$reviewEntityName,
-                        'disabled' => $disabled
-                    ));
-                    //$reviewHtml = $this->render('OlegTranslationalResearchBundle:ReviewBaseController:Some.html.twig', array())->getContent();
-                    //$reviewHtml = $this->redirectToRoute('translationalresearch_project_show', array('id' => $project->getId()));
-                    //TODO: use include form translationalresearch_review_edit in twig
-                }
-                break;
-
-            case "admin_review":
-                $reviewEntityName = "AdminReview";
-                $reviewObjects = $this->findReviewObjectsByProjectAndAnyReviewers($reviewEntityName,$project,$user);
-                foreach($reviewObjects as $reviewObject) {
-                    $reviewForm = $this->createForm(ReviewBaseType::class, $reviewObject, array(
-                        //'form_custom_value' => $params,
-                        'data_class' => 'Oleg\\TranslationalResearchBundle\\Entity\\'.$reviewEntityName
-                    ));
-                }
-                break;
-
-            case "committee_review":
-                $reviewEntityName = "CommitteeReview";
-                $reviewObjects = $this->findReviewObjectsByProjectAndAnyReviewers($reviewEntityName,$project,$user);
-                foreach($reviewObjects as $reviewObject) {
-                    $reviewForm = $this->createForm(ReviewBaseType::class, $reviewObject, array(
-                        //'form_custom_value' => $params,
-                        'data_class' => 'Oleg\\TranslationalResearchBundle\\Entity\\'.$reviewEntityName
-                    ));
-                }
-                break;
-
-            case "final_approval":
-                $reviewEntityName = "FinalReview";
-                $reviewObjects = $this->findReviewObjectsByProjectAndAnyReviewers($reviewEntityName,$project,$user);
-                foreach($reviewObjects as $reviewObject) {
-                    $reviewForm = $this->createForm(ReviewBaseType::class, $reviewObject, array(
-                        //'form_custom_value' => $params,
-                        'data_class' => 'Oleg\\TranslationalResearchBundle\\Entity\\'.$reviewEntityName
-                    ));
-                }
-                break;
-
-            default:
-                //
-        }
-        return $html;
-    }
+//    public function getReviewIds($project, $user) {
+//        $reviewIds = array();
+//        $reviewIds[] = 4;
+//        switch( $project->getState() ) {
+//
+//            case "irb_review":
+//                $reviewEntityName = "IrbReview";
+//                //$reviewIds[] = 4;
+//                break;
+//
+//            case "admin_review":
+//                $reviewEntityName = "AdminReview";
+//
+//                break;
+//
+//            case "committee_review":
+//                $reviewEntityName = "CommitteeReview";
+//
+//                break;
+//
+//            case "final_approval":
+//                $reviewEntityName = "FinalReview";
+//
+//                break;
+//
+//            default:
+//                //
+//        }
+//        return $reviewIds;
+//    }
 
     public function getTransitionLabelByName( $transitionName ) {
 

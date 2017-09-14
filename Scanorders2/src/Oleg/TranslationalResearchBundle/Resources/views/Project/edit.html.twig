@@ -14,10 +14,39 @@
         {{ title }}
     </h4>
 
-    {#{{ transres.projectHeader(project) }}#}
+    {{ transres.projectHeader(project) }}
 
     {{ form_start(edit_form) }}
         {#{{ form_widget(edit_form) }}#}
+
+        <div id="form-prototype-data"
+             data-prototype-transres-irbreviews = "{{ transres.projectSingleReview(project,project.irbReviews,cycle,'transres-irbreviews','prototype', sitename,1)|e }}"
+             data-prototype-transres-adminreviews = "{{ transres.projectSingleReview(project,project.adminReviews,cycle,'transres-adminreviews','prototype', sitename,1)|e }}"
+             data-prototype-transres-committeereviews = "{{ transres.projectSingleReview(project,project.committeeReviews,cycle,'transres-committeereviews','prototype', sitename,1)|e }}"
+             data-prototype-transres-finalreviews = "{{ transres.projectSingleReview(project,project.finalReviews,cycle,'transres-finalreviews','prototype', sitename,1)|e }}"
+        ></div>
+
+        {% set sitename = "translationalresearch" %}
+
+        {{ transres.projectReviews(edit_form,cycle,sitename) }}
+        {#{% if project.state.vars.value == "irb_review" %}#}
+            {#{% set reviews = project.irbReviews %}#}
+        {#{% endif %}#}
+        {#{% if project.state.vars.value == "admin_review" %}#}
+            {#{% set reviews = project.adminReviews %}#}
+        {#{% endif %}#}
+        {#{% if project.state.vars.value == "committee_review" %}#}
+            {#{% set reviews = project.committeeReviews %}#}
+        {#{% endif %}#}
+        {#{% if project.state.vars.value == "final_approval" %}#}
+            {#{% set reviews = project.finalReviews %}#}
+        {#{% endif %}#}
+        {#{{ transres.projectReviews(project,project.irbReviews,cycle,'transres-irbreviews','noprototype', sitename,1) }}#}
+        {#{{ transres.projectReviews(project,project.adminReviews,cycle,'transres-irbreviews','noprototype', sitename,1) }}#}
+        {#{{ transres.projectReviews(project,project.committeeReviews,cycle,'transres-irbreviews','noprototype', sitename,1) }}#}
+        {#{{ transres.projectReviews(project,project.finalReviews,cycle,'transres-irbreviews','noprototype', sitename,1) }}#}
+
+        <br>
 
         {% if edit_form.createDate is defined or edit_form.submitter is defined %}
             <div class="well well-sm">
