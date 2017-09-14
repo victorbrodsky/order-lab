@@ -312,9 +312,9 @@
     {% endif %}
 
     {% if prototype == "prototype" %}
-        {% set forminterview = reviews.vars.prototype %}
+        {% set formreview = review.vars.prototype %}
     {% else %}
-        {% set forminterview = reviews %}
+        {% set formreview = review %}
     {% endif %}
 
 
@@ -331,15 +331,15 @@
 
         {% endif %}
 
-        {{ formmacros.field(review.reviewer) }}
-        {% if review.reviewerDelegate is defined %}
-            {{ formmacros.field(review.reviewerDelegate) }}
+        {{ formmacros.field(formreview.reviewer) }}
+        {% if formreview.reviewerDelegate is defined %}
+            {{ formmacros.field(formreview.reviewerDelegate) }}
         {% endif %}
-        {% if review.decision is defined %}
-            {{ formmacros.field(review.decision) }}
+        {% if formreview.decision is defined %}
+            {{ formmacros.field(formreview.decision) }}
         {% endif %}
-        {% if review.comment is defined %}
-            {{ formmacros.field(review.comment) }}
+        {% if formreview.comment is defined %}
+            {{ formmacros.field(formreview.comment) }}
         {% endif %}
     </div>
 {% endmacro %}
