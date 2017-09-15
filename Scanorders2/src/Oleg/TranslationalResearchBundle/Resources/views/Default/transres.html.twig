@@ -184,7 +184,7 @@
     {% set showCommiteeReview = 1 %}
     {% set showFinalReview = 1 %}
 
-    {% if showIrbReview %}
+    {% if showIrbReview and project.irbReviews is defined %}
         <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
             <div class="panel panel-primary">
                 <div class="panel-heading" role="tab" id="irbreviewHeading">
@@ -217,7 +217,7 @@
         </div>
     {% endif %}
 
-    {% if showAdminReview %}
+    {% if showAdminReview and project.adminReviews is defined %}
         <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
             <div class="panel panel-primary">
                 <div class="panel-heading" role="tab" id="adminreviewHeading">
@@ -248,7 +248,7 @@
         </div>
     {% endif %}
 
-    {% if showCommiteeReview %}
+    {% if showCommiteeReview and project.committeeReviews is defined %}
         <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
             <div class="panel panel-primary">
                 <div class="panel-heading" role="tab" id="committeereviewHeading">
@@ -279,7 +279,7 @@
         </div>
     {% endif %}
 
-    {% if showFinalReview %}
+    {% if showFinalReview and project.finalReviews is defined %}
         <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
             <div class="panel panel-primary">
                 <div class="panel-heading" role="tab" id="finalreviewHeading">

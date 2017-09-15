@@ -28,8 +28,6 @@
              data-prototype-transres-finalreviews = "{{ transres.projectSingleReview(edit_form,edit_form.finalReviews,cycle,'transres-finalreviews','prototype', sitename,1)|e }}"
         ></div>
 
-        {% set sitename = "translationalresearch" %}
-
         {{ transres.projectReviews(edit_form,cycle,sitename) }}
 
         {#{% if project.state.vars.value == "irb_review" %}#}

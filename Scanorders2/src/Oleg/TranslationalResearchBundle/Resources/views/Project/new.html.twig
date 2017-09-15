@@ -15,12 +15,17 @@
     </h4>
     <br>
 
+    {% set sitename = translationalresearch_sitename %}
+
     {{ form_start(form) }}
         {#{{ form_widget(form) }}#}
 
         {#{% if form.vars.id  %}#}
             {#{{ formmacros.simplefield("Project #:", form.vars.id, "input", "disabled") }}#}
         {#{% endif %}#}
+
+        {{ transres.projectReviews(form,cycle,sitename) }}
+
 
         {% if form.createDate is defined or form.submitter is defined %}
             <div class="well well-sm">

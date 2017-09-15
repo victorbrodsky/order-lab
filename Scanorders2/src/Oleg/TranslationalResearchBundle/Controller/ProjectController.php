@@ -102,14 +102,31 @@ class ProjectController extends Controller
         $cycle = "new";
 
         $project = new Project($user);
+
+//        $defaultReviewersAdded = false;
+//        if(
+//            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ||
+//            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') ||
+//            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE')
+//        ) {
+//            //add all default reviewers
+//            $transresUtil->addDefaultStateReviewers($project);
+//            $defaultReviewersAdded = true;
+//        }
+
+        //add all default reviewers
+        $transresUtil->addDefaultStateReviewers($project);
+
         //$form = $this->createForm('Oleg\TranslationalResearchBundle\Form\ProjectType', $project);
         $form = $this->createProjectForm($project,$cycle);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            //add all default reviewers
-            $transresUtil->addDefaultStateReviewers($project);
+//            if( $defaultReviewersAdded == false ) {
+//                //add all default reviewers
+//                $transresUtil->addDefaultStateReviewers($project);
+//            }
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($project);
@@ -248,6 +265,21 @@ class ProjectController extends Controller
 
         if( $cycle == "show" ) {
             $disabled = true;
+        }
+
+        $params['showIrbReviews'] = false;
+        $params['showAdminReviews'] = false;
+        $params['showCommitteeReviews'] = false;
+        $params['showFinalReviews'] = false;
+        if(
+            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ||
+            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') ||
+            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE')
+        ) {
+            $params['showIrbReviews'] = true;
+            $params['showAdminReviews'] = true;
+            $params['showCommitteeReviews'] = true;
+            $params['showFinalReviews'] = true;
         }
 
         $form = $this->createForm(ProjectType::class, $project, array(

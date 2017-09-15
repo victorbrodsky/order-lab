@@ -260,12 +260,14 @@ class ProjectType extends AbstractType
         ));
 
         //Reviews
-        $showIrbReviews = true;
-        $showAdminReviews = true;
-        $showCommitteeReviews = true;
-        $showFinalReviews = true;
+        //$showIrbReviews = true;
+        //$showAdminReviews = true;
+        //$showCommitteeReviews = true;
+        //$showFinalReviews = true;
 
-        if( $showIrbReviews ) {
+        //echo "showIrbReviews=".$this->params['showIrbReviews']."<br>";
+        if( $this->params['showIrbReviews'] ) {
+            //echo "show irb<br>";
             $this->params['stateStr'] = "irb_review";
             $builder->add('irbReviews', CollectionType::class, array(
                 'entry_type' => ReviewBaseType::class,
@@ -283,7 +285,7 @@ class ProjectType extends AbstractType
             ));
         }
 
-        if( $showAdminReviews ) {
+        if( $this->params['showAdminReviews'] ) {
             $this->params['stateStr'] = "admin_review";
             $builder->add('adminReviews', CollectionType::class, array(
                 'entry_type' => ReviewBaseType::class,
@@ -301,7 +303,7 @@ class ProjectType extends AbstractType
             ));
         }
 
-        if( $showCommitteeReviews ) {
+        if( $this->params['showCommitteeReviews'] ) {
             $this->params['stateStr'] = "committee_review";
             $builder->add('committeeReviews', CollectionType::class, array(
                 'entry_type' => ReviewBaseType::class,
@@ -319,7 +321,7 @@ class ProjectType extends AbstractType
             ));
         }
 
-        if( $showFinalReviews ) {
+        if( $this->params['showFinalReviews'] ) {
             $this->params['stateStr'] = "final_review";
             $builder->add('finalReviews', CollectionType::class, array(
                 'entry_type' => ReviewBaseType::class,
