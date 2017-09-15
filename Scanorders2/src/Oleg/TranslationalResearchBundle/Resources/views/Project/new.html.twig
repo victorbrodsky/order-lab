@@ -24,6 +24,13 @@
             {#{{ formmacros.simplefield("Project #:", form.vars.id, "input", "disabled") }}#}
         {#{% endif %}#}
 
+        <div id="form-prototype-data"
+             data-prototype-transres-irbreviews = "{{ transres.projectSingleReview(form,form.irbReviews,cycle,'transres-irbreviews','prototype', sitename,1)|e }}"
+             data-prototype-transres-adminreviews = "{{ transres.projectSingleReview(form,form.adminReviews,cycle,'transres-adminreviews','prototype', sitename,1)|e }}"
+             data-prototype-transres-committeereviews = "{{ transres.projectSingleReview(form,form.committeeReviews,cycle,'transres-committeereviews','prototype', sitename,1)|e }}"
+             data-prototype-transres-finalreviews = "{{ transres.projectSingleReview(form,form.finalReviews,cycle,'transres-finalreviews','prototype', sitename,1)|e }}"
+        ></div>
+
         {{ transres.projectReviews(form,cycle,sitename) }}
 
 
