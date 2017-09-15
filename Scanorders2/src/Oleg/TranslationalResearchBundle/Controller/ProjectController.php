@@ -97,6 +97,7 @@ class ProjectController extends Controller
      */
     public function newAction(Request $request)
     {
+        $transresUtil = $this->container->get('transres_util');
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $cycle = "new";
 
@@ -106,6 +107,10 @@ class ProjectController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            //add all default reviewers
+            $transresUtil->addDefaultStateReviewers($project);
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($project);
             $em->flush();
@@ -176,7 +181,8 @@ class ProjectController extends Controller
 
         $cycle = "edit";
 
-        $transresUtil->addStateReviewers($project);
+        //testing: add all default reviewers
+        $transresUtil->addDefaultStateReviewers($project);
 
         $deleteForm = $this->createDeleteForm($project);
         //$editForm = $this->createForm('Oleg\TranslationalResearchBundle\Form\ProjectType', $project);
@@ -191,6 +197,11 @@ class ProjectController extends Controller
 
             return $this->redirectToRoute('translationalresearch_project_show', array('id' => $project->getId()));
         }
+
+//        echo "irbReview count=".count($project->getIrbReviews())."<br>";
+//        foreach($project->getIrbReviews() as $review){
+//            echo "reviewer=".$review->getReviewer()->getUsernameOptimal()."<br>";
+//        }
 
         return array(
             'project' => $project,

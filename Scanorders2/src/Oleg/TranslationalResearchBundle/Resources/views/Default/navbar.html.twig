@@ -27,7 +27,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            {% if is_granted('ROLE_TRANSLATIONALRESEARCH_USER') %}
+            {% if is_granted('ROLE_TRANSRES_USER') %}
                 <!-- this is for mobile devices - top menu -->
                 <a class="navbar-brand visible-xs visible-sm" href="{{ path(translationalresearch_sitename~'_home') }}">Home</a>
             {% endif %}
@@ -37,7 +37,7 @@
         <div class="collapse navbar-collapse navbar-ex1-collapse" style="max-height:none;">
 
 
-            {% if is_granted('ROLE_TRANSLATIONALRESEARCH_USER') %}
+            {% if is_granted('ROLE_TRANSRES_USER') %}
 
                 <ul class="nav navbar-nav">
 
@@ -66,7 +66,7 @@
 
             <ul class="nav navbar-nav navbar-right">
 
-                {% if is_granted('ROLE_TRANSLATIONALRESEARCH_ADMIN') %}
+                {% if is_granted('ROLE_TRANSRES_ADMIN') %}
 
                     <li id="nav-bar-admin" class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin<b class="caret"></b></a>
@@ -93,7 +93,7 @@
 
 
 
-                {% if is_granted('ROLE_TRANSLATIONALRESEARCH_USER') %}
+                {% if is_granted('ROLE_TRANSRES_USER') %}
 
                     <li id="nav-bar-user" class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span><b class="caret"></b></a>

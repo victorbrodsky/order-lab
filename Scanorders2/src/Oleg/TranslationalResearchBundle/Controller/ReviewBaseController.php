@@ -87,7 +87,7 @@ class ReviewBaseController extends Controller
      */
     public function editAction(Request $request, $stateStr, IrbReview $irbReview)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSLATIONALRESEARCH_USER') ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-order-nopermission') );
         }
 

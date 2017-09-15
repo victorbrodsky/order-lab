@@ -154,16 +154,17 @@
 {% macro projectReviews(project, cycle, sitename) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
 
     {% if showAddDeleteBtn is not defined %}
         {% set showAddDeleteBtn = 0 %}
     {% endif %}
 
-    {% if prototype == "prototype" %}
-        {% set forminterview = reviews.vars.prototype %}
-    {% else %}
-        {% set forminterview = reviews %}
-    {% endif %}
+    {#{% if prototype == "prototype" %}#}
+        {#{% set forminterview = reviews.vars.prototype %}#}
+    {#{% else %}#}
+        {#{% set forminterview = reviews %}#}
+    {#{% endif %}#}
 
     {#{% if project.state.vars.value == "irb_review" %}#}
         {#{% set reviews = project.irbReviews %}#}
@@ -186,26 +187,30 @@
     {% if showIrbReview %}
         <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
             <div class="panel panel-primary">
-                <div class="panel-heading" role="tab" id="headingOne">
+                <div class="panel-heading" role="tab" id="irbreviewHeading">
                     <h4 class="panel-title">
                         <a role="button" data-toggle="collapse" data-parent="#accordion" href="#irbreview" aria-expanded="true" aria-controls="reviewBase">
-                            {{ transres_util.getStateSimpleLabelByName(project.state.vars.value) }}
+                            {#{{ transres_util.getStateSimpleLabelByName(project.state.vars.value) }}#}
+                            IRB Review
                         </a>
                     </h4>
                 </div>
-            <div id="irbreview" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
-                <div class="panel-body">
-                    <div class="transres-reviews-holder">
+                <div id="irbreview" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="irbreviewHeading">
+                    <div class="panel-body">
+                        <div class="transres-irbreviews-holder">
 
-                        {% for review in project.irbReviews %}
-                            {{ transres.projectSingleReview(project,review,cycle,'transres-irbreviews','noprototype',sitename,1) }}
-                        {% endfor %}
+                            {#count irb reviewers={{ project.irbReviews|length }}<br>#}
+                            {% for review in project.irbReviews %}
+                                {#show review with reviewer={{ review.vars.value.reviewer.getUsernameOptimal }}<br>#}
+                                {{ transres.projectSingleReview(project,review,cycle,'transres-irbreviews','noprototype',sitename,1) }}
+                            {% endfor %}
 
-                        {% if cycle != "show" %}
-                            {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_PRIMARY_REVIEWER') or is_granted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE') %}
-                                {{ usermacros.addNewObjectBtn(cycle,'transres-irbreviews','Add IRB Reviewer') }}
+                            {% if cycle != "show" %}
+                                {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_PRIMARY_REVIEWER') or is_granted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE') %}
+                                    {{ usermacros.addNewObjectBtn(cycle,'transres-irbreviews','Add IRB Reviewer') }}
+                                {% endif %}
                             {% endif %}
-                        {% endif %}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -215,16 +220,17 @@
     {% if showAdminReview %}
         <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
             <div class="panel panel-primary">
-                <div class="panel-heading" role="tab" id="headingOne">
+                <div class="panel-heading" role="tab" id="adminreviewHeading">
                     <h4 class="panel-title">
                         <a role="button" data-toggle="collapse" data-parent="#accordion" href="#adminreview" aria-expanded="true" aria-controls="reviewBase">
-                            {{ transres_util.getStateSimpleLabelByName(project.state.vars.value) }}
+                            {#{{ transres_util.getStateSimpleLabelByName(project.state.vars.value) }}#}
+                            Admin Review
                         </a>
                     </h4>
                 </div>
-                <div id="adminreview" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                <div id="adminreview" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="adminreviewHeading">
                     <div class="panel-body">
-                        <div class="transres-reviews-holder">
+                        <div class="transres-adminreviews-holder">
 
                             {% for review in project.adminReviews %}
                                 {{ transres.projectSingleReview(project,review,cycle,'transres-adminreviews','noprototype',sitename,1) }}
@@ -245,16 +251,17 @@
     {% if showCommiteeReview %}
         <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
             <div class="panel panel-primary">
-                <div class="panel-heading" role="tab" id="headingOne">
+                <div class="panel-heading" role="tab" id="committeereviewHeading">
                     <h4 class="panel-title">
                         <a role="button" data-toggle="collapse" data-parent="#accordion" href="#committeereview" aria-expanded="true" aria-controls="reviewBase">
-                            {{ transres_util.getStateSimpleLabelByName(project.state.vars.value) }}
+                            {#{{ transres_util.getStateSimpleLabelByName(project.state.vars.value) }}#}
+                            Committee Reviews
                         </a>
                     </h4>
                 </div>
-                <div id="committeereview" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                <div id="committeereview" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="committeereviewHeading">
                     <div class="panel-body">
-                        <div class="transres-reviews-holder">
+                        <div class="transres-committeereviews-holder">
 
                             {% for review in project.committeeReviews %}
                                 {{ transres.projectSingleReview(project,review,cycle,'transres-committeereviews','noprototype',sitename,1) }}
@@ -275,16 +282,17 @@
     {% if showFinalReview %}
         <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
             <div class="panel panel-primary">
-                <div class="panel-heading" role="tab" id="headingOne">
+                <div class="panel-heading" role="tab" id="finalreviewHeading">
                     <h4 class="panel-title">
                         <a role="button" data-toggle="collapse" data-parent="#accordion" href="#finalreview" aria-expanded="true" aria-controls="reviewBase">
-                            {{ transres_util.getStateSimpleLabelByName(project.state.vars.value) }}
+                            {#{{ transres_util.getStateSimpleLabelByName(project.state.vars.value) }}#}
+                            Final Review
                         </a>
                     </h4>
                 </div>
-                <div id="finalreview" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                <div id="finalreview" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="finalreviewHeading">
                     <div class="panel-body">
-                        <div class="transres-reviews-holder">
+                        <div class="transres-finalreviews-holder">
 
                             {% for review in project.finalReviews %}
                                 {{ transres.projectSingleReview(project,review,cycle,'transres-finalreviews','noprototype',sitename,1) }}
@@ -328,19 +336,31 @@
             </div>
             <br>
         {% else %}
+            {#do nothing#}
+        {% endif %}
 
+        {#{% if formreview.reviewer.vars.value %}#}
+        {#formreview.reviewer={{ formreview.vars.value.reviewer.getUsernameOptimal() }}#}
+        {#{% endif %}#}
+
+        {% if formreview.id is defined %}
+            {{ form_widget(formreview.id) }}
         {% endif %}
 
         {{ formmacros.field(formreview.reviewer) }}
+
         {% if formreview.reviewerDelegate is defined %}
             {{ formmacros.field(formreview.reviewerDelegate) }}
         {% endif %}
+
         {% if formreview.decision is defined %}
             {{ formmacros.field(formreview.decision) }}
         {% endif %}
+
         {% if formreview.comment is defined %}
             {{ formmacros.field(formreview.comment) }}
         {% endif %}
+
     </div>
 {% endmacro %}
 

@@ -259,7 +259,13 @@ class ProjectType extends AbstractType
             },
         ));
 
-        if( $this->project->getState() == "irb_review" ) {
+        //Reviews
+        $showIrbReviews = true;
+        $showAdminReviews = true;
+        $showCommitteeReviews = true;
+        $showFinalReviews = true;
+
+        if( $showIrbReviews ) {
             $this->params['stateStr'] = "irb_review";
             $builder->add('irbReviews', CollectionType::class, array(
                 'entry_type' => ReviewBaseType::class,
@@ -273,7 +279,61 @@ class ProjectType extends AbstractType
                 'allow_delete' => true,
                 'by_reference' => false,
                 'prototype' => true,
-                'prototype_name' => '__irb_review__',
+                'prototype_name' => '__irbreviews__',
+            ));
+        }
+
+        if( $showAdminReviews ) {
+            $this->params['stateStr'] = "admin_review";
+            $builder->add('adminReviews', CollectionType::class, array(
+                'entry_type' => ReviewBaseType::class,
+                'entry_options' => array(
+                    'data_class' => 'Oleg\TranslationalResearchBundle\Entity\AdminReview',
+                    'form_custom_value' => $this->params
+                ),
+                'label' => false,
+                'required' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__adminreviews__',
+            ));
+        }
+
+        if( $showCommitteeReviews ) {
+            $this->params['stateStr'] = "committee_review";
+            $builder->add('committeeReviews', CollectionType::class, array(
+                'entry_type' => ReviewBaseType::class,
+                'entry_options' => array(
+                    'data_class' => 'Oleg\TranslationalResearchBundle\Entity\CommitteeReview',
+                    'form_custom_value' => $this->params
+                ),
+                'label' => false,
+                'required' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__committeereviews__',
+            ));
+        }
+
+        if( $showFinalReviews ) {
+            $this->params['stateStr'] = "final_review";
+            $builder->add('finalReviews', CollectionType::class, array(
+                'entry_type' => ReviewBaseType::class,
+                'entry_options' => array(
+                    'data_class' => 'Oleg\TranslationalResearchBundle\Entity\FinalReview',
+                    'form_custom_value' => $this->params
+                ),
+                'label' => false,
+                'required' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__finalreviews__',
             ));
         }
 

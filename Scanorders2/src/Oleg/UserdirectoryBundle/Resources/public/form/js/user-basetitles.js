@@ -293,7 +293,7 @@ function getNextElementCount( holder, elclass ) {
 
     var maxCount = 0;
 
-    elements.each( function(){
+    elements.each( function() {
         //console.log("this:");
         //console.log($(this));
         //find valid input field with valid id
@@ -301,18 +301,18 @@ function getNextElementCount( holder, elclass ) {
         //var inputElements = $(this).find('input[type=text]').not("*[id^='s2id_']");
         //use hidden id input field to calculate id
         var inputElements = $(this).find('input[type=text],input[type=hidden]').not("*[id^='s2id_']");
-        //console.log("inputElements count="+inputElements.length);
+        //console.log("inputElements count=" + inputElements.length);
 
-        inputElements.each( function(){
+        inputElements.each(function () {
 
             //console.log("inputElement:");
             //console.log($(this));
 
             var id = $(this).attr('id');
-            //console.log("id="+id);
-            if( id ) {
-                var counter = getElementCounter( $(this) );
-                if( counter ) {
+            //console.log("id=" + id);
+            if (id) {
+                var counter = getElementCounter($(this));
+                if (counter) {
                     inputEl = $(this);
                     return;
                 } else {
@@ -322,10 +322,14 @@ function getNextElementCount( holder, elclass ) {
         });
 
         //printF( inputEl, 'element:');
-        var counter = getElementCounter( inputEl );
-        //console.log("counter="+counter+", maxCount="+maxCount);
-        if( parseInt(counter) > parseInt(maxCount) ) {
-            maxCount = counter;
+        var counter = getElementCounter(inputEl);
+        //console.log("counter=" + counter + ", maxCount=" + maxCount);
+        if (counter) {
+            if (parseInt(counter) > parseInt(maxCount)) {
+                maxCount = counter;
+            }
+        } else {
+            maxCount++;
         }
 //        if( counter == null ) {
 //            //console.log("maxCount++ ="+maxCount);

@@ -27,7 +27,7 @@ class DefaultController extends Controller
 //     */
 //    public function indexAction( Request $request ) {
 //
-//        if( false == $this->get('security.context')->isGranted('ROLE_TRANSLATIONALRESEARCH_USER') ){
+//        if( false == $this->get('security.context')->isGranted('ROLE_TRANSRES_USER') ){
 //            //exit('deidentifier: no permission');
 //            return $this->redirect( $this->generateUrl('translationalresearch-nopermission') );
 //        }

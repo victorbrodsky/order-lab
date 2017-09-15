@@ -81,9 +81,10 @@ class DefaultReviewer
     private $reviewerDelegate;
 
     /**
-     * Project's state for this reviewer (irb_review, committee_review, final_approval-primaryReviewer) -
+     * Project's state for this reviewer (irb_review, admin_review, committee_review, final_approval-primaryReviewer) -
      *  corresponds to the user role:
      * irb_review - ROLE_TRANSRES_IRB_REVIEWER
+     * admin_review - ROLE_TRANSRES_ADMIN
      * committee_review - ROLE_TRANSRES_COMMITTEE_REVIEWER
      * final_approval - ROLE_TRANSRES_PRIMARY_REVIEWER
      *
@@ -237,6 +238,10 @@ class DefaultReviewer
         if( $this->getState() == "irb_review" ) {
             $roles['reviewer'] = "ROLE_TRANSRES_IRB_REVIEWER";
             $roles['reviewerDelegate'] = "ROLE_TRANSRES_IRB_REVIEWER_DELEGATE";
+        }
+        if( $this->getState() == "admin_review" ) {
+            $roles['reviewer'] = "ROLE_TRANSRES_ADMIN";
+            $roles['reviewerDelegate'] = null;  //"ROLE_TRANSRES_ADMIN_DELEGATE";
         }
         if( $this->getState() == "committee_review" ) {
             $roles['reviewer'] = "ROLE_TRANSRES_COMMITTEE_REVIEWER";

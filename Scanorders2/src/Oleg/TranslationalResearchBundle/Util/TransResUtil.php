@@ -162,7 +162,7 @@ class TransResUtil
                 $project->setState($to); //i.e. 'irb_review'
 
                 //check and add reviewers for this state by role? Do it when project is created?
-                $this->addStateReviewers($project);
+                //$this->addDefaultStateReviewers($project);
 
                 //write to DB
                 $this->em->flush($project);
@@ -187,85 +187,89 @@ class TransResUtil
     //TODO: create default reviewers object: set reviewer and delegate reviewer for each review state.
     //add reviewers according to their roles and state
     //for example, state=irb_review => roles=ROLE_TRANSRES_IRB_REVIEWER, ROLE_TRANSRES_IRB_REVIEWER_DELEGATE
-    public function addStateReviewers( $project ) {
-        //echo "project state=".$project->getState()."<br>";
-        switch( $project->getState() ) {
+    public function addDefaultStateReviewers( $project, $addForAllStates=true ) {
 
-            case "irb_review":
-                $defaultReviewers = $this->em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findByState($project->getState());
-                //reviewer delegate should be added to the specific reviewer => no delegate role is required?
-                foreach($defaultReviewers as $defaultReviewer) {
-                    //1) create IrbReview entity
-                    $reviewer = $defaultReviewer->getReviewer();
-                    if( $reviewer ) {
-                        $reviewEntity = new IrbReview($reviewer);
-                        $reviewerDelegate = $defaultReviewer->getReviewerDelegate();
-                        if( $reviewerDelegate ) {
-                            $reviewEntity->setReviewerDelegate($reviewerDelegate);
-                        }
-                        $project->addIrbReview($reviewEntity);
+        $currentState = $project->getState();
+        //echo "project state=".$currentState."<br>";
+
+        $irbReviewState = "irb_review";
+        if( $currentState == $irbReviewState || $addForAllStates ) {
+            $defaultReviewers = $this->em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findByState($irbReviewState);
+            //echo "defaultReviewers count=".count($defaultReviewers)."<br>";
+            //reviewer delegate should be added to the specific reviewer => no delegate role is required?
+            foreach ($defaultReviewers as $defaultReviewer) {
+                //1) create IrbReview entity
+                $reviewer = $defaultReviewer->getReviewer();
+                if ($reviewer) {
+                    //echo "reviewer=".$reviewer."<br>";
+                    $reviewEntity = new IrbReview($reviewer);
+                    $reviewerDelegate = $defaultReviewer->getReviewerDelegate();
+                    if ($reviewerDelegate) {
+                        $reviewEntity->setReviewerDelegate($reviewerDelegate);
                     }
+                    $project->addIrbReview($reviewEntity);
                 }
-                break;
-
-            case "admin_review":
-                $defaultReviewers = $this->em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findByState($project->getState());
-                //reviewer delegate should be added to the specific reviewer => no delegate role is required?
-                foreach($defaultReviewers as $defaultReviewer) {
-                    //1) create IrbReview entity
-                    $reviewer = $defaultReviewer->getReviewer();
-                    if( $reviewer ) {
-                        $reviewEntity = new AdminReview($reviewer);
-                        $reviewerDelegate = $defaultReviewer->getReviewerDelegate();
-                        if( $reviewerDelegate ) {
-                            $reviewEntity->setReviewerDelegate($reviewerDelegate);
-                        }
-                        $project->addAdminReview($reviewEntity);
-                    }
-                }
-                break;
-
-            case "committee_review":
-
-                $defaultReviewers = $this->em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findByState($project->getState());
-                //reviewer delegate should be added to the specific reviewer => no delegate role is required?
-                foreach($defaultReviewers as $defaultReviewer) {
-                    //1) create CommitteeReview entity
-                    $reviewer = $defaultReviewer->getReviewer();
-                    if( $reviewer ) {
-                        $reviewEntity = new CommitteeReview($reviewer);
-                        $reviewerDelegate = $defaultReviewer->getReviewerDelegate();
-                        if( $reviewerDelegate ) {
-                            $reviewEntity->setReviewerDelegate($reviewerDelegate);
-                        }
-                        $project->addCommitteeReview($reviewEntity);
-                    }
-                }
-
-                break;
-
-            case "final_approval":
-
-                $defaultReviewers = $this->em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findByState($project->getState());
-                //reviewer delegate should be added to the specific reviewer => no delegate role is required?
-                foreach($defaultReviewers as $defaultReviewer) {
-                    //1) create FinalReview entity
-                    $reviewer = $defaultReviewer->getReviewer();
-                    if( $reviewer ) {
-                        $reviewEntity = new FinalReview($reviewer);
-                        $reviewerDelegate = $defaultReviewer->getReviewerDelegate();
-                        if( $reviewerDelegate ) {
-                            $reviewEntity->setReviewerDelegate($reviewerDelegate);
-                        }
-                        $project->addFinalReview($reviewEntity);
-                    }
-                }
-
-                break;
-
-            default:
-                //
+            }
         }
+
+        $adminReviewState = "admin_review";
+        if( $currentState == $adminReviewState || $addForAllStates ) {
+            $defaultReviewers = $this->em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findByState($adminReviewState);
+            //reviewer delegate should be added to the specific reviewer => no delegate role is required?
+            foreach ($defaultReviewers as $defaultReviewer) {
+                //1) create IrbReview entity
+                $reviewer = $defaultReviewer->getReviewer();
+                if ($reviewer) {
+                    $reviewEntity = new AdminReview($reviewer);
+                    $reviewerDelegate = $defaultReviewer->getReviewerDelegate();
+                    if ($reviewerDelegate) {
+                        $reviewEntity->setReviewerDelegate($reviewerDelegate);
+                    }
+                    $project->addAdminReview($reviewEntity);
+                }
+            }
+        }
+
+        $committeeReviewState = "committee_review";
+        if( $currentState == $committeeReviewState || $addForAllStates ) {
+
+            $defaultReviewers = $this->em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findByState($committeeReviewState);
+            //reviewer delegate should be added to the specific reviewer => no delegate role is required?
+            foreach ($defaultReviewers as $defaultReviewer) {
+                //1) create CommitteeReview entity
+                $reviewer = $defaultReviewer->getReviewer();
+                if ($reviewer) {
+                    $reviewEntity = new CommitteeReview($reviewer);
+                    $reviewerDelegate = $defaultReviewer->getReviewerDelegate();
+                    if ($reviewerDelegate) {
+                        $reviewEntity->setReviewerDelegate($reviewerDelegate);
+                    }
+                    $project->addCommitteeReview($reviewEntity);
+                }
+            }
+
+        }
+
+        $finalReviewState = "final_approval";
+        if( $currentState == $finalReviewState || $addForAllStates ) {
+
+            $defaultReviewers = $this->em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findByState($finalReviewState);
+            //reviewer delegate should be added to the specific reviewer => no delegate role is required?
+            foreach ($defaultReviewers as $defaultReviewer) {
+                //1) create FinalReview entity
+                $reviewer = $defaultReviewer->getReviewer();
+                if ($reviewer) {
+                    $reviewEntity = new FinalReview($reviewer);
+                    $reviewerDelegate = $defaultReviewer->getReviewerDelegate();
+                    if ($reviewerDelegate) {
+                        $reviewEntity->setReviewerDelegate($reviewerDelegate);
+                    }
+                    $project->addFinalReview($reviewEntity);
+                }
+            }
+
+        }
+
 
         return $project;
     }
@@ -285,10 +289,10 @@ class TransResUtil
         }
 
         $reviewerDelegate = $defaultReviewer->getReviewerDelegate();
-        if( $reviewerDelegate ) {
+        if( $reviewerDelegate && $reviewerDelegateRole ) {
             $reviewerDelegate->addRole($reviewerDelegateRole);
         }
-        if( $originalReviewerDelegate && $originalReviewerDelegate != $reviewerDelegate ) {
+        if( $originalReviewerDelegate && $originalReviewerDelegate != $reviewerDelegate && $reviewerDelegateRole ) {
             $originalReviewerDelegate->removeRole($reviewerDelegateRole);
         }
 

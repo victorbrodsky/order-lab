@@ -4,6 +4,7 @@ namespace Oleg\TranslationalResearchBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -25,6 +26,14 @@ class ReviewBaseType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $this->formConstructor($options['form_custom_value']);
+
+        $builder->add( 'id', HiddenType::class, array(
+            'label'=>false,
+            'required'=>false,
+            //'attr' => array('class' => 'comment-field-id')
+        ));
+
+        //echo "add reviewer object <br>";
 
         //$builder->add('assignment')->add('createdate')->add('updatedate')->add('decision')->add('comment')->add('project')->add('reviewer')->add('reviewerDelegate');
 
@@ -57,13 +66,13 @@ class ReviewBaseType extends AbstractType
         $builder->add('reviewer', null, array(
             'label' => "Reviewer:",
             //'disabled' => true,
-            'attr' => array('class'=>'combobox combobox-width', 'readonly'=>true)
+            'attr' => array('class'=>'combobox combobox-width') //, 'readonly'=>true
         ));
 
         $builder->add('reviewerDelegate', null, array(
             'label' => "Reviewer Delegate:",
             //'disabled' => true,
-            'attr' => array('class'=>'combobox combobox-width', 'readonly'=>true)
+            'attr' => array('class'=>'combobox combobox-width') //, 'readonly'=>true
         ));
 
 

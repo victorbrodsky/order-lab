@@ -44,10 +44,10 @@ class TranslationalResearchLoginSuccessHandler extends LoginSuccessHandler {
 
         $this->siteName = $container->getParameter('translationalresearch.sitename');
         $this->siteNameStr = 'Translational Research System';
-        $this->roleBanned = 'ROLE_TRANSLATIONALRESEARCH_BANNED';
-        $this->roleUser = 'ROLE_TRANSLATIONALRESEARCH_USER';
-        $this->roleUnapproved = 'ROLE_TRANSLATIONALRESEARCH_UNAPPROVED';
-        $this->firewallName = 'ldap_translationalresearch_firewall';
+        $this->roleBanned = 'ROLE_TRANSRES_BANNED';
+        $this->roleUser = 'ROLE_TRANSRES_USER';
+        $this->roleUnapproved = 'ROLE_TRANSRES_UNAPPROVED';
+        $this->firewallName = 'ldap_TRANSRES_firewall';
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token) {

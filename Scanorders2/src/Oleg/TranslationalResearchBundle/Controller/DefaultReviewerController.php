@@ -29,6 +29,7 @@ class DefaultReviewerController extends Controller
 
         $states = array(
             'irb_review',
+            'admin_review',
             'committee_review',
             'final_approval'
         );
@@ -222,7 +223,7 @@ class DefaultReviewerController extends Controller
                 $reviewer->removeRole($reviewerRole);
             }
             $reviewerDelegate = $defaultReviewer->getReviewerDelegate();
-            if( $reviewerDelegate ) {
+            if( $reviewerDelegate && $reviewerDelegateRole ) {
                 $reviewerDelegate->removeRole($reviewerDelegateRole);
             }
 

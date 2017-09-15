@@ -16,6 +16,8 @@
     </h4>
     <br>
 
+    {% set sitename = translationalresearch_sitename %}
+
     {{ transres.projectHeader(project) }}
 
     {#{% for review_form in review_forms %}#}
@@ -29,7 +31,7 @@
     {#{{ formmacros.simplefield("Project #:", form.vars.id, "input", "disabled") }}#}
     {#{% endif %}#}
 
-    {{ transres.projectReviews(form) }}
+    {{ transres.projectReviews(form,cycle,sitename) }}
     <br>
 
     {% if form.createDate is defined or form.submitter is defined %}
@@ -70,7 +72,7 @@
     {{ form_end(form) }}
 
 
-    {% if is_granted('ROLE_TRANSLATIONALRESEARCH_ADMIN') %}
+    {% if is_granted('ROLE_TRANSRES_ADMIN') %}
         <br>
         <p>
             <a class="btn btn-warning" href="{{ path(translationalresearch_sitename~'_project_edit', { 'id': project.id }) }}">Edit project</a>
