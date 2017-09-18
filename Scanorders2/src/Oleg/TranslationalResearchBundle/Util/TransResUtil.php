@@ -282,10 +282,10 @@ class TransResUtil
         return $project;
     }
 
-    public function hasProjectReviewer($reviewer, $projectReviewers ) {
+    public function hasProjectReviewer($reviewerUser, $projectReviewers ) {
         foreach($projectReviewers as $projectReviewer ) {
-            if( $projectReviewer->getReviewer()->getId() && $reviewer->getId() ) {
-                if ($projectReviewer->getReviewer()->getId() == $reviewer->getId()) {
+            if( $projectReviewer->getReviewer()->getId() && $reviewerUser->getId() ) {
+                if ($projectReviewer->getReviewer()->getId() == $reviewerUser->getId()) {
                     return true;
                 }
             }

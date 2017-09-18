@@ -385,7 +385,8 @@
     {% endif %}
 {% endmacro %}
 
-{% macro getProjectReviiewFormData(form, cycle, sitename) %}
+{% macro getProjectReviiewPrototypeFormData(form, cycle, sitename) %}
+    {% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
     <div id="form-prototype-data"
             {% if form.irbReviews is defined %}
                 data-prototype-transres-irbreviews = "{{ transres.projectSingleReview(form,form.irbReviews,cycle,'transres-irbreviews','prototype', sitename,1)|e }}"

@@ -305,6 +305,7 @@ class ProjectController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
+        $transresUtil = $this->container->get('transres_util');
 
         $disabled = false;
 
@@ -334,6 +335,20 @@ class ProjectController extends Controller
             $params['showIrbReviews'] = true;
             $params['showAdminReviews'] = true;
             $params['showCommitteeReviews'] = true;
+            $params['showFinalReviews'] = true;
+        }
+
+        //show if owner
+        if( $transresUtil->hasProjectReviewer($user,$project->getIrbReviews()) ) {
+            $params['showIrbReviews'] = true;
+        }
+        if( $transresUtil->hasProjectReviewer($user,$project->getAdminReviews()) ) {
+            $params['showAdminReviews'] = true;
+        }
+        if( $transresUtil->hasProjectReviewer($user,$project->getCommitteeReviews()) ) {
+            $params['showCommitteeReviews'] = true;
+        }
+        if( $transresUtil->hasProjectReviewer($user,$project->getFinalReviews()) ) {
             $params['showFinalReviews'] = true;
         }
 
