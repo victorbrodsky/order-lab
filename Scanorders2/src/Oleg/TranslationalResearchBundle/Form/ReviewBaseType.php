@@ -8,6 +8,9 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+
 
 //IrbReviewType
 class ReviewBaseType extends AbstractType
@@ -27,6 +30,11 @@ class ReviewBaseType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
+        $disabledReviewers = true;
+        if( $this->params['admin'] ) {
+            $disabledReviewers = false;
+        }
+
         $builder->add( 'id', HiddenType::class, array(
             'label'=>false,
             'required'=>false,
@@ -35,45 +43,105 @@ class ReviewBaseType extends AbstractType
 
         //echo "add reviewer object <br>";
 
-        //$builder->add('assignment')->add('createdate')->add('updatedate')->add('decision')->add('comment')->add('project')->add('reviewer')->add('reviewerDelegate');
-
-        $approved = 'Approved';
-        $rejected = 'Rejected';
-        if( $this->params["stateStr"] == "committee_review" ) {
-            $approved = 'Like';
-            $rejected = 'Dislike';
-        }
-
-        $builder->add('decision', ChoiceType::class, array(
-            'choices' => array(
-                $approved => 'approved',
-                $rejected => 'rejected'
-            ),
-            'invalid_message' => 'invalid value: decision',
-            //'choices_as_values' => true,
-            'label' => "Decision:",
-            'multiple' => false,
-            'expanded' => true,
-            'attr' => array('class' => 'horizontal_type')
-        ));
-
-        $builder->add('comment', TextareaType::class, array(
-            'label'=>'Comment:',
-            'required'=> false,
-            'attr' => array('class'=>'textarea form-control'),
-        ));
+        //$builder->add('assignment');
 
         $builder->add('reviewer', null, array(
             'label' => "Reviewer:",
-            //'disabled' => true,
+            'disabled' => $disabledReviewers,
             'attr' => array('class'=>'combobox combobox-width') //, 'readonly'=>true
         ));
 
         $builder->add('reviewerDelegate', null, array(
             'label' => "Reviewer Delegate:",
-            //'disabled' => true,
+            'disabled' => $disabledReviewers,
             'attr' => array('class'=>'combobox combobox-width') //, 'readonly'=>true
         ));
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+
+            $reviewEntity = $event->getData();
+            $form = $event->getForm();
+
+            if( !$reviewEntity ) {
+                return null;
+            }
+
+            $disabledReviewerFields = true;
+            if( $this->params['admin'] ) {
+                $disabledReviewerFields = false;
+            }
+            if( $this->params['user']->getId() == $reviewEntity->getReviewer()->getId() ) {
+                $disabledReviewerFields = false;
+            }
+
+            if(
+                $reviewEntity->getReviewerDelegate() &&
+                $this->params['user']->getId() == $reviewEntity->getReviewerDelegate()->getId()
+            ){
+                $disabledReviewerFields = false;
+            }
+
+            //Reviewer's field
+            $approved = 'Approved';
+            $rejected = 'Rejected';
+            if( $this->params["stateStr"] == "committee_review" ) {
+                $approved = 'Like';
+                $rejected = 'Dislike';
+            }
+
+            $form->add('decision', ChoiceType::class, array(
+                'choices' => array(
+                    $approved => 'approved',
+                    $rejected => 'rejected'
+                ),
+                'invalid_message' => 'invalid value: decision',
+                //'choices_as_values' => true,
+                'disabled' => $disabledReviewerFields,
+                'label' => "Decision:",
+                'multiple' => false,
+                'expanded' => true,
+                'attr' => array('class' => 'horizontal_type')
+            ));
+
+            $form->add('comment', TextareaType::class, array(
+                'label'=>'Comment:',
+                'disabled' => $disabledReviewerFields,
+                'required'=> false,
+                'attr' => array('class'=>'textarea form-control'),
+            ));
+
+        });
+
+//        //Reviewer's field
+//        $approved = 'Approved';
+//        $rejected = 'Rejected';
+//        if( $this->params["stateStr"] == "committee_review" ) {
+//            $approved = 'Like';
+//            $rejected = 'Dislike';
+//        }
+//
+//        $builder->add('decision', ChoiceType::class, array(
+//            'choices' => array(
+//                $approved => 'approved',
+//                $rejected => 'rejected'
+//            ),
+//            'invalid_message' => 'invalid value: decision',
+//            //'choices_as_values' => true,
+//            'disabled' => $disabledReviewerFields,
+//            'label' => "Decision:",
+//            'multiple' => false,
+//            'expanded' => true,
+//            'attr' => array('class' => 'horizontal_type')
+//        ));
+//
+//        $builder->add('comment', TextareaType::class, array(
+//            'label'=>'Comment:',
+//            'disabled' => $disabledReviewerFields,
+//            'required'=> false,
+//            'attr' => array('class'=>'textarea form-control'),
+//        ));
+
+
 
 
     }

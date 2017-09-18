@@ -319,16 +319,29 @@
         {% set showAddDeleteBtn = 0 %}
     {% endif %}
 
+    {% set reviewInfo = null %}
     {% if prototype == "prototype" %}
         {% set formreview = review.vars.prototype %}
+        {% set reviewInfo = "Will be added as a new reviewer" %}
     {% else %}
         {% set formreview = review %}
+        {% if review.id.vars.value == null %}
+            {% set reviewInfo = "Will be added as a new default reviewer" %}
+        {% endif %}
     {% endif %}
 
 
     {% set wellclass = "alert-default well well-sm" %}
 
     <div class="user-collection-holder alert {{ classname }} {{ wellclass }}">
+
+        {% if reviewInfo %}
+            <p>
+            <div class="alert alert-info" role="alert">
+                {{ reviewInfo }}
+            </div>
+            </p>
+        {% endif %}
 
         {% if cycle != "show" and showAddDeleteBtn %}
             <div class="text-right">
@@ -370,5 +383,22 @@
         {% set personlink = '<a href="'~personurl~'" target="_blank">'~user.getUsernameOptimal()~'</a>'  %}
         {{ personlink|raw }}
     {% endif %}
+{% endmacro %}
+
+{% macro getProjectReviiewFormData(form, cycle, sitename) %}
+    <div id="form-prototype-data"
+            {% if form.irbReviews is defined %}
+                data-prototype-transres-irbreviews = "{{ transres.projectSingleReview(form,form.irbReviews,cycle,'transres-irbreviews','prototype', sitename,1)|e }}"
+            {% endif %}
+            {% if form.adminReviews is defined %}
+                data-prototype-transres-adminreviews = "{{ transres.projectSingleReview(form,form.adminReviews,cycle,'transres-adminreviews','prototype', sitename,1)|e }}"
+            {% endif %}
+            {% if form.committeeReviews is defined %}
+                data-prototype-transres-committeereviews = "{{ transres.projectSingleReview(form,form.committeeReviews,cycle,'transres-committeereviews','prototype', sitename,1)|e }}"
+            {% endif %}
+            {% if form.finalReviews is defined %}
+                data-prototype-transres-finalreviews = "{{ transres.projectSingleReview(form,form.finalReviews,cycle,'transres-finalreviews','prototype', sitename,1)|e }}"
+            {% endif %}
+    ></div>
 {% endmacro %}
 

@@ -18,6 +18,7 @@
 namespace Oleg\TranslationalResearchBundle\Controller;
 
 //use Graphp\GraphViz\GraphViz;
+use Doctrine\Common\Collections\ArrayCollection;
 use Oleg\TranslationalResearchBundle\Entity\Project;
 use Oleg\TranslationalResearchBundle\Form\ProjectType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -114,7 +115,7 @@ class ProjectController extends Controller
 //            $defaultReviewersAdded = true;
 //        }
 
-        //add all default reviewers
+        //new: add all default reviewers
         $transresUtil->addDefaultStateReviewers($project);
 
         //$form = $this->createForm('Oleg\TranslationalResearchBundle\Form\ProjectType', $project);
@@ -122,11 +123,6 @@ class ProjectController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-//            if( $defaultReviewersAdded == false ) {
-//                //add all default reviewers
-//                $transresUtil->addDefaultStateReviewers($project);
-//            }
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($project);
@@ -195,11 +191,36 @@ class ProjectController extends Controller
     {
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $transresUtil = $this->container->get('transres_util');
+        $em = $this->getDoctrine()->getManager();
 
         $cycle = "edit";
 
-        //testing: add all default reviewers
+        //edit: add all default reviewers
         $transresUtil->addDefaultStateReviewers($project);
+
+        ///////////// get originals /////////////
+        //IRB Reviews
+        $originalIrbReviews = new ArrayCollection();
+        foreach ($project->getIrbReviews() as $review) {
+            $originalIrbReviews->add($review);
+        }
+        //Admin Reviews
+        $originalAdminReviews = new ArrayCollection();
+        foreach ($project->getAdminReviews() as $review) {
+            $originalAdminReviews->add($review);
+        }
+        //Committee Reviews
+        $originalCommitteeReviews = new ArrayCollection();
+        foreach ($project->getCommitteeReviews() as $review) {
+            $originalCommitteeReviews->add($review);
+        }
+        //Final Reviews
+        $originalFinalReviews = new ArrayCollection();
+        foreach ($project->getFinalReviews() as $review) {
+            $originalFinalReviews->add($review);
+        }
+        ///////////// EOF get originals /////////////
+
 
         $deleteForm = $this->createDeleteForm($project);
         //$editForm = $this->createForm('Oleg\TranslationalResearchBundle\Form\ProjectType', $project);
@@ -210,7 +231,38 @@ class ProjectController extends Controller
 
             $project->setUpdateUser($user);
 
-            $this->getDoctrine()->getManager()->flush();
+
+            //////////// remove the relationship between the review and the project ////////////
+//            //IRB Reviews
+//            foreach ($originalIrbReviews as $review) {
+//                if (false === $project->IrbReviews()->contains($review)) {
+//                    // remove the Task from the Tag
+//                    $project->IrbReviews()->removeElement($review);
+//
+//                    // if it was a many-to-one relationship, remove the relationship like this
+//                    $review->setProject(null);
+//
+//                    $em->persist($review);
+//
+//                    // if you wanted to delete the Tag entirely, you can also do that
+//                    $em->remove($review);
+//                }
+//            }
+            $transresUtil->removeReviewsFromProject($project,$originalIrbReviews,$project->getIrbReviews());
+            $transresUtil->removeReviewsFromProject($project,$originalAdminReviews,$project->getAdminReviews());
+            $transresUtil->removeReviewsFromProject($project,$originalCommitteeReviews,$project->getCommitteeReviews());
+            $transresUtil->removeReviewsFromProject($project,$originalFinalReviews,$project->getFinalReviews());
+            //////////// EOF remove the relationship between the review and the project ////////////
+
+            //testing
+//            $irbs = $project->getIrbReviews();
+//            echo "irbs count=".count($irbs)."<br>";
+//            foreach($irbs as $irb) {
+//                echo "irb=".$irb->getReviewer()."<br>";
+//            }
+            //exit('exit');
+
+            $em->flush();
 
             return $this->redirectToRoute('translationalresearch_project_show', array('id' => $project->getId()));
         }
@@ -260,6 +312,7 @@ class ProjectController extends Controller
             'cycle' => $cycle,
             'em' => $em,
             'user' => $user,
+            'SecurityAuthChecker' => $this->get('security.authorization_checker'),
             'project' => $project
         );
 
@@ -267,6 +320,7 @@ class ProjectController extends Controller
             $disabled = true;
         }
 
+        $params['admin'] = false;
         $params['showIrbReviews'] = false;
         $params['showAdminReviews'] = false;
         $params['showCommitteeReviews'] = false;
@@ -276,11 +330,18 @@ class ProjectController extends Controller
             $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') ||
             $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE')
         ) {
+            $params['admin'] = true;
             $params['showIrbReviews'] = true;
             $params['showAdminReviews'] = true;
             $params['showCommitteeReviews'] = true;
             $params['showFinalReviews'] = true;
         }
+
+        //check if reviewer
+//        $params['reviewer'] = false;
+//        if(  ) {
+//
+//        }
 
         $form = $this->createForm(ProjectType::class, $project, array(
             'form_custom_value' => $params,

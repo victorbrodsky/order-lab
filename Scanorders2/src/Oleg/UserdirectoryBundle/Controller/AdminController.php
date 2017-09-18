@@ -1413,6 +1413,12 @@ class AdminController extends Controller
                 90,
                 "translational-research"
             ),
+            "ROLE_TRANSRES_ADMIN_DELEGATE" => array(
+                "Translational Research Admin Delegate",
+                "Full Access for Translational Research site",
+                80,
+                "translational-research"
+            ),
 
             "ROLE_TRANSRES_PRIMARY_REVIEWER" => array(
                 "Translational Research Primary Reviewer",

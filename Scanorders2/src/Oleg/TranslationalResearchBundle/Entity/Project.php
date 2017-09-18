@@ -688,6 +688,7 @@ class Project {
     {
         if( $item && !$this->irbReviews->contains($item) ) {
             $this->irbReviews->add($item);
+            $item->setProject($this);
         }
         return $this;
     }
@@ -704,6 +705,7 @@ class Project {
     {
         if( $item && !$this->committeeReviews->contains($item) ) {
             $this->committeeReviews->add($item);
+            $item->setProject($this);
         }
         return $this;
     }
@@ -720,6 +722,7 @@ class Project {
     {
         if( $item && !$this->finalReviews->contains($item) ) {
             $this->finalReviews->add($item);
+            $item->setProject($this);
         }
         return $this;
     }
@@ -736,6 +739,7 @@ class Project {
     {
         if( $item && !$this->adminReviews->contains($item) ) {
             $this->adminReviews->add($item);
+            $item->setProject($this);
         }
         return $this;
     }

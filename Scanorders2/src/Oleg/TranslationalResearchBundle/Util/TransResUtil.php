@@ -201,13 +201,15 @@ class TransResUtil
                 //1) create IrbReview entity
                 $reviewer = $defaultReviewer->getReviewer();
                 if ($reviewer) {
-                    //echo "reviewer=".$reviewer."<br>";
-                    $reviewEntity = new IrbReview($reviewer);
-                    $reviewerDelegate = $defaultReviewer->getReviewerDelegate();
-                    if ($reviewerDelegate) {
-                        $reviewEntity->setReviewerDelegate($reviewerDelegate);
+                    if(false === $this->hasProjectReviewer($reviewer,$project->getIrbReviews()) ) {
+                        //echo "reviewer=".$reviewer."<br>";
+                        $reviewEntity = new IrbReview($reviewer);
+                        $reviewerDelegate = $defaultReviewer->getReviewerDelegate();
+                        if ($reviewerDelegate) {
+                            $reviewEntity->setReviewerDelegate($reviewerDelegate);
+                        }
+                        $project->addIrbReview($reviewEntity);
                     }
-                    $project->addIrbReview($reviewEntity);
                 }
             }
         }
@@ -220,12 +222,14 @@ class TransResUtil
                 //1) create IrbReview entity
                 $reviewer = $defaultReviewer->getReviewer();
                 if ($reviewer) {
-                    $reviewEntity = new AdminReview($reviewer);
-                    $reviewerDelegate = $defaultReviewer->getReviewerDelegate();
-                    if ($reviewerDelegate) {
-                        $reviewEntity->setReviewerDelegate($reviewerDelegate);
+                    if(false === $this->hasProjectReviewer($reviewer,$project->getAdminReviews()) ) {
+                        $reviewEntity = new AdminReview($reviewer);
+                        $reviewerDelegate = $defaultReviewer->getReviewerDelegate();
+                        if ($reviewerDelegate) {
+                            $reviewEntity->setReviewerDelegate($reviewerDelegate);
+                        }
+                        $project->addAdminReview($reviewEntity);
                     }
-                    $project->addAdminReview($reviewEntity);
                 }
             }
         }
@@ -239,12 +243,14 @@ class TransResUtil
                 //1) create CommitteeReview entity
                 $reviewer = $defaultReviewer->getReviewer();
                 if ($reviewer) {
-                    $reviewEntity = new CommitteeReview($reviewer);
-                    $reviewerDelegate = $defaultReviewer->getReviewerDelegate();
-                    if ($reviewerDelegate) {
-                        $reviewEntity->setReviewerDelegate($reviewerDelegate);
+                    if(false === $this->hasProjectReviewer($reviewer,$project->getCommitteeReviews()) ) {
+                        $reviewEntity = new CommitteeReview($reviewer);
+                        $reviewerDelegate = $defaultReviewer->getReviewerDelegate();
+                        if ($reviewerDelegate) {
+                            $reviewEntity->setReviewerDelegate($reviewerDelegate);
+                        }
+                        $project->addCommitteeReview($reviewEntity);
                     }
-                    $project->addCommitteeReview($reviewEntity);
                 }
             }
 
@@ -259,18 +265,49 @@ class TransResUtil
                 //1) create FinalReview entity
                 $reviewer = $defaultReviewer->getReviewer();
                 if ($reviewer) {
-                    $reviewEntity = new FinalReview($reviewer);
-                    $reviewerDelegate = $defaultReviewer->getReviewerDelegate();
-                    if ($reviewerDelegate) {
-                        $reviewEntity->setReviewerDelegate($reviewerDelegate);
+                    if(false === $this->hasProjectReviewer($reviewer,$project->getFinalReviews()) ) {
+                        $reviewEntity = new FinalReview($reviewer);
+                        $reviewerDelegate = $defaultReviewer->getReviewerDelegate();
+                        if ($reviewerDelegate) {
+                            $reviewEntity->setReviewerDelegate($reviewerDelegate);
+                        }
+                        $project->addFinalReview($reviewEntity);
                     }
-                    $project->addFinalReview($reviewEntity);
                 }
             }
 
         }
 
 
+        return $project;
+    }
+
+    public function hasProjectReviewer($reviewer, $projectReviewers ) {
+        foreach($projectReviewers as $projectReviewer ) {
+            if( $projectReviewer->getReviewer()->getId() && $reviewer->getId() ) {
+                if ($projectReviewer->getReviewer()->getId() == $reviewer->getId()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public function removeReviewsFromProject($project, $originalReviews, $currentReviews) {
+        foreach ($originalReviews as $originalReview) {
+            if (false === $currentReviews->contains($originalReview)) {
+                // remove the Task from the Tag
+                $currentReviews->removeElement($originalReview);
+
+                // if it was a many-to-one relationship, remove the relationship like this
+                $originalReview->setProject(null);
+
+                $this->em->persist($originalReview);
+
+                // if you wanted to delete the Tag entirely, you can also do that
+                $this->em->remove($originalReview);
+            }
+        }
         return $project;
     }
 
