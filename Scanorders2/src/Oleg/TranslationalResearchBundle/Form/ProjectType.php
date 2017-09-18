@@ -36,6 +36,8 @@ class ProjectType extends AbstractType
         //->add('biostatisticalComment')->add('administratorComment')->add('primaryReviewerComment')->add('submitter')->add('updateUser')
         //->add('principalInvestigators')->add('coInvestigators')->add('pathologists')->add('irbSubmitter')->add('contact');
 
+        //TODO: disable all fields if routeName == "translationalresearch_project_review"
+
         if( $this->params['cycle'] != 'new' ) {
 
             $builder->add('primaryReviewerComment',null,array(

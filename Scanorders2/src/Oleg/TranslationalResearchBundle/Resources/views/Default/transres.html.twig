@@ -156,9 +156,9 @@
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
     {% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
 
-    {% if showAddDeleteBtn is not defined %}
-        {% set showAddDeleteBtn = 0 %}
-    {% endif %}
+    {#{% if showAddDeleteBtn is not defined %}#}
+        {#{% set showAddDeleteBtn = 0 %}#}
+    {#{% endif %}#}
 
     {#{% if prototype == "prototype" %}#}
         {#{% set forminterview = reviews.vars.prototype %}#}
@@ -184,6 +184,11 @@
     {% set showCommiteeReview = 1 %}
     {% set showFinalReview = 1 %}
 
+    {% set showAddDeleteBtn = 0 %}
+    {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_PRIMARY_REVIEWER') or is_granted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE') %}
+        {% set showAddDeleteBtn = 1 %}
+    {% endif %}
+
     {% if showIrbReview and project.irbReviews is defined %}
         <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
             <div class="panel panel-primary">
@@ -202,11 +207,11 @@
                             {#count irb reviewers={{ project.irbReviews|length }}<br>#}
                             {% for review in project.irbReviews %}
                                 {#show review with reviewer={{ review.vars.value.reviewer.getUsernameOptimal }}<br>#}
-                                {{ transres.projectSingleReview(project,review,cycle,'transres-irbreviews','noprototype',sitename,1) }}
+                                {{ transres.projectSingleReview(project,review,cycle,'transres-irbreviews','noprototype',sitename,showAddDeleteBtn) }}
                             {% endfor %}
 
                             {% if cycle != "show" %}
-                                {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_PRIMARY_REVIEWER') or is_granted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE') %}
+                                {% if showAddDeleteBtn %}
                                     {{ usermacros.addNewObjectBtn(cycle,'transres-irbreviews','Add IRB Reviewer') }}
                                 {% endif %}
                             {% endif %}
@@ -233,11 +238,11 @@
                         <div class="transres-adminreviews-holder">
 
                             {% for review in project.adminReviews %}
-                                {{ transres.projectSingleReview(project,review,cycle,'transres-adminreviews','noprototype',sitename,1) }}
+                                {{ transres.projectSingleReview(project,review,cycle,'transres-adminreviews','noprototype',sitename,showAddDeleteBtn) }}
                             {% endfor %}
 
                             {% if cycle != "show" %}
-                                {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_PRIMARY_REVIEWER') or is_granted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE') %}
+                                {% if showAddDeleteBtn %}
                                     {{ usermacros.addNewObjectBtn(cycle,'transres-adminreviews','Add Admin Reviewer') }}
                                 {% endif %}
                             {% endif %}
@@ -264,11 +269,11 @@
                         <div class="transres-committeereviews-holder">
 
                             {% for review in project.committeeReviews %}
-                                {{ transres.projectSingleReview(project,review,cycle,'transres-committeereviews','noprototype',sitename,1) }}
+                                {{ transres.projectSingleReview(project,review,cycle,'transres-committeereviews','noprototype',sitename,showAddDeleteBtn) }}
                             {% endfor %}
 
                             {% if cycle != "show" %}
-                                {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_PRIMARY_REVIEWER') or is_granted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE') %}
+                                {% if showAddDeleteBtn %}
                                     {{ usermacros.addNewObjectBtn(cycle,'transres-committeereviews','Add Committee Reviewer') }}
                                 {% endif %}
                             {% endif %}
@@ -295,11 +300,11 @@
                         <div class="transres-finalreviews-holder">
 
                             {% for review in project.finalReviews %}
-                                {{ transres.projectSingleReview(project,review,cycle,'transres-finalreviews','noprototype',sitename,1) }}
+                                {{ transres.projectSingleReview(project,review,cycle,'transres-finalreviews','noprototype',sitename,showAddDeleteBtn) }}
                             {% endfor %}
 
                             {% if cycle != "show" %}
-                                {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_PRIMARY_REVIEWER') or is_granted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE') %}
+                                {% if showAddDeleteBtn %}
                                     {{ usermacros.addNewObjectBtn(cycle,'transres-finalreviews','Add Final Reviewer') }}
                                 {% endif %}
                             {% endif %}
@@ -314,6 +319,7 @@
 
 {% macro projectSingleReview( project, review, cycle, classname, prototype, sitename, showAddDeleteBtn ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
 
     {% if showAddDeleteBtn is not defined %}
         {% set showAddDeleteBtn = 0 %}
@@ -322,12 +328,12 @@
     {% set reviewInfo = null %}
     {% if prototype == "prototype" %}
         {% set formreview = review.vars.prototype %}
-        {% set reviewInfo = "Will be added as a new reviewer" %}
+        {#{% set reviewInfo = "Will be added as a new reviewer" %}#}
     {% else %}
         {% set formreview = review %}
-        {% if review.id.vars.value == null %}
-            {% set reviewInfo = "Will be added as a new default reviewer" %}
-        {% endif %}
+        {#{% if review.id.vars.value == null %}#}
+            {#{% set reviewInfo = "Will be added as a new default reviewer" %}#}
+        {#{% endif %}#}
     {% endif %}
 
 
@@ -360,6 +366,11 @@
             {{ form_widget(formreview.id) }}
         {% endif %}
 
+        {% if formreview.vars.value.reviewedBy %}
+            {#{{ transres.userHtml(formreview.vars.value.reviewedBy) }}#}
+            {{ formmacros.simplefield("Reviewed By:", transres.userHtml(formreview.vars.value.reviewedBy), "input", "disabled") }}
+        {% endif %}
+
         {{ formmacros.field(formreview.reviewer) }}
 
         {% if formreview.reviewerDelegate is defined %}
@@ -385,7 +396,7 @@
     {% endif %}
 {% endmacro %}
 
-{% macro getProjectReviiewPrototypeFormData(form, cycle, sitename) %}
+{% macro getProjectReviewPrototypeFormData(form, cycle, sitename) %}
     {% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
     <div id="form-prototype-data"
             {% if form.irbReviews is defined %}

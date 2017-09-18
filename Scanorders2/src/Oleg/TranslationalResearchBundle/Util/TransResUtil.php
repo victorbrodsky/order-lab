@@ -47,6 +47,7 @@ class TransResUtil
         $this->secToken = $container->get('security.token_storage')->getToken(); //$user = $this->secToken->getUser();
     }
 
+    //TODO: add user's enabled links
     public function getEnabledLinkActions( $project, $user=null, $classEdit=null, $classTransition=null ) {
         $workflow = $this->container->get('state_machine.transres_project');
         $transitions = $workflow->getEnabledTransitions($project);
@@ -55,18 +56,16 @@ class TransResUtil
         foreach( $transitions as $transition ) {
             //$this->printTransition($transition);
             $transitionName = $transition->getName();
-            $tos = $transition->getTos();
-            foreach( $tos as $to ) {
-                //sent state $to
-//                $thisUrl = $this->container->get('router')->generate(
-//                    'translationalresearch_transition_state_action',
-//                    array(
-//                        'transitionName'=>$transitionName,
-//                        'to'=>$to,
-//                        'id'=>$project->getId()
-//                    ),
-//                    UrlGeneratorInterface::ABSOLUTE_URL
-//                );
+
+            //$tos = $transition->getTos();
+            $froms = $transition->getFroms();
+            foreach( $froms as $from ) {
+                //echo "from=".$from."<br>"; //irb_review
+
+                //add user's validation: $from=irb_review => user has role _IRB_REVIEW_
+                if( $user && false === $this->isUserAllowedFromThisTransaction($user,$from) ) {
+                    continue;
+                }
 
                 //don't sent state $to (get it from transition object)
                 $thisUrl = $this->container->get('router')->generate(
@@ -495,21 +494,24 @@ class TransResUtil
                 break;
             //ADMIN Review
             case "to_admin_review":
-                $label = "Submit to Admin Review";
+                //$label = "Submit to Admin Review";
+                $label = "Approve IRB Review";
                 break;
             case "admin_review_no":
                 $label = "Reject Admin Review";
                 break;
             //COMMITTEE Review
             case "to_committee_review":
-                $label = "Submit to Committee Review";
+                //$label = "Submit to Committee Review";
+                $label = "Approve Admin Review";
                 break;
             case "committee_review_no":
                 $label = "Reject Committee Review";
                 break;
             //FINAL approval
             case "to_final_approval":
-                $label = "Submit to Final Approval";
+                //$label = "Submit to Final Approval";
+                $label = "Approve Committee Review";
                 break;
             case "final_approval_yes":
                 $label = "Final Approve";
@@ -735,6 +737,41 @@ class TransResUtil
 
         $reviewObjects = $query->getResult();
 
-        return $reviewObject;
+        return $reviewObjects;
     }
+
+    //add user's validation: $from=irb_review => user has role _IRB_REVIEW_
+    public function isUserAllowedFromThisTransaction( $user, $from ) {
+
+        if(
+            $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') ||
+            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') ||
+            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE')
+        ) {
+            return true;
+        }
+
+        $sitename = $this->container->getParameter('translationalresearch.sitename');
+
+        $role = null;
+        if( $from == "irb_review" ) {
+            $role = "_IRB_REVIEW_";
+        }
+        if( $from == "admin_review" ) {
+            $role = "_ADMIN_REVIEW_";
+        }
+        if( $from == "committee_review" ) {
+            $role = "_COMMITTEE_REVIEW_";
+        }
+        if( $from == "final_review" ) {
+            $role = "_FINAL_REVIEW_";
+        }
+
+        if( $role && $this->em->getRepository('OlegUserdirectoryBundle:User')->isUserHasSiteAndPartialRoleName($user,$sitename,$role) ) {
+            return true;
+        }
+
+        return false;
+    }
+
 }

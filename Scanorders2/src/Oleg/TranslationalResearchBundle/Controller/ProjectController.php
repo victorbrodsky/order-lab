@@ -119,7 +119,7 @@ class ProjectController extends Controller
         $transresUtil->addDefaultStateReviewers($project);
 
         //$form = $this->createForm('Oleg\TranslationalResearchBundle\Form\ProjectType', $project);
-        $form = $this->createProjectForm($project,$cycle);
+        $form = $this->createProjectForm($project,$cycle,$request);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -146,7 +146,7 @@ class ProjectController extends Controller
      * @Template("OlegTranslationalResearchBundle:Project:show.html.twig")
      * @Method("GET")
      */
-    public function showAction(Project $project)
+    public function showAction(Request $request, Project $project)
     {
         $transresUtil = $this->container->get('transres_util');
         $em = $this->getDoctrine()->getManager();
@@ -154,7 +154,7 @@ class ProjectController extends Controller
 
         $cycle = "show";
 
-        $form = $this->createProjectForm($project,$cycle);
+        $form = $this->createProjectForm($project,$cycle,$request);
 
         $deleteForm = $this->createDeleteForm($project);
 
@@ -184,6 +184,7 @@ class ProjectController extends Controller
      * Displays a form to edit an existing project entity.
      *
      * @Route("/{id}/edit", name="translationalresearch_project_edit")
+     * @Route("/{id}/review", name="translationalresearch_project_review")
      * @Template("OlegTranslationalResearchBundle:Project:edit.html.twig")
      * @Method({"GET", "POST"})
      */
@@ -192,11 +193,14 @@ class ProjectController extends Controller
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $transresUtil = $this->container->get('transres_util');
         $em = $this->getDoctrine()->getManager();
+        $routeName = $request->get('_route');
 
         $cycle = "edit";
 
         //edit: add all default reviewers
-        $transresUtil->addDefaultStateReviewers($project);
+        if($routeName == "translationalresearch_project_edit") {
+            $transresUtil->addDefaultStateReviewers($project);
+        }
 
         ///////////// get originals /////////////
         //IRB Reviews
@@ -224,7 +228,7 @@ class ProjectController extends Controller
 
         $deleteForm = $this->createDeleteForm($project);
         //$editForm = $this->createForm('Oleg\TranslationalResearchBundle\Form\ProjectType', $project);
-        $editForm = $this->createProjectForm($project,$cycle);
+        $editForm = $this->createProjectForm($project,$cycle,$request);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
@@ -301,11 +305,12 @@ class ProjectController extends Controller
         return $this->redirectToRoute('translationalresearch_project_index');
     }
 
-    private function createProjectForm( Project $project, $cycle )
+    private function createProjectForm( Project $project, $cycle, $request )
     {
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $transresUtil = $this->container->get('transres_util');
+        $routeName = $request->get('_route');
 
         $disabled = false;
 
@@ -314,7 +319,8 @@ class ProjectController extends Controller
             'em' => $em,
             'user' => $user,
             'SecurityAuthChecker' => $this->get('security.authorization_checker'),
-            'project' => $project
+            'project' => $project,
+            'routeName' => $routeName
         );
 
         if( $cycle == "show" ) {
