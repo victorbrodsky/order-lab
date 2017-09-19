@@ -33,6 +33,7 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransf
 
 use Oleg\UserdirectoryBundle\Entity\AccessRequest;
 use Oleg\UserdirectoryBundle\Util\EmailUtil;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
 //When admin approves acc req, the user must logout and login.
@@ -99,7 +100,7 @@ class AccessRequestController extends Controller
             $this->get('session')->getFlashBag()->add(
                 'warning',
                 "You don't have permission to visit this page on ".$this->siteNameStr." site."."<br>".
-                "If you already applied for access, then try to " . "<a href=".$this->generateUrl($this->siteName.'_logout',true).">Re-Login</a>"
+                "If you already applied for access, then try to " . "<a href=".$this->generateUrl($this->siteName.'_logout',UrlGeneratorInterface::ABSOLUTE_URL).">Re-Login</a>"
             );
             return $this->redirect( $this->generateUrl('main_common_home') );
         }
@@ -195,7 +196,7 @@ class AccessRequestController extends Controller
             $this->get('session')->getFlashBag()->add(
                 'warning',
                 "You were banned to visit this site."."<br>".
-                "You can try to " . "<a href=".$this->generateUrl($sitename.'_logout',true).">Re-Login</a>"
+                "You can try to " . "<a href=".$this->generateUrl($sitename.'_logout',UrlGeneratorInterface::ABSOLUTE_URL).">Re-Login</a>"
             );
             return $this->redirect( $this->generateUrl('main_common_home') );
         }
@@ -207,7 +208,7 @@ class AccessRequestController extends Controller
                 'warning',
                 "You don't have permission to visit this site because you have UNAPPROVED role."."<br>".
                 "Please contact site system administrator ".$this->container->getParameter('default_system_email')."<br>".
-                "You can try to " . "<a href=".$this->generateUrl($sitename.'_logout',true).">Re-Login</a>"
+                "You can try to " . "<a href=".$this->generateUrl($sitename.'_logout',UrlGeneratorInterface::ABSOLUTE_URL).">Re-Login</a>"
             );
             return $this->redirect( $this->generateUrl('main_common_home') );
         }
@@ -351,7 +352,7 @@ class AccessRequestController extends Controller
                 $this->get('session')->getFlashBag()->add(
                     'warning',
                     "The status of your request is " . $userAccessReq->getStatusStr() . ". " .
-                    "Please re-login to access this site " . "<a href=".$this->generateUrl($sitename.'_logout',true).">Re-Login</a>"
+                    "Please re-login to access this site " . "<a href=".$this->generateUrl($sitename.'_logout',UrlGeneratorInterface::ABSOLUTE_URL).">Re-Login</a>"
                 );
                 return $this->redirect( $this->generateUrl('main_common_home') );
             }
@@ -398,7 +399,7 @@ class AccessRequestController extends Controller
 
         $emailUtil = $this->get('user_mailer_utility');
 
-        $siteurl = $this->generateUrl( $sitename.'_home', array(), true );
+        $siteurl = $this->generateUrl( $sitename.'_home', array(), UrlGeneratorInterface::ABSOLUTE_URL );
 
         $emailBody = 'Your access request for the ' .
             //'<a href="'.$siteurl.'">'.$sitenameFull.'</a>' .
@@ -428,7 +429,7 @@ class AccessRequestController extends Controller
 //        $msg = $msg . "\r\n"."\r\n" . $approvedMsg . "\r\n"."\r\n" . $declinedMsg;
 
         //add access request management link
-        $managementLink = $this->generateUrl( $sitename.'_accessrequest_management', array("id"=>$accReq->getId()), true );
+        $managementLink = $this->generateUrl( $sitename.'_accessrequest_management', array("id"=>$accReq->getId()), UrlGeneratorInterface::ABSOLUTE_URL );
         $managementMsg = "To review, approve, or deny " . $approveDeclineMsg . "\r\n" . $managementLink;
 
         $msg = $msg . "\r\n"."\r\n" . $managementMsg;
@@ -717,7 +718,7 @@ class AccessRequestController extends Controller
         $sitenameFull = $this->siteNameStr." site";
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
-        $siteLink = $this->generateUrl( $sitename.'_home', array(), true );
+        $siteLink = $this->generateUrl( $sitename.'_home', array(), UrlGeneratorInterface::ABSOLUTE_URL );
         $newline = "\r\n";
         $msg = "";
 
