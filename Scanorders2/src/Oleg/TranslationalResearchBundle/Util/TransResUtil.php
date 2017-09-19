@@ -47,7 +47,7 @@ class TransResUtil
         $this->secToken = $container->get('security.token_storage')->getToken(); //$user = $this->secToken->getUser();
     }
 
-    //TODO: add user's enabled links
+    //get Review links for this user: irb-review => "IRB Review" or "IRB Review as Admin"
     public function getEnabledLinkActions( $project, $user=null, $classEdit=null, $classTransition=null ) {
         $workflow = $this->container->get('state_machine.transres_project');
         $transitions = $workflow->getEnabledTransitions($project);
@@ -84,15 +84,79 @@ class TransResUtil
                     "general-data-confirm='Are you sure you want to $label?'".
                     "href=".$thisUrl." class='".$classTransition."'>".$label."</a>";
                 $links[] = $thisLink;
+
+
+//                ////////// add links to edit if the current state is "_rejected" //////////
+//                $showEditLink = false;
+//                $editLinkLabel = "Edit Project";
+//                if( strpos($from, '_rejected') !== false || $from == 'draft' || $from == 'complete' ) {
+//                    if(
+//                    $this->secAuth->isGranted('ROLE_TRANSRES_REQUESTER')
+//                    ) {
+//                        $showEditLink = true;
+//                        $editLinkLabel = "Edit Project as Requester";
+//                    }
+//                }
+//                if(
+//                    $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') ||
+//                    $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE')
+//                ) {
+//                    $showEditLink = true;
+//                    $editLinkLabel = "Edit Project as Primary Reviewer";
+//                }
+//                if(
+//                $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN')
+//                ) {
+//                    $showEditLink = true;
+//                    $editLinkLabel = "Edit Project as Administrator";
+//                }
+//
+//                if( $showEditLink ) {
+//                    $thisUrl = $this->container->get('router')->generate(
+//                        'translationalresearch_project_edit',
+//                        array(
+//                            'id'=>$project->getId()
+//                        ),
+//                        UrlGeneratorInterface::ABSOLUTE_URL
+//                    );
+//                    $editLink = "<a ".
+//                        //"general-data-confirm='Are you sure you want to $label?'".
+//                        "href=".$thisUrl." class='".$classEdit."'>".$editLinkLabel."</a>";
+//                    //$links[] = $editLink;
+//                    array_unshift($links,$editLink);
+//                }
+//                ////////// EOF add links to edit if the current state is "_rejected" //////////
+
             }
 
         }
 
-        //add links to edit if the current state is "_rejected"
+        ////////// add links to edit if the current state is "_rejected" //////////
         $froms = $transition->getFroms();
         $fromState = $froms[0];
+        $showEditLink = false;
+        $editLinkLabel = "Edit Project";
         if( strpos($fromState, '_rejected') !== false || $fromState == 'draft' || $fromState == 'complete' ) {
-            $label = "Edit Project";
+            if( $this->secAuth->isGranted('ROLE_TRANSRES_REQUESTER') ) {
+                $showEditLink = true;
+                $editLinkLabel = "Edit Project as Requester";
+            }
+        }
+        if(
+            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') ||
+            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE')
+        ) {
+            $showEditLink = true;
+            $editLinkLabel = "Edit Project as Primary Reviewer";
+        }
+        if(
+        $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN')
+        ) {
+            $showEditLink = true;
+            $editLinkLabel = "Edit Project as Administrator";
+        }
+
+        if( $showEditLink ) {
             $thisUrl = $this->container->get('router')->generate(
                 'translationalresearch_project_edit',
                 array(
@@ -102,10 +166,11 @@ class TransResUtil
             );
             $editLink = "<a ".
                 //"general-data-confirm='Are you sure you want to $label?'".
-                "href=".$thisUrl." class='".$classEdit."'>".$label."</a>";
+                "href=".$thisUrl." class='".$classEdit."'>".$editLinkLabel."</a>";
             //$links[] = $editLink;
             array_unshift($links,$editLink);
         }
+        ////////// EOF add links to edit if the current state is "_rejected" //////////
 
         //echo "count=".count($links)."<br>";
 
@@ -200,7 +265,7 @@ class TransResUtil
                 //1) create IrbReview entity
                 $reviewer = $defaultReviewer->getReviewer();
                 if ($reviewer) {
-                    if(false === $this->hasProjectReviewer($reviewer,$project->getIrbReviews()) ) {
+                    if(false === $this->isProjectReviewer($reviewer,$project->getIrbReviews()) ) {
                         //echo "reviewer=".$reviewer."<br>";
                         $reviewEntity = new IrbReview($reviewer);
                         $reviewerDelegate = $defaultReviewer->getReviewerDelegate();
@@ -221,7 +286,7 @@ class TransResUtil
                 //1) create IrbReview entity
                 $reviewer = $defaultReviewer->getReviewer();
                 if ($reviewer) {
-                    if(false === $this->hasProjectReviewer($reviewer,$project->getAdminReviews()) ) {
+                    if(false === $this->isProjectReviewer($reviewer,$project->getAdminReviews()) ) {
                         $reviewEntity = new AdminReview($reviewer);
                         $reviewerDelegate = $defaultReviewer->getReviewerDelegate();
                         if ($reviewerDelegate) {
@@ -242,7 +307,7 @@ class TransResUtil
                 //1) create CommitteeReview entity
                 $reviewer = $defaultReviewer->getReviewer();
                 if ($reviewer) {
-                    if(false === $this->hasProjectReviewer($reviewer,$project->getCommitteeReviews()) ) {
+                    if(false === $this->isProjectReviewer($reviewer,$project->getCommitteeReviews()) ) {
                         $reviewEntity = new CommitteeReview($reviewer);
                         $reviewerDelegate = $defaultReviewer->getReviewerDelegate();
                         if ($reviewerDelegate) {
@@ -264,7 +329,7 @@ class TransResUtil
                 //1) create FinalReview entity
                 $reviewer = $defaultReviewer->getReviewer();
                 if ($reviewer) {
-                    if(false === $this->hasProjectReviewer($reviewer,$project->getFinalReviews()) ) {
+                    if(false === $this->isProjectReviewer($reviewer,$project->getFinalReviews()) ) {
                         $reviewEntity = new FinalReview($reviewer);
                         $reviewerDelegate = $defaultReviewer->getReviewerDelegate();
                         if ($reviewerDelegate) {
@@ -281,10 +346,18 @@ class TransResUtil
         return $project;
     }
 
-    public function hasProjectReviewer($reviewerUser, $projectReviewers ) {
+    public function isProjectReviewer($reviewerUser, $projectReviewers ) {
+        if( !$reviewerUser || !$reviewerUser->getId() ) {
+            return false;
+        }
         foreach($projectReviewers as $projectReviewer ) {
-            if( $projectReviewer->getReviewer()->getId() && $reviewerUser->getId() ) {
+            if ($projectReviewer->getReviewer()->getId() ) {
                 if ($projectReviewer->getReviewer()->getId() == $reviewerUser->getId()) {
+                    return true;
+                }
+            }
+            if ($projectReviewer->getReviewerDelegate() && $projectReviewer->getReviewerDelegate()->getId()) {
+                if ($projectReviewer->getReviewerDelegate()->getId() == $reviewerUser->getId()) {
                     return true;
                 }
             }

@@ -184,7 +184,6 @@ class ProjectController extends Controller
      * Displays a form to edit an existing project entity.
      *
      * @Route("/{id}/edit", name="translationalresearch_project_edit")
-     * @Route("/{id}/review", name="translationalresearch_project_review")
      * @Template("OlegTranslationalResearchBundle:Project:edit.html.twig")
      * @Method({"GET", "POST"})
      */
@@ -193,14 +192,12 @@ class ProjectController extends Controller
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $transresUtil = $this->container->get('transres_util');
         $em = $this->getDoctrine()->getManager();
-        $routeName = $request->get('_route');
+        //$routeName = $request->get('_route');
 
         $cycle = "edit";
 
         //edit: add all default reviewers
-        if($routeName == "translationalresearch_project_edit") {
-            $transresUtil->addDefaultStateReviewers($project);
-        }
+        $transresUtil->addDefaultStateReviewers($project);
 
         ///////////// get originals /////////////
         //IRB Reviews
@@ -285,6 +282,11 @@ class ProjectController extends Controller
         );
     }
 
+
+    //     * @Route("/{id}/review", name="translationalresearch_project_review")
+
+
+
     /**
      * Deletes a project entity.
      *
@@ -345,16 +347,16 @@ class ProjectController extends Controller
         }
 
         //show if owner
-        if( $transresUtil->hasProjectReviewer($user,$project->getIrbReviews()) ) {
+        if( $transresUtil->isProjectReviewer($user,$project->getIrbReviews()) ) {
             $params['showIrbReviews'] = true;
         }
-        if( $transresUtil->hasProjectReviewer($user,$project->getAdminReviews()) ) {
+        if( $transresUtil->isProjectReviewer($user,$project->getAdminReviews()) ) {
             $params['showAdminReviews'] = true;
         }
-        if( $transresUtil->hasProjectReviewer($user,$project->getCommitteeReviews()) ) {
+        if( $transresUtil->isProjectReviewer($user,$project->getCommitteeReviews()) ) {
             $params['showCommitteeReviews'] = true;
         }
-        if( $transresUtil->hasProjectReviewer($user,$project->getFinalReviews()) ) {
+        if( $transresUtil->isProjectReviewer($user,$project->getFinalReviews()) ) {
             $params['showFinalReviews'] = true;
         }
 

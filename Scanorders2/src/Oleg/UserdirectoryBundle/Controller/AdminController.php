@@ -1462,6 +1462,31 @@ class AdminController extends Controller
                 "translational-research"
             ),
 
+//            "ROLE_TRANSRES_PRINCIPAL_INVESTIGATOR" => array(
+//                "Translational Research Project Submitter",
+//                "Submit, View and Edit a Translational Research Project",
+//                30,
+//                "translational-research"
+//            ),
+//            "ROLE_TRANSRES_PRINCIPAL_COINVESTIGATOR" => array(
+//                "Translational Research Project Submitter",
+//                "Submit, View and Edit a Translational Research Project",
+//                30,
+//                "translational-research"
+//            ),
+//            "ROLE_TRANSRES_PATHOLOGIST" => array(
+//                "Translational Research Project Submitter",
+//                "Submit, View and Edit a Translational Research Project",
+//                30,
+//                "translational-research"
+//            ),
+            "ROLE_TRANSRES_REQUESTER" => array(
+                "Translational Research Project Requester",
+                "Submit, View and Edit a Translational Research Project",
+                30,
+                "translational-research"
+            ),
+
 
         );
 
