@@ -86,14 +86,16 @@
                                 <a href="{{ path(translationalresearch_sitename~'_project_show', { 'id': project.id }) }}" target="_blank">Show Project</a>
                             </li>
 
-                            {#<li>#}
-                                {#<a href="{{ path(translationalresearch_sitename~'_project_edit', { 'id': project.id }) }}" target="_blank">Edit Project</a>#}
-                            {#</li>#}
+                            {% if is_granted('ROLE_TRANSRES_ADMIN') or transres_util.isProjectEditableByRequester(project,app.user) %}
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_project_edit', { 'id': project.id }) }}" target="_blank">Edit Project</a>
+                                </li>
+                            {% endif %}
 
                             {#<li>#}
                                 {#<a href="{{ path(translationalresearch_sitename~'_to_irb_review', { 'id': project.id }) }}" target="_blank">To IRB Review</a>#}
                             {#</li>#}
-                            {% set actionLinks = transres_util.getEnabledLinkActions(project,app.user) %}
+                            {% set actionLinks = transres_util.getProjectReviewLinks(project,app.user) %}
                             {% if actionLinks|length > 0 %}
                                 <li class="divider"></li>
                             {% endif %}

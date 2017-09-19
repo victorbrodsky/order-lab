@@ -3,6 +3,8 @@
 namespace Oleg\TranslationalResearchBundle\Controller;
 
 use Oleg\TranslationalResearchBundle\Entity\IrbReview;
+use Oleg\TranslationalResearchBundle\Entity\Project;
+use Oleg\TranslationalResearchBundle\Form\ReviewBaseType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -20,7 +22,7 @@ class ReviewBaseController extends Controller
      * Lists all irbReview entities.
      *
      * @Route("/{stateStr}", name="translationalresearch_review_index")
-     * @Template("OlegTranslationalResearchBundle:IrbReview:index.html.twig")
+     * @Template("OlegTranslationalResearchBundle:Review:index.html.twig")
      * @Method("GET")
      */
     public function indexAction(Request $request, $stateStr)
@@ -38,7 +40,7 @@ class ReviewBaseController extends Controller
      * Creates a new irbReview entity.
      *
      * @Route("/new", name="translationalresearch_review_new")
-     * @Template("OlegTranslationalResearchBundle:IrbReview:new.html.twig")
+     * @Template("OlegTranslationalResearchBundle:Review:new.html.twig")
      * @Method({"GET", "POST"})
      */
     public function newAction(Request $request)
@@ -62,36 +64,84 @@ class ReviewBaseController extends Controller
     }
 
     /**
-     * Finds and displays a irbReview entity.
+     * Finds and displays a Review entity.
      *
-     * @Route("/{id}", name="translationalresearch_review_show")
-     * @Template("OlegTranslationalResearchBundle:IrbReview:show.html.twig")
+     * @Route("/{stateStr}/{reviewId}/show", name="translationalresearch_review_show")
+     * @Template("OlegTranslationalResearchBundle:Review:show.html.twig")
      * @Method("GET")
      */
-    public function showAction(IrbReview $irbReview)
+    public function showAction(Request $request, $stateStr, $reviewId)
     {
-        $deleteForm = $this->createDeleteForm($irbReview);
+
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $transresUtil = $this->container->get('transres_util');
+        $cycle = "show";
+
+        $reviewEntityName = $transresUtil->getReviewClassNameByState($stateStr);
+        if( !$reviewEntityName ) {
+            throw $this->createNotFoundException('Unable to find Review Entity Name by state='.$stateStr);
+        }
+        $review = $em->getRepository('OlegTranslationalResearchBundle:'.$reviewEntityName)->find($reviewId);
+        if( !$review ) {
+            throw $this->createNotFoundException('Unable to find '.$reviewEntityName.' by id='.$reviewId);
+        }
+
+        if(
+            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') &&
+            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') &&
+            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE') &&
+            $transresUtil->isReviewer($user,$review)
+        ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-order-nopermission') );
+        }
+
+        $form = $this->createReviewForm($request, $review, $cycle, $stateStr);
 
         return array(
-            'irbReview' => $irbReview,
-            'delete_form' => $deleteForm->createView(),
+            'review' => $review,
+            'form' => $form,
+            'stateStr' => $stateStr
+            //'delete_form' => $deleteForm->createView(),
         );
     }
 
     /**
      * Displays a form to edit an existing irbReview entity.
      *
-     * @Route("/{stateStr}/{id}/edit", name="translationalresearch_review_edit")
-     * @Template("OlegTranslationalResearchBundle:IrbReview:edit.html.twig")
+     * @Route("/{stateStr}/{reviewId}/edit", name="translationalresearch_review_edit")
+     * @Template("OlegTranslationalResearchBundle:Review:edit.html.twig")
      * @Method({"GET", "POST"})
      */
-    public function editAction(Request $request, $stateStr, IrbReview $irbReview)
+    public function editAction(Request $request, $stateStr, $reviewId)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-order-nopermission') );
         }
 
+        $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
+        $transresUtil = $this->container->get('transres_util');
+        $cycle = "edit";
+
+        $reviewEntityName = $transresUtil->getReviewClassNameByState($stateStr);
+        if( !$reviewEntityName ) {
+            throw $this->createNotFoundException('Unable to find Review Entity Name by state='.$stateStr);
+        }
+        $review = $em->getRepository('OlegTranslationalResearchBundle:'.$reviewEntityName)->find($reviewId);
+        if( !$review ) {
+            throw $this->createNotFoundException('Unable to find '.$reviewEntityName.' by id='.$reviewId);
+        }
+        echo "reviewID=".$review->getId();
+
+        if(
+            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') &&
+            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') &&
+            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE') &&
+            $transresUtil->isReviewer($user,$review)
+        ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-order-nopermission') );
+        }
 
         $disabled = true;
         if(
@@ -103,26 +153,30 @@ class ReviewBaseController extends Controller
         }
 
         //can be edited if the logged in user is a reviewer or reviewerDelegate for this review object
-        if( $user == $irbReview->getReviewer() || $user == $irbReview->getReviewerDelegate() ) {
+        if( $user == $review->getReviewer() || $user == $review->getReviewerDelegate() ) {
             $disabled = false;
         }
 
-        $deleteForm = $this->createDeleteForm($irbReview);
-        $editForm = $this->createForm('Oleg\TranslationalResearchBundle\Form\IrbReviewType', $irbReview, array(
-            'disabled' => $disabled
-        ));
-        $editForm->handleRequest($request);
+        //$deleteForm = $this->createDeleteForm($review);
 
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
+//        $form = $this->createForm('Oleg\TranslationalResearchBundle\Form\ReviewBaseType', $review, array(
+//            'disabled' => $disabled
+//        ));
+        $form = $this->createReviewForm($request, $review, $cycle, $stateStr);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('translationalresearch_review_edit', array('id' => $irbReview->getId()));
+            return $this->redirectToRoute('translationalresearch_review_edit', array('id' => $review->getId()));
         }
 
         return array(
-            'irbReview' => $irbReview,
-            'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+            'review' => $review,
+            'form' => $form->createView(),
+            'stateStr' => $stateStr
+            //'delete_form' => $deleteForm->createView(),
         );
     }
 
@@ -161,4 +215,57 @@ class ReviewBaseController extends Controller
             ->getForm()
         ;
     }
+
+    private function createReviewForm( $request, $review, $cycle, $stateStr )
+    {
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $transresUtil = $this->container->get('transres_util');
+        $routeName = $request->get('_route');
+
+        $reviewEntityName = $transresUtil->getReviewClassNameByState($stateStr);
+        if( !$reviewEntityName ) {
+            throw $this->createNotFoundException('Unable to find Review Entity Name by state='.$stateStr);
+        }
+
+        $disabled = false;
+
+        $params = array(
+            'cycle' => $cycle,
+            'em' => $em,
+            'user' => $user,
+            'SecurityAuthChecker' => $this->get('security.authorization_checker'),
+            'review' => $review,
+            'routeName' => $routeName,
+            'stateStr' => $stateStr
+        );
+
+        if( $cycle == "show" ) {
+            $disabled = true;
+        }
+
+        $params['admin'] = false;
+        if(
+            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ||
+            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') ||
+            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE')
+        ) {
+            $params['admin'] = true;
+        }
+
+        //check if reviewer
+//        $params['reviewer'] = false;
+//        if(  ) {
+//
+//        }
+
+        $form = $this->createForm(ReviewBaseType::class, $review, array(
+            'data_class' => 'Oleg\\TranslationalResearchBundle\\Entity\\'.$reviewEntityName,
+            'form_custom_value' => $params,
+            'disabled' => $disabled,
+        ));
+
+        return $form;
+    }
+
 }
