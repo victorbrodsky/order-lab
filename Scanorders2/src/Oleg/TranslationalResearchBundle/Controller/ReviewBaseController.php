@@ -101,7 +101,9 @@ class ReviewBaseController extends Controller
         return array(
             'review' => $review,
             'form' => $form,
-            'stateStr' => $stateStr
+            'stateStr' => $stateStr,
+            'title' => $transresUtil->getStateSimpleLabelByName($stateStr),
+            'cycle' => $cycle
             //'delete_form' => $deleteForm->createView(),
         );
     }
@@ -132,7 +134,7 @@ class ReviewBaseController extends Controller
         if( !$review ) {
             throw $this->createNotFoundException('Unable to find '.$reviewEntityName.' by id='.$reviewId);
         }
-        echo "reviewID=".$review->getId();
+        //echo "reviewID=".$review->getId();
 
         if(
             false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') &&
@@ -175,7 +177,9 @@ class ReviewBaseController extends Controller
         return array(
             'review' => $review,
             'form' => $form->createView(),
-            'stateStr' => $stateStr
+            'stateStr' => $stateStr,
+            'title' => $transresUtil->getStateSimpleLabelByName($stateStr),
+            'cycle' => $cycle
             //'delete_form' => $deleteForm->createView(),
         );
     }

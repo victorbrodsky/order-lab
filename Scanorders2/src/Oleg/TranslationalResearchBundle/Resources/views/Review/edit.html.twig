@@ -1,21 +1,53 @@
-{% extends 'base.html.twig' %}
+{#{% extends 'base.html.twig' %}#}
 
-{% block body %}
-    <h1>Review edit</h1>
+{#{% block body %}#}
+    {#<h1>Review edit</h1>#}
 
-    {{ form_start(form) }}
-        {{ form_widget(form) }}
-        <input type="submit" value="Edit" />
-    {{ form_end(form) }}
+    {#{{ form_start(form) }}#}
+        {#{{ form_widget(form) }}#}
+        {#<input type="submit" value="Edit" />#}
+    {#{{ form_end(form) }}#}
 
-    <ul>
-        <li>
-            <a href="{{ path('translationalresearch_review_index',{'stateStr':stateStr}) }}">Back to the list</a>
-        </li>
+    {#<ul>#}
+        {#<li>#}
+            {#<a href="{{ path('translationalresearch_review_index',{'stateStr':stateStr}) }}">Back to the list</a>#}
+        {#</li>#}
         {#<li>#}
             {#{{ form_start(delete_form) }}#}
                 {#<input type="submit" value="Delete">#}
             {#{{ form_end(delete_form) }}#}
         {#</li>#}
-    </ul>
+    {#</ul>#}
+{#{% endblock %}#}
+
+{% extends "OlegTranslationalResearchBundle::Default/base.html.twig" %}
+
+{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+
+{% block title %}
+    {{ title }}
 {% endblock %}
+
+
+{% block content %}
+
+    <h4 class="text-info" align="center">
+        {{ title }}
+    </h4>
+    <br>
+
+    {% set sitename = translationalresearch_sitename %}
+
+    {{ form_start(form) }}
+
+        {{ transres.projectSingleReview(null,form,cycle,'transres-finalreviews','noprototype',sitename,0) }}
+
+    {{ form_end(form) }}
+
+    <br>
+    <br>
+    <a href="{{ path('translationalresearch_review_index',{'stateStr':stateStr}) }}">Back to the list</a>
+
+{% endblock %}
+
