@@ -38,14 +38,16 @@ class TransResUtil
 
     protected $container;
     protected $em;
-    protected $secToken;
+    //protected $secToken;
+    protected $secTokenStorage;
     protected $secAuth;
 
     public function __construct( $em, $container ) {
         $this->container = $container;
         $this->em = $em;
         $this->secAuth = $container->get('security.authorization_checker'); //$this->secAuth->isGranted("ROLE_USER")
-        $this->secToken = $container->get('security.token_storage')->getToken(); //$user = $this->secToken->getUser();
+        //$this->secToken = $container->get('security.token_storage')->getToken(); //$user = $this->secToken->getUser();
+        $this->secTokenStorage = $container->get('security.token_storage'); //$user = $this->secTokenStorage->getToken()->getUser();
     }
 
     //get links to change states: Reject IRB Review and Approve IRB Review (translationalresearch_transition_action)
@@ -191,7 +193,7 @@ class TransResUtil
         $state = $project->getState();
         if( strpos($state, '_rejected') !== false || $state == 'draft' || $state == 'complete' ) {
             if( $this->secAuth->isGranted('ROLE_TRANSRES_REQUESTER') ) {
-                $user = $this->secToken->getUser();
+                $user = $this->secTokenStorage->getToken()->getUser();
                 if( $project->getSubmitter() && $project->getSubmitter()->getId() == $user->getId() ) {
                     return true;
                 }
@@ -897,7 +899,7 @@ class TransResUtil
             return true;
         }
 
-        $user = $this->secToken->getUser();
+        $user = $this->secTokenStorage->getToken()->getUser();
         $sitename = $this->container->getParameter('translationalresearch.sitename');
 
         $role = null;
@@ -932,7 +934,7 @@ class TransResUtil
             return true;
         }
 
-        $user = $this->secToken->getUser();
+        $user = $this->secTokenStorage->getToken()->getUser();
         if( $this->isReviewer($user,$review) ) {
             return true;
         }
@@ -969,6 +971,9 @@ class TransResUtil
             throw new \Exception("Review with ID ".$review->getId()." does not have a project");
             //return null;
         }
+
+        $user = $this->secTokenStorage->getToken()->getUser();
+        echo "user=".$user."<br>";
 
         //$currentState = $project->getState();
 
