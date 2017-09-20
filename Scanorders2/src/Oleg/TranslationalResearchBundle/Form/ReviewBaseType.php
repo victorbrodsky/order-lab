@@ -120,11 +120,22 @@ class ReviewBaseType extends AbstractType
             });
         } else {
             //Reviewer's field
-            $approved = 'Approved';
-            $rejected = 'Rejected';
+            //$approved = 'Approved';
+            //$rejected = 'Rejected';
+            //choices: Label=>Value
+            $choices = array(
+                'Approved' => 'Approved',
+                'Rejected' => 'Rejected',
+                'Pending' => null
+            );
             if ($this->params["stateStr"] == "committee_review") {
-                $approved = 'Like';
-                $rejected = 'Dislike';
+                //$approved = 'Like';
+                //$rejected = 'Dislike';
+                $choices = array(
+                    'Like' => 'Like',
+                    'Dislike' => 'Dislike',
+                    'Pending' => null
+                );
             }
 
             $disabledReviewerFields = true;
@@ -133,11 +144,12 @@ class ReviewBaseType extends AbstractType
             }
 
             $builder->add('decision', ChoiceType::class, array(
-                'choices' => array(
-                    $approved => 'approved',
-                    $rejected => 'rejected',
-                    'Pending' => null
-                ),
+//                'choices' => array(
+//                    $approved => 'approved',
+//                    $rejected => 'rejected',
+//                    'Pending' => null
+//                ),
+                'choices' => $choices,
                 'invalid_message' => 'invalid value: decision',
                 //'choices_as_values' => true,
                 'disabled' => $disabledReviewerFields,

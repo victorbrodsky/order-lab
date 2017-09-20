@@ -23,6 +23,7 @@ use Oleg\TranslationalResearchBundle\Entity\AdminReview;
 use Oleg\TranslationalResearchBundle\Entity\CommitteeReview;
 use Oleg\TranslationalResearchBundle\Entity\FinalReview;
 use Oleg\TranslationalResearchBundle\Entity\IrbReview;
+use Symfony\Component\Form\Exception\LogicException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
@@ -959,6 +960,96 @@ class TransResUtil
             return true;
         }
         return false;
+    }
+
+    public function processProjectOnReviewUpdate( $review, $testing=false ) {
+
+        $project = $review->getProject();
+        if( !$project ) {
+            throw new \Exception("Review with ID ".$review->getId()." does not have a project");
+            //return null;
+        }
+
+        //$currentState = $project->getState();
+
+        //set project next transit state depends on the decision
+        $this->setProjectState($project,$review,$testing);
+
+        //send notification emails
+
+        //set eventLog
+
+    }
+    public function setProjectState( $project, $review, $testing=false ) {
+
+        if( $review->getDecision() == "Like" || $review->getDecision() == "Dislike" ) {
+            return;
+        }
+
+        $workflow = $this->container->get('state_machine.transres_project');
+        $transitions = $workflow->getEnabledTransitions($project);
+
+        echo "<pre>";
+        print_r($transitions);
+        echo "</pre><br><br>";
+
+        $toYes = null;
+        $toNo = null;
+
+        foreach($transitions as $transition) {
+            $transitionName = $transition->getName();
+            echo "transitionName=".$transitionName."<br>"; //"irb_review_no" or "to_admin_review"
+
+//            if( $review->getDecision() == "Rejected" ) {
+//                if (strpos($transitionName, '_review_no') !== false) {
+//                    echo "Rejected => irb_rejected <br>";
+//                    $tos = $transition->getTos();
+//                    if( count($tos) > 1 ) {
+//                        throw new \Exception("State machine must have only one to state. To count=".count($tos));
+//                    }
+//                    $to = $tos[0];
+//                }
+//            }
+//
+//            if( $review->getDecision() == "Approved" ) {
+//                if( strpos($transitionName, 'to_') !== false && ) {
+//                    echo "Rejected => irb_rejected <br>";
+//                    $tos = $transition->getTos();
+//                    if( count($tos) > 1 ) {
+//                        throw new \Exception("State machine must have only one to state. To count=".count($tos));
+//                    }
+//                    $to = $tos[0];
+//                }
+//            }
+
+            if( strpos($transitionName, '_review_no') !== false ) {
+                echo "to: No<br>";
+                $tos = $transition->getTos();
+                if( count($tos) > 1 ) {
+                    throw new \Exception("State machine must have only one to state. To count=".count($tos));
+                }
+                $toNo = $tos[0];
+            } else {
+                if (strpos($transitionName, 'to_') !== false ) {
+                    echo "to: Yes<br>";
+                    $tos = $transition->getTos();
+                    if (count($tos) > 1) {
+                        throw new \Exception("State machine must have only one to state. To count=" . count($tos));
+                    }
+                    $toYes = $tos[0];
+                }
+            }
+
+        }//foreach
+
+        if( $review->getDecision() == "Rejected" && $toNo ) {
+            echo "transit project to No: $toNo <br>";
+        }
+
+        if( $review->getDecision() == "Approved" && $toYes ) {
+            echo "transit project to Yes: $toYes <br>";
+        }
+
     }
 
 }

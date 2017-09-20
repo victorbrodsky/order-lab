@@ -106,7 +106,7 @@ class ReviewBaseController extends Controller
     /**
      * Displays a form to edit an existing irbReview entity.
      *
-     * @Route("/{stateStr}/{reviewId}/edit", name="translationalresearch_review_edit")
+     * @Route("/{stateStr}/{reviewId}/submit", name="translationalresearch_review_edit")
      * @Template("OlegTranslationalResearchBundle:Review:edit.html.twig")
      * @Method({"GET", "POST"})
      */
@@ -120,6 +120,9 @@ class ReviewBaseController extends Controller
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $transresUtil = $this->container->get('transres_util');
         $cycle = "edit";
+
+        $testing = false;
+        $testing = true;
 
         $reviewEntityName = $transresUtil->getReviewClassNameByState($stateStr);
         if( !$reviewEntityName ) {
@@ -160,13 +163,18 @@ class ReviewBaseController extends Controller
 
             $review->setReviewedBy($user);
 
-            $this->getDoctrine()->getManager()->flush();
+            if( !$testing ) {
+                $this->getDoctrine()->getManager()->flush();
+            }
 
             //set project next transit state depends on the decision
-
             //send notification emails
-
             //set eventLog
+            $transresUtil->processProjectOnReviewUpdate($review,$testing);
+
+            if( $testing ) {
+                exit("testing: exit submit review");
+            }
 
             return $this->redirectToRoute('translationalresearch_review_show', array('stateStr'=>$stateStr,'reviewId' => $review->getId()));
         }
