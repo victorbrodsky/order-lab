@@ -57,7 +57,7 @@ class ReviewBaseType extends AbstractType
             'attr' => array('class'=>'combobox combobox-width') //, 'readonly'=>true
         ));
 
-        if( 1 ) {
+        if( 0 ) {
             $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
 
                 $reviewEntity = $event->getData();
@@ -127,6 +127,11 @@ class ReviewBaseType extends AbstractType
                 $rejected = 'Dislike';
             }
 
+            $disabledReviewerFields = true;
+            if( $this->params["disabledReviewerFields"] == false ) {
+                $disabledReviewerFields = false;
+            }
+
             $builder->add('decision', ChoiceType::class, array(
                 'choices' => array(
                     $approved => 'approved',
@@ -135,7 +140,8 @@ class ReviewBaseType extends AbstractType
                 ),
                 'invalid_message' => 'invalid value: decision',
                 //'choices_as_values' => true,
-                //'disabled' => $disabledReviewerFields,
+                'disabled' => $disabledReviewerFields,
+                //'disabled' => true,
                 'label' => "Decision:",
                 'multiple' => false,
                 'expanded' => true,
@@ -144,7 +150,7 @@ class ReviewBaseType extends AbstractType
 
             $builder->add('comment', TextareaType::class, array(
                 'label' => 'Comment:',
-                //'disabled' => $disabledReviewerFields,
+                'disabled' => $disabledReviewerFields,
                 'required' => false,
                 'attr' => array('class' => 'textarea form-control'),
             ));

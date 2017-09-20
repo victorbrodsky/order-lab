@@ -87,13 +87,16 @@ class ReviewBaseController extends Controller
             throw $this->createNotFoundException('Unable to find '.$reviewEntityName.' by id='.$reviewId);
         }
 
-        if(
-            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') &&
-            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') &&
-            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE') &&
-            $transresUtil->isReviewer($user,$review)
-        ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-order-nopermission') );
+//        if(
+//            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') &&
+//            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') &&
+//            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE') &&
+//            false === $transresUtil->isReviewer($user,$review)
+//        ) {
+//            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+//        }
+        if( $transresUtil->isUserAllowedReview($review) === false ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
         $form = $this->createReviewForm($request, $review, $cycle, $stateStr);
@@ -118,7 +121,7 @@ class ReviewBaseController extends Controller
     public function editAction(Request $request, $stateStr, $reviewId)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-order-nopermission') );
+            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -136,13 +139,16 @@ class ReviewBaseController extends Controller
         }
         //echo "reviewID=".$review->getId();
 
-        if(
-            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') &&
-            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') &&
-            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE') &&
-            $transresUtil->isReviewer($user,$review)
-        ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-order-nopermission') );
+//        if(
+//            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') &&
+//            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') &&
+//            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE') &&
+//            false === $transresUtil->isReviewer($user,$review)
+//        ) {
+//            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+//        }
+        if( $transresUtil->isUserAllowedReview($review) === false ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
         $disabled = true;
@@ -241,7 +247,8 @@ class ReviewBaseController extends Controller
             'SecurityAuthChecker' => $this->get('security.authorization_checker'),
             'review' => $review,
             'routeName' => $routeName,
-            'stateStr' => $stateStr
+            'stateStr' => $stateStr,
+            'disabledReviewerFields' => false
         );
 
         if( $cycle == "show" ) {

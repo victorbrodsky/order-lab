@@ -322,7 +322,8 @@ class ProjectController extends Controller
             'user' => $user,
             'SecurityAuthChecker' => $this->get('security.authorization_checker'),
             'project' => $project,
-            'routeName' => $routeName
+            'routeName' => $routeName,
+            'disabledReviewerFields' => true
         );
 
         if( $cycle == "show" ) {

@@ -48,7 +48,7 @@ class TransResUtil
     }
 
     //get links to change states: Reject IRB Review and Approve IRB Review (translationalresearch_transition_action)
-    public function getEnabledLinkActions( $project, $user=null, $classEdit=null, $classTransition=null ) {
+    public function getEnabledLinkActions( $project, $classEdit=null, $classTransition=null ) {
         $workflow = $this->container->get('state_machine.transres_project');
         $transitions = $workflow->getEnabledTransitions($project);
 
@@ -64,7 +64,7 @@ class TransResUtil
                 //echo "from=".$from."<br>"; //irb_review
 
                 //add user's validation: $from=irb_review => user has role _IRB_REVIEW_
-                if( $user && false === $this->isUserAllowedFromThisTransaction($user,$from) ) {
+                if( false === $this->isUserAllowedFromThisState($from) ) {
                     continue;
                 }
 
@@ -96,19 +96,19 @@ class TransResUtil
         $showEditLink = false;
         $editLinkLabel = "Edit Project";
         if( strpos($fromState, '_rejected') !== false || $fromState == 'draft' || $fromState == 'complete' ) {
-            if( $user->hasRole('ROLE_TRANSRES_REQUESTER') ) {
+            if( $this->secAuth->isGranted('ROLE_TRANSRES_REQUESTER') ) {
                 $showEditLink = true;
                 $editLinkLabel = "Edit Project as Requester";
             }
         }
         if(
-            $user->hasRole('ROLE_TRANSRES_PRIMARY_REVIEWER') ||
-            $user->hasRole('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE')
+            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') ||
+            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE')
         ) {
             $showEditLink = true;
             $editLinkLabel = "Edit Project as Primary Reviewer";
         }
-        if( $user->hasRole('ROLE_TRANSRES_ADMIN') ) {
+        if( $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') ) {
             $showEditLink = true;
             $editLinkLabel = "Edit Project as Administrator";
         }
@@ -186,10 +186,11 @@ class TransResUtil
         return $links;
     }
 
-    public function isProjectEditableByRequester( $project, $user ) {
+    public function isProjectEditableByRequester( $project ) {
         $state = $project->getState();
         if( strpos($state, '_rejected') !== false || $state == 'draft' || $state == 'complete' ) {
-            if( $user->hasRole('ROLE_TRANSRES_REQUESTER') ) {
+            if( $this->secAuth->isGranted('ROLE_TRANSRES_REQUESTER') ) {
+                $user = $this->secToken->getUser();
                 if( $project->getSubmitter() && $project->getSubmitter()->getId() == $user->getId() ) {
                     return true;
                 }
@@ -399,6 +400,8 @@ class TransResUtil
         if( !$reviewerUser || !$reviewerUser->getId() ) {
             return false;
         }
+        //echo "reviewer ID=".$review->getId()."<br>";
+
         if ($review->getReviewer()->getId() ) {
             if ($review->getReviewer()->getId() == $reviewerUser->getId()) {
                 return true;
@@ -409,6 +412,8 @@ class TransResUtil
                 return true;
             }
         }
+
+        //exit('not reviewer');
         return false;
     }
 
@@ -880,17 +885,18 @@ class TransResUtil
         return $reviewObjects;
     }
 
-    //add user's validation: $from=irb_review => user has role _IRB_REVIEW_
-    public function isUserAllowedFromThisTransaction( $user, $from ) {
+    //add user's validation (rely on Role): $from=irb_review => user has role _IRB_REVIEW_
+    public function isUserAllowedFromThisState($from) {
 
         if(
-            $user->hasRole('ROLE_TRANSRES_ADMIN') ||
-            $user->hasRole('ROLE_TRANSRES_PRIMARY_REVIEWER') ||
-            $user->hasRole('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE')
+            $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') ||
+            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') ||
+            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE')
         ) {
             return true;
         }
 
+        $user = $this->secToken->getUser();
         $sitename = $this->container->getParameter('translationalresearch.sitename');
 
         $role = null;
@@ -911,6 +917,47 @@ class TransResUtil
             return true;
         }
 
+        return false;
+    }
+
+    public function isUserAllowedReview( $review ) {
+        //echo "reviewId=".$review->getId()."<br>";
+        if(
+            $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') ||
+            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') ||
+            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE')
+        ) {
+            //echo "admin ok <br>";
+            return true;
+        }
+
+        $user = $this->secToken->getUser();
+        if( $this->isReviewer($user,$review) ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isProjectStateReadyForReview($project) {
+        if( !$project ) {
+            return false;
+        }
+        $state = $project->getState();
+        //echo "projectId=".$project->getId()."<br>";
+        //echo "state1=".$state."<br>";
+        if( $state == "irb_review" ) {
+            return true;
+        }
+        if( $state == "admin_review" ) {
+            return true;
+        }
+        if( $state == "committee_review" ) {
+            return true;
+        }
+        if( $state == "final_review" ) {
+            return true;
+        }
         return false;
     }
 
