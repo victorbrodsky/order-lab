@@ -369,8 +369,11 @@
         {% endif %}
 
         {% if formreview.vars.value.reviewedBy %}
-            {#{{ transres.userHtml(formreview.vars.value.reviewedBy) }}#}
-            {{ formmacros.simplefield("Reviewed By:", transres.userHtml(formreview.vars.value.reviewedBy), "input", "disabled") }}
+            {#formreview.vars.value.reviewedBy.id={{ formreview.vars.value.reviewedBy.id }}<br>#}
+            {#{{ formmacros.simplefield("Reviewed By:", transres.userHtml(formreview.vars.value.reviewedBy), "input", "disabled") }}#}
+            <p>
+                Reviewed by {{ transres.userHtml(formreview.vars.value.reviewedBy) }} on {{ updatedate|date("m/d/Y H:i") }}
+            </p>
         {% endif %}
 
         {{ formmacros.field(formreview.reviewer) }}
@@ -405,8 +408,9 @@
 {% endmacro %}
 
 {% macro userHtml(user) %}
+    {#1user.id={{ user.id }}<br>#}
     {% if user %}
-        user.id={{ user.id }}<br>
+        {#2user.id={{ user.id }}<br>#}
         {% set personurl = path(translationalresearch_sitename~'_showuser',{'id':user.id}) %}
         {% set personlink = '<a href="'~personurl~'" target="_blank">'~user.getUsernameOptimal()~'</a>'  %}
         {{ personlink|raw }}

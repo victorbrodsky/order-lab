@@ -982,16 +982,23 @@ class TransResUtil
     }
     public function setProjectState( $project, $review, $testing=false ) {
 
+        $stateChanged = false;
+
+        echo "decision=".$review->getDecision()."<br>";
+        if( $review->getDecision() == null ) {
+            return $stateChanged;
+        }
+
         if( $review->getDecision() == "Like" || $review->getDecision() == "Dislike" ) {
-            return;
+            return $stateChanged;
         }
 
         $workflow = $this->container->get('state_machine.transres_project');
         $transitions = $workflow->getEnabledTransitions($project);
 
-        echo "<pre>";
-        print_r($transitions);
-        echo "</pre><br><br>";
+//        echo "<pre>";
+//        print_r($transitions);
+//        echo "</pre><br><br>";
 
         $toYes = null;
         $toNo = null;
@@ -999,28 +1006,6 @@ class TransResUtil
         foreach($transitions as $transition) {
             $transitionName = $transition->getName();
             echo "transitionName=".$transitionName."<br>"; //"irb_review_no" or "to_admin_review"
-
-//            if( $review->getDecision() == "Rejected" ) {
-//                if (strpos($transitionName, '_review_no') !== false) {
-//                    echo "Rejected => irb_rejected <br>";
-//                    $tos = $transition->getTos();
-//                    if( count($tos) > 1 ) {
-//                        throw new \Exception("State machine must have only one to state. To count=".count($tos));
-//                    }
-//                    $to = $tos[0];
-//                }
-//            }
-//
-//            if( $review->getDecision() == "Approved" ) {
-//                if( strpos($transitionName, 'to_') !== false && ) {
-//                    echo "Rejected => irb_rejected <br>";
-//                    $tos = $transition->getTos();
-//                    if( count($tos) > 1 ) {
-//                        throw new \Exception("State machine must have only one to state. To count=".count($tos));
-//                    }
-//                    $to = $tos[0];
-//                }
-//            }
 
             if( strpos($transitionName, '_review_no') !== false ) {
                 echo "to: No<br>";
@@ -1045,13 +1030,18 @@ class TransResUtil
         if( $review->getDecision() == "Rejected" && $toNo ) {
             echo "transit project to No: $toNo <br>";
             $project->setState($toNo);
+            $stateChanged = true;
         }
 
         if( $review->getDecision() == "Approved" && $toYes ) {
             echo "transit project to Yes: $toYes <br>";
             $project->setState($toYes);
+            $stateChanged = true;
         }
 
+        echo "stateChanged= $stateChanged <br>";
+
+        return $stateChanged;
     }
 
 }
