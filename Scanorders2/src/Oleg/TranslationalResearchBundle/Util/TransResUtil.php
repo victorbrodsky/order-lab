@@ -1044,10 +1044,12 @@ class TransResUtil
 
         if( $review->getDecision() == "Rejected" && $toNo ) {
             echo "transit project to No: $toNo <br>";
+            $project->setState($toNo);
         }
 
         if( $review->getDecision() == "Approved" && $toYes ) {
             echo "transit project to Yes: $toYes <br>";
+            $project->setState($toYes);
         }
 
     }
