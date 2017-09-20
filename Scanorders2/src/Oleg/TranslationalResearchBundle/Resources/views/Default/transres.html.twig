@@ -351,16 +351,6 @@
             </p>
         {% endif %}
 
-        {% if
-            reviewId and
-            transres_util.isUserAllowedReview(review.vars.value) and
-            transres_util.isProjectStateReadyForReview(project.vars.value)
-        %}
-            <p>
-                <a class="btn btn-primary" href="{{ path(translationalresearch_sitename~'_review_edit',{'stateStr':project.vars.value.state,'reviewId': reviewId}) }}">Update Review</a>
-            </p>
-        {% endif %}
-
         {% if cycle != "show" and showAddDeleteBtn %}
             <div class="text-right">
                 <button type="button" class="btn btn-default btn-sm" onClick="removeExistingObject(this,'{{ classname }}')" ><span class="glyphicon glyphicon-remove"></span></button>
@@ -395,6 +385,20 @@
 
         {% if formreview.comment is defined %}
             {{ formmacros.field(formreview.comment) }}
+        {% endif %}
+
+        {#allow change review by admin and reviewer only in the view page. Clicking this button on the edit page will not save any changes#}
+        {% if
+            cycle == "show" and
+            reviewId and
+            transres_util.isUserAllowedReview(review.vars.value) and
+            transres_util.isProjectStateReadyForReview(project.vars.value)
+        %}
+            <p>
+                <a class="btn btn-primary"
+                   href="{{ path(translationalresearch_sitename~'_review_edit',{'stateStr':project.vars.value.state,'reviewId': reviewId}) }}"
+                    >Update Review</a>
+            </p>
         {% endif %}
 
     </div>

@@ -87,14 +87,6 @@ class ReviewBaseController extends Controller
             throw $this->createNotFoundException('Unable to find '.$reviewEntityName.' by id='.$reviewId);
         }
 
-//        if(
-//            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') &&
-//            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') &&
-//            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE') &&
-//            false === $transresUtil->isReviewer($user,$review)
-//        ) {
-//            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
-//        }
         if( $transresUtil->isUserAllowedReview($review) === false ) {
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
@@ -139,34 +131,24 @@ class ReviewBaseController extends Controller
         }
         //echo "reviewID=".$review->getId();
 
-//        if(
-//            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') &&
-//            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') &&
-//            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE') &&
-//            false === $transresUtil->isReviewer($user,$review)
-//        ) {
-//            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
-//        }
         if( $transresUtil->isUserAllowedReview($review) === false ) {
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
-        $disabled = true;
-        if(
-            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ||
-            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') ||
-            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE')
-        ) {
-            $disabled = false;
-        }
-
-        //can be edited if the logged in user is a reviewer or reviewerDelegate for this review object
-        if( $user == $review->getReviewer() || $user == $review->getReviewerDelegate() ) {
-            $disabled = false;
-        }
-
+//        $disabled = true;
+//        if(
+//            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ||
+//            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') ||
+//            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE')
+//        ) {
+//            $disabled = false;
+//        }
+//
+//        //can be edited if the logged in user is a reviewer or reviewerDelegate for this review object
+//        if( $user == $review->getReviewer() || $user == $review->getReviewerDelegate() ) {
+//            $disabled = false;
+//        }
         //$deleteForm = $this->createDeleteForm($review);
-
 //        $form = $this->createForm('Oleg\TranslationalResearchBundle\Form\ReviewBaseType', $review, array(
 //            'disabled' => $disabled
 //        ));
@@ -175,9 +157,18 @@ class ReviewBaseController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $review->setReviewedBy($user);
+
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('translationalresearch_review_edit', array('id' => $review->getId()));
+            //set project next transit state depends on the decision
+
+            //send notification emails
+
+            //set eventLog
+
+            return $this->redirectToRoute('translationalresearch_review_show', array('stateStr'=>$stateStr,'reviewId' => $review->getId()));
         }
 
         return array(
