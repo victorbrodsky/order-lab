@@ -261,7 +261,9 @@ class ReviewBase
         $this->decision = $decision;
     }
 
-
+    public function getStateStr() {
+        return "undefined_review";
+    }
 
 
 }

@@ -40,6 +40,17 @@ class CommitteeReview extends ReviewBase
      */
     private $project;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $primaryReview;
+
+
+    public function __construct($reviewer=null) {
+        parent::__construct($reviewer);
+
+        $this->setPrimaryReview(false);
+    }
 
 
     /**
@@ -58,5 +69,24 @@ class CommitteeReview extends ReviewBase
         $this->project = $project;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getPrimaryReview()
+    {
+        return $this->primaryReview;
+    }
+
+    /**
+     * @param mixed $primaryReview
+     */
+    public function setPrimaryReview($primaryReview)
+    {
+        $this->primaryReview = $primaryReview;
+    }
+
+    public function getStateStr() {
+        return "committee_review";
+    }
 
 }

@@ -80,6 +80,8 @@ class IrbReview extends ReviewBase
         $this->assignment = $assignment;
     }
 
-
+    public function getStateStr() {
+        return "irb_review";
+    }
 
 }

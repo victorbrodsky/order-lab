@@ -354,7 +354,7 @@ class TransResUtil
 
         }
 
-        $finalReviewState = "final_approval";
+        $finalReviewState = "final_review";
         if( $currentState == $finalReviewState || $addForAllStates ) {
 
             $defaultReviewers = $this->em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findByState($finalReviewState);
@@ -378,6 +378,46 @@ class TransResUtil
 
 
         return $project;
+    }
+
+    public function getDefaultReviewerInfo($state) {
+        $infos = array();
+        $defaultReviewers = $this->em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findByState($state,array('primaryReview' => 'DESC'));
+        foreach ($defaultReviewers as $defaultReviewer) {
+            $info = "";
+            if( $defaultReviewer->getReviewer() ) {
+                $reviewerUrl = $this->container->get('router')->generate(
+                    'translationalresearch_showuser',
+                    array(
+                        'id'=>$defaultReviewer->getReviewer()->getId()
+                    )
+                );
+                $reviewerLink = "<a ".
+                    "href=".$reviewerUrl." target='_blank'>".$defaultReviewer->getReviewer()."</a>";
+                $info .= "Reviewer: ".$reviewerLink;
+            }
+            if( $defaultReviewer->getReviewerDelegate() ) {
+                $reviewerUrl = $this->container->get('router')->generate(
+                    'translationalresearch_showuser',
+                    array(
+                        'id'=>$defaultReviewer->getReviewerDelegate()->getId()
+                    )
+                );
+                $reviewerLink = "<a ".
+                    "href=".$reviewerUrl." target='_blank'>".$defaultReviewer->getReviewerDelegate()."</a>";
+                $info .= ", Reviewer Delegate: ".$reviewerLink;
+            }
+            if( $defaultReviewer->getState() == "committee_review" ) {
+                if( $defaultReviewer->getPrimaryReview() === true ) {
+                    $info .= " (<font color=\"#8063FF\">Primary Reviewer</font>)";
+                }
+            }
+            if( $info ) {
+                $info .= "<br>";
+            }
+            $infos[] = $info;
+        }
+        return $infos;
     }
 
     public function isProjectReviewer($reviewerUser, $projectReviewers ) {
@@ -540,7 +580,7 @@ class TransResUtil
 ////                }
 ////                break;
 ////
-////            case "final_approval":
+////            case "final_review":
 ////                $reviewEntityName = "FinalReview";
 ////                $reviewObjects = $this->findReviewObjectsByProjectAndAnyReviewers($reviewEntityName,$project,$user);
 ////                foreach($reviewObjects as $reviewObject) {
@@ -577,7 +617,7 @@ class TransResUtil
 //
 //                break;
 //
-//            case "final_approval":
+//            case "final_review":
 //                $reviewEntityName = "FinalReview";
 //
 //                break;
@@ -637,14 +677,14 @@ class TransResUtil
                 $label = "Reject Committee Review";
                 break;
             //FINAL approval
-            case "to_final_approval":
+            case "to_final_review":
                 //$label = "Submit to Final Approval";
                 $label = "Approve Committee Review";
                 break;
-            case "final_approval_yes":
+            case "final_review_yes":
                 $label = "Final Approve";
                 break;
-            case "final_approval_no":
+            case "final_review_no":
                 $label = "Reject Final Approval";
                 break;
 
@@ -698,7 +738,7 @@ class TransResUtil
                 $state = "Committee Review Rejected";
                 break;
 
-            case "final_approval":
+            case "final_review":
                 $state = "In Final Approval";
                 break;
             case "approved":
@@ -752,7 +792,7 @@ class TransResUtil
                 $state = "Committee Review Rejected";
                 break;
 
-            case "final_approval":
+            case "final_review":
                 $state = "Final Approval";
                 break;
             case "approved":
@@ -784,7 +824,7 @@ class TransResUtil
             case "committee_review":
                 $reviewEntityName = "CommitteeReview";
                 break;
-            case "final_approval":
+            case "final_review":
                 $reviewEntityName = "FinalReview";
                 break;
             default:
@@ -794,7 +834,7 @@ class TransResUtil
     }
 
     //create a review form (for example, IrbReview form if logged in user is a reviewer or reviewer delegate)
-    //1) if project is in the review state: irb_review, admin_review, committee_review or final_approval
+    //1) if project is in the review state: irb_review, admin_review, committee_review or final_review
     //2) if the current user is added to this project as the reviewer for the state above
     public function getReviewForm($project, $user) {
 
@@ -833,7 +873,7 @@ class TransResUtil
                 }
                 break;
 
-            case "final_approval":
+            case "final_review":
                 $reviewEntityName = "FinalReview";
                 $reviewObjects = $this->findReviewObjectsByProjectAndAnyReviewers($reviewEntityName,$project,$user);
                 if( count($reviewObjects) > 0 ) {
@@ -978,34 +1018,44 @@ class TransResUtil
         //$currentState = $project->getState();
 
         //set project next transit state depends on the decision
-        $this->setProjectState($project,$review,$testing);
+        $appliedTransition = $this->setProjectState($project,$review,$testing);
 
         //send notification emails
+        $this->sendNotificationEmails($project,$review,$appliedTransition,$testing);
+
 
         //set eventLog
 
     }
     public function setProjectState( $project, $review, $testing=false ) {
 
-        $stateChanged = false;
+        $appliedTransition = null;
 
         echo "decision=".$review->getDecision()."<br>";
         if( $review->getDecision() == null ) {
-            return $stateChanged;
+            return $appliedTransition;
         }
 
-        if( $review->getDecision() == "Like" || $review->getDecision() == "Dislike" ) {
-            return $stateChanged;
+//        if( $review->getDecision() == "Like" || $review->getDecision() == "Dislike" ) {
+//            return $stateChanged;
+//        }
+        //for not primary Committee review don't chnage the project state.
+        if( is_a($review,"CommitteeReview") ) {
+            if( $review->getPrimaryReview() !== true ) {
+                return $appliedTransition;
+            }
         }
 
         $workflow = $this->container->get('state_machine.transres_project');
         $transitions = $workflow->getEnabledTransitions($project);
 
-//        echo "<pre>";
-//        print_r($transitions);
-//        echo "</pre><br><br>";
+        echo "<pre>";
+        print_r($transitions);
+        echo "</pre><br><br>";
 
+        $transitionNameYes = null;
         $toYes = null;
+        $transitionNameNo = null;
         $toNo = null;
 
         foreach($transitions as $transition) {
@@ -1014,6 +1064,7 @@ class TransResUtil
 
             if( strpos($transitionName, '_review_no') !== false ) {
                 echo "to: No<br>";
+                $transitionNameNo = $transitionName;
                 $tos = $transition->getTos();
                 if( count($tos) > 1 ) {
                     throw new \Exception("State machine must have only one to state. To count=".count($tos));
@@ -1022,6 +1073,7 @@ class TransResUtil
             } else {
                 if (strpos($transitionName, 'to_') !== false ) {
                     echo "to: Yes<br>";
+                    $transitionNameYes = $transitionName;
                     $tos = $transition->getTos();
                     if (count($tos) > 1) {
                         throw new \Exception("State machine must have only one to state. To count=" . count($tos));
@@ -1034,19 +1086,54 @@ class TransResUtil
 
         if( $review->getDecision() == "Rejected" && $toNo ) {
             echo "transit project to No: $toNo <br>";
-            $project->setState($toNo);
-            $stateChanged = true;
+            //$project->setState($toNo);
+            $transitionNameFinal = $transitionNameNo;
+            //$appliedTransition = true;
         }
 
         if( $review->getDecision() == "Approved" && $toYes ) {
             echo "transit project to Yes: $toYes <br>";
-            $project->setState($toYes);
-            $stateChanged = true;
+            //$project->setState($toYes);
+            $transitionNameFinal = $transitionNameYes;
+            //$appliedTransition = true;
         }
 
-        echo "stateChanged= $stateChanged <br>";
+        if( $transitionNameFinal ) {
+            try {
+                echo "try apply transition=$transitionNameFinal <br>";
+                $workflow->apply($project, $transitionNameFinal);
+                $appliedTransition = $transitionNameFinal;
+            } catch (LogicException $e) {
+                throw new \Exception("Can not change project's state: transitionNameFinal=" . $transitionNameFinal);
+            }
+        }
 
-        return $stateChanged;
+        echo "appliedTransition= $appliedTransition <br>";
+
+        return $appliedTransition;
+    }
+
+    public function sendNotificationEmails($project,$review,$appliedTransition,$testing=false) {
+        if( !$appliedTransition ) {
+            return null;
+        }
+
+        $emailUtil = $this->container->get('user_mailer_utility');
+
+        $senderEmail = null; //Admin email
+        $emails = array();
+        $subject = "Project ID#".$project->getId()." sent to $appliedTransition";
+        $body = "Project ID#".$project->getId()." sent to $appliedTransition";
+
+
+        //send to the
+        // 1) project's Requester (submitter, principalInvestigators, coInvestigators, pathologists)
+        // 2) current project's reviewers
+        // 3) next state project's reviewers
+
+        //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
+        $emailUtil->sendEmail( $emails, $subject, $body, null, $senderEmail );
+
     }
 
 }

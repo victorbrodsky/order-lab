@@ -48,7 +48,7 @@
         {#{% if project.state.vars.value == "committee_review" %}#}
             {#{% set reviews = project.committeeReviews %}#}
         {#{% endif %}#}
-        {#{% if project.state.vars.value == "final_approval" %}#}
+        {#{% if project.state.vars.value == "final_review" %}#}
             {#{% set reviews = project.finalReviews %}#}
         {#{% endif %}#}
         {#{{ transres.projectReviews(project,project.irbReviews,cycle,'transres-irbreviews','noprototype', sitename,1) }}#}

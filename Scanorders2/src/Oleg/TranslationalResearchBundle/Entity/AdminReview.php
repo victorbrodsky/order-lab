@@ -58,5 +58,8 @@ class AdminReview extends ReviewBase
         $this->project = $project;
     }
 
+    public function getStateStr() {
+        return "admin_review";
+    }
     
 }

@@ -81,18 +81,23 @@ class DefaultReviewer
     private $reviewerDelegate;
 
     /**
-     * Project's state for this reviewer (irb_review, admin_review, committee_review, final_approval-primaryReviewer) -
+     * Project's state for this reviewer (irb_review, admin_review, committee_review, final_review-primaryReviewer) -
      *  corresponds to the user role:
      * irb_review - ROLE_TRANSRES_IRB_REVIEWER
      * admin_review - ROLE_TRANSRES_ADMIN
      * committee_review - ROLE_TRANSRES_COMMITTEE_REVIEWER
-     * final_approval - ROLE_TRANSRES_PRIMARY_REVIEWER
+     * final_review - ROLE_TRANSRES_PRIMARY_REVIEWER
      *
      * @ORM\Column(type="string", nullable=true)
      */
     private $state;
 
-
+    /**
+     * Used for Committee review. One review should be a primary and this review will change the project state.
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $primaryReview;
 
 
     public function __construct($creator=null) {
@@ -231,6 +236,24 @@ class DefaultReviewer
         $this->state = $state;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getPrimaryReview()
+    {
+        return $this->primaryReview;
+    }
+
+    /**
+     * @param mixed $primaryReview
+     */
+    public function setPrimaryReview($primaryReview)
+    {
+        $this->primaryReview = $primaryReview;
+    }
+
+
+
 
     public function getRoleByState() {
         $roles = array();
@@ -247,7 +270,7 @@ class DefaultReviewer
             $roles['reviewer'] = "ROLE_TRANSRES_COMMITTEE_REVIEWER";
             $roles['reviewerDelegate'] = "ROLE_TRANSRES_COMMITTEE_REVIEWER_DELEGATE";
         }
-        if( $this->getState() == "final_approval" ) {
+        if( $this->getState() == "final_review" ) {
             $roles['reviewer'] = "ROLE_TRANSRES_PRIMARY_REVIEWER";
             $roles['reviewerDelegate'] = "ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE";
         }

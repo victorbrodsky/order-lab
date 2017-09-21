@@ -18,7 +18,7 @@ class DefaultReviewerController extends Controller
 {
 
     /**
-     * Lists defaultReviewer states: irb_review, committee_review, final_approval
+     * Lists defaultReviewer states: irb_review, committee_review, final_review
      *
      * @Route("/", name="translationalresearch_default-reviewer_index")
      * @Template("OlegTranslationalResearchBundle:DefaultReviewer:index.html.twig")
@@ -31,7 +31,7 @@ class DefaultReviewerController extends Controller
             'irb_review',
             'admin_review',
             'committee_review',
-            'final_approval'
+            'final_review'
         );
 
         return array(
@@ -107,13 +107,16 @@ class DefaultReviewerController extends Controller
     {
         $transresUtil = $this->container->get('transres_util');
         $cycle = "new";
+
         $defaultReviewer = new Defaultreviewer();
+        $defaultReviewer->setState($stateStr);
+
         //$form = $this->createForm('Oleg\TranslationalResearchBundle\Form\DefaultReviewerType', $defaultReviewer);
         $form = $this->createDefaultReviewForm($cycle,$defaultReviewer);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $defaultReviewer->setState($stateStr);
+
             $transresUtil->processDefaultReviewersRole($defaultReviewer);
 
             $em = $this->getDoctrine()->getManager();
@@ -263,8 +266,16 @@ class DefaultReviewerController extends Controller
             $disabled = false;
         }
 
+        $params = array('showPrimaryReview'=>false);
+
+        //echo "state=[".$defaultReviewer->getState()."]<br>";
+        if( $defaultReviewer->getState() == "committee_review" ) {
+            $params['showPrimaryReview'] = true;
+        }
+
         $form = $this->createForm('Oleg\TranslationalResearchBundle\Form\DefaultReviewerType', $defaultReviewer, array(
-            'disabled' => $disabled
+            'disabled' => $disabled,
+            'form_custom_value' => $params
         ));
 
         return $form;

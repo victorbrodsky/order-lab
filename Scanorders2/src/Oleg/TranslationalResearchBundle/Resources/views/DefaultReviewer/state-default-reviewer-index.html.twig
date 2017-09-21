@@ -18,6 +18,9 @@
                 <th>{{ knp_pagination_sortable(defaultReviewers, 'Reviewer', 'reviewerInfos.displayName') }}</th>
                 <th>{{ knp_pagination_sortable(defaultReviewers, 'reviewer Delegate', 'reviewerDelegate.displayName') }}</th>
                 <th>{{ knp_pagination_sortable(defaultReviewers, 'Created', 'defaultReviewer.createDate') }}</th>
+                {% if stateStr == "committee_review" %}
+                    <th>{{ knp_pagination_sortable(defaultReviewers, 'Primary Review', 'defaultReviewer.primaryReview') }}</th>
+                {% endif %}
                 {#<th>{{ knp_pagination_sortable(defaultReviewers, 'Review Stage', 'defaultReviewer.state') }}</th>#}
                 <th>Actions</th>
             </tr>
@@ -42,6 +45,16 @@
                     {% endif %}
                 </td>
                 {#<td>{{ transres_util.getStateSimpleLabelByName(defaultReviewer.state) }}</td>#}
+
+                {% if stateStr == "committee_review" %}
+                    <td>
+                        {% if defaultReviewer.primaryReview == true %}
+                            Yes
+                        {% else %}
+                            No
+                        {% endif %}
+                    </td>
+                {% endif %}
 
                 <td class="rowlink-skip">
                     <div class="btn-group">

@@ -175,7 +175,7 @@
     {#{% if project.state.vars.value == "committee_review" %}#}
         {#{% set reviews = project.committeeReviews %}#}
     {#{% endif %}#}
-    {#{% if project.state.vars.value == "final_approval" %}#}
+    {#{% if project.state.vars.value == "final_review" %}#}
         {#{% set reviews = project.finalReviews %}#}
     {#{% endif %}#}
 
@@ -399,7 +399,7 @@
         %}
             <p>
                 <a class="btn btn-primary"
-                   href="{{ path(translationalresearch_sitename~'_review_edit',{'stateStr':project.vars.value.state,'reviewId': reviewId}) }}"
+                   href="{{ path(translationalresearch_sitename~'_review_edit',{'stateStr':review.vars.value.getStateStr(),'reviewId': reviewId}) }}"
                     >Update Review</a>
             </p>
         {% endif %}

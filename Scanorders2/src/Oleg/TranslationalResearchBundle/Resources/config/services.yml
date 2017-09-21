@@ -57,7 +57,7 @@ framework:
                 - admin_rejected
                 - committee_review
                 - committee_rejected
-                - final_approval
+                - final_review
                 - approved
                 - not_approved
                 - closed
@@ -102,15 +102,15 @@ framework:
                 committee_review_no:
                     from: committee_review
                     to: committee_rejected
-                #FINAL approval
-                to_final_approval:
+                #FINAL Review
+                to_final_review:
                     from: committee_review
-                    to: final_approval
-                final_approval_yes:
-                    from: final_approval
+                    to: final_review
+                final_review_yes:
+                    from: final_review
                     to: approved
-                final_approval_no:
-                    from: final_approval
+                final_review_no:
+                    from: final_review
                     to: not_approved
                 #Closed
                 approved_closed:

@@ -58,5 +58,7 @@ class FinalReview extends ReviewBase
         $this->project = $project;
     }
 
-    
+    public function getStateStr() {
+        return "final_review";
+    }
 }

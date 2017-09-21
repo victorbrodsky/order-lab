@@ -159,7 +159,7 @@ class ProjectController extends Controller
         $deleteForm = $this->createDeleteForm($project);
 
         //create a review form (for example, IrbReview form if logged in user is a reviewer or reviewer delegate)
-        //1) if project is in the review state: irb_review, admin_review, committee_review or final_approval
+        //1) if project is in the review state: irb_review, admin_review, committee_review or final_review
         //2) if the current user is added to this project as the reviewer for the state above
         //$reviewFormViews = $transresUtil->getReviewForm($project,$user);
 

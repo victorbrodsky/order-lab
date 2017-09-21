@@ -12,11 +12,31 @@
     </h4>
 
     {% for state in states %}
-        <p>
-            {#{{ render(controller('OlegTranslationalResearchBundleBundle:DefaultReviewer:stateDefaultReviewerIndex', { 'stateStr': state })) }}#}
-            <a href="{{ path(translationalresearch_sitename~'_state-default-reviewer_index',{'stateStr':state}) }}"
-            >Default Reviewers for {{ transres_util.getStateSimpleLabelByName(state) }}</a>
-        </p>
+        {#<p>#}
+            {#<a href="{{ path(translationalresearch_sitename~'_state-default-reviewer_index',{'stateStr':state}) }}"#}
+            {#>Default Reviewers for {{ transres_util.getStateSimpleLabelByName(state) }}</a>#}
+        {#</p>#}
+
+        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+            <div class="panel panel-primary">
+                <div class="panel-heading" role="tab" id="{{ state }}~Heading">
+                    <h4 class="panel-title">
+                        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#{{ state }}" aria-expanded="true" aria-controls="reviewBase">
+                            <a href="{{ path(translationalresearch_sitename~'_state-default-reviewer_index',{'stateStr':state}) }}"
+                            >Default Reviewers for {{ transres_util.getStateSimpleLabelByName(state) }}</a>
+                        </a>
+                    </h4>
+                </div>
+                <div id="{{ state }}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="{{ state }}~Heading">
+                    <div class="panel-body">
+                        {% for defaultReview in transres_util.getDefaultReviewerInfo(state) %}
+                            {{ defaultReview|raw }}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
     {% endfor %}
 
 
