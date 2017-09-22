@@ -38,15 +38,15 @@
 
     <ul>
         <li>
-            <a href="{{ path('translationalresearch_review_index') }}">Back to the list</a>
+            <a href="{{ path('translationalresearch_review_index',{'stateStr':stateStr}) }}">Back to the list</a>
         </li>
         <li>
-            <a href="{{ path('translationalresearch_review_edit', { 'id': irbReview.id }) }}">Edit</a>
+            <a href="{{ path('translationalresearch_review_edit', { 'stateStr':stateStr, 'reviewId': irbReview.id }) }}">Edit</a>
         </li>
-        <li>
-            {{ form_start(delete_form) }}
-                <input type="submit" value="Delete">
-            {{ form_end(delete_form) }}
-        </li>
+        {#<li>#}
+            {#{{ form_start(delete_form) }}#}
+                {#<input type="submit" value="Delete">#}
+            {#{{ form_end(delete_form) }}#}
+        {#</li>#}
     </ul>
 {% endblock %}

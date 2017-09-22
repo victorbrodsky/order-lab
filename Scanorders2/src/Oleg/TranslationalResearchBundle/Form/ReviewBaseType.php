@@ -3,6 +3,7 @@
 namespace Oleg\TranslationalResearchBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -166,6 +167,15 @@ class ReviewBaseType extends AbstractType
                 'required' => false,
                 'attr' => array('class' => 'textarea form-control'),
             ));
+
+            if( $this->params['stateStr'] == "committee_review" ) {
+                //echo "show primaryReview <br>";
+                $builder->add('primaryReview', CheckboxType::class, array(
+                    'label' => 'Primary Review:',
+                    'required' => false,
+                    'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
+                ));
+            }
         }
 
 //        //Reviewer's field

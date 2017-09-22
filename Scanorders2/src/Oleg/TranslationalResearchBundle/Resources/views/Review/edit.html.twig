@@ -43,12 +43,30 @@
 
         {{ transres.projectSingleReview(null,form,cycle,'transres-finalreviews','noprototype',sitename,0) }}
 
-        <br>
-        <p>
-            <input type="submit" class="btn btn-primary" value="Submit" />
-        </p>
+        {% if cycle == "edit" %}
+            <br>
+            <p>
+                <input type="submit" class="btn btn-warning" value="Submit" />
+                <a class="btn btn-primary" href="{{ path('translationalresearch_review_show',{'stateStr':stateStr,'reviewId':review.id}) }}">Cancel</a>
+            </p>
+            {#<p>#}
+                {#<a class="btn btn-primary" href="{{ path('translationalresearch_review_show',{'stateStr':stateStr,'reviewId':review.id}) }}">Cancel</a>#}
+            {#</p>#}
+        {% endif %}
 
     {{ form_end(form) }}
+
+    {% if
+        cycle == "show" and
+        transres_util.isUserAllowedReview(review) and
+        transres_util.isReviewable(review)
+    %}
+        {#TODO: add condition to allow edit only if project state is allow to edit this type of review: project state=irb_review => only irb_review are editable#}
+        <br>
+        <p>
+            <a class="btn btn-primary" href="{{ path('translationalresearch_review_edit',{'stateStr':stateStr,'reviewId':review.id}) }}">Edit</a>
+        </p>
+    {% endif %}
 
     <br>
     <br>

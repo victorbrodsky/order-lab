@@ -376,6 +376,10 @@
             </p>
         {% endif %}
 
+        {% if formreview.primaryReview is defined %}
+            {{ formmacros.checkbox(formreview.primaryReview) }}
+        {% endif %}
+
         {{ formmacros.field(formreview.reviewer) }}
 
         {% if formreview.reviewerDelegate is defined %}
@@ -391,11 +395,12 @@
         {% endif %}
 
         {#allow change review by admin and reviewer only in the view page. Clicking this button on the edit page will not save any changes#}
+        {#TODO: add condition to allow edit only if project state is allow to edit this type of review#}
         {% if
             cycle == "show" and
             reviewId and
             transres_util.isUserAllowedReview(review.vars.value) and
-            transres_util.isProjectStateReadyForReview(project.vars.value)
+            transres_util.isReviewable(review.vars.value)
         %}
             <p>
                 <a class="btn btn-primary"

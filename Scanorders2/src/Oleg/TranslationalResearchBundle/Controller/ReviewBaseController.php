@@ -67,14 +67,14 @@ class ReviewBaseController extends Controller
      * Finds and displays a Review entity.
      *
      * @Route("/{stateStr}/{reviewId}/show", name="translationalresearch_review_show")
-     * @Template("OlegTranslationalResearchBundle:Review:show.html.twig")
+     * @Template("OlegTranslationalResearchBundle:Review:edit.html.twig")
      * @Method("GET")
      */
     public function showAction(Request $request, $stateStr, $reviewId)
     {
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
         $transresUtil = $this->container->get('transres_util');
         $cycle = "show";
 
@@ -95,7 +95,7 @@ class ReviewBaseController extends Controller
 
         return array(
             'review' => $review,
-            'form' => $form,
+            'form' => $form->createView(),
             'stateStr' => $stateStr,
             'title' => $transresUtil->getStateSimpleLabelByName($stateStr),
             'cycle' => $cycle
@@ -122,7 +122,7 @@ class ReviewBaseController extends Controller
         $cycle = "edit";
 
         $testing = false;
-        $testing = true;
+        //$testing = true;
 
         $reviewEntityName = $transresUtil->getReviewClassNameByState($stateStr);
         if( !$reviewEntityName ) {
@@ -134,7 +134,7 @@ class ReviewBaseController extends Controller
         }
         //echo "reviewID=".$review->getId();
 
-        if( $transresUtil->isUserAllowedReview($review) === false ) {
+        if( $transresUtil->isUserAllowedReview($review) === false || $transresUtil->isReviewable($review) === false ) {
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
@@ -189,41 +189,41 @@ class ReviewBaseController extends Controller
         );
     }
 
-    /**
-     * Deletes a irbReview entity.
-     *
-     * @Route("/{id}", name="translationalresearch_review_delete")
-     * @Method("DELETE")
-     */
-    public function deleteAction(Request $request, IrbReview $irbReview)
-    {
-        $form = $this->createDeleteForm($irbReview);
-        $form->handleRequest($request);
+//    /**
+//     * Deletes a irbReview entity.
+//     *
+//     * @Route("/{id}", name="translationalresearch_review_delete")
+//     * @Method("DELETE")
+//     */
+//    public function deleteAction(Request $request, IrbReview $irbReview)
+//    {
+//        $form = $this->createDeleteForm($irbReview);
+//        $form->handleRequest($request);
+//
+//        if ($form->isSubmitted() && $form->isValid()) {
+//            $em = $this->getDoctrine()->getManager();
+//            $em->remove($irbReview);
+//            $em->flush();
+//        }
+//
+//        return $this->redirectToRoute('translationalresearch_review_index');
+//    }
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($irbReview);
-            $em->flush();
-        }
-
-        return $this->redirectToRoute('translationalresearch_review_index');
-    }
-
-    /**
-     * Creates a form to delete a irbReview entity.
-     *
-     * @param IrbReview $irbReview The irbReview entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createDeleteForm(IrbReview $irbReview)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('translationalresearch_review_delete', array('id' => $irbReview->getId())))
-            ->setMethod('DELETE')
-            ->getForm()
-        ;
-    }
+//    /**
+//     * Creates a form to delete a irbReview entity.
+//     *
+//     * @param IrbReview $irbReview The irbReview entity
+//     *
+//     * @return \Symfony\Component\Form\Form The form
+//     */
+//    private function createDeleteForm(IrbReview $irbReview)
+//    {
+//        return $this->createFormBuilder()
+//            ->setAction($this->generateUrl('translationalresearch_review_delete', array('id' => $irbReview->getId())))
+//            ->setMethod('DELETE')
+//            ->getForm()
+//        ;
+//    }
 
     private function createReviewForm( $request, $review, $cycle, $stateStr )
     {

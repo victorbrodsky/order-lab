@@ -47,7 +47,7 @@ class TranslationalResearchLoginSuccessHandler extends LoginSuccessHandler {
         $this->roleBanned = 'ROLE_TRANSRES_BANNED';
         $this->roleUser = 'ROLE_TRANSRES_USER';
         $this->roleUnapproved = 'ROLE_TRANSRES_UNAPPROVED';
-        $this->firewallName = 'ldap_TRANSRES_firewall';
+        $this->firewallName = 'ldap_translationalresearch_firewall';
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token) {

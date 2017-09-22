@@ -335,7 +335,7 @@ class TransResUtil
         $committeeReviewState = "committee_review";
         if( $currentState == $committeeReviewState || $addForAllStates ) {
 
-            $defaultReviewers = $this->em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findByState($committeeReviewState);
+            $defaultReviewers = $this->em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findByState($committeeReviewState,array("primaryReview"=>"DESC"));
             //reviewer delegate should be added to the specific reviewer => no delegate role is required?
             foreach ($defaultReviewers as $defaultReviewer) {
                 //1) create CommitteeReview entity
@@ -347,6 +347,10 @@ class TransResUtil
                         if ($reviewerDelegate) {
                             $reviewEntity->setReviewerDelegate($reviewerDelegate);
                         }
+
+                        //add primaryReview boolean
+                        $reviewEntity->setPrimaryReview($defaultReviewer->getPrimaryReview());
+
                         $project->addCommitteeReview($reviewEntity);
                     }
                 }
@@ -982,25 +986,41 @@ class TransResUtil
         return false;
     }
 
-    public function isProjectStateReadyForReview($project) {
+    public function isReviewable($review) {
+        if( !$review ) {
+            return false;
+        }
+        $project = $review->getProject();
         if( !$project ) {
             return false;
         }
-        $state = $project->getState();
+
+        //1) check if project state is reviewable
+        $projectStateRevaiewable = false;
+        $projectState = $project->getState();
         //echo "projectId=".$project->getId()."<br>";
         //echo "state1=".$state."<br>";
-        if( $state == "irb_review" ) {
+        if( $projectState == "irb_review" ) {
+            $projectStateRevaiewable = true;
+        }
+        if( $projectState == "admin_review" ) {
+            $projectStateRevaiewable = true;
+        }
+        if( $projectState == "committee_review" ) {
+            $projectStateRevaiewable = true;
+        }
+        if( $projectState == "final_review" ) {
+            $projectStateRevaiewable = true;
+        }
+        if( $projectStateRevaiewable === false ) {
+            return false;
+        }
+
+        //2) condition to allow edit only if project state is allow to edit this type of review (committee_review)
+        if( $projectState == $review->getStateStr() ) {
             return true;
         }
-        if( $state == "admin_review" ) {
-            return true;
-        }
-        if( $state == "committee_review" ) {
-            return true;
-        }
-        if( $state == "final_review" ) {
-            return true;
-        }
+
         return false;
     }
 
