@@ -56,17 +56,13 @@
 
     {{ form_end(form) }}
 
-    {% if
-        cycle == "show" and
-        transres_util.isUserAllowedReview(review) and
-        transres_util.isReviewable(review)
-    %}
-        {#TODO: add condition to allow edit only if project state is allow to edit this type of review: project state=irb_review => only irb_review are editable#}
-        <br>
-        <p>
-            <a class="btn btn-primary" href="{{ path('translationalresearch_review_edit',{'stateStr':stateStr,'reviewId':review.id}) }}">Edit</a>
-        </p>
-    {% endif %}
+    {#{% if cycle == "show" and transres_util.isUserAllowedReview(review) and transres_util.isReviewable(review) %}#}
+        {#<br>#}
+        {#<p>#}
+            {#<a class="btn btn-primary"#}
+               {#href="{{ path('translationalresearch_review_edit',{'stateStr':stateStr,'reviewId':review.id}) }}">Edit</a>#}
+        {#</p>#}
+    {#{% endif %}#}
 
     <br>
     <br>

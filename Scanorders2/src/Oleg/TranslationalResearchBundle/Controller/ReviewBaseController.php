@@ -170,7 +170,7 @@ class ReviewBaseController extends Controller
             //set project next transit state depends on the decision
             //send notification emails
             //set eventLog
-            $transresUtil->processProjectOnReviewUpdate($review,$testing);
+            $transresUtil->processProjectOnReviewUpdate($review,$stateStr,$request,$testing);
 
             if( $testing ) {
                 exit("testing: exit submit review");

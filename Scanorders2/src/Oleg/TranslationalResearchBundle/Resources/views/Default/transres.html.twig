@@ -395,7 +395,6 @@
         {% endif %}
 
         {#allow change review by admin and reviewer only in the view page. Clicking this button on the edit page will not save any changes#}
-        {#TODO: add condition to allow edit only if project state is allow to edit this type of review#}
         {% if
             cycle == "show" and
             reviewId and

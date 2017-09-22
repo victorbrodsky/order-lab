@@ -145,6 +145,8 @@ class TransResUtil
 
         $state = $project->getState();
 
+        $reviews = array();
+
         if( $state == "irb_review" ) {
             $reviews = $project->getIrbReviews();
             //$reviewEntityName = "IrbReview";
@@ -1024,7 +1026,7 @@ class TransResUtil
         return false;
     }
 
-    public function processProjectOnReviewUpdate( $review, $testing=false ) {
+    public function processProjectOnReviewUpdate( $review, $stateStr, $request, $testing=false ) {
 
         $project = $review->getProject();
         if( !$project ) {
@@ -1043,8 +1045,42 @@ class TransResUtil
         //send notification emails
         $this->sendNotificationEmails($project,$review,$appliedTransition,$testing);
 
+//        $workflow = $this->container->get('state_machine.transres_project');
+//        $transitions = $workflow->getEnabledTransitions($project);
+//        $transitionArr = array();
+//        foreach ($transitions as $transition) {
+//            echo "transition=" . $this->printTransition($transition) . "<br>";
+//            $transitionArr[] = $this->printTransition($transition);
+//        }
+//        $projectTransition = "Project transition " . implode(";",$transitionArr);
 
-        //set eventLog
+        //Event Log
+        if( $appliedTransition ) {
+            $eventType = "Review Submitted";
+            $event = "Project's (ID# " . $project->getId() . ") review has been successfully submitted. ".$review->getSubmittedReviewerInfo();
+
+            //testing
+            echo "appliedTransition=" . $appliedTransition . "<br>";
+            //echo "printTransition=".$this->printTransition($appliedTransition)."<br>";
+
+            $event .= ";<br> Project transitioned from '" . $this->getStateLabelByName($stateStr) . "'".
+                " to '" . $this->getStateLabelByName($project->getState()) . "'";
+            echo "event=".$event."<br>";
+
+            //exit('1');
+
+        } else {
+            $eventType = "Review Submitting Not Performed";
+            $event = "Project's (ID# " . $project->getId() . ") review submitting not performed. " . $review->getSubmittedReviewerInfo();
+            $event .= ";<br> Project transitioned from '" . $this->getStateLabelByName($stateStr) . "'" .
+                " to '" . $this->getStateLabelByName($project->getState()) . "'";
+            echo "event=".$event."<br>";
+
+            //exit('2');
+        }
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        $userSecUtil->createUserEditEvent($this->container->getParameter('translationalresearch.sitename'),$event,$user,$review,$request,$eventType);
 
     }
     public function setProjectState( $project, $review, $testing=false ) {
@@ -1123,12 +1159,21 @@ class TransResUtil
                 echo "try apply transition=$transitionNameFinal <br>";
                 $workflow->apply($project, $transitionNameFinal);
                 $appliedTransition = $transitionNameFinal;
+
+                //write to DB
+                $this->em->flush($project);
+
+                $this->container->get('session')->getFlashBag()->add(
+                    'notice',
+                    "Successful transition: ".$transitionNameFinal."; Project is ".$this->getStateLabelByProject($project)
+                );
+
             } catch (LogicException $e) {
                 throw new \Exception("Can not change project's state: transitionNameFinal=" . $transitionNameFinal);
             }
         }
 
-        echo "appliedTransition= $appliedTransition <br>";
+        echo "setProjectState: appliedTransition= $appliedTransition <br>";
 
         return $appliedTransition;
     }

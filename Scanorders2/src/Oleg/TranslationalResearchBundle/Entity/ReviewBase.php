@@ -265,5 +265,17 @@ class ReviewBase
         return "undefined_review";
     }
 
-
+    public function getSubmittedReviewerInfo() {
+        if( $this->getDecision() ) {
+            $decision = $this->getDecision();
+        } else {
+            $decision = "Pending";
+        }
+        $info =
+            "Decision: ".$decision.
+            ", submitted by ".$this->getReviewedBy().
+            " on ".$this->getUpdatedate()->format('m/d/Y H:i:s').
+            ", comment: ".$this->getComment();
+        return $info;
+    }
 }
