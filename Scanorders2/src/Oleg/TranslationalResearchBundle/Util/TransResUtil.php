@@ -191,6 +191,7 @@ class TransResUtil
         return $links;
     }
 
+    //TODO: requester => project is on the draft stage or in the reject stage
     public function isProjectEditableByRequester( $project ) {
         $state = $project->getState();
         if( strpos($state, '_rejected') !== false || $state == 'draft' || $state == 'complete' ) {
@@ -1192,13 +1193,113 @@ class TransResUtil
 
 
         //send to the
-        // 1) project's Requester (submitter, principalInvestigators, coInvestigators, pathologists)
-        // 2) current project's reviewers
-        // 3) next state project's reviewers
+        // 1) admins and primary reviewers
+        $admins = $this->getTransResAdminEmails();
+        // 2) project's Requester (submitter, principalInvestigators, coInvestigators, pathologists)
+        $requesterEmails = $this->getRequesterEmails($project,$review,$appliedTransition);
+        // 3) current project's reviewers
+        $currentReviewerEmails = $this->getCurrentReviewersEmails($project,$review,$appliedTransition);
+        // 4) next state project's reviewers
+        $nextStateReviewerEmails = $this->getNextStateReviewersEmails($project,$review,$appliedTransition);
+
 
         //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
         $emailUtil->sendEmail( $emails, $subject, $body, null, $senderEmail );
 
+    }
+    //get all users with admin and ROLE_TRANSRES_PRIMARY_REVIEWER, ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE
+    public function getTransResAdminEmails($asEmail=true) {
+        $users = array();
+
+        $admins = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole("ROLE_TRANSRES_ADMIN");
+        foreach( $admins as $user ) {
+            if( $user ) {
+                if( $asEmail ) {
+                    $users[] = $user->getSingleEmail();
+                } else {
+                    $users[] = $user;
+                }
+            }
+        }
+
+        $primarys = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole("ROLE_TRANSRES_PRIMARY_REVIEWER");
+        foreach( $primarys as $user ) {
+            if( $user ) {
+                if( $asEmail ) {
+                    $users[] = $user->getSingleEmail();
+                } else {
+                    $users[] = $user;
+                }
+            }
+        }
+
+        return $users;
+    }
+    //project's Requester (submitter, principalInvestigators, coInvestigators, pathologists)
+    public function getRequesterEmails($project, $review, $appliedTransition, $asEmail=true) {
+        $users = array();
+        //1 submitter
+        if( $project->getSubmitter() ) {
+            if( $asEmail ) {
+                $users[] = $project->getSubmitter()->getSingleEmail();
+            } else {
+                $users[] = $project->getSubmitter();
+            }
+        }
+
+        //2 principalInvestigators
+        $pis = $project->getPrincipalInvestigators();
+        foreach( $pis as $pi ) {
+            if( $pi ) {
+                if( $asEmail ) {
+                    $users[] = $pi->getSingleEmail();
+                } else {
+                    $users[] = $pi;
+                }
+            }
+        }
+
+        //3 coInvestigators
+        $cois = $project->getCoInvestigators();
+        foreach( $cois as $coi ) {
+            if( $coi ) {
+                if( $asEmail ) {
+                    $users[] = $coi->getSingleEmail();
+                } else {
+                    $users[] = $coi;
+                }
+            }
+        }
+
+        //4 pathologists
+        $pathologists = $project->getPathologists();
+        foreach( $pathologists as $pathologist ) {
+            if( $pathologist ) {
+                if( $asEmail ) {
+                    $users[] = $pathologist->getSingleEmail();
+                } else {
+                    $users[] = $pathologist;
+                }
+            }
+        }
+
+        return $users;
+    }
+
+    //current project's reviewers
+    public function getCurrentReviewersEmails($project, $review, $appliedTransition, $asEmail=true) {
+        $users = array();
+
+        //get all same reviews and reviewers
+
+        return $users;
+    }
+
+    //next state project's reviewers
+    public function getNextStateReviewersEmails($project, $review, $appliedTransition, $asEmail=true) {
+        $users = array();
+
+        return $users;
     }
 
 }

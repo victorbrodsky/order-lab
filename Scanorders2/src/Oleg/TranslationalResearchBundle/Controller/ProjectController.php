@@ -189,6 +189,10 @@ class ProjectController extends Controller
      */
     public function editAction(Request $request, Project $project)
     {
+        //TODO: add the verification if the logged in user can edit the project:
+        //1) requester => project is on the draft stage or in the reject stage
+        //2) admin => any stage
+
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $transresUtil = $this->container->get('transres_util');
         $em = $this->getDoctrine()->getManager();
