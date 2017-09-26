@@ -25,3 +25,57 @@
     <link rel="icon" type="image/x-icon" href="{{ asset('glyphicons-342-briefcase.png') }}" />
 {% endblock %}
 
+
+{% block mainjs %}
+
+    {% javascripts
+    '@OlegUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'
+    '@OlegUserdirectoryBundle/Resources/public/bootstrap/js/*'
+    '@OlegUserdirectoryBundle/Resources/public/ladda/spin.min.js'
+    '@OlegUserdirectoryBundle/Resources/public/ladda/ladda.min.js'
+    '@OlegUserdirectoryBundle/Resources/public/datepicker/js/bootstrap-datepicker.js'
+    '@OlegUserdirectoryBundle/Resources/public/select2/select2.js'
+    '@OlegUserdirectoryBundle/Resources/public/inputmask/jquery.inputmask.bundle.js'
+    '@OlegUserdirectoryBundle/Resources/public/jasny/js/rowlink.js'
+    '@OlegUserdirectoryBundle/Resources/public/q-1/q.js'
+    '@OlegUserdirectoryBundle/Resources/public/pnotify/pnotify.custom.min.js'
+
+    '@OlegUserdirectoryBundle/Resources/public/dropzone/dropzone.js'
+    '@OlegUserdirectoryBundle/Resources/public/form/js/user-fileuploads.js'
+    '@OlegUserdirectoryBundle/Resources/public/form/js/user-navbar.js'
+
+    '@OlegUserdirectoryBundle/Resources/public/form/js/user-common.js'
+
+    '@OlegUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimeout.js'
+    '@OlegUserdirectoryBundle/Resources/public/idletimeout/jquery.idletimer.js'
+    '@OlegUserdirectoryBundle/Resources/public/form/js/user-idleTimeout.js'
+
+    '@OlegUserdirectoryBundle/Resources/public/form/js/user-selectAjax.js'
+    '@OlegUserdirectoryBundle/Resources/public/form/js/user-treeSelectAjax.js'
+    '@OlegUserdirectoryBundle/Resources/public/vakata-jstree/jstree.min.js'
+    '@OlegUserdirectoryBundle/Resources/public/form/js/user-jstree.js'
+    '@OlegUserdirectoryBundle/Resources/public/form/js/user-formnode.js'
+
+    '@OlegOrderformBundle/Resources/public/form/js/idleTimeout.js'
+    '@OlegOrderformBundle/Resources/public/form/js/checkSingleForm.js'
+    '@OlegOrderformBundle/Resources/public/form/js/slideColl.js'
+    '@OlegOrderformBundle/Resources/public/form/js/partCheckboxes.js'
+    '@OlegOrderformBundle/Resources/public/form/js/selectAjax.js'
+    '@OlegOrderformBundle/Resources/public/form/js/commonCheckForm.js'
+    '@OlegOrderformBundle/Resources/public/form/js/checkForm.js'
+    '@OlegOrderformBundle/Resources/public/form/js/masking.js'
+    '@OlegOrderformBundle/Resources/public/form/js/form.js'
+    '@OlegOrderformBundle/Resources/public/form/js/formReady.js'
+
+    '@OlegOrderformBundle/Resources/public/form/js/modal.js'
+    '@OlegOrderformBundle/Resources/public/form/js/tooltips.js'
+
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    {#FOSJsRoutingBundle#}
+    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
+
+{% endblock %}

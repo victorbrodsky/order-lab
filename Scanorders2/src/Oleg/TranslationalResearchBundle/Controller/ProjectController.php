@@ -90,16 +90,19 @@ class ProjectController extends Controller
     }
 
     /**
-     * Creates a new project entity.
+     * Creates a new project entity in a simple way without formnode.
      *
-     * @Route("/new", name="translationalresearch_project_new")
+     * @Route("/simple/new", name="translationalresearch_project_simple_new")
      * @Template("OlegTranslationalResearchBundle:Project:new.html.twig")
      * @Method({"GET", "POST"})
      */
-    public function newAction(Request $request)
+    public function newSimpleAction(Request $request)
     {
+        exit("This is a simple Project form not used. We use a formnode project fields instead.");
+
         $transresUtil = $this->container->get('transres_util');
         $user = $this->get('security.token_storage')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
         $cycle = "new";
 
         $project = new Project($user);
@@ -138,6 +141,8 @@ class ProjectController extends Controller
             'title' => "Create Project"
         );
     }
+
+
 
     /**
      * Finds and displays a project entity.
@@ -311,7 +316,7 @@ class ProjectController extends Controller
         return $this->redirectToRoute('translationalresearch_project_index');
     }
 
-    private function createProjectForm( Project $project, $cycle, $request )
+    public function createProjectForm( Project $project, $cycle, $request )
     {
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();

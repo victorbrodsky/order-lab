@@ -3,12 +3,15 @@
 namespace Oleg\TranslationalResearchBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
+use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ProjectType extends AbstractType
@@ -340,6 +343,63 @@ class ProjectType extends AbstractType
                 'prototype_name' => '__finalreviews__',
             ));
         }
+
+
+        /////////////////////////////////////// messageCategory ///////////////////////////////////////
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $message = $event->getData();
+            $form = $event->getForm();
+            $messageCategory = null;
+
+            $label = null;
+            $mapper = array(
+                'prefix' => "Oleg",
+                'className' => "MessageCategory",
+                'bundleName' => "OrderformBundle",
+                'organizationalGroupType' => "MessageTypeClassifiers"
+            );
+            if ($message) {
+                $messageCategory = $message->getMessageCategory();
+                if ($messageCategory) {
+                    $label = $this->params['em']->getRepository('OlegOrderformBundle:MessageCategory')->getLevelLabels($messageCategory, $mapper);
+                }
+            }
+            if (!$label) {
+                $label = $this->params['em']->getRepository('OlegOrderformBundle:MessageCategory')->getLevelLabels(null, $mapper);
+            }
+
+            if( $label ) {
+                $label = $label . ":";
+            }
+
+            //echo "show defaultInstitution label=".$label."<br>";
+
+            $form->add('messageCategory', CustomSelectorType::class, array(
+                'label' => $label,
+                'required' => false,
+                //'read_only' => true, //this depracted and replaced by readonly in attr
+                //'disabled' => true, //this disabled all children
+                'attr' => array(
+                    'readonly' => true,
+                    'class' => 'ajax-combobox-compositetree combobox-without-add combobox-compositetree-postfix-level combobox-compositetree-read-only-exclusion ajax-combobox-messageCategory', //combobox-compositetree-readonly-parent
+                    'type' => 'hidden',
+                    'data-compositetree-bundlename' => 'OrderformBundle',
+                    'data-compositetree-classname' => 'MessageCategory',
+                    'data-label-prefix' => '',
+                    //'data-readonly-parent-level' => '2', //readonly all children from level 2 up (including this level)
+                    'data-read-only-exclusion-after-level' => '2', //readonly will be disable for all levels after indicated level
+                    'data-label-postfix-value-level' => '<span style="color:red">*</span>', //postfix after level
+                    'data-label-postfix-level' => '4', //postfix after level "Issue"
+                ),
+                'classtype' => 'messageCategory'
+            ));
+
+
+            //add form node fields
+            //$form = $this->addFormNodes($form,$messageCategory,$this->params);
+
+        });
+        /////////////////////////////////////// EOF messageCategory ///////////////////////////////////////
 
     }
     

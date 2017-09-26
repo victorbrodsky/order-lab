@@ -1505,7 +1505,7 @@ class CallEntryController extends Controller
             $messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
         }
         if( !$messageCategory ) {
-            throw new \Exception( "Location type is not found by name '".$categoryStr."'" );
+            throw new \Exception( "Message category is not found by name '".$categoryStr."'" );
         }
         $message->setMessageCategory($messageCategory);
 

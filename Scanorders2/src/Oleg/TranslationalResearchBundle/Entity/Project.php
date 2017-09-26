@@ -230,6 +230,22 @@ class Project {
     private $finalReviews;
 
 
+    /**
+     * MessageCategory with subcategory (parent-children hierarchy)
+     *
+     * @ORM\ManyToOne(targetEntity="Oleg\OrderformBundle\Entity\MessageCategory", cascade={"persist"})
+     */
+    private $messageCategory;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $version;
+
+//    /**
+//     * @ORM\OneToMany(targetEntity="FormVersion", mappedBy="message", cascade={"persist","remove"})
+//     */
+//    private $formVersions;
 
 
     public function __construct($user=null) {
@@ -245,6 +261,8 @@ class Project {
         $this->adminReviews = new ArrayCollection();
         $this->committeeReviews = new ArrayCollection();
         $this->finalReviews = new ArrayCollection();
+
+        //$this->formVersions = new ArrayCollection();
     }
 
 
@@ -747,6 +765,54 @@ class Project {
     {
         $this->adminReviews->removeElement($item);
     }
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getMessageCategory()
+    {
+        return $this->messageCategory;
+    }
+
+    /**
+     * @param mixed $messageCategory
+     */
+    public function setMessageCategory($messageCategory)
+    {
+        $this->messageCategory = $messageCategory;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    /**
+     * @param mixed $version
+     */
+    public function setVersion($version)
+    {
+        $this->version = $version;
+    }
+
+    //show the name of the form (from the form hierarchy) that was used to generate this submitted message.
+    // Make sure to save this form ID of the form linked from the Message Type at the time of message submission
+    public function getMessageTitleStr()
+    {
+        $title = "";
+        if( $this->getMessageCategory() ) {
+            $title = $this->getMessageCategory()->getNodeNameWithParent() . " (ID " . $this->getMessageCategory()->getId() . ")";
+        }
+
+        return $title;
+    }
+
+
 
     public function __toString() {
         return "Project id=".$this->getId();

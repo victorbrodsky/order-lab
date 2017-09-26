@@ -15,6 +15,9 @@
     </h4>
     <br>
 
+    <input type="hidden" id="formnodetrigger" value="{{ formnodetrigger }}" />
+    <input type="hidden" id="formnodeTopHolderId" value="{{ formnodeTopHolderId }}" />
+
     {% set sitename = translationalresearch_sitename %}
 
     {{ form_start(form) }}
@@ -30,7 +33,7 @@
              {#data-prototype-transres-committeereviews = "{{ transres.projectSingleReview(form,form.committeeReviews,cycle,'transres-committeereviews','prototype', sitename,1)|e }}"#}
              {#data-prototype-transres-finalreviews = "{{ transres.projectSingleReview(form,form.finalReviews,cycle,'transres-finalreviews','prototype', sitename,1)|e }}"#}
         {#></div>#}
-        {{ transres.getProjectReviiewPrototypeFormData(form,cycle,sitename) }}
+        {{ transres.getProjectReviewPrototypeFormData(form,cycle,sitename) }}
 
         {{ transres.projectReviews(form,cycle,sitename) }}
 
