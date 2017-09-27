@@ -1179,6 +1179,9 @@ class ScanAdminController extends AdminController
                     )
                 ),
                 'Procedure Note'
+            ),
+            'HemePath Translational Research' => array(
+                'HemePath Translational Research Project'
             )
 
         );

@@ -63,8 +63,7 @@
 
         {{ transres.projectForm(form,null,cycle) }}
 
-
-        {{ formmacros.checkbox(form.readyForReview) }}
+        {#{{ formmacros.checkbox(form.readyForReview) }}#}
 
         {% if form.primaryReviewerComment is defined %}
             {{ formmacros.field(form.primaryReviewerComment) }}

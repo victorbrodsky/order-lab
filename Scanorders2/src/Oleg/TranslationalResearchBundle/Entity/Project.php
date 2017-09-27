@@ -99,22 +99,28 @@ class Project {
     private $pathologists;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $title;
-
-    //Name of PI Who Submitted the IRB
-    /**
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
      */
-    private $irbSubmitter;
+    private $contact;
+
+//    /**
+//     * @ORM\Column(type="text", nullable=true)
+//     */
+//    private $title;
+
+    //Name of PI Who Submitted the IRB
+//    /**
+//     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+//     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
+//     */
+//    private $irbSubmitter;
 
     //Institutional Review Board (IRB)
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $irbNumber;
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $irbNumber;
 
 //    /**
 //     * @ORM\Column(type="date", nullable=true)
@@ -126,74 +132,68 @@ class Project {
 //     */
 //    private $expirationDate;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
-     */
-    private $contact;
-
     //Is this Research Project Funded by a WCMC Account?
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $funded;
+//    /**
+//     * @ORM\Column(type="boolean", nullable=true)
+//     */
+//    private $funded;
 
     //If funded please provide account number:
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $fundedAccountNumber;
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $fundedAccountNumber;
 
     //Please provide a brief description of the project to include background information,
     // purpose and objective, and a methodology section stating a justification for
     // the size and scope of the project (<250 words). The breadth of information
     // should be adequate for a scientific committee to understand and assess the value of the research.
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $description;
+//    /**
+//     * @ORM\Column(type="text", nullable=true)
+//     */
+//    private $description;
 
     //Provide a Detailed Budget Outline/Summary
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $budgetSummary;
+//    /**
+//     * @ORM\Column(type="text", nullable=true)
+//     */
+//    private $budgetSummary;
 
     //Estimated Total Costs
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $totalCost;
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $totalCost;
 
     //Project Type
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $projectType;
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $projectType;
 
     //Biostatistical Comment
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $biostatisticalComment;
+//    /**
+//     * @ORM\Column(type="text", nullable=true)
+//     */
+//    private $biostatisticalComment;
 
     //Administrator Comment
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $administratorComment;
+//    /**
+//     * @ORM\Column(type="text", nullable=true)
+//     */
+//    private $administratorComment;
 
     //Primary Reviewer Comment
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $primaryReviewerComment;
+//    /**
+//     * @ORM\Column(type="text", nullable=true)
+//     */
+//    private $primaryReviewerComment;
 
     //Please check the box if this project is ready for committee to review
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $readyForReview;
+//    /**
+//     * @ORM\Column(type="boolean", nullable=true)
+//     */
+//    private $readyForReview;
 
     /**
      * @ORM\Column(type="date", nullable=true)
@@ -375,53 +375,53 @@ class Project {
 
 
 
-    /**
-     * @return mixed
-     */
-    public function getTitle()
-    {
-        return $this->title;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getTitle()
+//    {
+//        return $this->title;
+//    }
+//
+//    /**
+//     * @param mixed $title
+//     */
+//    public function setTitle($title)
+//    {
+//        $this->title = $title;
+//    }
 
-    /**
-     * @param mixed $title
-     */
-    public function setTitle($title)
-    {
-        $this->title = $title;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getIrbSubmitter()
+//    {
+//        return $this->irbSubmitter;
+//    }
+//
+//    /**
+//     * @param mixed $irbSubmitter
+//     */
+//    public function setIrbSubmitter($irbSubmitter)
+//    {
+//        $this->irbSubmitter = $irbSubmitter;
+//    }
 
-    /**
-     * @return mixed
-     */
-    public function getIrbSubmitter()
-    {
-        return $this->irbSubmitter;
-    }
-
-    /**
-     * @param mixed $irbSubmitter
-     */
-    public function setIrbSubmitter($irbSubmitter)
-    {
-        $this->irbSubmitter = $irbSubmitter;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getIrbNumber()
-    {
-        return $this->irbNumber;
-    }
-
-    /**
-     * @param mixed $irbNumber
-     */
-    public function setIrbNumber($irbNumber)
-    {
-        $this->irbNumber = $irbNumber;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getIrbNumber()
+//    {
+//        return $this->irbNumber;
+//    }
+//
+//    /**
+//     * @param mixed $irbNumber
+//     */
+//    public function setIrbNumber($irbNumber)
+//    {
+//        $this->irbNumber = $irbNumber;
+//    }
 
 //    /**
 //     * @return mixed
@@ -471,149 +471,165 @@ class Project {
         $this->contact = $contact;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getFunded()
-    {
-        return $this->funded;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getFunded()
+//    {
+//        return $this->funded;
+//    }
+//
+//    /**
+//     * @param mixed $funded
+//     */
+//    public function setFunded($funded)
+//    {
+//        $this->funded = $funded;
+//    }
 
-    /**
-     * @param mixed $funded
-     */
-    public function setFunded($funded)
-    {
-        $this->funded = $funded;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getFundedAccountNumber()
+//    {
+//        return $this->fundedAccountNumber;
+//    }
+//
+//    /**
+//     * @param mixed $fundedAccountNumber
+//     */
+//    public function setFundedAccountNumber($fundedAccountNumber)
+//    {
+//        $this->fundedAccountNumber = $fundedAccountNumber;
+//    }
 
-    /**
-     * @return mixed
-     */
-    public function getFundedAccountNumber()
-    {
-        return $this->fundedAccountNumber;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getDescription()
+//    {
+//        return $this->description;
+//    }
+//
+//    /**
+//     * @param mixed $description
+//     */
+//    public function setDescription($description)
+//    {
+//        $this->description = $description;
+//    }
 
-    /**
-     * @param mixed $fundedAccountNumber
-     */
-    public function setFundedAccountNumber($fundedAccountNumber)
-    {
-        $this->fundedAccountNumber = $fundedAccountNumber;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getBudgetSummary()
+//    {
+//        return $this->budgetSummary;
+//    }
+//
+//    /**
+//     * @param mixed $budgetSummary
+//     */
+//    public function setBudgetSummary($budgetSummary)
+//    {
+//        $this->budgetSummary = $budgetSummary;
+//    }
 
-    /**
-     * @return mixed
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getTotalCost()
+//    {
+//        return $this->totalCost;
+//    }
+//
+//    /**
+//     * @param mixed $totalCost
+//     */
+//    public function setTotalCost($totalCost)
+//    {
+//        $this->totalCost = $totalCost;
+//    }
 
-    /**
-     * @param mixed $description
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getProjectType()
+//    {
+//        return $this->projectType;
+//    }
+//
+//    /**
+//     * @param mixed $projectType
+//     */
+//    public function setProjectType($projectType)
+//    {
+//        $this->projectType = $projectType;
+//    }
 
-    /**
-     * @return mixed
-     */
-    public function getBudgetSummary()
-    {
-        return $this->budgetSummary;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getBiostatisticalComment()
+//    {
+//        return $this->biostatisticalComment;
+//    }
+//
+//    /**
+//     * @param mixed $biostatisticalComment
+//     */
+//    public function setBiostatisticalComment($biostatisticalComment)
+//    {
+//        $this->biostatisticalComment = $biostatisticalComment;
+//    }
 
-    /**
-     * @param mixed $budgetSummary
-     */
-    public function setBudgetSummary($budgetSummary)
-    {
-        $this->budgetSummary = $budgetSummary;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getAdministratorComment()
+//    {
+//        return $this->administratorComment;
+//    }
+//
+//    /**
+//     * @param mixed $administratorComment
+//     */
+//    public function setAdministratorComment($administratorComment)
+//    {
+//        $this->administratorComment = $administratorComment;
+//    }
 
-    /**
-     * @return mixed
-     */
-    public function getTotalCost()
-    {
-        return $this->totalCost;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getPrimaryReviewerComment()
+//    {
+//        return $this->primaryReviewerComment;
+//    }
+//
+//    /**
+//     * @param mixed $primaryReviewerComment
+//     */
+//    public function setPrimaryReviewerComment($primaryReviewerComment)
+//    {
+//        $this->primaryReviewerComment = $primaryReviewerComment;
+//    }
 
-    /**
-     * @param mixed $totalCost
-     */
-    public function setTotalCost($totalCost)
-    {
-        $this->totalCost = $totalCost;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getProjectType()
-    {
-        return $this->projectType;
-    }
-
-    /**
-     * @param mixed $projectType
-     */
-    public function setProjectType($projectType)
-    {
-        $this->projectType = $projectType;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getBiostatisticalComment()
-    {
-        return $this->biostatisticalComment;
-    }
-
-    /**
-     * @param mixed $biostatisticalComment
-     */
-    public function setBiostatisticalComment($biostatisticalComment)
-    {
-        $this->biostatisticalComment = $biostatisticalComment;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAdministratorComment()
-    {
-        return $this->administratorComment;
-    }
-
-    /**
-     * @param mixed $administratorComment
-     */
-    public function setAdministratorComment($administratorComment)
-    {
-        $this->administratorComment = $administratorComment;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPrimaryReviewerComment()
-    {
-        return $this->primaryReviewerComment;
-    }
-
-    /**
-     * @param mixed $primaryReviewerComment
-     */
-    public function setPrimaryReviewerComment($primaryReviewerComment)
-    {
-        $this->primaryReviewerComment = $primaryReviewerComment;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getReadyForReview()
+//    {
+//        return $this->readyForReview;
+//    }
+//
+//    /**
+//     * @param mixed $readyForReview
+//     */
+//    public function setReadyForReview($readyForReview)
+//    {
+//        $this->readyForReview = $readyForReview;
+//    }
 
 
 
@@ -663,22 +679,6 @@ class Project {
     public function removePathologist($item)
     {
         $this->pathologists->removeElement($item);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getReadyForReview()
-    {
-        return $this->readyForReview;
-    }
-
-    /**
-     * @param mixed $readyForReview
-     */
-    public function setReadyForReview($readyForReview)
-    {
-        $this->readyForReview = $readyForReview;
     }
 
     /**

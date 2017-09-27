@@ -55,13 +55,13 @@ class ProjectFormNodeController extends ProjectController
         $cycle = "new";
 
         $testing = false;
-        $testing = true;
+        //$testing = true;
 
         $project = new Project($user);
         $project->setVersion(1);
 
         //set order category
-        $categoryStr = "Pathology Call Log Entry";
+        $categoryStr = "HemePath Translational Research Project";  //"Pathology Call Log Entry";
         //$categoryStr = "Nesting Test"; //testing
         $messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
 
@@ -105,8 +105,8 @@ class ProjectFormNodeController extends ProjectController
 
         //top message category id
         $formnodeTopHolderId = null;
-        $categoryStr = "Pathology Call Log Entry";
-        $messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
+        //$categoryStr = "Pathology Call Log Entry";
+        //$messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
         if( $messageCategory ) {
             $formnodeTopHolderId = $messageCategory->getId();
         }
@@ -152,4 +152,22 @@ class ProjectFormNodeController extends ProjectController
         );
     }
 
+
+
+
+    /**
+     * @Route("/project/generate-form-node-tree/", name="translationalresearch_generate_form_node_tree")
+     * @Method("GET")
+     */
+    public function generateFormNodeAction(Request $request)
+    {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
+        }
+
+        $transResFormNodeUtil = $this->get('transres_formnode_util');
+        $count = $transResFormNodeUtil->generateTransResFormNode();
+
+        exit("Form Node Tree generated: ".$count);
+    }
 }

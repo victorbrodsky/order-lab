@@ -33,17 +33,17 @@
     {% endif %}
     {{ transres.usersInfo(form.coInvestigators,coInvestigators,cycle) }}
 
-    {{ formmacros.field(form.title) }}
+    {#{{ formmacros.field(form.title) }}#}
 
-    <div class="well well-sm">
-        {% if cycle == "show" %}
-            {% set irbSubmitter = project.irbSubmitter %}
-        {% else %}
-            {% set irbSubmitter = null %}
-        {% endif %}
-        {{ transres.userInfo(form.irbSubmitter,irbSubmitter,cycle) }}
-        {{ formmacros.field(form.irbNumber) }}
-    </div>
+    {#<div class="well well-sm">#}
+        {#{% if cycle == "show" %}#}
+            {#{% set irbSubmitter = project.irbSubmitter %}#}
+        {#{% else %}#}
+            {#{% set irbSubmitter = null %}#}
+        {#{% endif %}#}
+        {#{{ transres.userInfo(form.irbSubmitter,irbSubmitter,cycle) }}#}
+        {#{{ formmacros.field(form.irbNumber) }}#}
+    {#</div>#}
 
     {#<div class="well well-sm">#}
         {#{{ formmacros.fieldDateLabel(form.startDate,'allow-future-date') }}#}
@@ -58,26 +58,28 @@
     {% endif %}
     {{ transres.userInfo(form.contact,contact,cycle) }}
 
-    <div class="well well-sm">
-        {{ formmacros.checkbox(form.funded) }}
-        {{ formmacros.field(form.fundedAccountNumber) }}
-    </div>
+    {#<div class="well well-sm">#}
+        {#{{ formmacros.checkbox(form.funded) }}#}
+        {#{{ formmacros.field(form.fundedAccountNumber) }}#}
+    {#</div>#}
 
-    {{ formmacros.field(form.description) }}
+    {#{{ formmacros.field(form.description) }}#}
 
-    {{ formmacros.field(form.budgetSummary) }}
+    {#{{ formmacros.field(form.budgetSummary) }}#}
 
-    {{ formmacros.field(form.totalCost) }}
+    {#{{ formmacros.field(form.totalCost) }}#}
 
-    {{ formmacros.field(form.projectType) }}
+    {#{{ formmacros.field(form.projectType) }}#}
 
-    {{ formmacros.field(form.biostatisticalComment) }}
+    {#{{ formmacros.field(form.biostatisticalComment) }}#}
 
-    {{ formmacros.field(form.administratorComment) }}
+    {#{{ formmacros.field(form.administratorComment) }}#}
 
+    <div style="display: none">
     {% if form.messageCategory is defined %}
         {{ treemacros.compositeTreeNode(form.messageCategory,cycle,"noprototype") }}
     {% endif %}
+    </div>
 
     <div id="form-node-holder"></div>
 
