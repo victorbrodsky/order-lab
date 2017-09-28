@@ -38,10 +38,10 @@ class TranslationalResearchAccessRequestController extends AccessRequestControll
         $this->siteName = 'translationalresearch';
         $this->siteNameShowuser = 'employees';
         $this->siteNameStr = 'Translational Research';
-        $this->roleBanned = 'ROLE_TRANSLATIONALRESEARCH_BANNED';
-        $this->roleUser = 'ROLE_TRANSLATIONALRESEARCH_USER';
-        $this->roleUnapproved = 'ROLE_TRANSLATIONALRESEARCH_UNAPPROVED';
-        $this->roleEditor = 'ROLE_TRANSLATIONALRESEARCH_ADMIN';
+        $this->roleBanned = 'ROLE_TRANSRES_BANNED';
+        $this->roleUser = 'ROLE_TRANSRES_USER';
+        $this->roleUnapproved = 'ROLE_TRANSRES_UNAPPROVED';
+        $this->roleEditor = 'ROLE_TRANSRES_ADMIN';
     }
 
     /**

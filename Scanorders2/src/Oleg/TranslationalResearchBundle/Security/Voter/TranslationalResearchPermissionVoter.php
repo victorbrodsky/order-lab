@@ -41,7 +41,7 @@ class TranslationalResearchPermissionVoter extends BasePermissionVoter //BasePer
 {
 
     protected function getSiteRoleBase() {
-        return 'TRANSLATIONALRESEARCH';
+        return 'TRANSRES';
     }
 
     protected function getSitename() {

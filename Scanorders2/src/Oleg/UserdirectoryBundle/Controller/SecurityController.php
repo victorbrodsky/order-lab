@@ -58,7 +58,7 @@ class SecurityController extends Controller
      * @Template()
      */
     public function loginAction( Request $request ) {
-
+        //exit('user: loginAction');
         $userSecUtil = $this->get('user_security_utility');
 
         $routename = $request->get('_route');

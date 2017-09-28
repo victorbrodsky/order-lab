@@ -118,14 +118,14 @@ class ProjectFormNodeController extends ProjectController
 
             //exit("Project submitted");
 
-            //process form nodes
-            $formNodeUtil = $this->get('user_formnode_utility');
-            $formNodeUtil->processFormNodes($request,$project->getMessageCategory(),$project,$testing); //testing
-
             if( !$testing ) {
                 $em->persist($project);
                 $em->flush();
             }
+
+            //process form nodes
+            $formNodeUtil = $this->get('user_formnode_utility');
+            $formNodeUtil->processFormNodes($request,$project->getMessageCategory(),$project,$testing); //testing
 
             $msg = "Project has been successfully submitted.";
 

@@ -11,31 +11,53 @@
         {{ title }}
     </h4>
 
-    <table class="table table-hover table-condensed text-left table-bordered">
+    {#<table class="table table-hover table-condensed text-left table-bordered">#}
+    <table class="records_list table table-condensed text-left my-table-class">
         <thead>
             <tr>
                 {#<th>Id</th>#}
                 <th>{{ knp_pagination_sortable(projects, 'ID#', 'project.id') }}</th>
-                <th>{{ knp_pagination_sortable(projects, 'IRB#', 'project.irbNumber') }}</th>
+                {#<th>{{ knp_pagination_sortable(projects, 'IRB#', 'project.irbNumber') }}</th>#}
                 <th>{{ knp_pagination_sortable(projects, 'Principal Investigator(s)', 'principalInvestigatorsInfos.displayName') }}</th>
-                <th>{{ knp_pagination_sortable(projects, 'Project Title', 'project.title') }}</th>
-                <th>{{ knp_pagination_sortable(projects, 'Project Funded', 'project.funded') }}</th>
+                <th>
+                    {#{{ knp_pagination_sortable(projects, 'Project Title', 'project.title') }}#}
+                    Project Title
+                </th>
+                <th>
+                    {#{{ knp_pagination_sortable(projects, 'Project Funded', 'project.funded') }}#}
+                    Project Funded
+                </th>
                 <th>{{ knp_pagination_sortable(projects, 'State', 'project.state') }}</th>
                 <th>{{ knp_pagination_sortable(projects, 'Approval Date', 'project.approvalDate') }}</th>
                 {#<th>{{ knp_pagination_sortable(projects, 'Expiration Date', 'project.expirationDate') }}</th>#}
                 <th>Actions</th>
             </tr>
         </thead>
-        <tbody data-link="row" class="rowlink">
+
+        {% set count = 0 %}
         {% for project in projects %}
-            <tr>
+
+            {% if count is odd %}
+                {% set trclassname = "table-row-separator-gray" %}
+            {% else %}
+                {% set trclassname = "table-row-separator-white" %}
+            {% endif %}
+            {% set count = count + 1 %}
+
+            {#add if state has "_rejected"?#}
+            {% if project.state == 'not_approved' or project.state == 'closed' %}
+                {% set trclassname = "order-reject-status" %}
+            {% endif %}
+
+            <tbody data-link="row" class="rowlink table-tbody-hover" {{ trclassname }}>
+            <tr style="border-bottom: 1px solid #C6C6C6;">
                 <td>
                     <a href="{{ path(translationalresearch_sitename~'_project_show', { 'id': project.id }) }}" target="_blank">{{ project.id }}</a>
                 </td>
 
-                <td>
-                    {{ project.irbNumber }}
-                </td>
+                {#<td>#}
+                    {#{{ project.irbNumber }}#}
+                {#</td>#}
 
                 <td class="rowlink-skip">
                     {% for principalInvestigator in project.principalInvestigators %}
@@ -46,10 +68,14 @@
                     {% endfor %}
                 </td>
 
-                <td>{{ project.title }}</td>
+                <td>
+                    {#{{ project.title }}#}
+                    {{ transres_formnode_util.getProjectFormNodeFieldByName(project,"Title") }}
+                </td>
 
                 <td>
-                    {% if project.funded %}
+                    {#{% if project.funded %}#}
+                    {% if transres_formnode_util.getProjectFormNodeFieldByName(project,"Funded") %}
                         Funded
                     {% else %}
                         Not Funded
@@ -115,6 +141,12 @@
 
                     </div>
                 </td>
+            </tr>
+            <tr class="table-no-border">
+                <td style="display: none">
+                    <a href="{{ path(translationalresearch_sitename~'_project_show', { 'id': project.id }) }}" target="_blank">Show Project</a>
+                </td>
+                {{ user_formnode_utility.getFormNodeHolderShortInfo(project,project.messageCategory,1,trclassname)|raw }}
             </tr>
         {% endfor %}
         </tbody>

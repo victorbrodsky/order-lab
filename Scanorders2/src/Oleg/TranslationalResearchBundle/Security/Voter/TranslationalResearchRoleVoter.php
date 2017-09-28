@@ -35,7 +35,7 @@ use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface
 class TranslationalResearchRoleVoter extends BaseRoleVoter {
 
     protected function getSiteRoleBase() {
-        return 'TRANSLATIONALRESEARCH';
+        return 'TRANSRES';
     }
 
     protected function getSitename() {

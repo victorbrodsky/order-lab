@@ -12,26 +12,7 @@
         {{ formmacros.field(form.approvalDate) }}
     {% endif %}
 
-    {% if cycle == "show" %}
-        {% set principalInvestigators = project.principalInvestigators %}
-    {% else %}
-        {% set principalInvestigators = null %}
-    {% endif %}
-    {{ transres.usersInfo(form.principalInvestigators,principalInvestigators,cycle) }}
 
-    {% if cycle == "show" %}
-        {% set pathologists = project.pathologists %}
-    {% else %}
-        {% set pathologists = null %}
-    {% endif %}
-    {{ transres.usersInfo(form.pathologists,pathologists,cycle) }}
-
-    {% if cycle == "show" %}
-        {% set coInvestigators = project.coInvestigators %}
-    {% else %}
-        {% set coInvestigators = null %}
-    {% endif %}
-    {{ transres.usersInfo(form.coInvestigators,coInvestigators,cycle) }}
 
     {#{{ formmacros.field(form.title) }}#}
 
@@ -51,12 +32,12 @@
     {#</div>#}
 
     {#{{ formmacros.field(form.contact) }}#}
-    {% if cycle == "show" %}
-        {% set contact = project.contact %}
-    {% else %}
-        {% set contact = null %}
-    {% endif %}
-    {{ transres.userInfo(form.contact,contact,cycle) }}
+    {#{% if cycle == "show" %}#}
+        {#{% set contact = project.contact %}#}
+    {#{% else %}#}
+        {#{% set contact = null %}#}
+    {#{% endif %}#}
+    {#{{ transres.userInfo(form.contact,contact,cycle) }}#}
 
     {#<div class="well well-sm">#}
         {#{{ formmacros.checkbox(form.funded) }}#}
@@ -74,6 +55,53 @@
     {#{{ formmacros.field(form.biostatisticalComment) }}#}
 
     {#{{ formmacros.field(form.administratorComment) }}#}
+
+
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-primary">
+            <div class="panel-heading" role="tab" id="projectRequestersHeading">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#projectRequesters" aria-expanded="true">
+                        Project's Requester(s)
+                    </a>
+                </h4>
+            </div>
+            <div id="projectRequesters" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="projectRequestersHeading">
+                <div class="panel-body">
+
+                    {% if cycle == "show" %}
+                        {% set principalInvestigators = project.principalInvestigators %}
+                    {% else %}
+                        {% set principalInvestigators = null %}
+                    {% endif %}
+                    {{ transres.usersInfo(form.principalInvestigators,principalInvestigators,cycle) }}
+
+                    {% if cycle == "show" %}
+                        {% set pathologists = project.pathologists %}
+                    {% else %}
+                        {% set pathologists = null %}
+                    {% endif %}
+                    {{ transres.usersInfo(form.pathologists,pathologists,cycle) }}
+
+                    {% if cycle == "show" %}
+                        {% set coInvestigators = project.coInvestigators %}
+                    {% else %}
+                        {% set coInvestigators = null %}
+                    {% endif %}
+                    {{ transres.usersInfo(form.coInvestigators,coInvestigators,cycle) }}
+
+                    {% if cycle == "show" %}
+                        {% set contact = project.contact %}
+                    {% else %}
+                        {% set contact = null %}
+                    {% endif %}
+                    {{ transres.userInfo(form.contact,contact,cycle) }}
+
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <div style="display: none">
     {% if form.messageCategory is defined %}
@@ -187,6 +215,11 @@
     {#{% if project.state.vars.value == "final_review" %}#}
         {#{% set reviews = project.finalReviews %}#}
     {#{% endif %}#}
+
+    <p>
+        <button type="button" class="btn btn-default btn-sm" onClick="collapseAll()" >Collapse All</button>
+        <button type="button" class="btn btn-default btn-sm" onClick="extendAll()" >Expand All</button>
+    </p>
 
     {% set showIrbReview = 1 %}
     {% set showAdminReview = 1 %}

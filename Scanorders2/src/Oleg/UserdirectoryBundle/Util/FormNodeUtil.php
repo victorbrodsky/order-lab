@@ -2000,7 +2000,9 @@ class FormNodeUtil
 
         $receivedValueEntityNamespaceArr = explode("\\", $receivedValueEntityNamespace);
         $bundleName = $receivedValueEntityNamespaceArr[0] . $receivedValueEntityNamespaceArr[1];
-        $repo = $this->em->getRepository($bundleName.':'.$receivedValueEntityName);
+        $repoNameStr = $bundleName.':'.$receivedValueEntityName;
+        //echo "repoNameStr=".$repoNameStr."<br>";
+        $repo = $this->em->getRepository($repoNameStr);
 
         return $repo;
     }

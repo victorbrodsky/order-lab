@@ -9,7 +9,7 @@
 {% endblock %}
 
 
-{% block content %}
+{% block contentleft %}
 
     <h4 class="text-info" align="center">
         {{ title }}
@@ -20,75 +20,61 @@
 
     {{ transres.projectHeader(project) }}
 
-    {#{% for review_form in review_forms %}#}
-        {#{{ form_widget(review_form) }}#}
-    {#{% endfor %}#}
 
-    {{ form_start(form) }}
-    {#{{ form_widget(form) }}#}
+    {#{{ form_start(form) }}#}
 
-    {#{% if form.vars.id  %}#}
-    {#{{ formmacros.simplefield("Project #:", form.vars.id, "input", "disabled") }}#}
-    {#{% endif %}#}
+    {#{{ transres.projectReviews(form,cycle,sitename) }}#}
+    {#<br>#}
 
-    {{ transres.projectReviews(form,cycle,sitename) }}
-    <br>
-
-    {% if form.createDate is defined or form.submitter is defined %}
-        <div class="well well-sm">
-            {% if form.createDate is defined %}
-                {{ formmacros.field(form.createDate) }}
-            {% endif %}
-            {% if form.submitter is defined %}
-                {{ formmacros.field(form.submitter) }}
-            {% endif %}
-        </div>
-    {% endif %}
-
-    {#{% if form.updateDate is defined or form.updateUser is defined  %}#}
+    {#{% if form.createDate is defined or form.submitter is defined %}#}
         {#<div class="well well-sm">#}
-            {#{% if form.updateDate is defined %}#}
-                {#{{ formmacros.field(form.updateDate) }}#}
+            {#{% if form.createDate is defined %}#}
+                {#{{ formmacros.field(form.createDate) }}#}
             {#{% endif %}#}
-            {#{% if form.updateUser is defined %}#}
-                {#{{ formmacros.field(form.updateUser) }}#}
+            {#{% if form.submitter is defined %}#}
+                {#{{ formmacros.field(form.submitter) }}#}
             {#{% endif %}#}
         {#</div>#}
     {#{% endif %}#}
 
-    {{ transres.updateInfo(form,cycle) }}
+    {#{{ transres.updateInfo(form,cycle) }}#}
+    {##}
+    {#{{ transres.projectForm(form,project,cycle) }}#}
+    {##}
+    {#{% if form.primaryReviewerComment is defined %}#}
+        {#{{ formmacros.field(form.primaryReviewerComment) }}#}
+    {#{% endif %}#}
+    {##}
+    {#{{ form_end(form) }}#}
+
+    {% set callLogViewClass = "order-white-background" %}
+    <div class="{{ callLogViewClass }}">
+
+    {{ user_formnode_utility.getFormNodeHolderShortInfoForView(project,project.messageCategory,false)|raw }}
+
+    </div>
 
 
-    {{ transres.projectForm(form,project,cycle) }}
+    <div class="well text-center">
 
+        {% if is_granted('ROLE_TRANSRES_ADMIN') %}
+            <br>
+            <p>
+                <a class="btn btn-warning" href="{{ path(translationalresearch_sitename~'_project_edit', { 'id': project.id }) }}">Edit project</a>
+            </p>
+        {% endif %}
+        {#{{ transres.projectHeader(project) }}#}
 
-    {#{{ formmacros.checkbox(form.readyForReview) }}#}
-
-    {% if form.primaryReviewerComment is defined %}
-        {{ formmacros.field(form.primaryReviewerComment) }}
-    {% endif %}
-
-
-    {{ form_end(form) }}
-
-
-    {% if is_granted('ROLE_TRANSRES_ADMIN') %}
+        <br>
         <br>
         <p>
-            <a class="btn btn-warning" href="{{ path(translationalresearch_sitename~'_project_edit', { 'id': project.id }) }}">Edit project</a>
+            <a href="{{ path(translationalresearch_sitename~'_project_index') }}">Back to the list</a>
         </p>
-    {% endif %}
-    {#{{ transres.projectHeader(project) }}#}
+        {#{{ form_start(delete_form) }}#}
+        {#<input class="btn btn-danger" type="submit" value="Delete">#}
+        {#{{ form_end(delete_form) }}#}
 
-    <br>
-    <br>
-    <p>
-        <a href="{{ path(translationalresearch_sitename~'_project_index') }}">Back to the list</a>
-    </p>
-    {#{{ form_start(delete_form) }}#}
-    {#<input class="btn btn-danger" type="submit" value="Delete">#}
-    {#{{ form_end(delete_form) }}#}
-
+    </div>
 
 
     {#<table>#}

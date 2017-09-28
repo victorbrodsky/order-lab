@@ -159,7 +159,7 @@ class ProjectController extends Controller
 
         $cycle = "show";
 
-        $form = $this->createProjectForm($project,$cycle,$request);
+        //$form = $this->createProjectForm($project,$cycle,$request);
 
         $deleteForm = $this->createDeleteForm($project);
 
@@ -170,7 +170,7 @@ class ProjectController extends Controller
 
         return array(
             'project' => $project,
-            'form' => $form->createView(),
+            //'form' => $form->createView(),
             'cycle' => $cycle,
             'title' => "Project ID ".$project->getId(),
             'delete_form' => $deleteForm->createView(),
