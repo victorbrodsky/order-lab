@@ -172,7 +172,9 @@ class ProjectFormNodeController extends ProjectController
 
 
     /**
-     * Get Call Log Entry Message Edit page
+     * Get Project Edit page
+     * Originally edit form generates a new entity Project with new id and same oid.
+     *
      * @Route("/project/edit/{id}", name="translationalresearch_project_edit")
      * @Template("OlegTranslationalResearchBundle:Project:edit.html.twig")
      * @Method({"GET", "POST"})

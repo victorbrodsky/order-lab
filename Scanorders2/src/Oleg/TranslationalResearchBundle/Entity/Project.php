@@ -860,7 +860,9 @@ class Project {
         return $title;
     }
 
-
+    public function isEditable() {
+        return true;
+    }
 
     public function __toString() {
         return "Project id=".$this->getId();

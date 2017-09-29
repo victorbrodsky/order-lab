@@ -445,8 +445,29 @@ class FormNodeUtil
 //            //print "</pre><br>";
 //        }
 
-        //1) create a new list element
-        $newListElement = $this->createNewList($formNode);
+        //1) create a new list element OR get existing listElement for this $holderEntity
+        if( method_exists($holderEntity, 'isEditable') && $holderEntity->isEditable() ){
+            echo "object isEditable => object is editable without creating a new amend copy";
+
+            $newListElement = $this->getUniqueFormNodeListRecord($formNode,$holderEntity);
+            if( $newListElement ) {
+                if( isset($formValue) ) {
+                    $newListElement->setValue($formValue);
+                }
+
+                if( !$noflush ) {
+                    $this->em->persist($newListElement);
+                    $this->em->flush($newListElement); //testing
+                }
+
+                return $newListElement;
+            }
+
+        }
+
+        echo "object is not editable => create a new amend only";
+        $newListElement = $this->createNewList($formNode,$holderEntity);
+
         //echo "newListElement=".$newListElement."<br>";
         if( !$newListElement ) {
             //exit("No newListElement created: formNode=".$formNode."; formValue=".$formValue."<br>");
@@ -496,6 +517,53 @@ class FormNodeUtil
         }
 
         return $newListElement;
+    }
+
+    public function ddd() {
+
+    }
+
+    //get unique list object for recording the form's value
+    public function getUniqueFormNodeListRecord($formNode,$holderEntity) {
+        $treeRepository = $this->getFormNodeReceivedListRepository($formNode); ////Oleg\UserdirectoryBundle\Entity:ObjectTypeDropdown
+
+        $dql =  $treeRepository->createQueryBuilder("list");
+        $dql->select('list');
+        $dql->where('list.entityName = :entityName AND list.entityNamespace = :entityNamespace AND list.entityId = :entityId');
+        $dql->andWhere('list.formNode = :formNodeId');
+        $dql->orderBy('list.arraySectionIndex','DESC');
+        $dql->addOrderBy('list.orderinlist', 'ASC');
+
+        $query = $this->em->createQuery($dql);
+
+        //echo "query=".$query->getSql()."<br>";
+
+        $mapper = $this->getMapper($holderEntity);
+
+        $query->setParameters(
+            array(
+                'entityName' => $mapper['entityName'],              //Project
+                'entityNamespace' => $mapper['entityNamespace'],    //Oleg\TranslationalResearchBundle\Entity
+                'entityId' => $mapper['entityId'],                  //project ID
+                'formNodeId' => $formNode->getId()
+            )
+        );
+
+        $listElements = $query->getResult();
+
+        if( count($listElements) == 0 ) {
+            return null;
+        }
+
+        if( count($listElements) == 1 ) {
+            return $listElements[0];
+        }
+
+        if( count($listElements) > 1 ) {
+            throw new \Exception( "Found multiple recording list: formNode ID=".$formNode->getId()."; holderEntity ID=".$holderEntity->getId() );
+        }
+
+        return null;
     }
 
     //Used in FormNodeController to show fields and values
@@ -674,7 +742,7 @@ class FormNodeUtil
         return true;
     }
 
-    public function createNewList( $formNode ) {
+    public function createNewList( $formNode, $holderEntity ) {
         $userSecUtil = $this->container->get('user_security_utility');
         $formNodeObjectType = $formNode->getObjectType();
         //$entityNamespace = $formNodeObjectType->getEntityNamespace();
@@ -1087,10 +1155,10 @@ class FormNodeUtil
                 if( is_array($formNodeValue) ) {
 
                     //////////// Case 1: array //////////////
-                    echo "Case 1: array: ".$formNode->getName().":<br>";
-                    print "<pre>";
-                    print_r($formNodeValue);
-                    print "</pre><br>";
+//                    echo "Case 1: array: ".$formNode->getName().":<br>";
+//                    print "<pre>";
+//                    print_r($formNodeValue);
+//                    print "</pre><br>";
 
                     //Array ( [0] => Array ( [formNodeValue] => 01/10/2017 8:8 [formNodeId] => 192 [arraySectionId] => 191 [arraySectionIndex] => 1 )
                     // [1] => Array ( [formNodeValue] => 01/09/2017 7:7 [formNodeId] => 192 [arraySectionId] => 191 [arraySectionIndex] => 0 ) )
@@ -1107,7 +1175,7 @@ class FormNodeUtil
 
                         //$thisFormNodeValue = $this->getValueStrFromValueId($formNode, $receivingEntity, $valArr['formNodeValue']);
                         $thisFormNodeValue = $this->getValueStrFromValueId($formNode, $receivingEntity, $thisValArr);
-                        echo "thisFormNodeValue=$thisFormNodeValue <br>";
+                        //echo "thisFormNodeValue=$thisFormNodeValue <br>";
 
                         $formNodeValueArr[$valArr['arraySectionIndex']] = $thisFormNodeValue;   //$this->getValueStrFromValueId($formNode, $receivingEntity, $valArr['formNodeValue']);
                     }
@@ -1182,7 +1250,7 @@ class FormNodeUtil
                 } else {
 
                     //////////// Case 2: single //////////////
-                    echo "<br>Case 2: single: ".$formNode->getName().": ".$formNodeValue."<br>";
+                    //echo "<br>Case 2: single: ".$formNode->getName().": ".$formNodeValue."<br>";
 
                     //hide message fields that are empty/have no value
                     if( $formNodeValue == null || $formNodeValue == "" ) {
@@ -1490,10 +1558,12 @@ class FormNodeUtil
 
     public function getViewValueShortInfo( $formNode, $value ) {
         if( $formNode->getObjectTypeName() == "Form Field - Checkbox" ) {
-            echo "Checkbox formNodeValue=".$value."<br>";
+            //echo "Checkbox formNodeValue=".$value."<br>";
+            $value = null;
             if( $value === true ) {
                 return "Yes";
-            } else {
+            }
+            if( $value === false ) {
                 return "No";
             }
         }
@@ -2089,7 +2159,7 @@ class FormNodeUtil
         }
 
         if( count($results) == 1 ) {
-            echo "single result: ".$formNode->getName()."; entityName=".$mapper['entityName']."; ReceivingEntityId=".$results[0]->getId()."<br>";
+            //echo "single result: ".$formNode->getName()."; entityName=".$mapper['entityName']."; ReceivingEntityId=".$results[0]->getId()."<br>";
             //return $results[0]->getValue();
             //$formNodeValue =  $this->getFormNodeValueByType($formNode,$results[0]);
             $formNodeValue = $this->processFormNodeValue($formNode,$results[0],$results[0]->getValue(),true);
@@ -2102,7 +2172,7 @@ class FormNodeUtil
         }
 
         if( count($results) > 1 ) {
-            echo "multiple results(".count(count($results))."): ".$formNode->getName()."<br>";
+            //echo "multiple results(".count(count($results))."): ".$formNode->getName()."<br>";
             $resArr = array();
             foreach( $results as $result ) {
                 //$formNodeValue = $this->getFormNodeValueByType($formNode,$result);
@@ -2165,6 +2235,17 @@ class FormNodeUtil
         return $formNodeId;
     }
 
+    public function getMapper($entity) {
+        $class = new \ReflectionClass($entity);
+        $className = $class->getShortName();
+        $classNamespace = $class->getNamespaceName();
+        $mapper = array(
+            'entityNamespace' => $classNamespace,   //"Oleg\\OrderformBundle\\Entity",
+            'entityName' => $className,             //"Message",
+            'entityId' => $entity->getId(),
+        );
+        return $mapper;
+    }
 
 
 
