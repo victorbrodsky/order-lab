@@ -940,7 +940,7 @@ class CallEntryController extends Controller
         //add new encounter to patient
         $patient->addEncounter($encounter2);
 
-        $message = $this->createCalllogEntryMessage($user,$permittedInstitutions,$system,$messageTypeId);
+        $message = $this->createCalllogEntryMessage($user,$permittedInstitutions,$system,$messageTypeId); //new
 
         //set patient list
         $patientList = $calllogUtil->getDefaultPatientList();
@@ -1047,7 +1047,7 @@ class CallEntryController extends Controller
         $cycle = 'new';
         $formtype = 'call-entry';
 
-        $message = $this->createCalllogEntryMessage($user,$permittedInstitutions,$system);
+        $message = $this->createCalllogEntryMessage($user,$permittedInstitutions,$system); //save
 
         $form = $this->createCalllogEntryForm($message,$mrntype,$mrn,$cycle); ///entry/save
 

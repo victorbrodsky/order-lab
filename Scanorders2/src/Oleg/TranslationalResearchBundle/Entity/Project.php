@@ -64,6 +64,38 @@ class Project {
     private $updateDate;
 
     /**
+     * Institutional PHI Scope: users with the same Institutional PHI Scope can view the data of this order
+     *
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
+     */
+    private $institution;
+
+    /**
+     * oid - id of the original order. Required for amend logic.
+     * When Amend order, switch orders to keep the original id and at newly created order set oid of the original order
+     * @var string
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $oid;
+
+    /**
+     * MessageCategory with subcategory (parent-children hierarchy)
+     *
+     * @ORM\ManyToOne(targetEntity="Oleg\OrderformBundle\Entity\MessageCategory", cascade={"persist"})
+     */
+    private $messageCategory;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $version;
+
+//    /**
+//     * @ORM\OneToMany(targetEntity="FormVersion", mappedBy="message", cascade={"persist","remove"})
+//     */
+//    private $formVersions;
+
+    /**
      * State of the project (state machine variable)
      *
      * @ORM\Column(type="string", nullable=true)
@@ -229,23 +261,6 @@ class Project {
      */
     private $finalReviews;
 
-
-    /**
-     * MessageCategory with subcategory (parent-children hierarchy)
-     *
-     * @ORM\ManyToOne(targetEntity="Oleg\OrderformBundle\Entity\MessageCategory", cascade={"persist"})
-     */
-    private $messageCategory;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $version;
-
-//    /**
-//     * @ORM\OneToMany(targetEntity="FormVersion", mappedBy="message", cascade={"persist","remove"})
-//     */
-//    private $formVersions;
 
 
     public function __construct($user=null) {
@@ -799,6 +814,39 @@ class Project {
     {
         $this->version = $version;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getInstitution()
+    {
+        return $this->institution;
+    }
+
+    /**
+     * @param mixed $institution
+     */
+    public function setInstitution($institution)
+    {
+        $this->institution = $institution;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOid()
+    {
+        return $this->oid;
+    }
+
+    /**
+     * @param string $oid
+     */
+    public function setOid($oid)
+    {
+        $this->oid = $oid;
+    }
+
 
     //show the name of the form (from the form hierarchy) that was used to generate this submitted message.
     // Make sure to save this form ID of the form linked from the Message Type at the time of message submission

@@ -1087,10 +1087,10 @@ class FormNodeUtil
                 if( is_array($formNodeValue) ) {
 
                     //////////// Case 1: array //////////////
-//                    echo "Case 1: array: ".$formNode->getName().":<br>";
-//                    print "<pre>";
-//                    print_r($formNodeValue);
-//                    print "</pre><br>";
+                    echo "Case 1: array: ".$formNode->getName().":<br>";
+                    print "<pre>";
+                    print_r($formNodeValue);
+                    print "</pre><br>";
 
                     //Array ( [0] => Array ( [formNodeValue] => 01/10/2017 8:8 [formNodeId] => 192 [arraySectionId] => 191 [arraySectionIndex] => 1 )
                     // [1] => Array ( [formNodeValue] => 01/09/2017 7:7 [formNodeId] => 192 [arraySectionId] => 191 [arraySectionIndex] => 0 ) )
@@ -1107,7 +1107,7 @@ class FormNodeUtil
 
                         //$thisFormNodeValue = $this->getValueStrFromValueId($formNode, $receivingEntity, $valArr['formNodeValue']);
                         $thisFormNodeValue = $this->getValueStrFromValueId($formNode, $receivingEntity, $thisValArr);
-                        //echo "thisFormNodeValue=$thisFormNodeValue <br>";
+                        echo "thisFormNodeValue=$thisFormNodeValue <br>";
 
                         $formNodeValueArr[$valArr['arraySectionIndex']] = $thisFormNodeValue;   //$this->getValueStrFromValueId($formNode, $receivingEntity, $valArr['formNodeValue']);
                     }
@@ -1145,6 +1145,9 @@ class FormNodeUtil
                         //process special cases (i.e. userWrapper, checkbox etc.)
                         $elementValue = $this->processFormNodeValue($formNode,$receivingEntity,$elementValue,true);
 
+                        //short info process value (i.e. checkbox => true === Yes, false === No )
+                        $formNodeValue = $this->getViewValueShortInfo($formNode,$formNodeValue);
+
                         $parentFormNode = $formNode->getParent();
                         if( $parentFormNode ) {
                             $parentFormNodeObjectType = $parentFormNode->getObjectType();
@@ -1179,7 +1182,7 @@ class FormNodeUtil
                 } else {
 
                     //////////// Case 2: single //////////////
-                    //echo "<br>Case 2: single: ".$formNode->getName().": ".$formNodeValue."<br>";
+                    echo "<br>Case 2: single: ".$formNode->getName().": ".$formNodeValue."<br>";
 
                     //hide message fields that are empty/have no value
                     if( $formNodeValue == null || $formNodeValue == "" ) {
@@ -1194,6 +1197,9 @@ class FormNodeUtil
                     //////////////// Regular form node /////////////////////
                     //process userWrapper case
                     $formNodeValue = $this->processFormNodeValue($formNode,$receivingEntity,$formNodeValue,true);
+
+                    //short info process value (i.e. checkbox => true === Yes, false === No )
+                    $formNodeValue = $this->getViewValueShortInfo($formNode,$formNodeValue);
 
                     //$formNodeValue = $this->getValueStrFromValueDatetime($formNode, $formNodeValue);
 
@@ -1480,6 +1486,18 @@ class FormNodeUtil
         }
 
         return $result;
+    }
+
+    public function getViewValueShortInfo( $formNode, $value ) {
+        if( $formNode->getObjectTypeName() == "Form Field - Checkbox" ) {
+            echo "Checkbox formNodeValue=".$value."<br>";
+            if( $value === true ) {
+                return "Yes";
+            } else {
+                return "No";
+            }
+        }
+        return $value;
     }
 
     //Used only for get SingleFormNodeHolderShortInfo
@@ -2071,7 +2089,7 @@ class FormNodeUtil
         }
 
         if( count($results) == 1 ) {
-            //echo "single result: ".$formNode->getName()."; entityName=".$mapper['entityName']."; ReceivingEntityId=".$results[0]->getId()."<br>";
+            echo "single result: ".$formNode->getName()."; entityName=".$mapper['entityName']."; ReceivingEntityId=".$results[0]->getId()."<br>";
             //return $results[0]->getValue();
             //$formNodeValue =  $this->getFormNodeValueByType($formNode,$results[0]);
             $formNodeValue = $this->processFormNodeValue($formNode,$results[0],$results[0]->getValue(),true);
@@ -2084,7 +2102,7 @@ class FormNodeUtil
         }
 
         if( count($results) > 1 ) {
-            //echo "multiple results(".count(count($results))."): ".$formNode->getName()."<br>";
+            echo "multiple results(".count(count($results))."): ".$formNode->getName()."<br>";
             $resArr = array();
             foreach( $results as $result ) {
                 //$formNodeValue = $this->getFormNodeValueByType($formNode,$result);

@@ -239,7 +239,7 @@ class CallLogEditController extends CallEntryController
             if( !$calllogUtil->isLatestEncounterVersion($encounter) ) {
                 $latestEncounter = $em->getRepository('OlegOrderformBundle:Encounter')->findLatestVersionEncounter($encounter);
                 if( $latestEncounter ) {
-                    echo "Original id=".$encounter->getId()."; version=".$encounter->getVersion()." => latestEncounter: id=".$latestEncounter->getId()."; version=".$latestEncounter->getVersion()."<br>";
+                    //echo "Original id=".$encounter->getId()."; version=".$encounter->getVersion()." => latestEncounter: id=".$latestEncounter->getId()."; version=".$latestEncounter->getVersion()."<br>";
                     //clear encounter
                     $message->clearEncounter();
                     //add encounter to the message
