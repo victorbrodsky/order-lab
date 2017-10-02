@@ -61,9 +61,9 @@ class FormNodeUtil
 
         $data = $request->request->all();
 
-        print "<pre>";
-        print_r($data);
-        print "</pre>";
+//        print "<pre>";
+//        print_r($data);
+//        print "</pre>";
 
         //process by form root's children nodes
         //$this->processFormNodeRecursively($data,$rootFormNode,$holderEntity);

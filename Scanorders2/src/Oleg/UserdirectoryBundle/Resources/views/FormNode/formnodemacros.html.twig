@@ -760,6 +760,7 @@
         {% set disabled = "disabled" %}
     {% endif %}
 
+    <input type='hidden' value='0' name="{{ fieldname }}">
     <input
             type="checkbox"
             id="oleg_userdirectorybundle_formnode_{{ formNodeId }}"
@@ -807,6 +808,7 @@
         {% else %}
             {% set checked = '' %}
         {% endif %}
+            <input type='hidden' value='0' name="{{ fieldname }}[{{ dropdownValue.id }}]">
             <input
                     type="checkbox"
                     id="oleg_userdirectorybundle_formnode_{{ formNodeId }}"

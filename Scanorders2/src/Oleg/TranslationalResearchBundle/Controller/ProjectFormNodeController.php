@@ -227,6 +227,13 @@ class ProjectFormNodeController extends ProjectController
                 $em->flush();
             }
 
+            //testing
+//            print "<pre>";
+//            var_dump($_POST);
+//            print "</pre><br>";
+//            echo "formnode[420]=".$_POST['formnode[420]']."<br>";
+//            echo "formnode[421]=".$_POST['formnode[421]']."<br>";
+
             //process form nodes
             $formNodeUtil = $this->get('user_formnode_utility');
             $formNodeUtil->processFormNodes($request,$project->getMessageCategory(),$project,$testing); //testing
