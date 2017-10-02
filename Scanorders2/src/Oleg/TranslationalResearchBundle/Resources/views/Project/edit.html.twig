@@ -31,6 +31,28 @@
     {{ transres.projectHeader(project) }}
 
     {{ form_start(edit_form) }}
+
+        {% if edit_form.state is defined %}
+            {{ formmacros.field(edit_form.state) }}
+        {% endif %}
+
+        {% if edit_form.approvalDate is defined %}
+            {{ formmacros.field(edit_form.approvalDate) }}
+        {% endif %}
+
+        {% if edit_form.createDate is defined or edit_form.submitter is defined %}
+            {#<div class="well well-sm">#}
+                {% if edit_form.createDate is defined %}
+                    {{ formmacros.field(edit_form.createDate) }}
+                {% endif %}
+                {% if edit_form.submitter is defined %}
+                    {{ formmacros.field(edit_form.submitter) }}
+                {% endif %}
+            {#</div>#}
+        {% endif %}
+        {{ transres.updateInfo(edit_form,cycle) }}
+        <br>
+
         {#{{ form_widget(edit_form) }}#}
 
         {#<div id="form-prototype-data"#}
@@ -68,18 +90,6 @@
         {#{{ transres.projectReviews(project,project.committeeReviews,cycle,'transres-irbreviews','noprototype', sitename,1) }}#}
         {#{{ transres.projectReviews(project,project.finalReviews,cycle,'transres-irbreviews','noprototype', sitename,1) }}#}
 
-        <br>
-
-        {% if edit_form.createDate is defined or edit_form.submitter is defined %}
-            <div class="well well-sm">
-                {% if edit_form.createDate is defined %}
-                    {{ formmacros.field(edit_form.createDate) }}
-                {% endif %}
-                {% if edit_form.submitter is defined %}
-                    {{ formmacros.field(edit_form.submitter) }}
-                {% endif %}
-            </div>
-        {% endif %}
 
         {#{% if edit_form.updateDate is defined or edit_form.updateUser is defined  %}#}
             {#<div class="well well-sm">#}
@@ -91,7 +101,6 @@
                 {#{% endif %}#}
             {#</div>#}
         {#{% endif %}#}
-        {{ transres.updateInfo(edit_form,cycle) }}
 
         {{ transres.projectForm(edit_form,project,cycle) }}
 

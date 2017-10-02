@@ -50,7 +50,7 @@ class ProjectType extends AbstractType
 
             $builder->add('state',null, array(
                 'label' => 'State:',
-                //'disabled' => true,
+                'disabled' => true,
                 'required' => false,
                 'attr' => array('class' => 'form-control'),
             ));
@@ -58,7 +58,7 @@ class ProjectType extends AbstractType
             $builder->add('approvalDate', DateType::class, array(
                 'widget' => 'single_text',
                 'label' => "Approval Date:",
-                //'disabled' => true,
+                'disabled' => true,
                 'format' => 'MM/dd/yyyy',
                 'attr' => array('class' => 'datepicker form-control'),
                 'required' => false,
@@ -345,61 +345,63 @@ class ProjectType extends AbstractType
         }
 
 
-        /////////////////////////////////////// messageCategory ///////////////////////////////////////
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            $message = $event->getData();
-            $form = $event->getForm();
-            $messageCategory = null;
+        if( $this->params['cycle'] != 'show' ) {
+            /////////////////////////////////////// messageCategory ///////////////////////////////////////
+            $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+                $message = $event->getData();
+                $form = $event->getForm();
+                $messageCategory = null;
 
-            $label = null;
-            $mapper = array(
-                'prefix' => "Oleg",
-                'className' => "MessageCategory",
-                'bundleName' => "OrderformBundle",
-                'organizationalGroupType' => "MessageTypeClassifiers"
-            );
-            if ($message) {
-                $messageCategory = $message->getMessageCategory();
-                if ($messageCategory) {
-                    $label = $this->params['em']->getRepository('OlegOrderformBundle:MessageCategory')->getLevelLabels($messageCategory, $mapper);
+                $label = null;
+                $mapper = array(
+                    'prefix' => "Oleg",
+                    'className' => "MessageCategory",
+                    'bundleName' => "OrderformBundle",
+                    'organizationalGroupType' => "MessageTypeClassifiers"
+                );
+                if ($message) {
+                    $messageCategory = $message->getMessageCategory();
+                    if ($messageCategory) {
+                        $label = $this->params['em']->getRepository('OlegOrderformBundle:MessageCategory')->getLevelLabels($messageCategory, $mapper);
+                    }
                 }
-            }
-            if (!$label) {
-                $label = $this->params['em']->getRepository('OlegOrderformBundle:MessageCategory')->getLevelLabels(null, $mapper);
-            }
+                if (!$label) {
+                    $label = $this->params['em']->getRepository('OlegOrderformBundle:MessageCategory')->getLevelLabels(null, $mapper);
+                }
 
-            if( $label ) {
-                $label = $label . ":";
-            }
+                if ($label) {
+                    $label = $label . ":";
+                }
 
-            //echo "show defaultInstitution label=".$label."<br>";
+                //echo "show defaultInstitution label=".$label."<br>";
 
-            $form->add('messageCategory', CustomSelectorType::class, array(
-                'label' => $label,
-                'required' => false,
-                //'read_only' => true, //this depracted and replaced by readonly in attr
-                //'disabled' => true, //this disabled all children
-                'attr' => array(
-                    'readonly' => true,
-                    'class' => 'ajax-combobox-compositetree combobox-without-add combobox-compositetree-postfix-level combobox-compositetree-read-only-exclusion ajax-combobox-messageCategory', //combobox-compositetree-readonly-parent
-                    'type' => 'hidden',
-                    'data-compositetree-bundlename' => 'OrderformBundle',
-                    'data-compositetree-classname' => 'MessageCategory',
-                    'data-label-prefix' => '',
-                    //'data-readonly-parent-level' => '2', //readonly all children from level 2 up (including this level)
-                    'data-read-only-exclusion-after-level' => '2', //readonly will be disable for all levels after indicated level
-                    'data-label-postfix-value-level' => '<span style="color:red">*</span>', //postfix after level
-                    'data-label-postfix-level' => '4', //postfix after level "Issue"
-                ),
-                'classtype' => 'messageCategory'
-            ));
+                $form->add('messageCategory', CustomSelectorType::class, array(
+                    'label' => $label,
+                    'required' => false,
+                    //'read_only' => true, //this depracted and replaced by readonly in attr
+                    //'disabled' => true, //this disabled all children
+                    'attr' => array(
+                        'readonly' => true,
+                        'class' => 'ajax-combobox-compositetree combobox-without-add combobox-compositetree-postfix-level combobox-compositetree-read-only-exclusion ajax-combobox-messageCategory', //combobox-compositetree-readonly-parent
+                        'type' => 'hidden',
+                        'data-compositetree-bundlename' => 'OrderformBundle',
+                        'data-compositetree-classname' => 'MessageCategory',
+                        'data-label-prefix' => '',
+                        //'data-readonly-parent-level' => '2', //readonly all children from level 2 up (including this level)
+                        'data-read-only-exclusion-after-level' => '2', //readonly will be disable for all levels after indicated level
+                        'data-label-postfix-value-level' => '<span style="color:red">*</span>', //postfix after level
+                        'data-label-postfix-level' => '4', //postfix after level "Issue"
+                    ),
+                    'classtype' => 'messageCategory'
+                ));
 
 
-            //add form node fields
-            //$form = $this->addFormNodes($form,$messageCategory,$this->params);
+                //add form node fields
+                //$form = $this->addFormNodes($form,$messageCategory,$this->params);
 
-        });
-        /////////////////////////////////////// EOF messageCategory ///////////////////////////////////////
+            });
+            /////////////////////////////////////// EOF messageCategory ///////////////////////////////////////
+        }
 
     }
     

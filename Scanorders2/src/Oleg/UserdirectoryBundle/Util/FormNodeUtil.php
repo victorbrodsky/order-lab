@@ -454,11 +454,11 @@ class FormNodeUtil
 
         //1) create a new list element OR get existing listElement for this $holderEntity
         if( method_exists($holderEntity, 'isEditable') && $holderEntity->isEditable() ){
-            echo "object isEditable => object is editable without creating a new amend copy <br>";
+            //echo "object isEditable => object is editable without creating a new amend copy <br>";
 
             $newListElement = $this->getUniqueFormNodeListRecord($formNode,$holderEntity);
             if( $newListElement ) {
-                echo $formNode.": formValue=".$formValue."<br>";
+                //echo $formNode.": formValue=".$formValue."<br>";
                 if( isset($formValue) ) {
                     $newListElement->setValue($formValue);
                 }
@@ -473,7 +473,7 @@ class FormNodeUtil
 
         }
 
-        echo "object is not editable => create a new amend only";
+        //echo "object is not editable => create a new amend only";
         $newListElement = $this->createNewList($formNode,$holderEntity);
 
         //echo "newListElement=".$newListElement."<br>";

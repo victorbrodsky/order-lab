@@ -4,14 +4,13 @@
     {% import "OlegUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
     {% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
 
-    {% if form.state is defined %}
-        {{ formmacros.field(form.state) }}
-    {% endif %}
+    {#{% if form.state is defined %}#}
+        {#{{ formmacros.field(form.state) }}#}
+    {#{% endif %}#}
 
-    {% if form.approvalDate is defined %}
-        {{ formmacros.field(form.approvalDate) }}
-    {% endif %}
-
+    {#{% if form.approvalDate is defined %}#}
+        {#{{ formmacros.field(form.approvalDate) }}#}
+    {#{% endif %}#}
 
 
     {#{{ formmacros.field(form.title) }}#}
@@ -57,6 +56,69 @@
     {#{{ formmacros.field(form.administratorComment) }}#}
 
 
+    {#<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">#}
+        {#<div class="panel panel-primary">#}
+            {#<div class="panel-heading" role="tab" id="projectRequestersHeading">#}
+                {#<h4 class="panel-title">#}
+                    {#<a role="button" data-toggle="collapse" data-parent="#accordion" href="#projectRequesters" aria-expanded="true">#}
+                        {#Project's Requester(s)#}
+                    {#</a>#}
+                {#</h4>#}
+            {#</div>#}
+            {#<div id="projectRequesters" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="projectRequestersHeading">#}
+                {#<div class="panel-body">#}
+
+                    {#{% if cycle == "show" %}#}
+                        {#{% set principalInvestigators = project.principalInvestigators %}#}
+                    {#{% else %}#}
+                        {#{% set principalInvestigators = null %}#}
+                    {#{% endif %}#}
+                    {#{{ transres.usersInfo(form.principalInvestigators,principalInvestigators,cycle) }}#}
+
+                    {#{% if cycle == "show" %}#}
+                        {#{% set pathologists = project.pathologists %}#}
+                    {#{% else %}#}
+                        {#{% set pathologists = null %}#}
+                    {#{% endif %}#}
+                    {#{{ transres.usersInfo(form.pathologists,pathologists,cycle) }}#}
+
+                    {#{% if cycle == "show" %}#}
+                        {#{% set coInvestigators = project.coInvestigators %}#}
+                    {#{% else %}#}
+                        {#{% set coInvestigators = null %}#}
+                    {#{% endif %}#}
+                    {#{{ transres.usersInfo(form.coInvestigators,coInvestigators,cycle) }}#}
+
+                    {#{% if cycle == "show" %}#}
+                        {#{% set contact = project.contact %}#}
+                    {#{% else %}#}
+                        {#{% set contact = null %}#}
+                    {#{% endif %}#}
+                    {#{{ transres.userInfo(form.contact,contact,cycle) }}#}
+
+                {#</div>#}
+            {#</div>#}
+        {#</div>#}
+    {#</div>#}
+
+    {{ transres.projectRequesters(form,project,cycle) }}
+
+
+    <div style="display: none">
+    {% if form.messageCategory is defined %}
+        {{ treemacros.compositeTreeNode(form.messageCategory,cycle,"noprototype") }}
+    {% endif %}
+    </div>
+
+    <div id="form-node-holder"></div>
+
+{% endmacro %}
+
+
+{% macro projectRequesters( form, project, cycle ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel panel-primary">
             <div class="panel-heading" role="tab" id="projectRequestersHeading">
@@ -101,16 +163,6 @@
             </div>
         </div>
     </div>
-
-
-    <div style="display: none">
-    {% if form.messageCategory is defined %}
-        {{ treemacros.compositeTreeNode(form.messageCategory,cycle,"noprototype") }}
-    {% endif %}
-    </div>
-
-    <div id="form-node-holder"></div>
-
 {% endmacro %}
 
 

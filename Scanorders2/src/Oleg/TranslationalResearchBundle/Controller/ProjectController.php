@@ -30,16 +30,17 @@ use Symfony\Component\Workflow\DefinitionBuilder;
 use Symfony\Component\Workflow\Dumper\GraphvizDumper;
 use Symfony\Component\Workflow\Transition;
 
-/**
- * Project controller.
- *
- * @Route("project")
- */
+///**
+// * Project controller.
+// *
+// * @Route("project")
+// */
+
 class ProjectController extends Controller
 {
 
     /**
-     * @Route("/home/", name="translationalresearch_home")
+     * @Route("/project/home/", name="translationalresearch_home")
      * @Method("GET")
      */
     public function homeAction()
@@ -50,7 +51,7 @@ class ProjectController extends Controller
     /**
      * Lists all project entities.
      *
-     * @Route("/", name="translationalresearch_project_index")
+     * @Route("/projects/", name="translationalresearch_project_index")
      * @Template("OlegTranslationalResearchBundle:Project:index.html.twig")
      * @Method("GET")
      */
@@ -92,7 +93,7 @@ class ProjectController extends Controller
     /**
      * Creates a new project entity in a simple way without formnode.
      *
-     * @Route("/simple/new", name="translationalresearch_project_simple_new")
+     * @Route("/project/simple/new", name="translationalresearch_project_simple_new")
      * @Template("OlegTranslationalResearchBundle:Project:new.html.twig")
      * @Method({"GET", "POST"})
      */
@@ -147,19 +148,19 @@ class ProjectController extends Controller
     /**
      * Finds and displays a project entity.
      *
-     * @Route("/{id}", name="translationalresearch_project_show")
+     * @Route("/project/{id}", name="translationalresearch_project_show")
      * @Template("OlegTranslationalResearchBundle:Project:show.html.twig")
      * @Method("GET")
      */
     public function showAction(Request $request, Project $project)
     {
-        $transresUtil = $this->container->get('transres_util');
-        $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        //$transresUtil = $this->container->get('transres_util');
+        //$em = $this->getDoctrine()->getManager();
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
 
         $cycle = "show";
 
-        //$form = $this->createProjectForm($project,$cycle,$request);
+        $form = $this->createProjectForm($project,$cycle,$request);
 
         $deleteForm = $this->createDeleteForm($project);
 
@@ -170,7 +171,7 @@ class ProjectController extends Controller
 
         return array(
             'project' => $project,
-            //'form' => $form->createView(),
+            'form' => $form->createView(),
             'cycle' => $cycle,
             'title' => "Project ID ".$project->getId(),
             'delete_form' => $deleteForm->createView(),
@@ -188,7 +189,7 @@ class ProjectController extends Controller
     /**
      * Displays a form to edit an existing project entity.
      *
-     * @Route("/{id}/edit", name="translationalresearch_project_edit")
+     * @Route("/project/{id}/simple/edit", name="translationalresearch_project_simple_edit")
      * @Template("OlegTranslationalResearchBundle:Project:edit.html.twig")
      * @Method({"GET", "POST"})
      */
@@ -299,7 +300,7 @@ class ProjectController extends Controller
     /**
      * Deletes a project entity.
      *
-     * @Route("/{id}", name="translationalresearch_project_delete")
+     * @Route("/project/{id}", name="translationalresearch_project_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, Project $project)

@@ -9,7 +9,7 @@
 {% endblock %}
 
 
-{% block contentleft %}
+{% block content %}
 
     <h4 class="text-info" align="center">
         {{ title }}
@@ -21,10 +21,33 @@
     {{ transres.projectHeader(project) }}
 
 
-    {#{{ form_start(form) }}#}
+    {{ form_start(form) }}
 
-    {#{{ transres.projectReviews(form,cycle,sitename) }}#}
-    {#<br>#}
+    {% if form.state is defined %}
+        {{ formmacros.field(form.state) }}
+    {% endif %}
+
+    {% if form.approvalDate is defined %}
+        {{ formmacros.field(form.approvalDate) }}
+    {% endif %}
+
+    {% if form.createDate is defined or form.submitter is defined %}
+        {#<div class="well well-sm">#}
+            {% if form.createDate is defined %}
+                {{ formmacros.field(form.createDate) }}
+            {% endif %}
+            {% if form.submitter is defined %}
+                {{ formmacros.field(form.submitter) }}
+            {% endif %}
+        {#</div>#}
+    {% endif %}
+    {{ transres.updateInfo(form,cycle) }}
+    <br>
+
+    {{ transres.projectReviews(form,cycle,sitename) }}
+
+    {{ transres.projectRequesters(form,project,cycle) }}
+    <br>
 
     {#{% if form.createDate is defined or form.submitter is defined %}#}
         {#<div class="well well-sm">#}
@@ -45,17 +68,15 @@
         {#{{ formmacros.field(form.primaryReviewerComment) }}#}
     {#{% endif %}#}
     {##}
-    {#{{ form_end(form) }}#}
+    {{ form_end(form) }}
 
     {% set callLogViewClass = "order-white-background" %}
-    <div class="{{ callLogViewClass }}">
-
-    {{ user_formnode_utility.getFormNodeHolderShortInfoForView(project,project.messageCategory,false)|raw }}
-
+    <div class="text-left {{ callLogViewClass }}">
+        {{ user_formnode_utility.getFormNodeHolderShortInfoForView(project,project.messageCategory,false)|raw }}
     </div>
 
 
-    <div class="well text-center">
+    <div>
 
         {% if is_granted('ROLE_TRANSRES_ADMIN') %}
             <br>
