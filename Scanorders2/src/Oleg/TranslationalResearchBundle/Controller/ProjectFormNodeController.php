@@ -198,7 +198,7 @@ class ProjectFormNodeController extends ProjectController
         $classNamespace = $class->getNamespaceName(); //Oleg\UserdirectoryBundle\Entity
 
         $testing = false;
-        //$testing = true;
+        $testing = true;
 
         $form = $this->createProjectForm($project,$cycle,$request);
 
@@ -244,32 +244,6 @@ class ProjectFormNodeController extends ProjectController
 
             return $this->redirectToRoute('translationalresearch_project_show', array('id' => $project->getId()));
         }
-
-//        return array(
-//            //'entity' => $entity,
-//            'form' => $form->createView(),
-//            'cycle' => $cycle,
-//            'title' => $title,
-//            'formtype' => $formtype,
-//            'triggerSearch' => 0,
-//            'mrn' => $mrn,
-//            'mrntype' => $mrntype,
-//            'message' => $message,
-//            'complexPatientStr' => $complexPatientStr,
-//            //'encounterid' => $encounterid
-//            'entityNamespace' => $classNamespace,
-//            'entityName' => $className,
-//            'entityId' => $message->getId(),
-//            'sitename' => $this->container->getParameter('calllog.sitename'),
-//            'titleheadroom' => $title,
-//            'formnodeTopHolderId' => $formnodeTopHolderId,
-//            'currentMessageStatus' => $latestMessageStatus,
-//            'currentMessageLabel' => $latestMessageLabel,
-//            'allMessages' => $allMessages,
-//            'currentMessageVersion' => $latestNextMessageVersion,
-//            'currentEncounterVersion' => $latestNextEncounterVersion,
-//            'latestEntryUrl' => $latestEntryUrl
-//        );
 
         return array(
             'project' => $project,

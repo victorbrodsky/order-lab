@@ -50,15 +50,20 @@ class FormNodeUtil
         }
 
         $formNodes = $formNodeHolder->getFormNodes();
+//        if( $testing ) {
+//            foreach($formNodes as $formNode){
+//                echo "Form Node ID=".$formNode->getId()."<br>";
+//            }
+//        }
         if( !$formNodes ) {
             return;
         }
 
         $data = $request->request->all();
 
-//        print "<pre>";
-//        print_r($data);
-//        print "</pre>";
+        print "<pre>";
+        print_r($data);
+        print "</pre>";
 
         //process by form root's children nodes
         //$this->processFormNodeRecursively($data,$rootFormNode,$holderEntity);
@@ -447,10 +452,11 @@ class FormNodeUtil
 
         //1) create a new list element OR get existing listElement for this $holderEntity
         if( method_exists($holderEntity, 'isEditable') && $holderEntity->isEditable() ){
-            echo "object isEditable => object is editable without creating a new amend copy";
+            echo "object isEditable => object is editable without creating a new amend copy <br>";
 
             $newListElement = $this->getUniqueFormNodeListRecord($formNode,$holderEntity);
             if( $newListElement ) {
+                echo $formNode.": formValue=".$formValue."<br>";
                 if( isset($formValue) ) {
                     $newListElement->setValue($formValue);
                 }
@@ -983,6 +989,19 @@ class FormNodeUtil
 
     public function getArraySectionPrefix() {
         return "fffsa";
+    }
+
+    //used in formnodemacros.html.twig to get the form name
+    public function getFieldName( $formNodeHolder, $formNode, $formNodeId, $formNodeValue, $count, $cycle, $prototype ) {
+        $fieldname = "formnode[".$formNode->getId()."]";
+        $parentFormType = null;
+        if( $formNode->getParent() && $formNode->getParent()->getObjectType() ) {
+            $parentFormType = $formNode->getParent()->getObjectType()->getName();
+            if ($parentFormType == "Form Section Array") {
+                $fieldname = "formnode[" . $formNode->getParent()->getId() . "][arraysectioncount][" . $count . "][node][" . $formNode->getId() . "]";
+            }
+        }
+        return $fieldname;
     }
 
     //fffsa_0-0_fffsa => 0-0
@@ -1557,15 +1576,16 @@ class FormNodeUtil
     }
 
     public function getViewValueShortInfo( $formNode, $value ) {
+        //return $value;
         if( $formNode->getObjectTypeName() == "Form Field - Checkbox" ) {
             //echo "Checkbox formNodeValue=".$value."<br>";
-            $value = null;
             if( $value === true ) {
                 return "Yes";
             }
             if( $value === false ) {
                 return "No";
             }
+            return null;
         }
         return $value;
     }

@@ -416,6 +416,7 @@
 {% endmacro %}
 
 {# getFieldName array section #}
+{#Not Used: use in service#}
 {% macro getFieldName( formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype ) %}
     {% set fieldname = "formnode["~formNode.id~"]" %}
     {% set parentFormType = null %}
@@ -446,7 +447,9 @@
 {% endmacro %}
 {% macro textareaField( formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype, type ) %}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
-    {% set fieldname = formnodemacros.getFieldName(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) %}
+    {#{% set fieldname = formnodemacros.getFieldName(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) %}#}
+    {% set fieldname = user_formnode_utility.getFieldName(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) %}
+
 
     {#"oleg_userdirectorybundle_formnode[{{ formNode.id }}]"#}
     {% if formNodeValue is not empty %}
@@ -498,7 +501,7 @@
 {% endmacro %}
 {% macro stringField( formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype, inputType ) %}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
-    {% set fieldname = formnodemacros.getFieldName(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) %}
+    {% set fieldname = user_formnode_utility.getFieldName(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) %}
 
     {% if formNodeValue is not empty %}
         {% set fieldValue = formNodeValue %}
@@ -574,7 +577,7 @@
 {% endmacro %}
 {% macro dropdownField( formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype, multiple, allownew ) %}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
-    {% set fieldname = formnodemacros.getFieldName(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) %}
+    {% set fieldname = user_formnode_utility.getFieldName(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) %}
 
     {#get dropdown values by getDropdownValue (user_formnode_utility)#}
 
@@ -674,7 +677,7 @@
 {% endmacro %}
 {% macro dateField( formNodeHolder, formNode, formNodeId, formNodeValue, receivingEntity, count, cycle, prototype, dateFormat, fieldNamePostfix, timezone ) %}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
-    {% set fieldname = formnodemacros.getFieldName(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) %}
+    {% set fieldname = user_formnode_utility.getFieldName(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) %}
 
     {% if formNodeValue %}
         {% if dateFormat is defined and dateFormat %}
@@ -744,7 +747,7 @@
 {% endmacro %}
 {% macro checkboxField( formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype ) %}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
-    {% set fieldname = formnodemacros.getFieldName(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) %}
+    {% set fieldname = user_formnode_utility.getFieldName(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) %}
 
     {% if formNodeValue %}
         {% set fieldValue = "checked" %}
@@ -787,7 +790,7 @@
 {% endmacro %}
 {% macro checkboxesField( formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype ) %}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
-    {% set fieldname = formnodemacros.getFieldName(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) %}
+    {% set fieldname = user_formnode_utility.getFieldName(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) %}
 
     {% if cycle != 'show' %}
         {% set disabled = "" %}
@@ -842,7 +845,7 @@
 {% endmacro %}
 {% macro radioField( formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype ) %}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
-    {% set fieldname = formnodemacros.getFieldName(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) %}
+    {% set fieldname = user_formnode_utility.getFieldName(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) %}
 
     {#get dropdown values by getDropdownValue (user_formnode_utility)#}
     {% set dropdownValues = user_formnode_utility.getDropdownValue(formNode) %}
@@ -897,7 +900,7 @@
 {% endmacro %}
 {% macro timeField( formNodeHolder, formNode, formNodeId, formNodeValue, receivingEntity, count, cycle, prototype, timezone ) %}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
-    {% set fieldname = formnodemacros.getFieldName(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) %}
+    {% set fieldname = user_formnode_utility.getFieldName(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) %}
 
     {#get dropdown values by getDropdownValue (user_formnode_utility)#}
     {% set dropdownValues = user_formnode_utility.getDropdownValue(formNode) %}
@@ -968,7 +971,7 @@
 {% endmacro %}
 {% macro timezoneField( formNodeHolder, formNode, formNodeId, formNodeValue, receivingEntity, count, cycle, prototype ) %}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
-    {% set fieldname = formnodemacros.getFieldName(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) %}
+    {% set fieldname = user_formnode_utility.getFieldName(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) %}
 
     {#get dropdown values by getDropdownValue (user_formnode_utility)#}
     {% set timezones = user_formnode_utility.getTimezones() %}
@@ -1024,7 +1027,7 @@
 {% endmacro %}
 {% macro dayField( formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype ) %}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
-    {% set fieldname = formnodemacros.getFieldName(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) %}
+    {% set fieldname = user_formnode_utility.getFieldName(formNodeHolder,formNode,formNodeId,formNodeValue,count,cycle,prototype) %}
 
     {#get dropdown values by getDropdownValue (user_formnode_utility)#}
     {% set dropdownValues = user_formnode_utility.getDropdownValue(formNode) %}

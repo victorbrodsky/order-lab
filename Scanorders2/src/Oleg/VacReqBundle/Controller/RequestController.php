@@ -1012,7 +1012,11 @@ class RequestController extends Controller
         }
 
         //check permissions
-        if( false == $this->get('security.authorization_checker')->isGranted("update", $entity) ) {
+        if(
+            false == $this->get('security.authorization_checker')->isGranted("update", $entity) &&
+            $entity->getUser()->getId() != $user->getId() //author can request cancellation
+        ) {
+            //exit("No permission");
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
