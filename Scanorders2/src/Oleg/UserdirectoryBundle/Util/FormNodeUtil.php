@@ -189,7 +189,9 @@ class FormNodeUtil
 
     public function createFormNodeListRecord( $formNode, $formValue, $holderEntity, $testing=false, $params=null ) {
 
-        if( !$formValue ) { //testing: prevent creating a new empty records in DB
+        //if( !$formValue ) { //testing: prevent creating a new empty records in DB
+        if( !isset($formValue) || $formValue == null ) {
+            //exit("No Value=".$formValue."<br>");
             return;
         }
 

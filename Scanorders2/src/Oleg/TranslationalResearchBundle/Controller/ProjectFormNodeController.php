@@ -198,7 +198,7 @@ class ProjectFormNodeController extends ProjectController
         $classNamespace = $class->getNamespaceName(); //Oleg\UserdirectoryBundle\Entity
 
         $testing = false;
-        $testing = true;
+        //$testing = true;
 
         $form = $this->createProjectForm($project,$cycle,$request);
 
