@@ -9,6 +9,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -69,7 +70,7 @@ class ProjectType extends AbstractType
             $builder->add('createDate', DateType::class, array(
                 'widget' => 'single_text',
                 'label' => "Create Date:",
-                //'disabled' => true,
+                'disabled' => true,
                 'format' => 'MM/dd/yyyy',
                 'attr' => array('class' => 'datepicker form-control', 'readonly'=>true),
                 'required' => false,
@@ -77,13 +78,13 @@ class ProjectType extends AbstractType
 
             $builder->add('submitter', null, array(
                 'label' => "Created By:",
-                //'disabled' => true,
+                'disabled' => true,
                 'attr' => array('class'=>'combobox combobox-width', 'readonly'=>true)
             ));
         }
 
 //        if( $this->project->getUpdateDate() ) {
-//            $builder->add('updateDate', 'date', array(
+//            $builder->add('updateDatCreate Date:e', 'date', array(
 //                'widget' => 'single_text',
 //                'label' => "Update Date:",
 //                'disabled' => true,
@@ -401,6 +402,31 @@ class ProjectType extends AbstractType
 
             });
             /////////////////////////////////////// EOF messageCategory ///////////////////////////////////////
+        }//if
+
+        if( $this->params['cycle'] == "new" ) {
+            $builder->add('saveAsDraft', SubmitType::class, array(
+                'label' => 'Save Project as Draft',
+                'attr' => array('class'=>'btn btn-warning')
+            ));
+            $builder->add('saveAsComplete', SubmitType::class, array(
+                'label' => 'Complete Submission',
+                'attr' => array('class'=>'btn btn-warning')
+            ));
+        }
+        if( $this->params['cycle'] == "edit" ) {
+            $builder->add('saveAsDraft', SubmitType::class, array(
+                'label' => 'Save Project as Draft',
+                'attr' => array('class'=>'btn btn-warning')
+            ));
+            $builder->add('saveAsComplete', SubmitType::class, array(
+                'label' => 'Complete Submission',
+                'attr' => array('class'=>'btn btn-warning')
+            ));
+            $builder->add('updateProject', SubmitType::class, array(
+                'label' => 'Update Project',
+                'attr' => array('class'=>'btn btn-warning')
+            ));
         }
 
     }

@@ -26,7 +26,6 @@ namespace Oleg\TranslationalResearchBundle\Controller;
 
 
 use Oleg\TranslationalResearchBundle\Entity\Project;
-use Oleg\TranslationalResearchBundle\Form\ProjectType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -94,7 +93,6 @@ class ProjectFormNodeController extends ProjectController
         //new: add all default reviewers
         $transresUtil->addDefaultStateReviewers($project);
 
-        //$form = $this->createForm('Oleg\TranslationalResearchBundle\Form\ProjectType', $project);
         $form = $this->createProjectForm($project,$cycle,$request);
 //        $form->handleRequest($request);
 //
@@ -127,6 +125,18 @@ class ProjectFormNodeController extends ProjectController
         if ($form->isSubmitted() && $form->isValid()) {
 
             //exit("Project submitted");
+
+            //new
+            if ($form->getClickedButton() && 'saveAsDraft' === $form->getClickedButton()->getName()) {
+                //Save Project as Draft => state='draft'
+                $project->setState('draft');
+            }
+
+            //new
+            if ($form->getClickedButton() && 'saveAsComplete' === $form->getClickedButton()->getName()) {
+                //Complete Submission => state='submit'
+                $project->setState('complete');
+            }
 
             if( !$testing ) {
                 $em->persist($project);
@@ -223,6 +233,18 @@ class ProjectFormNodeController extends ProjectController
         if ($form->isSubmitted() && $form->isValid()) {
 
             //exit("Project update submitted");
+
+            //edit
+            if ($form->getClickedButton() && 'saveAsDraft' === $form->getClickedButton()->getName()) {
+                //Save Project as Draft => state='draft'
+                $project->setState('draft');
+            }
+
+            //edit
+            if ($form->getClickedButton() && 'saveAsComplete' === $form->getClickedButton()->getName()) {
+                //Complete Submission => state='submit'
+                $project->setState('complete');
+            }
 
             if( !$testing ) {
                 $em->persist($project);

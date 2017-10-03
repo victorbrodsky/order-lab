@@ -122,7 +122,6 @@ class ProjectController extends Controller
         //new: add all default reviewers
         $transresUtil->addDefaultStateReviewers($project);
 
-        //$form = $this->createForm('Oleg\TranslationalResearchBundle\Form\ProjectType', $project);
         $form = $this->createProjectForm($project,$cycle,$request);
         $form->handleRequest($request);
 
@@ -234,7 +233,6 @@ class ProjectController extends Controller
 
 
         $deleteForm = $this->createDeleteForm($project);
-        //$editForm = $this->createForm('Oleg\TranslationalResearchBundle\Form\ProjectType', $project);
         $editForm = $this->createProjectForm($project,$cycle,$request);
         $editForm->handleRequest($request);
 
@@ -324,8 +322,6 @@ class ProjectController extends Controller
         $transresUtil = $this->container->get('transres_util');
         $routeName = $request->get('_route');
 
-        $disabled = false;
-
         $params = array(
             'cycle' => $cycle,
             'em' => $em,
@@ -335,10 +331,6 @@ class ProjectController extends Controller
             'routeName' => $routeName,
             'disabledReviewerFields' => true
         );
-
-        if( $cycle == "show" ) {
-            $disabled = true;
-        }
 
         $params['admin'] = false;
         $params['showIrbReviews'] = false;
@@ -377,10 +369,27 @@ class ProjectController extends Controller
 //
 //        }
 
-        $form = $this->createForm(ProjectType::class, $project, array(
+        $formArr = array(
             'form_custom_value' => $params,
-            'disabled' => $disabled,
-        ));
+            'disabled' => false,
+        );
+
+        if( $cycle == "new" ) {
+            $formArr['disabled'] = false;
+            //Save as draft
+
+            //Save as draft
+        }
+
+        if( $cycle == "show" ) {
+            $formArr['disabled'] = true;
+        }
+
+        if( $cycle == "edit" ) {
+            $formArr['disabled'] = false;
+        }
+
+        $form = $this->createForm(ProjectType::class, $project, $formArr);
 
         return $form;
     }

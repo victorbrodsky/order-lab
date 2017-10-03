@@ -120,7 +120,7 @@
     {% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
 
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-        <div class="panel panel-primary">
+        <div class="panel panel-default">
             <div class="panel-heading" role="tab" id="projectRequestersHeading">
                 <h4 class="panel-title">
                     <a role="button" data-toggle="collapse" data-parent="#accordion" href="#projectRequesters" aria-expanded="true">
@@ -170,10 +170,10 @@
 {% macro updateInfo( form, cycle ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% if form.vars.value.updateDate or form.vars.value.updateUser %}
-        <div class="well well-sm">
+        {#<div class="well well-sm">#}
         {{ formmacros.simplefield("Update Date:", form.vars.value.updateDate|date("m/d/Y"), "input", "disabled") }}
         {{ formmacros.simplefield("Updated By:", form.vars.value.updateUser, "input", "disabled") }}
-        </div>
+        {#</div>#}
     {% endif %}
 {% endmacro %}
 
@@ -181,7 +181,7 @@
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
     {% if cycle == "show" %}
-        <div class="well well-sm">
+        {#<div class="well well-sm">#}
             <div style="text-align: center;">
                 <p>
                     <strong>{{ usersForm.vars.label }}</strong>
@@ -190,7 +190,7 @@
             {% for userEntity in usersEntity %}
                 {{ usermacros.personInfo(userEntity, cycle, 'translationalresearch') }}
             {% endfor %}
-        </div>
+        {#</div>#}
         {% do usersForm.setRendered %}
     {% else %}
         {{ formmacros.field(usersForm) }}
@@ -201,32 +201,33 @@
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
     {% if cycle == "show" %}
-        <div class="well well-sm">
+        {#<div class="well well-sm">#}
             <div style="text-align: center;">
                 <p>
                     <strong>{{ userForm.vars.label }}</strong>
                 </p>
             </div>
             {{ usermacros.personInfo(userEntity, cycle, 'translationalresearch') }}
-        </div>
+        {#</div>#}
         {% do userForm.setRendered %}
     {% else %}
         {{ formmacros.field(userForm) }}
     {% endif %}
 {% endmacro %}
 
+{#NOT USED#}
 {% macro projectEnabledLinkActionsHeader(project) %}
     {% set actionLinks = transres_util.getEnabledLinkActions(project,"btn btn-default","btn btn-warning") %}
-    <div class="well">
+    {#<div class="well">#}
         <p>Project State: <strong>{{ transres_util.getStateLabelByProject(project) }}</strong></p>
         {% for actionLink in actionLinks %}
                 {{ actionLink|raw }}
         {% endfor %}
-    </div>
+    {#</div>#}
 {% endmacro %}
 
 {% macro projectHeader(project) %}
-    <div class="well">
+    {#<div class="well">#}
         <p>Project State: <strong>{{ transres_util.getStateLabelByProject(project) }}</strong></p>
         {#{{ transres_util.getReviewLink(project,app.user)|raw }}#}
         {#{{ transres_util.getReviewFormsHtml(project,app.user)|raw }}#}
@@ -237,7 +238,7 @@
                 {#{ 'stateStr':project.getState(), 'id': reviewId }#}
             {#)) }}#}
         {#{% endfor %}#}
-    </div>
+    {#</div>#}
 {% endmacro %}
 
 {% macro projectReviews(project, cycle, sitename) %}

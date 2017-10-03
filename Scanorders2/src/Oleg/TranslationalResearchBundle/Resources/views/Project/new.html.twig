@@ -21,7 +21,26 @@
     {% set sitename = translationalresearch_sitename %}
 
     {{ form_start(form) }}
-        {#{{ form_widget(form) }}#}
+
+
+        {% if form.state is defined %}
+            {{ formmacros.field(form.state) }}
+        {% endif %}
+
+        {% if form.approvalDate is defined %}
+            {{ formmacros.field(form.approvalDate) }}
+        {% endif %}
+
+        {% if form.createDate is defined or form.submitter is defined %}
+            {#<div class="well well-sm">#}
+            {% if form.createDate is defined %}
+                {{ formmacros.field(form.createDate) }}
+            {% endif %}
+            {% if form.submitter is defined %}
+                {{ formmacros.field(form.submitter) }}
+            {% endif %}
+            {#</div>#}
+        {% endif %}
 
         {#{% if form.vars.id  %}#}
             {#{{ formmacros.simplefield("Project #:", form.vars.id, "input", "disabled") }}#}
@@ -37,17 +56,6 @@
 
         {{ transres.projectReviews(form,cycle,sitename) }}
 
-
-        {% if form.createDate is defined or form.submitter is defined %}
-            <div class="well well-sm">
-                {% if form.createDate is defined %}
-                    {{ formmacros.field(form.createDate) }}
-                {% endif %}
-                {% if form.submitter is defined %}
-                    {{ formmacros.field(form.submitter) }}
-                {% endif %}
-            </div>
-        {% endif %}
 
         {% if form.updateDate is defined or form.updateUser is defined  %}
             <div class="well well-sm">
@@ -65,12 +73,19 @@
 
         {#{{ formmacros.checkbox(form.readyForReview) }}#}
 
-        {% if form.primaryReviewerComment is defined %}
-            {{ formmacros.field(form.primaryReviewerComment) }}
+        {#{% if form.primaryReviewerComment is defined %}#}
+            {#{{ formmacros.field(form.primaryReviewerComment) }}#}
+        {#{% endif %}#}
+
+
+        {#<input class="btn btn-primary" type="submit" value="Create New Project" />#}
+
+        {% if form.saveAsDraft is defined %}
+            {{ form_widget(form.saveAsDraft) }}
         {% endif %}
-
-
-        <input class="btn btn-primary" type="submit" value="Create New Project" />
+        {% if form.saveAsComplete is defined %}
+            {{ form_widget(form.saveAsComplete) }}
+        {% endif %}
 
     {{ form_end(form) }}
 

@@ -106,14 +106,24 @@
 
         {#{{ formmacros.checkbox(edit_form.readyForReview) }}#}
 
-        {% if edit_form.primaryReviewerComment is defined %}
-            {{ formmacros.field(edit_form.primaryReviewerComment) }}
-        {% endif %}
+        {#{% if edit_form.primaryReviewerComment is defined %}#}
+            {#{{ formmacros.field(edit_form.primaryReviewerComment) }}#}
+        {#{% endif %}#}
 
         <br>
-        <p>
-            <input class="btn btn-warning" type="submit" value="Update Project" />
-        </p>
+        {#<p>#}
+            {#<input class="btn btn-warning" type="submit" value="Update Project" />#}
+        {#</p>#}
+
+        {% if form.saveAsDraft is defined %}
+            {{ form_widget(form.saveAsDraft) }}
+        {% endif %}
+        {% if form.saveAsComplete is defined %}
+            {{ form_widget(form.saveAsComplete) }}
+        {% endif %}
+        {% if form.updateProject is defined %}
+            {{ form_widget(form.updateProject) }}
+        {% endif %}
 
     {{ form_end(edit_form) }}
 
