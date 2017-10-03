@@ -78,7 +78,7 @@ class ProjectFormNodeController extends ProjectController
 //        }
 //        $project->setMessageCategory($messageCategory);
 
-        $project = $this->createProjectEntity($user);
+        $project = $this->createProjectEntity($user,null);
 
 //        $defaultReviewersAdded = false;
 //        if(
@@ -200,6 +200,8 @@ class ProjectFormNodeController extends ProjectController
         $testing = false;
         //$testing = true;
 
+        $project = $this->createProjectEntity($user,$project);
+
         $form = $this->createProjectForm($project,$cycle,$request);
 
         $messageTypeId = true;//testing
@@ -269,30 +271,34 @@ class ProjectFormNodeController extends ProjectController
     }
 
 
-    public function createProjectEntity($user) {
+    public function createProjectEntity($user,$project=null) {
 
         $em = $this->getDoctrine()->getManager();
 
-        $project = new Project($user);
-        $project->setVersion(1);
+        if( !$project ) {
+            $project = new Project($user);
+            $project->setVersion(1);
+        }
 
-        $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
-        $project->setInstitution($institution);
+        if( !$project->getInstitution() ) {
+            $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
+            $project->setInstitution($institution);
+        }
 
         //set order category
-        $categoryStr = "HemePath Translational Research Project";  //"Pathology Call Log Entry";
-        //$categoryStr = "Nesting Test"; //testing
-        $messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
+        if( !$project->getMessageCategory() ) {
+            $categoryStr = "HemePath Translational Research Project";  //"Pathology Call Log Entry";
+            //$categoryStr = "Nesting Test"; //testing
+            $messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
 
-        if( !$messageCategory ) {
-            throw new \Exception( "Message category is not found by name '".$categoryStr."'" );
+            if (!$messageCategory) {
+                throw new \Exception("Message category is not found by name '" . $categoryStr . "'");
+            }
+            $project->setMessageCategory($messageCategory);
         }
-        $project->setMessageCategory($messageCategory);
 
         return $project;
     }
-
-
 
 
 
