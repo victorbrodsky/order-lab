@@ -104,11 +104,12 @@
     {{ transres.projectRequesters(form,project,cycle) }}
 
 
-    <div style="display: none">
+    {#<div style="display: none">#}
     {% if form.messageCategory is defined %}
+        form.messageCategory={{ form.messageCategory.vars.value.getId() }}
         {{ treemacros.compositeTreeNode(form.messageCategory,cycle,"noprototype") }}
     {% endif %}
-    </div>
+    {#</div>#}
 
     <div id="form-node-holder"></div>
 
