@@ -7,6 +7,7 @@ use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -404,25 +405,25 @@ class ProjectType extends AbstractType
             /////////////////////////////////////// EOF messageCategory ///////////////////////////////////////
         }//if
 
-        if( $this->params['cycle'] == "new" ) {
+        if( $this->params['saveAsDraft'] === true ) {
             $builder->add('saveAsDraft', SubmitType::class, array(
                 'label' => 'Save Project as Draft',
-                'attr' => array('class'=>'btn btn-warning')
+                'attr' => array('class' => 'btn btn-warning')
             ));
+        }
+        if( $this->params['saveAsComplete'] === true ) {
             $builder->add('saveAsComplete', SubmitType::class, array(
                 'label' => 'Complete Submission',
                 'attr' => array('class'=>'btn btn-warning')
             ));
         }
-        if( $this->params['cycle'] == "edit" ) {
-            $builder->add('saveAsDraft', SubmitType::class, array(
-                'label' => 'Save Project as Draft',
+        if( $this->params['submitIrbReview'] === true ) {
+            $builder->add('submitIrbReview', SubmitType::class, array(
+                'label' => 'Submit Irb Review',
                 'attr' => array('class'=>'btn btn-warning')
             ));
-            $builder->add('saveAsComplete', SubmitType::class, array(
-                'label' => 'Complete Submission',
-                'attr' => array('class'=>'btn btn-warning')
-            ));
+        }
+        if( $this->params['updateProject'] === true ) {
             $builder->add('updateProject', SubmitType::class, array(
                 'label' => 'Update Project',
                 'attr' => array('class'=>'btn btn-warning')

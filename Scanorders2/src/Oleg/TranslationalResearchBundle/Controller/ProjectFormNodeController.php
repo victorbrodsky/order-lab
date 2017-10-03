@@ -235,15 +235,23 @@ class ProjectFormNodeController extends ProjectController
             //exit("Project update submitted");
 
             //edit
-            if ($form->getClickedButton() && 'saveAsDraft' === $form->getClickedButton()->getName()) {
-                //Save Project as Draft => state='draft'
-                $project->setState('draft');
-            }
+//            if ($form->getClickedButton() && 'saveAsDraft' === $form->getClickedButton()->getName()) {
+//                //Save Project as Draft => state='draft'
+//                $project->setState('draft');
+//            }
 
             //edit
             if ($form->getClickedButton() && 'saveAsComplete' === $form->getClickedButton()->getName()) {
                 //Complete Submission => state='submit'
-                $project->setState('complete');
+                if( $project->getState() == 'draft' ) {
+                    $project->setState('complete');
+                }
+            }
+            if ($form->getClickedButton() && 'submitIrbReview' === $form->getClickedButton()->getName()) {
+                //Complete Submission => state='submit'
+                if( $project->getState() == 'complete' || $project->getState() == 'draft' ) {
+                    $project->setState('irb_review');
+                }
             }
 
             if( !$testing ) {
@@ -281,7 +289,7 @@ class ProjectFormNodeController extends ProjectController
             'edit_form' => $form->createView(),
             'cycle' => $cycle,
             'formtype' => $formtype,
-            'title' => "Update Project ID# ".$project->getId(),
+            'title' => "Edit Project ID ".$project->getId(),
             'triggerSearch' => 0,
             'formnodetrigger' => $formnodetrigger,
             'formnodeTopHolderId' => $formnodeTopHolderId,
@@ -332,7 +340,7 @@ class ProjectFormNodeController extends ProjectController
     public function generateFormNodeAction(Request $request)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
         $transResFormNodeUtil = $this->get('transres_formnode_util');

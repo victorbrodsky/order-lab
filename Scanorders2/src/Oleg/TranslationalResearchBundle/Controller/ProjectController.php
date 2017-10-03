@@ -20,6 +20,7 @@ namespace Oleg\TranslationalResearchBundle\Controller;
 //use Graphp\GraphViz\GraphViz;
 use Doctrine\Common\Collections\ArrayCollection;
 use Oleg\TranslationalResearchBundle\Entity\Project;
+use Oleg\TranslationalResearchBundle\Form\ProjectStateType;
 use Oleg\TranslationalResearchBundle\Form\ProjectType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -329,7 +330,10 @@ class ProjectController extends Controller
             'SecurityAuthChecker' => $this->get('security.authorization_checker'),
             'project' => $project,
             'routeName' => $routeName,
-            'disabledReviewerFields' => true
+            'disabledReviewerFields' => true,
+            'saveAsDraft' => false,
+            'saveAsComplete' => false,
+            'updateProject' => false,
         );
 
         $params['admin'] = false;
@@ -369,27 +373,40 @@ class ProjectController extends Controller
 //
 //        }
 
-        $formArr = array(
-            'form_custom_value' => $params,
-            'disabled' => false,
-        );
+        $disabled = false;
 
         if( $cycle == "new" ) {
-            $formArr['disabled'] = false;
-            //Save as draft
-
-            //Save as draft
+            $disabled = false;
+            $params['saveAsDraft'] = true;
+            $params['saveAsComplete'] = true;
         }
 
         if( $cycle == "show" ) {
-            $formArr['disabled'] = true;
+            $disabled = true;
         }
 
         if( $cycle == "edit" ) {
-            $formArr['disabled'] = false;
+            $disabled = false;
+            if( $project->getState() && $project->getState() == "draft" ) {
+                if( $transresUtil->isRequesterOrAdmin($project) === true ) {
+                    $params['saveAsComplete'] = true;
+                }
+            }
+            if( $project->getState() && ($project->getState() == "complete" || $project->getState() == "draft") ) {
+                if( $transresUtil->isRequesterOrAdmin($project) === true ) {
+                    $params['submitIrbReview'] = true;
+                }
+            }
         }
 
-        $form = $this->createForm(ProjectType::class, $project, $formArr);
+        if( $cycle == "set-state" ) {
+            $disabled = false;
+        }
+
+        $form = $this->createForm(ProjectType::class, $project, array(
+            'form_custom_value' => $params,
+            'disabled' => $disabled,
+        ));
 
         return $form;
     }
@@ -408,6 +425,46 @@ class ProjectController extends Controller
             ->setMethod('DELETE')
             ->getForm()
         ;
+    }
+
+
+    /**
+     * @Route("/project/set-state/{id}", name="translationalresearch_project_set_state")
+     * @Template("OlegTranslationalResearchBundle:Project:set-state.html.twig")
+     * @Method({"GET","POST"})
+     */
+    public function setStateAction(Request $request, Project $project)
+    {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+        }
+
+        $cycle = "set-state";
+
+        //$form = $this->createProjectForm($project,$cycle,$request);
+
+        $params = array();
+        $form = $this->createForm(ProjectStateType::class, $project, array(
+            'form_custom_value' => $params,
+        ));
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($project);
+            $em->flush();
+
+            return $this->redirectToRoute('translationalresearch_project_show', array('id' => $project->getId()));
+        }
+
+        return array(
+            'project' => $project,
+            'form' => $form->createView(),
+            'cycle' => $cycle,
+            'title' => "Set State for Project ID ".$project->getId()
+        );
     }
 
 }

@@ -115,23 +115,26 @@
             {#<input class="btn btn-warning" type="submit" value="Update Project" />#}
         {#</p>#}
 
-        {% if form.saveAsDraft is defined %}
-            {{ form_widget(form.saveAsDraft) }}
+        {% if edit_form.saveAsDraft is defined %}
+            {{ form_widget(edit_form.saveAsDraft) }}
         {% endif %}
-        {% if form.saveAsComplete is defined %}
-            {{ form_widget(form.saveAsComplete) }}
+        {% if edit_form.saveAsComplete is defined %}
+            {{ form_widget(edit_form.saveAsComplete) }}
         {% endif %}
-        {% if form.updateProject is defined %}
-            {{ form_widget(form.updateProject) }}
+        {% if edit_form.submitIrbReview is defined %}
+            {{ form_widget(edit_form.submitIrbReview) }}
+        {% endif %}
+        {% if edit_form.updateProject is defined %}
+            {{ form_widget(edit_form.updateProject) }}
         {% endif %}
 
     {{ form_end(edit_form) }}
 
+    <br>
+    <br>
     <p>
         <a class="btn btn-primary" href="{{ path(translationalresearch_sitename~'_project_show',{ 'id': project.id }) }}">Cancel</a>
     </p>
-
-    <br>
     <br>
     <p>
         <a href="{{ path(translationalresearch_sitename~'_project_index') }}">Back to the list</a>

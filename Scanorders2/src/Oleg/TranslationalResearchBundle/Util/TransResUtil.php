@@ -196,20 +196,50 @@ class TransResUtil
         $state = $project->getState();
         if( strpos($state, '_rejected') !== false || $state == 'draft' || $state == 'complete' ) {
             if( $this->secAuth->isGranted('ROLE_TRANSRES_REQUESTER') ) {
-                $user = $this->secTokenStorage->getToken()->getUser();
-                if( $project->getSubmitter() && $project->getSubmitter()->getId() == $user->getId() ) {
-                    return true;
-                }
-                if( $project->getPrincipalInvestigators()->contains($user) ) {
-                    return true;
-                }
-                if( $project->getCoInvestigators()->contains($user) ) {
-                    return true;
-                }
-                if( $project->getPathologists()->contains($user) ) {
+//                $user = $this->secTokenStorage->getToken()->getUser();
+//                if( $project->getSubmitter() && $project->getSubmitter()->getId() == $user->getId() ) {
+//                    return true;
+//                }
+//                if( $project->getPrincipalInvestigators()->contains($user) ) {
+//                    return true;
+//                }
+//                if( $project->getCoInvestigators()->contains($user) ) {
+//                    return true;
+//                }
+//                if( $project->getPathologists()->contains($user) ) {
+//                    return true;
+//                }
+                if( $this->isProjectRequester($project) === true ) {
                     return true;
                 }
             }
+        }
+        return false;
+    }
+    public function isProjectRequester( $project ) {
+        $user = $this->secTokenStorage->getToken()->getUser();
+        if( $project->getSubmitter() && $project->getSubmitter()->getId() == $user->getId() ) {
+            return true;
+        }
+        if( $project->getPrincipalInvestigators()->contains($user) ) {
+            return true;
+        }
+        if( $project->getCoInvestigators()->contains($user) ) {
+            return true;
+        }
+        if( $project->getPathologists()->contains($user) ) {
+            return true;
+        }
+        return false;
+    }
+    public function isRequesterOrAdmin( $project ) {
+        if(
+            $this->isProjectRequester($project) === true ||
+            $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') ||
+            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') ||
+            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE')
+        ) {
+            return true;
         }
         return false;
     }
@@ -977,7 +1007,7 @@ class TransResUtil
             $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') ||
             $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE')
         ) {
-            //echo "admin ok <br>";
+            //echo "isUserAllowedReview: admin ok <br>";
             return true;
         }
 
@@ -1002,7 +1032,7 @@ class TransResUtil
         $projectStateRevaiewable = false;
         $projectState = $project->getState();
         //echo "projectId=".$project->getId()."<br>";
-        //echo "state1=".$state."<br>";
+        //echo "projectState=".$projectState."<br>";
         if( $projectState == "irb_review" ) {
             $projectStateRevaiewable = true;
         }

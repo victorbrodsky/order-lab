@@ -109,13 +109,19 @@
                         <ul class="dropdown-menu dropdown-menu-right">
 
                             <li>
-                                <a href="{{ path(translationalresearch_sitename~'_project_show', { 'id': project.id }) }}" target="_blank">Show Project</a>
+                                <a href="{{ path(translationalresearch_sitename~'_project_show', { 'id': project.id }) }}" target="_blank">Show/Review Project</a>
                             </li>
 
                             {#add verification: requester => project is on the draft stage or in the reject stage#}
                             {% if is_granted('ROLE_TRANSRES_ADMIN') or transres_util.isProjectEditableByRequester(project) %}
                                 <li>
                                     <a href="{{ path(translationalresearch_sitename~'_project_edit', { 'id': project.id }) }}" target="_blank">Edit Project</a>
+                                </li>
+                            {% endif %}
+
+                            {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_project_set_state', { 'id': project.id }) }}" target="_blank">Force Set Project State (visible for super admin only for testing)</a>
                                 </li>
                             {% endif %}
 
@@ -144,7 +150,7 @@
             </tr>
             <tr class="table-no-border">
                 <td style="display: none">
-                    <a href="{{ path(translationalresearch_sitename~'_project_show', { 'id': project.id }) }}" target="_blank">Show Project</a>
+                    <a href="{{ path(translationalresearch_sitename~'_project_show', { 'id': project.id }) }}" target="_blank">Show/Review Project</a>
                 </td>
                 {{ user_formnode_utility.getFormNodeHolderShortInfo(project,project.messageCategory,1,trclassname)|raw }}
             </tr>
