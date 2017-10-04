@@ -1106,6 +1106,7 @@ class TransResUtil
 
         //set project next transit state depends on the decision
         $appliedTransition = $this->setProjectState($project,$review,$testing);
+        //exit("exit appliedTransition=".$appliedTransition);
 
         //send notification emails
         $this->sendNotificationEmails($project,$review,$appliedTransition,$testing);
@@ -1148,6 +1149,7 @@ class TransResUtil
         $userSecUtil->createUserEditEvent($this->container->getParameter('translationalresearch.sitename'),$event,$user,$review,$request,$eventType);
 
     }
+    //used by processProjectOnReviewUpdate
     public function setProjectState( $project, $review, $testing=false ) {
 
         $appliedTransition = null;
@@ -1160,7 +1162,7 @@ class TransResUtil
 //        if( $review->getDecision() == "Like" || $review->getDecision() == "Dislike" ) {
 //            return $stateChanged;
 //        }
-        //for not primary Committee review don't chnage the project state.
+        //for not primary Committee review don't change the project state.
         if( is_a($review,"CommitteeReview") ) {
             if( $review->getPrimaryReview() !== true ) {
                 return $appliedTransition;
@@ -1178,12 +1180,14 @@ class TransResUtil
         $toYes = null;
         $transitionNameNo = null;
         $toNo = null;
+        $transitionNameMissinginfo = null;
+        $toMissinginfo = null;
 
         foreach($transitions as $transition) {
             $transitionName = $transition->getName();
             echo "transitionName=".$transitionName."<br>"; //"irb_review_no" or "to_admin_review"
 
-            if( strpos($transitionName, '_review_no') !== false ) {
+            if( strpos($transitionName, '_rejected') !== false ) {
                 echo "to: No<br>";
                 $transitionNameNo = $transitionName;
                 $tos = $transition->getTos();
@@ -1191,31 +1195,48 @@ class TransResUtil
                     throw new \Exception("State machine must have only one to state. To count=".count($tos));
                 }
                 $toNo = $tos[0];
-            } else {
-                if (strpos($transitionName, 'to_') !== false ) {
-                    echo "to: Yes<br>";
-                    $transitionNameYes = $transitionName;
-                    $tos = $transition->getTos();
-                    if (count($tos) > 1) {
-                        throw new \Exception("State machine must have only one to state. To count=" . count($tos));
-                    }
-                    $toYes = $tos[0];
+            }
+
+            if (strpos($transitionName, '_approved') !== false ) {
+                echo "to: Yes<br>";
+                $transitionNameYes = $transitionName;
+                $tos = $transition->getTos();
+                if (count($tos) > 1) {
+                    throw new \Exception("State machine must have only one to state. To count=" . count($tos));
                 }
+                $toYes = $tos[0];
+            }
+
+            if (strpos($transitionName, '_missinginfo') !== false ) {
+                echo "to: missinginfo<br>";
+                $transitionNameMissinginfo = $transitionName;
+                $tos = $transition->getTos();
+                if (count($tos) > 1) {
+                    throw new \Exception("State machine must have only one to state. To count=" . count($tos));
+                }
+                $toMissinginfo = $tos[0];
             }
 
         }//foreach
 
-        if( $review->getDecision() == "Rejected" && $toNo ) {
+        if( $review->getDecision() == "rejected" && $toNo ) {
             echo "transit project to No: $toNo <br>";
             //$project->setState($toNo);
             $transitionNameFinal = $transitionNameNo;
             //$appliedTransition = true;
         }
 
-        if( $review->getDecision() == "Approved" && $toYes ) {
+        if( $review->getDecision() == "approved" && $toYes ) {
             echo "transit project to Yes: $toYes <br>";
             //$project->setState($toYes);
             $transitionNameFinal = $transitionNameYes;
+            //$appliedTransition = true;
+        }
+
+        if( $review->getDecision() == "missinginfo" && $toMissinginfo ) {
+            echo "transit project to missinginfo: $toMissinginfo <br>";
+            //$project->setState($toMissinginfo);
+            $transitionNameFinal = $transitionNameMissinginfo;
             //$appliedTransition = true;
         }
 
@@ -1226,7 +1247,9 @@ class TransResUtil
                 $appliedTransition = $transitionNameFinal;
 
                 //write to DB
-                $this->em->flush($project);
+                if( !$testing ) {
+                    $this->em->flush($project);
+                }
 
                 $this->container->get('session')->getFlashBag()->add(
                     'notice',

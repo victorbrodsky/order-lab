@@ -13,7 +13,6 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 
 
-//IrbReviewType
 class ReviewBaseType extends AbstractType
 {
 
@@ -145,18 +144,27 @@ class ReviewBaseType extends AbstractType
                 $decisions = array(
                     'Approved' => 'approved',
                     'Rejected' => 'rejected',
-                    'Request additional information from submitter' => 'missing_info',  //'Pending additional information from submitter',
+                    'Request additional information from submitter' => 'missinginfo',  //'Pending additional information from submitter',
                     'Pending' => null
                 );
             }
-            if ($this->params["stateStr"] == "committee_review") {
-                $decisions = array(
-                    'Like' => 'like',
-                    'Dislike' => 'dislike',
-                    'Pending' => null
-                );
+            if( $this->params["stateStr"] == "committee_review" ) {
+                //echo "primaryReview=".$this->params["review"]."<br>";//TODO: review is null?
+                if( $this->params["review"] && $this->params["review"]->getPrimaryReview() === true ) {
+                    $decisions = array(
+                        'Approved' => 'approved',
+                        'Rejected' => 'rejected',
+                        'Pending' => null
+                    );
+                } else {
+                    $decisions = array(
+                        'Like' => 'like',
+                        'Dislike' => 'dislike',
+                        'Pending' => null
+                    );
+                }
             }
-            if ($this->params["stateStr"] == "final_review") {
+            if( $this->params["stateStr"] == "final_review" ) {
                 $decisions = array(
                     'Approved' => 'approved',
                     'Rejected' => 'rejected',
