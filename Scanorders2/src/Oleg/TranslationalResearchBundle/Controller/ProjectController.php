@@ -439,11 +439,46 @@ class ProjectController extends Controller
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
+        $transresUtil = $this->container->get('transres_util');
         $cycle = "set-state";
 
         //$form = $this->createProjectForm($project,$cycle,$request);
 
-        $params = array();
+        $stateArr = array(
+            //'start', //Edit Project
+            'draft',
+            'complete',
+
+            'irb_review',
+            'irb_rejected',
+            'irb_missinginfo',
+
+            'admin_review',
+            'admin_rejected',
+            'admin_missinginfo',
+
+            'committee_review',
+            'committee_rejected',
+            'committee_missinginfo',
+
+            'final_review',
+            'final_approved',
+            'final_rejected',
+            'final_missinginfo',
+
+            'closed'
+        );
+
+        $stateChoiceArr = array();
+
+        foreach($stateArr as $state) {
+            //$label = $state;
+            $label = $transresUtil->getStateLabelByName($state);
+            $label = $label . " (" . $state . ")";
+            $stateChoiceArr[$label] = $state;
+        }
+
+        $params = array('stateChoiceArr'=>$stateChoiceArr);
         $form = $this->createForm(ProjectStateType::class, $project, array(
             'form_custom_value' => $params,
         ));

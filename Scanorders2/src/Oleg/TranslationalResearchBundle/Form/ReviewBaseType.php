@@ -124,17 +124,42 @@ class ReviewBaseType extends AbstractType
             //$approved = 'Approved';
             //$rejected = 'Rejected';
             //choices: Label=>Value
-            $choices = array(
-                'Approved' => 'Approved',
-                'Rejected' => 'Rejected',
-                'Pending' => null
-            );
+//            $choices = array(
+//                'Approved' => 'Approved',
+//                'Rejected' => 'Rejected',
+//                'Pending' => null
+//            );
+//            if ($this->params["stateStr"] == "committee_review") {
+//                //$approved = 'Like';
+//                //$rejected = 'Dislike';
+//                $choices = array(
+//                    'Like' => 'Like',
+//                    'Dislike' => 'Dislike',
+//                    'Pending' => null
+//                );
+//            }
+            //echo "stateStr=".$this->params["stateStr"]."<br>";
+            $decisions = array();
+
+            if( $this->params["stateStr"] == "irb_review" || $this->params["stateStr"] == "admin_review" ) {
+                $decisions = array(
+                    'Approved' => 'approved',
+                    'Rejected' => 'rejected',
+                    'Request additional information from submitter' => 'missing_info',  //'Pending additional information from submitter',
+                    'Pending' => null
+                );
+            }
             if ($this->params["stateStr"] == "committee_review") {
-                //$approved = 'Like';
-                //$rejected = 'Dislike';
-                $choices = array(
-                    'Like' => 'Like',
-                    'Dislike' => 'Dislike',
+                $decisions = array(
+                    'Like' => 'like',
+                    'Dislike' => 'dislike',
+                    'Pending' => null
+                );
+            }
+            if ($this->params["stateStr"] == "final_review") {
+                $decisions = array(
+                    'Approved' => 'approved',
+                    'Rejected' => 'rejected',
                     'Pending' => null
                 );
             }
@@ -150,7 +175,7 @@ class ReviewBaseType extends AbstractType
 //                    $rejected => 'rejected',
 //                    'Pending' => null
 //                ),
-                'choices' => $choices,
+                'choices' => $decisions,
                 'invalid_message' => 'invalid value: decision',
                 //'choices_as_values' => true,
                 'disabled' => $disabledReviewerFields,

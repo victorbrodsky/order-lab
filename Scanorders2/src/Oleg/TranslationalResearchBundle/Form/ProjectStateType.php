@@ -52,21 +52,22 @@ class ProjectStateType extends AbstractType
         $builder->add('state',ChoiceType::class, array(
             'label' => 'State:',
             'required' => false,
-            'choices'  => array(
-                'start' => 'start',
-                'draft' => 'draft',
-                'complete' => 'complete',
-                'irb_review' => 'irb_review',
-                'irb_rejected' => 'irb_rejected',
-                'admin_review' => 'admin_review',
-                'admin_rejected' => 'admin_rejected',
-                'committee_review' => 'committee_review',
-                'committee_rejected' => 'committee_rejected',
-                'final_review' => 'final_review',
-                'approved' => 'approved',
-                'not_approved' => 'not_approved',
-                'closed' => 'closed'
-            ),
+//            'choices'  => array(
+//                'start' => 'start',
+//                'draft' => 'draft',
+//                'complete' => 'complete',
+//                'irb_review' => 'irb_review',
+//                'irb_rejected' => 'irb_rejected',
+//                'admin_review' => 'admin_review',
+//                'admin_rejected' => 'admin_rejected',
+//                'committee_review' => 'committee_review',
+//                'committee_rejected' => 'committee_rejected',
+//                'final_review' => 'final_review',
+//                'approved' => 'approved',
+//                'not_approved' => 'not_approved',
+//                'closed' => 'closed'
+//            ),
+            'choices' => $this->params['stateChoiceArr'],
             'attr' => array('class' => 'combobox'),
         ));
 

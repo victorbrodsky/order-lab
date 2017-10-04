@@ -667,76 +667,86 @@ class TransResUtil
 
     public function getTransitionLabelByName( $transitionName ) {
 
+        //$returnLabel = "<$transitionName>";
+
         switch ($transitionName) {
-            case "draft":
+            //initial stages
+            case "to_draft":
                 $label = "Save Project as Draft";
                 break;
-            case "submit":
+            case "to_complete":
                 $label = "Complete Submission";
                 break;
-            case "edit":
-                $label = "Edit Project";
-                break;
-
-            ///// Re-Submit after rejected /////
-            case "resubmit_irb_rejected":
-                $label = "Re-Submit to IRB Review";
-                break;
-            case "resubmit_admin_rejected":
-                $label = "Re-Submit to Admin Review";
-                break;
-            case "resubmit_committee_rejected":
-                $label = "Re-Submit to Committee Review";
-                break;
-
-            ///// Main Actions /////
-            //IRB Review
-            case "to_irb_review":
+            case "to_review":
                 $label = "Submit to IRB Review";
                 break;
-            case "irb_review_no":
-                $label = "Reject IRB Review";
-                break;
-            //ADMIN Review
-            case "to_admin_review":
-                //$label = "Submit to Admin Review";
-                $label = "Approve IRB Review";
-                break;
-            case "admin_review_no":
-                $label = "Reject Admin Review";
-                break;
-            //COMMITTEE Review
-            case "to_committee_review":
-                //$label = "Submit to Committee Review";
-                $label = "Approve Admin Review";
-                break;
-            case "committee_review_no":
-                $label = "Reject Committee Review";
-                break;
-            //FINAL approval
-            case "to_final_review":
-                //$label = "Submit to Final Approval";
-                $label = "Approve Committee Review";
-                break;
-            case "final_review_yes":
-                $label = "Final Approve";
-                break;
-            case "final_review_no":
-                $label = "Reject Final Approval";
-                break;
-
+            //final stages
             case "approved_closed":
-                $label = "Close Approved Project";
+                $label = "Close Project";
                 break;
             case "closed_approved":
-                $label = "Re-Open Approved Project";
+                $label = "Re-Open previously Final Approved Project";
                 break;
 
-            default:
-                $label = "<$transitionName>";
+//            ///// Main Actions /////
+//            //IRB Review
+//            case "to_irb_review":
+//                $label = "Submit to IRB Review";
+//                break;
+//            case "irb_review_rejected":
+//                $label = "Reject IRB Review";
+//                break;
+//            //ADMIN Review
+//            case "to_admin_review":
+//                //$label = "Submit to Admin Review";
+//                $label = "Approve IRB Review";
+//                break;
+//            case "admin_review_no":
+//                $label = "Reject Admin Review";
+//                break;
+//            //COMMITTEE Review
+//            case "to_committee_review":
+//                //$label = "Submit to Committee Review";
+//                $label = "Approve Admin Review";
+//                break;
+//            case "committee_review_no":
+//                $label = "Reject Committee Review";
+//                break;
+//            //FINAL approval
+//            case "to_final_review":
+//                //$label = "Submit to Final Approval";
+//                $label = "Approve Committee Review";
+//                break;
+//            case "final_review_yes":
+//                $label = "Final Approve";
+//                break;
+//            case "final_review_no":
+//                $label = "Reject Final Approval";
+//                break;
+//
+//            case "approved_closed":
+//                $label = "Close Approved Project";
+//                break;
+//            case "closed_approved":
+//                $label = "Re-Open Approved Project";
+//                break;
 
+            default:
+                $label = null;
         }
-        return $label;
+
+        if( $label ) {
+            $returnLabel = $label;
+        } else {
+            //irb_review_approved => IRB Review Approved
+            //irb_review_rejected => IRB Review Rejected
+            //irb_review_missinginfo => IRB Review Missinginfo
+            //irb_review_resubmit => IRB Review Resubmit
+            $label = str_replace("_"," ",$transitionName);
+            $returnLabel = ucwords($label);
+        }
+
+        return $returnLabel;
     }
 
     public function getStateLabelByProject( $project ) {
@@ -745,7 +755,7 @@ class TransResUtil
     public function getStateLabelByName( $stateName ) {
         switch ($stateName) {
             case "start":
-                $state = "Edit Project";
+                $state = "New Project";
                 break;
             case "draft":
                 $state = "Draft";
@@ -753,36 +763,48 @@ class TransResUtil
             case "complete":
                 $state = "Completed";
                 break;
-            case "submit":
-                $state = "Completed";
-                break;
+
             case "irb_review":
                 $state = "In IRB Review";
                 break;
             case "irb_rejected":
                 $state = "IRB Review Rejected";
                 break;
+            case "irb_missinginfo":
+                $state = "Pending additional information from submitter for IRB Review";
+                break;
+
             case "admin_review":
                 $state = "In Admin Review";
                 break;
             case "admin_rejected":
                 $state = "Admin Review Rejected";
                 break;
+            case "admin_missinginfo":
+                $state = "Pending additional information from submitter for Admin Review";
+                break;
+
             case "committee_review":
                 $state = "In Committee Review";
                 break;
             case "committee_rejected":
                 $state = "Committee Review Rejected";
                 break;
+            case "committee_missinginfo":
+                $state = "Pending additional information from submitter for Committee Review";
+                break;
 
             case "final_review":
                 $state = "In Final Approval";
                 break;
-            case "approved":
+            case "final_approved":
                 $state = "Approved";
                 break;
-            case "not_approved":
+            case "final_rejected":
                 $state = "Final Approval Rejected";
+                break;
+            case "final_missinginfo":
+                $state = "Pending additional information from submitter for Final Review";
                 break;
 
             case "closed":
@@ -807,36 +829,48 @@ class TransResUtil
             case "complete":
                 $state = "Completed";
                 break;
-            case "submit":
-                $state = "Completed";
-                break;
+
             case "irb_review":
                 $state = "IRB Review";
                 break;
             case "irb_rejected":
                 $state = "IRB Review Rejected";
                 break;
+            case "irb_missinginfo":
+                $state = "Request additional information from submitter for IRB Review";
+                break;
+
             case "admin_review":
                 $state = "Admin Review";
                 break;
             case "admin_rejected":
                 $state = "Admin Review Rejected";
                 break;
+            case "admin_missinginfo":
+                $state = "Request additional information from submitter for Admin Review";
+                break;
+
             case "committee_review":
                 $state = "Committee Review";
                 break;
             case "committee_rejected":
                 $state = "Committee Review Rejected";
                 break;
+            case "committee_missinginfo":
+                $state = "Request additional information from submitter for Committee Review";
+                break;
 
             case "final_review":
                 $state = "Final Approval";
                 break;
-            case "approved":
+            case "final_approved":
                 $state = "Approved";
                 break;
-            case "not_approved":
+            case "final_rejected":
                 $state = "Final Approval Rejected";
+                break;
+            case "final_missinginfo":
+                $state = "Request additional information from submitter for Final Review";
                 break;
 
             case "closed":
