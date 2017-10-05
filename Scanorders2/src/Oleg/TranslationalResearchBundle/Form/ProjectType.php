@@ -236,7 +236,7 @@ class ProjectType extends AbstractType
 
         $builder->add( 'pathologists', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
-            'label'=> "WCMC Pathologist Involved:",
+            'label'=> "WCMC Pathologist(s) Involved:",
             'required'=> false,
             'multiple' => true,
             'attr' => array('class'=>'combobox combobox-width'),
@@ -250,11 +250,11 @@ class ProjectType extends AbstractType
             },
         ));
 
-        $builder->add( 'contact', EntityType::class, array(
+        $builder->add( 'contacts', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
-            'label'=> "Contact:",
+            'label'=> "Contact(s):",
             'required'=> false,
-            'multiple' => false,
+            'multiple' => true,
             'attr' => array('class'=>'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
                 return $er->createQueryBuilder('list')
@@ -276,6 +276,7 @@ class ProjectType extends AbstractType
         if( $this->params['showIrbReviews'] ) {
             //echo "show irb<br>";
             $this->params['stateStr'] = "irb_review";
+            $this->params['standAlone'] = false;
             $builder->add('irbReviews', CollectionType::class, array(
                 'entry_type' => ReviewBaseType::class,
                 'entry_options' => array(
@@ -294,6 +295,7 @@ class ProjectType extends AbstractType
 
         if( $this->params['showAdminReviews'] ) {
             $this->params['stateStr'] = "admin_review";
+            $this->params['standAlone'] = false;
             $builder->add('adminReviews', CollectionType::class, array(
                 'entry_type' => ReviewBaseType::class,
                 'entry_options' => array(
@@ -312,6 +314,7 @@ class ProjectType extends AbstractType
 
         if( $this->params['showCommitteeReviews'] ) {
             $this->params['stateStr'] = "committee_review";
+            $this->params['standAlone'] = false;
             $builder->add('committeeReviews', CollectionType::class, array(
                 'entry_type' => ReviewBaseType::class,
                 'entry_options' => array(
@@ -330,6 +333,7 @@ class ProjectType extends AbstractType
 
         if( $this->params['showFinalReviews'] ) {
             $this->params['stateStr'] = "final_review";
+            $this->params['standAlone'] = false;
             $builder->add('finalReviews', CollectionType::class, array(
                 'entry_type' => ReviewBaseType::class,
                 'entry_options' => array(

@@ -176,7 +176,8 @@ class ReviewBaseController extends Controller
                 exit("testing: exit submit review");
             }
 
-            return $this->redirectToRoute('translationalresearch_review_show', array('stateStr'=>$stateStr,'reviewId' => $review->getId()));
+            //return $this->redirectToRoute('translationalresearch_review_show', array('stateStr'=>$stateStr,'reviewId' => $review->getId()));
+            return $this->redirectToRoute('translationalresearch_project_show', array('id' => $review->getProject()->getId()));
         }
 
         return array(
@@ -247,7 +248,8 @@ class ReviewBaseController extends Controller
             'review' => $review,
             'routeName' => $routeName,
             'stateStr' => $stateStr,
-            'disabledReviewerFields' => false
+            'disabledReviewerFields' => false,
+            'standAlone' => true,
         );
 
         if( $cycle == "show" ) {

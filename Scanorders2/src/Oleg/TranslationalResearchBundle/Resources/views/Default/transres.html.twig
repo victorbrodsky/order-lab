@@ -153,11 +153,11 @@
                     {{ transres.usersInfo(form.coInvestigators,coInvestigators,cycle) }}
 
                     {% if cycle == "show" %}
-                        {% set contact = project.contact %}
+                        {% set contacts = project.contacts %}
                     {% else %}
-                        {% set contact = null %}
+                        {% set contacts = null %}
                     {% endif %}
-                    {{ transres.userInfo(form.contact,contact,cycle) }}
+                    {{ transres.usersInfo(form.contacts,contacts,cycle) }}
 
                 </div>
             </div>

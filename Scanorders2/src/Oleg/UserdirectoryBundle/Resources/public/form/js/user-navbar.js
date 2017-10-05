@@ -236,12 +236,16 @@ function setTranslationalResearchNavBar() {
 
     var full = window.location.pathname;
 
-    if( full.indexOf("/translational-research/new") !== -1 ) {
+    if( full.indexOf("/translational-research/project/new") !== -1 ) {
         id = 'translationalresearch-new-project';
     }
 
-    if( full.indexOf("/translational-research/my-projects") !== -1 ) {
+    if( full.indexOf("/translational-research/project/my-projects") !== -1 ) {
         id = 'translationalresearch-my-projects';
+    }
+
+    if( full.indexOf("/translational-research/project/my-review-projects") !== -1 ) {
+        id = 'translationalresearch-my-review-projects';
     }
 
     if( full.indexOf("/translational-research/workflow") !== -1 ) {

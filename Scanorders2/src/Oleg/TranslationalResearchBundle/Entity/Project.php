@@ -130,11 +130,19 @@ class Project {
      **/
     private $pathologists;
 
+//    /**
+//     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+//     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
+//     */
+//    private $contact;
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
-     */
-    private $contact;
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\JoinTable(name="transres_project_contact",
+     *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="contact_id", referencedColumnName="id")}
+     * )
+     **/
+    private $contacts;
 
 //    /**
 //     * @ORM\Column(type="text", nullable=true)
@@ -271,6 +279,7 @@ class Project {
         $this->principalInvestigators = new ArrayCollection();
         $this->coInvestigators = new ArrayCollection();
         $this->pathologists = new ArrayCollection();
+        $this->contacts = new ArrayCollection();
 
         $this->irbReviews = new ArrayCollection();
         $this->adminReviews = new ArrayCollection();
@@ -470,21 +479,21 @@ class Project {
 //        $this->expirationDate = $expirationDate;
 //    }
 
-    /**
-     * @return mixed
-     */
-    public function getContact()
-    {
-        return $this->contact;
-    }
-
-    /**
-     * @param mixed $contact
-     */
-    public function setContact($contact)
-    {
-        $this->contact = $contact;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getContact()
+//    {
+//        return $this->contact;
+//    }
+//
+//    /**
+//     * @param mixed $contact
+//     */
+//    public function setContact($contact)
+//    {
+//        $this->contact = $contact;
+//    }
 
 //    /**
 //     * @return mixed
@@ -694,6 +703,22 @@ class Project {
     public function removePathologist($item)
     {
         $this->pathologists->removeElement($item);
+    }
+
+    public function getContacts()
+    {
+        return $this->contacts;
+    }
+    public function addContact($item)
+    {
+        if( $item && !$this->contacts->contains($item) ) {
+            $this->contacts->add($item);
+        }
+        return $this;
+    }
+    public function removeContact($item)
+    {
+        $this->contacts->removeElement($item);
     }
 
     /**

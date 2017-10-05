@@ -233,8 +233,17 @@ class TransResUtil
         return false;
     }
     public function isRequesterOrAdmin( $project ) {
+        if( $this->isProjectRequester($project) === true ) {
+            return true;
+        }
+        if( $this->isAdminOrPrimaryReviewer() === true ) {
+            return true;
+        }
+
+        return false;
+    }
+    public function isAdminOrPrimaryReviewer() {
         if(
-            $this->isProjectRequester($project) === true ||
             $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') ||
             $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') ||
             $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE')
@@ -1159,12 +1168,12 @@ class TransResUtil
             return $appliedTransition;
         }
 
-//        if( $review->getDecision() == "Like" || $review->getDecision() == "Dislike" ) {
-//            return $stateChanged;
-//        }
         //for not primary Committee review don't change the project state.
-        if( is_a($review,"CommitteeReview") ) {
-            if( $review->getPrimaryReview() !== true ) {
+        //if( is_a($review,"CommitteeReview") ) {
+        if( $review instanceof CommitteeReview ) {
+            //echo "CommitteeReview <br>";
+            if( $review->getPrimaryReview() === false ) {
+                //exit("1");
                 return $appliedTransition;
             }
         }

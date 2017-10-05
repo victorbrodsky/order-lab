@@ -909,11 +909,14 @@
     <a href="tel:{{ valueclean }}" target="_top">{{ phone }}</a>
 {% endmacro %}
 
-{% macro personInfo( person, cycle, sitename ) %}
+{% macro personInfo( person, cycle, sitename, wellLabel ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import _self as usermacros %}
     <p>
     <div class="well well-sm user-margin-block">
+        {% if wellLabel is defined and wellLabel %}
+            {{ wellLabel|raw }}
+        {% endif %}
         {% set personurl = path(sitename~'_showuser',{'id':person.id}) %}
         {% set personlink = '<a href="'~personurl~'">'~person.getUsernameOptimal()~'</a>'  %}
         {{ formmacros.simplefield( "Name:", personlink, "", "disabled" ) }}

@@ -53,12 +53,22 @@ class ProjectController extends Controller
      * Lists all project entities.
      *
      * @Route("/projects/", name="translationalresearch_project_index")
+     * @Route("/my-projects/", name="translationalresearch_my_project_index")
+     * @Route("/my-review-projects/", name="translationalresearch_my_review_project_index")
      * @Template("OlegTranslationalResearchBundle:Project:index.html.twig")
      * @Method("GET")
      */
     public function indexAction(Request $request)
     {
+
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+        }
+
         $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $routeName = $request->get('_route');
+        $title = "Projects";
 
         //$projects = $em->getRepository('OlegTranslationalResearchBundle:Project')->findAll();
 
@@ -69,8 +79,67 @@ class ProjectController extends Controller
         $dql->leftJoin('project.principalInvestigators','principalInvestigators');
         $dql->leftJoin('principalInvestigators.infos','principalInvestigatorsInfos');
 
+        $dqlParameters = array();
+
+        if( $routeName == "translationalresearch_my_project_index" ) {
+            $dql->leftJoin('project.coInvestigators','coInvestigators');
+            $dql->leftJoin('project.pathologists','pathologists');
+            $dql->leftJoin('project.contacts','contacts');
+            $dql->leftJoin('project.submitter','submitter');
+
+            $dql->where(
+                "principalInvestigators.id = :userId OR ".
+                "coInvestigators.id = :userId OR ".
+                "pathologists.id = :userId OR ".
+                "contacts.id = :userId OR ".
+                "submitter.id = :userId"
+            );
+
+            $dqlParameters["userId"] = $user->getId();
+            $title = "My Projects, where I am a requester";
+        }
+
+        if( $routeName == "translationalresearch_my_review_project_index" ) {
+            $dql->leftJoin('project.irbReviews','irbReviews');
+            $dql->leftJoin('irbReviews.reviewer','irbReviewer');
+            $dql->leftJoin('irbReviews.reviewerDelegate','irbReviewerDelegate');
+
+            $dql->leftJoin('project.adminReviews','adminReviews');
+            $dql->leftJoin('adminReviews.reviewer','adminReviewer');
+            $dql->leftJoin('adminReviews.reviewerDelegate','adminReviewerDelegate');
+
+            $dql->leftJoin('project.committeeReviews','committeeReviews');
+            $dql->leftJoin('committeeReviews.reviewer','committeeReviewer');
+            $dql->leftJoin('committeeReviews.reviewerDelegate','committeeReviewerDelegate');
+
+            $dql->leftJoin('project.finalReviews','finalReviews');
+            $dql->leftJoin('finalReviews.reviewer','finalReviewer');
+            $dql->leftJoin('finalReviews.reviewerDelegate','finalReviewerDelegate');
+
+            $dql->where(
+                "irbReviewer.id = :userId OR ".
+                "irbReviewerDelegate.id = :userId OR ".
+
+                "adminReviewer.id = :userId OR ".
+                "adminReviewerDelegate.id = :userId OR ".
+
+                "committeeReviewer.id = :userId OR ".
+                "committeeReviewerDelegate.id = :userId OR ".
+
+                "finalReviewer.id = :userId OR ".
+                "finalReviewerDelegate.id = :userId"
+            );
+
+            $dqlParameters["userId"] = $user->getId();
+            $title = "My Review Projects, where I am a reviewer";
+        }
+
         $limit = 30;
         $query = $em->createQuery($dql);
+
+        if( count($dqlParameters) > 0 ) {
+            $query->setParameters($dqlParameters);
+        }
 
         $paginationParams = array(
             'defaultSortFieldName' => 'project.id',
@@ -87,9 +156,11 @@ class ProjectController extends Controller
 
         return array(
             'projects' => $projects,
-            'title' => "Projects"
+            'title' => $title
         );
     }
+
+
 
     /**
      * Creates a new project entity in a simple way without formnode.
@@ -395,7 +466,13 @@ class ProjectController extends Controller
             if( $project->getState() && ($project->getState() == "complete" || $project->getState() == "draft") ) {
                 if( $transresUtil->isRequesterOrAdmin($project) === true ) {
                     $params['submitIrbReview'] = true;
+                    $params['updateProject'] = true;
                 }
+            }
+
+            //allow edit if admin at any time
+            if( $transresUtil->isAdminOrPrimaryReviewer() ) {
+                $params['updateProject'] = true;
             }
         }
 
