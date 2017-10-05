@@ -475,7 +475,9 @@
             {{ formmacros.checkbox(formreview.primaryReview) }}
         {% endif %}
 
-        {{ formmacros.field(formreview.reviewer) }}
+        {% if formreview.reviewer is defined %}
+            {{ formmacros.field(formreview.reviewer) }}
+        {% endif %}
 
         {% if formreview.reviewerDelegate is defined %}
             {{ formmacros.field(formreview.reviewerDelegate) }}

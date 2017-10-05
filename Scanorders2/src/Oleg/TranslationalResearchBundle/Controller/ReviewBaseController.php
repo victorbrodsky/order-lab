@@ -244,6 +244,7 @@ class ReviewBaseController extends Controller
             'cycle' => $cycle,
             'em' => $em,
             'user' => $user,
+            'transresUtil' => $transresUtil,
             'SecurityAuthChecker' => $this->get('security.authorization_checker'),
             'review' => $review,
             'routeName' => $routeName,
@@ -266,10 +267,9 @@ class ReviewBaseController extends Controller
         }
 
         //check if reviewer
-//        $params['reviewer'] = false;
-//        if(  ) {
-//
-//        }
+        if( $transresUtil->isProjectReviewer($user,array($review)) ) {
+            $params['isReviewer'] = true;
+        }
 
         $form = $this->createForm(ReviewBaseType::class, $review, array(
             'data_class' => 'Oleg\\TranslationalResearchBundle\\Entity\\'.$reviewEntityName,

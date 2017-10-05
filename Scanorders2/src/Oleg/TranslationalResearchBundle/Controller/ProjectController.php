@@ -398,6 +398,7 @@ class ProjectController extends Controller
             'cycle' => $cycle,
             'em' => $em,
             'user' => $user,
+            'transresUtil' => $transresUtil,
             'SecurityAuthChecker' => $this->get('security.authorization_checker'),
             'project' => $project,
             'routeName' => $routeName,
@@ -408,34 +409,34 @@ class ProjectController extends Controller
         );
 
         $params['admin'] = false;
-        $params['showIrbReviews'] = false;
-        $params['showAdminReviews'] = false;
-        $params['showCommitteeReviews'] = false;
-        $params['showFinalReviews'] = false;
+        $params['isIrbReviewer'] = false;
+        $params['isAdminReviewer'] = false;
+        $params['isCommitteeReviewer'] = false;
+        $params['isFinalReviewer'] = false;
         if(
             $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ||
             $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') ||
             $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE')
         ) {
             $params['admin'] = true;
-            $params['showIrbReviews'] = true;
-            $params['showAdminReviews'] = true;
-            $params['showCommitteeReviews'] = true;
-            $params['showFinalReviews'] = true;
+            $params['isIrbReviewer'] = true;
+            $params['isAdminReviewer'] = true;
+            $params['isCommitteeReviewer'] = true;
+            $params['isFinalReviewer'] = true;
         }
 
         //show if owner
         if( $transresUtil->isProjectReviewer($user,$project->getIrbReviews()) ) {
-            $params['showIrbReviews'] = true;
+            $params['isIrbReviewer'] = true;
         }
         if( $transresUtil->isProjectReviewer($user,$project->getAdminReviews()) ) {
-            $params['showAdminReviews'] = true;
+            $params['isAdminReviewer'] = true;
         }
         if( $transresUtil->isProjectReviewer($user,$project->getCommitteeReviews()) ) {
-            $params['showCommitteeReviews'] = true;
+            $params['isCommitteeReviewer'] = true;
         }
         if( $transresUtil->isProjectReviewer($user,$project->getFinalReviews()) ) {
-            $params['showFinalReviews'] = true;
+            $params['isFinalReviewer'] = true;
         }
 
         //check if reviewer
