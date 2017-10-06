@@ -100,7 +100,7 @@ class ReviewBaseType extends AbstractType
             }
         }//if
 
-        $builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
 
             //var_dump($event->getData());
 
@@ -108,30 +108,30 @@ class ReviewBaseType extends AbstractType
             $form = $event->getForm();
 
             if(!$reviewObjectEntity) {
+                $form->add('reviewer', null, array(
+                    'label' => "Reviewer:",
+                    'disabled' => $this->disabledReviewers,
+                    'attr' => array('class' => 'combobox combobox-width') //, 'readonly'=>true
+                ));
+                $form->add('reviewerDelegate', null, array(
+                    'label' => "Reviewer Delegate:",
+                    'disabled' => $this->disabledReviewers,
+                    'attr' => array('class' => 'combobox combobox-width') //, 'readonly'=>true
+                ));
                 return;
             }
 
-            //echo "Rev ID=".$reviewObjectEntity->getReviewer()."<br>";
+            //echo "Rev ID=".$reviewObjectEntity->getId()."<br>";
+            //echo "Rev Reviewer=".$reviewObjectEntity->getReviewer()."<br>";
             //var_dump($reviewObjectEntity);
 
-            $showReviewers = false;
-            $prefix = "notdefined";
-            if( $reviewObjectEntity->getId() ) {
-                $prefix = "exists";
-                if( $this->params['transresUtil']->isProjectReviewer($this->params['user'],array($reviewObjectEntity)) ) {
-                    $showReviewers = true;
-                }
-                if( $this->params['admin'] ) {
-                    $showReviewers = true;
-                }
-            } {
-                $prefix = "nonexists!!!";
-                $showReviewers = true;
-            }
-
-            if( $showReviewers ) {
+            //TODO: test with committee reviewer (Aisha)
+            $isReviewer = $this->params['transresUtil']->isProjectReviewer($this->params['user'],array($reviewObjectEntity));
+            //echo "isReviewer=".$isReviewer."<br>";
+            if( $this->params['admin'] || $isReviewer ) {
+            //if( 1 ) {
                 $form->add('reviewer', null, array(
-                    'label' => "Reviewer:".$prefix,
+                    'label' => "Reviewer:",
                     'disabled' => $this->disabledReviewers,
                     'attr' => array('class' => 'combobox combobox-width') //, 'readonly'=>true
                 ));
