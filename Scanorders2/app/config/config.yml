@@ -20,7 +20,7 @@ services:
 framework:
     #esi:             ~
     #translator:      { fallback: %locale% }
-    #translator: ~
+    translator: ~
     secret:          '%secret%'
     router:
         resource: "%kernel.project_dir%/app/config/routing.yml"
@@ -37,6 +37,7 @@ framework:
 #        save_path: ~
     fragments:       ~
 #    fragments: { path: /_fragment }
+    http_method_override: true
 
 # Twig Configuration
 twig:
@@ -88,7 +89,7 @@ twig:
 assetic:
     debug:          '%kernel.debug%'
     use_controller: false
-    bundles:        ['OlegUserdirectoryBundle','OlegOrderformBundle','OlegFellAppBundle','OlegDeidentifierBundle','OlegVacReqBundle','OlegCallLogBundle','OlegTranslationalResearchBundle']
+    bundles:        ["FOSCommentBundle",'OlegUserdirectoryBundle','OlegOrderformBundle','OlegFellAppBundle','OlegDeidentifierBundle','OlegVacReqBundle','OlegCallLogBundle','OlegTranslationalResearchBundle']
     #java: /usr/bin/java
     filters:
 #         less:
@@ -254,4 +255,5 @@ knp_snappy:
 ##        binary:     "\"C:\\Program Files (x86)\\Aperio\\Spectrum\\htdocs\\order\\scanorder\\Scanorders2\\src\\Oleg\\UserdirectoryBundle\\Util\\wkhtmltopdf\\bin\\wkhtmltoimage.exe\""
 ##        binary:      "\"%kernel.root_dir%\\..\\vendor\\olegutil\\wkhtmltopdf\\bin\\wkhtmltoimage.exe\""
 #        options:    []
+
 

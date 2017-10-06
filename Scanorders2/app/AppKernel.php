@@ -53,6 +53,9 @@ class AppKernel extends Kernel
             new Spraed\PDFGeneratorBundle\SpraedPDFGeneratorBundle(),
             new Knp\Bundle\SnappyBundle\KnpSnappyBundle(),
             new ADesigns\CalendarBundle\ADesignsCalendarBundle(),
+            new FOS\RestBundle\FOSRestBundle(),
+            new FOS\CommentBundle\FOSCommentBundle(),
+            new JMS\SerializerBundle\JMSSerializerBundle($this),
 
             new Bmatzner\FontAwesomeBundle\BmatznerFontAwesomeBundle(),
 

@@ -51,7 +51,10 @@
             {#</div>#}
         {% endif %}
         {{ transres.updateInfo(edit_form,cycle) }}
+
         <br>
+
+        {{ transres.projectRequesters(edit_form,project,cycle) }}
 
         {#{{ form_widget(edit_form) }}#}
 

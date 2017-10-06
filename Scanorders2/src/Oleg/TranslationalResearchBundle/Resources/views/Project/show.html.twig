@@ -44,10 +44,10 @@
     {{ transres.updateInfo(form,cycle) }}
     <br>
 
-    {{ transres.projectReviews(form,cycle,sitename) }}
-
     {{ transres.projectRequesters(form,project,cycle) }}
     <br>
+
+    {{ transres.projectReviews(form,cycle,sitename) }}
 
     {#{% if form.createDate is defined or form.submitter is defined %}#}
         {#<div class="well well-sm">#}

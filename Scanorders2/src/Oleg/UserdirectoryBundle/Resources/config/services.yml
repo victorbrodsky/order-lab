@@ -54,6 +54,12 @@ fos_user:
         address: oli2002@med.cornell.edu
         sender_name: Oleg Ivanov
 
+fos_comment:
+    db_driver: orm
+    class:
+        model:
+            comment: Oleg\UserdirectoryBundle\Entity\FosComment
+            thread: Oleg\UserdirectoryBundle\Entity\FosThread
 
 services:
 

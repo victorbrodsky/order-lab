@@ -1,108 +1,6 @@
 {% macro projectForm( form, project, cycle ) %}
 
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import "OlegUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
-    {% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
-
-    {#{% if form.state is defined %}#}
-        {#{{ formmacros.field(form.state) }}#}
-    {#{% endif %}#}
-
-    {#{% if form.approvalDate is defined %}#}
-        {#{{ formmacros.field(form.approvalDate) }}#}
-    {#{% endif %}#}
-
-
-    {#{{ formmacros.field(form.title) }}#}
-
-    {#<div class="well well-sm">#}
-        {#{% if cycle == "show" %}#}
-            {#{% set irbSubmitter = project.irbSubmitter %}#}
-        {#{% else %}#}
-            {#{% set irbSubmitter = null %}#}
-        {#{% endif %}#}
-        {#{{ transres.userInfo(form.irbSubmitter,irbSubmitter,cycle) }}#}
-        {#{{ formmacros.field(form.irbNumber) }}#}
-    {#</div>#}
-
-    {#<div class="well well-sm">#}
-        {#{{ formmacros.fieldDateLabel(form.startDate,'allow-future-date') }}#}
-        {#{{ formmacros.fieldDateLabel(form.expirationDate,'allow-future-date') }}#}
-    {#</div>#}
-
-    {#{{ formmacros.field(form.contact) }}#}
-    {#{% if cycle == "show" %}#}
-        {#{% set contact = project.contact %}#}
-    {#{% else %}#}
-        {#{% set contact = null %}#}
-    {#{% endif %}#}
-    {#{{ transres.userInfo(form.contact,contact,cycle) }}#}
-
-    {#<div class="well well-sm">#}
-        {#{{ formmacros.checkbox(form.funded) }}#}
-        {#{{ formmacros.field(form.fundedAccountNumber) }}#}
-    {#</div>#}
-
-    {#{{ formmacros.field(form.description) }}#}
-
-    {#{{ formmacros.field(form.budgetSummary) }}#}
-
-    {#{{ formmacros.field(form.totalCost) }}#}
-
-    {#{{ formmacros.field(form.projectType) }}#}
-
-    {#{{ formmacros.field(form.biostatisticalComment) }}#}
-
-    {#{{ formmacros.field(form.administratorComment) }}#}
-
-
-    {#<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">#}
-        {#<div class="panel panel-primary">#}
-            {#<div class="panel-heading" role="tab" id="projectRequestersHeading">#}
-                {#<h4 class="panel-title">#}
-                    {#<a role="button" data-toggle="collapse" data-parent="#accordion" href="#projectRequesters" aria-expanded="true">#}
-                        {#Project's Requester(s)#}
-                    {#</a>#}
-                {#</h4>#}
-            {#</div>#}
-            {#<div id="projectRequesters" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="projectRequestersHeading">#}
-                {#<div class="panel-body">#}
-
-                    {#{% if cycle == "show" %}#}
-                        {#{% set principalInvestigators = project.principalInvestigators %}#}
-                    {#{% else %}#}
-                        {#{% set principalInvestigators = null %}#}
-                    {#{% endif %}#}
-                    {#{{ transres.usersInfo(form.principalInvestigators,principalInvestigators,cycle) }}#}
-
-                    {#{% if cycle == "show" %}#}
-                        {#{% set pathologists = project.pathologists %}#}
-                    {#{% else %}#}
-                        {#{% set pathologists = null %}#}
-                    {#{% endif %}#}
-                    {#{{ transres.usersInfo(form.pathologists,pathologists,cycle) }}#}
-
-                    {#{% if cycle == "show" %}#}
-                        {#{% set coInvestigators = project.coInvestigators %}#}
-                    {#{% else %}#}
-                        {#{% set coInvestigators = null %}#}
-                    {#{% endif %}#}
-                    {#{{ transres.usersInfo(form.coInvestigators,coInvestigators,cycle) }}#}
-
-                    {#{% if cycle == "show" %}#}
-                        {#{% set contact = project.contact %}#}
-                    {#{% else %}#}
-                        {#{% set contact = null %}#}
-                    {#{% endif %}#}
-                    {#{{ transres.userInfo(form.contact,contact,cycle) }}#}
-
-                {#</div>#}
-            {#</div>#}
-        {#</div>#}
-    {#</div>#}
-
-    {{ transres.projectRequesters(form,project,cycle) }}
-
 
     <div style="display: none">
         {% if form.messageCategory is defined %}
@@ -115,8 +13,8 @@
 {% endmacro %}
 
 
+
 {% macro projectRequesters( form, project, cycle ) %}
-    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
 
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
@@ -227,18 +125,8 @@
 {% endmacro %}
 
 {% macro projectHeader(project) %}
-    {#<div class="well">#}
-        <p>Project State: <strong>{{ transres_util.getStateLabelByProject(project) }}</strong></p>
-        {#{{ transres_util.getReviewLink(project,app.user)|raw }}#}
-        {#{{ transres_util.getReviewFormsHtml(project,app.user)|raw }}#}
-        {#{% set reviewIds = transres_util.getReviewIds(project,app.user) %}#}
-        {#{% for reviewId in reviewIds %}#}
-            {#{{ render(controller(#}
-                {#'OlegTranslationalResearchBundle:ReviewBase:edit',#}
-                {#{ 'stateStr':project.getState(), 'id': reviewId }#}
-            {#)) }}#}
-        {#{% endfor %}#}
-    {#</div>#}
+    <p>Project State: <strong>{{ transres_util.getStateLabelByProject(project) }}</strong></p>
+
 {% endmacro %}
 
 {% macro projectReviews(project, cycle, sitename) %}

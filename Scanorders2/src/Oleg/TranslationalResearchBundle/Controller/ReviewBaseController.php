@@ -267,9 +267,9 @@ class ReviewBaseController extends Controller
         }
 
         //check if reviewer
-        if( $transresUtil->isProjectReviewer($user,array($review)) ) {
-            $params['isReviewer'] = true;
-        }
+//        if( $transresUtil->isProjectReviewer($user,array($review)) ) {
+//            $params['isReviewer'] = true;
+//        }
 
         $form = $this->createForm(ReviewBaseType::class, $review, array(
             'data_class' => 'Oleg\\TranslationalResearchBundle\\Entity\\'.$reviewEntityName,

@@ -281,7 +281,7 @@ $file = null;
 $file = new UploadedFile($file['tmp_name'], $file['name'], $file['type'], $file['size'], $file['error']);
 }
 } else {
-$file = array_map(array($this,'convertFileInformation'), $file);
+$file = array_filter(array_map(array($this,'convertFileInformation'), $file));
 }
 }
 return $file;
@@ -337,7 +337,7 @@ $authorizationHeader = $this->parameters['REDIRECT_HTTP_AUTHORIZATION'];
 if (null !== $authorizationHeader) {
 if (0 === stripos($authorizationHeader,'basic ')) {
 $exploded = explode(':', base64_decode(substr($authorizationHeader, 6)), 2);
-if (count($exploded) == 2) {
+if (2 == count($exploded)) {
 list($headers['PHP_AUTH_USER'], $headers['PHP_AUTH_PW']) = $exploded;
 }
 } elseif (empty($this->parameters['PHP_AUTH_DIGEST']) && (0 === stripos($authorizationHeader,'digest '))) {
@@ -555,22 +555,22 @@ self::$requestFactory = $callable;
 public function duplicate(array $query = null, array $request = null, array $attributes = null, array $cookies = null, array $files = null, array $server = null)
 {
 $dup = clone $this;
-if ($query !== null) {
+if (null !== $query) {
 $dup->query = new ParameterBag($query);
 }
-if ($request !== null) {
+if (null !== $request) {
 $dup->request = new ParameterBag($request);
 }
-if ($attributes !== null) {
+if (null !== $attributes) {
 $dup->attributes = new ParameterBag($attributes);
 }
-if ($cookies !== null) {
+if (null !== $cookies) {
 $dup->cookies = new ParameterBag($cookies);
 }
-if ($files !== null) {
+if (null !== $files) {
 $dup->files = new FileBag($files);
 }
-if ($server !== null) {
+if (null !== $server) {
 $dup->server = new ServerBag($server);
 $dup->headers = new HeaderBag($dup->server->getHeaders());
 }
@@ -811,7 +811,7 @@ $host = $host[0];
 } elseif (!$host = $this->headers->get('HOST')) {
 return $this->server->get('SERVER_PORT');
 }
-if ($host[0] ==='[') {
+if ('['=== $host[0]) {
 $pos = strpos($host,':', strrpos($host,']'));
 } else {
 $pos = strrpos($host,':');
@@ -842,7 +842,7 @@ public function getHttpHost()
 {
 $scheme = $this->getScheme();
 $port = $this->getPort();
-if (('http'== $scheme && $port == 80) || ('https'== $scheme && $port == 443)) {
+if (('http'== $scheme && 80 == $port) || ('https'== $scheme && 443 == $port)) {
 return $this->getHost();
 }
 return $this->getHost().':'.$port;
@@ -1133,7 +1133,7 @@ $lang = $codes[1];
 }
 } else {
 for ($i = 0, $max = count($codes); $i < $max; ++$i) {
-if ($i === 0) {
+if (0 === $i) {
 $lang = strtolower($codes[0]);
 } else {
 $lang .='_'.strtoupper($codes[$i]);
@@ -1182,14 +1182,14 @@ $this->server->remove('IIS_WasUrlRewritten');
 } elseif ($this->headers->has('X_REWRITE_URL')) {
 $requestUri = $this->headers->get('X_REWRITE_URL');
 $this->headers->remove('X_REWRITE_URL');
-} elseif ($this->server->get('IIS_WasUrlRewritten') =='1'&& $this->server->get('UNENCODED_URL') !='') {
+} elseif ('1'== $this->server->get('IIS_WasUrlRewritten') &&''!= $this->server->get('UNENCODED_URL')) {
 $requestUri = $this->server->get('UNENCODED_URL');
 $this->server->remove('UNENCODED_URL');
 $this->server->remove('IIS_WasUrlRewritten');
 } elseif ($this->server->has('REQUEST_URI')) {
 $requestUri = $this->server->get('REQUEST_URI');
 $schemeAndHttpHost = $this->getSchemeAndHttpHost();
-if (strpos($requestUri, $schemeAndHttpHost) === 0) {
+if (0 === strpos($requestUri, $schemeAndHttpHost)) {
 $requestUri = substr($requestUri, strlen($schemeAndHttpHost));
 }
 } elseif ($this->server->has('ORIG_PATH_INFO')) {
@@ -1239,7 +1239,7 @@ $basename = basename($baseUrl);
 if (empty($basename) || !strpos(rawurldecode($truncatedRequestUri), $basename)) {
 return'';
 }
-if (strlen($requestUri) >= strlen($baseUrl) && (false !== $pos = strpos($requestUri, $baseUrl)) && $pos !== 0) {
+if (strlen($requestUri) >= strlen($baseUrl) && (false !== $pos = strpos($requestUri, $baseUrl)) && 0 !== $pos) {
 $baseUrl = substr($requestUri, 0, $pos + strlen($baseUrl));
 }
 return rtrim($baseUrl,'/'.DIRECTORY_SEPARATOR);

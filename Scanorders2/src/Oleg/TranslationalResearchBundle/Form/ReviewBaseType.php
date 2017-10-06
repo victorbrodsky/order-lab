@@ -55,59 +55,13 @@ class ReviewBaseType extends AbstractType
 
         //////////////////////// reviewer //////////////////////////
         //Visible only to admins and reviewer
-        if(0) {
-            $isReviewer = false;
-            if ($this->params['standAlone'] === true) {
-                if ($this->params['isReviewer'] === true) {
-                    $isReviewer = true;
-                }
-            }
-            if ($isReviewer === false) {
-                if ($this->data_class == 'Oleg\\TranslationalResearchBundle\\Entity\\IrbReview') {
-                    if ($this->params['isIrbReviewer']) {
-                        $isReviewer = true;
-                    }
-                }
-                if ($this->data_class == 'Oleg\\TranslationalResearchBundle\\Entity\\AdminReview') {
-                    if ($this->params['isAdminReviewer']) {
-                        $isReviewer = true;
-                    }
-                }
-                if ($this->data_class == 'Oleg\\TranslationalResearchBundle\\Entity\\CommitteeReview') {
-                    if ($this->params['isCommitteeReviewer']) {
-                        $isReviewer = true;
-                    }
-                }
-                if ($this->data_class == 'Oleg\\TranslationalResearchBundle\\Entity\\FinalReview') {
-                    if ($this->params['isFinalReviewer']) {
-                        $isReviewer = true;
-                    }
-                }
-            }
-            if ($this->params['admin'] || $isReviewer) {
-
-                $builder->add('reviewer', null, array(
-                    'label' => "Reviewer:",
-                    'disabled' => $this->disabledReviewers,
-                    'attr' => array('class' => 'combobox combobox-width') //, 'readonly'=>true
-                ));
-                $builder->add('reviewerDelegate', null, array(
-                    'label' => "Reviewer Delegate:",
-                    'disabled' => $this->disabledReviewers,
-                    'attr' => array('class' => 'combobox combobox-width') //, 'readonly'=>true
-                ));
-
-            }
-        }//if
-
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-
-            //var_dump($event->getData());
 
             $reviewObjectEntity = $event->getData();
             $form = $event->getForm();
 
             if(!$reviewObjectEntity) {
+                //new review object
                 $form->add('reviewer', null, array(
                     'label' => "Reviewer:",
                     'disabled' => $this->disabledReviewers,
@@ -121,15 +75,11 @@ class ReviewBaseType extends AbstractType
                 return;
             }
 
-            //echo "Rev ID=".$reviewObjectEntity->getId()."<br>";
-            //echo "Rev Reviewer=".$reviewObjectEntity->getReviewer()."<br>";
-            //var_dump($reviewObjectEntity);
-
-            //TODO: test with committee reviewer (Aisha)
-            $isReviewer = $this->params['transresUtil']->isProjectReviewer($this->params['user'],array($reviewObjectEntity));
-            //echo "isReviewer=".$isReviewer."<br>";
-            if( $this->params['admin'] || $isReviewer ) {
-            //if( 1 ) {
+            if(
+                $this->params['admin'] ||
+                $this->params['transresUtil']->isProjectReviewer($this->params['user'],array($reviewObjectEntity))
+            ) {
+                //existing review object
                 $form->add('reviewer', null, array(
                     'label' => "Reviewer:",
                     'disabled' => $this->disabledReviewers,
