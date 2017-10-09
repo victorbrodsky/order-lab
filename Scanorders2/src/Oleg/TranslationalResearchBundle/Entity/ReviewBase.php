@@ -98,18 +98,18 @@ class ReviewBase
      */
     protected $decision;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    protected $comment;
-
-
+//    /**
+//     * @ORM\Column(type="text", nullable=true)
+//     */
+//    protected $comment;
 
 
     public function __construct($reviewer=null) {
         $this->setReviewer($reviewer);
         $this->setStatus('valid');
         $this->setCreatedate(new \DateTime());
+
+        //$this->comments = new ArrayCollection();
     }
 
 

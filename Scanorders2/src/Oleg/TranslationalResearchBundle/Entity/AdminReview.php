@@ -40,6 +40,14 @@ class AdminReview extends ReviewBase
      */
     private $project;
 
+//    /**
+//     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\FosComment")
+//     * @ORM\JoinTable(name="transres_adminreview_comment",
+//     *      joinColumns={@ORM\JoinColumn(name="review_id", referencedColumnName="id")},
+//     *      inverseJoinColumns={@ORM\JoinColumn(name="comment_id", referencedColumnName="id")}
+//     * )
+//     **/
+//    protected $comments;
 
 
     /**
@@ -57,6 +65,23 @@ class AdminReview extends ReviewBase
     {
         $this->project = $project;
     }
+
+//    public function getComments()
+//    {
+//        return $this->comments;
+//    }
+//    public function addComment($item)
+//    {
+//        if( $item && !$this->comments->contains($item) ) {
+//            $this->comments->add($item);
+//        }
+//        return $this;
+//    }
+//    public function removeComment($item)
+//    {
+//        $this->comments->removeElement($item);
+//    }
+
 
     public function getStateStr() {
         return "admin_review";

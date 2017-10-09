@@ -27,7 +27,11 @@ namespace Oleg\UserdirectoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use FOS\CommentBundle\Entity\Thread as FosBaseThread;
 
-
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="user_fosThread")
+ * @ORM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
+ */
 class FosThread extends FosBaseThread
 {
 

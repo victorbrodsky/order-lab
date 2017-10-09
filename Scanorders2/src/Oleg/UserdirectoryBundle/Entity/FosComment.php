@@ -26,8 +26,15 @@ namespace Oleg\UserdirectoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use FOS\CommentBundle\Entity\Comment as FosBaseComment;
+use FOS\CommentBundle\Model\SignedCommentInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
-class FosComment extends FosBaseComment
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="user_fosComment")
+ * @ORM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
+ */
+class FosComment extends FosBaseComment implements SignedCommentInterface
 {
 
     /**
@@ -41,8 +48,37 @@ class FosComment extends FosBaseComment
      * Thread of this comment
      *
      * @var Thread
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Thread")
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\FosThread")
      */
     protected $thread;
 
+    /**
+     * Author of the comment
+     *
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @var User
+     */
+    protected $author;
+
+
+
+
+    public function setAuthor(UserInterface $author)
+    {
+        $this->author = $author;
+    }
+
+    public function getAuthor()
+    {
+        return $this->author;
+    }
+
+    public function getAuthorName()
+    {
+        if (null === $this->getAuthor()) {
+            return 'Anonymous';
+        }
+
+        return $this->getAuthor()->getUsername();
+    }
 }

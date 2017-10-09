@@ -157,11 +157,6 @@
         {#{% set reviews = project.finalReviews %}#}
     {#{% endif %}#}
 
-    <p>
-        <button type="button" class="btn btn-default btn-sm" onClick="collapseAll()" >Collapse All</button>
-        <button type="button" class="btn btn-default btn-sm" onClick="extendAll()" >Expand All</button>
-    </p>
-
     {% set showIrbReview = 1 %}
     {% set showAdminReview = 1 %}
     {% set showCommiteeReview = 1 %}
@@ -375,9 +370,9 @@
             {{ formmacros.field(formreview.decision) }}
         {% endif %}
 
-        {% if formreview.comment is defined %}
-            {{ formmacros.field(formreview.comment) }}
-        {% endif %}
+        {#{% if formreview.comments is defined %}#}
+            {#{{ formmacros.field(formreview.comments) }}#}
+        {#{% endif %}#}
 
         {#allow change review by admin and reviewer only in the view page. Clicking this button on the edit page will not save any changes#}
         {% if

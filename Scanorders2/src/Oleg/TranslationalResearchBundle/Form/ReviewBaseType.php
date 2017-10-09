@@ -5,6 +5,7 @@ namespace Oleg\TranslationalResearchBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -304,12 +305,26 @@ class ReviewBaseType extends AbstractType
                 'attr' => array('class' => 'horizontal_type')
             ));
 
-            $builder->add('comment', TextareaType::class, array(
-                'label' => 'Comment:',
-                'disabled' => $disabledReviewerFields,
-                'required' => false,
-                'attr' => array('class' => 'textarea form-control'),
-            ));
+//            $builder->add('comment', TextareaType::class, array(
+//                'label' => 'Comment:',
+//                'disabled' => $disabledReviewerFields,
+//                'required' => false,
+//                'attr' => array('class' => 'textarea form-control'),
+//            ));
+//            $builder->add('comments', CollectionType::class, array(
+//                'entry_type' => FosCommentType::class,
+//                'entry_options' => array(
+//                    'data_class' => 'Oleg\UserdirectoryBundle\Entity\FosComment',
+//                    'form_custom_value' => $this->params
+//                ),
+//                'label' => false,
+//                'required' => false,
+//                'allow_add' => true,
+//                'allow_delete' => true,
+//                'by_reference' => false,
+//                'prototype' => true,
+//                'prototype_name' => '__comments__',
+//            ));
 
             if( $this->params['stateStr'] == "committee_review" ) {
                 //echo "show primaryReview <br>";

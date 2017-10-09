@@ -45,6 +45,15 @@ class CommitteeReview extends ReviewBase
      */
     private $primaryReview;
 
+//    /**
+//     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\FosComment")
+//     * @ORM\JoinTable(name="transres_committeereview_comment",
+//     *      joinColumns={@ORM\JoinColumn(name="review_id", referencedColumnName="id")},
+//     *      inverseJoinColumns={@ORM\JoinColumn(name="comment_id", referencedColumnName="id")}
+//     * )
+//     **/
+//    protected $comments;
+
 
     public function __construct($reviewer=null) {
         parent::__construct($reviewer);
@@ -84,6 +93,23 @@ class CommitteeReview extends ReviewBase
     {
         $this->primaryReview = $primaryReview;
     }
+
+//    public function getComments()
+//    {
+//        return $this->comments;
+//    }
+//    public function addComment($item)
+//    {
+//        if( $item && !$this->comments->contains($item) ) {
+//            $this->comments->add($item);
+//        }
+//        return $this;
+//    }
+//    public function removeComment($item)
+//    {
+//        $this->comments->removeElement($item);
+//    }
+
 
     public function getStateStr() {
         return "committee_review";

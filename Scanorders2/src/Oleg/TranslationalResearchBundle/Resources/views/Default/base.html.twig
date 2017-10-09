@@ -28,6 +28,9 @@
 
 {% block mainjs %}
 
+    {#'@FOSCommentBundle/Resources/public/js/comments.js'#}
+    {#'@OlegUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'#}
+
     {% javascripts
     '@OlegUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'
     '@OlegUserdirectoryBundle/Resources/public/bootstrap/js/*'
@@ -71,13 +74,10 @@
 
     '@OlegOrderformBundle/Resources/public/form/js/modal.js'
     '@OlegOrderformBundle/Resources/public/form/js/tooltips.js'
-
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-
-    {#FOSJsRoutingBundle#}
     <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
     <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
+    {% endjavascripts %}
 
 {% endblock %}

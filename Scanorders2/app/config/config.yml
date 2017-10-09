@@ -145,6 +145,7 @@ doctrine:
                     OlegVacReqBundle: ~
                     OlegCallLogBundle: ~
                     OlegTranslationalResearchBundle: ~
+                    FOSCommentBundle: ~
                     gedmo_tree:
                         type: annotation
                         prefix: Gedmo\Tree\Entity
@@ -256,4 +257,10 @@ knp_snappy:
 ##        binary:      "\"%kernel.root_dir%\\..\\vendor\\olegutil\\wkhtmltopdf\\bin\\wkhtmltoimage.exe\""
 #        options:    []
 
+#fos_comment:
+#    db_driver: orm
+#    class:
+#        model:
+#            comment: Oleg\UserdirectoryBundle\Entity\FosComment
+#            thread: Oleg\UserdirectoryBundle\Entity\FosThread
 
