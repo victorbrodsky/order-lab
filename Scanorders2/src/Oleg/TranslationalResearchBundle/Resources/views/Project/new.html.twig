@@ -42,6 +42,9 @@
             {#</div>#}
         {% endif %}
 
+        <br>
+        {{ transres.projectRequesters(form,project,cycle) }}
+
         {#{% if form.vars.id  %}#}
             {#{{ formmacros.simplefield("Project #:", form.vars.id, "input", "disabled") }}#}
         {#{% endif %}#}

@@ -253,8 +253,8 @@ class ReviewBaseType extends AbstractType
                 $decisions = array(
                     'Approved' => 'approved',
                     'Rejected' => 'rejected',
-                    'Request additional information from submitter' => 'missinginfo',  //'Pending additional information from submitter',
-                    'Pending' => null
+                    'Pending additional information from submitter' => 'missinginfo',  //'Pending additional information from submitter',
+                    'Pending Review' => null
                 );
             }
             //if( $this->params["stateStr"] == "committee_review" ) {
@@ -264,13 +264,13 @@ class ReviewBaseType extends AbstractType
                     $decisions = array(
                         'Approved' => 'approved',
                         'Rejected' => 'rejected',
-                        'Pending' => null
+                        'Pending Review' => null
                     );
                 } else {
                     $decisions = array(
-                        'Like' => 'approved',
-                        'Dislike' => 'rejected',
-                        'Pending' => null
+                        'Approved/Approval Recommended' => 'approved',
+                        'Rejected/Rejection Recommended' => 'rejected',
+                        'Pending Review' => null
                     );
                 }
             }
@@ -279,7 +279,7 @@ class ReviewBaseType extends AbstractType
                 $decisions = array(
                     'Approved' => 'approved',
                     'Rejected' => 'rejected',
-                    'Pending' => null
+                    'Pending Review' => null
                 );
             }
 
@@ -329,7 +329,7 @@ class ReviewBaseType extends AbstractType
             if( $this->params['stateStr'] == "committee_review" ) {
                 //echo "show primaryReview <br>";
                 $builder->add('primaryReview', CheckboxType::class, array(
-                    'label' => 'Primary Review:',
+                    'label' => 'Primary Reviewer:',
                     'required' => false,
                     'disabled' => $this->disabledReviewers,
                     'attr' => array('class' => 'form-control', 'style' => 'margin:0'),

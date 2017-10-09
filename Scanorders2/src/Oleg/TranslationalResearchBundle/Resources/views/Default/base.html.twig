@@ -30,6 +30,7 @@
 
     {#'@FOSCommentBundle/Resources/public/js/comments.js'#}
     {#'@OlegUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'#}
+    {#'@OlegUserdirectoryBundle/Resources/public/jquery/jquery-3.2.1.min.js'#}
 
     {% javascripts
     '@OlegUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'
@@ -81,3 +82,10 @@
     {% endjavascripts %}
 
 {% endblock %}
+
+{% block additionalcss %}
+    {% stylesheets '@FOSCommentBundle/Resources/public/css/comments.css' %}
+        <link rel="stylesheet" href="{{ asset_url }}" type="text/css" />
+    {% endstylesheets %}
+{% endblock %}
+

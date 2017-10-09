@@ -52,11 +52,15 @@
 
                     <li id="nav-bar-translationalresearch-new-project"><a href="{{ path(translationalresearch_sitename~'_project_new') }}">New Project</a></li>
 
+                    {% if is_granted('ROLE_TRANSRES_REQUESTER') %}
                     <li id="nav-bar-translationalresearch-my-projects"><a href="{{ path(translationalresearch_sitename~'_my_project_index') }}">My Projects</a></li>
+                    {% endif %}
 
-                    <li id="nav-bar-translationalresearch-my-review-projects"><a href="{{ path(translationalresearch_sitename~'_my_review_project_index') }}">My Review Projects</a></li>
+                    {% if is_granted('ROLE_TRANSRES_ADMIN') %}
+                    <li id="nav-bar-translationalresearch-my-review-projects"><a href="{{ path(translationalresearch_sitename~'_my_review_project_index') }}">Projects Assigned To Me For Review</a></li>
 
                     <li id="nav-bar-translationalresearch-default-reviewers"><a href="{{ path(translationalresearch_sitename~'_default-reviewer_index') }}">Default Reviewers</a></li>
+                    {% endif %}
 
                     <li id="nav-bar-translationalresearch-project-workflow"><a href="{{ path(translationalresearch_sitename~'_workflow_show') }}" target="_blank">Workflow</a></li>
 
