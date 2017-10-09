@@ -29,10 +29,12 @@ use FOS\CommentBundle\Entity\Comment as FosBaseComment;
 use FOS\CommentBundle\Model\SignedCommentInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+
+//@ORM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
+
 /**
  * @ORM\Entity
  * @ORM\Table(name="user_fosComment")
- * @ORM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
  */
 class FosComment extends FosBaseComment implements SignedCommentInterface
 {
