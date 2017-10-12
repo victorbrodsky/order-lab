@@ -252,6 +252,22 @@ class TransResUtil
         }
         return false;
     }
+    public function isProjectReviewer( $project ) {
+        $user = $this->secTokenStorage->getToken()->getUser();
+        if( $this->isReviewsReviewer($user,$project->getIrbReviews()) ) {
+            return true;
+        }
+        if( $this->isReviewsReviewer($user,$project->getAdminReviews()) ) {
+            return true;
+        }
+        if( $this->isReviewsReviewer($user,$project->getCommitteeReviews()) ) {
+            return true;
+        }
+        if( $this->isReviewsReviewer($user,$project->getFinalReviews()) ) {
+            return true;
+        }
+        return false;
+    }
 
     public function printTransition($transition) {
         echo $transition->getName().": ";
@@ -341,7 +357,7 @@ class TransResUtil
                 //1) create IrbReview entity
                 $reviewer = $defaultReviewer->getReviewer();
                 if ($reviewer) {
-                    if(false === $this->isProjectReviewer($reviewer,$project->getIrbReviews()) ) {
+                    if(false === $this->isReviewsReviewer($reviewer,$project->getIrbReviews()) ) {
                         //echo "reviewer=".$reviewer."<br>";
                         $reviewEntity = new IrbReview($reviewer);
                         $reviewerDelegate = $defaultReviewer->getReviewerDelegate();
@@ -362,7 +378,7 @@ class TransResUtil
                 //1) create IrbReview entity
                 $reviewer = $defaultReviewer->getReviewer();
                 if ($reviewer) {
-                    if(false === $this->isProjectReviewer($reviewer,$project->getAdminReviews()) ) {
+                    if(false === $this->isReviewsReviewer($reviewer,$project->getAdminReviews()) ) {
                         $reviewEntity = new AdminReview($reviewer);
                         $reviewerDelegate = $defaultReviewer->getReviewerDelegate();
                         if ($reviewerDelegate) {
@@ -383,7 +399,7 @@ class TransResUtil
                 //1) create CommitteeReview entity
                 $reviewer = $defaultReviewer->getReviewer();
                 if ($reviewer) {
-                    if(false === $this->isProjectReviewer($reviewer,$project->getCommitteeReviews()) ) {
+                    if(false === $this->isReviewsReviewer($reviewer,$project->getCommitteeReviews()) ) {
                         $reviewEntity = new CommitteeReview($reviewer);
                         $reviewerDelegate = $defaultReviewer->getReviewerDelegate();
                         if ($reviewerDelegate) {
@@ -409,7 +425,7 @@ class TransResUtil
                 //1) create FinalReview entity
                 $reviewer = $defaultReviewer->getReviewer();
                 if ($reviewer) {
-                    if(false === $this->isProjectReviewer($reviewer,$project->getFinalReviews()) ) {
+                    if(false === $this->isReviewsReviewer($reviewer,$project->getFinalReviews()) ) {
                         $reviewEntity = new FinalReview($reviewer);
                         $reviewerDelegate = $defaultReviewer->getReviewerDelegate();
                         if ($reviewerDelegate) {
@@ -466,7 +482,7 @@ class TransResUtil
         return $infos;
     }
 
-    public function isProjectReviewer($reviewerUser, $projectReviewers ) {
+    public function isReviewsReviewer($reviewerUser, $projectReviewers ) {
         if( !$reviewerUser || !$reviewerUser->getId() ) {
             return false;
         }

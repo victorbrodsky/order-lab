@@ -258,6 +258,47 @@ class ProjectController extends Controller
     }
 
     /**
+     * Finds and displays a project entity.
+     *
+     * @Route("/project/review/{id}", name="translationalresearch_project_review")
+     * @Template("OlegTranslationalResearchBundle:Project:review.html.twig")
+     * @Method("GET")
+     */
+    public function reviewAction(Request $request, Project $project)
+    {
+        //$transresUtil = $this->container->get('transres_util');
+        //$em = $this->getDoctrine()->getManager();
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
+
+        $cycle = "show";
+
+        $form = $this->createProjectForm($project,$cycle,$request); //show
+
+        $deleteForm = $this->createDeleteForm($project);
+
+        //create a review form (for example, IrbReview form if logged in user is a reviewer or reviewer delegate)
+        //1) if project is in the review state: irb_review, admin_review, committee_review or final_review
+        //2) if the current user is added to this project as the reviewer for the state above
+        //$reviewFormViews = $transresUtil->getReviewForm($project,$user);
+
+        return array(
+            'project' => $project,
+            'form' => $form->createView(),
+            'cycle' => $cycle,
+            'title' => "Review Project ID ".$project->getId(),
+            'delete_form' => $deleteForm->createView(),
+            //'review_forms' => $reviewFormViews
+        );
+
+//        return array(
+//            'project' => $project,
+//            'cycle' => 'show',
+//            'delete_form' => $deleteForm->createView(),
+//            'title' => "Project ID ".$project->getId()
+//        );
+    }
+
+    /**
      * Displays a form to edit an existing project entity.
      *
      * @Route("/project/{id}/simple/edit", name="translationalresearch_project_simple_edit")

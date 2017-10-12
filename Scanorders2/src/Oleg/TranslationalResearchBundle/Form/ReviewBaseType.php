@@ -90,7 +90,7 @@ class ReviewBaseType extends AbstractType
 
             if(
                 $this->params['admin'] ||
-                $this->params['transresUtil']->isProjectReviewer($this->params['user'],array($reviewObjectEntity))
+                $this->params['transresUtil']->isReviewsReviewer($this->params['user'],array($reviewObjectEntity))
             ) {
                 //existing review object
                 $form->add('reviewer', null, array(

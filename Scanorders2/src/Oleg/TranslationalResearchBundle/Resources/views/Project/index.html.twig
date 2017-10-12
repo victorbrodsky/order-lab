@@ -109,8 +109,14 @@
                         <ul class="dropdown-menu dropdown-menu-right">
 
                             <li>
-                                <a href="{{ path(translationalresearch_sitename~'_project_show', { 'id': project.id }) }}" target="_blank">Show/Review Project</a>
+                                <a href="{{ path(translationalresearch_sitename~'_project_show', { 'id': project.id }) }}" target="_blank">Show Project</a>
                             </li>
+
+                            {% if transres_util.isAdminOrPrimaryReviewer() or transres_util.isProjectReviewer(project) %}
+                            <li>
+                                <a href="{{ path(translationalresearch_sitename~'_project_review', { 'id': project.id }) }}" target="_blank">Review Project</a>
+                            </li>
+                            {% endif %}
 
                             {#add verification: requester => project is on the draft stage or in the reject stage#}
                             {% if is_granted('ROLE_TRANSRES_ADMIN') or transres_util.isProjectEditableByRequester(project) %}
@@ -121,7 +127,7 @@
 
                             {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
                                 <li>
-                                    <a href="{{ path(translationalresearch_sitename~'_project_set_state', { 'id': project.id }) }}" target="_blank">Force Set Project State (visible for super admin only for testing)</a>
+                                    <a href="{{ path(translationalresearch_sitename~'_project_set_state', { 'id': project.id }) }}" target="_blank">Force Set Project State (visible for super admin only for testing only!)</a>
                                 </li>
                             {% endif %}
 

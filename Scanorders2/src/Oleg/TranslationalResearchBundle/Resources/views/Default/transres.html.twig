@@ -129,7 +129,7 @@
 
 {% endmacro %}
 
-{% macro projectReviews(project, cycle, sitename) %}
+{% macro projectReviews(project, cycle, sitename, addReviewButtons) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
     {% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
@@ -156,6 +156,10 @@
     {#{% if project.state.vars.value == "final_review" %}#}
         {#{% set reviews = project.finalReviews %}#}
     {#{% endif %}#}
+
+    {% if addReviewButtons is not defined %}
+        {% set addReviewButtons = 0 %}
+    {% endif %}
 
     {% set showIrbReview = 1 %}
     {% set showAdminReview = 1 %}
@@ -185,7 +189,7 @@
                             {#count irb reviewers={{ project.irbReviews|length }}<br>#}
                             {% for review in project.irbReviews %}
                                 {#show review with reviewer={{ review.vars.value.reviewer.getUsernameOptimal }}<br>#}
-                                {{ transres.projectSingleReview(project,review,cycle,'transres-irbreviews','noprototype',sitename,showAddDeleteBtn) }}
+                                {{ transres.projectSingleReview(project,review,cycle,'transres-irbreviews','noprototype',sitename,showAddDeleteBtn,addReviewButtons) }}
                             {% endfor %}
 
                             {% if cycle != "show" %}
@@ -216,7 +220,7 @@
                         <div class="transres-adminreviews-holder">
 
                             {% for review in project.adminReviews %}
-                                {{ transres.projectSingleReview(project,review,cycle,'transres-adminreviews','noprototype',sitename,showAddDeleteBtn) }}
+                                {{ transres.projectSingleReview(project,review,cycle,'transres-adminreviews','noprototype',sitename,showAddDeleteBtn,addReviewButtons) }}
                             {% endfor %}
 
                             {% if cycle != "show" %}
@@ -247,7 +251,7 @@
                         <div class="transres-committeereviews-holder">
 
                             {% for review in project.committeeReviews %}
-                                {{ transres.projectSingleReview(project,review,cycle,'transres-committeereviews','noprototype',sitename,showAddDeleteBtn) }}
+                                {{ transres.projectSingleReview(project,review,cycle,'transres-committeereviews','noprototype',sitename,showAddDeleteBtn,addReviewButtons) }}
                             {% endfor %}
 
                             {% if cycle != "show" %}
@@ -278,7 +282,7 @@
                         <div class="transres-finalreviews-holder">
 
                             {% for review in project.finalReviews %}
-                                {{ transres.projectSingleReview(project,review,cycle,'transres-finalreviews','noprototype',sitename,showAddDeleteBtn) }}
+                                {{ transres.projectSingleReview(project,review,cycle,'transres-finalreviews','noprototype',sitename,showAddDeleteBtn,addReviewButtons) }}
                             {% endfor %}
 
                             {% if cycle != "show" %}
@@ -295,12 +299,17 @@
 
 {% endmacro %}
 
-{% macro projectSingleReview( project, review, cycle, classname, prototype, sitename, showAddDeleteBtn ) %}
+{% macro projectSingleReview( project, review, cycle, classname, prototype, sitename, showAddDeleteBtn, addReviewButtons ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
 
     {% if showAddDeleteBtn is not defined %}
         {% set showAddDeleteBtn = 0 %}
+    {% endif %}
+
+    {% if addReviewButtons is not defined %}
+        addReviewButtons is not set!!!<br>
+        {% set addReviewButtons = 0 %}
     {% endif %}
 
     {% set reviewId = null %}
@@ -394,6 +403,14 @@
                    href="{{ path(translationalresearch_sitename~'_review_edit',{'stateStr':review.vars.value.getStateStr(),'reviewId': reviewId}) }}"
                     >Update Review</a>
             </p>
+
+            {#addReviewButtons={{ addReviewButtons }}<br>#}
+            {% if addReviewButtons is defined and addReviewButtons %}
+                <a class="btn btn-success">Approve</a>
+                <a class="btn btn-warning">Pending additional information from submitter</a>
+                <a class="btn btn-danger">Reject</a>
+            {% endif %}
+
         {% endif %}
 
     </div>
