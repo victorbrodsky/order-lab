@@ -192,7 +192,18 @@ class ProjectFormNodeController extends ProjectController
     public function editAction(Request $request, Project $project)
     {
 
-        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER')) {
+//        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER')) {
+//            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+//        }
+        //TODO: ediatble by admin and requester only
+        $transresUtil = $this->container->get('transres_util');
+
+        if(
+            $transresUtil->isAdminOrPrimaryReviewer() ||
+            $transresUtil->isProjectEditableByRequester($project)
+        ) {
+            //ok
+        } else {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 

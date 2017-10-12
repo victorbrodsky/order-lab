@@ -195,7 +195,7 @@ class TransResUtil
     public function isProjectEditableByRequester( $project ) {
         $state = $project->getState();
         if( strpos($state, '_rejected') !== false || $state == 'draft' || $state == 'complete' ) {
-            if( $this->secAuth->isGranted('ROLE_TRANSRES_REQUESTER') ) {
+//            if( $this->secAuth->isGranted('ROLE_TRANSRES_REQUESTER') ) {
 //                $user = $this->secTokenStorage->getToken()->getUser();
 //                if( $project->getSubmitter() && $project->getSubmitter()->getId() == $user->getId() ) {
 //                    return true;
@@ -212,7 +212,7 @@ class TransResUtil
                 if( $this->isProjectRequester($project) === true ) {
                     return true;
                 }
-            }
+//            }
         }
         return false;
     }
@@ -540,17 +540,19 @@ class TransResUtil
         if( $reviewer ) {
             $reviewer->addRole($reviewerRole);
         }
-        if( $originalReviewer && $originalReviewer != $reviewer ) {
-            $originalReviewer->removeRole($reviewerRole);
-        }
+        //remove role: make sure if the user is not a default reviewer in all other objects. Or don't remove role at all.
+        //if( $originalReviewer && $originalReviewer != $reviewer ) {
+            //$originalReviewer->removeRole($reviewerRole);
+        //}
 
         $reviewerDelegate = $defaultReviewer->getReviewerDelegate();
         if( $reviewerDelegate && $reviewerDelegateRole ) {
             $reviewerDelegate->addRole($reviewerDelegateRole);
         }
-        if( $originalReviewerDelegate && $originalReviewerDelegate != $reviewerDelegate && $reviewerDelegateRole ) {
-            $originalReviewerDelegate->removeRole($reviewerDelegateRole);
-        }
+        //remove role: make sure if the user is not a default reviewer in all other objects. Or don't remove role at all.
+        //if( $originalReviewerDelegate && $originalReviewerDelegate != $reviewerDelegate && $reviewerDelegateRole ) {
+            //$originalReviewerDelegate->removeRole($reviewerDelegateRole);
+        //}
 
         return $defaultReviewer;
     }
@@ -917,6 +919,44 @@ class TransResUtil
                 $reviewEntityName = null;
         }
         return $reviewEntityName;
+    }
+
+    public function getStateChoisesArr() {
+        $stateArr = array(
+            //'start', //Edit Project
+            'draft',
+            'complete',
+
+            'irb_review',
+            'irb_rejected',
+            'irb_missinginfo',
+
+            'admin_review',
+            'admin_rejected',
+            'admin_missinginfo',
+
+            'committee_review',
+            'committee_rejected',
+            'committee_missinginfo',
+
+            'final_review',
+            'final_approved',
+            'final_rejected',
+            'final_missinginfo',
+
+            'closed'
+        );
+
+        $stateChoiceArr = array();
+
+        foreach($stateArr as $state) {
+            //$label = $state;
+            $label = $this->getStateLabelByName($state);
+            $label = $label . " (" . $state . ")";
+            $stateChoiceArr[$label] = $state;
+        }
+
+        return $stateChoiceArr;
     }
 
     //create a review form (for example, IrbReview form if logged in user is a reviewer or reviewer delegate)

@@ -194,7 +194,7 @@ class ProjectController extends Controller
         //new: add all default reviewers
         $transresUtil->addDefaultStateReviewers($project);
 
-        $form = $this->createProjectForm($project,$cycle,$request);
+        $form = $this->createProjectForm($project,$cycle,$request); //simple new
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -231,7 +231,7 @@ class ProjectController extends Controller
 
         $cycle = "show";
 
-        $form = $this->createProjectForm($project,$cycle,$request);
+        $form = $this->createProjectForm($project,$cycle,$request); //show
 
         $deleteForm = $this->createDeleteForm($project);
 
@@ -305,7 +305,7 @@ class ProjectController extends Controller
 
 
         $deleteForm = $this->createDeleteForm($project);
-        $editForm = $this->createProjectForm($project,$cycle,$request);
+        $editForm = $this->createProjectForm($project,$cycle,$request); //simple edit
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
@@ -394,6 +394,8 @@ class ProjectController extends Controller
         $transresUtil = $this->container->get('transres_util');
         $routeName = $request->get('_route');
 
+        $stateChoiceArr = $transresUtil->getStateChoisesArr();
+
         $params = array(
             'cycle' => $cycle,
             'em' => $em,
@@ -403,41 +405,48 @@ class ProjectController extends Controller
             'project' => $project,
             'routeName' => $routeName,
             'disabledReviewerFields' => true,
+            'disabledState' => true,
+            'disabledReviewers' => true,
             'saveAsDraft' => false,
             'saveAsComplete' => false,
             'updateProject' => false,
+            'stateChoiceArr'=>$stateChoiceArr
         );
 
         $params['admin'] = false;
-        $params['isIrbReviewer'] = false;
-        $params['isAdminReviewer'] = false;
-        $params['isCommitteeReviewer'] = false;
-        $params['isFinalReviewer'] = false;
+        $params['showIrbReviewer'] = true;  //false; //TODO: change logic to show review result and comment, but hide reviewers
+        $params['showAdminReviewer'] = true;
+        $params['showCommitteeReviewer'] = true;
+        $params['showFinalReviewer'] = true;
         if(
             $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ||
             $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') ||
             $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE')
         ) {
             $params['admin'] = true;
-            $params['isIrbReviewer'] = true;
-            $params['isAdminReviewer'] = true;
-            $params['isCommitteeReviewer'] = true;
-            $params['isFinalReviewer'] = true;
+//            $params['showIrbReviewer'] = true;
+//            $params['showAdminReviewer'] = true;
+//            $params['showCommitteeReviewer'] = true;
+//            $params['showFinalReviewer'] = true;
+
+            $params['disabledReviewerFields'] = false;
+            $params['disabledState'] = false;
+            $params['disabledReviewers'] = false;
         }
 
         //show if owner
-        if( $transresUtil->isProjectReviewer($user,$project->getIrbReviews()) ) {
-            $params['isIrbReviewer'] = true;
-        }
-        if( $transresUtil->isProjectReviewer($user,$project->getAdminReviews()) ) {
-            $params['isAdminReviewer'] = true;
-        }
-        if( $transresUtil->isProjectReviewer($user,$project->getCommitteeReviews()) ) {
-            $params['isCommitteeReviewer'] = true;
-        }
-        if( $transresUtil->isProjectReviewer($user,$project->getFinalReviews()) ) {
-            $params['isFinalReviewer'] = true;
-        }
+//        if( $transresUtil->isProjectReviewer($user,$project->getIrbReviews()) ) {
+//            $params['showIrbReviewer'] = true;
+//        }
+//        if( $transresUtil->isProjectReviewer($user,$project->getAdminReviews()) ) {
+//            $params['showAdminReviewer'] = true;
+//        }
+//        if( $transresUtil->isProjectReviewer($user,$project->getCommitteeReviews()) ) {
+//            $params['showCommitteeReviewer'] = true;
+//        }
+//        if( $transresUtil->isProjectReviewer($user,$project->getFinalReviews()) ) {
+//            $params['showFinalReviewer'] = true;
+//        }
 
         //check if reviewer
 //        $params['reviewer'] = false;
@@ -522,39 +531,7 @@ class ProjectController extends Controller
 
         //$form = $this->createProjectForm($project,$cycle,$request);
 
-        $stateArr = array(
-            //'start', //Edit Project
-            'draft',
-            'complete',
-
-            'irb_review',
-            'irb_rejected',
-            'irb_missinginfo',
-
-            'admin_review',
-            'admin_rejected',
-            'admin_missinginfo',
-
-            'committee_review',
-            'committee_rejected',
-            'committee_missinginfo',
-
-            'final_review',
-            'final_approved',
-            'final_rejected',
-            'final_missinginfo',
-
-            'closed'
-        );
-
-        $stateChoiceArr = array();
-
-        foreach($stateArr as $state) {
-            //$label = $state;
-            $label = $transresUtil->getStateLabelByName($state);
-            $label = $label . " (" . $state . ")";
-            $stateChoiceArr[$label] = $state;
-        }
+        $stateChoiceArr = $transresUtil->getStateChoisesArr();
 
         $params = array('stateChoiceArr'=>$stateChoiceArr);
         $form = $this->createForm(ProjectStateType::class, $project, array(
@@ -579,5 +556,7 @@ class ProjectController extends Controller
             'title' => "Set State for Project ID ".$project->getId()
         );
     }
+
+
 
 }

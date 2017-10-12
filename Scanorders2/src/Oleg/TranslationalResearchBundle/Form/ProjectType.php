@@ -50,11 +50,18 @@ class ProjectType extends AbstractType
 //                'attr' => array('class'=>'textarea form-control')
 //            ));
 
-            $builder->add('state',null, array(
+//            $builder->add('state',null, array(
+//                'label' => 'State:',
+//                'disabled' => $this->params['disabledState'],
+//                'required' => false,
+//                'attr' => array('class' => 'form-control'),
+//            ));
+            $builder->add('state',ChoiceType::class, array(
                 'label' => 'State:',
-                'disabled' => true,
                 'required' => false,
-                'attr' => array('class' => 'form-control'),
+                'disabled' => $this->params['disabledState'],
+                'choices' => $this->params['stateChoiceArr'],
+                'attr' => array('class' => 'combobox'),
             ));
 
             $builder->add('approvalDate', DateType::class, array(
@@ -267,13 +274,8 @@ class ProjectType extends AbstractType
         ));
 
         //Reviews
-        //$isIrbReviewer = true;
-        //$isAdminReviewer = true;
-        //$isCommitteeReviewer = true;
-        //$isFinalReviewer = true;
-
-        //echo "isIrbReviewer=".$this->params['isIrbReviewer']."<br>";
-        if( $this->params['isIrbReviewer'] ) {
+        //echo "showIrbReviewer=".$this->params['showIrbReviewer']."<br>";
+        if( $this->params['showIrbReviewer'] ) {
             //echo "show irb<br>";
             $this->params['stateStr'] = "irb_review";
             $this->params['standAlone'] = false;
@@ -293,7 +295,7 @@ class ProjectType extends AbstractType
             ));
         }
 
-        if( $this->params['isAdminReviewer'] ) {
+        if( $this->params['showAdminReviewer'] ) {
             $this->params['stateStr'] = "admin_review";
             $this->params['standAlone'] = false;
             $builder->add('adminReviews', CollectionType::class, array(
@@ -312,7 +314,7 @@ class ProjectType extends AbstractType
             ));
         }
 
-        if( $this->params['isCommitteeReviewer'] ) {
+        if( $this->params['showCommitteeReviewer'] ) {
             $this->params['stateStr'] = "committee_review";
             $this->params['standAlone'] = false;
             $builder->add('committeeReviews', CollectionType::class, array(
@@ -331,7 +333,7 @@ class ProjectType extends AbstractType
             ));
         }
 
-        if( $this->params['isFinalReviewer'] ) {
+        if( $this->params['showFinalReviewer'] ) {
             $this->params['stateStr'] = "final_review";
             $this->params['standAlone'] = false;
             $builder->add('finalReviews', CollectionType::class, array(

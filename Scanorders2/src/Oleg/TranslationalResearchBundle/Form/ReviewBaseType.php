@@ -19,7 +19,7 @@ class ReviewBaseType extends AbstractType
 
     protected $params;
     private $data_class;
-    private $disabledReviewers;
+    //private $disabledReviewers;
 
     public function formConstructor( $params )
     {
@@ -36,10 +36,10 @@ class ReviewBaseType extends AbstractType
         $this->formConstructor($options['form_custom_value']);
         $this->data_class = $options['data_class'];
 
-        $this->disabledReviewers = true;
-        if( $this->params['standAlone'] === false ) {
-            $this->disabledReviewers = false;
-        }
+//        $this->disabledReviewers = true;
+//        if( $this->params['standAlone'] === false ) {
+//            $this->disabledReviewers = false;
+//        }
 //        if( $this->params['admin'] ) {
 //            $this->disabledReviewers = false;
 //        }
@@ -56,6 +56,7 @@ class ReviewBaseType extends AbstractType
 
         //////////////////////// reviewer //////////////////////////
         //Visible only to admins and reviewer
+        //Not Visible to requester
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
 
             $reviewObjectEntity = $event->getData();
@@ -65,16 +66,27 @@ class ReviewBaseType extends AbstractType
                 //new review object
                 $form->add('reviewer', null, array(
                     'label' => "Reviewer:",
-                    'disabled' => $this->disabledReviewers,
+                    'disabled' => $this->params['disabledReviewers'],  //$this->disabledReviewers,
                     'attr' => array('class' => 'combobox combobox-width') //, 'readonly'=>true
                 ));
                 $form->add('reviewerDelegate', null, array(
                     'label' => "Reviewer Delegate:",
-                    'disabled' => $this->disabledReviewers,
+                    'disabled' => $this->params['disabledReviewers'],
                     'attr' => array('class' => 'combobox combobox-width') //, 'readonly'=>true
                 ));
                 return;
             }
+
+            //Show reviewers only for admin, primary reviewer and the logged in user
+//            if(
+//                $this->params['admin'] ||
+//                $this->params['transresUtil']->isProjectReviewer($this->params['user'],array($reviewObjectEntity))
+//            ) {
+//                //ok
+//            } else {
+//                //don't show
+//                return;
+//            }
 
             if(
                 $this->params['admin'] ||
@@ -83,12 +95,12 @@ class ReviewBaseType extends AbstractType
                 //existing review object
                 $form->add('reviewer', null, array(
                     'label' => "Reviewer:",
-                    'disabled' => $this->disabledReviewers,
+                    'disabled' => $this->params['disabledReviewers'],
                     'attr' => array('class' => 'combobox combobox-width') //, 'readonly'=>true
                 ));
                 $form->add('reviewerDelegate', null, array(
                     'label' => "Reviewer Delegate:",
-                    'disabled' => $this->disabledReviewers,
+                    'disabled' => $this->params['disabledReviewers'],
                     'attr' => array('class' => 'combobox combobox-width') //, 'readonly'=>true
                 ));
             }
@@ -331,7 +343,7 @@ class ReviewBaseType extends AbstractType
                 $builder->add('primaryReview', CheckboxType::class, array(
                     'label' => 'Primary Reviewer:',
                     'required' => false,
-                    'disabled' => $this->disabledReviewers,
+                    'disabled' => $this->params['disabledReviewers'],
                     'attr' => array('class' => 'form-control', 'style' => 'margin:0'),
                 ));
             }
