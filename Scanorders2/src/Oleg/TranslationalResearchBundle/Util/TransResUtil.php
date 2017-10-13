@@ -854,47 +854,57 @@ class TransResUtil
                 break;
 
 //            ///// Main Actions /////
-//            //IRB Review
-//            case "to_irb_review":
-//                $label = "Submit to IRB Review";
-//                break;
-//            case "irb_review_rejected":
-//                $label = "Reject IRB Review";
-//                break;
-//            //ADMIN Review
-//            case "to_admin_review":
-//                //$label = "Submit to Admin Review";
-//                $label = "Approve IRB Review";
-//                break;
-//            case "admin_review_no":
-//                $label = "Reject Admin Review";
-//                break;
-//            //COMMITTEE Review
-//            case "to_committee_review":
-//                //$label = "Submit to Committee Review";
-//                $label = "Approve Admin Review";
-//                break;
-//            case "committee_review_no":
-//                $label = "Reject Committee Review";
-//                break;
-//            //FINAL approval
-//            case "to_final_review":
-//                //$label = "Submit to Final Approval";
-//                $label = "Approve Committee Review";
-//                break;
-//            case "final_review_yes":
-//                $label = "Final Approve";
-//                break;
-//            case "final_review_no":
-//                $label = "Reject Final Approval";
-//                break;
-//
-//            case "approved_closed":
-//                $label = "Close Approved Project";
-//                break;
-//            case "closed_approved":
-//                $label = "Re-Open Approved Project";
-//                break;
+            case "irb_review_approved":
+                $label = "Approve IRB Review";
+                break;
+            case "irb_review_rejected":
+                $label = "Reject IRB Review";
+                break;
+            case "irb_review_missinginfo":
+                $label = "Request additional information from submitter for IRB Review";
+                break;
+            case "irb_review_resubmit":
+                $label = "Resubmit to IRB Review";
+                break;
+
+            case "admin_review_approved":
+                $label = "Approve Admin Review";
+                break;
+            case "admin_review_rejected":
+                $label = "Reject Admin Review";
+                break;
+            case "admin_review_missinginfo":
+                $label = "Request additional information from submitter for Admin Review";
+                break;
+            case "admin_review_resubmit":
+                $label = "Resubmit to Admin Review";
+                break;
+
+            case "committee_review_approved":
+                $label = "Approve Committee Review";
+                break;
+            case "committee_review_rejected":
+                $label = "Reject Committee Review";
+                break;
+            case "committee_review_missinginfo":
+                $label = "Request additional information from submitter for Committee Review";
+                break;
+            case "committee_review_resubmit":
+                $label = "Resubmit to Committee Review";
+                break;
+
+            case "final_review_approved":
+                $label = "Approve Final Review";
+                break;
+            case "final_review_rejected":
+                $label = "Reject Final Review";
+                break;
+            case "final_review_missinginfo":
+                $label = "Request additional information from submitter for Final Review";
+                break;
+            case "final_review_resubmit":
+                $label = "Resubmit to Final Review";
+                break;
 
             default:
                 $label = null;

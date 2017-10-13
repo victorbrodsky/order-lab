@@ -114,7 +114,7 @@
 
                             {% if transres_util.isAdminOrPrimaryReviewer() or transres_util.isProjectReviewer(project) %}
                             <li>
-                                <a href="{{ path(translationalresearch_sitename~'_project_review', { 'id': project.id }) }}" target="_blank">Review Project</a>
+                                <a href="{{ path(translationalresearch_sitename~'_project_review', { 'id': project.id }) }}" >Review Project</a>
                             </li>
                             {% endif %}
 

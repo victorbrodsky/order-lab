@@ -473,6 +473,8 @@ class ProjectController extends Controller
             $params['disabledReviewerFields'] = false;
             $params['disabledState'] = false;
             $params['disabledReviewers'] = false;
+        } else {
+            //TODO: do not add reviewers
         }
 
         //show if owner

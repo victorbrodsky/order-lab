@@ -125,6 +125,15 @@ class TransResFormNodeUtil
         );
         $titleText = $formNodeUtil->createV2FormNode($formParams);
 
+        //IRB Number (string)
+        $formParams = array(
+            'parent' => $projectSection,
+            'name' => "IRB Number",
+            'objectType' => $objectTypeString,
+            //'showLabel' => false,
+        );
+        $titleText = $formNodeUtil->createV2FormNode($formParams);
+
         //funded (boolean)
         $formParams = array(
             'parent' => $projectSection,
