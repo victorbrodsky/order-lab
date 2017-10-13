@@ -125,11 +125,11 @@
                                 </li>
                             {% endif %}
 
-                            {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
-                                <li>
-                                    <a href="{{ path(translationalresearch_sitename~'_project_set_state', { 'id': project.id }) }}" target="_blank">Force Set Project State (visible for super admin only for testing only!)</a>
-                                </li>
-                            {% endif %}
+                            {#{% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}#}
+                                {#<li>#}
+                                    {#<a href="{{ path(translationalresearch_sitename~'_project_set_state', { 'id': project.id }) }}" target="_blank">Force Set Project State (visible for super admin only for testing only!)</a>#}
+                                {#</li>#}
+                            {#{% endif %}#}
 
                             {#<li>#}
                                 {#<a href="{{ path(translationalresearch_sitename~'_to_irb_review', { 'id': project.id }) }}" target="_blank">To IRB Review</a>#}

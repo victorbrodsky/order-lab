@@ -53,6 +53,9 @@
 
     {{ form_end(form) }}
 
+    {% set commentId = project.id %}
+    {% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': commentId} %}
+
     {% set callLogViewClass = "order-white-background" %}
     <div class="text-left {{ callLogViewClass }}">
         {{ user_formnode_utility.getFormNodeHolderShortInfoForView(project,project.messageCategory,false)|raw }}
@@ -78,3 +81,28 @@
     </div>
 
 {% endblock %}
+
+
+
+{#{% block headeradditionaljs %}#}
+
+    {#<script type="text/javascript">#}
+        {#// thread id#}
+        {#var fos_comment_thread_id = 'test';#}
+
+        {#// api base url to use for initial requests#}
+        {#var fos_comment_thread_api_base_url = '/sf2.1.2/web/app.php/api/threads';#}
+
+        {#// Snippet for asynchronously loading the comments#}
+        {#(function() {#}
+            {#var fos_comment_script = document.createElement('script');#}
+            {#fos_comment_script.async = true;#}
+            {#fos_comment_script.src = '/sf2.1.2/web/js/35a8e64.js';#}
+            {#fos_comment_script.type = 'text/javascript';#}
+
+            {#(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(fos_comment_script);#}
+        {#})();#}
+    {#</script>#}
+
+{#{% endblock %}#}
+

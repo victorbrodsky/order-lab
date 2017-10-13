@@ -205,7 +205,23 @@ class WorkflowController extends Controller
     public function transitionAction( $transitionName, Project $project )
     {
         $transresUtil = $this->container->get('transres_util');
-        $transresUtil->setTransition($project,$transitionName);
+        $transresUtil->setTransition($project,null,$transitionName);
+
+        //exit();
+        return $this->redirectToRoute('translationalresearch_home');
+    }
+
+    /**
+     * Change state of the project (by id) and make transition to this place indicated by transitionName
+     * https://symfony.com/doc/current/workflow/usage.html
+     *
+     * @Route("/project-review-transition/{transitionName}/{id}/{reviewId}", name="translationalresearch_transition_action_by_review")
+     * @Method("GET")
+     */
+    public function transitionReviewAction( $transitionName, Project $project, $reviewId )
+    {
+        $transresUtil = $this->container->get('transres_util');
+        $transresUtil->setTransition($project,$reviewId,$transitionName);
 
         //exit();
         return $this->redirectToRoute('translationalresearch_home');

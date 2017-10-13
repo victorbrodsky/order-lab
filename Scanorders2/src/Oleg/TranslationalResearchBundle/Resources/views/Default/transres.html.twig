@@ -26,7 +26,7 @@
                     </a>
                 </h4>
             </div>
-            <div id="projectRequesters" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="projectRequestersHeading">
+            <div id="projectRequesters" class="panel-collapse collapse" role="tabpanel" aria-labelledby="projectRequestersHeading">
                 <div class="panel-body">
 
                     {% if cycle == "show" %}
@@ -115,13 +115,19 @@
 
 {#NOT USED#}
 {% macro projectEnabledLinkActionsHeader(project) %}
-    {% set actionLinks = transres_util.getEnabledLinkActions(project,"btn btn-default","btn btn-warning") %}
+    {% set actionLinks = transres_util.getEnabledLinkActions(project) %}
     {#<div class="well">#}
-        <p>Project State: <strong>{{ transres_util.getStateLabelByProject(project) }}</strong></p>
+        {#<p>Project State: <strong>{{ transres_util.getStateLabelByProject(project) }}</strong></p>#}
         {% for actionLink in actionLinks %}
                 {{ actionLink|raw }}
         {% endfor %}
     {#</div>#}
+{% endmacro %}
+{% macro reviewEnabledLinkActionsHeader(review) %}
+    {% set actionLinks = transres_util.getReviewEnabledLinkActions(review) %}
+    {% for actionLink in actionLinks %}
+        {{ actionLink|raw }}
+    {% endfor %}
 {% endmacro %}
 
 {% macro projectHeader(project) %}
@@ -308,7 +314,7 @@
     {% endif %}
 
     {% if addReviewButtons is not defined %}
-        addReviewButtons is not set!!!<br>
+        {#addReviewButtons is not set!!!<br>#}
         {% set addReviewButtons = 0 %}
     {% endif %}
 
@@ -398,19 +404,48 @@
             transres_util.isUserAllowedReview(review.vars.value) and
             transres_util.isReviewable(review.vars.value)
         %}
-            <p>
-                <a class="btn btn-primary"
-                   href="{{ path(translationalresearch_sitename~'_review_edit',{'stateStr':review.vars.value.getStateStr(),'reviewId': reviewId}) }}"
-                    >Update Review</a>
-            </p>
+            {#<p>#}
+                {#<a class="btn btn-primary"#}
+                   {#href="{{ path(translationalresearch_sitename~'_review_edit',{'stateStr':review.vars.value.getStateStr(),'reviewId': reviewId}) }}"#}
+                    {#>Update Review</a>#}
+            {#</p>#}
 
             {#addReviewButtons={{ addReviewButtons }}<br>#}
             {% if addReviewButtons is defined and addReviewButtons %}
-                <a class="btn btn-success">Approve</a>
-                <a class="btn btn-warning">Pending additional information from submitter</a>
-                <a class="btn btn-danger">Reject</a>
+                {#<a class="btn btn-success">Approve</a>#}
+                {#<a class="btn btn-warning">Pending additional information from submitter</a>#}
+                {#<a class="btn btn-danger">Reject</a>#}
+                {#<br>#}
+                <p>
+                {{ transres.reviewEnabledLinkActionsHeader(review.vars.value) }}
+                </p>
             {% endif %}
 
+        {% endif %}
+
+        {% if reviewId %}
+            <p>
+                {% set actionLinks = transres_util.getResubmitButtons(review.vars.value) %}
+                {% for actionLink in actionLinks %}
+                    {{ actionLink|raw }}
+                {% endfor %}
+            </p>
+        {% endif %}
+
+        {#reviewId={{ reviewId }}<br>#}
+        {#project.vars.value.id={{ project.vars.value.id }}<br>#}
+        {% if reviewId and project.vars.value.id %}
+            {#projectId reviewId reviewClass-getStateStr#}
+            {#{% set commentId = project.vars.value.id ~ "-" ~ reviewId ~ "-" ~ review.vars.value.getStateStr() %}#}
+            {#commentId={{ commentId }}<br>#}
+            {#<iframe>#}
+            {#{% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': commentId} %}#}
+            {#</iframe>#}
+            {#<div class="thread-fos" data-thread-id="{{ commentId }}"></div>#}
+
+            {#<a class="btn btn-primary"#}
+                {#href="{{ path(translationalresearch_sitename~'_review_edit',{'stateStr':review.vars.value.getStateStr(),'reviewId': reviewId}) }}"#}
+            {#>Update Review</a>#}
         {% endif %}
 
     </div>
