@@ -4,6 +4,7 @@ namespace Oleg\TranslationalResearchBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
 use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
+use Oleg\UserdirectoryBundle\Form\DocumentType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -273,6 +274,22 @@ class ProjectType extends AbstractType
             },
         ));
 
+        $builder->add( 'billingContacts', EntityType::class, array(
+            'class' => 'OlegUserdirectoryBundle:User',
+            'label'=> "Billing Contact(s):",
+            'required'=> false,
+            'multiple' => true,
+            'attr' => array('class'=>'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->leftJoin("list.employmentStatus", "employmentStatus")
+                    ->leftJoin("employmentStatus.employmentType", "employmentType")
+                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+                    ->leftJoin("list.infos", "infos")
+                    ->orderBy("infos.displayName","ASC");
+            },
+        ));
+
         //Reviews
         //echo "showIrbReviewer=".$this->params['showIrbReviewer']."<br>";
         if( $this->params['showIrbReviewer'] ) {
@@ -410,6 +427,19 @@ class ProjectType extends AbstractType
             });
             /////////////////////////////////////// EOF messageCategory ///////////////////////////////////////
         }//if
+
+
+        $builder->add('documents', CollectionType::class, array(
+            'entry_type' => DocumentType::class,
+            'label' => 'Document(s):',
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__documentsid__',
+        ));
+
 
         if( $this->params['saveAsDraft'] === true ) {
             $builder->add('saveAsDraft', SubmitType::class, array(

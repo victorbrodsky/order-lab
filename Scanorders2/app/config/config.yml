@@ -73,6 +73,7 @@ twig:
         scan_uploadpath: 'Uploaded/%scan.uploadpath%'
         fellapp_uploadpath: 'Uploaded/%fellapp.uploadpath%'
         vacreq_uploadpath: 'Uploaded/%vacreq.uploadpath%'
+        transres_uploadpath: 'Uploaded/%transres.uploadpath%'
 
         #service
         user_security_utility: "@user_security_utility"
@@ -228,6 +229,10 @@ oneup_uploader:
             frontend: dropzone
             storage:
                 directory: 'Uploaded/%vacreq.uploadpath%'
+        transres_gallery:
+            frontend: dropzone
+            storage:
+                directory: 'Uploaded/%transres.uploadpath%'
 #    orphanage:
 #        maxage: 86400
 #        directory: Uploaded/orphanage

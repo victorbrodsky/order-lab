@@ -500,6 +500,11 @@
                 <td>{{ entity.vacrequploadpath }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'vacrequploadpath'}) }}">Edit</a></td>
             </tr>
+            <tr>
+                <td>Translational Research Upload Folder (example: directory/transres)</td>
+                <td>{{ entity.transresuploadpath }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'transresuploadpath'}) }}">Edit</a></td>
+            </tr>
 
             {#Titles and Messages#}
             <tr>

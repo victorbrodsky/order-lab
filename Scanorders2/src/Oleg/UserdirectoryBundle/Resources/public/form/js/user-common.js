@@ -479,9 +479,11 @@ function getSitename() {
     var holder = '/order/';
     var sitename = '';
     var url = document.URL;
+    //console.log("url="+url);
     var urlArr = url.split(holder);
     //get rid of app_dev.php
     var urlfullClean = urlArr[1].replace("app_dev.php/", "");
+    //console.log("urlfullClean="+urlfullClean);
     var urlCleanArr =  urlfullClean.split("/");
     sitename =  urlCleanArr[0];
 

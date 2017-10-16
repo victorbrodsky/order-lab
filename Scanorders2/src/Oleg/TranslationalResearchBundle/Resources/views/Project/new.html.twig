@@ -10,18 +10,18 @@
 
 {% block content %}
 
+    <input type="hidden" id="formnodetrigger" value="{{ formnodetrigger }}" />
+    <input type="hidden" id="formnodeTopHolderId" value="{{ formnodeTopHolderId }}" />
+    <input type="hidden" id="formcycle" value="{{ cycle }}" />
+
     <h4 class="text-info" align="center">
         {{ title }}
     </h4>
     <br>
 
-    <input type="hidden" id="formnodetrigger" value="{{ formnodetrigger }}" />
-    <input type="hidden" id="formnodeTopHolderId" value="{{ formnodeTopHolderId }}" />
-
     {% set sitename = translationalresearch_sitename %}
 
     {{ form_start(form) }}
-
 
         {#{% if form.state is defined %}#}
             {#{{ formmacros.field(form.state) }}#}

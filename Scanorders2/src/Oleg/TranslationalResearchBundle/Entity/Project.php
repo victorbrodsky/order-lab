@@ -144,6 +144,15 @@ class Project {
      **/
     private $contacts;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\JoinTable(name="transres_project_billingContact",
+     *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="billingContact_id", referencedColumnName="id")}
+     * )
+     **/
+    private $billingContacts;
+
 //    /**
 //     * @ORM\Column(type="text", nullable=true)
 //     */
@@ -269,6 +278,19 @@ class Project {
      */
     private $finalReviews;
 
+    /**
+     * Other Documents
+     *
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="transres_project_document",
+     *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id", onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")}
+     *      )
+     * @ORM\OrderBy({"createdate" = "ASC"})
+     **/
+    private $documents;
+
+
 
 
     public function __construct($user=null) {
@@ -280,11 +302,14 @@ class Project {
         $this->coInvestigators = new ArrayCollection();
         $this->pathologists = new ArrayCollection();
         $this->contacts = new ArrayCollection();
+        $this->billingContacts = new ArrayCollection();
 
         $this->irbReviews = new ArrayCollection();
         $this->adminReviews = new ArrayCollection();
         $this->committeeReviews = new ArrayCollection();
         $this->finalReviews = new ArrayCollection();
+
+        $this->documents = new ArrayCollection();
 
         //$this->formVersions = new ArrayCollection();
     }
@@ -721,6 +746,23 @@ class Project {
         $this->contacts->removeElement($item);
     }
 
+    //billingContacts
+    public function getBillingContacts()
+    {
+        return $this->billingContacts;
+    }
+    public function addBillingContact($item)
+    {
+        if( $item && !$this->billingContacts->contains($item) ) {
+            $this->billingContacts->add($item);
+        }
+        return $this;
+    }
+    public function removeBillingContact($item)
+    {
+        $this->billingContacts->removeElement($item);
+    }
+
     /**
      * @return mixed
      */
@@ -806,6 +848,23 @@ class Project {
         $this->adminReviews->removeElement($item);
     }
 
+    public function addDocument($item)
+    {
+        if( $item && !$this->documents->contains($item) ) {
+            $this->documents->add($item);
+            $item->createUseObject($this);
+        }
+        return $this;
+    }
+    public function removeDocument($item)
+    {
+        $this->documents->removeElement($item);
+        $item->clearUseObject();
+    }
+    public function getDocuments()
+    {
+        return $this->documents;
+    }
 
 
     /**

@@ -451,6 +451,7 @@ class ProjectController extends Controller
             'saveAsDraft' => false,
             'saveAsComplete' => false,
             'updateProject' => false,
+            'submitIrbReview' => false,
             'stateChoiceArr'=>$stateChoiceArr
         );
 

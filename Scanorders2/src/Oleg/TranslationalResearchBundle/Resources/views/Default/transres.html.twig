@@ -45,6 +45,7 @@
 {% macro projectFormEdit( form, project, cycle ) %}
 
     {% import "OlegUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
+    {% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
 
     <div style="display: none">
         {% if form.messageCategory is defined %}
@@ -54,10 +55,14 @@
 
     <div id="form-node-holder"></div>
 
+    {{ transres.projectDocument(form,project,cycle) }}
+
 {% endmacro %}
 
 
-{% macro projectFormShow( project, cycle ) %}
+{% macro projectFormShow( form, project, cycle ) %}
+
+    {% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
 
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel panel-default">
@@ -76,11 +81,26 @@
                         {{ user_formnode_utility.getFormNodeHolderShortInfoForView(project,project.messageCategory,false)|raw }}
                     </div>
 
+                    {{ transres.projectDocument(form,project,cycle) }}
+
                 </div>
             </div>
         </div>
     </div>
 
+{% endmacro %}
+
+
+{% macro projectDocument( form, project, cycle ) %}
+    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    <div class="well form-element-holder user-documents">
+        <label class="col-xs-12 control-label">Project Documents</label>
+        <div class="row withpaddingtop">
+            <div class="col-xs-12">
+                {{ usermacros.documentsContainer(null,form.documents,cycle,'noprototype',8,'default','Project Document') }}
+            </div>
+        </div>
+    </div>
 {% endmacro %}
 
 
@@ -126,6 +146,13 @@
                         {% set contacts = null %}
                     {% endif %}
                     {{ transres.usersInfo(form.contacts,contacts,cycle) }}
+
+                    {% if cycle == "show" %}
+                        {% set billingContacts = project.billingContacts %}
+                    {% else %}
+                        {% set billingContacts = null %}
+                    {% endif %}
+                    {{ transres.usersInfo(form.billingContacts,billingContacts,cycle) }}
 
                 </div>
             </div>
@@ -533,7 +560,13 @@
 
 {% macro getProjectReviewPrototypeFormData(form, cycle, sitename) %}
     {% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
     <div id="form-prototype-data"
+            data-userurllink = "{{ usermacros.userUrlLink()|e }}"
+            data-uploadurl = "{{ oneup_uploader_endpoint('transres_gallery') }}"
+            data-userid = "{{ app.user.id }}"
+
             {% if form.irbReviews is defined %}
                 data-prototype-transres-irbreviews = "{{ transres.projectSingleReview(form,form.irbReviews,cycle,'transres-irbreviews','prototype', sitename,1)|e }}"
             {% endif %}
@@ -547,5 +580,17 @@
                 data-prototype-transres-finalreviews = "{{ transres.projectSingleReview(form,form.finalReviews,cycle,'transres-finalreviews','prototype', sitename,1)|e }}"
             {% endif %}
     ></div>
+
+{% endmacro %}
+
+{% macro getProjectShowPrototypeFormData(form, cycle, sitename) %}
+    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
+    <div id="form-prototype-data"
+         data-userurllink = "{{ usermacros.userUrlLink()|e }}"
+         data-uploadurl = "{{ oneup_uploader_endpoint('transres_gallery') }}"
+         data-userid = "{{ app.user.id }}"
+    ></div>
+
 {% endmacro %}
 

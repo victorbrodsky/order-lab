@@ -190,13 +190,14 @@ function userAddActiveClass( id ) {
     //remove active fromm all other li in .navbar
     $('li.active').removeClass('active');
 
+    //console.log("activeId =" + '#nav-bar-'+id);
     $('#nav-bar-'+id).addClass('active');
 
 }
 
-
+//sitename is the portion of the url i.e. call-log-book
 function setNavBar(sitename) {
-
+    //console.log('1sitename='+sitename);
     if( typeof sitename === 'undefined' ) {
         sitename = getSitename();
     }
@@ -205,7 +206,7 @@ function setNavBar(sitename) {
         sitename = "directory";
     }
 
-    //console.log('sitename='+sitename);
+    //console.log('2sitename='+sitename);
 
     if( sitename == "scan" ) {
         setScanNavBar();
@@ -240,11 +241,11 @@ function setTranslationalResearchNavBar() {
         id = 'translationalresearch-new-project';
     }
 
-    if( full.indexOf("/translational-research/project/my-projects") !== -1 ) {
+    if( full.indexOf("/translational-research/my-projects") !== -1 ) {
         id = 'translationalresearch-my-projects';
     }
 
-    if( full.indexOf("/translational-research/project/my-review-projects") !== -1 ) {
+    if( full.indexOf("/translational-research/my-review-projects") !== -1 ) {
         id = 'translationalresearch-my-review-projects';
     }
 
@@ -252,7 +253,7 @@ function setTranslationalResearchNavBar() {
         id = 'translationalresearch-project-workflow';
     }
 
-    if( full.indexOf("/default-reviewers/") !== -1 ) {
+    if( full.indexOf("/translational-research/default-reviewers/") !== -1 ) {
         id = 'translationalresearch-default-reviewers';
     }
 

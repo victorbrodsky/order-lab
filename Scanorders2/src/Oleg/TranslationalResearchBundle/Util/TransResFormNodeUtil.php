@@ -96,6 +96,8 @@ class TransResFormNodeUtil
         $objectTypeText = $formNodeUtil->getObjectTypeByName('Form Field - Free Text');
         $objectTypeString = $formNodeUtil->getObjectTypeByName('Form Field - Free Text, Single Line');
         $objectTypeCheckbox = $formNodeUtil->getObjectTypeByName('Form Field - Checkbox');
+        $objectTypeDate = $formNodeUtil->getObjectTypeByName('Form Field - Full Date');
+
         //echo "objectTypeForm=".$objectTypeForm."<br>";
 
         //"Pathology Call Log Entry" [Form]
@@ -130,7 +132,22 @@ class TransResFormNodeUtil
             'parent' => $projectSection,
             'name' => "IRB Number",
             'objectType' => $objectTypeString,
-            //'showLabel' => false,
+        );
+        $titleText = $formNodeUtil->createV2FormNode($formParams);
+
+        //Funding Source (string)
+        $formParams = array(
+            'parent' => $projectSection,
+            'name' => "IRB Funding Source",
+            'objectType' => $objectTypeString,
+        );
+        $titleText = $formNodeUtil->createV2FormNode($formParams);
+
+        //IRB expiration date (date)
+        $formParams = array(
+            'parent' => $projectSection,
+            'name' => "IRB Expiration Date",
+            'objectType' => $objectTypeDate,
         );
         $titleText = $formNodeUtil->createV2FormNode($formParams);
 

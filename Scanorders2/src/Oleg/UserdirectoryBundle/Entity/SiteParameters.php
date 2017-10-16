@@ -234,6 +234,11 @@ class SiteParameters {
      */
     private $vacrequploadpath;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $transresuploadpath;
+
 
     //site titles and messages
     /**
@@ -2168,6 +2173,23 @@ class SiteParameters {
     {
         $this->vacrequploadpath = $vacrequploadpath;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getTransresuploadpath()
+    {
+        return $this->transresuploadpath;
+    }
+
+    /**
+     * @param mixed $transresuploadpath
+     */
+    public function setTransresuploadpath($transresuploadpath)
+    {
+        $this->transresuploadpath = $transresuploadpath;
+    }
+
 
     /**
      * @return mixed

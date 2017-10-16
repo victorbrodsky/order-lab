@@ -56,6 +56,9 @@ $container->setParameter('fellapp.uploadpath',$fellappuploadpath);
 //vacreq
 $vacrequploadpath = "vacreq";
 $container->setParameter('vacreq.uploadpath',$vacrequploadpath);
+//transres
+$transresuploadpath = "transres";
+$container->setParameter('transres.uploadpath',$transresuploadpath);
 
 $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
 
@@ -182,6 +185,10 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
             if (array_key_exists('vacrequploadpath', $row)) {
                 $vacrequploadpath = $row['vacrequploadpath'];
             }
+            //transres
+            if (array_key_exists('transresuploadpath', $row)) {
+                $transresuploadpath = $row['transresuploadpath'];
+            }
 
             //titles
             if( array_key_exists('mainHomeTitle', $row) )
@@ -248,6 +255,8 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
             $container->setParameter('fellapp.uploadpath',$fellappuploadpath);
         if( $vacrequploadpath )
             $container->setParameter('vacreq.uploadpath',$vacrequploadpath);
+        if( $transresuploadpath )
+            $container->setParameter('transres.uploadpath',$transresuploadpath);
 
         //titles
         $mainhome_title = str_replace("%","%%",$mainhome_title);

@@ -138,6 +138,8 @@ class ProjectFormNodeController extends ProjectController
                 $project->setState('complete');
             }
 
+            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($project);
+
             if( !$testing ) {
                 $em->persist($project);
                 $em->flush();
@@ -264,6 +266,8 @@ class ProjectFormNodeController extends ProjectController
                     $project->setState('irb_review');
                 }
             }
+
+            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($project);
 
             if( !$testing ) {
                 $em->persist($project);

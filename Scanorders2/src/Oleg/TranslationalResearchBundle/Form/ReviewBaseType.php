@@ -24,8 +24,6 @@ class ReviewBaseType extends AbstractType
     public function formConstructor( $params )
     {
         $this->params = $params;
-
-
     }
 
     /**
@@ -272,7 +270,7 @@ class ReviewBaseType extends AbstractType
             //if( $this->params["stateStr"] == "committee_review" ) {
             if( $this->data_class == 'Oleg\\TranslationalResearchBundle\\Entity\\CommitteeReview' ) {
                 //echo "primaryReview=".$this->params["review"]."<br>";//TODO: review is null?
-                if( $this->params["review"] && $this->params["review"]->getPrimaryReview() === true ) {
+                if( isset($this->params["review"]) && $this->params["review"]->getPrimaryReview() === true ) {
                     $decisions = array(
                         'Approved' => 'approved',
                         'Rejected' => 'rejected',
