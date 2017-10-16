@@ -37,27 +37,30 @@
 
     {{ form_start(edit_form) }}
 
-        {% if edit_form.state is defined %}
-            {{ formmacros.field(edit_form.state) }}
-        {% endif %}
+        {#{% if edit_form.state is defined %}#}
+            {#{{ formmacros.field(edit_form.state) }}#}
+        {#{% endif %}#}
 
-        {% if edit_form.approvalDate is defined %}
-            {{ formmacros.field(edit_form.approvalDate) }}
-        {% endif %}
+        {#{% if edit_form.approvalDate is defined %}#}
+            {#{{ formmacros.field(edit_form.approvalDate) }}#}
+        {#{% endif %}#}
 
-        {% if edit_form.createDate is defined or edit_form.submitter is defined %}
+        {#{% if edit_form.createDate is defined or edit_form.submitter is defined %}#}
             {#<div class="well well-sm">#}
-                {% if edit_form.createDate is defined %}
-                    {{ formmacros.field(edit_form.createDate) }}
-                {% endif %}
-                {% if edit_form.submitter is defined %}
-                    {{ formmacros.field(edit_form.submitter) }}
-                {% endif %}
+                {#{% if edit_form.createDate is defined %}#}
+                    {#{{ formmacros.field(edit_form.createDate) }}#}
+                {#{% endif %}#}
+                {#{% if edit_form.submitter is defined %}#}
+                    {#{{ formmacros.field(edit_form.submitter) }}#}
+                {#{% endif %}#}
             {#</div>#}
-        {% endif %}
-        {{ transres.updateInfo(edit_form,cycle) }}
+        {#{% endif %}#}
 
-        <br>
+        {{ transres.projectInfo(edit_form,project,cycle) }}
+
+        {#{{ transres.updateInfo(edit_form,cycle) }}#}
+
+        {{ transres.projectFormEdit(edit_form,project,cycle) }}
 
         {{ transres.projectRequesters(edit_form,project,cycle) }}
 
@@ -110,7 +113,7 @@
             {#</div>#}
         {#{% endif %}#}
 
-        {{ transres.projectForm(edit_form,project,cycle) }}
+        {#{{ transres.projectFormEdit(edit_form,project,cycle) }}#}
 
         {#{{ formmacros.checkbox(edit_form.readyForReview) }}#}
 

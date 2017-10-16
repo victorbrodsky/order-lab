@@ -1,4 +1,48 @@
-{% macro projectForm( form, project, cycle ) %}
+{% macro projectInfo( form, project, cycle ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="projectInfoHeading">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#projectInfo" aria-expanded="true">
+                        Project Info
+                    </a>
+                </h4>
+            </div>
+            <div id="projectInfo" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="projectInfoHeading">
+                <div class="panel-body">
+
+                    {% if form.state is defined %}
+                        {{ formmacros.field(form.state) }}
+                    {% endif %}
+
+                    {% if form.approvalDate is defined %}
+                        {{ formmacros.field(form.approvalDate) }}
+                    {% endif %}
+
+                    {% if form.createDate is defined or form.submitter is defined %}
+                        {#<div class="well well-sm">#}
+                        {% if form.createDate is defined %}
+                            {{ formmacros.field(form.createDate) }}
+                        {% endif %}
+                        {% if form.submitter is defined %}
+                            {{ formmacros.field(form.submitter) }}
+                        {% endif %}
+                        {#</div>#}
+                    {% endif %}
+
+                    {{ transres.updateInfo(form,cycle) }}
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endmacro %}
+
+{% macro projectFormEdit( form, project, cycle ) %}
 
     {% import "OlegUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
 
@@ -13,6 +57,32 @@
 {% endmacro %}
 
 
+{% macro projectFormShow( project, cycle ) %}
+
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="projectContentHeading">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#projectContent" aria-expanded="true">
+                        Project
+                    </a>
+                </h4>
+            </div>
+            <div id="projectContent" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="projectContentHeading">
+                <div class="panel-body">
+
+                    {% set callLogViewClass = "order-white-background" %}
+                    <div class="text-left {{ callLogViewClass }}">
+                        {{ user_formnode_utility.getFormNodeHolderShortInfoForView(project,project.messageCategory,false)|raw }}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endmacro %}
+
 
 {% macro projectRequesters( form, project, cycle ) %}
     {% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
@@ -26,7 +96,7 @@
                     </a>
                 </h4>
             </div>
-            <div id="projectRequesters" class="panel-collapse collapse" role="tabpanel" aria-labelledby="projectRequestersHeading">
+            <div id="projectRequesters" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="projectRequestersHeading">
                 <div class="panel-body">
 
                     {% if cycle == "show" %}

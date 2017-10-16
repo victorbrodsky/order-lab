@@ -23,26 +23,29 @@
     {{ form_start(form) }}
 
 
-        {% if form.state is defined %}
-            {{ formmacros.field(form.state) }}
-        {% endif %}
+        {#{% if form.state is defined %}#}
+            {#{{ formmacros.field(form.state) }}#}
+        {#{% endif %}#}
 
-        {% if form.approvalDate is defined %}
-            {{ formmacros.field(form.approvalDate) }}
-        {% endif %}
+        {#{% if form.approvalDate is defined %}#}
+            {#{{ formmacros.field(form.approvalDate) }}#}
+        {#{% endif %}#}
 
-        {% if form.createDate is defined or form.submitter is defined %}
+        {#{% if form.createDate is defined or form.submitter is defined %}#}
             {#<div class="well well-sm">#}
-            {% if form.createDate is defined %}
-                {{ formmacros.field(form.createDate) }}
-            {% endif %}
-            {% if form.submitter is defined %}
-                {{ formmacros.field(form.submitter) }}
-            {% endif %}
+            {#{% if form.createDate is defined %}#}
+                {#{{ formmacros.field(form.createDate) }}#}
+            {#{% endif %}#}
+            {#{% if form.submitter is defined %}#}
+                {#{{ formmacros.field(form.submitter) }}#}
+            {#{% endif %}#}
             {#</div>#}
-        {% endif %}
+        {#{% endif %}#}
 
-        <br>
+        {{ transres.projectInfo(form,project,cycle) }}
+
+        {{ transres.projectFormEdit(form,null,cycle) }}
+
         {{ transres.projectRequesters(form,project,cycle) }}
 
         {#{% if form.vars.id  %}#}
@@ -72,7 +75,7 @@
         {% endif %}
 
 
-        {{ transres.projectForm(form,null,cycle) }}
+        {#{{ transres.projectFormEdit(form,null,cycle) }}#}
 
         {#{{ formmacros.checkbox(form.readyForReview) }}#}
 
