@@ -531,12 +531,13 @@
 
         {#reviewId={{ reviewId }}<br>#}
         {#project.vars.value.id={{ project.vars.value.id }}<br>#}
+        {#TODO: create an individual page for each commentId and include this page below#}
         {% if reviewId and project.vars.value.id %}
             {#projectId reviewId reviewClass-getStateStr#}
             {#{% set commentId = project.vars.value.id ~ "-" ~ reviewId ~ "-" ~ review.vars.value.getStateStr() %}#}
             {#commentId={{ commentId }}<br>#}
-            {#<iframe>#}
-            {#{% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': commentId} %}#}
+            {#<iframe src="/order/api/threads/{{commentId}}/comments">#}
+                {#{% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': commentId} %}#}
             {#</iframe>#}
             {#<div class="thread-fos" data-thread-id="{{ commentId }}"></div>#}
 

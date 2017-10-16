@@ -61,6 +61,7 @@ class TransResUploadController extends UploadController {
      * @Method("GET")
      */
     public function viewFileAction(Request $request,$id,$eventtype=null, $viewType=null) {
+        //exit("viewType=".$viewType);
         return $this->viewFileMethod($request,$id,$this->container->getParameter('translationalresearch.sitename'),$eventtype,$viewType);
     }
 
