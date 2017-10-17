@@ -220,17 +220,184 @@
         {% endfor %}
     {#</div>#}
 {% endmacro %}
-{% macro reviewEnabledLinkActionsHeader(review) %}
-    {% set actionLinks = transres_util.getReviewEnabledLinkActions(review) %}
-    {% for actionLink in actionLinks %}
-        {{ actionLink|raw }}
+{#{% macro reviewEnabledLinkActionsHeader(project,review,cycle) %}#}
+    {#{% set actionLinks = transres_util.getReviewEnabledLinkActions(review) %}#}
+    {#{% for actionLink in actionLinks %}#}
+        {#{{ actionLink|raw }}#}
+    {#{% endfor %}#}
+
+    {#{% set threadId = project.id ~ "-" ~ review.id ~ "-" ~ review.getStateStr() %}#}
+    {#{% if actionLinks|length > 0 and cycle == "show" %}#}
+        {#{{ render(controller('OlegTranslationalResearchBundle:Project:threadComments', { 'id': threadId })) }}#}
+        {#{% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': threadId} %}#}
+    {#{% else %}#}
+        {#{{ render(controller('OlegTranslationalResearchBundle:Project:threadCommentsShow', { 'id': threadId })) }}#}
+    {#{% endif %}#}
+{#{% endmacro %}#}
+{% macro reviewEnabledLinkActionsHeader(project,review,cycle) %}
+
+    {% if
+        cycle == "show" and
+        review.id and
+        transres_util.isUserAllowedReview(review) and
+        transres_util.isReviewable(review)
+    %}
+        {% set actionLinks = transres_util.getReviewEnabledLinkActions(review) %}
+        {% for actionLink in actionLinks %}
+            <p>
+                {{ actionLink|raw }}
+            </p>
+        {% endfor %}
+
+        {#{% set threadId = project.id ~ "-" ~ review.id ~ "-" ~ review.getStateStr() %}#}
+        {% set threadId = project.vars.value.id ~ "-" ~ review.vars.value.getStateStr() %}
+        {#actionLinks|length={{ actionLinks|length }}, cycle={{ cycle }}<br>#}
+        {% if actionLinks|length > 0 and cycle == "show" %}
+            {#{{ render(controller('OlegTranslationalResearchBundle:Project:threadComments', { 'id': threadId })) }}#}
+            {#include async.html.twig threadId={{ threadId }}<br>#}
+            {% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': threadId} %}
+            {#{{ render(controller('OlegTranslationalResearchBundle:Project:threadComments', { 'id': threadId })) }}#}
+        {% else %}
+            {{ render(controller('OlegTranslationalResearchBundle:Project:threadCommentsShow', { 'id': threadId })) }}
+        {% endif %}
+    {% endif %}
+
+{% endmacro %}
+{% macro projectReviewsEnabledLinkActions_old(project,reviews,cycle) %}
+    {% set actionLinks = null %}
+    {% for review in reviews %}
+        {#{{ transres.projectSingleReview(project,review,cycle,'transres-irbreviews','noprototype',sitename,showAddDeleteBtn,addReviewButtons) }}#}
+        {#{{ transres.reviewEnabledLinkActionsHeader(project,review,cycle) }}#}
+        {% if
+            cycle == "show" and
+            review.id and
+            transres_util.isUserAllowedReview(review) and
+            transres_util.isReviewable(review)
+        %}
+            {% set actionLinks = transres_util.getReviewEnabledLinkActions(review) %}
+            {% for actionLink in actionLinks %}
+                    {{ actionLink|raw }}
+            {% endfor %}
+        {% endif %}
     {% endfor %}
+    {% if cycle == "show" and actionLinks %}
+        {% if actionLinks|length > 0 %}
+            {% set threadId = project.vars.value.id ~ "-" ~ review.getStateStr() %}
+            {% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': threadId} %}
+        {% endif %}
+    {% endif %}
+{% endmacro %}
+
+{% macro projectReviewsEnabledLinkActions(project,reviews,cycle) %}
+    {% set actionLinks = [] %}
+    {% for review in reviews %}
+        {#{{ transres.projectSingleReview(project,review,cycle,'transres-irbreviews','noprototype',sitename,showAddDeleteBtn,addReviewButtons) }}#}
+        {#{{ transres.reviewEnabledLinkActionsHeader(project,review,cycle) }}#}
+        {% if
+            cycle == "show" and
+            review.id and
+            transres_util.isUserAllowedReview(review) and
+            transres_util.isReviewable(review)
+        %}
+            {% set actionReviewLinks = transres_util.getReviewEnabledLinkActions(review) %}
+            {% set actionLinks = actionLinks|merge({ (loop.index0): actionReviewLinks}) %}
+        {% endif %}
+    {% endfor %}
+    {% if actionLinks and actionLinks|length > 0 %}
+        <div class="well">
+            {% for actionLink in actionLinks %}
+                <p>
+                {% for actionLinkSet in actionLink %}
+                    {{ actionLinkSet|raw }}
+                {% endfor %}
+                </p>
+            {% endfor %}
+            {% set threadId = project.vars.value.id ~ "-" ~ review.getStateStr() %}
+            {% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': threadId} %}
+        </div>
+    {% endif %}
 {% endmacro %}
 
 {% macro projectHeader(project) %}
     <p>Project State: <strong>{{ transres_util.getStateLabelByProject(project) }}</strong></p>
 
 {% endmacro %}
+
+
+{% macro getActionReviewCommentsSection(project, cycle, sitename, addReviewButtons) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+
+    {% if addReviewButtons is not defined %}
+        {% set addReviewButtons = 0 %}
+    {% endif %}
+
+    {% set showIrbReview = 1 %}
+    {% set showAdminReview = 1 %}
+    {% set showCommiteeReview = 1 %}
+    {% set showFinalReview = 1 %}
+
+    {% set showAddDeleteBtn = 0 %}
+    {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_PRIMARY_REVIEWER') or is_granted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE') %}
+        {% set showAddDeleteBtn = 1 %}
+    {% endif %}
+
+    {% if showIrbReview and project.irbReviews is defined %}
+        {#{% for review in project.irbReviews %}#}
+            {#{{ transres.projectSingleReview(project,review,cycle,'transres-irbreviews','noprototype',sitename,showAddDeleteBtn,addReviewButtons) }}#}
+            {#{{ transres.reviewEnabledLinkActionsHeader(project,review,cycle) }}#}
+
+            {#{% if#}
+                {#cycle == "show" and#}
+                {#review.id and#}
+                {#transres_util.isUserAllowedReview(review) and#}
+                {#transres_util.isReviewable(review)#}
+            {#%}#}
+                {#{% set actionLinks = transres_util.getReviewEnabledLinkActions(review) %}#}
+                {#{% for actionLink in actionLinks %}#}
+                    {#<p>#}
+                        {#{{ actionLink|raw }}#}
+                    {#</p>#}
+                {#{% endfor %}#}
+            {#{% endif %}#}
+        {#{% endfor %}#}
+        {#{% if actionLinks is defined actionLinks|length > 0 and cycle == "show" %}#}
+            {#{% set threadId = project.vars.value.id ~ "-" ~ review.vars.value.getStateStr() %}#}
+            {#{% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': threadId} %}#}
+        {#{% endif %}#}
+
+        {{ transres.projectReviewsEnabledLinkActions(project,project.irbReviews,cycle) }}
+
+    {% endif %}
+
+    {% if showAdminReview and project.adminReviews is defined %}
+        {#{% for review in project.adminReviews %}#}
+            {#{{ transres.projectSingleReview(project,review,cycle,'transres-adminreviews','noprototype',sitename,showAddDeleteBtn,addReviewButtons) }}#}
+            {#{{ transres.reviewEnabledLinkActionsHeader(project,review,cycle) }}#}
+        {#{% endfor %}#}
+        {{ transres.projectReviewsEnabledLinkActions(project,project.adminReviews,cycle) }}
+    {% endif %}
+
+    {% if showCommiteeReview and project.committeeReviews is defined %}
+        {#{% for review in project.committeeReviews %}#}
+            {#{{ transres.projectSingleReview(project,review,cycle,'transres-committeereviews','noprototype',sitename,showAddDeleteBtn,addReviewButtons) }}#}
+            {#{{ transres.reviewEnabledLinkActionsHeader(project,review,cycle) }}#}
+        {#{% endfor %}#}
+        {{ transres.projectReviewsEnabledLinkActions(project,project.committeeReviews,cycle) }}
+    {% endif %}
+
+    {% if showFinalReview and project.finalReviews is defined %}
+        {#{% for review in project.finalReviews %}#}
+            {#{{ transres.projectSingleReview(project,review,cycle,'transres-finalreviews','noprototype',sitename,showAddDeleteBtn,addReviewButtons) }}#}
+            {#{{ transres.reviewEnabledLinkActionsHeader(project,review,cycle) }}#}
+        {#{% endfor %}#}
+        {{ transres.projectReviewsEnabledLinkActions(project,project.finalReviews,cycle) }}
+    {% endif %}
+
+{% endmacro %}
+
+
 
 {% macro projectReviews(project, cycle, sitename, addReviewButtons) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
@@ -295,6 +462,13 @@
                                 {{ transres.projectSingleReview(project,review,cycle,'transres-irbreviews','noprototype',sitename,showAddDeleteBtn,addReviewButtons) }}
                             {% endfor %}
 
+                            {% if cycle == "edit" %}
+                                {% if project.irbReviews|length > 0 %}
+                                    {% set threadId = project.vars.value.id ~ "-" ~ project.irbReviews|first.getStateStr() %}
+                                    {{ render(controller('OlegTranslationalResearchBundle:Project:threadCommentsShow', { 'id': threadId })) }}
+                                {% endif %}
+                            {% endif %}
+
                             {% if cycle != "show" %}
                                 {% if showAddDeleteBtn %}
                                     {{ usermacros.addNewObjectBtn(cycle,'transres-irbreviews','Add IRB Reviewer') }}
@@ -325,6 +499,13 @@
                             {% for review in project.adminReviews %}
                                 {{ transres.projectSingleReview(project,review,cycle,'transres-adminreviews','noprototype',sitename,showAddDeleteBtn,addReviewButtons) }}
                             {% endfor %}
+
+                            {% if cycle == "edit" %}
+                                {% if project.adminReviews|length > 0 %}
+                                    {% set threadId = project.vars.value.id ~ "-" ~ project.adminReviews|first.getStateStr() %}
+                                    {{ render(controller('OlegTranslationalResearchBundle:Project:threadCommentsShow', { 'id': threadId })) }}
+                                {% endif %}
+                            {% endif %}
 
                             {% if cycle != "show" %}
                                 {% if showAddDeleteBtn %}
@@ -357,6 +538,13 @@
                                 {{ transres.projectSingleReview(project,review,cycle,'transres-committeereviews','noprototype',sitename,showAddDeleteBtn,addReviewButtons) }}
                             {% endfor %}
 
+                            {% if cycle == "edit" %}
+                                {% if project.committeeReviews|length > 0 %}
+                                    {% set threadId = project.vars.value.id ~ "-" ~ project.committeeReviews|first.getStateStr() %}
+                                    {{ render(controller('OlegTranslationalResearchBundle:Project:threadCommentsShow', { 'id': threadId })) }}
+                                {% endif %}
+                            {% endif %}
+
                             {% if cycle != "show" %}
                                 {% if showAddDeleteBtn %}
                                     {{ usermacros.addNewObjectBtn(cycle,'transres-committeereviews','Add Committee Reviewer') }}
@@ -387,6 +575,13 @@
                             {% for review in project.finalReviews %}
                                 {{ transres.projectSingleReview(project,review,cycle,'transres-finalreviews','noprototype',sitename,showAddDeleteBtn,addReviewButtons) }}
                             {% endfor %}
+
+                            {% if cycle == "edit" %}
+                                {% if project.finalReviews|length > 0 %}
+                                    {% set threadId = project.vars.value.id ~ "-" ~ project.finalReviews|first.getStateStr() %}
+                                    {{ render(controller('OlegTranslationalResearchBundle:Project:threadCommentsShow', { 'id': threadId })) }}
+                                {% endif %}
+                            {% endif %}
 
                             {% if cycle != "show" %}
                                 {% if showAddDeleteBtn %}
@@ -509,12 +704,8 @@
 
             {#addReviewButtons={{ addReviewButtons }}<br>#}
             {% if addReviewButtons is defined and addReviewButtons %}
-                {#<a class="btn btn-success">Approve</a>#}
-                {#<a class="btn btn-warning">Pending additional information from submitter</a>#}
-                {#<a class="btn btn-danger">Reject</a>#}
-                {#<br>#}
                 <p>
-                {{ transres.reviewEnabledLinkActionsHeader(review.vars.value) }}
+                {{ transres.reviewEnabledLinkActionsHeader(project.vars.value,review.vars.value,cycle) }}
                 </p>
             {% endif %}
 
@@ -531,20 +722,49 @@
 
         {#reviewId={{ reviewId }}<br>#}
         {#project.vars.value.id={{ project.vars.value.id }}<br>#}
-        {#TODO: create an individual page for each commentId and include this page below#}
-        {% if reviewId and project.vars.value.id %}
+        {#TODO: create an individual page for each threadId and include this page below#}
+        {#{% if reviewId and project.vars.value.id %}#}
             {#projectId reviewId reviewClass-getStateStr#}
-            {#{% set commentId = project.vars.value.id ~ "-" ~ reviewId ~ "-" ~ review.vars.value.getStateStr() %}#}
-            {#commentId={{ commentId }}<br>#}
-            {#<iframe src="/order/api/threads/{{commentId}}/comments">#}
-                {#{% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': commentId} %}#}
+            {#{% set threadId = project.vars.value.id ~ "-" ~ reviewId ~ "-" ~ review.vars.value.getStateStr() %}#}
+            {#{% set threadId = project.vars.value.id ~ "-" ~ review.vars.value.getStateStr() %}#}
+            {#threadId={{ threadId }}<br>#}
+            {#<iframe src="/order/api/threads/{{threadId}}/comments">#}
+                {#{% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': threadId} %}#}
             {#</iframe>#}
-            {#<div class="thread-fos" data-thread-id="{{ commentId }}"></div>#}
+            {#<div class="thread-fos" data-thread-id="{{ threadId }}"></div>#}
 
             {#<a class="btn btn-primary"#}
                 {#href="{{ path(translationalresearch_sitename~'_review_edit',{'stateStr':review.vars.value.getStateStr(),'reviewId': reviewId}) }}"#}
             {#>Update Review</a>#}
-        {% endif %}
+
+            {#{% include 'FOSCommentBundle:Thread:async.html.twig' with {'thread_container': '.comments-box'} %}#}
+            {#<div class="comments-box" data-thread-id="{{ threadId }}"></div>#}
+
+            {#{% include 'OlegTranslationalResearchBundle:Thread:async.html.twig' with {'id': threadId} %}#}
+
+            {#<p>#}
+                {#{{ render(controller('OlegTranslationalResearchBundle:Project:threadComments', { 'id': threadId })) }}#}
+            {#</p>#}
+
+            {#{% if cycle == "show" %}#}
+
+                {#{% if addReviewButtons is defined and addReviewButtons %}#}
+                    {#{{ render(controller('OlegTranslationalResearchBundle:Project:threadComments', { 'id': threadId })) }}#}
+                {#{% else %}#}
+                    {#{{ render(controller('OlegTranslationalResearchBundle:Project:threadCommentsShow', { 'id': threadId })) }}#}
+                {#{% endif %}#}
+
+            {#{% endif %}#}
+
+            {#{% if cycle == "edit" %}#}
+                {#{{ render(controller('OlegTranslationalResearchBundle:Project:threadCommentsShow', { 'id': threadId })) }}#}
+            {#{% endif %}#}
+
+        {#{% endif %}#}
+
+        {#{% if cycle == "edit" and threadId is defined and threadId %}#}
+            {#{{ render(controller('OlegTranslationalResearchBundle:Project:threadCommentsShow', { 'id': threadId })) }}#}
+        {#{% endif %}#}
 
     </div>
 {% endmacro %}

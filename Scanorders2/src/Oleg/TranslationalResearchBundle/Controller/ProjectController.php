@@ -601,6 +601,66 @@ class ProjectController extends Controller
         );
     }
 
+    /**
+     * @Route("/project/thread-comments/{id}", name="translationalresearch_project_thread_comments")
+     * @Template("OlegTranslationalResearchBundle:Project:thread-comments.html.twig")
+     * @Method({"GET"})
+     */
+    public function threadCommentsAction(Request $request, $id)
+    {
+        //$id = 'thread_id';
+        $thread = $this->container->get('fos_comment.manager.thread')->findThreadById($id);
+        if (null === $thread) {
+            $thread = $this->container->get('fos_comment.manager.thread')->createThread();
+            $thread->setId($id);
+            $thread->setPermalink($request->getUri());
+
+            // Add the thread
+            $this->container->get('fos_comment.manager.thread')->saveThread($thread);
+        }
+
+        $comments = $this->container->get('fos_comment.manager.comment')->findCommentTreeByThread($thread);
+
+        //return $comments;
+
+        return array(
+            'comments' => $comments,
+            'thread' => $thread,
+        );
+    }
+
+    /**
+     * @Route("/project/thread-comments/show/{id}", name="translationalresearch_project_thread_comments_show")
+     * @Template("OlegTranslationalResearchBundle:Project:thread-comments.html.twig")
+     * @Method({"GET"})
+     */
+    public function threadCommentsShowAction(Request $request, $id)
+    {
+        //$id = 'thread_id';
+        $thread = $this->container->get('fos_comment.manager.thread')->findThreadById($id);
+//        if (null === $thread) {
+//            $thread = $this->container->get('fos_comment.manager.thread')->createThread();
+//            $thread->setId($id);
+//            $thread->setPermalink($request->getUri());
+//
+//            // Add the thread
+//            $this->container->get('fos_comment.manager.thread')->saveThread($thread);
+//        }
+
+        if( $thread ) {
+            $thread->setCommentable(false);
+        }
+
+        $comments = $this->container->get('fos_comment.manager.comment')->findCommentTreeByThread($thread);
+
+        //echo "commets count=".count($comments)."<br>";
+
+        return array(
+            'comments' => $comments,
+            'thread' => $thread,
+        );
+    }
+
 
 
 }

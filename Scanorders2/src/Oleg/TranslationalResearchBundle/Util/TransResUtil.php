@@ -175,7 +175,7 @@ class TransResUtil
                 );
 
                 //$label = ucfirst($transitionName)." (mark as ".ucfirst($to);
-                $label = $this->getTransitionLabelByName($transitionName);
+                $label = $this->getTransitionLabelByName($transitionName,$review);
 
                 $classTransition = $this->getHtmlClassTransition($transitionName);
 
@@ -830,7 +830,7 @@ class TransResUtil
 //        return $reviewIds;
 //    }
 
-    public function getTransitionLabelByName( $transitionName ) {
+    public function getTransitionLabelByName( $transitionName, $review=null ) {
 
         //$returnLabel = "<$transitionName>";
 
@@ -882,12 +882,31 @@ class TransResUtil
 
             case "committee_review_approved":
                 $label = "Approve Committee Review";
+                if( method_exists($review, 'getPrimaryReview') ) {
+                    if( $review->getPrimaryReview() === true ) {
+                        $label = $label . " as Primary Reviewer";
+                    } else {
+                        $label = "Like";
+                    }
+                }
                 break;
             case "committee_review_rejected":
                 $label = "Reject Committee Review";
+                if( method_exists($review, 'getPrimaryReview') ) {
+                    if( $review->getPrimaryReview() === true ) {
+                        $label = $label . " as Primary Reviewer";
+                    } else {
+                        $label = "Dislike";
+                    }
+                }
                 break;
             case "committee_review_missinginfo":
                 $label = "Request additional information from submitter for Committee Review";
+                if( method_exists($review, 'getPrimaryReview') ) {
+                    if( $review->getPrimaryReview() === true ) {
+                        $label = $label . " as Primary Reviewer";
+                    }
+                }
                 break;
             case "committee_review_resubmit":
                 $label = "Resubmit to Committee Review";

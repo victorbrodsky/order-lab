@@ -1,0 +1,139 @@
+{#{% extends "OlegTranslationalResearchBundle::Default/base.html.twig" %}#}
+
+{#{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
+{#{% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}#}
+
+
+{#{% block title %}#}
+    {#{{ title }}#}
+{#{% endblock %}#}
+
+{#{% block header %}{% endblock %}#}
+
+{#{% block favicon %}{% endblock %}#}
+
+{#{% block title %}{% endblock %}#}
+
+
+{% javascripts
+    '@OlegUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'
+%}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+
+<script type="text/javascript">
+    var fos_comment_thread_container = $('.fos_comment_thread');
+</script>
+
+
+{#{% block content %}#}
+
+    <div id="fos_comment_thread" data-thread="{{ thread.id }}">
+
+        {% include 'FOSCommentBundle:Thread:comments.html.twig' with {
+            'comments': comments,
+            'thread': thread
+        } %}
+
+    </div>
+
+{#{% endblock %}#}
+
+
+{#{% block headeradditionaljs %}#}
+
+    {#<script type="text/javascript">#}
+        {#// thread id#}
+        {#var fos_comment_thread_id = 'test';#}
+
+        {#// api base url to use for initial requests#}
+        {#var fos_comment_thread_api_base_url = '/sf2.1.2/web/app.php/api/threads';#}
+
+        {#// Snippet for asynchronously loading the comments#}
+        {#(function() #}{#}#}
+            {#var fos_comment_script = document.createElement('script');#}
+            {#fos_comment_script.async = true;#}
+            {#fos_comment_script.src = '/sf2.1.2/web/js/35a8e64.js';#}
+            {#fos_comment_script.type = 'text/javascript';#}
+
+            {#(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(fos_comment_script);#}
+        {#})();#}
+    {#</script>#}
+
+{#{% endblock %}#}
+
+{#{% block javascript %}#}
+    {#{% javascripts '@FOSCommentBundle/Resources/public/js/comments.js' %}#}
+    {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+
+    {#<script type="text/javascript">#}
+        {#var fos_comment_thread_container = $('.fos_comment_thread');#}
+    {#</script>#}
+
+    {#jQuery(document).ready(function() {#}
+        {#jQuery('#search').click(submit_search);#}
+        {#jQuery('#nestedform').find('input').keydown(keypressed);#}
+    {#});#}
+
+{#{% endblock javascript %}#}
+
+{#pre js#}
+{#{% block headeradditionaljs %}#}
+
+    {#{% javascripts#}
+        {#'@OlegUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'#}
+    {#%}#}
+    {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+
+{#{% endblock %}#}
+
+{#middle js#}
+{#{% block mainjs %}#}
+
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+
+            $('.fos_comment_submit').find("input").click(function(event) {
+                console.log("btn click:");
+                console.log($(this));
+                $(this).closest('.fos_comment_comment_new_form').submit();
+            });
+
+        });
+
+//        function fosCommentSubmit(event) {
+//
+//            $(this).closest('.fos_comment_comment_new_form').submit();
+//
+//            return false;
+//        }
+
+//        function fosCommentKeypressed(event) {
+//            var charcode = (event.which) ? event.which : window.event.keyCode;
+//            if (charcode == 13) {
+//                return fosCommentSubmit(event);
+//            }
+//            return true;
+//        }
+//
+//        function do_submit(submit_output, submit_values) {
+//            jQuery(submit_output).hide();
+//            var posting = jQuery.post(
+//                    "search.php", {
+//                        'search_values[]': submit_values
+//                    });
+//            posting.done = function(data) {
+//                jQuery(submit_output).html(data.substr(0, data.length));
+//                jQuery(submit_output).show();
+//            };
+//        }
+
+    </script>
+
+{#{% endblock %}#}
+
+{#post js#}
+{#{% block additionaljs %}{% endblock %}#}

@@ -164,6 +164,9 @@
         </tbody>
     </table>
 
+    {#{{ render(controller('OlegTranslationalResearchBundle:Project:threadComments', { 'id': "3-9-committee_review" })) }}#}
+    {#{% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': "3-9-committee_review"} %}#}
+
     <br>
     <p>
         <a class="btn btn-primary" href="{{ path(translationalresearch_sitename~'_project_new') }}">Create a new project</a>

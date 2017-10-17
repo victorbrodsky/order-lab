@@ -20,31 +20,15 @@
 
     {% set sitename = translationalresearch_sitename %}
 
+    {{ transres.getActionReviewCommentsSection(project,cycle,sitename,1) }}
+    {#{% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': "3-9-committee_review"} %}#}
+
     <p>
         <button type="button" class="btn btn-default btn-sm" onClick="collapseAll()" >Collapse All</button>
         <button type="button" class="btn btn-default btn-sm" onClick="extendAll()" >Expand All</button>
     </p>
 
     {{ form_start(form) }}
-
-    {#{% if form.state is defined %}#}
-        {#{{ formmacros.field(form.state) }}#}
-    {#{% endif %}#}
-
-    {#{% if form.approvalDate is defined %}#}
-        {#{{ formmacros.field(form.approvalDate) }}#}
-    {#{% endif %}#}
-
-    {#{% if form.createDate is defined or form.submitter is defined %}#}
-        {#<div class="well well-sm">#}
-            {#{% if form.createDate is defined %}#}
-                {#{{ formmacros.field(form.createDate) }}#}
-            {#{% endif %}#}
-            {#{% if form.submitter is defined %}#}
-                {#{{ formmacros.field(form.submitter) }}#}
-            {#{% endif %}#}
-        {#</div>#}
-    {#{% endif %}#}
 
     {{ transres.getProjectShowPrototypeFormData(form,cycle,sitename) }}
 
@@ -54,18 +38,20 @@
 
     {{ transres.projectRequesters(form,project,cycle) }}
 
-    {{ transres.projectReviews(form,cycle,sitename,1) }}
+    {{ transres.projectReviews(form,cycle,sitename,0) }}
 
     {{ form_end(form) }}
 
-    {% set commentId = project.id %}
-    {% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': commentId} %}
+    {#{% set threadId = project.id %}#}
+    {#{% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': threadId} %}#}
 
     {#{% set callLogViewClass = "order-white-background" %}#}
     {#<div class="text-left {{ callLogViewClass }}">#}
         {#{{ user_formnode_utility.getFormNodeHolderShortInfoForView(project,project.messageCategory,false)|raw }}#}
     {#</div>#}
 
+    {#{% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': "3-9-committee_review"} %}#}
+    {#{{ render(controller('OlegTranslationalResearchBundle:Project:threadComments', { 'id': "3-9-committee_review" })) }}#}
 
     <div>
 
