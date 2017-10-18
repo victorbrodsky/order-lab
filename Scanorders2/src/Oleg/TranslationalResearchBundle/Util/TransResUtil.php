@@ -50,6 +50,7 @@ class TransResUtil
         $this->secTokenStorage = $container->get('security.token_storage'); //$user = $this->secTokenStorage->getToken()->getUser();
     }
 
+    //NOT USED
     //get links to change states: Reject IRB Review and Approve IRB Review (translationalresearch_transition_action)
     public function getEnabledLinkActions( $project, $classEdit=null, $classTransition=null ) {
         $workflow = $this->container->get('state_machine.transres_project');
@@ -67,7 +68,7 @@ class TransResUtil
                 //echo "from=".$from."<br>"; //irb_review
 
                 //add user's validation: $from=irb_review => user has role _IRB_REVIEW_
-                if( false === $this->isUserAllowedFromThisState($from) ) {
+                if( false === $this->isUserAllowedFromThisStateByRole($from) ) {
                     continue;
                 }
 
@@ -141,14 +142,38 @@ class TransResUtil
         return $links;
     }
 
+    //MAIN method to show allowed transition to state links
     //get links to change states: Reject IRB Review and Approve IRB Review (translationalresearch_transition_action)
     public function getReviewEnabledLinkActions( $review ) {
-        exit("get review links");
+        //exit("get review links");
         $project = $review->getProject();
         $workflow = $this->container->get('state_machine.transres_project');
         $transitions = $workflow->getEnabledTransitions($project);
 
         $links = array();
+
+        //check if review is reviewable from this state
+        if( $this->isReviewCorrespondsToState($review) === false ) {
+            //echo "Review ".$review->getStateStr()." does not corresponds to state=".$project->getState()."<br>";
+            return $links;
+        }
+
+//        $stateStr = $this->getAllowedFromState($project);
+//
+//        if( !$stateStr ) {
+//            return $links;
+//        }
+//
+//        if( $review->getStateStr() === "committee_review" ) {
+//            if( strpos($stateStr, "missinginfo") !== false ) {
+//                return $links;
+//            }
+//        }
+//
+//        if( false === $this->isUserAllowedFromThisStateByProjectOrReview($project,$review) ) {
+//            return $links;
+//        }
+
         foreach( $transitions as $transition ) {
 
             //$this->printTransition($transition);
@@ -166,7 +191,10 @@ class TransResUtil
                 //echo "from=".$from."<br>"; //irb_review
 
                 //add user's validation: $from=irb_review => user has role _IRB_REVIEW_
-                if( false === $this->isUserAllowedFromThisState($from) ) {
+//                if( false === $this->isUserAllowedFromThisStateByRole($from) ) {
+//                    continue;
+//                }
+                if( false === $this->isUserAllowedFromThisStateByProjectOrReview($project,$review) ) {
                     continue;
                 }
 
@@ -195,7 +223,8 @@ class TransResUtil
 
         }//foreach
 
-        echo "count=".count($links)."<br>";
+        //echo "count=".count($links)."<br>";
+        //exit();
 
         return $links;
     }
@@ -352,6 +381,12 @@ class TransResUtil
             return true;
         }
         if( $project->getPathologists()->contains($user) ) {
+            return true;
+        }
+        if( $project->getContacts()->contains($user) ) {
+            return true;
+        }
+        if( $project->getBillingContacts()->contains($user) ) {
             return true;
         }
         return false;
@@ -1432,8 +1467,9 @@ class TransResUtil
         return $reviewObjects;
     }
 
+    //NOT USED: roles are not relable for each project
     //add user's validation (rely on Role): $from=irb_review => user has role _IRB_REVIEW_
-    public function isUserAllowedFromThisState($from) {
+    public function isUserAllowedFromThisStateByRole($from) {
 
         if(
             $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') ||
@@ -1466,6 +1502,136 @@ class TransResUtil
 
         return false;
     }
+    //check if the current logged in user has permission to make changes from the current project state
+    public function isUserAllowedFromThisStateByProjectOrReview($project, $review=null) {
+
+        if( !$project ) {
+            $project = $review->getProject();
+        }
+
+//        $workflow = $this->container->get('state_machine.transres_project');
+//        $transitions = $workflow->getEnabledTransitions($project);
+//
+//        if( count($transitions) != 1 ) {
+//            throw new \Exception("Review with ID ".$review->getId()." does not have a project");
+//        }
+//
+//        foreach($transitions as $transition) {
+//            $this->printTransition($transition);
+//        }
+//        exit('1');
+
+        $stateStr = $this->getAllowedFromState($project); //must be equal to the current project state
+        if( !$stateStr ) {
+            return false;
+        }
+
+        if( $this->isAdminOrPrimaryReviewer() ) {
+            return true;
+        }
+
+        $user = $this->secTokenStorage->getToken()->getUser();
+
+        //check if reviewer
+        if( $this->isProjectStateReviewer($project,$user) ) {
+            return true;
+        }
+
+        //check if submitter and project state has _missinginfo
+//        if( strpos($stateStr, "_missinginfo") !== false ) {
+//            if( $this->isProjectRequester($project) ) {
+//                return true;
+//            }
+//        }
+        if( $this->isProjectStateRequesterResubmit($project) ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isProjectStateRequesterResubmit($project) {
+        $stateStr = $this->getAllowedFromState($project);
+        if( !$stateStr ) {
+            return false;
+        }
+
+        if( strpos($stateStr, "_missinginfo") !== false ) {
+            if( $this->isProjectRequester($project) ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function isProjectStateReviewer($project,$user) {
+
+        $stateStr = $this->getAllowedFromState($project); //must be equal to the current project state
+        if( !$stateStr ) {
+            return false;
+        }
+
+        $reviews = array();
+
+        if( $stateStr == "irb_review" ) {
+            $reviews = $project->getIrbReviews();
+        }
+        if( $stateStr == "irb_admin" ) {
+            $reviews = $project->getAdminReviews();
+        }
+        if( $stateStr == "irb_committee" ) {
+            $reviews = $project->getCommitteeReviews();
+        }
+        if( $stateStr == "irb_final" ) {
+            $reviews = $project->getFinalReviews();
+        }
+
+        if( $this->isReviewsReviewer($user,$reviews) ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    //only a single from state must exists, but a project can have multiple transitions and tos
+    public function getAllowedFromState($project) {
+
+        $stateStr = $project->getState();
+
+        //double check this state by state machine
+        $workflow = $this->container->get('state_machine.transres_project');
+
+        $transitions = $workflow->getEnabledTransitions($project);
+
+        foreach( $transitions as $transition ) {
+            foreach( $transition->getFroms() as $fromStateStr ) {
+                if( $fromStateStr == $stateStr ) {
+                    return $stateStr;
+                }
+            }
+        }
+
+        return null;
+
+//        if( count($transitions) == 0 ) {
+//            //rejected => no states
+//            return null;
+//            //throw new \Exception("State Machine: Project does not have any transition. project state=".$project->getState());
+//        }
+//        //TODO: project can have 3 transitions => rewrite to get a single fromState
+//        if( count($transitions) != 1 ) {
+//            throw new \Exception("State Machine: Project must have only one transition. Number of transitions=".count($transitions));
+//        }
+//        $transition = $transitions[0];
+//
+//        $froms = $transition->getFroms();
+//        if( count($froms) != 1 ) {
+//            throw new \Exception("State Machine: Project must have only one from state. Number of from states=".count($froms));
+//        }
+//        $from = $froms[0];
+//
+//        return $from;
+    }
 
     public function isUserAllowedReview( $review ) {
         //echo "reviewId=".$review->getId()."<br>";
@@ -1486,7 +1652,7 @@ class TransResUtil
         return false;
     }
 
-    public function isReviewable($review) {
+    public function isReviewCorrespondsToState($review) {
         if( !$review ) {
             return false;
         }
@@ -1496,32 +1662,51 @@ class TransResUtil
         }
 
         //1) check if project state is reviewable
-        $projectStateRevaiewable = false;
+        $projectStateReviewable = false;
         $projectState = $project->getState();
         //echo "projectId=".$project->getId()."<br>";
         //echo "projectState=".$projectState."<br>";
-        if( $projectState == "irb_review" ) {
-            $projectStateRevaiewable = true;
-        }
-        if( $projectState == "admin_review" ) {
-            $projectStateRevaiewable = true;
-        }
-        if( $projectState == "committee_review" ) {
-            $projectStateRevaiewable = true;
-        }
-        if( $projectState == "final_review" ) {
-            $projectStateRevaiewable = true;
-        }
-        if( $projectStateRevaiewable === false ) {
-            return false;
-        }
 
-        //2) condition to allow edit only if project state is allow to edit this type of review (committee_review)
-        if( $projectState == $review->getStateStr() ) {
+        //check if the $review->getStateStr() has prefix (i.e. irb)
+        //only if transitionName=irb_review_resubmit == irb class
+        $statePrefixArr= explode("_", $projectState); //irb,review
+        $statePrefix = $statePrefixArr[0]; //irb
+        if( strpos($review->getStateStr(), $statePrefix) !== false ) {
             return true;
         }
 
         return false;
+
+//        if( strpos($projectState, '_missinginfo') !== false ) {
+//            $projectStateReviewable = true;
+//            if( strpos($projectState, '_missinginfo') !== false ) {
+//
+//            }
+//        }
+//
+//        if( $projectState == "irb_review" ) {
+//            $projectStateReviewable = true;
+//        }
+//        if( $projectState == "admin_review" ) {
+//            $projectStateReviewable = true;
+//        }
+//        if( $projectState == "committee_review" ) {
+//            $projectStateReviewable = true;
+//        }
+//        if( $projectState == "final_review" ) {
+//            $projectStateReviewable = true;
+//        }
+//
+//        if( $projectStateReviewable === false ) {
+//            return false;
+//        }
+//
+//        //2) condition to allow edit only if project state is allow to edit this type of review (committee_review)
+//        if( $projectState == $review->getStateStr() ) {
+//            return true;
+//        }
+//
+//        return false;
     }
 
     public function processProjectOnReviewUpdate( $review, $stateStr, $request, $testing=false ) {

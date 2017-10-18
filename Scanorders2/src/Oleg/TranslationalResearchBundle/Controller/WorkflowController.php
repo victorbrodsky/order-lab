@@ -225,7 +225,12 @@ class WorkflowController extends Controller
         $transresUtil = $this->container->get('transres_util');
         $review = $transresUtil->getReviewByReviewidAndState($reviewId,$project->getState());
 
-        if( $transresUtil->isUserAllowedReview($review) === false || $transresUtil->isReviewable($review) === false ) {
+        if(
+            $transresUtil->isUserAllowedReview($review) === false &&
+            $transresUtil->isReviewCorrespondsToState($review) === false &&
+            $transresUtil->isUserAllowedFromThisStateByProjectOrReview($project) === false
+        ) {
+            //exit("no permission");
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 

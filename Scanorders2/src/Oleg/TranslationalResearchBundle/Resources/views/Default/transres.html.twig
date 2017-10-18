@@ -234,13 +234,14 @@
         {#{{ render(controller('OlegTranslationalResearchBundle:Project:threadCommentsShow', { 'id': threadId })) }}#}
     {#{% endif %}#}
 {#{% endmacro %}#}
+{#NOT USED#}
 {% macro reviewEnabledLinkActionsHeader(project,review,cycle) %}
 
     {% if
         cycle == "show" and
         review.id and
         transres_util.isUserAllowedReview(review) and
-        transres_util.isReviewable(review)
+        transres_util.isReviewCorrespondsToState(review)
     %}
         {% set actionLinks = transres_util.getReviewEnabledLinkActions(review) %}
         {% for actionLink in actionLinks %}
@@ -272,7 +273,7 @@
             {#cycle == "show" and#}
             {#review.id and#}
             {#transres_util.isUserAllowedReview(review) and#}
-            {#transres_util.isReviewable(review)#}
+            {#transres_util.isReviewCorrespondsToState(review)#}
         {#%}#}
             {#{% set actionLinks = transres_util.getReviewEnabledLinkActions(review) %}#}
             {#{% for actionLink in actionLinks %}#}
@@ -288,24 +289,42 @@
     {#{% endif %}#}
 {#{% endmacro %}#}
 
+{#show allowed transition to links#}
 {% macro projectReviewsEnabledLinkActions(project,reviews,cycle) %}
     {% set actionLinks = [] %}
     {% set threadId = null %}
     {% for review in reviews %}
         {#{{ transres.projectSingleReview(project,review,cycle,'transres-irbreviews','noprototype',sitename,showAddDeleteBtn,addReviewButtons) }}#}
         {#{{ transres.reviewEnabledLinkActionsHeader(project,review,cycle) }}#}
+
+        {#transres_util.isUserAllowedReview(review) and#}
+        {#transres_util.isReviewCorrespondsToState(review)#}
         {% if
             cycle == "show" and
             review.id and
-            transres_util.isUserAllowedReview(review) and
-            transres_util.isReviewable(review)
+            transres_util.isUserAllowedFromThisStateByProjectOrReview(null,review) and
+            transres_util.isReviewCorrespondsToState(review)
         %}
+            {#getReviewEnabledLinkActions<br>#}
             {% set actionReviewLinks = transres_util.getReviewEnabledLinkActions(review) %}
             {% set actionLinks = actionLinks|merge({ (loop.index0): actionReviewLinks}) %}
 
             {% set threadId = project.id ~ "-" ~ review.getStateStr() %}
             {#{% set threadIds = threadIds|merge({ (loop.index0): threadId}) %}#}
+        {% else %}
+            {#no getReviewEnabledLinkActions<br>#}
         {% endif %}
+
+        {#getResubmitButtons#}
+        {#{% if review.id %}#}
+            {#<p>#}
+                {#{% set actionReSubmitLinks = transres_util.getResubmitButtons(review) %}#}
+                {#{% for actionReSubmitLink in actionReSubmitLinks %}#}
+                    {#{{ actionReSubmitLink|raw }}#}
+                {#{% endfor %}#}
+            {#</p>#}
+        {#{% endif %}#}
+
     {% endfor %}
     {% if threadId and actionLinks|length > 0 %}
         <div class="well transres-review-holder">
@@ -347,31 +366,8 @@
     {% endif %}
 
     {% if showIrbReview and project.irbReviews is defined %}
-        {#{% for review in project.irbReviews %}#}
-            {#{{ transres.projectSingleReview(project,review,cycle,'transres-irbreviews','noprototype',sitename,showAddDeleteBtn,addReviewButtons) }}#}
-            {#{{ transres.reviewEnabledLinkActionsHeader(project,review,cycle) }}#}
-
-            {#{% if#}
-                {#cycle == "show" and#}
-                {#review.id and#}
-                {#transres_util.isUserAllowedReview(review) and#}
-                {#transres_util.isReviewable(review)#}
-            {#%}#}
-                {#{% set actionLinks = transres_util.getReviewEnabledLinkActions(review) %}#}
-                {#{% for actionLink in actionLinks %}#}
-                    {#<p>#}
-                        {#{{ actionLink|raw }}#}
-                    {#</p>#}
-                {#{% endfor %}#}
-            {#{% endif %}#}
-        {#{% endfor %}#}
-        {#{% if actionLinks is defined actionLinks|length > 0 and cycle == "show" %}#}
-            {#{% set threadId = project.vars.value.id ~ "-" ~ review.vars.value.getStateStr() %}#}
-            {#{% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': threadId} %}#}
-        {#{% endif %}#}
-
+        {#show project.irbReviews<br>#}
         {{ transres.projectReviewsEnabledLinkActions(project,project.irbReviews,cycle) }}
-
     {% endif %}
 
     {% if showAdminReview and project.adminReviews is defined %}
@@ -379,6 +375,7 @@
             {#{{ transres.projectSingleReview(project,review,cycle,'transres-adminreviews','noprototype',sitename,showAddDeleteBtn,addReviewButtons) }}#}
             {#{{ transres.reviewEnabledLinkActionsHeader(project,review,cycle) }}#}
         {#{% endfor %}#}
+        {#show project.adminReviews<br>#}
         {{ transres.projectReviewsEnabledLinkActions(project,project.adminReviews,cycle) }}
     {% endif %}
 
@@ -387,6 +384,7 @@
             {#{{ transres.projectSingleReview(project,review,cycle,'transres-committeereviews','noprototype',sitename,showAddDeleteBtn,addReviewButtons) }}#}
             {#{{ transres.reviewEnabledLinkActionsHeader(project,review,cycle) }}#}
         {#{% endfor %}#}
+        {#show project.committeeReviews<br>#}
         {{ transres.projectReviewsEnabledLinkActions(project,project.committeeReviews,cycle) }}
     {% endif %}
 
@@ -395,6 +393,7 @@
             {#{{ transres.projectSingleReview(project,review,cycle,'transres-finalreviews','noprototype',sitename,showAddDeleteBtn,addReviewButtons) }}#}
             {#{{ transres.reviewEnabledLinkActionsHeader(project,review,cycle) }}#}
         {#{% endfor %}#}
+        {#show project.finalReviews<br>#}
         {{ transres.projectReviewsEnabledLinkActions(project,project.finalReviews,cycle) }}
     {% endif %}
 
@@ -697,7 +696,7 @@
             cycle == "show" and
             reviewId and
             transres_util.isUserAllowedReview(review.vars.value) and
-            transres_util.isReviewable(review.vars.value)
+            transres_util.isReviewCorrespondsToState(review.vars.value)
         %}
             {#<p>#}
                 {#<a class="btn btn-primary"#}
@@ -706,22 +705,22 @@
             {#</p>#}
 
             {#addReviewButtons={{ addReviewButtons }}<br>#}
-            {% if addReviewButtons is defined and addReviewButtons %}
-                <p>
-                {{ transres.reviewEnabledLinkActionsHeader(project.vars.value,review.vars.value,cycle) }}
-                </p>
-            {% endif %}
+            {#{% if addReviewButtons is defined and addReviewButtons %}#}
+                {#<p>#}
+                {#{{ transres.reviewEnabledLinkActionsHeader(project.vars.value,review.vars.value,cycle) }}#}
+                {#</p>#}
+            {#{% endif %}#}
 
         {% endif %}
 
-        {% if reviewId %}
-            <p>
-                {% set actionLinks = transres_util.getResubmitButtons(review.vars.value) %}
-                {% for actionLink in actionLinks %}
-                    {{ actionLink|raw }}
-                {% endfor %}
-            </p>
-        {% endif %}
+        {#{% if reviewId %}#}
+            {#<p>#}
+                {#{% set actionLinks = transres_util.getResubmitButtons(review.vars.value) %}#}
+                {#{% for actionLink in actionLinks %}#}
+                    {#{{ actionLink|raw }}#}
+                {#{% endfor %}#}
+            {#</p>#}
+        {#{% endif %}#}
 
         {#reviewId={{ reviewId }}<br>#}
         {#project.vars.value.id={{ project.vars.value.id }}<br>#}

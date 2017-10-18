@@ -135,7 +135,7 @@ class ReviewBaseController extends Controller
         $review = $transresUtil->getReviewByReviewidAndState($reviewId,$stateStr);
         //echo "reviewID=".$review->getId();
 
-        if( $transresUtil->isUserAllowedReview($review) === false || $transresUtil->isReviewable($review) === false ) {
+        if( $transresUtil->isUserAllowedReview($review) === false || $transresUtil->isReviewCorrespondsToState($review) === false ) {
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 

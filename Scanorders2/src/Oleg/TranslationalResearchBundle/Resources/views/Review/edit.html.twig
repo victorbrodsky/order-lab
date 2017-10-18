@@ -60,7 +60,7 @@
     {#{% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': 'foo'} %}#}
     {#<div id="fos_comment_thread"></div>#}
 
-    {#{% if cycle == "show" and transres_util.isUserAllowedReview(review) and transres_util.isReviewable(review) %}#}
+    {#{% if cycle == "show" and transres_util.isUserAllowedReview(review) and transres_util.isReviewCorrespondsToState(review) %}#}
         {#<br>#}
         {#<p>#}
             {#<a class="btn btn-primary"#}

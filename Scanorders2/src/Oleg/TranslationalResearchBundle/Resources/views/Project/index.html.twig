@@ -113,9 +113,15 @@
                             </li>
 
                             {% if transres_util.isAdminOrPrimaryReviewer() or transres_util.isProjectReviewer(project) %}
-                            <li>
-                                <a href="{{ path(translationalresearch_sitename~'_project_review', { 'id': project.id }) }}" >Review Project</a>
-                            </li>
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_project_review', { 'id': project.id }) }}" >Review Project</a>
+                                </li>
+                            {% else %}
+                                {% if transres_util.isProjectStateRequesterResubmit(project) %}
+                                    <li>
+                                        <a href="{{ path(translationalresearch_sitename~'_project_review', { 'id': project.id }) }}" >Resubmit Project</a>
+                                    </li>
+                                {% endif %}
                             {% endif %}
 
                             {#add verification: requester => project is on the draft stage or in the reject stage#}
