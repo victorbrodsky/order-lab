@@ -204,6 +204,8 @@ class WorkflowController extends Controller
      */
     public function transitionAction( $transitionName, Project $project )
     {
+        exit("NOT USED PATH: translationalresearch_transition_action");
+
         $transresUtil = $this->container->get('transres_util');
         $transresUtil->setTransition($project,null,$transitionName);
 
@@ -221,7 +223,22 @@ class WorkflowController extends Controller
     public function transitionReviewAction( $transitionName, Project $project, $reviewId )
     {
         $transresUtil = $this->container->get('transres_util');
-        $transresUtil->setTransition($project,$reviewId,$transitionName);
+        $review = $transresUtil->getReviewByReviewidAndState($reviewId,$project->getState());
+
+        if( $transresUtil->isUserAllowedReview($review) === false || $transresUtil->isReviewable($review) === false ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+        }
+
+        echo $review->getId().": transitionName=".$transitionName."<br>";
+        //exit();
+
+        $transresUtil = $this->container->get('transres_util');
+
+        $to = null;
+        $testing = false;
+        //$testing = true;
+
+        $transresUtil->setTransition($project,$review,$transitionName,$to,$testing);
 
         //exit();
         return $this->redirectToRoute('translationalresearch_home');

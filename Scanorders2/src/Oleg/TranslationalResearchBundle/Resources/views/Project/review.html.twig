@@ -97,3 +97,38 @@
 
 {#{% endblock %}#}
 
+{% block additionaljs %}
+
+<script type="text/javascript">
+
+    $(document).ready(function() {
+
+        //transres-review-submit
+        $('.transres-review-submit').click(function(event) {
+            //console.log("btn click:");
+            //console.log($(this));
+            var reviewHolder = $(this).closest('.transres-review-holder');
+
+            var comment = reviewHolder.find('.fos_comment_comment_new_form').find('textarea').val();
+            console.log("comment="+comment);
+
+            if( comment ) {
+                reviewHolder.find('.fos_comment_comment_new_form').find('input[type="submit"]').click();
+            }
+
+            if( $(this).hasClass('btn-warning') && !comment ) {
+                alert('No comment is provided for requesting additional information');
+            }
+
+            console.log("done review");
+
+            return false;
+        });
+
+    });
+
+</script>
+
+{% endblock %}
+
+

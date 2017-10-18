@@ -263,33 +263,34 @@
     {% endif %}
 
 {% endmacro %}
-{% macro projectReviewsEnabledLinkActions_old(project,reviews,cycle) %}
-    {% set actionLinks = null %}
-    {% for review in reviews %}
+{#{% macro projectReviewsEnabledLinkActions_old(project,reviews,cycle) %}#}
+    {#{% set actionLinks = null %}#}
+    {#{% for review in reviews %}#}
         {#{{ transres.projectSingleReview(project,review,cycle,'transres-irbreviews','noprototype',sitename,showAddDeleteBtn,addReviewButtons) }}#}
         {#{{ transres.reviewEnabledLinkActionsHeader(project,review,cycle) }}#}
-        {% if
-            cycle == "show" and
-            review.id and
-            transres_util.isUserAllowedReview(review) and
-            transres_util.isReviewable(review)
-        %}
-            {% set actionLinks = transres_util.getReviewEnabledLinkActions(review) %}
-            {% for actionLink in actionLinks %}
-                    {{ actionLink|raw }}
-            {% endfor %}
-        {% endif %}
-    {% endfor %}
-    {% if cycle == "show" and actionLinks %}
-        {% if actionLinks|length > 0 %}
-            {% set threadId = project.vars.value.id ~ "-" ~ review.getStateStr() %}
-            {% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': threadId} %}
-        {% endif %}
-    {% endif %}
-{% endmacro %}
+        {#{% if#}
+            {#cycle == "show" and#}
+            {#review.id and#}
+            {#transres_util.isUserAllowedReview(review) and#}
+            {#transres_util.isReviewable(review)#}
+        {#%}#}
+            {#{% set actionLinks = transres_util.getReviewEnabledLinkActions(review) %}#}
+            {#{% for actionLink in actionLinks %}#}
+                    {#{{ actionLink|raw }}#}
+            {#{% endfor %}#}
+        {#{% endif %}#}
+    {#{% endfor %}#}
+    {#{% if cycle == "show" and actionLinks %}#}
+        {#{% if actionLinks|length > 0 %}#}
+            {#{% set threadId = project.vars.value.id ~ "-" ~ review.getStateStr() %}#}
+            {#{% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': threadId} %}#}
+        {#{% endif %}#}
+    {#{% endif %}#}
+{#{% endmacro %}#}
 
 {% macro projectReviewsEnabledLinkActions(project,reviews,cycle) %}
     {% set actionLinks = [] %}
+    {% set threadId = null %}
     {% for review in reviews %}
         {#{{ transres.projectSingleReview(project,review,cycle,'transres-irbreviews','noprototype',sitename,showAddDeleteBtn,addReviewButtons) }}#}
         {#{{ transres.reviewEnabledLinkActionsHeader(project,review,cycle) }}#}
@@ -301,10 +302,13 @@
         %}
             {% set actionReviewLinks = transres_util.getReviewEnabledLinkActions(review) %}
             {% set actionLinks = actionLinks|merge({ (loop.index0): actionReviewLinks}) %}
+
+            {% set threadId = project.id ~ "-" ~ review.getStateStr() %}
+            {#{% set threadIds = threadIds|merge({ (loop.index0): threadId}) %}#}
         {% endif %}
     {% endfor %}
-    {% if actionLinks and actionLinks|length > 0 %}
-        <div class="well">
+    {% if threadId and actionLinks|length > 0 %}
+        <div class="well transres-review-holder">
             {% for actionLink in actionLinks %}
                 <p>
                 {% for actionLinkSet in actionLink %}
@@ -312,7 +316,6 @@
                 {% endfor %}
                 </p>
             {% endfor %}
-            {% set threadId = project.vars.value.id ~ "-" ~ review.getStateStr() %}
             {% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': threadId} %}
         </div>
     {% endif %}
@@ -665,7 +668,7 @@
             {% endif %}
             <p>
                 {#Reviewed by {{ transres.userHtml(formreview.vars.value.reviewedBy) }} on {{ updatedate|date("m/d/Y H:i") }}#}
-                Reviewed {{ reviewedBy|raw }} on {{ updatedate|date("m/d/Y") }} at {{ updatedate|date("H:i") }}
+                Reviewed {{ reviewedBy|raw }} on {{ formreview.vars.value.updatedate|date("m/d/Y") }} at {{ formreview.vars.value.updatedate|date("H:i") }}
             </p>
         {% endif %}
 

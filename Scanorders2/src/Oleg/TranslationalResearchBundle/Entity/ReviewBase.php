@@ -278,4 +278,30 @@ class ReviewBase
             ", comment: ".$this->getComment();
         return $info;
     }
+
+    public function setDecisionByTransitionName( $transitionName ) {
+
+        //irb_review_approved => IRB Review Approved
+        //irb_review_rejected => IRB Review Rejected
+        //irb_review_missinginfo => IRB Review Missinginfo
+        //irb_review_resubmit => IRB Review Resubmit
+        $decision = null;
+
+        if( strpos($transitionName, "_approved") !== false ) {
+            $decision = "approved";
+        }
+        if( strpos($transitionName, "_missinginfo") !== false ) {
+            $decision = "missinginfo";
+        }
+        if( strpos($transitionName, "_rejected") !== false ) {
+            $decision = "rejected";
+        }
+        if( strpos($transitionName, "_resubmit") !== false ) {
+            $decision = null;
+        }
+
+        $this->setDecision($decision);
+
+        return null;
+    }
 }

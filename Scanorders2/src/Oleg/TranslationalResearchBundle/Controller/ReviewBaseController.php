@@ -124,14 +124,15 @@ class ReviewBaseController extends Controller
         $testing = false;
         //$testing = true;
 
-        $reviewEntityName = $transresUtil->getReviewClassNameByState($stateStr);
-        if( !$reviewEntityName ) {
-            throw $this->createNotFoundException('Unable to find Review Entity Name by state='.$stateStr);
-        }
-        $review = $em->getRepository('OlegTranslationalResearchBundle:'.$reviewEntityName)->find($reviewId);
-        if( !$review ) {
-            throw $this->createNotFoundException('Unable to find '.$reviewEntityName.' by id='.$reviewId);
-        }
+//        $reviewEntityName = $transresUtil->getReviewClassNameByState($stateStr);
+//        if( !$reviewEntityName ) {
+//            throw $this->createNotFoundException('Unable to find Review Entity Name by state='.$stateStr);
+//        }
+//        $review = $em->getRepository('OlegTranslationalResearchBundle:'.$reviewEntityName)->find($reviewId);
+//        if( !$review ) {
+//            throw $this->createNotFoundException('Unable to find '.$reviewEntityName.' by id='.$reviewId);
+//        }
+        $review = $transresUtil->getReviewByReviewidAndState($reviewId,$stateStr);
         //echo "reviewID=".$review->getId();
 
         if( $transresUtil->isUserAllowedReview($review) === false || $transresUtil->isReviewable($review) === false ) {

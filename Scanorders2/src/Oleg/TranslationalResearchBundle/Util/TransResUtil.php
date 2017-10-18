@@ -143,6 +143,7 @@ class TransResUtil
 
     //get links to change states: Reject IRB Review and Approve IRB Review (translationalresearch_transition_action)
     public function getReviewEnabledLinkActions( $review ) {
+        exit("get review links");
         $project = $review->getProject();
         $workflow = $this->container->get('state_machine.transres_project');
         $transitions = $workflow->getEnabledTransitions($project);
@@ -152,6 +153,12 @@ class TransResUtil
 
             //$this->printTransition($transition);
             $transitionName = $transition->getName();
+
+            if( $review->getStateStr() === "committee_review" ) {
+                if( strpos($transitionName, "missinginfo") !== false ) {
+                    continue;
+                }
+            }
 
             //$tos = $transition->getTos();
             $froms = $transition->getFroms();
@@ -188,7 +195,7 @@ class TransResUtil
 
         }//foreach
 
-        //echo "count=".count($links)."<br>";
+        echo "count=".count($links)."<br>";
 
         return $links;
     }
@@ -411,8 +418,18 @@ class TransResUtil
     }
 
     //change transition (by the $transitionName) of the project
-    public function setTransition( $project, $reviewId, $transitionName, $to=null ) {
+    public function setTransition( $project, $review, $transitionName, $to=null, $testing=false ) {
+
+        if( !$review ) {
+            throw $this->createNotFoundException('Review object does not exist');
+        }
+
+        if( !$review->getId() ) {
+            throw $this->createNotFoundException('Review object ID is null');
+        }
+
         //echo "transitionName=".$transitionName."<br>";
+        $user = $this->secTokenStorage->getToken()->getUser();
         $transresUtil = $this->container->get('transres_util');
         $workflow = $this->container->get('state_machine.transres_project');
 
@@ -430,32 +447,62 @@ class TransResUtil
         $label = $this->getTransitionLabelByName($transitionName);
         //echo "label=".$label."<br>";
 
+        $originalStateStr = $project->getState();
+
         // Update the currentState on the post
         if( $workflow->can($project, $transitionName) ) {
             try {
-                $originalState = $project->getState();
+
+                //$decision = $this->getDecisionByTransitionName($transitionName);
+                //$review->setDecision($decision);
+                $review->setDecisionByTransitionName($transitionName);
+
+                $review->setReviewedBy($user);
+
+                //check if like/dislike
+                if( $review->getStateStr() === "committee_review" ) {
+                    if( $review->getPrimaryReview() !== true ) {
+
+                        if( !$testing ) {
+                            $this->em->flush($review);
+                        }
+
+                        $recommended = true;
+
+                        //send notification emails
+                        $this->sendNotificationEmails($project,$review,$transitionName,$recommended,$testing);
+
+                        //event log
+                        $this->setEventLog($project,$review,$transitionName,$originalStateStr,$recommended,$testing);
+
+                        $this->container->get('session')->getFlashBag()->add(
+                            'notice',
+                            "Successful action: ".$label
+                        );
+
+                        return true;
+                    }
+                }
 
                 $workflow->apply($project, $transitionName);
                 //change state
                 $project->setState($to); //i.e. 'irb_review'
 
-                //set review state
-                $decision = $this->getDecisionByTransition($transitionName);
-                $review = $this->getReviewByProjectAndReviewidAndState($project,$reviewId,$originalState);
-
-                if( $review ) {
-                    $review->setDecision($decision);
-                } else {
-                    exit("Review not found: ID=".$reviewId);
-                }
-
                 //check and add reviewers for this state by role? Do it when project is created?
                 //$this->addDefaultStateReviewers($project);
 
                 //write to DB
-                $this->em->flush();
+                if( !$testing ) {
+                    $this->em->flush();
+                }
 
-                //send confirmation Emails
+                $recommended = false;
+
+                //send confirmation email
+                $this->sendNotificationEmails($project,$review,$transitionName,$recommended,$testing);
+
+                //event log
+                $this->setEventLog($project,$review,$transitionName,$originalStateStr,$recommended,$testing);
 
                 $this->container->get('session')->getFlashBag()->add(
                     'notice',
@@ -463,6 +510,9 @@ class TransResUtil
                 );
                 return true;
             } catch (LogicException $e) {
+
+                //event log
+
                 $this->container->get('session')->getFlashBag()->add(
                     'warning',
                     "Action failed: ".$label
@@ -838,95 +888,121 @@ class TransResUtil
             //initial stages
             case "to_draft":
                 $label = "Save Project as Draft";
+                $labeled = "Saved as Draft";
                 break;
             case "to_complete":
                 $label = "Complete Submission";
+                $labeled = "Completed Submission";
                 break;
             case "to_review":
                 $label = "Submit to IRB Review";
+                $labeled = "Submitted to IRB Review";
                 break;
             //final stages
             case "approved_closed":
                 $label = "Close Project";
+                $labeled = "Closed";
                 break;
             case "closed_approved":
                 $label = "Re-Open previously Final Approved Project";
+                $labeled = "Re-Opened (previously Final Approved Project)";
                 break;
 
 //            ///// Main Actions /////
             case "irb_review_approved":
                 $label = "Approve IRB Review";
+                $labeled = "Approved IRB Review";
                 break;
             case "irb_review_rejected":
                 $label = "Reject IRB Review";
+                $labeled = "Rejected IRB Review";
                 break;
             case "irb_review_missinginfo":
                 $label = "Request additional information from submitter for IRB Review";
+                $labeled = "Requested additional information from submitter for IRB Review";
                 break;
             case "irb_review_resubmit":
                 $label = "Resubmit to IRB Review";
+                $labeled = "Resubmitted to IRB Review";
                 break;
 
             case "admin_review_approved":
                 $label = "Approve Admin Review";
+                $labeled = "Approved Admin Review";
                 break;
             case "admin_review_rejected":
                 $label = "Reject Admin Review";
+                $labeled = "Rejected Admin Review";
                 break;
             case "admin_review_missinginfo":
                 $label = "Request additional information from submitter for Admin Review";
+                $labeled = "Requested additional information from submitter for Admin Review";
                 break;
             case "admin_review_resubmit":
                 $label = "Resubmit to Admin Review";
+                $labeled = "Resubmitted to Admin Review";
                 break;
 
             case "committee_review_approved":
                 $label = "Approve Committee Review";
+                $labeled = "Approved Committee Review";
                 if( method_exists($review, 'getPrimaryReview') ) {
                     if( $review->getPrimaryReview() === true ) {
                         $label = $label . " as Primary Reviewer";
+                        $labeled = $labeled . " as Primary Reviewer";
                     } else {
-                        $label = "Like";
+                        $label = "Recommend Approval Committee Review";
+                        $labeled = "Recommended Approval Committee Review";
                     }
                 }
                 break;
             case "committee_review_rejected":
                 $label = "Reject Committee Review";
+                $labeled = "Rejected Committee Review";
                 if( method_exists($review, 'getPrimaryReview') ) {
                     if( $review->getPrimaryReview() === true ) {
                         $label = $label . " as Primary Reviewer";
                     } else {
-                        $label = "Dislike";
+                        $label = "Recommend Reject Committee Review";
+                        $labeled = "Recommended Reject Committee Review";
                     }
                 }
                 break;
             case "committee_review_missinginfo":
                 $label = "Request additional information from submitter for Committee Review";
+                $labeled = "Requested additional information from submitter for Committee Review";
                 if( method_exists($review, 'getPrimaryReview') ) {
                     if( $review->getPrimaryReview() === true ) {
                         $label = $label . " as Primary Reviewer";
+                        $labeled = $labeled . " as Primary Reviewer";
                     }
                 }
                 break;
             case "committee_review_resubmit":
                 $label = "Resubmit to Committee Review";
+                $labeled = "Resubmitted to Committee Review";
                 break;
 
             case "final_review_approved":
                 $label = "Approve Final Review";
+                $labeled = "Approved Final Review";
                 break;
             case "final_review_rejected":
                 $label = "Reject Final Review";
+                $labeled = "Rejected Final Review";
                 break;
             case "final_review_missinginfo":
                 $label = "Request additional information from submitter for Final Review";
+                $labeled = "Requested additional information from submitter for Final Review";
                 break;
             case "final_review_resubmit":
                 $label = "Resubmit to Final Review";
+                $labeled = "Resubmitted to Final Review";
                 break;
 
             default:
                 $label = null;
+                $labeled = null;
         }
 
         if( $label ) {
@@ -1161,7 +1237,7 @@ class TransResUtil
         //irb_review_missinginfo => IRB Review Missinginfo
         //irb_review_resubmit => IRB Review Resubmit
         if( strpos($transitionName, "_approved") !== false ) {
-            return "btn btn-success";
+            return "btn btn-success transres-review-submit";
         }
         if( strpos($transitionName, "_missinginfo") !== false ) {
             return "btn btn-warning";
@@ -1176,53 +1252,81 @@ class TransResUtil
         return "btn btn-default";
     }
 
-    public function getDecisionByTransition( $transitionName ) {
+    //NOT USED
+//    public function getDecisionByTransitionName( $transitionName ) {
+//
+//        //irb_review_approved => IRB Review Approved
+//        //irb_review_rejected => IRB Review Rejected
+//        //irb_review_missinginfo => IRB Review Missinginfo
+//        //irb_review_resubmit => IRB Review Resubmit
+//        if( strpos($transitionName, "_approved") !== false ) {
+//            return "approved";
+//        }
+//        if( strpos($transitionName, "_missinginfo") !== false ) {
+//            return "missinginfo";
+//        }
+//        if( strpos($transitionName, "_rejected") !== false ) {
+//            return "rejected";
+//        }
+//        if( strpos($transitionName, "_resubmit") !== false ) {
+//            return null;
+//        }
+//
+//
+//        return null;
+//    }
 
-        //irb_review_approved => IRB Review Approved
-        //irb_review_rejected => IRB Review Rejected
-        //irb_review_missinginfo => IRB Review Missinginfo
-        //irb_review_resubmit => IRB Review Resubmit
-        if( strpos($transitionName, "_approved") !== false ) {
-            return "approved";
-        }
-        if( strpos($transitionName, "_missinginfo") !== false ) {
-            return "missinginfo";
-        }
-        if( strpos($transitionName, "_rejected") !== false ) {
-            return "rejected";
-        }
-        if( strpos($transitionName, "_resubmit") !== false ) {
-            return null;
-        }
-
-
-        return null;
-    }
-
-
-    public function getReviewByProjectAndReviewidAndState($project, $reviewId, $state) {
+    public function getReviewByReviewidAndState($reviewId, $state) {
 
         $reviewEntityName = $this->getReviewClassNameByState($state);
+        if( !$reviewEntityName ) {
+            throw $this->createNotFoundException('Unable to find Review Entity Name by state='.$state);
+        }
         //echo "reviewEntityName=".$reviewEntityName."<br>";
 
-        $reviewObjects = $this->findReviewObjectsByProjectAndAnyReviewers($reviewEntityName,$project,null,$reviewId);
-        //echo "reviewObjects count=".count($reviewObjects)."<br>";
-
-        if( count($reviewObjects) == 1 ) {
-            return $reviewObjects[0];
+        $reviewObject = $this->em->getRepository('OlegTranslationalResearchBundle:'.$reviewEntityName)->find($reviewId);
+        if( !$reviewObject ) {
+            throw $this->createNotFoundException('Unable to find '.$reviewEntityName.' by id='.$reviewId);
         }
 
-        if( count($reviewObjects) == 0 ) {
-            return null;
-        }
-
-        if( count($reviewObjects) > 1 ) {
-            //throw new \Exception("No single Review object $reviewEntityName founded: ID ".$reviewId);
-            return $reviewObjects[0];
-        }
-
-        return null;
+        return $reviewObject;
     }
+    //NOT USED
+//    public function getReviewByProjectAndReviewidAndState($project, $reviewId, $state) {
+//
+//        $reviewEntityName = $this->getReviewClassNameByState($state);
+//        if( !$reviewEntityName ) {
+//            throw $this->createNotFoundException('Unable to find Review Entity Name by state='.$state);
+//        }
+//        //echo "reviewEntityName=".$reviewEntityName."<br>";
+//
+//        if(1) {
+//            $reviewObject = $this->em->getRepository('OlegTranslationalResearchBundle:'.$reviewEntityName)->find($reviewId);
+//            if( !$reviewObject ) {
+//                throw $this->createNotFoundException('Unable to find '.$reviewEntityName.' by id='.$reviewId);
+//            }
+//            return $reviewObject;
+//        } else {
+//
+//            $reviewObjects = $this->findReviewObjectsByProjectAndAnyReviewers($reviewEntityName, $project, null, $reviewId);
+//            //echo "reviewObjects count=".count($reviewObjects)."<br>";
+//
+//            if (count($reviewObjects) == 1) {
+//                return $reviewObjects[0];
+//            }
+//
+//            if (count($reviewObjects) == 0) {
+//                return null;
+//            }
+//
+//            if (count($reviewObjects) > 1) {
+//                //throw new \Exception("No single Review object $reviewEntityName founded: ID ".$reviewId);
+//                return $reviewObjects[0];
+//            }
+//        }
+//
+//        return null;
+//    }
 
     //create a review form (for example, IrbReview form if logged in user is a reviewer or reviewer delegate)
     //1) if project is in the review state: irb_review, admin_review, committee_review or final_review
@@ -1437,8 +1541,13 @@ class TransResUtil
         $appliedTransition = $this->setProjectState($project,$review,$testing);
         //exit("exit appliedTransition=".$appliedTransition);
 
+        $recommended = false;
+        if( !$appliedTransition ) {
+            $recommended = true;
+        }
+
         //send notification emails
-        $this->sendNotificationEmails($project,$review,$appliedTransition,$testing);
+        $this->sendNotificationEmails($project,$review,$appliedTransition,$recommended,$testing);
 
 //        $workflow = $this->container->get('state_machine.transres_project');
 //        $transitions = $workflow->getEnabledTransitions($project);
@@ -1449,34 +1558,36 @@ class TransResUtil
 //        }
 //        $projectTransition = "Project transition " . implode(";",$transitionArr);
 
-        //Event Log
-        if( $appliedTransition ) {
-            $eventType = "Review Submitted";
-            $event = "Project's (ID# " . $project->getId() . ") review has been successfully submitted. ".$review->getSubmittedReviewerInfo();
+//        //Event Log
+//        if( $appliedTransition ) {
+//            $eventType = "Review Submitted";
+//            $event = "Project's (ID# " . $project->getId() . ") review has been successfully submitted. ".$review->getSubmittedReviewerInfo();
+//
+//            //testing
+//            echo "appliedTransition=" . $appliedTransition . "<br>";
+//            //echo "printTransition=".$this->printTransition($appliedTransition)."<br>";
+//
+//            $event .= ";<br> Project transitioned from '" . $this->getStateLabelByName($stateStr) . "'".
+//                " to '" . $this->getStateLabelByName($project->getState()) . "'";
+//            echo "event=".$event."<br>";
+//
+//            //exit('1');
+//
+//        } else {
+//            $eventType = "Review Submitting Not Performed";
+//            $event = "Project's (ID# " . $project->getId() . ") review submitting not performed. " . $review->getSubmittedReviewerInfo();
+//            $event .= ";<br> Project transitioned from '" . $this->getStateLabelByName($stateStr) . "'" .
+//                " to '" . $this->getStateLabelByName($project->getState()) . "'";
+//            echo "event=".$event."<br>";
+//
+//            //exit('2');
+//        }
+//
+//        $userSecUtil = $this->container->get('user_security_utility');
+//        $userSecUtil->createUserEditEvent($this->container->getParameter('translationalresearch.sitename'),$event,$user,$review,$request,$eventType);
 
-            //testing
-            echo "appliedTransition=" . $appliedTransition . "<br>";
-            //echo "printTransition=".$this->printTransition($appliedTransition)."<br>";
-
-            $event .= ";<br> Project transitioned from '" . $this->getStateLabelByName($stateStr) . "'".
-                " to '" . $this->getStateLabelByName($project->getState()) . "'";
-            echo "event=".$event."<br>";
-
-            //exit('1');
-
-        } else {
-            $eventType = "Review Submitting Not Performed";
-            $event = "Project's (ID# " . $project->getId() . ") review submitting not performed. " . $review->getSubmittedReviewerInfo();
-            $event .= ";<br> Project transitioned from '" . $this->getStateLabelByName($stateStr) . "'" .
-                " to '" . $this->getStateLabelByName($project->getState()) . "'";
-            echo "event=".$event."<br>";
-
-            //exit('2');
-        }
-
-        $userSecUtil = $this->container->get('user_security_utility');
-        $userSecUtil->createUserEditEvent($this->container->getParameter('translationalresearch.sitename'),$event,$user,$review,$request,$eventType);
-
+        //event log
+        $this->setEventLog($project,$review,$appliedTransition,$stateStr,$recommended,$testing);
     }
     //used by processProjectOnReviewUpdate
     public function setProjectState( $project, $review, $testing=false ) {
@@ -1595,7 +1706,40 @@ class TransResUtil
         return $appliedTransition;
     }
 
-    public function sendNotificationEmails($project,$review,$appliedTransition,$testing=false) {
+    //Event Log
+    public function setEventLog($project, $review, $appliedTransition, $originalStateStr, $recommended=false, $testing=false) {
+        $user = $this->secTokenStorage->getToken()->getUser();
+
+        if( $appliedTransition ) {
+            $eventType = "Review Submitted";
+            $event = "Project's (ID# " . $project->getId() . ") review has been successfully submitted. ".$review->getSubmittedReviewerInfo();
+
+            //testing
+            echo "appliedTransition=" . $appliedTransition . "<br>";
+            //echo "printTransition=".$this->printTransition($appliedTransition)."<br>";
+
+            $event .= ";<br> Project transitioned from '" . $this->getStateLabelByName($originalStateStr) . "'".
+                " to '" . $this->getStateLabelByName($project->getState()) . "'";
+            echo "event=".$event."<br>";
+
+            //exit('1');
+
+        } else {
+            $eventType = "Review Submitting Not Performed";
+            $event = "Project's (ID# " . $project->getId() . ") review submitting not performed. " . $review->getSubmittedReviewerInfo();
+            $event .= ";<br> Project transitioned from '" . $this->getStateLabelByName($originalStateStr) . "'" .
+                " to '" . $this->getStateLabelByName($project->getState()) . "'";
+            echo "event=".$event."<br>";
+
+            //exit('2');
+        }
+
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        $userSecUtil->createUserEditEvent($this->container->getParameter('translationalresearch.sitename'),$event,$user,$project,null,$eventType);
+    }
+
+    public function sendNotificationEmails($project, $review, $appliedTransition, $recommended=false, $testing=false) {
         if( !$appliedTransition ) {
             return null;
         }
@@ -1604,8 +1748,16 @@ class TransResUtil
 
         $senderEmail = null; //Admin email
         $emails = array();
-        $subject = "Project ID#".$project->getId()." sent to $appliedTransition";
-        $body = "Project ID#".$project->getId()." sent to $appliedTransition";
+
+        $label = $this->getTransitionLabelByName($appliedTransition,$review);
+
+        //if( $recommended ) {
+            $subject = "Project ID#".$project->getId()." has been set to $label";
+            $body = "Project ID#".$project->getId()." has been set to $label";
+//        } else {
+//            $subject = "Project ID#".$project->getId()." has been set to $label";
+//            $body = "Project ID#".$project->getId()." has been set to $label";
+//        }
 
 
         //send to the
