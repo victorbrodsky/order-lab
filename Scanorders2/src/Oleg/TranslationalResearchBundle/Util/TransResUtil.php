@@ -1550,6 +1550,7 @@ class TransResUtil
         return false;
     }
 
+    //return true if the project is in missinginfo state and logged in user is a requester or admin
     public function isProjectStateRequesterResubmit($project) {
         $stateStr = $this->getAllowedFromState($project);
         if( !$stateStr ) {
@@ -1557,6 +1558,9 @@ class TransResUtil
         }
 
         if( strpos($stateStr, "_missinginfo") !== false ) {
+            if ($this->isAdminOrPrimaryReviewer()) {
+                return true;
+            }
             if( $this->isProjectRequester($project) ) {
                 return true;
             }
@@ -1564,6 +1568,7 @@ class TransResUtil
         return false;
     }
 
+    //return true if the project is in review state and logged in user is a reviewer or admin
     public function isProjectStateReviewer($project,$user) {
 
         $stateStr = $this->getAllowedFromState($project); //must be equal to the current project state
@@ -1586,8 +1591,13 @@ class TransResUtil
             $reviews = $project->getFinalReviews();
         }
 
-        if( $this->isReviewsReviewer($user,$reviews) ) {
-            return true;
+        if( count($reviews) > 0 ) {
+            if ($this->isAdminOrPrimaryReviewer()) {
+                return true;
+            }
+            if ($this->isReviewsReviewer($user, $reviews)) {
+                return true;
+            }
         }
 
         return false;

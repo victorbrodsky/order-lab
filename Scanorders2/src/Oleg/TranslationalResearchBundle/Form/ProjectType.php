@@ -111,11 +111,11 @@ class ProjectType extends AbstractType
             },
         ));
 
-        $builder->add('oid', null, array(
-            'label' => "Project ID:",
-            'disabled' => ($this->params['admin'] ? false : true),
-            'attr' => array('class'=>'form-control')
-        ));
+//        $builder->add('oid', null, array(
+//            'label' => "Project ID:",
+//            'disabled' => ($this->params['admin'] ? false : true),
+//            'attr' => array('class'=>'form-control')
+//        ));
 
 //        if( $this->project->getUpdateDate() ) {
 //            $builder->add('updateDatCreate Date:e', 'date', array(

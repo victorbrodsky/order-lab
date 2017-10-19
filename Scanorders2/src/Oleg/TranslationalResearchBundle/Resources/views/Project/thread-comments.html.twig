@@ -92,17 +92,17 @@
 {#middle js#}
 {#{% block mainjs %}#}
 
-    <script type="text/javascript">
+    {#<script type="text/javascript">#}
 
-        $(document).ready(function() {
+        {#$(document).ready(function() {#}
 
-            $('.fos_comment_submit').find("input").click(function(event) {
-                console.log("btn click:");
-                console.log($(this));
-                $(this).closest('.fos_comment_comment_new_form').submit();
-            });
+            {#$('.fos_comment_submit').find("input").click(function(event) {#}
+                {#console.log("btn click:");#}
+                {#console.log($(this));#}
+                {#$(this).closest('.fos_comment_comment_new_form').submit();#}
+            {#});#}
 
-        });
+        {#});#}
 
 //        function fosCommentSubmit(event) {
 //
@@ -131,7 +131,7 @@
 //            };
 //        }
 
-    </script>
+{#    </script>#}
 
 {#{% endblock %}#}
 

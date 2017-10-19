@@ -55,12 +55,12 @@
 
     <div>
 
-        {% if is_granted('ROLE_TRANSRES_ADMIN') %}
-            <br>
-            <p>
-                <a class="btn btn-warning" href="{{ path(translationalresearch_sitename~'_project_edit', { 'id': project.id }) }}">Edit project</a>
-            </p>
-        {% endif %}
+        {#{% if is_granted('ROLE_TRANSRES_ADMIN') %}#}
+            {#<br>#}
+            {#<p>#}
+                {#<a class="btn btn-warning" href="{{ path(translationalresearch_sitename~'_project_edit', { 'id': project.id }) }}">Edit project</a>#}
+            {#</p>#}
+        {#{% endif %}#}
         {#{{ transres.projectHeader(project) }}#}
 
         <br>
@@ -118,6 +118,7 @@
 
             if( $(this).hasClass('btn-warning') && !comment ) {
                 alert('No comment is provided for requesting additional information');
+                return false;
             }
 
             console.log("done review");
@@ -131,4 +132,10 @@
 
 {% endblock %}
 
+
+{#{% block additionalcss %}#}
+    {#{% stylesheets '@FOSCommentBundle/Resources/public/css/comments.css' %}#}
+    {#<link rel="stylesheet" href="{{ asset_url }}" type="text/css" />#}
+    {#{% endstylesheets %}#}
+{#{% endblock %}#}
 

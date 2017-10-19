@@ -33,7 +33,6 @@
     {#'@OlegUserdirectoryBundle/Resources/public/jquery/jquery-3.2.1.min.js'#}
 
     {% javascripts
-    '@OlegUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'
     '@OlegUserdirectoryBundle/Resources/public/bootstrap/js/*'
     '@OlegUserdirectoryBundle/Resources/public/ladda/spin.min.js'
     '@OlegUserdirectoryBundle/Resources/public/ladda/ladda.min.js'
@@ -78,8 +77,24 @@
 {% endblock %}
 
 {% block additionalcss %}
-    {% stylesheets '@FOSCommentBundle/Resources/public/css/comments.css' %}
-        <link rel="stylesheet" href="{{ asset_url }}" type="text/css" />
+    {#{% stylesheets '@FOSCommentBundle/Resources/public/css/comments.css' %}#}
+        {#<link rel="stylesheet" href="{{ asset_url }}" type="text/css" />#}
+    {#{% endstylesheets %}#}
+
+    {% stylesheets
+        'bundles/olegtranslationalresearch/form/css/comments.css' filter='cssrewrite'
+    %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
+
+{% endblock %}
+
+{% block headeradditionaljs %}
+    {#jquery is required before {% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': threadId} %}#}
+    {% javascripts
+        '@OlegUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 {% endblock %}
 

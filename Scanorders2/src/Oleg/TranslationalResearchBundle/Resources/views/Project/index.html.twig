@@ -113,9 +113,11 @@
                             </li>
 
                             {% if transres_util.isAdminOrPrimaryReviewer() or transres_util.isProjectReviewer(project) %}
+                                {% if transres_util.isProjectStateReviewer(project,app.user) %}
                                 <li>
                                     <a href="{{ path(translationalresearch_sitename~'_project_review', { 'id': project.id }) }} " target="_blank">Review Project</a>
                                 </li>
+                                {% endif %}
                             {% else %}
                                 {% if transres_util.isProjectStateRequesterResubmit(project) %}
                                     <li>
