@@ -113,7 +113,7 @@ class ProjectType extends AbstractType
 
         $builder->add('oid', null, array(
             'label' => "Project ID:",
-            'disabled' => ($this->params['admin'] ? false : true),,
+            'disabled' => ($this->params['admin'] ? false : true),
             'attr' => array('class'=>'form-control')
         ));
 
