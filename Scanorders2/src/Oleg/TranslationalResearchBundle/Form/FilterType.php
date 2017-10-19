@@ -45,7 +45,7 @@ class FilterType extends AbstractType
             'class' => 'OlegTranslationalResearchBundle:SpecialtyList',
             'choice_label' => 'name',
             'label'=>'Project Specialty',
-            'disabled' => ($this->params['admin'] ? false : true),
+            //'disabled' => ($this->params['admin'] ? false : true),
             'required'=> false,
             'multiple' => false,
             'attr' => array('class'=>'combobox combobox-width'),
