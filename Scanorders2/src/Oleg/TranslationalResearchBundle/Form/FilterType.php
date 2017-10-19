@@ -43,8 +43,8 @@ class FilterType extends AbstractType
 
         $builder->add( 'projectSpecialty', EntityType::class, array(
             'class' => 'OlegTranslationalResearchBundle:SpecialtyList',
-            'choice_label' => 'name',
-            'label'=>'Project Specialty',
+            //'choice_label' => 'name',
+            'label' => false,   //'Project Specialty',
             //'disabled' => ($this->params['admin'] ? false : true),
             'required'=> false,
             'multiple' => false,
