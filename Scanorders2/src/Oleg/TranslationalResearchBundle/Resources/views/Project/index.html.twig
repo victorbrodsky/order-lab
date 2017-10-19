@@ -11,6 +11,30 @@
         {{ title }}
     </h4>
 
+    <div class="well form-search">
+        {{ form_start(filterform) }}
+            <div class="row">
+                <div class="col-xs-4">
+                    {{ form_row(filterform.projectSpecialty, {'attr': {'placeholder': 'Specialty'}}) }}
+                </div>
+                <div class="col-xs-4">
+                    {{ form_row(filterform.search,{'attr': {'placeholder': 'Search'}}) }}
+                </div>
+                <div class="col-xs-4">
+                    {{ form_row(filterform.search, {'attr': {'placeholder': 'State'}}) }}
+                </div>
+                <div class="col-xs-2">
+                    <div class="btn-group btn-group-justified">
+                        <div class="btn-group">
+                            <button type="submit" id="filter-btn" class="btn btn-sm btn-default"><i class="icon-search"></i>Filter</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {{ form_end(filterform) }}
+    </div>
+    <br>
+
     {#<table class="table table-hover table-condensed text-left table-bordered">#}
     <table class="records_list table table-condensed text-left my-table-class">
         <thead>

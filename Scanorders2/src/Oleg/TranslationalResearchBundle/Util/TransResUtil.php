@@ -1275,13 +1275,13 @@ class TransResUtil
             return "btn btn-success transres-review-submit";
         }
         if( strpos($transitionName, "_missinginfo") !== false ) {
-            return "btn btn-warning";
+            return "btn btn-warning transres-review-submit";
         }
         if( strpos($transitionName, "_rejected") !== false ) {
-            return "btn btn-danger";
+            return "btn btn-danger transres-review-submit";
         }
         if( strpos($transitionName, "_resubmit") !== false ) {
-            return "btn btn-success";
+            return "btn btn-success transres-review-submit";
         }
 
         return "btn btn-default";

@@ -77,9 +77,9 @@
 {% endblock %}
 
 {% block additionalcss %}
-    {#{% stylesheets '@FOSCommentBundle/Resources/public/css/comments.css' %}#}
-        {#<link rel="stylesheet" href="{{ asset_url }}" type="text/css" />#}
-    {#{% endstylesheets %}#}
+    {% stylesheets '@FOSCommentBundle/Resources/public/css/comments.css' %}
+        <link rel="stylesheet" href="{{ asset_url }}" type="text/css" />
+    {% endstylesheets %}
 
     {% stylesheets
         'bundles/olegtranslationalresearch/form/css/comments.css' filter='cssrewrite'

@@ -20,6 +20,7 @@ namespace Oleg\TranslationalResearchBundle\Controller;
 //use Graphp\GraphViz\GraphViz;
 use Doctrine\Common\Collections\ArrayCollection;
 use Oleg\TranslationalResearchBundle\Entity\Project;
+use Oleg\TranslationalResearchBundle\Form\FilterType;
 use Oleg\TranslationalResearchBundle\Form\ProjectStateType;
 use Oleg\TranslationalResearchBundle\Form\ProjectType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -65,6 +66,7 @@ class ProjectController extends Controller
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
+        $transresUtil = $this->container->get('transres_util');
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $routeName = $request->get('_route');
@@ -80,6 +82,25 @@ class ProjectController extends Controller
         $dql->leftJoin('principalInvestigators.infos','principalInvestigatorsInfos');
 
         $dqlParameters = array();
+
+        //create filter
+        $stateChoiceArr = $transresUtil->getStateChoisesArr();
+        $params = array('stateChoiceArr'=>$stateChoiceArr);
+        $filterform = $this->createForm(FilterType::class, null,array(
+            'method' => 'GET',
+            'form_custom_value'=>$params
+        ));
+
+        $filterform->handleRequest($request);
+
+        $projectSpecialty = $filterform['projectSpecialty']->getData();
+        $search = $filterform['search']->getData();
+        $states = $filterform['state']->getData();
+//        $archived = $filterform['completed']->getData();
+//        $complete = $filterform['review']->getData();
+//        $interviewee = $filterform['missinginfo']->getData();
+//        $active = $filterform['approved']->getData();
+//        $reject = $filterform['closed']->getData();
 
         if( $routeName == "translationalresearch_my_project_index" ) {
             $dql->leftJoin('project.coInvestigators','coInvestigators');
@@ -156,7 +177,8 @@ class ProjectController extends Controller
 
         return array(
             'projects' => $projects,
-            'title' => $title
+            'title' => $title,
+            'filterform' => $filterform->createView()
         );
     }
 
