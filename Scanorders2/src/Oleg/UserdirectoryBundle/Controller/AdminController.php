@@ -8053,7 +8053,7 @@ class AdminController extends Controller
 
     public function setFormNodeVersion() {
         $em = $this->getDoctrine()->getManager();
-        $query = $em->createQuery("UPDATE OlegUserdirectoryBundle:FormNode node SET node.version = '1' WHERE node.version = 'NULL' OR node.version IS NULL");
+        $query = $em->createQuery("UPDATE OlegUserdirectoryBundle:FormNode node SET node.version = '1' WHERE node.version IS NULL");
         $numUpdated = $query->execute();
         return "set formnode versions count ".$numUpdated;
     }
