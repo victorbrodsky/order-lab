@@ -26,6 +26,7 @@ namespace Oleg\TranslationalResearchBundle\Controller;
 
 
 use Oleg\TranslationalResearchBundle\Entity\Project;
+use Oleg\TranslationalResearchBundle\Entity\SpecialtyList;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -42,11 +43,34 @@ class ProjectFormNodeController extends ProjectController
     /**
      * Creates a new project entity with formnode.
      *
-     * @Route("/project/new", name="translationalresearch_project_new")
+     * @Route("/project/new", name="translationalresearch_project_new_selector")
+     * @Template("OlegTranslationalResearchBundle:Project:new-project-selector.html.twig")
+     * @Method({"GET", "POST"})
+     */
+    public function newProjectSelectorAction(Request $request)
+    {
+        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER')) {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $specialties = $em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->findBy( array('type' => array("default","user-added")) );
+
+        return array(
+            'specialties' => $specialties,
+            'title' => "New Project Selector"
+        );
+    }
+
+
+    /**
+     * Creates a new project entity with formnode.
+     *
+     * @Route("/project/new/{specialty}", name="translationalresearch_project_new")
      * @Template("OlegTranslationalResearchBundle:Project:new.html.twig")
      * @Method({"GET", "POST"})
      */
-    public function newFormNodeAction(Request $request)
+    public function newFormNodeAction(Request $request, SpecialtyList $specialty)
     {
         if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER')) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
@@ -78,6 +102,8 @@ class ProjectFormNodeController extends ProjectController
 //        $project->setMessageCategory($messageCategory);
 
         $project = $this->createProjectEntity($user,null);
+
+        $project->setProjectSpecialty($specialty);
 
 //        $defaultReviewersAdded = false;
 //        if(
@@ -142,6 +168,9 @@ class ProjectFormNodeController extends ProjectController
 
             if( !$testing ) {
                 $em->persist($project);
+                $em->flush();
+
+                $project->generateOid();
                 $em->flush();
             }
 
@@ -304,7 +333,7 @@ class ProjectFormNodeController extends ProjectController
             'edit_form' => $form->createView(),
             'cycle' => $cycle,
             'formtype' => $formtype,
-            'title' => "Edit Project ID ".$project->getId(),
+            'title' => "Edit Project ID ".$project->getOid(),
             'triggerSearch' => 0,
             'formnodetrigger' => $formnodetrigger,
             'formnodeTopHolderId' => $formnodeTopHolderId,

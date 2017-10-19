@@ -18,6 +18,13 @@
                         {{ formmacros.field(form.state) }}
                     {% endif %}
 
+                    {% if form.oid is defined %}
+                        {{ formmacros.field(form.oid) }}
+                    {% endif %}
+                    {% if form.projectSpecialty is defined %}
+                        {{ formmacros.field(form.projectSpecialty) }}
+                    {% endif %}
+
                     {% if form.approvalDate is defined %}
                         {{ formmacros.field(form.approvalDate) }}
                     {% endif %}

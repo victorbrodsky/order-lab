@@ -145,6 +145,7 @@ class ListController extends Controller
      * @Route("/list/object-type-radio-buttons/", name="objecttyperadiobuttons-list")
      * @Route("/list/life-forms/", name="lifeforms-list")
      * @Route("/list/position-track-types/", name="positiontracktypes-list")
+     * @Route("/list/translational-research-project-specialties/", name="transresprojectspecialties-list")
      *
      *
      * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
@@ -446,6 +447,7 @@ class ListController extends Controller
      * @Route("/list/object-type-radio-buttons/", name="objecttyperadiobuttons_create")
      * @Route("/list/life-forms/", name="lifeforms_create")
      * @Route("/list/position-track-types/", name="positiontracktypes_create")
+     * @Route("/list/translational-research-project-specialties/", name="transresprojectspecialties_create")
      *
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -632,6 +634,7 @@ class ListController extends Controller
      * @Route("/list/object-type-radio-buttons/new", name="objecttyperadiobuttons_new")
      * @Route("/list/life-forms/new", name="lifeforms_new")
      * @Route("/list/position-track-types/new", name="positiontracktypes_new")
+     * @Route("/list/translational-research-project-specialties/new", name="transresprojectspecialties_new")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -788,6 +791,7 @@ class ListController extends Controller
      * @Route("/list/object-type-radio-buttons/{id}", name="objecttyperadiobuttons_show")
      * @Route("/list/life-forms/{id}", name="lifeforms_show")
      * @Route("/list/position-track-types/{id}", name="positiontracktypes_show")
+     * @Route("/list/translational-research-project-specialties/{id}", name="transresprojectspecialties_show")
      *
      *
      * @Method("GET")
@@ -935,6 +939,7 @@ class ListController extends Controller
      * @Route("/list/object-type-radio-buttons/{id}/edit", name="objecttyperadiobuttons_edit")
      * @Route("/list/life-forms/{id}/edit", name="lifeforms_edit")
      * @Route("/list/position-track-types/{id}/edit", name="positiontracktypes_edit")
+     * @Route("/list/translational-research-project-specialties/{id}/edit", name="transresprojectspecialties_edit")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -1125,6 +1130,7 @@ class ListController extends Controller
      * @Route("/list/object-type-radio-buttons/{id}", name="objecttyperadiobuttons_update")
      * @Route("/list/life-forms/{id}", name="lifeforms_update")
      * @Route("/list/position-track-types/{id}", name="positiontracktypes_update")
+     * @Route("/list/translational-research-project-specialties/{id}", name="transresprojectspecialties_update")
      *
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -1857,6 +1863,11 @@ class ListController extends Controller
                 $className = "PositionTrackTypeList";
                 $displayName = "Position Track Type List";
                 break;
+            case "transresprojectspecialties":
+                $className = "SpecialtyList";
+                $displayName = "Translational Research Project Specialty List";
+                $bundleName = "TranslationalResearchBundle";
+                break;
 
 //            case "employees_locations":
 //                $className = "Location";
@@ -2032,6 +2043,7 @@ class ListController extends Controller
      * @Route("/list/object-type-radio-buttons/{id}", name="objecttyperadiobuttons_delete")
      * @Route("/list/life-forms/{id}", name="lifeforms_delete")
      * @Route("/list/position-track-types/{id}", name="positiontracktypes_delete")
+     * @Route("/list/translational-research-project-specialties/{id}", name="transresprojectspecialties_delete")
      *
      *
      * @Method("DELETE")

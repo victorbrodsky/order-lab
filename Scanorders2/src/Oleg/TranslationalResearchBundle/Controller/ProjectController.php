@@ -244,7 +244,7 @@ class ProjectController extends Controller
             'project' => $project,
             'form' => $form->createView(),
             'cycle' => $cycle,
-            'title' => "Project ID ".$project->getId(),
+            'title' => "Project ID ".$project->getOid(),
             'delete_form' => $deleteForm->createView(),
             //'review_forms' => $reviewFormViews
         );
@@ -285,7 +285,7 @@ class ProjectController extends Controller
             'project' => $project,
             'form' => $form->createView(),
             'cycle' => $cycle,
-            'title' => "Review Project ID ".$project->getId(),
+            'title' => "Review Project ID ".$project->getOid(),
             'delete_form' => $deleteForm->createView(),
             //'review_forms' => $reviewFormViews
         );
@@ -399,7 +399,7 @@ class ProjectController extends Controller
             'edit_form' => $editForm->createView(),
             'cycle' => $cycle,
             'delete_form' => $deleteForm->createView(),
-            'title' => "Edit Project ID ".$project->getId()
+            'title' => "Edit Project ID ".$project->getOid()
         );
     }
 
@@ -597,7 +597,7 @@ class ProjectController extends Controller
             'project' => $project,
             'form' => $form->createView(),
             'cycle' => $cycle,
-            'title' => "Set State for Project ID ".$project->getId()
+            'title' => "Set State for Project ID ".$project->getOid()
         );
     }
 

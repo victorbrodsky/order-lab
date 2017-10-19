@@ -21,6 +21,7 @@ namespace Oleg\UserdirectoryBundle\Controller;
 use Oleg\FellAppBundle\Entity\FellAppRank;
 use Oleg\FellAppBundle\Entity\FellAppStatus;
 use Oleg\FellAppBundle\Entity\LanguageProficiency;
+use Oleg\TranslationalResearchBundle\Entity\SpecialtyList;
 use Oleg\UserdirectoryBundle\Entity\AuthorshipRoles;
 use Oleg\UserdirectoryBundle\Entity\BloodProductTransfusedList;
 use Oleg\UserdirectoryBundle\Entity\BloodTypeList;
@@ -722,6 +723,7 @@ class AdminController extends Controller
         $count_generatePathologyResultSignatoriesList = $this->generatePathologyResultSignatoriesList();
         $count_setFormNodeVersion = $this->setFormNodeVersion();
         $count_generateLifeForm = $this->generateLifeForm();
+        $count_generateTransResProjectSpecialty = $this->generateTransResProjectSpecialty();
 
         $count_generatePlatformListManagerList = $this->generatePlatformListManagerList();
 
@@ -813,6 +815,7 @@ class AdminController extends Controller
             'PathologyResultSignatoriesList='.$count_generatePathologyResultSignatoriesList.', '.
             'FormNodeVersion='.$count_setFormNodeVersion.', '.
             'LifeForms='.$count_generateLifeForm.', '.
+            'TransResProjectSpecialty='.$count_generateTransResProjectSpecialty.', '.
             'PlatformListManagerList='.$count_generatePlatformListManagerList.', '.
 
             ' (Note: -1 means that this table is already exists)';
@@ -7865,6 +7868,37 @@ class AdminController extends Controller
             }
 
             $listEntity = new LifeFormList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            //exit('exit generateObjectTypeActions');
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+    public function generateTransResProjectSpecialty() {
+
+        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "HemePath",
+            "AP/CP"
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new SpecialtyList();
             $this->setDefaultList($listEntity,$count,$username,$name);
 
             //exit('exit generateObjectTypeActions');

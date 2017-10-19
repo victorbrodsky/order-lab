@@ -92,6 +92,31 @@ class ProjectType extends AbstractType
             ));
         }
 
+        $builder->add( 'projectSpecialty', EntityType::class, array(
+            'class' => 'OlegTranslationalResearchBundle:SpecialtyList',
+            'choice_label' => 'name',
+            'label'=>'Project Specialty:',
+            'disabled' => true,
+            'required'=> false,
+            'multiple' => false,
+            'attr' => array('class'=>'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->orderBy("list.orderinlist","ASC")
+                    ->setParameters( array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
+            },
+        ));
+
+//        $builder->add('oid', null, array(
+//            'label' => "Project ID:",
+//            //'disabled' => true,
+//            'attr' => array('class'=>'form-control')
+//        ));
+
 //        if( $this->project->getUpdateDate() ) {
 //            $builder->add('updateDatCreate Date:e', 'date', array(
 //                'widget' => 'single_text',

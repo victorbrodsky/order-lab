@@ -71,12 +71,17 @@ class Project {
     private $institution;
 
     /**
-     * oid - id of the original order. Required for amend logic.
-     * When Amend order, switch orders to keep the original id and at newly created order set oid of the original order
      * @var string
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     private $oid;
+
+    /**
+     * MessageCategory with subcategory (parent-children hierarchy)
+     *
+     * @ORM\ManyToOne(targetEntity="Oleg\TranslationalResearchBundle\Entity\SpecialtyList", cascade={"persist"})
+     */
+    private $projectSpecialty;
 
     /**
      * MessageCategory with subcategory (parent-children hierarchy)
@@ -931,6 +936,22 @@ class Project {
         $this->oid = $oid;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getProjectSpecialty()
+    {
+        return $this->projectSpecialty;
+    }
+
+    /**
+     * @param mixed $projectSpecialty
+     */
+    public function setProjectSpecialty($projectSpecialty)
+    {
+        $this->projectSpecialty = $projectSpecialty;
+    }
+
 
     //show the name of the form (from the form hierarchy) that was used to generate this submitted message.
     // Make sure to save this form ID of the form linked from the Message Type at the time of message submission
@@ -946,6 +967,21 @@ class Project {
 
     public function isEditable() {
         return true;
+    }
+
+    /**
+     * "HEMEPATH-ID" or "APCP-ID"
+     * @param string $oid
+     */
+    public function generateOid()
+    {
+        if( $this->getProjectSpecialty() ) {
+            $projectSpecialty = $this->getProjectSpecialty();
+            $projectSpecialty = str_replace("/","",$projectSpecialty);
+            $projectSpecialty = strtoupper($projectSpecialty);
+        }
+        $oid = $projectSpecialty . "-" . $this->getId();
+        $this->setOid($oid);
     }
 
     public function __toString() {

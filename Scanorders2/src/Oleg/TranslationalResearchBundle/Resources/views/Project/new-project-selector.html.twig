@@ -1,0 +1,22 @@
+{% extends "OlegTranslationalResearchBundle::Default/base.html.twig" %}
+
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block content %}
+    <h4 class="text-info" align="center">
+        {{ title }}
+    </h4>
+    <br>
+
+
+    {% for specialty in specialties %}
+        <p>
+            <a class="btn btn-primary" href="{{ path(translationalresearch_sitename~'_project_new',{'specialty':specialty.id}) }}">New {{ specialty.name }} Project</a>
+        </p>
+    {% endfor %}
+
+{% endblock %}
