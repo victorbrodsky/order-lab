@@ -148,12 +148,12 @@
                                     <a href="{{ path(translationalresearch_sitename~'_project_review', { 'id': project.id }) }} " target="_blank">Review Project</a>
                                 </li>
                                 {% endif %}
-                            {% else %}
-                                {% if transres_util.isProjectStateRequesterResubmit(project) %}
-                                    <li>
-                                        <a href="{{ path(translationalresearch_sitename~'_project_review', { 'id': project.id }) }}" target="_blank">Resubmit Project</a>
-                                    </li>
-                                {% endif %}
+                            {% endif %}
+
+                            {% if transres_util.isProjectStateRequesterResubmit(project) %}
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_project_review', { 'id': project.id }) }}" target="_blank">Resubmit Project</a>
+                                </li>
                             {% endif %}
 
                             {#add verification: requester => project is on the draft stage or in the reject stage#}
