@@ -709,11 +709,15 @@ class ProjectController extends Controller
 
         if( $thread ) {
             $thread->setCommentable(false);
+            $comments = $this->container->get('fos_comment.manager.comment')->findCommentTreeByThread($thread);
+        } else {
+            $comments = array();
         }
 
-        $comments = $this->container->get('fos_comment.manager.comment')->findCommentTreeByThread($thread);
-
-        //echo "commets count=".count($comments)."<br>";
+        //echo "comments count=".count($comments)."<br>";
+        //if( count($comments) == 0 ) {
+            //exit('stop');
+        //}
 
         return array(
             'comments' => $comments,

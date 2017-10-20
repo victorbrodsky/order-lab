@@ -408,7 +408,7 @@
 
 
 
-{% macro projectReviews(project, cycle, sitename, addReviewButtons) %}
+{% macro projectReviews(project, cycle, sitename, showComments) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
     {% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
@@ -436,8 +436,8 @@
         {#{% set reviews = project.finalReviews %}#}
     {#{% endif %}#}
 
-    {% if addReviewButtons is not defined %}
-        {% set addReviewButtons = 0 %}
+    {% if showComments is not defined %}
+        {% set showComments = 0 %}
     {% endif %}
 
     {% set showIrbReview = 1 %}
@@ -468,12 +468,12 @@
                             {#count irb reviewers={{ project.irbReviews|length }}<br>#}
                             {% for review in project.irbReviews %}
                                 {#show review with reviewer={{ review.vars.value.reviewer.getUsernameOptimal }}<br>#}
-                                {{ transres.projectSingleReview(project,review,cycle,'transres-irbreviews','noprototype',sitename,showAddDeleteBtn,addReviewButtons) }}
+                                {{ transres.projectSingleReview(project,review,cycle,'transres-irbreviews','noprototype',sitename,showAddDeleteBtn) }}
                             {% endfor %}
 
-                            {% if cycle == "edit" %}
+                            {% if showComments == 1 %}
                                 {% if project.irbReviews|length > 0 %}
-                                    {% set threadId = project.vars.value.id ~ "-" ~ project.irbReviews|first.getStateStr() %}
+                                    {% set threadId = project.vars.value.id ~ "-" ~ project.vars.value.irbReviews|first.getStateStr() %}
                                     {{ render(controller('OlegTranslationalResearchBundle:Project:threadCommentsShow', { 'id': threadId })) }}
                                 {% endif %}
                             {% endif %}
@@ -506,12 +506,12 @@
                         <div class="transres-adminreviews-holder">
 
                             {% for review in project.adminReviews %}
-                                {{ transres.projectSingleReview(project,review,cycle,'transres-adminreviews','noprototype',sitename,showAddDeleteBtn,addReviewButtons) }}
+                                {{ transres.projectSingleReview(project,review,cycle,'transres-adminreviews','noprototype',sitename,showAddDeleteBtn) }}
                             {% endfor %}
 
-                            {% if cycle == "edit" %}
+                            {% if showComments == 1 %}
                                 {% if project.adminReviews|length > 0 %}
-                                    {% set threadId = project.vars.value.id ~ "-" ~ project.adminReviews|first.getStateStr() %}
+                                    {% set threadId = project.vars.value.id ~ "-" ~ project.vars.value.adminReviews|first.getStateStr() %}
                                     {{ render(controller('OlegTranslationalResearchBundle:Project:threadCommentsShow', { 'id': threadId })) }}
                                 {% endif %}
                             {% endif %}
@@ -544,12 +544,12 @@
                         <div class="transres-committeereviews-holder">
 
                             {% for review in project.committeeReviews %}
-                                {{ transres.projectSingleReview(project,review,cycle,'transres-committeereviews','noprototype',sitename,showAddDeleteBtn,addReviewButtons) }}
+                                {{ transres.projectSingleReview(project,review,cycle,'transres-committeereviews','noprototype',sitename,showAddDeleteBtn) }}
                             {% endfor %}
 
-                            {% if cycle == "edit" %}
+                            {% if showComments == 1 %}
                                 {% if project.committeeReviews|length > 0 %}
-                                    {% set threadId = project.vars.value.id ~ "-" ~ project.committeeReviews|first.getStateStr() %}
+                                    {% set threadId = project.vars.value.id ~ "-" ~ project.vars.value.committeeReviews|first.getStateStr() %}
                                     {{ render(controller('OlegTranslationalResearchBundle:Project:threadCommentsShow', { 'id': threadId })) }}
                                 {% endif %}
                             {% endif %}
@@ -582,12 +582,12 @@
                         <div class="transres-finalreviews-holder">
 
                             {% for review in project.finalReviews %}
-                                {{ transres.projectSingleReview(project,review,cycle,'transres-finalreviews','noprototype',sitename,showAddDeleteBtn,addReviewButtons) }}
+                                {{ transres.projectSingleReview(project,review,cycle,'transres-finalreviews','noprototype',sitename,showAddDeleteBtn) }}
                             {% endfor %}
 
-                            {% if cycle == "edit" %}
+                            {% if showComments == 1 %}
                                 {% if project.finalReviews|length > 0 %}
-                                    {% set threadId = project.vars.value.id ~ "-" ~ project.finalReviews|first.getStateStr() %}
+                                    {% set threadId = project.vars.value.id ~ "-" ~ project.vars.value.finalReviews|first.getStateStr() %}
                                     {{ render(controller('OlegTranslationalResearchBundle:Project:threadCommentsShow', { 'id': threadId })) }}
                                 {% endif %}
                             {% endif %}
@@ -606,17 +606,12 @@
 
 {% endmacro %}
 
-{% macro projectSingleReview( project, review, cycle, classname, prototype, sitename, showAddDeleteBtn, addReviewButtons ) %}
+{% macro projectSingleReview( project, review, cycle, classname, prototype, sitename, showAddDeleteBtn ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
 
     {% if showAddDeleteBtn is not defined %}
         {% set showAddDeleteBtn = 0 %}
-    {% endif %}
-
-    {% if addReviewButtons is not defined %}
-        {#addReviewButtons is not set!!!<br>#}
-        {% set addReviewButtons = 0 %}
     {% endif %}
 
     {% set reviewId = null %}
