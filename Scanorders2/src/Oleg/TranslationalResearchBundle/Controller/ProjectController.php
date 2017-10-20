@@ -78,12 +78,13 @@ class ProjectController extends Controller
         $dql =  $repository->createQueryBuilder("project");
         $dql->select('project');
 
+        $dql->leftJoin('project.submitter','submitter');
         $dql->leftJoin('project.principalInvestigators','principalInvestigators');
         $dql->leftJoin('principalInvestigators.infos','principalInvestigatorsInfos');
 
         $dqlParameters = array();
 
-        //create filter
+        //////// create filter //////////
         $stateChoiceArr = $transresUtil->getStateChoisesArr();
         $params = array('stateChoiceArr'=>$stateChoiceArr);
         $filterform = $this->createForm(FilterType::class, null,array(
@@ -94,21 +95,56 @@ class ProjectController extends Controller
         $filterform->handleRequest($request);
 
         $projectSpecialty = $filterform['projectSpecialty']->getData();
-        $search = $filterform['search']->getData();
         $states = $filterform['state']->getData();
+        $principalInvestigators = $filterform['principalInvestigators']->getData();
+        $submitter = $filterform['submitter']->getData();
+        //$search = $filterform['search']->getData();
 //        $archived = $filterform['completed']->getData();
 //        $complete = $filterform['review']->getData();
 //        $interviewee = $filterform['missinginfo']->getData();
 //        $active = $filterform['approved']->getData();
 //        $reject = $filterform['closed']->getData();
+        //////// EOF create filter //////////
+
+        if( $projectSpecialty ) {
+            $dql->leftJoin('project.projectSpecialty','projectSpecialty');
+            $dql->andWhere("projectSpecialty.id = :projectSpecialtyId");
+            $dqlParameters["projectSpecialtyId"] = $projectSpecialty->getId();
+        }
+
+        //echo "count states=".count($states)."<br>";
+        if( $states && count($states)>0 ) {
+            $dql->andWhere("project.state IN (:states)");
+            $dqlParameters["states"] = implode(",",$states);
+        }
+
+//        if( $search ) {
+//            $dql->andWhere("project.state LIKE '%:search%'");
+//            $dqlParameters["search"] = $search;
+//        }
+
+        if( $principalInvestigators && count($principalInvestigators)>0 ) {
+            $dql->andWhere("principalInvestigators.id IN (:principalInvestigators)");
+            $principalInvestigatorsIdsArr = array();
+            foreach($principalInvestigators as $principalInvestigator) {
+                $principalInvestigatorsIdsArr[] = $principalInvestigator->getId();
+            }
+            $dqlParameters["principalInvestigators"] = implode(",",$principalInvestigatorsIdsArr);
+        }
+
+        if( $submitter ) {
+            //echo "submitter=".$submitter->getId()."<br>";
+            $dql->andWhere("submitter.id = :submitterId");
+            $dqlParameters["submitterId"] = $submitter->getId();
+        }
+
 
         if( $routeName == "translationalresearch_my_project_index" ) {
             $dql->leftJoin('project.coInvestigators','coInvestigators');
             $dql->leftJoin('project.pathologists','pathologists');
             $dql->leftJoin('project.contacts','contacts');
-            $dql->leftJoin('project.submitter','submitter');
 
-            $dql->where(
+            $dql->andWhere(
                 "principalInvestigators.id = :userId OR ".
                 "coInvestigators.id = :userId OR ".
                 "pathologists.id = :userId OR ".
@@ -137,7 +173,7 @@ class ProjectController extends Controller
             $dql->leftJoin('finalReviews.reviewer','finalReviewer');
             $dql->leftJoin('finalReviews.reviewerDelegate','finalReviewerDelegate');
 
-            $dql->where(
+            $dql->andWhere(
                 "irbReviewer.id = :userId OR ".
                 "irbReviewerDelegate.id = :userId OR ".
 
@@ -161,6 +197,8 @@ class ProjectController extends Controller
         if( count($dqlParameters) > 0 ) {
             $query->setParameters($dqlParameters);
         }
+
+        //echo "query=".$query->getSql()."<br>";
 
         $paginationParams = array(
             'defaultSortFieldName' => 'project.id',

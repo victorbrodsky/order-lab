@@ -15,20 +15,26 @@
         {{ form_start(filterform) }}
             <div class="row">
                 <div class="col-xs-2">
-                    {{ form_row(filterform.projectSpecialty, {'attr': {'placeholder': 'Specialty'}}) }}
+                    {{ form_widget(filterform.projectSpecialty, {'attr': {'placeholder': 'Specialty'}}) }}
                 </div>
                 <div class="col-xs-4">
-                    {{ form_row(filterform.state,{'attr': {'placeholder': 'State'}}) }}
+                    {{ form_widget(filterform.state,{'attr': {'placeholder': 'State'}}) }}
                 </div>
-                <div class="col-xs-4">
-                    {{ form_row(filterform.state, {'attr': {'placeholder': 'Search'}}) }}
+                {#<div class="col-xs-4">#}
+                    {#{{ form_widget(filterform.search, {'attr': {'placeholder': 'Search'}}) }}#}
+                {#</div>#}
+                <div class="col-xs-2">
+                    {{ form_widget(filterform.principalInvestigators, {'attr': {'placeholder': 'Principal Investigators'}}) }}
                 </div>
                 <div class="col-xs-2">
-                    <div class="btn-group btn-group-justified">
-                        <div class="btn-group">
-                            <button type="submit" id="filter-btn" class="btn btn-sm btn-default"><i class="icon-search"></i>Filter</button>
-                        </div>
-                    </div>
+                    {{ form_widget(filterform.submitter, {'attr': {'placeholder': 'Submitter'}}) }}
+                </div>
+                <div class="col-xs-2">
+                    {#<div class="btn-group btn-group-justified">#}
+                        {#<div class="btn-group">#}
+                            <button type="submit" id="filter-btn" class="btn btn-sm btn-default">Filter</button>
+                        {#</div>#}
+                    {#</div>#}
                 </div>
             </div>
         {{ form_end(filterform) }}

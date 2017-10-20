@@ -60,11 +60,11 @@ class FilterType extends AbstractType
             },
         ));
         
-        $builder->add('search', TextType::class, array(
-            'required'=>false,
-            'label' => false,
-            'attr' => array('class'=>'form-control form-control-modif limit-font-size submit-on-enter-field'),
-        ));
+//        $builder->add('search', TextType::class, array(
+//            'required'=>false,
+//            'label' => false,
+//            'attr' => array('class'=>'form-control form-control-modif limit-font-size submit-on-enter-field'),
+//        ));
 
         $builder->add('state',ChoiceType::class, array(
             'label' => false,
@@ -72,6 +72,38 @@ class FilterType extends AbstractType
             'multiple' => true,
             'choices' => $this->params['stateChoiceArr'],
             'attr' => array('class' => 'combobox'),
+        ));
+
+        $builder->add( 'principalInvestigators', EntityType::class, array(
+            'class' => 'OlegUserdirectoryBundle:User',
+            'label'=> false,    //"Principal Investigator(s):",
+            'required'=> false,
+            'multiple' => true,
+            'attr' => array('class'=>'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->leftJoin("list.employmentStatus", "employmentStatus")
+                    ->leftJoin("employmentStatus.employmentType", "employmentType")
+                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+                    ->leftJoin("list.infos", "infos")
+                    ->orderBy("infos.displayName","ASC");
+            },
+        ));
+
+        $builder->add( 'submitter', EntityType::class, array(
+            'class' => 'OlegUserdirectoryBundle:User',
+            'label'=> false,
+            'required'=> false,
+            'multiple' => false,
+            'attr' => array('class'=>'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->leftJoin("list.employmentStatus", "employmentStatus")
+                    ->leftJoin("employmentStatus.employmentType", "employmentType")
+                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+                    ->leftJoin("list.infos", "infos")
+                    ->orderBy("infos.displayName","ASC");
+            },
         ));
 
 //        $builder->add('completed', CheckboxType::class, array(
