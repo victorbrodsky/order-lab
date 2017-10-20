@@ -40,5 +40,32 @@ class SpecialtyList extends ListAbstract
      **/
     protected $original;
 
+    //new-ap-cp-project
+    public function getNewProjectUrlPrefix() {
+        if( $this->getAbbreviation() ) {
+            $name = $this->getAbbreviation();
+        } else {
+            $name = $this->getName();
+        }
+        //return "new-".$name."-project"; //new-ap-cp-project
+        return $name."-project"; //ap-cp-project
+    }
+    //new-ap-cp-project => ap-cp
+    //ap-cp-project => ap-cp
+    static public function getProjectAbbreviationFromUrlPrefix($urlPrefix) {
+        $urlPrefix = str_replace("new-","",$urlPrefix);
+        $urlPrefix = str_replace("-project","",$urlPrefix);
+        return $urlPrefix;
+    }
+
+    //New AP/CP Project
+    public function getNewProjectName() {
+        if( $this->getName() ) {
+            $name = $this->getName();
+        } else {
+            $name = "UnknownSpecialty";
+        }
+        return "New ".$name." Project";
+    }
 
 }

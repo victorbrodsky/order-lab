@@ -7886,12 +7886,12 @@ class AdminController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
-            "HemePath",
-            "AP/CP"
+            "HemePath" => "hemepath",
+            "AP/CP" => "ap-cp"
         );
 
         $count = 10;
-        foreach( $types as $name ) {
+        foreach( $types as $name => $abbreviation ) {
 
             $listEntity = $em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->findOneByName($name);
             if( $listEntity ) {
@@ -7900,6 +7900,8 @@ class AdminController extends Controller
 
             $listEntity = new SpecialtyList();
             $this->setDefaultList($listEntity,$count,$username,$name);
+
+            $listEntity->setAbbreviation($abbreviation);
 
             //exit('exit generateObjectTypeActions');
             $em->persist($listEntity);

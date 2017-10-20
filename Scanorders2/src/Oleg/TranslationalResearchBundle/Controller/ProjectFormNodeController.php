@@ -53,8 +53,8 @@ class ProjectFormNodeController extends ProjectController
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
-        $em = $this->getDoctrine()->getManager();
-        $specialties = $em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->findBy( array('type' => array("default","user-added")) );
+        $transresUtil = $this->container->get('transres_util');
+        $specialties = $transresUtil->getTransResProjectSpecialties();
 
         return array(
             'specialties' => $specialties,
@@ -70,17 +70,26 @@ class ProjectFormNodeController extends ProjectController
      * @Template("OlegTranslationalResearchBundle:Project:new.html.twig")
      * @Method({"GET", "POST"})
      */
-    public function newFormNodeAction(Request $request, SpecialtyList $specialty)
+    public function newFormNodeAction(Request $request, $specialty)
     {
         if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER')) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
-
         $transresUtil = $this->container->get('transres_util');
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
         $cycle = "new";
+
+        //$specialty is a url prefix (i.e. "new-ap-cp-project")
+        $specialtyAbbreviation = SpecialtyList::getProjectAbbreviationFromUrlPrefix($specialty);
+        if( !$specialtyAbbreviation ) {
+            throw new \Exception( "Project specialty abbreviation is not found by name '".$specialty."'" );
+        }
+        $specialty = $em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation($specialtyAbbreviation);
+        if( !$specialty ) {
+            throw new \Exception( "Project specialty is not found by name '".$specialtyAbbreviation."'" );
+        }
 
         $testing = false;
         //$testing = true;

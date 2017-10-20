@@ -50,7 +50,15 @@
                         </a>
                     </li>
 
-                    <li id="nav-bar-translationalresearch-new-project"><a href="{{ path(translationalresearch_sitename~'_project_new_selector') }}">New Project</a></li>
+                    {% set specialties = transres_util.getTransResProjectSpecialties() %}
+                    {% for specialty in specialties %}
+                        <li id="nav-bar-translationalresearch-new-project-{{ specialty.getNewProjectUrlPrefix() }}">
+                            <a href="{{ path(translationalresearch_sitename~'_project_new',{'specialty':specialty.getNewProjectUrlPrefix()}) }}">{{ specialty.getNewProjectName() }}</a>
+                        </li>
+                        {#<li id="nav-bar-translationalresearch-new-project-apcp">#}
+                            {#<a href="{{ path(translationalresearch_sitename~'_project_new') }}">New AP/CP Project</a>#}
+                        {#</li>#}
+                    {% endfor %}
 
                     {% if is_granted('ROLE_TRANSRES_REQUESTER') %}
                     <li id="nav-bar-translationalresearch-my-projects"><a href="{{ path(translationalresearch_sitename~'_my_project_index') }}">My Projects</a></li>

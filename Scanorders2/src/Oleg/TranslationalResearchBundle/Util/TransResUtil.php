@@ -2065,4 +2065,13 @@ class TransResUtil
         return $users;
     }
 
+    public function getTransResProjectSpecialties() {
+        $specialties = $this->em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->findBy(
+            array(
+                'type' => array("default","user-added")
+            )
+        );
+        return $specialties;
+    }
+
 }

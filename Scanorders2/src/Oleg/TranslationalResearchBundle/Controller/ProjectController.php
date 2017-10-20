@@ -42,7 +42,7 @@ class ProjectController extends Controller
 {
 
     /**
-     * @Route("/project/home/", name="translationalresearch_home")
+     * @Route("/", name="translationalresearch_home")
      * @Method("GET")
      */
     public function homeAction()
