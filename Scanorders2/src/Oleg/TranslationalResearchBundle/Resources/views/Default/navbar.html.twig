@@ -50,24 +50,23 @@
                         </a>
                     </li>
 
-                    {% set specialties = transres_util.getTransResProjectSpecialties() %}
-                    {% for specialty in specialties %}
-                        <li id="nav-bar-translationalresearch-new-project-{{ specialty.getNewProjectUrlPrefix() }}">
-                            <a href="{{ path(translationalresearch_sitename~'_project_new',{'specialty':specialty.getNewProjectUrlPrefix()}) }}">{{ specialty.getNewProjectName() }}</a>
-                        </li>
-                        {#<li id="nav-bar-translationalresearch-new-project-apcp">#}
-                            {#<a href="{{ path(translationalresearch_sitename~'_project_new') }}">New AP/CP Project</a>#}
-                        {#</li>#}
-                    {% endfor %}
+                    {% if is_granted('ROLE_TRANSRES_REQUESTER') %}
+                        {% set specialties = transres_util.getTransResProjectSpecialties() %}
+                        {% for specialty in specialties %}
+                            <li id="nav-bar-translationalresearch-new-project-{{ specialty.getNewProjectUrlPrefix() }}">
+                                <a href="{{ path(translationalresearch_sitename~'_project_new',{'specialty':specialty.getNewProjectUrlPrefix()}) }}">{{ specialty.getNewProjectName() }}</a>
+                            </li>
+                        {% endfor %}
+                    {% endif %}
 
                     {% if is_granted('ROLE_TRANSRES_REQUESTER') %}
-                    <li id="nav-bar-translationalresearch-my-projects"><a href="{{ path(translationalresearch_sitename~'_my_project_index') }}">My Projects</a></li>
+                        <li id="nav-bar-translationalresearch-my-projects"><a href="{{ path(translationalresearch_sitename~'_my_project_index') }}">My Projects</a></li>
                     {% endif %}
 
                     {% if is_granted('ROLE_TRANSRES_ADMIN') %}
-                    <li id="nav-bar-translationalresearch-my-review-projects"><a href="{{ path(translationalresearch_sitename~'_my_review_project_index') }}">Projects Assigned To Me For Review</a></li>
+                        <li id="nav-bar-translationalresearch-my-review-projects"><a href="{{ path(translationalresearch_sitename~'_my_review_project_index') }}">Projects Assigned To Me For Review</a></li>
 
-                    <li id="nav-bar-translationalresearch-default-reviewers"><a href="{{ path(translationalresearch_sitename~'_default-reviewer_index') }}">Default Reviewers</a></li>
+                        <li id="nav-bar-translationalresearch-default-reviewers"><a href="{{ path(translationalresearch_sitename~'_default-reviewer_index') }}">Default Reviewers</a></li>
                     {% endif %}
 
                     <li id="nav-bar-translationalresearch-project-workflow"><a href="{{ path(translationalresearch_sitename~'_workflow_show') }}" target="_blank">Workflow</a></li>
