@@ -142,6 +142,7 @@
                                 <a href="{{ path(translationalresearch_sitename~'_project_show', { 'id': project.id }) }}" target="_blank">Show Project</a>
                             </li>
 
+
                             {% if transres_util.isAdminOrPrimaryReviewer() or transres_util.isProjectReviewer(project) %}
                                 {% if transres_util.isProjectStateReviewer(project,app.user) %}
                                 <li>
@@ -152,7 +153,7 @@
 
                             {% if transres_util.isProjectStateRequesterResubmit(project) %}
                                 <li>
-                                    <a href="{{ path(translationalresearch_sitename~'_project_review', { 'id': project.id }) }}" target="_blank">Resubmit Project</a>
+                                    <a href="{{ path(translationalresearch_sitename~'_project_resubmit', { 'id': project.id }) }}" target="_blank">Resubmit Project</a>
                                 </li>
                             {% endif %}
 
@@ -169,18 +170,16 @@
                                 {#</li>#}
                             {#{% endif %}#}
 
-                            {#<li>#}
-                                {#<a href="{{ path(translationalresearch_sitename~'_to_irb_review', { 'id': project.id }) }}" target="_blank">To IRB Review</a>#}
-                            {#</li>#}
-                            {% set actionLinks = transres_util.getProjectReviewLinks(project,app.user) %}
-                            {% if actionLinks|length > 0 %}
-                                <li class="divider"></li>
-                            {% endif %}
-                            {% for actionLink in actionLinks %}
-                                <li>
-                                    {{ actionLink|raw }}
-                                </li>
-                            {% endfor %}
+                            {#{% set actionLinks = transres_util.getProjectReviewLinks(project,app.user) %}#}
+                            {#{% if actionLinks|length > 0 %}#}
+                                {#<li class="divider"></li>#}
+                            {#{% endif %}#}
+                            {#{% for actionLink in actionLinks %}#}
+                                {#<li>#}
+                                    {#{{ actionLink|raw }}#}
+                                {#</li>#}
+                            {#{% endfor %}#}
+
                             {#{% if actionLinks|length > 0 %}#}
                                 {#<li>#}
                                     {#<a href="{{ path(translationalresearch_sitename~'_project_review', { 'id': project.id }) }}" target="_blank">Review Project</a>#}

@@ -229,21 +229,21 @@ class ReviewBase
         $this->status = $status;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getComment()
-    {
-        return $this->comment;
-    }
-
-    /**
-     * @param mixed $comment
-     */
-    public function setComment($comment)
-    {
-        $this->comment = $comment;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getComment()
+//    {
+//        return $this->comment;
+//    }
+//
+//    /**
+//     * @param mixed $comment
+//     */
+//    public function setComment($comment)
+//    {
+//        $this->comment = $comment;
+//    }
 
     /**
      * @return mixed
@@ -272,10 +272,10 @@ class ReviewBase
             $decision = "Pending";
         }
         $info =
-            "Decision: ".$decision.
+            "Decision: ".ucwords($decision).
             ", submitted by ".$this->getReviewedBy().
-            " on ".$this->getUpdatedate()->format('m/d/Y H:i:s').
-            ", comment: ".$this->getComment();
+            " on ".$this->getUpdatedate()->format('m/d/Y H:i:s');
+            //", comment: ".$this->getComment();
         return $info;
     }
 

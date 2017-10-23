@@ -318,7 +318,7 @@ class ProjectType extends AbstractType
         //Reviews
         //echo "showIrbReviewer=".$this->params['showIrbReviewer']."<br>";
         if( $this->params['showIrbReviewer'] ) {
-            //echo "show irb<br>";
+            //echo "show irb_review<br>";
             $this->params['stateStr'] = "irb_review";
             $this->params['standAlone'] = false;
             $builder->add('irbReviews', CollectionType::class, array(
@@ -338,6 +338,7 @@ class ProjectType extends AbstractType
         }
 
         if( $this->params['showAdminReviewer'] ) {
+            //echo "show admin_review<br>";
             $this->params['stateStr'] = "admin_review";
             $this->params['standAlone'] = false;
             $builder->add('adminReviews', CollectionType::class, array(
@@ -357,6 +358,7 @@ class ProjectType extends AbstractType
         }
 
         if( $this->params['showCommitteeReviewer'] ) {
+            //echo "show committee_review<br>";
             $this->params['stateStr'] = "committee_review";
             $this->params['standAlone'] = false;
             $builder->add('committeeReviews', CollectionType::class, array(
@@ -376,6 +378,7 @@ class ProjectType extends AbstractType
         }
 
         if( $this->params['showFinalReviewer'] ) {
+            //echo "show final_review<br>";
             $this->params['stateStr'] = "final_review";
             $this->params['standAlone'] = false;
             $builder->add('finalReviews', CollectionType::class, array(

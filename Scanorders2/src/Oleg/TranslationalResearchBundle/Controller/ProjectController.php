@@ -47,6 +47,10 @@ class ProjectController extends Controller
      */
     public function homeAction()
     {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+        }
+
         return $this->redirectToRoute('translationalresearch_project_index');
     }
 
@@ -233,6 +237,10 @@ class ProjectController extends Controller
     {
         exit("This is a simple Project form not used. We use a formnode project fields instead.");
 
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+        }
+
         $transresUtil = $this->container->get('transres_util');
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
@@ -285,6 +293,10 @@ class ProjectController extends Controller
      */
     public function showAction(Request $request, Project $project)
     {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+        }
+
         //$transresUtil = $this->container->get('transres_util');
         //$em = $this->getDoctrine()->getManager();
         //$user = $this->get('security.token_storage')->getToken()->getUser();
@@ -318,7 +330,7 @@ class ProjectController extends Controller
     }
 
     /**
-     * Finds and displays a project entity.
+     * Finds and displays a review form for this project entity.
      *
      * @Route("/project/review/{id}", name="translationalresearch_project_review")
      * @Template("OlegTranslationalResearchBundle:Project:review.html.twig")
@@ -326,6 +338,18 @@ class ProjectController extends Controller
      */
     public function reviewAction(Request $request, Project $project)
     {
+        $transresUtil = $this->container->get('transres_util');
+
+        if(
+            $transresUtil->isAdminOrPrimaryReviewer() ||
+            $transresUtil->isProjectReviewer($project)
+        ) {
+            //ok
+        } else {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
+
         //$transresUtil = $this->container->get('transres_util');
         //$em = $this->getDoctrine()->getManager();
         //$user = $this->get('security.token_storage')->getToken()->getUser();
@@ -359,6 +383,38 @@ class ProjectController extends Controller
     }
 
     /**
+     * Finds and displays a resubmit form for this project entity.
+     *
+     * @Route("/project/resubmit/{id}", name="translationalresearch_project_resubmit")
+     * @Template("OlegTranslationalResearchBundle:Project:review.html.twig")
+     * @Method("GET")
+     */
+    public function resubmitAction(Request $request, Project $project)
+    {
+        $transresUtil = $this->container->get('transres_util');
+
+        if(
+            $transresUtil->isAdminOrPrimaryReviewer() ||
+            $transresUtil->isProjectStateRequesterResubmit($project)
+        ) {
+            //ok
+        } else {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
+        $cycle = "show";
+
+        $form = $this->createProjectForm($project,$cycle,$request); //show
+
+        return array(
+            'project' => $project,
+            'form' => $form->createView(),
+            'cycle' => $cycle,
+            'title' => "Resubmit Project ID ".$project->getOid(),
+        );
+    }
+
+    /**
      * Displays a form to edit an existing project entity.
      *
      * @Route("/project/{id}/simple/edit", name="translationalresearch_project_simple_edit")
@@ -367,6 +423,28 @@ class ProjectController extends Controller
      */
     public function editAction(Request $request, Project $project)
     {
+        $transresUtil = $this->container->get('transres_util');
+
+        if(
+            $transresUtil->isAdminOrPrimaryReviewer() ||
+            $transresUtil->isProjectEditableByRequester($project)
+        ) {
+            //ok
+        } else {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
+        $transresUtil = $this->container->get('transres_util');
+
+        if(
+            $transresUtil->isAdminOrPrimaryReviewer() ||
+            $transresUtil->isProjectEditableByRequester($project)
+        ) {
+            //ok
+        } else {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
         //TODO: add the verification if the logged in user can edit the project:
         //1) requester => project is on the draft stage or in the reject stage
         //2) admin => any stage
@@ -476,6 +554,20 @@ class ProjectController extends Controller
      */
     public function deleteAction(Request $request, Project $project)
     {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+        }
+
+        $transresUtil = $this->container->get('transres_util');
+
+        if(
+            $transresUtil->isAdminOrPrimaryReviewer()
+        ) {
+            //ok
+        } else {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
         $form = $this->createDeleteForm($project);
         $form->handleRequest($request);
 
@@ -537,6 +629,12 @@ class ProjectController extends Controller
         } else {
             //TODO: do not add reviewers
         }
+
+        //testing
+        //s$params['showIrbReviewer'] = false;
+        //$params['showAdminReviewer'] = false;
+        //$params['showCommitteeReviewer'] = false;
+        //$params['showFinalReviewer'] = false;
 
         //show if owner
 //        if( $transresUtil->isProjectReviewer($user,$project->getIrbReviews()) ) {
@@ -668,6 +766,10 @@ class ProjectController extends Controller
      */
     public function threadCommentsAction(Request $request, $id)
     {
+        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER')) {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
         //$id = 'thread_id';
         $thread = $this->container->get('fos_comment.manager.thread')->findThreadById($id);
         if (null === $thread) {
@@ -696,6 +798,14 @@ class ProjectController extends Controller
      */
     public function threadCommentsShowAction(Request $request, $id)
     {
+        //echo "comments id=".$id."<br>";
+        //exit('1');
+
+        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER')) {
+            //exit("comments no permission");
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
         //$id = 'thread_id';
         $thread = $this->container->get('fos_comment.manager.thread')->findThreadById($id);
 //        if (null === $thread) {

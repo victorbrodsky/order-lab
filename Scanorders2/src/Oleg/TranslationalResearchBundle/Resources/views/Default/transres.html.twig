@@ -465,6 +465,7 @@
                     <div class="panel-body">
                         <div class="transres-irbreviews-holder">
 
+
                             {#count irb reviewers={{ project.irbReviews|length }}<br>#}
                             {% for review in project.irbReviews %}
                                 {#show review with reviewer={{ review.vars.value.reviewer.getUsernameOptimal }}<br>#}
@@ -474,6 +475,7 @@
                             {% if showComments == 1 %}
                                 {% if project.irbReviews|length > 0 %}
                                     {% set threadId = project.vars.value.id ~ "-" ~ project.vars.value.irbReviews|first.getStateStr() %}
+                                    {#irb threadId={{ threadId }}<br>#}
                                     {{ render(controller('OlegTranslationalResearchBundle:Project:threadCommentsShow', { 'id': threadId })) }}
                                 {% endif %}
                             {% endif %}

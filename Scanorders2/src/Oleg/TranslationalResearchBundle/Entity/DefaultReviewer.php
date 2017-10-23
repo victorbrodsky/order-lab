@@ -260,19 +260,19 @@ class DefaultReviewer
 
         if( $this->getState() == "irb_review" ) {
             $roles['reviewer'] = "ROLE_TRANSRES_IRB_REVIEWER";
-            $roles['reviewerDelegate'] = "ROLE_TRANSRES_IRB_REVIEWER_DELEGATE";
+            //$roles['reviewerDelegate'] = "ROLE_TRANSRES_IRB_REVIEWER_DELEGATE";
         }
         if( $this->getState() == "admin_review" ) {
             $roles['reviewer'] = "ROLE_TRANSRES_ADMIN";
-            $roles['reviewerDelegate'] = null;  //"ROLE_TRANSRES_ADMIN_DELEGATE";
+            //$roles['reviewerDelegate'] = null;  //"ROLE_TRANSRES_ADMIN_DELEGATE";
         }
         if( $this->getState() == "committee_review" ) {
             $roles['reviewer'] = "ROLE_TRANSRES_COMMITTEE_REVIEWER";
-            $roles['reviewerDelegate'] = "ROLE_TRANSRES_COMMITTEE_REVIEWER_DELEGATE";
+            //$roles['reviewerDelegate'] = "ROLE_TRANSRES_COMMITTEE_REVIEWER_DELEGATE";
         }
         if( $this->getState() == "final_review" ) {
             $roles['reviewer'] = "ROLE_TRANSRES_PRIMARY_REVIEWER";
-            $roles['reviewerDelegate'] = "ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE";
+            //$roles['reviewerDelegate'] = "ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE";
         }
 
         return $roles;

@@ -149,6 +149,7 @@ class TransResUtil
         $project = $review->getProject();
         $workflow = $this->container->get('state_machine.transres_project');
         $transitions = $workflow->getEnabledTransitions($project);
+        $user = $this->secTokenStorage->getToken()->getUser();
 
         $links = array();
 
@@ -156,6 +157,18 @@ class TransResUtil
         if( $this->isReviewCorrespondsToState($review) === false ) {
             //echo "Review ".$review->getStateStr()." does not corresponds to state=".$project->getState()."<br>";
             return $links;
+        }
+
+        //if not admin - check if the logged in user is a reviewer for this review object (show committee review links according to the assigned reviewer)
+        if( $this->isAdminOrPrimaryReviewer() === false ) {
+            if ($this->isReviewsReviewer($user, array($review)) === false) {
+                return $links;
+            }
+        }
+
+        //add current state of the review object
+        if( $review->getDecision() ) {
+            $links[] = "<p>(Current " . $review->getSubmittedReviewerInfo() . ")</p>";
         }
 
 //        $stateStr = $this->getAllowedFromState($project);
@@ -178,11 +191,20 @@ class TransResUtil
 
             //$this->printTransition($transition);
             $transitionName = $transition->getName();
+            //echo "transitionName=".$transitionName."<br>";
+
+            if( $this->isExceptionTransition($transitionName) === true ) {
+                continue;
+            }
 
             if( $review->getStateStr() === "committee_review" ) {
                 if( strpos($transitionName, "missinginfo") !== false ) {
                     continue;
                 }
+            }
+
+            if( false === $this->isUserAllowedFromThisStateByProjectOrReview($project,$review) ) {
+                continue;
             }
 
             //$tos = $transition->getTos();
@@ -194,9 +216,9 @@ class TransResUtil
 //                if( false === $this->isUserAllowedFromThisStateByRole($from) ) {
 //                    continue;
 //                }
-                if( false === $this->isUserAllowedFromThisStateByProjectOrReview($project,$review) ) {
-                    continue;
-                }
+//                if( false === $this->isUserAllowedFromThisStateByProjectOrReview($project,$review) ) {
+//                    continue;
+//                }
 
                 //don't sent state $to (get it from transition object)
                 $thisUrl = $this->container->get('router')->generate(
@@ -290,6 +312,18 @@ class TransResUtil
         return $links;
     }
 
+    //$transitionName - transition name, for example, committee_review_missinginfo or final_review_missinginfo
+    public function isExceptionTransition( $transitionName ) {
+        if( $transitionName == "committee_review_missinginfo" ) {
+            return true;
+        }
+        if( $transitionName == "final_review_missinginfo" ) {
+            return true;
+        }
+        return false;
+    }
+
+    //NOT USED
     //get Review links for this user: irb_review => "IRB Review" or "IRB Review as Admin"
     //project/review/2/6 - project ID 2, review ID 6
     public function getProjectReviewLinks( $project, $user ) {
@@ -304,15 +338,15 @@ class TransResUtil
             $reviews = $project->getIrbReviews();
             //$reviewEntityName = "IrbReview";
         }
-        if( $state == "irb_admin" ) {
+        if( $state == "admin_review" ) {
             $reviews = $project->getAdminReviews();
             //$reviewEntityName = "AdminReview";
         }
-        if( $state == "irb_committee" ) {
+        if( $state == "committee_review" ) {
             $reviews = $project->getCommitteeReviews();
             //$reviewEntityName = "CommitteeReview";
         }
-        if( $state == "irb_final" ) {
+        if( $state == "final_review" ) {
             $reviews = $project->getFinalReviews();
             //$reviewEntityName = "FinalReview";
         }
@@ -407,6 +441,21 @@ class TransResUtil
             $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') ||
             $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE')
         ) {
+            return true;
+        }
+        return false;
+    }
+    public function hasReviewerRoles() {
+        if( $this->secAuth->isGranted('ROLE_TRANSRES_IRB_REVIEWER') ) {
+            return true;
+        }
+        if( $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') ) {
+            return true;
+        }
+        if( $this->secAuth->isGranted('ROLE_TRANSRES_COMMITTEE_REVIEWER') ) {
+            return true;
+        }
+        if( $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') ) {
             return true;
         }
         return false;
@@ -767,7 +816,7 @@ class TransResUtil
 
         $roles = $defaultReviewer->getRoleByState();
         $reviewerRole = $roles['reviewer'];
-        $reviewerDelegateRole = $roles['reviewerDelegate'];
+        //$reviewerDelegateRole = $roles['reviewerDelegate'];
 
         $reviewer = $defaultReviewer->getReviewer();
         if( $reviewer ) {
@@ -778,10 +827,15 @@ class TransResUtil
             //$originalReviewer->removeRole($reviewerRole);
         //}
 
+//        $reviewerDelegate = $defaultReviewer->getReviewerDelegate();
+//        if( $reviewerDelegate && $reviewerDelegateRole ) {
+//            $reviewerDelegate->addRole($reviewerDelegateRole);
+//        }
         $reviewerDelegate = $defaultReviewer->getReviewerDelegate();
-        if( $reviewerDelegate && $reviewerDelegateRole ) {
-            $reviewerDelegate->addRole($reviewerDelegateRole);
+        if( $reviewerDelegate ) {
+            $reviewerDelegate->addRole($reviewerRole);
         }
+
         //remove role: make sure if the user is not a default reviewer in all other objects. Or don't remove role at all.
         //if( $originalReviewerDelegate && $originalReviewerDelegate != $reviewerDelegate && $reviewerDelegateRole ) {
             //$originalReviewerDelegate->removeRole($reviewerDelegateRole);
@@ -1581,16 +1635,17 @@ class TransResUtil
         if( $stateStr == "irb_review" ) {
             $reviews = $project->getIrbReviews();
         }
-        if( $stateStr == "irb_admin" ) {
+        if( $stateStr == "admin_review" ) {
             $reviews = $project->getAdminReviews();
         }
-        if( $stateStr == "irb_committee" ) {
+        if( $stateStr == "committee_review" ) {
             $reviews = $project->getCommitteeReviews();
         }
-        if( $stateStr == "irb_final" ) {
+        if( $stateStr == "final_review" ) {
             $reviews = $project->getFinalReviews();
         }
 
+        //echo $stateStr.": reviews count=".count($reviews)."<br>";
         if( count($reviews) > 0 ) {
             if ($this->isAdminOrPrimaryReviewer()) {
                 return true;
@@ -1728,7 +1783,7 @@ class TransResUtil
         }
 
         $user = $this->secTokenStorage->getToken()->getUser();
-        echo "user=".$user."<br>";
+        //echo "user=".$user."<br>";
 
         //$currentState = $project->getState();
 
