@@ -136,12 +136,12 @@ class TransResFormNodeUtil
         $titleText = $formNodeUtil->createV2FormNode($formParams);
 
         //Funding Source (string)
-        $formParams = array(
-            'parent' => $projectSection,
-            'name' => "IRB Funding Source",
-            'objectType' => $objectTypeString,
-        );
-        $titleText = $formNodeUtil->createV2FormNode($formParams);
+//        $formParams = array(
+//            'parent' => $projectSection,
+//            'name' => "IRB Funding Source",
+//            'objectType' => $objectTypeString,
+//        );
+//        $titleText = $formNodeUtil->createV2FormNode($formParams);
 
         //IRB expiration date (date)
         $formParams = array(
@@ -150,6 +150,15 @@ class TransResFormNodeUtil
             'objectType' => $objectTypeDate,
         );
         $titleText = $formNodeUtil->createV2FormNode($formParams);
+
+        //projectType (string)
+        //ProjectTypeList
+        $formParams = array(
+            'parent' => $projectSection,
+            'name' => "Project Type",
+            'objectType' => $objectTypeString,
+        );
+        $newField = $formNodeUtil->createV2FormNode($formParams);
 
         //funded (boolean)
         $formParams = array(
@@ -191,13 +200,7 @@ class TransResFormNodeUtil
         );
         $newField = $formNodeUtil->createV2FormNode($formParams);
 
-        //projectType (string)
-        $formParams = array(
-            'parent' => $projectSection,
-            'name' => "Project Type",
-            'objectType' => $objectTypeString,
-        );
-        $newField = $formNodeUtil->createV2FormNode($formParams);
+
 
     }
 

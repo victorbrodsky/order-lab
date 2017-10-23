@@ -6273,6 +6273,8 @@ class AdminController extends Controller
             "1070" => array('PositionTrackTypeList','positiontracktypes-list','Position Track Type List'),
             "1080" => array('SuggestedMessageCategoriesList','suggestedmessagecategorys-list','Suggested Message Categories List'),
             "1090" => array('CalllogEntryTagsList','calllogentrytags-list','Call Log Entry Tags List'),
+            "1100" => array('TranslationalResearchBundle','transresprojectspecialties-list','Translational Research Project Specialty List'),
+            "1110" => array('TranslationalResearchBundle','transresprojecttypes-list','Translational Research Project Type List'),
             //"1050" => array('','-list'),
 
         );

@@ -672,6 +672,13 @@ class ProjectController extends Controller
             $disabled = false;
             $params['saveAsDraft'] = true;
             $params['saveAsComplete'] = true;
+
+            if( $params['admin'] === false ) {
+                $params['showIrbReviewer'] = false;
+                $params['showAdminReviewer'] = false;
+                $params['showCommitteeReviewer'] = false;
+                $params['showFinalReviewer'] = false;
+            }
         }
 
         if( $cycle == "show" ) {

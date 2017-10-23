@@ -146,6 +146,7 @@ class ListController extends Controller
      * @Route("/list/life-forms/", name="lifeforms-list")
      * @Route("/list/position-track-types/", name="positiontracktypes-list")
      * @Route("/list/translational-research-project-specialties/", name="transresprojectspecialties-list")
+     * @Route("/list/translational-research-project-types/", name="transresprojecttypes-list")
      *
      *
      * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
@@ -448,6 +449,7 @@ class ListController extends Controller
      * @Route("/list/life-forms/", name="lifeforms_create")
      * @Route("/list/position-track-types/", name="positiontracktypes_create")
      * @Route("/list/translational-research-project-specialties/", name="transresprojectspecialties_create")
+     * @Route("/list/translational-research-project-types/", name="transresprojecttypes_create")
      *
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -635,6 +637,7 @@ class ListController extends Controller
      * @Route("/list/life-forms/new", name="lifeforms_new")
      * @Route("/list/position-track-types/new", name="positiontracktypes_new")
      * @Route("/list/translational-research-project-specialties/new", name="transresprojectspecialties_new")
+     * @Route("/list/translational-research-project-types/new", name="transresprojecttypes_new")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -792,6 +795,7 @@ class ListController extends Controller
      * @Route("/list/life-forms/{id}", name="lifeforms_show")
      * @Route("/list/position-track-types/{id}", name="positiontracktypes_show")
      * @Route("/list/translational-research-project-specialties/{id}", name="transresprojectspecialties_show")
+     * @Route("/list/translational-research-project-types/{id}", name="transresprojecttypes_show")
      *
      *
      * @Method("GET")
@@ -940,6 +944,7 @@ class ListController extends Controller
      * @Route("/list/life-forms/{id}/edit", name="lifeforms_edit")
      * @Route("/list/position-track-types/{id}/edit", name="positiontracktypes_edit")
      * @Route("/list/translational-research-project-specialties/{id}/edit", name="transresprojectspecialties_edit")
+     * @Route("/list/translational-research-project-types/{id}/edit", name="transresprojecttypes_edit")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -1131,6 +1136,7 @@ class ListController extends Controller
      * @Route("/list/life-forms/{id}", name="lifeforms_update")
      * @Route("/list/position-track-types/{id}", name="positiontracktypes_update")
      * @Route("/list/translational-research-project-specialties/{id}", name="transresprojectspecialties_update")
+     * @Route("/list/translational-research-project-types/{id}", name="transresprojecttypes_update")
      *
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -1868,6 +1874,11 @@ class ListController extends Controller
                 $displayName = "Translational Research Project Specialty List";
                 $bundleName = "TranslationalResearchBundle";
                 break;
+            case "transresprojecttypes":
+                $className = "ProjectTypeList";
+                $displayName = "Translational Research Project Type List";
+                $bundleName = "TranslationalResearchBundle";
+                break;
 
 //            case "employees_locations":
 //                $className = "Location";
@@ -2044,6 +2055,8 @@ class ListController extends Controller
      * @Route("/list/life-forms/{id}", name="lifeforms_delete")
      * @Route("/list/position-track-types/{id}", name="positiontracktypes_delete")
      * @Route("/list/translational-research-project-specialties/{id}", name="transresprojectspecialties_delete")
+     * @Route("/list/translational-research-project-types/{id}", name="transresprojecttypes_delete")
+     *
      *
      *
      * @Method("DELETE")
