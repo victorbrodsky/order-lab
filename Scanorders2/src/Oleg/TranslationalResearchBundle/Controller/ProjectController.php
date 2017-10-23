@@ -51,6 +51,10 @@ class ProjectController extends Controller
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER') ) {
+            return $this->redirectToRoute('translationalresearch_my_project_index');
+        }
+
         return $this->redirectToRoute('translationalresearch_project_index');
     }
 
@@ -75,6 +79,12 @@ class ProjectController extends Controller
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $routeName = $request->get('_route');
         $title = "Projects";
+
+        if( $routeName == "translationalresearch_project_index" ) {
+            if ($this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER')) {
+                return $this->redirectToRoute('translationalresearch_my_project_index');
+            }
+        }
 
         //$projects = $em->getRepository('OlegTranslationalResearchBundle:Project')->findAll();
 
