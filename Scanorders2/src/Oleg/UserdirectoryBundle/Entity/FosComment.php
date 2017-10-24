@@ -30,11 +30,11 @@ use FOS\CommentBundle\Model\SignedCommentInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 
-//@ORM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="user_fosComment")
+ * @ORM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
  */
 class FosComment extends FosBaseComment implements SignedCommentInterface
 {
@@ -57,8 +57,8 @@ class FosComment extends FosBaseComment implements SignedCommentInterface
     /**
      * Author of the comment
      *
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
      * @var User
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
      */
     protected $author;
 
@@ -81,6 +81,31 @@ class FosComment extends FosBaseComment implements SignedCommentInterface
             return 'Anonymous';
         }
 
-        return $this->getAuthor()->getUsername();
+        return $this->getAuthor()->getUsernameOptimal();  //getUsername();
+    }
+
+    public function getAuthorNameByLoggedUser($loggedUser)
+    {
+        if (null === $this->getAuthor()) {
+            return 'Anonymous';
+        }
+
+        if( $loggedUser->getId() != $this->getAuthor()->getId() ) {
+            return 'Anonymous';
+        }
+
+        if( $loggedUser->getId() == $this->getAuthor()->getId() ) {
+            return $this->getAuthor()->getUsernameOptimal();  //getUsername();
+        }
+
+        return $this->getAuthor()->getUsernameOptimal();  //getUsername();
+    }
+
+    public function setBody($body)
+    {
+        if( $this->getBody() ) {
+            $body = $this->getBody() ." ". $body;
+        }
+        $this->body = $body;
     }
 }

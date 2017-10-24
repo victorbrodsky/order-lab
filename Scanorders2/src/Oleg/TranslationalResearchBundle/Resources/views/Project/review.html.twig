@@ -117,13 +117,14 @@
             }
 
             if( $(this).hasClass('btn-warning') && !comment ) {
+                //event.stopPropagation();
                 alert('No comment is provided for requesting additional information');
                 return false;
             }
 
             console.log("done review");
 
-            return false;
+            //return false;
         });
 
     });
@@ -138,4 +139,5 @@
     {#<link rel="stylesheet" href="{{ asset_url }}" type="text/css" />#}
     {#{% endstylesheets %}#}
 {#{% endblock %}#}
+
 

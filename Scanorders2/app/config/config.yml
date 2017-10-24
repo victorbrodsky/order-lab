@@ -8,6 +8,7 @@ imports:
     - { resource: "@OlegDeidentifierBundle/Resources/config/services.yml" }
     - { resource: "@OlegCallLogBundle/Resources/config/services.yml" }
     - { resource: "@OlegTranslationalResearchBundle/Resources/config/services.yml" }
+#    - { resource: "@OlegTranslationalResearchBundle/Resources/config/validation.yml" }
     - { resource: "@OlegUserdirectoryBundle/Resources/config/setparameters.php" }   #must run after importing services
 
 

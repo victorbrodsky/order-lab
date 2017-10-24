@@ -136,6 +136,12 @@ services:
             - { name: doctrine.event_listener, event: postPersist, connection: default }
             - { name: doctrine.event_listener, event: preUpdate, connection: default }
 
+#    foscomment.listener:
+#        class: Oleg\UserdirectoryBundle\Services\FosCommentListener
+#        arguments: ["@service_container", "@security.token_storage", "@doctrine.orm.entity_manager"]
+#        tags:
+#            - { name: "kernel.event_listener", event: "fos_comment.comment.pre_persist", method: onCommentPrePersist }
+
     #user mailer util
     user_mailer_utility:
         class: Oleg\UserdirectoryBundle\Util\EmailUtil

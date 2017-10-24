@@ -264,6 +264,16 @@ security:
                 path:     /translational-research
 #                always_remember_me: true
 
+        foscomment_api_firewall:
+            pattern: ^/api
+            context: scan_auth
+            anonymous:  true
+#            remember_me:
+#                secret:      "%secret%"
+#                lifetime: 604800 # 1 week in seconds
+#                path:     /api
+#                always_remember_me: true
+
     #Note: first match is used, the later would be ignored
     access_control:
 
@@ -283,6 +293,8 @@ security:
        - { path: ^/directory/file-delete/, role: ROLE_USER }
        - { path: ^/directory/user/only-ajax/, role: ROLE_USER }
        - { path: ^/directory/formnode-fields/, role: ROLE_USER }
+       ################################# common fos comment ####################################
+       - { path: ^/api/threads/, role: ROLE_USER }
 
        ############################## EMPLOYEES SITE SETTINGS ##############################
        - { path: ^/directory/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }

@@ -236,8 +236,15 @@ class TransResUtil
 
                 $classTransition = $this->getHtmlClassTransition($transitionName);
 
+                if( strpos($transitionName, "missinginfo") === false ) {
+                    $generalDataConfirmation = "general-data-confirm='Are you sure you want to $label?'";
+                } else {
+                    $generalDataConfirmation = "";
+                }
+
                 $thisLink = "<a ".
-                    "general-data-confirm='Are you sure you want to $label?'".
+                    //"general-data-confirm='Are you sure you want to $label?'".
+                    $generalDataConfirmation.
                     "href=".$thisUrl." class='".$classTransition."'>".$label."</a>";
                 $links[] = $thisLink;
 
@@ -2127,6 +2134,22 @@ class TransResUtil
             )
         );
         return $specialties;
+    }
+
+    //TODO: show reviewer or submitter
+    public function getCommentAuthorNameByLoggedUser( $comment ) {
+        if( $this->isAdminOrPrimaryReviewer() ) {
+            return $comment->getAuthorName();
+        }
+
+        if( $comment->getAuthor() && $comment->getAuthor()->getId() ) {
+            $user = $this->secTokenStorage->getToken()->getUser();
+            if( $user->getId() == $comment->getAuthor()->getId() ) {
+                return $comment->getAuthorName();
+            }
+        }
+
+        return "getCommentAuthorNameByLoggedUser: Anonymous";
     }
 
 }

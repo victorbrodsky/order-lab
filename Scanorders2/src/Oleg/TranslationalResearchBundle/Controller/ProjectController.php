@@ -51,8 +51,11 @@ class ProjectController extends Controller
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER') ) {
-            return $this->redirectToRoute('translationalresearch_my_project_index');
+        $transresUtil = $this->container->get('transres_util');
+        if( $transresUtil->isAdminOrPrimaryReviewer() === false ) {
+            if ($this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER')) {
+                return $this->redirectToRoute('translationalresearch_my_project_index');
+            }
         }
 
         return $this->redirectToRoute('translationalresearch_project_index');
@@ -81,8 +84,10 @@ class ProjectController extends Controller
         $title = "Projects";
 
         if( $routeName == "translationalresearch_project_index" ) {
-            if ($this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER')) {
-                return $this->redirectToRoute('translationalresearch_my_project_index');
+            if( $transresUtil->isAdminOrPrimaryReviewer() === false ) {
+                if ($this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER')) {
+                    return $this->redirectToRoute('translationalresearch_my_project_index');
+                }
             }
         }
 
