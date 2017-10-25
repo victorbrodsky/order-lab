@@ -62,6 +62,49 @@ class FosComment extends FosBaseComment implements SignedCommentInterface
      */
     protected $author;
 
+    /**
+     * @var string
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $authorType;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $authorTypeDescription;
+
+    /**
+     * @return string
+     */
+    public function getAuthorType()
+    {
+        return $this->authorType;
+    }
+
+    /**
+     * @param string $authorType
+     */
+    public function setAuthorType($authorType)
+    {
+        $this->authorType = $authorType;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAuthorTypeDescription()
+    {
+        return $this->authorTypeDescription;
+    }
+
+    /**
+     * @param string $authorTypeDescription
+     */
+    public function setAuthorTypeDescription($authorTypeDescription)
+    {
+        $this->authorTypeDescription = $authorTypeDescription;
+    }
 
 
 
@@ -103,9 +146,9 @@ class FosComment extends FosBaseComment implements SignedCommentInterface
 
     public function setBody($body)
     {
-        if( $this->getBody() ) {
-            $body = $this->getBody() ." ". $body;
-        }
+//        if( $this->getBody() ) {
+//            $body = $this->getBody() ." ". $body;
+//        }
         $this->body = $body;
     }
 }

@@ -58,16 +58,148 @@ class FosCommentListener implements EventSubscriberInterface {
 
     public function onCommentPrePersist(CommentEvent $event)
     {
+        //$logger = $this->container->get('logger');
+
         $comment = $event->getComment();
 
-        //$user = $this->secTokenStorage->getToken()->getUser();
+        //$request = $event->getRequest();
+
+        // Matched route
+        //$routeName = $request->attributes->get('_route');
+        //$logger->notice("onCommentPrePersist routeName=".$routeName);
 
         if( $this->secTokenStorage->getToken() ) {
+
             $user = $this->secTokenStorage->getToken()->getUser();
-            $comment->setAuthor($user);
-        } else {
-            $comment->setBody("NO TOKEN");
+
+            $authorTypeArr = $this->getAuthorType($comment);
+
+            if( $authorTypeArr && count($authorTypeArr) > 0 ) {
+                $comment->setAuthorType($authorTypeArr['type']);
+                $comment->setAuthorTypeDescription($authorTypeArr['description']);
+            }
+
+
+            //TODO: send emails
+            //1) if reviewer: send emails to the project requesters
+            //if( $authorTypeArr['type'] == "Administrator" || $authorTypeArr['type'] == "Reviewer" ) {
+            //}
+            //2) if requester: send emails to the project reviewers and admin
+            //if( $authorTypeArr['type'] == "Requester" ) {
+            //}
+            //send email to all project related users: admin, primary, requesters, reviewers of this review type.
+            
+
         }
+
+    }
+
+    public function getAuthorType( $comment ) {
+        $authorTypeArr = array();
+
+        if( $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') ) {
+            //$authorType = "Administrator";
+            $authorTypeArr['type'] = "Administrator";
+            $authorTypeArr['description'] = "Administrator";
+            return $authorTypeArr;
+        }
+        if( $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') ) {
+            //$authorType = "Primary Reviewer";
+            $authorTypeArr['type'] = "Administrator";
+            $authorTypeArr['description'] = "Primary Reviewer";
+            return $authorTypeArr;
+        }
+        if( $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE') ) {
+            //$comment->setAuthorType("Primary Reviewer Delegate");
+            //$authorType = "Primary Reviewer";
+            $authorTypeArr['type'] = "Administrator";
+            $authorTypeArr['description'] = "Primary Reviewer";
+            return $authorTypeArr;
+        }
+
+        //if not found
+        $transresUtil = $this->container->get('transres_util');
+        $user = $this->secTokenStorage->getToken()->getUser();
+
+        //1) check if the user is project requester
+
+        //get project
+        $threadId = $comment->getThread()->getId();
+        $idArr = explode("-",$threadId);
+
+        $projectId = null;
+        //$stateStr = null;
+        if( count($idArr) > 1 ) {
+            $projectId = $idArr[0]; //7
+            //$stateStr = $idArr[1];  //irb_review
+        }
+
+        if( $projectId ) {
+            $project = $this->em->getRepository('OlegTranslationalResearchBundle:Project')->find($projectId);
+            if( $project ) {
+
+                //check if reviewer
+                if( $transresUtil->isProjectReviewer($project) ) {
+                    //return "Reviewer";
+                    $authorTypeArr['type'] = "Reviewer";
+                    $authorTypeArr['description'] = "Reviewer";
+                    return $authorTypeArr;
+                }
+//                if( $transresUtil->isReviewsReviewer($user,$project->getIrbReviews()) ) {
+//                    return "IRB Reviewer";
+//                }
+//                if( $transresUtil->isReviewsReviewer($user,$project->getAdminReviews()) ) {
+//                    return "Admin Reviewer";
+//                }
+//                if( $transresUtil->isReviewsReviewer($user,$project->getCommitteeReviews()) ) {
+//                    return "Committee Reviewer";
+//                }
+//                if( $transresUtil->isReviewsReviewer($user,$project->getFinalReviews()) ) {
+//                    return "Primary Reviewer";
+//                }
+
+                //check if requester
+                if( $project->getSubmitter() && $project->getSubmitter()->getId() == $user->getId() ) {
+                    //return "Submitter";
+                    $authorTypeArr['type'] = "Requester";
+                    $authorTypeArr['description'] = "Submitter";
+                    return $authorTypeArr;
+                }
+                if( $project->getPrincipalInvestigators()->contains($user) ) {
+                    //return "Principal Investigator";
+                    $authorTypeArr['type'] = "Requester";
+                    $authorTypeArr['description'] = "Principal Investigator";
+                    return $authorTypeArr;
+                }
+                if( $project->getCoInvestigators()->contains($user) ) {
+                    //return "Co-Investigator";
+                    $authorTypeArr['type'] = "Requester";
+                    $authorTypeArr['description'] = "Co-Investigator";
+                    return $authorTypeArr;
+                }
+                if( $project->getPathologists()->contains($user) ) {
+                    //return "Pathologist";
+                    $authorTypeArr['type'] = "Requester";
+                    $authorTypeArr['description'] = "Pathologist";
+                    return $authorTypeArr;
+                }
+                if( $project->getContacts()->contains($user) ) {
+                    //return "Contact";
+                    $authorTypeArr['type'] = "Requester";
+                    $authorTypeArr['description'] = "Contact";
+                    return $authorTypeArr;
+                }
+                if( $project->getBillingContacts()->contains($user) ) {
+                    //return "Billing Contact";
+                    $authorTypeArr['type'] = "Requester";
+                    $authorTypeArr['description'] = "Billing Contact";
+                    return $authorTypeArr;
+                }
+
+            }//if project
+        }//if projectId
+
+        return null;
     }
 
 } 

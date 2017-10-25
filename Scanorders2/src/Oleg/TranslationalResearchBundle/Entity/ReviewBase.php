@@ -268,6 +268,9 @@ class ReviewBase
     public function getSubmittedReviewerInfo() {
         if( $this->getDecision() ) {
             $decision = $this->getDecision();
+            if( $decision == "missinginfo" ) {
+                $decision = "Missing Information";
+            }
         } else {
             $decision = "Pending";
         }

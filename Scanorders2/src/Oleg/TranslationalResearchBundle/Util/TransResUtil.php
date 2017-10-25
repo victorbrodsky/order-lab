@@ -161,7 +161,8 @@ class TransResUtil
 
         //if not admin - check if the logged in user is a reviewer for this review object (show committee review links according to the assigned reviewer)
         if( $this->isAdminOrPrimaryReviewer() === false ) {
-            if ($this->isReviewsReviewer($user, array($review)) === false) {
+            if( $this->isReviewsReviewer($user, array($review)) === false && $this->isProjectRequester($project) === false ) {
+                //exit("return: is not reviewer or requester");
                 return $links;
             }
         }
@@ -258,9 +259,10 @@ class TransResUtil
         return $links;
     }
 
+    //NOT USED
     //if status is missing and user is requester => add button "resubmit
     public function getResubmitButtons($review) {
-        //exit("111 <br>");
+        //exit("getResubmitButtons <br>");
         $project = $review->getProject();
         $workflow = $this->container->get('state_machine.transres_project');
         $transitions = $workflow->getEnabledTransitions($project);
@@ -1109,6 +1111,7 @@ class TransResUtil
             //irb_review_missinginfo => IRB Review Missinginfo
             //irb_review_resubmit => IRB Review Resubmit
             $label = str_replace("_"," ",$transitionName);
+            $label = str_replace("missinginfo","missing information",$label);
             $returnLabel = ucwords($label);
         }
 
@@ -2136,20 +2139,33 @@ class TransResUtil
         return $specialties;
     }
 
-    //TODO: show reviewer or submitter
     public function getCommentAuthorNameByLoggedUser( $comment ) {
-        if( $this->isAdminOrPrimaryReviewer() ) {
-            return $comment->getAuthorName();
-        }
 
-        if( $comment->getAuthor() && $comment->getAuthor()->getId() ) {
-            $user = $this->secTokenStorage->getToken()->getUser();
-            if( $user->getId() == $comment->getAuthor()->getId() ) {
-                return $comment->getAuthorName();
+        $authorType = $comment->getAuthorTypeDescription();
+        if( $authorType ) {
+            $authorType = " (".$authorType.")";
+        } else {
+            $authorType = $comment->getAuthorType();
+            if( $authorType ) {
+                $authorType = " (".$authorType.")";
             }
         }
 
-        return "getCommentAuthorNameByLoggedUser: Anonymous";
+        if( !$comment->getAuthor() ) {
+            return "Anonymous" . $authorType;
+        }
+
+        $user = $this->secTokenStorage->getToken()->getUser();
+
+        if( $this->isAdminOrPrimaryReviewer() ) {
+            return $comment->getAuthorName() . $authorType;
+        }
+
+        if( $user->getId() == $comment->getAuthor()->getId() ) {
+            return $comment->getAuthorName() . $authorType;
+        }
+
+        return "Anonymous" . $authorType;
     }
 
 }
