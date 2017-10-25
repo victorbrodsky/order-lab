@@ -1397,7 +1397,7 @@ class TransResUtil
             throw $this->createNotFoundException('Unable to find Review Entity Name by state='.$state);
         }
 
-        $reviews = $this->findReviewObjectsByProjectAndAnyReviewers($reviewObjectClassName,$project);
+        $reviews = $this->findReviewObjectsByProjectAndAnyReviewers($reviewEntityName,$project);
 
         return $reviews;
     }

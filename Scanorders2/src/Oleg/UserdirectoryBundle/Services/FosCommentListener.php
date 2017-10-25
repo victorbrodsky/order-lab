@@ -100,7 +100,7 @@ class FosCommentListener implements EventSubscriberInterface {
         }
 
         //3) requesters
-        $requesterEmails = $this->getRequesterEmails($project);
+        $requesterEmails = $transresUtil->getRequesterEmails($project);
         $emails = array_merge($emails,$requesterEmails);
 
         $emails = array_unique($emails);
