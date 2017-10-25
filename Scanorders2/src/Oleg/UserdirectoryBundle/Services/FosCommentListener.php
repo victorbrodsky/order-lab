@@ -58,43 +58,75 @@ class FosCommentListener implements EventSubscriberInterface {
 
     public function onCommentPrePersist(CommentEvent $event)
     {
-        //$logger = $this->container->get('logger');
+        $transresUtil = $this->container->get('transres_util');
 
         $comment = $event->getComment();
 
-        //$request = $event->getRequest();
+        $project = $this->getProjectFromComment($comment);
 
-        // Matched route
-        //$routeName = $request->attributes->get('_route');
-        //$logger->notice("onCommentPrePersist routeName=".$routeName);
+        $authorTypeArr = $this->getAuthorType($project);
 
-        if( $this->secTokenStorage->getToken() ) {
-
-            $user = $this->secTokenStorage->getToken()->getUser();
-
-            $authorTypeArr = $this->getAuthorType($comment);
-
-            if( $authorTypeArr && count($authorTypeArr) > 0 ) {
-                $comment->setAuthorType($authorTypeArr['type']);
-                $comment->setAuthorTypeDescription($authorTypeArr['description']);
-            }
-
-
-            //TODO: send emails
-            //1) if reviewer: send emails to the project requesters
-            //if( $authorTypeArr['type'] == "Administrator" || $authorTypeArr['type'] == "Reviewer" ) {
-            //}
-            //2) if requester: send emails to the project reviewers and admin
-            //if( $authorTypeArr['type'] == "Requester" ) {
-            //}
-            //send email to all project related users: admin, primary, requesters, reviewers of this review type.
-            
-
+        if( $authorTypeArr && count($authorTypeArr) > 0 ) {
+            $comment->setAuthorType($authorTypeArr['type']);
+            $comment->setAuthorTypeDescription($authorTypeArr['description']);
         }
 
+
+        //TODO: send emails
+        //1) if reviewer: send emails to the project requesters
+        //if( $authorTypeArr['type'] == "Administrator" || $authorTypeArr['type'] == "Reviewer" ) {
+        //}
+        //2) if requester: send emails to the project reviewers and admin
+        //if( $authorTypeArr['type'] == "Requester" ) {
+        //}
+        //send email to all project related users: admin, primary, requesters, reviewers of this review type.
+
+
+
+        //send email to all project related users: admin, primary, requesters, reviewers of this review type.
+        $emails = array();
+
+        $stateStr = $this->getStateStrFromComment($comment);
+        $reviews = $transresUtil->getReviewsByProjectAndState($project,$stateStr);
+
+        //1) admins
+        $adminEmails = $transresUtil->getTransResAdminEmails();
+        $emails = array_merge($emails,$adminEmails);
+
+        //2) reviewers of this review
+        foreach($reviews as $review) {
+            $reviewerEmails = $transresUtil->getCurrentReviewersEmails($review);
+            $emails = array_merge($emails,$reviewerEmails);
+        }
+
+        //3) requesters
+        $requesterEmails = $this->getRequesterEmails($project);
+        $emails = array_merge($emails,$requesterEmails);
+
+        $emails = array_unique($emails);
+
+        $break = "\r\n";
+        $senderEmail = null; //Admin email
+
+        $stateLabel = $transresUtil->getStateLabelByName($stateStr);
+        $subject = "New Comment for Project ID#".$project->getOid()." has been posted for ".$stateLabel;
+        $body = $subject . ":" . $break . $comment->getBody();
+
+        //get project url
+        $projectUrl = $transresUtil->getProjectShowUrl($project);
+        $body = $body . $break.$break. "Please click on the URL below to view this project:".$break.$projectUrl;
+
+        $emailUtil = $this->container->get('user_mailer_utility');
+        $emailUtil->sendEmail( $emails, $subject, $body, null, $senderEmail );
     }
 
-    public function getAuthorType( $comment ) {
+    public function getAuthorType( $project ) {
+
+        if( !$this->secTokenStorage->getToken() ) {
+            //not authenticated
+            return null;
+        }
+
         $authorTypeArr = array();
 
         if( $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') ) {
@@ -122,29 +154,18 @@ class FosCommentListener implements EventSubscriberInterface {
         $user = $this->secTokenStorage->getToken()->getUser();
 
         //1) check if the user is project requester
-
-        //get project
-        $threadId = $comment->getThread()->getId();
-        $idArr = explode("-",$threadId);
-
-        $projectId = null;
-        //$stateStr = null;
-        if( count($idArr) > 1 ) {
-            $projectId = $idArr[0]; //7
-            //$stateStr = $idArr[1];  //irb_review
+        //$project = $this->getProjectFromComment($comment);
+        if( !$project ) {
+            return null;
         }
 
-        if( $projectId ) {
-            $project = $this->em->getRepository('OlegTranslationalResearchBundle:Project')->find($projectId);
-            if( $project ) {
-
-                //check if reviewer
-                if( $transresUtil->isProjectReviewer($project) ) {
-                    //return "Reviewer";
-                    $authorTypeArr['type'] = "Reviewer";
-                    $authorTypeArr['description'] = "Reviewer";
-                    return $authorTypeArr;
-                }
+        //check if reviewer
+        if( $transresUtil->isProjectReviewer($project) ) {
+            //return "Reviewer";
+            $authorTypeArr['type'] = "Reviewer";
+            $authorTypeArr['description'] = "Reviewer";
+            return $authorTypeArr;
+        }
 //                if( $transresUtil->isReviewsReviewer($user,$project->getIrbReviews()) ) {
 //                    return "IRB Reviewer";
 //                }
@@ -158,48 +179,79 @@ class FosCommentListener implements EventSubscriberInterface {
 //                    return "Primary Reviewer";
 //                }
 
-                //check if requester
-                if( $project->getSubmitter() && $project->getSubmitter()->getId() == $user->getId() ) {
-                    //return "Submitter";
-                    $authorTypeArr['type'] = "Requester";
-                    $authorTypeArr['description'] = "Submitter";
-                    return $authorTypeArr;
-                }
-                if( $project->getPrincipalInvestigators()->contains($user) ) {
-                    //return "Principal Investigator";
-                    $authorTypeArr['type'] = "Requester";
-                    $authorTypeArr['description'] = "Principal Investigator";
-                    return $authorTypeArr;
-                }
-                if( $project->getCoInvestigators()->contains($user) ) {
-                    //return "Co-Investigator";
-                    $authorTypeArr['type'] = "Requester";
-                    $authorTypeArr['description'] = "Co-Investigator";
-                    return $authorTypeArr;
-                }
-                if( $project->getPathologists()->contains($user) ) {
-                    //return "Pathologist";
-                    $authorTypeArr['type'] = "Requester";
-                    $authorTypeArr['description'] = "Pathologist";
-                    return $authorTypeArr;
-                }
-                if( $project->getContacts()->contains($user) ) {
-                    //return "Contact";
-                    $authorTypeArr['type'] = "Requester";
-                    $authorTypeArr['description'] = "Contact";
-                    return $authorTypeArr;
-                }
-                if( $project->getBillingContacts()->contains($user) ) {
-                    //return "Billing Contact";
-                    $authorTypeArr['type'] = "Requester";
-                    $authorTypeArr['description'] = "Billing Contact";
-                    return $authorTypeArr;
-                }
-
-            }//if project
-        }//if projectId
+        //check if requester
+        if( $project->getSubmitter() && $project->getSubmitter()->getId() == $user->getId() ) {
+            //return "Submitter";
+            $authorTypeArr['type'] = "Requester";
+            $authorTypeArr['description'] = "Submitter";
+            return $authorTypeArr;
+        }
+        if( $project->getPrincipalInvestigators()->contains($user) ) {
+            //return "Principal Investigator";
+            $authorTypeArr['type'] = "Requester";
+            $authorTypeArr['description'] = "Principal Investigator";
+            return $authorTypeArr;
+        }
+        if( $project->getCoInvestigators()->contains($user) ) {
+            //return "Co-Investigator";
+            $authorTypeArr['type'] = "Requester";
+            $authorTypeArr['description'] = "Co-Investigator";
+            return $authorTypeArr;
+        }
+        if( $project->getPathologists()->contains($user) ) {
+            //return "Pathologist";
+            $authorTypeArr['type'] = "Requester";
+            $authorTypeArr['description'] = "Pathologist";
+            return $authorTypeArr;
+        }
+        if( $project->getContacts()->contains($user) ) {
+            //return "Contact";
+            $authorTypeArr['type'] = "Requester";
+            $authorTypeArr['description'] = "Contact";
+            return $authorTypeArr;
+        }
+        if( $project->getBillingContacts()->contains($user) ) {
+            //return "Billing Contact";
+            $authorTypeArr['type'] = "Requester";
+            $authorTypeArr['description'] = "Billing Contact";
+            return $authorTypeArr;
+        }
 
         return null;
+    }
+
+    public function getProjectFromComment($comment) {
+        $project = null;
+        //get project
+        $threadId = $comment->getThread()->getId();
+        $idArr = explode("-",$threadId);
+
+        $projectId = null;
+        //$stateStr = null;
+        if( count($idArr) > 1 ) {
+            $projectId = $idArr[0]; //7
+            //$stateStr = $idArr[1];  //irb_review
+        }
+
+        if( $projectId ) {
+            $project = $this->em->getRepository('OlegTranslationalResearchBundle:Project')->find($projectId);
+        }
+
+        return $project;
+    }
+
+    public function getStateStrFromComment($comment) {
+        $project = null;
+        //get project
+        $threadId = $comment->getThread()->getId();
+        $idArr = explode("-",$threadId);
+
+        $stateStr = null;
+        if( count($idArr) > 1 ) {
+            $stateStr = $idArr[1];  //irb_review
+        }
+
+        return $stateStr;
     }
 
 } 

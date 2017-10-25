@@ -1390,6 +1390,18 @@ class TransResUtil
 
         return $reviewObject;
     }
+
+    public function getReviewsByProjectAndState($project,$state) {
+        $reviewEntityName = $this->getReviewClassNameByState($state);
+        if( !$reviewEntityName ) {
+            throw $this->createNotFoundException('Unable to find Review Entity Name by state='.$state);
+        }
+
+        $reviews = $this->findReviewObjectsByProjectAndAnyReviewers($reviewObjectClassName,$project);
+
+        return $reviews;
+    }
+
     //NOT USED
 //    public function getReviewByProjectAndReviewidAndState($project, $reviewId, $state) {
 //
@@ -2012,8 +2024,8 @@ class TransResUtil
         $label = $this->getTransitionLabelByName($appliedTransition,$review);
 
         //if( $recommended ) {
-            $subject = "Project ID#".$project->getId()." has been set to $label";
-            $body = "Project ID#".$project->getId()." has been set to $label";
+            $subject = "Project ID#".$project->getOid()." has been set to $label";
+            $body = "Project ID#".$project->getOid()." has been set to $label";
 //        } else {
 //            $subject = "Project ID#".$project->getId()." has been set to $label";
 //            $body = "Project ID#".$project->getId()." has been set to $label";
@@ -2022,11 +2034,11 @@ class TransResUtil
 
         //send to the
         // 1) admins and primary reviewers
-        $admins = $this->getTransResAdminEmails();
+        $admins = $this->getTransResAdminEmails(); //ok
         // 2) project's Requester (submitter, principalInvestigators, coInvestigators, pathologists)
-        $requesterEmails = $this->getRequesterEmails($project,$review,$appliedTransition);
+        $requesterEmails = $this->getRequesterEmails($project); //ok
         // 3) current project's reviewers
-        $currentReviewerEmails = $this->getCurrentReviewersEmails($project,$review,$appliedTransition);
+        $currentReviewerEmails = $this->getCurrentReviewersEmails($review); //ok
         // 4) next state project's reviewers
         $nextStateReviewerEmails = $this->getNextStateReviewersEmails($project,$review,$appliedTransition);
 
@@ -2064,14 +2076,15 @@ class TransResUtil
         return $users;
     }
     //project's Requester (submitter, principalInvestigators, coInvestigators, pathologists)
-    public function getRequesterEmails($project, $review, $appliedTransition, $asEmail=true) {
-        $users = array();
+    public function getRequesterEmails($project, $asEmail=true) {
+        $resArr = array();
+
         //1 submitter
         if( $project->getSubmitter() ) {
             if( $asEmail ) {
-                $users[] = $project->getSubmitter()->getSingleEmail();
+                $resArr[] = $project->getSubmitter()->getSingleEmail();
             } else {
-                $users[] = $project->getSubmitter();
+                $resArr[] = $project->getSubmitter();
             }
         }
 
@@ -2080,9 +2093,9 @@ class TransResUtil
         foreach( $pis as $pi ) {
             if( $pi ) {
                 if( $asEmail ) {
-                    $users[] = $pi->getSingleEmail();
+                    $resArr[] = $pi->getSingleEmail();
                 } else {
-                    $users[] = $pi;
+                    $resArr[] = $pi;
                 }
             }
         }
@@ -2092,9 +2105,9 @@ class TransResUtil
         foreach( $cois as $coi ) {
             if( $coi ) {
                 if( $asEmail ) {
-                    $users[] = $coi->getSingleEmail();
+                    $resArr[] = $coi->getSingleEmail();
                 } else {
-                    $users[] = $coi;
+                    $resArr[] = $coi;
                 }
             }
         }
@@ -2104,23 +2117,56 @@ class TransResUtil
         foreach( $pathologists as $pathologist ) {
             if( $pathologist ) {
                 if( $asEmail ) {
-                    $users[] = $pathologist->getSingleEmail();
+                    $resArr[] = $pathologist->getSingleEmail();
                 } else {
-                    $users[] = $pathologist;
+                    $resArr[] = $pathologist;
                 }
             }
         }
 
-        return $users;
+        //5 contacts
+        $contacts = $project->getContacts();
+        foreach( $contacts as $contact ) {
+            if( $contact ) {
+                if( $asEmail ) {
+                    $resArr[] = $contact->getSingleEmail();
+                } else {
+                    $resArr[] = $contact;
+                }
+            }
+        }
+
+        //6 Billing contacts
+        $billingContacts = $project->getBillingContacts();
+        foreach( $billingContacts as $billingContact ) {
+            if( $billingContact ) {
+                if( $asEmail ) {
+                    $resArr[] = $billingContact->getSingleEmail();
+                } else {
+                    $resArr[] = $billingContact;
+                }
+            }
+        }
+
+        return $resArr;
     }
 
     //current project's reviewers
-    public function getCurrentReviewersEmails($project, $review, $appliedTransition, $asEmail=true) {
-        $users = array();
+    public function getCurrentReviewersEmails($review) {
+        $emails = array();
 
-        //get all same reviews and reviewers
+        //get reviewers
+        $reviewer = $review->getReviewer();
+        if( $reviewer ) {
+            $emails[] = $reviewer->getSingleEmail();
+        }
 
-        return $users;
+        $reviewerDelegate = $review->getReviewerDelegate();
+        if( $reviewerDelegate ) {
+            $emails[] = $reviewerDelegate->getSingleEmail();
+        }
+
+        return $emails;
     }
 
     //next state project's reviewers
@@ -2166,6 +2212,18 @@ class TransResUtil
         }
 
         return "Anonymous" . $authorType;
+    }
+
+    public function getProjectShowUrl($project) {
+        $projectUrl = $this->container->get('router')->generate(
+            'translationalresearch_project_show',
+            array(
+                'id' => $project->getId(),
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+
+        return $projectUrl;
     }
 
 }
