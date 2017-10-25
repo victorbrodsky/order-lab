@@ -2038,17 +2038,16 @@ class TransResUtil
     }
 
     public function sendNotificationEmails($project, $review, $appliedTransition, $subject, $body, $testing=false) {
-        if( !$appliedTransition ) {
-            return null;
-        }
+        //if( !$appliedTransition ) {
+        //    return null;
+        //}
 
         $emailUtil = $this->container->get('user_mailer_utility');
 
         $senderEmail = null; //Admin email
         $emails = array();
 
-        $label = $this->getTransitionLabelByName($appliedTransition,$review);
-
+//        $label = $this->getTransitionLabelByName($appliedTransition,$review);
 //        if( $recommended ) {
 //            $subject = "Project ID ".$project->getOid()." has been recommended to send to the stage '$label'";
 //            $body = "Project ID ".$project->getOid()." has been sent to the stage '$label'";
