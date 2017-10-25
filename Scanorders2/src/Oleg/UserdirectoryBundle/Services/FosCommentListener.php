@@ -109,7 +109,7 @@ class FosCommentListener implements EventSubscriberInterface {
         $senderEmail = null; //Admin email
 
         $stateLabel = $transresUtil->getStateLabelByName($stateStr);
-        $subject = "New Comment for Project ID#".$project->getOid()." has been posted for ".$stateLabel;
+        $subject = "New Comment for Project ID ".$project->getOid()." has been posted for the stage '".$stateLabel."'";
         $body = $subject . ":" . $break . $comment->getBody();
 
         //get project url

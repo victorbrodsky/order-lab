@@ -525,6 +525,7 @@ class TransResUtil
         $user = $this->secTokenStorage->getToken()->getUser();
         $transresUtil = $this->container->get('transres_util');
         $workflow = $this->container->get('state_machine.transres_project');
+        $break = "\r\n";
 
         if( !$to ) {
             //Get Transition and $to
@@ -561,9 +562,15 @@ class TransResUtil
                         }
 
                         $recommended = true;
+                        $label = $this->getStateLabelByName($project->getState());
+                        $subject = "Project ID ".$project->getOid(). " (" .$label. "). Recommendation: ".$review->getDecision();
+                        $body = $subject;
+                        //get project url
+                        $projectUrl = $transresUtil->getProjectShowUrl($project);
+                        $body = $body . $break.$break. "Please click on the URL below to view this project:".$break.$projectUrl;
 
                         //send notification emails
-                        $this->sendNotificationEmails($project,$review,$transitionName,$recommended,$testing);
+                        $this->sendNotificationEmails($project,$review,$transitionName,$subject,$body,$testing);
 
                         //event log
                         $this->setEventLog($project,$review,$transitionName,$originalStateStr,$recommended,$testing);
@@ -590,9 +597,15 @@ class TransResUtil
                 }
 
                 $recommended = false;
+                $label = $this->getTransitionLabelByName($transitionName,$review);
+                $subject = "Project ID ".$project->getOid()." has been sent to the stage '$label'";
+                $body = $subject;
+                //get project url
+                $projectUrl = $transresUtil->getProjectShowUrl($project);
+                $body = $body . $break.$break. "Please click on the URL below to view this project:".$break.$projectUrl;
 
                 //send confirmation email
-                $this->sendNotificationEmails($project,$review,$transitionName,$recommended,$testing);
+                $this->sendNotificationEmails($project,$review,$transitionName,$subject,$body,$testing);
 
                 //event log
                 $this->setEventLog($project,$review,$transitionName,$originalStateStr,$recommended,$testing);
@@ -1805,6 +1818,8 @@ class TransResUtil
         }
 
         $user = $this->secTokenStorage->getToken()->getUser();
+        $transresUtil = $this->container->get('transres_util');
+        $break = "\r\n";
         //echo "user=".$user."<br>";
 
         //$currentState = $project->getState();
@@ -1813,13 +1828,24 @@ class TransResUtil
         $appliedTransition = $this->setProjectState($project,$review,$testing);
         //exit("exit appliedTransition=".$appliedTransition);
 
-        $recommended = false;
-        if( !$appliedTransition ) {
+        if( $appliedTransition ) {
+            $recommended = false;
+            $label = $this->getTransitionLabelByName($appliedTransition,$review);
+            $subject = "Project ID ".$project->getOid()." has been sent to the stage '$label'";
+            $body = "Project ID ".$project->getOid()." has been sent to the stage '$label'";
+        } else {
             $recommended = true;
+            $label = $this->getStateLabelByName($project->getState());
+            $subject = "Project ID ".$project->getOid(). " (" .$label. "). Recommendation: ".$review->getDecision();
+            $body = $subject;
         }
 
+        //get project url
+        $projectUrl = $transresUtil->getProjectShowUrl($project);
+        $body = $body . $break.$break. "Please click on the URL below to view this project:".$break.$projectUrl;
+
         //send notification emails
-        $this->sendNotificationEmails($project,$review,$appliedTransition,$recommended,$testing);
+        $this->sendNotificationEmails($project,$review,$appliedTransition,$subject,$body,$testing);
 
 //        $workflow = $this->container->get('state_machine.transres_project');
 //        $transitions = $workflow->getEnabledTransitions($project);
@@ -2011,7 +2037,7 @@ class TransResUtil
         $userSecUtil->createUserEditEvent($this->container->getParameter('translationalresearch.sitename'),$event,$user,$project,null,$eventType);
     }
 
-    public function sendNotificationEmails($project, $review, $appliedTransition, $recommended=false, $testing=false) {
+    public function sendNotificationEmails($project, $review, $appliedTransition, $subject, $body, $testing=false) {
         if( !$appliedTransition ) {
             return null;
         }
@@ -2023,12 +2049,12 @@ class TransResUtil
 
         $label = $this->getTransitionLabelByName($appliedTransition,$review);
 
-        //if( $recommended ) {
-            $subject = "Project ID#".$project->getOid()." has been set to $label";
-            $body = "Project ID#".$project->getOid()." has been set to $label";
+//        if( $recommended ) {
+//            $subject = "Project ID ".$project->getOid()." has been recommended to send to the stage '$label'";
+//            $body = "Project ID ".$project->getOid()." has been sent to the stage '$label'";
 //        } else {
-//            $subject = "Project ID#".$project->getId()." has been set to $label";
-//            $body = "Project ID#".$project->getId()." has been set to $label";
+//            $subject = "Project ID ".$project->getOid()." has been sent to the stage '$label'";
+//            $body = "Project ID ".$project->getOid()." has been sent to the stage '$label'";
 //        }
 
 
