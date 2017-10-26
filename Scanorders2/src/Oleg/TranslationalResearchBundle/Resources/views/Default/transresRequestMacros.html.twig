@@ -1,0 +1,94 @@
+{% macro transresRequestInfo( form, transresRequest, cycle ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="transresRequestInfoHeading">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#transresRequestInfo" aria-expanded="true">
+                        Request Info
+                    </a>
+                </h4>
+            </div>
+            <div id="transresRequestInfo" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="transresRequestInfoHeading">
+                <div class="panel-body">
+
+                    {% if form.state is defined %}
+                        {{ formmacros.field(form.state) }}
+                    {% endif %}
+
+                    {% if form.oid is defined %}
+                        {{ formmacros.field(form.oid) }}
+                    {% endif %}
+
+                    {% if form.approvalDate is defined %}
+                        {{ formmacros.field(form.approvalDate) }}
+                    {% endif %}
+
+                    {% if form.createDate is defined or form.submitter is defined %}
+                        {#<div class="well well-sm">#}
+                        {% if form.createDate is defined %}
+                            {{ formmacros.field(form.createDate) }}
+                        {% endif %}
+                        {% if form.submitter is defined %}
+                            {{ formmacros.field(form.submitter) }}
+                        {% endif %}
+                        {#</div>#}
+                    {% endif %}
+
+                    {{ transres.updateInfo(form,cycle) }}
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endmacro %}
+
+{% macro transresRequestFormEdit( form, transresRequest, cycle ) %}
+
+    {% import "OlegUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
+    {#{% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}#}
+
+    <div style="display: none">
+        {% if form.messageCategory is defined %}
+            {{ treemacros.compositeTreeNode(form.messageCategory,cycle,"noprototype") }}
+        {% endif %}
+    </div>
+
+    <div id="form-node-holder"></div>
+
+{% endmacro %}
+
+
+{% macro transresRequestFormShow( form, transresRequest, cycle ) %}
+
+    {#{% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}#}
+
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="transresRequestContentHeading">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#transresRequestContent" aria-expanded="true">
+                        Request
+                    </a>
+                </h4>
+            </div>
+            <div id="transresRequestContent" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="transresRequestContentHeading">
+                <div class="panel-body">
+
+                    {% set callLogViewClass = "order-white-background" %}
+                    <div class="text-left {{ callLogViewClass }}">
+                        {{ user_formnode_utility.getFormNodeHolderShortInfoForView(transresRequest,transresRequest.messageCategory,false)|raw }}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endmacro %}
+
+
+

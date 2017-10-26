@@ -295,6 +295,10 @@ class Project {
      **/
     private $documents;
 
+    /**
+     * @ORM\OneToMany(targetEntity="TransResRequest", mappedBy="project", cascade={"persist"})
+     */
+    private $requests;
 
 
 
@@ -315,6 +319,8 @@ class Project {
         $this->finalReviews = new ArrayCollection();
 
         $this->documents = new ArrayCollection();
+
+        $this->requests = new ArrayCollection();
 
         //$this->formVersions = new ArrayCollection();
     }
@@ -871,6 +877,22 @@ class Project {
         return $this->documents;
     }
 
+    public function getRequests()
+    {
+        return $this->requests;
+    }
+    public function addRequest($item)
+    {
+        if( $item && !$this->requests->contains($item) ) {
+            $this->requests->add($item);
+            $item->setProject($this);
+        }
+        return $this;
+    }
+    public function removeRequest($item)
+    {
+        $this->requests->removeElement($item);
+    }
 
     /**
      * @return mixed

@@ -56,8 +56,8 @@ class TwigDateRequestListener {
             $timezone = $user->getPreferences()->getTimezone();
         }
 
-        $this->twig->getExtension('core')->setTimezone($timezone);
-
+        //$this->twig->getExtension('core')->setTimezone($timezone);
+        $this->twig->getExtension('Twig_Extension_Core')->setTimezone($timezone);
     }
 
 }

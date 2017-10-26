@@ -98,6 +98,11 @@ class TransResFormNodeUtil
         $objectTypeCheckbox = $formNodeUtil->getObjectTypeByName('Form Field - Checkbox');
         $objectTypeDate = $formNodeUtil->getObjectTypeByName('Form Field - Full Date');
 
+        $objectTypeDropDownAllowNewEntries = $formNodeUtil->getObjectTypeByName('Form Field - Dropdown Menu - Allow Multiple Selections - Allow New Entries');
+        if( !$objectTypeDropDownAllowNewEntries ) {
+            exit('object type not found by name='.'Form Field - Dropdown Menu - Allow Multiple Selections - Allow New Entries');
+        }
+
         //echo "objectTypeForm=".$objectTypeForm."<br>";
 
         //"Pathology Call Log Entry" [Form]
@@ -152,13 +157,21 @@ class TransResFormNodeUtil
         $titleText = $formNodeUtil->createV2FormNode($formParams);
 
         //projectType (string)
-        //ProjectTypeList
+//        $formParams = array(
+//            'parent' => $projectSection,
+//            'name' => "Project Type",
+//            'objectType' => $objectTypeString,
+//        );
+//        $newField = $formNodeUtil->createV2FormNode($formParams);
+        //projectType - ProjectTypeList ('Form Field - Dropdown Menu - Allow Multiple Selections - Allow New Entries')
         $formParams = array(
             'parent' => $projectSection,
             'name' => "Project Type",
-            'objectType' => $objectTypeString,
+            'objectType' => $objectTypeDropDownAllowNewEntries,
+            'classNamespace' => "Oleg\\TranslationalResearchBundle\\Entity",
+            'className' => "ProjectTypeList"
         );
-        $newField = $formNodeUtil->createV2FormNode($formParams);
+        $formNodeUtil->createV2FormNode($formParams);
 
         //funded (boolean)
         $formParams = array(
@@ -203,6 +216,116 @@ class TransResFormNodeUtil
 
 
     }
+
+
+    /////////////////////// Request form ////////////////////////
+    //run: translational-research/request/generate-form-node-tree/
+    public function generateTransResFormNodeRequest()
+    {
+
+        $em = $this->em;
+        $formNodeUtil = $this->container->get('user_formnode_utility');
+        $username = $this->container->get('security.token_storage')->getToken()->getUser();
+
+        //root
+        $categories = array(
+            'All Forms' => array('HemePath Translational Research'),
+        );
+        $count = 20;
+        $level = 0;
+
+        $count = $formNodeUtil->addNestedsetNodeRecursevely(
+            null,           //$parentCategory
+            $categories,    //$categories
+            $level,         //$level
+            $username,      //$username
+            $count          //$count
+        );
+        echo "addNestedsetNodeRecursevely: count=".$count."<br>";
+
+        $parentNode = $em->getRepository('OlegUserdirectoryBundle:FormNode')->findOneByName('HemePath Translational Research');
+        echo "rootNode=".$parentNode."<br>";
+
+        $this->createRequestFormNode($parentNode);
+
+        return round($count);
+    }
+
+    public function createRequestFormNode($parent)
+    {
+        //Request fields via FormNode
+        //Requested #
+        //category (fees)
+        //Completed #
+        //Comment
+
+        $formNodeUtil = $this->container->get('user_formnode_utility');
+
+        $objectTypeForm = $formNodeUtil->getObjectTypeByName('Form');
+        $objectTypeSection = $formNodeUtil->getObjectTypeByName('Form Section');
+        $objectTypeString = $formNodeUtil->getObjectTypeByName('Form Field - Free Text, Single Line');
+        $objectTypeText = $formNodeUtil->getObjectTypeByName('Form Field - Free Text');
+
+        $objectTypeDropDown = $formNodeUtil->getObjectTypeByName('Form Field - Dropdown Menu');
+        if( !$objectTypeDropDown ) {
+            exit('object type not found by name='.'Form Field - Dropdown Menu');
+        }
+
+        //echo "objectTypeForm=".$objectTypeForm."<br>";
+        //"Pathology Call Log Entry" [Form]
+        $formParams = array(
+            'parent' => $parent,
+            'name' => "HemePath Translational Research Request",
+            'objectType' => $objectTypeForm,
+        );
+        $RequestFom = $formNodeUtil->createV2FormNode($formParams); //$formNode
+        $formNodeUtil->setMessageCategoryListLink("HemePath Translational Research Request",$RequestFom);
+
+        //Request (Section)
+        $formParams = array(
+            'parent' => $RequestFom,
+            'name' => "Request",
+            'objectType' => $objectTypeSection,
+            'showLabel' => false,
+        );
+        $projectSection = $formNodeUtil->createV2FormNode($formParams);
+
+        //Requested # (string)
+        $formParams = array(
+            'parent' => $projectSection,
+            'name' => "Requested #",
+            'objectType' => $objectTypeString,
+        );
+        $titleText = $formNodeUtil->createV2FormNode($formParams);
+
+        //category (fees) - RequestCategoryTypeList ('Form Field - Dropdown Menu')
+        $formParams = array(
+            'parent' => $projectSection,
+            'name' => "Category Type",
+            'objectType' => $objectTypeDropDown,
+            'classNamespace' => "Oleg\\TranslationalResearchBundle\\Entity",
+            'className' => "RequestCategoryTypeList"
+        );
+        $formNodeUtil->createV2FormNode($formParams);
+
+        //Completed # (string)
+        $formParams = array(
+            'parent' => $projectSection,
+            'name' => "Completed #",
+            'objectType' => $objectTypeString,
+        );
+        $titleText = $formNodeUtil->createV2FormNode($formParams);
+
+        //Comment (text)
+        $formParams = array(
+            'parent' => $projectSection,
+            'name' => "Comment",
+            'objectType' => $objectTypeText,
+        );
+        $newField = $formNodeUtil->createV2FormNode($formParams);
+
+    }
+    /////////////////////////////////////////////////////////////
 
 
     public function getProjectFormNodeFieldByName($project, $fieldName) {

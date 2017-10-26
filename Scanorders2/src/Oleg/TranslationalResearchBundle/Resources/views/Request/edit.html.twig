@@ -1,0 +1,158 @@
+{% extends "OlegTranslationalResearchBundle::Default/base.html.twig" %}
+
+{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block content %}
+
+    <input type="hidden" id="formcycle" value="{{ cycle }}" />
+    <input type="hidden" id="orderformtype" value="transres" />
+    <input type="hidden" id="formtype" value="{{ formtype }}" />
+    <input type="hidden" id="triggerSearch" value="{{ triggerSearch }}" />
+
+    <input type="hidden" id="entityNamespace" value="{{ entityNamespace }}" />
+    <input type="hidden" id="entityName" value="{{ entityName }}" />
+    <input type="hidden" id="entityId" value="{{ entityId }}" />
+
+    <input type="hidden" id="formnodetrigger" value="{{ formnodetrigger }}" />
+    <input type="hidden" id="formnodeTopHolderId" value="{{ formnodeTopHolderId }}" />
+
+
+    <h4 class="text-info" align="center">
+        {{ title }}
+    </h4>
+
+    {% set sitename = translationalresearch_sitename %}
+
+    {#{{ transres.projectHeader(project) }}#}
+
+    <p>
+        <button type="button" class="btn btn-default btn-sm" onClick="collapseAll()" >Collapse All</button>
+        <button type="button" class="btn btn-default btn-sm" onClick="extendAll()" >Expand All</button>
+    </p>
+
+    {{ form_start(edit_form) }}
+
+        {#{% if edit_form.state is defined %}#}
+            {#{{ formmacros.field(edit_form.state) }}#}
+        {#{% endif %}#}
+
+        {#{% if edit_form.approvalDate is defined %}#}
+            {#{{ formmacros.field(edit_form.approvalDate) }}#}
+        {#{% endif %}#}
+
+        {#{% if edit_form.createDate is defined or edit_form.submitter is defined %}#}
+            {#<div class="well well-sm">#}
+                {#{% if edit_form.createDate is defined %}#}
+                    {#{{ formmacros.field(edit_form.createDate) }}#}
+                {#{% endif %}#}
+                {#{% if edit_form.submitter is defined %}#}
+                    {#{{ formmacros.field(edit_form.submitter) }}#}
+                {#{% endif %}#}
+            {#</div>#}
+        {#{% endif %}#}
+
+        {{ transres.projectInfo(edit_form,project,cycle) }}
+
+        {#{{ transres.updateInfo(edit_form,cycle) }}#}
+
+        {{ transres.projectFormEdit(edit_form,project,cycle) }}
+
+        {{ transres.projectRequesters(edit_form,project,cycle) }}
+
+        {#{{ form_widget(edit_form) }}#}
+
+        {#<div id="form-prototype-data"#}
+            {#{% if edit_form.irbReviews is defined %}#}
+             {#data-prototype-transres-irbreviews = "{{ transres.projectSingleReview(edit_form,edit_form.irbReviews,cycle,'transres-irbreviews','prototype', sitename,1)|e }}"#}
+            {#{% endif %}#}
+            {#{% if edit_form.adminReviews is defined %}#}
+             {#data-prototype-transres-adminreviews = "{{ transres.projectSingleReview(edit_form,edit_form.adminReviews,cycle,'transres-adminreviews','prototype', sitename,1)|e }}"#}
+            {#{% endif %}#}
+            {#{% if edit_form.committeeReviews is defined %}#}
+             {#data-prototype-transres-committeereviews = "{{ transres.projectSingleReview(edit_form,edit_form.committeeReviews,cycle,'transres-committeereviews','prototype', sitename,1)|e }}"#}
+            {#{% endif %}#}
+            {#{% if edit_form.finalReviews is defined %}#}
+             {#data-prototype-transres-finalreviews = "{{ transres.projectSingleReview(edit_form,edit_form.finalReviews,cycle,'transres-finalreviews','prototype', sitename,1)|e }}"#}
+            {#{% endif %}#}
+        {#></div>#}
+        {{ transres.getProjectReviewPrototypeFormData(edit_form,cycle,sitename) }}
+
+        {{ transres.projectReviews(edit_form,cycle,sitename,1) }}
+
+        {#{% if project.state.vars.value == "irb_review" %}#}
+            {#{% set reviews = project.irbReviews %}#}
+        {#{% endif %}#}
+        {#{% if project.state.vars.value == "admin_review" %}#}
+            {#{% set reviews = project.adminReviews %}#}
+        {#{% endif %}#}
+        {#{% if project.state.vars.value == "committee_review" %}#}
+            {#{% set reviews = project.committeeReviews %}#}
+        {#{% endif %}#}
+        {#{% if project.state.vars.value == "final_review" %}#}
+            {#{% set reviews = project.finalReviews %}#}
+        {#{% endif %}#}
+        {#{{ transres.projectReviews(project,project.irbReviews,cycle,'transres-irbreviews','noprototype', sitename,1) }}#}
+        {#{{ transres.projectReviews(project,project.adminReviews,cycle,'transres-irbreviews','noprototype', sitename,1) }}#}
+        {#{{ transres.projectReviews(project,project.committeeReviews,cycle,'transres-irbreviews','noprototype', sitename,1) }}#}
+        {#{{ transres.projectReviews(project,project.finalReviews,cycle,'transres-irbreviews','noprototype', sitename,1) }}#}
+
+
+        {#{% if edit_form.updateDate is defined or edit_form.updateUser is defined  %}#}
+            {#<div class="well well-sm">#}
+                {#{% if edit_form.updateDate is defined %}#}
+                    {#{{ formmacros.field(edit_form.updateDate) }}#}
+                {#{% endif %}#}
+                {#{% if edit_form.updateUser is defined %}#}
+                    {#{{ formmacros.field(edit_form.updateUser) }}#}
+                {#{% endif %}#}
+            {#</div>#}
+        {#{% endif %}#}
+
+        {#{{ transres.projectFormEdit(edit_form,project,cycle) }}#}
+
+        {#{{ formmacros.checkbox(edit_form.readyForReview) }}#}
+
+        {#{% if edit_form.primaryReviewerComment is defined %}#}
+            {#{{ formmacros.field(edit_form.primaryReviewerComment) }}#}
+        {#{% endif %}#}
+
+        <br>
+        {#<p>#}
+            {#<input class="btn btn-warning" type="submit" value="Update Project" />#}
+        {#</p>#}
+
+        {% if edit_form.saveAsDraft is defined %}
+            {{ form_widget(edit_form.saveAsDraft) }}
+        {% endif %}
+        {% if edit_form.saveAsComplete is defined %}
+            {{ form_widget(edit_form.saveAsComplete) }}
+        {% endif %}
+        {% if edit_form.submitIrbReview is defined %}
+            {{ form_widget(edit_form.submitIrbReview) }}
+        {% endif %}
+        {% if edit_form.updateProject is defined %}
+            {{ form_widget(edit_form.updateProject) }}
+        {% endif %}
+
+    {{ form_end(edit_form) }}
+
+    <br>
+    <br>
+    <p>
+        <a class="btn btn-primary" href="{{ path(translationalresearch_sitename~'_project_show',{ 'id': project.id }) }}">Cancel</a>
+    </p>
+    <br>
+    <p>
+        <a href="{{ path(translationalresearch_sitename~'_project_index') }}">Back to the list</a>
+    </p>
+    {#{{ form_start(delete_form) }}#}
+        {#<input class="btn btn-danger" type="submit" value="Delete">#}
+    {#{{ form_end(delete_form) }}#}
+
+{% endblock %}
