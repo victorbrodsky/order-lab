@@ -58,8 +58,8 @@
     <br>
 
 
-    {#<p>#}
-        {#<a href="{{ path(translationalresearch_sitename~'_request_index') }}">Back to the request list</a>#}
-    {#</p>#}
+    <p>
+        <a href="{{ path(translationalresearch_sitename~'_request_index',{'id':project.id}) }}">Back to the request list</a>
+    </p>
 
 {% endblock %}

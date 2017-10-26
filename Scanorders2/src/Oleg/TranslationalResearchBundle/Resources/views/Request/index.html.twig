@@ -1,0 +1,103 @@
+{% extends "OlegTranslationalResearchBundle::Default/base.html.twig" %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block content %}
+
+    <h4 class="text-info" align="center">
+        {{ title }}
+    </h4>
+
+    {#<table class="table table-hover table-condensed text-left table-bordered">#}
+    <table class="records_list table table-condensed text-left my-table-class">
+        <thead>
+            <tr>
+                {#<th>Id</th>#}
+                <th>{{ knp_pagination_sortable(transresRequests, 'ID#', 'transresRequest.id') }}</th>
+                <th>{{ knp_pagination_sortable(transresRequests, 'Submitter', 'submitterInfos.displayName') }}</th>
+                <th>{{ knp_pagination_sortable(transresRequests, 'Creation Date', 'transresRequest.createDate') }}</th>
+                {#<th>{{ knp_pagination_sortable(projects, 'Expiration Date', 'project.expirationDate') }}</th>#}
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        {% set count = 0 %}
+        {% for transresRequest in transresRequests %}
+
+            {% if count is odd %}
+                {% set trclassname = "table-row-separator-gray" %}
+            {% else %}
+                {% set trclassname = "table-row-separator-white" %}
+            {% endif %}
+            {% set count = count + 1 %}
+
+            {#add if state has "_rejected"?#}
+            {#{% if project.state == 'not_approved' or project.state == 'closed' %}#}
+                {#{% set trclassname = "order-reject-status" %}#}
+            {#{% endif %}#}
+
+            <tbody data-link="row" class="rowlink table-tbody-hover" {{ trclassname }}>
+            <tr style="border-bottom: 1px solid #C6C6C6;">
+                <td>
+                    <a href="{{ path(translationalresearch_sitename~'_request_show', { 'id': transresRequest.id }) }}" target="_blank">{{ transresRequest.id }}</a>
+                </td>
+
+                <td class="rowlink-skip">
+                    {#{{ principalInvestigator }}<br>#}
+                    {% set personurl = path(translationalresearch_sitename~'_showuser',{'id':transresRequest.submitter.id}) %}
+                    {% set personlink = '<a href="'~personurl~'" target="_blank">'~transresRequest.submitter.getUsernameOptimal()~'</a>'  %}
+                    {{ personlink|raw }}<br>
+                </td>
+
+                <td>
+                    {% if transresRequest.createDate %}
+                        {{ transresRequest.createDate|date('Y-m-d H:i:s') }}
+                    {% endif %}
+                </td>
+
+                <td class="rowlink-skip">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            Action <span class="caret"></span>
+                        </button>
+
+                        <ul class="dropdown-menu dropdown-menu-right">
+
+                            <li>
+                                <a href="{{ path(translationalresearch_sitename~'_request_show', { 'id': transresRequest.id }) }}" target="_blank">Show Request</a>
+                            </li>
+
+
+                            {% if is_granted('ROLE_TRANSRES_ADMIN') or transresRequest.submitter.id == app.user.id %}
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_request_edit', { 'id': transresRequest.id }) }}" target="_blank">Edit Request</a>
+                                </li>
+                            {% endif %}
+
+                        </ul>
+
+                    </div>
+                </td>
+            </tr>
+            <tr class="table-no-border">
+                <td style="display: none">
+                    <a href="{{ path(translationalresearch_sitename~'_request_show', { 'id': transresRequest.id }) }}" target="_blank">Show Request</a>
+                </td>
+                {{ user_formnode_utility.getFormNodeHolderShortInfo(transresRequest,transresRequest.messageCategory,1,trclassname)|raw }}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {#{{ render(controller('OlegTranslationalResearchBundle:Project:threadComments', { 'id': "3-9-committee_review" })) }}#}
+    {#{% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': "3-9-committee_review"} %}#}
+
+    <br>
+    <p>
+        <a class="btn btn-primary" href="{{ path(translationalresearch_sitename~'_request_new', {'id':project.id}) }}">Create a new Request</a>
+    </p>
+
+{% endblock %}

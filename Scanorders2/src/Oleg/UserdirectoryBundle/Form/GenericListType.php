@@ -18,6 +18,7 @@
 namespace Oleg\UserdirectoryBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
+use Oleg\TranslationalResearchBundle\Entity\RequestCategoryTypeList;
 use Oleg\UserdirectoryBundle\Entity\CompositeNodeInterface;
 use Oleg\UserdirectoryBundle\Entity\FormNode;
 use Oleg\UserdirectoryBundle\Entity\Institution;
@@ -582,6 +583,26 @@ class GenericListType extends AbstractType
                 'attr' => array('class'=>'form-control')
             ));
         }
+
+        //RequestCategoryTypeList
+        if( $this->params['entity'] instanceof RequestCategoryTypeList ) {
+            $builder->add('section', TextType::class, array(
+                'label' => 'Section:',
+                'required' => false,
+                'attr' => array('class'=>'form-control')
+            ));
+            $builder->add('fee', TextType::class, array(
+                'label' => 'Fee ($):',
+                'required' => false,
+                'attr' => array('class'=>'form-control')
+            ));
+            $builder->add('feeUnit', TextType::class, array(
+                'label' => 'Fee Unit:',
+                'required' => false,
+                'attr' => array('class'=>'form-control')
+            ));
+        }
+
 
         ///////////////// Many To Many relationship /////////////////
 

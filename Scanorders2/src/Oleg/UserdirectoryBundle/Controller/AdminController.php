@@ -21,6 +21,7 @@ namespace Oleg\UserdirectoryBundle\Controller;
 use Oleg\FellAppBundle\Entity\FellAppRank;
 use Oleg\FellAppBundle\Entity\FellAppStatus;
 use Oleg\FellAppBundle\Entity\LanguageProficiency;
+use Oleg\TranslationalResearchBundle\Entity\RequestCategoryTypeList;
 use Oleg\TranslationalResearchBundle\Entity\SpecialtyList;
 use Oleg\UserdirectoryBundle\Entity\AuthorshipRoles;
 use Oleg\UserdirectoryBundle\Entity\BloodProductTransfusedList;
@@ -724,6 +725,7 @@ class AdminController extends Controller
         $count_setFormNodeVersion = $this->setFormNodeVersion();
         $count_generateLifeForm = $this->generateLifeForm();
         $count_generateTransResProjectSpecialty = $this->generateTransResProjectSpecialty();
+        $count_generateTransResRequestCategoryType = $this->generateTransResRequestCategoryType();
 
         $count_generatePlatformListManagerList = $this->generatePlatformListManagerList();
 
@@ -816,6 +818,7 @@ class AdminController extends Controller
             'FormNodeVersion='.$count_setFormNodeVersion.', '.
             'LifeForms='.$count_generateLifeForm.', '.
             'TransResProjectSpecialty='.$count_generateTransResProjectSpecialty.', '.
+            'TransResRequestCategoryType='.$count_generateTransResRequestCategoryType.', '.
             'PlatformListManagerList='.$count_generatePlatformListManagerList.', '.
 
             ' (Note: -1 means that this table is already exists)';
@@ -6275,6 +6278,7 @@ class AdminController extends Controller
             "1090" => array('CalllogEntryTagsList','calllogentrytags-list','Call Log Entry Tags List'),
             "1100" => array('TranslationalResearchBundle','transresprojectspecialties-list','Translational Research Project Specialty List'),
             "1110" => array('TranslationalResearchBundle','transresprojecttypes-list','Translational Research Project Type List'),
+            "1120" => array('TranslationalResearchBundle','transresrequestcategorytypes-list','Translational Research Request Category Type List'),
             //"1050" => array('','-list'),
 
         );
@@ -7904,6 +7908,58 @@ class AdminController extends Controller
             $this->setDefaultList($listEntity,$count,$username,$name);
 
             $listEntity->setAbbreviation($abbreviation);
+
+            //exit('exit generateObjectTypeActions');
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+    //https://pathology.weill.cornell.edu/research/translational-research-services/fee-schedule
+    public function generateTransResRequestCategoryType() {
+
+        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            //"" => array("Histology", "",""),
+            "Processing fixed tissue & embedding in paraffin block only" => array("Histology", "18","block"),
+            "Embedding frozen tissue in OCT block" => array("Histology", "10","block"),
+            "Unstained slides from paraffin-embedded or frozen tissue" => array("Histology", "10","slide"),
+            "Unstained slides from TMA block" => array("Histology", "10","slide"),
+            "Processing tissue and providing one H&E stained slide from paraffin-embedded block or frozen tissue" => array("Histology", "25","slide"),
+            "Prepare one H&E stained slide from paraffin-embedded block or frozen tissue" => array("Histology", "12","slide"),
+            "Prepare one H&E stained slide from TMA block" => array("Histology", "12","slide"),
+            "Sectioning or coring from paraffin-embedded or frozen tissue (Eppendorf tube)" => array("Histology", "15","tube"),
+            "Weigert's elastic staining" => array("Histology", "28","Slide"),
+            "Giemsa staining" => array("Histology", "28","slide"),
+            "Iron staining" => array("Histology", "28","slide"),
+        );
+
+        $count = 10;
+        foreach( $types as $name => $paramsArr ) {
+
+            $listEntity = $em->getRepository('OlegTranslationalResearchBundle:RequestCategoryTypeList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new RequestCategoryTypeList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            if( count($paramsArr) > 0 ) {
+                $section = $paramsArr[0];
+                $fee = $paramsArr[1];
+                $feeUnit = $paramsArr[2];
+
+                $listEntity->setSection($section);
+                $listEntity->setFee($fee);
+                $listEntity->setFeeUnit($feeUnit);
+            }
 
             //exit('exit generateObjectTypeActions');
             $em->persist($listEntity);

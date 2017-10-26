@@ -788,6 +788,17 @@
         {{ formmacros.field(form.userWrapperEmail) }}
     {% endif %}
 
+    {#RequestCategoryTypeList#}
+    {% if form.section is defined %}
+        {{ formmacros.field(form.section) }}
+    {% endif %}
+    {% if form.fee is defined %}
+        {{ formmacros.field(form.fee) }}
+    {% endif %}
+    {% if form.feeUnit is defined %}
+        {{ formmacros.field(form.feeUnit) }}
+    {% endif %}
+
 {% endmacro %}
 
 {#permissionList attributes#}

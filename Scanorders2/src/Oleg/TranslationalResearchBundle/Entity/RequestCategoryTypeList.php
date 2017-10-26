@@ -41,4 +41,78 @@ class RequestCategoryTypeList extends ListAbstract
     protected $original;
 
 
+    /**
+     * @var string
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $fee;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $feeUnit;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $section;
+
+
+
+
+    /**
+     * @return string
+     */
+    public function getFee()
+    {
+        return $this->fee;
+    }
+
+    /**
+     * @param string $fee
+     */
+    public function setFee($fee)
+    {
+        $this->fee = $fee;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFeeUnit()
+    {
+        return $this->feeUnit;
+    }
+
+    /**
+     * @param string $feeUnit
+     */
+    public function setFeeUnit($feeUnit)
+    {
+        $this->feeUnit = $feeUnit;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSection()
+    {
+        return $this->section;
+    }
+
+    /**
+     * @param string $section
+     */
+    public function setSection($section)
+    {
+        $this->section = $section;
+    }
+
+    public function getOptimalAbbreviationName()
+    {
+        return $this->getName() . ": $" . $this->getFee() . "/" . $this->getFeeUnit();
+    }
+
 }

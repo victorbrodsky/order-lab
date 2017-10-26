@@ -65,7 +65,7 @@ class RequestController extends Controller
 
         $transresRequest = $this->createRequestEntity($user,null);
 
-        $form = $this->createRequestForm($transresRequest,$cycle,$request);
+        $form = $this->createRequestForm($transresRequest,$cycle,$request); //new
 
         $messageTypeId = true;//testing
         $formnodetrigger = 1;
@@ -88,17 +88,17 @@ class RequestController extends Controller
 
             //exit("Project submitted");
 
-//            //new
-//            if ($form->getClickedButton() && 'saveAsDraft' === $form->getClickedButton()->getName()) {
-//                //Save Project as Draft => state='draft'
-//                $project->setState('draft');
-//            }
-//
-//            //new
-//            if ($form->getClickedButton() && 'saveAsComplete' === $form->getClickedButton()->getName()) {
-//                //Complete Submission => state='submit'
-//                $project->setState('complete');
-//            }
+            //new
+            if ($form->getClickedButton() && 'saveAsDraft' === $form->getClickedButton()->getName()) {
+                //Save Project as Draft => state='draft'
+                $transresRequest->setProgressState('draft');
+            }
+
+            //new
+            if ($form->getClickedButton() && 'saveAsComplete' === $form->getClickedButton()->getName()) {
+                //Complete Submission => state='submit'
+                $transresRequest->setProgressState('complete');
+            }
 
             if( !$testing ) {
                 $em->persist($transresRequest);
@@ -129,6 +129,7 @@ class RequestController extends Controller
 
         return array(
             'transresRequest' => $transresRequest,
+            'project' => $project,
             'form' => $form->createView(),
             'cycle' => $cycle,
             'title' => "Create Request for project ID ".$project->getOid(),
@@ -171,7 +172,7 @@ class RequestController extends Controller
 
         $transresRequest = $this->createRequestEntity($user,$transresRequest);
 
-        $form = $this->createRequestForm($transresRequest,$cycle,$request);
+        $form = $this->createRequestForm($transresRequest,$cycle,$request); //edit
 
         $messageTypeId = true;//testing
         $formnodetrigger = 1;
@@ -194,24 +195,19 @@ class RequestController extends Controller
             //exit("Request update submitted");
 
             //edit
-//            if ($form->getClickedButton() && 'saveAsDraft' === $form->getClickedButton()->getName()) {
-//                //Save Project as Draft => state='draft'
-//                $project->setState('draft');
-//            }
+            if ($form->getClickedButton() && 'saveAsDraft' === $form->getClickedButton()->getName()) {
+                //Save Project as Draft => state='draft'
+                $transresRequest->setProgressState('draft');
+            }
 
-//            //edit
-//            if ($form->getClickedButton() && 'saveAsComplete' === $form->getClickedButton()->getName()) {
-//                //Complete Submission => state='submit'
-//                if( $project->getState() == 'draft' ) {
-//                    $project->setState('complete');
-//                }
-//            }
-//            if ($form->getClickedButton() && 'submitIrbReview' === $form->getClickedButton()->getName()) {
-//                //Complete Submission => state='submit'
-//                if( $project->getState() == 'complete' || $project->getState() == 'draft' ) {
-//                    $project->setState('irb_review');
-//                }
-//            }
+            //edit
+            if ($form->getClickedButton() && 'saveAsComplete' === $form->getClickedButton()->getName()) {
+                //Complete Submission => state='submit'
+                if( $transresRequest->getProgressState() == 'draft' ) {
+                    $transresRequest->setProgressState('complete');
+                }
+            }
+
 
             if( !$testing ) {
                 $em->persist($transresRequest);
@@ -245,6 +241,7 @@ class RequestController extends Controller
 
         return array(
             'transresRequest' => $transresRequest,
+            'project' => $project,
             'edit_form' => $form->createView(),
             'cycle' => $cycle,
             'formtype' => $formtype,
@@ -304,6 +301,69 @@ class RequestController extends Controller
 //        );
     }
 
+    /**
+     * Finds and displays all project's requests
+     *
+     * @Route("/requests/{id}", name="translationalresearch_request_index")
+     * @Template("OlegTranslationalResearchBundle:Request:index.html.twig")
+     * @Method("GET")
+     */
+    public function indexAction(Request $request, Project $project)
+    {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+        }
+
+        $transresUtil = $this->container->get('transres_util');
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $routeName = $request->get('_route');
+        $title = "Requests for the project ID ".$project->getOid();
+
+
+        $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
+        $dql =  $repository->createQueryBuilder("transresRequest");
+        $dql->select('transresRequest');
+
+        $dql->leftJoin('transresRequest.submitter','submitter');
+        $dql->leftJoin('transresRequest.project','project');
+        $dql->leftJoin('submitter.infos','submitterInfos');
+
+        $dqlParameters = array();
+
+        $dql->andWhere("project.id = :projectId");
+
+        $dqlParameters["projectId"] = $project->getId();
+
+        $limit = 30;
+        $query = $em->createQuery($dql);
+
+        if( count($dqlParameters) > 0 ) {
+            $query->setParameters($dqlParameters);
+        }
+
+        //echo "query=".$query->getSql()."<br>";
+
+        $paginationParams = array(
+            'defaultSortFieldName' => 'transresRequest.id',
+            'defaultSortDirection' => 'DESC'
+        );
+
+        $paginator  = $this->get('knp_paginator');
+        $transresRequests = $paginator->paginate(
+            $query,
+            $request->query->get('page', 1),   /*page number*/
+            $limit,                                         /*limit per page*/
+            $paginationParams
+        );
+
+        return array(
+            'transresRequests' => $transresRequests,
+            'project' => $project,
+            'title' => $title,
+        );
+    }
+
 
     public function createRequestEntity($user,$transresRequest=null) {
 
@@ -346,7 +406,10 @@ class RequestController extends Controller
             'transresUtil' => $transresUtil,
             'SecurityAuthChecker' => $this->get('security.authorization_checker'),
             'transresRequest' => $transresRequest,
-            'routeName' => $routeName
+            'routeName' => $routeName,
+            'saveAsDraft' => false,
+            'saveAsComplete' => false,
+            'updateRequest' => false,
         );
 
         $params['admin'] = false;
@@ -365,16 +428,19 @@ class RequestController extends Controller
 
         if( $cycle == "new" ) {
             $disabled = false;
-            //$params['saveAsDraft'] = true;
-            //$params['saveAsComplete'] = true;
+            $params['saveAsDraft'] = true;
+            $params['saveAsComplete'] = true;
         }
 
         if( $cycle == "show" ) {
             $disabled = true;
+            $params['updateRequest'] = true;
         }
 
         if( $cycle == "edit" ) {
             $disabled = false;
+            $params['saveAsDraft'] = true;
+            $params['saveAsComplete'] = true;
         }
 
         if( $cycle == "set-state" ) {
