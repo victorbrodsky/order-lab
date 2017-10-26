@@ -62,14 +62,14 @@ class TransResRequestType extends AbstractType
 //                'attr' => array('class' => 'combobox'),
 //            ));
 
-            $builder->add('approvalDate', DateType::class, array(
-                'widget' => 'single_text',
-                'label' => "Approval Date:",
-                'disabled' => true,
-                'format' => 'MM/dd/yyyy',
-                'attr' => array('class' => 'datepicker form-control'),
-                'required' => false,
-            ));
+//            $builder->add('approvalDate', DateType::class, array(
+//                'widget' => 'single_text',
+//                'label' => "Approval Date:",
+//                'disabled' => true,
+//                'format' => 'MM/dd/yyyy',
+//                'attr' => array('class' => 'datepicker form-control'),
+//                'required' => false,
+//            ));
         }
 
         if( $this->transresRequest->getCreateDate() ) {

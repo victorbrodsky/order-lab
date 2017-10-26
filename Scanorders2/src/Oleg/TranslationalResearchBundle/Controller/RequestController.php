@@ -64,6 +64,7 @@ class RequestController extends Controller
         //$testing = true;
 
         $transresRequest = $this->createRequestEntity($user,null);
+        $transresRequest->setProject($project);
 
         $form = $this->createRequestForm($transresRequest,$cycle,$request); //new
 
