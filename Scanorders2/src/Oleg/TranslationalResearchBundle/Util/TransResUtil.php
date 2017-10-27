@@ -730,7 +730,7 @@ class TransResUtil
         $defaultReviewers = $this->em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findBy(
             array(
                 'state'=>$state,
-                'projectSpecialty'=>$specialty->getId()
+                //'projectSpecialty'=>$specialty->getId()
             ),
             array('primaryReview' => 'DESC')
         );
