@@ -73,19 +73,27 @@ class FosCommentListener implements EventSubscriberInterface {
         //eventlog
 //        $transresUtil = $this->container->get('transres_util');
 //        $eventType = "Comment Posted";
-//        $resArr = $this->getMsgSubjectAndBody($comment,$project,false);
+//        $resArr = $this->getMsgSubjectAndBody($comment,$project);
 //        $body = $resArr['body'];
 //        $transresUtil->setEventLog($project,$eventType,$body);
-        $this->setCommentEventLog($event,$comment,$project);
+
+        //set only eventlog
+        //$this->setCommentEventLog($event,$comment,$project);
     }
 
-    public function onCommentPostPersistTest(CommentEvent $event)
+    public function onCommentPostPersist(CommentEvent $event)
     {
         $comment = $event->getComment();
         $project = $this->getProjectFromComment($comment);
 
-        $this->sendCommentEmails($event,$comment,$project);
+        //set only eventlog
+        $resArr = $this->setCommentEventLog($event,$comment,$project);
+
+        //send only emails
+        $this->sendCommentEmails($event,$comment,$project,$resArr);
     }
+
+
 
     public function setCommentEventLog(CommentEvent $event, $comment=null, $project=null) {
         $transresUtil = $this->container->get('transres_util');
@@ -99,12 +107,14 @@ class FosCommentListener implements EventSubscriberInterface {
         }
 
         $eventType = "Comment Posted";
-        $resArr = $this->getMsgSubjectAndBody($comment,$project,false);
+        $resArr = $this->getMsgSubjectAndBody($comment,$project);
         $body = $resArr['body'];
         $transresUtil->setEventLog($project,$eventType,$body);
+
+        return $resArr;
     }
 
-    public function sendCommentEmails(CommentEvent $event, $comment=null, $project=null)
+    public function sendCommentEmails(CommentEvent $event, $comment=null, $project=null, $resArr=null)
     {
         $transresUtil = $this->container->get('transres_util');
 
@@ -115,21 +125,6 @@ class FosCommentListener implements EventSubscriberInterface {
         if( !$project ) {
             $project = $this->getProjectFromComment($comment);
         }
-
-//        $authorTypeArr = $this->getAuthorType($project);
-//        if( $authorTypeArr && count($authorTypeArr) > 0 ) {
-//            $comment->setAuthorType($authorTypeArr['type']);
-//            $comment->setAuthorTypeDescription($authorTypeArr['description']);
-//        }
-
-        //TODO: send emails
-        //1) if reviewer: send emails to the project requesters
-        //if( $authorTypeArr['type'] == "Administrator" || $authorTypeArr['type'] == "Reviewer" ) {
-        //}
-        //2) if requester: send emails to the project reviewers and admin
-        //if( $authorTypeArr['type'] == "Requester" ) {
-        //}
-        //send email to all project related users: admin, primary, requesters, reviewers of this review type.
 
         //send email to all project related users: admin, primary, requesters, reviewers of this review type.
         $emails = array();
@@ -155,7 +150,7 @@ class FosCommentListener implements EventSubscriberInterface {
 
         $senderEmail = null; //Admin email
 
-        //$break = "\r\n";
+        $break = "\r\n";
 
         //$stateLabel = $transresUtil->getStateLabelByName($stateStr);
         //$subject = "New Comment for Project ID ".$project->getOid()." has been posted for the stage '".$stateLabel."'";
@@ -165,19 +160,22 @@ class FosCommentListener implements EventSubscriberInterface {
         //$projectUrl = $transresUtil->getProjectShowUrl($project);
         //$emailBody = $body . $break.$break. "Please click on the URL below to view this project:".$break.$projectUrl;
 
-        $resArr = $this->getMsgSubjectAndBody($comment,$project,true);
+        if( !$resArr ) {
+            $resArr = $this->getMsgSubjectAndBody($comment, $project);
+        }
+
         $subject = $resArr['subject'];
         $body = $resArr['body'];
 
+        //get project url
+        $projectUrl = $transresUtil->getProjectShowUrl($project);
+        $body = $body . $break . $break . "Please click on the URL below to view this project:" . $break . $projectUrl;
+
         $emailUtil = $this->container->get('user_mailer_utility');
         $emailUtil->sendEmail( $emails, $subject, $body, null, $senderEmail );
-
-        //eventlog
-        //$eventType = "Comment Posted";
-        //$transresUtil->setEventLog($project,$eventType,$body);
     }
 
-    public function getMsgSubjectAndBody($comment,$project,$withProjectUrl) {
+    public function getMsgSubjectAndBody($comment,$project) {
         $transresUtil = $this->container->get('transres_util');
         $break = "\r\n";
 
@@ -185,12 +183,6 @@ class FosCommentListener implements EventSubscriberInterface {
         $stateLabel = $transresUtil->getStateLabelByName($stateStr);
         $subject = "New Comment for Project ID ".$project->getOid()." has been posted for the stage '".$stateLabel."'";
         $body = $subject . ":" . $break . $comment->getBody();
-
-        if( $withProjectUrl ) {
-            //get project url
-            $projectUrl = $transresUtil->getProjectShowUrl($project);
-            $body = $body . $break . $break . "Please click on the URL below to view this project:" . $break . $projectUrl;
-        }
 
         return array('subject'=>$subject, 'body'=>$body);
     }
