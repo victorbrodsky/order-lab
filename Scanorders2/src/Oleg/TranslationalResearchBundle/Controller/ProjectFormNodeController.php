@@ -318,7 +318,7 @@ class ProjectFormNodeController extends ProjectController
             $startProjectReview = false;
 
             $originalStateStr = $project->getState();
-            $originalStateLabel = $this->getStateLabelByName($originalStateStr);
+            $originalStateLabel = $transresUtil->getStateLabelByName($originalStateStr);
 
             $msg = "Project ID ".$project->getOid() ." has been successfully updated";
 
@@ -348,7 +348,7 @@ class ProjectFormNodeController extends ProjectController
                     $project->setState('irb_review');
                     $startProjectReview = true;
 
-                    $label = $this->getStateLabelByName($project->getState());
+                    $label = $transresUtil->getStateLabelByName($project->getState());
                     $msg = "Project ID ".$project->getOid()." has been sent to the stage '$label' from ".$originalStateLabel;
                 }
             }
