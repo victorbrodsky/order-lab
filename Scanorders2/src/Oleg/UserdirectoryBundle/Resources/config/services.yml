@@ -141,6 +141,7 @@ services:
         arguments: ["@service_container", "@security.token_storage", "@doctrine.orm.entity_manager"]
         tags:
             - { name: "kernel.event_listener", event: "fos_comment.comment.pre_persist", method: onCommentPrePersist }
+            - { name: "kernel.event_listener", event: "fos_comment.comment.post_persist", method: onCommentPostPersist }
 
     #user mailer util
     user_mailer_utility:
