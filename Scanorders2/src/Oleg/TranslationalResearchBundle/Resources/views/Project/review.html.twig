@@ -116,11 +116,12 @@
                 reviewHolder.find('.fos_comment_comment_new_form').find('input[type="submit"]').click();
             }
 
-            if( $(this).hasClass('btn-warning') && !comment ) {
-                //event.stopPropagation();
-                alert('No comment is provided for requesting additional information');
-                return false;
-            }
+            //get alert if the additional info button clicked and no comment is provided
+//            if( $(this).hasClass('btn-warning') && !comment ) {
+//                //event.stopPropagation();
+//                alert('No comment is provided for requesting additional information');
+//                return false;
+//            }
 
             console.log("done review");
 

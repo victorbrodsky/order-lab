@@ -114,10 +114,14 @@ class FosCommentListener implements EventSubscriberInterface {
 
         //get project url
         $projectUrl = $transresUtil->getProjectShowUrl($project);
-        $body = $body . $break.$break. "Please click on the URL below to view this project:".$break.$projectUrl;
+        $emailBody = $body . $break.$break. "Please click on the URL below to view this project:".$break.$projectUrl;
 
         $emailUtil = $this->container->get('user_mailer_utility');
-        $emailUtil->sendEmail( $emails, $subject, $body, null, $senderEmail );
+        $emailUtil->sendEmail( $emails, $subject, $emailBody, null, $senderEmail );
+
+        //eventlog
+        $eventType = "Comment Posted";
+        $transresUtil->setEventLog($project,$eventType,$body);
     }
 
     public function getAuthorType( $project ) {

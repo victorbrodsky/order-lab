@@ -237,11 +237,12 @@ class TransResUtil
 
                 $classTransition = $this->getHtmlClassTransition($transitionName);
 
-                if( strpos($transitionName, "missinginfo") === false ) {
-                    $generalDataConfirmation = "general-data-confirm='Are you sure you want to $label?'";
-                } else {
-                    $generalDataConfirmation = "";
-                }
+                $generalDataConfirmation = "general-data-confirm='Are you sure you want to $label?'";
+
+                //don't show confirmation modal
+//                if( strpos($transitionName, "missinginfo") !== false ) {
+//                    $generalDataConfirmation = "";
+//                }
 
                 $thisLink = "<a ".
                     //"general-data-confirm='Are you sure you want to $label?'".
