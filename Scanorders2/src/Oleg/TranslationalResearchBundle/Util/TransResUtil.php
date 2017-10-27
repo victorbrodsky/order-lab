@@ -387,28 +387,15 @@ class TransResUtil
         return $links;
     }
 
-    //TODO: requester => project is on the draft stage or in the reject stage
     public function isProjectEditableByRequester( $project ) {
         $state = $project->getState();
-        if( strpos($state, '_rejected') !== false || $state == 'draft' || $state == 'complete' ) {
-//            if( $this->secAuth->isGranted('ROLE_TRANSRES_REQUESTER') ) {
-//                $user = $this->secTokenStorage->getToken()->getUser();
-//                if( $project->getSubmitter() && $project->getSubmitter()->getId() == $user->getId() ) {
-//                    return true;
-//                }
-//                if( $project->getPrincipalInvestigators()->contains($user) ) {
-//                    return true;
-//                }
-//                if( $project->getCoInvestigators()->contains($user) ) {
-//                    return true;
-//                }
-//                if( $project->getPathologists()->contains($user) ) {
-//                    return true;
-//                }
-                if( $this->isProjectRequester($project) === true ) {
-                    return true;
-                }
-//            }
+        if( strpos($state, '_rejected') !== false || $state == 'draft' || $state == 'complete' ) { //|| strpos($state, "_missinginfo") !== false
+            if( $this->isProjectRequester($project) === true ) {
+                return true;
+            }
+        }
+        if( $this->isProjectStateRequesterResubmit($project) ) {
+            return true;
         }
         return false;
     }
@@ -542,6 +529,7 @@ class TransResUtil
         //echo "label=".$label."<br>";
 
         $originalStateStr = $project->getState();
+        $originalStateLabel = $this->getStateLabelByName($originalStateStr);
 
         // Update the currentState on the post
         if( $workflow->can($project, $transitionName) ) {
@@ -567,13 +555,15 @@ class TransResUtil
                         $body = $subject;
                         //get project url
                         $projectUrl = $transresUtil->getProjectShowUrl($project);
-                        $body = $body . $break.$break. "Please click on the URL below to view this project:".$break.$projectUrl;
+                        $emailBody = $body . $break.$break. "Please click on the URL below to view this project:".$break.$projectUrl;
 
                         //send notification emails
-                        $this->sendNotificationEmails($project,$review,$transitionName,$subject,$body,$testing);
+                        $this->sendNotificationEmails($project,$review,$transitionName,$subject,$emailBody,$testing);
 
                         //event log
-                        $this->setEventLog($project,$review,$transitionName,$originalStateStr,$recommended,$testing);
+                        //$this->setEventLog($project,$review,$transitionName,$originalStateStr,$body,$testing);
+                        $eventType = "Review Submitted";
+                        $this->setEventLog($project,$eventType,$body,$testing);
 
                         $this->container->get('session')->getFlashBag()->add(
                             'notice',
@@ -598,17 +588,19 @@ class TransResUtil
 
                 $recommended = false;
                 $label = $this->getTransitionLabelByName($transitionName,$review);
-                $subject = "Project ID ".$project->getOid()." has been sent to the stage '$label'";
+                $subject = "Project ID ".$project->getOid()." has been sent to the stage '$label' from ".$originalStateLabel;
                 $body = $subject;
                 //get project url
                 $projectUrl = $transresUtil->getProjectShowUrl($project);
-                $body = $body . $break.$break. "Please click on the URL below to view this project:".$break.$projectUrl;
+                $emailBody = $body . $break.$break. "Please click on the URL below to view this project:".$break.$projectUrl;
 
                 //send confirmation email
-                $this->sendNotificationEmails($project,$review,$transitionName,$subject,$body,$testing);
+                $this->sendNotificationEmails($project,$review,$transitionName,$subject,$emailBody,$testing);
 
                 //event log
-                $this->setEventLog($project,$review,$transitionName,$originalStateStr,$recommended,$testing);
+                //$this->setEventLog($project,$review,$transitionName,$originalStateStr,$body,$testing);
+                $eventType = "Review Submitted";
+                $this->setEventLog($project,$eventType,$body,$testing);
 
                 $this->container->get('session')->getFlashBag()->add(
                     'notice',
@@ -1809,6 +1801,7 @@ class TransResUtil
 //        return false;
     }
 
+    //NOT USED
     public function processProjectOnReviewUpdate( $review, $stateStr, $request, $testing=false ) {
 
         $project = $review->getProject();
@@ -1818,6 +1811,7 @@ class TransResUtil
         }
 
         $user = $this->secTokenStorage->getToken()->getUser();
+        $userSecUtil = $this->container->get('user_security_utility');
         $transresUtil = $this->container->get('transres_util');
         $break = "\r\n";
         //echo "user=".$user."<br>";
@@ -1830,11 +1824,13 @@ class TransResUtil
 
         if( $appliedTransition ) {
             $recommended = false;
+            $eventType = "Review Submitted";
             $label = $this->getTransitionLabelByName($appliedTransition,$review);
             $subject = "Project ID ".$project->getOid()." has been sent to the stage '$label'";
             $body = "Project ID ".$project->getOid()." has been sent to the stage '$label'";
         } else {
             $recommended = true;
+            $eventType = "Review Submitted";
             $label = $this->getStateLabelByName($project->getState());
             $subject = "Project ID ".$project->getOid(). " (" .$label. "). Recommendation: ".$review->getDecision();
             $body = $subject;
@@ -1842,10 +1838,10 @@ class TransResUtil
 
         //get project url
         $projectUrl = $transresUtil->getProjectShowUrl($project);
-        $body = $body . $break.$break. "Please click on the URL below to view this project:".$break.$projectUrl;
+        $emailBody = $body . $break.$break. "Please click on the URL below to view this project:".$break.$projectUrl;
 
         //send notification emails
-        $this->sendNotificationEmails($project,$review,$appliedTransition,$subject,$body,$testing);
+        $this->sendNotificationEmails($project,$review,$appliedTransition,$subject,$emailBody,$testing);
 
 //        $workflow = $this->container->get('state_machine.transres_project');
 //        $transitions = $workflow->getEnabledTransitions($project);
@@ -1885,7 +1881,8 @@ class TransResUtil
 //        $userSecUtil->createUserEditEvent($this->container->getParameter('translationalresearch.sitename'),$event,$user,$review,$request,$eventType);
 
         //event log
-        $this->setEventLog($project,$review,$appliedTransition,$stateStr,$recommended,$testing);
+        //$this->setEventLog($project,$review,$appliedTransition,$stateStr,$eventType,$body,$testing);
+        $this->setEventLog($project,$eventType,$body,$testing);
     }
     //used by processProjectOnReviewUpdate
     public function setProjectState( $project, $review, $testing=false ) {
@@ -2005,36 +2002,42 @@ class TransResUtil
     }
 
     //Event Log
-    public function setEventLog($project, $review, $appliedTransition, $originalStateStr, $recommended=false, $testing=false) {
+    public function setEventLog($project, $eventType, $event, $testing=false) {
         $user = $this->secTokenStorage->getToken()->getUser();
-
-        if( $appliedTransition ) {
-            $eventType = "Review Submitted";
-            $event = "Project's (ID# " . $project->getId() . ") review has been successfully submitted. ".$review->getSubmittedReviewerInfo();
-
-            //testing
-            echo "appliedTransition=" . $appliedTransition . "<br>";
-            //echo "printTransition=".$this->printTransition($appliedTransition)."<br>";
-
-            $event .= ";<br> Project transitioned from '" . $this->getStateLabelByName($originalStateStr) . "'".
-                " to '" . $this->getStateLabelByName($project->getState()) . "'";
-            echo "event=".$event."<br>";
-
-            //exit('1');
-
-        } else {
-            $eventType = "Review Submitting Not Performed";
-            $event = "Project's (ID# " . $project->getId() . ") review submitting not performed. " . $review->getSubmittedReviewerInfo();
-            $event .= ";<br> Project transitioned from '" . $this->getStateLabelByName($originalStateStr) . "'" .
-                " to '" . $this->getStateLabelByName($project->getState()) . "'";
-            echo "event=".$event."<br>";
-
-            //exit('2');
-        }
-
         $userSecUtil = $this->container->get('user_security_utility');
 
-        $userSecUtil->createUserEditEvent($this->container->getParameter('translationalresearch.sitename'),$event,$user,$project,null,$eventType);
+//        if( $appliedTransition ) {
+//            $eventType = "Review Submitted";
+//
+//            if( !$event ) {
+//                $event = "Project's (ID# " . $project->getId() . ") review has been successfully submitted. " . $review->getSubmittedReviewerInfo();
+//
+//                //testing
+//                echo "appliedTransition=" . $appliedTransition . "<br>";
+//                //echo "printTransition=".$this->printTransition($appliedTransition)."<br>";
+//
+//                $event .= ";<br> Project transitioned from '" . $this->getStateLabelByName($originalStateStr) . "'" .
+//                    " to '" . $this->getStateLabelByName($project->getState()) . "'";
+//                echo "event=" . $event . "<br>";
+//
+//                //exit('1');
+//            }
+//
+//        } else {
+//            $eventType = "Review Submitting Not Performed";
+//            if( !$event ) {
+//                $event = "Project's (ID# " . $project->getId() . ") review submitting not performed. " . $review->getSubmittedReviewerInfo();
+//                $event .= ";<br> Project transitioned from '" . $this->getStateLabelByName($originalStateStr) . "'" .
+//                    " to '" . $this->getStateLabelByName($project->getState()) . "'";
+//                echo "event=" . $event . "<br>";
+//
+//                //exit('2');
+//            }
+//        }
+
+        if( !$testing ) {
+            $userSecUtil->createUserEditEvent($this->container->getParameter('translationalresearch.sitename'), $event, $user, $project, null, $eventType);
+        }
     }
 
     public function sendNotificationEmails($project, $review, $appliedTransition, $subject, $body, $testing=false) {
@@ -2056,17 +2059,24 @@ class TransResUtil
 //            $body = "Project ID ".$project->getOid()." has been sent to the stage '$label'";
 //        }
 
-
         //send to the
         // 1) admins and primary reviewers
         $admins = $this->getTransResAdminEmails(); //ok
+        $emails = array_merge($emails,$admins);
+
         // 2) project's Requester (submitter, principalInvestigators, coInvestigators, pathologists)
         $requesterEmails = $this->getRequesterEmails($project); //ok
+        $emails = array_merge($emails,$requesterEmails);
+
         // 3) current project's reviewers
         $currentReviewerEmails = $this->getCurrentReviewersEmails($review); //ok
-        // 4) next state project's reviewers
-        $nextStateReviewerEmails = $this->getNextStateReviewersEmails($project,$review,$appliedTransition);
+        $emails = array_merge($emails,$currentReviewerEmails);
 
+        // 4) next state project's reviewers
+        $nextStateReviewerEmails = $this->getNextStateReviewersEmails($project,$project->getState());
+        $emails = array_merge($emails,$nextStateReviewerEmails);
+
+        $emails = array_unique($emails);
 
         //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
         $emailUtil->sendEmail( $emails, $subject, $body, null, $senderEmail );
@@ -2195,10 +2205,19 @@ class TransResUtil
     }
 
     //next state project's reviewers
-    public function getNextStateReviewersEmails($project, $review, $appliedTransition, $asEmail=true) {
-        $users = array();
+    public function getNextStateReviewersEmails($project, $nextStateStr, $asEmail=true) {
+        $emails = array();
 
-        return $users;
+        //get next state
+        $reviews = $this->getReviewsByProjectAndState($project,$nextStateStr);
+        foreach($reviews as $review) {
+            $currentReviewerEmails = $this->getCurrentReviewersEmails($review); //ok
+            $emails = array_merge($emails,$currentReviewerEmails);
+        }
+
+        $emails = array_unique($emails);
+
+        return $emails;
     }
 
     public function getTransResProjectSpecialties() {

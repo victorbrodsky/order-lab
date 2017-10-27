@@ -286,7 +286,8 @@ class RequestController extends Controller
         //$reviewFormViews = $transresUtil->getReviewForm($project,$user);
 
         return array(
-            'project' => $transresRequest,
+            'transresRequest' => $transresRequest,
+            'project' => $transresRequest->getProject(),
             'form' => $form->createView(),
             'cycle' => $cycle,
             'title' => "Request ID ".$transresRequest->getOid(),
@@ -435,7 +436,7 @@ class RequestController extends Controller
 
         if( $cycle == "show" ) {
             $disabled = true;
-            $params['updateRequest'] = true;
+            //$params['updateRequest'] = true;
         }
 
         if( $cycle == "edit" ) {

@@ -25,6 +25,7 @@
 namespace Oleg\TranslationalResearchBundle\Controller;
 
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Oleg\TranslationalResearchBundle\Entity\Project;
 use Oleg\TranslationalResearchBundle\Entity\SpecialtyList;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -187,7 +188,7 @@ class ProjectFormNodeController extends ProjectController
             $formNodeUtil = $this->get('user_formnode_utility');
             $formNodeUtil->processFormNodes($request,$project->getMessageCategory(),$project,$testing); //testing
 
-            $msg = "Project has been successfully submitted.";
+            $msg = "Project with ID ".$project->getOid()." has been successfully created";
 
             if( $testing ) {
                 exit('form is submitted and finished, msg='.$msg);
@@ -197,6 +198,10 @@ class ProjectFormNodeController extends ProjectController
                 'notice',
                 $msg
             );
+
+            $eventType = "Project Created";
+            $msg = $msg . " by ".$project->getSubmitter()->getUsernameOptimal();
+            $transresUtil->setEventLog($project,$eventType,$msg,$testing);
 
             return $this->redirectToRoute('translationalresearch_project_show', array('id' => $project->getId()));
         }
@@ -263,6 +268,29 @@ class ProjectFormNodeController extends ProjectController
 
         $project = $this->createProjectEntity($user,$project);
 
+        ///////////// get originals /////////////
+        //IRB Reviews
+        $originalIrbReviews = new ArrayCollection();
+        foreach ($project->getIrbReviews() as $review) {
+            $originalIrbReviews->add($review);
+        }
+        //Admin Reviews
+        $originalAdminReviews = new ArrayCollection();
+        foreach ($project->getAdminReviews() as $review) {
+            $originalAdminReviews->add($review);
+        }
+        //Committee Reviews
+        $originalCommitteeReviews = new ArrayCollection();
+        foreach ($project->getCommitteeReviews() as $review) {
+            $originalCommitteeReviews->add($review);
+        }
+        //Final Reviews
+        $originalFinalReviews = new ArrayCollection();
+        foreach ($project->getFinalReviews() as $review) {
+            $originalFinalReviews->add($review);
+        }
+        ///////////// EOF get originals /////////////
+
         $form = $this->createProjectForm($project,$cycle,$request);
 
         $messageTypeId = true;//testing
@@ -284,6 +312,15 @@ class ProjectFormNodeController extends ProjectController
         if ($form->isSubmitted() && $form->isValid()) {
 
             //exit("Project update submitted");
+
+            $project->setUpdateUser($user);
+
+            //////////// remove the relationship between the review and the project ////////////
+            $transresUtil->removeReviewsFromProject($project,$originalIrbReviews,$project->getIrbReviews());
+            $transresUtil->removeReviewsFromProject($project,$originalAdminReviews,$project->getAdminReviews());
+            $transresUtil->removeReviewsFromProject($project,$originalCommitteeReviews,$project->getCommitteeReviews());
+            $transresUtil->removeReviewsFromProject($project,$originalFinalReviews,$project->getFinalReviews());
+            //////////// EOF remove the relationship between the review and the project ////////////
 
             //edit
 //            if ($form->getClickedButton() && 'saveAsDraft' === $form->getClickedButton()->getName()) {
@@ -323,7 +360,7 @@ class ProjectFormNodeController extends ProjectController
             $formNodeUtil = $this->get('user_formnode_utility');
             $formNodeUtil->processFormNodes($request,$project->getMessageCategory(),$project,$testing); //testing
 
-            $msg = "Project has been successfully updated.";
+            $msg = "Project has been successfully updated";
 
             if( $testing ) {
                 exit('form is submitted and finished, msg='.$msg);
@@ -333,6 +370,10 @@ class ProjectFormNodeController extends ProjectController
                 'notice',
                 $msg
             );
+
+            $eventType = "Project Updated";
+            $msg = $msg . " by ".$project->getUpdateUser()->getUsernameOptimal();
+            $transresUtil->setEventLog($project,$eventType,$msg,$testing);
 
             return $this->redirectToRoute('translationalresearch_project_show', array('id' => $project->getId()));
         }

@@ -705,7 +705,7 @@ class ProjectController extends Controller
             }
 
             //allow edit if admin at any time
-            if( $transresUtil->isAdminOrPrimaryReviewer() ) {
+            if( $transresUtil->isAdminOrPrimaryReviewer() || $transresUtil->isProjectEditableByRequester($project) ) {
                 $params['updateProject'] = true;
             }
         }
