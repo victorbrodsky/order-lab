@@ -588,7 +588,7 @@ class TransResUtil
 
                 $recommended = false;
                 $label = $this->getTransitionLabelByName($transitionName,$review);
-                $subject = "Project ID ".$project->getOid()." has been sent to the stage '$label' from ".$originalStateLabel;
+                $subject = "Project ID ".$project->getOid()." has been sent to the stage '$label' from '".$originalStateLabel."'";
                 $body = $subject;
                 //get project url
                 $projectUrl = $transresUtil->getProjectShowUrl($project);
