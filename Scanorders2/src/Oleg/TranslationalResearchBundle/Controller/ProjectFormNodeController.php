@@ -392,7 +392,7 @@ class ProjectFormNodeController extends ProjectController
                 //get project url
                 $projectUrl = $transresUtil->getProjectShowUrl($project);
                 $emailBody = $msg . $break.$break. "Please click on the URL below to view this project:".$break.$projectUrl;
-                $this->sendNotificationEmails($project,null,$msg,$emailBody,$testing);
+                $transresUtil->sendNotificationEmails($project,null,$msg,$emailBody,$testing);
             }
 
             return $this->redirectToRoute('translationalresearch_project_show', array('id' => $project->getId()));
