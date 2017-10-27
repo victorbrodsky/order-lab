@@ -70,13 +70,6 @@ class FosCommentListener implements EventSubscriberInterface {
 
         //$this->sendEmails($event,$comment,$project);
 
-        //eventlog
-//        $transresUtil = $this->container->get('transres_util');
-//        $eventType = "Comment Posted";
-//        $resArr = $this->getMsgSubjectAndBody($comment,$project);
-//        $body = $resArr['body'];
-//        $transresUtil->setEventLog($project,$eventType,$body);
-
         //set only eventlog
         //$this->setCommentEventLog($event,$comment,$project);
     }

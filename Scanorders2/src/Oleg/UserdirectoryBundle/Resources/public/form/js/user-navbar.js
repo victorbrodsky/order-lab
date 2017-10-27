@@ -237,11 +237,14 @@ function setTranslationalResearchNavBar() {
 
     var full = window.location.pathname;
 
-    if( full.indexOf("/translational-research/project/new/hemepath-project") !== -1 ) {
-        id = 'translationalresearch-new-project-hemepath-project';
-    }
-    if( full.indexOf("/translational-research/project/new/ap-cp-project") !== -1 ) {
-        id = 'translationalresearch-new-project-ap-cp-project';
+    //if( full.indexOf("/translational-research/project/new/hemepath-project") !== -1 ) {
+    //    id = 'translationalresearch-new-project-hemepath-project';
+    //}
+    //if( full.indexOf("/translational-research/project/new/ap-cp-project") !== -1 ) {
+    //    id = 'translationalresearch-new-project-ap-cp-project';
+    //}
+    if( full.indexOf("/translational-research/project/new/") !== -1 ) {
+        id = 'translationalresearch-new-project';
     }
 
     if( full.indexOf("/translational-research/my-projects") !== -1 ) {

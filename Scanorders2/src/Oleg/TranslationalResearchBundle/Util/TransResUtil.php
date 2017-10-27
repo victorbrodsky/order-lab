@@ -723,9 +723,18 @@ class TransResUtil
         return $project;
     }
 
-    public function getDefaultReviewerInfo($state) {
+    public function getDefaultReviewerInfo( $state, $specialty ) {
         $infos = array();
-        $defaultReviewers = $this->em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findByState($state,array('primaryReview' => 'DESC'));
+
+        //$defaultReviewers = $this->em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findByState($state,array('primaryReview' => 'DESC'));
+        $defaultReviewers = $this->em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findBy(
+            array(
+                'state'=>$state,
+                'projectSpecialty'=>$specialty->getId()
+            ),
+            array('primaryReview' => 'DESC')
+        );
+
         foreach ($defaultReviewers as $defaultReviewer) {
             $info = "";
             if( $defaultReviewer->getReviewer() ) {

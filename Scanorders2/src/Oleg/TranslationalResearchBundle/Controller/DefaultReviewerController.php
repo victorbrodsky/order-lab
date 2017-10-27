@@ -3,6 +3,7 @@
 namespace Oleg\TranslationalResearchBundle\Controller;
 
 use Oleg\TranslationalResearchBundle\Entity\DefaultReviewer;
+use Oleg\TranslationalResearchBundle\Entity\SpecialtyList;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -20,12 +21,27 @@ class DefaultReviewerController extends Controller
     /**
      * Lists defaultReviewer states: irb_review, committee_review, final_review
      *
-     * @Route("/", name="translationalresearch_default-reviewer_index")
+     * @Route("/{specialty}", name="translationalresearch_default-reviewer_index")
      * @Template("OlegTranslationalResearchBundle:DefaultReviewer:index.html.twig")
      * @Method("GET")
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request, $specialty)
     {
+        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN')) {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        //$specialty is a url prefix (i.e. "new-ap-cp-project")
+        $specialtyAbbreviation = SpecialtyList::getProjectAbbreviationFromUrlPrefix($specialty);
+        if( !$specialtyAbbreviation ) {
+            throw new \Exception( "Project specialty abbreviation is not found by name '".$specialty."'" );
+        }
+        $specialty = $em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation($specialtyAbbreviation);
+        if( !$specialty ) {
+            throw new \Exception( "Project specialty is not found by name '".$specialtyAbbreviation."'" );
+        }
 
         $states = array(
             'irb_review',
@@ -36,7 +52,8 @@ class DefaultReviewerController extends Controller
 
         return array(
             'states' => $states,
-            'title' => "Default Reviewers"
+            'specialty' => $specialty,
+            'title' => "Default Reviewers for ".$specialty
         );
     }
 
@@ -49,6 +66,10 @@ class DefaultReviewerController extends Controller
      */
     public function stateDefaultReviewerIndexAction(Request $request, $stateStr)
     {
+        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN')) {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
         $em = $this->getDoctrine()->getManager();
 
         //$defaultReviewers = $em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findAll();
@@ -105,6 +126,10 @@ class DefaultReviewerController extends Controller
      */
     public function newAction(Request $request, $stateStr)
     {
+        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN')) {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
         $transresUtil = $this->container->get('transres_util');
         $cycle = "new";
 
@@ -147,6 +172,10 @@ class DefaultReviewerController extends Controller
      */
     public function showAction(DefaultReviewer $defaultReviewer)
     {
+        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN')) {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
         $cycle = "show";
 
         $deleteForm = $this->createDeleteForm($defaultReviewer);
@@ -175,6 +204,10 @@ class DefaultReviewerController extends Controller
      */
     public function editAction(Request $request, DefaultReviewer $defaultReviewer)
     {
+        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN')) {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
         $transresUtil = $this->container->get('transres_util');
         $cycle = "edit";
 
@@ -212,6 +245,10 @@ class DefaultReviewerController extends Controller
      */
     public function deleteAction(Request $request, DefaultReviewer $defaultReviewer)
     {
+        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN')) {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
         $form = $this->createDeleteForm($defaultReviewer);
         $form->handleRequest($request);
 

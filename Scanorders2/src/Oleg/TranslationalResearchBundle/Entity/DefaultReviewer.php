@@ -99,6 +99,12 @@ class DefaultReviewer
      */
     private $primaryReview;
 
+    /**
+     *
+     * @ORM\ManyToOne(targetEntity="Oleg\TranslationalResearchBundle\Entity\SpecialtyList", cascade={"persist"})
+     */
+    private $projectSpecialty;
+
 
     public function __construct($creator=null) {
         $this->setCreator($creator);
@@ -250,6 +256,22 @@ class DefaultReviewer
     public function setPrimaryReview($primaryReview)
     {
         $this->primaryReview = $primaryReview;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProjectSpecialty()
+    {
+        return $this->projectSpecialty;
+    }
+
+    /**
+     * @param mixed $projectSpecialty
+     */
+    public function setProjectSpecialty($projectSpecialty)
+    {
+        $this->projectSpecialty = $projectSpecialty;
     }
 
 

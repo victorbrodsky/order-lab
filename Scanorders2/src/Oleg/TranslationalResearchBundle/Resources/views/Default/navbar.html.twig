@@ -39,6 +39,8 @@
 
             {% if is_granted('ROLE_TRANSRES_USER') %}
 
+                {% set specialties = transres_util.getTransResProjectSpecialties() %}
+
                 <ul class="nav navbar-nav">
 
                     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
@@ -51,12 +53,23 @@
                     </li>
 
                     {% if is_granted('ROLE_TRANSRES_REQUESTER') %}
-                        {% set specialties = transres_util.getTransResProjectSpecialties() %}
-                        {% for specialty in specialties %}
-                            <li id="nav-bar-translationalresearch-new-project-{{ specialty.getNewProjectUrlPrefix() }}">
-                                <a href="{{ path(translationalresearch_sitename~'_project_new',{'specialty':specialty.getNewProjectUrlPrefix()}) }}">{{ specialty.getNewProjectName() }}</a>
-                            </li>
-                        {% endfor %}
+
+                        {% if specialties|length > 0 %}
+                        <li id="nav-bar-translationalresearch-new-project" class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">New Project<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+
+                            {% for specialty in specialties %}
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_project_new',{'specialty':specialty.getNewProjectUrlPrefix()}) }}"
+                                    >{{ specialty.getNewProjectName() }}</a>
+                                </li>
+                            {% endfor %}
+
+                            </ul>
+                        </li>
+                        {% endif %}
+
                     {% endif %}
 
                     {% if is_granted('ROLE_TRANSRES_REQUESTER') %}
@@ -70,13 +83,24 @@
                     {% endif %}
 
                     {% if is_granted('ROLE_TRANSRES_ADMIN') %}
-                        <li id="nav-bar-translationalresearch-default-reviewers"><a href="{{ path(translationalresearch_sitename~'_default-reviewer_index') }}">Default Reviewers</a></li>
-                            {% set specialties = transres_util.getTransResProjectSpecialties() %}
+                        {#<li id="nav-bar-translationalresearch-default-reviewers"><a href="{{ path(translationalresearch_sitename~'_default-reviewer_index') }}">Default Reviewers</a></li>#}
+
+                        {% if specialties|length > 0 %}
+                        <li id="nav-bar-translationalresearch-default-reviewers" class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Default Reviewers<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+
                             {% for specialty in specialties %}
-                                <li id="nav-bar-translationalresearch-new-project-{{ specialty.getNewProjectUrlPrefix() }}">
-                                    <a href="{{ path(translationalresearch_sitename~'_project_new',{'specialty':specialty.getNewProjectUrlPrefix()}) }}">{{ specialty.getNewProjectName() }}</a>
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_default-reviewer_index',{'specialty':specialty.getAbbreviation()}) }}"
+                                    >Default Reviewers for {{ specialty.getName() }}</a>
                                 </li>
                             {% endfor %}
+
+                            </ul>
+                        </li>
+                        {% endif %}
+
                     {% endif %}
 
                     <li id="nav-bar-translationalresearch-project-workflow"><a href="{{ path(translationalresearch_sitename~'_workflow_show') }}" target="_blank">Workflow</a></li>
