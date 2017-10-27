@@ -558,7 +558,7 @@ class TransResUtil
                         $emailBody = $body . $break.$break. "Please click on the URL below to view this project:".$break.$projectUrl;
 
                         //send notification emails
-                        $this->sendNotificationEmails($project,$review,$transitionName,$subject,$emailBody,$testing);
+                        $this->sendNotificationEmails($project,$review,$subject,$emailBody,$testing);
 
                         //event log
                         //$this->setEventLog($project,$review,$transitionName,$originalStateStr,$body,$testing);
@@ -595,7 +595,7 @@ class TransResUtil
                 $emailBody = $body . $break.$break. "Please click on the URL below to view this project:".$break.$projectUrl;
 
                 //send confirmation email
-                $this->sendNotificationEmails($project,$review,$transitionName,$subject,$emailBody,$testing);
+                $this->sendNotificationEmails($project,$review,$subject,$emailBody,$testing);
 
                 //event log
                 //$this->setEventLog($project,$review,$transitionName,$originalStateStr,$body,$testing);
@@ -1841,7 +1841,7 @@ class TransResUtil
         $emailBody = $body . $break.$break. "Please click on the URL below to view this project:".$break.$projectUrl;
 
         //send notification emails
-        $this->sendNotificationEmails($project,$review,$appliedTransition,$subject,$emailBody,$testing);
+        $this->sendNotificationEmails($project,$review,$subject,$emailBody,$testing);
 
 //        $workflow = $this->container->get('state_machine.transres_project');
 //        $transitions = $workflow->getEnabledTransitions($project);
@@ -2040,7 +2040,7 @@ class TransResUtil
         }
     }
 
-    public function sendNotificationEmails($project, $review, $appliedTransition, $subject, $body, $testing=false) {
+    public function sendNotificationEmails($project, $review, $subject, $body, $testing=false) {
         //if( !$appliedTransition ) {
         //    return null;
         //}
@@ -2068,9 +2068,11 @@ class TransResUtil
         $requesterEmails = $this->getRequesterEmails($project); //ok
         $emails = array_merge($emails,$requesterEmails);
 
-        // 3) current project's reviewers
-        $currentReviewerEmails = $this->getCurrentReviewersEmails($review); //ok
-        $emails = array_merge($emails,$currentReviewerEmails);
+        if( $review ) {
+            // 3) current project's reviewers
+            $currentReviewerEmails = $this->getCurrentReviewersEmails($review); //ok
+            $emails = array_merge($emails, $currentReviewerEmails);
+        }
 
         // 4) next state project's reviewers
         $nextStateReviewerEmails = $this->getNextStateReviewersEmails($project,$project->getState());

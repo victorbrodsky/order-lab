@@ -315,6 +315,13 @@ class ProjectFormNodeController extends ProjectController
 
             $project->setUpdateUser($user);
 
+            $startProjectReview = false;
+
+            $originalStateStr = $project->getState();
+            $originalStateLabel = $this->getStateLabelByName($originalStateStr);
+
+            $msg = "Project ID ".$project->getOid() ." has been successfully updated";
+
             //////////// remove the relationship between the review and the project ////////////
             $transresUtil->removeReviewsFromProject($project,$originalIrbReviews,$project->getIrbReviews());
             $transresUtil->removeReviewsFromProject($project,$originalAdminReviews,$project->getAdminReviews());
@@ -339,6 +346,10 @@ class ProjectFormNodeController extends ProjectController
                 //Complete Submission => state='submit'
                 if( $project->getState() == 'complete' || $project->getState() == 'draft' ) {
                     $project->setState('irb_review');
+                    $startProjectReview = true;
+
+                    $label = $this->getStateLabelByName($project->getState());
+                    $msg = "Project ID ".$project->getOid()." has been sent to the stage '$label' from ".$originalStateLabel;
                 }
             }
 
@@ -360,7 +371,7 @@ class ProjectFormNodeController extends ProjectController
             $formNodeUtil = $this->get('user_formnode_utility');
             $formNodeUtil->processFormNodes($request,$project->getMessageCategory(),$project,$testing); //testing
 
-            $msg = "Project has been successfully updated";
+            $msg = $msg . " by ".$project->getUpdateUser()->getUsernameOptimal();
 
             if( $testing ) {
                 exit('form is submitted and finished, msg='.$msg);
@@ -371,9 +382,18 @@ class ProjectFormNodeController extends ProjectController
                 $msg
             );
 
+            //eventlog
             $eventType = "Project Updated";
-            $msg = $msg . " by ".$project->getUpdateUser()->getUsernameOptimal();
             $transresUtil->setEventLog($project,$eventType,$msg,$testing);
+
+            if( $startProjectReview ) {
+                //send confirmation email
+                $break = "\r\n";
+                //get project url
+                $projectUrl = $transresUtil->getProjectShowUrl($project);
+                $emailBody = $msg . $break.$break. "Please click on the URL below to view this project:".$break.$projectUrl;
+                $this->sendNotificationEmails($project,null,$msg,$emailBody,$testing);
+            }
 
             return $this->redirectToRoute('translationalresearch_project_show', array('id' => $project->getId()));
         }
