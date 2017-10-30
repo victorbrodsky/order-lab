@@ -21,27 +21,30 @@ class DefaultReviewerController extends Controller
     /**
      * Lists defaultReviewer states: irb_review, committee_review, final_review
      *
-     * @Route("/{specialty}", name="translationalresearch_default-reviewer_index")
+     * @Route("/{specialtyStr}", name="translationalresearch_default-reviewer_index")
      * @Template("OlegTranslationalResearchBundle:DefaultReviewer:index.html.twig")
      * @Method("GET")
      */
-    public function indexAction(Request $request, $specialty)
+    public function indexAction(Request $request, $specialtyStr)
     {
         if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN')) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
+        $transresUtil = $this->container->get('transres_util');
         $em = $this->getDoctrine()->getManager();
 
         //$specialty is a url prefix (i.e. "new-ap-cp-project")
-        $specialtyAbbreviation = SpecialtyList::getProjectAbbreviationFromUrlPrefix($specialty);
-        if( !$specialtyAbbreviation ) {
-            throw new \Exception( "Project specialty abbreviation is not found by name '".$specialty."'" );
-        }
-        $specialty = $em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation($specialtyAbbreviation);
-        if( !$specialty ) {
-            throw new \Exception( "Project specialty is not found by name '".$specialtyAbbreviation."'" );
-        }
+//        $specialtyAbbreviation = SpecialtyList::getProjectAbbreviationFromUrlPrefix($specialty);
+//        if( !$specialtyAbbreviation ) {
+//            throw new \Exception( "Project specialty abbreviation is not found by name '".$specialty."'" );
+//        }
+//        $specialty = $em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation($specialtyAbbreviation);
+//        if( !$specialty ) {
+//            throw new \Exception( "Project specialty is not found by name '".$specialtyAbbreviation."'" );
+//        }
+        //$specialty is a url prefix (i.e. "new-ap-cp-project")
+        $specialty = $transresUtil->getSpecialtyObject($specialtyStr);
 
         $states = array(
             'irb_review',
@@ -60,17 +63,21 @@ class DefaultReviewerController extends Controller
     /**
      * Lists all defaultReviewer entities for a particular state.
      *
-     * @Route("/stage/{stateStr}/", name="translationalresearch_state-default-reviewer_index")
+     * @Route("/stage/{stateStr}/{specialtyStr}", name="translationalresearch_state-default-reviewer_index")
      * @Template("OlegTranslationalResearchBundle:DefaultReviewer:state-default-reviewer-index.html.twig")
      * @Method("GET")
      */
-    public function stateDefaultReviewerIndexAction(Request $request, $stateStr)
+    public function stateDefaultReviewerIndexAction(Request $request, $stateStr, $specialtyStr)
     {
         if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN')) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
+        $transresUtil = $this->container->get('transres_util');
         $em = $this->getDoctrine()->getManager();
+
+        //$specialty is a url prefix (i.e. "new-ap-cp-project")
+        $specialty = $transresUtil->getSpecialtyObject($specialtyStr);
 
         //$defaultReviewers = $em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findAll();
 
@@ -82,14 +89,16 @@ class DefaultReviewerController extends Controller
         $dql->leftJoin('reviewer.infos','reviewerInfos');
         $dql->leftJoin('defaultReviewer.reviewerDelegate','reviewerDelegate');
         $dql->leftJoin('reviewerDelegate.infos','reviewerDelegateInfos');
+        $dql->leftJoin('defaultReviewer.projectSpecialty','projectSpecialty');
 
-        $dql->where('defaultReviewer.state=:state');
+        $dql->where('defaultReviewer.state=:state AND projectSpecialty.id=:specialty');
 
         $limit = 30;
         $query = $em->createQuery($dql);
 
         $query->setParameters(array(
-            "state" => $stateStr
+            "state" => $stateStr,
+            "specialty" => $specialty->getId()
         ));
 
         $paginationParams = array(
@@ -106,25 +115,25 @@ class DefaultReviewerController extends Controller
         );
 
         //get state string: irb_review=>IRB Review
-        $transresUtil = $this->container->get('transres_util');
         $stateLabel = $transresUtil->getStateSimpleLabelByName($stateStr);
 
 
         return array(
             'defaultReviewers' => $defaultReviewers,
             'stateStr' => $stateStr,
-            'title' => "Default Reviewers for ".$stateLabel
+            'specialty' => $specialty,
+            'title' => "Default Reviewers for ".$specialty." ".$stateLabel
         );
     }
 
     /**
      * Creates a new defaultReviewer entity.
      *
-     * @Route("/new/{stateStr}", name="translationalresearch_default-reviewer_new")
+     * @Route("/new/{stateStr}/{specialtyStr}", name="translationalresearch_default-reviewer_new")
      * @Template("OlegTranslationalResearchBundle:DefaultReviewer:new.html.twig")
      * @Method({"GET", "POST"})
      */
-    public function newAction(Request $request, $stateStr)
+    public function newAction(Request $request, $stateStr, $specialtyStr)
     {
         if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN')) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
@@ -133,8 +142,12 @@ class DefaultReviewerController extends Controller
         $transresUtil = $this->container->get('transres_util');
         $cycle = "new";
 
+        //$specialty is a url prefix (i.e. "new-ap-cp-project")
+        $specialty = $transresUtil->getSpecialtyObject($specialtyStr);
+
         $defaultReviewer = new Defaultreviewer();
         $defaultReviewer->setState($stateStr);
+        $defaultReviewer->setProjectSpecialty($specialty);
 
         //$form = $this->createForm('Oleg\TranslationalResearchBundle\Form\DefaultReviewerType', $defaultReviewer);
         $form = $this->createDefaultReviewForm($cycle,$defaultReviewer);
@@ -158,6 +171,7 @@ class DefaultReviewerController extends Controller
         return array(
             'cycle' => $cycle,
             'defaultReviewer' => $defaultReviewer,
+            'specialty' => $specialty,
             'form' => $form->createView(),
             'title' => "Create a new Default Reviewer for ".$stateLabel
         );
@@ -166,7 +180,7 @@ class DefaultReviewerController extends Controller
     /**
      * Finds and displays a defaultReviewer entity.
      *
-     * @Route("/{id}", name="translationalresearch_default-reviewer_show")
+     * @Route("/{id}/show", name="translationalresearch_default-reviewer_show")
      * @Template("OlegTranslationalResearchBundle:DefaultReviewer:new.html.twig")
      * @Method("GET")
      */
@@ -186,6 +200,7 @@ class DefaultReviewerController extends Controller
             'cycle' => $cycle,
             'form' => $form->createView(),
             'defaultReviewer' => $defaultReviewer,
+            'specialty' => $defaultReviewer->getProjectSpecialty(),
             'title' => "Default Reviewer ".$defaultReviewer->getReviewer(),
             'delete_form' => $deleteForm->createView(),
         );
@@ -231,6 +246,7 @@ class DefaultReviewerController extends Controller
         return array(
             'cycle' => $cycle,
             'defaultReviewer' => $defaultReviewer,
+            'specialty' => $defaultReviewer->getProjectSpecialty(),
             'form' => $form->createView(),
             'title' => "Default Reviewer ".$defaultReviewer->getReviewer(),
             'delete_form' => $deleteForm->createView(),
@@ -248,6 +264,8 @@ class DefaultReviewerController extends Controller
         if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN')) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
+
+        $specialtyStr = $defaultReviewer->getProjectSpecialty()->getAbbreviation();
 
         $form = $this->createDeleteForm($defaultReviewer);
         $form->handleRequest($request);
@@ -272,7 +290,7 @@ class DefaultReviewerController extends Controller
             $em->flush();
         }
 
-        return $this->redirectToRoute('translationalresearch_default-reviewer_index');
+        return $this->redirectToRoute('translationalresearch_default-reviewer_index',array("specialtyStr"=>$specialtyStr ));
     }
 
     /**

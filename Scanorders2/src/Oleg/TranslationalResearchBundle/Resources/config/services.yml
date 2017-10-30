@@ -151,3 +151,107 @@ framework:
                 closed_approved:
                     from: closed
                     to: final_approved
+
+        transres_request_billing:
+            type: 'state_machine'
+            marking_store:
+                type: 'single_state' # 'multiple_state' or 'single_state'
+                arguments:
+                    - 'billingState' #state keeps the marking state
+            supports:
+                - Oleg\TranslationalResearchBundle\Entity\TransResRequest
+            places:
+                - active
+                - cancel
+                - missinginfo
+                - invoice
+                - paid
+                - refund
+                - partially_refund
+
+            transitions:
+                active_cancel:
+                    from: active
+                    to: cancel
+                cancel_active:
+                    from: cancel
+                    to: active
+                active_invoice:
+                    from: active
+                    to: invoice
+                active_missinginfo:
+                    from: active
+                    to: missinginfo
+                invoice_paid:
+                    from: invoice
+                    to: paid
+                invoice_refund:
+                    from: invoice
+                    to: refund
+                invoice_partially_refund:
+                     from: invoice
+                     to: partially_refund
+
+        transres_request_progress:
+            type: 'state_machine'
+            marking_store:
+                type: 'single_state' # 'multiple_state' or 'single_state'
+                arguments:
+                    - 'progressState' #state keeps the marking state
+            supports:
+                - Oleg\TranslationalResearchBundle\Entity\TransResRequest
+            places:
+                - active
+                - cancel
+                - pending
+                - investigator
+                - histo
+                - ihc
+                - mol
+                - retrieval
+                - payment
+                - slidescanning
+                - block
+                - complet
+                - suspend
+            transitions:
+                active_cancel:
+                    from: active
+                    to: cancel
+                cancel_active:
+                    from: cancel
+                    to: active
+                active_pending:
+                    from: active
+                    to: pending
+                pending_investigator:
+                    from: pending
+                    to: investigator
+                pending_histo:
+                    from: pending
+                    to: histo
+                pending_ihc:
+                    from: pending
+                    to: ihc
+                pending_mol:
+                    from: pending
+                    to: mol
+                pending_retrieval:
+                    from: pending
+                    to: retrieval
+                pending_payment:
+                    from: pending
+                    to: payment
+                pending_slidescanning:
+                    from: pending
+                    to: slidescanning
+                pending_block:
+                    from: pending
+                    to: block
+                pending_complet:
+                    from: pending
+                    to: complet
+                pending_suspend:
+                    from: pending
+                    to: suspend
+

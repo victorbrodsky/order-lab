@@ -302,7 +302,7 @@ class ProjectController extends Controller
     /**
      * Finds and displays a project entity.
      *
-     * @Route("/project/{id}", name="translationalresearch_project_show")
+     * @Route("/project/show/{id}", name="translationalresearch_project_show")
      * @Template("OlegTranslationalResearchBundle:Project:show.html.twig")
      * @Method("GET")
      */
@@ -312,7 +312,7 @@ class ProjectController extends Controller
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
-        //$transresUtil = $this->container->get('transres_util');
+        $transresUtil = $this->container->get('transres_util');
         //$em = $this->getDoctrine()->getManager();
         //$user = $this->get('security.token_storage')->getToken()->getUser();
 
@@ -326,6 +326,10 @@ class ProjectController extends Controller
         //1) if project is in the review state: irb_review, admin_review, committee_review or final_review
         //2) if the current user is added to this project as the reviewer for the state above
         //$reviewFormViews = $transresUtil->getReviewForm($project,$user);
+
+        $eventType = "Project Viewed";
+        $msg = "Project ID ".$project->getOid() ." has been viewed on the show page.";
+        $transresUtil->setEventLog($project,$eventType,$msg);
 
         return array(
             'project' => $project,
@@ -379,6 +383,10 @@ class ProjectController extends Controller
         //1) if project is in the review state: irb_review, admin_review, committee_review or final_review
         //2) if the current user is added to this project as the reviewer for the state above
         //$reviewFormViews = $transresUtil->getReviewForm($project,$user);
+
+        $eventType = "Project Viewed";
+        $msg = "Project ID ".$project->getOid() ." has been viewed on the review page.";
+        $transresUtil->setEventLog($project,$eventType,$msg);
 
         return array(
             'project' => $project,

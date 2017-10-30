@@ -38,6 +38,7 @@ class DefaultReviewerType extends AbstractType
             ));
         }
 
+
         $builder->add( 'reviewer', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
             'label'=> "Reviewer:",
@@ -67,6 +68,25 @@ class DefaultReviewerType extends AbstractType
                     ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
                     ->leftJoin("list.infos", "infos")
                     ->orderBy("infos.displayName","ASC");
+            },
+        ));
+
+        $builder->add( 'projectSpecialty', EntityType::class, array(
+            'class' => 'OlegTranslationalResearchBundle:SpecialtyList',
+            'choice_label' => 'name',
+            'label'=>'Project Specialty:',
+            'disabled' => true, //($this->params['admin'] ? false : true),
+            'required'=> false,
+            'multiple' => false,
+            'attr' => array('class'=>'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->orderBy("list.orderinlist","ASC")
+                    ->setParameters( array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
             },
         ));
     }

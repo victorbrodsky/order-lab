@@ -22,7 +22,7 @@
                 <div class="panel-heading" role="tab" id="{{ state }}~Heading">
                     <h4 class="panel-title">
                         <a role="button" data-toggle="collapse" data-parent="#accordion" href="#{{ state }}" aria-expanded="true" aria-controls="reviewBase">
-                            <a href="{{ path(translationalresearch_sitename~'_state-default-reviewer_index',{'stateStr':state,'specialty':specialty.getId()}) }}"
+                            <a href="{{ path(translationalresearch_sitename~'_state-default-reviewer_index',{'stateStr':state,'specialtyStr':specialty.getAbbreviation()}) }}"
                             >Default Reviewers for {{ specialty.getName() }} {{ transres_util.getStateSimpleLabelByName(state) }}</a>
                         </a>
                     </h4>

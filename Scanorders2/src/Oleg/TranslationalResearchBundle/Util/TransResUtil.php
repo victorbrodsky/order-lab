@@ -23,6 +23,7 @@ use Oleg\TranslationalResearchBundle\Entity\AdminReview;
 use Oleg\TranslationalResearchBundle\Entity\CommitteeReview;
 use Oleg\TranslationalResearchBundle\Entity\FinalReview;
 use Oleg\TranslationalResearchBundle\Entity\IrbReview;
+use Oleg\TranslationalResearchBundle\Entity\SpecialtyList;
 use Symfony\Component\Form\Exception\LogicException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -631,7 +632,12 @@ class TransResUtil
 
         $irbReviewState = "irb_review";
         if( $currentState == $irbReviewState || $addForAllStates ) {
-            $defaultReviewers = $this->em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findByState($irbReviewState);
+            $defaultReviewers = $this->em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findBy(
+                array(
+                    "state" => $irbReviewState,
+                    "projectSpecialty" => $project->getProjectSpecialty()
+                )
+            );
             //echo "defaultReviewers count=".count($defaultReviewers)."<br>";
             //reviewer delegate should be added to the specific reviewer => no delegate role is required?
             foreach ($defaultReviewers as $defaultReviewer) {
@@ -653,7 +659,13 @@ class TransResUtil
 
         $adminReviewState = "admin_review";
         if( $currentState == $adminReviewState || $addForAllStates ) {
-            $defaultReviewers = $this->em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findByState($adminReviewState);
+            //$defaultReviewers = $this->em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findByState($adminReviewState);
+            $defaultReviewers = $this->em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findBy(
+                array(
+                    "state" => $adminReviewState,
+                    "projectSpecialty" => $project->getProjectSpecialty()
+                )
+            );
             //reviewer delegate should be added to the specific reviewer => no delegate role is required?
             foreach ($defaultReviewers as $defaultReviewer) {
                 //1) create IrbReview entity
@@ -674,7 +686,13 @@ class TransResUtil
         $committeeReviewState = "committee_review";
         if( $currentState == $committeeReviewState || $addForAllStates ) {
 
-            $defaultReviewers = $this->em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findByState($committeeReviewState,array("primaryReview"=>"DESC"));
+            //$defaultReviewers = $this->em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findByState($committeeReviewState,array("primaryReview"=>"DESC"));
+            $defaultReviewers = $this->em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findBy(
+                array(
+                    "state" => $committeeReviewState,
+                    "projectSpecialty" => $project->getProjectSpecialty()
+                )
+            );
             //reviewer delegate should be added to the specific reviewer => no delegate role is required?
             foreach ($defaultReviewers as $defaultReviewer) {
                 //1) create CommitteeReview entity
@@ -700,7 +718,13 @@ class TransResUtil
         $finalReviewState = "final_review";
         if( $currentState == $finalReviewState || $addForAllStates ) {
 
-            $defaultReviewers = $this->em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findByState($finalReviewState);
+            //$defaultReviewers = $this->em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findByState($finalReviewState);
+            $defaultReviewers = $this->em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findBy(
+                array(
+                    "state" => $finalReviewState,
+                    "projectSpecialty" => $project->getProjectSpecialty()
+                )
+            );
             //reviewer delegate should be added to the specific reviewer => no delegate role is required?
             foreach ($defaultReviewers as $defaultReviewer) {
                 //1) create FinalReview entity
@@ -730,7 +754,7 @@ class TransResUtil
         $defaultReviewers = $this->em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findBy(
             array(
                 'state'=>$state,
-                //'projectSpecialty'=>$specialty->getId()
+                'projectSpecialty'=>$specialty->getId()
             ),
             array('primaryReview' => 'DESC')
         );
@@ -2280,6 +2304,22 @@ class TransResUtil
         );
 
         return $projectUrl;
+    }
+
+    //$specialtyStr: new-ap-cp-project, ap-cp
+    public function getSpecialtyObject($specialtyStr) {
+        //echo "specialtyStr=".$specialtyStr."<br>";
+        //$specialty is a url prefix (i.e. "new-ap-cp-project")
+        $specialtyAbbreviation = SpecialtyList::getProjectAbbreviationFromUrlPrefix($specialtyStr);
+        if( !$specialtyAbbreviation ) {
+            throw new \Exception( "Project specialty abbreviation is not found by name '".$specialtyStr."'" );
+        }
+        $specialty = $this->em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation($specialtyAbbreviation);
+        if( !$specialty ) {
+            throw new \Exception( "Project specialty is not found by name '".$specialtyAbbreviation."'" );
+        }
+
+        return $specialty;
     }
 
 }

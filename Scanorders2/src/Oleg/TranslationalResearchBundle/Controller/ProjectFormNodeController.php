@@ -67,11 +67,11 @@ class ProjectFormNodeController extends ProjectController
     /**
      * Creates a new project entity with formnode.
      *
-     * @Route("/project/new/{specialty}", name="translationalresearch_project_new")
+     * @Route("/project/new/{specialtyStr}", name="translationalresearch_project_new")
      * @Template("OlegTranslationalResearchBundle:Project:new.html.twig")
      * @Method({"GET", "POST"})
      */
-    public function newFormNodeAction(Request $request, $specialty)
+    public function newFormNodeAction(Request $request, $specialtyStr)
     {
         if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER')) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
@@ -83,14 +83,16 @@ class ProjectFormNodeController extends ProjectController
         $cycle = "new";
 
         //$specialty is a url prefix (i.e. "new-ap-cp-project")
-        $specialtyAbbreviation = SpecialtyList::getProjectAbbreviationFromUrlPrefix($specialty);
-        if( !$specialtyAbbreviation ) {
-            throw new \Exception( "Project specialty abbreviation is not found by name '".$specialty."'" );
-        }
-        $specialty = $em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation($specialtyAbbreviation);
-        if( !$specialty ) {
-            throw new \Exception( "Project specialty is not found by name '".$specialtyAbbreviation."'" );
-        }
+//        $specialtyAbbreviation = SpecialtyList::getProjectAbbreviationFromUrlPrefix($specialty);
+//        if( !$specialtyAbbreviation ) {
+//            throw new \Exception( "Project specialty abbreviation is not found by name '".$specialty."'" );
+//        }
+//        $specialty = $em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation($specialtyAbbreviation);
+//        if( !$specialty ) {
+//            throw new \Exception( "Project specialty is not found by name '".$specialtyAbbreviation."'" );
+//        }
+        //$specialty is a url prefix (i.e. "new-ap-cp-project")
+        $specialty = $transresUtil->getSpecialtyObject($specialtyStr);
 
         $testing = false;
         //$testing = true;
@@ -397,6 +399,10 @@ class ProjectFormNodeController extends ProjectController
 
             return $this->redirectToRoute('translationalresearch_project_show', array('id' => $project->getId()));
         }
+
+        $eventType = "Project Viewed";
+        $msg = "Project ID ".$project->getOid() ." has been viewed on the edit page.";
+        $transresUtil->setEventLog($project,$eventType,$msg,$testing);
 
         return array(
             'project' => $project,

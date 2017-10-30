@@ -1412,7 +1412,7 @@ class AdminController extends Controller
                 30
             ),
 
-            //TRANSRES
+            //TRANSRES - similar to ROLE_FELLAPP_INTERVIEWER_WCMC_HEMATOPATHOLOGY - _WCMC_HEMEPATH and _WCMC_APCP
             "ROLE_TRANSRES_ADMIN" => array(
                 "Translational Research Admin",
                 "Full Access for Translational Research site",

@@ -21,12 +21,16 @@
                 <th>State</th>
                 <td>{{ defaultReviewer.state }}</td>
             </tr>
+            <tr>
+                <th>State</th>
+                <td>{{ defaultReviewer.projectSpecialty }}</td>
+            </tr>
         </tbody>
     </table>
 
     <ul>
         <li>
-            <a href="{{ path('translationalresearch_default-reviewer_index') }}">Back to the list</a>
+            <a href="{{ path('translationalresearch_default-reviewer_index',{'specialtyStr':defaultReviewer.getProjectSpecialty().getAbbreviation()}) }}">Back to the list</a>
         </li>
         <li>
             <a href="{{ path('translationalresearch_default-reviewer_edit', { 'id': defaultReviewer.id }) }}">Edit</a>
