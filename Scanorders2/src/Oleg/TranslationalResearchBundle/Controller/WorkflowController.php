@@ -88,10 +88,17 @@ class WorkflowController extends Controller
             exit("Filename with workflow graph is not specified.");
         }
 
-        $shellout = system("pwd");
-        echo "shellout=".$shellout."<br>";
+//        $output = null;
+//        $return = null;
+//        $shellout = exec( "cd", $output, $return );
+//        echo "shellout=".$shellout."<br>";
+//        echo "output=".$output."<br>";
+//        echo "return=".$return."<br>";
 
-        exit("EXIT: type=".$type."; filename=".$filename);
+        //$shellout = system("cd");
+        //echo "<br>shellout=".$shellout."<br>";
+
+        //exit("EXIT: type=".$type."; filename=".$filename);
 
         $file = $webpath."/../src/Oleg/TranslationalResearchBundle/Util/".$filename;
         if (!file_exists($file)) {
@@ -109,7 +116,16 @@ class WorkflowController extends Controller
 
     public function windowsCmdRunAsync($type,$filename) {
 
-        $cmd = 'php ../bin/console workflow:dump ' . 'transres_'.$type . " | " . "C:\Program Files (x86)\Graphviz2.38\bin\dot.exe -Tpng -o" . $filename;
+        return;
+
+        $cmd = "php ..".DIRECTORY_SEPARATOR."bin".DIRECTORY_SEPARATOR."console workflow:dump " . 'transres_'.$type . " | " .
+            "C:".DIRECTORY_SEPARATOR."Program Files (x86)".DIRECTORY_SEPARATOR."Graphviz2.38".
+            DIRECTORY_SEPARATOR."bin".DIRECTORY_SEPARATOR."dot.exe -Tpng -o " . $filename;
+
+        echo "cmd=".$cmd."<br>";
+
+        $dir = $this->get('kernel')->getRootDir();
+        echo "dir=".$dir."<br>";
 
         $oExec = null;
         //$WshShell = new \COM("WScript.Shell");
@@ -118,6 +134,7 @@ class WorkflowController extends Controller
         //$oExec = pclose(popen("start ". $cmd, "r"));
         $oExec = pclose(popen("start /B ". $cmd, "r"));
         //$oExec = exec($cmd);
+        //$oExec = system($cmd);
 
         //$logger = $this->container->get('logger');
         echo "Windows Cmd Run Sync: oExec=".$oExec."<br>";
