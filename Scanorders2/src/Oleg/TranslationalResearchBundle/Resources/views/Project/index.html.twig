@@ -60,6 +60,8 @@
                 <th>{{ knp_pagination_sortable(projects, 'State', 'project.state') }}</th>
                 <th>{{ knp_pagination_sortable(projects, 'Approval Date', 'project.approvalDate') }}</th>
                 {#<th>{{ knp_pagination_sortable(projects, 'Expiration Date', 'project.expirationDate') }}</th>#}
+                <th>IRB Expiration Date</th>
+                <th>Requests</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -129,6 +131,14 @@
                     {#{% endif %}#}
                 {#</td>#}
 
+                <td>
+                    {#{{ project.title }}#}
+                    {{ transres_formnode_util.getProjectFormNodeFieldByName(project,"IRB Expiration Date") }}
+                </td>
+
+                <td>
+                    {{ project.getRequests()|length }}
+                </td>
 
                 <td class="rowlink-skip">
                     <div class="btn-group">
@@ -191,9 +201,12 @@
                                 <li>
                                     <a href="{{ path(translationalresearch_sitename~'_request_new', { 'id': project.id }) }}" target="_blank">Create New Request</a>
                                 </li>
-                                <li>
-                                    <a href="{{ path(translationalresearch_sitename~'_request_index', { 'id': project.id }) }}" target="_blank">Show All Requests</a>
-                                </li>
+                                {% if project.getRequests()|length > 0 %}
+                                    <li>
+                                        <a href="{{ path(translationalresearch_sitename~'_request_index', { 'id': project.id }) }}"
+                                           target="_blank">Show All Requests</a>
+                                    </li>
+                                {% endif %}
                             {% endif %}
 
                         </ul>

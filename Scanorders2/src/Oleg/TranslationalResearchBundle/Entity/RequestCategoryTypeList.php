@@ -112,7 +112,7 @@ class RequestCategoryTypeList extends ListAbstract
 
     public function getOptimalAbbreviationName()
     {
-        return $this->getName() . ": $" . $this->getFee() . "/" . $this->getFeeUnit();
+        return $this->getSection() . ": " . $this->getName() . ": $" . $this->getFee() . "/" . $this->getFeeUnit();
     }
 
 }

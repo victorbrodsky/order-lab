@@ -317,6 +317,7 @@ class RequestController extends Controller
         }
 
         $transresUtil = $this->container->get('transres_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $routeName = $request->get('_route');
@@ -359,10 +360,13 @@ class RequestController extends Controller
             $paginationParams
         );
 
+        $requestTotalFeeHtml = $transresRequestUtil->getRequestTotalFeeHtml($project);
+
         return array(
             'transresRequests' => $transresRequests,
             'project' => $project,
             'title' => $title,
+            'requestTotalFeeHtml' => $requestTotalFeeHtml
         );
     }
 

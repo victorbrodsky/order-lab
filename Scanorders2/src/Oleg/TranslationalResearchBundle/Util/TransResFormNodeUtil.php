@@ -328,11 +328,19 @@ class TransResFormNodeUtil
     /////////////////////////////////////////////////////////////
 
 
-    public function getProjectFormNodeFieldByName($project, $fieldName) {
+    public function getProjectFormNodeFieldByName(
+        $project,
+        $fieldName,
+        $parentNameStr = "HemePath Translational Research",
+        $formNameStr = "HemePath Translational Research Project",
+        $projectFormNodeSectionStr = "Project",
+        $asReceivingEntity=false
+    ) {
 
         $formNodeUtil = $this->container->get('user_formnode_utility');
 
         $value = null;
+        $receivingEntity = null;
 
         $mapper = array(
             'prefix' => "Oleg",
@@ -341,27 +349,27 @@ class TransResFormNodeUtil
         );
 
         //1) get FormNode by fieldName
-        $parentNameStr = "HemePath Translational Research"; //must be unique name
+        //$parentNameStr = "HemePath Translational Research"; //must be unique name
         $parentNode = $this->em->getRepository('OlegUserdirectoryBundle:FormNode')->findOneByName($parentNameStr);
         if( !$parentNode ) {
-            throw new \Exception( "FormNode parent not found by ".$parentNameStr );
+            throw new \Exception( "FormNode parent not found by '".$parentNameStr."'" );
         }
 
-        $formNameStr = "HemePath Translational Research Project"; //Project's form
+        //$formNameStr = "HemePath Translational Research Project"; //Project's form
         $projectFormNode = $this->em->getRepository('OlegUserdirectoryBundle:FormNode')->findByChildnameAndParent($formNameStr,$parentNode,$mapper);
         if( !$projectFormNode ) {
-            throw new \Exception( "FormNode project's form not found by ".$formNameStr );
+            throw new \Exception( "FormNode project's form not found by '".$formNameStr."'" );
         }
 
-        $projectFormNodeSectionStr = "Project"; //Project's form section
+        //$projectFormNodeSectionStr = "Project"; //Project's form section
         $projectFormNodeSection = $this->em->getRepository('OlegUserdirectoryBundle:FormNode')->findByChildnameAndParent($projectFormNodeSectionStr,$projectFormNode,$mapper);
         if( !$projectFormNodeSection ) {
-            throw new \Exception( "FormNode project's form section not found by ".$projectFormNodeSectionStr );
+            throw new \Exception( "FormNode project's form section not found by '".$projectFormNodeSectionStr."'" );
         }
 
         $fieldFormNode = $this->em->getRepository('OlegUserdirectoryBundle:FormNode')->findByChildnameAndParent($fieldName,$projectFormNodeSection,$mapper);
         if( !$fieldFormNode ) {
-            throw new \Exception( "FormNode field form not found by ".$fieldName );
+            throw new \Exception( "FormNode field form not found by '".$fieldName."'" );
         }
 
         //2) get field for this particular project
@@ -385,6 +393,10 @@ class TransResFormNodeUtil
             //process userWrapper case
             $value = $formNodeUtil->processFormNodeValue($fieldFormNode,$receivingEntity,$formNodeValue);
             //echo $fieldName.": getProjectFormNodeFieldByName value=".$value."<br>";
+        }
+
+        if( $asReceivingEntity ) {
+            return $receivingEntity;
         }
 
         return $value;
