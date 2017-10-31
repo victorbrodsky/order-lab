@@ -90,7 +90,9 @@ class TransResRequestUtil
                 "Request",
                 true
             );
-            echo "requestCategoryType ID=".$requestCategoryType->getId()."<br>";
+
+            //TODO: find dropdown list entity
+            echo "requestCategoryType=".$requestCategoryType."<br>";
             //echo "requestCategoryType feeUnit=".$requestCategoryType->getFeeUnit()."<br>";
             //echo "requestCategoryType fee=".$requestCategoryType->getFee()."<br>";
         }
