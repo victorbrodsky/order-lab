@@ -737,7 +737,7 @@ class UserController extends Controller
             $dql->leftJoin("administrativeTitles.userPositions", "administrativePositions");
             $verifiedStatus = BaseUserAttributes::STATUS_VERIFIED;
             $criteriastr .= "(".
-                "administrativeName IS NOT NULL".
+                "administrativeTitles.id IS NOT NULL".
                 " AND administrativeTitles.status = ".$verifiedStatus.
                 //only "Head of Institution", "Head of Department", "Head of Division"
                 " AND (".
@@ -755,7 +755,7 @@ class UserController extends Controller
             $dql->leftJoin("administrativeTitles.userPositions", "administrativePositions");
             $verifiedStatus = BaseUserAttributes::STATUS_VERIFIED;
             $criteriastr .= "(".
-                "administrativeName IS NOT NULL".
+                "administrativeTitles.id IS NOT NULL".
                 " AND administrativeTitles.status = ".$verifiedStatus.
                 " AND administrativeInstitution.name = "."'Administration'".
                 ")";

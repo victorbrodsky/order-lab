@@ -7938,6 +7938,27 @@ class AdminController extends Controller
             "Weigert's elastic staining" => array("Histology", "28","Slide"),
             "Giemsa staining" => array("Histology", "28","slide"),
             "Iron staining" => array("Histology", "28","slide"),
+            "Alcian Blue staining" => array("Histology", "28","slide"),
+            "Periodic Acid-Schiff (PAS) staining" => array("Histology", "28","slide"),
+            "Reticulocyte staining" => array("Histology", "35","slide"),
+            "Masson's trichrome staining (manual)" => array("Histology", "35","slide"),
+            "Von Kossa staining (manual)" => array("Histology", "35","slide"),
+            "Alzarin Red staining (manual)" => array("Histology", "35","slide"),
+            "Oil Red O Staining (manual)" => array("Histology", "28","slide"),
+            "Warthin Starry (Spirochetes)" => array("Histology", "35","slide"),
+            "Congo Red (Amyloid)" => array("Histology", "28","slide"),
+            "Picrosirius Red (Collagen)" => array("Histology", "28","slide"),
+            "Modified H&E (Harris and Gill 3 Hematoxylin) Overnight staining" => array("Histology", "12","slide"),
+
+            "" => array("Immunopathology", "",""),
+            "" => array("Immunopathology", "",""),
+            "" => array("Immunopathology", "",""),
+            "" => array("Immunopathology", "",""),
+            "" => array("Immunopathology", "",""),
+            "" => array("Immunopathology", "",""),
+            "" => array("Immunopathology", "",""),
+            "" => array("Immunopathology", "",""),
+            "" => array("Immunopathology", "",""),
         );
 
         $count = 10;
