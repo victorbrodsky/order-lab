@@ -260,7 +260,7 @@ class RequestController extends Controller
     /**
      * Finds and displays a request entity.
      *
-     * @Route("/request/{id}", name="translationalresearch_request_show")
+     * @Route("/request/show/{id}", name="translationalresearch_request_show")
      * @Template("OlegTranslationalResearchBundle:Request:show.html.twig")
      * @Method("GET")
      */
@@ -270,7 +270,7 @@ class RequestController extends Controller
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
-        //$transresUtil = $this->container->get('transres_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
         //$em = $this->getDoctrine()->getManager();
         //$user = $this->get('security.token_storage')->getToken()->getUser();
 
@@ -285,12 +285,18 @@ class RequestController extends Controller
         //2) if the current user is added to this project as the reviewer for the state above
         //$reviewFormViews = $transresUtil->getReviewForm($project,$user);
 
+        $feeHtml = null;
+        $fee = $transresRequestUtil->getTransResRequestFeeHtml($transresRequest);
+        if( $fee ) {
+            $feeHtml = " (fee $".$fee.")";
+        }
+
         return array(
             'transresRequest' => $transresRequest,
             'project' => $transresRequest->getProject(),
             'form' => $form->createView(),
             'cycle' => $cycle,
-            'title' => "Request ID ".$transresRequest->getOid(),
+            'title' => "Request ID ".$transresRequest->getOid() . $feeHtml,
             //'delete_form' => $deleteForm->createView(),
             //'review_forms' => $reviewFormViews
         );
@@ -360,13 +366,13 @@ class RequestController extends Controller
             $paginationParams
         );
 
-        $requestTotalFeeHtml = $transresRequestUtil->getRequestTotalFeeHtml($project);
+        $requestTotalFeeHtml = $transresRequestUtil->getTransResRequestTotalFeeHtml($project);
 
         return array(
             'transresRequests' => $transresRequests,
             'project' => $project,
-            'title' => $title,
-            'requestTotalFeeHtml' => $requestTotalFeeHtml
+            'title' => $title . " (". $requestTotalFeeHtml . ")",
+            'requestTotalFeeHtml' => null //$requestTotalFeeHtml
         );
     }
 

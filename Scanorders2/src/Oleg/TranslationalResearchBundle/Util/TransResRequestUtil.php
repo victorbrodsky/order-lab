@@ -45,7 +45,7 @@ class TransResRequestUtil
     }
 
 
-    public function getRequestTotalFeeHtml( $project ) {
+    public function getTransResRequestTotalFeeHtml( $project ) {
 
         $transResFormNodeUtil = $this->container->get('transres_formnode_util');
 
@@ -71,30 +71,89 @@ class TransResRequestUtil
 
         $requests = $query->getResult();
 
+        $total = 0;
+
         foreach($requests as $request) {
-            $completed = $transResFormNodeUtil->getProjectFormNodeFieldByName(
-                $request,
-                "Completed #",
-                "HemePath Translational Research",
-                "HemePath Translational Research Request",
-                "Request",
-                false
-            );
-            echo "completed=".$completed."<br>";
+//            $completed = $transResFormNodeUtil->getProjectFormNodeFieldByName(
+//                $request,
+//                "Completed #",
+//                "HemePath Translational Research",
+//                "HemePath Translational Research Request",
+//                "Request",
+//                false
+//            );
+//            //echo "completed=".$completed."<br>";
+//
+//            $requestCategoryTypeDropdownObject = $transResFormNodeUtil->getProjectFormNodeFieldByName(
+//                $request,
+//                "Category Type",
+//                "HemePath Translational Research",
+//                "HemePath Translational Research Request",
+//                "Request",
+//                true
+//            );
+//
+//            if( $completed && $requestCategoryTypeDropdownObject ) {
+//                //echo "requestCategoryTypeDropdownObject=".$requestCategoryTypeDropdownObject."<br>";
+//                //echo "requestCategoryType feeUnit=".$requestCategoryType->getFeeUnit()."<br>";
+//                //echo "requestCategoryType fee=".$requestCategoryType->getFee()."<br>";
+//
+//                $fee = $requestCategoryTypeDropdownObject->getFee();
+//
+//                if( $fee ) {
+//                    $subTotal = intval($completed) * intval($fee);
+//
+//                    $total = $total + $subTotal;
+//                }
+//            }
 
-            $requestCategoryType = $transResFormNodeUtil->getProjectFormNodeFieldByName(
-                $request,
-                "Category Type",
-                "HemePath Translational Research",
-                "HemePath Translational Research Request",
-                "Request",
-                true
-            );
+            $subTotal = $this->getTransResRequestFeeHtml($request);
+            if( $subTotal ) {
+                $total = $total + $subTotal;
+            }
+        }
 
-            //TODO: find dropdown list entity
-            echo "requestCategoryType=".$requestCategoryType."<br>";
+        if( $total ) {
+            $res = "Total fees: $$total";
+            return $res;
+        }
+
+        return null;
+    }
+
+    public function getTransResRequestFeeHtml( $request ) {
+        $transResFormNodeUtil = $this->container->get('transres_formnode_util');
+
+        $completed = $transResFormNodeUtil->getProjectFormNodeFieldByName(
+            $request,
+            "Completed #",
+            "HemePath Translational Research",
+            "HemePath Translational Research Request",
+            "Request",
+            false
+        );
+        //echo "completed=".$completed."<br>";
+
+        $requestCategoryTypeDropdownObject = $transResFormNodeUtil->getProjectFormNodeFieldByName(
+            $request,
+            "Category Type",
+            "HemePath Translational Research",
+            "HemePath Translational Research Request",
+            "Request",
+            true
+        );
+
+        if( $completed && $requestCategoryTypeDropdownObject ) {
+            //echo "requestCategoryTypeDropdownObject=".$requestCategoryTypeDropdownObject."<br>";
             //echo "requestCategoryType feeUnit=".$requestCategoryType->getFeeUnit()."<br>";
             //echo "requestCategoryType fee=".$requestCategoryType->getFee()."<br>";
+
+            $fee = $requestCategoryTypeDropdownObject->getFee();
+
+            if( $fee ) {
+                $subTotal = intval($completed) * intval($fee);
+                return $subTotal;
+            }
         }
 
         return null;

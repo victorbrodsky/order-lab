@@ -396,11 +396,27 @@ class TransResFormNodeUtil
         }
 
         if( $asEntity && $receivingEntity ) {
-            $listElement = $formNodeUtil->getUniqueFormNodeListRecord($receivingEntity->getFormNode(),$entity);
-            echo "listElement ID=".$listElement->getId()."<br>";
+            //$listElement = $formNodeUtil->getUniqueFormNodeListRecord($receivingEntity->getFormNode(),$entity);
+            //echo "listElement ID=".$listElement->getId()."<br>";
             //TODO: find dropdown list entity
-            if( $listElement ) {
+            $formNode = $receivingEntity->getFormNode();
+            //echo "find dropdown list entity  formNodeID=".$formNode->getId()."<br>";
+            //echo "getObjectTypeName=".$formNode->getObjectTypeName()."<br>";
+            if( $formNode ) {
+                if (
+                    $formNode->getObjectTypeName() == "Form Field - Dropdown Menu - Allow Multiple Selections" ||
+                    $formNode->getObjectTypeName() == "Form Field - Dropdown Menu - Allow Multiple Selections - Allow New Entries" ||
+                    $formNode->getObjectTypeName() == "Form Field - Dropdown Menu - Allow New Entries" ||
+                    $formNode->getObjectTypeName() == "Form Field - Dropdown Menu"
+                ) {
+                    $dropdownObject = $formNodeUtil->getReceivingObject($formNode, $value);
+                    //echo "dropdownObject ID=".$dropdownObject->getId()."<br>";
+                    //echo "dropdownObject getSection=".$dropdownObject->getSection()."<br>";
+                    //echo "dropdownObject getFeeUnit=".$dropdownObject->getFeeUnit()."<br>";
+                    //echo "dropdownObject getFee=".$dropdownObject->getFee()."<br>";
 
+                    return $dropdownObject;
+                }
             }
         }
 

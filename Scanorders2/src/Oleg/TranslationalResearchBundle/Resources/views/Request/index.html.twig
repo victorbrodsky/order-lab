@@ -24,6 +24,7 @@
                 <th>{{ knp_pagination_sortable(transresRequests, 'Submitter', 'submitterInfos.displayName') }}</th>
                 <th>{{ knp_pagination_sortable(transresRequests, 'Creation Date', 'transresRequest.createDate') }}</th>
                 {#<th>{{ knp_pagination_sortable(projects, 'Expiration Date', 'project.expirationDate') }}</th>#}
+                <th>Fee</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -59,6 +60,14 @@
                 <td>
                     {% if transresRequest.createDate %}
                         {{ transresRequest.createDate|date('Y-m-d H:i:s') }}
+                    {% endif %}
+                </td>
+
+                <td>
+                    {#{{ principalInvestigator }}<br>#}
+                    {% set fee = transres_request_util.getTransResRequestFeeHtml(transresRequest) %}
+                    {% if fee %}
+                        ${{ fee|raw }}
                     {% endif %}
                 </td>
 
