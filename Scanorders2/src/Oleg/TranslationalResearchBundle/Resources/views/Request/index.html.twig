@@ -15,6 +15,34 @@
         {{ requestTotalFeeHtml|raw }}
     </p>
 
+    <div class="well form-search">
+        {{ form_start(filterform) }}
+        <div class="row">
+            <div class="col-xs-2">
+                {{ form_widget(filterform.submitter, {'attr': {'placeholder': 'Submitter'}}) }}
+            </div>
+            <div class="col-xs-2">
+                {{ form_widget(filterform.progressState, {'attr': {'placeholder': 'Progress State'}}) }}
+            </div>
+            <div class="col-xs-2">
+                {{ form_widget(filterform.billingState, {'attr': {'placeholder': 'Billing State'}}) }}
+            </div>
+            <div class="col-xs-4">
+                {{ form_widget(filterform.category,{'attr': {'placeholder': 'Category'}}) }}
+            </div>
+
+            <div class="col-xs-2">
+                {#<div class="btn-group btn-group-justified">#}
+                {#<div class="btn-group">#}
+                <button type="submit" id="filter-btn" class="btn btn-sm btn-default">Filter</button>
+                {#</div>#}
+                {#</div>#}
+            </div>
+        </div>
+        {{ form_end(filterform) }}
+    </div>
+    <br>
+
     {#<table class="table table-hover table-condensed text-left table-bordered">#}
     <table class="records_list table table-condensed text-left my-table-class">
         <thead>

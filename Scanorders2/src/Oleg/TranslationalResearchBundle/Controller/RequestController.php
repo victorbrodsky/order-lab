@@ -27,6 +27,7 @@ namespace Oleg\TranslationalResearchBundle\Controller;
 
 use Oleg\TranslationalResearchBundle\Entity\Project;
 use Oleg\TranslationalResearchBundle\Entity\TransResRequest;
+use Oleg\TranslationalResearchBundle\Form\FilterRequestType;
 use Oleg\TranslationalResearchBundle\Form\TransResRequestType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -329,6 +330,30 @@ class RequestController extends Controller
         $routeName = $request->get('_route');
         $title = "Requests for the project ID ".$project->getOid();
 
+        //////// create filter //////////
+        $progressStateArr = $transresRequestUtil->getProgressStateArr();
+        $billingStateArr = $transresRequestUtil->getBillingStateArr();
+        $params = array('progressStateArr'=>$progressStateArr,'billingStateArr'=>$billingStateArr);
+        $filterform = $this->createForm(FilterRequestType::class, null,array(
+            'method' => 'GET',
+            'form_custom_value'=>$params
+        ));
+
+        $filterform->handleRequest($request);
+        $submitter = $filterform['submitter']->getData();
+        $progressStates = $filterform['progressState']->getData();
+        $billingStates = $filterform['billingState']->getData();
+        $category = $filterform['category']->getData();
+        //$search = $filterform['search']->getData();
+        //////// EOF create filter //////////
+
+        $ids = array();
+        //////////////// get Requests IDs with the form node categoryType ////////////////
+        $categoryIds = $transresRequestUtil->getRequestIdsFormNodeByCategory($category);
+        $ids = array_merge( $ids, $categoryIds );
+        $ids = array_unique($ids);
+        //////////////// EOF get Requests IDs with the form node categoryType ////////////////
+
 
         $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
         $dql =  $repository->createQueryBuilder("transresRequest");
@@ -343,6 +368,26 @@ class RequestController extends Controller
         $dql->andWhere("project.id = :projectId");
 
         $dqlParameters["projectId"] = $project->getId();
+
+        if( $submitter ) {
+            $dql->andWhere("submitter.id = :submitterId");
+            $dqlParameters["submitterId"] = $submitter->getId();
+        }
+
+        if( $progressStates && count($progressStates)>0 ) {
+            $dql->andWhere("project.progressState IN (:progressStates)");
+            $dqlParameters["progressStates"] = implode(",",$progressStates);
+        }
+
+        if( $billingStates && count($billingStates)>0 ) {
+            $dql->andWhere("project.billingState IN (:billingStates)");
+            $dqlParameters["billingStates"] = implode(",",$billingStates);
+        }
+
+        if( count($ids) > 0 ) {
+            $dql->andWhere("project.id IN (:ids)");
+            $dqlParameters["ids"] = implode(",",$ids);
+        }
 
         $limit = 30;
         $query = $em->createQuery($dql);
@@ -371,6 +416,7 @@ class RequestController extends Controller
         return array(
             'transresRequests' => $transresRequests,
             'project' => $project,
+            'filterform' => $filterform->createView(),
             'title' => $title . " (". $requestTotalFeeHtml . ")",
             'requestTotalFeeHtml' => null //$requestTotalFeeHtml
         );

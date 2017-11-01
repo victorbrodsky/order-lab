@@ -47,8 +47,7 @@ class TransResRequestUtil
 
     public function getTransResRequestTotalFeeHtml( $project ) {
 
-        $transResFormNodeUtil = $this->container->get('transres_formnode_util');
-
+        //$transResFormNodeUtil = $this->container->get('transres_formnode_util');
         $repository = $this->em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
         $dql =  $repository->createQueryBuilder("transresRequest");
         $dql->select('transresRequest');
@@ -74,39 +73,6 @@ class TransResRequestUtil
         $total = 0;
 
         foreach($requests as $request) {
-//            $completed = $transResFormNodeUtil->getProjectFormNodeFieldByName(
-//                $request,
-//                "Completed #",
-//                "HemePath Translational Research",
-//                "HemePath Translational Research Request",
-//                "Request",
-//                false
-//            );
-//            //echo "completed=".$completed."<br>";
-//
-//            $requestCategoryTypeDropdownObject = $transResFormNodeUtil->getProjectFormNodeFieldByName(
-//                $request,
-//                "Category Type",
-//                "HemePath Translational Research",
-//                "HemePath Translational Research Request",
-//                "Request",
-//                true
-//            );
-//
-//            if( $completed && $requestCategoryTypeDropdownObject ) {
-//                //echo "requestCategoryTypeDropdownObject=".$requestCategoryTypeDropdownObject."<br>";
-//                //echo "requestCategoryType feeUnit=".$requestCategoryType->getFeeUnit()."<br>";
-//                //echo "requestCategoryType fee=".$requestCategoryType->getFee()."<br>";
-//
-//                $fee = $requestCategoryTypeDropdownObject->getFee();
-//
-//                if( $fee ) {
-//                    $subTotal = intval($completed) * intval($fee);
-//
-//                    $total = $total + $subTotal;
-//                }
-//            }
-
             $subTotal = $this->getTransResRequestFeeHtml($request);
             if( $subTotal ) {
                 $total = $total + $subTotal;
@@ -157,6 +123,171 @@ class TransResRequestUtil
         }
 
         return null;
+    }
+
+    public function getProgressStateArr() {
+        $stateArr = array(
+            'active',
+            'cancel',
+            'pending',
+            'investigator',
+            'histo',
+            'ihc',
+            'mol',
+            'retrieval',
+            'payment',
+            'slidescanning',
+            'block',
+            'complet',
+            'suspend'
+        );
+
+        $stateChoiceArr = array();
+
+        foreach($stateArr as $state) {
+            //$label = $state;
+            $label = $this->getProgressStateLabelByName($state);
+            $label = $label . " (" . $state . ")";
+            $stateChoiceArr[$label] = $state;
+        }
+
+        return $stateChoiceArr;
+    }
+
+
+    public function getBillingStateArr() {
+        $stateArr = array(
+            'active',
+            'cancel',
+            'missinginfo',
+            'invoice',
+            'paid',
+            'refund',
+            'partially_refund',
+        );
+
+        $stateChoiceArr = array();
+
+        foreach($stateArr as $state) {
+            //$label = $state;
+            $label = $this->getBillingStateLabelByName($state);
+            $label = $label . " (" . $state . ")";
+            $stateChoiceArr[$label] = $state;
+        }
+
+        return $stateChoiceArr;
+    }
+
+
+    public function getProgressStateLabelByName( $stateName ) {
+        switch ($stateName) {
+            case "active":
+                $state = "Active";
+                break;
+            case "cancel":
+                $state = "Cancel";
+                break;
+            case "pending":
+                $state = "Pending";
+                break;
+            case "investigator":
+                $state = "Investigator";
+                break;
+            case "histo":
+                $state = "Histo";
+                break;
+            case "ihc":
+                $state = "Ihc";
+                break;
+            case "mol":
+                $state = "Mol";
+                break;
+            case "retrieval":
+                $state = "Retrieval";
+                break;
+            case "payment":
+                $state = "Payment";
+                break;
+            case "slidescanning":
+                $state = "Slide Scanning";
+                break;
+            case "block":
+                $state = "Block";
+                break;
+            case "complet":
+                $state = "Complet";
+                break;
+            case "suspend":
+                $state = "Suspend";
+                break;
+
+            default:
+                $state = "<$stateName>";
+
+        }
+        return $state;
+    }
+    public function getBillingStateLabelByName( $stateName ) {
+        switch ($stateName) {
+            case "active":
+                $state = "Active";
+                break;
+            case "cancel":
+                $state = "Cancel";
+                break;
+            case "missinginfo":
+                $state = "Pending additional information from submitter";
+                break;
+            case "invoice":
+                $state = "Invoice";
+                break;
+            case "paid":
+                $state = "Paid";
+                break;
+            case "refund":
+                $state = "Refund";
+                break;
+            case "partially_refund":
+                $state = "Partially Refund";
+                break;
+
+            default:
+                $state = "<$stateName>";
+
+        }
+        return $state;
+    }
+
+    //get Request IDs for specified RequestCategoryTypeList
+    public function getRequestIdsFormNodeByCategory( $categoryType ) {
+        echo $categoryType->getId().": categoryType=".$categoryType->getOptimalAbbreviationName()."<br>";
+
+        $transResFormNodeUtil = $this->container->get('transres_formnode_util');
+        $ids = array();
+        $objectTypeDropdowns = array();
+
+        //1) get formnode by category type name "Category Type" under formnode "HemePath Translational Research Request"->"Request"
+        $fieldFormNode = $transResFormNodeUtil->getFormNodeByFieldNameAndParents(
+            "Category Type",
+            "HemePath Translational Research",
+            "HemePath Translational Research Request",
+            "Request"
+        );
+        echo "fieldFormNode=".$fieldFormNode->getId()."<br>";
+        if( !$fieldFormNode ) {
+            return array();
+        }
+
+        //2) get objectTypeDropdowns by:
+        // value=$categoryType->getId(), entityNamespace="Oleg\TranslationalResearchBundle\Entity" , entityName="TransResRequest"
+
+
+        //3
+        foreach($objectTypeDropdowns as $objectTypeDropdown) {
+            $ids[] = $objectTypeDropdown->getEntityId();
+        }
+
+        return $ids;
     }
 
 }
