@@ -2,6 +2,8 @@
 
 namespace Oleg\TranslationalResearchBundle\Form;
 
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -91,15 +93,49 @@ class ReviewBaseType extends AbstractType
                 $this->params['transresUtil']->isReviewsReviewer($this->params['user'],array($reviewObjectEntity))
             ) {
                 //existing review object
-                $form->add('reviewer', null, array(
-                    'label' => "Reviewer:",
-                    'disabled' => $this->params['disabledReviewers'],
-                    'attr' => array('class' => 'combobox combobox-width') //, 'readonly'=>true
+//                $form->add('reviewer', null, array(
+//                    'label' => "Reviewer:",
+//                    'disabled' => $this->params['disabledReviewers'],
+//                    'attr' => array('class' => 'combobox combobox-width') //, 'readonly'=>true
+//                ));
+//                $form->add('reviewerDelegate', null, array(
+//                    'label' => "Reviewer Delegate:",
+//                    'disabled' => $this->params['disabledReviewers'],
+//                    'attr' => array('class' => 'combobox combobox-width') //, 'readonly'=>true
+//                ));
+
+                $form->add( 'reviewer', EntityType::class, array(
+                    'class' => 'OlegUserdirectoryBundle:User',
+                    'label'=> "Reviewer:",
+                    'required'=> false,
+                    'multiple' => false,
+                    'attr' => array('class'=>'combobox combobox-width'),
+                    'query_builder' => function(EntityRepository $er) {
+                        return $er->createQueryBuilder('list')
+                            ->leftJoin("list.employmentStatus", "employmentStatus")
+                            ->leftJoin("employmentStatus.employmentType", "employmentType")
+                            ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+                            ->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
+                            ->leftJoin("list.infos", "infos")
+                            ->orderBy("infos.displayName","ASC");
+                    },
                 ));
-                $form->add('reviewerDelegate', null, array(
-                    'label' => "Reviewer Delegate:",
-                    'disabled' => $this->params['disabledReviewers'],
-                    'attr' => array('class' => 'combobox combobox-width') //, 'readonly'=>true
+
+                $form->add( 'reviewerDelegate', EntityType::class, array(
+                    'class' => 'OlegUserdirectoryBundle:User',
+                    'label'=> "Reviewer Delegate:",
+                    'required'=> false,
+                    'multiple' => false,
+                    'attr' => array('class'=>'combobox combobox-width'),
+                    'query_builder' => function(EntityRepository $er) {
+                        return $er->createQueryBuilder('list')
+                            ->leftJoin("list.employmentStatus", "employmentStatus")
+                            ->leftJoin("employmentStatus.employmentType", "employmentType")
+                            ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+                            ->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
+                            ->leftJoin("list.infos", "infos")
+                            ->orderBy("infos.displayName","ASC");
+                    },
                 ));
             }
 
