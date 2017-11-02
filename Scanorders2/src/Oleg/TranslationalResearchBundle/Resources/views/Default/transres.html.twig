@@ -662,16 +662,16 @@
         {#{% set showReviewers = false %}#}
         {#{% if  %}#}
         {#formreview.vars.value.id={{ formreview.vars.value.id }}<br>#}
-        {% if formreview.vars.value and formreview.vars.value.reviewedBy %}
+        {% if formreview.vars.value and (formreview.vars.value.reviewedBy or formreview.vars.value.updatedate) %}
             {#formreview.vars.value.reviewedBy.id={{ formreview.vars.value.reviewedBy.id }}<br>#}
             {#{{ formmacros.simplefield("Reviewed By:", transres.userHtml(formreview.vars.value.reviewedBy), "input", "disabled") }}#}
             {% set reviewedBy = null %}
             {% if formreview.reviewer is defined %}
-                {% set reviewedBy = "by" ~ transres.userHtml(formreview.vars.value.reviewedBy) %}
+                {% set reviewedBy = " by" ~ transres.userHtml(formreview.vars.value.reviewedBy) %}
             {% endif %}
             <p>
                 {#Reviewed by {{ transres.userHtml(formreview.vars.value.reviewedBy) }} on {{ updatedate|date("m/d/Y H:i") }}#}
-                Reviewed {{ reviewedBy|raw }} on {{ formreview.vars.value.updatedate|date("m/d/Y") }} at {{ formreview.vars.value.updatedate|date("H:i") }}
+                Reviewed{{ reviewedBy|raw }} on {{ formreview.vars.value.updatedate|date("m/d/Y") }} at {{ formreview.vars.value.updatedate|date("H:i") }}
             </p>
         {% endif %}
 
