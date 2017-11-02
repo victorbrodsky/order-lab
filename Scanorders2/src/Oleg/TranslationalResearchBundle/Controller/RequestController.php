@@ -344,7 +344,7 @@ class RequestController extends Controller
         $progressStates = $filterform['progressState']->getData();
         $billingStates = $filterform['billingState']->getData();
         $category = $filterform['category']->getData();
-        //$search = $filterform['search']->getData();
+        //$search = $filterform['comment']->getData();
         //////// EOF create filter //////////
 
         $ids = array();
@@ -377,17 +377,17 @@ class RequestController extends Controller
         }
 
         if( $progressStates && count($progressStates)>0 ) {
-            $dql->andWhere("project.progressState IN (:progressStates)");
+            $dql->andWhere("transresRequest.progressState IN (:progressStates)");
             $dqlParameters["progressStates"] = implode(",",$progressStates);
         }
 
         if( $billingStates && count($billingStates)>0 ) {
-            $dql->andWhere("project.billingState IN (:billingStates)");
+            $dql->andWhere("transresRequest.billingState IN (:billingStates)");
             $dqlParameters["billingStates"] = implode(",",$billingStates);
         }
 
         if( count($ids) > 0 ) {
-            $dql->andWhere("project.id IN (:ids)");
+            $dql->andWhere("transresRequest.id IN (:ids)");
             $dqlParameters["ids"] = implode(",",$ids);
         }
 

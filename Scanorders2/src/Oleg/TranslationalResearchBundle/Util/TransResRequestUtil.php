@@ -260,8 +260,13 @@ class TransResRequestUtil
 
     //get Request IDs for specified RequestCategoryTypeList
     public function getRequestIdsFormNodeByCategory( $categoryType ) {
-        echo $categoryType->getId().": categoryType=".$categoryType->getOptimalAbbreviationName()."<br>";
 
+        if( !$categoryType ) {
+            return array();
+        }
+        //echo $categoryType->getId().": categoryType=".$categoryType->getOptimalAbbreviationName()."<br>";
+
+        $formNodeUtil = $this->container->get('user_formnode_utility');
         $transResFormNodeUtil = $this->container->get('transres_formnode_util');
         $ids = array();
         $objectTypeDropdowns = array();
@@ -273,18 +278,24 @@ class TransResRequestUtil
             "HemePath Translational Research Request",
             "Request"
         );
-        echo "fieldFormNode=".$fieldFormNode->getId()."<br>";
+        //echo "fieldFormNode=".$fieldFormNode->getId()."<br>";
         if( !$fieldFormNode ) {
             return array();
         }
 
         //2) get objectTypeDropdowns by:
         // value=$categoryType->getId(), entityNamespace="Oleg\TranslationalResearchBundle\Entity" , entityName="TransResRequest"
-
+        $objectTypeDropdowns = $formNodeUtil->getFormNodeListRecordsByDropdown($fieldFormNode,$categoryType);
+        //echo "objectTypeDropdowns=".count($objectTypeDropdowns)."<br>";
 
         //3
         foreach($objectTypeDropdowns as $objectTypeDropdown) {
+            //echo "id=".$objectTypeDropdown->getEntityId()."<br>";
             $ids[] = $objectTypeDropdown->getEntityId();
+        }
+
+        if( count($ids) == 0 ) {
+            $ids[] = 0;
         }
 
         return $ids;

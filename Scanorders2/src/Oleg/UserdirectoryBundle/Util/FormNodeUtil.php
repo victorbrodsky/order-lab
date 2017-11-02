@@ -574,6 +574,39 @@ class FormNodeUtil
         return null;
     }
 
+    //Used by getRequestIdsFormNodeByCategory to get ids of the dropdown objects for given categoryType (holderEntity)
+    public function getFormNodeListRecordsByDropdown($formNode,$holderEntity) {
+        //get objectTypeDropdowns by:
+        // value=$categoryType->getId(), entityNamespace="Oleg\TranslationalResearchBundle\Entity" , entityName="TransResRequest"
+        //echo "get objectTypeDropdown repo <br>";
+        $treeRepository = $this->getFormNodeReceivedListRepository($formNode);
+        $dql =  $treeRepository->createQueryBuilder("list");
+        $dql->select('list');
+        $dql->where('list.entityName = :entityName AND list.entityNamespace = :entityNamespace');
+        $dql->andWhere('list.formNode = :formNodeId');
+        $dql->andWhere('list.value = :value');
+        $dql->orderBy('list.arraySectionIndex','DESC');
+        $dql->addOrderBy('list.orderinlist', 'ASC');
+
+        $query = $this->em->createQuery($dql);
+
+        //echo "query=".$query->getSql()."<br>";
+
+        $query->setParameters(
+            array(
+                'entityName' => "TransResRequest",
+                'entityNamespace' => "Oleg\\TranslationalResearchBundle\\Entity",
+                //'entityId' => null,
+                'formNodeId' => $formNode->getId(),
+                'value' => $holderEntity->getId()
+            )
+        );
+
+        $objectTypeDropdowns = $query->getResult();
+
+        return $objectTypeDropdowns;
+    }
+
     //Used in FormNodeController to show fields and values
     //return value string (->getName) for dropdown menu - single and multiple
     //check if value is userWrapper case (object=PathologyResultSignatoriesList)
