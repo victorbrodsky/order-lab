@@ -574,8 +574,8 @@ class FormNodeUtil
         return null;
     }
 
-    //Used by getRequestIdsFormNodeByCategory to get ids of the dropdown objects for given categoryType (holderEntity)
-    public function getFormNodeListRecordsByDropdown($formNode,$holderEntity) {
+    //Used by getRequestIdsFormNodeByCategory to get ids of the receiving (i.e. objectTypeText, objectTypeDropdown) objects for the given value
+    public function getFormNodeListRecordsByReceivingObjectValue($formNode,$value,$mapper,$compareType="exact") {
         //get objectTypeDropdowns by:
         // value=$categoryType->getId(), entityNamespace="Oleg\TranslationalResearchBundle\Entity" , entityName="TransResRequest"
         //echo "get objectTypeDropdown repo <br>";
@@ -584,7 +584,18 @@ class FormNodeUtil
         $dql->select('list');
         $dql->where('list.entityName = :entityName AND list.entityNamespace = :entityNamespace');
         $dql->andWhere('list.formNode = :formNodeId');
-        $dql->andWhere('list.value = :value');
+
+        $parameterValue = $value;
+        if( $compareType == "exact" ) {
+            $dql->andWhere('list.value = :value');
+        }
+        if( $compareType == "like" ) {
+            $dql->andWhere('list.value LIKE :value');
+            //$parameterValue = "'%".$value."%'";
+            //$parameterValue = "%".$value."%";
+            $parameterValue = '%'.$value.'%';
+        }
+
         $dql->orderBy('list.arraySectionIndex','DESC');
         $dql->addOrderBy('list.orderinlist', 'ASC');
 
@@ -594,11 +605,10 @@ class FormNodeUtil
 
         $query->setParameters(
             array(
-                'entityName' => "TransResRequest",
-                'entityNamespace' => "Oleg\\TranslationalResearchBundle\\Entity",
-                //'entityId' => null,
+                'entityName' => $mapper['entityName'],  //"TransResRequest",
+                'entityNamespace' => $mapper['entityNamespace'],    //"Oleg\\TranslationalResearchBundle\\Entity",
                 'formNodeId' => $formNode->getId(),
-                'value' => $holderEntity->getId()
+                'value' => $parameterValue,  //$holderEntity->getId()
             )
         );
 

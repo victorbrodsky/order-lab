@@ -58,11 +58,11 @@ class FilterRequestType extends AbstractType
             },
         ));
         
-//        $builder->add('search', TextType::class, array(
-//            'required'=>false,
-//            'label' => false,
-//            'attr' => array('class'=>'form-control form-control-modif limit-font-size submit-on-enter-field'),
-//        ));
+        $builder->add('comment', TextType::class, array(
+            'required'=>false,
+            'label' => false,
+            'attr' => array('class'=>'form-control form-control-modif limit-font-size submit-on-enter-field'),
+        ));
 
         $builder->add( 'category', EntityType::class, array(
             'class' => 'OlegTranslationalResearchBundle:RequestCategoryTypeList',

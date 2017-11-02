@@ -344,18 +344,25 @@ class RequestController extends Controller
         $progressStates = $filterform['progressState']->getData();
         $billingStates = $filterform['billingState']->getData();
         $category = $filterform['category']->getData();
-        //$search = $filterform['comment']->getData();
+        $searchStr = $filterform['comment']->getData();
         //////// EOF create filter //////////
 
         $ids = array();
 
-        //////////////// get Requests IDs with the form node categoryType ////////////////
+        //////////////// get Requests IDs with the form node filter ////////////////
         if( $category ) {
             $categoryIds = $transresRequestUtil->getRequestIdsFormNodeByCategory($category);
             $ids = array_merge($ids, $categoryIds);
-            $ids = array_unique($ids);
         }
-        //////////////// EOF get Requests IDs with the form node categoryType ////////////////
+        if( $searchStr ) {
+            $commentIds = $transresRequestUtil->getRequestIdsFormNodeByComment($searchStr);
+            $ids = array_merge($ids, $commentIds);
+        }
+        if( count($ids) > 0 ) {
+            $ids = array_unique($ids);
+            print_r($ids);
+        }
+        //////////////// EOF get Requests IDs with the form node filter ////////////////
 
         $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
         $dql =  $repository->createQueryBuilder("transresRequest");
@@ -387,8 +394,9 @@ class RequestController extends Controller
         }
 
         if( count($ids) > 0 ) {
-            $dql->andWhere("transresRequest.id IN (:ids)");
-            $dqlParameters["ids"] = implode(",",$ids);
+            //$dql->andWhere("transresRequest.id IN (:ids)");
+            //$dqlParameters["ids"] = implode(",",$ids);
+            $dql->andWhere("transresRequest.id IN (".implode(",",$ids).")");
         }
 
         $limit = 30;
@@ -398,7 +406,7 @@ class RequestController extends Controller
             $query->setParameters($dqlParameters);
         }
 
-        //echo "query=".$query->getSql()."<br>";
+        echo "query=".$query->getSql()."<br>";
 
         $paginationParams = array(
             'defaultSortFieldName' => 'transresRequest.id',
@@ -412,6 +420,7 @@ class RequestController extends Controller
             $limit,                                         /*limit per page*/
             $paginationParams
         );
+        echo "transresRequests count=".count($transresRequests)."<br>";
 
         $requestTotalFeeHtml = $transresRequestUtil->getTransResRequestTotalFeeHtml($project);
 

@@ -269,7 +269,6 @@ class TransResRequestUtil
         $formNodeUtil = $this->container->get('user_formnode_utility');
         $transResFormNodeUtil = $this->container->get('transres_formnode_util');
         $ids = array();
-        $objectTypeDropdowns = array();
 
         //1) get formnode by category type name "Category Type" under formnode "HemePath Translational Research Request"->"Request"
         $fieldFormNode = $transResFormNodeUtil->getFormNodeByFieldNameAndParents(
@@ -285,7 +284,11 @@ class TransResRequestUtil
 
         //2) get objectTypeDropdowns by:
         // value=$categoryType->getId(), entityNamespace="Oleg\TranslationalResearchBundle\Entity" , entityName="TransResRequest"
-        $objectTypeDropdowns = $formNodeUtil->getFormNodeListRecordsByDropdown($fieldFormNode,$categoryType);
+        $mapper = array(
+            "entityName" => "TransResRequest",
+            "entityNamespace" => "Oleg\\TranslationalResearchBundle\\Entity",
+        );
+        $objectTypeDropdowns = $formNodeUtil->getFormNodeListRecordsByReceivingObjectValue($fieldFormNode,$categoryType->getId(),$mapper,"exact");
         //echo "objectTypeDropdowns=".count($objectTypeDropdowns)."<br>";
 
         //3
@@ -300,5 +303,53 @@ class TransResRequestUtil
 
         return $ids;
     }
+
+    public function getRequestIdsFormNodeByComment( $commentStr ) {
+
+        if( !$commentStr ) {
+            return array();
+        }
+        //echo "commentStr=".$commentStr."<br>";
+
+        $formNodeUtil = $this->container->get('user_formnode_utility');
+        $transResFormNodeUtil = $this->container->get('transres_formnode_util');
+        $ids = array();
+        $objectTypeDropdowns = array();
+
+        //1) get formnode by category type name "Category Type" under formnode "HemePath Translational Research Request"->"Request"
+        $fieldFormNode = $transResFormNodeUtil->getFormNodeByFieldNameAndParents(
+            "Comment",
+            "HemePath Translational Research",
+            "HemePath Translational Research Request",
+            "Request"
+        );
+        //echo "fieldFormNode=".$fieldFormNode->getId()."<br>";
+        if( !$fieldFormNode ) {
+            return array();
+        }
+
+        //2) get objectTypeDropdowns by:
+        // value=$categoryType->getId(), entityNamespace="Oleg\TranslationalResearchBundle\Entity" , entityName="TransResRequest"
+        $mapper = array(
+            "entityName" => "TransResRequest",
+            "entityNamespace" => "Oleg\\TranslationalResearchBundle\\Entity",
+        );
+        $objectTypeDropdowns = $formNodeUtil->getFormNodeListRecordsByReceivingObjectValue($fieldFormNode,$commentStr,$mapper,"like");
+        //echo "objectTypeDropdowns=".count($objectTypeDropdowns)."<br>";
+
+        //3
+        foreach($objectTypeDropdowns as $objectTypeDropdown) {
+            //echo "id=".$objectTypeDropdown->getEntityId()."<br>";
+            $ids[] = $objectTypeDropdown->getEntityId();
+        }
+
+        if( count($ids) == 0 ) {
+            $ids[] = 0;
+        }
+
+        return $ids;
+    }
+
+
 
 }
