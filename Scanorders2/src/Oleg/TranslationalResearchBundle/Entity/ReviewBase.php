@@ -70,7 +70,7 @@ class ReviewBase
 
     /**
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(name="reviewerPrimary", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="reviewedBy", referencedColumnName="id", nullable=true)
      */
     protected $reviewedBy;
 

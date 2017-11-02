@@ -661,7 +661,7 @@
 
         {#{% set showReviewers = false %}#}
         {#{% if  %}#}
-        formreview.vars.value.id={{ formreview.vars.value.id }}<br>
+        {#formreview.vars.value.id={{ formreview.vars.value.id }}<br>#}
         {% if formreview.vars.value and formreview.vars.value.reviewedBy %}
             {#formreview.vars.value.reviewedBy.id={{ formreview.vars.value.reviewedBy.id }}<br>#}
             {#{{ formmacros.simplefield("Reviewed By:", transres.userHtml(formreview.vars.value.reviewedBy), "input", "disabled") }}#}
