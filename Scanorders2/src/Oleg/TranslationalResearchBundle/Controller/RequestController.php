@@ -348,12 +348,14 @@ class RequestController extends Controller
         //////// EOF create filter //////////
 
         $ids = array();
-        //////////////// get Requests IDs with the form node categoryType ////////////////
-        $categoryIds = $transresRequestUtil->getRequestIdsFormNodeByCategory($category);
-        $ids = array_merge( $ids, $categoryIds );
-        $ids = array_unique($ids);
-        //////////////// EOF get Requests IDs with the form node categoryType ////////////////
 
+        //////////////// get Requests IDs with the form node categoryType ////////////////
+        if( $category ) {
+            $categoryIds = $transresRequestUtil->getRequestIdsFormNodeByCategory($category);
+            $ids = array_merge($ids, $categoryIds);
+            $ids = array_unique($ids);
+        }
+        //////////////// EOF get Requests IDs with the form node categoryType ////////////////
 
         $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
         $dql =  $repository->createQueryBuilder("transresRequest");

@@ -400,7 +400,6 @@ class TransResFormNodeUtil
         if( $asEntity && $receivingEntity ) {
             //$listElement = $formNodeUtil->getUniqueFormNodeListRecord($receivingEntity->getFormNode(),$entity);
             //echo "listElement ID=".$listElement->getId()."<br>";
-            //TODO: find dropdown list entity
             $formNode = $receivingEntity->getFormNode();
             //echo "find dropdown list entity  formNodeID=".$formNode->getId()."<br>";
             //echo "getObjectTypeName=".$formNode->getObjectTypeName()."<br>";
