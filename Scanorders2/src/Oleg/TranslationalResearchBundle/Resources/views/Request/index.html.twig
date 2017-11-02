@@ -67,6 +67,8 @@
                 <th>{{ knp_pagination_sortable(transresRequests, 'ID#', 'transresRequest.id') }}</th>
                 <th>{{ knp_pagination_sortable(transresRequests, 'Submitter', 'submitterInfos.displayName') }}</th>
                 <th>{{ knp_pagination_sortable(transresRequests, 'Creation Date', 'transresRequest.createDate') }}</th>
+                <th>{{ knp_pagination_sortable(transresRequests, 'Progress State', 'transresRequest.progressState') }}</th>
+                <th>{{ knp_pagination_sortable(transresRequests, 'Billing State', 'transresRequest.billingState') }}</th>
                 {#<th>{{ knp_pagination_sortable(projects, 'Expiration Date', 'project.expirationDate') }}</th>#}
                 <th>Fee</th>
                 <th>Actions</th>
@@ -105,6 +107,14 @@
                     {% if transresRequest.createDate %}
                         {{ transresRequest.createDate|date('Y-m-d H:i:s') }}
                     {% endif %}
+                </td>
+
+                <td>
+                    {{ transres_request_util.getProgressStateLabelByName(transresRequest.progressState) }}
+                </td>
+
+                <td>
+                    {{ transres_request_util.getBillingStateLabelByName(transresRequest.billingState) }}
                 </td>
 
                 <td>

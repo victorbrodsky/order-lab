@@ -94,12 +94,14 @@ class RequestController extends Controller
             if ($form->getClickedButton() && 'saveAsDraft' === $form->getClickedButton()->getName()) {
                 //Save Project as Draft => state='draft'
                 $transresRequest->setProgressState('draft');
+                $transresRequest->setBillingState('draft');
             }
 
             //new
             if ($form->getClickedButton() && 'saveAsComplete' === $form->getClickedButton()->getName()) {
                 //Complete Submission => state='submit'
-                $transresRequest->setProgressState('complete');
+                $transresRequest->setProgressState('active');
+                $transresRequest->setBillingState('active');
             }
 
             if( !$testing ) {
@@ -200,13 +202,15 @@ class RequestController extends Controller
             if ($form->getClickedButton() && 'saveAsDraft' === $form->getClickedButton()->getName()) {
                 //Save Project as Draft => state='draft'
                 $transresRequest->setProgressState('draft');
+                $transresRequest->setBillingState('draft');
             }
 
             //edit
             if ($form->getClickedButton() && 'saveAsComplete' === $form->getClickedButton()->getName()) {
                 //Complete Submission => state='submit'
                 if( $transresRequest->getProgressState() == 'draft' ) {
-                    $transresRequest->setProgressState('complete');
+                    $transresRequest->setProgressState('active');
+                    $transresRequest->setBillingState('active');
                 }
             }
 
@@ -360,7 +364,7 @@ class RequestController extends Controller
         }
         if( count($ids) > 0 ) {
             $ids = array_unique($ids);
-            print_r($ids);
+            //print_r($ids);
         }
         //////////////// EOF get Requests IDs with the form node filter ////////////////
 
@@ -406,7 +410,7 @@ class RequestController extends Controller
             $query->setParameters($dqlParameters);
         }
 
-        echo "query=".$query->getSql()."<br>";
+        //echo "query=".$query->getSql()."<br>";
 
         $paginationParams = array(
             'defaultSortFieldName' => 'transresRequest.id',
@@ -420,7 +424,7 @@ class RequestController extends Controller
             $limit,                                         /*limit per page*/
             $paginationParams
         );
-        echo "transresRequests count=".count($transresRequests)."<br>";
+        //echo "transresRequests count=".count($transresRequests)."<br>";
 
         $requestTotalFeeHtml = $transresRequestUtil->getTransResRequestTotalFeeHtml($project);
 

@@ -181,6 +181,9 @@ class TransResRequestUtil
 
     public function getProgressStateLabelByName( $stateName ) {
         switch ($stateName) {
+            case "draft":
+                $state = "Draft";
+                break;
             case "active":
                 $state = "Active";
                 break;
@@ -229,6 +232,9 @@ class TransResRequestUtil
     }
     public function getBillingStateLabelByName( $stateName ) {
         switch ($stateName) {
+            case "draft":
+                $state = "Draft";
+                break;
             case "active":
                 $state = "Active";
                 break;
