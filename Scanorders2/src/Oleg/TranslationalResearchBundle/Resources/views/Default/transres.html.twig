@@ -666,7 +666,7 @@
             {#formreview.vars.value.reviewedBy.id={{ formreview.vars.value.reviewedBy.id }}<br>#}
             {#{{ formmacros.simplefield("Reviewed By:", transres.userHtml(formreview.vars.value.reviewedBy), "input", "disabled") }}#}
             {% set reviewedBy = null %}
-            {% if formreview.reviewer is defined %}
+            {% if formreview.reviewedBy is defined %}
                 {% set reviewedBy = " by" ~ transres.userHtml(formreview.vars.value.reviewedBy) %}
             {% endif %}
             <p>
