@@ -26,6 +26,7 @@ namespace Oleg\TranslationalResearchBundle\Controller;
 
 
 use Oleg\TranslationalResearchBundle\Entity\Project;
+use Oleg\TranslationalResearchBundle\Entity\TransResRequest;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -307,6 +308,41 @@ class WorkflowController extends Controller
 
         //exit();
         return $this->redirectToRoute('translationalresearch_home');
+    }
+
+
+    /**
+     * Change state of the request (by id) and make transition to this place indicated by transitionName
+     * https://symfony.com/doc/current/workflow/usage.html
+     *
+     * @Route("/request-review-transition/{transitionName}/{id}/{statMachineType}", name="translationalresearch_request_transition_action_by_review")
+     * @Method("GET")
+     */
+    public function transitionRequestReviewAction( $transitionName, TransResRequest $transresRequest, $statMachineType )
+    {
+        $transresUtil = $this->container->get('transres_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
+
+        if(
+            $transresUtil->isUserAllowedReview($transresRequest) === false
+        ) {
+            //exit("no permission");
+            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+        }
+
+        $project = $transresRequest->getProject();
+
+        echo $transresRequest->getId().": transitionName=".$transitionName."<br>";
+        //exit();
+
+        $to = null;
+        $testing = false;
+        //$testing = true;
+
+        $transresRequestUtil->setRequestTransition($transresRequest,$statMachineType,$transitionName,$to,$testing);
+
+        //exit();
+        return $this->redirectToRoute('translationalresearch_request_index',array('id'=>$project->getId()));
     }
 
 }

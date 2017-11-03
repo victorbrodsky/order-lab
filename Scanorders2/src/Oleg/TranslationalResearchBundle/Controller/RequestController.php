@@ -549,4 +549,84 @@ class RequestController extends Controller
 
 
 
+    /**
+     * Finds and displays a progress review form for this request entity.
+     *
+     * @Route("/request/progress/review/{id}", name="translationalresearch_request_review_progress_state")
+     * @Template("OlegTranslationalResearchBundle:Request:review.html.twig")
+     * @Method("GET")
+     */
+    public function reviewProgressAction(Request $request, TransResRequest $transresRequest)
+    {
+        $transresUtil = $this->container->get('transres_util');
+
+        if(
+            $transresUtil->isAdminOrPrimaryReviewer()
+            //||
+            //$transresUtil->isProjectReviewer($transresRequest)
+        ) {
+            //ok
+        } else {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
+        $cycle = "show";
+
+        $form = $this->createRequestForm($transresRequest,$cycle,$request); //show
+
+        $eventType = "Request Viewed";
+        $msg = "Request ID ".$transresRequest->getId() ." has been viewed on the progress review page.";
+        $transresUtil->setEventLog($transresRequest,$eventType,$msg);
+
+        return array(
+            'transresRequest' => $transresRequest,
+            'form' => $form->createView(),
+            'cycle' => $cycle,
+            'statMachineType' => 'progress',
+            'title' => "Progress Review Request ID ".$transresRequest->getId(),
+        );
+    }
+
+    /**
+     * Finds and displays a billing review form for this request entity.
+     *
+     * @Route("/request/billing/review/{id}", name="translationalresearch_request_review_billing_state")
+     * @Template("OlegTranslationalResearchBundle:Request:review.html.twig")
+     * @Method("GET")
+     */
+    public function reviewBillingAction(Request $request, TransResRequest $transresRequest)
+    {
+        $transresUtil = $this->container->get('transres_util');
+
+        if(
+        $transresUtil->isAdminOrPrimaryReviewer()
+            //||
+            //$transresUtil->isProjectReviewer($transresRequest)
+        ) {
+            //ok
+        } else {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
+        $cycle = "show";
+
+        $form = $this->createRequestForm($transresRequest,$cycle,$request); //show
+
+        $eventType = "Request Viewed";
+        $msg = "Request ID ".$transresRequest->getId() ." has been viewed on the billing review page.";
+        $transresUtil->setEventLog($transresRequest,$eventType,$msg);
+
+        return array(
+            'transresRequest' => $transresRequest,
+            'project' => $transresRequest->getProject(),
+            'form' => $form->createView(),
+            'cycle' => $cycle,
+            'statMachineType' => 'billing',
+            'title' => "Billing Review Request ID ".$transresRequest->getId(),
+        );
+    }
+
+
+
+
 }

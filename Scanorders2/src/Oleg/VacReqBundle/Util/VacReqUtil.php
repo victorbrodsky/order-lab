@@ -477,6 +477,7 @@ class VacReqUtil
     }
 
     //totalAllocatedDays - vacationDays + carryOverDays for given $yearRange
+    //TODO: might add "date of hire" and "end of employment date" to calculate the total vacation days
     public function totalVacationRemainingDays( $user, $totalAllocatedDays=null, $vacationDays=null, $carryOverDays=null, $yearRange=null ) {
 
         if( !$totalAllocatedDays ) {

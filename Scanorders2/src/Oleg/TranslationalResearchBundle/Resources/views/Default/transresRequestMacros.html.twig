@@ -91,4 +91,34 @@
 {% endmacro %}
 
 
+{% macro getActionRequestReviewCommentsSection(transresRequest, cycle, sitename, statMachineType) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+
+    {% if cycle == "show" %}
+        {% set actionReviewLinks = transres_request_util.getReviewEnabledLinkActions(transresRequest,statMachineType) %}
+        {#{% set actionLinks = actionLinks|merge({ (loop.index0): actionReviewLinks}) %}#}
+
+        {% set threadId = transresRequest.id ~ "-" ~ statMachineType %}
+    {% else %}
+        {#no getReviewEnabledLinkActions<br>#}
+    {% endif %}
+
+    {% if threadId and actionReviewLinks|length > 0 %}
+        <div class="well transres-review-holder text-center col-xs-12">
+            {% for actionReviewLink in actionReviewLinks %}
+                {{ actionReviewLink|raw }}
+                {#<p>#}
+                    {#{% for actionLinkSet in actionLink %}#}
+                        {#{{ actionLinkSet|raw }}#}
+                    {#{% endfor %}#}
+                {#</p>#}
+            {% endfor %}
+            {% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': threadId} %}
+        </div>
+    {% endif %}
+
+{% endmacro %}
+
 
