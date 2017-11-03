@@ -496,15 +496,22 @@ class TransResRequestUtil
         if( $statMachineType == 'progress' ) {
             $workflow = $this->container->get('state_machine.transres_request_progress');
             $transitions = $workflow->getEnabledTransitions($transresRequest);
+            $originalStateStr = $transresRequest->getProgressState();
+            $setState = "setProgressState";
         }
         if( $statMachineType == 'billing' ) {
             $workflow = $this->container->get('state_machine.transres_request_billing');
             $transitions = $workflow->getEnabledTransitions($transresRequest);
+            $originalStateStr = $transresRequest->getBillingState();
+            $setState = "setBillingState";
         }
 
         if( !$to ) {
             //Get Transition and $to
-            $transition = $transresUtil->getTransitionByName($transresRequest, $transitionName);
+            $transition = $this->getTransitionByName($transresRequest,$transitionName,$statMachineType);
+            if( !$transition ) {
+                throw $this->createNotFoundException($statMachineType.' transition not found by name '.$transitionName);
+            }
             $tos = $transition->getTos();
             if (count($tos) != 1) {
                 throw $this->createNotFoundException('Available to state is not a single state; count=' . $tos . ": " . implode(",", $tos));
@@ -513,58 +520,22 @@ class TransResRequestUtil
         }
         //echo "to=".$to."<br>";
 
-        $label = $this->getTransitionLabelByName($transitionName);
+        //$label = $this->getTransitionLabelByName($transitionName);
+        //$label = $transitionName;
         //echo "label=".$label."<br>";
 
-        $originalStateStr = $project->getState();
-        $originalStateLabel = $this->getStateLabelByName($originalStateStr);
+        $originalStateLabel = $this->getRequestStateLabelByName($originalStateStr,$statMachineType);
 
         // Update the currentState on the post
-        if( $workflow->can($project, $transitionName) ) {
+        if( $workflow->can($transresRequest, $transitionName) ) {
             try {
 
-                //$decision = $this->getDecisionByTransitionName($transitionName);
-                //$review->setDecision($decision);
-                $review->setDecisionByTransitionName($transitionName);
+                //$review->setDecisionByTransitionName($transitionName);
+                //$review->setReviewedBy($user);
 
-                $review->setReviewedBy($user);
-
-                //check if like/dislike
-                if( $review->getStateStr() === "committee_review" ) {
-                    if( $review->getPrimaryReview() !== true ) {
-
-                        if( !$testing ) {
-                            $this->em->flush($review);
-                        }
-
-                        $recommended = true;
-                        $label = $this->getStateLabelByName($project->getState());
-                        $subject = "Project ID ".$project->getOid(). " (" .$label. "). Recommendation: ".$review->getDecision();
-                        $body = $subject;
-                        //get project url
-                        $projectUrl = $transresUtil->getProjectShowUrl($project);
-                        $emailBody = $body . $break.$break. "Please click on the URL below to view this project:".$break.$projectUrl;
-
-                        //send notification emails
-                        $this->sendNotificationEmails($project,$review,$subject,$emailBody,$testing);
-
-                        //event log
-                        //$this->setEventLog($project,$review,$transitionName,$originalStateStr,$body,$testing);
-                        $eventType = "Review Submitted";
-                        $this->setEventLog($project,$eventType,$body,$testing);
-
-                        $this->container->get('session')->getFlashBag()->add(
-                            'notice',
-                            "Successful action: ".$label
-                        );
-
-                        return true;
-                    }
-                }
-
-                $workflow->apply($project, $transitionName);
+                $workflow->apply($transresRequest, $transitionName);
                 //change state
-                $project->setState($to); //i.e. 'irb_review'
+                $transresRequest->$setState($to); //i.e. 'irb_review'
 
                 //check and add reviewers for this state by role? Do it when project is created?
                 //$this->addDefaultStateReviewers($project);
@@ -574,21 +545,21 @@ class TransResRequestUtil
                     $this->em->flush();
                 }
 
-                $recommended = false;
-                $label = $this->getTransitionLabelByName($transitionName,$review);
-                $subject = "Project ID ".$project->getOid()." has been sent to the stage '$label' from '".$originalStateLabel."'";
+                $label = $this->getRequestStateLabelByName($to,$statMachineType);
+                $subject = "Project ID ".$transresRequest->getProject()->getOid().": Request ID ".$transresRequest->getId()." has been sent to the stage '$label' from '".$originalStateLabel."'";
                 $body = $subject;
-                //get project url
-                $projectUrl = $transresUtil->getProjectShowUrl($project);
-                $emailBody = $body . $break.$break. "Please click on the URL below to view this project:".$break.$projectUrl;
+                //get request url
+                $requestUrl = $this->getRequestShowUrl($transresRequest);
+                $emailBody = $body . $break.$break. "Please click on the URL below to view this project:".$break.$requestUrl;
 
                 //send confirmation email
-                $this->sendNotificationEmails($project,$review,$subject,$emailBody,$testing);
+                //TODO: send confirmation email to who?
+                //$this->sendNotificationEmails($transresRequest,$review,$subject,$emailBody,$testing);
 
                 //event log
                 //$this->setEventLog($project,$review,$transitionName,$originalStateStr,$body,$testing);
-                $eventType = "Review Submitted";
-                $this->setEventLog($project,$eventType,$body,$testing);
+                $eventType = "Request State Changed";
+                $transresUtil->setEventLog($transresRequest,$eventType,$body,$testing);
 
                 $this->container->get('session')->getFlashBag()->add(
                     'notice',
@@ -606,5 +577,38 @@ class TransResRequestUtil
                 return false;
             }//try
         }
+    }
+
+    public function getTransitionByName( $transresRequest, $transitionName, $statMachineType ) {
+        $workflow = $this->getWorkflowByStateMachineType($statMachineType);
+        $transitions = $workflow->getEnabledTransitions($transresRequest);
+        foreach( $transitions as $transition ) {
+            if( $transition->getName() == $transitionName ) {
+                return $transition;
+            }
+        }
+        return null;
+    }
+
+    public function getWorkflowByStateMachineType($statMachineType) {
+        if( $statMachineType == 'progress' ) {
+            return $this->container->get('state_machine.transres_request_progress');
+        }
+        if( $statMachineType == 'billing' ) {
+            return $this->container->get('state_machine.transres_request_billing');
+        }
+        return null;
+    }
+
+    public function getRequestShowUrl($transresRequest) {
+        $url = $this->container->get('router')->generate(
+            'translationalresearch_request_show',
+            array(
+                'id' => $transresRequest->getId(),
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+
+        return $url;
     }
 }
