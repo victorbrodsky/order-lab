@@ -144,16 +144,20 @@
                                 </li>
                             {% endif %}
 
+                            {% if transres_request_util.isRequestProgressReviewable(transresRequest) %}
                             {% if transres_util.isAdminOrPrimaryReviewer() or transres_request_util.isRequestProgressReviewer(transresRequest) %}
                                 <li>
                                     <a href="{{ path(translationalresearch_sitename~'_request_review_progress_state', { 'id': transresRequest.id }) }} " target="_blank">Change Progress State</a>
                                 </li>
                             {% endif %}
+                            {% endif %}
 
+                            {% if transres_request_util.isRequestBillingReviewable(transresRequest) %}
                             {% if transres_util.isAdminOrPrimaryReviewer() or transres_request_util.isRequestBillingReviewer(transresRequest) %}
                                 <li>
                                     <a href="{{ path(translationalresearch_sitename~'_request_review_billing_state', { 'id': transresRequest.id }) }} " target="_blank">Change Billing State</a>
                                 </li>
+                            {% endif %}
                             {% endif %}
 
                         </ul>

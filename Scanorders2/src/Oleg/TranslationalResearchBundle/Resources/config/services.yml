@@ -184,6 +184,9 @@ framework:
                 cancel_active:
                     from: cancel
                     to: active
+                missinginfo_active:
+                    from: missinginfo
+                    to: active
                 active_invoice:
                     from: active
                     to: invoice

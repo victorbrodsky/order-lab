@@ -379,6 +379,24 @@ class TransResRequestUtil
         return true;
     }
 
+    public function isRequestProgressReviewable($transresRequest) {
+        return $this->isRequestReviewableByRequestAndStateMachineType($transresRequest,"progress");
+    }
+    public function isRequestBillingReviewable($transresRequest) {
+        return $this->isRequestReviewableByRequestAndStateMachineType($transresRequest,"billing");
+    }
+    public function isRequestReviewableByRequestAndStateMachineType( $transresRequest, $statMachineType ) {
+        $workflow = $this->getWorkflowByStateMachineType($statMachineType);
+        $transitions = $workflow->getEnabledTransitions($transresRequest);
+        foreach( $transitions as $transition ) {
+            $tos = $transition->getTos();
+            if( count($tos) > 0 ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public function getReviewEnabledLinkActions( $transresRequest, $statMachineType ) {
         //exit("get review links");
         $transresUtil = $this->container->get('transres_util');

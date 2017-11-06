@@ -127,6 +127,10 @@ class RequestController extends Controller
                 $msg
             );
 
+            $eventType = "Request Created";
+            $msg = "New Request with ID ".$transresRequest->getId()." has been successfully submitted for the project ID ".$project->getOid();
+            $transresUtil->setEventLog($transresRequest,$eventType,$msg);
+
             return $this->redirectToRoute('translationalresearch_request_show', array('id' => $transresRequest->getId()));
         }
 
@@ -159,6 +163,7 @@ class RequestController extends Controller
         }
 
         //$userSecUtil = $this->get('user_security_utility');
+        $transresUtil = $this->container->get('transres_util');
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
@@ -242,8 +247,16 @@ class RequestController extends Controller
                 $msg
             );
 
+            $eventType = "Request Updated";
+            $msg = "Request ID ".$transresRequest->getId() ." has been updated.";
+            $transresUtil->setEventLog($transresRequest,$eventType,$msg);
+
             return $this->redirectToRoute('translationalresearch_request_show', array('id' => $transresRequest->getId()));
         }
+
+        $eventType = "Request Viewed";
+        $msg = "Request ID ".$transresRequest->getId() ." has been viewed on the edit page.";
+        $transresUtil->setEventLog($transresRequest,$eventType,$msg);
 
         return array(
             'transresRequest' => $transresRequest,
@@ -275,6 +288,7 @@ class RequestController extends Controller
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
+        $transresUtil = $this->container->get('transres_util');
         $transresRequestUtil = $this->container->get('transres_request_util');
         //$em = $this->getDoctrine()->getManager();
         //$user = $this->get('security.token_storage')->getToken()->getUser();
@@ -295,6 +309,10 @@ class RequestController extends Controller
         if( $fee ) {
             $feeHtml = " (fee $".$fee.")";
         }
+
+        $eventType = "Request Viewed";
+        $msg = "Request ID ".$transresRequest->getId() ." has been viewed on the show review page.";
+        $transresUtil->setEventLog($transresRequest,$eventType,$msg);
 
         return array(
             'transresRequest' => $transresRequest,

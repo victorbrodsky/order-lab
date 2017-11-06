@@ -196,7 +196,7 @@
                                 {#</li>#}
                             {#{% endif %}#}
 
-                            {% if is_granted('ROLE_TRANSRES_REQUESTER') %}
+                            {% if is_granted('ROLE_TRANSRES_REQUESTER') and project.state == "final_approved" %}
                                 <li class="divider"></li>
                                 <li>
                                     <a href="{{ path(translationalresearch_sitename~'_request_new', { 'id': project.id }) }}" target="_blank">Create New Request</a>
