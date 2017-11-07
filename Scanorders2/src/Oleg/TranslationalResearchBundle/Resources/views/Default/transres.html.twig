@@ -617,15 +617,15 @@
     {% endif %}
 
     {% set reviewId = null %}
-    {% set reviewInfo = null %}
+    {#{% set reviewInfo = null %}#}
     {% if prototype == "prototype" %}
         {% set formreview = review.vars.prototype %}
-        {% set reviewInfo = "Will be added as a new reviewer after update" %}
+        {#{% set reviewInfo = "Will be added as a new reviewer after update" %}#}
     {% else %}
         {% set formreview = review %}
         {% set reviewId = review.id.vars.value %}
         {% if review.id.vars.value == null %}
-            {% set reviewInfo = "Will be added as a new default reviewer after update" %}
+            {#{% set reviewInfo = "Will be added as a new default reviewer after update" %}#}
         {% endif %}
     {% endif %}
 
@@ -634,13 +634,14 @@
 
     <div class="user-collection-holder alert {{ classname }} {{ wellclass }}">
 
-        {% if reviewInfo %}
-            <p>
-            <div class="alert alert-info" role="alert">
-                {{ reviewInfo }}
-            </div>
-            </p>
-        {% endif %}
+        {#please hide these blue wells with these sentences#}
+        {#{% if reviewInfo %}#}
+            {#<p>#}
+            {#<div class="alert alert-info" role="alert">#}
+                {#{{ reviewInfo }}#}
+            {#</div>#}
+            {#</p>#}
+        {#{% endif %}#}
 
         {% if cycle != "show" and showAddDeleteBtn %}
             <div class="text-right">

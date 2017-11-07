@@ -15,7 +15,7 @@
 
     {% for specialty in specialties %}
         <p>
-            <a class="btn btn-primary" href="{{ path(translationalresearch_sitename~'_project_new',{'specialtyStr':specialty.getNewProjectUrlPrefix()}) }}">{{ specialty.getNewProjectName() }}</a>
+            <a class="btn btn-primary" href="{{ path(translationalresearch_sitename~'_project_new',{'specialtyStr':specialty.getAbbreviation()}) }}">{{ specialty.getName() }}</a>
         </p>
     {% endfor %}
 

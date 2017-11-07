@@ -66,7 +66,7 @@ class ProjectController extends Controller
      *
      * @Route("/projects/", name="translationalresearch_project_index")
      * @Route("/my-projects/", name="translationalresearch_my_project_index")
-     * @Route("/my-review-projects/", name="translationalresearch_my_review_project_index")
+     * @Route("/projects-assigned-to-me-for-review/", name="translationalresearch_my_review_project_index")
      * @Template("OlegTranslationalResearchBundle:Project:index.html.twig")
      * @Method("GET")
      */

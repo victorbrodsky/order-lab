@@ -7892,7 +7892,7 @@ class AdminController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $types = array(
-            "HemePath" => "hemepath",
+            "Hematopathology" => "hematopathology",
             "AP/CP" => "ap-cp"
         );
 

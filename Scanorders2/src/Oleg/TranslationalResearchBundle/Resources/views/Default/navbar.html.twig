@@ -61,8 +61,8 @@
 
                             {% for specialty in specialties %}
                                 <li>
-                                    <a href="{{ path(translationalresearch_sitename~'_project_new',{'specialtyStr':specialty.getNewProjectUrlPrefix()}) }}"
-                                    >{{ specialty.getNewProjectName() }}</a>
+                                    <a href="{{ path(translationalresearch_sitename~'_project_new',{'specialtyStr':specialty.getAbbreviation()}) }}"
+                                    >{{ specialty.getName() }}</a>
                                 </li>
                             {% endfor %}
 

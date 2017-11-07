@@ -2307,13 +2307,13 @@ class TransResUtil
     }
 
     //$specialtyStr: new-ap-cp-project, ap-cp
-    public function getSpecialtyObject($specialtyStr) {
+    public function getSpecialtyObject($specialtyAbbreviation) {
         //echo "specialtyStr=".$specialtyStr."<br>";
         //$specialty is a url prefix (i.e. "new-ap-cp-project")
-        $specialtyAbbreviation = SpecialtyList::getProjectAbbreviationFromUrlPrefix($specialtyStr);
-        if( !$specialtyAbbreviation ) {
-            throw new \Exception( "Project specialty abbreviation is not found by name '".$specialtyStr."'" );
-        }
+//        $specialtyAbbreviation = SpecialtyList::getProjectAbbreviationFromUrlPrefix($specialtyStr);
+//        if( !$specialtyAbbreviation ) {
+//            throw new \Exception( "Project specialty abbreviation is not found by name '".$specialtyStr."'" );
+//        }
         $specialty = $this->em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation($specialtyAbbreviation);
         if( !$specialty ) {
             throw new \Exception( "Project specialty is not found by name '".$specialtyAbbreviation."'" );

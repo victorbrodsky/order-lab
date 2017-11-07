@@ -251,7 +251,7 @@ function setTranslationalResearchNavBar() {
         id = 'translationalresearch-my-projects';
     }
 
-    if( full.indexOf("/translational-research/my-review-projects") !== -1 ) {
+    if( full.indexOf("/translational-research/projects-assigned-to-me-for-review") !== -1 ) {
         id = 'translationalresearch-my-review-projects';
     }
 
