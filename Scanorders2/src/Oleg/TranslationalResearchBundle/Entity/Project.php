@@ -997,12 +997,17 @@ class Project {
      */
     public function generateOid()
     {
-        if( $this->getProjectSpecialty() ) {
-            $projectSpecialty = $this->getProjectSpecialty();
-            $projectSpecialty = str_replace("/","",$projectSpecialty);
-            $projectSpecialty = strtoupper($projectSpecialty);
+        $projectSpecialty = $this->getProjectSpecialty();
+        if( $projectSpecialty ) {
+            $projectSpecialtyAbbreviation = $projectSpecialty->getAbbreviation();
+            if( $projectSpecialtyAbbreviation == "hematopathology" ) {
+                $projectSpecialtyAbbreviation = "HEMEPATH";
+            }
+            $projectSpecialtyAbbreviation = str_replace("-","",$projectSpecialtyAbbreviation);
+            $projectSpecialtyStr = strtoupper($projectSpecialtyAbbreviation);
         }
-        $oid = $projectSpecialty . "-" . $this->getId();
+        $oid = $projectSpecialtyStr . "-" . $this->getId();
+        //echo "oid=$oid <br>";
         $this->setOid($oid);
     }
 

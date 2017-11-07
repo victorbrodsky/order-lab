@@ -208,7 +208,6 @@ class ProjectFormNodeController extends ProjectController
             return $this->redirectToRoute('translationalresearch_project_show', array('id' => $project->getId()));
         }
 
-
         return array(
             'project' => $project,
             'form' => $form->createView(),
