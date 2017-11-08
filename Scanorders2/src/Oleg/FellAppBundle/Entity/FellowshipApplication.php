@@ -1230,9 +1230,27 @@ class FellowshipApplication extends BaseUserAttributes {
         }
         return implode(' ',$resArr);
     }
-    function capitalizeIfNotAllCapital($s) {
-        if( strlen(preg_replace('![^A-Z]+!', '', $s)) == strlen($s) ) {
-            $s = ucfirst(strtolower($s));
+//    function capitalizeIfNotAllCapital($s) {
+//        if( strlen(preg_replace('![^A-Z]+!', '', $s)) == strlen($s) ) {
+//            $s = ucfirst(strtolower($s));
+//        }
+//        return $s;
+//    }
+    public function capitalizeIfNotAllCapital($s) {
+        if( !$s ) {
+            return $s;
+        }
+        $convert = false;
+        //check if all UPPER
+        if( strtoupper($s) == $s ) {
+            $convert = true;
+        }
+        //check if all lower
+        if( strtolower($s) == $s ) {
+            $convert = true;
+        }
+        if( $convert ) {
+            return ucwords( strtolower($s) );
         }
         return $s;
     }

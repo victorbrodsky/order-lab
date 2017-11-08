@@ -383,14 +383,32 @@ abstract class ArrayFieldAbstract {
     //convert "all lower case" or "ALL UPPERCASE".
     // If either condition is met, convert the string to "Sentence Case".
     // This way "john" and "JOHN" become "John", but "McMaster" stays "McMaster".
-    function capitalizeIfNotAllCapital($s) {
+//    function capitalizeIfNotAllCapital($s) {
+//        if( !$s ) {
+//            return $s;
+//        }
+//        if( strlen(preg_replace('![^A-Z]+!', '', $s)) == strlen($s) ) {
+//            $s = ucfirst(strtolower($s));
+//        }
+//        return ucwords($s);
+//    }
+    public function capitalizeIfNotAllCapital($s) {
         if( !$s ) {
             return $s;
         }
-        if( strlen(preg_replace('![^A-Z]+!', '', $s)) == strlen($s) ) {
-            $s = ucfirst(strtolower($s));
+        $convert = false;
+        //check if all UPPER
+        if( strtoupper($s) == $s ) {
+            $convert = true;
         }
-        return ucwords($s);
+        //check if all lower
+        if( strtolower($s) == $s ) {
+            $convert = true;
+        }
+        if( $convert ) {
+            return ucwords( strtolower($s) );
+        }
+        return $s;
     }
 
 }

@@ -1136,12 +1136,31 @@ class User extends BaseUser {
     public function getFirstNameUppercase() {
         return $this->capitalizeIfNotAllCapital($this->getFirstName());
     }
-    function capitalizeIfNotAllCapital($s) {
-        echo "s=".$s."<br>";
-        if( strlen(preg_replace('![^A-Z]+!', '', $s)) == strlen($s) ) {
-            $s = ucfirst(strtolower($s));
+//    function capitalizeIfNotAllCapitalOrig($s) {
+//        //echo "1s=".$s."<br>";
+//        if( strlen(preg_replace('![^A-Z]+!', '', $s)) == strlen($s) ) {
+//            $s = ucfirst(strtolower($s));
+//        }
+//        //echo "2s=".$s."<br>";
+//        return ucwords($s);
+//    }
+    public function capitalizeIfNotAllCapital($s) {
+        if( !$s ) {
+            return $s;
         }
-        return ucwords($s);
+        $convert = false;
+        //check if all UPPER
+        if( strtoupper($s) == $s ) {
+            $convert = true;
+        }
+        //check if all lower
+        if( strtolower($s) == $s ) {
+            $convert = true;
+        }
+        if( $convert ) {
+            return ucwords( strtolower($s) );
+        }
+        return $s;
     }
 //    function isAllCapital($s) {
 //        if( $this->count_capitals($s) == strlen($s) ) {
