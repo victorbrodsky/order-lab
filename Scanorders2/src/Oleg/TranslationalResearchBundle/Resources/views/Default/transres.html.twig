@@ -450,6 +450,22 @@
         {% set showAddDeleteBtn = 1 %}
     {% endif %}
 
+
+    {#Reviewers accordion#}
+    <div class="panel-group" id="accordionReviewers" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="reviewersHeading">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordionReviewers" href="#accordionReviewersBody" aria-expanded="true" aria-controls="reviewersBase">
+                        Reviewers
+                    </a>
+                </h4>
+            </div>
+            <div id="accordionReviewersBody" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="reviewersHeading">
+                <div class="panel-body">
+    {#EOF Reviewers accordion#}
+
+
     {% if showIrbReview and project.irbReviews is defined %}
         <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
             <div class="panel panel-primary">
@@ -606,6 +622,13 @@
         </div>
     {% endif %}
 
+    {#Reviewers accordion#}
+                </div>
+            </div>
+        </div>
+    </div>
+    {#EOF Reviewers accordion#}
+
 {% endmacro %}
 
 {% macro projectSingleReview( project, review, cycle, classname, prototype, sitename, showAddDeleteBtn ) %}
@@ -668,7 +691,10 @@
             {#{{ formmacros.simplefield("Reviewed By:", transres.userHtml(formreview.vars.value.reviewedBy), "input", "disabled") }}#}
             {% set reviewedBy = null %}
             {% if formreview.vars.value.reviewedBy %}
-                {% set reviewedBy = " by" ~ transres.userHtml(formreview.vars.value.reviewedBy) %}
+                {#show it only to admin, reviewers and reviewedBy users#}
+                {% if transres_util.showReviewedBy(formreview.vars.value) %}
+                    {% set reviewedBy = " by" ~ transres.userHtml(formreview.vars.value.reviewedBy) %}
+                {% endif %}
             {% endif %}
             <p>
                 {#Reviewed by {{ transres.userHtml(formreview.vars.value.reviewedBy) }} on {{ updatedate|date("m/d/Y H:i") }}#}
@@ -697,12 +723,12 @@
         {#{% endif %}#}
 
         {#allow change review by admin and reviewer only in the view page. Clicking this button on the edit page will not save any changes#}
-        {% if
-            cycle == "show" and
-            reviewId and
-            transres_util.isUserAllowedReview(review.vars.value) and
-            transres_util.isReviewCorrespondsToState(review.vars.value)
-        %}
+        {#{% if#}
+            {#cycle == "show" and#}
+            {#reviewId and#}
+            {#transres_util.isUserAllowedReview(review.vars.value) and#}
+            {#transres_util.isReviewCorrespondsToState(review.vars.value)#}
+        {#%}#}
             {#<p>#}
                 {#<a class="btn btn-primary"#}
                    {#href="{{ path(translationalresearch_sitename~'_review_edit',{'stateStr':review.vars.value.getStateStr(),'reviewId': reviewId}) }}"#}
@@ -716,7 +742,7 @@
                 {#</p>#}
             {#{% endif %}#}
 
-        {% endif %}
+        {#{% endif %}#}
 
         {#{% if reviewId %}#}
             {#<p>#}

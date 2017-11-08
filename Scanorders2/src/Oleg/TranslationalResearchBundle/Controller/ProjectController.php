@@ -117,6 +117,8 @@ class ProjectController extends Controller
         $states = $filterform['state']->getData();
         $principalInvestigators = $filterform['principalInvestigators']->getData();
         $submitter = $filterform['submitter']->getData();
+        $startDate = $filterform['startDate']->getData();
+        $endDate = $filterform['endDate']->getData();
         //$search = $filterform['search']->getData();
 //        $archived = $filterform['completed']->getData();
 //        $complete = $filterform['review']->getData();
@@ -155,6 +157,18 @@ class ProjectController extends Controller
             //echo "submitter=".$submitter->getId()."<br>";
             $dql->andWhere("submitter.id = :submitterId");
             $dqlParameters["submitterId"] = $submitter->getId();
+        }
+
+        if( $startDate ) {
+            //echo "startDate=" . $startDate->format('Y-m-d H:i:s') . "<br>";
+            $dql->andWhere('project.createDate >= :startDate');
+            $dqlParameters['startDate'] = $startDate->format('Y-m-d H:i:s');
+        }
+        if( $endDate ) {
+            $endDate->modify('+1 day');
+            //echo "endDate=" . $endDate->format('Y-m-d H:i:s') . "<br>";
+            $dql->andWhere('project.createDate <= :endDate');
+            $dqlParameters['endDate'] = $endDate->format('Y-m-d H:i:s');
         }
 
 

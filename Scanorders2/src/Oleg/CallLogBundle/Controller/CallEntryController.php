@@ -405,6 +405,7 @@ class CallEntryController extends Controller
             $queryParameters['startDate'] = $startDate->format('Y-m-d H:i:s');
         }
         if( $endDate ) {
+            $endDate->modify('+1 day');
             //echo "endDate=" . $endDate->format('Y-m-d') . "<br>";
             $dql->andWhere('message.orderdate <= :endDate');
             $queryParameters['endDate'] = $endDate->format('Y-m-d H:i:s');

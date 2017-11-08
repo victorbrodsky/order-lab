@@ -106,6 +106,22 @@ class FilterType extends AbstractType
             },
         ));
 
+        $builder->add('startDate', DateTimeType::class, array(
+            'label' => false,
+            'widget' => 'single_text',
+            'required' => false,
+            'format' => 'MM/dd/yyyy',
+            'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'Start Submission Date'), //'title'=>'Start Year', 'data-toggle'=>'tooltip',
+        ));
+
+        $builder->add('endDate', DateTimeType::class, array(
+            'label' => false,
+            'widget' => 'single_text',
+            'required' => false,
+            'format' => 'MM/dd/yyyy',
+            'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'End Submission Date'), //'title'=>'End Year', 'data-toggle'=>'tooltip',
+        ));
+
 //        $builder->add('completed', CheckboxType::class, array(
 //            'required'=>false,
 //            'label' => 'Completed',

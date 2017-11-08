@@ -1361,7 +1361,7 @@ class TransResUtil
         foreach($stateArr as $state) {
             //$label = $state;
             $label = $this->getStateLabelByName($state);
-            $label = $label . " (" . $state . ")";
+            //$label = $label . " (" . $state . ")";
             $stateChoiceArr[$label] = $state;
         }
 
@@ -2320,6 +2320,23 @@ class TransResUtil
         }
 
         return $specialty;
+    }
+
+    //show it only to admin, reviewers and reviewedBy users
+    public function showReviewedBy( $reviewObject ) {
+
+        if( $this->isAdminOrPrimaryReviewer() ) {
+            return true;
+        }
+
+        $user = $this->secTokenStorage->getToken()->getUser();
+        if( $this->isReviewer($user,$reviewObject) ) {
+            return true;
+        }
+
+
+
+        return false;
     }
 
 }

@@ -23,43 +23,13 @@
 
     {{ form_start(form) }}
 
-        {#{% if form.state is defined %}#}
-            {#{{ formmacros.field(form.state) }}#}
-        {#{% endif %}#}
-
-        {#{% if form.approvalDate is defined %}#}
-            {#{{ formmacros.field(form.approvalDate) }}#}
-        {#{% endif %}#}
-
-        {#{% if form.createDate is defined or form.submitter is defined %}#}
-            {#<div class="well well-sm">#}
-            {#{% if form.createDate is defined %}#}
-                {#{{ formmacros.field(form.createDate) }}#}
-            {#{% endif %}#}
-            {#{% if form.submitter is defined %}#}
-                {#{{ formmacros.field(form.submitter) }}#}
-            {#{% endif %}#}
-            {#</div>#}
-        {#{% endif %}#}
-
-        {{ transres.projectInfo(form,project,cycle) }}
+        {{ transres.projectRequesters(form,project,cycle) }}
 
         {{ transres.projectFormEdit(form,null,cycle) }}
 
-        {{ transres.projectRequesters(form,project,cycle) }}
+        {{ transres.projectInfo(form,project,cycle) }}
 
-        {#{% if form.vars.id  %}#}
-            {#{{ formmacros.simplefield("Project #:", form.vars.id, "input", "disabled") }}#}
-        {#{% endif %}#}
-
-        {#<div id="form-prototype-data"#}
-             {#data-prototype-transres-irbreviews = "{{ transres.projectSingleReview(form,form.irbReviews,cycle,'transres-irbreviews','prototype', sitename,1)|e }}"#}
-             {#data-prototype-transres-adminreviews = "{{ transres.projectSingleReview(form,form.adminReviews,cycle,'transres-adminreviews','prototype', sitename,1)|e }}"#}
-             {#data-prototype-transres-committeereviews = "{{ transres.projectSingleReview(form,form.committeeReviews,cycle,'transres-committeereviews','prototype', sitename,1)|e }}"#}
-             {#data-prototype-transres-finalreviews = "{{ transres.projectSingleReview(form,form.finalReviews,cycle,'transres-finalreviews','prototype', sitename,1)|e }}"#}
-        {#></div>#}
         {{ transres.getProjectReviewPrototypeFormData(form,cycle,sitename) }}
-
         {{ transres.projectReviews(form,cycle,sitename) }}
 
 
