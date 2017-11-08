@@ -1137,6 +1137,7 @@ class User extends BaseUser {
         return $this->capitalizeIfNotAllCapital($this->getFirstName());
     }
     function capitalizeIfNotAllCapital($s) {
+        echo "s=".$s."<br>";
         if( strlen(preg_replace('![^A-Z]+!', '', $s)) == strlen($s) ) {
             $s = ucfirst(strtolower($s));
         }
