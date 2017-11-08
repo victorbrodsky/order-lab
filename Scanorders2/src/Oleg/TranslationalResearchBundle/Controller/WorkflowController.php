@@ -41,6 +41,7 @@ class WorkflowController extends Controller
      * Dump Workflows
      *
      * @Route("/workflow/{type}", name="translationalresearch_workflow_show")
+     * @Template("OlegTranslationalResearchBundle:Workflow:workflow.html.twig")
      */
     public function dumpWorkflowAction(Request $request, $type)
     {
@@ -73,14 +74,17 @@ class WorkflowController extends Controller
         $filename = null;
 
         if( $type == "project" ) {
+            $title = "Project Workflow";
             $filename = "project.png";
             $this->windowsCmdRunAsync($type,$filename);
         }
-        if( $type == "request_billing" ) {
+        if( $type == "request-billing" ) {
+            $title = "Request Billing Workflow";
             $filename = "request_billing.png";
             $this->windowsCmdRunAsync($type,$filename);
         }
-        if( $type == "request_progress" ) {
+        if( $type == "request-work-progress" ) {
+            $title = "Request Project Work Workflow";
             $filename = "request_progress.png";
             $this->windowsCmdRunAsync($type,$filename);
         }
@@ -101,18 +105,28 @@ class WorkflowController extends Controller
 
         //exit("EXIT: type=".$type."; filename=".$filename);
 
-        $file = $webpath."/../src/Oleg/TranslationalResearchBundle/Util/".$filename;
+        $file = $webpath."/../src/Oleg/TranslationalResearchBundle/Resources/public/images/".$filename;
         if (!file_exists($file)) {
-            exit("File not exists ".$file);
+            exit("File does not exist filename=".$filename);
         }
 
-        $imagename = "Project Workflow";
+        //$bundleFileName = '@OlegTranslationalResearchBundle/Resources/public/images/'.$filename;
+        $bundleFileName = "bundles\\olegtranslationalresearch\\images\\".$filename;
 
-        header("Content-Type: image/png");
-        header('Content-Length: ' . filesize($file));
-        header("Content-Disposition: inline; filename='$imagename'");
-        readfile($file);
-        exit(0);
+//        $imagename = "Project Workflow";
+//
+//        header("Content-Type: image/png");
+//        header('Content-Length: ' . filesize($file));
+//        header("Content-Disposition: inline; filename='$imagename'");
+//        readfile($file);
+//        exit(0);
+
+        return array(
+            //'file' => $file,
+            'bundleFileName' => $bundleFileName,
+            'fileName' => $filename,
+            'title' => $title
+        );
     }
 
     public function windowsCmdRunAsync($type,$filename) {
