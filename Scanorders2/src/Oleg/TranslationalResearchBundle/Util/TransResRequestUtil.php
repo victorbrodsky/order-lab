@@ -128,8 +128,7 @@ class TransResRequestUtil
     public function getProgressStateArr() {
         $stateArr = array(
             'active',
-            'cancel',
-            'pending',
+            'canceled',
             'investigator',
             'histo',
             'ihc',
@@ -139,7 +138,9 @@ class TransResRequestUtil
             'slidescanning',
             'block',
             'complet',
-            'suspend'
+            'suspended',
+            'other',
+            'completed'
         );
 
         $stateChoiceArr = array();
@@ -158,7 +159,7 @@ class TransResRequestUtil
     public function getBillingStateArr() {
         $stateArr = array(
             'active',
-            'cancel',
+            'canceled',
             'missinginfo',
             'invoice',
             'paid',
@@ -187,11 +188,8 @@ class TransResRequestUtil
             case "active":
                 $state = "Active";
                 break;
-            case "cancel":
-                $state = "Cancel";
-                break;
-            case "pending":
-                $state = "Pending";
+            case "canceled":
+                $state = "Canceled";
                 break;
             case "investigator":
                 $state = "Investigator";
@@ -217,11 +215,14 @@ class TransResRequestUtil
             case "block":
                 $state = "Block";
                 break;
-            case "complet":
-                $state = "Complet";
+            case "suspended":
+                $state = "Suspended";
                 break;
-            case "suspend":
-                $state = "Suspend";
+            case "other":
+                $state = "Other";
+                break;
+            case "completed":
+                $state = "Completed";
                 break;
 
             default:
@@ -238,8 +239,8 @@ class TransResRequestUtil
             case "active":
                 $state = "Active";
                 break;
-            case "cancel":
-                $state = "Cancel";
+            case "canceled":
+                $state = "Canceled";
                 break;
             case "missinginfo":
                 $state = "Pending additional information from submitter";

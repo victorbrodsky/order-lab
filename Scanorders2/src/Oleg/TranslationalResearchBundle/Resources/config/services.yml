@@ -167,22 +167,21 @@ framework:
             places:
                 - draft
                 - active
-                - cancel
+                - canceled
                 - missinginfo
                 - invoice
                 - paid
                 - refund
                 - partially_refund
-
             transitions:
                 draft_active:
                     from: draft
                     to: active
-                active_cancel:
+                active_canceled:
                     from: active
-                    to: cancel
-                cancel_active:
-                    from: cancel
+                    to: canceled
+                canceled_active:
+                    from: canceled
                     to: active
                 missinginfo_active:
                     from: missinginfo
@@ -214,8 +213,7 @@ framework:
             places:
                 - draft
                 - active
-                - cancel
-                - pending
+                - canceled
                 - investigator
                 - histo
                 - ihc
@@ -224,49 +222,84 @@ framework:
                 - payment
                 - slidescanning
                 - block
-                - complet
-                - suspend
+                - other
+                - suspended
+                - completed
             transitions:
                 draft_active:
                     from: draft
                     to: active
-                active_cancel:
+                active_canceled:
                     from: active
-                    to: cancel
-                cancel_active:
-                    from: cancel
+                    to: canceled
+                canceled_active:
+                    from: canceled
                     to: active
-                active_pending:
+                canceled_completed:
+                    from: canceled
+                    to: completed
+                active_completed:
                     from: active
-                    to: pending
-                pending_investigator:
-                    from: pending
+                    to: completed
+                #active to pending
+                active_investigator:
+                    from: active
                     to: investigator
-                pending_histo:
-                    from: pending
+                active_histo:
+                    from: active
                     to: histo
-                pending_ihc:
-                    from: pending
+                active_ihc:
+                    from: active
                     to: ihc
-                pending_mol:
-                    from: pending
+                active_mol:
+                    from: active
                     to: mol
-                pending_retrieval:
-                    from: pending
+                active_retrieval:
+                    from: active
                     to: retrieval
-                pending_payment:
-                    from: pending
+                active_payment:
+                    from: active
                     to: payment
-                pending_slidescanning:
-                    from: pending
+                active_slidescanning:
+                    from: active
                     to: slidescanning
-                pending_block:
-                    from: pending
+                active_block:
+                    from: active
                     to: block
-                pending_complet:
-                    from: pending
-                    to: complet
-                pending_suspend:
-                    from: pending
-                    to: suspend
-
+                active_suspended:
+                    from: active
+                    to: suspended
+                active_other:
+                    from: active
+                    to: other
+                #pending to completed
+                investigator_completed:
+                    from: investigator
+                    to: completed
+                histo_completed:
+                    from: histo
+                    to: completed
+                ihc_completed:
+                    from: ihc
+                    to: completed
+                mol_completed:
+                    from: mol
+                    to: completed
+                retrieval_completed:
+                    from: retrieval
+                    to: completed
+                payment_completed:
+                    from: payment
+                    to: completed
+                slidescanning_completed:
+                    from: slidescanning
+                    to: completed
+                block_completed:
+                    from: block
+                    to: completed
+                suspended_completed:
+                    from: suspended
+                    to: completed
+                other_completed:
+                    from: other
+                    to: completed

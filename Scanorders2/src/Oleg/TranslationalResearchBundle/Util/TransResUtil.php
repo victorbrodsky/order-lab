@@ -2223,21 +2223,29 @@ class TransResUtil
     }
 
     //current project's reviewers
-    public function getCurrentReviewersEmails($review) {
-        $emails = array();
+    public function getCurrentReviewersEmails($review, $asEmail=true) {
+        $resArr = array();
 
         //get reviewers
         $reviewer = $review->getReviewer();
         if( $reviewer ) {
-            $emails[] = $reviewer->getSingleEmail();
+            if( $asEmail ) {
+                $resArr[] = $reviewer->getSingleEmail();
+            } else {
+                $resArr['reviewer'] = $reviewer;//->getUsernameOptimal();
+            }
         }
 
         $reviewerDelegate = $review->getReviewerDelegate();
         if( $reviewerDelegate ) {
-            $emails[] = $reviewerDelegate->getSingleEmail();
+            if( $asEmail ) {
+                $resArr[] = $reviewerDelegate->getSingleEmail();
+            } else {
+                $resArr['reviewerDelegate'] = $reviewerDelegate;//->getUsernameOptimal();
+            }
         }
 
-        return $emails;
+        return $resArr;
     }
 
     //next state project's reviewers

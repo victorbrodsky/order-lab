@@ -161,6 +161,14 @@ class DefaultReviewerController extends Controller
             $em->persist($defaultReviewer);
             $em->flush();
 
+            //Event Log
+            $eventType = "Default Reviewer Created";
+            $reviewersArr = $transresUtil->getCurrentReviewersEmails($defaultReviewer,false);
+            $reviewer = $reviewersArr['reviewer'];
+            $reviewerDelegate = $reviewersArr['reviewerDelegate'];
+            $msg = "Default Reviewer Object ($stateStr, $specialtyStr) has been created with reviewer=".$reviewer . " ; reviewerDelegate=".$reviewerDelegate;
+            $transresUtil->setEventLog($defaultReviewer,$eventType,$msg);
+
             return $this->redirectToRoute('translationalresearch_default-reviewer_show', array('id' => $defaultReviewer->getId()));
         }
 
@@ -226,6 +234,11 @@ class DefaultReviewerController extends Controller
         $transresUtil = $this->container->get('transres_util');
         $cycle = "edit";
 
+        $specialtyStr = $defaultReviewer->getProjectSpecialty();
+        $stateStr = $defaultReviewer->getState();
+        //get state string: irb_review=>IRB Review
+        $stateLabel = $transresUtil->getStateSimpleLabelByName($stateStr);
+
         $originalReviewer = $defaultReviewer->getReviewer();
         $originalReviewerDelegate = $defaultReviewer->getReviewerDelegate();
 
@@ -240,6 +253,20 @@ class DefaultReviewerController extends Controller
 
             $this->getDoctrine()->getManager()->flush();
 
+            //Event Log
+            $eventType = "Default Reviewer Updated";
+            $reviewersArr = $transresUtil->getCurrentReviewersEmails($defaultReviewer,false);
+            $reviewer = $reviewersArr['reviewer'];
+            $reviewerDelegate = $reviewersArr['reviewerDelegate'];
+            $stateStr = $defaultReviewer->getState();
+            //get state string: irb_review=>IRB Review
+            $stateLabel = $transresUtil->getStateSimpleLabelByName($stateStr);
+            $specialtyStr = $defaultReviewer->getProjectSpecialty();
+            $msg = "Default Reviewer Object ($stateLabel, $specialtyStr) has been updated:"; //with reviewer=".$reviewer . " ; reviewerDelegate=".$reviewerDelegate;
+            $msg = $msg . "<br>Original reviewer=".$originalReviewer.";<br> New reviewer=".$reviewer;
+            $msg = $msg . "<br>Original reviewerDelegate=".$originalReviewerDelegate.";<br> New reviewerDelegate=".$reviewerDelegate;
+            $transresUtil->setEventLog($defaultReviewer,$eventType,$msg);
+
             return $this->redirectToRoute('translationalresearch_default-reviewer_show', array('id' => $defaultReviewer->getId()));
         }
 
@@ -248,7 +275,7 @@ class DefaultReviewerController extends Controller
             'defaultReviewer' => $defaultReviewer,
             'specialty' => $defaultReviewer->getProjectSpecialty(),
             'form' => $form->createView(),
-            'title' => "Default Reviewer ".$defaultReviewer->getReviewer(),
+            'title' => "Default Reviewer for ".$specialtyStr." ".$stateLabel,
             'delete_form' => $deleteForm->createView(),
         );
     }
@@ -265,6 +292,7 @@ class DefaultReviewerController extends Controller
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
+        $transresUtil = $this->container->get('transres_util');
         $specialtyStr = $defaultReviewer->getProjectSpecialty()->getAbbreviation();
 
         $form = $this->createDeleteForm($defaultReviewer);
@@ -288,6 +316,13 @@ class DefaultReviewerController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->remove($defaultReviewer);
             $em->flush();
+
+            //Event Log
+            $eventType = "Default Reviewer Deleted";
+            $stateStr = $defaultReviewer->getState();
+            $specialtyStr = $defaultReviewer->getProjectSpecialty();
+            $msg = "Default Reviewer Object ($stateStr, $specialtyStr) has been deleted with reviewer=".$reviewer . " ; reviewerDelegate=".$reviewerDelegate;
+            $transresUtil->setEventLog($defaultReviewer,$eventType,$msg);
         }
 
         return $this->redirectToRoute('translationalresearch_default-reviewer_index',array("specialtyStr"=>$specialtyStr ));
