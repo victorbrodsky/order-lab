@@ -103,7 +103,7 @@ class TransResUtil
             $fromState = $froms[0];
             $showEditLink = false;
             $editLinkLabel = "Edit Project";
-            if (strpos($fromState, '_rejected') !== false || $fromState == 'draft' || $fromState == 'complete') {
+            if (strpos($fromState, '_rejected') !== false || $fromState == 'draft' || $fromState == 'completed') {
                 if ($this->secAuth->isGranted('ROLE_TRANSRES_REQUESTER')) {
                     $showEditLink = true;
                     $editLinkLabel = "Edit Project as Requester";
@@ -391,7 +391,7 @@ class TransResUtil
 
     public function isProjectEditableByRequester( $project ) {
         $state = $project->getState();
-        if( strpos($state, '_rejected') !== false || $state == 'draft' || $state == 'complete' ) { //|| strpos($state, "_missinginfo") !== false
+        if( strpos($state, '_rejected') !== false || $state == 'draft' || $state == 'completed' ) { //|| strpos($state, "_missinginfo") !== false
             if( $this->isProjectRequester($project) === true ) {
                 return true;
             }
@@ -1027,7 +1027,7 @@ class TransResUtil
                 $label = "Save Project as Draft";
                 $labeled = "Saved as Draft";
                 break;
-            case "to_complete":
+            case "to_completed":
                 $label = "Complete Submission";
                 $labeled = "Completed Submission";
                 break;
@@ -1168,7 +1168,7 @@ class TransResUtil
             case "draft":
                 $state = "Draft";
                 break;
-            case "complete":
+            case "completed":
                 $state = "Completed";
                 break;
 
@@ -1234,7 +1234,7 @@ class TransResUtil
             case "draft":
                 $state = "Draft";
                 break;
-            case "complete":
+            case "completed":
                 $state = "Completed";
                 break;
 
@@ -1334,7 +1334,7 @@ class TransResUtil
         $stateArr = array(
             //'start', //Edit Project
             'draft',
-            'complete',
+            'completed',
 
             'irb_review',
             'irb_rejected',

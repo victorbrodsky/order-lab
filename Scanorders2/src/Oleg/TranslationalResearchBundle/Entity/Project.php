@@ -1011,6 +1011,10 @@ class Project {
         $this->setOid($oid);
     }
 
+    public function getProjectInfoName() {
+        return $this->getOid() . " submitted by ".$this->getSubmitter() . " on ".$this->getCreateDate()->format('Y-m-d') . " at ".$this->getCreateDate()->format('H:i:s');
+    }
+
     public function __toString() {
         return "Project id=".$this->getId();
     }

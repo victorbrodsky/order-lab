@@ -719,7 +719,7 @@ class ProjectController extends Controller
                     $params['saveAsComplete'] = true;
                 }
             }
-            if( $project->getState() && ($project->getState() == "complete" || $project->getState() == "draft") ) {
+            if( $project->getState() && ($project->getState() == "completed" || $project->getState() == "draft") ) {
                 if( $transresUtil->isRequesterOrAdmin($project) === true ) {
                     $params['submitIrbReview'] = true;
                     $params['updateProject'] = true;

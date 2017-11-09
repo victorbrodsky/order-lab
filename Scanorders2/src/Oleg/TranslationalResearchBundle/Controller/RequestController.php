@@ -46,7 +46,7 @@ class RequestController extends Controller
     /**
      * Creates a new request entity with formnode.
      *
-     * @Route("/request/new/{id}", name="translationalresearch_request_new")
+     * @Route("/project/{id}/request/new/", name="translationalresearch_request_new")
      * @Template("OlegTranslationalResearchBundle:Request:new.html.twig")
      * @Method({"GET", "POST"})
      */
@@ -335,7 +335,7 @@ class RequestController extends Controller
     /**
      * Finds and displays all project's requests
      *
-     * @Route("/requests/{id}", name="translationalresearch_request_index")
+     * @Route("/project/{id}/requests", name="translationalresearch_request_index")
      * @Template("OlegTranslationalResearchBundle:Request:index.html.twig")
      * @Method("GET")
      */
@@ -355,7 +355,7 @@ class RequestController extends Controller
         //////// create filter //////////
         $progressStateArr = $transresRequestUtil->getProgressStateArr();
         $billingStateArr = $transresRequestUtil->getBillingStateArr();
-        $params = array('progressStateArr'=>$progressStateArr,'billingStateArr'=>$billingStateArr);
+        $params = array('progressStateArr'=>$progressStateArr,'billingStateArr'=>$billingStateArr,'routeName'=>$routeName);
         $filterform = $this->createForm(FilterRequestType::class, null,array(
             'method' => 'GET',
             'form_custom_value'=>$params
@@ -369,9 +369,9 @@ class RequestController extends Controller
         $searchStr = $filterform['comment']->getData();
         //////// EOF create filter //////////
 
-        $ids = array();
 
         //////////////// get Requests IDs with the form node filter ////////////////
+        $ids = array();
         if( $category ) {
             $categoryIds = $transresRequestUtil->getRequestIdsFormNodeByCategory($category);
             $ids = array_merge($ids, $categoryIds);
@@ -400,6 +400,7 @@ class RequestController extends Controller
 
         $dqlParameters["projectId"] = $project->getId();
 
+        ///////// filters //////////
         if( $submitter ) {
             $dql->andWhere("submitter.id = :submitterId");
             $dqlParameters["submitterId"] = $submitter->getId();
@@ -420,6 +421,7 @@ class RequestController extends Controller
             //$dqlParameters["ids"] = implode(",",$ids);
             $dql->andWhere("transresRequest.id IN (".implode(",",$ids).")");
         }
+        ///////// EOF filters //////////
 
         $limit = 30;
         $query = $em->createQuery($dql);
@@ -454,6 +456,146 @@ class RequestController extends Controller
             'requestTotalFeeHtml' => null //$requestTotalFeeHtml
         );
     }
+
+    /**
+     * Finds and displays all my requests
+     *
+     * @Route("/my-requests", name="translationalresearch_my_requests")
+     * @Route("/all-requests", name="translationalresearch_all_requests")
+     * @Template("OlegTranslationalResearchBundle:Request:all-requests.html.twig")
+     * @Method("GET")
+     */
+    public function myRequestsAction(Request $request)
+    {
+        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER')) {
+            return $this->redirect($this->generateUrl($this->container->getParameter('translationalresearch.sitename') . '-nopermission'));
+        }
+
+        $transresUtil = $this->container->get('transres_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $routeName = $request->get('_route');
+        $title = "My Requests";
+
+        //////// create filter //////////
+        $progressStateArr = $transresRequestUtil->getProgressStateArr();
+        $billingStateArr = $transresRequestUtil->getBillingStateArr();
+        $params = array('progressStateArr'=>$progressStateArr,'billingStateArr'=>$billingStateArr,'routeName'=>$routeName);
+        $filterform = $this->createForm(FilterRequestType::class, null,array(
+            'method' => 'GET',
+            'form_custom_value'=>$params
+        ));
+
+        $filterform->handleRequest($request);
+        $submitter = null;
+        $progressStates = $filterform['progressState']->getData();
+        $billingStates = $filterform['billingState']->getData();
+        $category = $filterform['category']->getData();
+        $searchStr = $filterform['comment']->getData();
+
+        if( isset($filterform['submitter']) ) {
+            $submitter = $filterform['submitter']->getData();
+        }
+        if( isset($filterform['project']) ) {
+            $project = $filterform['project']->getData();
+        }
+        //////// EOF create filter //////////
+
+        //////////////// get Requests IDs with the form node filter ////////////////
+        $ids = array();
+        if( $category ) {
+            $categoryIds = $transresRequestUtil->getRequestIdsFormNodeByCategory($category);
+            $ids = array_merge($ids, $categoryIds);
+        }
+        if( $searchStr ) {
+            $commentIds = $transresRequestUtil->getRequestIdsFormNodeByComment($searchStr);
+            $ids = array_merge($ids, $commentIds);
+        }
+        if( count($ids) > 0 ) {
+            $ids = array_unique($ids);
+            //print_r($ids);
+        }
+        //////////////// EOF get Requests IDs with the form node filter ////////////////
+
+        $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
+        $dql =  $repository->createQueryBuilder("transresRequest");
+        $dql->select('transresRequest');
+
+        $dql->leftJoin('transresRequest.submitter','submitter');
+        $dql->leftJoin('transresRequest.project','project');
+        $dql->leftJoin('submitter.infos','submitterInfos');
+
+        $dqlParameters = array();
+
+        if( $routeName == "translationalresearch_my_requests" ) {
+            $title = "My Requests";
+            $dql->andWhere("submitter.id = :submitterId");
+            $dqlParameters["submitterId"] = $user->getId();
+        }
+
+        if( $routeName == "translationalresearch_all_requests" ) {
+            $title = "All Requests";
+        }
+
+        ///////// filters //////////
+        if( $submitter ) {
+            $dql->andWhere("submitter.id = :submitterId");
+            $dqlParameters["submitterId"] = $submitter->getId();
+        }
+
+        if( $project ) {
+            $dql->andWhere("project.id = :projectId");
+            $dqlParameters["projectId"] = $project->getId();
+        }
+
+        if( $progressStates && count($progressStates)>0 ) {
+            $dql->andWhere("transresRequest.progressState IN (:progressStates)");
+            $dqlParameters["progressStates"] = implode(",",$progressStates);
+        }
+
+        if( $billingStates && count($billingStates)>0 ) {
+            $dql->andWhere("transresRequest.billingState IN (:billingStates)");
+            $dqlParameters["billingStates"] = implode(",",$billingStates);
+        }
+
+        if( count($ids) > 0 ) {
+            //$dql->andWhere("transresRequest.id IN (:ids)");
+            //$dqlParameters["ids"] = implode(",",$ids);
+            $dql->andWhere("transresRequest.id IN (".implode(",",$ids).")");
+        }
+        ///////// EOF filters //////////
+
+        $limit = 30;
+        $query = $em->createQuery($dql);
+
+        if( count($dqlParameters) > 0 ) {
+            $query->setParameters($dqlParameters);
+        }
+
+        //echo "query=".$query->getSql()."<br>";
+
+        $paginationParams = array(
+            'defaultSortFieldName' => 'transresRequest.id',
+            'defaultSortDirection' => 'DESC'
+        );
+
+        $paginator  = $this->get('knp_paginator');
+        $transresRequests = $paginator->paginate(
+            $query,
+            $request->query->get('page', 1),   /*page number*/
+            $limit,                                         /*limit per page*/
+            $paginationParams
+        );
+
+        return array(
+            'transresRequests' => $transresRequests,
+            'filterform' => $filterform->createView(),
+            'title' => $title,
+            'requestTotalFeeHtml' => null //$requestTotalFeeHtml
+        );
+    }
+
 
 
     public function createRequestEntity($user,$transresRequest=null) {

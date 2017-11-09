@@ -137,7 +137,6 @@ class TransResRequestUtil
             'payment',
             'slidescanning',
             'block',
-            'complet',
             'suspended',
             'other',
             'completed'

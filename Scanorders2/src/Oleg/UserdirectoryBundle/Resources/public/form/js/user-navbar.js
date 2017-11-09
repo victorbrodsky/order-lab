@@ -263,6 +263,14 @@ function setTranslationalResearchNavBar() {
         id = 'translationalresearch-default-reviewers';
     }
 
+    if( full.indexOf("/translational-research/my-requests") !== -1 ) {
+        id = 'translationalresearch-my-requests';
+    }
+
+    if( full.indexOf("/translational-research/all-requests") !== -1 ) {
+        id = 'translationalresearch-all-requests';
+    }
+
     id = commonNavBar(full,id);
 
     //if( full.indexOf("/translational-research/event-log/event-log-per-user-per-event-type/") !== -1 ) {

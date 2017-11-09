@@ -10,10 +10,8 @@
     <h4 class="text-info" align="center">
         {{ title }}
     </h4>
+    <br>
 
-    <p>
-        {{ requestTotalFeeHtml|raw }}
-    </p>
 
     <div class="well form-search">
         {{ form_start(filterform) }}
@@ -31,19 +29,24 @@
                 {{ form_widget(filterform.billingState, {'attr': {'placeholder': 'Billing Progress Status'}}) }}
             </div>
             {#<div class="col-xs-4">#}
-                {#{{ form_widget(filterform.category,{'attr': {'placeholder': 'Category'}}) }}#}
+            {#{{ form_widget(filterform.category,{'attr': {'placeholder': 'Category'}}) }}#}
             {#</div>#}
             {#<div class="col-xs-4">#}
-                {#{{ form_widget(filterform.category,{'attr': {'placeholder': 'Category'}}) }}#}
+            {#{{ form_widget(filterform.category,{'attr': {'placeholder': 'Category'}}) }}#}
             {#</div>#}
 
             {#<div class="col-xs-2">#}
-                {#<button type="submit" id="filter-btn" class="btn btn-sm btn-default">Filter</button>#}
+            {#<button type="submit" id="filter-btn" class="btn btn-sm btn-default">Filter</button>#}
             {#</div>#}
         </div>
         </p>
         <p>
         <div class="row">
+            <div class="col-xs-4">
+                {% if filterform.project is defined %}
+                    {{ form_widget(filterform.project,{'attr': {'placeholder': 'Project'}}) }}
+                {% endif %}
+            </div>
             <div class="col-xs-4">
                 {{ form_widget(filterform.category,{'attr': {'placeholder': 'Category'}}) }}
             </div>
@@ -61,17 +64,18 @@
     </div>
     <br>
 
+
     {#<table class="table table-hover table-condensed text-left table-bordered">#}
     <table class="records_list table table-condensed text-left my-table-class">
         <thead>
             <tr>
                 {#<th>Id</th>#}
                 <th>{{ knp_pagination_sortable(transresRequests, 'ID#', 'transresRequest.id') }}</th>
-                <th>{{ knp_pagination_sortable(transresRequests, 'Submitter', 'submitterInfos.displayName') }}</th>
+                <th>{{ knp_pagination_sortable(transresRequests, 'Project ID#', 'project.id') }}</th>
+                {#<th>{{ knp_pagination_sortable(transresRequests, 'Submitter', 'submitterInfos.displayName') }}</th>#}
                 <th>{{ knp_pagination_sortable(transresRequests, 'Creation Date', 'transresRequest.createDate') }}</th>
                 <th>{{ knp_pagination_sortable(transresRequests, 'Work Progress Status', 'transresRequest.progressState') }}</th>
                 <th>{{ knp_pagination_sortable(transresRequests, 'Billing Progress Status', 'transresRequest.billingState') }}</th>
-                {#<th>{{ knp_pagination_sortable(projects, 'Expiration Date', 'project.expirationDate') }}</th>#}
                 <th>Fee</th>
                 <th>Actions</th>
             </tr>
@@ -99,11 +103,16 @@
                 </td>
 
                 <td class="rowlink-skip">
-                    {#{{ principalInvestigator }}<br>#}
-                    {% set personurl = path(translationalresearch_sitename~'_showuser',{'id':transresRequest.submitter.id}) %}
-                    {% set personlink = '<a href="'~personurl~'" target="_blank">'~transresRequest.submitter.getUsernameOptimal()~'</a>'  %}
-                    {{ personlink|raw }}<br>
+                    <a href="{{ path(translationalresearch_sitename~'_project_show', { 'id': transresRequest.project.id }) }}"
+                       target="_blank">{{ transresRequest.project.getOid() }}</a>
                 </td>
+
+                {#<td class="rowlink-skip">#}
+                    {#{{ principalInvestigator }}<br>#}
+                    {#{% set personurl = path(translationalresearch_sitename~'_showuser',{'id':transresRequest.submitter.id}) %}#}
+                    {#{% set personlink = '<a href="'~personurl~'" target="_blank">'~transresRequest.submitter.getUsernameOptimal()~'</a>'  %}#}
+                    {#{{ personlink|raw }}<br>#}
+                {#</td>#}
 
                 <td>
                     {% if transresRequest.createDate %}
@@ -139,7 +148,6 @@
                                 <a href="{{ path(translationalresearch_sitename~'_request_show', { 'id': transresRequest.id }) }}" target="_blank">Show Request</a>
                             </li>
 
-
                             {% if is_granted('ROLE_TRANSRES_ADMIN') or transresRequest.submitter.id == app.user.id %}
                                 <li>
                                     <a href="{{ path(translationalresearch_sitename~'_request_edit', { 'id': transresRequest.id }) }}" target="_blank">Edit Request</a>
@@ -162,6 +170,13 @@
                             {% endif %}
                             {% endif %}
 
+                            {% if transresRequest.project.getRequests()|length > 0 %}
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_request_index', { 'id': transresRequest.project.id }) }}"
+                                       target="_blank">Show All Requests for this Project {{ transresRequest.project.getOid() }} </a>
+                                </li>
+                            {% endif %}
+
                         </ul>
 
                     </div>
@@ -176,13 +191,5 @@
         {% endfor %}
         </tbody>
     </table>
-
-    {#{{ render(controller('OlegTranslationalResearchBundle:Project:threadComments', { 'id': "3-9-committee_review" })) }}#}
-    {#{% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': "3-9-committee_review"} %}#}
-
-    <br>
-    <p>
-        <a class="btn btn-primary" href="{{ path(translationalresearch_sitename~'_request_new', {'id':project.id}) }}">Create a new Request</a>
-    </p>
 
 {% endblock %}

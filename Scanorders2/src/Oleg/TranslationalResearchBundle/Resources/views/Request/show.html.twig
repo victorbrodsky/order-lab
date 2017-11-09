@@ -27,12 +27,11 @@
 
     {{ form_start(form) }}
 
+    {{ transresRequestMacros.transresRequestFormShow(form,transresRequest,cycle) }}
 
     {{ transresRequestMacros.transresRequestInfo(form,transresRequest,cycle) }}
 
     {#{{ transres.updateInfo(form,cycle) }}#}
-
-    {{ transresRequestMacros.transresRequestFormShow(form,transresRequest,cycle) }}
 
     {#{{ transres.projectRequesters(form,project,cycle) }}#}
 

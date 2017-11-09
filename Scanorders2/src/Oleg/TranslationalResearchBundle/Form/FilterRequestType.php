@@ -41,22 +41,34 @@ class FilterRequestType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        $builder->add( 'submitter', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:User',
-            'label'=> "Reviewer Delegate:",
-            'required'=> false,
-            'multiple' => false,
-            'attr' => array('class'=>'combobox combobox-width'),
-            'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->leftJoin("list.employmentStatus", "employmentStatus")
-                    ->leftJoin("employmentStatus.employmentType", "employmentType")
-                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
-                    //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
-                    ->leftJoin("list.infos", "infos")
-                    ->orderBy("infos.displayName","ASC");
-            },
-        ));
+        if( $this->params['routeName'] != "translationalresearch_my_requests" ) {
+            $builder->add('submitter', EntityType::class, array(
+                'class' => 'OlegUserdirectoryBundle:User',
+                'label' => "Reviewer Delegate:",
+                'required' => false,
+                'multiple' => false,
+                'attr' => array('class' => 'combobox combobox-width'),
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->leftJoin("list.employmentStatus", "employmentStatus")
+                        ->leftJoin("employmentStatus.employmentType", "employmentType")
+                        ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+                        //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
+                        ->leftJoin("list.infos", "infos")
+                        ->orderBy("infos.displayName", "ASC");
+                },
+            ));
+        }
+
+        if( $this->params['routeName'] != "translationalresearch_request_index" ) {
+            $builder->add('project', EntityType::class, array(
+                'class' => 'OlegTranslationalResearchBundle:Project',
+                'choice_label' => "getProjectInfoName",
+                'required'=>false,
+                'label' => false,
+                'attr' => array('class'=>'combobox combobox-width'),
+            ));
+        }
         
         $builder->add('comment', TextType::class, array(
             'required'=>false,

@@ -82,6 +82,16 @@
                         </li>
                     {% endif %}
 
+                    {% if is_granted('ROLE_TRANSRES_REQUESTER') %}
+                        <li id="nav-bar-translationalresearch-my-requests">
+                            <a href="{{ path(translationalresearch_sitename~'_my_requests') }}">My Requests</a>
+                        </li>
+
+                        <li id="nav-bar-translationalresearch-all-requests">
+                            <a href="{{ path(translationalresearch_sitename~'_all_requests') }}">All Requests</a>
+                        </li>
+                    {% endif %}
+
                     {% if is_granted('ROLE_TRANSRES_ADMIN') %}
                         {#<li id="nav-bar-translationalresearch-default-reviewers"><a href="{{ path(translationalresearch_sitename~'_default-reviewer_index') }}">Default Reviewers</a></li>#}
 
