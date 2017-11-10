@@ -98,6 +98,22 @@ class TransResRequestUtil
             "Request",
             false
         );
+
+        //
+        $completed = str_replace(" ","",$completed);
+
+        if( !$completed ) {
+            $completed = $transResFormNodeUtil->getProjectFormNodeFieldByName(
+                $request,
+                "Requested #",
+                "HemePath Translational Research",
+                "HemePath Translational Research Request",
+                "Request",
+                false
+            );
+        }
+
+        $completed = str_replace(" ","",$completed);
         //echo "completed=".$completed."<br>";
 
         $requestCategoryTypeDropdownObject = $transResFormNodeUtil->getProjectFormNodeFieldByName(
