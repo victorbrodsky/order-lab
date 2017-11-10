@@ -434,7 +434,8 @@ class RequestController extends Controller
 
         $paginationParams = array(
             'defaultSortFieldName' => 'transresRequest.id',
-            'defaultSortDirection' => 'DESC'
+            'defaultSortDirection' => 'DESC',
+            'wrap-queries' => true
         );
 
         $paginator  = $this->get('knp_paginator');
