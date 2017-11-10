@@ -290,14 +290,6 @@ class TransResFormNodeUtil
         );
         $projectSection = $formNodeUtil->createV2FormNode($formParams);
 
-        //Requested # (string)
-        $formParams = array(
-            'parent' => $projectSection,
-            'name' => "Requested #",
-            'objectType' => $objectTypeString,
-        );
-        $titleText = $formNodeUtil->createV2FormNode($formParams);
-
         //category (fees) - RequestCategoryTypeList ('Form Field - Dropdown Menu')
         $formParams = array(
             'parent' => $projectSection,
@@ -307,6 +299,27 @@ class TransResFormNodeUtil
             'className' => "RequestCategoryTypeList"
         );
         $formNodeUtil->createV2FormNode($formParams);
+
+        //Lab (?)
+//        $objectTypeCheckboxes = $formNodeUtil->getObjectTypeByName('Form Field - Checkboxes');
+//        $formParams = array(
+//            'parent' => $projectSection,
+//            'name' => "Lab",
+//            'objectType' => $objectTypeCheckboxes,
+//            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+//            'className' => "ResearchLab"
+//        );
+//        $formNodeUtil->createV2FormNode($formParams);
+
+        //Total # of Patient/Cases (?)
+
+        //Requested # (string)
+        $formParams = array(
+            'parent' => $projectSection,
+            'name' => "Requested #",
+            'objectType' => $objectTypeString,
+        );
+        $titleText = $formNodeUtil->createV2FormNode($formParams);
 
         //Completed # (string)
         $formParams = array(
@@ -323,6 +336,51 @@ class TransResFormNodeUtil
             'objectType' => $objectTypeText,
         );
         $newField = $formNodeUtil->createV2FormNode($formParams);
+
+        //Interpretation by Pathologist (yes/no)
+//        $objectTypeRadio = $formNodeUtil->getObjectTypeByName('Form Field - Radio Button');
+//        $formParams = array(
+//            'parent' => $projectSection,
+//            'name' => "Interpretation by Pathologist",
+//            'objectType' => $objectTypeRadio,
+//            'classNamespace' => "Oleg\\TranslationalResearchBundle\\Entity",
+//            'className' => "InterpretationByPathologistList"
+//        );
+//        $formNodeUtil->createV2FormNode($formParams);
+
+        //Estimated period of technical support needed (start date, end date)
+        //Support Start Date
+        $objectTypeFullDate = $formNodeUtil->getObjectTypeByName('Form Field - Full Date');
+        $formParams = array(
+            'parent' => $projectSection,
+            'name' => "Support Start Date",
+            'objectType' => $objectTypeFullDate,
+        );
+        $titleText = $formNodeUtil->createV2FormNode($formParams);
+        //Support End Date
+        $objectTypeFullDate = $formNodeUtil->getObjectTypeByName('Form Field - Full Date');
+        $formParams = array(
+            'parent' => $projectSection,
+            'name' => "Support End Date",
+            'objectType' => $objectTypeFullDate,
+        );
+        $titleText = $formNodeUtil->createV2FormNode($formParams);
+
+        //Contact Name and Email
+//        $formParams = array(
+//            'parent' => $projectSection,
+//            'name' => "Contact",
+//            'objectType' => $objectTypeDropDown,
+//            'classNamespace' => "Oleg\\UserdirectoryBundle\\Entity",
+//            'className' => "User"
+//        );
+//        $formNodeUtil->createV2FormNode($formParams);
+        $formParams = array(
+            'parent' => $projectSection,
+            'name' => "Contact",
+            'objectType' => $objectTypeString,
+        );
+        $titleText = $formNodeUtil->createV2FormNode($formParams);
 
     }
     /////////////////////////////////////////////////////////////
