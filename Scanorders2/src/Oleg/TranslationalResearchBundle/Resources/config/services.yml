@@ -169,10 +169,10 @@ framework:
                 - active
                 - canceled
                 - missinginfo
-                - invoice
+                - invoiced
                 - paid
-                - refund
-                - partially_refund
+                - refunded
+                - partiallyRefunded
             transitions:
                 draft_active:
                     from: draft
@@ -186,21 +186,49 @@ framework:
                 missinginfo_active:
                     from: missinginfo
                     to: active
-                active_invoice:
+                active_invoiced:
                     from: active
-                    to: invoice
+                    to: invoiced
                 active_missinginfo:
                     from: active
                     to: missinginfo
-                invoice_paid:
-                    from: invoice
+                invoiced_paid:
+                    from: invoiced
                     to: paid
-                invoice_refund:
-                    from: invoice
-                    to: refund
-                invoice_partially_refund:
-                     from: invoice
-                     to: partially_refund
+                invoiced_refunded:
+                    from: invoiced
+                    to: refunded
+                invoiced_canceled:
+                    from: invoiced
+                    to: canceled
+                invoiced_active:
+                    from: invoiced
+                    to: active
+                invoiced_partiallyRefunded:
+                     from: invoiced
+                     to: partiallyRefunded
+                paid_refunded:
+                    from: paid
+                    to: refunded
+                #Add arrows from "Paid", "Refunded", and "Partially Refunded" to "Canceled" and to "Invoiced" (6 new arrows total)
+                paid_canceled:
+                    from: paid
+                    to: canceled
+                refunded_canceled:
+                    from: refunded
+                    to: canceled
+                partiallyRefunded_canceled:
+                    from: partiallyRefunded
+                    to: canceled
+                paid_invoiced:
+                    from: paid
+                    to: invoiced
+                refunded_invoiced:
+                    from: refunded
+                    to: invoiced
+                partiallyRefunded_invoiced:
+                    from: partiallyRefunded
+                    to: invoiced
 
         transres_request_progress:
             type: 'state_machine'
@@ -241,6 +269,12 @@ framework:
                 active_completed:
                     from: active
                     to: completed
+                completed_active:
+                    from: completed
+                    to: active
+                completed_canceled:
+                    from: completed
+                    to: canceled
                 #active to pending
                 active_investigator:
                     from: active
@@ -303,3 +337,34 @@ framework:
                 other_completed:
                     from: other
                     to: completed
+                #completed to all other statuses EXCEPT Draft
+                completed_investigator:
+                    from: completed
+                    to: investigator
+                completed_histo:
+                    from: completed
+                    to: histo
+                completed_ihc:
+                    from: completed
+                    to: ihc
+                completed_mol:
+                    from: completed
+                    to: mol
+                completed_retrieval:
+                    from: completed
+                    to: retrieval
+                completed_payment:
+                    from: completed
+                    to: payment
+                completed_slidescanning:
+                    from: completed
+                    to: slidescanning
+                completed_block:
+                    from: completed
+                    to: block
+                completed_suspended:
+                    from: completed
+                    to: suspended
+                completed_other:
+                    from: completed
+                    to: other

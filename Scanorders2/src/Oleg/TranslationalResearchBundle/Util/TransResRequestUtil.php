@@ -160,10 +160,10 @@ class TransResRequestUtil
             'active',
             'canceled',
             'missinginfo',
-            'invoice',
+            'invoiced',
             'paid',
-            'refund',
-            'partially_refund',
+            'refunded',
+            'partiallyRefunded',
         );
 
         $stateChoiceArr = array();
@@ -244,17 +244,17 @@ class TransResRequestUtil
             case "missinginfo":
                 $state = "Pending additional information from submitter";
                 break;
-            case "invoice":
-                $state = "Invoice";
+            case "invoiced":
+                $state = "Invoiced";
                 break;
             case "paid":
                 $state = "Paid";
                 break;
-            case "refund":
-                $state = "Refund";
+            case "refunded":
+                $state = "Refunded";
                 break;
-            case "partially_refund":
-                $state = "Partially Refund";
+            case "partiallyRefunded":
+                $state = "Partially Refunded";
                 break;
 
             default:
