@@ -103,7 +103,7 @@ class TransResUtil
             $fromState = $froms[0];
             $showEditLink = false;
             $editLinkLabel = "Edit Project";
-            if (strpos($fromState, '_rejected') !== false || $fromState == 'draft' || $fromState == 'completed') {
+            if (strpos($fromState, '_rejected') !== false || $fromState == 'draft') {
                 if ($this->secAuth->isGranted('ROLE_TRANSRES_REQUESTER')) {
                     $showEditLink = true;
                     $editLinkLabel = "Edit Project as Requester";
@@ -391,7 +391,7 @@ class TransResUtil
 
     public function isProjectEditableByRequester( $project ) {
         $state = $project->getState();
-        if( strpos($state, '_rejected') !== false || $state == 'draft' || $state == 'completed' ) { //|| strpos($state, "_missinginfo") !== false
+        if( strpos($state, '_rejected') !== false || $state == 'draft' ) { //|| strpos($state, "_missinginfo") !== false
             if( $this->isProjectRequester($project) === true ) {
                 return true;
             }
@@ -1027,10 +1027,10 @@ class TransResUtil
                 $label = "Save Project as Draft";
                 $labeled = "Saved as Draft";
                 break;
-            case "to_completed":
-                $label = "Complete Submission";
-                $labeled = "Completed Submission";
-                break;
+//            case "to_completed":
+//                $label = "Complete Submission";
+//                $labeled = "Completed Submission";
+//                break;
             case "to_review":
                 $label = "Submit to IRB Review";
                 $labeled = "Submitted to IRB Review";
@@ -1168,9 +1168,9 @@ class TransResUtil
             case "draft":
                 $state = "Draft";
                 break;
-            case "completed":
-                $state = "Completed";
-                break;
+//            case "completed":
+//                $state = "Completed";
+//                break;
 
             case "irb_review":
                 $state = "In IRB Review";
@@ -1234,9 +1234,9 @@ class TransResUtil
             case "draft":
                 $state = "Draft";
                 break;
-            case "completed":
-                $state = "Completed";
-                break;
+//            case "completed":
+//                $state = "Completed";
+//                break;
 
             case "irb_review":
                 $state = "IRB Review";
@@ -1334,7 +1334,7 @@ class TransResUtil
         $stateArr = array(
             //'start', //Edit Project
             'draft',
-            'completed',
+//            'completed',
 
             'irb_review',
             'irb_rejected',

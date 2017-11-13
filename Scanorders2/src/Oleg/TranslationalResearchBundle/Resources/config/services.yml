@@ -58,7 +58,7 @@ framework:
             places:
                 - start
                 - draft
-                - completed
+#                - completed
                 # irb
                 - irb_review        #available for IRB review
 #                - irb_approved     #approved by IRB review. Project goes to the next stage
@@ -86,11 +86,11 @@ framework:
                 to_draft:
                     from: start
                     to: draft
-                to_completed:
-                    from: [start, draft]
-                    to: completed
+#                to_completed:
+#                    from: [start, draft]
+#                    to: completed
                 to_review:
-                    from: completed
+                    from: [start, draft]
                     to: irb_review
 
                 ### Main Actions ###

@@ -171,9 +171,9 @@ class ProjectFormNodeController extends ProjectController
             }
 
             //new
-            if ($form->getClickedButton() && 'saveAsComplete' === $form->getClickedButton()->getName()) {
-                //Complete Submission => state='submit'
-                $project->setState('completed');
+            if ($form->getClickedButton() && 'submitIrbReview' === $form->getClickedButton()->getName()) {
+                //Submit to IRB review
+                $project->setState('irb_review');
             }
 
             $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($project);
@@ -337,15 +337,15 @@ class ProjectFormNodeController extends ProjectController
 //            }
 
             //edit
-            if ($form->getClickedButton() && 'saveAsComplete' === $form->getClickedButton()->getName()) {
-                //Complete Submission => state='submit'
-                if( $project->getState() == 'draft' ) {
-                    $project->setState('completed');
-                }
-            }
+//            if ($form->getClickedButton() && 'saveAsComplete' === $form->getClickedButton()->getName()) {
+//                //Complete Submission => state='submit'
+//                if( $project->getState() == 'draft' ) {
+//                    $project->setState('completed');
+//                }
+//            }
             if ($form->getClickedButton() && 'submitIrbReview' === $form->getClickedButton()->getName()) {
-                //Complete Submission => state='submit'
-                if( $project->getState() == 'completed' || $project->getState() == 'draft' ) {
+                //Submit to IRB review
+                if( $project->getState() == 'draft' ) {
                     $project->setState('irb_review');
                     $startProjectReview = true;
 

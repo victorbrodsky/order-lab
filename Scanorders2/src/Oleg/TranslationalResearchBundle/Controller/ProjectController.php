@@ -638,7 +638,7 @@ class ProjectController extends Controller
             'disabledState' => true,
             'disabledReviewers' => true,
             'saveAsDraft' => false,
-            'saveAsComplete' => false,
+            //'saveAsComplete' => false,
             'updateProject' => false,
             'submitIrbReview' => false,
             'stateChoiceArr'=>$stateChoiceArr
@@ -698,7 +698,7 @@ class ProjectController extends Controller
         if( $cycle == "new" ) {
             $disabled = false;
             $params['saveAsDraft'] = true;
-            $params['saveAsComplete'] = true;
+            //$params['saveAsComplete'] = true;
 
             if( $params['admin'] === false ) {
                 $params['showIrbReviewer'] = false;
@@ -714,12 +714,12 @@ class ProjectController extends Controller
 
         if( $cycle == "edit" ) {
             $disabled = false;
+//            if( $project->getState() && $project->getState() == "draft" ) {
+//                if( $transresUtil->isRequesterOrAdmin($project) === true ) {
+//                    $params['saveAsComplete'] = true;
+//                }
+//            }
             if( $project->getState() && $project->getState() == "draft" ) {
-                if( $transresUtil->isRequesterOrAdmin($project) === true ) {
-                    $params['saveAsComplete'] = true;
-                }
-            }
-            if( $project->getState() && ($project->getState() == "completed" || $project->getState() == "draft") ) {
                 if( $transresUtil->isRequesterOrAdmin($project) === true ) {
                     $params['submitIrbReview'] = true;
                     $params['updateProject'] = true;

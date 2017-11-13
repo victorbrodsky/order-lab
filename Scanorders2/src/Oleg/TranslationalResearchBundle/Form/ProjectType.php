@@ -481,12 +481,12 @@ class ProjectType extends AbstractType
                 'attr' => array('class' => 'btn btn-warning')
             ));
         }
-        if( $this->params['saveAsComplete'] === true ) {
-            $builder->add('saveAsComplete', SubmitType::class, array(
-                'label' => 'Complete Submission',
-                'attr' => array('class'=>'btn btn-warning')
-            ));
-        }
+//        if( $this->params['saveAsComplete'] === true ) {
+//            $builder->add('saveAsComplete', SubmitType::class, array(
+//                'label' => 'Complete Submission',
+//                'attr' => array('class'=>'btn btn-warning')
+//            ));
+//        }
         if( $this->params['submitIrbReview'] === true ) {
             $builder->add('submitIrbReview', SubmitType::class, array(
                 'label' => 'Submit Irb Review',
