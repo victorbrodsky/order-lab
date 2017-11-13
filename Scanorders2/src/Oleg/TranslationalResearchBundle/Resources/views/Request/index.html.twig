@@ -180,9 +180,12 @@
     {#{{ render(controller('OlegTranslationalResearchBundle:Project:threadComments', { 'id': "3-9-committee_review" })) }}#}
     {#{% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': "3-9-committee_review"} %}#}
 
-    <br>
-    <p>
-        <a class="btn btn-primary" href="{{ path(translationalresearch_sitename~'_request_new', {'id':project.id}) }}">Create a new Request</a>
-    </p>
+    {% if transres_request_util.isRequestCanBeCreated(project) %}
+        <br>
+        <p>
+            <a class="btn btn-primary" href="{{ path(translationalresearch_sitename~'_request_new', {'id':project.id}) }}"
+            >Create a new Request</a>
+        </p>
+    {% endif %}
 
 {% endblock %}

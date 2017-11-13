@@ -590,7 +590,7 @@ class TransResUtil
 
                 $recommended = false;
                 $label = $this->getTransitionLabelByName($transitionName,$review);
-                $subject = "Project ID ".$project->getOid()." has been sent to the stage '$label' from '".$originalStateLabel."'";
+                $subject = "Project ID ".$project->getOid()." has been sent to the status '$label' from '".$originalStateLabel."'";
                 $body = $subject;
                 //get project url
                 $projectUrl = $transresUtil->getProjectShowUrl($project);
@@ -1860,8 +1860,8 @@ class TransResUtil
             $recommended = false;
             $eventType = "Review Submitted";
             $label = $this->getTransitionLabelByName($appliedTransition,$review);
-            $subject = "Project ID ".$project->getOid()." has been sent to the stage '$label'";
-            $body = "Project ID ".$project->getOid()." has been sent to the stage '$label'";
+            $subject = "Project ID ".$project->getOid()." has been sent to the status '$label'";
+            $body = "Project ID ".$project->getOid()." has been sent to the status '$label'";
         } else {
             $recommended = true;
             $eventType = "Review Submitted";
@@ -2086,11 +2086,11 @@ class TransResUtil
 
 //        $label = $this->getTransitionLabelByName($appliedTransition,$review);
 //        if( $recommended ) {
-//            $subject = "Project ID ".$project->getOid()." has been recommended to send to the stage '$label'";
-//            $body = "Project ID ".$project->getOid()." has been sent to the stage '$label'";
+//            $subject = "Project ID ".$project->getOid()." has been recommended to send to the status '$label'";
+//            $body = "Project ID ".$project->getOid()." has been sent to the status '$label'";
 //        } else {
-//            $subject = "Project ID ".$project->getOid()." has been sent to the stage '$label'";
-//            $body = "Project ID ".$project->getOid()." has been sent to the stage '$label'";
+//            $subject = "Project ID ".$project->getOid()." has been sent to the status '$label'";
+//            $body = "Project ID ".$project->getOid()." has been sent to the status '$label'";
 //        }
 
         //send to the

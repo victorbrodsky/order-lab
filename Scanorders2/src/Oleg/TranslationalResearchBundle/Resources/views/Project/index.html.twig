@@ -29,7 +29,7 @@
         <br>
             <div class="row">
                 <div class="col-xs-4">
-                    {{ form_widget(filterform.state,{'attr': {'placeholder': 'State'}}) }}
+                    {{ form_widget(filterform.state,{'attr': {'placeholder': 'Status'}}) }}
                 </div>
                 <div class="col-xs-4">
                     {{ form_widget(filterform.principalInvestigators, {'attr': {'placeholder': 'Principal Investigators'}}) }}
@@ -65,7 +65,7 @@
                     {#{{ knp_pagination_sortable(projects, 'Project Funded', 'project.funded') }}#}
                     Project Funded
                 </th>
-                <th>{{ knp_pagination_sortable(projects, 'State', 'project.state') }}</th>
+                <th>{{ knp_pagination_sortable(projects, 'Status', 'project.state') }}</th>
                 <th>{{ knp_pagination_sortable(projects, 'Approval Date', 'project.approvalDate') }}</th>
                 {#<th>{{ knp_pagination_sortable(projects, 'Expiration Date', 'project.expirationDate') }}</th>#}
                 <th>IRB Expiration Date</th>
@@ -204,11 +204,14 @@
                                 {#</li>#}
                             {#{% endif %}#}
 
-                            {% if is_granted('ROLE_TRANSRES_REQUESTER') and project.state == "final_approved" %}
+                            {% if transres_request_util.isRequestCanBeCreated(project) %}
                                 <li class="divider"></li>
                                 <li>
-                                    <a href="{{ path(translationalresearch_sitename~'_request_new', { 'id': project.id }) }}" target="_blank">Create New Request</a>
+                                    <a href="{{ path(translationalresearch_sitename~'_request_new', { 'id': project.id }) }}"
+                                       target="_blank">Create a New Request</a>
                                 </li>
+                            {% endif %}
+                            {% if is_granted('ROLE_TRANSRES_REQUESTER') or transres_util.isAdminOrPrimaryReviewer() %}
                                 {% if project.getRequests()|length > 0 %}
                                     <li>
                                         <a href="{{ path(translationalresearch_sitename~'_request_index', { 'id': project.id }) }}"

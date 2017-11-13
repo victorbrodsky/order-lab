@@ -350,7 +350,7 @@ class ProjectFormNodeController extends ProjectController
                     $startProjectReview = true;
 
                     $label = $transresUtil->getStateLabelByName($project->getState());
-                    $msg = "Project ID ".$project->getOid()." has been sent to the stage '$label' from '".$originalStateLabel."'";
+                    $msg = "Project ID ".$project->getOid()." has been sent to the status '$label' from '".$originalStateLabel."'";
                 }
             }
 

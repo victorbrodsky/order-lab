@@ -413,6 +413,36 @@ class TransResRequestUtil
         return false;
     }
 
+    public function isRequestCanBeCreated( $project ) {
+        $transresUtil = $this->container->get('transres_util');
+        $transResFormNodeUtil = $this->container->get('transres_formnode_util');
+
+        //1) is_granted('ROLE_TRANSRES_REQUESTER')
+        if( $this->secAuth->isGranted('ROLE_TRANSRES_REQUESTER') === false && $transresUtil->isAdminOrPrimaryReviewer() === false ) {
+            return false;
+        }
+
+        //2) project.state == "final_approved"
+        if( $project->getState() != "final_approved" ) {
+            return false;
+        }
+
+        //3) Request can not be submitted for the expired project
+        $expirationDate = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"IRB Expiration Date");
+        //echo "expirationDate=$expirationDate<br>";
+        $exp_date = date_create_from_format('m/d/Y', $expirationDate);
+        //echo "exp_date=".$exp_date->format("d-m-Y H:i:s")."<br>";
+        $now = new \DateTime();
+        //echo "now=".$now->format("d-m-Y H:m:s")."<br>";
+        if( $now > $exp_date ) {
+            //echo "expired<br>";
+            return false;
+        }
+        //echo "not expired<br>";
+
+        return true;
+    }
+
     public function getReviewEnabledLinkActions( $transresRequest, $statMachineType ) {
         //exit("get review links");
         $transresUtil = $this->container->get('transres_util');
@@ -580,7 +610,7 @@ class TransResRequestUtil
                 }
 
                 $label = $this->getRequestStateLabelByName($to,$statMachineType);
-                $subject = "Project ID ".$transresRequest->getProject()->getOid().": Request ID ".$transresRequest->getId()." has been sent to the stage '$label' from '".$originalStateLabel."'";
+                $subject = "Project ID ".$transresRequest->getProject()->getOid().": Request ID ".$transresRequest->getId()." has been sent to the status '$label' from '".$originalStateLabel."'";
                 $body = $subject;
                 //get request url
                 $requestUrl = $this->getRequestShowUrl($transresRequest);
