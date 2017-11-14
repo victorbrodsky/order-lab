@@ -42,20 +42,21 @@ use Symfony\Component\HttpFoundation\Request;
 class RequestController extends Controller
 {
 
-
     /**
      * Creates a new request entity with formnode.
      *
      * @Route("/project/{id}/request/new/", name="translationalresearch_request_new")
+     * @Route("/request/new/", name="translationalresearch_new_standalone_request")
      * @Template("OlegTranslationalResearchBundle:Request:new.html.twig")
      * @Method({"GET", "POST"})
      */
-    public function newFormNodeAction(Request $request, Project $project)
+    public function newFormNodeAction(Request $request, Project $project=null)
     {
         if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER')) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
+        $transResFormNodeUtil = $this->get('transres_formnode_util');
         $transresUtil = $this->container->get('transres_util');
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
@@ -65,7 +66,18 @@ class RequestController extends Controller
         //$testing = true;
 
         $transresRequest = $this->createRequestEntity($user,null);
-        $transresRequest->setProject($project);
+
+        $title = "Create a new Request";
+
+        if( $project ) {
+            $transresRequest->setProject($project);
+            $title = "Create a new Request for project ID ".$project->getOid();
+
+            $projectFundedAccountNumber = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"If funded, please provide account number");
+            if( $projectFundedAccountNumber ) {
+                $transresRequest->setFundedAccountNumber($projectFundedAccountNumber);
+            }
+        }
 
         $form = $this->createRequestForm($transresRequest,$cycle,$request); //new
 
@@ -89,6 +101,8 @@ class RequestController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
 
             //exit("Project submitted");
+
+            $project = $transresRequest->getProject();
 
             //new
             if ($form->getClickedButton() && 'saveAsDraft' === $form->getClickedButton()->getName()) {
@@ -140,7 +154,7 @@ class RequestController extends Controller
             'project' => $project,
             'form' => $form->createView(),
             'cycle' => $cycle,
-            'title' => "Create Request for project ID ".$project->getOid(),
+            'title' => $title,
             'formnodetrigger' => $formnodetrigger,
             'formnodeTopHolderId' => $formnodeTopHolderId
         );
@@ -162,7 +176,7 @@ class RequestController extends Controller
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
-        //$userSecUtil = $this->get('user_security_utility');
+        $transResFormNodeUtil = $this->get('transres_formnode_util');
         $transresUtil = $this->container->get('transres_util');
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
@@ -178,6 +192,11 @@ class RequestController extends Controller
         //$testing = true;
 
         $project = $transresRequest->getProject();
+
+        $projectFundedAccountNumber = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"If funded, please provide account number");
+        if( $projectFundedAccountNumber ) {
+            $transresRequest->setFundedAccountNumber($projectFundedAccountNumber);
+        }
 
         $transresRequest = $this->createRequestEntity($user,$transresRequest);
 
@@ -644,6 +663,7 @@ class RequestController extends Controller
             'saveAsDraft' => false,
             'saveAsComplete' => false,
             'updateRequest' => false,
+            'projects' => null
         );
 
         $params['admin'] = false;
@@ -664,6 +684,11 @@ class RequestController extends Controller
             $disabled = false;
             $params['saveAsDraft'] = true;
             $params['saveAsComplete'] = true;
+
+            if( $routeName == "translationalresearch_new_standalone_request" ) {
+                $availableProjects = $transresUtil->getAvailableProjects();
+                $params['availableProjects'] = $availableProjects;
+            }
         }
 
         if( $cycle == "show" ) {

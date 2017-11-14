@@ -181,11 +181,6 @@ class Project {
 //     */
 //    private $startDate;
 //
-//    /**
-//     * @ORM\Column(type="date", nullable=true)
-//     */
-//    private $expirationDate;
-
     //Is this Research Project Funded by a WCMC Account?
 //    /**
 //     * @ORM\Column(type="boolean", nullable=true)
@@ -299,6 +294,18 @@ class Project {
      * @ORM\OneToMany(targetEntity="TransResRequest", mappedBy="project", cascade={"persist"})
      */
     private $requests;
+
+    /**
+     * IRB Expiration Date: copied from the project's formnode field on create and update
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $irbExpirationDate;
+
+    /**
+     * fundedAccountNumber: copied from the project's formnode field on create and update
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $fundedAccountNumber;
 
 
 
@@ -546,23 +553,6 @@ class Project {
 //    {
 //        $this->funded = $funded;
 //    }
-
-//    /**
-//     * @return mixed
-//     */
-//    public function getFundedAccountNumber()
-//    {
-//        return $this->fundedAccountNumber;
-//    }
-//
-//    /**
-//     * @param mixed $fundedAccountNumber
-//     */
-//    public function setFundedAccountNumber($fundedAccountNumber)
-//    {
-//        $this->fundedAccountNumber = $fundedAccountNumber;
-//    }
-
 //    /**
 //     * @return mixed
 //     */
@@ -790,6 +780,37 @@ class Project {
         $this->approvalDate = $approvalDate;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getIrbExpirationDate()
+    {
+        return $this->irbExpirationDate;
+    }
+
+    /**
+     * @param mixed $irbExpirationDate
+     */
+    public function setIrbExpirationDate($irbExpirationDate)
+    {
+        $this->irbExpirationDate = $irbExpirationDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFundedAccountNumber()
+    {
+        return $this->fundedAccountNumber;
+    }
+
+    /**
+     * @param mixed $fundedAccountNumber
+     */
+    public function setFundedAccountNumber($fundedAccountNumber)
+    {
+        $this->fundedAccountNumber = $fundedAccountNumber;
+    }
 
     public function getIrbReviews()
     {

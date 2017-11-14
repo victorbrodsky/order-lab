@@ -2347,4 +2347,45 @@ class TransResUtil
         return false;
     }
 
+    public function getAvailableProjects() {
+
+        $transresRequestUtil = $this->container->get('transres_request_util');
+
+        $repository = $this->em->getRepository('OlegTranslationalResearchBundle:Project');
+        $dql =  $repository->createQueryBuilder("project");
+        $dql->select('project');
+
+        //state
+        $dql->where("project.state=:state");
+        $dql->andWhere("project.irbExpirationDate > CURRENT_DATE()");
+
+        $parameters = array(
+            "state" => "final_approved",
+            //"today" => new \DateTime()
+        );
+
+        $query = $dql->getQuery();
+
+        //echo "projectId=".$project->getId()."<br>";
+        //echo "reviewId=".$reviewId."<br>";
+        //echo "query=".$query->getSql()."<br>";
+
+        $query->setParameters($parameters);
+
+        $projects = $query->getResult();
+
+        return $projects;
+
+//        //check for Request can not be submitted for the expired project
+//        $finalProjects = array();
+//        //TODO: this loop can cause delay for large number of projects. => duplicate IRB expiration date in the project
+//        foreach($projects as $project) {
+//            if( $transresRequestUtil->isRequestCanBeCreated($project) ) {
+//                $finalProjects[] = $project;
+//            }
+//        }
+//
+//        return $finalProjects;
+    }
+
 }

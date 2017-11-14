@@ -89,6 +89,12 @@ class TransResRequestType extends AbstractType
             ));
         }
 
+        $builder->add('fundedAccountNumber',null, array(
+            'label' => "Project's Account Number:",
+            'required' => false,
+            'attr' => array('class' => 'form-control tarnsresrequest-fundedAccountNumber'),
+        ));
+
         if( $this->params['cycle'] != 'show' ) {
             /////////////////////////////////////// messageCategory ///////////////////////////////////////
             $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
@@ -163,6 +169,20 @@ class TransResRequestType extends AbstractType
             $builder->add('updateRequest', SubmitType::class, array(
                 'label' => 'Update Request',
                 'attr' => array('class'=>'btn btn-warning')
+            ));
+        }
+
+        if( $this->params['availableProjects'] ) {
+            $builder->add('project', EntityType::class, array(
+                'class' => 'OlegTranslationalResearchBundle:Project',
+                'choice_label' => 'getProjectInfoName',
+                'choices' => $this->params['availableProjects'],
+                'label' => 'Project:',
+                //'disabled' => ($this->params['admin'] ? false : true),
+                //'disabled' => true,
+                'required' => true,
+                'multiple' => false,
+                'attr' => array('class' => 'combobox combobox-width')
             ));
         }
 

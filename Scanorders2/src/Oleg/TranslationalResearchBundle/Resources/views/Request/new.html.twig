@@ -23,6 +23,14 @@
 
     {{ form_start(form) }}
 
+        {% if form.project is defined %}
+            {{ formmacros.field(form.project) }}
+        {% endif %}
+
+        {% if form.fundedAccountNumber is defined %}
+            {{ formmacros.field(form.fundedAccountNumber) }}
+        {% endif %}
+
         {{ transresRequestMacros.transresRequestFormEdit(form,null,cycle) }}
 
         {{ transresRequestMacros.transresRequestInfo(form,transresRequest,cycle) }}
@@ -58,8 +66,10 @@
     <br>
 
 
-    <p>
-        <a href="{{ path(translationalresearch_sitename~'_request_index',{'id':project.id}) }}">Back to the request list</a>
-    </p>
+    {% if project and project.id %}
+        <p>
+            <a href="{{ path(translationalresearch_sitename~'_request_index',{'id':project.id}) }}">Back to the request list</a>
+        </p>
+    {% endif %}
 
 {% endblock %}

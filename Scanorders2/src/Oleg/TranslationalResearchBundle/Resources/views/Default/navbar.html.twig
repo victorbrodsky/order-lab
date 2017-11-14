@@ -83,6 +83,10 @@
                     {% endif %}
 
                     {% if is_granted('ROLE_TRANSRES_REQUESTER') %}
+                        <li id="nav-bar-translationalresearch-new-standalone-request">
+                            <a href="{{ path(translationalresearch_sitename~'_new_standalone_request') }}">New Request</a>
+                        </li>
+
                         <li id="nav-bar-translationalresearch-my-requests">
                             <a href="{{ path(translationalresearch_sitename~'_my_requests') }}">My Requests</a>
                         </li>

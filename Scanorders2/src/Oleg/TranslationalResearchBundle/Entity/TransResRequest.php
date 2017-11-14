@@ -126,19 +126,11 @@ class TransResRequest {
      */
     private $project;
 
-//    /**
-//     * Other Documents
-//     *
-//     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
-//     * @ORM\JoinTable(name="transres_request_document",
-//     *      joinColumns={@ORM\JoinColumn(name="request_id", referencedColumnName="id", onDelete="CASCADE")},
-//     *      inverseJoinColumns={@ORM\JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")}
-//     *      )
-//     * @ORM\OrderBy({"createdate" = "ASC"})
-//     **/
-//    private $documents;
-
-
+    /**
+     * fundedAccountNumber: this field can override the project's fundedAccountNumber
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $fundedAccountNumber;
 
 
     public function __construct($user=null) {
@@ -380,6 +372,22 @@ class TransResRequest {
     public function setProject($project)
     {
         $this->project = $project;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFundedAccountNumber()
+    {
+        return $this->fundedAccountNumber;
+    }
+
+    /**
+     * @param mixed $fundedAccountNumber
+     */
+    public function setFundedAccountNumber($fundedAccountNumber)
+    {
+        $this->fundedAccountNumber = $fundedAccountNumber;
     }
 
 

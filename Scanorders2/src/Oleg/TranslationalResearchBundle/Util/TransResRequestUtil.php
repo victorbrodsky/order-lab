@@ -428,13 +428,17 @@ class TransResRequestUtil
         }
 
         //3) Request can not be submitted for the expired project
-        $expirationDate = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"IRB Expiration Date");
-        //echo "expirationDate=$expirationDate<br>";
-        $exp_date = date_create_from_format('m/d/Y', $expirationDate);
-        //echo "exp_date=".$exp_date->format("d-m-Y H:i:s")."<br>";
-        $now = new \DateTime();
-        //echo "now=".$now->format("d-m-Y H:m:s")."<br>";
-        if( $now > $exp_date ) {
+        if( $project->getIrbExpirationDate() ) {
+            //use simple project's field
+            $expDate = $project->getIrbExpirationDate();
+        } else {
+            //use formnode project's field if the simple field is null
+            $expirationDate = $transResFormNodeUtil->getProjectFormNodeFieldByName($project, "IRB Expiration Date");
+            //echo "expirationDate=$expirationDate<br>";
+            $expDate = date_create_from_format('m/d/Y', $expirationDate);
+            //echo "exp_date=".$expDate->format("d-m-Y H:i:s")."<br>";
+        }
+        if( new \DateTime() > $expDate ) {
             //echo "expired<br>";
             return false;
         }

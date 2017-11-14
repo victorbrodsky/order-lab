@@ -37,6 +37,10 @@
 
     {{ form_start(edit_form) }}
 
+        {% if edit_form.fundedAccountNumber is defined %}
+            {{ formmacros.field(edit_form.fundedAccountNumber) }}
+        {% endif %}
+
         {{ transresRequestMacros.transresRequestFormEdit(edit_form,transresRequest,cycle) }}
 
         {{ transresRequestMacros.transresRequestInfo(edit_form,transresRequest,cycle) }}
