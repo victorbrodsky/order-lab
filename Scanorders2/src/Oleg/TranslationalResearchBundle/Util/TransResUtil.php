@@ -2357,7 +2357,7 @@ class TransResUtil
 
         //state
         $dql->where("project.state=:state");
-        $dql->andWhere("project.irbExpirationDate > CURRENT_DATE()");
+        $dql->andWhere("project.irbExpirationDate >= CURRENT_DATE()");
 
         $parameters = array(
             "state" => "final_approved",

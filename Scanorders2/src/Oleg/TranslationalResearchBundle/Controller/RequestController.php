@@ -194,6 +194,7 @@ class RequestController extends Controller
         $project = $transresRequest->getProject();
 
         $projectFundedAccountNumber = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"If funded, please provide account number");
+        //echo "projectFundedAccountNumber=$projectFundedAccountNumber<br>";
         if( $projectFundedAccountNumber ) {
             $transresRequest->setFundedAccountNumber($projectFundedAccountNumber);
         }

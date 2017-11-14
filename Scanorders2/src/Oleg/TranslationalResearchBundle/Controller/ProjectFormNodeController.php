@@ -384,6 +384,7 @@ class ProjectFormNodeController extends ProjectController
 //            echo "formnode[421]=".$_POST['formnode[421]']."<br>";
 
             //process form nodes
+            //TODO: 1) check and fix formnode update. 2) adding the same dropdown item on update
             $formNodeUtil = $this->get('user_formnode_utility');
             $formNodeUtil->processFormNodes($request,$project->getMessageCategory(),$project,$testing); //testing
 
