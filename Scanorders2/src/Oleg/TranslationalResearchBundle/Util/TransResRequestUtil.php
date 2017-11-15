@@ -18,8 +18,6 @@
 namespace Oleg\TranslationalResearchBundle\Util;
 
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Form\Exception\LogicException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
@@ -634,7 +632,7 @@ class TransResRequestUtil
                     "Successful action: ".$label
                 );
                 return true;
-            } catch (LogicException $e) {
+            } catch (\LogicException $e) {
 
                 //event log
 
@@ -678,5 +676,55 @@ class TransResRequestUtil
         );
 
         return $url;
+    }
+
+    //TODO:
+    //set transresRequest's $fundedAccountNumber to the project's formnode (i.e. $fundedAccountNumber => "If funded, please provide account number")
+    public function setValueToFormNodeProject( $project, $fieldName, $value ) {
+        //echo "value=$value<br>";
+
+        if( $fieldName != "If funded, please provide account number" ) {
+            //only supported and tested for the string formnode field
+            return;
+        }
+
+        $formNodeUtil = $this->container->get('user_formnode_utility');
+        $transResFormNodeUtil = $this->container->get('transres_formnode_util');
+        //$transResFormNodeUtil->setProjectFormNodeFieldByName($project,$fieldName,$value);
+
+        //1) get project's formnode
+        $fieldFormNode = $transResFormNodeUtil->getFormNodeByFieldNameAndParents(
+            $fieldName
+        );
+        //echo "fieldFormNode=".$fieldFormNode->getId()."<br>";
+        if( !$fieldFormNode ) {
+            return array();
+        }
+
+        //2) get objectTypeDropdowns by:
+        $mapper = array(
+            "entityName" => "Project",
+            "entityNamespace" => "Oleg\\TranslationalResearchBundle\\Entity",
+            "entityId" => $project->getId(),
+        );
+        $receivingValue = null;
+        $compareType = null;
+        $receivingObjects = $formNodeUtil->getFormNodeListRecordsByReceivingObjectValue($fieldFormNode,$receivingValue,$mapper,$compareType);
+
+//        echo "receivingObjects count=".count($receivingObjects)."<br>";
+//        foreach($receivingObjects as $receivingObject){
+//            echo "receivingObject ID=".$receivingObject->getId()."<br>";
+//        }
+
+        if( count($receivingObjects) == 0 ) {
+            throw new \Exception("receivingObjects are not found for the project ID ".$project->getId()." and fieldName=".$fieldName." => "."failed to set value".$value);
+        }
+
+        $receivingObject = $receivingObjects[0];
+        $receivingObject->setValue($value);
+
+        //$this->em->flush($receivingObject);
+
+        //exit('exit setValueToFormNodeProject');
     }
 }

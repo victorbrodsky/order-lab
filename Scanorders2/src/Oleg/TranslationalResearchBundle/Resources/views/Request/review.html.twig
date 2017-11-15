@@ -30,6 +30,15 @@
 
     {{ form_start(form) }}
 
+    {% if form.project is defined %}
+        {{ formmacros.field(form.project) }}
+    {% endif %}
+
+    {% if form.fundedAccountNumber is defined %}
+        <p>Current project's funded account number: {{ project.getFundedAccountNumber() }}</p>
+        {{ formmacros.field(form.fundedAccountNumber) }}
+    {% endif %}
+
     {{ transresRequestMacros.transresRequestInfo(form,transresRequest,cycle) }}
 
     {{ transresRequestMacros.transresRequestFormShow(form,transresRequest,cycle) }}

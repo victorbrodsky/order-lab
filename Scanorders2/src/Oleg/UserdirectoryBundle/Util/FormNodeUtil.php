@@ -595,15 +595,31 @@ class FormNodeUtil
         $dql->where('list.entityName = :entityName AND list.entityNamespace = :entityNamespace');
         $dql->andWhere('list.formNode = :formNodeId');
 
-        $parameterValue = $value;
-        if( $compareType == "exact" ) {
+        //echo "entityNamespace=".$mapper['entityNamespace']."; entityName=".$mapper['entityName']."; formNodeId=".$formNode->getId()."<br>";
+        $queryParameters = array(
+            'entityName' => $mapper['entityName'],  //"TransResRequest",
+            'entityNamespace' => $mapper['entityNamespace'],    //"Oleg\\TranslationalResearchBundle\\Entity",
+            'formNodeId' => $formNode->getId(),
+        );
+
+        //provide the exact entityId
+        if( isset($mapper['entityId']) && $mapper['entityId'] ) {
+            $dql->andWhere('list.entityId = :entityId');
+            $queryParameters['entityId'] = $mapper['entityId'];
+        }
+
+        //$parameterValue = $value;
+        if( $value && $compareType == "exact" ) {
             $dql->andWhere('list.value = :value');
         }
-        if( $compareType == "like" ) {
+        if( $value && $compareType == "like" ) {
             $dql->andWhere('list.value LIKE :value');
             //$parameterValue = "'%".$value."%'";
             //$parameterValue = "%".$value."%";
-            $parameterValue = '%'.$value.'%';
+            $value = '%'.$value.'%';
+        }
+        if( $value && $compareType ) {
+            $queryParameters['value'] = $value;
         }
 
         $dql->orderBy('list.arraySectionIndex','DESC');
@@ -613,14 +629,15 @@ class FormNodeUtil
 
         //echo "query=".$query->getSql()."<br>";
 
-        $query->setParameters(
-            array(
-                'entityName' => $mapper['entityName'],  //"TransResRequest",
-                'entityNamespace' => $mapper['entityNamespace'],    //"Oleg\\TranslationalResearchBundle\\Entity",
-                'formNodeId' => $formNode->getId(),
-                'value' => $parameterValue,  //$holderEntity->getId()
-            )
-        );
+//        $query->setParameters(
+//            array(
+//                'entityName' => $mapper['entityName'],  //"TransResRequest",
+//                'entityNamespace' => $mapper['entityNamespace'],    //"Oleg\\TranslationalResearchBundle\\Entity",
+//                'formNodeId' => $formNode->getId(),
+//                'value' => $parameterValue,  //$holderEntity->getId()
+//            )
+//        );
+        $query->setParameters($queryParameters);
 
         $objectTypeDropdowns = $query->getResult();
 

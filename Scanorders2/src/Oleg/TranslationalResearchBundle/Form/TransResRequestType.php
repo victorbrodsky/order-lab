@@ -90,7 +90,7 @@ class TransResRequestType extends AbstractType
         }
 
         $builder->add('fundedAccountNumber',null, array(
-            'label' => "Project's Account Number:",
+            'label' => "New project's funded account number:",
             'required' => false,
             'attr' => array('class' => 'form-control tarnsresrequest-fundedAccountNumber'),
         ));

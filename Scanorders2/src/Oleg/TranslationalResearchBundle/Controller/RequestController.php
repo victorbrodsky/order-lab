@@ -177,6 +177,7 @@ class RequestController extends Controller
         }
 
         $transResFormNodeUtil = $this->get('transres_formnode_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
         $transresUtil = $this->container->get('transres_util');
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
@@ -223,6 +224,12 @@ class RequestController extends Controller
 
             //exit("Request update submitted");
 
+            //set project's funded account number
+            $fundedAccountNumber = $transresRequest->getFundedAccountNumber();
+            $project->setFundedAccountNumber($fundedAccountNumber);
+            //set formnode field
+            $transresRequestUtil->setValueToFormNodeProject($project,"If funded, please provide account number",$fundedAccountNumber);
+
             //edit
             if ($form->getClickedButton() && 'saveAsDraft' === $form->getClickedButton()->getName()) {
                 //Save Project as Draft => state='draft'
@@ -238,7 +245,6 @@ class RequestController extends Controller
                     $transresRequest->setBillingState('active');
                 }
             }
-
 
             if( !$testing ) {
                 $em->persist($transresRequest);
