@@ -88,7 +88,11 @@
                         {{ user_formnode_utility.getFormNodeHolderShortInfoForView(project,project.messageCategory,false)|raw }}
                     </div>
 
-                    {{ transres.projectDocument(form,project,cycle) }}
+                    {% if form %}
+                        {{ transres.projectDocument(form,project,cycle) }}
+                    {% else %}
+
+                    {% endif %}
 
                 </div>
             </div>

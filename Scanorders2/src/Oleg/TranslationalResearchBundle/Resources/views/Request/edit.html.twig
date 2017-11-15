@@ -2,6 +2,7 @@
 
 {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 {% import "OlegTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}
+{% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
 
 {% block title %}
     {{ title }}
@@ -74,6 +75,10 @@
     <p>
         <a class="btn btn-primary" href="{{ path(translationalresearch_sitename~'_request_show',{ 'id': transresRequest.id }) }}">Cancel</a>
     </p>
+
+    <br>
+    {{ transres.projectFormShow(null,project,cycle) }}
+
     <br>
     <p>
         <a href="{{ path(translationalresearch_sitename~'_request_index',{'id':project.id}) }}">Back to the request list</a>
