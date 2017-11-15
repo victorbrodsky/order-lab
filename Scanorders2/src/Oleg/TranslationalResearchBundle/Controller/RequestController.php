@@ -57,7 +57,8 @@ class RequestController extends Controller
         }
 
         $transResFormNodeUtil = $this->get('transres_formnode_util');
-        $transresUtil = $this->container->get('transres_util');
+        $transresRequestUtil = $this->get('transres_request_util');
+        $transresUtil = $this->get('transres_util');
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
         $cycle = "new";
@@ -103,6 +104,12 @@ class RequestController extends Controller
             //exit("Project submitted");
 
             $project = $transresRequest->getProject();
+
+            //set project's funded account number
+            $fundedAccountNumber = $transresRequest->getFundedAccountNumber();
+            $project->setFundedAccountNumber($fundedAccountNumber);
+            //set formnode field
+            $transresRequestUtil->setValueToFormNodeProject($project,"If funded, please provide account number",$fundedAccountNumber);
 
             //new
             if ($form->getClickedButton() && 'saveAsDraft' === $form->getClickedButton()->getName()) {
