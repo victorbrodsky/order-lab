@@ -77,7 +77,6 @@ class ProjectFormNodeController extends ProjectController
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
-        $transResFormNodeUtil = $this->get('transres_formnode_util');
         $transresUtil = $this->container->get('transres_util');
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
@@ -191,19 +190,20 @@ class ProjectFormNodeController extends ProjectController
             $formNodeUtil = $this->get('user_formnode_utility');
             $formNodeUtil->processFormNodes($request,$project->getMessageCategory(),$project,$testing); //testing
 
-            //update project's irbExpirationDate
-            $projectIrbExpirationDate = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"IRB Expiration Date");
-            if( $projectIrbExpirationDate ) {
-                $expDate = date_create_from_format('m/d/Y', $projectIrbExpirationDate);
-                $project->setIrbExpirationDate($expDate);
-                $em->flush($project);
-            }
-            //update project's fundedAccountNumber
-            $projectFundedAccountNumber = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"If funded, please provide account number");
-            if( $projectFundedAccountNumber ) {
-                $project->setFundedAccountNumber($projectFundedAccountNumber);
-                $em->flush($project);
-            }
+//            //update project's irbExpirationDate
+//            $projectIrbExpirationDate = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"IRB Expiration Date");
+//            if( $projectIrbExpirationDate ) {
+//                $expDate = date_create_from_format('m/d/Y', $projectIrbExpirationDate);
+//                $project->setIrbExpirationDate($expDate);
+//                $em->flush($project);
+//            }
+//            //update project's fundedAccountNumber
+//            $projectFundedAccountNumber = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"If funded, please provide account number");
+//            if( $projectFundedAccountNumber ) {
+//                $project->setFundedAccountNumber($projectFundedAccountNumber);
+//                $em->flush($project);
+//            }
+            $transresUtil->copyFormNodeFieldsToProject($project);
 
             $msg = "Project with ID ".$project->getOid()." has been successfully created";
 
@@ -257,7 +257,6 @@ class ProjectFormNodeController extends ProjectController
 //            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
 //        }
         $transresUtil = $this->container->get('transres_util');
-        $transResFormNodeUtil = $this->get('transres_formnode_util');
 
         if(
             $transresUtil->isAdminOrPrimaryReviewer() ||
@@ -388,20 +387,8 @@ class ProjectFormNodeController extends ProjectController
             $formNodeUtil = $this->get('user_formnode_utility');
             $formNodeUtil->processFormNodes($request,$project->getMessageCategory(),$project,$testing); //testing
 
-            //update project's irbExpirationDate
-            $projectIrbExpirationDate = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"IRB Expiration Date");
-            //echo "projectIrbExpirationDate=".$projectIrbExpirationDate."<br>";
-            if( $projectIrbExpirationDate ) {
-                $expDate = date_create_from_format('m/d/Y', $projectIrbExpirationDate);
-                $project->setIrbExpirationDate($expDate);
-                $em->flush($project);
-            }
-            //update project's fundedAccountNumber
-            $projectFundedAccountNumber = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"If funded, please provide account number");
-            if( $projectFundedAccountNumber ) {
-                $project->setFundedAccountNumber($projectFundedAccountNumber);
-                $em->flush($project);
-            }
+            //update project's irbExpirationDate and fundedAccountNumber
+            $transresUtil->copyFormNodeFieldsToProject($project);
 
             $msg = $msg . " by ".$project->getUpdateUser()->getUsernameOptimal();
 

@@ -18,13 +18,11 @@
 namespace Oleg\TranslationalResearchBundle\Util;
 
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Oleg\TranslationalResearchBundle\Entity\AdminReview;
 use Oleg\TranslationalResearchBundle\Entity\CommitteeReview;
 use Oleg\TranslationalResearchBundle\Entity\FinalReview;
 use Oleg\TranslationalResearchBundle\Entity\IrbReview;
 use Oleg\TranslationalResearchBundle\Entity\SpecialtyList;
-use Symfony\Component\Form\Exception\LogicException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
@@ -609,7 +607,7 @@ class TransResUtil
                     "Successful action: ".$label
                 );
                 return true;
-            } catch (LogicException $e) {
+            } catch (\LogicException $e) {
 
                 //event log
 
@@ -2388,4 +2386,24 @@ class TransResUtil
 //        return $finalProjects;
     }
 
+    public function copyFormNodeFieldsToProject( $project, $flushDb=true ) {
+        $transResFormNodeUtil = $this->container->get('transres_formnode_util');
+
+        //update project's irbExpirationDate
+        $projectIrbExpirationDate = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"IRB Expiration Date");
+        if( $projectIrbExpirationDate ) {
+            $expDate = date_create_from_format('m/d/Y', $projectIrbExpirationDate);
+            $project->setIrbExpirationDate($expDate);
+        } else {
+            $project->setIrbExpirationDate(null);
+        }
+
+        //update project's fundedAccountNumber
+        $projectFundedAccountNumber = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"If funded, please provide account number");
+        $project->setFundedAccountNumber($projectFundedAccountNumber);
+
+        if( $flushDb ) {
+            $this->em->flush($project);
+        }
+    }
 }

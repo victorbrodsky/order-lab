@@ -132,17 +132,18 @@ class FormNodeUtil
 
         //$key = $formNode->getId();
         //$formValue = $data['formnode'][$key];
-        //echo $formNode. ": " .$formNode->getId().": formValue=" . $formValue . "<br>";
+        echo $formNode. ": " .$formNode->getId().": formValue=" . $formValue . "<br>";
 
 //        if( $formValue === 0 ) {
 //            exit("value is zero");
 //        }
 
         //this condition should prevent creating new empty records in DB
+        //TODO: what is the value is deleted => null => update value
         if( !isset($formValue) || $formValue == null ) {
             //exit("No Value=".$formValue."<br>");
             //echo "No Value=".$formValue."<br>";
-            return;
+            //return;
         }
         //echo $formNode. ": " .$formNode->getId().": formValue=" . $formValue . "<br>";
         //exit("Value=[".$formValue."]<br>");
@@ -151,11 +152,11 @@ class FormNodeUtil
         if( is_array($formValue) ) {
 
             if( array_key_exists('arraysectioncount', $formValue) ) {
-                //echo $formNode.": ".$formNodeObjectName.": formValue is arraysectioncount <br>";
+                echo $formNode.": ".$formNodeObjectName.": formValue is arraysectioncount <br>";
                 //record section array index including parent index: 0-0, 0-1 (array section 1 (index 0) includes two array sections (indexes 0 and 1))
                 $this->createArraysectionListRecord($formNode, $formValue, $holderEntity, $testing);
             } else {
-                //echo $formNodeObjectName.": formValue is regular array <br>";
+                echo $formNodeObjectName.": formValue is regular array <br>";
                 foreach( $formValue as $thisFormValue ) {
                     $this->createFormNodeListRecord($formNode, $thisFormValue, $holderEntity, $testing);
                 }
@@ -188,11 +189,11 @@ class FormNodeUtil
     }
 
     public function createFormNodeListRecord( $formNode, $formValue, $holderEntity, $testing=false, $params=null ) {
-
         //if( !$formValue ) { //testing: prevent creating a new empty records in DB
+        //TODO: if updated value is null
         if( !isset($formValue) || $formValue == null ) {
-            //exit("No Value=".$formValue."<br>");
-            return;
+            echo "1 Return: No Value=".$formValue."<br>";
+            //return;
         }
 
         $formNodeObjectName = $formNode->getObjectTypeName();
@@ -209,9 +210,9 @@ class FormNodeUtil
             $formNodeObjectName == "Form Field - Dropdown Menu - Allow Multiple Selections - Allow New Entries" ||
             $formNodeObjectName == "Form Field - Dropdown Menu - Allow New Entries"
         ) {
-
             if( !$formValue ) {
-                return;
+                echo "2 Return: No Value=".$formValue."<br>";
+                //return;
             }
 
 //            echo "formNodeObjectName:".$formNodeObjectName."; formValue=".$formValue."<br>";
@@ -228,7 +229,8 @@ class FormNodeUtil
             } else {
                 $formValueArr = explode(",",$formValue);
             }
-            if( count($formValueArr) > 0 ) {
+            //if the array is null => still update idValues (setIdValues(array()))
+            //if( count($formValueArr) > 0 ) {
                 $formValueArrIDs = array();
                 //convert possible value string to id
                 foreach( $formValueArr as $thisFormValue ) {
@@ -242,8 +244,14 @@ class FormNodeUtil
                         $formValueArrIDs[] = $thisFormValue;
                     }
                 }
+                if( count($formValueArrIDs) > 0 ) {
+                    $formValueArrIDs = array_unique($formValueArrIDs);
+                }
+//                print "############## <pre>";
+//                print_r($formValueArrIDs);
+//                print "</pre><br>";
                 $newListElement->setIdValues($formValueArrIDs);
-            }
+            //}
 
             if( !$testing ) {
                 $this->em->persist($newListElement);
@@ -443,7 +451,7 @@ class FormNodeUtil
     }
     public function createSingleFormNodeListRecord( $formNode, $formValue, $holderEntity, $noflush=false, $params=null ) {
 
-//        echo "formnode-".$formNode->getId().": formValue=" . $formValue ."<br>";
+        echo "createSingleFormNodeListRecord: formnode-".$formNode->getId().": formValue=" . $formValue ."<br>";
 //        if( $params ) {
 //            echo "params:<br>";
 //            echo "arraySectionIndex=".$params['arraySectionIndex']."; arraySectionId=" . $params['arraySectionId'] ."<br>";
@@ -458,10 +466,11 @@ class FormNodeUtil
 
             $newListElement = $this->getUniqueFormNodeListRecord($formNode,$holderEntity);
             if( $newListElement ) {
-                //echo $formNode.": formValue=".$formValue."<br>";
-                if( isset($formValue) ) {
+                echo $formNode.": (isEditable) formValue=".$formValue."<br>";
+                //if value is null => still update this value
+                //if( isset($formValue) ) {
                     $newListElement->setValue($formValue);
-                }
+                //}
 
                 if( !$noflush ) {
                     $this->em->persist($newListElement);
@@ -484,9 +493,10 @@ class FormNodeUtil
 
         //2) add value to the created list
         //if( $formValue != null && $formValue != "" ) {
-        if( isset($formValue) ) {
+        //if value is null => still update this value
+        //if( isset($formValue) ) {
             $newListElement->setValue($formValue);
-        }
+        //}
 
         //3) set message by entityName to the created list
         $newListElement->setObject($holderEntity);
