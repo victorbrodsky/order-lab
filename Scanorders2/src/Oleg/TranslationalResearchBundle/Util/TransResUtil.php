@@ -2347,7 +2347,7 @@ class TransResUtil
 
     public function getAvailableProjects() {
 
-        $transresRequestUtil = $this->container->get('transres_request_util');
+        //$transresRequestUtil = $this->container->get('transres_request_util');
 
         $repository = $this->em->getRepository('OlegTranslationalResearchBundle:Project');
         $dql =  $repository->createQueryBuilder("project");

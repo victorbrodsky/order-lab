@@ -1032,8 +1032,9 @@ class Project {
         $this->setOid($oid);
     }
 
+    //Project ID - Project Title - Submitted by FirstName LastName on MM/DD/YYYY at HH:MM
     public function getProjectInfoName() {
-        return $this->getOid() . " submitted by ".$this->getSubmitter() . " on ".$this->getCreateDate()->format('Y-m-d') . " at ".$this->getCreateDate()->format('H:i:s');
+        return $this->getOid() . " - Submitted by ".$this->getSubmitter()->getUsernameOptimal() . " on ".$this->getCreateDate()->format('Y-m-d') . " at ".$this->getCreateDate()->format('H:i:s');
     }
 
     public function __toString() {

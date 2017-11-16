@@ -90,12 +90,13 @@ class TransResRequestType extends AbstractType
         }
 
         $builder->add('fundedAccountNumber',null, array(
-            'label' => "New project's funded account number:",
+            'label' => "Fund account number:",
             'required' => false,
             'attr' => array('class' => 'form-control tarnsresrequest-fundedAccountNumber'),
         ));
 
-        if( $this->params['availableProjects'] ) {
+        if( $this->params['availableProjects'] && count($this->params['availableProjects']) > 0 ) {
+            //echo "2availableProjects count=".count($this->params['availableProjects'])."<br>";
             $builder->add('project', EntityType::class, array(
                 'class' => 'OlegTranslationalResearchBundle:Project',
                 'choice_label' => 'getProjectInfoName',

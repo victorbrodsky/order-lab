@@ -163,7 +163,8 @@ class RequestController extends Controller
             'cycle' => $cycle,
             'title' => $title,
             'formnodetrigger' => $formnodetrigger,
-            'formnodeTopHolderId' => $formnodeTopHolderId
+            'formnodeTopHolderId' => $formnodeTopHolderId,
+            'routeName' => $request->get('_route')
         );
     }
 

@@ -20,6 +20,10 @@
     </h4>
     <br>
 
+{% if routeName == "translationalresearch_new_standalone_request" and form.project is not defined %}
+    <p>There are no approved projects are available at this time.</p>
+{% else %}
+
     {% set sitename = translationalresearch_sitename %}
 
     {{ form_start(form) }}
@@ -75,5 +79,7 @@
             <a href="{{ path(translationalresearch_sitename~'_request_index',{'id':project.id}) }}">Back to the request list</a>
         </p>
     {% endif %}
+
+{% endif %} {#routeName and project#}
 
 {% endblock %}
