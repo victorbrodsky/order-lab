@@ -411,8 +411,11 @@ class ProjectController extends Controller
         //$user = $this->get('security.token_storage')->getToken()->getUser();
 
         $cycle = "show";
+        //$cycle = "review";
 
         $form = $this->createProjectForm($project,$cycle,$request); //show
+
+        $cycle = "review";
 
         $deleteForm = $this->createDeleteForm($project);
 
@@ -731,7 +734,7 @@ class ProjectController extends Controller
             }
         }
 
-        if( $cycle == "show" ) {
+        if( $cycle == "show" || $cycle == "review" ) {
             $disabled = true;
         }
 

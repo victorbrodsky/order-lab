@@ -560,7 +560,7 @@ function extendAll(holder) {
 //}
 
 function initDatepicker( holder ) {
-
+    // console.log("init Datepicker cycle="+cycle);
     if( cycle != "show" ) {
 
         //console.log("init Datepicker");

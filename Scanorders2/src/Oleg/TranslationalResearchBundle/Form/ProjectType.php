@@ -404,7 +404,7 @@ class ProjectType extends AbstractType
         }
 
 
-        if( $this->params['cycle'] != 'show' ) {
+        if( $this->params['cycle'] != 'show' ) { //&& $this->params['cycle'] != 'review'
             /////////////////////////////////////// messageCategory ///////////////////////////////////////
             $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
                 $message = $event->getData();
