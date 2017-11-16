@@ -2406,4 +2406,49 @@ class TransResUtil
             $this->em->flush($project);
         }
     }
+    
+    public function getProjectIdsFormNodeByFieldName( $search, $fieldName ) {
+        $ids = array();
+        if( !$search ) {
+            return $ids;
+        }
+        //echo "search=".$search."<br>";
+
+        $formNodeUtil = $this->container->get('user_formnode_utility');
+        $transResFormNodeUtil = $this->container->get('transres_formnode_util');
+        $ids = array();
+
+        //1) get formnode by category type name "Category Type" under formnode "HemePath Translational Research Request"->"Request"
+        $fieldFormNode = $transResFormNodeUtil->getFormNodeByFieldNameAndParents(
+            $fieldName,
+            "HemePath Translational Research",
+            "HemePath Translational Research Project",
+            "Project"
+        );
+        //echo "fieldFormNode=".$fieldFormNode->getId()."<br>";
+        if( !$fieldFormNode ) {
+            return array();
+        }
+
+        //2) get objectTypeDropdowns by:
+        // value=$categoryType->getId(), entityNamespace="Oleg\TranslationalResearchBundle\Entity" , entityName="TransResRequest"
+        $mapper = array(
+            "entityName" => "Project",
+            "entityNamespace" => "Oleg\\TranslationalResearchBundle\\Entity",
+        );
+        $objectTypeDropdowns = $formNodeUtil->getFormNodeListRecordsByReceivingObjectValue($fieldFormNode,$search,$mapper,"like");
+        //echo "objectTypeDropdowns=".count($objectTypeDropdowns)."<br>";
+
+        //3
+        foreach($objectTypeDropdowns as $objectTypeDropdown) {
+            //echo "id=".$objectTypeDropdown->getEntityId()."<br>";
+            $ids[] = $objectTypeDropdown->getEntityId();
+        }
+
+        if( count($ids) == 0 ) {
+            $ids[] = 0;
+        }
+
+        return $ids;
+    }
 }

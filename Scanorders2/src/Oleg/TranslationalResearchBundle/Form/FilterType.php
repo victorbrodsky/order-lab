@@ -41,7 +41,7 @@ class FilterType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        $builder->add( 'projectSpecialty', EntityType::class, array(
+        $builder->add('projectSpecialty', EntityType::class, array(
             'class' => 'OlegTranslationalResearchBundle:SpecialtyList',
             //'choice_label' => 'name',
             'label' => false,   //'Project Specialty',
@@ -60,11 +60,11 @@ class FilterType extends AbstractType
             },
         ));
         
-//        $builder->add('search', TextType::class, array(
-//            'required'=>false,
-//            'label' => false,
-//            'attr' => array('class'=>'form-control form-control-modif limit-font-size submit-on-enter-field'),
-//        ));
+        $builder->add('search', TextType::class, array(
+            'required'=>false,
+            'label' => false,
+            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'Search by Title, ID, IRB number'),
+        ));
 
         $builder->add('state',ChoiceType::class, array(
             'label' => false,
@@ -74,7 +74,7 @@ class FilterType extends AbstractType
             'attr' => array('class' => 'combobox'),
         ));
 
-        $builder->add( 'principalInvestigators', EntityType::class, array(
+        $builder->add('principalInvestigators', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
             'label'=> false,    //"Principal Investigator(s):",
             'required'=> false,
@@ -90,7 +90,7 @@ class FilterType extends AbstractType
             },
         ));
 
-        $builder->add( 'submitter', EntityType::class, array(
+        $builder->add('submitter', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
             'label'=> false,
             'required'=> false,

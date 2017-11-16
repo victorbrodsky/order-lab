@@ -26,7 +26,7 @@
                     {{ form_widget(filterform.projectSpecialty, {'attr': {'placeholder': 'Specialty'}}) }}
                 </div>
             </div>
-        <br>
+            <br>
             <div class="row">
                 <div class="col-xs-4">
                     {{ form_widget(filterform.state,{'attr': {'placeholder': 'Status'}}) }}
@@ -38,7 +38,13 @@
                     {{ form_widget(filterform.submitter, {'attr': {'placeholder': 'Submitter'}}) }}
                 </div>
             </div>
-        <br>
+            <br>
+            <div class="row">
+                <div class="col-xs-12">
+                    {{ form_widget(filterform.search) }}
+                </div>
+            </div>
+            <br>
             <div class="row">
                 <div class="col-xs-12">
                     <button type="submit" id="filter-btn" class="btn btn-sm btn-default">Filter</button>

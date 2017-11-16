@@ -119,7 +119,7 @@ class ProjectController extends Controller
         $submitter = $filterform['submitter']->getData();
         $startDate = $filterform['startDate']->getData();
         $endDate = $filterform['endDate']->getData();
-        //$search = $filterform['search']->getData();
+        $search = $filterform['search']->getData();
 //        $archived = $filterform['completed']->getData();
 //        $complete = $filterform['review']->getData();
 //        $interviewee = $filterform['missinginfo']->getData();
@@ -139,10 +139,33 @@ class ProjectController extends Controller
             $dqlParameters["states"] = implode(",",$states);
         }
 
-//        if( $search ) {
-//            $dql->andWhere("project.state LIKE '%:search%'");
-//            $dqlParameters["search"] = $search;
-//        }
+        //////////////// get Projects IDs with the form node filter ////////////////
+        $ids = array();
+        if( $search ) {
+            //echo "search=$search<br>";
+            $searchArr = array();
+
+            $searchArr[] = "project.oid LIKE :oid";
+            $dqlParameters["oid"] = "%".$search."%";
+
+            $titleIds = $transresUtil->getProjectIdsFormNodeByFieldName($search,"Title");
+            $ids = array_merge($ids, $titleIds);
+
+            $irbnumberIds = $transresUtil->getProjectIdsFormNodeByFieldName($search,"IRB Number");
+            $ids = array_merge($ids, $irbnumberIds);
+        }
+        if( count($ids) > 0 ) {
+            $ids = array_unique($ids);
+            //print_r($ids);
+        }
+        if( count($ids) > 0 ) {
+            //$dql->andWhere("project.id IN (".implode(",",$ids).")");
+            $searchArr[] = "project.id IN (".implode(",",$ids).")";
+        }
+        if( count($searchArr) > 0 ) {
+            $dql->andWhere(implode(" OR ",$searchArr));
+        }
+        //////////////// EOF get Projects IDs with the form node filter ////////////////
 
         if( $principalInvestigators && count($principalInvestigators)>0 ) {
             $dql->andWhere("principalInvestigators.id IN (:principalInvestigators)");
