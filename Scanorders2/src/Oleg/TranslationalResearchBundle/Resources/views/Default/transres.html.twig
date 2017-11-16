@@ -346,7 +346,7 @@
         {#Add field "Update expiration date" (irbExpirationDate) in the IRB Review page#}
         {% if project.state == "irb_review" %}
             <p>Current project's IRB Expiration Date: {{ project.getIrbExpirationDate()|date("m/d/Y") }}</p>
-            {{ transres.fieldDateLabel( project.getIrbExpirationDate(), "Update IRB Expiration Date:" ) }}
+            {{ transres.fieldDateLabel("Update IRB Expiration Date:") }}
             {#<p>#}
             {#id="oleg_translationalresearchbundle_project_irbExpirationDate"#}
             {#name="oleg_translationalresearchbundle_project[irbExpirationDate]"#}
@@ -877,21 +877,25 @@
 
 {% endmacro %}
 
-{% macro fieldDateLabel( field, label ) %}
+{% macro fieldDateLabel( label ) %}
+    <p>
     <div class="row">
-        <div class="col-xs-6" align="right">
-            {{ label }}
+        <div class="col-xs-3" align="right">
         </div>
-        <div class="col-xs-6" align="left" class="form_body_toggle_btn">
-
-            <div class="input-group input-group-reg date regular-datepicker">
-                <input id="oleg_translationalresearchbundle_project_irbExpirationDate"
-                       name="oleg_translationalresearchbundle_project[irbExpirationDate]"
+        <div class="col-xs-3" align="right">
+            <strong>{{ label|raw }}</strong>
+        </div>
+        <div class="col-xs-3" align="left">
+            {#regular-datepicker#}
+            <div class="input-group input-group-reg date allow-future-date">
+                <input id="transres_irbExpirationDate"
                        class="datepicker form-control submit-on-enter-field"
                        placeholder="IRB Expiration Date" type="text">
                 <span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>
             </div>
-
+        </div>
+        <div class="col-xs-3" align="right">
         </div>
     </div>
+    </p>
 {% endmacro %}

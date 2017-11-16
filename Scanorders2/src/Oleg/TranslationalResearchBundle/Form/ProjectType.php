@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -72,6 +73,13 @@ class ProjectType extends AbstractType
                 'format' => 'MM/dd/yyyy',
                 'attr' => array('class' => 'datepicker form-control'),
                 'required' => false,
+            ));
+        }
+
+        if( $this->params['cycle'] == 'review' ) {
+            $builder->add('irbExpirationDate',HiddenType::class,array(
+                'label' => false,
+                'attr' => array('class'=>'datepicker form-control transres-irbExpirationDate')
             ));
         }
 

@@ -411,7 +411,7 @@ class ProjectController extends Controller
         //$user = $this->get('security.token_storage')->getToken()->getUser();
 
         $cycle = "show";
-        //$cycle = "review";
+        $cycle = "review";
 
         $form = $this->createProjectForm($project,$cycle,$request); //show
 

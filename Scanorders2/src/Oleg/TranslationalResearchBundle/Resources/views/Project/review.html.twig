@@ -29,7 +29,12 @@
         <button type="button" class="btn btn-default btn-sm" onClick="extendAll()" >Expand All</button>
     </p>
 
-    {{ form_start(form) }}
+    {{ form_start(form,{'attr': {'onsubmit':'transresReadValue(this);'}}) }}
+
+    {#hidden field to be copied by JS#}
+    {% if form.irbExpirationDate is defined %}
+        {{ form_widget(form.irbExpirationDate) }}
+    {% endif %}
 
     {{ transres.getProjectShowPrototypeFormData(form,cycle,sitename) }}
 
@@ -128,6 +133,19 @@
 
             //return false;
         });
+
+        function transresReadValue(oForm) {
+            console.log("transresReadValue");
+
+            //var expDate = document.getElementById("transres_irbExpirationDate").value;
+            //console.log("expDate="+expDate);
+            //oForm.elements["myHiddenFieldId"].value = myValue;
+            //$(".transres-irbExpirationDate").val(expDate);
+
+            //$(".transres-irbExpirationDate").datepicker( 'setDate', expDate );
+            //$(".transres-irbExpirationDate").datepicker( 'update');
+            return false;
+        }
 
     });
 
