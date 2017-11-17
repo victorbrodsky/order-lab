@@ -324,7 +324,10 @@ class WorkflowController extends Controller
 
         $transresUtil->setTransition($project,$review,$transitionName,$to,$testing);
 
-        //exit();
+        if( $testing ) {
+            exit();
+        }
+
         return $this->redirectToRoute('translationalresearch_home');
     }
 

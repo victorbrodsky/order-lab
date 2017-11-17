@@ -141,9 +141,9 @@ class ProjectController extends Controller
 
         //////////////// get Projects IDs with the form node filter ////////////////
         $ids = array();
+        $searchArr = array();
         if( $search ) {
             //echo "search=$search<br>";
-            $searchArr = array();
 
             $searchArr[] = "project.oid LIKE :oid";
             $dqlParameters["oid"] = "%".$search."%";
@@ -410,12 +410,12 @@ class ProjectController extends Controller
         //$em = $this->getDoctrine()->getManager();
         //$user = $this->get('security.token_storage')->getToken()->getUser();
 
-        $cycle = "show";
+        //$cycle = "show";
         $cycle = "review";
 
         $form = $this->createProjectForm($project,$cycle,$request); //show
 
-        $cycle = "review";
+        //$cycle = "review";
 
         $deleteForm = $this->createDeleteForm($project);
 
@@ -465,7 +465,8 @@ class ProjectController extends Controller
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
-        $cycle = "show";
+        //$cycle = "show";
+        $cycle = "review";
 
         $form = $this->createProjectForm($project,$cycle,$request); //show
 

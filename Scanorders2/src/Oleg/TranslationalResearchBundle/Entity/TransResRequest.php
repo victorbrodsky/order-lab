@@ -283,7 +283,13 @@ class TransResRequest {
      */
     public function getOid()
     {
-        return $this->oid;
+        //return $this->oid;
+
+        if( $this->oid ) {
+            return $this->oid;
+        } else {
+            return $this->generateOid();
+        }
     }
 
     /**
@@ -390,6 +396,17 @@ class TransResRequest {
         $this->fundedAccountNumber = $fundedAccountNumber;
     }
 
+    /**
+     * projectOid + "-RED-" + ID; Example: "HEMEPATH-8-REQ-1"
+     * @param string $oid
+     */
+    public function generateOid()
+    {
+        $oid = $this->getProject()->getOid() . "-REQ-" . $this->getId();
+        //echo "oid=$oid <br>";
+        $this->setOid($oid);
+        return $oid;
+    }
 
 
 

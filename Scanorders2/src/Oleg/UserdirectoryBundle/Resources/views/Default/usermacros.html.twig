@@ -196,9 +196,13 @@
 {#dropzoneInit = 'inactive':    inactive by default#}
 {#dropzoneInit = 'active':      active by default#}
 {#dropzoneInit = 'default':     inactive if show or active otherwise#}
-{% macro documentsContainer(container,documents,cycle,prototype,documentspercontainer,dropzoneInit,documentType) %}
+{% macro documentsContainer(container,documents,cycle,prototype,documentspercontainer,dropzoneInit,documentType,asForm) %}
 
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
+    {% if asForm is not defined %}
+        {% set asForm = true %}
+    {% endif %}
 
     {% if documents is defined or prototype == 'prototype' %}
 
@@ -271,7 +275,7 @@
 
             {% endif %}
 
-            {{ usermacros.document( documents, cycle, prototype, addRemoveLink ) }}
+            {{ usermacros.document( documents, cycle, prototype, addRemoveLink, asForm ) }}
 
             {#render field "other". id of this field will be used to get the containerid in js#}
             {% if container is not null %}
@@ -289,7 +293,7 @@
 
 {% endmacro %}
 
-{% macro document( documents, cycle, prototype, addRemoveLink ) %}
+{% macro document( documents, cycle, prototype, addRemoveLink, asForm ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
@@ -318,6 +322,9 @@
         {% set sitename = translationalresearch_sitename %}
     {% endif %}
 
+    {% if asForm is not defined %}
+        {% set asForm = true %}
+    {% endif %}
 
     {% if "show" in cycle %}
         {% set showFlag = true %}
@@ -325,48 +332,62 @@
         {% set showFlag = false %}
     {% endif %}
 
-    {% for document in documents if document.vars.value %}
+    {% for document in documents %}
 
-        {#document:{{ document.vars.value.id }}#}
+        {% if asForm %}
+            {% set documentObj = document.vars.value %}
+        {% else %}
+            {% set documentObj = document %}
+        {% endif %}
 
-        <div class="dz-preview dz-file-preview" style="width:100%; height:220px; margin-left:1px; margin-right:0px;">
-            <div class="dz-details">
-                {#<div class="dz-filename"><span data-dz-name>{{ document.vars.value.uniquename }}</span></div>#}
-                <div class="dz-size" data-dz-size><strong>{{ document.vars.value.getSizeStr() }}</strong></div>
-                {{ usermacros.showDocumentAsImage(document.vars.value,'Document', 'data-dz-thumbnail') }}
-            </div>
-            <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
-            <div class="dz-success-mark"><span>✔</span></div>
-            <div class="dz-error-mark"><span>✘</span></div>
-            <div class="dz-error-message"><span data-dz-errormessage></span></div>
+        {% if documentObj %}
+            {#document:{{ documentObj.id }}#}
 
-
-            {#link to open/download file#}
-            <div class="file-upload-showlink">
-                <div style="overflow:hidden; white-space:nowrap;">
-                    {% if document.vars.value.id %}
-                        <a target="_blank" href="{{ path(sitename~'_file_download', { 'id': document.vars.value.id }) }}">{{ document.vars.value.originalname }} ({{ document.vars.value.createdate|date('m/d/Y') }})</a>
-                    {% endif %}
+            <div class="dz-preview dz-file-preview" style="width:100%; height:220px; margin-left:1px; margin-right:0px;">
+                <div class="dz-details">
+                    {#<div class="dz-filename"><span data-dz-name>{{ documentObj.uniquename }}</span></div>#}
+                    <div class="dz-size" data-dz-size><strong>{{ documentObj.getSizeStr() }}</strong></div>
+                    {{ usermacros.showDocumentAsImage(documentObj,'Document', 'data-dz-thumbnail') }}
                 </div>
+                <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
+                <div class="dz-success-mark"><span>✔</span></div>
+                <div class="dz-error-mark"><span>✘</span></div>
+                <div class="dz-error-message"><span data-dz-errormessage></span></div>
+
+
+                {#link to open/download file#}
+                <div class="file-upload-showlink">
+                    <div style="overflow:hidden; white-space:nowrap;">
+                        {% if documentObj.id %}
+                            <a target="_blank" href="{{ path(sitename~'_file_download', { 'id': documentObj.id }) }}">{{ documentObj.originalname }} ({{ documentObj.createdate|date('m/d/Y') }})</a>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% if addRemoveLink or addRemoveLink == 'default' %}
+                    <a data-dz-remove="" href="javascript:void(0);" class="dz-remove" onclick="removeUploadedFile(this)">Remove file</a>
+                {% endif %}
+
+                {% if asForm %}
+                    {{ formmacros.field(document.id) }}
+                    {{ formmacros.field(document.dummyprototypefield) }}
+                {% endif %}
             </div>
 
-            {% if addRemoveLink or addRemoveLink == 'default' %}
-                <a data-dz-remove="" href="javascript:void(0);" class="dz-remove" onclick="removeUploadedFile(this)">Remove file</a>
+            {% if asForm %}
+                {% do document.setRendered %}
             {% endif %}
 
-            {{ formmacros.field(document.id) }}
-            {{ formmacros.field(document.dummyprototypefield) }}
-        </div>
-
-        {% do document.setRendered %}
+        {% endif %}
 
     {% endfor %}
 
-    {#use dummy-prototype-field to get id and name prototype for adding new document#}
-    {{ formmacros.field(documents.vars.prototype.dummyprototypefield) }}
+    {% if asForm %}
+        {#use dummy-prototype-field to get id and name prototype for adding new document#}
+        {{ formmacros.field(documents.vars.prototype.dummyprototypefield) }}
 
-
-    {% do documents.setRendered %}
+        {% do documents.setRendered %}
+    {% endif %}
 
 {% endmacro %}
 

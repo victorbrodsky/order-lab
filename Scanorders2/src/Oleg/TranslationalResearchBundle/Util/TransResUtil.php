@@ -243,6 +243,12 @@ class TransResUtil
 //                    $generalDataConfirmation = "";
 //                }
 
+                //add class to distinguish irb_review update IRB expiration date
+                if( $review->getStateStr() === "irb_review" ) {
+                    $classTransition = $classTransition . " transres-irb_review";
+                    $generalDataConfirmation = "";
+                }
+
                 $thisLink = "<a ".
                     //"general-data-confirm='Are you sure you want to $label?'".
                     $generalDataConfirmation.

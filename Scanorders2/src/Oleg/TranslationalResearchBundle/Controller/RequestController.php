@@ -104,7 +104,7 @@ class RequestController extends Controller
             //exit("Project submitted");
 
             $project = $transresRequest->getProject();
-
+            
             //set project's funded account number
             $fundedAccountNumber = $transresRequest->getFundedAccountNumber();
             $project->setFundedAccountNumber($fundedAccountNumber);
@@ -129,7 +129,8 @@ class RequestController extends Controller
                 $em->persist($transresRequest);
                 $em->flush();
 
-                //$project->generateOid();
+                //set oid
+                $transresRequest->generateOid();
                 $em->flush();
             }
 
@@ -149,7 +150,7 @@ class RequestController extends Controller
             );
 
             $eventType = "Request Created";
-            $msg = "New Request with ID ".$transresRequest->getId()." has been successfully submitted for the project ID ".$project->getOid();
+            $msg = "New Request with ID ".$transresRequest->getOid()." has been successfully submitted for the project ID ".$project->getOid();
             $transresUtil->setEventLog($transresRequest,$eventType,$msg);
 
             return $this->redirectToRoute('translationalresearch_request_show', array('id' => $transresRequest->getId()));
@@ -270,7 +271,7 @@ class RequestController extends Controller
             $formNodeUtil = $this->get('user_formnode_utility');
             $formNodeUtil->processFormNodes($request,$transresRequest->getMessageCategory(),$transresRequest,$testing); //testing
 
-            $msg = "Request ID ".$transresRequest->getId()." has been successfully updated for the project ID ".$project->getOid();
+            $msg = "Request ID ".$transresRequest->getOid()." has been successfully updated for the project ID ".$project->getOid();
 
             if( $testing ) {
                 exit('form is submitted and finished, msg='.$msg);
@@ -282,14 +283,14 @@ class RequestController extends Controller
             );
 
             $eventType = "Request Updated";
-            $msg = "Request ID ".$transresRequest->getId() ." has been updated.";
+            $msg = "Request ID ".$transresRequest->getOid() ." has been updated.";
             $transresUtil->setEventLog($transresRequest,$eventType,$msg);
 
             return $this->redirectToRoute('translationalresearch_request_show', array('id' => $transresRequest->getId()));
         }
 
         $eventType = "Request Viewed";
-        $msg = "Request ID ".$transresRequest->getId() ." has been viewed on the edit page.";
+        $msg = "Request ID ".$transresRequest->getOid() ." has been viewed on the edit page.";
         $transresUtil->setEventLog($transresRequest,$eventType,$msg);
 
         return array(
@@ -298,7 +299,7 @@ class RequestController extends Controller
             'edit_form' => $form->createView(),
             'cycle' => $cycle,
             'formtype' => $formtype,
-            'title' => "Edit Request ID ".$transresRequest->getId(),
+            'title' => "Edit Request ID ".$transresRequest->getOid(),
             'triggerSearch' => 0,
             'formnodetrigger' => $formnodetrigger,
             'formnodeTopHolderId' => $formnodeTopHolderId,
@@ -345,7 +346,7 @@ class RequestController extends Controller
         }
 
         $eventType = "Request Viewed";
-        $msg = "Request ID ".$transresRequest->getId() ." has been viewed on the show review page.";
+        $msg = "Request ID ".$transresRequest->getOid() ." has been viewed on the show review page.";
         $transresUtil->setEventLog($transresRequest,$eventType,$msg);
 
         return array(
@@ -362,7 +363,7 @@ class RequestController extends Controller
 //            'project' => $project,
 //            'cycle' => 'show',
 //            'delete_form' => $deleteForm->createView(),
-//            'title' => "Project ID ".$project->getId()
+//            'title' => "Project ID ".$project->getOid()
 //        );
     }
 
@@ -678,7 +679,8 @@ class RequestController extends Controller
             'saveAsDraft' => false,
             'saveAsComplete' => false,
             'updateRequest' => false,
-            'projects' => null
+            //'projects' => null,
+            'availableProjects' => null
         );
 
         $params['admin'] = false;
@@ -776,7 +778,7 @@ class RequestController extends Controller
         $form = $this->createRequestForm($transresRequest,$cycle,$request); //show
 
         $eventType = "Request Viewed";
-        $msg = "Request ID ".$transresRequest->getId() ." has been viewed on the progress review page.";
+        $msg = "Request ID ".$transresRequest->getOid() ." has been viewed on the progress review page.";
         $transresUtil->setEventLog($transresRequest,$eventType,$msg);
 
         return array(
@@ -784,7 +786,7 @@ class RequestController extends Controller
             'form' => $form->createView(),
             'cycle' => $cycle,
             'statMachineType' => 'progress',
-            'title' => "Progress Review Request ID ".$transresRequest->getId(),
+            'title' => "Progress Review Request ID ".$transresRequest->getOid(),
         );
     }
 
@@ -814,7 +816,7 @@ class RequestController extends Controller
         $form = $this->createRequestForm($transresRequest,$cycle,$request); //show
 
         $eventType = "Request Viewed";
-        $msg = "Request ID ".$transresRequest->getId() ." has been viewed on the billing review page.";
+        $msg = "Request ID ".$transresRequest->getOid() ." has been viewed on the billing review page.";
         $transresUtil->setEventLog($transresRequest,$eventType,$msg);
 
         return array(
@@ -823,7 +825,7 @@ class RequestController extends Controller
             'form' => $form->createView(),
             'cycle' => $cycle,
             'statMachineType' => 'billing',
-            'title' => "Billing Review Request ID ".$transresRequest->getId(),
+            'title' => "Billing Review Request ID ".$transresRequest->getOid(),
         );
     }
 

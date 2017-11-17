@@ -49,6 +49,62 @@
 
 {% endmacro %}
 
+{% macro projectObjInfo( project, cycle ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {#{% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}#}
+
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="projectInfoHeading">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#projectInfo" aria-expanded="true">
+                        Project Status
+                    </a>
+                </h4>
+            </div>
+            <div id="projectInfo" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="projectInfoHeading">
+                <div class="panel-body">
+
+                    {% if project.oid is defined %}
+                        {{ formmacros.simplefield("ID:", project.oid, "input", "disabled") }}
+                    {% endif %}
+                    {% if project.state is defined %}
+                        {{ formmacros.simplefield("Status:", project.state, "input", "disabled") }}
+                    {% endif %}
+                    {% if project.projectSpecialty is defined %}
+                        {{ formmacros.simplefield("Project Specialty:", project.projectSpecialty, "input", "disabled") }}
+                    {% endif %}
+                    {% if project.approvalDate is defined %}
+                        {{ formmacros.simplefield("Project Specialty:", project.approvalDate|date('m/d/Y H:i:s'), "input", "disabled") }}
+                    {% endif %}
+
+                    {% if project.createDate is defined or project.submitter is defined %}
+                        {#<div class="well well-sm">#}
+                        {% if project.createDate is defined %}
+                            {{ formmacros.simplefield("Create Date:", project.createDate|date('m/d/Y H:i:s'), "input", "disabled") }}
+                        {% endif %}
+                        {% if project.submitter is defined %}
+                            {#{% set createdby = '<a href="'~path('translationalresearch_showuser', { 'id': project.submitter.id })~'">'~project.submitter~'</a>' %}#}
+                            {#{{ formmacros.simplefield( "Created By:", createdby, "input", "disabled" ) }}#}
+                            {{ formmacros.simplefield("Created By:", project.submitter, "input", "disabled") }}
+                        {% endif %}
+                        {#</div>#}
+                    {% endif %}
+
+                    {% if project.updateDate or project.updateUser %}
+                        {#<div class="well well-sm">#}
+                        {{ formmacros.simplefield("Update Date:", project.updateDate|date("m/d/Y"), "input", "disabled") }}
+                        {{ formmacros.simplefield("Updated By:", project.updateUser, "input", "disabled") }}
+                        {#</div>#}
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endmacro %}
+
 {% macro projectFormEdit( form, project, cycle ) %}
 
     {% import "OlegUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
@@ -88,11 +144,11 @@
                         {{ user_formnode_utility.getFormNodeHolderShortInfoForView(project,project.messageCategory,false)|raw }}
                     </div>
 
-                    {% if form %}
+                    {#{% if form %}#}
                         {{ transres.projectDocument(form,project,cycle) }}
-                    {% else %}
+                    {#{% else %}#}
 
-                    {% endif %}
+                    {#{% endif %}#}
 
                 </div>
             </div>
@@ -104,14 +160,29 @@
 
 {% macro projectDocument( form, project, cycle ) %}
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {#{% set asForm = true %}#}
     {% if cycle == "review" %}
         {% set cycle = "show" %}
+        {#{% set asForm = false %}#}
+        {#{% set documents = project.documents %}#}
+    {% else %}
+        {#{% set documents = form.documents %}#}
     {% endif %}
+
+    {% if form %}
+        {% set asForm = true %}
+        {% set documents = form.documents %}
+    {% else %}
+        {% set cycle = "show" %}
+        {% set asForm = false %}
+        {% set documents = project.documents %}
+    {% endif %}
+
     <div class="well form-element-holder user-documents">
         <label class="col-xs-12 control-label">Project Documents</label>
         <div class="row withpaddingtop">
             <div class="col-xs-12">
-                {{ usermacros.documentsContainer(null,form.documents,cycle,'noprototype',8,'default','Project Document') }}
+                {{ usermacros.documentsContainer(null,documents,cycle,'noprototype',8,'default','Project Document',asForm) }}
             </div>
         </div>
     </div>
@@ -194,6 +265,9 @@
             <div style="text-align: center;">
                 <p>
                     <strong>{{ usersForm.vars.label }}</strong>
+                    {% if usersEntity|length == 0 %}
+                        None
+                    {% endif %}
                 </p>
             </div>
             {% for userEntity in usersEntity %}
@@ -850,17 +924,19 @@
             data-uploadurl = "{{ oneup_uploader_endpoint('transres_gallery') }}"
             data-userid = "{{ app.user.id }}"
 
-            {% if form.irbReviews is defined %}
-                data-prototype-transres-irbreviews = "{{ transres.projectSingleReview(form,form.irbReviews,cycle,'transres-irbreviews','prototype', sitename,1)|e }}"
-            {% endif %}
-            {% if form.adminReviews is defined %}
-                data-prototype-transres-adminreviews = "{{ transres.projectSingleReview(form,form.adminReviews,cycle,'transres-adminreviews','prototype', sitename,1)|e }}"
-            {% endif %}
-            {% if form.committeeReviews is defined %}
-                data-prototype-transres-committeereviews = "{{ transres.projectSingleReview(form,form.committeeReviews,cycle,'transres-committeereviews','prototype', sitename,1)|e }}"
-            {% endif %}
-            {% if form.finalReviews is defined %}
-                data-prototype-transres-finalreviews = "{{ transres.projectSingleReview(form,form.finalReviews,cycle,'transres-finalreviews','prototype', sitename,1)|e }}"
+            {% if form %}
+                {% if form.irbReviews is defined %}
+                    data-prototype-transres-irbreviews = "{{ transres.projectSingleReview(form,form.irbReviews,cycle,'transres-irbreviews','prototype', sitename,1)|e }}"
+                {% endif %}
+                {% if form.adminReviews is defined %}
+                    data-prototype-transres-adminreviews = "{{ transres.projectSingleReview(form,form.adminReviews,cycle,'transres-adminreviews','prototype', sitename,1)|e }}"
+                {% endif %}
+                {% if form.committeeReviews is defined %}
+                    data-prototype-transres-committeereviews = "{{ transres.projectSingleReview(form,form.committeeReviews,cycle,'transres-committeereviews','prototype', sitename,1)|e }}"
+                {% endif %}
+                {% if form.finalReviews is defined %}
+                    data-prototype-transres-finalreviews = "{{ transres.projectSingleReview(form,form.finalReviews,cycle,'transres-finalreviews','prototype', sitename,1)|e }}"
+                {% endif %}
             {% endif %}
     ></div>
 

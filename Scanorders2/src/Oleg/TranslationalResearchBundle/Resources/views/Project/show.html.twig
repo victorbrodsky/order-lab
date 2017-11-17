@@ -29,14 +29,13 @@
 
     {{ form_start(form) }}
 
-        {{ transres.getProjectShowPrototypeFormData(form,cycle,sitename) }}
-
         {{ transres.projectRequesters(form,project,cycle) }}
 
         {{ transres.projectFormShow(form,project,cycle) }}
 
         {{ transres.projectInfo(form,project,cycle) }}
 
+        {{ transres.getProjectShowPrototypeFormData(form,cycle,sitename) }}
         {{ transres.projectReviews(form,cycle,sitename,1) }}
 
     {{ form_end(form) }}

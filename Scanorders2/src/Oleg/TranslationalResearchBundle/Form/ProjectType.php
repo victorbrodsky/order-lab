@@ -59,7 +59,7 @@ class ProjectType extends AbstractType
 //                'attr' => array('class' => 'form-control'),
 //            ));
             $builder->add('state',ChoiceType::class, array(
-                'label' => 'State:',
+                'label' => 'Status:',
                 'required' => false,
                 'disabled' => $this->params['disabledState'],
                 'choices' => $this->params['stateChoiceArr'],
@@ -76,12 +76,12 @@ class ProjectType extends AbstractType
             ));
         }
 
-        if( $this->params['cycle'] == 'review' ) {
-            $builder->add('irbExpirationDate',HiddenType::class,array(
-                'label' => false,
-                'attr' => array('class'=>'datepicker form-control transres-irbExpirationDate')
-            ));
-        }
+//        if( $this->params['cycle'] == 'review' ) {
+//            $builder->add('irbExpirationDate',DateType::class,array(
+//                'label' => false,
+//                'attr' => array('class'=>'datepicker form-control transres-irbExpirationDate')
+//            ));
+//        }
 
         if( $this->project->getCreateDate() ) {
             $builder->add('createDate', DateType::class, array(
@@ -412,7 +412,7 @@ class ProjectType extends AbstractType
         }
 
 
-        if( $this->params['cycle'] != 'show' ) { //&& $this->params['cycle'] != 'review'
+        if( $this->params['cycle'] != 'show' && $this->params['cycle'] != 'review' ) { //
             /////////////////////////////////////// messageCategory ///////////////////////////////////////
             $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
                 $message = $event->getData();

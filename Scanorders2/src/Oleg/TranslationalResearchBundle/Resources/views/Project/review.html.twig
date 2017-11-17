@@ -29,12 +29,13 @@
         <button type="button" class="btn btn-default btn-sm" onClick="extendAll()" >Expand All</button>
     </p>
 
-    {{ form_start(form,{'attr': {'onsubmit':'transresReadValue(this);'}}) }}
+    {#{{ form_start(form,{'attr': {'onsubmit':'transresUpdateIrbExpDate(this);'}}) }}#}
+    {{ form_start(form) }}
 
     {#hidden field to be copied by JS#}
-    {% if form.irbExpirationDate is defined %}
-        {{ form_widget(form.irbExpirationDate) }}
-    {% endif %}
+    {#{% if form.irbExpirationDate is defined %}#}
+        {#{{ form_row(form.irbExpirationDate) }}#}
+    {#{% endif %}#}
 
     {{ transres.getProjectShowPrototypeFormData(form,cycle,sitename) }}
 
@@ -129,12 +130,25 @@
 //                return false;
 //            }
 
+            ////////// Update IRB Expiration Date by transres-irb_review //////////
+            if( $(this).hasClass('transres-irb_review') ) {
+                var irbExpDateEl = $('#transres_irbExpirationDate');
+                if( irbExpDateEl && irbExpDateEl.length > 0 ) {
+                    var irbExpDate = irbExpDateEl.val();
+                    console.log("irbExpDate=" + irbExpDate);
+
+                    return false;
+                    alert("Working on Update IRB expiration date by JS (Not implemented yet)");
+                }
+            }
+            ////////// EOF Update IRB Expiration Date //////////
+
             console.log("done review");
 
             //return false;
         });
 
-        function transresReadValue(oForm) {
+        function transresUpdateIrbExpDate(oForm) {
             console.log("transresReadValue");
 
             //var expDate = document.getElementById("transres_irbExpirationDate").value;

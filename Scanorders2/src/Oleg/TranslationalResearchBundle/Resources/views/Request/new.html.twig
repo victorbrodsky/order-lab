@@ -43,10 +43,9 @@
 
         {#{{ transres.projectRequesters(form,transresRequest,cycle) }}#}
 
-        {#{{ transres.getProjectReviewPrototypeFormData(form,cycle,sitename) }}#}
-
         {#{{ transres.projectReviews(form,cycle,sitename) }}#}
 
+        {{ transres.getProjectReviewPrototypeFormData(null,cycle,sitename) }}
 
         {% if form.updateDate is defined or form.updateUser is defined  %}
             <div class="well well-sm">
@@ -74,7 +73,7 @@
         <br>
         {{ transres.projectFormShow(null,project,cycle) }}
         {#add project status#}
-
+        {{ transres.projectObjInfo(project,cycle) }}
         <p>
             <a href="{{ path(translationalresearch_sitename~'_request_index',{'id':project.id}) }}">Back to the request list</a>
         </p>

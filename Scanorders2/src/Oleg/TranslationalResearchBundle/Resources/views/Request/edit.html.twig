@@ -49,7 +49,7 @@
 
         {#{{ transres.projectRequesters(edit_form,project,cycle) }}#}
 
-        {#{{ transres.getProjectReviewPrototypeFormData(edit_form,cycle,sitename) }}#}
+        {{ transres.getProjectReviewPrototypeFormData(null,cycle,sitename) }}
 
         {#{{ transres.projectReviews(edit_form,cycle,sitename,1) }}#}
 
@@ -78,6 +78,7 @@
 
     <br>
     {{ transres.projectFormShow(null,project,cycle) }}
+    {{ transres.projectObjInfo(project,cycle) }}
 
     <br>
     <p>

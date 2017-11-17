@@ -47,6 +47,8 @@
 
     {#{{ transres.projectReviews(form,cycle,sitename,1) }}#}
 
+    {{ transres.getProjectReviewPrototypeFormData(null,cycle,sitename) }}
+
     {{ form_end(form) }}
 
 
@@ -61,6 +63,7 @@
 
         <br>
         {{ transres.projectFormShow(null,project,cycle) }}
+        {{ transres.projectObjInfo(project,cycle) }}
 
         <br>
         <p>
