@@ -419,23 +419,9 @@
 
         {#Add field "Update expiration date" (irbExpirationDate) in the IRB Review page#}
         {% if project.state == "irb_review" %}
-            <p>Current project's IRB Expiration Date: {{ project.getIrbExpirationDate()|date("m/d/Y") }}</p>
+            {#<p>Current project's IRB Expiration Date: {{ project.getIrbExpirationDate()|date("m/d/Y") }}</p>#}
+            <p>Current project's IRB Expiration Date:{{ transres_formnode_util.getProjectFormNodeFieldByName(project,"IRB Expiration Date") }}</p>
             {{ transres.fieldDateLabel("Update IRB Expiration Date:") }}
-            {#<p>#}
-            {#id="oleg_translationalresearchbundle_project_irbExpirationDate"#}
-            {#name="oleg_translationalresearchbundle_project[irbExpirationDate]"#}
-            {#<input class="datepicker" type="text">#}
-            {#<div class="col-xs-12">#}
-                {#<div class="input-group input-group-reg date regular-datepicker">#}
-                    {#Update IRB Expiration Date:#}
-                    {#<input id="oleg_translationalresearchbundle_project_irbExpirationDate"#}
-                           {#name="oleg_translationalresearchbundle_project[irbExpirationDate]"#}
-                           {#class="datepicker form-control submit-on-enter-field"#}
-                           {#placeholder="IRB Expiration Date" type="text">#}
-                    {#<span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>#}
-                {#</div>#}
-            {#</div>#}
-            {#</p>#}
         {% endif %}
 
         <div class="well transres-review-holder text-center col-xs-12">

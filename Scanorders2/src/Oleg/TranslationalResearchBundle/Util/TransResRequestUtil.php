@@ -678,15 +678,14 @@ class TransResRequestUtil
         return $url;
     }
 
-    //TODO:
     //set transresRequest's $fundedAccountNumber to the project's formnode (i.e. $fundedAccountNumber => "If funded, please provide account number")
     public function setValueToFormNodeProject( $project, $fieldName, $value ) {
         //echo "value=$value<br>";
 
-        if( $fieldName != "If funded, please provide account number" ) {
+        //if( $fieldName != "If funded, please provide account number" ) {
             //only supported and tested for the string formnode field
             //return;
-        }
+        //}
 
         $formNodeUtil = $this->container->get('user_formnode_utility');
         $transResFormNodeUtil = $this->container->get('transres_formnode_util');
@@ -711,10 +710,10 @@ class TransResRequestUtil
         $compareType = null;
         $receivingObjects = $formNodeUtil->getFormNodeListRecordsByReceivingObjectValue($fieldFormNode,$receivingValue,$mapper,$compareType);
 
-//        echo "receivingObjects count=".count($receivingObjects)."<br>";
-//        foreach($receivingObjects as $receivingObject){
-//            echo "receivingObject ID=".$receivingObject->getId()."<br>";
-//        }
+        //echo "receivingObjects count=".count($receivingObjects)."<br>";
+        //foreach($receivingObjects as $receivingObject){
+        //    echo "receivingObject ID=".$receivingObject->getId()."<br>";
+        //}
 
         if( count($receivingObjects) == 0 ) {
             throw new \Exception("receivingObjects are not found for the project ID ".$project->getId()." and fieldName=".$fieldName." => "."failed to set value".$value);
@@ -723,8 +722,12 @@ class TransResRequestUtil
         $receivingObject = $receivingObjects[0];
         $receivingObject->setValue($value);
 
+        //echo "receivingObject ID=".$receivingObject->getId().": updated value=".$value."<br>";
+
         //$this->em->flush($receivingObject);
 
         //exit('exit setValueToFormNodeProject');
+        
+        return $receivingObject;
     }
 }

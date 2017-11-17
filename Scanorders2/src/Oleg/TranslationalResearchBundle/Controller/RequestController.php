@@ -836,30 +836,38 @@ class RequestController extends Controller
      * @Method({"GET", "POST"})
      */
     public function updateIrbExpDateAction( Request $request ) {
-
+//TODO: set permission: project irb reviewer or admin
 //        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
 //            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
 //        }
 
         $em = $this->getDoctrine()->getManager();
         $transresRequestUtil = $this->get('transres_request_util');
+        $res = "NotOK";
 
         $projectId = trim( $request->get('projectId') );
         $project = $em->getRepository('OlegTranslationalResearchBundle:Project')->find($projectId);
 
-        $value = trim( $request->get('value') );
+        if( $project ) {
+            $value = trim($request->get('value'));
 
-        $irbExpDate = \DateTime::createFromFormat('m/d/Y', $value);
+            $irbExpDate = \DateTime::createFromFormat('m/d/Y', $value);
 
-        $project->setIrbExpirationDate($irbExpDate);
+            $project->setIrbExpirationDate($irbExpDate);
 
-        $transresRequestUtil->setValueToFormNodeProject($project,"IRB Expiration Date",$value);
+            $receivingObject = $transresRequestUtil->setValueToFormNodeProject($project, "IRB Expiration Date", $value);
 
-        $em->flush($project);
+            //$em->flush($receivingObject);
+            //$em->flush($project);
+            $em->flush();
+            $res = "OK";
+
+            //add eventlog changed IRB
+        }
 
 //        $json = json_encode($template);
-        $response = new Response("OK");
-        $response->headers->set('Content-Type', 'application/json');
+        $response = new Response($res);
+        //$response->headers->set('Content-Type', 'application/json');
         return $response;
     }
 

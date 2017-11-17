@@ -115,6 +115,9 @@
         $('.transres-review-submit').click(function(event) {
             //console.log("btn click:");
             //console.log($(this));
+            event.stopPropagation();
+            window.onbeforeunload = null;
+
             var reviewHolder = $(this).closest('.transres-review-holder');
 
             var comment = reviewHolder.find('.fos_comment_comment_new_form').find('textarea').val();

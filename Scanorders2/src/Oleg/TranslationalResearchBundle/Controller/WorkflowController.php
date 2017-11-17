@@ -313,14 +313,14 @@ class WorkflowController extends Controller
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
-        echo $review->getId().": transitionName=".$transitionName."<br>";
+        //echo $review->getId().": transitionName=".$transitionName."<br>";
         //exit();
 
         $transresUtil = $this->container->get('transres_util');
 
         $to = null;
         $testing = false;
-        $testing = true;
+        //$testing = true;
 
         $transresUtil->setTransition($project,$review,$transitionName,$to,$testing);
 
@@ -353,7 +353,7 @@ class WorkflowController extends Controller
 
         $project = $transresRequest->getProject();
 
-        echo $transresRequest->getId().": transitionName=".$transitionName."<br>";
+        //echo $transresRequest->getId().": transitionName=".$transitionName."<br>";
         //exit();
 
         $to = null;

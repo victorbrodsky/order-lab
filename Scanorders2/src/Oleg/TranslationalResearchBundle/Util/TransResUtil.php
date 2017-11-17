@@ -244,8 +244,8 @@ class TransResUtil
 //                }
 
                 //add class to distinguish irb_review update IRB expiration date
-                if( $review->getStateStr() === "irb_review" ) {
-                    $classTransition = $classTransition . " transres-irb_review_111";
+                if( $review->getStateStr() == "irb_review" ) {
+                    $classTransition = $classTransition . " transres-irb_review";
                     //$generalDataConfirmation = "";
                 }
 
