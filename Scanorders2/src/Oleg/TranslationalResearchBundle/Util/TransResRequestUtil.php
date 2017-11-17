@@ -685,7 +685,7 @@ class TransResRequestUtil
 
         if( $fieldName != "If funded, please provide account number" ) {
             //only supported and tested for the string formnode field
-            return;
+            //return;
         }
 
         $formNodeUtil = $this->container->get('user_formnode_utility');

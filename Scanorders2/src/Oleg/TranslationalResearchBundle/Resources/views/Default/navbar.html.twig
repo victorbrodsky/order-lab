@@ -83,16 +83,24 @@
                     {% endif %}
 
                     {% if is_granted('ROLE_TRANSRES_REQUESTER') %}
-                        <li id="nav-bar-translationalresearch-new-standalone-request">
-                            <a href="{{ path(translationalresearch_sitename~'_new_standalone_request') }}">New Request</a>
-                        </li>
 
-                        <li id="nav-bar-translationalresearch-my-requests">
-                            <a href="{{ path(translationalresearch_sitename~'_my_requests') }}">My Requests</a>
-                        </li>
+                    <li id="nav-bar-translationalresearch-allmenu-requests" class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Requests<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
 
-                        <li id="nav-bar-translationalresearch-all-requests">
-                            <a href="{{ path(translationalresearch_sitename~'_all_requests') }}">All Requests</a>
+                            <li id="nav-bar-translationalresearch-new-standalone-request">
+                                <a href="{{ path(translationalresearch_sitename~'_new_standalone_request') }}">New Request</a>
+                            </li>
+
+                            <li id="nav-bar-translationalresearch-my-requests">
+                                <a href="{{ path(translationalresearch_sitename~'_my_requests') }}">My Requests</a>
+                            </li>
+
+                            <li id="nav-bar-translationalresearch-all-requests">
+                                <a href="{{ path(translationalresearch_sitename~'_all_requests') }}">All Requests</a>
+                            </li>
+
+                            </ul>
                         </li>
                     {% endif %}
 

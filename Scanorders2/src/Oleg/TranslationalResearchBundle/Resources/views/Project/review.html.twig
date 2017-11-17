@@ -12,6 +12,7 @@
 {% block content %}
 
     <input type="hidden" id="formcycle" value="{{ cycle }}" />
+    <input type="hidden" id="projectid" value="{{ project.id }}" />
 
     <h4 class="text-info" align="center">
         {{ title }}
@@ -137,8 +138,11 @@
                     var irbExpDate = irbExpDateEl.val();
                     console.log("irbExpDate=" + irbExpDate);
 
-                    return false;
-                    alert("Working on Update IRB expiration date by JS (Not implemented yet)");
+                    var projectId = $("#projectid").val();
+
+                    transresUpdateIrbExpDate(irbExpDate,projectId);
+                    //return false;
+                    //alert("Working on Update IRB expiration date by JS (Not implemented yet)");
                 }
             }
             ////////// EOF Update IRB Expiration Date //////////
@@ -148,16 +152,28 @@
             //return false;
         });
 
-        function transresUpdateIrbExpDate(oForm) {
-            console.log("transresReadValue");
+        function transresUpdateIrbExpDate(irbExpDate,projectId) {
+            console.log("transresUpdateIrbExpDate: irbExpDate="+irbExpDate+"; projectId="+projectId);
 
-            //var expDate = document.getElementById("transres_irbExpirationDate").value;
-            //console.log("expDate="+expDate);
-            //oForm.elements["myHiddenFieldId"].value = myValue;
-            //$(".transres-irbExpirationDate").val(expDate);
+            var url = Routing.generate('translationalresearch_update_irb_exp_date');
+            //url = url + "/" + projectId + "/" + irbExpDate
 
-            //$(".transres-irbExpirationDate").datepicker( 'setDate', expDate );
-            //$(".transres-irbExpirationDate").datepicker( 'update');
+            $.ajax({
+                url: url,
+                timeout: _ajaxTimeout,
+                //type: "GET",
+                type: "POST",
+                data: {projectId: projectId, value: irbExpDate },
+                //dataType: 'json',
+                async: asyncflag
+            }).success(function(response) {
+                console.log(response);
+            }).done(function() {
+                //lbtn.stop();
+            }).error(function(jqXHR, textStatus, errorThrown) {
+                console.log('Error : ' + errorThrown);
+            });
+
             return false;
         }
 

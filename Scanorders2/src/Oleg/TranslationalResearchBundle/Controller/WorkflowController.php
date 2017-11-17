@@ -320,7 +320,7 @@ class WorkflowController extends Controller
 
         $to = null;
         $testing = false;
-        //$testing = true;
+        $testing = true;
 
         $transresUtil->setTransition($project,$review,$transitionName,$to,$testing);
 

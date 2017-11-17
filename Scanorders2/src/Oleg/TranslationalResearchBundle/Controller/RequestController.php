@@ -34,6 +34,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 
 /**
@@ -830,6 +831,36 @@ class RequestController extends Controller
     }
 
 
+    /**
+     * @Route("/request/update-irb-exp-date/", name="translationalresearch_update_irb_exp_date", options={"expose"=true})
+     * @Method({"GET", "POST"})
+     */
+    public function updateIrbExpDateAction( Request $request ) {
 
+//        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
+//            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+//        }
+
+        $em = $this->getDoctrine()->getManager();
+        $transresRequestUtil = $this->get('transres_request_util');
+
+        $projectId = trim( $request->get('projectId') );
+        $project = $em->getRepository('OlegTranslationalResearchBundle:Project')->find($projectId);
+
+        $value = trim( $request->get('value') );
+
+        $irbExpDate = \DateTime::createFromFormat('m/d/Y', $value);
+
+        $project->setIrbExpirationDate($irbExpDate);
+
+        $transresRequestUtil->setValueToFormNodeProject($project,"IRB Expiration Date",$value);
+
+        $em->flush($project);
+
+//        $json = json_encode($template);
+        $response = new Response("OK");
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+    }
 
 }
