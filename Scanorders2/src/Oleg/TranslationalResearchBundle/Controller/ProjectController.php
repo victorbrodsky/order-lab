@@ -119,7 +119,9 @@ class ProjectController extends Controller
         $submitter = $filterform['submitter']->getData();
         $startDate = $filterform['startDate']->getData();
         $endDate = $filterform['endDate']->getData();
-        $search = $filterform['search']->getData();
+        $searchId = $filterform['searchId']->getData();
+        $searchTitle = $filterform['searchTitle']->getData();
+        $searchIrbNumber = $filterform['searchIrbNumber']->getData();
 //        $archived = $filterform['completed']->getData();
 //        $complete = $filterform['review']->getData();
 //        $interviewee = $filterform['missinginfo']->getData();
@@ -139,32 +141,39 @@ class ProjectController extends Controller
             $dqlParameters["states"] = implode(",",$states);
         }
 
+        if( $searchId ) {
+            //echo "searchId=$searchId<br>";
+            $dql->andWhere("project.oid LIKE :oid");
+            $dqlParameters["oid"] = "%".$searchId."%";
+        }
+
         //////////////// get Projects IDs with the form node filter ////////////////
         $ids = array();
-        $searchArr = array();
-        if( $search ) {
-            //echo "search=$search<br>";
+        //$searchArr = array();
+        if( $searchTitle ) {
+            //echo "searchTitle=$searchTitle<br>";
+            $titleIds = $transresUtil->getProjectIdsFormNodeByFieldName($searchTitle,"Title");
+            $dql->andWhere("project.id IN (".implode(",",$titleIds).")");
+            //$ids = array_merge($ids, $titleIds);
+        }
+        if( $searchIrbNumber ) {
+            //echo "searchIrbNumber=$searchIrbNumber<br>";
+            $irbnumberIds = $transresUtil->getProjectIdsFormNodeByFieldName($searchIrbNumber,"IRB Number");
+            //$ids = array_merge($ids, $irbnumberIds);
+            $dql->andWhere("project.id IN (".implode(",",$irbnumberIds).")");
+        }
 
-            $searchArr[] = "project.oid LIKE :oid";
-            $dqlParameters["oid"] = "%".$search."%";
-
-            $titleIds = $transresUtil->getProjectIdsFormNodeByFieldName($search,"Title");
-            $ids = array_merge($ids, $titleIds);
-
-            $irbnumberIds = $transresUtil->getProjectIdsFormNodeByFieldName($search,"IRB Number");
-            $ids = array_merge($ids, $irbnumberIds);
-        }
-        if( count($ids) > 0 ) {
-            $ids = array_unique($ids);
-            //print_r($ids);
-        }
-        if( count($ids) > 0 ) {
-            //$dql->andWhere("project.id IN (".implode(",",$ids).")");
-            $searchArr[] = "project.id IN (".implode(",",$ids).")";
-        }
-        if( count($searchArr) > 0 ) {
-            $dql->andWhere(implode(" OR ",$searchArr));
-        }
+//        if( count($ids) > 0 ) {
+//            $ids = array_unique($ids);
+//            //print_r($ids);
+//        }
+//        if( count($ids) > 0 ) {
+//            $dql->andWhere("project.id IN (".implode(",",$ids).")");
+//            //$searchArr[] = "project.id IN (".implode(",",$ids).")";
+//        }
+//        if( count($searchArr) > 0 ) {
+//            $dql->andWhere(implode(" OR ",$searchArr));
+//        }
         //////////////// EOF get Projects IDs with the form node filter ////////////////
 
         if( $principalInvestigators && count($principalInvestigators)>0 ) {

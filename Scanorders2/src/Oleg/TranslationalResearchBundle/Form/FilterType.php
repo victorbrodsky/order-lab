@@ -59,12 +59,6 @@ class FilterType extends AbstractType
                     ));
             },
         ));
-        
-        $builder->add('search', TextType::class, array(
-            'required'=>false,
-            'label' => false,
-            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'Search by Title, ID, IRB number'),
-        ));
 
         $builder->add('state',ChoiceType::class, array(
             'label' => false,
@@ -120,6 +114,22 @@ class FilterType extends AbstractType
             'required' => false,
             'format' => 'MM/dd/yyyy',
             'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'End Submission Date'), //'title'=>'End Year', 'data-toggle'=>'tooltip',
+        ));
+
+        $builder->add('searchId', TextType::class, array(
+            'required'=>false,
+            'label' => false,
+            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'Search by ID'),
+        ));
+        $builder->add('searchTitle', TextType::class, array(
+            'required'=>false,
+            'label' => false,
+            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'Search by Title'),
+        ));
+        $builder->add('searchIrbNumber', TextType::class, array(
+            'required'=>false,
+            'label' => false,
+            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'Search by IRB number'),
         ));
 
 //        $builder->add('completed', CheckboxType::class, array(

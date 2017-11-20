@@ -836,17 +836,28 @@ class RequestController extends Controller
      * @Method({"GET", "POST"})
      */
     public function updateIrbExpDateAction( Request $request ) {
-//TODO: set permission: project irb reviewer or admin
-//        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
-//            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
-//        }
+        //set permission: project irb reviewer or admin
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
 
         $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $transresRequestUtil = $this->get('transres_request_util');
+        $transresUtil = $this->container->get('transres_util');
         $res = "NotOK";
 
         $projectId = trim( $request->get('projectId') );
         $project = $em->getRepository('OlegTranslationalResearchBundle:Project')->find($projectId);
+
+        if(
+            $transresUtil->isAdminOrPrimaryReviewer() ||
+            $this->isReviewsReviewer($user,$project->getIrbReviews())
+        ) {
+            //ok
+        } else {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
 
         if( $project ) {
             $value = trim($request->get('value'));
@@ -863,11 +874,12 @@ class RequestController extends Controller
             $res = "OK";
 
             //add eventlog changed IRB
+            $eventType = "Project Updated";
+            $msg = "Project ID ".$project->getOid() ." has been updated: new IRB Expiration Date ".$value;
+            $transresUtil->setEventLog($project,$eventType,$msg);
         }
 
-//        $json = json_encode($template);
         $response = new Response($res);
-        //$response->headers->set('Content-Type', 'application/json');
         return $response;
     }
 

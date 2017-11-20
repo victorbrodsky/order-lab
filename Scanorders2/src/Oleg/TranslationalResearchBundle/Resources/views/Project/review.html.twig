@@ -168,7 +168,8 @@
                 type: "POST",
                 data: {projectId: projectId, value: irbExpDate },
                 //dataType: 'json',
-                async: asyncflag
+                //async: asyncflag
+                async: false
             }).success(function(response) {
                 console.log(response);
             }).done(function() {
