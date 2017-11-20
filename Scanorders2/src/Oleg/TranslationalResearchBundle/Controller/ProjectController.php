@@ -148,32 +148,15 @@ class ProjectController extends Controller
         }
 
         //////////////// get Projects IDs with the form node filter ////////////////
-        $ids = array();
-        //$searchArr = array();
         if( $searchTitle ) {
-            //echo "searchTitle=$searchTitle<br>";
             $titleIds = $transresUtil->getProjectIdsFormNodeByFieldName($searchTitle,"Title");
             $dql->andWhere("project.id IN (".implode(",",$titleIds).")");
             //$ids = array_merge($ids, $titleIds);
         }
         if( $searchIrbNumber ) {
-            //echo "searchIrbNumber=$searchIrbNumber<br>";
             $irbnumberIds = $transresUtil->getProjectIdsFormNodeByFieldName($searchIrbNumber,"IRB Number");
-            //$ids = array_merge($ids, $irbnumberIds);
             $dql->andWhere("project.id IN (".implode(",",$irbnumberIds).")");
         }
-
-//        if( count($ids) > 0 ) {
-//            $ids = array_unique($ids);
-//            //print_r($ids);
-//        }
-//        if( count($ids) > 0 ) {
-//            $dql->andWhere("project.id IN (".implode(",",$ids).")");
-//            //$searchArr[] = "project.id IN (".implode(",",$ids).")";
-//        }
-//        if( count($searchArr) > 0 ) {
-//            $dql->andWhere(implode(" OR ",$searchArr));
-//        }
         //////////////// EOF get Projects IDs with the form node filter ////////////////
 
         if( $principalInvestigators && count($principalInvestigators)>0 ) {

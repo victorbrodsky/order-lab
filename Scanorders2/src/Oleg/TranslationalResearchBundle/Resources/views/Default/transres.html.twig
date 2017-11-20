@@ -104,6 +104,26 @@
     </div>
 
 {% endmacro %}
+{% macro projectObjFullInfo( project, cycle ) %}
+    {% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="projectFullInfoHeading">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#projectFullInfo" aria-expanded="true">
+                        Associated Project Info
+                    </a>
+                </h4>
+            </div>
+            <div id="projectFullInfo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="projectFullInfoHeading">
+                <div class="panel-body">
+                    {{ transres.projectFormShow(null,project,cycle) }}
+                    {{ transres.projectObjInfo(project,cycle) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
 
 {% macro projectFormEdit( form, project, cycle ) %}
 

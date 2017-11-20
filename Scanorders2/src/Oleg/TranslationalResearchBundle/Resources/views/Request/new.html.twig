@@ -71,9 +71,10 @@
 
     {% if project and project.id %}
         <br>
-        {{ transres.projectFormShow(null,project,cycle) }}
+        {#{{ transres.projectFormShow(null,project,cycle) }}#}
         {#add project status#}
-        {{ transres.projectObjInfo(project,cycle) }}
+        {#{{ transres.projectObjInfo(project,cycle) }}#}
+        {{ transres.projectObjFullInfo(project,cycle) }}
         <p>
             <a href="{{ path(translationalresearch_sitename~'_request_index',{'id':project.id}) }}">Back to the request list</a>
         </p>
