@@ -132,11 +132,18 @@ class TransResRequest {
      */
     private $fundedAccountNumber;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="Invoice", inversedBy="transresRequests")
+     * @ORM\JoinTable(name="transres_request_invoice")
+     */
+    private $invoices;
+
 
     public function __construct($user=null) {
         $this->setSubmitter($user);
         //$this->setState('draft');
         $this->setCreateDate(new \DateTime());
+        $this->invoices = new ArrayCollection();
     }
 
 
@@ -395,6 +402,23 @@ class TransResRequest {
     {
         $this->fundedAccountNumber = $fundedAccountNumber;
     }
+
+    public function getInvoices()
+    {
+        return $this->invoices;
+    }
+    public function addInvoice($item)
+    {
+        if( $item && !$this->invoices->contains($item) ) {
+            $this->invoices->add($item);
+        }
+        return $this;
+    }
+    public function removeInvoice($item)
+    {
+        $this->invoices->removeElement($item);
+    }
+
 
     /**
      * projectOid + "-RED-" + ID; Example: "HEMEPATH-8-REQ-1"

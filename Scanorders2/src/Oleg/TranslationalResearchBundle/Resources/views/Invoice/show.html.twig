@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Invoice</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ invoice.id }}</td>
+            </tr>
+            <tr>
+                <th>Createdate</th>
+                <td>{% if invoice.createDate %}{{ invoice.createDate|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Updatedate</th>
+                <td>{% if invoice.updateDate %}{{ invoice.updateDate|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Oid</th>
+                <td>{{ invoice.oid }}</td>
+            </tr>
+            <tr>
+                <th>Invoicenumber</th>
+                <td>{{ invoice.invoiceNumber }}</td>
+            </tr>
+            <tr>
+                <th>Duedate</th>
+                <td>{% if invoice.dueDate %}{{ invoice.dueDate|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ invoice.status }}</td>
+            </tr>
+            <tr>
+                <th>To</th>
+                <td>{{ invoice.to }}</td>
+            </tr>
+            <tr>
+                <th>Discountnumeric</th>
+                <td>{{ invoice.discountNumeric }}</td>
+            </tr>
+            <tr>
+                <th>Discountpercent</th>
+                <td>{{ invoice.discountPercent }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('invoice_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('invoice_edit', { 'id': invoice.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}

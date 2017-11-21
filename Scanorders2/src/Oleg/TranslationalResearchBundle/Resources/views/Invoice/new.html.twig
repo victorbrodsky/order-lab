@@ -1,0 +1,54 @@
+{% extends "OlegTranslationalResearchBundle::Default/base.html.twig" %}
+
+{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "OlegTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}
+{% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block content %}
+
+    <input type="hidden" id="formcycle" value="{{ cycle }}" />
+
+    <h4 class="text-info" align="center">
+        {{ title }}
+    </h4>
+    <br>
+
+    {% set sitename = translationalresearch_sitename %}
+
+    {{ form_start(form) }}
+
+        {#{{ formmacros.field(form.updateUser) }}#}
+
+        {{ formmacros.field(form.createDate) }}
+        {{ formmacros.field(form.submitter) }}
+
+        {{ formmacros.field(form.invoiceNumber) }}
+        {{ formmacros.field(form.dueDate) }}
+        {{ formmacros.field(form.discountNumeric) }}
+        {{ formmacros.field(form.discountPercent) }}
+
+
+        {% if form.save is defined %}
+            {{ form_widget(form.save) }}
+        {% endif %}
+        {% if form.edit is defined %}
+            {{ form_widget(form.edit) }}
+        {% endif %}
+
+    {{ form_end(form) }}
+
+
+    {#{% if project and project.id %}#}
+        {#<br>#}
+        {#{{ transres.projectObjFullInfo(project,cycle) }}#}
+        {#<p>#}
+            {#<a href="{{ path(translationalresearch_sitename~'_request_index',{'id':project.id}) }}">Back to the request list</a>#}
+        {#</p>#}
+    {#{% endif %}#}
+
+{% endblock %}
