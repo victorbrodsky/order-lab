@@ -3,6 +3,7 @@
 {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 {% import "OlegTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}
 {% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+{% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
 {% block title %}
     {{ title }}
@@ -12,6 +13,13 @@
 {% block content %}
 
     <input type="hidden" id="formcycle" value="{{ cycle }}" />
+
+    <div id="form-prototype-data"
+         data-userurllink = "{{ usermacros.userUrlLink()|e }}"
+         data-uploadurl = "{{ oneup_uploader_endpoint('transres_gallery') }}"
+         data-userid = "{{ app.user.id }}"
+    ></div>
+
 
     <h4 class="text-info" align="center">
         {{ title }}
@@ -27,11 +35,53 @@
         {{ formmacros.field(form.createDate) }}
         {{ formmacros.field(form.submitter) }}
 
-        {{ formmacros.field(form.invoiceNumber) }}
-        {{ formmacros.field(form.dueDate) }}
+        <hr />
+
+        {#{{ usermacros.documentsContainer(null,form.document,cycle, 'noprototype',1,'default','Logo') }}#}
+        <div class="well form-element-holder user-documents">
+            <label class="col-xs-12 control-label">Logo</label>
+            <div class="row withpaddingtop">
+                <div class="col-xs-12">
+                    {{ usermacros.documentsContainer(null,form.documents,cycle,'noprototype',1,'default','Logo') }}
+                </div>
+            </div>
+        </div>
+
+
+    <hr />
+
+    {{ formmacros.field(form.oid) }}
+        {{ formmacros.fieldDateLabel(form.dueDate,'allow-future-date') }}
+
+        <hr />
+
+        {{ formmacros.field(form.from) }}
+        {{ formmacros.field(form.to) }}
+
+        <hr />
+
+        {#{% for invoiceItem in form.invoiceItems %}#}
+            {#<div class="well well-sm">#}
+            {#{{ formmacros.field(invoiceItem.quantity) }}#}
+            {#{{ formmacros.field(invoiceItem.itemCode) }}#}
+            {#{{ formmacros.field(invoiceItem.description) }}#}
+            {#{{ formmacros.field(invoiceItem.unitPrice) }}#}
+            {#{{ formmacros.field(invoiceItem.total) }}#}
+            {#</div>#}
+            {#{{ transresRequestMacros.invoiceItem(invoiceItem,cycle) }}#}
+        {#{% endfor %}#}
+        {{ transresRequestMacros.invoiceItems(form,cycle) }}
+
+        <hr />
+
         {{ formmacros.field(form.discountNumeric) }}
         {{ formmacros.field(form.discountPercent) }}
 
+        <hr />
+
+        {{ formmacros.field(form.footer) }}
+
+        <br>
 
         {% if form.save is defined %}
             {{ form_widget(form.save) }}

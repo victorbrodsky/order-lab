@@ -103,11 +103,42 @@ class Invoice {
      */
     private $status;
 
+//    /**
+//     * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist"})
+//     * @ORM\JoinColumn(name="document_id", referencedColumnName="id")
+//     */
+//    private $document;
+    /**
+     * Other Documents
+     *
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="transres_invoice_document",
+     *      joinColumns={@ORM\JoinColumn(name="invoice_id", referencedColumnName="id", onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")}
+     *      )
+     * @ORM\OrderBy({"createdate" = "ASC"})
+     **/
+    private $documents;
+
     /**
      * @var string
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $from;
+
+    /**
+     * @var string
+     * @ORM\Column(type="text", nullable=true)
      */
     private $to;
+
+    /**
+     * Make check payable & mail to: Weill Cornell Medicine, 1300 York Ave, C302/Box69, New York, NY 10065 (Attn: John Dow)
+     *
+     * @var string
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $footer;
 
     /**
      * Discount numeric
@@ -123,7 +154,10 @@ class Invoice {
      */
     private $discountPercent;
 
-
+    /**
+     * @ORM\OneToMany(targetEntity="InvoiceItem", mappedBy="invoice")
+     */
+    private $invoiceItems;
 
 
 
@@ -131,6 +165,8 @@ class Invoice {
         $this->setSubmitter($user);
         $this->setCreateDate(new \DateTime());
         $this->transresRequests = new ArrayCollection();
+        $this->invoiceItems = new ArrayCollection();
+        $this->documents = new ArrayCollection();
     }
 
 
@@ -224,6 +260,7 @@ class Invoice {
     }
 
     /**
+     * Invoice number
      * @param string $oid
      */
     public function setOid($oid)
@@ -296,6 +333,38 @@ class Invoice {
     }
 
     /**
+     * @return mixed
+     */
+    public function getDocument()
+    {
+        return $this->document;
+    }
+
+    /**
+     * @param mixed $document
+     */
+    public function setDocument($document)
+    {
+        $this->document = $document;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getFrom()
+    {
+        return $this->from;
+    }
+
+    /**
+     * @param string $from
+     */
+    public function setFrom($from)
+    {
+        $this->from = $from;
+    }
+
+    /**
      * @return string
      */
     public function getTo()
@@ -309,6 +378,22 @@ class Invoice {
     public function setTo($to)
     {
         $this->to = $to;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFooter()
+    {
+        return $this->footer;
+    }
+
+    /**
+     * @param string $footer
+     */
+    public function setFooter($footer)
+    {
+        $this->footer = $footer;
     }
 
     /**
@@ -358,6 +443,40 @@ class Invoice {
     public function removeTransresRequest($item)
     {
         $this->transresRequests->removeElement($item);
+    }
+
+    public function getInvoiceItems()
+    {
+        return $this->invoiceItems;
+    }
+    public function addInvoiceItem($item)
+    {
+        if( $item && !$this->invoiceItems->contains($item) ) {
+            $this->invoiceItems->add($item);
+        }
+        return $this;
+    }
+    public function removeInvoiceItem($item)
+    {
+        $this->invoiceItems->removeElement($item);
+    }
+
+    public function addDocument($item)
+    {
+        if( $item && !$this->documents->contains($item) ) {
+            $this->documents->add($item);
+            $item->createUseObject($this);
+        }
+        return $this;
+    }
+    public function removeDocument($item)
+    {
+        $this->documents->removeElement($item);
+        $item->clearUseObject();
+    }
+    public function getDocuments()
+    {
+        return $this->documents;
     }
 
 }

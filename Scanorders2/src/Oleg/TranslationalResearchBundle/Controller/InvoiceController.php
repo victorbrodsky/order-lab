@@ -45,6 +45,8 @@ class InvoiceController extends Controller
      */
     public function newAction(Request $request, TransResRequest $transresRequest)
     {
+
+        $transresRequestUtil = $this->get('transres_request_util');
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $cycle = "new";
 
@@ -52,7 +54,11 @@ class InvoiceController extends Controller
 
         $transresRequest->addInvoice($invoice);
 
-        //$form = $this->createForm('Oleg\TranslationalResearchBundle\Form\InvoiceType', $invoice);
+        $invoiceItems = $transresRequestUtil->getRequestItems();
+        foreach( $invoiceItems as $invoiceItem ) {
+            $invoice->addInvoiceItem($invoiceItem);
+        }
+
         $form = $this->createInvoiceForm($invoice,$cycle);
 
         $form->handleRequest($request);
@@ -68,6 +74,7 @@ class InvoiceController extends Controller
         return array(
             'invoice' => $invoice,
             'form' => $form->createView(),
+            'title' => "New Invoice"
         );
     }
 

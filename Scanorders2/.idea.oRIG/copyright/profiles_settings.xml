@@ -1,0 +1,8 @@
+<component name="CopyrightManager">
+  <settings default="">
+    <module2copyright>
+      <element module="All" copyright="cornell" />
+    </module2copyright>
+    <LanguageOptions name="PHP" />
+  </settings>
+</component>

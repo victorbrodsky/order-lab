@@ -18,6 +18,8 @@
 namespace Oleg\TranslationalResearchBundle\Util;
 
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Oleg\TranslationalResearchBundle\Entity\InvoiceItem;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
@@ -729,5 +731,14 @@ class TransResRequestUtil
         //exit('exit setValueToFormNodeProject');
         
         return $receivingObject;
+    }
+
+    public function getRequestItems() {
+        $user = $this->secTokenStorage->getToken()->getUser();
+        $invoiceItemsArr = new ArrayCollection();
+        $invoiceItemsArr->add(new InvoiceItem($user));
+        $invoiceItemsArr->add(new InvoiceItem($user));
+        $invoiceItemsArr->add(new InvoiceItem($user));
+        return $invoiceItemsArr;
     }
 }

@@ -3,8 +3,10 @@
 namespace Oleg\TranslationalResearchBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
+use Oleg\UserdirectoryBundle\Form\DocumentType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -58,7 +60,7 @@ class InvoiceType extends AbstractType
             },
         ));
 
-        $builder->add('invoiceNumber', null, array(
+        $builder->add('oid', null, array(
             'label' => "Invoice Number:",
             //'disabled' => true,
             'required' => false,
@@ -72,6 +74,18 @@ class InvoiceType extends AbstractType
             'format' => 'MM/dd/yyyy',
             'attr' => array('class' => 'datepicker form-control'),
             'required' => false,
+        ));
+
+        $builder->add('from', null, array(
+            'label' => "From:",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+
+        $builder->add('to', null, array(
+            'label' => "To:",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
         ));
 
         $builder->add('discountNumeric', null, array(
@@ -88,9 +102,42 @@ class InvoiceType extends AbstractType
             'attr' => array('class' => 'form-control')
         ));
 
+        $builder->add('footer', null, array(
+            'label' => "Footer:",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+
+        //InvoiceItems
+        $builder->add('invoiceItems', CollectionType::class, array(
+            'entry_type' => InvoiceItemType::class,
+            'entry_options' => array(
+                //'data_class' => 'Oleg\TranslationalResearchBundle\Entity\AdminReview',
+                'form_custom_value' => $this->params
+            ),
+            'label' => false,
+            'required' => false,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__invoiceitems__',
+        ));
+
+        //logo
+        $builder->add('documents', CollectionType::class, array(
+            'entry_type' => DocumentType::class,
+            'label' => 'Logo:',
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__logo__',
+        ));
 
 
-
+        //Buttons
         if( $this->params['cycle'] === "new" ) {
             $builder->add('save', SubmitType::class, array(
                 'label' => 'Save',

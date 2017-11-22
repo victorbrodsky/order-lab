@@ -121,4 +121,64 @@
 
 {% endmacro %}
 
+{% macro invoiceItems(form, cycle) %}
 
+    <table class="table text-left table-hover">
+        <thead style="background-color: grey;">
+        <tr>
+            <th>{{ form_label(form.invoiceItems|first.quantity) }}</th>
+            <th>{{ form_label(form.invoiceItems|first.itemCode) }}</th>
+            <th>{{ form_label(form.invoiceItems|first.description) }}</th>
+            <th>{{ form_label(form.invoiceItems|first.unitPrice) }}</th>
+            <th>{{ form_label(form.invoiceItems|first.total) }}</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {#<div class="well well-sm">#}
+
+        {% for invoiceItem in form.invoiceItems %}
+            {#<div class="well well-sm">#}
+                {#<div class="col-xs-2">#}
+                    {#{{ form_widget(invoiceItem.quantity) }}#}
+                {#</div>#}
+                {#<div class="col-xs-2">#}
+                    {#{{ form_widget(invoiceItem.itemCode) }}#}
+                {#</div>#}
+                {#<div class="col-xs-2">#}
+                    {#{{ form_widget(invoiceItem.description) }}#}
+                {#</div>#}
+                {#<div class="col-xs-2">#}
+                    {#{{ form_widget(invoiceItem.unitPrice) }}#}
+                {#</div>#}
+                {#<div class="col-xs-2">#}
+                    {#{{ form_widget(invoiceItem.total) }}#}
+                {#</div>#}
+            {#</div>#}
+
+            <tr>
+                <td>
+                    {{ form_widget(invoiceItem.quantity) }}
+                </td>
+                <td>
+                    {{ form_widget(invoiceItem.itemCode) }}
+                </td>
+                <td>
+                    {{ form_widget(invoiceItem.description) }}
+                </td>
+                <td>
+                    {{ form_widget(invoiceItem.unitPrice) }}
+                </td>
+                <td>
+                    {{ form_widget(invoiceItem.total) }}
+                </td>
+            </tr>
+
+            {#</div>#}
+
+        {% endfor %}
+
+        </tbody>
+    </table>
+
+{% endmacro %}
