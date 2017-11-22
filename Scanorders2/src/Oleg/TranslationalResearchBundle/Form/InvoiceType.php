@@ -127,7 +127,7 @@ class InvoiceType extends AbstractType
         //logo
         $builder->add('documents', CollectionType::class, array(
             'entry_type' => DocumentType::class,
-            'label' => 'Logo:',
+            'label' => false,
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
