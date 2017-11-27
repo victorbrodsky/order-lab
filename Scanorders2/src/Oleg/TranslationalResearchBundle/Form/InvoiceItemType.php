@@ -31,31 +31,31 @@ class InvoiceItemType extends AbstractType
         $builder->add('quantity', null, array(
             'label' => "Quantity",
             'required' => false,
-            'attr' => array('class' => 'form-control')
+            'attr' => array('class' => 'form-control invoiceitem-quantity')
         ));
 
         $builder->add('itemCode', null, array(
             'label' => "Item Code",
             'required' => false,
-            'attr' => array('class' => 'form-control')
+            'attr' => array('class' => 'form-control invoiceitem-itemCode')
         ));
 
         $builder->add('description', null, array(
             'label' => "Description",
             'required' => false,
-            'attr' => array('class' => 'textarea form-control')
+            'attr' => array('class' => 'textarea form-control ')
         ));
 
         $builder->add('unitPrice', null, array(
             'label' => "Unit Price",
             'required' => false,
-            'attr' => array('class' => 'form-control')
+            'attr' => array('class' => 'form-control invoiceitem-unitPrice')
         ));
 
         $builder->add('total', null, array(
             'label' => "Total",
             'required' => false,
-            'attr' => array('class' => 'form-control')
+            'attr' => array('class' => 'form-control invoiceitem-total')
         ));
 
 

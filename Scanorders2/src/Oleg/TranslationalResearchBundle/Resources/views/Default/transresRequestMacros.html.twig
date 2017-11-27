@@ -123,7 +123,7 @@
 
 {% macro invoiceItems(form, cycle) %}
 
-    <table class="table text-left table-hover">
+    <table class="table text-left table-hover invoiceItemTable">
         <thead style="background-color: grey;">
         <tr>
             <th>{{ form_label(form.invoiceItems|first.quantity) }}</th>
@@ -138,25 +138,7 @@
         {#<div class="well well-sm">#}
 
         {% for invoiceItem in form.invoiceItems %}
-            {#<div class="well well-sm">#}
-                {#<div class="col-xs-2">#}
-                    {#{{ form_widget(invoiceItem.quantity) }}#}
-                {#</div>#}
-                {#<div class="col-xs-2">#}
-                    {#{{ form_widget(invoiceItem.itemCode) }}#}
-                {#</div>#}
-                {#<div class="col-xs-2">#}
-                    {#{{ form_widget(invoiceItem.description) }}#}
-                {#</div>#}
-                {#<div class="col-xs-2">#}
-                    {#{{ form_widget(invoiceItem.unitPrice) }}#}
-                {#</div>#}
-                {#<div class="col-xs-2">#}
-                    {#{{ form_widget(invoiceItem.total) }}#}
-                {#</div>#}
-            {#</div>#}
-
-            <tr>
+            <tr class="invoiceItemRow">
                 <td>
                     {{ form_widget(invoiceItem.quantity) }}
                 </td>
@@ -173,9 +155,6 @@
                     {{ form_widget(invoiceItem.total) }}
                 </td>
             </tr>
-
-            {#</div>#}
-
         {% endfor %}
 
         </tbody>

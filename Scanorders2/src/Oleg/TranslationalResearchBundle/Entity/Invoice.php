@@ -109,7 +109,7 @@ class Invoice {
 //     */
 //    private $document;
     /**
-     * Other Documents
+     * Generated Invoices
      *
      * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
      * @ORM\JoinTable(name="transres_invoice_document",
@@ -153,6 +153,21 @@ class Invoice {
      * @ORM\Column(type="string", nullable=true)
      */
     private $discountPercent;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $subTotal;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $total;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $paid;
 
     /**
      * @ORM\OneToMany(targetEntity="InvoiceItem", mappedBy="invoice")
@@ -428,6 +443,56 @@ class Invoice {
         $this->discountPercent = $discountPercent;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getSubTotal()
+    {
+        return $this->subTotal;
+    }
+
+    /**
+     * @param mixed $subTotal
+     */
+    public function setSubTotal($subTotal)
+    {
+        $this->subTotal = $subTotal;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTotal()
+    {
+        return $this->total;
+    }
+
+    /**
+     * @param mixed $total
+     */
+    public function setTotal($total)
+    {
+        $this->total = $total;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPaid()
+    {
+        return $this->paid;
+    }
+
+    /**
+     * @param mixed $paid
+     */
+    public function setPaid($paid)
+    {
+        $this->paid = $paid;
+    }
+
+    
+
 
     public function getTransresRequests()
     {
@@ -478,5 +543,7 @@ class Invoice {
     {
         return $this->documents;
     }
+
+
 
 }

@@ -92,14 +92,14 @@ class InvoiceType extends AbstractType
             'label' => "Discount ($):",
             //'disabled' => true,
             'required' => false,
-            'attr' => array('class' => 'form-control')
+            'attr' => array('class' => 'form-control invoice-discountNumeric')
         ));
 
         $builder->add('discountPercent', null, array(
             'label' => "Discount (%):",
             //'disabled' => true,
             'required' => false,
-            'attr' => array('class' => 'form-control')
+            'attr' => array('class' => 'form-control invoice-discountPercent')
         ));
 
         $builder->add('footer', null, array(
@@ -124,17 +124,38 @@ class InvoiceType extends AbstractType
             'prototype_name' => '__invoiceitems__',
         ));
 
-        //logo
-        $builder->add('documents', CollectionType::class, array(
-            'entry_type' => DocumentType::class,
-            'label' => false,
-            'allow_add' => true,
-            'allow_delete' => true,
+        //Generated Invoices
+//        $builder->add('documents', CollectionType::class, array(
+//            'entry_type' => DocumentType::class,
+//            'label' => false,
+//            'allow_add' => true,
+//            'allow_delete' => true,
+//            'required' => false,
+//            'by_reference' => false,
+//            'prototype' => true,
+//            'prototype_name' => '__logo__',
+//        ));
+
+
+        $builder->add('subTotal', null, array(
+            'label' => "Subtotal:",
             'required' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__logo__',
+            'attr' => array('class' => 'form-control invoice-subTotal')
         ));
+
+        $builder->add('total', null, array(
+            'label' => "Total:",
+            'required' => false,
+            'attr' => array('class' => 'form-control invoice-total')
+        ));
+
+        $builder->add('paid', null, array(
+            'label' => "Paid:",
+            'required' => false,
+            'attr' => array('class' => 'form-control')
+        ));
+
+
 
 
         //Buttons
