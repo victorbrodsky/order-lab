@@ -744,11 +744,11 @@ class TransResRequestUtil
     
     public function getInvoiceLogo() {
         //<img src="{{ asset(bundleFileName) }}" alt="{{ title }}"/>
-
-        $title = "WCMC";
         $filename = "wcmc_logo.jpg";
         $bundleFileName = "bundles\\olegtranslationalresearch\\images\\".$filename;
+        return $bundleFileName;
 
+        $title = "WCMC";
         $html = '<img src="'.$bundleFileName.'" alt="'.$title.'"/>';
         return $html;
     }

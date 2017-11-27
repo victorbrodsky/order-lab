@@ -28,12 +28,17 @@
 
     {% set sitename = translationalresearch_sitename %}
 
-    <div class="row" align="left">
-        <div class="col-xs-5">
-            {{ transres_request_util.getInvoiceLogo()|raw }}
-        </div>
-        <div class="col-xs-7"></div>
-    </div>
+    {% set bundleFileName = transres_request_util.getInvoiceLogo()|raw %}
+    {% if bundleFileName %}
+        <img src="{{ asset(bundleFileName) }}" alt="Invoice Logo"/>
+        <br>
+        {#<div class="row" align="left">#}
+            {#<div class="col-xs-5">#}
+                {#<img src="{{ asset(bundleFileName) }}" alt="Invoice Logo"/>#}
+            {#</div>#}
+            {#<div class="col-xs-7"></div>#}
+        {#</div>#}
+    {% endif %}
 
     {{ form_start(form) }}
 
