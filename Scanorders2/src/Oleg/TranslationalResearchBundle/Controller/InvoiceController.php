@@ -48,33 +48,36 @@ class InvoiceController extends Controller
 
         $transresRequestUtil = $this->get('transres_request_util');
         $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = null; //testing
         $cycle = "new";
 
         $invoice = new Invoice($user);
 
         $transresRequest->addInvoice($invoice);
 
-        $invoiceItems = $transresRequestUtil->getRequestItems();
-        foreach( $invoiceItems as $invoiceItem ) {
-            $invoice->addInvoiceItem($invoiceItem);
-        }
+//        $invoiceItems = $transresRequestUtil->getRequestItems();
+//        foreach( $invoiceItems as $invoiceItem ) {
+//            $invoice->addInvoiceItem($invoiceItem);
+//        }
 
         $form = $this->createInvoiceForm($invoice,$cycle);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            //exit('new');
             $em = $this->getDoctrine()->getManager();
             $em->persist($invoice);
             $em->flush();
 
-            return $this->redirectToRoute('invoice_show', array('id' => $invoice->getId()));
+            return $this->redirectToRoute('translationalresearch_invoice_show', array('id' => $invoice->getId()));
         }
 
         return array(
             'invoice' => $invoice,
             'form' => $form->createView(),
-            'title' => "New Invoice"
+            'title' => "New Invoice",
+            'cycle' => $cycle
         );
     }
 
@@ -94,6 +97,7 @@ class InvoiceController extends Controller
         return array(
             'invoice' => $invoice,
             'delete_form' => $deleteForm->createView(),
+            'cycle' => $cycle
         );
     }
 

@@ -31,7 +31,7 @@
     {% set bundleFileName = transres_request_util.getInvoiceLogo()|raw %}
     {% if bundleFileName %}
         <img src="{{ asset(bundleFileName) }}" alt="Invoice Logo"/>
-        <br>
+        <br><br>
         {#<div class="row" align="left">#}
             {#<div class="col-xs-5">#}
                 {#<img src="{{ asset(bundleFileName) }}" alt="Invoice Logo"/>#}
@@ -44,31 +44,38 @@
 
         {#{{ formmacros.field(form.updateUser) }}#}
 
-        {{ formmacros.field(form.createDate) }}
-        {{ formmacros.field(form.submitter) }}
+        {% if form.createDate is defined %}
+            {{ formmacros.field(form.createDate) }}
+        {% endif %}
+        {% if form.submitter is defined %}
+            {{ formmacros.field(form.submitter) }}
+        {% endif %}
 
         <hr />
 
-        {% if form.documents is defined %}
-            <div class="well form-element-holder user-documents">
-                <label class="col-xs-12 control-label">Logo</label>
-                <div class="row withpaddingtop">
-                    <div class="col-xs-12">
-                        {{ usermacros.documentsContainer(null,form.documents,cycle,'noprototype',1,'default','Logo') }}
-                    </div>
-                </div>
-            </div>
-        {% endif %}
+        {#{% if form.documents is defined %}#}
+            {#<div class="well form-element-holder user-documents">#}
+                {#<label class="col-xs-12 control-label">Logo</label>#}
+                {#<div class="row withpaddingtop">#}
+                    {#<div class="col-xs-12">#}
+                        {#{{ usermacros.documentsContainer(null,form.documents,cycle,'noprototype',1,'default','Logo') }}#}
+                    {#</div>#}
+                {#</div>#}
+            {#</div>#}
+        {#{% endif %}#}
 
         {#<hr />#}
 
         {{ formmacros.field(form.oid) }}
-        {{ formmacros.fieldDateLabel(form.dueDate,'allow-future-date') }}
+
+        {% if form.dueDate is defined %}
+            {{ formmacros.fieldDateLabel(form.dueDate,'allow-future-date') }}
+        {% endif %}
 
         {#<hr />#}
 
-        {{ formmacros.field(form.from) }}
-        {{ formmacros.field(form.to) }}
+        {{ formmacros.field(form.invoiceFrom) }}
+        {{ formmacros.field(form.invoiceTo) }}
         {{ formmacros.field(form.footer) }}
         <br>
 
@@ -124,7 +131,7 @@
     <script type="text/javascript">
 
         $(document).ready(function() {
-
+return; //testing
             //quantity or unit price update => update total
             $('.invoiceitem-quantity, .invoiceitem-unitPrice').on('input', function(event) {
                 console.log("update row total");

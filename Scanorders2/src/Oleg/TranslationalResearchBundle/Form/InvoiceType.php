@@ -33,32 +33,42 @@ class InvoiceType extends AbstractType
 
         //$builder->add('createDate')->add('updateDate')->add('oid')->add('invoiceNumber')->add('dueDate')->add('status')->add('to')->add('discountNumeric')->add('discountPercent')->add('submitter')->add('updateUser')->add('transresRequests')->add('salesperson');
 
-        $builder->add('createDate', DateType::class, array(
-            'widget' => 'single_text',
-            'label' => "Create Date:",
-            'disabled' => true,
-            'format' => 'MM/dd/yyyy',
-            'attr' => array('class' => 'datepicker form-control'),
-            'required' => false,
-        ));
+//        $builder->add('createDate', DateType::class, array(
+//            'widget' => 'single_text',
+//            'label' => "Create Date:",
+//            'disabled' => true,
+//            'format' => 'MM/dd/yyyy',
+//            'attr' => array('class' => 'datepicker form-control'),
+//            'required' => false,
+//        ));
+//        $builder->add('createDate', null, array(
+//            //'widget' => 'single_text',
+//            'label' => "Create Date:",
+//            //'disabled' => true,
+//            //'format' => 'MM/dd/yyyy',
+//            //'attr' => array('class' => 'datepicker form-control'),
+//            //'required' => false,
+//        ));
 
-        $builder->add('submitter', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:User',
-            'label'=> "Submitter:",
-            'disabled' => true,
-            'required'=> false,
-            'multiple' => false,
-            'attr' => array('class'=>'combobox combobox-width'),
-            'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->leftJoin("list.employmentStatus", "employmentStatus")
-                    ->leftJoin("employmentStatus.employmentType", "employmentType")
-                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
-                    //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
-                    ->leftJoin("list.infos", "infos")
-                    ->orderBy("infos.displayName","ASC");
-            },
-        ));
+        if(0) {
+            $builder->add('submitter', EntityType::class, array(
+                'class' => 'OlegUserdirectoryBundle:User',
+                'label' => "Submitter:",
+                'disabled' => true,
+                'required' => false,
+                'multiple' => false,
+                'attr' => array('class' => 'combobox combobox-width'),
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->leftJoin("list.employmentStatus", "employmentStatus")
+                        ->leftJoin("employmentStatus.employmentType", "employmentType")
+                        ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+                        //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
+                        ->leftJoin("list.infos", "infos")
+                        ->orderBy("infos.displayName", "ASC");
+                },
+            ));
+        }
 
         $builder->add('oid', null, array(
             'label' => "Invoice Number:",
@@ -67,22 +77,24 @@ class InvoiceType extends AbstractType
             'attr' => array('class' => 'form-control')
         ));
 
-        $builder->add('dueDate', DateType::class, array(
-            'widget' => 'single_text',
-            'label' => "Due Date:",
-            //'disabled' => true,
-            'format' => 'MM/dd/yyyy',
-            'attr' => array('class' => 'datepicker form-control'),
-            'required' => false,
-        ));
+        if(0) {
+            $builder->add('dueDate', DateType::class, array(
+                'widget' => 'single_text',
+                'label' => "Due Date:",
+                //'disabled' => true,
+                'format' => 'MM/dd/yyyy',
+                'attr' => array('class' => 'datepicker form-control'),
+                'required' => false,
+            ));
+        }
 
-        $builder->add('from', null, array(
+        $builder->add('invoiceFrom', null, array(
             'label' => "From:",
             'required' => false,
             'attr' => array('class' => 'textarea form-control')
         ));
 
-        $builder->add('to', null, array(
+        $builder->add('invoiceTo', null, array(
             'label' => "To:",
             'required' => false,
             'attr' => array('class' => 'textarea form-control')
@@ -108,21 +120,23 @@ class InvoiceType extends AbstractType
             'attr' => array('class' => 'textarea form-control')
         ));
 
-        //InvoiceItems
-        $builder->add('invoiceItems', CollectionType::class, array(
-            'entry_type' => InvoiceItemType::class,
-            'entry_options' => array(
-                //'data_class' => 'Oleg\TranslationalResearchBundle\Entity\AdminReview',
-                'form_custom_value' => $this->params
-            ),
-            'label' => false,
-            'required' => false,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__invoiceitems__',
-        ));
+        if(0) {
+            //InvoiceItems
+            $builder->add('invoiceItems', CollectionType::class, array(
+                'entry_type' => InvoiceItemType::class,
+                'entry_options' => array(
+                    //'data_class' => 'Oleg\TranslationalResearchBundle\Entity\AdminReview',
+                    'form_custom_value' => $this->params
+                ),
+                'label' => false,
+                'required' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__invoiceitems__',
+            ));
+        }
 
         //Generated Invoices
 //        $builder->add('documents', CollectionType::class, array(

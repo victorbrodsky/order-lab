@@ -124,13 +124,13 @@ class Invoice {
      * @var string
      * @ORM\Column(type="text", nullable=true)
      */
-    private $from;
+    private $invoiceFrom;
 
     /**
      * @var string
      * @ORM\Column(type="text", nullable=true)
      */
-    private $to;
+    private $invoiceTo;
 
     /**
      * Make check payable & mail to: Weill Cornell Medicine, 1300 York Ave, C302/Box69, New York, NY 10065 (Attn: John Dow)
@@ -170,7 +170,7 @@ class Invoice {
     private $paid;
 
     /**
-     * @ORM\OneToMany(targetEntity="InvoiceItem", mappedBy="invoice")
+     * @ORM\OneToMany(targetEntity="InvoiceItem", mappedBy="invoice", cascade={"persist","remove"})
      */
     private $invoiceItems;
 
@@ -362,37 +362,37 @@ class Invoice {
     {
         $this->document = $document;
     }
-    
-    /**
-     * @return string
-     */
-    public function getFrom()
-    {
-        return $this->from;
-    }
-
-    /**
-     * @param string $from
-     */
-    public function setFrom($from)
-    {
-        $this->from = $from;
-    }
 
     /**
      * @return string
      */
-    public function getTo()
+    public function getInvoiceFrom()
     {
-        return $this->to;
+        return $this->invoiceFrom;
     }
 
     /**
-     * @param string $to
+     * @param string $invoiceFrom
      */
-    public function setTo($to)
+    public function setInvoiceFrom($invoiceFrom)
     {
-        $this->to = $to;
+        $this->invoiceFrom = $invoiceFrom;
+    }
+
+    /**
+     * @return string
+     */
+    public function getInvoiceTo()
+    {
+        return $this->invoiceTo;
+    }
+
+    /**
+     * @param string $invoiceTo
+     */
+    public function setInvoiceTo($invoiceTo)
+    {
+        $this->invoiceTo = $invoiceTo;
     }
 
     /**

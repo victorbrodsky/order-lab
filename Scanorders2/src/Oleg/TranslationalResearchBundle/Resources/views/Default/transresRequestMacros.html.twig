@@ -123,6 +123,7 @@
 
 {% macro invoiceItems(form, cycle) %}
 
+    {% if form.invoiceItems is defined %}
     <table class="table text-left table-hover invoiceItemTable">
         <thead style="background-color: grey;">
         <tr>
@@ -159,5 +160,6 @@
 
         </tbody>
     </table>
+    {% endif %}
 
 {% endmacro %}

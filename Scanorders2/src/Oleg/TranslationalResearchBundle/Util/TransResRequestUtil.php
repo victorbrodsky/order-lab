@@ -735,6 +735,7 @@ class TransResRequestUtil
 
     public function getRequestItems() {
         $user = $this->secTokenStorage->getToken()->getUser();
+        $user = null; //testing
         $invoiceItemsArr = new ArrayCollection();
         $invoiceItemsArr->add(new InvoiceItem($user));
         $invoiceItemsArr->add(new InvoiceItem($user));
