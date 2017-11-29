@@ -92,6 +92,7 @@ class InvoiceController extends Controller
     public function newAction(Request $request, TransResRequest $transresRequest)
     {
 
+        $em = $this->getDoctrine()->getManager();
         $transresRequestUtil = $this->get('transres_request_util');
         $user = $this->get('security.token_storage')->getToken()->getUser();
         //$user = null; //testing
@@ -101,6 +102,7 @@ class InvoiceController extends Controller
 
         $transresRequest->addInvoice($invoice);
 
+        //populate invoice items corresponding to the multiple requests
         $invoiceItems = $transresRequestUtil->getRequestItems();
         foreach( $invoiceItems as $invoiceItem ) {
             $invoice->addInvoiceItem($invoiceItem);
@@ -112,11 +114,13 @@ class InvoiceController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             //exit('new');
-            $em = $this->getDoctrine()->getManager();
+
+            //TODO: check how many items per invoice
+
             $em->persist($invoice);
             $em->flush();
 
-            return $this->redirectToRoute('translationalresearch_invoice_show', array('id'=>$transresRequest->getId(), 'oid' => $invoice->getId()));
+            return $this->redirectToRoute('translationalresearch_invoice_show', array('id'=>$transresRequest->getId(), 'oid' => $invoice->getOid()));
         }
 
         return array(
@@ -185,7 +189,7 @@ class InvoiceController extends Controller
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('translationalresearch_invoice_edit', array('id'=>$transresRequest->getId(), 'oid' => $invoice->getId()));
+            return $this->redirectToRoute('translationalresearch_invoice_edit', array('id'=>$transresRequest->getId(), 'oid' => $invoice->getOid()));
         }
 
         return array(
