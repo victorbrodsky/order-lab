@@ -165,7 +165,10 @@
 
                             <li class="divider"></li>
                             <li>
-                                <a href="{{ path(translationalresearch_sitename~'_invoice_new', { 'id': transresRequest.id }) }} " target="_blank">Create New Invoice</a>
+                                <a href="{{ path(translationalresearch_sitename~'_invoice_index', { 'id': transresRequest.id }) }} " target="_blank">Show All Invoice</a>
+                            </li>
+                            <li>
+                                <a href="{{ path(translationalresearch_sitename~'_invoice_new', { 'id': transresRequest.id }) }} " target="_blank">Create New Invoices</a>
                             </li>
 
                         </ul>

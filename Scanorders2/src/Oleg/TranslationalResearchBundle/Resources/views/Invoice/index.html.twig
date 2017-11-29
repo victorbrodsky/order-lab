@@ -1,46 +1,65 @@
-{% extends 'base.html.twig' %}
+{% extends "OlegTranslationalResearchBundle::Default/base.html.twig" %}
 
-{% block body %}
-    <h1>Invoices list</h1>
+{% block title %}
+    {{ title }}
+{% endblock %}
 
-    <table>
+{% block content %}
+    <h4 class="text-info" align="center">
+        {{ title }}
+    </h4>
+    <br>
+
+    <table class="records_list table table-condensed text-left">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Createdate</th>
-                <th>Updatedate</th>
-                <th>Oid</th>
-                <th>Invoicenumber</th>
-                <th>Duedate</th>
-                <th>Status</th>
-                <th>To</th>
-                <th>Discountnumeric</th>
-                <th>Discountpercent</th>
+                <th>{{ knp_pagination_sortable(invoices, 'Invoice Number', 'invoice.oid') }}</th>
+                <th>{{ knp_pagination_sortable(invoices, 'Salesperson', 'salesperson.displayName') }}</th>
+                <th>{{ knp_pagination_sortable(invoices, 'Create Date', 'invoice.createDate') }}</th>
+                <th>{{ knp_pagination_sortable(invoices, 'Update Date', 'invoice.updateDate') }}</th>
+                <th>{{ knp_pagination_sortable(invoices, 'Due Date', 'invoice.dueDate') }}</th>
+                <th>{{ knp_pagination_sortable(invoices, 'Status', 'invoice.status') }}</th>
+                <th>{{ knp_pagination_sortable(invoices, 'To', 'invoice.invoiceTo') }}</th>
+                <th>{{ knp_pagination_sortable(invoices, 'Total', 'invoice.total') }}</th>
                 <th>Actions</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody data-link="row">
         {% for invoice in invoices %}
             <tr>
-                <td><a href="{{ path('invoice_show', { 'id': invoice.id }) }}">{{ invoice.id }}</a></td>
+                <td>
+                    <a href="{{ path('translationalresearch_invoice_show', { 'id': transresRequest.getId(), 'oid': invoice.oid }) }}">{{ invoice.oid }}</a>
+                </td>
+                <td>{{ invoice.salesperson }}</td>
                 <td>{% if invoice.createDate %}{{ invoice.createDate|date('Y-m-d H:i:s') }}{% endif %}</td>
                 <td>{% if invoice.updateDate %}{{ invoice.updateDate|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>{{ invoice.oid }}</td>
-                <td>{{ invoice.invoiceNumber }}</td>
                 <td>{% if invoice.dueDate %}{{ invoice.dueDate|date('Y-m-d H:i:s') }}{% endif %}</td>
                 <td>{{ invoice.status }}</td>
                 <td>{{ invoice.to }}</td>
-                <td>{{ invoice.discountNumeric }}</td>
-                <td>{{ invoice.discountPercent }}</td>
-                <td>
-                    <ul>
-                        <li>
-                            <a href="{{ path('invoice_show', { 'id': invoice.id }) }}">show</a>
-                        </li>
-                        <li>
-                            <a href="{{ path('invoice_edit', { 'id': invoice.id }) }}">edit</a>
-                        </li>
-                    </ul>
+                <td>{{ invoice.invoiceTotal }}</td>
+                <td class="rowlink-skip">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            Action <span class="caret"></span>
+                        </button>
+
+                        <ul class="dropdown-menu dropdown-menu-right">
+
+                            <li>
+                                <a href="{{ path('translationalresearch_invoice_show', { 'id': transresRequest.getId(), 'oid': invoice.oid }) }}">Show</a>
+                            </li>
+                            <li>
+                                <a href="{{ path('translationalresearch_invoice_edit', { 'id': transresRequest.getId(), 'oid': invoice.oid }) }}">Edit</a>
+                            </li>
+                            {#<li>#}
+                                {#<a#}
+                                    {#general-data-confirm="Are you sure you want to delete this invoice?"#}
+                                    {#href="{{ path('translationalresearch_invoice_delete', {'id': invoice.id}) }}"#}
+                                {#>Delete</a>#}
+                            {#</li>#}
+
+                        </ul>
+                    </div>
                 </td>
             </tr>
         {% endfor %}
@@ -49,7 +68,7 @@
 
     <ul>
         <li>
-            <a href="{{ path('invoice_new') }}">Create a new invoice</a>
+            <a href="{{ path('translationalresearch_invoice_new', {'id': transresRequest}) }}">Create a new invoice</a>
         </li>
     </ul>
 {% endblock %}

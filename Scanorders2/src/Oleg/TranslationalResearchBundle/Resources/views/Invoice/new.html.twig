@@ -50,6 +50,9 @@
         {% if form.submitter is defined %}
             {{ formmacros.field(form.submitter) }}
         {% endif %}
+        {% if form.salesperson is defined %}
+            {{ formmacros.field(form.salesperson) }}
+        {% endif %}
 
         <hr />
 
@@ -114,6 +117,30 @@
 
     {{ form_end(form) }}
 
+    {% if cycle == "show" %}
+        <p>
+            <a class="btn btn-warning" href="{{ path(translationalresearch_sitename~'_invoice_edit',{'id': transresRequest.getId(),'oid':invoice.oid}) }}">Edit Invoice</a>
+        </p>
+        <p>
+            {#<a#}
+                {#general-data-confirm="Are you sure you want to delete this invoice?"#}
+                {#href="{{ path('translationalresearch_invoice_delete', {'id': invoice.id}) }}"#}
+        {#>Delete</a>#}
+            {{ form_start(delete_form) }}
+                <input class="btn btn-danger" type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </p>
+    {% endif %}
+
+    {% if cycle == "edit" %}
+        <p>
+            <a class="btn btn-primary" href="{{ path(translationalresearch_sitename~'_invoice_show',{'id': transresRequest.getId(),'oid': invoice.oid }) }}">Cancel</a>
+        </p>
+
+        {{ form_start(delete_form) }}
+            <input class="btn btn-danger" type="submit" value="Delete">
+        {{ form_end(delete_form) }}
+    {% endif %}
 
     {#{% if project and project.id %}#}
         {#<br>#}
@@ -131,7 +158,7 @@
     <script type="text/javascript">
 
         $(document).ready(function() {
-return; //testing
+
             //quantity or unit price update => update total
             $('.invoiceitem-quantity, .invoiceitem-unitPrice').on('input', function(event) {
                 console.log("update row total");

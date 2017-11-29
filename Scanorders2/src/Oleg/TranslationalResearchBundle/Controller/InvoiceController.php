@@ -21,18 +21,64 @@ class InvoiceController extends Controller
     /**
      * Lists all invoice entities.
      *
-     * @Route("/", name="translationalresearch_invoice_index")
+     * @Route("/list/{id}", name="translationalresearch_invoice_index")
+     * @Route("/list-all/", name="translationalresearch_invoice_index_all")
      * @Template("OlegTranslationalResearchBundle:Invoice:index.html.twig")
      * @Method("GET")
      */
-    public function indexAction()
+    public function indexAction(Request $request, TransResRequest $transresRequest=null)
     {
         $em = $this->getDoctrine()->getManager();
+        $routeName = $request->get('_route');
 
-        $invoices = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findAll();
+
+        $repository = $em->getRepository('OlegTranslationalResearchBundle:Invoice');
+        $dql =  $repository->createQueryBuilder("invoice");
+        $dql->select('invoice');
+
+        $dql->leftJoin('invoice.submitter','submitter');
+        $dql->leftJoin('invoice.salesperson','salesperson');
+        $dql->leftJoin('invoice.transresRequests','transresRequests');
+
+        $dqlParameters = array();
+
+        if( $routeName == "translationalresearch_invoice_index_all" ) {
+            //$invoices = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findAll();
+            $title = "List of Invoices";
+        }
+
+        if( $routeName == "translationalresearch_invoice_index" ) {
+            $title = "List of Invoices for Request ID# ".$transresRequest->getOid();
+            $dql->where("transresRequests.id = :transresRequestId");
+            $dqlParameters["transresRequestId"] = $transresRequest->getId();
+        }
+
+        $limit = 30;
+        $query = $em->createQuery($dql);
+
+        if( count($dqlParameters) > 0 ) {
+            $query->setParameters($dqlParameters);
+        }
+
+        //echo "query=".$query->getSql()."<br>";
+
+        $paginationParams = array(
+            'defaultSortFieldName' => 'invoice.id',
+            'defaultSortDirection' => 'DESC'
+        );
+
+        $paginator  = $this->get('knp_paginator');
+        $invoices = $paginator->paginate(
+            $query,
+            $request->query->get('page', 1),    /*page number*/
+            $limit,                             /*limit per page*/
+            $paginationParams
+        );
 
         return array(
             'invoices' => $invoices,
+            'transresRequest' => $transresRequest,
+            'title' => $title
         );
     }
 
@@ -48,17 +94,17 @@ class InvoiceController extends Controller
 
         $transresRequestUtil = $this->get('transres_request_util');
         $user = $this->get('security.token_storage')->getToken()->getUser();
-        $user = null; //testing
+        //$user = null; //testing
         $cycle = "new";
 
         $invoice = new Invoice($user);
 
         $transresRequest->addInvoice($invoice);
 
-//        $invoiceItems = $transresRequestUtil->getRequestItems();
-//        foreach( $invoiceItems as $invoiceItem ) {
-//            $invoice->addInvoiceItem($invoiceItem);
-//        }
+        $invoiceItems = $transresRequestUtil->getRequestItems();
+        foreach( $invoiceItems as $invoiceItem ) {
+            $invoice->addInvoiceItem($invoiceItem);
+        }
 
         $form = $this->createInvoiceForm($invoice,$cycle);
 
@@ -70,10 +116,11 @@ class InvoiceController extends Controller
             $em->persist($invoice);
             $em->flush();
 
-            return $this->redirectToRoute('translationalresearch_invoice_show', array('id' => $invoice->getId()));
+            return $this->redirectToRoute('translationalresearch_invoice_show', array('id'=>$transresRequest->getId(), 'oid' => $invoice->getId()));
         }
 
         return array(
+            'transresRequest' => $transresRequest,
             'invoice' => $invoice,
             'form' => $form->createView(),
             'title' => "New Invoice",
@@ -84,18 +131,28 @@ class InvoiceController extends Controller
     /**
      * Finds and displays a invoice entity.
      *
-     * @Route("/show/{id}", name="translationalresearch_invoice_show")
+     * @Route("/show/{id}/{oid}", name="translationalresearch_invoice_show")
      * @Template("OlegTranslationalResearchBundle:Invoice:new.html.twig")
      * @Method("GET")
      */
-    public function showAction(Invoice $invoice)
+    public function showAction(Request $request, TransResRequest $transresRequest, $oid)
     {
+
+        $em = $this->getDoctrine()->getManager();
+        $invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($oid);
+        if( !$invoice ) {
+            throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
+        }
+
         $cycle = "show";
+        $form = $this->createInvoiceForm($invoice,$cycle);
 
         $deleteForm = $this->createDeleteForm($invoice);
 
         return array(
+            'transresRequest' => $transresRequest,
             'invoice' => $invoice,
+            'form' => $form->createView(),
             'delete_form' => $deleteForm->createView(),
             'cycle' => $cycle
         );
@@ -104,12 +161,18 @@ class InvoiceController extends Controller
     /**
      * Displays a form to edit an existing invoice entity.
      *
-     * @Route("/edit/{id}", name="translationalresearch_invoice_edit")
+     * @Route("/edit/{id}/{oid}", name="translationalresearch_invoice_edit")
      * @Template("OlegTranslationalResearchBundle:Invoice:new.html.twig")
      * @Method({"GET", "POST"})
      */
-    public function editAction(Request $request, Invoice $invoice)
+    public function editAction(Request $request, TransResRequest $transresRequest, $oid)
     {
+        $em = $this->getDoctrine()->getManager();
+        $invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($oid);
+        if( !$invoice ) {
+            throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
+        }
+
         $cycle = "edit";
 
         $deleteForm = $this->createDeleteForm($invoice);
@@ -122,7 +185,7 @@ class InvoiceController extends Controller
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('invoice_edit', array('id' => $invoice->getId()));
+            return $this->redirectToRoute('translationalresearch_invoice_edit', array('id'=>$transresRequest->getId(), 'oid' => $invoice->getId()));
         }
 
         return array(
@@ -149,7 +212,7 @@ class InvoiceController extends Controller
             $em->flush();
         }
 
-        return $this->redirectToRoute('invoice_index');
+        return $this->redirectToRoute('translationalresearch_invoice_index_all');
     }
 
     /**
@@ -162,7 +225,7 @@ class InvoiceController extends Controller
     private function createDeleteForm(Invoice $invoice)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('invoice_delete', array('id' => $invoice->getId())))
+            ->setAction($this->generateUrl('translationalresearch_invoice_delete', array('id' => $invoice->getId())))
             ->setMethod('DELETE')
             ->getForm()
         ;

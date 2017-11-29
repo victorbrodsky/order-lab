@@ -79,6 +79,7 @@ class Invoice {
     private $transresRequests;
 
     /**
+     * The same as OID (remove it?)
      * @var string
      * @ORM\Column(type="string", nullable=true)
      */

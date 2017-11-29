@@ -272,6 +272,9 @@ function setTranslationalResearchNavBar() {
     if( full.indexOf("/translational-research/request/new/") !== -1 ) {
         id = 'translationalresearch-allmenu-requests';
     }
+    if( full.indexOf("/requests") !== -1 ) {
+        id = 'translationalresearch-allmenu-requests';
+    }
 
     id = commonNavBar(full,id);
 
