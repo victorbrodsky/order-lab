@@ -7925,6 +7925,12 @@ class AdminController extends Controller
         $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
+        //disable all where productId is NULL
+        $query = $em->createQuery("UPDATE OlegTranslationalResearchBundle:RequestCategoryTypeList list SET list.type = 'disabled' WHERE list.productId IS NULL");
+        $numUpdated = $query->execute();
+        echo "Disabled elements in RequestCategoryTypeList, where productId IS NULL = ".$numUpdated."<br>";
+
+
 //        $types = array(
 //            //"" => array("Histology", "",""),
 //            "Processing fixed tissue & embedding in paraffin block only" => array("Histology", "18","block"),
@@ -7994,6 +8000,7 @@ class AdminController extends Controller
 //            "Administration fee (outside requests)" => array("Administration", "25","request"),
 //        );
 
+        //(rev.08/17) *Contact: Bing He 212-746-6230
         $types = array(
             //array("Section", "TRP-0000","description","0","null"),
             array("Histology", "TRP-1001","Processing fixed tissue & embedding in paraffin block only","18","block"),
@@ -8049,9 +8056,19 @@ class AdminController extends Controller
             array("Imaging", "TRP-4005","Aperio scanning rate -20X - TMA slide","100","scan"),
             array("Imaging", "TRP-4006","Aperio scanning rate -40X - TMA slide","150","scan"),
 
-            array("Pathology Service", "TRP-4001","sss","10","scan"),
+            array("Pathology Service", "TRP-5001","Data Search w/ MD Review of Reports (Up to 100 reports)","250","request"),
 
+            array("Genomics", "TRP-6001","Custom genotyping","","Project-specific"),
+            array("Genomics", "TRP-6002","Gene expression analysis (including miRNAs)","","Project-specific"),
+            array("Genomics", "TRP-6003","DNA copy number analysis","","Project-specific"),
+            array("Genomics", "TRP-6004","Methylation analysis","","Project-specific"),
 
+            array("Other Service Pricing", "TRP-7001","Search through up to 10 patient records/blocks outside requests only","100","request"),
+
+            array("Biostatistics and Informatics", "TRP-8001","Biostatistics consultation - Study design, data collection & analysis, clinical trials protocol support","","Project-specific"),
+
+            array("Administration", "TRP-9000","Professional fee (outside requests, Pathologist consulting service for selection of block and determination of adequacy)","100","request"),
+            array("Administration", "TRP-9001","Administration fee (outside requests)","25","request"),
         );
 
         $count = 10;

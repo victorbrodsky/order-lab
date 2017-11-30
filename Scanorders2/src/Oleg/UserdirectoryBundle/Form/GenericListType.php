@@ -591,6 +591,11 @@ class GenericListType extends AbstractType
                 'required' => false,
                 'attr' => array('class'=>'form-control')
             ));
+            $builder->add('productId', TextType::class, array(
+                'label' => 'Product ID:',
+                'required' => false,
+                'attr' => array('class'=>'form-control')
+            ));
             $builder->add('fee', TextType::class, array(
                 'label' => 'Fee ($):',
                 'required' => false,

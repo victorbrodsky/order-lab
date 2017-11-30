@@ -792,6 +792,9 @@
     {% if form.section is defined %}
         {{ formmacros.field(form.section) }}
     {% endif %}
+    {% if form.productId is defined %}
+        {{ formmacros.field(form.productId) }}
+    {% endif %}
     {% if form.fee is defined %}
         {{ formmacros.field(form.fee) }}
     {% endif %}
