@@ -42,6 +42,8 @@ class RequestCategoryTypeList extends ListAbstract
 
 
     /**
+     * Price of Product or Service
+     *
      * @var string
      * @ORM\Column(type="string", nullable=true)
      */
@@ -59,7 +61,13 @@ class RequestCategoryTypeList extends ListAbstract
      */
     private $section;
 
-
+    /**
+     * ID of Product or Service
+     *
+     * @var string
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $productId;
 
 
     /**
@@ -109,6 +117,24 @@ class RequestCategoryTypeList extends ListAbstract
     {
         $this->section = $section;
     }
+
+    /**
+     * @return string
+     */
+    public function getProductId()
+    {
+        return $this->productId;
+    }
+
+    /**
+     * @param string $productId
+     */
+    public function setProductId($productId)
+    {
+        $this->productId = $productId;
+    }
+
+
 
     public function getOptimalAbbreviationName()
     {

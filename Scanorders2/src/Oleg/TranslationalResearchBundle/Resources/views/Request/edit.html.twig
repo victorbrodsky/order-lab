@@ -39,7 +39,9 @@
     {{ form_start(edit_form) }}
 
         {% if edit_form.fundedAccountNumber is defined %}
-            <p>Current project's funded account number: {{ project.getFundedAccountNumber() }}</p>
+            {#{% if project.getFundedAccountNumber() %}#}
+                {#<p>Current project's funded account number: {{ project.getFundedAccountNumber() }}</p>#}
+            {#{% endif %}#}
             {{ formmacros.field(edit_form.fundedAccountNumber) }}
         {% endif %}
 

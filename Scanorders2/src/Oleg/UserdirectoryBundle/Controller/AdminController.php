@@ -7925,79 +7925,149 @@ class AdminController extends Controller
         $username = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
+//        $types = array(
+//            //"" => array("Histology", "",""),
+//            "Processing fixed tissue & embedding in paraffin block only" => array("Histology", "18","block"),
+//            "Embedding frozen tissue in OCT block" => array("Histology", "10","block"),
+//            "Unstained slides from paraffin-embedded or frozen tissue" => array("Histology", "10","slide"),
+//            "Unstained slides from TMA block" => array("Histology", "10","slide"),
+//            "Processing tissue and providing one H&E stained slide from paraffin-embedded block or frozen tissue" => array("Histology", "25","slide"),
+//            "Prepare one H&E stained slide from paraffin-embedded block or frozen tissue" => array("Histology", "12","slide"),
+//            "Prepare one H&E stained slide from TMA block" => array("Histology", "12","slide"),
+//            "Sectioning or coring from paraffin-embedded or frozen tissue (Eppendorf tube)" => array("Histology", "15","tube"),
+//            "Weigert's elastic staining" => array("Histology", "28","Slide"),
+//            "Giemsa staining" => array("Histology", "28","slide"),
+//            "Iron staining" => array("Histology", "28","slide"),
+//            "Alcian Blue staining" => array("Histology", "28","slide"),
+//            "Periodic Acid-Schiff (PAS) staining" => array("Histology", "28","slide"),
+//            "Reticulocyte staining" => array("Histology", "35","slide"),
+//            "Masson's trichrome staining (manual)" => array("Histology", "35","slide"),
+//            "Von Kossa staining (manual)" => array("Histology", "35","slide"),
+//            "Alzarin Red staining (manual)" => array("Histology", "35","slide"),
+//            "Oil Red O Staining (manual)" => array("Histology", "28","slide"),
+//            "Warthin Starry (Spirochetes)" => array("Histology", "35","slide"),
+//            "Congo Red (Amyloid)" => array("Histology", "28","slide"),
+//            "Picrosirius Red (Collagen)" => array("Histology", "28","slide"),
+//            "Modified H&E (Harris and Gill 3 Hematoxylin) Overnight staining" => array("Histology", "12","slide"),
+//
+//            "Staining - IHC regular" => array("Immunopathology", "35","slide"),
+//            "Staining - IHC regular double" => array("Immunopathology", "70","slide"),
+//            "Staining - IHC fluorescent" => array("Immunopathology", "35","slide"),
+//            "Staining - IHC fluorescent double" => array("Immunopathology", "70","slide"),
+//            "Staining - IHC fluorescent triple" => array("Immunopathology", "100","slide"),
+//            "Antibody titering (one antibody)" => array("Immunopathology", "250","request"),
+//            "Antibody titering (double staining)" => array("Immunopathology", "400","request"),
+//            "TMA construction (base charge)" => array("Immunopathology", "400","TMA block"),
+//            "TMA construction (additional cores)" => array("Immunopathology", "10","tissue core"),
+//            "DNA in situ Hybridization (DNA probe)" => array("Immunopathology", "100","slide"),
+//            "RNA in situ Hybridization (RNASCOPE)" => array("Immunopathology", "100","slide"),
+//
+//            "DNA/RNA extraction from blood, FFPE tissue, frozen tissue, etc" => array("Molecular Pathology", "30","reaction"),
+//            "Quantitation of DNA/RNA utilizing Qubit 3.0" => array("Molecular Pathology", "5","reaction"),
+//            "Applied Biosystems Real Time PCR" => array("Molecular Pathology", "20","run"),
+//            "RNA Probe Hybridization" => array("Molecular Pathology", "","Project-specific"),
+//            "Mutation analysis platform" => array("Molecular Pathology", "30","reaction"),
+//            "Fluorescent In-Situ Hybridization (FISH) Probe Development" => array("Molecular Pathology", "","Project-specific"),
+//            "FISH Probe Hybridization" => array("Molecular Pathology", "","Project-specific"),
+//            "Laser Capture Microdisection (User)" => array("Molecular Pathology", "","Project-specific"),
+//            "Enzyme-linked immunosorbent assay (ELISA)" => array("Molecular Pathology", "","Project-specific"),
+//
+//            "Aperio scanning rate -20X - each slide" => array("Imaging", "10","scan"),
+//            "Aperio scanning rate -40X - each slide" => array("Imaging", "15","scan"),
+//            "Hosting images - per slide (20X) - per year" => array("Imaging", "","Project-specific"),
+//            "Hosting images - per slide (40X) - per year" => array("Imaging", "","Project-specific"),
+//            "Aperio scanning rate -20X - TMA slide" => array("Imaging", "100","scan"),
+//            "Aperio scanning rate -40X - TMA slide" => array("Imaging", "150","scan"),
+//
+//            "Data search w/ MD review of reports (up to 100 reports)" => array("Pathology Service", "250","request"),
+//
+//            "Custom genotyping" => array("Genomics", "","Project-specific"),
+//            "Gene expression analysis (including miRNAs)" => array("Genomics", "","Project-specific"),
+//            "DNA copy number analysis" => array("Genomics", "","Project-specific"),
+//            "Methylation analysis" => array("Genomics", "","Project-specific"),
+//
+//            "Search through up to 10 patient records/blocks (outside requests only)" => array("Other Service Pricing", "100","request"),
+//
+//            "Biostatistics consultation - Study design, data collection & analysis, clinical trials protocol support" => array("Biostatistics and Informatics", "","Project-specific"),
+//
+//            "Professional fee (outside requests, Pathologist consulting service for selection of block and determination of adequacy)" => array("Administration", "100","request"),
+//            "Administration fee (outside requests)" => array("Administration", "25","request"),
+//        );
+
         $types = array(
-            //"" => array("Histology", "",""),
-            "Processing fixed tissue & embedding in paraffin block only" => array("Histology", "18","block"),
-            "Embedding frozen tissue in OCT block" => array("Histology", "10","block"),
-            "Unstained slides from paraffin-embedded or frozen tissue" => array("Histology", "10","slide"),
-            "Unstained slides from TMA block" => array("Histology", "10","slide"),
-            "Processing tissue and providing one H&E stained slide from paraffin-embedded block or frozen tissue" => array("Histology", "25","slide"),
-            "Prepare one H&E stained slide from paraffin-embedded block or frozen tissue" => array("Histology", "12","slide"),
-            "Prepare one H&E stained slide from TMA block" => array("Histology", "12","slide"),
-            "Sectioning or coring from paraffin-embedded or frozen tissue (Eppendorf tube)" => array("Histology", "15","tube"),
-            "Weigert's elastic staining" => array("Histology", "28","Slide"),
-            "Giemsa staining" => array("Histology", "28","slide"),
-            "Iron staining" => array("Histology", "28","slide"),
-            "Alcian Blue staining" => array("Histology", "28","slide"),
-            "Periodic Acid-Schiff (PAS) staining" => array("Histology", "28","slide"),
-            "Reticulocyte staining" => array("Histology", "35","slide"),
-            "Masson's trichrome staining (manual)" => array("Histology", "35","slide"),
-            "Von Kossa staining (manual)" => array("Histology", "35","slide"),
-            "Alzarin Red staining (manual)" => array("Histology", "35","slide"),
-            "Oil Red O Staining (manual)" => array("Histology", "28","slide"),
-            "Warthin Starry (Spirochetes)" => array("Histology", "35","slide"),
-            "Congo Red (Amyloid)" => array("Histology", "28","slide"),
-            "Picrosirius Red (Collagen)" => array("Histology", "28","slide"),
-            "Modified H&E (Harris and Gill 3 Hematoxylin) Overnight staining" => array("Histology", "12","slide"),
+            //array("Section", "TRP-0000","description","0","null"),
+            array("Histology", "TRP-1001","Processing fixed tissue & embedding in paraffin block only","18","block"),
+            array("Histology", "TRP-1002","Embedding frozen tissue in OCT block","10","block"),
+            array("Histology", "TRP-1003","Unstained slides from paraffin-embedded or frozen tissue","10","slide"),
+            array("Histology", "TRP-1004","Unstained slides from TMA block","10","slide"),
+            array("Histology", "TRP-1005","Processing tissue and providing one H&E stained slide from paraffin-embedded block or frozen tissue","25","slide"),
+            array("Histology", "TRP-1006","Prepare one H&E stained slide from paraffin-embedded block or frozen tissue","12","slide"),
+            array("Histology", "TRP-1007","Prepare one H&E stained slide from TMA block","12","slide"),
+            array("Histology", "TRP-1008","Sectioning or coring from paraffin-embedded or frozen tissue (Eppendorf tube)","15","tube"),
+            array("Histology", "TRP-1009","Weigert's elastic staining","28","slide"),
+            array("Histology", "TRP-1010","Giemsa staining","28","slide"),
+            array("Histology", "TRP-1011","Iron staining","28","slide"),
+            array("Histology", "TRP-1012","Alcian Blue staining","28","slide"),
+            array("Histology", "TRP-1013","Periodic Acid-Schiff (PAS) staining","28","slide"),
+            array("Histology", "TRP-1014","Reticulocyte staining","15","slide"),
+            array("Histology", "TRP-1015","Masson's trichrome staining (manual)","35","slide"),
+            array("Histology", "TRP-1016","Von Kossa staining (manual)","35","slide"),
+            array("Histology", "TRP-1017","Alzarin Red staining (manual)","35","slide"),
+            array("Histology", "TRP-1018","Oil Red O staining (manual)","28","slide"),
+            array("Histology", "TRP-1019","Warthin Starry (Spirochetes)","35","slide"),
+            array("Histology", "TRP-1020","Congo Red (Amyloid)","28","slide"),
+            array("Histology", "TRP-1021","Picrosirius Red ( Collagen)","28","slide"),
+            array("Histology", "TRP-1022","Modified H&E (Harris and Gill 3 Hematoxylin) Overnight staining.","12","slide"),
 
-            "Staining - IHC regular" => array("Immunopathology", "35","slide"),
-            "Staining - IHC regular double" => array("Immunopathology", "70","slide"),
-            "Staining - IHC fluorescent" => array("Immunopathology", "35","slide"),
-            "Staining - IHC fluorescent double" => array("Immunopathology", "70","slide"),
-            "Staining - IHC fluorescent triple" => array("Immunopathology", "100","slide"),
-            "Antibody titering (one antibody)" => array("Immunopathology", "250","request"),
-            "Antibody titering (double staining)" => array("Immunopathology", "400","request"),
-            "TMA construction (base charge)" => array("Immunopathology", "400","TMA block"),
-            "TMA construction (additional cores)" => array("Immunopathology", "10","tissue core"),
-            "DNA in situ Hybridization (DNA probe)" => array("Immunopathology", "100","slide"),
-            "RNA in situ Hybridization (RNASCOPE)" => array("Immunopathology", "100","slide"),
+            array("Immunopathology", "TRP-2001","Staining - IHC regular","35","slide"),
+            array("Immunopathology", "TRP-2002","Staining - IHC regular double","70","slide"),
+            array("Immunopathology", "TRP-2003","Staining - IHC fluorescent","35","slide"),
+            array("Immunopathology", "TRP-2004","Staining - IHC fluorescent double","70","slide"),
+            array("Immunopathology", "TRP-2005","Staining - IHC fluorescent triple","100","slide"),
+            array("Immunopathology", "TRP-2006","Antibody titering (one antibody)","250","request"),
+            array("Immunopathology", "TRP-2007","Antibody titering (double staining)","400","request"),
+            array("Immunopathology", "TRP-2008","TMA construction (base charge)","400","TMA block"),
+            array("Immunopathology", "TRP-2009","TMA construction (additional cores)","10","tissue core"),
+            array("Immunopathology", "TRP-2010","DNA in situ Hybridization (DNA probe)","100","slide"),
+            array("Immunopathology", "TRP-2011","RNA in situ Hybridization (RNASCOPE)","100","slide"),
 
-            "DNA/RNA extraction from blood, FFPE tissue, frozen tissue, etc" => array("Molecular Pathology", "30","reaction"),
-            "Quantitation of DNA/RNA utilizing Qubit 3.0" => array("Molecular Pathology", "5","reaction"),
-            "Applied Biosystems Real Time PCR" => array("Molecular Pathology", "20","run"),
-            "RNA Probe Hybridization" => array("Molecular Pathology", "","Project-specific"),
-            "Mutation analysis platform" => array("Molecular Pathology", "30","reaction"),
-            "Fluorescent In-Situ Hybridization (FISH) Probe Development" => array("Molecular Pathology", "","Project-specific"),
-            "FISH Probe Hybridization" => array("Molecular Pathology", "","Project-specific"),
-            "Laser Capture Microdisection (User)" => array("Molecular Pathology", "","Project-specific"),
-            "Enzyme-linked immunosorbent assay (ELISA)" => array("Molecular Pathology", "","Project-specific"),
+            array("Molecular Pathology", "TRP-3001","DNA/RNA extraction from blood, FFPE tissue, frozen tissue, etc","30","reaction"),
+            array("Molecular Pathology", "TRP-3002","Quantitation of DNA/RNA utilizing Qubit 3.0","5","reaction"),
+            array("Molecular Pathology", "TRP-3003","Applied Biosystems Real Time PCR","20","run"),
+            array("Molecular Pathology", "TRP-3004","RNA Probe Hybridization","","Project-specific"),
+            //array("Molecular Pathology", "TRP-3005","description","0","null"),
+            array("Molecular Pathology", "TRP-3006","Mutation analysis platform","30","reaction"),
+            array("Molecular Pathology", "TRP-3007","Fluorescent In-Situ Hybridization (FISH) Probe Development","","Project-specific"),
+            array("Molecular Pathology", "TRP-3008","FISH Probe Hybridization","","Project-specific"),
+            array("Molecular Pathology", "TRP-3009","Laser Capture Microdisection (User)","","Project-specific"),
+            array("Molecular Pathology", "TRP-3010","Enzyme-linked immunosorbent assay (ELISA)","","Project-specific"),
 
-            "Aperio scanning rate -20X - each slide" => array("Imaging", "10","scan"),
-            "Aperio scanning rate -40X - each slide" => array("Imaging", "15","scan"),
-            "Hosting images - per slide (20X) - per year" => array("Imaging", "","Project-specific"),
-            "Hosting images - per slide (40X) - per year" => array("Imaging", "","Project-specific"),
-            "Aperio scanning rate -20X - TMA slide" => array("Imaging", "100","scan"),
-            "Aperio scanning rate -40X - TMA slide" => array("Imaging", "150","scan"),
+            array("Imaging", "TRP-4001","Aperio scanning rate -20X - each slide","10","scan"),
+            array("Imaging", "TRP-4002","Aperio scanning rate -40X - each slide","15","scan"),
+            array("Imaging", "TRP-4003","Hosting images - per slide (20X) - per year","","Project-specific"),
+            array("Imaging", "TRP-4004","Hosting images - per slide (40X) - per year","","Project-specific"),
+            array("Imaging", "TRP-4005","Aperio scanning rate -20X - TMA slide","100","scan"),
+            array("Imaging", "TRP-4006","Aperio scanning rate -40X - TMA slide","150","scan"),
 
-            "Data search w/ MD review of reports (up to 100 reports)" => array("Pathology Service", "250","request"),
+            array("Pathology Service", "TRP-4001","sss","10","scan"),
 
-            "Custom genotyping" => array("Genomics", "","Project-specific"),
-            "Gene expression analysis (including miRNAs)" => array("Genomics", "","Project-specific"),
-            "DNA copy number analysis" => array("Genomics", "","Project-specific"),
-            "Methylation analysis" => array("Genomics", "","Project-specific"),
 
-            "Search through up to 10 patient records/blocks (outside requests only)" => array("Other Service Pricing", "100","request"),
-
-            "Biostatistics consultation - Study design, data collection & analysis, clinical trials protocol support" => array("Biostatistics and Informatics", "","Project-specific"),
-
-            "Professional fee (outside requests, Pathologist consulting service for selection of block and determination of adequacy)" => array("Administration", "100","request"),
-            "Administration fee (outside requests)" => array("Administration", "25","request"),
         );
 
         $count = 10;
-        foreach( $types as $name => $paramsArr ) {
+        foreach( $types as $paramsArr ) {
 
-            $listEntity = $em->getRepository('OlegTranslationalResearchBundle:RequestCategoryTypeList')->findOneByName($name);
+            if( count($paramsArr) > 0 ) {
+                $section = $paramsArr[0];
+                $productId = $paramsArr[1];
+                $name = $paramsArr[2];
+                $fee = $paramsArr[3];
+                $feeUnit = $paramsArr[4];
+            } else {
+                continue;
+            }
+
+            $listEntity = $em->getRepository('OlegTranslationalResearchBundle:RequestCategoryTypeList')->findOneByProductId($productId);
             if( $listEntity ) {
                 continue;
             }
@@ -8005,15 +8075,10 @@ class AdminController extends Controller
             $listEntity = new RequestCategoryTypeList();
             $this->setDefaultList($listEntity,$count,$username,$name);
 
-            if( count($paramsArr) > 0 ) {
-                $section = $paramsArr[0];
-                $fee = $paramsArr[1];
-                $feeUnit = $paramsArr[2];
-
-                $listEntity->setSection($section);
-                $listEntity->setFee($fee);
-                $listEntity->setFeeUnit($feeUnit);
-            }
+            $listEntity->setSection($section);
+            $listEntity->setProductId($productId);
+            $listEntity->setFee($fee);
+            $listEntity->setFeeUnit($feeUnit);
 
             //exit('exit generateObjectTypeActions');
             $em->persist($listEntity);
