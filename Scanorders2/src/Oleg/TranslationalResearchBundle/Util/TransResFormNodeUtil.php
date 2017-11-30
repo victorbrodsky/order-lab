@@ -350,32 +350,6 @@ class TransResFormNodeUtil
         $newField = $formNodeUtil->createV2FormNode($formParams);
         ///////////////////////////// Product or Service (Form Section Array) /////////////////////
 
-
-//        $sections = array(
-//            //CCI (Corrected Count Increment) Instance: [Form Section] NESTED IN "CCI (Corrected Count Increment) Calculations: [Form Section]"
-//            //    CCI date: [Form Field - Full Date and Time]
-//            //    CCI Platelet Type Transfused [Form Field - Dropdown Menu]
-//            //    Pre Platelet Count 1: [Form Field - Free Text, Single Line] (rename to Pre-transfusion Platelet Count)
-//            //    Post Platelet Count 2: [Form Field - Free Text, Single Line] (rename to Post-transfusion Platelet Count)
-//            //    CCI: [Form Field - Free Text, Single Line]
-//            array(
-//                'sectionName' => "CCI (Corrected Count Increment) Instance",
-//                'sectionObjectTypeName' => "Form Section Array",
-//                'sectionParentName' => 'CCI (Corrected Count Increment) Calculations',
-//                'fields' => array(
-//                    'CCI date'=>'Form Field - Full Date and Time',
-//                    'CCI Platelet Type Transfused'=>array('Form Field - Dropdown Menu',"Oleg\\UserdirectoryBundle\\Entity","CCIPlateletTypeTransfusedList"),
-//                    'Pre-transfusion Platelet Count'=>'Form Field - Free Text, Single Line',
-//                    'Post-transfusion Platelet Count'=>'Form Field - Free Text, Single Line',
-//                    //'CCI'=>'Form Field - Free Text, Single Line',
-//                    //TODO: implement and replace for CCI
-//                    'CCI'=>'Form Field - Free Text, Single Line, Unlocked, Calculated, Stored',
-//                )
-//            ),
-//        );
-//        $ProductForm = $this->addFormToHolder($parent,"Complex platelet summary",$sections);
-        
-
         //Interpretation by Pathologist (yes/no)
 //        $objectTypeRadio = $formNodeUtil->getObjectTypeByName('Form Field - Radio Button');
 //        $formParams = array(
