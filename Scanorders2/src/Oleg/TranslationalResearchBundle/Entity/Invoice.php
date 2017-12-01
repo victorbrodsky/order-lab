@@ -545,6 +545,13 @@ class Invoice {
         return $this->documents;
     }
 
-
+    public function generateOid($transresRequest)
+    {
+        $transresRequestOid = $transresRequest->getOid();
+        $oid = $transresRequestOid . "-INV-" . $this->getId();
+        //echo "oid=$oid <br>";
+        $this->setOid($oid);
+        return $oid;
+    }
 
 }

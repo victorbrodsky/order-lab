@@ -479,7 +479,11 @@ class ListController extends Controller
         $form = $this->createCreateForm($entity,$mapper,$pathbase,'new');
         $form->handleRequest($request);
 
+        //echo "new list item creation <br>";
+
         if ($form->isValid()) {
+            //TODO: test creating new item for a list
+            //exit('valid');
             $em = $this->getDoctrine()->getManager();
 
             //the date from the form does not contain time, so set createdate with date and time.
@@ -493,6 +497,7 @@ class ListController extends Controller
 
             return $this->redirect($this->generateUrl($pathbase.'_show', array('id' => $entity->getId())));
         }
+        //exit('invalid');
 
         return array(
             'entity' => $entity,

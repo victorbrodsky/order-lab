@@ -100,10 +100,12 @@ class InvoiceController extends Controller
 
         $invoice = new Invoice($user);
 
+        $invoice->generateOid($transresRequest);
+
         $transresRequest->addInvoice($invoice);
 
         //populate invoice items corresponding to the multiple requests
-        $invoiceItems = $transresRequestUtil->getRequestItems();
+        $invoiceItems = $transresRequestUtil->getRequestItems($transresRequest);
         foreach( $invoiceItems as $invoiceItem ) {
             $invoice->addInvoiceItem($invoiceItem);
         }
@@ -114,6 +116,8 @@ class InvoiceController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             //exit('new');
+
+            $invoice->generateOid($transresRequest);
 
             //TODO: check how many items per invoice
 

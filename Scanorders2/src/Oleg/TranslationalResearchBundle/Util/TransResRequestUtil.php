@@ -89,7 +89,7 @@ class TransResRequestUtil
 
     //TODO: modify for multiple sections
     public function getTransResRequestFeeHtml( $request ) {
-//return 1;
+
         $transResFormNodeUtil = $this->container->get('transres_formnode_util');
         $formNodeUtil = $this->container->get('user_formnode_utility');
 
@@ -891,13 +891,98 @@ class TransResRequestUtil
         return $receivingObject;
     }
 
-    public function getRequestItems() {
+    public function getRequestItems($request) {
         $user = $this->secTokenStorage->getToken()->getUser();
         //$user = null; //testing
         $invoiceItemsArr = new ArrayCollection();
-        $invoiceItemsArr->add(new InvoiceItem($user));
-        $invoiceItemsArr->add(new InvoiceItem($user));
-        $invoiceItemsArr->add(new InvoiceItem($user));
+
+        $transResFormNodeUtil = $this->container->get('transres_formnode_util');
+        $formNodeUtil = $this->container->get('user_formnode_utility');
+
+        $completedEntities = $transResFormNodeUtil->getProjectFormNodeFieldByName(
+            $request,
+            "Completed #",
+            "HemePath Translational Research Request",
+            "Request",
+            "Product or Service",
+            null,
+            true
+        );
+        //echo "completedEntities=".count($completedEntities)."<br>";
+//        $formNodeValues = $completedEntities['formNodeValue'];
+//        foreach($formNodeValues as $resArr) {
+//            $formNodeValue = $resArr['formNodeValue'];
+//            echo "formNodeValue=".$formNodeValue."<br>";
+//            $arraySectionIndex = $resArr['arraySectionIndex'];
+//            echo "arraySectionIndex=" . $arraySectionIndex . "<br>";
+//        }
+//        return 1;
+
+        $requestedEntities = $transResFormNodeUtil->getProjectFormNodeFieldByName(
+            $request,
+            "Requested #",
+            "HemePath Translational Research Request",
+            "Request",
+            "Product or Service",
+            null,
+            true
+        );
+        //echo "requestedEntities=".count($requestedEntities)."<br>";
+
+        $requestCategoryTypeComplexResults = $this->getMultipleProjectFormNodeFieldByName(
+            $request,
+            "Category Type",
+            "HemePath Translational Research Request",
+            "Request",
+            "Product or Service"
+        );
+        //echo "requestCategoryTypeComplexResults=".count($requestCategoryTypeComplexResults)."<br>";
+
+        //2) group by arraySectionIndex
+        foreach($requestCategoryTypeComplexResults as $complexRes) {
+
+            $arraySectionIndex = $complexRes['arraySectionIndex'];
+            //echo "arraySectionIndex=".$arraySectionIndex."<br>";
+            $dropdownObject = $complexRes['dropdownObject'];
+
+            $requested = $this->findByArraySectionIndex($requestedEntities,$arraySectionIndex);
+            //echo "requested=".$requested."<br>";
+            $completed = $this->findByArraySectionIndex($completedEntities,$arraySectionIndex);
+            //echo "completed=".$completed."<br>";
+            //echo "###<br>";
+
+            //$fee = $dropdownObject->getFee();
+
+//            if( $fee ) {
+//                $subTotal = $subTotal + intval($completed) * intval($fee);
+//                //return $subTotal;
+//            }
+
+            $invoiceItem = new InvoiceItem($user);
+            $invoiceItem->setQuantity($completed);
+
+            //ItemCode
+            $itemCode = $dropdownObject->getProductId();
+            $invoiceItem->setItemCode($itemCode);
+
+            //Description
+            $name = $dropdownObject->getName();
+            $invoiceItem->setDescription($name);
+
+            //UnitPrice
+            $fee = $dropdownObject->getFee();
+            $invoiceItem->setUnitPrice($fee);
+
+            //Total
+            $total = intval($completed) * intval($fee);
+            $invoiceItem->setTotal($total);
+
+            $invoiceItemsArr->add($invoiceItem);
+        }
+
+        //$invoiceItemsArr->add(new InvoiceItem($user));
+        //$invoiceItemsArr->add(new InvoiceItem($user));
+        //$invoiceItemsArr->add(new InvoiceItem($user));
         return $invoiceItemsArr;
     }
     

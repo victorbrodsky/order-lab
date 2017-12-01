@@ -48,7 +48,7 @@ class InvoiceType extends AbstractType
         $builder->add('salesperson', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
             'label' => "Salesperson:",
-            'disabled' => true,
+            //'disabled' => true,
             'required' => false,
             'multiple' => false,
             'attr' => array('class' => 'combobox combobox-width'),
@@ -63,7 +63,7 @@ class InvoiceType extends AbstractType
             },
         ));
 
-        //if(!$testing) {
+        if(0) {
             $builder->add('submitter', EntityType::class, array(
                 'class' => 'OlegUserdirectoryBundle:User',
                 'label' => "Submitter:",
@@ -81,14 +81,16 @@ class InvoiceType extends AbstractType
                         ->orderBy("infos.displayName", "ASC");
                 },
             ));
-        //}
+        }
 
-        $builder->add('oid', null, array(
-            'label' => "Invoice Number:",
-            //'disabled' => true,
-            'required' => false,
-            'attr' => array('class' => 'form-control')
-        ));
+        //if( $this->params['cycle'] != 'new' ) {
+            $builder->add('oid', null, array(
+                'label' => "Invoice Number:",
+                //'disabled' => true,
+                'required' => false,
+                'attr' => array('class' => 'form-control')
+            ));
+        //}
 
         //if(!$testing) {
             $builder->add('dueDate', DateType::class, array(

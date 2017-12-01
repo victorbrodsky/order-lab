@@ -68,8 +68,9 @@
         {#{% endif %}#}
 
         {#<hr />#}
-
-        {{ formmacros.field(form.oid) }}
+        {% if form.oid is defined %}
+            {{ formmacros.field(form.oid) }}
+        {% endif %}
 
         {% if form.dueDate is defined %}
             {{ formmacros.fieldDateLabel(form.dueDate,'allow-future-date') }}
@@ -158,6 +159,13 @@
     <script type="text/javascript">
 
         $(document).ready(function() {
+
+            // Create a new 'change' event
+            //var event = new Event('change');
+            // Dispatch it.
+            //$('.invoiceitem-total').dispatchEvent(event);
+            var onetotal = $('.invoiceitem-total').first();
+            transresUpdateSubTotal(onetotal);
 
             //quantity or unit price update => update total
             $('.invoiceitem-quantity, .invoiceitem-unitPrice').on('input', function(event) {
