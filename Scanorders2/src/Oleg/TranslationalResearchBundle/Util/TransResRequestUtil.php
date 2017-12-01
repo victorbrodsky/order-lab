@@ -87,7 +87,155 @@ class TransResRequestUtil
         return null;
     }
 
+    //TODO: modify for multiple sections
     public function getTransResRequestFeeHtml( $request ) {
+//return 1;
+        $transResFormNodeUtil = $this->container->get('transres_formnode_util');
+        $formNodeUtil = $this->container->get('user_formnode_utility');
+
+        $completedEntities = $transResFormNodeUtil->getProjectFormNodeFieldByName(
+            $request,
+            "Completed #",
+            "HemePath Translational Research Request",
+            "Request",
+            "Product or Service",
+            null,
+            true
+        );
+        //echo "completedEntities=".count($completedEntities)."<br>";
+//        $formNodeValues = $completedEntities['formNodeValue'];
+//        foreach($formNodeValues as $resArr) {
+//            $formNodeValue = $resArr['formNodeValue'];
+//            echo "formNodeValue=".$formNodeValue."<br>";
+//            $arraySectionIndex = $resArr['arraySectionIndex'];
+//            echo "arraySectionIndex=" . $arraySectionIndex . "<br>";
+//        }
+//        return 1;
+
+        $requestedEntities = $transResFormNodeUtil->getProjectFormNodeFieldByName(
+            $request,
+            "Requested #",
+            "HemePath Translational Research Request",
+            "Request",
+            "Product or Service",
+            null,
+            true
+        );
+        //echo "requestedEntities=".count($requestedEntities)."<br>";
+
+        $requestCategoryTypeComplexResults = $this->getMultipleProjectFormNodeFieldByName(
+            $request,
+            "Category Type",
+            "HemePath Translational Research Request",
+            "Request",
+            "Product or Service"
+        );
+        //echo "requestCategoryTypeComplexResults=".count($requestCategoryTypeComplexResults)."<br>";
+//        $res = array(
+//            'formNodeValue' => $formNodeValue,
+//            'formNodeId' => $formNode->getId(),
+//            'arraySectionId' => $result->getArraySectionId(),
+//            'arraySectionIndex' => $result->getArraySectionIndex(),
+//        );
+//        $resArr[] = $res;
+
+        $subTotal = 0;
+
+        //2) group by arraySectionIndex
+        foreach($requestCategoryTypeComplexResults as $complexRes) {
+
+            $arraySectionIndex = $complexRes['arraySectionIndex'];
+            //echo "arraySectionIndex=".$arraySectionIndex."<br>";
+            $dropdownObject = $complexRes['dropdownObject'];
+
+            $requested = $this->findByArraySectionIndex($requestedEntities,$arraySectionIndex);
+            //echo "requested=".$requested."<br>";
+            $completed = $this->findByArraySectionIndex($completedEntities,$arraySectionIndex);
+            //echo "completed=".$completed."<br>";
+            //echo "###<br>";
+
+            $fee = $dropdownObject->getFee();
+
+            if( $fee ) {
+                $subTotal = $subTotal + intval($completed) * intval($fee);
+                //return $subTotal;
+            }
+        }
+
+        return $subTotal;
+    }
+    public function findByArraySectionIndex($entities, $arraySectionIndex) {
+//        foreach($entities as $entity) {
+////            if( $entity->getArraySectionIndex() == $arraySectionIndex ) {
+////                return $entity;
+////            }
+//        }
+        $formNodeValues = $entities['formNodeValue'];
+        if( !is_array($formNodeValues) ) {
+            return null;
+        }
+        foreach($formNodeValues as $resArr) {
+            $formNodeValue = $resArr['formNodeValue'];
+            //echo "formNodeValue=".$formNodeValue."<br>";
+            $thisArraySectionIndex = $resArr['arraySectionIndex'];
+            //echo "arraySectionIndex=" . $arraySectionIndex . "<br>";
+            if( $thisArraySectionIndex == $arraySectionIndex ) {
+                return $formNodeValue;
+            }
+        }
+        return null;
+    }
+    public function getMultipleProjectFormNodeFieldByName(
+        $entity,
+        $fieldName,
+        $parentNameStr = "HemePath Translational Research",
+        $formNameStr = "HemePath Translational Research Project",
+        $entityFormNodeSectionStr = "Project"
+    )
+    {
+        $transResFormNodeUtil = $this->container->get('transres_formnode_util');
+        $formNodeUtil = $this->container->get('user_formnode_utility');
+
+        $value = null;
+        $receivingEntity = null;
+
+        //1) get FormNode by fieldName
+        //echo "getting formnode <br>";
+        $fieldFormNode = $transResFormNodeUtil->getFormNodeByFieldNameAndParents($fieldName, $parentNameStr, $formNameStr, $entityFormNodeSectionStr);
+
+        //2) get field for this particular project
+        $class = new \ReflectionClass($entity);
+        $className = $class->getShortName();
+        $classNamespace = $class->getNamespaceName();
+        $entityMapper = array(
+            'entityNamespace' => $classNamespace,   //"Oleg\\TranslationalResearchBundle\\Entity",
+            'entityName' => $className, //"Project",
+            'entityId' => $entity->getId(),
+        );
+
+        $results = $formNodeUtil->getFormNodeValueByFormnodeAndReceivingmapper($fieldFormNode,$entityMapper,true);
+
+        $resArr = array();
+        foreach( $results as $result ) {
+            $arraySectionIndex = $result->getArraySectionIndex();
+            //echo "result ID= ".$result->getId()." <br>";
+            //$formNodeValue = $formNodeUtil->processFormNodeValue($fieldFormNode,$result,$result->getValue(),true);
+            //echo "formNodeValue= $formNodeValue <br>";
+            //$dropdownObject = $formNodeUtil->getReceivingObject($fieldFormNode,$result->getId());
+            //echo "dropdownObject ID= ".$dropdownObject->getId()." <br>";
+            $dropdownObject = $this->em->getRepository('OlegTranslationalResearchBundle:RequestCategoryTypeList')->find($result->getValue());
+            //echo "category=".$dropdownObject."<br>";
+            $thisRes = array(
+                'arraySectionIndex'=>$arraySectionIndex,
+                'dropdownObject'=>$dropdownObject
+            );
+            $resArr[] = $thisRes;
+        }
+
+        return $resArr;
+    }
+    public function getSingleTransResRequestFeeHtml_OLD( $request ) {
+
         $transResFormNodeUtil = $this->container->get('transres_formnode_util');
 
         $completed = $transResFormNodeUtil->getProjectFormNodeFieldByName(
@@ -306,11 +454,16 @@ class TransResRequestUtil
         $ids = array();
 
         //1) get formnode by category type name "Category Type" under formnode "HemePath Translational Research Request"->"Request"
+//        $fieldFormNode = $transResFormNodeUtil->getFormNodeByFieldNameAndParents(
+//            "Category Type",
+//            "HemePath Translational Research",
+//            "HemePath Translational Research Request",
+//            "Request" //Product or Service
+//        );
         $fieldFormNode = $transResFormNodeUtil->getFormNodeByFieldNameAndParents(
             "Category Type",
-            "HemePath Translational Research",
             "HemePath Translational Research Request",
-            "Request"
+            "Product or Service"
         );
         //echo "fieldFormNode=".$fieldFormNode->getId()."<br>";
         if( !$fieldFormNode ) {
@@ -352,11 +505,16 @@ class TransResRequestUtil
         $objectTypeDropdowns = array();
 
         //1) get formnode by category type name "Category Type" under formnode "HemePath Translational Research Request"->"Request"
+//        $fieldFormNode = $transResFormNodeUtil->getFormNodeByFieldNameAndParents(
+//            "Comment",
+//            "HemePath Translational Research",
+//            "HemePath Translational Research Request",
+//            "Request"
+//        );
         $fieldFormNode = $transResFormNodeUtil->getFormNodeByFieldNameAndParents(
             "Comment",
-            "HemePath Translational Research",
             "HemePath Translational Research Request",
-            "Request"
+            "Product or Service"
         );
         //echo "fieldFormNode=".$fieldFormNode->getId()."<br>";
         if( !$fieldFormNode ) {

@@ -461,7 +461,8 @@ class FormNodeUtil
 //        }
 
         //1) create a new list element OR get existing listElement for this $holderEntity
-        if( method_exists($holderEntity, 'isEditable') && $holderEntity->isEditable() ){
+        //if( method_exists($holderEntity, 'isEditable') && $holderEntity->isEditable() ){
+        if( $this->isHolderEntityEditable($holderEntity,$params) ) {
             //echo "object isEditable => object is editable without creating a new amend copy <br>";
 
             $newListElement = $this->getUniqueFormNodeListRecord($formNode,$holderEntity);
@@ -477,6 +478,7 @@ class FormNodeUtil
                     $this->em->flush($newListElement); //testing
                 }
 
+                echo "Editable => return existing listelement <br>";
                 return $newListElement;
             }
 
@@ -537,8 +539,20 @@ class FormNodeUtil
         return $newListElement;
     }
 
-    public function ddd() {
-
+    public function isHolderEntityEditable($holderEntity,$params) {
+        if( method_exists($holderEntity, 'isEditable') && $holderEntity->isEditable() ){
+            if( $params ) {
+                //echo "params: arraySectionIndex=".$params['arraySectionIndex']."; arraySectionId=" . $params['arraySectionId'] ."<br>";
+                if( array_key_exists('arraySectionIndex', $params) ) {
+                    return false;
+                }
+                if( array_key_exists('arraySectionId', $params) ) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
     }
 
     //get unique list object for recording the form's value
@@ -2264,11 +2278,12 @@ class FormNodeUtil
         }
 
         if( count($results) > 1 ) {
-            //echo "multiple results(".count(count($results))."): ".$formNode->getName()."<br>";
+            //echo "multiple results(".count($results)."): ".$formNode->getName()."<br>";
             $resArr = array();
             foreach( $results as $result ) {
                 //$formNodeValue = $this->getFormNodeValueByType($formNode,$result);
                 $formNodeValue = $this->processFormNodeValue($formNode,$result,$result->getValue(),true);
+                //echo "formNodeValue=".$formNodeValue."<br>";
                 $res = array(
                     'formNodeValue' => $formNodeValue,
                     'formNodeId' => $formNode->getId(),

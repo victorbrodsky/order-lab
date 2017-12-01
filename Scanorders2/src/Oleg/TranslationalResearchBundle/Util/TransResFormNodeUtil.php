@@ -405,7 +405,8 @@ class TransResFormNodeUtil
         $parentNameStr = "HemePath Translational Research",
         $formNameStr = "HemePath Translational Research Project",
         $entityFormNodeSectionStr = "Project",
-        $asEntity=false
+        $asEntity=false,
+        $asComplexRes=false
     ) {
 
         $formNodeUtil = $this->container->get('user_formnode_utility');
@@ -429,6 +430,9 @@ class TransResFormNodeUtil
 
         $complexRes = $formNodeUtil->getFormNodeValueByFormnodeAndReceivingmapper($fieldFormNode,$entityMapper);
         if( $complexRes ) {
+            if( $asComplexRes ) {
+                return $complexRes;
+            }
             $formNodeValue = $complexRes['formNodeValue'];
             $receivingEntity = $complexRes['receivingEntity'];
             //echo $fieldName.": getProjectFormNodeFieldByName formNodeValue=".$formNodeValue."<br>";
