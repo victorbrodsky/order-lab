@@ -127,23 +127,51 @@ class TransResRequest {
     private $project;
 
     /**
-     * fundedAccountNumber: this field can override the project's fundedAccountNumber
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $fundedAccountNumber;
-
-    /**
      * @ORM\ManyToMany(targetEntity="Invoice", inversedBy="transresRequests")
      * @ORM\JoinTable(name="transres_request_invoice")
      */
     private $invoices;
 
 
+    //////////////// fields /////////////////////////
+    /**
+     * fundedAccountNumber: this field can override the project's fundedAccountNumber
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $fundedAccountNumber;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $supportStartDate;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $supportEndDate;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\JoinColumn(name="contact", referencedColumnName="id", nullable=true)
+     */
+    private $contact;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Product", mappedBy="transresRequest", cascade={"persist","remove"})
+     */
+    private $products;
+
+    //////////////// EOF fields /////////////////////////
+
+
+
     public function __construct($user=null) {
         $this->setSubmitter($user);
         //$this->setState('draft');
         $this->setCreateDate(new \DateTime());
+
         $this->invoices = new ArrayCollection();
+        $this->products = new ArrayCollection();
     }
 
 
@@ -419,6 +447,71 @@ class TransResRequest {
         $this->invoices->removeElement($item);
     }
 
+    //////////////// fields /////////////////////////
+    public function getProducts()
+    {
+        return $this->products;
+    }
+    public function addProduct($item)
+    {
+        if( $item && !$this->products->contains($item) ) {
+            $this->products->add($item);
+        }
+        return $this;
+    }
+    public function removeProduct($item)
+    {
+        $this->products->removeElement($item);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSupportStartDate()
+    {
+        return $this->supportStartDate;
+    }
+
+    /**
+     * @param mixed $supportStartDate
+     */
+    public function setSupportStartDate($supportStartDate)
+    {
+        $this->supportStartDate = $supportStartDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSupportEndDate()
+    {
+        return $this->supportEndDate;
+    }
+
+    /**
+     * @param mixed $supportEndDate
+     */
+    public function setSupportEndDate($supportEndDate)
+    {
+        $this->supportEndDate = $supportEndDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContact()
+    {
+        return $this->contact;
+    }
+
+    /**
+     * @param mixed $contact
+     */
+    public function setContact($contact)
+    {
+        $this->contact = $contact;
+    }
+    //////////////// EOF fields /////////////////////////
 
 
 

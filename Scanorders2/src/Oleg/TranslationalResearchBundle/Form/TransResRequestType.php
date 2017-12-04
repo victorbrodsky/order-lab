@@ -89,12 +89,6 @@ class TransResRequestType extends AbstractType
             ));
         }
 
-        $builder->add('fundedAccountNumber',null, array(
-            'label' => "Fund account number:",
-            'required' => false,
-            'attr' => array('class' => 'form-control tarnsresrequest-fundedAccountNumber'),
-        ));
-
         if( $this->params['availableProjects'] && count($this->params['availableProjects']) > 0 ) {
             //echo "2availableProjects count=".count($this->params['availableProjects'])."<br>";
             $builder->add('project', EntityType::class, array(
@@ -167,6 +161,65 @@ class TransResRequestType extends AbstractType
             });
             /////////////////////////////////////// EOF messageCategory ///////////////////////////////////////
         }//if
+
+
+        //////////////// fields /////////////////////////
+        $builder->add('fundedAccountNumber',null, array(
+            'label' => "Fund account number:",
+            'required' => false,
+            'attr' => array('class' => 'form-control tarnsresrequest-fundedAccountNumber'),
+        ));
+
+        $builder->add('supportStartDate', DateType::class, array(
+            'widget' => 'single_text',
+            'label' => "Support Start Date:",
+            'format' => 'MM/dd/yyyy',
+            'attr' => array('class' => 'datepicker form-control'),
+            'required' => false,
+        ));
+
+        $builder->add('supportEndDate', DateType::class, array(
+            'widget' => 'single_text',
+            'label' => "Support End Date:",
+            'format' => 'MM/dd/yyyy',
+            'attr' => array('class' => 'datepicker form-control'),
+            'required' => false,
+        ));
+
+        $builder->add('contact', EntityType::class, array(
+            'class' => 'OlegUserdirectoryBundle:User',
+            'label'=> "Contact:",
+            'required'=> false,
+            'multiple' => false,
+            'attr' => array('class'=>'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->leftJoin("list.employmentStatus", "employmentStatus")
+                    ->leftJoin("employmentStatus.employmentType", "employmentType")
+                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+                    ->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
+                    ->leftJoin("list.infos", "infos")
+                    ->orderBy("infos.displayName","ASC");
+            },
+        ));
+
+        $builder->add('products', CollectionType::class, array(
+            'entry_type' => ProductType::class,
+            'entry_options' => array(
+                'data_class' => 'Oleg\TranslationalResearchBundle\Entity\Product',
+                'form_custom_value' => $this->params
+            ),
+            'label' => false,
+            'required' => false,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__products__',
+        ));
+        //////////////// EOF fields /////////////////////////
+
+
 
         if( $this->params['saveAsDraft'] === true ) {
             $builder->add('saveAsDraft', SubmitType::class, array(

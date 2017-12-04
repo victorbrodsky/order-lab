@@ -39,16 +39,18 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Request FormNode controller.
+ *
+ * @Route("formnode")
  */
-class RequestController extends Controller
+class RequestFormNodeController extends Controller
 {
 
     /**
      * Creates a new request entity with formnode.
      *
-     * @Route("/project/{id}/request/new/", name="translationalresearch_request_new")
-     * @Route("/request/new/", name="translationalresearch_new_standalone_request")
-     * @Template("OlegTranslationalResearchBundle:Request:new.html.twig")
+     * @Route("/project/{id}/request/new/", name="translationalresearch_request_formnode_new")
+     * @Route("/request/new/", name="translationalresearch_new_standalone_request_formnode")
+     * @Template("OlegTranslationalResearchBundle:RequestFormnode:new.html.twig")
      * @Method({"GET", "POST"})
      */
     public function newFormNodeAction(Request $request, Project $project=null)
@@ -63,8 +65,6 @@ class RequestController extends Controller
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
         $cycle = "new";
-
-        $formnode = false;
 
         $testing = false;
         //$testing = true;
@@ -93,6 +93,8 @@ class RequestController extends Controller
 
         //top message category id
         $formnodeTopHolderId = null;
+        //$categoryStr = "Pathology Call Log Entry";
+        //$messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
         $messageCategory = $transresRequest->getMessageCategory();
         if( $messageCategory ) {
             $formnodeTopHolderId = $messageCategory->getId();
@@ -136,10 +138,8 @@ class RequestController extends Controller
             }
 
             //process form nodes
-            if( $formnode ) {
-                $formNodeUtil = $this->get('user_formnode_utility');
-                $formNodeUtil->processFormNodes($request, $transresRequest->getMessageCategory(), $transresRequest, $testing);
-            }
+            $formNodeUtil = $this->get('user_formnode_utility');
+            $formNodeUtil->processFormNodes($request,$transresRequest->getMessageCategory(),$transresRequest,$testing);
 
             $msg = "New Request has been successfully submitted for the project ID ".$project->getOid();
 
@@ -156,7 +156,7 @@ class RequestController extends Controller
             $msg = "New Request with ID ".$transresRequest->getOid()." has been successfully submitted for the project ID ".$project->getOid();
             $transresUtil->setEventLog($transresRequest,$eventType,$msg);
 
-            return $this->redirectToRoute('translationalresearch_request_show', array('id' => $transresRequest->getId()));
+            return $this->redirectToRoute('translationalresearch_request_formnode_show', array('id' => $transresRequest->getId()));
         }
 
 
@@ -177,8 +177,8 @@ class RequestController extends Controller
     /**
      * Get TransResRequest Edit page
      *
-     * @Route("/request/edit/{id}", name="translationalresearch_request_edit")
-     * @Template("OlegTranslationalResearchBundle:Request:edit.html.twig")
+     * @Route("/request/edit/{id}", name="translationalresearch_request_formnode_edit")
+     * @Template("OlegTranslationalResearchBundle:RequestFormnode:edit.html.twig")
      * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, TransResRequest $transresRequest)
@@ -289,7 +289,7 @@ class RequestController extends Controller
             $msg = "Request ID ".$transresRequest->getOid() ." has been updated.";
             $transresUtil->setEventLog($transresRequest,$eventType,$msg);
 
-            return $this->redirectToRoute('translationalresearch_request_show', array('id' => $transresRequest->getId()));
+            return $this->redirectToRoute('translationalresearch_request_formnode_show', array('id' => $transresRequest->getId()));
         }
 
         $eventType = "Request Viewed";
@@ -316,8 +316,8 @@ class RequestController extends Controller
     /**
      * Finds and displays a request entity.
      *
-     * @Route("/request/show/{id}", name="translationalresearch_request_show")
-     * @Template("OlegTranslationalResearchBundle:Request:show.html.twig")
+     * @Route("/request/show/{id}", name="translationalresearch_request_formnode_show")
+     * @Template("OlegTranslationalResearchBundle:RequestFormnode:show.html.twig")
      * @Method("GET")
      */
     public function showAction(Request $request, TransResRequest $transresRequest)
@@ -373,8 +373,8 @@ class RequestController extends Controller
     /**
      * Finds and displays all project's requests
      *
-     * @Route("/project/{id}/requests", name="translationalresearch_request_index")
-     * @Template("OlegTranslationalResearchBundle:Request:index.html.twig")
+     * @Route("/project/{id}/requests", name="translationalresearch_request_formnode_index")
+     * @Template("OlegTranslationalResearchBundle:RequestFormnode:index.html.twig")
      * @Method("GET")
      */
     public function indexAction(Request $request, Project $project)
@@ -499,9 +499,9 @@ class RequestController extends Controller
     /**
      * Finds and displays all my requests
      *
-     * @Route("/my-requests", name="translationalresearch_my_requests")
-     * @Route("/all-requests", name="translationalresearch_all_requests")
-     * @Template("OlegTranslationalResearchBundle:Request:all-requests.html.twig")
+     * @Route("/my-requests", name="translationalresearch_my_requests_formnode")
+     * @Route("/all-requests", name="translationalresearch_all_requests_formnode")
+     * @Template("OlegTranslationalResearchBundle:RequestFormnode:all-requests.html.twig")
      * @Method("GET")
      */
     public function myRequestsAction(Request $request)
@@ -567,13 +567,13 @@ class RequestController extends Controller
 
         $dqlParameters = array();
 
-        if( $routeName == "translationalresearch_my_requests" ) {
+        if( $routeName == "translationalresearch_my_requests_formnode" ) {
             $title = "My Requests";
             $dql->andWhere("submitter.id = :submitterId");
             $dqlParameters["submitterId"] = $user->getId();
         }
 
-        if( $routeName == "translationalresearch_all_requests" ) {
+        if( $routeName == "translationalresearch_all_requests_formnode" ) {
             $title = "All Requests";
         }
 
@@ -637,7 +637,7 @@ class RequestController extends Controller
 
 
 
-    public function createRequestEntity($user,$transresRequest=null,$formnode=false) {
+    public function createRequestEntity($user,$transresRequest=null) {
 
         $em = $this->getDoctrine()->getManager();
 
@@ -652,7 +652,7 @@ class RequestController extends Controller
         }
 
         //set order category
-        if( $formnode && !$transresRequest->getMessageCategory() ) {
+        if( !$transresRequest->getMessageCategory() ) {
             $categoryStr = "HemePath Translational Research Request";  //"Pathology Call Log Entry";
             //$categoryStr = "Nesting Test"; //testing
             $messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
@@ -705,7 +705,7 @@ class RequestController extends Controller
             $params['saveAsDraft'] = true;
             $params['saveAsComplete'] = true;
 
-            if( $routeName == "translationalresearch_new_standalone_request" ) {
+            if( $routeName == "translationalresearch_new_standalone_request_formnode" ) {
                 $availableProjects = $transresUtil->getAvailableProjects();
                 $params['availableProjects'] = $availableProjects;
             }
@@ -758,8 +758,8 @@ class RequestController extends Controller
     /**
      * Finds and displays a progress review form for this request entity.
      *
-     * @Route("/request/progress/review/{id}", name="translationalresearch_request_review_progress_state")
-     * @Template("OlegTranslationalResearchBundle:Request:review.html.twig")
+     * @Route("/request/progress/review/{id}", name="translationalresearch_request_formnode_review_progress_state")
+     * @Template("OlegTranslationalResearchBundle:RequestFormnode:review.html.twig")
      * @Method("GET")
      */
     public function reviewProgressAction(Request $request, TransResRequest $transresRequest)
@@ -796,8 +796,8 @@ class RequestController extends Controller
     /**
      * Finds and displays a billing review form for this request entity.
      *
-     * @Route("/request/billing/review/{id}", name="translationalresearch_request_review_billing_state")
-     * @Template("OlegTranslationalResearchBundle:Request:review.html.twig")
+     * @Route("/request/billing/review/{id}", name="translationalresearch_request_formnode_review_billing_state")
+     * @Template("OlegTranslationalResearchBundle:RequestFormnode:review.html.twig")
      * @Method("GET")
      */
     public function reviewBillingAction(Request $request, TransResRequest $transresRequest)
