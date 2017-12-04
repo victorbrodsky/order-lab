@@ -1437,6 +1437,9 @@ class User extends BaseUser {
 
         return $this->getId();
     }
+    public function getOptimalAbbreviationName() {
+        return $this->getUserNameStr();
+    }
 
     public function getSingleLastName() {
         if( $this->getLastName() ) {

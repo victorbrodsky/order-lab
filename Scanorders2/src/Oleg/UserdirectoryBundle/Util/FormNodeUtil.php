@@ -2098,14 +2098,21 @@ class FormNodeUtil
             $entityNamespaceArr = explode("\\",$entityNamespace);
             $bundleName = $entityNamespaceArr[0].$entityNamespaceArr[1];
 
-            $query = $em->createQueryBuilder()->from($bundleName.':'.$entityName, 'list')
-                //->select("list.id as id, list.name as text")
-                ->select("list")
-                ->orderBy("list.orderinlist","ASC");
+            $dropdownObjectClassname = $entityNamespace."\\".$entityName;
+            $dropdownObject = new $dropdownObjectClassname();
 
-            $query->where("list.type = :typedef OR list.type = :typeadd");
-            $parameters['typedef'] = 'default';
-            $parameters['typeadd'] = 'user-added';
+            $parameters = array();
+            $query = $em->createQueryBuilder()->from($bundleName . ':' . $entityName, 'list')
+                //->select("list.id as id, list.name as text")
+                ->select("list");
+
+            if( method_exists($dropdownObject,'getOrderinlist') ) {
+                $query->orderBy("list.orderinlist", "ASC");
+
+                $query->where("list.type = :typedef OR list.type = :typeadd");
+                $parameters['typedef'] = 'default';
+                $parameters['typeadd'] = 'user-added';
+            }
 
             if( $formNodeId ) {
                 if( strval($formNodeId) != strval(intval($formNodeId)) ) {
@@ -2118,7 +2125,9 @@ class FormNodeUtil
                 }
             }
 
-            $query->setParameters($parameters);
+            if( count($parameters) > 0 ) {
+                $query->setParameters($parameters);
+            }
 
             $output = $query->getQuery()->getResult();
 
