@@ -150,6 +150,7 @@ class ListController extends Controller
      * @Route("/list/translational-research-request-category-types/", name="transresrequestcategorytypes-list")
      *
      *
+     * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
      */
     public function indexAction(Request $request)
@@ -427,7 +428,7 @@ class ListController extends Controller
      * @Route("/list/transfusion-reaction-types/", name="transfusionreactiontypes_create")
      * @Route("/list/object-type-strings/", name="objecttypestrings_create")
      * @Route("/list/object-type-dropdowns/", name="objecttypedropdowns_create")
-     * @Route("/list/blood-types/", name="bloodtypes_creste")
+     * @Route("/list/blood-types/", name="bloodtypes_create")
      * @Route("/list/transfusion-antibody-screen-results/", name="transfusionantibodyscreenresults_create")
      * @Route("/list/transfusion-crossmatch-results/", name="transfusioncrossmatchresults_create")
      * @Route("/list/transfusion-dat-results/", name="transfusiondatresults_create")
@@ -479,11 +480,7 @@ class ListController extends Controller
         $form = $this->createCreateForm($entity,$mapper,$pathbase,'new');
         $form->handleRequest($request);
 
-        //echo "new list item creation <br>";
-
         if ($form->isValid()) {
-            //TODO: test creating new item for a list
-            //exit('valid');
             $em = $this->getDoctrine()->getManager();
 
             //the date from the form does not contain time, so set createdate with date and time.
@@ -497,7 +494,6 @@ class ListController extends Controller
 
             return $this->redirect($this->generateUrl($pathbase.'_show', array('id' => $entity->getId())));
         }
-        //exit('invalid');
 
         return array(
             'entity' => $entity,
@@ -529,7 +525,7 @@ class ListController extends Controller
 
         $form = $this->createForm(GenericListType::class, $entity, array(
             'action' => $this->generateUrl($pathbase.'_create'),
-            'method' => 'POST',
+            //'method' => 'POST',
             'data_class' => $mapper['fullClassName'],
             'form_custom_value' => $options,
             'form_custom_value_mapper' => $mapper

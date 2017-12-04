@@ -279,6 +279,7 @@ class TreeController extends Controller {
 
             if( $mapper['className'] == "FormNode" ) {
                 $text = $text . " " . "v." . $entity->getVersion();
+                $text = $text . " (" . "ID:" . $entity->getId() . "; order: " . $entity->getOrderinlist() . ")";
             }
 
             //disabled or not

@@ -420,13 +420,16 @@ class TransResRequest {
     }
 
 
+
+
+
     /**
-     * projectOid + "-RED-" + ID; Example: "HEMEPATH-8-REQ-1"
+     * projectOid + "-RED-" + ID; Example: "HP8-REQ1" or "APCP7-REQ1"
      * @param string $oid
      */
     public function generateOid()
     {
-        $oid = $this->getProject()->getOid() . "-REQ-" . $this->getId();
+        $oid = $this->getProject()->getOid() . "-REQ" . $this->getId();
         //echo "oid=$oid <br>";
         $this->setOid($oid);
         return $oid;

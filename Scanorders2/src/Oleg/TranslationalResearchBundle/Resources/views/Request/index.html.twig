@@ -61,6 +61,15 @@
     </div>
     <br>
 
+    {% if transres_request_util.isRequestCanBeCreated(project) %}
+        <br>
+        <p>
+            <a class="btn btn-primary" href="{{ path(translationalresearch_sitename~'_request_new', {'id':project.id}) }}"
+            >Create a new Request</a>
+        </p>
+        <br>
+    {% endif %}
+
     {#<table class="table table-hover table-condensed text-left table-bordered">#}
     <table class="records_list table table-condensed text-left my-table-class">
         <thead>

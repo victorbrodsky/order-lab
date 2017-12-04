@@ -1013,7 +1013,7 @@ class Project {
     }
 
     /**
-     * "HEMEPATH-ID" or "APCP-ID"
+     * "HPID" or "APCPID"
      * @param string $oid
      */
     public function generateOid()
@@ -1022,12 +1022,13 @@ class Project {
         if( $projectSpecialty ) {
             $projectSpecialtyAbbreviation = $projectSpecialty->getAbbreviation();
             if( $projectSpecialtyAbbreviation == "hematopathology" ) {
-                $projectSpecialtyAbbreviation = "HEMEPATH";
+                //$projectSpecialtyAbbreviation = "HEMEPATH";
+                $projectSpecialtyAbbreviation = "HP";
             }
             $projectSpecialtyAbbreviation = str_replace("-","",$projectSpecialtyAbbreviation);
             $projectSpecialtyStr = strtoupper($projectSpecialtyAbbreviation);
         }
-        $oid = $projectSpecialtyStr . "-" . $this->getId();
+        $oid = $projectSpecialtyStr . $this->getId();
         //echo "oid=$oid <br>";
         $this->setOid($oid);
     }
