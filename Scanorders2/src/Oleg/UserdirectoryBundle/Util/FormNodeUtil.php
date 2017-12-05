@@ -1211,9 +1211,11 @@ class FormNodeUtil
             return null;
         }
 
+        //$holderEntity->__load();
         $class = new \ReflectionClass($holderEntity);
         $className = $class->getShortName();
         $classNamespace = $class->getNamespaceName();
+        $classNamespace = str_replace("Proxies\\__CG__\\","",$classNamespace);
         $mapper = array(
             'entityNamespace' => $classNamespace,   //"Oleg\\OrderformBundle\\Entity",
             'entityName' => $className, //"Message",
@@ -1256,6 +1258,7 @@ class FormNodeUtil
             if( $complexRes ) {
                 $formNodeValue = $complexRes['formNodeValue'];
                 $receivingEntity = $complexRes['receivingEntity'];
+                //echo "formNodeValue=".$formNodeValue.":<br>";
 
                 if( is_array($formNodeValue) ) {
 
@@ -1366,7 +1369,6 @@ class FormNodeUtil
                     }
 
                     $formNodeValue = $this->getValueStrFromValueId($formNode, $receivingEntity, $formNodeValue);
-
                     //////////////// Regular form node /////////////////////
                     //process userWrapper case
                     $formNodeValue = $this->processFormNodeValue($formNode,$receivingEntity,$formNodeValue,true);
@@ -1576,10 +1578,12 @@ class FormNodeUtil
     //$holderEntity - message; $formNodeHolderEntity - message category
     public function getFormNodeHolderShortInfoForView( $holderEntity, $formNodeHolderEntity, $withValue=true ) {
         if( !$holderEntity ) {
+            //echo "holderEntity is NULL !!! <br>";
             return null;
         }
 
         if( !$formNodeHolderEntity ) {
+            //echo "formNodeHolderEntity is NULL !!! <br>";
             return null;
         }
 
@@ -2265,7 +2269,7 @@ class FormNodeUtil
         }
 
         if( count($results) == 0 ) {
-            //echo "no value were added to receiving object: ".$formNode->getName()."; entityName=".$mapper['entityName']."<br>";
+            //echo "no value were added to receiving object: ".$formNode->getName()."; entityNamespace=".$mapper['entityNamespace']."; entityName=".$mapper['entityName']."; entityId=".$mapper['entityId']."<br>";
             $complexRes = array(
                 'formNodeValue' => null,
                 'receivingEntity' => null

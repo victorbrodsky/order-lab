@@ -456,6 +456,7 @@ class TransResRequest {
     {
         if( $item && !$this->products->contains($item) ) {
             $this->products->add($item);
+            $item->setTransresRequest($this);
         }
         return $this;
     }

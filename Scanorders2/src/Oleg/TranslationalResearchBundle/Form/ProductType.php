@@ -8,6 +8,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -15,13 +16,13 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class ProductType extends AbstractType
 {
 
-    protected $invoice;
+    //protected $product;
     protected $params;
 
     public function formConstructor( $params )
     {
         $this->params = $params;
-        $this->invoice = $params['invoice'];
+        //$this->$product = $params['product'];
     }
 
     /**
@@ -31,12 +32,12 @@ class ProductType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
+        $builder->add('id', HiddenType::class);
 
         $builder->add('category', EntityType::class, array(
             'class' => 'OlegTranslationalResearchBundle:RequestCategoryTypeList',
-            'choice_label' => 'name',
+            'choice_label' => 'getOptimalAbbreviationName',
             'label'=>'Category Type:',
-            'disabled' => true,
             'required'=> false,
             'multiple' => false,
             'attr' => array('class'=>'combobox combobox-width'),
@@ -77,7 +78,7 @@ class ProductType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\TranslationalResearchBundle\Entity\Invoice',
+            'data_class' => 'Oleg\TranslationalResearchBundle\Entity\Product',
             'form_custom_value' => null
         ));
     }
@@ -87,7 +88,7 @@ class ProductType extends AbstractType
      */
     public function getBlockPrefix()
     {
-        return 'oleg_translationalresearchbundle_invoice';
+        return 'oleg_translationalresearchbundle_product';
     }
 
 

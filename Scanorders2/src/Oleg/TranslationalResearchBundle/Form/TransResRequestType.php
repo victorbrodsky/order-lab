@@ -165,7 +165,7 @@ class TransResRequestType extends AbstractType
 
         //////////////// fields /////////////////////////
         $builder->add('fundedAccountNumber',null, array(
-            'label' => "Fund account number:",
+            'label' => "WCM account number:",
             'required' => false,
             'attr' => array('class' => 'form-control tarnsresrequest-fundedAccountNumber'),
         ));
@@ -206,7 +206,7 @@ class TransResRequestType extends AbstractType
         $builder->add('products', CollectionType::class, array(
             'entry_type' => ProductType::class,
             'entry_options' => array(
-                'data_class' => 'Oleg\TranslationalResearchBundle\Entity\Product',
+                //'data_class' => 'Oleg\TranslationalResearchBundle\Entity\Product',
                 'form_custom_value' => $this->params
             ),
             'label' => false,

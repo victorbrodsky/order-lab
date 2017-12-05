@@ -41,7 +41,7 @@ class Product {
     private $submitter;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Product", inversedBy="products")
+     * @ORM\ManyToOne(targetEntity="TransResRequest", inversedBy="products")
      * @ORM\JoinColumn(name="transresRequest_id", referencedColumnName="id")
      */
     private $transresRequest;

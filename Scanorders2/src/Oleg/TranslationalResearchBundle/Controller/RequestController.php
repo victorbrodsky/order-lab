@@ -25,6 +25,8 @@
 namespace Oleg\TranslationalResearchBundle\Controller;
 
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Oleg\TranslationalResearchBundle\Entity\Product;
 use Oleg\TranslationalResearchBundle\Entity\Project;
 use Oleg\TranslationalResearchBundle\Entity\TransResRequest;
 use Oleg\TranslationalResearchBundle\Form\FilterRequestType;
@@ -71,6 +73,10 @@ class RequestController extends Controller
 
         $transresRequest = $this->createRequestEntity($user,null);
 
+        //add one Product or Service
+        $product = new Product($user);
+        $transresRequest->addProduct($product);
+
         $title = "Create a new Request";
 
         if( $project ) {
@@ -111,6 +117,13 @@ class RequestController extends Controller
             $project->setFundedAccountNumber($fundedAccountNumber);
             //set formnode field
             $transresRequestUtil->setValueToFormNodeProject($project,"If funded, please provide account number",$fundedAccountNumber);
+
+            //set submitter to product
+            foreach($transresRequest->getProducts() as $product) {
+                if( !$product->getSubmitter() ) {
+                    $product->setSubmitter($user);
+                }
+            }
 
             //new
             if ($form->getClickedButton() && 'saveAsDraft' === $form->getClickedButton()->getName()) {
@@ -178,7 +191,7 @@ class RequestController extends Controller
      * Get TransResRequest Edit page
      *
      * @Route("/request/edit/{id}", name="translationalresearch_request_edit")
-     * @Template("OlegTranslationalResearchBundle:Request:edit.html.twig")
+     * @Template("OlegTranslationalResearchBundle:Request:new.html.twig")
      * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, TransResRequest $transresRequest)
@@ -194,6 +207,7 @@ class RequestController extends Controller
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
+        $formnode = false;
         $cycle = "edit";
         $formtype = "translationalresearch-request";
 
@@ -213,6 +227,12 @@ class RequestController extends Controller
         }
 
         $transresRequest = $this->createRequestEntity($user,$transresRequest);
+
+        // Create an ArrayCollection of the current Tag objects in the database
+        $originalProducts = new ArrayCollection();
+        foreach($transresRequest->getProducts() as $product) {
+            $originalProducts->add($product);
+        }
 
         $form = $this->createRequestForm($transresRequest,$cycle,$request); //edit
 
@@ -241,6 +261,21 @@ class RequestController extends Controller
             $project->setFundedAccountNumber($fundedAccountNumber);
             //set formnode field
             $transresRequestUtil->setValueToFormNodeProject($project,"If funded, please provide account number",$fundedAccountNumber);
+
+            //process Product or Service sections
+            // remove the relationship between the tag and the Task
+            foreach($originalProducts as $product) {
+                if( false === $transresRequest->getProducts()->contains($product) ) {
+                    // remove the Task from the Tag
+                    $transresRequest->getProducts()->removeElement($product);
+                    // if it was a many-to-one relationship, remove the relationship like this
+                    $product->setTransresRequest(null);
+                    $em->persist($product);
+                    // if you wanted to delete the Tag entirely, you can also do that
+                    $em->remove($product);
+                }
+            }
+
 
             //edit
             if ($form->getClickedButton() && 'saveAsDraft' === $form->getClickedButton()->getName()) {
@@ -271,10 +306,12 @@ class RequestController extends Controller
 //            echo "formnode[421]=".$_POST['formnode[421]']."<br>";
 
             //process form nodes
-            $formNodeUtil = $this->get('user_formnode_utility');
-            $formNodeUtil->processFormNodes($request,$transresRequest->getMessageCategory(),$transresRequest,$testing); //testing
+            if( $formnode ) {
+                $formNodeUtil = $this->get('user_formnode_utility');
+                $formNodeUtil->processFormNodes($request, $transresRequest->getMessageCategory(), $transresRequest, $testing); //testing
+            }
 
-            $msg = "Request ID ".$transresRequest->getOid()." has been successfully updated for the project ID ".$project->getOid();
+            $msg = "Request ".$transresRequest->getOid()." has been successfully updated for the project ID ".$project->getOid();
 
             if( $testing ) {
                 exit('form is submitted and finished, msg='.$msg);
@@ -286,23 +323,23 @@ class RequestController extends Controller
             );
 
             $eventType = "Request Updated";
-            $msg = "Request ID ".$transresRequest->getOid() ." has been updated.";
+            $msg = "Request ".$transresRequest->getOid() ." has been updated.";
             $transresUtil->setEventLog($transresRequest,$eventType,$msg);
 
             return $this->redirectToRoute('translationalresearch_request_show', array('id' => $transresRequest->getId()));
         }
 
         $eventType = "Request Viewed";
-        $msg = "Request ID ".$transresRequest->getOid() ." has been viewed on the edit page.";
+        $msg = "Request ".$transresRequest->getOid() ." has been viewed on the edit page.";
         $transresUtil->setEventLog($transresRequest,$eventType,$msg);
 
         return array(
             'transresRequest' => $transresRequest,
             'project' => $project,
-            'edit_form' => $form->createView(),
+            'form' => $form->createView(),
             'cycle' => $cycle,
             'formtype' => $formtype,
-            'title' => "Edit Request ID ".$transresRequest->getOid(),
+            'title' => "Edit Request ".$transresRequest->getOid(),
             'triggerSearch' => 0,
             'formnodetrigger' => $formnodetrigger,
             'formnodeTopHolderId' => $formnodeTopHolderId,
@@ -310,6 +347,7 @@ class RequestController extends Controller
             'entityName' => $className,
             'entityId' => $transresRequest->getId(),
             'sitename' => $this->container->getParameter('translationalresearch.sitename'),
+            'routeName' => $request->get('_route')
         );
     }
 
@@ -317,7 +355,7 @@ class RequestController extends Controller
      * Finds and displays a request entity.
      *
      * @Route("/request/show/{id}", name="translationalresearch_request_show")
-     * @Template("OlegTranslationalResearchBundle:Request:show.html.twig")
+     * @Template("OlegTranslationalResearchBundle:Request:new.html.twig")
      * @Method("GET")
      */
     public function showAction(Request $request, TransResRequest $transresRequest)
@@ -332,6 +370,7 @@ class RequestController extends Controller
         //$user = $this->get('security.token_storage')->getToken()->getUser();
 
         $cycle = "show";
+        $project = $transresRequest->getProject();
 
         $form = $this->createRequestForm($transresRequest,$cycle,$request); //show
 
@@ -349,25 +388,18 @@ class RequestController extends Controller
         }
 
         $eventType = "Request Viewed";
-        $msg = "Request ID ".$transresRequest->getOid() ." has been viewed on the show review page.";
+        $msg = "Request ".$transresRequest->getOid() ." has been viewed on the show review page.";
         $transresUtil->setEventLog($transresRequest,$eventType,$msg);
 
         return array(
             'transresRequest' => $transresRequest,
-            'project' => $transresRequest->getProject(),
+            'project' => $project,
             'form' => $form->createView(),
             'cycle' => $cycle,
-            'title' => "Request ID ".$transresRequest->getOid() . $feeHtml,
+            'title' => "Request ".$transresRequest->getOid() . $feeHtml,
             //'delete_form' => $deleteForm->createView(),
             //'review_forms' => $reviewFormViews
         );
-
-//        return array(
-//            'project' => $project,
-//            'cycle' => 'show',
-//            'delete_form' => $deleteForm->createView(),
-//            'title' => "Project ID ".$project->getOid()
-//        );
     }
 
     /**
@@ -389,6 +421,7 @@ class RequestController extends Controller
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $routeName = $request->get('_route');
         $title = "Requests for the project ID ".$project->getOid();
+        $formnode = false;
 
         //////// create filter //////////
         $progressStateArr = $transresRequestUtil->getProgressStateArr();
@@ -410,17 +443,19 @@ class RequestController extends Controller
 
         //////////////// get Requests IDs with the form node filter ////////////////
         $ids = array();
-        if( $category ) {
-            $categoryIds = $transresRequestUtil->getRequestIdsFormNodeByCategory($category);
-            $ids = array_merge($ids, $categoryIds);
-        }
-        if( $searchStr ) {
-            $commentIds = $transresRequestUtil->getRequestIdsFormNodeByComment($searchStr);
-            $ids = array_merge($ids, $commentIds);
-        }
-        if( count($ids) > 0 ) {
-            $ids = array_unique($ids);
-            //print_r($ids);
+        if( $formnode ) {
+            if ($category) {
+                $categoryIds = $transresRequestUtil->getRequestIdsFormNodeByCategory($category);
+                $ids = array_merge($ids, $categoryIds);
+            }
+            if ($searchStr) {
+                $commentIds = $transresRequestUtil->getRequestIdsFormNodeByComment($searchStr);
+                $ids = array_merge($ids, $commentIds);
+            }
+            if (count($ids) > 0) {
+                $ids = array_unique($ids);
+                //print_r($ids);
+            }
         }
         //////////////// EOF get Requests IDs with the form node filter ////////////////
 
@@ -781,7 +816,7 @@ class RequestController extends Controller
         $form = $this->createRequestForm($transresRequest,$cycle,$request); //show
 
         $eventType = "Request Viewed";
-        $msg = "Request ID ".$transresRequest->getOid() ." has been viewed on the progress review page.";
+        $msg = "Request ".$transresRequest->getOid() ." has been viewed on the progress review page.";
         $transresUtil->setEventLog($transresRequest,$eventType,$msg);
 
         return array(
@@ -789,7 +824,7 @@ class RequestController extends Controller
             'form' => $form->createView(),
             'cycle' => $cycle,
             'statMachineType' => 'progress',
-            'title' => "Progress Review Request ID ".$transresRequest->getOid(),
+            'title' => "Progress Review Request ".$transresRequest->getOid(),
         );
     }
 
@@ -819,7 +854,7 @@ class RequestController extends Controller
         $form = $this->createRequestForm($transresRequest,$cycle,$request); //show
 
         $eventType = "Request Viewed";
-        $msg = "Request ID ".$transresRequest->getOid() ." has been viewed on the billing review page.";
+        $msg = "Request ".$transresRequest->getOid() ." has been viewed on the billing review page.";
         $transresUtil->setEventLog($transresRequest,$eventType,$msg);
 
         return array(
@@ -828,7 +863,7 @@ class RequestController extends Controller
             'form' => $form->createView(),
             'cycle' => $cycle,
             'statMachineType' => 'billing',
-            'title' => "Billing Review Request ID ".$transresRequest->getOid(),
+            'title' => "Billing Review Request ".$transresRequest->getOid(),
         );
     }
 

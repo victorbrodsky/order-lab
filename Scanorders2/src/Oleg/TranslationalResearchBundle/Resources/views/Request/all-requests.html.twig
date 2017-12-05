@@ -76,6 +76,7 @@
                 <th>{{ knp_pagination_sortable(transresRequests, 'Creation Date', 'transresRequest.createDate') }}</th>
                 <th>{{ knp_pagination_sortable(transresRequests, 'Work Progress Status', 'transresRequest.progressState') }}</th>
                 <th>{{ knp_pagination_sortable(transresRequests, 'Billing Progress Status', 'transresRequest.billingState') }}</th>
+                <th>Products/Services</th>
                 <th>Fee</th>
                 <th>Actions</th>
             </tr>
@@ -126,6 +127,14 @@
 
                 <td>
                     {{ transres_request_util.getBillingStateLabelByName(transresRequest.billingState) }}
+                </td>
+
+                <td>
+                    {% for product in transresRequest.products %}
+                        {% if product.category %}
+                            {{ product.category.getShortInfo() }}<br>
+                        {% endif %}
+                    {% endfor %}
                 </td>
 
                 <td>
@@ -182,12 +191,12 @@
                     </div>
                 </td>
             </tr>
-            <tr class="table-no-border">
-                <td style="display: none">
-                    <a href="{{ path(translationalresearch_sitename~'_request_show', { 'id': transresRequest.id }) }}" target="_blank">Show Request</a>
-                </td>
-                {{ user_formnode_utility.getFormNodeHolderShortInfo(transresRequest,transresRequest.messageCategory,1,trclassname)|raw }}
-            </tr>
+            {#<tr class="table-no-border">#}
+                {#<td style="display: none">#}
+                    {#<a href="{{ path(translationalresearch_sitename~'_request_show', { 'id': transresRequest.id }) }}" target="_blank">Show Request</a>#}
+                {#</td>#}
+                {#{{ user_formnode_utility.getFormNodeHolderShortInfo(transresRequest,transresRequest.messageCategory,1,trclassname)|raw }}#}
+            {#</tr>#}
         {% endfor %}
         </tbody>
     </table>

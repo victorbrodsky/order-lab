@@ -87,8 +87,36 @@ class TransResRequestUtil
         return null;
     }
 
-    //TODO: modify for multiple sections
     public function getTransResRequestFeeHtml( $request ) {
+        $subTotal = 0;
+
+        foreach($request->getProducts() as $product) {
+            $requested = $product->getRequested();
+            $completed = $product->getCompleted();
+            $category = $product->getCategory();
+            //echo "requested=$requested <br>";
+            $fee = 0;
+            $units = 0;
+            if( $category ) {
+                $fee = $category->getFee();
+            }
+            if( $requested ) {
+                $units = intval($requested);
+            }
+            if( $completed ) {
+                $units = intval($completed);
+            }
+            //echo "units=$units; fee=$fee <br>";
+            if( $fee && $units ) {
+                $subTotal = $subTotal + ($units * intval($fee));
+            }
+        }
+
+        return $subTotal;
+    }
+
+    //TODO: modify for multiple sections
+    public function getTransResRequestFormnodeFeeHtml( $request ) {
 
         $transResFormNodeUtil = $this->container->get('transres_formnode_util');
         $formNodeUtil = $this->container->get('user_formnode_utility');
