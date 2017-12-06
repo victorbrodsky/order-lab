@@ -226,6 +226,16 @@ class RequestController extends Controller
             $transresRequest->setFundedAccountNumber($projectFundedAccountNumber);
         }
 
+        //pre-populate Request's Billing Contact by Project's Billing Contact
+        if( $project->getBillingContact() ) {
+            $transresRequest->setContact($project->getBillingContact());
+        }
+
+        //pre-populate Request's Support End Date by Project's IRB Expiration Date
+        if( $project->getIrbExpirationDate() ) {
+            $transresRequest->setSupportEndDate($project->getIrbExpirationDate());
+        }
+
         $transresRequest = $this->createRequestEntity($user,$transresRequest);
 
         // Create an ArrayCollection of the current Tag objects in the database
@@ -487,6 +497,20 @@ class RequestController extends Controller
         if( $billingStates && count($billingStates)>0 ) {
             $dql->andWhere("transresRequest.billingState IN (:billingStates)");
             $dqlParameters["billingStates"] = implode(",",$billingStates);
+        }
+
+        if( !$formnode ) {
+            $dql->leftJoin('transresRequest.products','products');
+            if ($category) {
+                $dql->leftJoin('products.category','category');
+                $dql->andWhere("category.id = :categoryId");
+                $dqlParameters["categoryId"] = $category;
+            }
+            if ($searchStr) {
+                //$dql->andWhere("(category.name LIKE :categoryStr OR category.productId LIKE :categoryStr OR category.feeUnit LIKE :categoryStr OR category.fee LIKE :categoryStr)");
+                $dql->andWhere("products.comment LIKE :searchStr");
+                $dqlParameters["searchStr"] = "%".$searchStr."%";
+            }
         }
 
         if( count($ids) > 0 ) {

@@ -312,11 +312,11 @@ class ProjectType extends AbstractType
             },
         ));
 
-        $builder->add( 'billingContacts', EntityType::class, array(
+        $builder->add( 'billingContact', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
-            'label'=> "Billing Contact(s):",
+            'label'=> "Billing Contact:",
             'required'=> false,
-            'multiple' => true,
+            'multiple' => false,
             'attr' => array('class'=>'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
                 return $er->createQueryBuilder('list')
@@ -480,6 +480,28 @@ class ProjectType extends AbstractType
             'by_reference' => false,
             'prototype' => true,
             'prototype_name' => '__documentsid__',
+        ));
+
+        $builder->add('irbApprovalLetters', CollectionType::class, array(
+            'entry_type' => DocumentType::class,
+            'label' => 'IRB Approval Letters(s):',
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__irbApprovalLettersid__',
+        ));
+
+        $builder->add('humanTissueForms', CollectionType::class, array(
+            'entry_type' => DocumentType::class,
+            'label' => 'Human TissueForms(s):',
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__humanTissueFormsid__',
         ));
 
 

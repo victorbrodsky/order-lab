@@ -425,6 +425,11 @@ class TransResUtil
         if( $project->getBillingContacts()->contains($user) ) {
             return true;
         }
+//        if( $project->getBillingContact() ) {
+//            if( $project->getBillingContact()->getId() == $user->getId() ) {
+//                return true;
+//            }
+//        }
         return false;
     }
     public function isRequesterOrAdmin( $project ) {

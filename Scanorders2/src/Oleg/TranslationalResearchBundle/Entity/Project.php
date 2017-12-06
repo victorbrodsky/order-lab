@@ -149,14 +149,19 @@ class Project {
      **/
     private $contacts;
 
+//    /**
+//     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+//     * @ORM\JoinTable(name="transres_project_billingContact",
+//     *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id")},
+//     *      inverseJoinColumns={@ORM\JoinColumn(name="billingContact_id", referencedColumnName="id")}
+//     * )
+//     **/
+//    private $billingContacts;
     /**
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinTable(name="transres_project_billingContact",
-     *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="billingContact_id", referencedColumnName="id")}
-     * )
-     **/
-    private $billingContacts;
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
+     */
+    private $billingContact;
 
 //    /**
 //     * @ORM\Column(type="text", nullable=true)
@@ -279,7 +284,7 @@ class Project {
     private $finalReviews;
 
     /**
-     * Other Documents
+     * Project Documents
      *
      * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
      * @ORM\JoinTable(name="transres_project_document",
@@ -289,6 +294,30 @@ class Project {
      * @ORM\OrderBy({"createdate" = "ASC"})
      **/
     private $documents;
+
+    /**
+     * IRB Approval Letter
+     *
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="transres_project_irbApprovalLetter",
+     *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id", onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="irbApprovalLetters_id", referencedColumnName="id", onDelete="CASCADE")}
+     *      )
+     * @ORM\OrderBy({"createdate" = "ASC"})
+     **/
+    private $irbApprovalLetters;
+
+    /**
+     * Human Tissue Form
+     *
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="transres_project_humanTissueForm",
+     *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id", onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="humanTissueForm_id", referencedColumnName="id", onDelete="CASCADE")}
+     *      )
+     * @ORM\OrderBy({"createdate" = "ASC"})
+     **/
+    private $humanTissueForms;
 
     /**
      * @ORM\OneToMany(targetEntity="TransResRequest", mappedBy="project", cascade={"persist"})
@@ -318,7 +347,7 @@ class Project {
         $this->coInvestigators = new ArrayCollection();
         $this->pathologists = new ArrayCollection();
         $this->contacts = new ArrayCollection();
-        $this->billingContacts = new ArrayCollection();
+        //$this->billingContacts = new ArrayCollection();
 
         $this->irbReviews = new ArrayCollection();
         $this->adminReviews = new ArrayCollection();
@@ -326,6 +355,8 @@ class Project {
         $this->finalReviews = new ArrayCollection();
 
         $this->documents = new ArrayCollection();
+        $this->irbApprovalLetters = new ArrayCollection();
+        $this->humanTissueForms = new ArrayCollection();
 
         $this->requests = new ArrayCollection();
 
@@ -747,22 +778,44 @@ class Project {
         $this->contacts->removeElement($item);
     }
 
-    //billingContacts
+    /**
+     * @return mixed
+     */
+    public function getBillingContact()
+    {
+        return $this->billingContact;
+    }
     public function getBillingContacts()
     {
-        return $this->billingContacts;
+        //return array($this->billingContact);
+        $billingContacts = new ArrayCollection();
+        $billingContacts->add($this->billingContact);
+        return $billingContacts;
     }
-    public function addBillingContact($item)
+    /**
+     * @param mixed $billingContact
+     */
+    public function setBillingContact($billingContact)
     {
-        if( $item && !$this->billingContacts->contains($item) ) {
-            $this->billingContacts->add($item);
-        }
-        return $this;
+        $this->billingContact = $billingContact;
     }
-    public function removeBillingContact($item)
-    {
-        $this->billingContacts->removeElement($item);
-    }
+
+    //billingContacts
+//    public function getBillingContacts()
+//    {
+//        return $this->billingContacts;
+//    }
+//    public function addBillingContact($item)
+//    {
+//        if( $item && !$this->billingContacts->contains($item) ) {
+//            $this->billingContacts->add($item);
+//        }
+//        return $this;
+//    }
+//    public function removeBillingContact($item)
+//    {
+//        $this->billingContacts->removeElement($item);
+//    }
 
     /**
      * @return mixed
@@ -896,6 +949,42 @@ class Project {
     public function getDocuments()
     {
         return $this->documents;
+    }
+
+    public function addIrbApprovalLetter($item)
+    {
+        if( $item && !$this->irbApprovalLetters->contains($item) ) {
+            $this->irbApprovalLetters->add($item);
+            $item->createUseObject($this);
+        }
+        return $this;
+    }
+    public function removeIrbApprovalLetter($item)
+    {
+        $this->irbApprovalLetters->removeElement($item);
+        $item->clearUseObject();
+    }
+    public function getIrbApprovalLetters()
+    {
+        return $this->irbApprovalLetters;
+    }
+
+    public function addHumanTissueForm($item)
+    {
+        if( $item && !$this->humanTissueForms->contains($item) ) {
+            $this->humanTissueForms->add($item);
+            $item->createUseObject($this);
+        }
+        return $this;
+    }
+    public function removeHumanTissueForm($item)
+    {
+        $this->humanTissueForms->removeElement($item);
+        $item->clearUseObject();
+    }
+    public function getHumanTissueForms()
+    {
+        return $this->humanTissueForms;
     }
 
     public function getRequests()

@@ -78,6 +78,7 @@
                 <th>{{ knp_pagination_sortable(transresRequests, 'Billing Progress Status', 'transresRequest.billingState') }}</th>
                 <th>Products/Services</th>
                 <th>Fee</th>
+                <th># Invoices</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -145,6 +146,13 @@
                     {% endif %}
                 </td>
 
+                <td>
+                    {% set invoicesCount = transresRequest.invoices|length %}
+                    {% if invoicesCount > 0 %}
+                        {{ invoicesCount }}
+                    {% endif %}
+                </td>
+
                 <td class="rowlink-skip">
                     <div class="btn-group">
                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -200,5 +208,10 @@
         {% endfor %}
         </tbody>
     </table>
+
+    {# display navigation #}
+    <div class="navigation">
+        {{ knp_pagination_render(transresRequests) }}
+    </div>
 
 {% endblock %}

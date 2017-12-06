@@ -188,7 +188,7 @@ class TransResRequestType extends AbstractType
 
         $builder->add('contact', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
-            'label'=> "Contact:",
+            'label'=> "Billing Contact:",
             'required'=> false,
             'multiple' => false,
             'attr' => array('class'=>'combobox combobox-width'),
