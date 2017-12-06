@@ -64,8 +64,12 @@
                     {% if form.fundedAccountNumber is defined %}
                         {{ formmacros.field(form.fundedAccountNumber) }}
                     {% endif %}
-                    {{ formmacros.fieldDateLabel(form.supportStartDate,'allow-future-date') }}
-                    {{ formmacros.fieldDateLabel(form.supportEndDate,'allow-future-date') }}
+                    {% if form.supportStartDate is defined %}
+                        {{ formmacros.fieldDateLabel(form.supportStartDate,'allow-future-date') }}
+                    {% endif %}
+                    {% if form.supportEndDate is defined %}
+                        {{ formmacros.fieldDateLabel(form.supportEndDate,'allow-future-date') }}
+                    {% endif %}
                     {{ formmacros.field(form.contact) }}
 
                     {{ transresRequestMacros.transresRequestFormEdit(form,null,cycle) }}

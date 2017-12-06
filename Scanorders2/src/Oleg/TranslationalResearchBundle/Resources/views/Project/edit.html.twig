@@ -78,3 +78,11 @@
     {#{{ form_end(delete_form) }}#}
 
 {% endblock %}
+
+{% block additionaljs %}
+    {% javascripts
+    '@OlegTranslationalResearchBundle/Resources/public/form/js/transres.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}

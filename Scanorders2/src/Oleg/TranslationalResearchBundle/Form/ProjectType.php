@@ -484,7 +484,7 @@ class ProjectType extends AbstractType
 
         $builder->add('irbApprovalLetters', CollectionType::class, array(
             'entry_type' => DocumentType::class,
-            'label' => 'IRB Approval Letters(s):',
+            'label' => 'IRB Approval Letters:',
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
@@ -495,13 +495,23 @@ class ProjectType extends AbstractType
 
         $builder->add('humanTissueForms', CollectionType::class, array(
             'entry_type' => DocumentType::class,
-            'label' => 'Human TissueForms(s):',
+            'label' => 'Human TissueForms:',
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
             'by_reference' => false,
             'prototype' => true,
             'prototype_name' => '__humanTissueFormsid__',
+        ));
+
+        //involveHumanTissue
+        $builder->add('involveHumanTissue', ChoiceType::class, array( //flipped
+            'label' => 'Will this project involve human tissue?',
+            'choices' => array("Yes"=>"Yes", "No"=>"No"),
+            'choices_as_values' => true,
+            'multiple' => false,
+            'expanded' => true,
+            'attr' => array('class' => 'horizontal_type hascwid')
         ));
 
 

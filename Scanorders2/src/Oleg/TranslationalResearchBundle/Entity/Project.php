@@ -337,6 +337,13 @@ class Project {
     private $fundedAccountNumber;
 
 
+    /**
+     * Will this project involve human tissue?
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $involveHumanTissue;
+
 
     public function __construct($user=null) {
         $this->setSubmitter($user);
@@ -864,6 +871,23 @@ class Project {
     {
         $this->fundedAccountNumber = $fundedAccountNumber;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getInvolveHumanTissue()
+    {
+        return $this->involveHumanTissue;
+    }
+
+    /**
+     * @param mixed $involveHumanTissue
+     */
+    public function setInvolveHumanTissue($involveHumanTissue)
+    {
+        $this->involveHumanTissue = $involveHumanTissue;
+    }
+
 
     public function getIrbReviews()
     {

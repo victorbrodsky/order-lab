@@ -87,6 +87,16 @@ class RequestController extends Controller
             if( $projectFundedAccountNumber ) {
                 $transresRequest->setFundedAccountNumber($projectFundedAccountNumber);
             }
+
+            //pre-populate Request's Billing Contact by Project's Billing Contact
+            if( $project->getBillingContact() ) {
+                $transresRequest->setContact($project->getBillingContact());
+            }
+
+            //pre-populate Request's Support End Date by Project's IRB Expiration Date
+            if( $project->getIrbExpirationDate() ) {
+                $transresRequest->setSupportEndDate($project->getIrbExpirationDate());
+            }
         }
 
         $form = $this->createRequestForm($transresRequest,$cycle,$request); //new
@@ -111,12 +121,21 @@ class RequestController extends Controller
             //exit("Project submitted");
 
             $project = $transresRequest->getProject();
-            
+
             //set project's funded account number
+            $changedMsg = "";
+            //$changedProjectFundNumber = false;
+            $originalFundedAccountNumber = $project->getFundedAccountNumber();
             $fundedAccountNumber = $transresRequest->getFundedAccountNumber();
-            $project->setFundedAccountNumber($fundedAccountNumber);
-            //set formnode field
-            $transresRequestUtil->setValueToFormNodeProject($project,"If funded, please provide account number",$fundedAccountNumber);
+            if( $fundedAccountNumber && $fundedAccountNumber != $originalFundedAccountNumber ) {
+                $project->setFundedAccountNumber($fundedAccountNumber);
+                //set formnode field
+                $transresRequestUtil->setValueToFormNodeProject($project, "If funded, please provide account number", $fundedAccountNumber);
+                //$changedProjectFundNumber = true;
+                $changedMsg = $changedMsg . "<br>Project's Account Fund Number has been updated: ";
+                $changedMsg = $changedMsg . "<br>Original account number " . $originalFundedAccountNumber;
+                $changedMsg = $changedMsg . "<br>New account number " . $project->getFundedAccountNumber();
+            }
 
             //set submitter to product
             foreach($transresRequest->getProducts() as $product) {
@@ -155,6 +174,7 @@ class RequestController extends Controller
             }
 
             $msg = "New Request has been successfully submitted for the project ID ".$project->getOid();
+            $msg = $msg . $changedMsg;
 
             if( $testing ) {
                 exit('form is submitted and finished, msg='.$msg);
@@ -167,6 +187,7 @@ class RequestController extends Controller
 
             $eventType = "Request Created";
             $msg = "New Request with ID ".$transresRequest->getOid()." has been successfully submitted for the project ID ".$project->getOid();
+            $msg = $msg . $changedMsg;
             $transresUtil->setEventLog($transresRequest,$eventType,$msg);
 
             return $this->redirectToRoute('translationalresearch_request_show', array('id' => $transresRequest->getId()));
@@ -220,21 +241,10 @@ class RequestController extends Controller
 
         $project = $transresRequest->getProject();
 
-        $projectFundedAccountNumber = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"If funded, please provide account number");
-        //echo "projectFundedAccountNumber=$projectFundedAccountNumber<br>";
-        if( $projectFundedAccountNumber ) {
-            $transresRequest->setFundedAccountNumber($projectFundedAccountNumber);
-        }
-
-        //pre-populate Request's Billing Contact by Project's Billing Contact
-        if( $project->getBillingContact() ) {
-            $transresRequest->setContact($project->getBillingContact());
-        }
-
-        //pre-populate Request's Support End Date by Project's IRB Expiration Date
-        if( $project->getIrbExpirationDate() ) {
-            $transresRequest->setSupportEndDate($project->getIrbExpirationDate());
-        }
+        //$projectFundedAccountNumber = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"If funded, please provide account number");
+        //if( $projectFundedAccountNumber ) {
+        //    $transresRequest->setFundedAccountNumber($projectFundedAccountNumber);
+        //}
 
         $transresRequest = $this->createRequestEntity($user,$transresRequest);
 
@@ -267,10 +277,22 @@ class RequestController extends Controller
             //exit("Request update submitted");
 
             //set project's funded account number
+            $changedMsg = "";
+            //$changedProjectFundNumber = false;
+            $originalFundedAccountNumber = $project->getFundedAccountNumber();
             $fundedAccountNumber = $transresRequest->getFundedAccountNumber();
-            $project->setFundedAccountNumber($fundedAccountNumber);
-            //set formnode field
-            $transresRequestUtil->setValueToFormNodeProject($project,"If funded, please provide account number",$fundedAccountNumber);
+            if( $fundedAccountNumber && $fundedAccountNumber != $originalFundedAccountNumber ) {
+                $project->setFundedAccountNumber($fundedAccountNumber);
+                //set formnode field
+                $transresRequestUtil->setValueToFormNodeProject($project, "If funded, please provide account number", $fundedAccountNumber);
+                //$changedProjectFundNumber = true;
+                $changedMsg = $changedMsg . "<br>Project's Account Fund Number has been updated: ";
+                $changedMsg = $changedMsg . "<br>Original account number " . $originalFundedAccountNumber;
+                $changedMsg = $changedMsg . "<br>New account number " . $project->getFundedAccountNumber();
+            }
+
+            //update updateBy
+            $transresRequest->setUpdateUser($user);
 
             //process Product or Service sections
             // remove the relationship between the tag and the Task
@@ -322,6 +344,7 @@ class RequestController extends Controller
             }
 
             $msg = "Request ".$transresRequest->getOid()." has been successfully updated for the project ID ".$project->getOid();
+            $msg = $msg . $changedMsg;
 
             if( $testing ) {
                 exit('form is submitted and finished, msg='.$msg);
@@ -334,6 +357,7 @@ class RequestController extends Controller
 
             $eventType = "Request Updated";
             $msg = "Request ".$transresRequest->getOid() ." has been updated.";
+            $msg = $msg . $changedMsg;
             $transresUtil->setEventLog($transresRequest,$eventType,$msg);
 
             return $this->redirectToRoute('translationalresearch_request_show', array('id' => $transresRequest->getId()));

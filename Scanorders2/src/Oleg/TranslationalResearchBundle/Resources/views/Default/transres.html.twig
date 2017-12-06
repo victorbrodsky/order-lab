@@ -197,7 +197,21 @@
         {% set humanTissueForms = project.humanTissueForms %}
     {% endif %}
 
-    <div class="well form-element-holder user-irbApprovalLetters">
+    {#involveHumanTissue "Will this project involve human tissue?"#}
+    {{ formmacros.field(form.involveHumanTissue) }}
+    {#You can download the blank form here. "download blank form here" should link to the blank form document#}
+    {#<p>#}
+    {#<div class="row">#}
+        {#<div class="col-xs-6" align="right">#}
+            {#<b>Do you (the person for whom the account is being requested) have a <a href="http://weill.cornell.edu/its/identity-security/identity/cwid/">CWID</a> username?</b>#}
+        {#</div>#}
+        {#<div class="col-xs-6" align="left">#}
+            {#{{ form_widget(form.hascwid) }}#}
+        {#</div>#}
+    {#</div>#}
+    {#</p>#}
+
+    <div class="well form-element-holder user-irbApprovalLetters" style="display: none;">
         <label class="col-xs-12 control-label">IRB Approval Letter</label>
         <div class="row withpaddingtop">
             <div class="col-xs-12">

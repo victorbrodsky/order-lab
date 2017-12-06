@@ -170,21 +170,23 @@ class TransResRequestType extends AbstractType
             'attr' => array('class' => 'form-control tarnsresrequest-fundedAccountNumber'),
         ));
 
-        $builder->add('supportStartDate', DateType::class, array(
-            'widget' => 'single_text',
-            'label' => "Support Start Date:",
-            'format' => 'MM/dd/yyyy',
-            'attr' => array('class' => 'datepicker form-control'),
-            'required' => false,
-        ));
+//        $builder->add('supportStartDate', DateType::class, array(
+//            'widget' => 'single_text',
+//            'label' => "Support Start Date:",
+//            'format' => 'MM/dd/yyyy',
+//            'attr' => array('class' => 'datepicker form-control'),
+//            'required' => false,
+//        ));
 
-        $builder->add('supportEndDate', DateType::class, array(
-            'widget' => 'single_text',
-            'label' => "Support End Date:",
-            'format' => 'MM/dd/yyyy',
-            'attr' => array('class' => 'datepicker form-control'),
-            'required' => false,
-        ));
+        if( $this->params['cycle'] != 'new' ) {
+            $builder->add('supportEndDate', DateType::class, array(
+                'widget' => 'single_text',
+                'label' => "Support End Date:",
+                'format' => 'MM/dd/yyyy',
+                'attr' => array('class' => 'datepicker form-control'),
+                'required' => false,
+            ));
+        }
 
         $builder->add('contact', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
