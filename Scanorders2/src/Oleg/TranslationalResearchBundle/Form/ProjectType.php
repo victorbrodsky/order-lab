@@ -490,7 +490,7 @@ class ProjectType extends AbstractType
             'required' => false,
             'by_reference' => false,
             'prototype' => true,
-            'prototype_name' => '__irbApprovalLettersid__',
+            'prototype_name' => '__documentsid__',
         ));
 
         $builder->add('humanTissueForms', CollectionType::class, array(
@@ -501,7 +501,7 @@ class ProjectType extends AbstractType
             'required' => false,
             'by_reference' => false,
             'prototype' => true,
-            'prototype_name' => '__humanTissueFormsid__',
+            'prototype_name' => '__documentsid__',
         ));
 
         //involveHumanTissue

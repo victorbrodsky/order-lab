@@ -64,7 +64,8 @@ function transresValidateProjectForm(projectForm) {
     //console.log("involveHumanTissue="+involveHumanTissue);
     if( !involveHumanTissue ) {
         //console.log("Error: involveHumanTissue is NULL!");
-        var msg = "Please upload a completed human tissue form";
+        //var msg = "Please upload a completed human tissue form";
+        var msg = "Please answer the required question: 'Will this project involve human tissue?'";
         $("#projectError").show();
         $("#projectError").html(msg);
 
@@ -123,6 +124,17 @@ function transresValidateProjectForm(projectForm) {
         $("#projectError").show();
         $("#projectError").html(msg);
         return false;
+    }
+
+    var involveHumanTissue = $(".involveHumanTissue").find('input[name="oleg_translationalresearchbundle_project[involveHumanTissue]"]:checked').val();
+    if( involveHumanTissue == "Yes" ) {
+        var showlink = $(".user-humanTissueForms").find(".dz-preview");
+        if( !showlink || showlink.length == 0 ) {
+            var msg = "Please upload a completed human tissue form";
+            $("#projectError").show();
+            $("#projectError").html(msg);
+            return false;
+        }
     }
 
     //console.log("No Error");
