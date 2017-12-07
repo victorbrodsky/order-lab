@@ -223,9 +223,17 @@
     </div>
 
     {#involveHumanTissue "Will this project involve human tissue?"#}
-    {{ formmacros.field(form.involveHumanTissue) }}
+    {% set humanTissueFormStyle = "display: none;" %}
+    {% if project.involveHumanTissue == "Yes" %}
+        {% set humanTissueFormStyle = "" %}
+    {% endif %}
+    {% if form %}
+        {{ formmacros.field(form.involveHumanTissue) }}
+    {% else %}
+        {{ formmacros.simplefield("Will this project involve human tissue?:", project.involveHumanTissue, "input", "disabled") }}
+    {% endif %}
 
-    <div class="well form-element-holder user-humanTissueForms" style="display: none;">
+    <div class="well form-element-holder user-humanTissueForms" style="{{ humanTissueFormStyle }}">
         <label class="col-xs-12 control-label">Human Tissue Form</label>
         <p>You can <a href="{{ path(translationalresearch_sitename~'_download_humanTissueForm') }}" target="_blank">download the blank form here.</a></p>
         <div class="row withpaddingtop">
