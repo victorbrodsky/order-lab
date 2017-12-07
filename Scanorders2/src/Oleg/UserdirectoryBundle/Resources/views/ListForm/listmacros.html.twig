@@ -764,6 +764,10 @@
         {{ formmacros.checkbox(form.visible) }}
     {% endif %}
 
+    {% if form.required is defined %}
+        {{ formmacros.checkbox(form.required) }}
+    {% endif %}
+
     {% if form.receivedValueEntityNamespace is defined %}
         {{ formmacros.field(form.receivedValueEntityNamespace) }}
     {% endif %}

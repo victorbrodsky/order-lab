@@ -231,7 +231,7 @@ class ProjectType extends AbstractType
         $builder->add( 'principalInvestigators', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
             'label'=> "Principal Investigator(s):",
-            'required'=> false,
+            'required'=> true,
             'multiple' => true,
             'attr' => array('class'=>'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
@@ -484,7 +484,7 @@ class ProjectType extends AbstractType
 
         $builder->add('irbApprovalLetters', CollectionType::class, array(
             'entry_type' => DocumentType::class,
-            'label' => 'IRB Approval Letters:',
+            'label' => 'IRB Approval Letter:',
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
@@ -495,7 +495,7 @@ class ProjectType extends AbstractType
 
         $builder->add('humanTissueForms', CollectionType::class, array(
             'entry_type' => DocumentType::class,
-            'label' => 'Human TissueForms:',
+            'label' => 'Human Tissue Form:',
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
@@ -510,8 +510,9 @@ class ProjectType extends AbstractType
             'choices' => array("Yes"=>"Yes", "No"=>"No"),
             'choices_as_values' => true,
             'multiple' => false,
+            'required' => true,
             'expanded' => true,
-            'attr' => array('class' => 'horizontal_type hascwid')
+            'attr' => array('class' => 'horizontal_type involveHumanTissue')
         ));
 
 

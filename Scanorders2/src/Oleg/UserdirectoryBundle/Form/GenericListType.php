@@ -523,6 +523,11 @@ class GenericListType extends AbstractType
                 'required' => false,
                 'attr' => array('class'=>'form-control', 'style'=>'margin:0')
             ));
+            $builder->add('required', CheckboxType::class, array(
+                'label' => 'Required:',
+                'required' => false,
+                'attr' => array('class'=>'form-control', 'style'=>'margin:0')
+            ));
         }
 
         //ReceivedValueEntity

@@ -21,7 +21,8 @@
 
     {% set sitename = translationalresearch_sitename %}
 
-    {{ form_start(form) }}
+    {{ form_start(form,{'id':'transresProjectForm'}) }}
+    {#{{ form_start(form) }}#}
 
         {{ transres.projectRequesters(form,project,cycle) }}
 
@@ -67,6 +68,7 @@
 
     <br>
 
+    <div id="projectError" class="alert alert-danger" style="display: none;"></div>
 
     <p>
         <a href="{{ path(translationalresearch_sitename~'_project_index') }}">Back to the project list</a>

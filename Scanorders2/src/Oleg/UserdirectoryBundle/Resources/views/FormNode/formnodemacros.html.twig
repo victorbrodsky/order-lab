@@ -430,10 +430,15 @@
 {% macro textareaForm( formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype, type ) %}
     {#{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+    {% if formNode.required %}
+        {% set requiredClass = "required" %}
+    {% else %}
+        {% set requiredClass = "" %}
+    {% endif %}
     <p>
     {% if formNode.showLabel %}
         <div class="row">
-            <div class="col-xs-6" align="right">
+            <div class="col-xs-6 {{ requiredClass }}" align="right">
                 <label>{{ formNode.name }}:</label>
             </div>
             <div class="col-xs-6" align="left">
@@ -484,10 +489,15 @@
 {% macro stringForm( formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype, inputType ) %}
     {#{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+    {% if formNode.required %}
+        {% set requiredClass = "required" %}
+    {% else %}
+        {% set requiredClass = "" %}
+    {% endif %}
     <p>
     {% if formNode.showLabel %}
         <div class="row">
-            <div class="col-xs-6" align="right">
+            <div class="col-xs-6 {{ requiredClass }}" align="right">
                 <label>{{ formNode.name }}:</label>
             </div>
             <div class="col-xs-6" align="left">
@@ -560,10 +570,15 @@
 {% macro dropdownForm( formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype, multiple, allownew ) %}
     {#{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+    {% if formNode.required %}
+        {% set requiredClass = "required" %}
+    {% else %}
+        {% set requiredClass = "" %}
+    {% endif %}
     <p>
     {% if formNode.showLabel %}
         <div class="row">
-            <div class="col-xs-6" align="right">
+            <div class="col-xs-6 {{ requiredClass }}" align="right">
                 <label>{{ formNode.name }}:</label>
             </div>
             <div class="col-xs-6" align="left">
@@ -660,10 +675,15 @@
 {% macro dateForm( formNodeHolder, formNode, formNodeId, formNodeValue, receivingEntity, count, cycle, prototype, dateFormat ) %}
     {#{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}#}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+    {% if formNode.required %}
+        {% set requiredClass = "required" %}
+    {% else %}
+        {% set requiredClass = "" %}
+    {% endif %}
     <p>
     {% if formNode.showLabel %}
         <div class="row">
-            <div class="col-xs-6" align="right">
+            <div class="col-xs-6 {{ requiredClass }}" align="right">
                 <label>{{ formNode.name }}:</label>
             </div>
             <div class="col-xs-6" align="left">
@@ -730,10 +750,15 @@
 
 {% macro checkboxForm( formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype ) %}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+    {% if formNode.required %}
+        {% set requiredClass = "required" %}
+    {% else %}
+        {% set requiredClass = "" %}
+    {% endif %}
     <p>
     {% if formNode.showLabel %}
         <div class="row">
-            <div class="col-xs-6" align="right">
+            <div class="col-xs-6 {{ requiredClass }}" align="right">
                 <label>{{ formNode.name }}:</label>
             </div>
             <div class="col-xs-6 text-center" align="left" style="width: 50px;">
@@ -774,10 +799,15 @@
 
 {% macro checkboxesForm( formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype ) %}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+    {% if formNode.required %}
+        {% set requiredClass = "required" %}
+    {% else %}
+        {% set requiredClass = "" %}
+    {% endif %}
     <p>
     {% if formNode.showLabel %}
         <div class="row">
-            <div class="col-xs-6" align="right">
+            <div class="col-xs-6 {{ requiredClass }}" align="right">
                 <label>{{ formNode.name }}:</label>
             </div>
             <div class="col-xs-6 text-center" align="left">
@@ -830,10 +860,15 @@
 
 {% macro radioForm( formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype ) %}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+    {% if formNode.required %}
+        {% set requiredClass = "required" %}
+    {% else %}
+        {% set requiredClass = "" %}
+    {% endif %}
     <p>
     {% if formNode.showLabel %}
         <div class="row">
-            <div class="col-xs-6" align="right">
+            <div class="col-xs-6 {{ requiredClass }}" align="right">
                 <label>{{ formNode.name }}:</label>
             </div>
             <div class="col-xs-6" align="left">
@@ -885,10 +920,15 @@
 
 {% macro timeForm( formNodeHolder, formNode, formNodeId, formNodeValue, receivingEntity, count, cycle, prototype, timezone ) %}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+    {% if formNode.required %}
+        {% set requiredClass = "required" %}
+    {% else %}
+        {% set requiredClass = "" %}
+    {% endif %}
     <p>
     {% if formNode.showLabel %}
         <div class="row">
-            <div class="col-xs-6" align="right">
+            <div class="col-xs-6 {{ requiredClass }}" align="right">
                 <label>{{ formNode.name }}:</label>
             </div>
             <div class="col-xs-6" align="left">
@@ -1012,10 +1052,15 @@
 
 {% macro dayForm( formNodeHolder, formNode, formNodeId, formNodeValue, count, cycle, prototype ) %}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+    {% if formNode.required %}
+        {% set requiredClass = "required" %}
+    {% else %}
+        {% set requiredClass = "" %}
+    {% endif %}
     <p>
     {% if formNode.showLabel %}
         <div class="row">
-            <div class="col-xs-6" align="right">
+            <div class="col-xs-6 {{ requiredClass }}" align="right">
                 <label>{{ formNode.name }}:</label>
             </div>
             <div class="col-xs-6" align="left">
@@ -1071,10 +1116,15 @@
 
 {% macro datetimeForm( formNodeHolder, formNode, formNodeId, formNodeValue, receivingEntity, count, cycle, prototype, dateFormat, timezone ) %}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
+    {% if formNode.required %}
+        {% set requiredClass = "required" %}
+    {% else %}
+        {% set requiredClass = "" %}
+    {% endif %}
     <p>
     {% if formNode.showLabel %}
         <div class="row">
-            <div class="col-xs-6" align="right">
+            <div class="col-xs-6 {{ requiredClass }}" align="right">
                 <label>{{ formNode.name }}:</label>
             </div>
             <div class="col-xs-6" align="left">

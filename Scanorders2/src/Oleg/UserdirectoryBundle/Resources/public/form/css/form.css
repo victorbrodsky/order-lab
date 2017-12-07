@@ -656,3 +656,8 @@ Bootstrap NavBar not collapsing as expected - separating onto two lines.
 .mask-text-align-left {
     text-align: left !important;
 }
+
+.required:after {
+    content: "*";
+    color: red;
+}

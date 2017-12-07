@@ -20,6 +20,13 @@ $(document).ready(function() {
     console.log('transres form ready');
     transresIrbApprovalLetterListener();
 
+    $('form[name="oleg_translationalresearchbundle_project"]').submit(function(ev) {
+        ev.preventDefault(); // to stop the form from submitting
+        /* Validations go here */
+        transresValidateProjectForm(this);
+        //this.submit(); // If all the validations succeeded
+    });
+
 });
 
 //Will this project involve human tissue?
@@ -27,11 +34,100 @@ function transresIrbApprovalLetterListener() {
     $(".involveHumanTissue").on("input", function(e) {
         var involveHumanTissue = $(this).val();
 
-        var checkedValue = form.find('input[name="myRadio"]:checked').val();
+        var involveHumanTissue = $(".involveHumanTissue").find('input[name="oleg_translationalresearchbundle_project[involveHumanTissue]"]:checked').val();
 
-        console.log("involveHumanTissue="+involveHumanTissue);
+        //console.log("involveHumanTissue="+involveHumanTissue);
+
+        if( involveHumanTissue == "Yes" ) {
+            $(".user-humanTissueForms").show();
+        }
+
+        if( involveHumanTissue == "No" ) {
+            $(".user-humanTissueForms").hide();
+        }
 
     });
 }
 
+
+function transresValidateProjectForm(projectForm) {
+
+    var validated = true;
+    var label = null;
+    var value = null;
+
+    $("#projectError").hide();
+    $("#projectError").html(null);
+
+    //involveHumanTissue
+    var involveHumanTissue = $(".involveHumanTissue").find('input[name="oleg_translationalresearchbundle_project[involveHumanTissue]"]:checked').val();
+    //console.log("involveHumanTissue="+involveHumanTissue);
+    if( !involveHumanTissue ) {
+        //console.log("Error: involveHumanTissue is NULL!");
+        var msg = "Please upload a completed human tissue form";
+        $("#projectError").show();
+        $("#projectError").html(msg);
+
+        validated = false;
+        return false;
+    }
+
+    //required
+    $( ".required" ).each(function( index ) {
+        //console.log( "Required: "+index + ": " + $( this ).text() );
+        label = $( this ).text();   //$(this).find("label").text();
+        value = null;
+        var holder = $(this).closest(".row");
+
+        //input
+        var inputField = holder.find(".form-control");
+        if( inputField.length > 0 ) {
+            value = inputField.val();
+            //console.log("label="+label+"; value="+value);
+            if( !value ) {
+                //console.log("Error Input form-control");
+                validated = false;
+                return false;
+            }
+        }
+
+        //select combobox
+        var selectField = holder.find("select.combobox");
+        if( selectField.length > 0 ) {
+            value = selectField.val();
+            //console.log("label="+label+"; value="+value);
+            if( !value ) {
+                //console.log("Error Select select combobox");
+                validated = false;
+                return false;
+            }
+        }
+
+        //input combobox
+        var inputSelectField = holder.find("input.combobox");
+        if( inputSelectField.length > 0 ) {
+            value = inputSelectField.val();
+            //console.log("label="+label+"; value="+value);
+            if( !value ) {
+                //console.log("Error Select input combobox");
+                validated = false;
+                return false;
+            }
+        }
+
+    });
+
+    if( validated == false ) {
+        //console.log("Error: required value is NULL! label="+label+"; value="+value);
+        var msg = "The required field '" + label + "' is empty";
+        $("#projectError").show();
+        $("#projectError").html(msg);
+        return false;
+    }
+
+    //console.log("No Error");
+    //return false; //testing
+
+    projectForm.submit(); // If all the validations succeeded
+}
 

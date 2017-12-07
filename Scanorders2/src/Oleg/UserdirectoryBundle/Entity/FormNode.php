@@ -103,7 +103,11 @@ class FormNode extends BaseCompositeNode {
      */
     private $visible;
 
-
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $required;
+    
     //Received Form Field Value Entity. Used to overwrite the same values in the formnode's ObjectType
     /**
      * i.e. "Oleg\OlegUserdirectoryBundle\Entity"
@@ -351,6 +355,22 @@ class FormNode extends BaseCompositeNode {
     public function setVisible($visible)
     {
         $this->visible = $visible;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRequired()
+    {
+        return $this->required;
+    }
+
+    /**
+     * @param mixed $required
+     */
+    public function setRequired($required)
+    {
+        $this->required = $required;
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace Oleg\TranslationalResearchBundle\Controller;
 
+use Oleg\UserdirectoryBundle\Util\LargeFileDownloader;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -38,4 +39,24 @@ class DefaultController extends Controller
 ////            'title' => "Translational Research"
 ////        );
 //    }
+
+
+    /**
+     * @Route("/download/humanTissueForm", name="translationalresearch_download_humanTissueForm")
+     */
+    public function downloadHumanTissueFormAction( Request $request ) {
+
+        $originalname = "human_tissue_request_form.pdf";
+        $abspath = "";
+
+        $abspath = "bundles\\olegtranslationalresearch\\downloads\\".$originalname;
+
+        $size = null;//$document->getSize();
+
+        $downloader = new LargeFileDownloader();
+        $downloader->downloadLargeFile($abspath, $originalname, $size);
+
+        exit;
+    }
+
 }
