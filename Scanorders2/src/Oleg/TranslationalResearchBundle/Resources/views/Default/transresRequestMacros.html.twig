@@ -121,48 +121,109 @@
 
 {% endmacro %}
 
-{% macro invoiceItems(form, cycle) %}
+{% macro invoiceItemSections(form, cycle) %}
 
-    {% if form.invoiceItems is defined and form.invoiceItems|length > 0 %}
-    <table class="table text-left table-hover invoiceItemTable">
-        <thead style="background-color: grey;">
-        <tr>
-            <th>{{ form_label(form.invoiceItems|first.quantity) }}</th>
-            <th>{{ form_label(form.invoiceItems|first.itemCode) }}</th>
-            <th>{{ form_label(form.invoiceItems|first.description) }}</th>
-            <th>{{ form_label(form.invoiceItems|first.unitPrice) }}</th>
-            <th>{{ form_label(form.invoiceItems|first.total) }}</th>
-        </tr>
-        </thead>
-        <tbody>
+    {% import "OlegFellAppBundle::Default/fellappmacros.html.twig" as fellappmacros %}
+    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "OlegTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}
 
-        {#<div class="well well-sm">#}
+    {#{% if form.invoiceItems is defined and form.invoiceItems|length > 0 %}#}
+    <div class="panel panel-default">
 
-        {% for invoiceItem in form.invoiceItems %}
-            <tr class="invoiceItemRow">
-                <td>
-                    {{ form_widget(invoiceItem.quantity) }}
-                </td>
-                <td>
-                    {{ form_widget(invoiceItem.itemCode) }}
-                </td>
-                <td>
-                    {{ form_widget(invoiceItem.description) }}
-                </td>
-                <td>
-                    {{ form_widget(invoiceItem.unitPrice) }}
-                </td>
-                <td>
-                    {{ form_widget(invoiceItem.total) }}
-                </td>
-            </tr>
-        {% endfor %}
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" href="#invoiceItems" name="invoiceItems">
+                    Invoice Items
+                </a>
+            </h4>
+        </div>
 
-        </tbody>
-    </table>
-    {% else %}
-        <p>There are no invoice items</p>
+        <div id="invoiceItems" class="panel-collapse collapse in">
+            <div class="panel-body">
+
+                <div class="row">
+                    <div class="col-xs-2">
+                        {{ form_label(form.invoiceItems|first.quantity) }}
+                    </div>
+                    <div class="col-xs-2">
+                        {{ form_label(form.invoiceItems|first.itemCode) }}
+                    </div>
+                    <div class="col-xs-3">
+                        {{ form_label(form.invoiceItems|first.description) }}
+                    </div>
+                    <div class="col-xs-2">
+                        {{ form_label(form.invoiceItems|first.unitPrice) }}
+                    </div>
+                    <div class="col-xs-2">
+                        {{ form_label(form.invoiceItems|first.total) }}
+                    </div>
+                    <div class="col-xs-1">
+
+                    </div>
+                </div>
+
+                <div class="transres-invoiceItems-holder">
+                    {% for invoiceItem in form.invoiceItems %}
+                        {{ transresRequestMacros.invoiceItemForm(invoiceItem, cycle, 'transres-invoiceItems', 'noprototype', sitename, 1) }}
+                    {% endfor %}
+
+                    {% if cycle != "show" %}
+                        {{ usermacros.addNewObjectBtn(cycle,'transres-invoiceItems','Add New Item') }}
+                    {% endif %}
+                </div>
+
+            </div> <!-- panel-body -->
+        </div> <!-- panel-collapse -->
+    </div> <!-- panel panel-info -->
+
+    {#{% else %}#}
+        {#<p>There are no invoice items</p>#}
+    {#{% endif %}#}
+
+{% endmacro %}
+{% macro invoiceItemForm( invoiceItem, cycle, classname, prototype, sitename, showAddDeleteBtn ) %}
+
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    {% if showAddDeleteBtn is not defined %}
+        {% set showAddDeleteBtn = 0 %}
     {% endif %}
+
+    {% if prototype == "prototype" %}
+        {% set forminvoiceItem = invoiceItem.vars.prototype %}
+    {% else %}
+        {% set forminvoiceItem = invoiceItem %}
+    {% endif %}
+
+    {% set wellclass = "alert-default well well-sm" %}
+
+    <div class="user-collection-holder alert {{ classname }} {{ wellclass }}">
+
+        <div class="row">
+            <div class="col-xs-2">
+                {{ form_widget(forminvoiceItem.quantity) }}
+            </div>
+            <div class="col-xs-2">
+                {{ form_widget(forminvoiceItem.itemCode) }}
+            </div>
+            <div class="col-xs-3">
+                {{ form_widget(forminvoiceItem.description) }}
+            </div>
+            <div class="col-xs-2">
+                {{ form_widget(forminvoiceItem.unitPrice) }}
+            </div>
+            <div class="col-xs-2">
+                {{ form_widget(forminvoiceItem.total) }}
+            </div>
+            <div class="col-xs-1">
+                {% if cycle != "show" and showAddDeleteBtn %}
+                    <button type="button" class="btn btn-default btn-sm"
+                            onClick="removeExistingObject(this,'{{ classname }}')" >
+                        <span class="glyphicon glyphicon-remove"></span></button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 
 {% endmacro %}
 
@@ -242,7 +303,9 @@
 
         {{ formmacros.field(formproduct.requested) }}
 
-        {{ formmacros.field(formproduct.completed) }}
+        {% if formproduct.completed is defined %}
+            {{ formmacros.field(formproduct.completed) }}
+        {% endif %}
 
         {{ formmacros.field(formproduct.comment) }}
 

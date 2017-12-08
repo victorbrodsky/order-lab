@@ -100,7 +100,7 @@ class TransResRequestType extends AbstractType
                 //'disabled' => true,
                 'required' => true,
                 'multiple' => false,
-                'attr' => array('class' => 'combobox combobox-width')
+                'attr' => array('class' => 'combobox combobox-width tarnsresrequest-project')
             ));
         }
 
@@ -193,6 +193,23 @@ class TransResRequestType extends AbstractType
             'label'=> "Billing Contact:",
             'required'=> false,
             'multiple' => false,
+            'attr' => array('class'=>'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->leftJoin("list.employmentStatus", "employmentStatus")
+                    ->leftJoin("employmentStatus.employmentType", "employmentType")
+                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+                    ->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
+                    ->leftJoin("list.infos", "infos")
+                    ->orderBy("infos.displayName","ASC");
+            },
+        ));
+
+        $builder->add('principalInvestigators', EntityType::class, array(
+            'class' => 'OlegUserdirectoryBundle:User',
+            'label'=> "Principal Investigator(s):",
+            'required'=> false,
+            'multiple' => true,
             'attr' => array('class'=>'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
                 return $er->createQueryBuilder('list')

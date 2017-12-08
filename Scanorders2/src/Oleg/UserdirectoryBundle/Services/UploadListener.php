@@ -60,10 +60,12 @@ class UploadListener {
         //$holdername = $request->get('holdername');
         //$holderid = $request->get('holderid');
         //$docfieldname = $request->get('docfieldname');
+
         //echo "userid=".$userid."<br>";
+        //echo "originalfilename=".$originalfilename."<br>";
+        //echo "documentType=".$documentType."<br>";
 
         $file = $event->getFile();
-
 
         $path = $file->getPath();
         //echo "path=".$path."<br>";
@@ -93,6 +95,7 @@ class UploadListener {
 
         //$this->processHolder($object,$holdername,$holderid,$docfieldname);
 
+        //exit('exit upload listener');
         $this->em->persist($object);
         $this->em->flush();
 

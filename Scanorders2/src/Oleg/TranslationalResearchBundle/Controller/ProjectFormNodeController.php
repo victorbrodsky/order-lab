@@ -176,7 +176,9 @@ class ProjectFormNodeController extends ProjectController
                 $project->setState('irb_review');
             }
 
-            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($project);
+            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($project,"document");
+            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($project,"irbApprovalLetter");
+            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($project,"humanTissueForm");
 
             if( !$testing ) {
                 $em->persist($project);
@@ -368,7 +370,9 @@ class ProjectFormNodeController extends ProjectController
                 }
             }
 
-            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($project);
+            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($project,"document");
+            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($project,"irbApprovalLetter");
+            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($project,"humanTissueForm");
 
             if( !$testing ) {
                 $em->persist($project);

@@ -1849,6 +1849,17 @@ class User extends BaseUser {
 //        }
 //        return null;
 //    }
+    public function getAllFaxes()
+    {
+        $faxArr = array();
+        //get all locations phones
+        foreach ($this->getLocations() as $location) {
+            if( $location->getFax() ) {
+                $faxArr[] = $location->getFax();
+            }
+        }
+        return implode(", ",$faxArr);
+    }
 
     public function getAllEmail() {
         $emailArr = array();

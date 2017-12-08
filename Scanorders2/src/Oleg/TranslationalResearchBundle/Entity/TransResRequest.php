@@ -132,6 +132,14 @@ class TransResRequest {
      */
     private $invoices;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\JoinTable(name="transres_request_principalinvestigator",
+     *      joinColumns={@ORM\JoinColumn(name="request_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="principalinvestigator_id", referencedColumnName="id")}
+     * )
+     **/
+    private $principalInvestigators;
 
     //////////////// fields /////////////////////////
     /**
@@ -172,6 +180,7 @@ class TransResRequest {
 
         $this->invoices = new ArrayCollection();
         $this->products = new ArrayCollection();
+        $this->principalInvestigators = new ArrayCollection();
     }
 
 
@@ -445,6 +454,23 @@ class TransResRequest {
     public function removeInvoice($item)
     {
         $this->invoices->removeElement($item);
+    }
+
+
+    public function getPrincipalInvestigators()
+    {
+        return $this->principalInvestigators;
+    }
+    public function addPrincipalInvestigator($item)
+    {
+        if( $item && !$this->principalInvestigators->contains($item) ) {
+            $this->principalInvestigators->add($item);
+        }
+        return $this;
+    }
+    public function removePrincipalInvestigator($item)
+    {
+        $this->principalInvestigators->removeElement($item);
     }
 
     //////////////// fields /////////////////////////

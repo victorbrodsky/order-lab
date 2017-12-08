@@ -921,6 +921,50 @@ class TransResRequestUtil
 
     public function getRequestItems($request) {
         $user = $this->secTokenStorage->getToken()->getUser();
+        $invoiceItemsArr = new ArrayCollection();
+        foreach( $request->getProducts() as $product ) {
+            //Invoice's quantity field is pre-populated by the Request's "Requested #"
+            $invoiceItem = new InvoiceItem($user);
+
+            $invoiceItem->setProduct($product);
+
+            $quantity = null;
+            $requested = $product->getRequested();
+            if( $requested ) {
+                $quantity = $requested;
+            } else {
+                $completed = $product->getCompleted();
+                if( $completed ) {
+                    $quantity = $completed;
+                }
+            }
+            $invoiceItem->setQuantity($quantity);
+
+            $category = $product->getCategory();
+
+            //ItemCode
+            $itemCode = $category->getProductId();
+            $invoiceItem->setItemCode($itemCode);
+
+            //Description
+            $name = $category->getName();
+            $invoiceItem->setDescription($name);
+
+            //UnitPrice
+            $fee = $category->getFee();
+            $invoiceItem->setUnitPrice($fee);
+
+            //Total
+            $total = intval($requested) * intval($fee);
+            $invoiceItem->setTotal($total);
+
+            $invoiceItemsArr->add($invoiceItem);
+        }
+
+        return $invoiceItemsArr;
+    }
+    public function getRequestItemsFormNode($request) {
+        $user = $this->secTokenStorage->getToken()->getUser();
         //$user = null; //testing
         $invoiceItemsArr = new ArrayCollection();
 

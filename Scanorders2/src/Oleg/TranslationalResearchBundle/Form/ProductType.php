@@ -58,11 +58,13 @@ class ProductType extends AbstractType
             'attr' => array('class' => 'form-control')
         ));
 
-        $builder->add('completed', null, array(
-            'label' => "Completed Quantity:",
-            'required' => false,
-            'attr' => array('class' => 'form-control')
-        ));
+        if( $this->params["cycle"] != "new" ) {
+            $builder->add('completed', null, array(
+                'label' => "Completed Quantity:",
+                'required' => false,
+                'attr' => array('class' => 'form-control')
+            ));
+        }
 
         $builder->add('comment', null, array(
             'label' => "Comment:",

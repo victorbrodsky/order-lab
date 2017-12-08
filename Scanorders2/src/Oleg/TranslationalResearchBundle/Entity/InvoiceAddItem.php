@@ -29,10 +29,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="transres_invoiceItem")
+ * @ORM\Table(name="transres_invoiceAddItem")
  * @ORM\HasLifecycleCallbacks
  */
-class InvoiceItem {
+class InvoiceAddItem {
 
     /**
      * @var integer
@@ -68,31 +68,11 @@ class InvoiceItem {
     private $updateDate;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Invoice", inversedBy="invoiceItems")
+     * @ORM\ManyToOne(targetEntity="Invoice", inversedBy="invoiceAddItems")
      * @ORM\JoinColumn(name="invoice_id", referencedColumnName="id")
      */
     private $invoice;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Product")
-     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
-     */
-    private $product;
-
-    //////////// Invoice fields ///////////////////
-    /**
-     * QTY
-     *
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $quantity;
-
-    /**
-     * Item Code (i.e. TRP-1003)
-     *
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $itemCode;
 
     /**
      * Description
@@ -102,18 +82,11 @@ class InvoiceItem {
     private $description;
 
     /**
-     * Unit price
+     * Fee
      *
      * @ORM\Column(type="string", nullable=true)
      */
-    private $unitPrice;
-
-    /**
-     * Total
-     *
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $total;
+    private $fee;
     //////////// EOF Invoice fields ///////////////////
 
 
@@ -223,54 +196,6 @@ class InvoiceItem {
     /**
      * @return mixed
      */
-    public function getProduct()
-    {
-        return $this->product;
-    }
-
-    /**
-     * @param mixed $product
-     */
-    public function setProduct($product)
-    {
-        $this->product = $product;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getQuantity()
-    {
-        return $this->quantity;
-    }
-
-    /**
-     * @param mixed $quantity
-     */
-    public function setQuantity($quantity)
-    {
-        $this->quantity = $quantity;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getItemCode()
-    {
-        return $this->itemCode;
-    }
-
-    /**
-     * @param mixed $itemCode
-     */
-    public function setItemCode($itemCode)
-    {
-        $this->itemCode = $itemCode;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getDescription()
     {
         return $this->description;
@@ -287,33 +212,19 @@ class InvoiceItem {
     /**
      * @return mixed
      */
-    public function getUnitPrice()
+    public function getFee()
     {
-        return $this->unitPrice;
+        return $this->fee;
     }
 
     /**
-     * @param mixed $unitPrice
+     * @param mixed $fee
      */
-    public function setUnitPrice($unitPrice)
+    public function setFee($fee)
     {
-        $this->unitPrice = $unitPrice;
+        $this->fee = $fee;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getTotal()
-    {
-        return $this->total;
-    }
 
-    /**
-     * @param mixed $total
-     */
-    public function setTotal($total)
-    {
-        $this->total = $total;
-    }
 
 }

@@ -97,6 +97,12 @@ class RequestController extends Controller
             if( $project->getIrbExpirationDate() ) {
                 $transresRequest->setSupportEndDate($project->getIrbExpirationDate());
             }
+
+            //pre-populate PIs
+            $transreqPis = $project->getPrincipalInvestigators();
+            foreach( $transreqPis as $transreqPi ) {
+                $transresRequest->addPrincipalInvestigator($transreqPi);
+            }
         }
 
         $form = $this->createRequestForm($transresRequest,$cycle,$request); //new

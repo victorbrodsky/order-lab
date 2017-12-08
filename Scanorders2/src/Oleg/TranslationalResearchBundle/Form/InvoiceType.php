@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityRepository;
 use Oleg\UserdirectoryBundle\Form\DocumentType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -44,6 +45,31 @@ class InvoiceType extends AbstractType
 //            'attr' => array('class' => 'datepicker form-control'),
 //            'required' => false,
 //        ));
+
+        $builder->add('status', ChoiceType::class, array( //flipped
+            'label' => 'Status',
+            'choices' => array("Unpaid"=>"Unpaid", "Paid in Full"=>"Paid in Full", "Paid Partially"=>"Paid Partially"),
+            'multiple' => false,
+            'required' => true,
+            'attr' => array('class' => 'combobox combobox-width')
+        ));
+
+        $builder->add('principalInvestigators', EntityType::class, array(
+            'class' => 'OlegUserdirectoryBundle:User',
+            'label'=> "Principal Investigator(s):",
+            'required'=> false,
+            'multiple' => true,
+            'attr' => array('class'=>'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->leftJoin("list.employmentStatus", "employmentStatus")
+                    ->leftJoin("employmentStatus.employmentType", "employmentType")
+                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+                    ->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
+                    ->leftJoin("list.infos", "infos")
+                    ->orderBy("infos.displayName","ASC");
+            },
+        ));
 
         $builder->add('salesperson', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
@@ -86,7 +112,7 @@ class InvoiceType extends AbstractType
         //if( $this->params['cycle'] != 'new' ) {
             $builder->add('oid', null, array(
                 'label' => "Invoice Number:",
-                //'disabled' => true,
+                'disabled' => true,
                 'required' => false,
                 'attr' => array('class' => 'form-control')
             ));
@@ -135,6 +161,18 @@ class InvoiceType extends AbstractType
             'attr' => array('class' => 'textarea form-control')
         ));
 
+        $builder->add('footer2', null, array(
+            'label' => "Footer 2 (In Bold):",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control', 'style'=>"font-weight: bold")
+        ));
+
+//        $builder->add('footer3', null, array(
+//            'label' => "Footer 3:",
+//            'required' => false,
+//            'attr' => array('class' => 'textarea form-control')
+//        ));
+
         //if(!$testing) {
             //InvoiceItems
             $builder->add('invoiceItems', CollectionType::class, array(
@@ -152,6 +190,20 @@ class InvoiceType extends AbstractType
                 'prototype_name' => '__invoiceitems__',
             ));
         //}
+
+//        $builder->add('invoiceAddItems', CollectionType::class, array(
+//            'entry_type' => InvoiceAddItemType::class,
+//            'entry_options' => array(
+//                'form_custom_value' => $this->params
+//            ),
+//            'label' => false,
+//            'required' => false,
+//            'allow_add' => true,
+//            'allow_delete' => true,
+//            'by_reference' => false,
+//            'prototype' => true,
+//            'prototype_name' => '__invoiceadditems__',
+//        ));
 
         //Generated Invoices
 //        $builder->add('documents', CollectionType::class, array(
@@ -190,13 +242,13 @@ class InvoiceType extends AbstractType
         //Buttons
         if( $this->params['cycle'] === "new" ) {
             $builder->add('save', SubmitType::class, array(
-                'label' => 'Save',
+                'label' => 'Generate and Send Invoice',
                 'attr' => array('class' => 'btn btn-warning')
             ));
         }
         if( $this->params['cycle'] === "edit" ) {
             $builder->add('edit', SubmitType::class, array(
-                'label' => 'Update',
+                'label' => 'Update Invoice',
                 'attr' => array('class' => 'btn btn-warning')
             ));
         }

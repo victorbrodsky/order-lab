@@ -98,6 +98,15 @@ class Invoice {
     private $salesperson;
 
     /**
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\JoinTable(name="transres_invoice_principalinvestigator",
+     *      joinColumns={@ORM\JoinColumn(name="invoice_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="principalinvestigator_id", referencedColumnName="id")}
+     * )
+     **/
+    private $principalInvestigators;
+
+    /**
      * Invoice status
      *
      * @ORM\Column(type="string", nullable=true)
@@ -142,6 +151,22 @@ class Invoice {
     private $footer;
 
     /**
+     * Tel: (212) 111-1111 Fax: (212) 111-1111 Email: email@med.cornell.edu
+     *
+     * @var string
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $footer2;
+
+    /**
+     * Detach and return with payment
+     *
+     * @var string
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $footer3;
+
+    /**
      * Discount numeric
      *
      * @ORM\Column(type="string", nullable=true)
@@ -175,6 +200,12 @@ class Invoice {
      */
     private $invoiceItems;
 
+//    /**
+//     * @ORM\OneToMany(targetEntity="InvoiceAddItem", mappedBy="invoice", cascade={"persist","remove"})
+//     */
+//    private $invoiceAddItems;
+
+
 
 
     public function __construct($user=null) {
@@ -182,7 +213,9 @@ class Invoice {
         $this->setCreateDate(new \DateTime());
         $this->transresRequests = new ArrayCollection();
         $this->invoiceItems = new ArrayCollection();
+//        $this->invoiceAddItems = new ArrayCollection();
         $this->documents = new ArrayCollection();
+        $this->principalInvestigators = new ArrayCollection();
     }
 
 
@@ -332,6 +365,22 @@ class Invoice {
         $this->salesperson = $salesperson;
     }
 
+    public function getPrincipalInvestigators()
+    {
+        return $this->principalInvestigators;
+    }
+    public function addPrincipalInvestigator($item)
+    {
+        if( $item && !$this->principalInvestigators->contains($item) ) {
+            $this->principalInvestigators->add($item);
+        }
+        return $this;
+    }
+    public function removePrincipalInvestigator($item)
+    {
+        $this->principalInvestigators->removeElement($item);
+    }
+
     /**
      * @return mixed
      */
@@ -410,6 +459,38 @@ class Invoice {
     public function setFooter($footer)
     {
         $this->footer = $footer;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFooter2()
+    {
+        return $this->footer2;
+    }
+
+    /**
+     * @param string $footer2
+     */
+    public function setFooter2($footer2)
+    {
+        $this->footer2 = $footer2;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFooter3()
+    {
+        return $this->footer3;
+    }
+
+    /**
+     * @param string $footer3
+     */
+    public function setFooter3($footer3)
+    {
+        $this->footer3 = $footer3;
     }
 
     /**
@@ -526,6 +607,22 @@ class Invoice {
     {
         $this->invoiceItems->removeElement($item);
     }
+
+//    public function getInvoiceAddItems()
+//    {
+//        return $this->invoiceAddItems;
+//    }
+//    public function addInvoiceAddItem($item)
+//    {
+//        if( $item && !$this->invoiceAddItems->contains($item) ) {
+//            $this->invoiceAddItems->add($item);
+//        }
+//        return $this;
+//    }
+//    public function removeInvoiceAddItem($item)
+//    {
+//        $this->invoiceAddItems->removeElement($item);
+//    }
 
     public function addDocument($item)
     {

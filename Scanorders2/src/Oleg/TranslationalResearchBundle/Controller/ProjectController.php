@@ -28,6 +28,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Workflow\DefinitionBuilder;
 use Symfony\Component\Workflow\Dumper\GraphvizDumper;
 use Symfony\Component\Workflow\Transition;
@@ -898,6 +899,29 @@ class ProjectController extends Controller
         );
     }
 
+    /**
+     * Finds and displays a resubmit form for this project entity.
+     *
+     * @Route("/project/ajax/{id}", name="translationalresearch_get_project_ajax", options={"expose"=true})
+     * @Template("OlegTranslationalResearchBundle:Project:review.html.twig")
+     * @Method("GET")
+     */
+    public function getProjectAction(Request $request, Project $project)
+    {
+        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER')) {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
+        $output = array(
+            "fundedAccountNumber" => $project->getFundedAccountNumber(),
+            "irbExpirationDate" => $project->getIrbExpirationDate()->format("m/d/Y")
+        );
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($output));
+        return $response;
+    }
 
 
 }

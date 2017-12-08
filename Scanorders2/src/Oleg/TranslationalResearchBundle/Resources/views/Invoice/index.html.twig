@@ -46,10 +46,10 @@
                         <ul class="dropdown-menu dropdown-menu-right">
 
                             <li>
-                                <a href="{{ path('translationalresearch_invoice_show', { 'id': transresRequest.getId(), 'oid': invoice.oid }) }}">Show</a>
+                                <a href="{{ path('translationalresearch_invoice_show', { 'id': transresRequest.getId(), 'oid': invoice.oid }) }}">Show Invoice</a>
                             </li>
                             <li>
-                                <a href="{{ path('translationalresearch_invoice_edit', { 'id': transresRequest.getId(), 'oid': invoice.oid }) }}">Edit</a>
+                                <a href="{{ path('translationalresearch_invoice_edit', { 'id': transresRequest.getId(), 'oid': invoice.oid }) }}">Edit Invoice</a>
                             </li>
                             {#<li>#}
                                 {#<a#}
@@ -66,9 +66,8 @@
         </tbody>
     </table>
 
-    <ul>
-        <li>
+        <br>
+        <p>
             <a href="{{ path('translationalresearch_invoice_new', {'id': transresRequest.id}) }}">Create a new invoice</a>
-        </li>
-    </ul>
+        </p>
 {% endblock %}

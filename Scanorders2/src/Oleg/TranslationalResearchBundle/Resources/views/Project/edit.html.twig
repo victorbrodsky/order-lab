@@ -39,13 +39,14 @@
     {#{{ form_start(edit_form) }}#}
     {{ form_start(edit_form,{'id':'transresProjectForm'}) }}
 
+        {{ transres.getProjectReviewPrototypeFormData(edit_form,cycle,sitename) }}
+
         {{ transres.projectRequesters(edit_form,project,cycle) }}
 
         {{ transres.projectFormEdit(edit_form,project,cycle) }}
 
         {{ transres.projectInfo(edit_form,project,cycle) }}
 
-        {{ transres.getProjectReviewPrototypeFormData(edit_form,cycle,sitename) }}
         {{ transres.projectReviews(edit_form,cycle,sitename,1) }}
 
         <br>

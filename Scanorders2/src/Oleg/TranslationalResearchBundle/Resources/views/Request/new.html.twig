@@ -70,6 +70,8 @@
                     {% if form.supportEndDate is defined %}
                         {{ formmacros.fieldDateLabel(form.supportEndDate,'allow-future-date') }}
                     {% endif %}
+
+                    {{ formmacros.field(form.principalInvestigators) }}
                     {{ formmacros.field(form.contact) }}
 
                     {{ transresRequestMacros.transresRequestFormEdit(form,null,cycle) }}
@@ -120,5 +122,67 @@
     {% endif %}
 
 {% endif %} {#routeName and project#}
+
+{% endblock %}
+
+{% block additionaljs %}
+
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+
+            //if( $('#oleg_translationalresearchbundle_request_project') ) {
+                //var projectId = $('#oleg_translationalresearchbundle_request_project').val();
+                transresPrepopulateFundedAccountNumber( $('#oleg_translationalresearchbundle_request_project') );
+
+                //update tarnsresrequest-fundedAccountNumber by tarnsresrequest-project
+                $('#oleg_translationalresearchbundle_request_project').on("change", function(event) {
+                    //console.log("project changed: change");
+                    //var projectId = $(this).val();
+                    //transresPrepopulateFundedAccountNumber(projectId);
+                    transresPrepopulateFundedAccountNumber( $(this) );
+                });
+            //}
+        });
+
+        function transresPrepopulateFundedAccountNumber( projectField ) {
+            var projectId = null;    //$('#oleg_translationalresearchbundle_request_project');
+            if( projectField.length ) {
+                projectId = projectField.val();
+            } else {
+                return;
+            }
+
+            console.log("projectId="+projectId);
+            if( projectId ) {
+                //console.log("get project account number");
+
+                var url = Routing.generate('translationalresearch_get_project_ajax');
+                url = url + "/" + projectId;
+
+                $.ajax({
+                    url: url,
+                    timeout: _ajaxTimeout,
+                    type: "GET",
+                    //data: {id: projectId },
+                    dataType: 'json',
+                    async: asyncflag
+                }).success(function(response) {
+                    //console.log(response);
+                    $("#oleg_translationalresearchbundle_request_fundedAccountNumber").val(response.fundedAccountNumber);
+                }).done(function() {
+                    //
+                }).error(function(jqXHR, textStatus, errorThrown) {
+                    //console.log('Error : ' + errorThrown);
+                    $("#oleg_translationalresearchbundle_request_fundedAccountNumber").val(errorThrown);
+                });
+
+            } else {
+                $("#oleg_translationalresearchbundle_request_fundedAccountNumber").val(null);
+            }
+        }
+
+    </script>
+
 
 {% endblock %}

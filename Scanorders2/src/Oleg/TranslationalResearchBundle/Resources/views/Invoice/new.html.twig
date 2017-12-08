@@ -14,12 +14,11 @@
 
     <input type="hidden" id="formcycle" value="{{ cycle }}" />
 
-    <div id="form-prototype-data"
-         data-userurllink = "{{ usermacros.userUrlLink()|e }}"
-         data-uploadurl = "{{ oneup_uploader_endpoint('transres_gallery') }}"
-         data-userid = "{{ app.user.id }}"
-    ></div>
-
+    {#<div id="form-prototype-data"#}
+         {#data-userurllink = "{{ usermacros.userUrlLink()|e }}"#}
+         {#data-uploadurl = "{{ oneup_uploader_endpoint('transres_gallery') }}"#}
+         {#data-userid = "{{ app.user.id }}"#}
+    {#></div>#}
 
     <h4 class="text-info" align="center">
         {{ title }}
@@ -42,6 +41,14 @@
 
     {{ form_start(form) }}
 
+        <div id="form-prototype-data"
+             data-userurllink = "{{ usermacros.userUrlLink()|e }}"
+             data-uploadurl = "{{ oneup_uploader_endpoint('transres_gallery') }}"
+             data-userid = "{{ app.user.id }}"
+
+             data-prototype-transres-invoiceItems = "{{ transresRequestMacros.invoiceItemForm(form.invoiceItems,cycle,'transres-invoiceItems','prototype',sitename,1)|e }}"
+        ></div>
+
         {#{{ formmacros.field(form.updateUser) }}#}
 
         {% if form.createDate is defined %}
@@ -49,6 +56,14 @@
         {% endif %}
         {% if form.submitter is defined %}
             {{ formmacros.field(form.submitter) }}
+        {% endif %}
+
+        {% if form.status is defined %}
+            {{ formmacros.field(form.status) }}
+        {% endif %}
+
+        {% if form.principalInvestigators is defined %}
+            {{ formmacros.field(form.principalInvestigators) }}
         {% endif %}
         {% if form.salesperson is defined %}
             {{ formmacros.field(form.salesperson) }}
@@ -80,7 +95,6 @@
 
         {{ formmacros.field(form.invoiceFrom) }}
         {{ formmacros.field(form.invoiceTo) }}
-        {{ formmacros.field(form.footer) }}
         <br>
 
         {#<hr />#}
@@ -95,7 +109,11 @@
             {#</div>#}
             {#{{ transresRequestMacros.invoiceItem(invoiceItem,cycle) }}#}
         {#{% endfor %}#}
-        {{ transresRequestMacros.invoiceItems(form,cycle) }}
+        {{ transresRequestMacros.invoiceItemSections(form,cycle) }}
+
+        {#{{ transresRequestMacros.invoiceAddItems(form,cycle) }}#}
+        {#Product or Service Panel +/-#}
+        {#{{ transresRequestMacros.productSections(form,cycle,sitename) }}#}
 
         {#<hr />#}
 
@@ -107,6 +125,17 @@
         {{ formmacros.field(form.total) }}
         {{ formmacros.field(form.paid) }}
 
+        <br>
+        <hr>
+        {% if form.footer is defined %}
+            {{ formmacros.field(form.footer) }}
+        {% endif %}
+        {% if form.footer2 is defined %}
+            {{ formmacros.field(form.footer2) }}
+        {% endif %}
+        {% if form.footer3 is defined %}
+            {{ formmacros.field(form.footer3) }}
+        {% endif %}
         <br><br>
 
         {% if form.save is defined %}
@@ -170,7 +199,7 @@
             //quantity or unit price update => update total
             $('.invoiceitem-quantity, .invoiceitem-unitPrice').on('input', function(event) {
                 console.log("update row total");
-                var invoiceItemRow = $(this).closest('.invoiceItemRow');
+                var invoiceItemRow = $(this).closest('.user-collection-holder');
                 var quatity = invoiceItemRow.find(".invoiceitem-quantity").val();
                 var unitPrice = invoiceItemRow.find(".invoiceitem-unitPrice").val();
                 console.log("row quatity="+quatity+"; unitPrice="+unitPrice);
