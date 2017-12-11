@@ -2141,7 +2141,7 @@
 {% endmacro %}
 
 
-{% macro addNewObjectBtn( cycle, classname, title, addClass ) %}
+{% macro addNewObjectBtn( cycle, classname, title, addClass, callback ) %}
     {% if "show" in cycle %}
         {% set showFlag = true %}
     {% else %}
@@ -2155,8 +2155,12 @@
             {% set addClassStr = addClass %}
         {% endif %}
 
+        {% if callback is not defined %}
+            {% set callback = null %}
+        {% endif %}
+
         <div style="align-content: center;">
-            <button class="btn btn-default {{ addClassStr }}" onClick="addNewObject(this,'{{ classname }}')" type='button'>{{ title }}</button>
+            <button class="btn btn-default {{ addClassStr }}" onClick="addNewObject(this,'{{ classname }}',{{ callback }})" type='button'>{{ title }}</button>
         </div>
     {% endif %}
 {% endmacro %}

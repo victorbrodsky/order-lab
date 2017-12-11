@@ -21,7 +21,7 @@
  */
 
 
-function addNewObject(btn,classname) {
+function addNewObject(btn,classname,callback) {
 //    var btnEl = $(btn);
 
     //console.log("classname="+classname);
@@ -46,12 +46,12 @@ function addNewObject(btn,classname) {
     //printF(newForm,"added el:");
     //console.log(newForm);
 
-    initBaseAdd(newForm);
+    initBaseAdd(newForm,callback);
     processEmploymentStatusRemoveButtons(btn,'add');
 
 }
 
-function initBaseAdd(newForm) {
+function initBaseAdd(newForm,callback) {
     expandTextarea();
     regularCombobox();
 
@@ -86,6 +86,10 @@ function initBaseAdd(newForm) {
     degreeListener(newForm);
 
     listenerFellAppRank(newForm);
+
+    if( callback ) {
+        callback();
+    }
 }
 
 //get input field only

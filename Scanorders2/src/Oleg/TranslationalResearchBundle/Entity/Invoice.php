@@ -169,29 +169,29 @@ class Invoice {
     /**
      * Discount numeric
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="decimal", precision=15, scale=2)
      */
     private $discountNumeric;
 
     /**
      * Discount numeric
      *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="decimal", precision=8, scale=2)
      */
     private $discountPercent;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="decimal", precision=15, scale=2)
      */
     private $subTotal;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="decimal", precision=15, scale=2)
      */
     private $total;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="decimal", precision=15, scale=2)
      */
     private $paid;
 

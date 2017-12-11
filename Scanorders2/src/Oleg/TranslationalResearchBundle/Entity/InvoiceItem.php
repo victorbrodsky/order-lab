@@ -102,16 +102,12 @@ class InvoiceItem {
     private $description;
 
     /**
-     * Unit price
-     *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="decimal", precision=15, scale=2)
      */
     private $unitPrice;
 
     /**
-     * Total
-     *
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="decimal", precision=15, scale=2)
      */
     private $total;
     //////////// EOF Invoice fields ///////////////////

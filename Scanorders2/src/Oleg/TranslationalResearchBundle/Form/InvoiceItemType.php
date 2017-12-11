@@ -7,6 +7,8 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -46,14 +48,20 @@ class InvoiceItemType extends AbstractType
             'attr' => array('class' => 'textarea form-control ')
         ));
 
-        $builder->add('unitPrice', null, array(
-            'label' => "Unit Price",
+        $builder->add('unitPrice', NumberType::class, array(
+            'label' => "Unit Price ($)",
+            'scale' => 2,
+            //'divisor' => 100,
+            //'currency' => false,
             'required' => false,
             'attr' => array('class' => 'form-control invoiceitem-unitPrice')
         ));
 
-        $builder->add('total', null, array(
-            'label' => "Total",
+        $builder->add('total', NumberType::class, array(
+            'label' => "Total ($)",
+            'scale' => 2,
+            //'divisor' => 100,
+            //'currency' => false,
             'required' => false,
             'attr' => array('class' => 'form-control invoiceitem-total')
         ));

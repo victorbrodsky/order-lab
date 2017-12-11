@@ -9,6 +9,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -218,20 +219,23 @@ class InvoiceType extends AbstractType
 //        ));
 
 
-        $builder->add('subTotal', null, array(
+        $builder->add('subTotal', NumberType::class, array(
             'label' => "Subtotal:",
+            'scale' => 2,
             'required' => false,
-            'attr' => array('class' => 'form-control invoice-subTotal')
+            'attr' => array('class' => 'form-control invoice-subTotal') //'onclick'=>'transresUpdateSubTotal()'
         ));
 
-        $builder->add('total', null, array(
+        $builder->add('total', NumberType::class, array(
             'label' => "Total:",
+            'scale' => 2,
             'required' => false,
             'attr' => array('class' => 'form-control invoice-total')
         ));
 
-        $builder->add('paid', null, array(
+        $builder->add('paid', NumberType::class, array(
             'label' => "Paid:",
+            'scale' => 2,
             'required' => false,
             'attr' => array('class' => 'form-control')
         ));

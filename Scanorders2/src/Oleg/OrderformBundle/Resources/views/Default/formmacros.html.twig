@@ -165,6 +165,35 @@
     {% endif %}
 {% endmacro %}
 
+{% macro field_left( field, label, attr ) %}
+    {% if field is defined %}
+        {% form_theme field 'OlegOrderformBundle::Default/collection_widget.html.twig' %}
+        <p>
+        <div class="row">
+            {{ form_errors(field) }}
+            <div class="col-xs-2" align="right">
+                {{ form_label(field,label) }}
+            </div>
+            <div class="col-xs-6" align="left">
+                {% if attr == "disabled" %}
+                    {#value of disabled field will be ignored#}
+                    {{ form_widget(field,{ 'disabled':'disabled' }) }}
+                {% elseif attr == "readonly" %}
+                    {{ form_widget(field, { 'attr': {'readonly': 'readonly'} }) }}
+                {% elseif attr == "required" %}
+                    {{ form_widget(field, { 'attr': {'required': 'true'} }) }}
+                {% else %}
+                    {{ form_widget(field) }}
+                {% endif %}
+            </div>
+            <div class="col-xs-4" align="right">
+            </div>
+            {{ form_rest(field) }}
+        </div>
+        </p>
+    {% endif %}
+{% endmacro %}
+
 
 {% macro fieldDateLabel_notempty( field, cycle, classname, attr ) %}
     {% import _self as formmacros %}
@@ -243,6 +272,37 @@
         {{ form_rest(field) }}
     </div>
 {% endmacro %}
+
+{% macro fieldDateLabel_left( field, classname, attr, noerror ) %}
+    {% import _self as formmacros %}
+    <p>
+    <div class="row">
+        {% if noerror is not defined %}
+            {{ form_errors(field) }}
+        {% endif %}
+        <div class="col-xs-2" align="right">
+            {{ form_label(field) }}
+        </div>
+        <div class="col-xs-6" align="left" class="form_body_toggle_btn">
+            <div class="input-group input-group-reg date {{ classname }}">
+                {% if attr == "disabled" %}
+                    {#value of disabled field will be ignored#}
+                    {{ form_widget(field,{ 'disabled':'disabled' }) }}
+                {% elseif attr == "readonly" %}
+                    {{ form_widget(field, { 'attr': {'readonly': 'readonly'} }) }}
+                {% else %}
+                    {{ form_widget(field) }}
+                {% endif %}
+                <span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>
+            </div>
+        </div>
+        <div class="col-xs-4" align="right">
+        </div>
+        {{ form_rest(field) }}
+    </div>
+    </p>
+{% endmacro %}
+
 {% macro fielddate( datetime, classname, attr ) %}
     {% if datetime.field is defined %}
         {% set datetimeField = datetime.field %}

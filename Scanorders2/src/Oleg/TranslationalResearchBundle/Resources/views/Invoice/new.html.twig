@@ -29,7 +29,19 @@
 
     {% set bundleFileName = transres_request_util.getInvoiceLogo()|raw %}
     {% if bundleFileName %}
-        <img src="{{ asset(bundleFileName) }}" alt="Invoice Logo"/>
+
+        <p>
+        <div class="row">
+            <div class="col-xs-2" align="right">
+            </div>
+            <div class="col-xs-6" align="left">
+                <img src="{{ asset(bundleFileName) }}" alt="Invoice Logo"/>
+            </div>
+            <div class="col-xs-4" align="left">
+            </div>
+        </div>
+        </p>
+
         <br><br>
         {#<div class="row" align="left">#}
             {#<div class="col-xs-5">#}
@@ -52,21 +64,21 @@
         {#{{ formmacros.field(form.updateUser) }}#}
 
         {% if form.createDate is defined %}
-            {{ formmacros.field(form.createDate) }}
+            {{ formmacros.field_left(form.createDate) }}
         {% endif %}
         {% if form.submitter is defined %}
-            {{ formmacros.field(form.submitter) }}
+            {{ formmacros.field_left(form.submitter) }}
         {% endif %}
 
         {% if form.status is defined %}
-            {{ formmacros.field(form.status) }}
+            {{ formmacros.field_left(form.status) }}
         {% endif %}
 
         {% if form.principalInvestigators is defined %}
-            {{ formmacros.field(form.principalInvestigators) }}
+            {{ formmacros.field_left(form.principalInvestigators) }}
         {% endif %}
         {% if form.salesperson is defined %}
-            {{ formmacros.field(form.salesperson) }}
+            {{ formmacros.field_left(form.salesperson) }}
         {% endif %}
 
         <hr />
@@ -84,17 +96,17 @@
 
         {#<hr />#}
         {% if form.oid is defined %}
-            {{ formmacros.field(form.oid) }}
+            {{ formmacros.field_left(form.oid) }}
         {% endif %}
 
         {% if form.dueDate is defined %}
-            {{ formmacros.fieldDateLabel(form.dueDate,'allow-future-date') }}
+            {{ formmacros.fieldDateLabel_left(form.dueDate,'allow-future-date') }}
         {% endif %}
 
         {#<hr />#}
 
-        {{ formmacros.field(form.invoiceFrom) }}
-        {{ formmacros.field(form.invoiceTo) }}
+        {{ formmacros.field_left(form.invoiceFrom) }}
+        {{ formmacros.field_left(form.invoiceTo) }}
         <br>
 
         {#<hr />#}
@@ -117,24 +129,59 @@
 
         {#<hr />#}
 
-        {{ formmacros.field(form.subTotal) }}
+        {#{{ formmacros.field(form.subTotal) }}#}
+        <p>
+        <div class="row">
+            <div class="col-xs-2" align="right">
+                <strong>{{ form.subTotal.vars.label|raw }}</strong>
+            </div>
+            <div class="col-xs-6" align="left">
+                <div class = "input-group">
+                    {{ form_widget(form.subTotal) }}
+                    <span class = "input-group-addon btn" onclick="transresUpdateSubTotal();">
+                        Calculate
+                    </span>
+                </div>
+            </div>
+            <div class="col-xs-4" align="right">
+            </div>
+        </div>
+        </p>
 
-        {{ formmacros.field(form.discountNumeric) }}
-        {{ formmacros.field(form.discountPercent) }}
+        {{ formmacros.field_left(form.discountNumeric) }}
+        {{ formmacros.field_left(form.discountPercent) }}
 
-        {{ formmacros.field(form.total) }}
-        {{ formmacros.field(form.paid) }}
+        {#{{ formmacros.field_left(form.total) }}#}
+        <p>
+        <div class="row">
+            <div class="col-xs-2" align="right">
+                <strong>{{ form.total.vars.label|raw }}</strong>
+            </div>
+            <div class="col-xs-6" align="left">
+                <div class = "input-group">
+                    {{ form_widget(form.total) }}
+                    <span class = "input-group-addon btn" onclick="transresUpdateTotal();">
+                            Calculate
+                        </span>
+                </div>
+            </div>
+            <div class="col-xs-4" align="right">
+            </div>
+        </div>
+        </p>
+
+        {{ formmacros.field_left(form.paid) }}
 
         <br>
         <hr>
         {% if form.footer is defined %}
-            {{ formmacros.field(form.footer) }}
+            {{ formmacros.field_left(form.footer) }}
         {% endif %}
         {% if form.footer2 is defined %}
-            {{ formmacros.field(form.footer2) }}
+            {{ formmacros.field_left(form.footer2) }}
         {% endif %}
         {% if form.footer3 is defined %}
-            {{ formmacros.field(form.footer3) }}
+            {{ formmacros.field_left(form.footer3) }}
         {% endif %}
         <br><br>
 
@@ -189,13 +236,21 @@
 
         $(document).ready(function() {
 
-            // Create a new 'change' event
-            //var event = new Event('change');
-            // Dispatch it.
-            //$('.invoiceitem-total').dispatchEvent(event);
-            var onetotal = $('.invoiceitem-total').first();
-            transresUpdateSubTotal(onetotal);
+            console.log("cycle="+cycle);
+            if( cycle == "new" ) {
+                transresUpdateSubTotal();
+            }
 
+            transresInvoiceItemListeneres();
+
+//            $('.invoice-subTotal').on('input', function(event) {
+//                console.log("invoice-subTotal: triggered by manually update row subTotal");
+//                transresUpdateSubTotal();
+//            });
+
+        });
+
+        function transresInvoiceItemListeneres(){
             //quantity or unit price update => update total
             $('.invoiceitem-quantity, .invoiceitem-unitPrice').on('input', function(event) {
                 console.log("update row total");
@@ -205,34 +260,21 @@
                 console.log("row quatity="+quatity+"; unitPrice="+unitPrice);
                 var invoiceItemTotalEl = invoiceItemRow.find(".invoiceitem-total");
                 if( quatity && unitPrice ) {
-                    var total = parseInt(quatity) * parseInt(unitPrice);
+                    var total = parseFloat(quatity) * parseFloat(unitPrice);
+                    total = transresRoundDecimal(total);
                     console.log("row total="+total);
                     invoiceItemTotalEl.val(total);
                 } else {
                     invoiceItemTotalEl.val(null);
                 }
                 console.log("transresUpdateSubTotal: triggered by claculated row total");
-                transresUpdateSubTotal(invoiceItemTotalEl);
+                transresUpdateSubTotal();
             });
 
             //total update => update subtotal and total
             $('.invoiceitem-total').on('input', function(event) {
-//                console.log("update subtotal and total");
-//                var totals = $(this).closest('.invoiceItemTable').find(".invoiceitem-total");
-//                var subTotal = 0;
-//                totals.each(function() {
-//                    var total = $(this).val();
-//                    console.log("total="+total);
-//                    if( !total ) {
-//                        total = 0;
-//                    }
-//                    subTotal = subTotal + parseInt(total);
-//                });
-//                console.log("subTotal="+subTotal);
-//                $(".invoice-subTotal").val(subTotal);
-//                $(".invoice-total").val(subTotal);
                 console.log("transresUpdateSubTotal: triggered by manually update row total");
-                transresUpdateSubTotal( $(this) );
+                transresUpdateSubTotal();
             });
 
             $('.invoice-discountNumeric').on('input', function(event) {
@@ -243,12 +285,12 @@
                 $('.invoice-discountNumeric').val(null);
                 transresUpdateTotal();
             });
+        }
 
-        });
-
-        function transresUpdateSubTotal(invoiceItemTotalEl) {
+        function transresUpdateSubTotal() { //invoiceItemTotalEl
             console.log("update subtotal and total");
-            var totals = invoiceItemTotalEl.closest('.invoiceItemTable').find(".invoiceitem-total");
+            //var totals = invoiceItemTotalEl.closest('.transres-invoiceItems-holder').find(".invoiceitem-total");
+            var totals = $('.transres-invoiceItems-holder').find(".invoiceitem-total");
             var subTotal = 0;
             totals.each(function() {
                 var total = $(this).val();
@@ -256,11 +298,11 @@
                 if( !total ) {
                     total = 0;
                 }
-                subTotal = subTotal + parseInt(total);
+                subTotal = subTotal + parseFloat(total);
             });
+            subTotal = transresRoundDecimal(subTotal);
             console.log("subTotal="+subTotal);
             $(".invoice-subTotal").val(subTotal);
-            //$(".invoice-total").val(subTotal);
             transresUpdateTotal();
         }
 
@@ -273,16 +315,21 @@
 
             if( subTotal ) {
                 if( discountNumeric ) {
-                    discount = parseInt(discountNumeric);
+                    discount = parseFloat(discountNumeric);
                 }
                 if( discountPercent ) {
-                    discount = subTotal * (parseInt(discountPercent)/100);
+                    discount = subTotal * (parseFloat(discountPercent)/100);
                 }
             }
 
             var total = subTotal - discount;
 
+            total = transresRoundDecimal(total);
             $(".invoice-total").val(total);
+        }
+
+        function transresRoundDecimal(value) {
+            return Number(Math.round(value+'e2')+'e-2').toFixed(2); //1.005 => 1.01
         }
 
     </script>
