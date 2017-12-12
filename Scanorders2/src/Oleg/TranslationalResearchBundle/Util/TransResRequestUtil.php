@@ -605,12 +605,12 @@ class TransResRequestUtil
 
         //1) is_granted('ROLE_TRANSRES_REQUESTER')
         if( $this->secAuth->isGranted('ROLE_TRANSRES_REQUESTER') === false && $transresUtil->isAdminOrPrimaryReviewer() === false ) {
-            return false;
+            return -1;
         }
 
         //2) project.state == "final_approved"
         if( $project->getState() != "final_approved" ) {
-            return false;
+            return -2;
         }
 
         //3) Request can not be submitted for the expired project
@@ -626,11 +626,11 @@ class TransResRequestUtil
         }
         if( new \DateTime() > $expDate ) {
             //echo "expired<br>";
-            return false;
+            return -3;
         }
         //echo "not expired<br>";
 
-        return true;
+        return 1;
     }
 
     public function getReviewEnabledLinkActions( $transresRequest, $statMachineType ) {

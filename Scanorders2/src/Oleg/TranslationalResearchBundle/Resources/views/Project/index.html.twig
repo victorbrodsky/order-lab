@@ -216,11 +216,25 @@
                                 {#</li>#}
                             {#{% endif %}#}
 
-                            {% if transres_request_util.isRequestCanBeCreated(project) %}
+                            {% set isRequestCanBeCreated = transres_request_util.isRequestCanBeCreated(project) %}
+                            {% if isRequestCanBeCreated == 1 %}
                                 <li class="divider"></li>
                                 <li>
                                     <a href="{{ path(translationalresearch_sitename~'_request_new', { 'id': project.id }) }}"
                                        target="_blank">Create a New Request</a>
+                                </li>
+                            {% endif %}
+                            {#{% if isRequestCanBeCreated == -1 %}#}
+                                {#You don't have a permission to create a new request#}
+                            {#{% endif %}#}
+                            {#{% if isRequestCanBeCreated == -2 %}#}
+                                {#Project is not in the approved state#}
+                            {#{% endif %}#}
+                            {% if isRequestCanBeCreated == -3 %}
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_project_edit', { 'id': project.id }) }}"
+                                       target="_blank">Update IRB approval expiration date to submit new requests</a>
                                 </li>
                             {% endif %}
                             {% if is_granted('ROLE_TRANSRES_REQUESTER') or transres_util.isAdminOrPrimaryReviewer() %}

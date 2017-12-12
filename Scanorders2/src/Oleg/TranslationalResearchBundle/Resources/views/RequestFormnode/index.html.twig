@@ -61,7 +61,7 @@
     </div>
     <br>
 
-    {% if transres_request_util.isRequestCanBeCreated(project) %}
+    {% if transres_request_util.isRequestCanBeCreated(project) == 1 %}
         <br>
         <p>
             <a class="btn btn-primary" href="{{ path(translationalresearch_sitename~'_request_formnode_new', {'id':project.id}) }}"
@@ -198,7 +198,7 @@
     {#{{ render(controller('OlegTranslationalResearchBundle:Project:threadComments', { 'id': "3-9-committee_review" })) }}#}
     {#{% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': "3-9-committee_review"} %}#}
 
-    {% if transres_request_util.isRequestCanBeCreated(project) %}
+    {% if transres_request_util.isRequestCanBeCreated(project) == 1 %}
         <br>
         <p>
             <a class="btn btn-primary" href="{{ path(translationalresearch_sitename~'_request_formnode_new', {'id':project.id}) }}"

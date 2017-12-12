@@ -61,7 +61,8 @@
     </div>
     <br>
 
-    {% if transres_request_util.isRequestCanBeCreated(project) %}
+    {% set isRequestCanBeCreated = transres_request_util.isRequestCanBeCreated(project) %}
+    {% if isRequestCanBeCreated == 1 %}
         <br>
         <p>
             <a class="btn btn-primary" href="{{ path(translationalresearch_sitename~'_request_new', {'id':project.id}) }}"
@@ -220,12 +221,13 @@
     {#{{ render(controller('OlegTranslationalResearchBundle:Project:threadComments', { 'id': "3-9-committee_review" })) }}#}
     {#{% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': "3-9-committee_review"} %}#}
 
-    {% if transres_request_util.isRequestCanBeCreated(project) %}
+    {% if isRequestCanBeCreated == 1 %}
         <br>
         <p>
             <a class="btn btn-primary" href="{{ path(translationalresearch_sitename~'_request_new', {'id':project.id}) }}"
             >Create a new Request</a>
         </p>
+        <br>
     {% endif %}
 
 {% endblock %}
