@@ -79,8 +79,9 @@ class TransResRequestUtil
             }
         }
 
+        //echo "total=".$total."<br>";
         if( $total ) {
-            $res = "Total fees: $$total";
+            $res = "Total fees: $".$total;
             return $res;
         }
 

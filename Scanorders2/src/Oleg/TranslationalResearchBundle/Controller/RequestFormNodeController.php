@@ -486,12 +486,15 @@ class RequestFormNodeController extends Controller
         //echo "transresRequests count=".count($transresRequests)."<br>";
 
         $requestTotalFeeHtml = $transresRequestUtil->getTransResRequestTotalFeeHtml($project);
+        if( $requestTotalFeeHtml ) {
+            $requestTotalFeeHtml = " (". $requestTotalFeeHtml . ")";
+        }
 
         return array(
             'transresRequests' => $transresRequests,
             'project' => $project,
             'filterform' => $filterform->createView(),
-            'title' => $title . " (". $requestTotalFeeHtml . ")",
+            'title' => $title . $requestTotalFeeHtml,
             'requestTotalFeeHtml' => null //$requestTotalFeeHtml
         );
     }
