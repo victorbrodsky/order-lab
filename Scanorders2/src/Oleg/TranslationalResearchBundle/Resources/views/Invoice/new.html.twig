@@ -121,7 +121,7 @@
             {#</div>#}
             {#{{ transresRequestMacros.invoiceItem(invoiceItem,cycle) }}#}
         {#{% endfor %}#}
-        {{ transresRequestMacros.invoiceItemSections(form,cycle) }}
+        {{ transresRequestMacros.invoiceItemSections(form,cycle,sitename) }}
 
         {#{{ transresRequestMacros.invoiceAddItems(form,cycle) }}#}
         {#Product or Service Panel +/-#}
@@ -170,7 +170,9 @@
         </div>
         </p>
 
-        {{ formmacros.field_left(form.paid) }}
+        {% if form.paid is defined %}
+            {{ formmacros.field_left(form.paid) }}
+        {% endif %}
 
         <br>
         <hr>
@@ -198,25 +200,30 @@
         <p>
             <a class="btn btn-warning" href="{{ path(translationalresearch_sitename~'_invoice_edit',{'id': transresRequest.getId(),'oid':invoice.oid}) }}">Edit Invoice</a>
         </p>
+
         <p>
-            {#<a#}
-                {#general-data-confirm="Are you sure you want to delete this invoice?"#}
-                {#href="{{ path('translationalresearch_invoice_delete', {'id': invoice.id}) }}"#}
-        {#>Delete</a>#}
-            {{ form_start(delete_form) }}
-                <input class="btn btn-danger" type="submit" value="Delete">
-            {{ form_end(delete_form) }}
+            {% if is_granted('ROLE_TRANSRES_ADMIN') %}
+                {#{{ form_start(delete_form) }}#}
+                {{ form_start(delete_form,{'attr':{'onsubmit':"return confirm('Do you really want to delete this invoice?');"}}) }}
+                    <input class="btn btn-danger" type="submit" value="Delete">
+                {{ form_end(delete_form) }}
+                <br><br>
+            {% endif %}
         </p>
     {% endif %}
 
     {% if cycle == "edit" %}
+        <br><br>
         <p>
             <a class="btn btn-primary" href="{{ path(translationalresearch_sitename~'_invoice_show',{'id': transresRequest.getId(),'oid': invoice.oid }) }}">Cancel</a>
         </p>
 
-        {{ form_start(delete_form) }}
-            <input class="btn btn-danger" type="submit" value="Delete">
-        {{ form_end(delete_form) }}
+        {% if is_granted('ROLE_TRANSRES_ADMIN') %}
+            {{ form_start(delete_form,{'attr':{'onsubmit':"return confirm('Do you really want to delete this invoice?');"}}) }}
+                <input class="btn btn-danger" type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+            <br><br>
+        {% endif %}
     {% endif %}
 
     {#{% if project and project.id %}#}

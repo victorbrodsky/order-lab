@@ -169,29 +169,29 @@ class Invoice {
     /**
      * Discount numeric
      *
-     * @ORM\Column(type="decimal", precision=15, scale=2)
+     * @ORM\Column(type="decimal", precision=15, scale=2, nullable=true)
      */
     private $discountNumeric;
 
     /**
      * Discount numeric
      *
-     * @ORM\Column(type="decimal", precision=8, scale=2)
+     * @ORM\Column(type="decimal", precision=8, scale=2, nullable=true)
      */
     private $discountPercent;
 
     /**
-     * @ORM\Column(type="decimal", precision=15, scale=2)
+     * @ORM\Column(type="decimal", precision=15, scale=2, nullable=true)
      */
     private $subTotal;
 
     /**
-     * @ORM\Column(type="decimal", precision=15, scale=2)
+     * @ORM\Column(type="decimal", precision=15, scale=2, nullable=true)
      */
     private $total;
 
     /**
-     * @ORM\Column(type="decimal", precision=15, scale=2)
+     * @ORM\Column(type="decimal", precision=15, scale=2, nullable=true)
      */
     private $paid;
 
@@ -293,11 +293,11 @@ class Invoice {
     }
 
     /**
-     * @param \DateTime $updateDate
+     * @ORM\PreUpdate
      */
-    public function setUpdateDate($updateDate)
+    public function setUpdateDate()
     {
-        $this->updateDate = $updateDate;
+        $this->updateDate = new \DateTime();
     }
 
     /**
@@ -600,6 +600,7 @@ class Invoice {
     {
         if( $item && !$this->invoiceItems->contains($item) ) {
             $this->invoiceItems->add($item);
+            $item->setInvoice($this);
         }
         return $this;
     }
@@ -645,7 +646,7 @@ class Invoice {
     public function generateOid($transresRequest)
     {
         $transresRequestOid = $transresRequest->getOid();
-        $oid = $transresRequestOid . "-INV-" . $this->getId();
+        $oid = $transresRequestOid . "-INV" . $this->getId();
         //echo "oid=$oid <br>";
         $this->setOid($oid);
         return $oid;

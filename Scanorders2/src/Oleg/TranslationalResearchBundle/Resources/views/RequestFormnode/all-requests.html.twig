@@ -70,8 +70,8 @@
         <thead>
             <tr>
                 {#<th>Id</th>#}
-                <th>{{ knp_pagination_sortable(transresRequests, 'ID#', 'transresRequest.id') }}</th>
-                <th>{{ knp_pagination_sortable(transresRequests, 'Project ID#', 'project.id') }}</th>
+                <th>{{ knp_pagination_sortable(transresRequests, 'ID', 'transresRequest.id') }}</th>
+                <th>{{ knp_pagination_sortable(transresRequests, 'Project ID', 'project.id') }}</th>
                 {#<th>{{ knp_pagination_sortable(transresRequests, 'Submitter', 'submitterInfos.displayName') }}</th>#}
                 <th>{{ knp_pagination_sortable(transresRequests, 'Creation Date', 'transresRequest.createDate') }}</th>
                 <th>{{ knp_pagination_sortable(transresRequests, 'Work Progress Status', 'transresRequest.progressState') }}</th>
@@ -173,7 +173,7 @@
                             {% if transresRequest.project.getRequests()|length > 0 %}
                                 <li>
                                     <a href="{{ path(translationalresearch_sitename~'_request_formnode_index', { 'id': transresRequest.project.id }) }}"
-                                       target="_blank">Show All Requests for this Project {{ transresRequest.project.getOid() }} </a>
+                                       target="_blank">Show associated requests for this Project {{ transresRequest.project.getOid() }} </a>
                                 </li>
                             {% endif %}
 

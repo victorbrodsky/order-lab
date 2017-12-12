@@ -121,7 +121,7 @@
 
 {% endmacro %}
 
-{% macro invoiceItemSections(form, cycle) %}
+{% macro invoiceItemSections(form, cycle, sitename) %}
 
     {% import "OlegFellAppBundle::Default/fellappmacros.html.twig" as fellappmacros %}
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
@@ -141,26 +141,30 @@
         <div id="invoiceItems" class="panel-collapse collapse in">
             <div class="panel-body">
 
-                <div class="row">
-                    <div class="col-xs-2">
-                        {{ form_label(form.invoiceItems|first.quantity) }}
-                    </div>
-                    <div class="col-xs-2">
-                        {{ form_label(form.invoiceItems|first.itemCode) }}
-                    </div>
-                    <div class="col-xs-3">
-                        {{ form_label(form.invoiceItems|first.description) }}
-                    </div>
-                    <div class="col-xs-2">
-                        {{ form_label(form.invoiceItems|first.unitPrice) }}
-                    </div>
-                    <div class="col-xs-2">
-                        {{ form_label(form.invoiceItems|first.total) }}
-                    </div>
-                    <div class="col-xs-1">
+                {% if form.invoiceItems|length > 0 %}
+                    <div class="row">
+                        <div class="col-xs-2">
+                            {{ form_label(form.invoiceItems|first.quantity) }}
+                        </div>
+                        <div class="col-xs-2">
+                            {{ form_label(form.invoiceItems|first.itemCode) }}
+                        </div>
+                        <div class="col-xs-3">
+                            {{ form_label(form.invoiceItems|first.description) }}
+                        </div>
+                        <div class="col-xs-2">
+                            {{ form_label(form.invoiceItems|first.unitPrice) }}
+                        </div>
+                        <div class="col-xs-2">
+                            {{ form_label(form.invoiceItems|first.total) }}
+                        </div>
+                        <div class="col-xs-1">
 
+                        </div>
                     </div>
-                </div>
+                {% else %}
+                    <p>There are no Invoice Items</p>
+                {% endif %}
 
                 <div class="transres-invoiceItems-holder">
                     {% for invoiceItem in form.invoiceItems %}

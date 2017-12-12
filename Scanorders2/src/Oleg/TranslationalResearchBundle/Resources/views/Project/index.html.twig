@@ -65,8 +65,8 @@
         <thead>
             <tr>
                 {#<th>Id</th>#}
-                <th>{{ knp_pagination_sortable(projects, 'ID#', 'project.oid') }}</th>
-                <th>{{ knp_pagination_sortable(projects, 'Create Date', 'project.createDate') }}</th>
+                <th>{{ knp_pagination_sortable(projects, 'ID', 'project.oid') }}</th>
+                <th>{{ knp_pagination_sortable(projects, 'Submission Date', 'project.createDate') }}</th>
                 {#<th>{{ knp_pagination_sortable(projects, 'IRB#', 'project.irbNumber') }}</th>#}
                 <th>{{ knp_pagination_sortable(projects, 'Principal Investigator(s)', 'principalInvestigatorsInfos.displayName') }}</th>
                 <th>
@@ -75,7 +75,7 @@
                 </th>
                 <th>
                     {#{{ knp_pagination_sortable(projects, 'Project Funded', 'project.funded') }}#}
-                    Project Funded
+                    Funding
                 </th>
                 <th>{{ knp_pagination_sortable(projects, 'Status', 'project.state') }}</th>
                 <th>{{ knp_pagination_sortable(projects, 'Approval Date', 'project.approvalDate') }}</th>
@@ -227,9 +227,15 @@
                                 {% if project.getRequests()|length > 0 %}
                                     <li>
                                         <a href="{{ path(translationalresearch_sitename~'_request_index', { 'id': project.id }) }}"
-                                           target="_blank">Show All Requests</a>
+                                           target="_blank">Show associated requests</a>
                                     </li>
                                 {% endif %}
+                            {% endif %}
+
+                            {% if is_granted('ROLE_TRANSRES_ADMIN') %}
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_project_edit', { 'id': project.id }) }}" target="_blank">Edit Project</a>
+                                </li>
                             {% endif %}
 
                         </ul>

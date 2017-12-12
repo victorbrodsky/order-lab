@@ -28,6 +28,10 @@ class InvoiceController extends Controller
      */
     public function indexAction(Request $request, TransResRequest $transresRequest=null)
     {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+        }
+
         $em = $this->getDoctrine()->getManager();
         $routeName = $request->get('_route');
 
@@ -48,7 +52,7 @@ class InvoiceController extends Controller
         }
 
         if( $routeName == "translationalresearch_invoice_index" ) {
-            $title = "List of Invoices for Request ID# ".$transresRequest->getOid();
+            $title = "List of Invoices for Request ID ".$transresRequest->getOid();
             $dql->where("transresRequests.id = :transresRequestId");
             $dqlParameters["transresRequestId"] = $transresRequest->getId();
         }
@@ -91,8 +95,12 @@ class InvoiceController extends Controller
      */
     public function newAction(Request $request, TransResRequest $transresRequest)
     {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+        }
 
         $em = $this->getDoctrine()->getManager();
+        $transresUtil = $this->get('transres_util');
         $transresRequestUtil = $this->get('transres_request_util');
         $user = $this->get('security.token_storage')->getToken()->getUser();
         //$user = null; //testing
@@ -178,12 +186,25 @@ class InvoiceController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             //exit('new');
 
-            $invoice->generateOid($transresRequest);
-
             //TODO: check how many items per invoice
 
             $em->persist($invoice);
             $em->flush();
+
+            $invoice->generateOid($transresRequest);
+            $em->flush($invoice);
+
+            $msg = "New Invoice has been successfully created for the request ID ".$transresRequest->getOid();
+
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                $msg
+            );
+
+            $eventType = "Invoice Created";
+            $msg = "New Invoice with ID ".$invoice->getOid()." has been successfully submitted for the request ID ".$transresRequest->getOid();
+            $transresUtil->setEventLog($invoice,$eventType,$msg);
+
 
             return $this->redirectToRoute('translationalresearch_invoice_show', array('id'=>$transresRequest->getId(), 'oid' => $invoice->getOid()));
         }
@@ -192,7 +213,7 @@ class InvoiceController extends Controller
             'transresRequest' => $transresRequest,
             'invoice' => $invoice,
             'form' => $form->createView(),
-            'title' => "New Invoice",
+            'title' => "New Invoice for the Request ID ".$transresRequest->getOid(),
             'cycle' => $cycle
         );
     }
@@ -206,6 +227,9 @@ class InvoiceController extends Controller
      */
     public function showAction(Request $request, TransResRequest $transresRequest, $oid)
     {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+        }
 
         $em = $this->getDoctrine()->getManager();
         $invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($oid);
@@ -223,7 +247,8 @@ class InvoiceController extends Controller
             'invoice' => $invoice,
             'form' => $form->createView(),
             'delete_form' => $deleteForm->createView(),
-            'cycle' => $cycle
+            'cycle' => $cycle,
+            'title' => "Invoice for the Request ID ".$transresRequest->getOid(),
         );
     }
 
@@ -236,12 +261,20 @@ class InvoiceController extends Controller
      */
     public function editAction(Request $request, TransResRequest $transresRequest, $oid)
     {
+
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+        }
+
         $em = $this->getDoctrine()->getManager();
+        $transresUtil = $this->get('transres_util');
+
         $invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($oid);
         if( !$invoice ) {
             throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
         }
 
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $cycle = "edit";
 
         $deleteForm = $this->createDeleteForm($invoice);
@@ -252,15 +285,33 @@ class InvoiceController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+
+            //update user
+            $invoice->setUpdateUser($user);
+
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('translationalresearch_invoice_edit', array('id'=>$transresRequest->getId(), 'oid' => $invoice->getOid()));
+            $msg = "Invoice with ID ".$invoice->getOid()." has been updated.";
+
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                $msg
+            );
+
+            $eventType = "Invoice Updated";
+            $msg = "Invoice with ID ".$invoice->getOid()." has been updated.";
+            $transresUtil->setEventLog($invoice,$eventType,$msg);
+
+            return $this->redirectToRoute('translationalresearch_invoice_show', array('id'=>$transresRequest->getId(), 'oid' => $invoice->getOid()));
         }
 
         return array(
+            'transresRequest' => $transresRequest,
             'invoice' => $invoice,
             'form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
+            'cycle' => $cycle,
+            'title' => "Invoice for the Request ID ".$transresRequest->getOid(),
         );
     }
 
@@ -272,13 +323,30 @@ class InvoiceController extends Controller
      */
     public function deleteAction(Request $request, Invoice $invoice)
     {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+        }
+
+        $transresUtil = $this->get('transres_util');
+
         $form = $this->createDeleteForm($invoice);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $msg = "Invoice with ID ".$invoice->getOid()." has been successfully deleted.";
+
             $em = $this->getDoctrine()->getManager();
             $em->remove($invoice);
             $em->flush();
+
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                $msg
+            );
+
+            $eventType = "Invoice Deleted";
+            $transresUtil->setEventLog($invoice,$eventType,$msg);
         }
 
         return $this->redirectToRoute('translationalresearch_invoice_index_all');

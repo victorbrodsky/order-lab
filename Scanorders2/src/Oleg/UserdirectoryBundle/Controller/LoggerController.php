@@ -618,6 +618,23 @@ class LoggerController extends Controller
         return $response;
     }
 
+    /**
+     * Displays an error message for the logger's "Object ID" url
+     *
+     * @Route("/warning-message/", name="logger_warning_message")
+     * @Method("GET")
+     * @Template("OlegUserdirectoryBundle:Logger:warning.html.twig")
+     */
+    public function warningLoggerAction(Request $request)
+    {
+        $message = $request->get('message');
+
+        return array(
+            'title' => "Logger Warning Message",
+            'message' => $message
+        );
+    }
+
 
 
     //////////////// Currently not used ////////////////////

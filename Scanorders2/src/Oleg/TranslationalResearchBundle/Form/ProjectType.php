@@ -86,7 +86,7 @@ class ProjectType extends AbstractType
         if( $this->project->getCreateDate() ) {
             $builder->add('createDate', DateType::class, array(
                 'widget' => 'single_text',
-                'label' => "Create Date:",
+                'label' => "Submission Date:",
                 'disabled' => true,
                 'format' => 'MM/dd/yyyy',
                 'attr' => array('class' => 'datepicker form-control', 'readonly'=>true),
@@ -94,7 +94,7 @@ class ProjectType extends AbstractType
             ));
 
             $builder->add('submitter', null, array(
-                'label' => "Created By:",
+                'label' => "Submitted By:",
                 'disabled' => true,
                 'attr' => array('class'=>'combobox combobox-width', 'readonly'=>true)
             ));

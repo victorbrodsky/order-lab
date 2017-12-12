@@ -220,25 +220,27 @@ class InvoiceType extends AbstractType
 
 
         $builder->add('subTotal', NumberType::class, array(
-            'label' => "Subtotal:",
+            'label' => "Subtotal ($):",
             'scale' => 2,
             'required' => false,
             'attr' => array('class' => 'form-control invoice-subTotal') //'onclick'=>'transresUpdateSubTotal()'
         ));
 
         $builder->add('total', NumberType::class, array(
-            'label' => "Total:",
+            'label' => "Total ($):",
             'scale' => 2,
             'required' => false,
             'attr' => array('class' => 'form-control invoice-total')
         ));
 
-        $builder->add('paid', NumberType::class, array(
-            'label' => "Paid:",
-            'scale' => 2,
-            'required' => false,
-            'attr' => array('class' => 'form-control')
-        ));
+        if( $this->params['cycle'] != 'new' ) {
+            $builder->add('paid', NumberType::class, array(
+                'label' => "Paid ($):",
+                'scale' => 2,
+                'required' => false,
+                'attr' => array('class' => 'form-control')
+            ));
+        }
 
 
 

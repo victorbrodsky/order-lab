@@ -1366,7 +1366,27 @@ class UserSecurityUtil {
         if( !$url ) {
             //Make sure url (i.e. 'entry/view') is set in the object type (EventObjectTypeList)
             $baseUrl = $request->getScheme() . '://' . $request->getHttpHost() . $request->getBasePath();
-            $url = $baseUrl . '/' . $siteName . '/' . $logger->getObjectType()->getUrl() . '/' . $logger->getEntityId();
+
+            $objectUrl = $logger->getObjectType()->getUrl();
+            if( !$objectUrl ) {
+                $message = "Object can not be shown. Please set up the 'Url' field in the 'Event Log Object Type' list for the object '".$logger->getObjectType()."'.";
+                //exit($objectUrl);
+
+                $logger = $this->container->get('logger');
+                $logger->warning($message);
+
+                $url = $this->container->get('router')->generate(
+                    "logger_warning_message",
+                    array(
+                        'message' => $message,
+                    )
+                    //UrlGeneratorInterface::ABSOLUTE_URL
+                );
+
+                return $url;
+            }
+
+            $url = $baseUrl . '/' . $siteName . '/' . $objectUrl . '/' . $logger->getEntityId();
             //echo "logger->getObjectType()->getUrl()=".$logger->getObjectType()->getUrl()."<br>";
             //echo "url=".$url."<br>";
         }

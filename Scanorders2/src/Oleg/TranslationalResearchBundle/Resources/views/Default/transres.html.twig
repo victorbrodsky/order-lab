@@ -79,23 +79,17 @@
                     {% endif %}
 
                     {% if project.createDate is defined or project.submitter is defined %}
-                        {#<div class="well well-sm">#}
                         {% if project.createDate is defined %}
-                            {{ formmacros.simplefield("Create Date:", project.createDate|date('m/d/Y H:i:s'), "input", "disabled") }}
+                            {{ formmacros.simplefield("Submission Date:", project.createDate|date('m/d/Y H:i:s'), "input", "disabled") }}
                         {% endif %}
                         {% if project.submitter is defined %}
-                            {#{% set createdby = '<a href="'~path('translationalresearch_showuser', { 'id': project.submitter.id })~'">'~project.submitter~'</a>' %}#}
-                            {#{{ formmacros.simplefield( "Created By:", createdby, "input", "disabled" ) }}#}
-                            {{ formmacros.simplefield("Created By:", project.submitter, "input", "disabled") }}
+                            {{ formmacros.simplefield("Submitted By:", project.submitter, "input", "disabled") }}
                         {% endif %}
-                        {#</div>#}
                     {% endif %}
 
                     {% if project.updateDate or project.updateUser %}
-                        {#<div class="well well-sm">#}
                         {{ formmacros.simplefield("Update Date:", project.updateDate|date("m/d/Y"), "input", "disabled") }}
                         {{ formmacros.simplefield("Updated By:", project.updateUser, "input", "disabled") }}
-                        {#</div>#}
                     {% endif %}
 
                 </div>
