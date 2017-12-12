@@ -246,12 +246,6 @@
                                 {% endif %}
                             {% endif %}
 
-                            {% if is_granted('ROLE_TRANSRES_ADMIN') %}
-                                <li>
-                                    <a href="{{ path(translationalresearch_sitename~'_project_edit', { 'id': project.id }) }}" target="_blank">Edit Project</a>
-                                </li>
-                            {% endif %}
-
                         </ul>
 
                     </div>
