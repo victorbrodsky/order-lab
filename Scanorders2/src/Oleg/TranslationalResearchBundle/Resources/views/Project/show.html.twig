@@ -18,6 +18,30 @@
     </h4>
     <br>
 
+    {% if project.state == "final_approved" %}
+        {#Submit a New Request#}
+        {% if transres_request_util.isRequestCanBeCreated(project) == 1 %}
+            <a class="btn btn-primary"
+               href="{{ path(translationalresearch_sitename~'_request_new', { 'id': project.id }) }}"
+               target="_blank">Create a New Request</a>
+        {% endif %}
+
+        {#See associated requests if the number of associated requests is greater than zero#}
+        {% if project.getRequests()|length > 0 %}
+            <a class="btn btn-primary"
+               href="{{ path(translationalresearch_sitename~'_request_index', { 'id': project.id }) }}"
+               target="_blank">Show associated requests</a>
+        {% endif %}
+
+        {#See event log#}
+        {% if eventObjectTypeId is defined and eventObjectTypeId %}
+            <a class="btn btn-primary"
+               href="{{ path('translationalresearch_event-log-per-object_log', { 'filter[objectType][]': eventObjectTypeId, 'filter[objectId]': project.id}) }}"
+               target="_blank">View Event Log</a>
+        {% endif %}
+        <br><br>
+    {% endif %}
+
     {% set sitename = translationalresearch_sitename %}
 
     {#{{ transres.projectHeader(project) }}#}

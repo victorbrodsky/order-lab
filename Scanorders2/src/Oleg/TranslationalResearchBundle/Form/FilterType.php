@@ -105,7 +105,7 @@ class FilterType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
-            'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'Start Submission Date'), //'title'=>'Start Year', 'data-toggle'=>'tooltip',
+            'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'From Submission Date'), //'title'=>'Start Year', 'data-toggle'=>'tooltip',
         ));
 
         $builder->add('endDate', DateTimeType::class, array(
@@ -113,7 +113,7 @@ class FilterType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
-            'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'End Submission Date'), //'title'=>'End Year', 'data-toggle'=>'tooltip',
+            'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'To Submission Date'), //'title'=>'End Year', 'data-toggle'=>'tooltip',
         ));
 
         $builder->add('searchId', TextType::class, array(

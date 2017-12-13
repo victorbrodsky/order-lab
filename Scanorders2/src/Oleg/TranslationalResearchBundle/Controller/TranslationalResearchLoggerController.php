@@ -109,4 +109,34 @@ class TranslationalResearchLoggerController extends LoggerController
 //
 //    }
 
+    /**
+     *
+     * @Route("/event-log-per-object/", name="translationalresearch_event-log-per-object_log")
+     * @Method("GET")
+     * @Template("OlegCallLogBundle:Logger:index.html.twig")
+     */
+    public function transresEventLogPerObjectAction(Request $request)
+    {
+        if (false == $this->get('security.authorization_checker')->isGranted("ROLE_CALLLOG_USER")) {
+            return $this->redirect($this->generateUrl('calllog-nopermission'));
+        }
+
+        //filter[objectType][]=4
+        //filter[objectId]=178
+
+//        $filter = $request->query->get('filter');
+//
+//        if( count($filter) > 0 ) {
+//            $objectTypes = $filter['objectType'];
+//            $objectId = $filter['objectId'];
+//        }
+//        echo "$objectTypes, $objectId <br>";
+//        exit();
+
+        $params = array('sitename'=>$this->container->getParameter('translationalresearch.sitename'));
+        $loggerFormParams = $this->listLogger($params,$request);
+
+        return $loggerFormParams;
+    }
+
 }

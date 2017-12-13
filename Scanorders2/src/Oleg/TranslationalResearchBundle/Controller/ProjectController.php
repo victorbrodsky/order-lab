@@ -102,6 +102,8 @@ class ProjectController extends Controller
         $dql->leftJoin('project.principalInvestigators','principalInvestigators');
         $dql->leftJoin('principalInvestigators.infos','principalInvestigatorsInfos');
 
+        $advancedFilter = 0;
+
         $dqlParameters = array();
 
         //////// create filter //////////
@@ -140,6 +142,7 @@ class ProjectController extends Controller
         if( $states && count($states)>0 ) {
             $dql->andWhere("project.state IN (:states)");
             $dqlParameters["states"] = implode(",",$states);
+            $advancedFilter++;
         }
 
         if( $searchId ) {
@@ -157,6 +160,7 @@ class ProjectController extends Controller
         if( $searchIrbNumber ) {
             $irbnumberIds = $transresUtil->getProjectIdsFormNodeByFieldName($searchIrbNumber,"IRB Number");
             $dql->andWhere("project.id IN (".implode(",",$irbnumberIds).")");
+            $advancedFilter++;
         }
         //////////////// EOF get Projects IDs with the form node filter ////////////////
 
@@ -167,24 +171,28 @@ class ProjectController extends Controller
                 $principalInvestigatorsIdsArr[] = $principalInvestigator->getId();
             }
             $dqlParameters["principalInvestigators"] = implode(",",$principalInvestigatorsIdsArr);
+            $advancedFilter++;
         }
 
         if( $submitter ) {
             //echo "submitter=".$submitter->getId()."<br>";
             $dql->andWhere("submitter.id = :submitterId");
             $dqlParameters["submitterId"] = $submitter->getId();
+            $advancedFilter++;
         }
 
         if( $startDate ) {
             //echo "startDate=" . $startDate->format('Y-m-d H:i:s') . "<br>";
             $dql->andWhere('project.createDate >= :startDate');
             $dqlParameters['startDate'] = $startDate->format('Y-m-d H:i:s');
+            $advancedFilter++;
         }
         if( $endDate ) {
             $endDate->modify('+1 day');
             //echo "endDate=" . $endDate->format('Y-m-d H:i:s') . "<br>";
             $dql->andWhere('project.createDate <= :endDate');
             $dqlParameters['endDate'] = $endDate->format('Y-m-d H:i:s');
+            $advancedFilter++;
         }
 
 
@@ -262,10 +270,19 @@ class ProjectController extends Controller
             $paginationParams
         );
 
+        $eventObjectType = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->findOneByName("Project");
+        if( $eventObjectType ) {
+            $eventObjectTypeId = $eventObjectType->getId();
+        } else {
+            $eventObjectTypeId = null;
+        }
+
         return array(
             'projects' => $projects,
             'title' => $title,
-            'filterform' => $filterform->createView()
+            'filterform' => $filterform->createView(),
+            'eventObjectTypeId' => $eventObjectTypeId,
+            'advancedFilter' => $advancedFilter
         );
     }
 
@@ -343,7 +360,7 @@ class ProjectController extends Controller
         }
 
         $transresUtil = $this->container->get('transres_util');
-        //$em = $this->getDoctrine()->getManager();
+        $em = $this->getDoctrine()->getManager();
         //$user = $this->get('security.token_storage')->getToken()->getUser();
 
         $cycle = "show";
@@ -361,12 +378,20 @@ class ProjectController extends Controller
         $msg = "Project ID ".$project->getOid() ." has been viewed on the show page.";
         $transresUtil->setEventLog($project,$eventType,$msg);
 
+        $eventObjectType = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->findOneByName("Project");
+        if( $eventObjectType ) {
+            $eventObjectTypeId = $eventObjectType->getId();
+        } else {
+            $eventObjectTypeId = null;
+        }
+
         return array(
             'project' => $project,
             'form' => $form->createView(),
             'cycle' => $cycle,
-            'title' => "Project ID ".$project->getOid(),
+            'title' => $project->getProjectInfoName(), //"Project ID ".$project->getOid(),
             'delete_form' => $deleteForm->createView(),
+            'eventObjectTypeId' => $eventObjectTypeId,
             //'review_forms' => $reviewFormViews
         );
 
@@ -425,7 +450,7 @@ class ProjectController extends Controller
             'project' => $project,
             'form' => $form->createView(),
             'cycle' => $cycle,
-            'title' => "Review Project ID ".$project->getOid(),
+            'title' => "Review ".$project->getProjectInfoName(),
             'delete_form' => $deleteForm->createView(),
             //'review_forms' => $reviewFormViews
         );
@@ -467,7 +492,7 @@ class ProjectController extends Controller
             'project' => $project,
             'form' => $form->createView(),
             'cycle' => $cycle,
-            'title' => "Resubmit Project ID ".$project->getOid(),
+            'title' => "Resubmit ".$project->getProjectInfoName(),
         );
     }
 
@@ -594,7 +619,7 @@ class ProjectController extends Controller
             'edit_form' => $editForm->createView(),
             'cycle' => $cycle,
             'delete_form' => $deleteForm->createView(),
-            'title' => "Edit Project ID ".$project->getOid()
+            'title' => "Edit ".$project->getProjectInfoName()
         );
     }
 

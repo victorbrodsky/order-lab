@@ -430,7 +430,7 @@ class ProjectFormNodeController extends ProjectController
             'edit_form' => $form->createView(),
             'cycle' => $cycle,
             'formtype' => $formtype,
-            'title' => "Edit Project ID ".$project->getOid(),
+            'title' => "Edit ".$project->getProjectInfoName(),
             'triggerSearch' => 0,
             'formnodetrigger' => $formnodetrigger,
             'formnodeTopHolderId' => $formnodeTopHolderId,
