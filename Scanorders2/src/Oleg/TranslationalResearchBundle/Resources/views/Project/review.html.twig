@@ -128,11 +128,11 @@
             }
 
             //get alert if the additional info button clicked and no comment is provided
-//            if( $(this).hasClass('btn-warning') && !comment ) {
-//                //event.stopPropagation();
-//                alert('No comment is provided for requesting additional information');
-//                return false;
-//            }
+            if( $(this).hasClass('btn-warning') && !comment ) {
+                //event.stopPropagation();
+                alert('No comment is provided for requesting additional information');
+                return false;
+            }
 
             ////////// Update IRB Expiration Date by transres-irb_review //////////
             if( $(this).hasClass('transres-irb_review') ) {

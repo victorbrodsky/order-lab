@@ -809,7 +809,7 @@ class TransResRequestUtil
 
                 //send confirmation email
                 //TODO: send confirmation email to who?
-                //$this->sendNotificationEmails($transresRequest,$review,$subject,$emailBody,$testing);
+                $this->sendNotificationEmails($transresRequest,$statMachineType,$subject,$emailBody,$testing);
 
                 //event log
                 //$this->setEventLog($project,$review,$transitionName,$originalStateStr,$body,$testing);
@@ -1068,6 +1068,56 @@ class TransResRequestUtil
         $title = "WCMC";
         $html = '<img src="'.$bundleFileName.'" alt="'.$title.'"/>';
         return $html;
+    }
+
+    public function sendNotificationEmails($transresRequest, $statMachineType, $subject, $body, $testing=false) {
+        //if( !$appliedTransition ) {
+        //    return null;
+        //}
+
+        $transresUtil = $this->container->get('transres_util');
+        $emailUtil = $this->container->get('user_mailer_utility');
+
+        $senderEmail = null; //Admin email
+        $emails = array();
+
+        //send to the
+        // 1) admins and primary reviewers
+        $admins = $transresUtil->getTransResAdminEmails(); //ok
+        $emails = array_merge($emails,$admins);
+
+        // 2) a) submitter, b) principalInvestigators, c) contact
+        //a submitter
+        if( $transresRequest->getSubmitter() ) {
+            $submitterEmail = $transresRequest->getSubmitter()->getSingleEmail();
+            if( $submitterEmail ) {
+                $emails = array_merge($emails,array($submitterEmail));
+            }
+        }
+
+        //b principalInvestigators
+        $piEmailArr = array();
+        $pis = $transresRequest->getPrincipalInvestigators();
+        foreach( $pis as $pi ) {
+            if( $pi ) {
+                $piEmailArr[] = $pi->getSingleEmail();
+            }
+        }
+        $emails = array_merge($emails,$piEmailArr);
+
+        //c contact
+        if( $transresRequest->getContact() ) {
+            $contactEmail = $transresRequest->getContact()->getSingleEmail();
+            if( $submitterEmail ) {
+                $emails = array_merge($emails,array($contactEmail));
+            }
+        }
+
+        $emails = array_unique($emails);
+
+        //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
+        $emailUtil->sendEmail( $emails, $subject, $body, null, $senderEmail );
+
     }
     
 }

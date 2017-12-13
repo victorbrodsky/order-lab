@@ -20,7 +20,7 @@
     <div class="fos_comment_comment_form_holder">
         {% block fos_comment_form_title %}
             {% if first %}
-                <h3>{% trans from 'FOSCommentBundle' %}fos_comment_comment_new_headline_first{% endtrans %}</h3>
+                {#<h3>{% trans from 'FOSCommentBundle' %}fos_comment_comment_new_headline_first{% endtrans %}</h3>#}
             {% elseif parent is not null %}
                 <h3>{% trans with {"%name%": parent.authorName } from 'FOSCommentBundle' %}fos_comment_comment_reply_reply_to{% endtrans %}</h3>
             {% else %}
@@ -36,7 +36,7 @@
                     {{ form_errors(form) }}
                     {{ form_errors(form.body) }}
                     </div>
-                    {{ form_widget(form.body) }}
+                    {{ form_widget(form.body,{'attr': {'placeholder': 'Type your comment here...'}}) }}
 
                     {{ form_rest(form) }}
                 {% endblock %}

@@ -913,10 +913,10 @@ class ProjectController extends Controller
             $comments = array();
         }
 
-        //echo "comments count=".count($comments)."<br>";
-        //if( count($comments) == 0 ) {
-            //exit('stop');
-        //}
+//        echo "comments count=".count($comments)."<br>";
+//        if( count($comments) == 0 ) {
+//            exit('stop');
+//        }
 
         return array(
             'comments' => $comments,
