@@ -13,11 +13,16 @@
 
     <input type="hidden" id="formcycle" value="{{ cycle }}" />
     <input type="hidden" id="projectid" value="{{ project.id }}" />
+    <input type="hidden" id="project-irbExpirationDate" value="{{ project.irbExpirationDate|date("m/d/Y",false) }}" />
 
     <h4 class="text-info" align="center">
         {{ title }}
     </h4>
     <br>
+
+    <div class="transres-alert" style="display: none">
+        <p class="alert alert-info center-block" align="middle" style="width: 70%;"></p>
+    </div>
 
     {% set sitename = translationalresearch_sitename %}
 
@@ -136,17 +141,7 @@
 
             ////////// Update IRB Expiration Date by transres-irb_review //////////
             if( $(this).hasClass('transres-irb_review') ) {
-                var irbExpDateEl = $('#transres_irbExpirationDate');
-                if( irbExpDateEl && irbExpDateEl.length > 0 ) {
-                    var irbExpDate = irbExpDateEl.val();
-                    console.log("irbExpDate=" + irbExpDate);
-
-                    var projectId = $("#projectid").val();
-
-                    transresUpdateIrbExpDate(irbExpDate,projectId);
-                    //return false;
-                    //alert("Working on Update IRB expiration date by JS (Not implemented yet)");
-                }
+                transresUpdateIrbExpDate();
             }
             ////////// EOF Update IRB Expiration Date //////////
 
@@ -155,33 +150,73 @@
             //return false;
         });
 
-        function transresUpdateIrbExpDate(irbExpDate,projectId) {
-            console.log("transresUpdateIrbExpDate: irbExpDate="+irbExpDate+"; projectId="+projectId);
+        //transres-update-irbexpirationdate
+        $('.transres-update-irbexpirationdate').click(function(event) {
+            transresUpdateIrbExpDate();
+        });
 
-            var url = Routing.generate('translationalresearch_update_irb_exp_date');
-            //url = url + "/" + projectId + "/" + irbExpDate
 
-            $.ajax({
-                url: url,
-                timeout: _ajaxTimeout,
-                //type: "GET",
-                type: "POST",
-                data: {projectId: projectId, value: irbExpDate },
-                //dataType: 'json',
-                //async: asyncflag
-                async: false
-            }).success(function(response) {
-                console.log(response);
-            }).done(function() {
-                //lbtn.stop();
-            }).error(function(jqXHR, textStatus, errorThrown) {
-                console.log('Error : ' + errorThrown);
-            });
+    });
 
+
+    function transresUpdateIrbExpDate() {
+
+        $(".transres-alert").find(".alert").html("");
+        $(".transres-alert").hide();
+
+        var projectId = null;
+        var irbExpDate = null;
+        var irbExpDateEl = $('#transres_irbExpirationDate');
+        if( irbExpDateEl && irbExpDateEl.length > 0 ) {
+            irbExpDate = irbExpDateEl.val();
+            console.log("transres-review-submit: irbExpDate=" + irbExpDate);
+            if( !irbExpDate ) {
+                return false;
+            }
+
+            projectId = $("#projectid").val();
+            var irbExpirationDate = $("#project-irbExpirationDate").val(); //MM/dd/yyyy
+            console.log("transres-review-submit: irbExpDate=" + irbExpDate + "; irbExpirationDate="+irbExpirationDate);
+            if( irbExpDate == irbExpirationDate ) {
+                return false;
+            }
+            //return false;
+            //alert("Working on Update IRB expiration date by JS (Not implemented yet)");
+        }
+
+        console.log("transresUpdateIrbExpDate: irbExpDate="+irbExpDate+"; projectId="+projectId);
+
+        if( projectId == null || irbExpDate == null ) {
+            console.log("return false: projectId or irbExpDate is null");
             return false;
         }
 
-    });
+        var url = Routing.generate('translationalresearch_update_irb_exp_date');
+        //url = url + "/" + projectId + "/" + irbExpDate
+
+        $.ajax({
+            url: url,
+            timeout: _ajaxTimeout,
+            //type: "GET",
+            type: "POST",
+            data: {projectId: projectId, value: irbExpDate },
+            //dataType: 'json',
+            //async: asyncflag
+            async: false
+        }).success(function(response) {
+            console.log(response);
+            if( response != "NotOK" ) {
+                $(".transres-alert").find(".alert").html(response);
+                $(".transres-alert").show();
+            }
+        }).done(function() {
+            //lbtn.stop();
+        }).error(function(jqXHR, textStatus, errorThrown) {
+            console.log('Error : ' + errorThrown);
+        });
+
+        return false;
+    }
 
 </script>
 

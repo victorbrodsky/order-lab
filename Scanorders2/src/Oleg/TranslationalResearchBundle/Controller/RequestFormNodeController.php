@@ -740,7 +740,7 @@ class RequestFormNodeController extends Controller
 
 
     /**
-     * @Route("/request/generate-form-node-tree/", name="translationalresearch_generate_form_node_tree_request")
+     * @Route("/request/generate-form-node-tree/", name="translationalresearch_generate_form_node_tree_request_formnode")
      * @Method("GET")
      */
     public function generateFormNodeAction(Request $request)
@@ -837,7 +837,7 @@ class RequestFormNodeController extends Controller
 
 
     /**
-     * @Route("/request/update-irb-exp-date/", name="translationalresearch_update_irb_exp_date", options={"expose"=true})
+     * @Route("/request/update-irb-exp-date/", name="translationalresearch_formnode_update_irb_exp_date", options={"expose"=true})
      * @Method({"GET", "POST"})
      */
     public function updateIrbExpDateAction( Request $request ) {
