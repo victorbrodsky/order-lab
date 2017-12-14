@@ -140,18 +140,19 @@
     -moz-border-radius: 5px;
 }
 .fos_comment_comment_metas{
-    font-size: 16px;
+    font-size: 13px;
     margin-top: 0;
     margin-bottom: 5px;
     font-weight: 500;
 }
 .fos_comment_comment_body{
-    font-size: 14px;
+    font-size: 16px;
     display: block;
     /*width: 100%;*/
     padding: .5rem .75rem;
     line-height: 1.25;
     color: #495057;
+    font-weight: bold;
     background-color: #fff;
     background-image: none;
     background-clip: padding-box;

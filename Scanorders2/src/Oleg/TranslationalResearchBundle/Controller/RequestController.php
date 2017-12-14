@@ -954,6 +954,11 @@ class RequestController extends Controller
         }
 
         if( $project ) {
+            $originalIrbExpDateStr = "Unknown";
+            if( $project->getIrbExpirationDate() ) {
+                $originalIrbExpDateStr = $project->getIrbExpirationDate()->format('m/d/Y');
+            }
+
             $value = trim($request->get('value'));
 
             $irbExpDate = \DateTime::createFromFormat('m/d/Y', $value);
@@ -965,12 +970,12 @@ class RequestController extends Controller
             //$em->flush($receivingObject);
             //$em->flush($project);
             $em->flush();
-            $res = "OK";
 
             //add eventlog changed IRB
             $eventType = "Project Updated";
-            $msg = "Project ID ".$project->getOid() ." has been updated: new IRB Expiration Date ".$value;
-            $transresUtil->setEventLog($project,$eventType,$msg);
+            $res = "Project ID ".$project->getOid() ." has been updated: ".
+                "IRB Expiration Date changed form ".$originalIrbExpDateStr." to ".$value;
+            $transresUtil->setEventLog($project,$eventType,$res);
         }
 
         $response = new Response($res);

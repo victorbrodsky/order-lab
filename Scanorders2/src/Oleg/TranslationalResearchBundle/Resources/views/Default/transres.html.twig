@@ -490,15 +490,21 @@
     {% endfor %}
     {% if threadId and actionLinks|length > 0 %}
 
-        {#Add field "Update expiration date" (irbExpirationDate) in the IRB Review page#}
-        {% if project.state == "irb_review" %}
-            {#<p>Current project's IRB Expiration Date: {{ project.getIrbExpirationDate()|date("m/d/Y") }}</p>#}
-            {% set irbExpDate = transres_formnode_util.getProjectFormNodeFieldByName(project,"IRB Expiration Date") %}
-            {#<p>Current project's IRB Expiration Date:{{ irbExpDate }}</p>#}
-            {{ transres.fieldDateLabel(irbExpDate,"Update IRB Expiration Date:") }}
+        {% if transres_util.isProjectStateReviewer(project,app.user) %}
+            <p><strong>
+                This project is {{ transres_util.getStateLabelByProject(project) }} stage.
+                Please review this request, enter a comment (if any),
+                and press the green, red, or orange (optional) button to enter your opinion:
+            </strong></p>
         {% endif %}
 
         <div class="well transres-review-holder text-center col-xs-12">
+            {#Add field "Update expiration date" (irbExpirationDate) in the IRB Review page#}
+            {% if project.state == "irb_review" %}
+                {% set irbExpDate = transres_formnode_util.getProjectFormNodeFieldByName(project,"IRB Expiration Date") %}
+                {{ transres.fieldDateLabel(irbExpDate,"Provided IRB Expiration Date (enter a new date to update it):") }}
+            {% endif %}
+
             {% for actionLink in actionLinks %}
                 <p>
                 {% for actionLinkSet in actionLink %}
@@ -506,6 +512,7 @@
                 {% endfor %}
                 </p>
             {% endfor %}
+
             {% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': threadId} %}
         </div>
     {% endif %}
