@@ -809,7 +809,7 @@ class TransResRequestUtil
 
                 //send confirmation email
                 //TODO: send confirmation email to who?
-                $this->sendNotificationEmails($transresRequest,$statMachineType,$subject,$emailBody,$testing);
+                $this->sendRequestNotificationEmails($transresRequest,$subject,$emailBody,$testing);
 
                 //event log
                 //$this->setEventLog($project,$review,$transitionName,$originalStateStr,$body,$testing);
@@ -1070,7 +1070,7 @@ class TransResRequestUtil
         return $html;
     }
 
-    public function sendNotificationEmails($transresRequest, $statMachineType, $subject, $body, $testing=false) {
+    public function sendRequestNotificationEmails($transresRequest, $subject, $body, $testing=false) {
         //if( !$appliedTransition ) {
         //    return null;
         //}
