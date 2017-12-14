@@ -340,7 +340,7 @@ class TransResRequestUtil
         foreach($stateArr as $state) {
             //$label = $state;
             $label = $this->getProgressStateLabelByName($state);
-            $label = $label . " (" . $state . ")";
+            //$label = $label . " (" . $state . ")";
             $stateChoiceArr[$label] = $state;
         }
 
