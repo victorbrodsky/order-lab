@@ -1,6 +1,6 @@
 {% extends "OlegTranslationalResearchBundle::Default/base.html.twig" %}
 
-{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "OlegTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}
 
 {% block title %}
     {{ title }}
@@ -17,81 +17,81 @@
         {{ requestTotalFeeHtml|raw }}
     </p>
 
-    <div class="well form-search">
-        {{ form_start(filterform) }}
+    {#<div class="well form-search">#}
+        {#{{ form_start(filterform) }}#}
 
         {#"Category", "Project Specialty" [AP/CP or Hematopathology], "Project", "Work Progress Status", "Billing Progress Status", and "Submitter"#}
-        <div class="row">
-            <div class="col-xs-4">
-                {{ form_widget(filterform.category,{'attr': {'placeholder': 'Category'}}) }}
-            </div>
-            <div class="col-xs-4">
-                {{ form_widget(filterform.projectSpecialty, {'attr': {'placeholder': 'Project Specialty'}}) }}
-            </div>
-            <div class="col-xs-4">
-                {{ form_widget(filterform.project) }}
-            </div>
-        </div>
-        <br>
-        <div class="row">
-            <div class="col-xs-4">
-                {{ form_widget(filterform.progressState, {'attr': {'placeholder': 'Work Progress Status'}}) }}
-            </div>
-            <div class="col-xs-4">
-                {{ form_widget(filterform.billingState, {'attr': {'placeholder': 'Billing Progress Status'}}) }}
-            </div>
-            <div class="col-xs-4">
-                {{ form_widget(filterform.submitter, {'attr': {'placeholder': 'Submitter'}}) }}
-            </div>
-        </div>
-        <br>
-        <div class="row">
-            <div class="col-xs-12">
-                <button id="Search_button" type="submit" class="btn btn-default">Filter</button>
-            </div>
-        </div>
+        {#<div class="row">#}
+            {#<div class="col-xs-4">#}
+                {#{{ form_widget(filterform.category,{'attr': {'placeholder': 'Category'}}) }}#}
+            {#</div>#}
+            {#<div class="col-xs-4">#}
+                {#{{ form_widget(filterform.projectSpecialty, {'attr': {'placeholder': 'Project Specialty'}}) }}#}
+            {#</div>#}
+            {#<div class="col-xs-4">#}
+                {#{{ form_widget(filterform.project) }}#}
+            {#</div>#}
+        {#</div>#}
+        {#<br>#}
+        {#<div class="row">#}
+            {#<div class="col-xs-4">#}
+                {#{{ form_widget(filterform.progressState, {'attr': {'placeholder': 'Work Progress Status'}}) }}#}
+            {#</div>#}
+            {#<div class="col-xs-4">#}
+                {#{{ form_widget(filterform.billingState, {'attr': {'placeholder': 'Billing Progress Status'}}) }}#}
+            {#</div>#}
+            {#<div class="col-xs-4">#}
+                {#{{ form_widget(filterform.submitter, {'attr': {'placeholder': 'Submitter'}}) }}#}
+            {#</div>#}
+        {#</div>#}
+        {#<br>#}
+        {#<div class="row">#}
+            {#<div class="col-xs-12">#}
+                {#<button id="Search_button" type="submit" class="btn btn-default">Filter</button>#}
+            {#</div>#}
+        {#</div>#}
 
         {#advanced search#}
-        {% if advancedFilter %}
-            {% set advacedCollapse = 'in' %}
-        {% else %}
-            {% set advacedCollapse = '' %}
-        {% endif %}
-        <br>
-        <div class="row">
-            <a data-toggle="collapse" href="#transres-AdvancedSearch">Advanced Search</a>
-        </div>
-        <div id="transres-AdvancedSearch" class="panel-collapse collapse {{ advacedCollapse }}">
-            <div class="panel-body">
+        {#{% if advancedFilter %}#}
+            {#{% set advacedCollapse = 'in' %}#}
+        {#{% else %}#}
+            {#{% set advacedCollapse = '' %}#}
+        {#{% endif %}#}
+        {#<br>#}
+        {#<div class="row">#}
+            {#<a data-toggle="collapse" href="#transres-AdvancedSearch">Advanced Search</a>#}
+        {#</div>#}
+        {#<div id="transres-AdvancedSearch" class="panel-collapse collapse {{ advacedCollapse }}">#}
+            {#<div class="panel-body">#}
 
-                <div class="row">
-                    <div class="col-xs-4">
-                        {{ form_widget(filterform.principalInvestigators,{'attr': {'placeholder': 'Principal Investigators'}}) }}
-                    </div>
-                    <div class="col-xs-4">
-                        {{ formmacros.fielddate(filterform.startDate,'regular-datepicker') }}
-                    </div>
-                    <div class="col-xs-4">
-                        {{ formmacros.fielddate(filterform.endDate,'regular-datepicker') }}
-                    </div>
-                </div>
+                {#<div class="row">#}
+                    {#<div class="col-xs-4">#}
+                        {#{{ form_widget(filterform.principalInvestigators,{'attr': {'placeholder': 'Principal Investigators'}}) }}#}
+                    {#</div>#}
+                    {#<div class="col-xs-4">#}
+                        {#{{ formmacros.fielddate(filterform.startDate,'regular-datepicker') }}#}
+                    {#</div>#}
+                    {#<div class="col-xs-4">#}
+                        {#{{ formmacros.fielddate(filterform.endDate,'regular-datepicker') }}#}
+                    {#</div>#}
+                {#</div>#}
 
-                <br>
+                {#<br>#}
 
-                <div class="row">
-                    <div class="col-xs-4">
-                        {{ form_widget(filterform.billingContact, {'attr': {'placeholder': 'Billing Contact'}}) }}
-                    </div>
-                    <div class="col-xs-4">
-                        {{ form_widget(filterform.accountNumber, {'attr': {'placeholder': 'WCM Account Number'}}) }}
-                    </div>
-                    <div class="col-xs-4">
-                        {{ form_widget(filterform.comment,{'attr': {'placeholder': 'Comment Search'}}) }}
-                    </div>
-                </div>
+                {#<div class="row">#}
+                    {#<div class="col-xs-4">#}
+                        {#{{ form_widget(filterform.billingContact, {'attr': {'placeholder': 'Billing Contact'}}) }}#}
+                    {#</div>#}
+                    {#<div class="col-xs-4">#}
+                        {#{{ form_widget(filterform.accountNumber, {'attr': {'placeholder': 'WCM Account Number'}}) }}#}
+                    {#</div>#}
+                    {#<div class="col-xs-4">#}
+                        {#{{ form_widget(filterform.comment,{'attr': {'placeholder': 'Comment Search'}}) }}#}
+                    {#</div>#}
+                {#</div>#}
 
-            </div> <!-- panel-body -->
-        </div> <!-- panel-collapse -->
+            {#</div> <!-- panel-body -->#}
+        {#</div> <!-- panel-collapse -->#}
 
 
         {#<p>#}
@@ -124,8 +124,11 @@
                 {#<button type="submit" id="filter-btn" class="btn btn-sm btn-default">Filter</button>#}
             {#</div>#}
         {#</div>#}
-        {{ form_end(filterform) }}
-    </div>
+        {#{{ form_end(filterform) }}#}
+    {#</div>#}
+
+    {{ transresRequestMacros.transresRequestsFilter(filterform,advancedFilter) }}
+
     <br>
 
     {% set isRequestCanBeCreated = transres_request_util.isRequestCanBeCreated(project) %}

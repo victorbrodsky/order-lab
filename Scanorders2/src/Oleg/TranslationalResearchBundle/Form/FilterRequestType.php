@@ -66,7 +66,7 @@ class FilterRequestType extends AbstractType
                 'choice_label' => "getProjectInfoName",
                 'required'=>false,
                 'label' => false,
-                'attr' => array('class'=>'combobox combobox-width'),
+                'attr' => array('class'=>'combobox combobox-width', 'placeholder'=>"Project"),
             ));
         //}
         

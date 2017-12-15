@@ -483,16 +483,17 @@ class RequestController extends Controller
         $progressStates = $filterform['progressState']->getData();
         $billingStates = $filterform['billingState']->getData();
         $category = $filterform['category']->getData();
-        $searchStr = $filterform['comment']->getData();
+        $projectSpecialty = $filterform['projectSpecialty']->getData();
+        $projectFilter = $filterform['project']->getData();
 
+        $searchStr = $filterform['comment']->getData();
         $startDate = $filterform['startDate']->getData();
         $endDate = $filterform['endDate']->getData();
         $principalInvestigators = $filterform['principalInvestigators']->getData();
         $accountNumber = $filterform['accountNumber']->getData();
         $billingContact = $filterform['billingContact']->getData();
-        $projectSpecialty = $filterform['projectSpecialty']->getData();
-        //////// EOF create filter //////////
 
+        //////// EOF create filter //////////
 
         $advancedFilter = 0;
 
@@ -519,8 +520,10 @@ class RequestController extends Controller
         $dql->select('transresRequest');
 
         $dql->leftJoin('transresRequest.submitter','submitter');
+        $dql->leftJoin('transresRequest.contact','contact');
         $dql->leftJoin('transresRequest.project','project');
         $dql->leftJoin('submitter.infos','submitterInfos');
+        $dql->leftJoin('transresRequest.principalInvestigators','principalInvestigators');
 
         $dqlParameters = array();
 
@@ -532,6 +535,17 @@ class RequestController extends Controller
         if( $submitter ) {
             $dql->andWhere("submitter.id = :submitterId");
             $dqlParameters["submitterId"] = $submitter->getId();
+        }
+
+        if( $projectSpecialty ) {
+            $dql->leftJoin('project.projectSpecialty','projectSpecialty');
+            $dql->andWhere("projectSpecialty.id = :projectSpecialtyId");
+            $dqlParameters["projectSpecialtyId"] = $projectSpecialty->getId();
+        }
+
+        if( $projectFilter ) {
+            $dql->andWhere("project.id = :projectId");
+            $dqlParameters["projectId"] = $projectFilter->getId();
         }
 
         if( $progressStates && count($progressStates)>0 ) {
@@ -555,7 +569,50 @@ class RequestController extends Controller
                 //$dql->andWhere("(category.name LIKE :categoryStr OR category.productId LIKE :categoryStr OR category.feeUnit LIKE :categoryStr OR category.fee LIKE :categoryStr)");
                 $dql->andWhere("products.comment LIKE :searchStr");
                 $dqlParameters["searchStr"] = "%".$searchStr."%";
+                $advancedFilter++;
             }
+        }
+
+        if( $principalInvestigators && count($principalInvestigators)>0 ) {
+            $dql->andWhere("principalInvestigators.id IN (:principalInvestigators)");
+            $principalInvestigatorsIdsArr = array();
+            foreach($principalInvestigators as $principalInvestigator) {
+                $principalInvestigatorsIdsArr[] = $principalInvestigator->getId();
+            }
+            $dqlParameters["principalInvestigators"] = implode(",",$principalInvestigatorsIdsArr);
+            $advancedFilter++;
+        }
+
+        if( $submitter ) {
+            //echo "submitter=".$submitter->getId()."<br>";
+            $dql->andWhere("submitter.id = :submitterId");
+            $dqlParameters["submitterId"] = $submitter->getId();
+        }
+
+        if( $startDate ) {
+            //echo "startDate=" . $startDate->format('Y-m-d H:i:s') . "<br>";
+            $dql->andWhere('transresRequest.createDate >= :startDate');
+            $dqlParameters['startDate'] = $startDate->format('Y-m-d H:i:s');
+            $advancedFilter++;
+        }
+        if( $endDate ) {
+            $endDate->modify('+1 day');
+            //echo "endDate=" . $endDate->format('Y-m-d H:i:s') . "<br>";
+            $dql->andWhere('transresRequest.createDate <= :endDate');
+            $dqlParameters['endDate'] = $endDate->format('Y-m-d H:i:s');
+            $advancedFilter++;
+        }
+
+        if( $billingContact ) {
+            $dql->andWhere("contact.id = :billingContactId");
+            $dqlParameters["billingContactId"] = $billingContact->getId();
+            $advancedFilter++;
+        }
+
+        if( $accountNumber ) {
+            $dql->andWhere("transresRequest.fundedAccountNumber = :fundedAccountNumber");
+            $dqlParameters["fundedAccountNumber"] = $accountNumber;
+            $advancedFilter++;
         }
 
         if( count($ids) > 0 ) {
@@ -624,6 +681,9 @@ class RequestController extends Controller
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $routeName = $request->get('_route');
         $title = "My Requests";
+        $formnode = false;
+
+        $advancedFilter = 0;
 
         //////// create filter //////////
         $progressStateArr = $transresRequestUtil->getProgressStateArr();
@@ -636,10 +696,20 @@ class RequestController extends Controller
 
         $filterform->handleRequest($request);
         $submitter = null;
+
+        $submitter = $filterform['submitter']->getData();
         $progressStates = $filterform['progressState']->getData();
         $billingStates = $filterform['billingState']->getData();
         $category = $filterform['category']->getData();
+        $projectSpecialty = $filterform['projectSpecialty']->getData();
+        $projectFilter = $filterform['project']->getData();
+
         $searchStr = $filterform['comment']->getData();
+        $startDate = $filterform['startDate']->getData();
+        $endDate = $filterform['endDate']->getData();
+        $principalInvestigators = $filterform['principalInvestigators']->getData();
+        $accountNumber = $filterform['accountNumber']->getData();
+        $billingContact = $filterform['billingContact']->getData();
 
         if( isset($filterform['submitter']) ) {
             $submitter = $filterform['submitter']->getData();
@@ -651,13 +721,15 @@ class RequestController extends Controller
 
         //////////////// get Requests IDs with the form node filter ////////////////
         $ids = array();
-        if( $category ) {
-            $categoryIds = $transresRequestUtil->getRequestIdsFormNodeByCategory($category);
-            $ids = array_merge($ids, $categoryIds);
-        }
-        if( $searchStr ) {
-            $commentIds = $transresRequestUtil->getRequestIdsFormNodeByComment($searchStr);
-            $ids = array_merge($ids, $commentIds);
+        if( !$formnode ) {
+            if ($category) {
+                $categoryIds = $transresRequestUtil->getRequestIdsFormNodeByCategory($category);
+                $ids = array_merge($ids, $categoryIds);
+            }
+            if ($searchStr) {
+                $commentIds = $transresRequestUtil->getRequestIdsFormNodeByComment($searchStr);
+                $ids = array_merge($ids, $commentIds);
+            }
         }
         if( count($ids) > 0 ) {
             $ids = array_unique($ids);
@@ -686,6 +758,17 @@ class RequestController extends Controller
         }
 
         ///////// filters //////////
+        if( $projectSpecialty ) {
+            $dql->leftJoin('project.projectSpecialty','projectSpecialty');
+            $dql->andWhere("projectSpecialty.id = :projectSpecialtyId");
+            $dqlParameters["projectSpecialtyId"] = $projectSpecialty->getId();
+        }
+
+        if( $projectFilter ) {
+            $dql->andWhere("project.id = :projectId");
+            $dqlParameters["projectId"] = $projectFilter->getId();
+        }
+
         if( $submitter ) {
             $dql->andWhere("submitter.id = :submitterId");
             $dqlParameters["submitterId"] = $submitter->getId();
@@ -704,6 +787,56 @@ class RequestController extends Controller
         if( $billingStates && count($billingStates)>0 ) {
             $dql->andWhere("transresRequest.billingState IN (:billingStates)");
             $dqlParameters["billingStates"] = implode(",",$billingStates);
+        }
+
+        if( $startDate ) {
+            //echo "startDate=" . $startDate->format('Y-m-d H:i:s') . "<br>";
+            $dql->andWhere('transresRequest.createDate >= :startDate');
+            $dqlParameters['startDate'] = $startDate->format('Y-m-d H:i:s');
+            $advancedFilter++;
+        }
+        if( $endDate ) {
+            $endDate->modify('+1 day');
+            $dql->andWhere('transresRequest.createDate <= :endDate');
+            $dqlParameters['endDate'] = $endDate->format('Y-m-d H:i:s');
+            $advancedFilter++;
+        }
+
+        if( $billingContact ) {
+            $dql->andWhere("contact.id = :billingContactId");
+            $dqlParameters["billingContactId"] = $billingContact->getId();
+            $advancedFilter++;
+        }
+
+        if( $accountNumber ) {
+            $dql->andWhere("transresRequest.fundedAccountNumber = :fundedAccountNumber");
+            $dqlParameters["fundedAccountNumber"] = $accountNumber;
+            $advancedFilter++;
+        }
+
+        if( $principalInvestigators && count($principalInvestigators)>0 ) {
+            $dql->andWhere("principalInvestigators.id IN (:principalInvestigators)");
+            $principalInvestigatorsIdsArr = array();
+            foreach($principalInvestigators as $principalInvestigator) {
+                $principalInvestigatorsIdsArr[] = $principalInvestigator->getId();
+            }
+            $dqlParameters["principalInvestigators"] = implode(",",$principalInvestigatorsIdsArr);
+            $advancedFilter++;
+        }
+
+        if( !$formnode ) {
+            $dql->leftJoin('transresRequest.products','products');
+            if ($category) {
+                $dql->leftJoin('products.category','category');
+                $dql->andWhere("category.id = :categoryId");
+                $dqlParameters["categoryId"] = $category;
+            }
+            if ($searchStr) {
+                //$dql->andWhere("(category.name LIKE :categoryStr OR category.productId LIKE :categoryStr OR category.feeUnit LIKE :categoryStr OR category.fee LIKE :categoryStr)");
+                $dql->andWhere("products.comment LIKE :searchStr");
+                $dqlParameters["searchStr"] = "%".$searchStr."%";
+                $advancedFilter++;
+            }
         }
 
         if( count($ids) > 0 ) {
@@ -739,7 +872,8 @@ class RequestController extends Controller
             'transresRequests' => $transresRequests,
             'filterform' => $filterform->createView(),
             'title' => $title,
-            'requestTotalFeeHtml' => null //$requestTotalFeeHtml
+            'requestTotalFeeHtml' => null, //$requestTotalFeeHtml
+            'advancedFilter' => $advancedFilter
         );
     }
 
