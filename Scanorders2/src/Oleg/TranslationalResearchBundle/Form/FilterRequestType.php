@@ -41,7 +41,7 @@ class FilterRequestType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        if( $this->params['routeName'] != "translationalresearch_my_requests" ) {
+        //if( $this->params['routeName'] != "translationalresearch_my_requests" ) {
             $builder->add('submitter', EntityType::class, array(
                 'class' => 'OlegUserdirectoryBundle:User',
                 'label' => "Reviewer Delegate:",
@@ -58,9 +58,9 @@ class FilterRequestType extends AbstractType
                         ->orderBy("infos.displayName", "ASC");
                 },
             ));
-        }
+        //}
 
-        if( $this->params['routeName'] != "translationalresearch_request_index" ) {
+        //if( $this->params['routeName'] != "translationalresearch_request_index" ) {
             $builder->add('project', EntityType::class, array(
                 'class' => 'OlegTranslationalResearchBundle:Project',
                 'choice_label' => "getProjectInfoName",
@@ -68,7 +68,7 @@ class FilterRequestType extends AbstractType
                 'label' => false,
                 'attr' => array('class'=>'combobox combobox-width'),
             ));
-        }
+        //}
         
         $builder->add('comment', TextType::class, array(
             'required'=>false,
@@ -109,7 +109,80 @@ class FilterRequestType extends AbstractType
             'choices' => $this->params['billingStateArr'],
             'attr' => array('class' => 'combobox'),
         ));
-        
+
+        $builder->add('startDate', DateTimeType::class, array(
+            'label' => false,
+            'widget' => 'single_text',
+            'required' => false,
+            'format' => 'MM/dd/yyyy',
+            'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'From Submission Date'), //'title'=>'Start Year', 'data-toggle'=>'tooltip',
+        ));
+
+        $builder->add('endDate', DateTimeType::class, array(
+            'label' => false,
+            'widget' => 'single_text',
+            'required' => false,
+            'format' => 'MM/dd/yyyy',
+            'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'To Submission Date'), //'title'=>'End Year', 'data-toggle'=>'tooltip',
+        ));
+
+        $builder->add('accountNumber', TextType::class, array(
+            'required'=>false,
+            'label' => false,
+            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'Search by IRB number'),
+        ));
+
+        $builder->add('billingContact', EntityType::class, array(
+            'class' => 'OlegUserdirectoryBundle:User',
+            'label' => false,
+            'required' => false,
+            'multiple' => false,
+            'attr' => array('class' => 'combobox combobox-width'),
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->leftJoin("list.employmentStatus", "employmentStatus")
+                    ->leftJoin("employmentStatus.employmentType", "employmentType")
+                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+                    //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
+                    ->leftJoin("list.infos", "infos")
+                    ->orderBy("infos.displayName", "ASC");
+            },
+        ));
+
+        $builder->add('principalInvestigators', EntityType::class, array(
+            'class' => 'OlegUserdirectoryBundle:User',
+            'label' => false,
+            'required' => false,
+            'multiple' => true,
+            'attr' => array('class' => 'combobox combobox-width'),
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->leftJoin("list.employmentStatus", "employmentStatus")
+                    ->leftJoin("employmentStatus.employmentType", "employmentType")
+                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+                    //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
+                    ->leftJoin("list.infos", "infos")
+                    ->orderBy("infos.displayName", "ASC");
+            },
+        ));
+
+        $builder->add('projectSpecialty', EntityType::class, array(
+            'class' => 'OlegTranslationalResearchBundle:SpecialtyList',
+            'label' => false,   //'Project Specialty',
+            'required'=> false,
+            'multiple' => false,
+            'attr' => array('class'=>'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->orderBy("list.orderinlist","ASC")
+                    ->setParameters( array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
+            },
+        ));
+
     }
 
     public function configureOptions(OptionsResolver $resolver)

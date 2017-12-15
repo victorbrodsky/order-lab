@@ -73,48 +73,6 @@
                 </div> <!-- panel-body -->
             </div> <!-- panel-collapse -->
 
-            {#<div class="row">#}
-                {#<div class="col-xs-4">#}
-                    {#{{ formmacros.fielddate(filterform.startDate,'regular-datepicker') }}#}
-                {#</div>#}
-                {#<div class="col-xs-4">#}
-                    {#{{ formmacros.fielddate(filterform.endDate,'regular-datepicker') }}#}
-                {#</div>#}
-                {#<div class="col-xs-4">#}
-                    {#{{ form_widget(filterform.projectSpecialty, {'attr': {'placeholder': 'Specialty'}}) }}#}
-                {#</div>#}
-            {#</div>#}
-            {#<br>#}
-            {#<div class="row">#}
-                {#<div class="col-xs-4">#}
-                    {#{{ form_widget(filterform.state,{'attr': {'placeholder': 'Status'}}) }}#}
-                {#</div>#}
-                {#<div class="col-xs-4">#}
-                    {#{{ form_widget(filterform.principalInvestigators, {'attr': {'placeholder': 'Principal Investigators'}}) }}#}
-                {#</div>#}
-                {#<div class="col-xs-4">#}
-                    {#{{ form_widget(filterform.submitter, {'attr': {'placeholder': 'Submitter'}}) }}#}
-                {#</div>#}
-            {#</div>#}
-            {#<br>#}
-            {#<div class="row">#}
-                {#<div class="col-xs-4">#}
-                    {#{{ form_widget(filterform.searchId) }}#}
-                {#</div>#}
-                {#<div class="col-xs-4">#}
-                    {#{{ form_widget(filterform.searchTitle) }}#}
-                {#</div>#}
-                {#<div class="col-xs-4">#}
-                    {#{{ form_widget(filterform.searchIrbNumber) }}#}
-                {#</div>#}
-            {#</div>#}
-            {#<br>#}
-            {#<div class="row">#}
-                {#<div class="col-xs-12">#}
-                    {#<button type="submit" id="filter-btn" class="btn btn-sm btn-default">Filter</button>#}
-                {#</div>#}
-            {#</div>#}
-
         {{ form_end(filterform) }}
     </div>
     <br>

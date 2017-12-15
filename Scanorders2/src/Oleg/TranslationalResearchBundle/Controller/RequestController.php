@@ -484,8 +484,17 @@ class RequestController extends Controller
         $billingStates = $filterform['billingState']->getData();
         $category = $filterform['category']->getData();
         $searchStr = $filterform['comment']->getData();
+
+        $startDate = $filterform['startDate']->getData();
+        $endDate = $filterform['endDate']->getData();
+        $principalInvestigators = $filterform['principalInvestigators']->getData();
+        $accountNumber = $filterform['accountNumber']->getData();
+        $billingContact = $filterform['billingContact']->getData();
+        $projectSpecialty = $filterform['projectSpecialty']->getData();
         //////// EOF create filter //////////
 
+
+        $advancedFilter = 0;
 
         //////////////// get Requests IDs with the form node filter ////////////////
         $ids = array();
@@ -590,7 +599,8 @@ class RequestController extends Controller
             'project' => $project,
             'filterform' => $filterform->createView(),
             'title' => $title . $requestTotalFeeHtml,
-            'requestTotalFeeHtml' => null //$requestTotalFeeHtml
+            'requestTotalFeeHtml' => null, //$requestTotalFeeHtml
+            'advancedFilter' => $advancedFilter
         );
     }
 

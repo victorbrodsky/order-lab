@@ -19,7 +19,7 @@
                 <th>{{ knp_pagination_sortable(invoices, 'Update Date', 'invoice.updateDate') }}</th>
                 <th>{{ knp_pagination_sortable(invoices, 'Due Date', 'invoice.dueDate') }}</th>
                 <th>{{ knp_pagination_sortable(invoices, 'Status', 'invoice.status') }}</th>
-                <th>{{ knp_pagination_sortable(invoices, 'To', 'invoice.invoiceTo') }}</th>
+                <th>{{ knp_pagination_sortable(invoices, 'Bill To', 'invoice.invoiceTo') }}</th>
                 <th>{{ knp_pagination_sortable(invoices, 'Total', 'invoice.total') }}</th>
                 <th>Actions</th>
             </tr>
@@ -35,7 +35,7 @@
                 <td>{% if invoice.updateDate %}{{ invoice.updateDate|date('Y-m-d H:i:s') }}{% endif %}</td>
                 <td>{% if invoice.dueDate %}{{ invoice.dueDate|date('Y-m-d H:i:s') }}{% endif %}</td>
                 <td>{{ invoice.status }}</td>
-                <td>{{ invoice.to }}</td>
+                <td>{{ invoice.invoiceTo }}</td>
                 <td>${{ invoice.total }}</td>
                 <td class="rowlink-skip">
                     <div class="btn-group">
