@@ -59,16 +59,25 @@ class FilterRequestType extends AbstractType
                 },
             ));
         //}
-
-        //if( $this->params['routeName'] != "translationalresearch_request_index" ) {
+        
+        if( $this->params['routeName'] == "translationalresearch_request_index" ) {
             $builder->add('project', EntityType::class, array(
                 'class' => 'OlegTranslationalResearchBundle:Project',
                 'choice_label' => "getProjectInfoName",
-                'required'=>false,
+                'required' => false,
                 'label' => false,
-                'attr' => array('class'=>'combobox combobox-width', 'placeholder'=>"Project"),
+                'data' => $this->params['project'],
+                'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Project"),
             ));
-        //}
+        } else {
+            $builder->add('project', EntityType::class, array(
+                'class' => 'OlegTranslationalResearchBundle:Project',
+                'choice_label' => "getProjectInfoName",
+                'required' => false,
+                'label' => false,
+                'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Project"),
+            ));
+        }
         
         $builder->add('comment', TextType::class, array(
             'required'=>false,

@@ -472,7 +472,12 @@ class RequestController extends Controller
         //////// create filter //////////
         $progressStateArr = $transresRequestUtil->getProgressStateArr();
         $billingStateArr = $transresRequestUtil->getBillingStateArr();
-        $params = array('progressStateArr'=>$progressStateArr,'billingStateArr'=>$billingStateArr,'routeName'=>$routeName);
+        $params = array(
+            'progressStateArr'=>$progressStateArr,
+            'billingStateArr'=>$billingStateArr,
+            'routeName'=>$routeName,
+            'project'=>$project
+        );
         $filterform = $this->createForm(FilterRequestType::class, null,array(
             'method' => 'GET',
             'form_custom_value'=>$params
