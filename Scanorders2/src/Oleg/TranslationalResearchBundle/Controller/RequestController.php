@@ -1052,7 +1052,7 @@ class RequestController extends Controller
         $transresUtil = $this->container->get('transres_util');
 
         if(
-        $transresUtil->isAdminOrPrimaryReviewer()
+            $transresUtil->isAdminOrPrimaryReviewer()
             //||
             //$transresUtil->isProjectReviewer($transresRequest)
         ) {

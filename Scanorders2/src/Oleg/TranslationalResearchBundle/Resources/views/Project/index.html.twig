@@ -264,14 +264,14 @@
                                        target="_blank">Update IRB approval expiration date to submit new requests</a>
                                 </li>
                             {% endif %}
-                            {% if is_granted('ROLE_TRANSRES_REQUESTER') or transres_util.isAdminOrPrimaryReviewer() %}
+                            {#{% if is_granted('ROLE_TRANSRES_REQUESTER') or transres_util.isAdminOrPrimaryReviewer() %}#}
                                 {% if project.getRequests()|length > 0 %}
                                     <li>
                                         <a href="{{ path(translationalresearch_sitename~'_request_index', { 'id': project.id }) }}"
-                                           target="_blank">Show associated requests</a>
+                                           target="_blank">Show Associated Requests</a>
                                     </li>
                                 {% endif %}
-                            {% endif %}
+                            {#{% endif %}#}
 
                         </ul>
 

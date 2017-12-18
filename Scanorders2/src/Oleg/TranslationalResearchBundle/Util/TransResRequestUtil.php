@@ -351,6 +351,7 @@ class TransResRequestUtil
     public function getBillingStateArr() {
         $stateArr = array(
             'active',
+            'approved',
             'canceled',
             'missinginfo',
             'invoiced',
@@ -431,6 +432,9 @@ class TransResRequestUtil
             case "active":
                 $state = "Active";
                 break;
+            case "approved":
+                $state = "Approved/Ready for Invoicing";
+                break;
             case "canceled":
                 $state = "Canceled";
                 break;
@@ -464,6 +468,15 @@ class TransResRequestUtil
             return $this->getBillingStateLabelByName($stateName);
         }
         return "<".$stateName.">";
+    }
+    public function getRequestLabelByStateMachineType( $transresRequest, $statMachineType ) {
+        if( $statMachineType == 'progress' ) {
+            return $this->getRequestStateLabelByName($transresRequest->getProgressState(),$statMachineType);
+        }
+        if( $statMachineType == 'billing' ) {
+            return $this->getRequestStateLabelByName($transresRequest->getBillingState(),$statMachineType);
+        }
+        return "<Unknown State for ".$transresRequest.">";
     }
 
     public function getHtmlClassTransition( $stateStr ) {
@@ -572,14 +585,64 @@ class TransResRequestUtil
         return $ids;
     }
 
+    //Used by twig Request's review to check if message ...Please review this request...
+    //For now it is only isAdminOrPrimaryReviewer
+    public function isRequestStateReviewer($transresRequest,$statMachineType) {
+        if( $statMachineType == 'progress' ) {
+            return $this->isRequestProgressReviewer($transresRequest);
+        }
+        if( $statMachineType == 'billing' ) {
+            return $this->isRequestBillingReviewer($transresRequest);
+        }
+        return false;
+    }
+    //For now it is only isAdminOrPrimaryReviewer
     public function isRequestProgressReviewer($transresRequest) {
+        return $this->isRequestReviewer($transresRequest);
+    }
+    public function isRequestBillingReviewer($transresRequest) {
+        return $this->isRequestReviewer($transresRequest);
+    }
+    //Request can be reviewd only by isAdminOrPrimaryReviewer
+    public function isRequestReviewer($transresRequest) {
+        $transresUtil = $this->container->get('transres_util');
+        $project = $transresRequest->getProject();
 
-        return true;
+        if( $transresUtil->isAdminOrPrimaryReviewer() ) {
+            return true;
+        }
+
+//        if( $transresUtil->isProjectRequester($project) ) {
+//            return true;
+//        }
+
+//        if( $this->isRequestRequester($transresRequest) ) {
+//            return true;
+//        }
+
+        return false;
     }
 
-    public function isRequestBillingReviewer($transresRequest) {
+    //return true if request's submitter or principalInvestigators
+    public function isRequestRequester( $transresRequest ) {
+        $user = $this->secTokenStorage->getToken()->getUser();
+        //submitter
+        $submitter = $transresRequest->getSubmitter();
+        if( $submitter ) {
+            if ($submitter->getId() == $user->getId()) {
+                return true;
+            }
+        }
 
-        return true;
+        //principalInvestigators
+        $pis = $transresRequest->getPrincipalInvestigators();
+        foreach( $pis as $pi ) {
+            if( $pi->getId() == $user->getId() ) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function isRequestProgressReviewable($transresRequest) {
@@ -643,10 +706,11 @@ class TransResRequestUtil
         $links = array();
 
         ////////// Check permission //////////
+        //Request's review can be done only by isAdminOrPrimaryReviewer
         $verified = false;
         if( $statMachineType == 'progress' ) {
             if( $transresUtil->isAdminOrPrimaryReviewer() === false && $this->isRequestProgressReviewer($transresRequest) === false ) {
-                exit("return: progress not allowed");
+                //exit("return: progress not allowed");
                 return $links;
             }
             $workflow = $this->container->get('state_machine.transres_request_progress');
@@ -655,7 +719,7 @@ class TransResRequestUtil
         }
         if( $statMachineType == 'billing' ) {
             if( $transresUtil->isAdminOrPrimaryReviewer() === false && $this->isRequestBillingReviewer($transresRequest) === false ) {
-                exit("return: billing not allowed");
+                //exit("return: billing not allowed");
                 return $links;
             }
             $workflow = $this->container->get('state_machine.transres_request_billing');
@@ -681,6 +745,11 @@ class TransResRequestUtil
             //$froms = $transition->getFroms();
             foreach( $tos as $to ) {
                 //echo "from=".$from."<br>"; //irb_review
+
+                //exception: ok: if $to == "approved" and TRP Administrator
+                if( $to == "approved" && !$this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') ) {
+                    continue; //skip this $to state
+                }
 
                 //add user's validation: $from=irb_review => user has role _IRB_REVIEW_
 //                if( false === $this->isUserAllowedFromThisStateByRole($from) ) {

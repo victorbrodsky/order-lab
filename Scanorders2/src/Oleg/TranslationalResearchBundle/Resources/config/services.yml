@@ -167,6 +167,7 @@ framework:
             places:
                 - draft
                 - active
+                - approved
                 - canceled
                 - missinginfo
                 - invoiced
@@ -183,14 +184,23 @@ framework:
                 canceled_active:
                     from: canceled
                     to: active
-                missinginfo_active:
-                    from: missinginfo
+                active_approved:
+                    from: active
+                    to: approved
+                approved_active:
+                    from: approved
                     to: active
-                active_invoiced:
-                    from: active
+                approved_canceled:
+                    from: approved
+                    to: canceled
+                missinginfo_approved:
+                    from: missinginfo
+                    to: approved
+                approved_invoiced:
+                    from: approved
                     to: invoiced
-                active_missinginfo:
-                    from: active
+                approved_missinginfo:
+                    from: approved
                     to: missinginfo
                 invoiced_paid:
                     from: invoiced
@@ -201,9 +211,9 @@ framework:
                 invoiced_canceled:
                     from: invoiced
                     to: canceled
-                invoiced_active:
+                invoiced_approved:
                     from: invoiced
-                    to: active
+                    to: approved
                 invoiced_partiallyRefunded:
                      from: invoiced
                      to: partiallyRefunded
