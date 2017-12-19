@@ -102,6 +102,7 @@ class InvoiceController extends Controller
         $em = $this->getDoctrine()->getManager();
         $transresUtil = $this->get('transres_util');
         $transresRequestUtil = $this->get('transres_request_util');
+        $userDownloadUtil = $this->get('user_download_utility');
         $user = $this->get('security.token_storage')->getToken()->getUser();
         //$user = null; //testing
         $cycle = "new";
@@ -114,7 +115,18 @@ class InvoiceController extends Controller
 
         $newline = "\n";
 
-        //to
+        //invoiceTo (text): the first PI
+        $billToUser = null;
+        $pis = $transresRequest->getPrincipalInvestigators();
+        if( count($pis) > 0 ) {
+            $billToUser = $pis[0];
+        }
+        if( $billToUser ) {
+            $userlabel = $userDownloadUtil->getLabelSingleUser($billToUser,$newline,true);
+            if( $userlabel ) {
+                $invoice->setInvoiceTo($userlabel);
+            }
+        }
 
         //pre-populate salesperson
         $transresRequestContact = $transresRequest->getContact();

@@ -203,7 +203,7 @@ class GeoLocation
 
 
     //City, Country Abbreviation such as USA (Full name of country if abbreviation not available)
-    public function getFullGeoLocation() {
+    public function getFullGeoLocation( $delimeter=", " ) {
 
         $resArr = array();
 
@@ -231,7 +231,8 @@ class GeoLocation
             $resArr[] = $this->getCountry()->getOptimalName() . "";
         }
 
-        return implode(", ",$resArr);
+        //echo "selimeter=".$delimeter."<br>";
+        return implode($delimeter,$resArr);
     }
 
     public function __toString() {

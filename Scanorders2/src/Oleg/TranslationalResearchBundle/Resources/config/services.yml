@@ -167,7 +167,7 @@ framework:
             places:
                 - draft
                 - active
-                - approved
+                - approvedInvoicing
                 - canceled
                 - missinginfo
                 - invoiced
@@ -184,23 +184,23 @@ framework:
                 canceled_active:
                     from: canceled
                     to: active
-                active_approved:
+                active_approvedInvoicing:
                     from: active
-                    to: approved
-                approved_active:
-                    from: approved
+                    to: approvedInvoicing
+                approvedInvoicing_active:
+                    from: approvedInvoicing
                     to: active
-                approved_canceled:
-                    from: approved
+                approvedInvoicing_canceled:
+                    from: approvedInvoicing
                     to: canceled
-                missinginfo_approved:
+                missinginfo_approvedInvoicing:
                     from: missinginfo
-                    to: approved
-                approved_invoiced:
-                    from: approved
+                    to: approvedInvoicing
+                approvedInvoicing_invoiced:
+                    from: approvedInvoicing
                     to: invoiced
-                approved_missinginfo:
-                    from: approved
+                approvedInvoicing_missinginfo:
+                    from: approvedInvoicing
                     to: missinginfo
                 invoiced_paid:
                     from: invoiced
@@ -211,9 +211,9 @@ framework:
                 invoiced_canceled:
                     from: invoiced
                     to: canceled
-                invoiced_approved:
+                invoiced_approvedInvoicing:
                     from: invoiced
-                    to: approved
+                    to: approvedInvoicing
                 invoiced_partiallyRefunded:
                      from: invoiced
                      to: partiallyRefunded

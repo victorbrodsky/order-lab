@@ -878,7 +878,7 @@ class Patient extends ObjectAbstract
                         $phoneStr = '<a href="tel:'.$currentLocation->getPhone().'" target="_top">'.$currentLocation->getPhone().'</a> ';
                     }
 
-                    $locationArr[] = $emailStr.$phoneStr.$currentLocation->getLocationFullName();
+                    $locationArr[] = $emailStr.$phoneStr.$currentLocation->getLocationFullBuildingName();
 
                 }
 

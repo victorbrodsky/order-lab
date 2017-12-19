@@ -731,14 +731,14 @@ class Location extends ListAbstract
 //            $name = $name . $this->name;
 //        }
 
-        $locationFullname = $this->getLocationFullName($html);
+        $locationFullname = $this->getLocationFullBuildingName($html);
 
         $name = $name . $locationFullname;
 
         return $name;
     }
 
-    public function getLocationFullName($html=false) {
+    public function getLocationFullBuildingName($html=false, $withType=true) {
 
         $name = "";
 
@@ -747,8 +747,6 @@ class Location extends ListAbstract
 //        } else {
 //            $name = $name . $this->name;
 //        }
-
-        $name = $this->getLocationTypesStr($html);
 
         $detailsArr = array();
 
@@ -776,10 +774,61 @@ class Location extends ListAbstract
         //exit();
 
         if( count($detailsArr) > 0 ) {
-            $name = $name . " (" . implode(", ",$detailsArr) . ")";
+            $detailsStr = implode(", ",$detailsArr);
+            if( $withType ) {
+                $name = $this->getLocationTypesStr($html);
+                $name = $name . " (" . $detailsStr . ")";
+            } else {
+                $name = $detailsStr;
+            }
         }
 
         return $name;
+    }
+
+    public function getLocationAddress( $delimeter=null ) {
+        $address = null;
+        $buildingLevelStr = null;
+        $geoLevelStr = null;
+        $detailsArr = array();
+
+        if( $this->getRoom() ) {
+            $detailsArr[] = $this->getRoom();
+        }
+
+        if( $this->getSuite() ) {
+            $detailsArr[] = $this->getSuite();
+        }
+
+//        if( $this->getBuilding() ) {
+//            $detailsArr[] = $this->getBuilding()."";
+//        }
+
+        if( $this->getInstitution() && $this->getBuilding() == null ) {
+            $detailsArr[] = $this->getInstitution()->getName()."";
+        }
+
+        if( $this->getMailbox() ) {
+            $detailsArr[] = $this->getMailbox();
+        }
+
+        if( count($detailsArr) > 0 ) {
+            $buildingLevelStr = implode($delimeter,$detailsArr);
+        }
+        
+        if( $this->getGeoLocation() != "" ) {
+            $geoLevelStr = $this->getGeoLocation()->getFullGeoLocation($delimeter);
+        }
+
+        if( $buildingLevelStr ) {
+            $address = $buildingLevelStr.$delimeter;
+        }
+
+        if( $geoLevelStr ) {
+            $address = $address . $geoLevelStr;
+        }
+
+        return $address;
     }
 
     public function getLocationNameNoType() {

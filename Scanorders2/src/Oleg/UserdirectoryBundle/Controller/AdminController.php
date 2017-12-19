@@ -1493,6 +1493,13 @@ class AdminController extends Controller
                 "translational-research"
             ),
 
+            "ROLE_TRANSRES_BILLING_ADMIN" => array(
+                "Translational Research Billing Administrator",
+                "Create, View, Edit and Send an Invoice for Translational Research Project",
+                30,
+                "translational-research"
+            ),
+
 
         );
 

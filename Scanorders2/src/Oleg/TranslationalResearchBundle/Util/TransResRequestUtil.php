@@ -351,7 +351,7 @@ class TransResRequestUtil
     public function getBillingStateArr() {
         $stateArr = array(
             'active',
-            'approved',
+            'approvedInvoicing',
             'canceled',
             'missinginfo',
             'invoiced',
@@ -432,7 +432,7 @@ class TransResRequestUtil
             case "active":
                 $state = "Active";
                 break;
-            case "approved":
+            case "approvedInvoicing":
                 $state = "Approved/Ready for Invoicing";
                 break;
             case "canceled":
@@ -746,8 +746,8 @@ class TransResRequestUtil
             foreach( $tos as $to ) {
                 //echo "from=".$from."<br>"; //irb_review
 
-                //exception: ok: if $to == "approved" and TRP Administrator
-                if( $to == "approved" && !$this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') ) {
+                //exception: ok: if $to == "approvedInvoicing" and TRP Administrator
+                if( $to == "approvedInvoicing" && !$this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') ) {
                     continue; //skip this $to state
                 }
 
@@ -879,6 +879,12 @@ class TransResRequestUtil
                 //send confirmation email
                 //TODO: send confirmation email to who?
                 $this->sendRequestNotificationEmails($transresRequest,$subject,$emailBody,$testing);
+
+                //Changing the status of request to "Approved/Ready for Invoicing" should send an email notification
+                // to the users with the role of "Translational Research Billing Administrator"
+                if( $to == "approvedInvoicing" ) {
+                    $this->sendRequestBillingNotificationEmails($transresRequest,$label,$originalStateLabel,$testing);
+                }
 
                 //event log
                 //$this->setEventLog($project,$review,$transitionName,$originalStateStr,$body,$testing);
@@ -1188,5 +1194,43 @@ class TransResRequestUtil
         $emailUtil->sendEmail( $emails, $subject, $body, null, $senderEmail );
 
     }
+
+    public function sendRequestBillingNotificationEmails($transresRequest,$newStateLabel,$originalStateLabel,$testing=false) {
+        $transResFormNodeUtil = $this->container->get('transres_formnode_util');
+        $emailUtil = $this->container->get('user_mailer_utility');
+        $senderEmail = null; //Admin email
+        $newline = "\r\n";
+
+        $project = $transresRequest->getProject();
+        $projectTitle = $transResFormNodeUtil.getProjectFormNodeFieldByName($project,"Title");
+        
+        $emails = array();
+        //1) get ROLE_TRANSRES_BILLING_ADMIN
+        $billingUsers = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole("ROLE_TRANSRES_BILLING_ADMIN");
+        foreach( $billingUsers as $user ) {
+            if( $user ) {
+                $emails[] = $user->getSingleEmail();
+            }
+        }
+        
+        //Subject: Draft Translation Research Invoice for Request [Request ID] of Project [Project Title]
+        $subject = "Draft Translation Research Invoice for Request ".$transresRequest->getOid()." of Project ".$projectTitle;
+
+        $body = "Please review the draft invoice for request ".$transresRequest->getOid()." of project ".$projectTitle.":".$newline;
+
+        $newInvoiceUrl = $this->container->get('router')->generate(
+            'translationalresearch_invoice_new',
+            array(
+                'id'=>$transresRequest->getId()
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+
+        $body = $body . $newInvoiceUrl;
+
+        //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
+        $emailUtil->sendEmail( $emails, $subject, $body, null, $senderEmail );
+    }
+    
     
 }

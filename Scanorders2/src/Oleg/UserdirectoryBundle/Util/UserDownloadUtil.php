@@ -536,23 +536,22 @@ class UserDownloadUtil {
         return $richText;
     }
 
-    public function getUserTitleStr($user) {
+    public function getUserTitleStr($user,$newline=" \n") {
         $titleNameStr = null;
-
         //first priority is admin title
-        $titleNameStr = $user->getUniqueTitlesStr($user->getAdministrativeTitles()," \n");
+        $titleNameStr = $user->getUniqueTitlesStr($user->getAdministrativeTitles(),$newline);
 
         if( !$titleNameStr ) {
             //if admin title is empty, then add appointment and medical titles
             $titleNameStrArr = array();
-            $titleNameStrArr[] = $user->getUniqueTitlesStr($user->getAppointmentTitles()," \n");
-            $titleNameStrArr[] = $user->getUniqueTitlesStr($user->getMedicalTitles()," \n");
-            $titleNameStr = implode(" \n",$titleNameStrArr);
+            $titleNameStrArr[] = $user->getUniqueTitlesStr($user->getAppointmentTitles(),$newline);
+            $titleNameStrArr[] = $user->getUniqueTitlesStr($user->getMedicalTitles(),$newline);
+            $titleNameStr = implode($newline,$titleNameStrArr);
         }
 
-        if( !$titleNameStr ) {
+        //if( !$titleNameStr ) {
             //$titleNameStr = $this->getUserHeaderStr($user);
-        }
+        //}
 
         return $titleNameStr;
     }
@@ -779,7 +778,7 @@ class UserDownloadUtil {
     }
 
 
-    public function getLabelSingleUser( $subjectUser ) {
+    public function getLabelSingleUser( $subjectUser, $newline=null, $fullLocation=false ) {
 
         //echo "subjectUser=".$subjectUser."<br>";
         if( !$subjectUser ) {
@@ -788,18 +787,26 @@ class UserDownloadUtil {
 
         //Title
         $administrativeTitleNameStr = $this->getUniqueFirstTitleStr($subjectUser);
+        $administrativeTitleNameStr = trim($administrativeTitleNameStr);
+        //echo "title=[$administrativeTitleNameStr]<br>";
 
         //Room
         $locationStr = null;
         $location = $subjectUser->getMainLocation();
         if( $location ) {
-            $locationStr = $location->getLocationNameNoType();
+            if( $fullLocation ) {
+                $locationStr = $location->getLocationAddress($newline);
+            } else {
+                $locationStr = $location->getLocationNameNoType();
+            }
         }
         //echo "locationStr=[$locationStr]<br>";
 
         //$nl = "&#13;&#10;";
         //$nl = "\n";
-        $nl = "<br>\n";
+        if( !$newline ) {
+            $newline = "<br>\n";
+        }
 
 //        $userEl = array();
 //        $userEl['name'] = $subjectUser->getUsernameOptimal();
@@ -807,9 +814,9 @@ class UserDownloadUtil {
 //        $userEl['room'] = $locationStr;
 //        $userElStr = implode("\n",$userEl);
 
-        $userElStr = $subjectUser->getUsernameOptimal() . $nl .
-            $administrativeTitleNameStr . $nl .
-            $locationStr;
+        $userElStr =    $subjectUser->getUsernameOptimal() . $newline .
+                        $administrativeTitleNameStr . $newline .
+                        $locationStr;
 
         //echo "userElStr=[$userElStr]<br>";
 
