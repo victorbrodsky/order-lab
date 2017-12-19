@@ -786,7 +786,7 @@ class Location extends ListAbstract
         return $name;
     }
 
-    public function getLocationAddress( $delimeter=null ) {
+    public function getLocationAddress($delimeter=", ") {
         $address = null;
         $buildingLevelStr = null;
         $geoLevelStr = null;
@@ -815,13 +815,15 @@ class Location extends ListAbstract
         if( count($detailsArr) > 0 ) {
             $buildingLevelStr = implode($delimeter,$detailsArr);
         }
-        
-        if( $this->getGeoLocation() != "" ) {
-            $geoLevelStr = $this->getGeoLocation()->getFullGeoLocation($delimeter);
+
+        $geoLocation = $this->getGeoLocation();
+        if( $geoLocation ) {
+            $delimeter = "\n";
+            $geoLevelStr = $geoLocation->getFullGeoLocation($delimeter);
         }
 
         if( $buildingLevelStr ) {
-            $address = $buildingLevelStr.$delimeter;
+            $address = $buildingLevelStr . $delimeter;
         }
 
         if( $geoLevelStr ) {

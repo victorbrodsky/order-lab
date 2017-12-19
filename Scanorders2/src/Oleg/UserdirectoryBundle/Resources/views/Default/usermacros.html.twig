@@ -334,6 +334,13 @@
 
     {% for document in documents %}
 
+        {#TODO: fix this for transres and others like fellapp#}
+        {#{% if documentObj.getSizeStr() is defined %}#}
+            {#{% set asForm = false %}#}
+        {#{% else %}#}
+            {#{% set asForm = true %}#}
+        {#{% endif %}#}
+
         {% if asForm %}
             {% set documentObj = document.vars.value %}
         {% else %}

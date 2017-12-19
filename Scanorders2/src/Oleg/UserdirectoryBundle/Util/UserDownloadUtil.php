@@ -778,7 +778,7 @@ class UserDownloadUtil {
     }
 
 
-    public function getLabelSingleUser( $subjectUser, $newline=null, $fullLocation=false ) {
+    public function getLabelSingleUser( $subjectUser, $newline=null, $fullAddressLocation=false ) {
 
         //echo "subjectUser=".$subjectUser."<br>";
         if( !$subjectUser ) {
@@ -794,7 +794,7 @@ class UserDownloadUtil {
         $locationStr = null;
         $location = $subjectUser->getMainLocation();
         if( $location ) {
-            if( $fullLocation ) {
+            if( $fullAddressLocation ) {
                 $locationStr = $location->getLocationAddress($newline);
             } else {
                 $locationStr = $location->getLocationNameNoType();
@@ -804,7 +804,7 @@ class UserDownloadUtil {
 
         //$nl = "&#13;&#10;";
         //$nl = "\n";
-        if( !$newline ) {
+        if( $newline === null ) {
             $newline = "<br>\n";
         }
 
