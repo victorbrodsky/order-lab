@@ -573,6 +573,9 @@ class TransResRequest {
         return true;
     }
 
+    public function getEntityName() {
+        return "Request";
+    }
 
     public function __toString() {
         return "Request id=".$this->getId();

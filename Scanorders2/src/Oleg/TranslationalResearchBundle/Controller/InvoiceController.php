@@ -102,94 +102,97 @@ class InvoiceController extends Controller
         $em = $this->getDoctrine()->getManager();
         $transresUtil = $this->get('transres_util');
         $transresRequestUtil = $this->get('transres_request_util');
-        $userDownloadUtil = $this->get('user_download_utility');
         $user = $this->get('security.token_storage')->getToken()->getUser();
         //$user = null; //testing
         $cycle = "new";
 
-        $invoice = new Invoice($user);
+        if(0) {
+            $userDownloadUtil = $this->get('user_download_utility');
+            $invoice = new Invoice($user);
 
-        $invoice->generateOid($transresRequest);
+            $invoice->generateOid($transresRequest);
 
-        $transresRequest->addInvoice($invoice);
+            $transresRequest->addInvoice($invoice);
 
-        $newline = "\n";
+            $newline = "\n";
 
-        //invoiceTo (text): the first PI
-        $billToUser = null;
-        $pis = $transresRequest->getPrincipalInvestigators();
-        if( count($pis) > 0 ) {
-            $billToUser = $pis[0];
-        }
-        if( $billToUser ) {
-            $userlabel = $userDownloadUtil->getLabelSingleUser($billToUser,$newline,true);
-            if( $userlabel ) {
-                $invoice->setInvoiceTo($userlabel);
-            }
-        }
-
-        //pre-populate salesperson
-        $transresRequestContact = $transresRequest->getContact();
-        if( $transresRequestContact ) {
-            $invoice->setSalesperson($transresRequestContact);
-        }
-
-        ////////////// from //////////////
-        $from = "Weill Cornell Medicine".$newline."Department of Pathology and".$newline."Laboratory Medicine";
-        $from = $from . $newline . "1300 York Avenue, C302/Box 69 New York, NY 10065";
-
-        if( $invoice->getSalesperson() ) {
-            $sellerStr = "";
-
-            $phone = $invoice->getSalesperson()->getSinglePhoneAndPager();
-            if( isset($phone['phone']) ) {
-                $from = $from . $newline . "Tel: " .$phone['phone'];
-                $sellerStr = $sellerStr . " Tel: " .$phone['phone'];
+            //pre-populate salesperson
+            $transresRequestContact = $transresRequest->getContact();
+            if ($transresRequestContact) {
+                $invoice->setSalesperson($transresRequestContact);
             }
 
-            $fax = $invoice->getSalesperson()->getAllFaxes();
-            if( $fax ) {
-                $from = $from . $newline . "Fax: " . $fax;
-                $sellerStr = $sellerStr . " Fax: " . $fax;
+            ////////////// from //////////////
+            $from = "Weill Cornell Medicine" . $newline . "Department of Pathology and" . $newline . "Laboratory Medicine";
+            $from = $from . $newline . "1300 York Avenue, C302/Box 69 New York, NY 10065";
+
+            if ($invoice->getSalesperson()) {
+                $sellerStr = "";
+
+                $phone = $invoice->getSalesperson()->getSinglePhoneAndPager();
+                if (isset($phone['phone'])) {
+                    $from = $from . $newline . "Tel: " . $phone['phone'];
+                    $sellerStr = $sellerStr . " Tel: " . $phone['phone'];
+                }
+
+                $fax = $invoice->getSalesperson()->getAllFaxes();
+                if ($fax) {
+                    $from = $from . $newline . "Fax: " . $fax;
+                    $sellerStr = $sellerStr . " Fax: " . $fax;
+                }
+
+                $email = $invoice->getSalesperson()->getSingleEmail();
+                if ($email) {
+                    $from = $from . $newline . "Email: " . $email;
+                    $sellerStr = $sellerStr . " Email: " . $email;
+                }
             }
 
-            $email = $invoice->getSalesperson()->getSingleEmail();
-            if( $email ) {
-                $from = $from . $newline . "Email: " . $email;
-                $sellerStr = $sellerStr . " Email: " . $email;
-            }
-        }
+            $invoice->setInvoiceFrom($from);
+            ////////////// EOF from //////////////
 
-        $invoice->setInvoiceFrom($from);
-        ////////////// EOF from //////////////
+            //footer:
+            $footer = "Make check payable & mail to: Weill Cornell Medicine, 1300 York Ave, C302/Box69, New York, NY 10065 (Attn: Jeffrey Hernandez)";
+            $invoice->setFooter($footer);
 
-        //footer:
-        $footer = "Make check payable & mail to: Weill Cornell Medicine, 1300 York Ave, C302/Box69, New York, NY 10065 (Attn: Jeffrey Hernandez)";
-        $invoice->setFooter($footer);
-
-        //footer2:
-        $invoice->setFooter2($sellerStr);
+            //footer2:
+            $invoice->setFooter2($sellerStr);
 
 //        //footer3:
 //        $footer3 = "------------------ Detach and return with payment ------------------";
 //        $invoice->setFooter3($footer3);
 
-        //pre-populate dueDate +30 days
-        $dueDateStr = date('Y-m-d', strtotime("+30 days"));
-        $dueDate = new \DateTime($dueDateStr);
-        $invoice->setDueDate($dueDate);
+            //pre-populate dueDate +30 days
+            $dueDateStr = date('Y-m-d', strtotime("+30 days"));
+            $dueDate = new \DateTime($dueDateStr);
+            $invoice->setDueDate($dueDate);
 
-        //pre-populate PIs
-        $transreqPis = $transresRequest->getPrincipalInvestigators();
-        foreach( $transreqPis as $transreqPi ) {
-            $invoice->addPrincipalInvestigator($transreqPi);
-        }
+            //pre-populate PIs
+            $transreqPis = $transresRequest->getPrincipalInvestigators();
+            foreach ($transreqPis as $transreqPi) {
+                $invoice->addPrincipalInvestigator($transreqPi);
+            }
 
-        //populate invoice items corresponding to the multiple requests
-        $invoiceItems = $transresRequestUtil->getRequestItems($transresRequest);
-        foreach( $invoiceItems as $invoiceItem ) {
-            $invoice->addInvoiceItem($invoiceItem);
-        }
+            //invoiceTo (text): the first PI
+            $billToUser = null;
+            $pis = $invoice->getPrincipalInvestigators();
+            if (count($pis) > 0) {
+                $billToUser = $pis[0];
+            }
+            if ($billToUser) {
+                $userlabel = $userDownloadUtil->getLabelSingleUser($billToUser, $newline, true);
+                if ($userlabel) {
+                    $invoice->setInvoiceTo($userlabel);
+                }
+            }
+
+            //populate invoice items corresponding to the multiple requests
+            $invoiceItems = $transresRequestUtil->getRequestItems($transresRequest);
+            foreach ($invoiceItems as $invoiceItem) {
+                $invoice->addInvoiceItem($invoiceItem);
+            }
+        }//if(0)
+        $invoice = $transresRequestUtil->createNewInvoice($transresRequest,$user);
 
         $form = $this->createInvoiceForm($invoice,$cycle);
 
@@ -198,13 +201,25 @@ class InvoiceController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             //exit('new');
 
-            //TODO: check how many items per invoice
+            if(0) {
+                $em->persist($invoice);
+                $em->flush();
 
-            $em->persist($invoice);
-            $em->flush();
+                $invoice->generateOid($transresRequest);
+                $em->flush($invoice);
 
-            $invoice->generateOid($transresRequest);
-            $em->flush($invoice);
+                $msg = "New Invoice has been successfully created for the request ID " . $transresRequest->getOid();
+
+                $this->get('session')->getFlashBag()->add(
+                    'notice',
+                    $msg
+                );
+
+                $eventType = "Invoice Created";
+                $msg = "New Invoice with ID " . $invoice->getOid() . " has been successfully submitted for the request ID " . $transresRequest->getOid();
+                $transresUtil->setEventLog($invoice, $eventType, $msg);
+            }
+            $invoice = $transresRequestUtil->createSubmitNewInvoice($transresRequest,$invoice);
 
             $msg = "New Invoice has been successfully created for the request ID ".$transresRequest->getOid();
 
@@ -212,11 +227,6 @@ class InvoiceController extends Controller
                 'notice',
                 $msg
             );
-
-            $eventType = "Invoice Created";
-            $msg = "New Invoice with ID ".$invoice->getOid()." has been successfully submitted for the request ID ".$transresRequest->getOid();
-            $transresUtil->setEventLog($invoice,$eventType,$msg);
-
 
             return $this->redirectToRoute('translationalresearch_invoice_show', array('id'=>$transresRequest->getId(), 'oid' => $invoice->getOid()));
         }

@@ -1151,6 +1151,10 @@ class Project {
         return "Project ID " . $this->getOid() . " - Submitted by ".$this->getSubmitter()->getUsernameOptimal() . " on ".$this->getCreateDate()->format('Y-m-d') . " at ".$this->getCreateDate()->format('H:i:s');
     }
 
+    public function getEntityName() {
+        return "Project";
+    }
+
     public function __toString() {
         return "Project id=".$this->getId();
     }

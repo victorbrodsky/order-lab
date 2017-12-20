@@ -816,6 +816,7 @@ class TransResRequestUtil
         $user = $this->secTokenStorage->getToken()->getUser();
         $transresUtil = $this->container->get('transres_util');
         $break = "\r\n";
+        $addMsg = "";
 
         if( $statMachineType == 'progress' ) {
             $workflow = $this->container->get('state_machine.transres_request_progress');
@@ -880,10 +881,15 @@ class TransResRequestUtil
                 //TODO: send confirmation email to who?
                 $this->sendRequestNotificationEmails($transresRequest,$subject,$emailBody,$testing);
 
-                //Changing the status of request to "Approved/Ready for Invoicing" should send an email notification
+                //Exception: Changing the status of request to "Approved/Ready for Invoicing" should send an email notification
                 // to the users with the role of "Translational Research Billing Administrator"
                 if( $to == "approvedInvoicing" ) {
                     $this->sendRequestBillingNotificationEmails($transresRequest,$label,$originalStateLabel,$testing);
+
+                    //TODO: create invoice entity and pdf
+                    $invoice = $this->createNewInvoice($transresRequest,$user);
+                    $invoice = $this->createSubmitNewInvoice($transresRequest,$invoice);
+                    $addMsg = $addMsg . "<br>New Invoice ID".$invoice->Oid()." has been successfully created for the request ID ".$transresRequest->getOid();
                 }
 
                 //event log
@@ -893,7 +899,7 @@ class TransResRequestUtil
 
                 $this->container->get('session')->getFlashBag()->add(
                     'notice',
-                    "Successful action: ".$label
+                    "Successful action: ".$label . $addMsg
                 );
                 return true;
             } catch (\LogicException $e) {
@@ -1231,6 +1237,117 @@ class TransResRequestUtil
         //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
         $emailUtil->sendEmail( $emails, $subject, $body, null, $senderEmail );
     }
-    
+
+    public function createNewInvoice($transresRequest,$user) {
+        $userDownloadUtil = $this->get('user_download_utility');
+
+        $invoice = new Invoice($user);
+
+        $invoice->generateOid($transresRequest);
+
+        $transresRequest->addInvoice($invoice);
+
+        $newline = "\n";
+
+        //pre-populate salesperson
+        $transresRequestContact = $transresRequest->getContact();
+        if( $transresRequestContact ) {
+            $invoice->setSalesperson($transresRequestContact);
+        }
+
+        ////////////// from //////////////
+        $from = "Weill Cornell Medicine".$newline."Department of Pathology and".$newline."Laboratory Medicine";
+        $from = $from . $newline . "1300 York Avenue, C302/Box 69 New York, NY 10065";
+
+        if( $invoice->getSalesperson() ) {
+            $sellerStr = "";
+
+            $phone = $invoice->getSalesperson()->getSinglePhoneAndPager();
+            if( isset($phone['phone']) ) {
+                $from = $from . $newline . "Tel: " .$phone['phone'];
+                $sellerStr = $sellerStr . " Tel: " .$phone['phone'];
+            }
+
+            $fax = $invoice->getSalesperson()->getAllFaxes();
+            if( $fax ) {
+                $from = $from . $newline . "Fax: " . $fax;
+                $sellerStr = $sellerStr . " Fax: " . $fax;
+            }
+
+            $email = $invoice->getSalesperson()->getSingleEmail();
+            if( $email ) {
+                $from = $from . $newline . "Email: " . $email;
+                $sellerStr = $sellerStr . " Email: " . $email;
+            }
+        }
+
+        $invoice->setInvoiceFrom($from);
+        ////////////// EOF from //////////////
+
+        //footer:
+        $footer = "Make check payable & mail to: Weill Cornell Medicine, 1300 York Ave, C302/Box69, New York, NY 10065 (Attn: Jeffrey Hernandez)";
+        $invoice->setFooter($footer);
+
+        //footer2:
+        $invoice->setFooter2($sellerStr);
+
+//        //footer3:
+//        $footer3 = "------------------ Detach and return with payment ------------------";
+//        $invoice->setFooter3($footer3);
+
+        //pre-populate dueDate +30 days
+        $dueDateStr = date('Y-m-d', strtotime("+30 days"));
+        $dueDate = new \DateTime($dueDateStr);
+        $invoice->setDueDate($dueDate);
+
+        //pre-populate PIs
+        $transreqPis = $transresRequest->getPrincipalInvestigators();
+        foreach( $transreqPis as $transreqPi ) {
+            $invoice->addPrincipalInvestigator($transreqPi);
+        }
+
+        //invoiceTo (text): the first PI
+        $billToUser = null;
+        $pis = $invoice->getPrincipalInvestigators();
+        if( count($pis) > 0 ) {
+            $billToUser = $pis[0];
+        }
+        if( $billToUser ) {
+            $userlabel = $userDownloadUtil->getLabelSingleUser($billToUser,$newline,true);
+            if( $userlabel ) {
+                $invoice->setInvoiceTo($userlabel);
+            }
+        }
+
+        //populate invoice items corresponding to the multiple requests
+        $invoiceItems = $this->getRequestItems($transresRequest);
+        foreach( $invoiceItems as $invoiceItem ) {
+            $invoice->addInvoiceItem($invoiceItem);
+        }
+
+        return $invoice;
+    }
+    public function createSubmitNewInvoice($transresRequest,$invoice) {
+        $transresUtil = $this->get('transres_util');
+
+        $this->em->persist($invoice);
+        $this->em->flush();
+
+        $invoice->generateOid($transresRequest);
+        $this->em->flush($invoice);
+
+        $msg = "New Invoice has been successfully created for the request ID ".$transresRequest->getOid();
+
+//        $this->get('session')->getFlashBag()->add(
+//            'notice',
+//            $msg
+//        );
+
+        $eventType = "Invoice Created";
+        $msg = "New Invoice with ID ".$invoice->getOid()." has been successfully submitted for the request ID ".$transresRequest->getOid();
+        $transresUtil->setEventLog($invoice,$eventType,$msg);
+
+        return $invoice;
+    }
     
 }

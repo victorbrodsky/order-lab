@@ -818,7 +818,6 @@ class Location extends ListAbstract
 
         $geoLocation = $this->getGeoLocation();
         if( $geoLocation ) {
-            $delimeter = "\n";
             $geoLevelStr = $geoLocation->getFullGeoLocation($delimeter);
         }
 

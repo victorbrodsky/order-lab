@@ -112,12 +112,7 @@ class Invoice {
      * @ORM\Column(type="string", nullable=true)
      */
     private $status;
-
-//    /**
-//     * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist"})
-//     * @ORM\JoinColumn(name="document_id", referencedColumnName="id")
-//     */
-//    private $document;
+    
     /**
      * Generated Invoices
      *

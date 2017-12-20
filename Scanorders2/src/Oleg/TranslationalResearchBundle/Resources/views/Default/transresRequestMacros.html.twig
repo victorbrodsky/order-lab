@@ -46,6 +46,48 @@
 
 {% endmacro %}
 
+{% macro transresRequestBody( form, transresRequest, cycle, sitename ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "OlegTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}
+    {#Request#}
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-info">
+            <div class="panel-heading" role="tab" id="transresRequestHeading">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#transresRequest" aria-expanded="true">
+                        Request
+                    </a>
+                </h4>
+            </div>
+            <div id="transresRequest" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="transresRequestHeading">
+                <div class="panel-body">
+
+                    {#Product or Service Panel +/-#}
+                    {{ transresRequestMacros.productSections(form,cycle,sitename) }}
+
+                    <br>
+
+                    {% if form.fundedAccountNumber is defined %}
+                        {{ formmacros.field(form.fundedAccountNumber) }}
+                    {% endif %}
+                    {% if form.supportStartDate is defined %}
+                        {{ formmacros.fieldDateLabel(form.supportStartDate,'allow-future-date') }}
+                    {% endif %}
+                    {% if form.supportEndDate is defined %}
+                        {{ formmacros.fieldDateLabel(form.supportEndDate,'allow-future-date') }}
+                    {% endif %}
+
+                    {{ formmacros.field(form.principalInvestigators) }}
+                    {{ formmacros.field(form.contact) }}
+
+                    {{ transresRequestMacros.transresRequestFormEdit(form,null,cycle) }}
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
 {% macro transresRequestFormEdit( form, transresRequest, cycle ) %}
 
     {% import "OlegUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
@@ -100,7 +142,7 @@
         {% set actionReviewLinks = transres_request_util.getReviewEnabledLinkActions(transresRequest,statMachineType) %}
         {#{% set actionLinks = actionLinks|merge({ (loop.index0): actionReviewLinks}) %}#}
 
-        {% set threadId = transresRequest.id ~ "-" ~ statMachineType %}
+        {% set threadId = "transres-" ~ transresRequest.getEntityName() ~ "-" ~ transresRequest.id ~ "-" ~ statMachineType %}
     {% else %}
         {#no getReviewEnabledLinkActions<br>#}
     {% endif %}

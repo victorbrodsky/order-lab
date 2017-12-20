@@ -60,70 +60,76 @@ class FosCommentListener implements EventSubscriberInterface {
     public function onCommentPrePersist(CommentEvent $event)
     {
         $comment = $event->getComment();
-        $project = $this->getProjectFromComment($comment);
+        $entity = $this->getEntityFromComment($comment);
 
-        $authorTypeArr = $this->getAuthorType($project);
+        $authorTypeArr = $this->getAuthorType($entity);
         if( $authorTypeArr && count($authorTypeArr) > 0 ) {
             $comment->setAuthorType($authorTypeArr['type']);
             $comment->setAuthorTypeDescription($authorTypeArr['description']);
         }
 
-        //$this->sendEmails($event,$comment,$project);
+        //$this->sendEmails($event,$comment,$entity);
 
         //set only eventlog
-        //$this->setCommentEventLog($event,$comment,$project);
+        //$this->setCommentEventLog($event,$comment,$entity);
     }
 
     public function onCommentPostPersist(CommentEvent $event)
     {
         $comment = $event->getComment();
-        $project = $this->getProjectFromComment($comment);
+        $entity = $this->getEntityFromComment($comment);
 
         //set only eventlog
-        $resArr = $this->setCommentEventLog($event,$comment,$project);
+        $resArr = $this->setCommentEventLog($event,$comment,$entity);
 
         //send only emails
-        $this->sendCommentEmails($event,$comment,$project,$resArr);
+        $this->sendCommentEmails($comment,$entity,$resArr);
     }
 
 
 
-    public function setCommentEventLog(CommentEvent $event, $comment=null, $project=null) {
+    public function setCommentEventLog(CommentEvent $event, $comment=null, $entity=null) {
         $transresUtil = $this->container->get('transres_util');
 
         if( !$comment ) {
             $comment = $event->getComment();
         }
 
-        if( !$project ) {
-            $project = $this->getProjectFromComment($comment);
+        if( !$entity ) {
+            $entity = $this->getEntityFromComment($comment);
         }
 
         $eventType = "Comment Posted";
-        $resArr = $this->getMsgSubjectAndBody($comment,$project);
+        $resArr = $this->getMsgSubjectAndBody($comment,$entity);
         $body = $resArr['body'];
-        $transresUtil->setEventLog($project,$eventType,$body);
+        $transresUtil->setEventLog($entity,$eventType,$body);
 
         return $resArr;
     }
 
-    public function sendCommentEmails(CommentEvent $event, $comment=null, $project=null, $resArr=null)
+    public function sendCommentEmails($comment, $entity, $resArr) {
+        if( $entity->getEntityName() == "Project" ) {
+            $this->sendCommentProjectEmails($comment, $entity, $resArr);
+        }
+
+        if( $entity->getEntityName() == "Request" ) {
+            $this->sendCommentRequestEmails($comment, $entity, $resArr);
+        }
+    }
+
+    public function sendCommentProjectEmails($comment=null, $entity=null, $resArr=null)
     {
         $transresUtil = $this->container->get('transres_util');
 
-        if( !$comment ) {
-            $comment = $event->getComment();
+        if( !$entity ) {
+            $entity = $this->getEntityFromComment($comment);
         }
 
-        if( !$project ) {
-            $project = $this->getProjectFromComment($comment);
-        }
-
-        //send email to all project related users: admin, primary, requesters, reviewers of this review type.
+        //send email to all entity related users: admin, primary, requesters, reviewers of this review type.
         $emails = array();
 
         $stateStr = $this->getStateStrFromComment($comment);
-        $reviews = $transresUtil->getReviewsByProjectAndState($project,$stateStr);
+        $reviews = $transresUtil->getReviewsByProjectAndState($entity,$stateStr);
 
         //1) admins
         $adminEmails = $transresUtil->getTransResAdminEmails();
@@ -136,7 +142,7 @@ class FosCommentListener implements EventSubscriberInterface {
         }
 
         //3) requesters
-        $requesterEmails = $transresUtil->getRequesterEmails($project);
+        $requesterEmails = $transresUtil->getRequesterEmails($entity);
         $emails = array_merge($emails,$requesterEmails);
 
         $emails = array_unique($emails);
@@ -145,42 +151,38 @@ class FosCommentListener implements EventSubscriberInterface {
 
         $break = "\r\n";
 
-        //$stateLabel = $transresUtil->getStateLabelByName($stateStr);
-        //$subject = "New Comment for Project ID ".$project->getOid()." has been posted for the stage '".$stateLabel."'";
-        //$body = $subject . ":" . $break . $comment->getBody();
-
-        //get project url
-        //$projectUrl = $transresUtil->getProjectShowUrl($project);
-        //$emailBody = $body . $break.$break. "Please click on the URL below to view this project:".$break.$projectUrl;
-
         if( !$resArr ) {
-            $resArr = $this->getMsgSubjectAndBody($comment, $project);
+            $resArr = $this->getMsgSubjectAndBody($comment, $entity);
         }
 
         $subject = $resArr['subject'];
         $body = $resArr['body'];
 
-        //get project url
-        $projectUrl = $transresUtil->getProjectShowUrl($project);
-        $body = $body . $break . $break . "Please click on the URL below to view this project:" . $break . $projectUrl;
+        //get entity url
+        $entityUrl = $transresUtil->getProjectShowUrl($entity);
+        $body = $body . $break . $break . "Please click on the URL below to view this ".$entity->getEntityName().":" . $break . $entityUrl;
 
         $emailUtil = $this->container->get('user_mailer_utility');
         $emailUtil->sendEmail( $emails, $subject, $body, null, $senderEmail );
     }
 
-    public function getMsgSubjectAndBody($comment,$project) {
+    public function sendCommentRequestEmails($comment, $entity, $resArr) {
+
+    }
+
+    public function getMsgSubjectAndBody($comment,$entity) {
         $transresUtil = $this->container->get('transres_util');
         $break = "\r\n";
 
         $stateStr = $this->getStateStrFromComment($comment);
         $stateLabel = $transresUtil->getStateLabelByName($stateStr);
-        $subject = "New Comment for Project ID ".$project->getOid()." has been posted for the stage '".$stateLabel."'";
+        $subject = "New Comment for ".$entity->getEntityName()." ID ".$entity->getOid()." has been posted for the stage '".$stateLabel."'";
         $body = $subject . ":" . $break . $comment->getBody();
 
         return array('subject'=>$subject, 'body'=>$body);
     }
 
-    public function getAuthorType( $project ) {
+    public function getAuthorType( $entity ) {
 
         if( !$this->secTokenStorage->getToken() ) {
             //not authenticated
@@ -213,64 +215,102 @@ class FosCommentListener implements EventSubscriberInterface {
         $transresUtil = $this->container->get('transres_util');
         $user = $this->secTokenStorage->getToken()->getUser();
 
-        //1) check if the user is project requester
-        //$project = $this->getProjectFromComment($comment);
-        if( !$project ) {
+        //1) check if the user is entity requester
+        //$entity = $this->getEntityFromComment($comment);
+        if( !$entity ) {
             return null;
         }
 
         //check if reviewer
-        if( $transresUtil->isProjectReviewer($project) ) {
+        if( $transresUtil->isProjectReviewer($entity) ) {
             //return "Reviewer";
             $authorTypeArr['type'] = "Reviewer";
             $authorTypeArr['description'] = "Reviewer";
             return $authorTypeArr;
         }
-//                if( $transresUtil->isReviewsReviewer($user,$project->getIrbReviews()) ) {
-//                    return "IRB Reviewer";
-//                }
-//                if( $transresUtil->isReviewsReviewer($user,$project->getAdminReviews()) ) {
-//                    return "Admin Reviewer";
-//                }
-//                if( $transresUtil->isReviewsReviewer($user,$project->getCommitteeReviews()) ) {
-//                    return "Committee Reviewer";
-//                }
-//                if( $transresUtil->isReviewsReviewer($user,$project->getFinalReviews()) ) {
-//                    return "Primary Reviewer";
-//                }
+
+//        //check if requester
+//        if( $project->getSubmitter() && $project->getSubmitter()->getId() == $user->getId() ) {
+//            //return "Submitter";
+//            $authorTypeArr['type'] = "Requester";
+//            $authorTypeArr['description'] = "Submitter";
+//            return $authorTypeArr;
+//        }
+//        if( $project->getPrincipalInvestigators()->contains($user) ) {
+//            //return "Principal Investigator";
+//            $authorTypeArr['type'] = "Requester";
+//            $authorTypeArr['description'] = "Principal Investigator";
+//            return $authorTypeArr;
+//        }
+//        if( $project->getCoInvestigators()->contains($user) ) {
+//            //return "Co-Investigator";
+//            $authorTypeArr['type'] = "Requester";
+//            $authorTypeArr['description'] = "Co-Investigator";
+//            return $authorTypeArr;
+//        }
+//        if( $project->getPathologists()->contains($user) ) {
+//            //return "Pathologist";
+//            $authorTypeArr['type'] = "Requester";
+//            $authorTypeArr['description'] = "Pathologist";
+//            return $authorTypeArr;
+//        }
+//        if( $project->getContacts()->contains($user) ) {
+//            //return "Contact";
+//            $authorTypeArr['type'] = "Requester";
+//            $authorTypeArr['description'] = "Contact";
+//            return $authorTypeArr;
+//        }
+//        if( $project->getBillingContacts()->contains($user) ) {
+//            //return "Billing Contact";
+//            $authorTypeArr['type'] = "Requester";
+//            $authorTypeArr['description'] = "Billing Contact";
+//            return $authorTypeArr;
+//        }
+
+        if( $entity->getEntityName() == "Project" ) {
+            return $this->getProjectRequesterAuthorType($entity,$user);
+        }
+
+        if( $entity->getEntityName() == "Request" ) {
+            return $this->getRequestRequesterAuthorType($entity,$user);
+        }
+
+        return null;
+    }
+    public function getProjectRequesterAuthorType( $entity, $user ) {
 
         //check if requester
-        if( $project->getSubmitter() && $project->getSubmitter()->getId() == $user->getId() ) {
+        if( $entity->getSubmitter() && $entity->getSubmitter()->getId() == $user->getId() ) {
             //return "Submitter";
             $authorTypeArr['type'] = "Requester";
             $authorTypeArr['description'] = "Submitter";
             return $authorTypeArr;
         }
-        if( $project->getPrincipalInvestigators()->contains($user) ) {
+        if( $entity->getPrincipalInvestigators()->contains($user) ) {
             //return "Principal Investigator";
             $authorTypeArr['type'] = "Requester";
             $authorTypeArr['description'] = "Principal Investigator";
             return $authorTypeArr;
         }
-        if( $project->getCoInvestigators()->contains($user) ) {
+        if( $entity->getCoInvestigators()->contains($user) ) {
             //return "Co-Investigator";
             $authorTypeArr['type'] = "Requester";
             $authorTypeArr['description'] = "Co-Investigator";
             return $authorTypeArr;
         }
-        if( $project->getPathologists()->contains($user) ) {
+        if( $entity->getPathologists()->contains($user) ) {
             //return "Pathologist";
             $authorTypeArr['type'] = "Requester";
             $authorTypeArr['description'] = "Pathologist";
             return $authorTypeArr;
         }
-        if( $project->getContacts()->contains($user) ) {
+        if( $entity->getContacts()->contains($user) ) {
             //return "Contact";
             $authorTypeArr['type'] = "Requester";
             $authorTypeArr['description'] = "Contact";
             return $authorTypeArr;
         }
-        if( $project->getBillingContacts()->contains($user) ) {
+        if( $entity->getBillingContacts()->contains($user) ) {
             //return "Billing Contact";
             $authorTypeArr['type'] = "Requester";
             $authorTypeArr['description'] = "Billing Contact";
@@ -279,39 +319,70 @@ class FosCommentListener implements EventSubscriberInterface {
 
         return null;
     }
+    public function getRequestRequesterAuthorType( $entity, $user ) {
+        //check if requester
+        if( $entity->getSubmitter() && $entity->getSubmitter()->getId() == $user->getId() ) {
+            //return "Submitter";
+            $authorTypeArr['type'] = "Requester";
+            $authorTypeArr['description'] = "Submitter";
+            return $authorTypeArr;
+        }
+        if( $entity->getPrincipalInvestigators()->contains($user) ) {
+            //return "Principal Investigator";
+            $authorTypeArr['type'] = "Requester";
+            $authorTypeArr['description'] = "Principal Investigator";
+            return $authorTypeArr;
+        }
+        if( $entity->getContacts()->contains($user) ) {
+            //return "Contact";
+            $authorTypeArr['type'] = "Requester";
+            $authorTypeArr['description'] = "Contact";
+            return $authorTypeArr;
+        }
 
-    public function getProjectFromComment($comment) {
-        $project = null;
-        //get project
+        return null;
+    }
+
+    //http://localhost/order/api/threads/transres-request-20-billing/comments
+    public function getEntityFromComment($comment) {
+        $entity = null;
+        //get entity from "transres-request-20-billing"
         $threadId = $comment->getThread()->getId();
         $idArr = explode("-",$threadId);
 
-        $projectId = null;
+        $entityId = null;
         //$stateStr = null;
-        if( count($idArr) > 1 ) {
-            $projectId = $idArr[0]; //7
+        if( count($idArr) >= 4 ) {
+            $entitySitename = $idArr[0]; //sitename
+            $entityName = $idArr[1]; //entity name
+            $entityId = $idArr[0]; //entity id
             //$stateStr = $idArr[1];  //irb_review
         }
 
-        if( $projectId ) {
-            $project = $this->em->getRepository('OlegTranslationalResearchBundle:Project')->find($projectId);
+        if( $entitySitename == "transres" ) {
+            $bundleName = 'OlegTranslationalResearchBundle';
         }
 
-        return $project;
+        if( $bundleName && $entityId ) {
+            $entity = $this->em->getRepository($bundleName.':'.$entityName)->find($entityId);
+        }
+
+        return $entity;
     }
 
     public function getStateStrFromComment($comment) {
-        $project = null;
-        //get project
+        $entity = null;
+        //get state from "transres-request-20-billing"
         $threadId = $comment->getThread()->getId();
         $idArr = explode("-",$threadId);
 
         $stateStr = null;
-        if( count($idArr) > 1 ) {
-            $stateStr = $idArr[1];  //irb_review
+        if( count($idArr) > 4 ) {
+            $stateStr = $idArr[4];  //irb_review
         }
 
         return $stateStr;
     }
+
 
 } 

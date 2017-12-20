@@ -107,18 +107,18 @@ class RequestController extends Controller
 
         $form = $this->createRequestForm($transresRequest,$cycle,$request); //new
 
-        $messageTypeId = true;//testing
-        $formnodetrigger = 1;
-        if( $messageTypeId ) {
-            $formnodetrigger = 0; //build formnodes from top to bottom
-        }
+//        $messageTypeId = true;//testing
+//        $formnodetrigger = 1;
+//        if( $messageTypeId ) {
+//            $formnodetrigger = 0; //build formnodes from top to bottom
+//        }
 
         //top message category id
-        $formnodeTopHolderId = null;
-        $messageCategory = $transresRequest->getMessageCategory();
-        if( $messageCategory ) {
-            $formnodeTopHolderId = $messageCategory->getId();
-        }
+//        $formnodeTopHolderId = null;
+//        $messageCategory = $transresRequest->getMessageCategory();
+//        if( $messageCategory ) {
+//            $formnodeTopHolderId = $messageCategory->getId();
+//        }
 
         $form->handleRequest($request);
 
@@ -209,8 +209,8 @@ class RequestController extends Controller
             'form' => $form->createView(),
             'cycle' => $cycle,
             'title' => $title,
-            'formnodetrigger' => $formnodetrigger,
-            'formnodeTopHolderId' => $formnodeTopHolderId,
+            //'formnodetrigger' => $formnodetrigger,
+            //'formnodeTopHolderId' => $formnodeTopHolderId,
             'routeName' => $request->get('_route')
         );
     }
@@ -265,19 +265,19 @@ class RequestController extends Controller
 
         $form = $this->createRequestForm($transresRequest,$cycle,$request); //edit
 
-        $messageTypeId = true;//testing
-        $formnodetrigger = 1;
-        if( $messageTypeId ) {
-            $formnodetrigger = 0; //build formnodes from top to bottom
-        }
+//        $messageTypeId = true;//testing
+//        $formnodetrigger = 1;
+//        if( $messageTypeId ) {
+//            $formnodetrigger = 0; //build formnodes from top to bottom
+//        }
 
         //top message category id
-        $formnodeTopHolderId = null;
-        //$categoryStr = "Pathology Call Log Entry";
-        $messageCategory = $transresRequest->getMessageCategory();
-        if( $messageCategory ) {
-            $formnodeTopHolderId = $messageCategory->getId();
-        }
+//        $formnodeTopHolderId = null;
+//        //$categoryStr = "Pathology Call Log Entry";
+//        $messageCategory = $transresRequest->getMessageCategory();
+//        if( $messageCategory ) {
+//            $formnodeTopHolderId = $messageCategory->getId();
+//        }
 
         $form->handleRequest($request);
 
@@ -387,8 +387,8 @@ class RequestController extends Controller
             'formtype' => $formtype,
             'title' => "Edit Request ".$transresRequest->getOid(),
             'triggerSearch' => 0,
-            'formnodetrigger' => $formnodetrigger,
-            'formnodeTopHolderId' => $formnodeTopHolderId,
+            //'formnodetrigger' => $formnodetrigger,
+            //'formnodeTopHolderId' => $formnodeTopHolderId,
             'entityNamespace' => $classNamespace,
             'entityName' => $className,
             'entityId' => $transresRequest->getId(),
@@ -443,6 +443,7 @@ class RequestController extends Controller
             'form' => $form->createView(),
             'cycle' => $cycle,
             'title' => "Request ".$transresRequest->getOid() . $feeHtml,
+            'routeName' => $request->get('_route')
             //'delete_form' => $deleteForm->createView(),
             //'review_forms' => $reviewFormViews
         );
@@ -1025,7 +1026,7 @@ class RequestController extends Controller
 
         $cycle = "show";
 
-        $form = $this->createRequestForm($transresRequest,$cycle,$request); //show
+        $form = $this->createRequestForm($transresRequest,$cycle,$request); //show progress review
 
         $eventType = "Request Viewed";
         $msg = "Request ".$transresRequest->getOid() ." has been viewed on the progress review page.";
@@ -1063,7 +1064,7 @@ class RequestController extends Controller
 
         $cycle = "show";
 
-        $form = $this->createRequestForm($transresRequest,$cycle,$request); //show
+        $form = $this->createRequestForm($transresRequest,$cycle,$request); //show billing review
 
         $eventType = "Request Viewed";
         $msg = "Request ".$transresRequest->getOid() ." has been viewed on the billing review page.";

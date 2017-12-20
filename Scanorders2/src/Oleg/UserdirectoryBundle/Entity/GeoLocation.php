@@ -219,12 +219,29 @@ class GeoLocation
             $resArr[] = $this->getStreet2() . "";
         }
 
+        $cityStr = null;
         if( $this->getCity() ) {
-            $resArr[] = $this->getCity()->getOptimalName() . "";
+            $cityStr = $this->getCity()->getOptimalName() . "";
         }
 
+        $stateStr = null;
         if( $this->getState() ) {
-            $resArr[] = $this->getState()->getOptimalName() . "";
+            $stateStr = $this->getState()->getOptimalName() . "";
+        }
+
+        if( $cityStr && $stateStr ) {
+            $resArr[] = $cityStr . ", " . $stateStr;
+        } else {
+            if( $cityStr ) {
+                $resArr[] = $cityStr . "";
+            }
+            if( $stateStr ) {
+                $resArr[] = $stateStr . "";
+            }
+        }
+
+        if( $this->getZip() ) {
+            $resArr[] = $this->getZip() . "";
         }
 
         if( $this->getCountry() ) {

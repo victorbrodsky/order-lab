@@ -43,7 +43,8 @@
 
     {{ transresRequestMacros.transresRequestInfo(form,transresRequest,cycle) }}
 
-    {{ transresRequestMacros.transresRequestFormShow(form,transresRequest,cycle) }}
+    {#{{ transresRequestMacros.transresRequestFormShow(form,transresRequest,cycle) }}#}
+    {{ transresRequestMacros.transresRequestBody(form,transresRequest,cycle,sitename) }}
 
     {{ form_end(form) }}
 

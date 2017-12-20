@@ -181,13 +181,13 @@
     {% endif %}
 
     {% if form %}
-        {% set asForm = true %}
+        {% set asFormOrEntity = "asForm" %}
         {% set documents = form.documents %}
         {% set irbApprovalLetters = form.irbApprovalLetters %}
         {% set humanTissueForms = form.humanTissueForms %}
     {% else %}
         {% set cycle = "show" %}
-        {% set asForm = false %}
+        {% set asFormOrEntity = "asEntity" %}
         {% set documents = project.documents %}
         {% set irbApprovalLetters = project.irbApprovalLetters %}
         {% set humanTissueForms = project.humanTissueForms %}
@@ -211,7 +211,7 @@
         <label class="col-xs-12 control-label">IRB Approval Letter</label>
         <div class="row withpaddingtop">
             <div class="col-xs-12">
-                {{ usermacros.documentsContainer(null,irbApprovalLetters,cycle,'noprototype',8,'default','IRB Approval Letter',asForm) }}
+                {{ usermacros.documentsContainer(null,irbApprovalLetters,cycle,'noprototype',8,'default','IRB Approval Letter',asFormOrEntity) }}
             </div>
         </div>
     </div>
@@ -232,7 +232,7 @@
         <p>You can <a href="{{ path(translationalresearch_sitename~'_download_humanTissueForm') }}" target="_blank">download the blank form here.</a></p>
         <div class="row withpaddingtop">
             <div class="col-xs-12">
-                {{ usermacros.documentsContainer(null,humanTissueForms,cycle,'noprototype',8,'default','Human Tissue Form',asForm) }}
+                {{ usermacros.documentsContainer(null,humanTissueForms,cycle,'noprototype',8,'default','Human Tissue Form',asFormOrEntity) }}
             </div>
         </div>
     </div>
@@ -241,7 +241,7 @@
         <label class="col-xs-12 control-label">Project Documents</label>
         <div class="row withpaddingtop">
             <div class="col-xs-12">
-                {{ usermacros.documentsContainer(null,documents,cycle,'noprototype',8,'default','Project Document',asForm) }}
+                {{ usermacros.documentsContainer(null,documents,cycle,'noprototype',8,'default','Project Document',asFormOrEntity) }}
             </div>
         </div>
     </div>
@@ -387,7 +387,7 @@
         {#{{ actionLink|raw }}#}
     {#{% endfor %}#}
 
-    {#{% set threadId = project.id ~ "-" ~ review.id ~ "-" ~ review.getStateStr() %}#}
+    {#{% set threadId = "transres-" ~ project.vars.value.getEntityName() ~ "-" ~ project.id ~ "-" ~ review.id ~ "-" ~ review.getStateStr() %}#}
     {#{% if actionLinks|length > 0 and cycle == "show" %}#}
         {#{{ render(controller('OlegTranslationalResearchBundle:Project:threadComments', { 'id': threadId })) }}#}
         {#{% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': threadId} %}#}
@@ -411,8 +411,8 @@
             </p>
         {% endfor %}
 
-        {#{% set threadId = project.id ~ "-" ~ review.id ~ "-" ~ review.getStateStr() %}#}
-        {% set threadId = project.vars.value.id ~ "-" ~ review.vars.value.getStateStr() %}
+        {#{% set threadId = "transres-" ~ project.vars.value.getEntityName() ~ "-" ~ project.id ~ "-" ~ review.id ~ "-" ~ review.getStateStr() %}#}
+        {% set threadId = "transres-" ~ project.vars.value.getEntityName() ~ "-" ~ project.vars.value.id ~ "-" ~ review.vars.value.getStateStr() %}
         {#actionLinks|length={{ actionLinks|length }}, cycle={{ cycle }}<br>#}
         {% if actionLinks|length > 0 and cycle == "show" %}
             {#{{ render(controller('OlegTranslationalResearchBundle:Project:threadComments', { 'id': threadId })) }}#}
@@ -444,7 +444,7 @@
     {#{% endfor %}#}
     {#{% if cycle == "show" and actionLinks %}#}
         {#{% if actionLinks|length > 0 %}#}
-            {#{% set threadId = project.vars.value.id ~ "-" ~ review.getStateStr() %}#}
+            {#{% set threadId = "transres-" ~ project.vars.value.getEntityName() ~ "-" ~  project.vars.value.id ~ "-" ~ review.getStateStr() %}#}
             {#{% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': threadId} %}#}
         {#{% endif %}#}
     {#{% endif %}#}
@@ -471,7 +471,7 @@
             {% set actionReviewLinks = transres_util.getReviewEnabledLinkActions(review) %}
             {% set actionLinks = actionLinks|merge({ (loop.index0): actionReviewLinks}) %}
 
-            {% set threadId = project.id ~ "-" ~ review.getStateStr() %}
+            {% set threadId = "transres-" ~ project.vars.value.getEntityName() ~ "-" ~ project.id ~ "-" ~ review.getStateStr() %}
             {#{% set threadIds = threadIds|merge({ (loop.index0): threadId}) %}#}
         {% else %}
             {#no getReviewEnabledLinkActions<br>#}
@@ -661,7 +661,7 @@
 
                             {% if showComments == 1 %}
                                 {% if project.irbReviews|length > 0 %}
-                                    {% set threadId = project.vars.value.id ~ "-" ~ project.vars.value.irbReviews|first.getStateStr() %}
+                                    {% set threadId = "transres-" ~ project.vars.value.getEntityName() ~ "-" ~ project.vars.value.id ~ "-" ~ project.vars.value.irbReviews|first.getStateStr() %}
                                     {#irb threadId={{ threadId }}<br>#}
                                     {{ render(controller('OlegTranslationalResearchBundle:Project:threadCommentsShow', { 'id': threadId })) }}
                                 {% endif %}
@@ -700,7 +700,7 @@
 
                             {% if showComments == 1 %}
                                 {% if project.adminReviews|length > 0 %}
-                                    {% set threadId = project.vars.value.id ~ "-" ~ project.vars.value.adminReviews|first.getStateStr() %}
+                                    {% set threadId = "transres-" ~ project.vars.value.getEntityName() ~ "-" ~ project.vars.value.id ~ "-" ~ project.vars.value.adminReviews|first.getStateStr() %}
                                     {{ render(controller('OlegTranslationalResearchBundle:Project:threadCommentsShow', { 'id': threadId })) }}
                                 {% endif %}
                             {% endif %}
@@ -738,7 +738,7 @@
 
                             {% if showComments == 1 %}
                                 {% if project.committeeReviews|length > 0 %}
-                                    {% set threadId = project.vars.value.id ~ "-" ~ project.vars.value.committeeReviews|first.getStateStr() %}
+                                    {% set threadId = "transres-" ~ project.vars.value.getEntityName() ~ "-" ~ project.vars.value.id ~ "-" ~ project.vars.value.committeeReviews|first.getStateStr() %}
                                     {{ render(controller('OlegTranslationalResearchBundle:Project:threadCommentsShow', { 'id': threadId })) }}
                                 {% endif %}
                             {% endif %}
@@ -776,7 +776,7 @@
 
                             {% if showComments == 1 %}
                                 {% if project.finalReviews|length > 0 %}
-                                    {% set threadId = project.vars.value.id ~ "-" ~ project.vars.value.finalReviews|first.getStateStr() %}
+                                    {% set threadId = "transres-" ~ project.vars.value.getEntityName() ~ "-" ~ project.vars.value.id ~ "-" ~ project.vars.value.finalReviews|first.getStateStr() %}
                                     {{ render(controller('OlegTranslationalResearchBundle:Project:threadCommentsShow', { 'id': threadId })) }}
                                 {% endif %}
                             {% endif %}
@@ -928,8 +928,8 @@
         {#TODO: create an individual page for each threadId and include this page below#}
         {#{% if reviewId and project.vars.value.id %}#}
             {#projectId reviewId reviewClass-getStateStr#}
-            {#{% set threadId = project.vars.value.id ~ "-" ~ reviewId ~ "-" ~ review.vars.value.getStateStr() %}#}
-            {#{% set threadId = project.vars.value.id ~ "-" ~ review.vars.value.getStateStr() %}#}
+            {#{% set threadId = "transres-" ~ project.vars.value.getEntityName() ~ "-" ~ project.vars.value.id ~ "-" ~ reviewId ~ "-" ~ review.vars.value.getStateStr() %}#}
+            {#{% set threadId = "transres-" ~ project.vars.value.getEntityName() ~ "-" ~ project.vars.value.id ~ "-" ~ review.vars.value.getStateStr() %}#}
             {#threadId={{ threadId }}<br>#}
             {#<iframe src="/order/api/threads/{{threadId}}/comments">#}
                 {#{% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': threadId} %}#}

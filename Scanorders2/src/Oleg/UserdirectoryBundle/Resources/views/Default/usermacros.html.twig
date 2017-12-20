@@ -196,12 +196,12 @@
 {#dropzoneInit = 'inactive':    inactive by default#}
 {#dropzoneInit = 'active':      active by default#}
 {#dropzoneInit = 'default':     inactive if show or active otherwise#}
-{% macro documentsContainer(container,documents,cycle,prototype,documentspercontainer,dropzoneInit,documentType,asForm) %}
+{% macro documentsContainer(container,documents,cycle,prototype,documentspercontainer,dropzoneInit,documentType,asFormOrEntity) %}
 
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
-    {% if asForm is not defined %}
-        {% set asForm = true %}
+    {% if asFormOrEntity is not defined or not asFormOrEntity or asFormOrEntity == "" %}
+        {% set asFormOrEntity = "asForm" %}
     {% endif %}
 
     {% if documents is defined or prototype == 'prototype' %}
@@ -275,7 +275,7 @@
 
             {% endif %}
 
-            {{ usermacros.document( documents, cycle, prototype, addRemoveLink, asForm ) }}
+            {{ usermacros.document( documents, cycle, prototype, addRemoveLink, asFormOrEntity ) }}
 
             {#render field "other". id of this field will be used to get the containerid in js#}
             {% if container is not null %}
@@ -293,7 +293,7 @@
 
 {% endmacro %}
 
-{% macro document( documents, cycle, prototype, addRemoveLink, asForm ) %}
+{% macro document( documents, cycle, prototype, addRemoveLink, asFormOrEntity ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
@@ -322,8 +322,8 @@
         {% set sitename = translationalresearch_sitename %}
     {% endif %}
 
-    {% if asForm is not defined %}
-        {% set asForm = true %}
+    {% if asFormOrEntity is not defined or not asFormOrEntity or asFormOrEntity == "" %}
+        {% set asFormOrEntity = "asForm" %}
     {% endif %}
 
     {% if "show" in cycle %}
@@ -334,14 +334,7 @@
 
     {% for document in documents %}
 
-        {#TODO: fix this for transres and others like fellapp#}
-        {#{% if documentObj.getSizeStr() is defined %}#}
-            {#{% set asForm = false %}#}
-        {#{% else %}#}
-            {#{% set asForm = true %}#}
-        {#{% endif %}#}
-
-        {% if asForm %}
+        {% if asFormOrEntity == "asForm" %}
             {% set documentObj = document.vars.value %}
         {% else %}
             {% set documentObj = document %}
@@ -375,13 +368,13 @@
                     <a data-dz-remove="" href="javascript:void(0);" class="dz-remove" onclick="removeUploadedFile(this)">Remove file</a>
                 {% endif %}
 
-                {% if asForm %}
+                {% if asFormOrEntity == "asForm" %}
                     {{ formmacros.field(document.id) }}
                     {{ formmacros.field(document.dummyprototypefield) }}
                 {% endif %}
             </div>
 
-            {% if asForm %}
+            {% if asFormOrEntity == "asForm" %}
                 {% do document.setRendered %}
             {% endif %}
 
@@ -389,7 +382,7 @@
 
     {% endfor %}
 
-    {% if asForm %}
+    {% if asFormOrEntity == "asForm" %}
         {#use dummy-prototype-field to get id and name prototype for adding new document#}
         {{ formmacros.field(documents.vars.prototype.dummyprototypefield) }}
 
