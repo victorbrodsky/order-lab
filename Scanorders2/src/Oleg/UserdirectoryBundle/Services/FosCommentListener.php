@@ -167,7 +167,57 @@ class FosCommentListener implements EventSubscriberInterface {
     }
 
     public function sendCommentRequestEmails($comment, $entity, $resArr) {
+        $transresUtil = $this->container->get('transres_util');
 
+        if( !$entity ) {
+            $entity = $this->getEntityFromComment($comment);
+        }
+
+        //send email to all entity related users: admin, primary, requesters, reviewers of this review type.
+        $emails = array();
+
+        //1) admins
+        $adminEmails = $transresUtil->getTransResAdminEmails();
+        $emails = array_merge($emails,$adminEmails);
+
+        //2) contact
+        $contact = $entity->getContact();
+        if( $contact ) {
+            $contactEmail = $contact->getSingleEmail();
+            if( $contactEmail ) {
+                $emails = array_merge($emails,array($emails));
+            }
+        }
+
+        //3) principalInvestigators
+        $piEmailArr = array();
+        $pis = $entity->getPrincipalInvestigators();
+        foreach( $pis as $pi ) {
+            if( $pi ) {
+                $piEmailArr[] = $pi->getSingleEmail();
+            }
+        }
+        $emails = array_merge($emails,$piEmailArr);
+
+        $emails = array_unique($emails);
+
+        $senderEmail = null; //Admin email
+
+        $break = "\r\n";
+
+        if( !$resArr ) {
+            $resArr = $this->getMsgSubjectAndBody($comment, $entity);
+        }
+
+        $subject = $resArr['subject'];
+        $body = $resArr['body'];
+
+        //get entity url
+        $entityUrl = $transresUtil->getProjectShowUrl($entity);
+        $body = $body . $break . $break . "Please click on the URL below to view this ".$entity->getEntityName().":" . $break . $entityUrl;
+
+        $emailUtil = $this->container->get('user_mailer_utility');
+        $emailUtil->sendEmail( $emails, $subject, $body, null, $senderEmail );
     }
 
     public function getMsgSubjectAndBody($comment,$entity) {
@@ -355,7 +405,7 @@ class FosCommentListener implements EventSubscriberInterface {
         if( count($idArr) >= 4 ) {
             $entitySitename = $idArr[0]; //sitename
             $entityName = $idArr[1]; //entity name
-            $entityId = $idArr[0]; //entity id
+            $entityId = $idArr[2]; //entity id
             //$stateStr = $idArr[1];  //irb_review
         }
 
@@ -363,8 +413,16 @@ class FosCommentListener implements EventSubscriberInterface {
             $bundleName = 'OlegTranslationalResearchBundle';
         }
 
+        if( $entityName == "Request" ) {
+            $entityName = "TransResRequest";
+        }
+
         if( $bundleName && $entityId ) {
             $entity = $this->em->getRepository($bundleName.':'.$entityName)->find($entityId);
+        }
+
+        if( !$entity ) {
+            exit("No entity found by ID=".$entityId."; namespace=".$bundleName.':'.$entityName);
         }
 
         return $entity;
