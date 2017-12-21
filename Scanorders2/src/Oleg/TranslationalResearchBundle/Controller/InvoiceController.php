@@ -260,6 +260,8 @@ class InvoiceController extends Controller
         }
 
         $cycle = "show";
+        $routeName = $request->get('_route');
+
         $form = $this->createInvoiceForm($invoice,$cycle);
 
         $deleteForm = $this->createDeleteForm($invoice);
@@ -375,6 +377,92 @@ class InvoiceController extends Controller
     }
 
     /**
+     * Finds and displays a invoice entity.
+     *
+     * @Route("/generate-invoice-pdf/{id}", name="translationalresearch_invoice_generate_pdf")
+     * @Template("OlegTranslationalResearchBundle:Invoice:new.html.twig")
+     * @Method("GET")
+     */
+    public function generateInvoicePdfAction(Request $request, Invoice $invoice) {
+        $transresPdfUtil = $this->get('transres_pdf_generator');
+
+        $res = $transresPdfUtil->generateInvoicePdf($invoice);
+        
+        $filename = $res['filename'];
+        $pdf = $res['pdf'];
+        $size = $res['size'];
+
+        $msg = "PDF has been created for Invoice ID " . $invoice->getOid() . "; filename=".$filename."; size=".$size;
+
+        exit($msg);
+
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            $msg
+        );
+
+        return $this->redirectToRoute('translationalresearch_invoice_index_all');
+    }
+
+    /**
+     * Show PDF version of invoice
+     *
+     * @Route("/download-invoice-pdf/{id}/{oid}", name="translationalresearch_invoice_download")
+     * @Template("OlegTranslationalResearchBundle:Invoice:pdf-show.html.twig")
+     * @Method("GET")
+     */
+    public function downloadPdfAction(Request $request, TransResRequest $transresRequest, $oid)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $logger = $this->container->get('logger');
+        $routeName = $request->get('_route');
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        //download: user or localhost
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //download link can be accessed by a console as localhost with role IS_AUTHENTICATED_ANONYMOUSLY, so simulate login manually
+        if( !($user instanceof User) ) {
+            $firewall = 'ldap_translationalresearch_firewall';
+            $systemUser = $userSecUtil->findSystemUser();
+            if( $systemUser ) {
+                $token = new UsernamePasswordToken($systemUser, null, $firewall, $systemUser->getRoles());
+                $this->get('security.token_storage')->setToken($token);
+                //$this->get('security.token_storage')->setToken($token);
+            }
+            $logger->notice("Download view: Logged in as systemUser=".$systemUser);
+        } else {
+            $logger->notice("Download view: Token user is valid security.token_storage user=".$user);
+        }
+
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($oid);
+        if( !$invoice ) {
+            throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
+        }
+
+        $cycle = "download";
+        $routeName = $request->get('_route');
+
+        //$form = $this->createInvoiceForm($invoice,$cycle);
+
+        $deleteForm = $this->createDeleteForm($invoice);
+
+        return array(
+            'transresRequest' => $transresRequest,
+            'invoice' => $invoice,
+            //'form' => $form->createView(),
+            'delete_form' => $deleteForm->createView(),
+            'cycle' => $cycle,
+            'title' => "Invoice for the Request ID ".$transresRequest->getOid(),
+        );
+    }
+
+    /**
      * Creates a form to delete a invoice entity.
      *
      * @param Invoice $invoice The invoice entity
@@ -413,6 +501,10 @@ class InvoiceController extends Controller
 
         if( $cycle == "edit" ) {
             $disabled = false;
+        }
+
+        if( $cycle == "download" ) {
+            $disabled = true;
         }
 
         $form = $this->createForm(InvoiceType::class, $invoice, array(

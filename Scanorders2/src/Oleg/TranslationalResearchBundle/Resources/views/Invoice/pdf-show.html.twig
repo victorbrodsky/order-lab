@@ -1,0 +1,345 @@
+{% extends "OlegTranslationalResearchBundle::Default/base.html.twig" %}
+
+{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "OlegTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}
+{% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+{% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block content %}
+
+    <input type="hidden" id="formcycle" value="{{ cycle }}" />
+
+    {#<div id="form-prototype-data"#}
+         {#data-userurllink = "{{ usermacros.userUrlLink()|e }}"#}
+         {#data-uploadurl = "{{ oneup_uploader_endpoint('transres_gallery') }}"#}
+         {#data-userid = "{{ app.user.id }}"#}
+    {#></div>#}
+
+    <h4 class="text-info" align="center">
+        {{ title }}
+    </h4>
+    <br>
+
+    {% set sitename = translationalresearch_sitename %}
+
+    {% set bundleFileName = transres_request_util.getInvoiceLogo()|raw %}
+    {% if bundleFileName %}
+
+        <p>
+        <div class="row">
+            <div class="col-xs-2" align="right">
+            </div>
+            <div class="col-xs-6" align="left">
+                <img src="{{ asset(bundleFileName) }}" alt="Invoice Logo"/>
+            </div>
+            <div class="col-xs-4" align="left">
+            </div>
+        </div>
+        </p>
+
+        <br><br>
+        {#<div class="row" align="left">#}
+            {#<div class="col-xs-5">#}
+                {#<img src="{{ asset(bundleFileName) }}" alt="Invoice Logo"/>#}
+            {#</div>#}
+            {#<div class="col-xs-7"></div>#}
+        {#</div>#}
+    {% endif %}
+
+    {{ form_start(form) }}
+
+        <div id="form-prototype-data"
+             data-userurllink = "{{ usermacros.userUrlLink()|e }}"
+             data-uploadurl = "{{ oneup_uploader_endpoint('transres_gallery') }}"
+             data-userid = "{{ app.user.id }}"
+
+             data-prototype-transres-invoiceItems = "{{ transresRequestMacros.invoiceItemForm(form.invoiceItems,cycle,'transres-invoiceItems','prototype',sitename,1)|e }}"
+        ></div>
+
+        {#{{ formmacros.field(form.updateUser) }}#}
+
+        {% if form.createDate is defined %}
+            {{ formmacros.field_left(form.createDate) }}
+        {% endif %}
+        {% if form.submitter is defined %}
+            {{ formmacros.field_left(form.submitter) }}
+        {% endif %}
+
+        {% if form.status is defined %}
+            {{ formmacros.field_left(form.status) }}
+        {% endif %}
+
+        {% if form.principalInvestigators is defined %}
+            {{ formmacros.field_left(form.principalInvestigators) }}
+        {% endif %}
+        {% if form.salesperson is defined %}
+            {{ formmacros.field_left(form.salesperson) }}
+        {% endif %}
+
+        <hr />
+
+        {#{% if form.documents is defined %}#}
+            {#<div class="well form-element-holder user-documents">#}
+                {#<label class="col-xs-12 control-label">Logo</label>#}
+                {#<div class="row withpaddingtop">#}
+                    {#<div class="col-xs-12">#}
+                        {#{{ usermacros.documentsContainer(null,form.documents,cycle,'noprototype',1,'default','Logo') }}#}
+                    {#</div>#}
+                {#</div>#}
+            {#</div>#}
+        {#{% endif %}#}
+
+        {#<hr />#}
+        {% if form.oid is defined %}
+            {{ formmacros.field_left(form.oid) }}
+        {% endif %}
+
+        {% if form.dueDate is defined %}
+            {{ formmacros.fieldDateLabel_left(form.dueDate,'allow-future-date') }}
+        {% endif %}
+
+        {#<hr />#}
+
+        {{ formmacros.field_left(form.invoiceFrom) }}
+        {{ formmacros.field_left(form.invoiceTo) }}
+        <br>
+
+        {#<hr />#}
+
+        {#{% for invoiceItem in form.invoiceItems %}#}
+            {#<div class="well well-sm">#}
+            {#{{ formmacros.field(invoiceItem.quantity) }}#}
+            {#{{ formmacros.field(invoiceItem.itemCode) }}#}
+            {#{{ formmacros.field(invoiceItem.description) }}#}
+            {#{{ formmacros.field(invoiceItem.unitPrice) }}#}
+            {#{{ formmacros.field(invoiceItem.total) }}#}
+            {#</div>#}
+            {#{{ transresRequestMacros.invoiceItem(invoiceItem,cycle) }}#}
+        {#{% endfor %}#}
+        {{ transresRequestMacros.invoiceItemSections(form,cycle,sitename) }}
+
+        {#{{ transresRequestMacros.invoiceAddItems(form,cycle) }}#}
+        {#Product or Service Panel +/-#}
+        {#{{ transresRequestMacros.productSections(form,cycle,sitename) }}#}
+
+        {#<hr />#}
+
+        {#{{ formmacros.field(form.subTotal) }}#}
+        <p>
+        <div class="row">
+            <div class="col-xs-2" align="right">
+                <strong>{{ form.subTotal.vars.label|raw }}</strong>
+            </div>
+            <div class="col-xs-6" align="left">
+                <div class = "input-group">
+                    {{ form_widget(form.subTotal) }}
+                    <span class = "input-group-addon btn" onclick="transresUpdateSubTotal();">
+                        Calculate
+                    </span>
+                </div>
+            </div>
+            <div class="col-xs-4" align="right">
+            </div>
+        </div>
+        </p>
+
+        {{ formmacros.field_left(form.discountNumeric) }}
+        {{ formmacros.field_left(form.discountPercent) }}
+
+        {#{{ formmacros.field_left(form.total) }}#}
+        <p>
+        <div class="row">
+            <div class="col-xs-2" align="right">
+                <strong>{{ form.total.vars.label|raw }}</strong>
+            </div>
+            <div class="col-xs-6" align="left">
+                <div class = "input-group">
+                    {{ form_widget(form.total) }}
+                    <span class = "input-group-addon btn" onclick="transresUpdateTotal();">
+                            Calculate
+                        </span>
+                </div>
+            </div>
+            <div class="col-xs-4" align="right">
+            </div>
+        </div>
+        </p>
+
+        {% if form.paid is defined %}
+            {{ formmacros.field_left(form.paid) }}
+        {% endif %}
+
+        <br>
+        <hr>
+        {% if form.footer is defined %}
+            {{ formmacros.field_left(form.footer) }}
+        {% endif %}
+        {% if form.footer2 is defined %}
+            {{ formmacros.field_left(form.footer2) }}
+        {% endif %}
+        {% if form.footer3 is defined %}
+            {{ formmacros.field_left(form.footer3) }}
+        {% endif %}
+        <br><br>
+
+        {% if form.save is defined %}
+            {{ form_widget(form.save) }}
+        {% endif %}
+        {% if form.edit is defined %}
+            {{ form_widget(form.edit) }}
+        {% endif %}
+
+    {{ form_end(form) }}
+
+    {% if cycle == "show" %}
+        <p>
+            <a class="btn btn-warning" href="{{ path(translationalresearch_sitename~'_invoice_edit',{'id': transresRequest.getId(),'oid':invoice.oid}) }}">Edit Invoice</a>
+        </p>
+
+        <p>
+            {% if is_granted('ROLE_TRANSRES_ADMIN') %}
+                {#{{ form_start(delete_form) }}#}
+                {{ form_start(delete_form,{'attr':{'onsubmit':"return confirm('Do you really want to delete this invoice?');"}}) }}
+                    <input class="btn btn-danger" type="submit" value="Delete">
+                {{ form_end(delete_form) }}
+                <br><br>
+            {% endif %}
+        </p>
+    {% endif %}
+
+    {% if cycle == "edit" %}
+        <br><br>
+        <p>
+            <a class="btn btn-primary" href="{{ path(translationalresearch_sitename~'_invoice_show',{'id': transresRequest.getId(),'oid': invoice.oid }) }}">Cancel</a>
+        </p>
+
+        {% if is_granted('ROLE_TRANSRES_ADMIN') %}
+            {{ form_start(delete_form,{'attr':{'onsubmit':"return confirm('Do you really want to delete this invoice?');"}}) }}
+                <input class="btn btn-danger" type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+            <br><br>
+        {% endif %}
+    {% endif %}
+
+    {#{% if project and project.id %}#}
+        {#<br>#}
+        {#{{ transres.projectObjFullInfo(project,cycle) }}#}
+        {#<p>#}
+            {#<a href="{{ path(translationalresearch_sitename~'_request_index',{'id':project.id}) }}">Back to the request list</a>#}
+        {#</p>#}
+    {#{% endif %}#}
+
+{% endblock %}
+
+
+{% block additionaljs %}
+
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+
+            console.log("cycle="+cycle);
+            if( cycle == "new" ) {
+                transresUpdateSubTotal();
+            }
+
+            transresInvoiceItemListeneres();
+
+//            $('.invoice-subTotal').on('input', function(event) {
+//                console.log("invoice-subTotal: triggered by manually update row subTotal");
+//                transresUpdateSubTotal();
+//            });
+
+        });
+
+        function transresInvoiceItemListeneres(){
+            //quantity or unit price update => update total
+            $('.invoiceitem-quantity, .invoiceitem-unitPrice').on('input', function(event) {
+                console.log("update row total");
+                var invoiceItemRow = $(this).closest('.user-collection-holder');
+                var quatity = invoiceItemRow.find(".invoiceitem-quantity").val();
+                var unitPrice = invoiceItemRow.find(".invoiceitem-unitPrice").val();
+                console.log("row quatity="+quatity+"; unitPrice="+unitPrice);
+                var invoiceItemTotalEl = invoiceItemRow.find(".invoiceitem-total");
+                if( quatity && unitPrice ) {
+                    var total = parseFloat(quatity) * parseFloat(unitPrice);
+                    total = transresRoundDecimal(total);
+                    console.log("row total="+total);
+                    invoiceItemTotalEl.val(total);
+                } else {
+                    invoiceItemTotalEl.val(null);
+                }
+                console.log("transresUpdateSubTotal: triggered by claculated row total");
+                transresUpdateSubTotal();
+            });
+
+            //total update => update subtotal and total
+            $('.invoiceitem-total').on('input', function(event) {
+                console.log("transresUpdateSubTotal: triggered by manually update row total");
+                transresUpdateSubTotal();
+            });
+
+            $('.invoice-discountNumeric').on('input', function(event) {
+                $('.invoice-discountPercent').val(null);
+                transresUpdateTotal();
+            });
+            $('.invoice-discountPercent').on('input', function(event) {
+                $('.invoice-discountNumeric').val(null);
+                transresUpdateTotal();
+            });
+        }
+
+        function transresUpdateSubTotal() { //invoiceItemTotalEl
+            console.log("update subtotal and total");
+            //var totals = invoiceItemTotalEl.closest('.transres-invoiceItems-holder').find(".invoiceitem-total");
+            var totals = $('.transres-invoiceItems-holder').find(".invoiceitem-total");
+            var subTotal = 0;
+            totals.each(function() {
+                var total = $(this).val();
+                console.log("total="+total);
+                if( !total ) {
+                    total = 0;
+                }
+                subTotal = subTotal + parseFloat(total);
+            });
+            subTotal = transresRoundDecimal(subTotal);
+            console.log("subTotal="+subTotal);
+            $(".invoice-subTotal").val(subTotal);
+            transresUpdateTotal();
+        }
+
+        function transresUpdateTotal() {
+
+            var discount = 0;
+            var discountNumeric = $(".invoice-discountNumeric").val();
+            var discountPercent = $(".invoice-discountPercent").val();
+            var subTotal = $(".invoice-subTotal").val();
+
+            if( subTotal ) {
+                if( discountNumeric ) {
+                    discount = parseFloat(discountNumeric);
+                }
+                if( discountPercent ) {
+                    discount = subTotal * (parseFloat(discountPercent)/100);
+                }
+            }
+
+            var total = subTotal - discount;
+
+            total = transresRoundDecimal(total);
+            $(".invoice-total").val(total);
+        }
+
+        function transresRoundDecimal(value) {
+            return Number(Math.round(value+'e2')+'e-2').toFixed(2); //1.005 => 1.01
+        }
+
+    </script>
+
+{% endblock %}
+

@@ -112,6 +112,12 @@
 
 {% block additionaljs %}
 
+    {#{% javascripts#}
+    {#'@OlegTranslationalResearchBundle/Resources/public/form/js/comments.js'#}
+    {#%}#}
+    {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+
 <script type="text/javascript">
 
     $(document).ready(function() {
@@ -155,6 +161,7 @@
             transresUpdateIrbExpDate();
         });
 
+        //addCommentButtonClickListener();
 
     });
 
@@ -217,6 +224,41 @@
 
         return false;
     }
+
+//    function addCommentButtonClickListener() {
+//        //fos_comment_submit_btn
+//        $('.fos_comment_submit_btn').on('submit', function(event){
+//            console.log("fos_comment_submit_btn");
+//            var addSubmitBtn = $(this).get(0);
+//            var submitLaddaBtn = Ladda.create( addSubmitBtn );
+//            submitLaddaBtn.start();
+//        });
+//
+//        $('form').on('submit', function(event) {
+//            console.log("form submit");
+//        });
+//
+//        $("#fos_comment_comment_new_form_oleg").on('submit', function(event) {
+//            console.log("fos_comment_comment_new_form_oleg submit");
+//        });
+//
+//        $("#fos_comment_submit_btn_oleg").on('click', function(event){
+//            console.log("fos_comment_submit_btn_oleg click");
+//        });
+//
+//        $('#fos_comment_submit_btn_oleg').click(function(event) {
+//            console.log("fos_comment_submit_btn_oleg click 2");
+//        });
+//
+//
+//        $('#fos_comment_comment_new_form_oleg').on('DOMNodeInserted', 'div', function () {
+//            console.log("DOMNodeInserted div");
+//            //var addSubmitBtn = $(this).get(0);
+//            //var submitLaddaBtn = Ladda.create( addSubmitBtn );
+//            //submitLaddaBtn.stop();
+//        });
+//
+//    }
 
 </script>
 

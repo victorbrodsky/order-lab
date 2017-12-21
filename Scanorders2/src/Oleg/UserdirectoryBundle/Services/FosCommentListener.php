@@ -82,8 +82,8 @@ class FosCommentListener implements EventSubscriberInterface {
         //set only eventlog
         $resArr = $this->setCommentEventLog($event,$comment,$entity);
 
-        //send only emails
-        $this->sendCommentEmails($comment,$entity,$resArr);
+        //send only emails (Comment takes lots of time - couple seconds delay)
+        //$this->sendCommentEmails($comment,$entity,$resArr);
     }
 
 
@@ -279,44 +279,6 @@ class FosCommentListener implements EventSubscriberInterface {
             return $authorTypeArr;
         }
 
-//        //check if requester
-//        if( $project->getSubmitter() && $project->getSubmitter()->getId() == $user->getId() ) {
-//            //return "Submitter";
-//            $authorTypeArr['type'] = "Requester";
-//            $authorTypeArr['description'] = "Submitter";
-//            return $authorTypeArr;
-//        }
-//        if( $project->getPrincipalInvestigators()->contains($user) ) {
-//            //return "Principal Investigator";
-//            $authorTypeArr['type'] = "Requester";
-//            $authorTypeArr['description'] = "Principal Investigator";
-//            return $authorTypeArr;
-//        }
-//        if( $project->getCoInvestigators()->contains($user) ) {
-//            //return "Co-Investigator";
-//            $authorTypeArr['type'] = "Requester";
-//            $authorTypeArr['description'] = "Co-Investigator";
-//            return $authorTypeArr;
-//        }
-//        if( $project->getPathologists()->contains($user) ) {
-//            //return "Pathologist";
-//            $authorTypeArr['type'] = "Requester";
-//            $authorTypeArr['description'] = "Pathologist";
-//            return $authorTypeArr;
-//        }
-//        if( $project->getContacts()->contains($user) ) {
-//            //return "Contact";
-//            $authorTypeArr['type'] = "Requester";
-//            $authorTypeArr['description'] = "Contact";
-//            return $authorTypeArr;
-//        }
-//        if( $project->getBillingContacts()->contains($user) ) {
-//            //return "Billing Contact";
-//            $authorTypeArr['type'] = "Requester";
-//            $authorTypeArr['description'] = "Billing Contact";
-//            return $authorTypeArr;
-//        }
-
         if( $entity->getEntityName() == "Project" ) {
             return $this->getProjectRequesterAuthorType($entity,$user);
         }
@@ -416,27 +378,32 @@ class FosCommentListener implements EventSubscriberInterface {
         if( $entityName == "Request" ) {
             $entityName = "TransResRequest";
         }
+        //exit("Find entity by ID=".$entityId."; namespace=".$bundleName.':'.$entityName);
 
         if( $bundleName && $entityId ) {
             $entity = $this->em->getRepository($bundleName.':'.$entityName)->find($entityId);
         }
 
-        if( !$entity ) {
-            exit("No entity found by ID=".$entityId."; namespace=".$bundleName.':'.$entityName);
-        }
+//        if( !$entity ) {
+//            exit("No entity found by ID=".$entityId."; namespace=".$bundleName.':'.$entityName);
+//        }
 
         return $entity;
     }
 
     public function getStateStrFromComment($comment) {
         $entity = null;
-        //get state from "transres-request-20-billing"
+        //get state from "transres-request-20-billing" or "transres-Project-9-irb_review"
         $threadId = $comment->getThread()->getId();
         $idArr = explode("-",$threadId);
 
         $stateStr = null;
-        if( count($idArr) > 4 ) {
-            $stateStr = $idArr[4];  //irb_review
+        if( count($idArr) >= 4 ) {
+            $stateStr = $idArr[3];  //irb_review
+        }
+
+        if( !$stateStr ) {
+            throw new \Exception('State not found by threadId='.$threadId);
         }
 
         return $stateStr;

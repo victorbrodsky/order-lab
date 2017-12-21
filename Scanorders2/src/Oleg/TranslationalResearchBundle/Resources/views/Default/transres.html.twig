@@ -425,30 +425,6 @@
     {% endif %}
 
 {% endmacro %}
-{#{% macro projectReviewsEnabledLinkActions_old(project,reviews,cycle) %}#}
-    {#{% set actionLinks = null %}#}
-    {#{% for review in reviews %}#}
-        {#{{ transres.projectSingleReview(project,review,cycle,'transres-irbreviews','noprototype',sitename,showAddDeleteBtn,addReviewButtons) }}#}
-        {#{{ transres.reviewEnabledLinkActionsHeader(project,review,cycle) }}#}
-        {#{% if#}
-            {#cycle == "show" and#}
-            {#review.id and#}
-            {#transres_util.isUserAllowedReview(review) and#}
-            {#transres_util.isReviewCorrespondsToState(review)#}
-        {#%}#}
-            {#{% set actionLinks = transres_util.getReviewEnabledLinkActions(review) %}#}
-            {#{% for actionLink in actionLinks %}#}
-                    {#{{ actionLink|raw }}#}
-            {#{% endfor %}#}
-        {#{% endif %}#}
-    {#{% endfor %}#}
-    {#{% if cycle == "show" and actionLinks %}#}
-        {#{% if actionLinks|length > 0 %}#}
-            {#{% set threadId = "transres-" ~ project.vars.value.getEntityName() ~ "-" ~  project.vars.value.id ~ "-" ~ review.getStateStr() %}#}
-            {#{% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': threadId} %}#}
-        {#{% endif %}#}
-    {#{% endif %}#}
-{#{% endmacro %}#}
 
 {#show allowed transition to links#}
 {% macro projectReviewsEnabledLinkActions(project,reviews,cycle) %}
@@ -471,7 +447,7 @@
             {% set actionReviewLinks = transres_util.getReviewEnabledLinkActions(review) %}
             {% set actionLinks = actionLinks|merge({ (loop.index0): actionReviewLinks}) %}
 
-            {% set threadId = "transres-" ~ project.vars.value.getEntityName() ~ "-" ~ project.id ~ "-" ~ review.getStateStr() %}
+            {% set threadId = "transres-" ~ project.getEntityName() ~ "-" ~ project.id ~ "-" ~ review.getStateStr() %}
             {#{% set threadIds = threadIds|merge({ (loop.index0): threadId}) %}#}
         {% else %}
             {#no getReviewEnabledLinkActions<br>#}

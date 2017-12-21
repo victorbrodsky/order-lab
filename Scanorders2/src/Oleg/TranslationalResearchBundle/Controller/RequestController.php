@@ -917,7 +917,11 @@ class RequestController extends Controller
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $transresUtil = $this->container->get('transres_util');
+        $transresRequestUtil = $this->get('transres_request_util');
         $routeName = $request->get('_route');
+
+        $billingStateChoiceArr = $transresRequestUtil->getBillingStateArr();
+        $progressStateChoiceArr = $transresRequestUtil->getProgressStateArr();
 
         $params = array(
             'cycle' => $cycle,
@@ -927,11 +931,14 @@ class RequestController extends Controller
             'SecurityAuthChecker' => $this->get('security.authorization_checker'),
             'transresRequest' => $transresRequest,
             'routeName' => $routeName,
+            'saveAsUpdate' => false,
             'saveAsDraft' => false,
             'saveAsComplete' => false,
             'updateRequest' => false,
             //'projects' => null,
-            'availableProjects' => null
+            'availableProjects' => null,
+            'billingStateChoiceArr' => $billingStateChoiceArr,
+            'progressStateChoiceArr' => $progressStateChoiceArr,
         );
 
         $params['admin'] = false;
@@ -966,6 +973,7 @@ class RequestController extends Controller
 
         if( $cycle == "edit" ) {
             $disabled = false;
+            $params['saveAsUpdate'] = true;
             $params['saveAsDraft'] = true;
             $params['saveAsComplete'] = true;
         }

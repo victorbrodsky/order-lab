@@ -54,13 +54,19 @@ class TransResRequestType extends AbstractType
 
         if( $this->params['cycle'] != 'new' ) {
 
-//            $builder->add('state',ChoiceType::class, array(
-//                'label' => 'State:',
-//                'required' => false,
-//                'disabled' => $this->params['disabledState'],
-//                'choices' => $this->params['stateChoiceArr'],
-//                'attr' => array('class' => 'combobox'),
-//            ));
+            $builder->add('billingState',ChoiceType::class, array(
+                'label' => 'Billing State:',
+                'required' => false,
+                'choices' => $this->params['billingStateChoiceArr'],
+                'attr' => array('class' => 'combobox'),
+            ));
+
+            $builder->add('progressState',ChoiceType::class, array(
+                'label' => 'Progress State:',
+                'required' => false,
+                'choices' => $this->params['progressStateChoiceArr'],
+                'attr' => array('class' => 'combobox'),
+            ));
 
 //            $builder->add('approvalDate', DateType::class, array(
 //                'widget' => 'single_text',
@@ -246,6 +252,12 @@ class TransResRequestType extends AbstractType
             $builder->add('saveAsDraft', SubmitType::class, array(
                 'label' => 'Save Request as Draft',
                 'attr' => array('class' => 'btn btn-warning')
+            ));
+        }
+        if( $this->params['saveAsUpdate'] === true ) {
+            $builder->add('saveAsUpdate', SubmitType::class, array(
+                'label' => 'Update',
+                'attr' => array('class'=>'btn btn-warning')
             ));
         }
         if( $this->params['saveAsComplete'] === true ) {

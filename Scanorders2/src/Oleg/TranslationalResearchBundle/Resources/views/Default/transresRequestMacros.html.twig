@@ -67,6 +67,12 @@
 
                     <br>
 
+                    {% if form.billingState is defined %}
+                        {{ formmacros.field(form.billingState) }}
+                    {% endif %}
+                    {% if form.progressState is defined %}
+                        {{ formmacros.field(form.progressState) }}
+                    {% endif %}
                     {% if form.fundedAccountNumber is defined %}
                         {{ formmacros.field(form.fundedAccountNumber) }}
                     {% endif %}
@@ -225,7 +231,7 @@
                         {{ transresRequestMacros.invoiceItemForm(invoiceItem, cycle, 'transres-invoiceItems', 'noprototype', sitename, 1) }}
                     {% endfor %}
 
-                    {% if cycle != "show" %}
+                    {% if cycle != "show" and cycle != "download" %}
                         {{ usermacros.addNewObjectBtn(cycle,'transres-invoiceItems','Add New Item',null,'transresInvoiceItemListeneres') }}
                     {% endif %}
                 </div>

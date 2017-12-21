@@ -43,6 +43,10 @@ services:
         class: Oleg\TranslationalResearchBundle\Util\TransResFormNodeUtil
         arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
+    transres_pdf_generator:
+        class: Oleg\TranslationalResearchBundle\Util\PdfGenerator
+        arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+
 
 framework:
     workflows:

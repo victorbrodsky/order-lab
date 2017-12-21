@@ -29,7 +29,7 @@
         {% endblock %}
 
         {% block fos_comment_comment_new_form %}
-            <form class="fos_comment_comment_new_form" action="{{ url('fos_comment_post_thread_comments', url_parameters) }}" data-parent="{{ parent.id|default() }}" method="POST">
+            <form class="fos_comment_comment_new_form" id="fos_comment_comment_new_form_oleg" action="{{ url('fos_comment_post_thread_comments', url_parameters) }}" data-parent="{{ parent.id|default() }}" method="POST">
 
                 {% block fos_comment_form_fields %}
                     <div class="fos_comment_form_errors">
@@ -50,7 +50,7 @@
                         {#{% if parent is null %}#}
                             {#{% set postBtnStyle = "display: none;" %}#}
                         {#{% endif %}#}
-                        <input style="{{ postBtnStyle }}" type="submit" value="{% trans from 'FOSCommentBundle' %}fos_comment_comment_new_submit{% endtrans %}" />
+                        <input class="fos_comment_submit_btn" id="fos_comment_submit_btn_oleg" style="{{ postBtnStyle }}" type="submit" value="{% trans from 'FOSCommentBundle' %}fos_comment_comment_new_submit{% endtrans %}" />
                     {% endblock %}
                 </div>
 

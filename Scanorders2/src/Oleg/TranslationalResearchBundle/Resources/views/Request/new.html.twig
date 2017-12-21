@@ -59,6 +59,9 @@
         {% endif %}
 
 
+        {% if form.saveAsUpdate is defined %}
+            {{ form_widget(form.saveAsUpdate) }}
+        {% endif %}
         {% if form.saveAsDraft is defined %}
             {{ form_widget(form.saveAsDraft) }}
         {% endif %}

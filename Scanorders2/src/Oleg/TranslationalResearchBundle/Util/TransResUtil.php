@@ -512,11 +512,11 @@ class TransResUtil
     public function setTransition( $project, $review, $transitionName, $to=null, $testing=false ) {
 
         if( !$review ) {
-            throw $this->createNotFoundException('Review object does not exist');
+            throw new \Exception('Review object does not exist');
         }
 
         if( !$review->getId() ) {
-            throw $this->createNotFoundException('Review object ID is null');
+            throw new \Exception('Review object ID is null');
         }
 
         //echo "transitionName=".$transitionName."<br>";
@@ -530,7 +530,7 @@ class TransResUtil
             $transition = $transresUtil->getTransitionByName($project, $transitionName);
             $tos = $transition->getTos();
             if (count($tos) != 1) {
-                throw $this->createNotFoundException('Available to state is not a single state; count=' . $tos . ": " . implode(",", $tos));
+                throw new \Exception('Available to state is not a single state; count=' . $tos . ": " . implode(",", $tos));
             }
             $to = $tos[0];
         }
@@ -1427,13 +1427,13 @@ class TransResUtil
 
         $reviewEntityName = $this->getReviewClassNameByState($state);
         if( !$reviewEntityName ) {
-            throw $this->createNotFoundException('Unable to find Review Entity Name by state='.$state);
+            throw new \Exception('Unable to find Review Entity Name by state='.$state);
         }
         //echo "reviewEntityName=".$reviewEntityName."<br>";
 
         $reviewObject = $this->em->getRepository('OlegTranslationalResearchBundle:'.$reviewEntityName)->find($reviewId);
         if( !$reviewObject ) {
-            throw $this->createNotFoundException('Unable to find '.$reviewEntityName.' by id='.$reviewId);
+            throw new \Exception('Unable to find '.$reviewEntityName.' by id='.$reviewId);
         }
 
         return $reviewObject;
@@ -1442,7 +1442,7 @@ class TransResUtil
     public function getReviewsByProjectAndState($project,$state) {
         $reviewEntityName = $this->getReviewClassNameByState($state);
         if( !$reviewEntityName ) {
-            throw $this->createNotFoundException('Unable to find Review Entity Name by state='.$state);
+            throw new \Exception('Unable to find Review Entity Name by state='.$state);
         }
 
         $reviews = $this->findReviewObjectsByProjectAndAnyReviewers($reviewEntityName,$project);
@@ -1455,14 +1455,14 @@ class TransResUtil
 //
 //        $reviewEntityName = $this->getReviewClassNameByState($state);
 //        if( !$reviewEntityName ) {
-//            throw $this->createNotFoundException('Unable to find Review Entity Name by state='.$state);
+//            throw new \Exception('Unable to find Review Entity Name by state='.$state);
 //        }
 //        //echo "reviewEntityName=".$reviewEntityName."<br>";
 //
 //        if(1) {
 //            $reviewObject = $this->em->getRepository('OlegTranslationalResearchBundle:'.$reviewEntityName)->find($reviewId);
 //            if( !$reviewObject ) {
-//                throw $this->createNotFoundException('Unable to find '.$reviewEntityName.' by id='.$reviewId);
+//                throw new \Exception('Unable to find '.$reviewEntityName.' by id='.$reviewId);
 //            }
 //            return $reviewObject;
 //        } else {

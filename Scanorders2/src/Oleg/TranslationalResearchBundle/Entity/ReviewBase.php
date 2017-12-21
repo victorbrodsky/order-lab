@@ -307,4 +307,8 @@ class ReviewBase
 
         return null;
     }
+
+    public function getEntityName() {
+        return "Project";
+    }
 }

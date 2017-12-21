@@ -19,6 +19,7 @@ namespace Oleg\TranslationalResearchBundle\Util;
 
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Oleg\TranslationalResearchBundle\Entity\Invoice;
 use Oleg\TranslationalResearchBundle\Entity\InvoiceItem;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -320,6 +321,7 @@ class TransResRequestUtil
 
     public function getProgressStateArr() {
         $stateArr = array(
+            'draft',
             'active',
             'canceled',
             'investigator',
@@ -350,6 +352,7 @@ class TransResRequestUtil
 
     public function getBillingStateArr() {
         $stateArr = array(
+            'draft',
             'active',
             'approvedInvoicing',
             'canceled',
@@ -805,11 +808,11 @@ class TransResRequestUtil
     public function setRequestTransition( $transresRequest, $statMachineType, $transitionName, $to, $testing ) {
 
         if( !$transresRequest ) {
-            throw $this->createNotFoundException('Request object does not exist');
+            throw new \Exception('Request object does not exist');
         }
 
         if( !$transresRequest->getId() ) {
-            throw $this->createNotFoundException('Request object ID is null');
+            throw new \Exception('Request object ID is null');
         }
 
         //echo "transitionName=".$transitionName."<br>";
@@ -835,11 +838,11 @@ class TransResRequestUtil
             //Get Transition and $to
             $transition = $this->getTransitionByName($transresRequest,$transitionName,$statMachineType);
             if( !$transition ) {
-                throw $this->createNotFoundException($statMachineType.' transition not found by name '.$transitionName);
+                throw new \Exception($statMachineType.' transition not found by name '.$transitionName);
             }
             $tos = $transition->getTos();
             if (count($tos) != 1) {
-                throw $this->createNotFoundException('Available to state is not a single state; count=' . $tos . ": " . implode(",", $tos));
+                throw new \Exception('Available to state is not a single state; count=' . $tos . ": " . implode(",", $tos));
             }
             $to = $tos[0];
         }
@@ -889,7 +892,7 @@ class TransResRequestUtil
                     //TODO: create invoice entity and pdf
                     $invoice = $this->createNewInvoice($transresRequest,$user);
                     $invoice = $this->createSubmitNewInvoice($transresRequest,$invoice);
-                    $addMsg = $addMsg . "<br>New Invoice ID".$invoice->Oid()." has been successfully created for the request ID ".$transresRequest->getOid();
+                    $addMsg = $addMsg . "<br>New Invoice ID".$invoice->getOid()." has been successfully created for the request ID ".$transresRequest->getOid();
                 }
 
                 //event log
@@ -1208,7 +1211,7 @@ class TransResRequestUtil
         $newline = "\r\n";
 
         $project = $transresRequest->getProject();
-        $projectTitle = $transResFormNodeUtil.getProjectFormNodeFieldByName($project,"Title");
+        $projectTitle = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"Title");
         
         $emails = array();
         //1) get ROLE_TRANSRES_BILLING_ADMIN
@@ -1239,7 +1242,7 @@ class TransResRequestUtil
     }
 
     public function createNewInvoice($transresRequest,$user) {
-        $userDownloadUtil = $this->get('user_download_utility');
+        $userDownloadUtil = $this->container->get('user_download_utility');
 
         $invoice = new Invoice($user);
 
@@ -1325,10 +1328,15 @@ class TransResRequestUtil
             $invoice->addInvoiceItem($invoiceItem);
         }
 
+        //calculate Subtotal and Total
+        $total = $this->getTransResRequestFeeHtml($transresRequest);
+        $invoice->setSubTotal($total);
+        $invoice->setTotal($total);
+
         return $invoice;
     }
     public function createSubmitNewInvoice($transresRequest,$invoice) {
-        $transresUtil = $this->get('transres_util');
+        $transresUtil = $this->container->get('transres_util');
 
         $this->em->persist($invoice);
         $this->em->flush();
@@ -1349,5 +1357,6 @@ class TransResRequestUtil
 
         return $invoice;
     }
+    
     
 }
