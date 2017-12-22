@@ -12,6 +12,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
+use Oleg\UserdirectoryBundle\Entity\User;
+
 /**
  * Invoice controller.
  *
@@ -107,92 +109,6 @@ class InvoiceController extends Controller
         //$user = null; //testing
         $cycle = "new";
 
-        if(0) {
-            $userDownloadUtil = $this->get('user_download_utility');
-            $invoice = new Invoice($user);
-
-            $invoice->generateOid($transresRequest);
-
-            $transresRequest->addInvoice($invoice);
-
-            $newline = "\n";
-
-            //pre-populate salesperson
-            $transresRequestContact = $transresRequest->getContact();
-            if ($transresRequestContact) {
-                $invoice->setSalesperson($transresRequestContact);
-            }
-
-            ////////////// from //////////////
-            $from = "Weill Cornell Medicine" . $newline . "Department of Pathology and" . $newline . "Laboratory Medicine";
-            $from = $from . $newline . "1300 York Avenue, C302/Box 69 New York, NY 10065";
-
-            if ($invoice->getSalesperson()) {
-                $sellerStr = "";
-
-                $phone = $invoice->getSalesperson()->getSinglePhoneAndPager();
-                if (isset($phone['phone'])) {
-                    $from = $from . $newline . "Tel: " . $phone['phone'];
-                    $sellerStr = $sellerStr . " Tel: " . $phone['phone'];
-                }
-
-                $fax = $invoice->getSalesperson()->getAllFaxes();
-                if ($fax) {
-                    $from = $from . $newline . "Fax: " . $fax;
-                    $sellerStr = $sellerStr . " Fax: " . $fax;
-                }
-
-                $email = $invoice->getSalesperson()->getSingleEmail();
-                if ($email) {
-                    $from = $from . $newline . "Email: " . $email;
-                    $sellerStr = $sellerStr . " Email: " . $email;
-                }
-            }
-
-            $invoice->setInvoiceFrom($from);
-            ////////////// EOF from //////////////
-
-            //footer:
-            $footer = "Make check payable & mail to: Weill Cornell Medicine, 1300 York Ave, C302/Box69, New York, NY 10065 (Attn: Jeffrey Hernandez)";
-            $invoice->setFooter($footer);
-
-            //footer2:
-            $invoice->setFooter2($sellerStr);
-
-//        //footer3:
-//        $footer3 = "------------------ Detach and return with payment ------------------";
-//        $invoice->setFooter3($footer3);
-
-            //pre-populate dueDate +30 days
-            $dueDateStr = date('Y-m-d', strtotime("+30 days"));
-            $dueDate = new \DateTime($dueDateStr);
-            $invoice->setDueDate($dueDate);
-
-            //pre-populate PIs
-            $transreqPis = $transresRequest->getPrincipalInvestigators();
-            foreach ($transreqPis as $transreqPi) {
-                $invoice->addPrincipalInvestigator($transreqPi);
-            }
-
-            //invoiceTo (text): the first PI
-            $billToUser = null;
-            $pis = $invoice->getPrincipalInvestigators();
-            if (count($pis) > 0) {
-                $billToUser = $pis[0];
-            }
-            if ($billToUser) {
-                $userlabel = $userDownloadUtil->getLabelSingleUser($billToUser, $newline, true);
-                if ($userlabel) {
-                    $invoice->setInvoiceTo($userlabel);
-                }
-            }
-
-            //populate invoice items corresponding to the multiple requests
-            $invoiceItems = $transresRequestUtil->getRequestItems($transresRequest);
-            foreach ($invoiceItems as $invoiceItem) {
-                $invoice->addInvoiceItem($invoiceItem);
-            }
-        }//if(0)
         $invoice = $transresRequestUtil->createNewInvoice($transresRequest,$user);
 
         $form = $this->createInvoiceForm($invoice,$cycle);
@@ -378,16 +294,28 @@ class InvoiceController extends Controller
     }
 
     /**
-     * Finds and displays a invoice entity.
+     * Generate Invoice PDF
      *
-     * @Route("/generate-invoice-pdf/{id}", name="translationalresearch_invoice_generate_pdf")
+     * @Route("/generate-invoice-pdf/{id}/{oid}", name="translationalresearch_invoice_generate_pdf")
      * @Template("OlegTranslationalResearchBundle:Invoice:new.html.twig")
      * @Method("GET")
      */
-    public function generateInvoicePdfAction(Request $request, Invoice $invoice) {
-        $transresPdfUtil = $this->get('transres_pdf_generator');
+    public function generateInvoicePdfAction(Request $request, TransResRequest $transresRequest, $oid) {
 
-        $res = $transresPdfUtil->generateInvoicePdf($invoice);
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $transresPdfUtil = $this->get('transres_pdf_generator');
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        $invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($oid);
+        if( !$invoice ) {
+            throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
+        }
+
+        $res = $transresPdfUtil->generateInvoicePdf($transresRequest,$invoice,$user);
         
         $filename = $res['filename'];
         $pdf = $res['pdf'];
@@ -395,14 +323,16 @@ class InvoiceController extends Controller
 
         $msg = "PDF has been created for Invoice ID " . $invoice->getOid() . "; filename=".$filename."; size=".$size;
 
-        exit("<br><br>".$msg);
+        //exit("<br><br>".$msg);
 
         $this->get('session')->getFlashBag()->add(
             'notice',
             $msg
         );
 
-        return $this->redirectToRoute('translationalresearch_invoice_index_all');
+        //return $this->redirectToRoute('translationalresearch_invoice_index_all');
+        return $this->redirectToRoute('translationalresearch_invoice_show', array('id'=>$transresRequest->getId(), 'oid' => $invoice->getOid()));
+
     }
 
     /**
@@ -447,17 +377,17 @@ class InvoiceController extends Controller
         }
 
         $cycle = "download";
-        $routeName = $request->get('_route');
+        //$routeName = $request->get('_route');
 
         //$form = $this->createInvoiceForm($invoice,$cycle);
 
-        $deleteForm = $this->createDeleteForm($invoice);
+        //$deleteForm = $this->createDeleteForm($invoice);
 
         return array(
             'transresRequest' => $transresRequest,
             'invoice' => $invoice,
             //'form' => $form->createView(),
-            'delete_form' => $deleteForm->createView(),
+            //'delete_form' => $deleteForm->createView(),
             'cycle' => $cycle,
             'title' => "Invoice for the Request ID ".$transresRequest->getOid(),
         );

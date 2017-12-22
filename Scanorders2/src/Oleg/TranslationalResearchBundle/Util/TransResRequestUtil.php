@@ -1251,6 +1251,7 @@ class TransResRequestUtil
         $transresRequest->addInvoice($invoice);
 
         $newline = "\n";
+        //$newline = "<br>";
 
         //pre-populate salesperson
         $transresRequestContact = $transresRequest->getContact();

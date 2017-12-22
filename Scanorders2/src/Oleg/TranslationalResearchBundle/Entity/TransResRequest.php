@@ -159,6 +159,8 @@ class TransResRequest {
     private $supportEndDate;
 
     /**
+     * Billing contact for Invoice
+     *
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(name="contact", referencedColumnName="id", nullable=true)
      */

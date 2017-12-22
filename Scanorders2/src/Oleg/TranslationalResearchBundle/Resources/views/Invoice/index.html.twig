@@ -62,6 +62,16 @@
                                 {#>Delete</a>#}
                             {#</li>#}
 
+                            {#{% if is_granted('ROLE_TRANSRES_ADMIN') %}#}
+                                <li>
+                                    <a href="{{ path('translationalresearch_invoice_download', { 'id': transresRequest.getId(), 'oid': invoice.oid }) }}">PDF Invoice Preview</a>
+                                </li>
+
+                                <li>
+                                    <a href="{{ path('translationalresearch_invoice_generate_pdf', { 'id': transresRequest.getId(), 'oid': invoice.oid }) }}">Generate Invoice's PDF</a>
+                                </li>
+                            {#{% endif %}#}
+
                         </ul>
                     </div>
                 </td>

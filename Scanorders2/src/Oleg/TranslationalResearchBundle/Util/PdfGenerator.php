@@ -33,16 +33,19 @@ class PdfGenerator
     }
 
 
-    public function generateInvoicePdf( $entity ) {
+    public function generateInvoicePdf( $transresRequest, $entity, $authorUser ) {
 
         ini_set('max_execution_time', 300); //300 seconds = 5 minutes
         $logger = $this->container->get('logger');
 
         $userSecUtil = $this->container->get('user_security_utility');
-        $systemUser = $userSecUtil->findSystemUser();
+
+        if( !$authorUser ) {
+            $authorUser = $userSecUtil->findSystemUser();
+        }
 
         //Assume invoice has only one request: one request has many invoices
-        $transresRequest = $entity->getTransresRequests()->first();
+        //$transresRequest = $entity->getTransresRequests()->first();
 
         //generate file name
         $fileFullReportUniqueName = $this->constructUniqueFileName($entity,"Invoice-PDF");
@@ -66,20 +69,22 @@ class PdfGenerator
             chmod($reportPath, 0700);
         }
 
-        $outdir = $reportPath.'/temp_'.$entity->getOid().'/';
+        //$outdir = $reportPath.'/temp_'.$entity->getOid().'/';
+        $outdir = $reportPath.'/'.$entity->getOid().'/';
 
         //echo "before generateApplicationPdf id=".$id."; outdir=".$outdir."<br>";
         //0) generate application pdf
-        $applicationFilePath = $outdir . "application_ID" . $entity->getOid() . ".pdf";
+        //$applicationFilePath = $outdir . "application_ID" . $entity->getOid() . ".pdf";
+        $applicationFilePath = $outdir . $fileFullReportUniqueName;
+
         $this->generatePdf($transresRequest,$entity,$applicationFilePath);
         //$logger->notice("Successfully Generated Application PDF from HTML for ID=".$id."; file=".$applicationFilePath);
 
-        $filenamePdf = $reportPath . '/' . $fileFullReportUniqueName;
+        //$filenamePdf = $reportPath . '/' . $fileFullReportUniqueName;
 
         //4) add PDF to invoice DB
-        $filesize = filesize($filenamePdf);
-        $deleteOldFileFromServer = false;
-        $documentPdf = $this->createInvoicePdfDB($entity,"document",$systemUser,$fileFullReportUniqueName,$uploadReportPath,$filesize,'Invoice PDF',$deleteOldFileFromServer);
+        $filesize = filesize($applicationFilePath);
+        $documentPdf = $this->createInvoicePdfDB($entity,"document",$authorUser,$fileFullReportUniqueName,$uploadReportPath,$filesize,'Invoice PDF');
         if( $documentPdf ) {
             $documentPdfId = $documentPdf->getId();
         } else {
@@ -90,14 +95,14 @@ class PdfGenerator
         //echo $event."<br>";
         //$logger->notice($event);
 
-        $userSecUtil->createUserEditEvent($this->container->getParameter('translationalresearch.sitename'),$event,$systemUser,$entity,null,'Invoice PDF Created');
+        $userSecUtil->createUserEditEvent($this->container->getParameter('translationalresearch.sitename'),$event,$authorUser,$entity,null,'Invoice PDF Created');
 
         //delete application temp folder
-        $this->deleteDir($outdir);
+        //$this->deleteDir($outdir);
 
         $res = array(
             'filename' => $fileFullReportUniqueName,
-            'pdf' => $filenamePdf,
+            'pdf' => $applicationFilePath,
             'size' => $filesize
         );
 
@@ -112,14 +117,21 @@ class PdfGenerator
 
         $currentDate = new \DateTime();
         $subjectUser = $entity->getSubmitter();
+        $submitterName = $subjectUser->getUsernameShortest();
+        $submitterName = str_replace(" ","-",$submitterName);
+        $submitterName = str_replace(".","-",$submitterName);
+        if( $submitterName ) {
+            $submitterName = "-" . $submitterName;
+        }
 
         $serverTimezone = date_default_timezone_get(); //server timezone
 
         $filename =
             $filenameStr.
             "-ID".$entity->getOId().
-            "-".$subjectUser->getLastNameUppercase().
-            "-".$subjectUser->getFirstNameUppercase().
+            //"-".$subjectUser->getLastNameUppercase().
+            //"-".$subjectUser->getFirstNameUppercase().
+            $submitterName.
             "-generated-on-".$currentDate->format('m-d-Y').'-at-'.$currentDate->format('h-i-s-a').'_'.$serverTimezone.
             ".pdf";
 
@@ -134,8 +146,9 @@ class PdfGenerator
     //http://wkhtmltopdf.org must be installed on server
     public function generatePdf($transresRequest,$invoice,$applicationOutputFilePath) {
         $logger = $this->container->get('logger');
-
+        $logger->notice("Trying to generate PDF in ".$applicationOutputFilePath);
         if( file_exists($applicationOutputFilePath) ) {
+            //return;
             $logger->notice("generatePdf: unlink file already exists path=" . $applicationOutputFilePath );
             unlink($applicationOutputFilePath);
         }
@@ -144,8 +157,7 @@ class PdfGenerator
 
         //generate application URL
         $router = $this->container->get('router');
-
-        $context = $this->container->get('router')->getContext();
+        $context = $router->getContext();
 
         //http://192.168.37.128/order/app_dev.php/translational-research/download-invoice-pdf/49
         $context->setHost('localhost');
@@ -176,7 +188,7 @@ class PdfGenerator
     }
 
     //create invoice report in DB
-    protected function createInvoicePdfDB($holderEntity,$holderMethodSingularStr,$author,$uniqueTitle,$path,$filesize,$documentType,$deleteOldFileFromServer) {
+    protected function createInvoicePdfDB($holderEntity,$holderMethodSingularStr,$author,$uniqueTitle,$path,$filesize,$documentType) {
 
         $logger = $this->container->get('logger');
 

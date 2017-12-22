@@ -210,6 +210,15 @@
                 <br><br>
             {% endif %}
         </p>
+
+        <p>
+            <a href="{{ path('translationalresearch_invoice_download', { 'id': transresRequest.getId(), 'oid': invoice.oid }) }}" target="_blank">PDF Invoice Preview</a>
+        </p>
+
+        <p>
+            <a href="{{ path('translationalresearch_invoice_generate_pdf', { 'id': transresRequest.getId(), 'oid': invoice.oid }) }}" target="_blank">Generate Invoice's PDF</a>
+        </p>
+
     {% endif %}
 
     {% if cycle == "edit" %}
