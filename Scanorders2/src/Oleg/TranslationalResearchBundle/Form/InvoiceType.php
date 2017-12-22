@@ -242,7 +242,16 @@ class InvoiceType extends AbstractType
             ));
         }
 
-
+        $builder->add('documents', CollectionType::class, array(
+            'entry_type' => DocumentType::class,
+            'label' => 'PDF(s):',
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__documentsid__',
+        ));
 
 
         //Buttons

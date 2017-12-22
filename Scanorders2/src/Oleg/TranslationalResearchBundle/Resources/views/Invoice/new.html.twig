@@ -187,12 +187,31 @@
         {% endif %}
         <br><br>
 
+        <p>
+            <div class="well form-element-holder user-documents">
+                <label class="col-xs-12 control-label">Invoice PDFs</label>
+                <div class="row withpaddingtop">
+                    <div class="col-xs-12">
+                        {{ usermacros.documentsContainer(form,form.documents,cycle,'noprototype',8,'default','PDF') }}
+                    </div>
+                </div>
+            </div>
+        </p>
+
+        <br><br>
+
+
         {% if form.save is defined %}
+            <p>
             {{ form_widget(form.save) }}
+            </p>
         {% endif %}
         {% if form.edit is defined %}
+            <p>
             {{ form_widget(form.edit) }}
+            </p>
         {% endif %}
+    
 
     {{ form_end(form) }}
 

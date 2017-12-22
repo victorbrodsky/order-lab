@@ -70,7 +70,8 @@ class PdfGenerator
         }
 
         //$outdir = $reportPath.'/temp_'.$entity->getOid().'/';
-        $outdir = $reportPath.'/'.$entity->getOid().'/';
+        //$outdir = $reportPath.'/'.$entity->getOid().'/';
+        $outdir = $reportPath.'/';
 
         //echo "before generateApplicationPdf id=".$id."; outdir=".$outdir."<br>";
         //0) generate application pdf
