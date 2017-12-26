@@ -11,9 +11,9 @@
 
 
 {% block header %}
-    <div class="text-center col-xs-12">
-        <h1 style="color:#ff633b;"><b>{{ invoice.status|upper }}</b></h1>
-    </div>
+    {#<div class="text-center col-xs-12">#}
+        {#<h1 style="color:#ff633b;"><b>{{ invoice.status|upper }}</b></h1>#}
+    {#</div>#}
 {% endblock %}
 
 {% block contentleft %}
@@ -121,18 +121,18 @@
             {% endfor %}
             <tr>
                 <td COLSPAN=3 ALIGN=CENTER></td>
-                <td>Subtotal</td>
+                <td>Subtotal ($)</td>
                 <td>{{ invoice.subTotal }}</td>
             </tr>
             <tr>
                 <td COLSPAN=3 ALIGN=CENTER></td>
-                <td><b>Total Amt</b></td>
+                <td><b>Total Amt ($)</b></td>
                 <td>{{ invoice.total }}</td>
             </tr>
             <tr>
                 <td COLSPAN=3 ALIGN=CENTER></td>
-                <td><b>Paid</b></td>
-                <td></td>
+                <td><b>{{ invoice.status }}</b></td>
+                <td>{{ invoice.paid }}</td>
             </tr>
         </table>
     </div>

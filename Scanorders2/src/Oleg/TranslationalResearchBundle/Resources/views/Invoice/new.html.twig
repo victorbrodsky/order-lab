@@ -189,29 +189,27 @@
 
         <p>
             <div class="well form-element-holder user-documents">
-                <label class="col-xs-12 control-label">Invoice PDFs</label>
+                <label class="col-xs-12 control-label">Invoice in PDF(s)</label>
                 <div class="row withpaddingtop">
                     <div class="col-xs-12">
-                        {{ usermacros.documentsContainer(form,form.documents,cycle,'noprototype',8,'default','PDF') }}
+                        {{ usermacros.documentsContainer(form,form.documents,cycle,'noprototype',8,'default','PDF','asForm',false) }}
                     </div>
                 </div>
             </div>
         </p>
 
-        <br><br>
+        <p>
+            {% if form.save is defined %}
+                {{ form_widget(form.save) }}
+            {% endif %}
+            {% if form.edit is defined %}
+                {{ form_widget(form.edit) }}
+            {% endif %}
+            {% if form.saveAndSend is defined %}
+                {{ form_widget(form.saveAndSend) }}
+            {% endif %}
+        </p>
 
-
-        {% if form.save is defined %}
-            <p>
-            {{ form_widget(form.save) }}
-            </p>
-        {% endif %}
-        {% if form.edit is defined %}
-            <p>
-            {{ form_widget(form.edit) }}
-            </p>
-        {% endif %}
-    
 
     {{ form_end(form) }}
 
@@ -220,15 +218,15 @@
             <a class="btn btn-warning" href="{{ path(translationalresearch_sitename~'_invoice_edit',{'id': transresRequest.getId(),'oid':invoice.oid}) }}">Edit Invoice</a>
         </p>
 
-        <p>
-            {% if is_granted('ROLE_TRANSRES_ADMIN') %}
+        {#<p>#}
+            {#{% if is_granted('ROLE_TRANSRES_ADMIN') %}#}
                 {#{{ form_start(delete_form) }}#}
-                {{ form_start(delete_form,{'attr':{'onsubmit':"return confirm('Do you really want to delete this invoice?');"}}) }}
-                    <input class="btn btn-danger" type="submit" value="Delete">
-                {{ form_end(delete_form) }}
-                <br><br>
-            {% endif %}
-        </p>
+                {#{{ form_start(delete_form,{'attr':{'onsubmit':"return confirm('Do you really want to delete this invoice?');"}}) }}#}
+                    {#<input class="btn btn-danger" type="submit" value="Delete">#}
+                {#{{ form_end(delete_form) }}#}
+                {#<br><br>#}
+            {#{% endif %}#}
+        {#</p>#}
 
         <p>
             <a href="{{ path('translationalresearch_invoice_download', { 'id': transresRequest.getId(), 'oid': invoice.oid }) }}" target="_blank">PDF Invoice Preview</a>
@@ -241,17 +239,16 @@
     {% endif %}
 
     {% if cycle == "edit" %}
-        <br><br>
         <p>
             <a class="btn btn-primary" href="{{ path(translationalresearch_sitename~'_invoice_show',{'id': transresRequest.getId(),'oid': invoice.oid }) }}">Cancel</a>
         </p>
 
-        {% if is_granted('ROLE_TRANSRES_ADMIN') %}
-            {{ form_start(delete_form,{'attr':{'onsubmit':"return confirm('Do you really want to delete this invoice?');"}}) }}
-                <input class="btn btn-danger" type="submit" value="Delete">
-            {{ form_end(delete_form) }}
-            <br><br>
-        {% endif %}
+        {#{% if is_granted('ROLE_TRANSRES_ADMIN') %}#}
+            {#{{ form_start(delete_form,{'attr':{'onsubmit':"return confirm('Do you really want to delete this invoice?');"}}) }}#}
+                {#<input class="btn btn-danger" type="submit" value="Delete">#}
+            {#{{ form_end(delete_form) }}#}
+            {#<br><br>#}
+        {#{% endif %}#}
     {% endif %}
 
     {#{% if project and project.id %}#}

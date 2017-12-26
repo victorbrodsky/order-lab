@@ -46,6 +46,7 @@ class InvoiceController extends Controller
         $dql->leftJoin('invoice.submitter','submitter');
         $dql->leftJoin('invoice.salesperson','salesperson');
         $dql->leftJoin('invoice.transresRequests','transresRequests');
+        //$dql->leftJoin('invoice.documents','documents');
 
         $dqlParameters = array();
 
@@ -118,27 +119,13 @@ class InvoiceController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             //exit('new');
 
-            if(0) {
-                $em->persist($invoice);
-                $em->flush();
+            $msg = $transresRequestUtil->createSubmitNewInvoice($transresRequest,$invoice,$form);
 
-                $invoice->generateOid($transresRequest);
-                $em->flush($invoice);
-
-                $msg = "New Invoice has been successfully created for the request ID " . $transresRequest->getOid();
-
-                $this->get('session')->getFlashBag()->add(
-                    'notice',
-                    $msg
-                );
-
-                $eventType = "Invoice Created";
-                $msg = "New Invoice with ID " . $invoice->getOid() . " has been successfully submitted for the request ID " . $transresRequest->getOid();
-                $transresUtil->setEventLog($invoice, $eventType, $msg);
+            if( $form->getClickedButton() && 'saveAndSend' === $form->getClickedButton()->getName() ) {
+                //TODO: generate and send PDF
             }
-            $invoice = $transresRequestUtil->createSubmitNewInvoice($transresRequest,$invoice);
 
-            $msg = "New Invoice has been successfully created for the request ID ".$transresRequest->getOid();
+            //$msg = "New Invoice has been successfully created for the request ID ".$transresRequest->getOid();
 
             $this->get('session')->getFlashBag()->add(
                 'notice',
@@ -181,13 +168,13 @@ class InvoiceController extends Controller
 
         $form = $this->createInvoiceForm($invoice,$cycle);
 
-        $deleteForm = $this->createDeleteForm($invoice);
+        //$deleteForm = $this->createDeleteForm($invoice);
 
         return array(
             'transresRequest' => $transresRequest,
             'invoice' => $invoice,
             'form' => $form->createView(),
-            'delete_form' => $deleteForm->createView(),
+            //'delete_form' => $deleteForm->createView(),
             'cycle' => $cycle,
             'title' => "Invoice for the Request ID ".$transresRequest->getOid(),
         );
@@ -218,7 +205,7 @@ class InvoiceController extends Controller
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $cycle = "edit";
 
-        $deleteForm = $this->createDeleteForm($invoice);
+        //$deleteForm = $this->createDeleteForm($invoice);
 
         //$editForm = $this->createForm('Oleg\TranslationalResearchBundle\Form\InvoiceType', $invoice);
         $editForm = $this->createInvoiceForm($invoice,$cycle);
@@ -250,7 +237,7 @@ class InvoiceController extends Controller
             'transresRequest' => $transresRequest,
             'invoice' => $invoice,
             'form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+            //'delete_form' => $deleteForm->createView(),
             'cycle' => $cycle,
             'title' => "Invoice for the Request ID ".$transresRequest->getOid(),
         );
@@ -264,6 +251,8 @@ class InvoiceController extends Controller
      */
     public function deleteAction(Request $request, Invoice $invoice)
     {
+        exit("Delete is not allowed.");
+
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
@@ -302,17 +291,18 @@ class InvoiceController extends Controller
      */
     public function generateInvoicePdfAction(Request $request, TransResRequest $transresRequest, $oid) {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
-        }
-
         $em = $this->getDoctrine()->getManager();
         $transresPdfUtil = $this->get('transres_pdf_generator');
+        $transresRequestUtil = $this->get('transres_request_util');
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($oid);
         if( !$invoice ) {
             throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
+        }
+
+        if( false === $transresRequestUtil->isInvoiceBillingContact($invoice,$user) ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
         $res = $transresPdfUtil->generateInvoicePdf($transresRequest,$invoice,$user);
@@ -392,6 +382,61 @@ class InvoiceController extends Controller
             'title' => "Invoice for the Request ID ".$transresRequest->getOid(),
         );
     }
+
+    /**
+     * Show the most recent PDF version of invoice
+     *
+     * @Route("/download-recent-invoice-pdf{id}/{oid}", name="translationalresearch_invoice_download_recent")
+     * @Template("OlegTranslationalResearchBundle:Invoice:pdf-show.html.twig")
+     * @Method("GET")
+     */
+    public function downloadRecentPdfAction(Request $request, TransResRequest $transresRequest, $oid)
+    {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $logger = $this->container->get('logger');
+        $routeName = $request->get('_route');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $transresRequestUtil = $this->get('transres_request_util');
+
+        $em = $this->getDoctrine()->getManager();
+        $invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($oid);
+        if( !$invoice ) {
+            throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
+        }
+
+        if( false === $transresRequestUtil->isInvoiceBillingContact($invoice,$user) ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+        }
+
+        //get the most recent PDF document
+        $invoicePDF = $invoice->getRecentPDF();
+
+        if( $invoicePDF ) {
+
+//            $routeName = $request->get('_route');
+//            if( $routeName == "fellapp_view_pdf" ) {
+//                return $this->redirect( $this->generateUrl('fellapp_file_view',array('id' => $reportDocument->getId())) );
+//            } else {
+//                return $this->redirect( $this->generateUrl('fellapp_file_download',array('id' => $reportDocument->getId())) );
+//            }
+
+            return $this->redirect( $this->generateUrl('translationalresearch_file_view',array('id' => $invoicePDF->getId())) );
+
+        } else {
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                'Invoice PDF does not exists.'
+            );
+
+            return $this->redirectToRoute('translationalresearch_invoice_show', array('id'=>$transresRequest->getId(), 'oid' => $invoice->getOid()));
+        }
+    }
+
 
     /**
      * Creates a form to delete a invoice entity.

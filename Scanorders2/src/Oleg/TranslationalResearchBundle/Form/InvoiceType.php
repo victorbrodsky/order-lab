@@ -49,7 +49,12 @@ class InvoiceType extends AbstractType
 
         $builder->add('status', ChoiceType::class, array( //flipped
             'label' => 'Status',
-            'choices' => array("Unpaid"=>"Unpaid", "Paid in Full"=>"Paid in Full", "Paid Partially"=>"Paid Partially"),
+            'choices' => array(
+                "Pending" => "Pending",
+                "Unpaid/Issued" => "Unpaid/Issued",
+                "Paid in Full" => "Paid in Full",
+                "Paid Partially" => "Paid Partially"
+            ),
             'multiple' => false,
             'required' => true,
             'attr' => array('class' => 'combobox combobox-width')
@@ -257,6 +262,10 @@ class InvoiceType extends AbstractType
         //Buttons
         if( $this->params['cycle'] === "new" ) {
             $builder->add('save', SubmitType::class, array(
+                'label' => 'Generate Invoice',
+                'attr' => array('class' => 'btn btn-warning')
+            ));
+            $builder->add('saveAndSend', SubmitType::class, array(
                 'label' => 'Generate and Send Invoice',
                 'attr' => array('class' => 'btn btn-warning')
             ));
@@ -264,6 +273,10 @@ class InvoiceType extends AbstractType
         if( $this->params['cycle'] === "edit" ) {
             $builder->add('edit', SubmitType::class, array(
                 'label' => 'Update Invoice',
+                'attr' => array('class' => 'btn btn-warning')
+            ));
+            $builder->add('saveAndSend', SubmitType::class, array(
+                'label' => 'Generate and Send Invoice',
                 'attr' => array('class' => 'btn btn-warning')
             ));
         }

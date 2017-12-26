@@ -92,6 +92,8 @@ class Invoice {
     private $dueDate;
 
     /**
+     * Pre-Populated by Request's contact (Billing Contact)
+     *
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(name="salesperson", referencedColumnName="id", nullable=true)
      */
@@ -121,7 +123,7 @@ class Invoice {
      *      joinColumns={@ORM\JoinColumn(name="invoice_id", referencedColumnName="id", onDelete="CASCADE")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")}
      *      )
-     * @ORM\OrderBy({"createdate" = "ASC"})
+     * @ORM\OrderBy({"createdate" = "DESC"})
      **/
     private $documents;
 
@@ -200,12 +202,17 @@ class Invoice {
 //     */
 //    private $invoiceAddItems;
 
-
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $version;
 
 
     public function __construct($user=null) {
         $this->setSubmitter($user);
         $this->setCreateDate(new \DateTime());
+        $this->setVersion(1);
+
         $this->transresRequests = new ArrayCollection();
         $this->invoiceItems = new ArrayCollection();
 //        $this->invoiceAddItems = new ArrayCollection();
@@ -229,6 +236,22 @@ class Invoice {
     public function setId($id)
     {
         $this->id = $id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    /**
+     * @param mixed $version
+     */
+    public function setVersion($version)
+    {
+        $this->version = $version;
     }
 
     /**
@@ -390,22 +413,6 @@ class Invoice {
     public function setStatus($status)
     {
         $this->status = $status;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDocument()
-    {
-        return $this->document;
-    }
-
-    /**
-     * @param mixed $document
-     */
-    public function setDocument($document)
-    {
-        $this->document = $document;
     }
 
     /**
@@ -637,12 +644,19 @@ class Invoice {
     {
         return $this->documents;
     }
+    //"createdate" = "DESC" => the most recent is the first one
+    public function getRecentPDF() {
+        if( count($this->getDocuments()) > 0 ) {
+            return $this->getDocuments()->first();
+        } else {
+            return null;
+        }
+    }
 
     public function generateOid($transresRequest)
     {
         $transresRequestOid = $transresRequest->getOid();
-        $oid = $transresRequestOid . "-INV" . $this->getId();
-        //echo "oid=$oid <br>";
+        $oid = $transresRequestOid . "-V" . $this->getVersion();
         $this->setOid($oid);
         return $oid;
     }

@@ -196,9 +196,13 @@
 {#dropzoneInit = 'inactive':    inactive by default#}
 {#dropzoneInit = 'active':      active by default#}
 {#dropzoneInit = 'default':     inactive if show or active otherwise#}
-{% macro documentsContainer(container,documents,cycle,prototype,documentspercontainer,dropzoneInit,documentType,asFormOrEntity) %}
+{% macro documentsContainer(container,documents,cycle,prototype,documentspercontainer,dropzoneInit,documentType,asFormOrEntity,formRest) %}
 
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
+    {% if formRest is not defined %}
+        {% set formRest = true %}
+    {% endif %}
 
     {% if asFormOrEntity is not defined or not asFormOrEntity or asFormOrEntity == "" %}
         {% set asFormOrEntity = "asForm" %}
@@ -283,7 +287,10 @@
                     {% if container.others is defined %}
                         {{ form_widget(container.others) }}
                     {% endif %}
-                    {{ form_rest(container) }}
+
+                    {% if formRest %}
+                        {{ form_rest(container) }}
+                    {% endif %}
                 {% endif %}
             {% endif %}
 

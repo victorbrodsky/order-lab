@@ -889,9 +889,12 @@ class TransResRequestUtil
                 if( $to == "approvedInvoicing" ) {
                     $this->sendRequestBillingNotificationEmails($transresRequest,$label,$originalStateLabel,$testing);
 
-                    //TODO: create invoice entity and pdf
+                    //Create new invoice entity and pdf
                     $invoice = $this->createNewInvoice($transresRequest,$user);
                     $invoice = $this->createSubmitNewInvoice($transresRequest,$invoice);
+
+                    //TODO: generate and send PDF
+
                     $addMsg = $addMsg . "<br>New Invoice ID".$invoice->getOid()." has been successfully created for the request ID ".$transresRequest->getOid();
                 }
 
@@ -1214,6 +1217,7 @@ class TransResRequestUtil
         $projectTitle = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"Title");
         
         $emails = array();
+
         //1) get ROLE_TRANSRES_BILLING_ADMIN
         $billingUsers = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole("ROLE_TRANSRES_BILLING_ADMIN");
         foreach( $billingUsers as $user ) {
@@ -1221,7 +1225,16 @@ class TransResRequestUtil
                 $emails[] = $user->getSingleEmail();
             }
         }
-        
+
+        //2) Request's billing contact
+        $billingContact = $transresRequest->getContact();
+        if( $billingContact ) {
+            $billingContactEmail = $billingContact->getSingleEmail();
+            if( $billingContactEmail ) {
+                $emails[] = $billingContactEmail;
+            }
+        }
+
         //Subject: Draft Translation Research Invoice for Request [Request ID] of Project [Project Title]
         $subject = "Draft Translation Research Invoice for Request ".$transresRequest->getOid()." of Project ".$projectTitle;
 
@@ -1246,7 +1259,7 @@ class TransResRequestUtil
 
         $invoice = new Invoice($user);
 
-        $invoice->generateOid($transresRequest);
+        $invoice = $this->generateInvoiceOid($transresRequest,$invoice);
 
         $transresRequest->addInvoice($invoice);
 
@@ -1339,11 +1352,10 @@ class TransResRequestUtil
     public function createSubmitNewInvoice($transresRequest,$invoice) {
         $transresUtil = $this->container->get('transres_util');
 
+        $invoice = $this->generateInvoiceOid($transresRequest,$invoice);
+
         $this->em->persist($invoice);
         $this->em->flush();
-
-        $invoice->generateOid($transresRequest);
-        $this->em->flush($invoice);
 
         $msg = "New Invoice has been successfully created for the request ID ".$transresRequest->getOid();
 
@@ -1356,8 +1368,67 @@ class TransResRequestUtil
         $msg = "New Invoice with ID ".$invoice->getOid()." has been successfully submitted for the request ID ".$transresRequest->getOid();
         $transresUtil->setEventLog($invoice,$eventType,$msg);
 
-        return $invoice;
+        return $msg;
     }
     
-    
+    public function isInvoiceBillingContact( $invoice, $user ) {
+        //ROLE_TRANSRES_BILLING_ADMIN role
+        if( $this->secAuth->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ) {
+            return true;
+        }
+        
+        //Invoice's billing contact (salesperson)
+        $salesperson = $invoice->getSalesperson();
+        if( $salesperson->getId() == $user->getId() ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function generateInvoiceOid( $transresRequest, $invoice ) {
+        //Generate oid based by the invoice version issued for the given $transresRequest
+        //1) Find all invoices for the given $transresRequest
+        $repository = $this->em->getRepository('OlegTranslationalResearchBundle:Invoice');
+        $dql = $repository->createQueryBuilder("invoice");
+        $dql->select('invoice');
+        $dql->leftJoin('invoice.transresRequests','transresRequests');
+
+        $dqlParameters = array();
+
+        $dql->andWhere("transresRequests.id = :transresRequestId");
+
+        $dql->orderBy("invoice.version","DESC");
+        $dql->setMaxResults(1);
+
+        $dqlParameters["transresRequestId"] = $transresRequest->getId();
+
+        $query = $this->em->createQuery($dql);
+
+        if( count($dqlParameters) > 0 ) {
+            $query->setParameters($dqlParameters);
+        }
+
+        $existingInvoices = $query->getResult();
+
+        $existingInvoice = null;
+        $version = 1;
+
+        if( count($existingInvoices) > 0 ) {
+            $existingInvoice = $existingInvoices[0];
+        }
+
+        if( $existingInvoice ) {
+            $version = $existingInvoice->getVersion();
+
+            //2) Next version
+            $version = intval($version) + 1;
+        }
+
+        $invoice->setVersion($version);
+
+        $invoice->generateOid($transresRequest);
+
+        return $invoice;
+    }
 }
