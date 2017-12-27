@@ -50,7 +50,7 @@ class FilterInvoiceType extends AbstractType
                 "Paid Partially" => "Paid Partially"
             ),
             'multiple' => false,
-            'required' => true,
+            'required' => false,
             'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Status")
         ));
 

@@ -50,12 +50,12 @@ class InvoiceController extends Controller
         $dql->leftJoin('invoice.submitter','submitter');
         $dql->leftJoin('invoice.salesperson','salesperson');
         $dql->leftJoin('invoice.transresRequests','transresRequests');
-        //$dql->leftJoin('invoice.documents','documents');
+        $dql->leftJoin('invoice.principalInvestigators','principalInvestigators');
 
         $dqlParameters = array();
 
         if( $routeName == "translationalresearch_invoice_index_all" ) {
-            $title = "List of Invoices";
+            $title = "List of All Invoices";
         }
 
         if( $routeName == "translationalresearch_invoice_index_all_my" ) {
@@ -99,14 +99,59 @@ class InvoiceController extends Controller
         ////// EOF create filter //////////
 
         if( $submitter ) {
-
+            $dql->andWhere("submitter.id = :submitterId");
+            $dqlParameters["submitterId"] = $submitter->getId();
         }
 
         if( $status ) {
-            $dql->andWhere("transresRequests.status = :status");
+            $dql->andWhere("invoice.status = :status");
             $dqlParameters["status"] = $status;
         }
 
+        if( $idSearch ) {
+            $dql->andWhere("invoice.oid LIKE :idSearch");
+            $dqlParameters["idSearch"] = "%".$idSearch."%";
+        }
+
+        if( $principalInvestigators && count($principalInvestigators)>0 ) {
+            $dql->andWhere("principalInvestigators.id IN (:principalInvestigators)");
+            $principalInvestigatorsIdsArr = array();
+            foreach($principalInvestigators as $principalInvestigator) {
+                $principalInvestigatorsIdsArr[] = $principalInvestigator->getId();
+            }
+            $dqlParameters["principalInvestigators"] = implode(",",$principalInvestigatorsIdsArr);
+            $advancedFilter++;
+        }
+
+        if( $startDate ) {
+            $dql->andWhere('invoice.dueDate >= :startDate');
+            $dqlParameters['startDate'] = $startDate->format('Y-m-d H:i:s');
+            $advancedFilter++;
+        }
+        if( $endDate ) {
+            $endDate->modify('+1 day');
+            $dql->andWhere('invoice.dueDate <= :endDate');
+            $dqlParameters['endDate'] = $endDate->format('Y-m-d H:i:s');
+            $advancedFilter++;
+        }
+
+        if( $salesperson ) {
+            $dql->andWhere("salesperson.id = :salespersonId");
+            $dqlParameters["salespersonId"] = $salesperson->getId();
+            $advancedFilter++;
+        }
+
+        if( $totalMin ) {
+            $dql->andWhere('invoice.total >= :totalMin');
+            $dqlParameters['totalMin'] = $totalMin;
+            $advancedFilter++;
+        }
+
+        if( $totalMax ) {
+            $dql->andWhere('invoice.total <= :totalMax');
+            $dqlParameters['totalMax'] = $totalMax;
+            $advancedFilter++;
+        }
 
 
         $limit = 30;
