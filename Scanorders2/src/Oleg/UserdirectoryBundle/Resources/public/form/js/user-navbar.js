@@ -276,6 +276,10 @@ function setTranslationalResearchNavBar() {
         id = 'translationalresearch-allmenu-requests';
     }
 
+    if( full.indexOf("/translational-research/invoice/list") !== -1 ) {
+        id = 'translationalresearch-allmenu-invoices';
+    }
+
     id = commonNavBar(full,id);
 
     //if( full.indexOf("/translational-research/event-log/event-log-per-user-per-event-type/") !== -1 ) {

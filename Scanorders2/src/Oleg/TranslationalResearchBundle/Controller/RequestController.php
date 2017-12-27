@@ -498,7 +498,6 @@ class RequestController extends Controller
         $principalInvestigators = $filterform['principalInvestigators']->getData();
         $accountNumber = $filterform['accountNumber']->getData();
         $billingContact = $filterform['billingContact']->getData();
-
         //////// EOF create filter //////////
 
         $advancedFilter = 0;

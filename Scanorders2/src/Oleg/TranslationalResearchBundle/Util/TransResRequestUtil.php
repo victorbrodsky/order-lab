@@ -881,21 +881,23 @@ class TransResRequestUtil
                 $emailBody = $body . $break.$break. "Please click on the URL below to view this project:".$break.$requestUrl;
 
                 //send confirmation email
-                //TODO: send confirmation email to who?
                 $this->sendRequestNotificationEmails($transresRequest,$subject,$emailBody,$testing);
 
                 //Exception: Changing the status of request to "Approved/Ready for Invoicing" should send an email notification
                 // to the users with the role of "Translational Research Billing Administrator"
                 if( $to == "approvedInvoicing" ) {
-                    $this->sendRequestBillingNotificationEmails($transresRequest,$label,$originalStateLabel,$testing);
+                    //TODO: what if the Request has been moved to this stage multiple times?
+                    if(0) {
+                        $this->sendRequestBillingNotificationEmails($transresRequest, $label, $originalStateLabel, $testing);
 
-                    //Create new invoice entity and pdf
-                    $invoice = $this->createNewInvoice($transresRequest,$user);
-                    $invoice = $this->createSubmitNewInvoice($transresRequest,$invoice);
+                        //Create new invoice entity and pdf
+                        $invoice = $this->createNewInvoice($transresRequest, $user);
+                        $invoice = $this->createSubmitNewInvoice($transresRequest, $invoice);
 
-                    //TODO: generate and send PDF
+                        //TODO: generate and send PDF
 
-                    $addMsg = $addMsg . "<br>New Invoice ID".$invoice->getOid()." has been successfully created for the request ID ".$transresRequest->getOid();
+                        $addMsg = $addMsg . "<br>New Invoice ID" . $invoice->getOid() . " has been successfully created for the request ID " . $transresRequest->getOid();
+                    }
                 }
 
                 //event log

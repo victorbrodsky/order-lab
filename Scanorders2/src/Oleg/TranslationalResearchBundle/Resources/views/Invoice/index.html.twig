@@ -1,5 +1,7 @@
 {% extends "OlegTranslationalResearchBundle::Default/base.html.twig" %}
 
+{% import "OlegTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}
+
 {% block title %}
     {{ title }}
 {% endblock %}
@@ -8,6 +10,9 @@
     <h4 class="text-info" align="center">
         {{ title }}
     </h4>
+    <br>
+
+    {{ transresRequestMacros.transresInvoiceFilter(filterform,advancedFilter) }}
     <br>
 
     <table class="records_list table table-condensed text-left">

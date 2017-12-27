@@ -83,9 +83,8 @@
                     {% endif %}
 
                     {% if is_granted('ROLE_TRANSRES_REQUESTER') %}
-
-                    <li id="nav-bar-translationalresearch-allmenu-requests" class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Requests<b class="caret"></b></a>
+                        <li id="nav-bar-translationalresearch-allmenu-requests" class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Requests<b class="caret"></b></a>
                             <ul class="dropdown-menu">
 
                             <li id="nav-bar-translationalresearch-new-standalone-request">
@@ -100,6 +99,26 @@
                                 <a href="{{ path(translationalresearch_sitename~'_all_requests') }}">All Requests</a>
                             </li>
 
+                            </ul>
+                        </li>
+                    {% endif %}
+
+                    {% if is_granted('ROLE_TRANSRES_BILLING_ADMIN') %}
+                        <li id="nav-bar-translationalresearch-allmenu-invoices" class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Invoices<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li id="nav-bar-translationalresearch-all-invoices">
+                                    <a href="{{ path(translationalresearch_sitename~'_invoice_index_all') }}">All Invoices</a>
+                                </li>
+                                <li id="nav-bar-translationalresearch-all-invoices-my">
+                                    <a href="{{ path(translationalresearch_sitename~'_invoice_index_all_my') }}">My Invoices</a>
+                                </li>
+                                <li id="nav-bar-translationalresearch-all-invoices-issued">
+                                    <a href="{{ path(translationalresearch_sitename~'_invoice_index_all_issued') }}">All Issued Invoices</a>
+                                </li>
+                                <li id="nav-bar-translationalresearch-all-invoices-pending">
+                                    <a href="{{ path(translationalresearch_sitename~'_invoice_index_all_pending') }}">All Pending Invoices</a>
+                                </li>
                             </ul>
                         </li>
                     {% endif %}

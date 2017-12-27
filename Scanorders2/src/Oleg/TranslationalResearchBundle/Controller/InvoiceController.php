@@ -4,6 +4,7 @@ namespace Oleg\TranslationalResearchBundle\Controller;
 
 use Oleg\TranslationalResearchBundle\Entity\Invoice;
 use Oleg\TranslationalResearchBundle\Entity\TransResRequest;
+use Oleg\TranslationalResearchBundle\Form\FilterInvoiceType;
 use Oleg\TranslationalResearchBundle\Form\InvoiceType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -26,6 +27,9 @@ class InvoiceController extends Controller
      *
      * @Route("/list/{id}", name="translationalresearch_invoice_index")
      * @Route("/list-all/", name="translationalresearch_invoice_index_all")
+     * @Route("/list-all-my/", name="translationalresearch_invoice_index_all_my")
+     * @Route("/list-all-issued/", name="translationalresearch_invoice_index_all_issued")
+     * @Route("/list-all-pending/", name="translationalresearch_invoice_index_all_pending")
      * @Template("OlegTranslationalResearchBundle:Invoice:index.html.twig")
      * @Method("GET")
      */
@@ -37,7 +41,7 @@ class InvoiceController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $routeName = $request->get('_route');
-
+        $advancedFilter = 0;
 
         $repository = $em->getRepository('OlegTranslationalResearchBundle:Invoice');
         $dql =  $repository->createQueryBuilder("invoice");
@@ -51,8 +55,19 @@ class InvoiceController extends Controller
         $dqlParameters = array();
 
         if( $routeName == "translationalresearch_invoice_index_all" ) {
-            //$invoices = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findAll();
             $title = "List of Invoices";
+        }
+
+        if( $routeName == "translationalresearch_invoice_index_all_my" ) {
+            $title = "List of All My Invoices";
+        }
+
+        if( $routeName == "translationalresearch_invoice_index_all_issued" ) {
+            $title = "List of All Issued Invoices";
+        }
+
+        if( $routeName == "translationalresearch_invoice_index_all_pending" ) {
+            $title = "List of All Pending Invoices";
         }
 
         if( $routeName == "translationalresearch_invoice_index" ) {
@@ -60,6 +75,39 @@ class InvoiceController extends Controller
             $dql->where("transresRequests.id = :transresRequestId");
             $dqlParameters["transresRequestId"] = $transresRequest->getId();
         }
+
+        //////// create filter //////////
+        $params = array(
+            'routeName'=>$routeName,
+            'transresRequest'=>$transresRequest
+        );
+        $filterform = $this->createForm(FilterInvoiceType::class, null,array(
+            'method' => 'GET',
+            'form_custom_value'=>$params
+        ));
+
+        $filterform->handleRequest($request);
+        $submitter = $filterform['submitter']->getData();
+        $status = $filterform['status']->getData();
+        $principalInvestigators = $filterform['principalInvestigators']->getData();
+        $salesperson = $filterform['salesperson']->getData();
+        $idSearch = $filterform['idSearch']->getData();
+        $totalMin = $filterform['totalMin']->getData();
+        $totalMax = $filterform['totalMax']->getData();
+        $startDate = $filterform['startDate']->getData();
+        $endDate = $filterform['endDate']->getData();
+        ////// EOF create filter //////////
+
+        if( $submitter ) {
+
+        }
+
+        if( $status ) {
+            $dql->andWhere("transresRequests.status = :status");
+            $dqlParameters["status"] = $status;
+        }
+
+
 
         $limit = 30;
         $query = $em->createQuery($dql);
@@ -86,7 +134,9 @@ class InvoiceController extends Controller
         return array(
             'invoices' => $invoices,
             'transresRequest' => $transresRequest,
-            'title' => $title
+            'title' => $title,
+            'filterform' => $filterform->createView(),
+            'advancedFilter' => $advancedFilter
         );
     }
 

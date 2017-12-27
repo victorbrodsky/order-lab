@@ -165,19 +165,22 @@
                         <ul class="dropdown-menu dropdown-menu-right">
 
                             <li>
-                                <a href="{{ path(translationalresearch_sitename~'_request_show', { 'id': transresRequest.id }) }}" target="_blank">Show Request</a>
+                                <a href="{{ path(translationalresearch_sitename~'_request_show', { 'id': transresRequest.id }) }}"
+                                >Show Request</a>
                             </li>
 
                             {% if is_granted('ROLE_TRANSRES_ADMIN') or transresRequest.submitter.id == app.user.id %}
                                 <li>
-                                    <a href="{{ path(translationalresearch_sitename~'_request_edit', { 'id': transresRequest.id }) }}" target="_blank">Edit Request</a>
+                                    <a href="{{ path(translationalresearch_sitename~'_request_edit', { 'id': transresRequest.id }) }}"
+                                    >Edit Request</a>
                                 </li>
                             {% endif %}
 
                             {% if transres_request_util.isRequestProgressReviewable(transresRequest) %}
                             {% if transres_util.isAdminOrPrimaryReviewer() or transres_request_util.isRequestProgressReviewer(transresRequest) %}
                                 <li>
-                                    <a href="{{ path(translationalresearch_sitename~'_request_review_progress_state', { 'id': transresRequest.id }) }} " target="_blank">Change Work Progress Status</a>
+                                    <a href="{{ path(translationalresearch_sitename~'_request_review_progress_state', { 'id': transresRequest.id }) }} "
+                                    >Change Work Progress Status</a>
                                 </li>
                             {% endif %}
                             {% endif %}
@@ -185,7 +188,8 @@
                             {% if transres_request_util.isRequestBillingReviewable(transresRequest) %}
                             {% if transres_util.isAdminOrPrimaryReviewer() or transres_request_util.isRequestBillingReviewer(transresRequest) %}
                                 <li>
-                                    <a href="{{ path(translationalresearch_sitename~'_request_review_billing_state', { 'id': transresRequest.id }) }} " target="_blank">Change Billing Progress Status</a>
+                                    <a href="{{ path(translationalresearch_sitename~'_request_review_billing_state', { 'id': transresRequest.id }) }} "
+                                    >Change Billing Progress Status</a>
                                 </li>
                             {% endif %}
                             {% endif %}
@@ -193,7 +197,7 @@
                             {% if transresRequest.project.getRequests()|length > 0 %}
                                 <li>
                                     <a href="{{ path(translationalresearch_sitename~'_request_index', { 'id': transresRequest.project.id }) }}"
-                                       target="_blank">Show associated requests for this Project {{ transresRequest.project.getOid() }} </a>
+                                       >Show associated requests for this Project {{ transresRequest.project.getOid() }} </a>
                                 </li>
                             {% endif %}
 

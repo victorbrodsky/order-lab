@@ -49,10 +49,10 @@
                             {{ form_widget(filterform.state,{'attr': {'placeholder': 'Status'}}) }}
                         </div>
                         <div class="col-xs-4">
-                            {{ formmacros.fielddate(filterform.startDate,'regular-datepicker') }}
+                            {{ formmacros.fielddate(filterform.startDate,'allow-future-date') }}
                         </div>
                         <div class="col-xs-4">
-                            {{ formmacros.fielddate(filterform.endDate,'regular-datepicker') }}
+                            {{ formmacros.fielddate(filterform.endDate,'allow-future-date') }}
                         </div>
                     </div>
                     <br>
@@ -186,35 +186,39 @@
                         <ul class="dropdown-menu dropdown-menu-right">
 
                             <li>
-                                <a href="{{ path(translationalresearch_sitename~'_project_show', { 'id': project.id }) }}" target="_blank">Show Project</a>
+                                <a href="{{ path(translationalresearch_sitename~'_project_show', { 'id': project.id }) }}"
+                                >Show Project</a>
                             </li>
 
 
                             {% if transres_util.isAdminOrPrimaryReviewer() or transres_util.isProjectReviewer(project) %}
                                 {% if transres_util.isProjectStateReviewer(project,app.user) %}
                                 <li>
-                                    <a href="{{ path(translationalresearch_sitename~'_project_review', { 'id': project.id }) }} " target="_blank">Review Project</a>
+                                    <a href="{{ path(translationalresearch_sitename~'_project_review', { 'id': project.id }) }} "
+                                    >Review Project</a>
                                 </li>
                                 {% endif %}
                             {% endif %}
 
                             {% if transres_util.isProjectStateRequesterResubmit(project) %}
                                 <li>
-                                    <a href="{{ path(translationalresearch_sitename~'_project_resubmit', { 'id': project.id }) }}" target="_blank">Resubmit Project</a>
+                                    <a href="{{ path(translationalresearch_sitename~'_project_resubmit', { 'id': project.id }) }}"
+                                    >Resubmit Project</a>
                                 </li>
                             {% endif %}
 
                             {#add verification: requester => project is on the draft stage or in the reject stage#}
                             {% if is_granted('ROLE_TRANSRES_ADMIN') or transres_util.isProjectEditableByRequester(project) %}
                                 <li>
-                                    <a href="{{ path(translationalresearch_sitename~'_project_edit', { 'id': project.id }) }}" target="_blank">Edit Project</a>
+                                    <a href="{{ path(translationalresearch_sitename~'_project_edit', { 'id': project.id }) }}"
+                                    >Edit Project</a>
                                 </li>
                             {% endif %}
 
                             {% if eventObjectTypeId is defined and eventObjectTypeId %}
                                 <li>
                                 <a href="{{ path('translationalresearch_event-log-per-object_log', { 'filter[objectType][]': eventObjectTypeId, 'filter[objectId]': project.id}) }}"
-                                    target="_blank">View Event Log</a>
+                                    >View Event Log</a>
                                 </li>
                             {% endif %}
 
@@ -245,7 +249,7 @@
                                 <li class="divider"></li>
                                 <li>
                                     <a href="{{ path(translationalresearch_sitename~'_request_new', { 'id': project.id }) }}"
-                                       target="_blank">Create a New Request</a>
+                                       >Create a New Request</a>
                                 </li>
                             {% endif %}
                             {#{% if isRequestCanBeCreated == -1 %}#}
@@ -261,14 +265,14 @@
                                 <li class="divider"></li>
                                 <li>
                                     <a href="{{ path(translationalresearch_sitename~'_project_edit', { 'id': project.id }) }}"
-                                       target="_blank">Update IRB approval expiration date to submit new requests</a>
+                                       >Update IRB approval expiration date to submit new requests</a>
                                 </li>
                             {% endif %}
                             {#{% if is_granted('ROLE_TRANSRES_REQUESTER') or transres_util.isAdminOrPrimaryReviewer() %}#}
                                 {% if project.getRequests()|length > 0 %}
                                     <li>
                                         <a href="{{ path(translationalresearch_sitename~'_request_index', { 'id': project.id }) }}"
-                                           target="_blank">Show Associated Requests</a>
+                                           >Show Associated Requests</a>
                                     </li>
                                 {% endif %}
                             {#{% endif %}#}
