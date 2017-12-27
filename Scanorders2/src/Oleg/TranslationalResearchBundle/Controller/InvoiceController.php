@@ -40,6 +40,7 @@ class InvoiceController extends Controller
         }
 
         $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $routeName = $request->get('_route');
         $advancedFilter = 0;
 
@@ -53,22 +54,6 @@ class InvoiceController extends Controller
         $dql->leftJoin('invoice.principalInvestigators','principalInvestigators');
 
         $dqlParameters = array();
-
-        if( $routeName == "translationalresearch_invoice_index_all" ) {
-            $title = "List of All Invoices";
-        }
-
-        if( $routeName == "translationalresearch_invoice_index_all_my" ) {
-            $title = "List of All My Invoices";
-        }
-
-        if( $routeName == "translationalresearch_invoice_index_all_issued" ) {
-            $title = "List of All Issued Invoices";
-        }
-
-        if( $routeName == "translationalresearch_invoice_index_all_pending" ) {
-            $title = "List of All Pending Invoices";
-        }
 
         if( $routeName == "translationalresearch_invoice_index" ) {
             $title = "List of Invoices for Request ID ".$transresRequest->getOid();
@@ -97,6 +82,26 @@ class InvoiceController extends Controller
         $startDate = $filterform['startDate']->getData();
         $endDate = $filterform['endDate']->getData();
         ////// EOF create filter //////////
+
+        if( $routeName == "translationalresearch_invoice_index_all" ) {
+            $title = "List of All Invoices";
+        }
+
+        if( $routeName == "translationalresearch_invoice_index_all_my" ) {
+            $title = "List of All My Invoices";
+            $submitter = $user;
+        }
+
+        if( $routeName == "translationalresearch_invoice_index_all_issued" ) {
+            $title = "List of All Issued Invoices";
+            $status = "Unpaid/Issued";
+            //TODO: show also "Paid in Full" and "Paid Partially": allow multiple selection
+        }
+
+        if( $routeName == "translationalresearch_invoice_index_all_pending" ) {
+            $title = "List of All Pending Invoices";
+            $status = "Pending";
+        }
 
         if( $submitter ) {
             $dql->andWhere("submitter.id = :submitterId");
