@@ -53,7 +53,8 @@ class InvoiceType extends AbstractType
                 "Pending" => "Pending",
                 "Unpaid/Issued" => "Unpaid/Issued",
                 "Paid in Full" => "Paid in Full",
-                "Paid Partially" => "Paid Partially"
+                "Paid Partially" => "Paid Partially",
+                "Canceled" => "Canceled"
             ),
             'multiple' => false,
             'required' => true,

@@ -207,6 +207,11 @@ class Invoice {
      */
     private $version;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $latestVersion;
+
 
     public function __construct($user=null) {
         $this->setSubmitter($user);
@@ -252,6 +257,22 @@ class Invoice {
     public function setVersion($version)
     {
         $this->version = $version;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLatestVersion()
+    {
+        return $this->latestVersion;
+    }
+
+    /**
+     * @param mixed $latestVersion
+     */
+    public function setLatestVersion($latestVersion)
+    {
+        $this->latestVersion = $latestVersion;
     }
 
     /**

@@ -23,6 +23,13 @@
     <h4 class="text-info" align="center">
         {{ title }}
     </h4>
+
+    {% if transresRequest is defined %}
+        <p>
+            <a href="{{ path('translationalresearch_invoice_index', {'id': transresRequest.id }) }}" target="_blank">Show All Invoices for this Request ID {{ transresRequest.oid }}</a>
+        </p>
+    {% endif %}
+
     <br>
 
     {% set sitename = translationalresearch_sitename %}
@@ -60,6 +67,10 @@
 
              data-prototype-transres-invoiceItems = "{{ transresRequestMacros.invoiceItemForm(form.invoiceItems,cycle,'transres-invoiceItems','prototype',sitename,1)|e }}"
         ></div>
+
+        {#{% if form.version is defined %}#}
+            {#{{ formmacros.field_left(form.version) }}#}
+        {#{% endif %}#}
 
         {#{{ formmacros.field(form.updateUser) }}#}
 
@@ -215,7 +226,7 @@
 
     {% if cycle == "show" %}
         <p>
-            <a class="btn btn-warning" href="{{ path(translationalresearch_sitename~'_invoice_edit',{'id': transresRequest.getId(),'oid':invoice.oid}) }}">Edit Invoice</a>
+            <a class="btn btn-warning" href="{{ path(translationalresearch_sitename~'_invoice_edit',{'oid':invoice.oid}) }}">Edit Invoice</a>
         </p>
 
         {#<p>#}
@@ -229,18 +240,18 @@
         {#</p>#}
 
         <p>
-            <a href="{{ path('translationalresearch_invoice_download', { 'id': transresRequest.getId(), 'oid': invoice.oid }) }}" target="_blank">PDF Invoice Preview</a>
+            <a href="{{ path('translationalresearch_invoice_download', {'oid': invoice.oid }) }}" target="_blank">PDF Invoice Preview</a>
         </p>
 
         <p>
-            <a href="{{ path('translationalresearch_invoice_generate_pdf', { 'id': transresRequest.getId(), 'oid': invoice.oid }) }}" target="_blank">Generate Invoice's PDF</a>
+            <a href="{{ path('translationalresearch_invoice_generate_pdf', {'oid': invoice.oid }) }}" target="_blank">Generate Invoice's PDF</a>
         </p>
 
     {% endif %}
 
     {% if cycle == "edit" %}
         <p>
-            <a class="btn btn-primary" href="{{ path(translationalresearch_sitename~'_invoice_show',{'id': transresRequest.getId(),'oid': invoice.oid }) }}">Cancel</a>
+            <a class="btn btn-primary" href="{{ path(translationalresearch_sitename~'_invoice_show',{'oid': invoice.oid }) }}">Cancel</a>
         </p>
 
         {#{% if is_granted('ROLE_TRANSRES_ADMIN') %}#}
@@ -249,6 +260,13 @@
             {#{{ form_end(delete_form) }}#}
             {#<br><br>#}
         {#{% endif %}#}
+    {% endif %}
+
+    {% if transresRequest is defined %}
+        <br>
+        <p>
+            <a href="{{ path('translationalresearch_invoice_index', {'id': transresRequest.id }) }}" target="_blank">Show All Invoices for this Request ID {{ transresRequest.oid }}</a>
+        </p>
     {% endif %}
 
     {#{% if project and project.id %}#}

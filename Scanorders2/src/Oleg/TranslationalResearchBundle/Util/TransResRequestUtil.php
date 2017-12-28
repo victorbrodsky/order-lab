@@ -1359,8 +1359,7 @@ class TransResRequestUtil
         $this->em->persist($invoice);
         $this->em->flush();
 
-        $msg = "New Invoice has been successfully created for the request ID ".$transresRequest->getOid();
-
+//        $msg = "New Invoice has been successfully created for the request ID ".$transresRequest->getOid();
 //        $this->get('session')->getFlashBag()->add(
 //            'notice',
 //            $msg
@@ -1389,7 +1388,29 @@ class TransResRequestUtil
     }
 
     public function generateInvoiceOid( $transresRequest, $invoice ) {
-        //Generate oid based by the invoice version issued for the given $transresRequest
+        $version = 1;
+
+        $latestVersion = $this->getLatestInvoiceVersion($transresRequest);
+
+        if( $latestVersion ) {
+            $version = intval($latestVersion) + 1;
+        }
+
+        $invoice->setVersion($version);
+
+        foreach($transresRequest->getInvoices() as $inv){
+            $inv->setLatestVersion(false);
+            //$this->em->persist($inv);
+        }
+        $invoice->setLatestVersion(true);
+            
+        $invoice->generateOid($transresRequest);
+
+        return $invoice;
+    }
+
+    //return version if exists, null if not exists
+    public function getLatestInvoiceVersion( $transresRequest ) {
         //1) Find all invoices for the given $transresRequest
         $repository = $this->em->getRepository('OlegTranslationalResearchBundle:Invoice');
         $dql = $repository->createQueryBuilder("invoice");
@@ -1413,24 +1434,51 @@ class TransResRequestUtil
 
         $existingInvoices = $query->getResult();
 
-        $existingInvoice = null;
         $version = 1;
 
         if( count($existingInvoices) > 0 ) {
             $existingInvoice = $existingInvoices[0];
+            return $existingInvoice->getVersion();
         }
 
-        if( $existingInvoice ) {
-            $version = $existingInvoice->getVersion();
+        return null;
+    }
 
-            //2) Next version
-            $version = intval($version) + 1;
+    public function getInvoiceComplexVersions( $limit=100 ) {
+        $versions = array();
+        $versions['Latest'] = 'Latest';
+        $versions['Old'] = 'Old';
+        for($i = 1; $i <= $limit; $i++) {
+            $versions[$i] = $i;
         }
 
-        $invoice->setVersion($version);
+        return $versions;
+    }
 
-        $invoice->generateOid($transresRequest);
+    public function getInvoiceFilterPresetType() {
+        $filterTypes = array(
+            'All Invoices',
+            'My Invoices',
+            'All Issued Invoices',
+            'All Pending Invoices',
 
-        return $invoice;
+            "Latest Versions of All Invoices",
+            "Latest Versions of Issued (Unpaid) Invoices",
+            "Latest Versions of Pending (Unissued) Invoices",
+            "Latest Versions of Paid Invoices",
+            "Latest Versions of Partially Paid Invoices",
+            "Latest Versions of Paid and Partially Paid Invoices",
+            "Latest Versions of Canceled Invoices",
+
+            "Old Versions of All Invoices",
+            "Old Versions of Issued (Unpaid) Invoices",
+            "Old Versions of Pending (Unissued) Invoices",
+            "Old Versions of Paid Invoices",
+            "Old Versions of Partially Paid Invoices",
+            "Old Versions of Paid and Partially Paid Invoices",
+            "Old Versions of Canceled Invoices"
+        );
+
+        return $filterTypes;
     }
 }

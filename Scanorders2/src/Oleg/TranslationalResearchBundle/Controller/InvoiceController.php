@@ -22,14 +22,17 @@ use Oleg\UserdirectoryBundle\Entity\User;
  */
 class InvoiceController extends Controller
 {
+
+    //* @Route("/list-all/", name="translationalresearch_invoice_index_all")
+    //* @Route("/list-all-my/", name="translationalresearch_invoice_index_all_my")
+    //* @Route("/list-all-issued/", name="translationalresearch_invoice_index_all_issued")
+    //* @Route("/list-all-pending/", name="translationalresearch_invoice_index_all_pending")
+
     /**
      * Lists all invoice entities.
      *
-     * @Route("/list/{id}", name="translationalresearch_invoice_index")
-     * @Route("/list-all/", name="translationalresearch_invoice_index_all")
-     * @Route("/list-all-my/", name="translationalresearch_invoice_index_all_my")
-     * @Route("/list-all-issued/", name="translationalresearch_invoice_index_all_issued")
-     * @Route("/list-all-pending/", name="translationalresearch_invoice_index_all_pending")
+     * @Route("/list-request/{id}", name="translationalresearch_invoice_index")
+     * @Route("/list/", name="translationalresearch_invoice_index_filter")
      * @Template("OlegTranslationalResearchBundle:Invoice:index.html.twig")
      * @Method("GET")
      */
@@ -41,6 +44,7 @@ class InvoiceController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
+        $transresRequestUtil = $this->get('transres_request_util');
         $routeName = $request->get('_route');
         $advancedFilter = 0;
 
@@ -62,9 +66,12 @@ class InvoiceController extends Controller
         }
 
         //////// create filter //////////
+        $versions = $transresRequestUtil->getInvoiceComplexVersions(100);
+
         $params = array(
             'routeName'=>$routeName,
-            'transresRequest'=>$transresRequest
+            'transresRequest'=>$transresRequest,
+            'versions'=>$versions
         );
         $filterform = $this->createForm(FilterInvoiceType::class, null,array(
             'method' => 'GET',
@@ -72,36 +79,204 @@ class InvoiceController extends Controller
         ));
 
         $filterform->handleRequest($request);
-        $submitter = $filterform['submitter']->getData();
-        $status = $filterform['status']->getData();
-        $principalInvestigators = $filterform['principalInvestigators']->getData();
-        $salesperson = $filterform['salesperson']->getData();
-        $idSearch = $filterform['idSearch']->getData();
-        $totalMin = $filterform['totalMin']->getData();
-        $totalMax = $filterform['totalMax']->getData();
-        $startDate = $filterform['startDate']->getData();
-        $endDate = $filterform['endDate']->getData();
+
+        $filterType = trim( $request->get('type') );
+
+        if( $filterType ) {
+            if( $filterType == "All Invoices" ) {
+                //filter nothing
+                $title = "List of All Invoices";
+            }
+            if( $filterType == "My Invoices" ) {
+                //$title = "List of All My Invoices";
+                //$submitter = $user;
+                return $this->redirectToRoute(
+                    'translationalresearch_invoice_index_filter',
+                    array(
+                        'filter[submitter]' => $user->getId()
+                    )
+                );
+            }
+            if( $filterType == "All Issued Invoices" ) {
+                return $this->redirectToRoute(
+                    'translationalresearch_invoice_index_filter',
+                    array(
+                        'filter[status][0]' => "Unpaid/Issued",
+                        'filter[status][1]' => "Paid in Full",
+                        'filter[status][2]' => "Paid Partially",
+                    )
+                );
+            }
+            if( $filterType == "All Pending Invoices" ) {
+                return $this->redirectToRoute(
+                    'translationalresearch_invoice_index_filter',
+                    array(
+                        'filter[status][]' => "Pending"
+                    )
+                );
+            }
+            //Latest
+            if( $filterType == "Latest Versions of All Invoices" ) {
+                return $this->redirectToRoute(
+                    'translationalresearch_invoice_index_filter',
+                    array(
+                        'filter[version]' => "Latest"
+                    )
+                );
+            }
+            if( $filterType == "Latest Versions of Issued (Unpaid) Invoices" ) {
+                return $this->redirectToRoute(
+                    'translationalresearch_invoice_index_filter',
+                    array(
+                        'filter[version]' => "Latest",
+                        'filter[status][0]' => "Unpaid/Issued",
+                    )
+                );
+            }
+            if( $filterType == "Latest Versions of Pending (Unissued) Invoices" ) {
+                return $this->redirectToRoute(
+                    'translationalresearch_invoice_index_filter',
+                    array(
+                        'filter[version]' => "Latest",
+                        'filter[status][0]' => "Pending"
+                    )
+                );
+            }
+            if( $filterType == "Latest Versions of Paid Invoices" ) {
+                return $this->redirectToRoute(
+                    'translationalresearch_invoice_index_filter',
+                    array(
+                        'filter[version]' => "Latest",
+                        'filter[status][0]' => "Paid in Full",
+                    )
+                );
+            }
+            if( $filterType == "Latest Versions of Partially Paid Invoices" ) {
+                return $this->redirectToRoute(
+                    'translationalresearch_invoice_index_filter',
+                    array(
+                        'filter[version]' => "Latest",
+                        'filter[status][0]' => "Paid Partially",
+                    )
+                );
+            }
+            if( $filterType == "Latest Versions of Paid and Partially Paid Invoices" ) {
+                return $this->redirectToRoute(
+                    'translationalresearch_invoice_index_filter',
+                    array(
+                        'filter[version]' => "Latest",
+                        'filter[status][0]' => "Paid in Full",
+                        'filter[status][1]' => "Paid Partially",
+                    )
+                );
+            }
+            if( $filterType == "Latest Versions of Canceled Invoices" ) {
+                return $this->redirectToRoute(
+                    'translationalresearch_invoice_index_filter',
+                    array(
+                        'filter[version]' => "Latest",
+                        'filter[status][0]' => "Canceled",
+                    )
+                );
+            }
+
+            //Old
+            if( $filterType == "Old Versions of All Invoices" ) {
+                return $this->redirectToRoute(
+                    'translationalresearch_invoice_index_filter',
+                    array(
+                        'filter[version]' => "Old",
+                    )
+                );
+            }
+            if( $filterType == "Old Versions of Issued (Unpaid) Invoices" ) {
+                return $this->redirectToRoute(
+                    'translationalresearch_invoice_index_filter',
+                    array(
+                        'filter[version]' => "Old",
+                        'filter[status][0]' => "Unpaid/Issued",
+                    )
+                );
+            }
+            if( $filterType == "Old Versions of Pending (Unissued) Invoices" ) {
+                return $this->redirectToRoute(
+                    'translationalresearch_invoice_index_filter',
+                    array(
+                        'filter[version]' => "Old",
+                        'filter[status][0]' => "Pending",
+                    )
+                );
+            }
+            if( $filterType == "Old Versions of Paid Invoices" ) {
+                return $this->redirectToRoute(
+                    'translationalresearch_invoice_index_filter',
+                    array(
+                        'filter[version]' => "Old",
+                        'filter[status][0]' => "Paid in Full",
+                    )
+                );
+            }
+            if( $filterType == "Old Versions of Partially Paid Invoices" ) {
+                return $this->redirectToRoute(
+                    'translationalresearch_invoice_index_filter',
+                    array(
+                        'filter[version]' => "Old",
+                        'filter[status][0]' => "Paid Partially",
+                    )
+                );
+            }
+            if( $filterType == "Old Versions of Paid and Partially Paid Invoices" ) {
+                return $this->redirectToRoute(
+                    'translationalresearch_invoice_index_filter',
+                    array(
+                        'filter[version]' => "Old",
+                        'filter[status][0]' => "Paid in Full",
+                        'filter[status][1]' => "Paid Partially",
+                    )
+                );
+            }
+            if( $filterType == "Old Versions of Canceled Invoices" ) {
+                return $this->redirectToRoute(
+                    'translationalresearch_invoice_index_filter',
+                    array(
+                        'filter[version]' => "Old",
+                        'filter[status][0]' => "Canceled",
+                    )
+                );
+            }
+
+        } else {
+            $submitter = $filterform['submitter']->getData();
+            $status = $filterform['status']->getData();
+            $principalInvestigators = $filterform['principalInvestigators']->getData();
+            $salesperson = $filterform['salesperson']->getData();
+            $idSearch = $filterform['idSearch']->getData();
+            $totalMin = $filterform['totalMin']->getData();
+            $totalMax = $filterform['totalMax']->getData();
+            $startDate = $filterform['startDate']->getData();
+            $endDate = $filterform['endDate']->getData();
+            $version = $filterform['version']->getData();
+        }
         ////// EOF create filter //////////
 
-        if( $routeName == "translationalresearch_invoice_index_all" ) {
-            $title = "List of All Invoices";
-        }
-
-        if( $routeName == "translationalresearch_invoice_index_all_my" ) {
-            $title = "List of All My Invoices";
-            $submitter = $user;
-        }
-
-        if( $routeName == "translationalresearch_invoice_index_all_issued" ) {
-            $title = "List of All Issued Invoices";
-            $status = "Unpaid/Issued";
-            //TODO: show also "Paid in Full" and "Paid Partially": allow multiple selection
-        }
-
-        if( $routeName == "translationalresearch_invoice_index_all_pending" ) {
-            $title = "List of All Pending Invoices";
-            $status = "Pending";
-        }
+//        if( $routeName == "translationalresearch_invoice_index_filter" ) {
+//            $title = "List of All Invoices";
+//        }
+//        if( $routeName == "translationalresearch_invoice_index_all_my" ) {
+//            $title = "List of All My Invoices";
+//            $submitter = $user;
+//        }
+//        if( $routeName == "translationalresearch_invoice_index_all_issued" ) {
+//            $title = "List of All Issued Invoices";
+//            $status = "Unpaid/Issued";
+//            //TODO: show also "Paid in Full" and "Paid Partially": allow multiple selection
+//        }
+//        if( $routeName == "translationalresearch_invoice_index_all_pending" ) {
+//            $title = "List of All Pending Invoices";
+//            $status = "Pending";
+//        }
+        
+        
 
         if( $submitter ) {
             $dql->andWhere("submitter.id = :submitterId");
@@ -109,8 +284,8 @@ class InvoiceController extends Controller
         }
 
         if( $status ) {
-            $dql->andWhere("invoice.status = :status");
-            $dqlParameters["status"] = $status;
+            $statusStr = "'".implode("','",$status)."'";
+            $dql->andWhere("invoice.status IN (".$statusStr.")");
         }
 
         if( $idSearch ) {
@@ -158,6 +333,17 @@ class InvoiceController extends Controller
             $advancedFilter++;
         }
 
+        if( $version ) {
+            if( $version == "Latest" ) {
+                $dql->andWhere('invoice.latestVersion = TRUE');
+            } elseif( $version == "Old" ) {
+                $dql->andWhere('invoice.latestVersion != TRUE ');
+            } else {
+                $dql->andWhere('invoice.version = :version');
+                $dqlParameters['version'] = $version;
+            }
+            $advancedFilter++;
+        }
 
         $limit = 30;
         $query = $em->createQuery($dql);
@@ -181,12 +367,15 @@ class InvoiceController extends Controller
             $paginationParams
         );
 
+        //$latestVersion = $transresRequestUtil->getLatestInvoiceVersion($transresRequest);
+
         return array(
             'invoices' => $invoices,
             'transresRequest' => $transresRequest,
             'title' => $title,
             'filterform' => $filterform->createView(),
-            'advancedFilter' => $advancedFilter
+            'advancedFilter' => $advancedFilter,
+            //'latestVersion' => $latestVersion
         );
     }
 
@@ -203,8 +392,8 @@ class InvoiceController extends Controller
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
-        $em = $this->getDoctrine()->getManager();
-        $transresUtil = $this->get('transres_util');
+        //$em = $this->getDoctrine()->getManager();
+        //$transresUtil = $this->get('transres_util');
         $transresRequestUtil = $this->get('transres_request_util');
         $user = $this->get('security.token_storage')->getToken()->getUser();
         //$user = null; //testing
@@ -232,7 +421,7 @@ class InvoiceController extends Controller
                 $msg
             );
 
-            return $this->redirectToRoute('translationalresearch_invoice_show', array('id'=>$transresRequest->getId(), 'oid' => $invoice->getOid()));
+            return $this->redirectToRoute('translationalresearch_invoice_show', array('oid' => $invoice->getOid()));
         }
 
         return array(
@@ -247,11 +436,11 @@ class InvoiceController extends Controller
     /**
      * Finds and displays a invoice entity.
      *
-     * @Route("/show/{id}/{oid}", name="translationalresearch_invoice_show")
+     * @Route("/show/{oid}", name="translationalresearch_invoice_show")
      * @Template("OlegTranslationalResearchBundle:Invoice:new.html.twig")
      * @Method("GET")
      */
-    public function showAction(Request $request, TransResRequest $transresRequest, $oid)
+    public function showAction(Request $request, $oid)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
@@ -270,24 +459,31 @@ class InvoiceController extends Controller
 
         //$deleteForm = $this->createDeleteForm($invoice);
 
+        //Get $transresRequest (Assume invoice has a single $transresRequest)
+        $transresRequest = null;
+        $transresRequests = $invoice->getTransresRequests();
+        if( count($transresRequests) > 0 ) {
+            $transresRequest = $transresRequests[0];
+        }
+
         return array(
             'transresRequest' => $transresRequest,
             'invoice' => $invoice,
             'form' => $form->createView(),
             //'delete_form' => $deleteForm->createView(),
             'cycle' => $cycle,
-            'title' => "Invoice for the Request ID ".$transresRequest->getOid(),
+            'title' => "Invoice ID ".$invoice->getOid(),
         );
     }
 
     /**
      * Displays a form to edit an existing invoice entity.
      *
-     * @Route("/edit/{id}/{oid}", name="translationalresearch_invoice_edit")
+     * @Route("/edit/{oid}", name="translationalresearch_invoice_edit")
      * @Template("OlegTranslationalResearchBundle:Invoice:new.html.twig")
      * @Method({"GET", "POST"})
      */
-    public function editAction(Request $request, TransResRequest $transresRequest, $oid)
+    public function editAction(Request $request, $oid)
     {
 
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
@@ -296,6 +492,7 @@ class InvoiceController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $transresUtil = $this->get('transres_util');
+        //$transresRequestUtil = $this->get('transres_request_util');
 
         $invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($oid);
         if( !$invoice ) {
@@ -317,6 +514,8 @@ class InvoiceController extends Controller
             //update user
             $invoice->setUpdateUser($user);
 
+            //update oid: don't update Invoice version on edit. Only the last version can be edited.
+
             $this->getDoctrine()->getManager()->flush();
 
             $msg = "Invoice with ID ".$invoice->getOid()." has been updated.";
@@ -330,7 +529,14 @@ class InvoiceController extends Controller
             $msg = "Invoice with ID ".$invoice->getOid()." has been updated.";
             $transresUtil->setEventLog($invoice,$eventType,$msg);
 
-            return $this->redirectToRoute('translationalresearch_invoice_show', array('id'=>$transresRequest->getId(), 'oid' => $invoice->getOid()));
+            return $this->redirectToRoute('translationalresearch_invoice_show', array('oid' => $invoice->getOid()));
+        }
+
+        //Get $transresRequest (Assume invoice has a single $transresRequest)
+        $transresRequest = null;
+        $transresRequests = $invoice->getTransresRequests();
+        if( count($transresRequests) > 0 ) {
+            $transresRequest = $transresRequests[0];
         }
 
         return array(
@@ -339,7 +545,7 @@ class InvoiceController extends Controller
             'form' => $editForm->createView(),
             //'delete_form' => $deleteForm->createView(),
             'cycle' => $cycle,
-            'title' => "Invoice for the Request ID ".$transresRequest->getOid(),
+            'title' => "Invoice ID ".$invoice->getOid(),
         );
     }
 
@@ -385,11 +591,11 @@ class InvoiceController extends Controller
     /**
      * Generate Invoice PDF
      *
-     * @Route("/generate-invoice-pdf/{id}/{oid}", name="translationalresearch_invoice_generate_pdf")
+     * @Route("/generate-invoice-pdf/{oid}", name="translationalresearch_invoice_generate_pdf")
      * @Template("OlegTranslationalResearchBundle:Invoice:new.html.twig")
      * @Method("GET")
      */
-    public function generateInvoicePdfAction(Request $request, TransResRequest $transresRequest, $oid) {
+    public function generateInvoicePdfAction(Request $request, $oid) {
 
         $em = $this->getDoctrine()->getManager();
         $transresPdfUtil = $this->get('transres_pdf_generator');
@@ -421,23 +627,23 @@ class InvoiceController extends Controller
         );
 
         //return $this->redirectToRoute('translationalresearch_invoice_index_all');
-        return $this->redirectToRoute('translationalresearch_invoice_show', array('id'=>$transresRequest->getId(), 'oid' => $invoice->getOid()));
+        return $this->redirectToRoute('translationalresearch_invoice_show', array('oid' => $invoice->getOid()));
 
     }
 
     /**
      * Show PDF version of invoice
      *
-     * @Route("/download-invoice-pdf/{id}/{oid}", name="translationalresearch_invoice_download")
+     * @Route("/download-invoice-pdf/{oid}", name="translationalresearch_invoice_download")
      * @Template("OlegTranslationalResearchBundle:Invoice:pdf-show.html.twig")
      * @Method("GET")
      */
-    public function downloadPdfAction(Request $request, TransResRequest $transresRequest, $oid)
+    public function downloadPdfAction(Request $request, $oid)
     {
-        $em = $this->getDoctrine()->getManager();
+        //$em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $logger = $this->container->get('logger');
-        $routeName = $request->get('_route');
+        //$routeName = $request->get('_route');
         $userSecUtil = $this->container->get('user_security_utility');
 
         //download: user or localhost
@@ -474,33 +680,33 @@ class InvoiceController extends Controller
         //$deleteForm = $this->createDeleteForm($invoice);
 
         return array(
-            'transresRequest' => $transresRequest,
+            //'transresRequest' => $transresRequest,
             'invoice' => $invoice,
             //'form' => $form->createView(),
             //'delete_form' => $deleteForm->createView(),
             'cycle' => $cycle,
-            'title' => "Invoice for the Request ID ".$transresRequest->getOid(),
+            'title' => "Invoice ID ".$invoice->getOid(),
         );
     }
 
     /**
      * Show the most recent PDF version of invoice
      *
-     * @Route("/download-recent-invoice-pdf{id}/{oid}", name="translationalresearch_invoice_download_recent")
+     * @Route("/download-recent-invoice-pdf/{oid}", name="translationalresearch_invoice_download_recent")
      * @Template("OlegTranslationalResearchBundle:Invoice:pdf-show.html.twig")
      * @Method("GET")
      */
-    public function downloadRecentPdfAction(Request $request, TransResRequest $transresRequest, $oid)
+    public function downloadRecentPdfAction(Request $request, $oid)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
-        $em = $this->getDoctrine()->getManager();
+        //$em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
-        $logger = $this->container->get('logger');
-        $routeName = $request->get('_route');
-        $userSecUtil = $this->container->get('user_security_utility');
+        //$logger = $this->container->get('logger');
+        //$routeName = $request->get('_route');
+        //$userSecUtil = $this->container->get('user_security_utility');
         $transresRequestUtil = $this->get('transres_request_util');
 
         $em = $this->getDoctrine()->getManager();
@@ -533,7 +739,7 @@ class InvoiceController extends Controller
                 'Invoice PDF does not exists.'
             );
 
-            return $this->redirectToRoute('translationalresearch_invoice_show', array('id'=>$transresRequest->getId(), 'oid' => $invoice->getOid()));
+            return $this->redirectToRoute('translationalresearch_invoice_show', array('oid' => $invoice->getOid()));
         }
     }
 

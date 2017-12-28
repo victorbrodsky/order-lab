@@ -47,9 +47,10 @@ class FilterInvoiceType extends AbstractType
                 "Pending" => "Pending",
                 "Unpaid/Issued" => "Unpaid/Issued",
                 "Paid in Full" => "Paid in Full",
-                "Paid Partially" => "Paid Partially"
+                "Paid Partially" => "Paid Partially",
+                "Canceled" => "Canceled"
             ),
-            'multiple' => false,
+            'multiple' => true,
             'required' => false,
             'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Status")
         ));
@@ -140,6 +141,18 @@ class FilterInvoiceType extends AbstractType
             'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'To Due Date'), //'title'=>'End Year', 'data-toggle'=>'tooltip',
         ));
 
+        $builder->add('version', ChoiceType::class, array(
+            'label' => false,
+            'choices' => $this->params['versions'],
+            'required' => false,
+            'attr' => array('class' => 'form-control', 'placeholder' => "Version")
+        ));
+
+//        $builder->add('complexFilterList', null, array(
+//            'label' => false,
+//            'required' => false,
+//            'attr' => array('class' => 'form-control', 'placeholder' => "Optional Complex Filter")
+//        ));
 
     }
 

@@ -33,7 +33,7 @@ class PdfGenerator
     }
 
 
-    public function generateInvoicePdf( $transresRequest, $entity, $authorUser ) {
+    public function generateInvoicePdf( $entity, $authorUser ) {
 
         ini_set('max_execution_time', 300); //300 seconds = 5 minutes
         $logger = $this->container->get('logger');
@@ -78,7 +78,7 @@ class PdfGenerator
         //$applicationFilePath = $outdir . "application_ID" . $entity->getOid() . ".pdf";
         $applicationFilePath = $outdir . $fileFullReportUniqueName;
 
-        $this->generatePdf($transresRequest,$entity,$applicationFilePath);
+        $this->generatePdf($entity,$applicationFilePath);
         //$logger->notice("Successfully Generated Application PDF from HTML for ID=".$id."; file=".$applicationFilePath);
 
         //$filenamePdf = $reportPath . '/' . $fileFullReportUniqueName;
@@ -145,7 +145,7 @@ class PdfGenerator
 
     //use KnpSnappyBundle to convert html to pdf
     //http://wkhtmltopdf.org must be installed on server
-    public function generatePdf($transresRequest,$invoice,$applicationOutputFilePath) {
+    public function generatePdf($invoice,$applicationOutputFilePath) {
         $logger = $this->container->get('logger');
         $logger->notice("Trying to generate PDF in ".$applicationOutputFilePath);
         if( file_exists($applicationOutputFilePath) ) {
@@ -168,7 +168,6 @@ class PdfGenerator
         //invoice download
         $pageUrl = $router->generate('translationalresearch_invoice_download',
             array(
-                'id' => $transresRequest->getId(),
                 'oid' => $invoice->getOid()
             ),
             UrlGeneratorInterface::ABSOLUTE_URL

@@ -104,21 +104,49 @@
                     {% endif %}
 
                     {% if is_granted('ROLE_TRANSRES_BILLING_ADMIN') %}
+                        {% macro createFilterType( filterTypes ) %}
+                            {% for filterType in filterTypes %}
+                                <li id="nav-bar-translationalresearch-all-invoices-my">
+                                    <a href="{{ path(translationalresearch_sitename~'_invoice_index_filter',{'type':filterType}) }}">{{ filterType }}</a>
+                                </li>
+                            {% endfor %}
+                        {% endmacro %}
                         <li id="nav-bar-translationalresearch-allmenu-invoices" class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Invoices<b class="caret"></b></a>
                             <ul class="dropdown-menu">
-                                <li id="nav-bar-translationalresearch-all-invoices">
-                                    <a href="{{ path(translationalresearch_sitename~'_invoice_index_all') }}">All Invoices</a>
-                                </li>
-                                <li id="nav-bar-translationalresearch-all-invoices-my">
-                                    <a href="{{ path(translationalresearch_sitename~'_invoice_index_all_my') }}">My Invoices</a>
-                                </li>
-                                <li id="nav-bar-translationalresearch-all-invoices-issued">
-                                    <a href="{{ path(translationalresearch_sitename~'_invoice_index_all_issued') }}">All Issued Invoices</a>
-                                </li>
-                                <li id="nav-bar-translationalresearch-all-invoices-pending">
-                                    <a href="{{ path(translationalresearch_sitename~'_invoice_index_all_pending') }}">All Pending Invoices</a>
-                                </li>
+                                {#<li id="nav-bar-translationalresearch-all-invoices">#}
+                                    {#<a href="{{ path(translationalresearch_sitename~'_invoice_index_filter') }}">All Invoices</a>#}
+                                {#</li>#}
+                                {#<li id="nav-bar-translationalresearch-all-invoices-my">#}
+                                    {#<a href="{{ path(translationalresearch_sitename~'_invoice_index_filter',{'type': 'My Invoices'}) }}">My Invoices</a>#}
+                                {#</li>#}
+                                {#<li id="nav-bar-translationalresearch-all-invoices-issued">#}
+                                    {#<a href="{{ path(translationalresearch_sitename~'_invoice_index_filter',{'type': 'All Issued Invoices'}) }}">All Issued Invoices</a>#}
+                                {#</li>#}
+                                {#<li id="nav-bar-translationalresearch-all-invoices-pending">#}
+                                    {#<a href="{{ path(translationalresearch_sitename~'_invoice_index_filter',{'type': 'All Pending Invoices'}) }}">All Pending Invoices</a>#}
+                                {#</li>#}
+
+                                {#<li id="nav-bar-translationalresearch-all-invoices-pending">#}
+                                    {#<a href="{{ path(translationalresearch_sitename~'_invoice_index_filter',{'type': 'Latest Versions of All Invoices'}) }}">Latest Versions of All Invoices</a>#}
+                                {#</li>#}
+                                {#<li id="nav-bar-translationalresearch-all-invoices-pending">#}
+                                    {#<a href="{{ path(translationalresearch_sitename~'_invoice_index_filter',{'type': 'Latest Versions of Issued Invoices'}) }}">Latest Versions of Issued Invoices</a>#}
+                                {#</li>#}
+                                {#<li id="nav-bar-translationalresearch-all-invoices-pending">#}
+                                    {#<a href="{{ path(translationalresearch_sitename~'_invoice_index_filter',{'type': 'Latest Versions of Pending Invoices'}) }}">Latest Versions of Pending Invoices</a>#}
+                                {#</li>#}
+                                {#<li id="nav-bar-translationalresearch-all-invoices-pending">#}
+                                    {#<a href="{{ path(translationalresearch_sitename~'_invoice_index_filter',{'type': 'Latest Versions of Paid in Full Invoices'}) }}">Latest Versions of Paid in Full Invoices</a>#}
+                                {#</li>#}
+                                {#<li id="nav-bar-translationalresearch-all-invoices-pending">#}
+                                    {#<a href="{{ path(translationalresearch_sitename~'_invoice_index_filter',{'type': 'Latest Versions of Partially Paid Invoices'}) }}">Latest Versions of Partially Paid Invoices</a>#}
+                                {#</li>#}
+                                {#<li id="nav-bar-translationalresearch-all-invoices-pending">#}
+                                    {#<a href="{{ path(translationalresearch_sitename~'_invoice_index_filter',{'type': 'Latest Versions of Paid and Partially Paid Invoices'}) }}">Latest Versions of Paid and Partially Paid Invoices</a>#}
+                                {#</li>#}
+                                {% set filterTypes = transres_request_util.getInvoiceFilterPresetType() %}
+                                {{ _self.createFilterType(filterTypes) }}
                             </ul>
                         </li>
                     {% endif %}
