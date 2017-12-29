@@ -77,7 +77,7 @@ class Project {
     private $oid;
 
     /**
-     * MessageCategory with subcategory (parent-children hierarchy)
+     * Hematopathology or AP/CP
      *
      * @ORM\ManyToOne(targetEntity="Oleg\TranslationalResearchBundle\Entity\SpecialtyList", cascade={"persist"})
      */

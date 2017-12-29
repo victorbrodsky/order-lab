@@ -722,8 +722,7 @@ class SiteParameters {
      */
     private $networkDrivePath;
 
-
-
+    
 
     function __construct( $addobjects=true )
     {
@@ -2658,7 +2657,5 @@ class SiteParameters {
     {
         $this->networkDrivePath = $networkDrivePath;
     }
-
-
 
 }
