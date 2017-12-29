@@ -72,11 +72,11 @@ class FilterInvoiceType extends AbstractType
             },
         ));
 
-        $builder->add('principalInvestigators', EntityType::class, array(
+        $builder->add('principalInvestigator', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
             'label'=> false,
             'required'=> false,
-            'multiple' => true,
+            'multiple' => false,
             'attr' => array('class'=>'combobox combobox-width', 'placeholder' => "Principal Investigator(s)"),
             'query_builder' => function(EntityRepository $er) {
                 return $er->createQueryBuilder('list')

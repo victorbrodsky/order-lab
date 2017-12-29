@@ -203,9 +203,10 @@
         <tr>
             <td>Customer Name:</td>
             <td>
-                {% for pi in invoice.principalInvestigators %}
-                    {{ pi.getUsernameOptimal() }}<br>
-                {% endfor %}
+                {#{% for pi in invoice.principalInvestigators %}#}
+                    {#{{ pi.getUsernameOptimal() }}<br>#}
+                {#{% endfor %}#}
+                {{ invoice.principalInvestigator.getUsernameOptimal() }}
             </td>
         </tr>
         <tr>

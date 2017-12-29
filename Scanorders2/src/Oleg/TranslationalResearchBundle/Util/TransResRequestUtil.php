@@ -1319,18 +1319,15 @@ class TransResRequestUtil
         $dueDate = new \DateTime($dueDateStr);
         $invoice->setDueDate($dueDate);
 
-        //pre-populate PIs
+        //pre-populate PIs: use the first one from request
         $transreqPis = $transresRequest->getPrincipalInvestigators();
-        foreach( $transreqPis as $transreqPi ) {
-            $invoice->addPrincipalInvestigator($transreqPi);
+        if( count($transreqPis) > 0 ) {
+            $invoice->setPrincipalInvestigator($transreqPis[0]);
         }
 
         //invoiceTo (text): the first PI
         $billToUser = null;
-        $pis = $invoice->getPrincipalInvestigators();
-        if( count($pis) > 0 ) {
-            $billToUser = $pis[0];
-        }
+        $billToUser = $invoice->getPrincipalInvestigator();
         if( $billToUser ) {
             $userlabel = $userDownloadUtil->getLabelSingleUser($billToUser,$newline,true);
             if( $userlabel ) {

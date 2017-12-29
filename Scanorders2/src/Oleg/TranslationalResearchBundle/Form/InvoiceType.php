@@ -61,21 +61,33 @@ class InvoiceType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width')
         ));
 
-        $builder->add('principalInvestigators', EntityType::class, array(
+//        $builder->add('principalInvestigators', EntityType::class, array(
+//            'class' => 'OlegUserdirectoryBundle:User',
+//            'label'=> "Principal Investigator(s):",
+//            'required'=> false,
+//            'multiple' => false,
+//            'attr' => array('class'=>'combobox combobox-width transres-invoice-principalInvestigator'),
+//            'choices' => $this->params['principalInvestigators']
+////            'query_builder' => function(EntityRepository $er) {
+////                return $er->createQueryBuilder('list')
+////                    ->leftJoin("list.employmentStatus", "employmentStatus")
+////                    ->leftJoin("employmentStatus.employmentType", "employmentType")
+////                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+////                    ->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
+////                    ->leftJoin("list.infos", "infos")
+////                    ->orderBy("infos.displayName","ASC");
+////            },
+//        ));
+        $builder->add('principalInvestigator', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
-            'label'=> "Principal Investigator(s):",
-            'required'=> false,
-            'multiple' => true,
-            'attr' => array('class'=>'combobox combobox-width'),
-            'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->leftJoin("list.employmentStatus", "employmentStatus")
-                    ->leftJoin("employmentStatus.employmentType", "employmentType")
-                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
-                    ->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
-                    ->leftJoin("list.infos", "infos")
-                    ->orderBy("infos.displayName","ASC");
-            },
+            'label'=> "Principal Investigator:",
+            'required'=> true,
+            'multiple' => false,
+            'attr' => array('class'=>'combobox combobox-width transres-invoice-principalInvestigator'),
+            'choices' => $this->params['principalInvestigators'],
+            //'by_reference' => true
+            //'em' => $this->params['em'],
+            //'data' => $this->params['principalInvestigators']
         ));
 
         $builder->add('salesperson', EntityType::class, array(
@@ -145,7 +157,7 @@ class InvoiceType extends AbstractType
         $builder->add('invoiceTo', null, array(
             'label' => "To:",
             'required' => false,
-            'attr' => array('class' => 'textarea form-control')
+            'attr' => array('class' => 'textarea form-control transres-invoice-invoiceTo')
         ));
 
         $builder->add('discountNumeric', null, array(
@@ -271,7 +283,7 @@ class InvoiceType extends AbstractType
                 'attr' => array('class' => 'btn btn-warning')
             ));
         }
-        if( $this->params['cycle'] === "edit" ) {
+        if( $this->params['cycle'] === "edit" && $this->params['invoice']->getLatestVersion() === true ) {
             $builder->add('edit', SubmitType::class, array(
                 'label' => 'Update Invoice',
                 'attr' => array('class' => 'btn btn-warning')

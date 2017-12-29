@@ -11,6 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 use Oleg\UserdirectoryBundle\Entity\User;
@@ -55,7 +56,7 @@ class InvoiceController extends Controller
         $dql->leftJoin('invoice.submitter','submitter');
         $dql->leftJoin('invoice.salesperson','salesperson');
         $dql->leftJoin('invoice.transresRequests','transresRequests');
-        $dql->leftJoin('invoice.principalInvestigators','principalInvestigators');
+        $dql->leftJoin('invoice.principalInvestigator','principalInvestigator');
 
         $dqlParameters = array();
 
@@ -248,7 +249,7 @@ class InvoiceController extends Controller
         } else {
             $submitter = $filterform['submitter']->getData();
             $status = $filterform['status']->getData();
-            $principalInvestigators = $filterform['principalInvestigators']->getData();
+            $principalInvestigator = $filterform['principalInvestigator']->getData();
             $salesperson = $filterform['salesperson']->getData();
             $idSearch = $filterform['idSearch']->getData();
             $totalMin = $filterform['totalMin']->getData();
@@ -293,13 +294,18 @@ class InvoiceController extends Controller
             $dqlParameters["idSearch"] = "%".$idSearch."%";
         }
 
-        if( $principalInvestigators && count($principalInvestigators)>0 ) {
-            $dql->andWhere("principalInvestigators.id IN (:principalInvestigators)");
-            $principalInvestigatorsIdsArr = array();
-            foreach($principalInvestigators as $principalInvestigator) {
-                $principalInvestigatorsIdsArr[] = $principalInvestigator->getId();
-            }
-            $dqlParameters["principalInvestigators"] = implode(",",$principalInvestigatorsIdsArr);
+//        if( $principalInvestigators && count($principalInvestigators)>0 ) {
+//            $dql->andWhere("principalInvestigators.id IN (:principalInvestigators)");
+//            $principalInvestigatorsIdsArr = array();
+//            foreach($principalInvestigators as $principalInvestigator) {
+//                $principalInvestigatorsIdsArr[] = $principalInvestigator->getId();
+//            }
+//            $dqlParameters["principalInvestigators"] = implode(",",$principalInvestigatorsIdsArr);
+//            $advancedFilter++;
+//        }
+        if( $principalInvestigator ) {
+            $dql->andWhere("principalInvestigator.id == :principalInvestigatorId");
+            $dqlParameters["principalInvestigatorId"] = $principalInvestigator->getId();
             $advancedFilter++;
         }
 
@@ -401,7 +407,7 @@ class InvoiceController extends Controller
 
         $invoice = $transresRequestUtil->createNewInvoice($transresRequest,$user);
 
-        $form = $this->createInvoiceForm($invoice,$cycle);
+        $form = $this->createInvoiceForm($invoice,$cycle,$transresRequest);
 
         $form->handleRequest($request);
 
@@ -497,6 +503,15 @@ class InvoiceController extends Controller
         $invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($oid);
         if( !$invoice ) {
             throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
+        }
+
+        if( $invoice->getLatestVersion() !== true ) {
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                "The old version of the invoice can not be edited."
+            );
+            return $this->redirectToRoute('translationalresearch_invoice_show', array('oid' => $invoice->getOid()));
+
         }
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -760,16 +775,40 @@ class InvoiceController extends Controller
         ;
     }
 
-    public function createInvoiceForm( $invoice, $cycle ) {
+    public function createInvoiceForm( $invoice, $cycle, $transresRequest=null ) {
 
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
+        if( !$transresRequest ) {
+            $transresRequests = $invoice->getTransresRequests();
+            if( count($transresRequests) > 0 ) {
+                $transresRequest = $transresRequests[0];
+            }
+        }
+
+//        $principalInvestigators = $invoice->getPrincipalInvestigators();
+//        $pisArr = array();
+//        foreach($principalInvestigators as $principalInvestigator) {
+//            //$em->persist($principalInvestigator);
+//            $pi = $em->getRepository('OlegUserdirectoryBundle:User')->find($principalInvestigator->getId());
+//            $pisArr[] = $pi;
+//        }
+        //$piEm = $this->getDoctrine()->getManager('OlegTranslationalResearchBundle:Invoice');
+        //$piEm = $invoice->getEntityManagerName();
+        //$piEm = $this->getDoctrine()->getManager('default');
+
+        //PIs of the request's pis
+        $principalInvestigators = $transresRequest->getPrincipalInvestigators();
+        //echo "pi count=".count($principalInvestigators)."<br>";
+        
         $params = array(
             'cycle' => $cycle,
             'em' => $em,
             'user' => $user,
             'invoice' => $invoice,
+            'principalInvestigators' => $principalInvestigators,
+            //'piEm' => $piEm,
             'SecurityAuthChecker' => $this->get('security.authorization_checker'),
         );
 
@@ -795,5 +834,32 @@ class InvoiceController extends Controller
         ));
 
         return $form;
+    }
+
+
+    /**
+     * @Route("/get-billto-info/", name="translationalresearch_invoice_get_billto_info", options={"expose"=true})
+     * @Method({"GET"})
+     */
+    public function getBillToInfoAction( Request $request ) {
+        //set permission: project irb reviewer or admin
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
+        $userDownloadUtil = $this->get('user_download_utility');
+        $em = $this->getDoctrine()->getManager();
+        $newline = "\n";
+        $res = "NotOK";
+
+        $userId = trim( $request->get('userId') );
+        $billToUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($userId);
+
+        if( $billToUser ) {
+            $res = $userDownloadUtil->getLabelSingleUser($billToUser,$newline,true);
+        }
+
+        $response = new Response($res);
+        return $response;
     }
 }

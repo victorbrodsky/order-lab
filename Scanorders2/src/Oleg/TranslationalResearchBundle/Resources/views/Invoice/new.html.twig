@@ -22,6 +22,11 @@
 
     <h4 class="text-info" align="center">
         {{ title }}
+        {% if invoice.latestVersion %}
+            (Latest)
+        {% else %}
+            (Old)
+        {% endif %}
     </h4>
 
     {% if transresRequest is defined %}
@@ -85,8 +90,8 @@
             {{ formmacros.field_left(form.status) }}
         {% endif %}
 
-        {% if form.principalInvestigators is defined %}
-            {{ formmacros.field_left(form.principalInvestigators) }}
+        {% if form.principalInvestigator is defined %}
+            {{ formmacros.field_left(form.principalInvestigator) }}
         {% endif %}
         {% if form.salesperson is defined %}
             {{ formmacros.field_left(form.salesperson) }}
@@ -117,6 +122,10 @@
         {#<hr />#}
 
         {{ formmacros.field_left(form.invoiceFrom) }}
+
+        <div class="transres-alert" style="display: none">
+            <p class="alert alert-info center-block" align="middle" style="width: 70%;"></p>
+        </div>
         {{ formmacros.field_left(form.invoiceTo) }}
         <br>
 
@@ -224,7 +233,7 @@
 
     {{ form_end(form) }}
 
-    {% if cycle == "show" %}
+    {% if cycle == "show" and invoice.latestVersion %}
         <p>
             <a class="btn btn-warning" href="{{ path(translationalresearch_sitename~'_invoice_edit',{'oid':invoice.oid}) }}">Edit Invoice</a>
         </p>
@@ -286,44 +295,41 @@
 
         $(document).ready(function() {
 
-            console.log("cycle="+cycle);
+            //console.log("cycle="+cycle);
             if( cycle == "new" ) {
                 transresUpdateSubTotal();
             }
 
             transresInvoiceItemListeneres();
 
-//            $('.invoice-subTotal').on('input', function(event) {
-//                console.log("invoice-subTotal: triggered by manually update row subTotal");
-//                transresUpdateSubTotal();
-//            });
+            transresInvoicePiListeneres();
 
         });
 
         function transresInvoiceItemListeneres(){
             //quantity or unit price update => update total
             $('.invoiceitem-quantity, .invoiceitem-unitPrice').on('input', function(event) {
-                console.log("update row total");
+                //console.log("update row total");
                 var invoiceItemRow = $(this).closest('.user-collection-holder');
                 var quatity = invoiceItemRow.find(".invoiceitem-quantity").val();
                 var unitPrice = invoiceItemRow.find(".invoiceitem-unitPrice").val();
-                console.log("row quatity="+quatity+"; unitPrice="+unitPrice);
+                //console.log("row quatity="+quatity+"; unitPrice="+unitPrice);
                 var invoiceItemTotalEl = invoiceItemRow.find(".invoiceitem-total");
                 if( quatity && unitPrice ) {
                     var total = parseFloat(quatity) * parseFloat(unitPrice);
                     total = transresRoundDecimal(total);
-                    console.log("row total="+total);
+                    //console.log("row total="+total);
                     invoiceItemTotalEl.val(total);
                 } else {
                     invoiceItemTotalEl.val(null);
                 }
-                console.log("transresUpdateSubTotal: triggered by claculated row total");
+                //console.log("transresUpdateSubTotal: triggered by claculated row total");
                 transresUpdateSubTotal();
             });
 
             //total update => update subtotal and total
             $('.invoiceitem-total').on('input', function(event) {
-                console.log("transresUpdateSubTotal: triggered by manually update row total");
+                //console.log("transresUpdateSubTotal: triggered by manually update row total");
                 transresUpdateSubTotal();
             });
 
@@ -338,20 +344,20 @@
         }
 
         function transresUpdateSubTotal() { //invoiceItemTotalEl
-            console.log("update subtotal and total");
+            //console.log("update subtotal and total");
             //var totals = invoiceItemTotalEl.closest('.transres-invoiceItems-holder').find(".invoiceitem-total");
             var totals = $('.transres-invoiceItems-holder').find(".invoiceitem-total");
             var subTotal = 0;
             totals.each(function() {
                 var total = $(this).val();
-                console.log("total="+total);
+                //console.log("total="+total);
                 if( !total ) {
                     total = 0;
                 }
                 subTotal = subTotal + parseFloat(total);
             });
             subTotal = transresRoundDecimal(subTotal);
-            console.log("subTotal="+subTotal);
+            //console.log("subTotal="+subTotal);
             $(".invoice-subTotal").val(subTotal);
             transresUpdateTotal();
         }
@@ -381,6 +387,52 @@
         function transresRoundDecimal(value) {
             return Number(Math.round(value+'e2')+'e-2').toFixed(2); //1.005 => 1.01
         }
+
+        //update Bill To
+        function transresInvoicePiListeneres(){
+            $('.transres-invoice-principalInvestigator').on("change", function(e) {
+                var piId = $(this).select2('val');
+                //console.log("transres-invoice-principalInvestigator change: piId="+piId);
+                //$('.transres-invoice-invoiceTo').val(piId);
+                transresUpdateBillTo(piId);
+            });
+        }
+        function transresUpdateBillTo(userId) {
+            $(".transres-alert").find(".alert").html("");
+            $(".transres-alert").hide();
+
+            var url = Routing.generate('translationalresearch_invoice_get_billto_info');
+            //url = url + "/" + projectId + "/" + irbExpDate
+
+            $.ajax({
+                url: url,
+                timeout: _ajaxTimeout,
+                //type: "GET",
+                type: "GET",
+                data: {userId: userId },
+                //dataType: 'json',
+                async: asyncflag
+            }).success(function(response) {
+                //console.log(response);
+                if( response == "NotOK" ) {
+                    $(".transres-alert").find(".alert").html(response);
+                    $(".transres-alert").show();
+                } else {
+                    //populate textarea
+                    $('.transres-invoice-invoiceTo').val(response);
+                    var height = $('.transres-invoice-invoiceTo').prop('scrollHeight');
+                    //console.log('height='+height);
+                    $('.transres-invoice-invoiceTo').height(height);
+                }
+            }).done(function() {
+                //lbtn.stop();
+            }).error(function(jqXHR, textStatus, errorThrown) {
+                console.log('Error : ' + errorThrown);
+                $(".transres-alert").find(".alert").html(errorThrown);
+                $(".transres-alert").show();
+            });
+        }
+
 
     </script>
 

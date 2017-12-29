@@ -107,10 +107,12 @@
                     {% endif %}
                 </td>
 
-                <td>
+                <td class="rowlink-skip">
                     {% set invoicesCount = transresRequest.invoices|length %}
                     {% if invoicesCount > 0 %}
-                        {{ invoicesCount }}
+                        <a data-toggle="tooltip" title="Show All Invoice"
+                           href="{{ path(translationalresearch_sitename~'_invoice_index', { 'id': transresRequest.id }) }} "
+                        >{{ invoicesCount }}</a>
                     {% endif %}
                 </td>
 

@@ -99,14 +99,21 @@ class Invoice {
      */
     private $salesperson;
 
+//    /**
+//     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+//     * @ORM\JoinTable(name="transres_invoice_principalinvestigator",
+//     *      joinColumns={@ORM\JoinColumn(name="invoice_id", referencedColumnName="id")},
+//     *      inverseJoinColumns={@ORM\JoinColumn(name="principalinvestigator_id", referencedColumnName="id")}
+//     * )
+//     **/
+//    private $principalInvestigators;
     /**
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinTable(name="transres_invoice_principalinvestigator",
-     *      joinColumns={@ORM\JoinColumn(name="invoice_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="principalinvestigator_id", referencedColumnName="id")}
-     * )
-     **/
-    private $principalInvestigators;
+     * Pre-Populated by Request's contact (Billing Contact: "Bill To")
+     *
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\JoinColumn(name="salesperson", referencedColumnName="id", nullable=true)
+     */
+    private $principalInvestigator;
 
     /**
      * Invoice status
@@ -222,7 +229,7 @@ class Invoice {
         $this->invoiceItems = new ArrayCollection();
 //        $this->invoiceAddItems = new ArrayCollection();
         $this->documents = new ArrayCollection();
-        $this->principalInvestigators = new ArrayCollection();
+        //$this->principalInvestigators = new ArrayCollection();
     }
 
 
@@ -404,21 +411,38 @@ class Invoice {
         $this->salesperson = $salesperson;
     }
 
-    public function getPrincipalInvestigators()
+    /**
+     * @return mixed
+     */
+    public function getPrincipalInvestigator()
     {
-        return $this->principalInvestigators;
+        return $this->principalInvestigator;
     }
-    public function addPrincipalInvestigator($item)
+
+    /**
+     * @param mixed $principalInvestigator
+     */
+    public function setPrincipalInvestigator($principalInvestigator)
     {
-        if( $item && !$this->principalInvestigators->contains($item) ) {
-            $this->principalInvestigators->add($item);
-        }
-        return $this;
+        $this->principalInvestigator = $principalInvestigator;
     }
-    public function removePrincipalInvestigator($item)
-    {
-        $this->principalInvestigators->removeElement($item);
-    }
+
+//    public function getPrincipalInvestigators()
+//    {
+//        return $this->principalInvestigators;
+//    }
+//    public function addPrincipalInvestigator($item)
+//    {
+//        if( $item && !$this->principalInvestigators->contains($item) ) {
+//            $this->principalInvestigators->add($item);
+//        }
+//        return $this;
+//    }
+//    public function removePrincipalInvestigator($item)
+//    {
+//        $this->principalInvestigators->removeElement($item);
+//    }
+
 
     /**
      * @return mixed
