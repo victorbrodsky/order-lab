@@ -124,19 +124,33 @@
                         {#<li id="nav-bar-translationalresearch-default-reviewers"><a href="{{ path(translationalresearch_sitename~'_default-reviewer_index') }}">Default Reviewers</a></li>#}
 
                         {% if specialties|length > 0 %}
-                        <li id="nav-bar-translationalresearch-default-reviewers" class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Default Reviewers<b class="caret"></b></a>
-                            <ul class="dropdown-menu">
+                            <li id="nav-bar-translationalresearch-default-reviewers" class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Default Reviewers<b class="caret"></b></a>
+                                <ul class="dropdown-menu">
 
-                            {% for specialty in specialties %}
-                                <li>
-                                    <a href="{{ path(translationalresearch_sitename~'_default-reviewer_index',{'specialtyStr':specialty.getAbbreviation()}) }}"
-                                    >Default Reviewers for {{ specialty.getName() }}</a>
-                                </li>
-                            {% endfor %}
+                                {% for specialty in specialties %}
+                                    <li>
+                                        <a href="{{ path(translationalresearch_sitename~'_default-reviewer_index',{'specialtyStr':specialty.getAbbreviation()}) }}"
+                                        >Default Reviewers for {{ specialty.getName() }}</a>
+                                    </li>
+                                {% endfor %}
 
-                            </ul>
-                        </li>
+                                </ul>
+                            </li>
+
+                            <li id="nav-bar-translationalresearch-default-siteparameters" class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Default Site Settings<b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+
+                                    {% for specialty in specialties %}
+                                        <li>
+                                            <a href="{{ path(translationalresearch_sitename~'_standalone_siteparameters_show',{'specialtyStr':specialty.getAbbreviation()}) }}"
+                                            >Default Site Settings for {{ specialty.getName() }}</a>
+                                        </li>
+                                    {% endfor %}
+
+                                </ul>
+                            </li>
                         {% endif %}
 
                     {% endif %}

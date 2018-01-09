@@ -2,11 +2,9 @@
 
 namespace Oleg\TranslationalResearchBundle\Controller;
 
-use Oleg\TranslationalResearchBundle\Entity\Invoice;
-use Oleg\TranslationalResearchBundle\Entity\TransResRequest;
-use Oleg\TranslationalResearchBundle\Form\FilterInvoiceType;
-use Oleg\TranslationalResearchBundle\Form\InvoiceType;
-use Oleg\UserdirectoryBundle\Entity\TransResSiteParameters;
+use Oleg\TranslationalResearchBundle\Entity\TransResSiteParameters;
+
+use Oleg\TranslationalResearchBundle\Form\SiteParameterType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -14,8 +12,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-
-use Oleg\UserdirectoryBundle\Entity\User;
 
 /**
  * SiteParameters controller.
@@ -28,11 +24,11 @@ class TransResSiteParametersController extends Controller
     /**
      * Lists all SiteParameters entities.
      *
-     * @Route("/list/", name="translationalresearch_siteparameters_index")
+     * @Route("/list/{specialtyStr}", name="translationalresearch_standalone_siteparameters_index")
      * @Template("OlegTranslationalResearchBundle:SiteParameters:index.html.twig")
      * @Method("GET")
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request, $specialtyStr)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
@@ -45,19 +41,19 @@ class TransResSiteParametersController extends Controller
         );
     }
 
-    /**
-     * Creates a new invoice entity.
-     *
-     * @Route("/new/", name="translationalresearch_siteparameters_new")
-     * @Template("OlegTranslationalResearchBundle:SiteParameters:new.html.twig")
-     * @Method({"GET", "POST"})
-     */
-    public function newAction(Request $request)
-    {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
-        }
-
+//    /**
+//     * Creates a new SiteParameters entity.
+//     *
+//     * @Route("/new/{specialtyStr}", name="translationalresearch_standalone_siteparameters_new")
+//     * @Template("OlegTranslationalResearchBundle:SiteParameters:new.html.twig")
+//     * @Method({"GET", "POST"})
+//     */
+//    public function newAction(Request $request, $specialtyStr)
+//    {
+//        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
+//            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+//        }
+//
 //        //$em = $this->getDoctrine()->getManager();
 //        //$transresUtil = $this->get('transres_util');
 //        $transresRequestUtil = $this->get('transres_request_util');
@@ -67,7 +63,7 @@ class TransResSiteParametersController extends Controller
 //
 //        $invoice = $transresRequestUtil->createNewInvoice($transresRequest,$user);
 //
-//        $form = $this->createInvoiceForm($invoice,$cycle,$transresRequest);
+//        $form = $this->createSiteParameterForm($invoice,$cycle,$transresRequest);
 //
 //        $form->handleRequest($request);
 //
@@ -97,119 +93,100 @@ class TransResSiteParametersController extends Controller
 //            'title' => "New Invoice for the Request ID ".$transresRequest->getOid(),
 //            'cycle' => $cycle
 //        );
-    }
+//    }
 
     /**
-     * Finds and displays entity.
+     * Finds and displays site parameters entity.
      *
-     * @Route("/show/{id}", name="translationalresearch_siteparameters_show")
+     * @Route("/show/{specialtyStr}", name="translationalresearch_standalone_siteparameters_show")
      * @Template("OlegTranslationalResearchBundle:SiteParameters:new.html.twig")
      * @Method("GET")
      */
-    public function showAction(Request $request, TransResSiteParameters $siteParameters)
+    public function showAction(Request $request, $specialtyStr)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
-        $em = $this->getDoctrine()->getManager();
-
+        $transresRequestUtil = $this->get('transres_request_util');
         $cycle = "show";
 
-//        $form = $this->createInvoiceForm($siteParameters,$cycle);
-//
-//        //$deleteForm = $this->createDeleteForm($invoice);
-//
-//        //Get $transresRequest (Assume invoice has a single $transresRequest)
-//        $transresRequest = null;
-//        $transresRequests = $invoice->getTransresRequests();
-//        if( count($transresRequests) > 0 ) {
-//            $transresRequest = $transresRequests[0];
-//        }
-//
-//        return array(
-//            'transresRequest' => $transresRequest,
-//            'invoice' => $invoice,
-//            'form' => $form->createView(),
-//            //'delete_form' => $deleteForm->createView(),
-//            'cycle' => $cycle,
-//            'title' => "Invoice ID ".$invoice->getOid(),
-//        );
+        $siteParameter = $transresRequestUtil->findCreateSiteParameterEntity($specialtyStr);
+        if( !$siteParameter ) {
+            throw new \Exception("SiteParameter is not found by specialty '" . $specialtyStr . "'");
+        }
+        //echo "siteParameter=".$siteParameter."<br>";
+        //exit();
+
+        $form = $this->createSiteParameterForm($siteParameter,$cycle);
+
+        return array(
+            'siteParameter' => $siteParameter,
+            'form' => $form->createView(),
+            'cycle' => $cycle,
+            'title' => $siteParameter,
+        );
     }
 
     /**
      * Displays a form to edit an existing entity.
      *
-     * @Route("/edit/{id}", name="translationalresearch_siteparameters_edit")
+     * @Route("/edit/{specialtyStr}", name="translationalresearch_standalone_siteparameters_edit")
      * @Template("OlegTranslationalResearchBundle:SiteParameters:new.html.twig")
      * @Method({"GET", "POST"})
      */
-    public function editAction(Request $request, TransResSiteParameters $siteParameters)
+    public function editAction(Request $request, $specialtyStr)
     {
 
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
-//        $em = $this->getDoctrine()->getManager();
-//        $transresUtil = $this->get('transres_util');
-//        //$transresRequestUtil = $this->get('transres_request_util');
-//
-//        $invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($oid);
-//        if( !$invoice ) {
-//            throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
-//        }
-//
-//        if( $invoice->getLatestVersion() !== true ) {
-//            $this->get('session')->getFlashBag()->add(
-//                'notice',
-//                "The old version of the invoice can not be edited."
-//            );
-//            return $this->redirectToRoute('translationalresearch_invoice_show', array('oid' => $invoice->getOid()));
-//
-//        }
-//
-//        $user = $this->get('security.token_storage')->getToken()->getUser();
-//        $cycle = "edit";
-//
-//        //$deleteForm = $this->createDeleteForm($invoice);
-//
-//        //$editForm = $this->createForm('Oleg\TranslationalResearchBundle\Form\InvoiceType', $invoice);
-//        $editForm = $this->createInvoiceForm($invoice,$cycle);
-//
-//        $editForm->handleRequest($request);
-//
-//        if ($editForm->isSubmitted() && $editForm->isValid()) {
-//
-//            //update user
-//            $invoice->setUpdateUser($user);
-//
-//            //update oid: don't update Invoice version on edit. Only the last version can be edited.
-//
-//            $this->getDoctrine()->getManager()->flush();
-//
-//            $msg = "Invoice with ID ".$invoice->getOid()." has been updated.";
-//
-//            $this->get('session')->getFlashBag()->add(
-//                'notice',
-//                $msg
-//            );
-//
-//            $eventType = "Invoice Updated";
-//            $msg = "Invoice with ID ".$invoice->getOid()." has been updated.";
-//            $transresUtil->setEventLog($invoice,$eventType,$msg);
-//
-//            return $this->redirectToRoute('translationalresearch_invoice_show', array('oid' => $invoice->getOid()));
-//        }
-//
-//        return array(
-//            'transresRequest' => $transresRequest,
-//            'invoice' => $invoice,
-//            'form' => $editForm->createView(),
-//            //'delete_form' => $deleteForm->createView(),
-//            'cycle' => $cycle,
-//            'title' => "Invoice ID ".$invoice->getOid(),
-//        );
+        $cycle = "edit";
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $transresUtil = $this->get('transres_util');
+        $transresRequestUtil = $this->get('transres_request_util');
+        $em = $this->getDoctrine()->getManager();
+
+        $siteParameter = $transresRequestUtil->findCreateSiteParameterEntity($specialtyStr);
+        if( !$siteParameter ) {
+            throw new \Exception("SiteParameter is not found by specialty '" . $specialtyStr . "'");
+        }
+
+        $form = $this->createSiteParameterForm($siteParameter,$cycle);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            //update user
+            $siteParameter->setUpdateUser($user);
+
+            $em->flush($siteParameter);
+
+            $msg = $siteParameter." have been updated.";
+
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                $msg
+            );
+
+            $eventType = "SiteParameters Updated";
+            //$eventType = "Site Settings Parameter Updated";
+            $msg = $siteParameter." have been updated.";
+            $transresUtil->setEventLog($siteParameter,$eventType,$msg);
+
+            return $this->redirectToRoute('translationalresearch_standalone_siteparameters_show', array(
+                'specialtyStr' => $siteParameter->getProjectSpecialty()->getAbbreviation()
+            ));
+        }
+
+        return array(
+            'siteParameter' => $siteParameter,
+            'form' => $form->createView(),
+            'cycle' => $cycle,
+            'title' => $siteParameter,
+        );
     }
 
 
@@ -218,38 +195,78 @@ class TransResSiteParametersController extends Controller
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
         
-//        $params = array(
-//            'cycle' => $cycle,
-//            'em' => $em,
-//            'user' => $user,
-//            'invoice' => $invoice,
-//            'principalInvestigators' => $principalInvestigators,
-//            //'piEm' => $piEm,
-//            'SecurityAuthChecker' => $this->get('security.authorization_checker'),
-//        );
-//
-//        if( $cycle == "new" ) {
-//            $disabled = false;
-//        }
-//
-//        if( $cycle == "show" ) {
-//            $disabled = true;
-//        }
-//
-//        if( $cycle == "edit" ) {
-//            $disabled = false;
-//        }
-//
-//        if( $cycle == "download" ) {
-//            $disabled = true;
-//        }
-//
-//        $form = $this->createForm(InvoiceType::class, $invoice, array(
-//            'form_custom_value' => $params,
-//            'disabled' => $disabled,
-//        ));
-//
-//        return $form;
+        $params = array(
+            'cycle' => $cycle,
+            'em' => $em,
+            'user' => $user,
+        );
+
+        if( $cycle == "new" ) {
+            $disabled = false;
+        }
+
+        if( $cycle == "show" ) {
+            $disabled = true;
+        }
+
+        if( $cycle == "edit" ) {
+            $disabled = false;
+        }
+
+        $form = $this->createForm(SiteParameterType::class, $siteParameter, array(
+            'form_custom_value' => $params,
+            'disabled' => $disabled,
+        ));
+
+        return $form;
     }
+
+//    public function findCreateSiteParameterEntity($specialtyStr) {
+//        $em = $this->getDoctrine()->getManager();
+//        $user = $this->get('security.token_storage')->getToken()->getUser();
+//
+//        //$entity = $em->getRepository('OlegTranslationalResearchBundle:TransResSiteParameters')->findOneByOid($specialtyStr);
+//
+//        $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResSiteParameters');
+//        $dql = $repository->createQueryBuilder("siteParameter");
+//        $dql->select('siteParameter');
+//        $dql->leftJoin('siteParameter.projectSpecialty','projectSpecialty');
+//
+//        $dqlParameters = array();
+//
+//        $dql->where("projectSpecialty.abbreviation = :specialtyStr");
+//
+//        $dqlParameters["specialtyStr"] = $specialtyStr;
+//
+//        $query = $em->createQuery($dql);
+//
+//        if( count($dqlParameters) > 0 ) {
+//            $query->setParameters($dqlParameters);
+//        }
+//
+//        $entities = $query->getResult();
+//        //echo "projectSpecialty count=".count($entities)."<br>";
+//
+//        if( count($entities) > 0 ) {
+//            return $entities[0];
+//        }
+//
+//        //Create New
+//        $specialty = $em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation($specialtyStr);
+//        if( !$specialty ) {
+//            throw new \Exception("SpecialtyList is not found by specialty abbreviation '" . $specialtyStr . "'");
+//        } else {
+//            $entity = new TransResSiteParameters($user);
+//
+//            $entity->setProjectSpecialty($specialty);
+//
+//            $em->persist($entity);
+//            $em->flush($entity);
+//
+//            return $entity;
+//        }
+//
+//        return null;
+//    }
 
 }

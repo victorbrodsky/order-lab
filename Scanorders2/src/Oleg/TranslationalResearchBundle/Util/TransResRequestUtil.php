@@ -1259,6 +1259,15 @@ class TransResRequestUtil
     public function createNewInvoice($transresRequest,$user) {
         $userDownloadUtil = $this->container->get('user_download_utility');
 
+        $project = $transresRequest->getProject();
+        $projectSpecialty = $project->getProjectSpecialty();
+        $projectSpecialtyAbbreviation = $projectSpecialty->getAbbreviation();
+
+        $siteParameter = $this->findCreateSiteParameterEntity($projectSpecialtyAbbreviation);
+        if( !$siteParameter ) {
+            throw new \Exception("SiteParameter is not found by specialty '" . $projectSpecialtyAbbreviation . "'");
+        }
+
         $invoice = new Invoice($user);
 
         $invoice = $this->generateInvoiceOid($transresRequest,$invoice);
@@ -1275,8 +1284,13 @@ class TransResRequestUtil
         }
 
         ////////////// from //////////////
-        $from = "Weill Cornell Medicine".$newline."Department of Pathology and".$newline."Laboratory Medicine";
-        $from = $from . $newline . "1300 York Avenue, C302/Box 69 New York, NY 10065";
+        if( $siteParameter->getTransresFromHeader() ) {
+            $from = $siteParameter->getTransresFromHeader();
+        } else {
+            $from = "";
+            //$from = "Weill Cornell Medicine".$newline."Department of Pathology and".$newline."Laboratory Medicine";
+            //$from = $from . $newline . "1300 York Avenue, C302/Box 69 New York, NY 10065";
+        }
 
         if( $invoice->getSalesperson() ) {
             $sellerStr = "";
@@ -1304,7 +1318,12 @@ class TransResRequestUtil
         ////////////// EOF from //////////////
 
         //footer:
-        $footer = "Make check payable & mail to: Weill Cornell Medicine, 1300 York Ave, C302/Box69, New York, NY 10065 (Attn: Jeffrey Hernandez)";
+        if( $siteParameter->getTransresFooter() ) {
+            $footer = $siteParameter->getTransresFooter();
+        } else {
+            $footer = "";
+            //$footer = "Make check payable & mail to: Weill Cornell Medicine, 1300 York Ave, C302/Box69, New York, NY 10065 (Attn: TPR Billing)";
+        }
         $invoice->setFooter($footer);
 
         //footer2:
@@ -1477,5 +1496,53 @@ class TransResRequestUtil
         );
 
         return $filterTypes;
+    }
+
+    public function findCreateSiteParameterEntity($specialtyStr) {
+        $em = $this->em;
+        $user = $this->secTokenStorage->getToken()->getUser();
+
+        //$entity = $em->getRepository('OlegTranslationalResearchBundle:TransResSiteParameters')->findOneByOid($specialtyStr);
+
+        $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResSiteParameters');
+        $dql = $repository->createQueryBuilder("siteParameter");
+        $dql->select('siteParameter');
+        $dql->leftJoin('siteParameter.projectSpecialty','projectSpecialty');
+
+        $dqlParameters = array();
+
+        $dql->where("projectSpecialty.abbreviation = :specialtyStr");
+
+        $dqlParameters["specialtyStr"] = $specialtyStr;
+
+        $query = $em->createQuery($dql);
+
+        if( count($dqlParameters) > 0 ) {
+            $query->setParameters($dqlParameters);
+        }
+
+        $entities = $query->getResult();
+        //echo "projectSpecialty count=".count($entities)."<br>";
+
+        if( count($entities) > 0 ) {
+            return $entities[0];
+        }
+
+        //Create New
+        $specialty = $em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation($specialtyStr);
+        if( !$specialty ) {
+            throw new \Exception("SpecialtyList is not found by specialty abbreviation '" . $specialtyStr . "'");
+        } else {
+            $entity = new TransResSiteParameters($user);
+
+            $entity->setProjectSpecialty($specialty);
+
+            $em->persist($entity);
+            $em->flush($entity);
+
+            return $entity;
+        }
+
+        return null;
     }
 }

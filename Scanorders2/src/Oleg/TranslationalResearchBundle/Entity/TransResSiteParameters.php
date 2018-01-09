@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-namespace Oleg\UserdirectoryBundle\Entity;
+namespace Oleg\TranslationalResearchBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -24,7 +24,8 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransf
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="transres_siteParameters")
+ * @ORM\Table(name="transres_siteParameters", uniqueConstraints={@ORM\UniqueConstraint(name="siteParameters_unique", columns={"projectSpecialty_id"})})
+ * @ORM\HasLifecycleCallbacks
  */
 class TransResSiteParameters {
 
@@ -36,9 +37,34 @@ class TransResSiteParameters {
     private $id;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
+     */
+    private $creator;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\JoinColumn(name="updateUser", referencedColumnName="id", nullable=true)
+     */
+    private $updateUser;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $createDate;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $updateDate;
+
+    /**
      * Hematopathology or AP/CP
      *
      * @ORM\ManyToOne(targetEntity="Oleg\TranslationalResearchBundle\Entity\SpecialtyList", cascade={"persist"})
+     * @ORM\JoinColumn(name="projectSpecialty_id", referencedColumnName="id", nullable=false)
      */
     private $projectSpecialty;
 
@@ -53,7 +79,7 @@ class TransResSiteParameters {
     private $transresFooter;
 
     /**
-     * @ORM\OneToOne(targetEntity="Document")
+     * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", )
      * @ORM\JoinColumn(name="transresLogo_id", referencedColumnName="id")
      **/
     private $transresLogo;
@@ -64,6 +90,11 @@ class TransResSiteParameters {
     private $transresNotificationEmail;
 
 
+
+    public function __construct($user=null) {
+        $this->setCreator($user);
+        $this->setCreateDate(new \DateTime());
+    }
 
 
 
@@ -82,6 +113,71 @@ class TransResSiteParameters {
     {
         $this->id = $id;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCreator()
+    {
+        return $this->creator;
+    }
+
+    /**
+     * @param mixed $creator
+     */
+    public function setCreator($creator)
+    {
+        $this->creator = $creator;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUpdateUser()
+    {
+        return $this->updateUser;
+    }
+
+    /**
+     * @param mixed $updateUser
+     */
+    public function setUpdateUser($updateUser)
+    {
+        $this->updateUser = $updateUser;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCreateDate()
+    {
+        return $this->createDate;
+    }
+
+    /**
+     * @param mixed $createDate
+     */
+    public function setCreateDate($createDate)
+    {
+        $this->createDate = $createDate;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdateDate()
+    {
+        return $this->updateDate;
+    }
+
+    /**
+     * @ORM\PreUpdate
+     */
+    public function setUpdateDate()
+    {
+        $this->updateDate = new \DateTime();
+    }
+
 
     /**
      * @return mixed
@@ -164,7 +260,10 @@ class TransResSiteParameters {
     }
 
 
-
+    public function __toString(){
+        //return "Site Parameters ID ".$this->getId()." for ".$this->getProjectSpecialty();
+        return "Site Parameters for ".$this->getProjectSpecialty()->getName();
+    }
 
 
 

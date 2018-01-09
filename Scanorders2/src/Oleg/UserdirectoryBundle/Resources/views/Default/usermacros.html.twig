@@ -300,7 +300,7 @@
 
 {% endmacro %}
 
-{% macro document( documents, cycle, prototype, addRemoveLink, asFormOrEntity ) %}
+{% macro document( documents, cycle, prototype, addRemoveLink, asFormOrEntity, asDocumentArray ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
@@ -331,6 +331,10 @@
 
     {% if asFormOrEntity is not defined or not asFormOrEntity or asFormOrEntity == "" %}
         {% set asFormOrEntity = "asForm" %}
+    {% endif %}
+
+    {% if asDocumentArray is not defined or not asDocumentArray or asDocumentArray == "" %}
+        {% set asDocumentArray = "asDocumentArray" %}
     {% endif %}
 
     {% if "show" in cycle %}
@@ -390,15 +394,116 @@
     {% endfor %}
 
     {% if asFormOrEntity == "asForm" %}
-        {#use dummy-prototype-field to get id and name prototype for adding new document#}
-        {{ formmacros.field(documents.vars.prototype.dummyprototypefield) }}
+        {% if asDocumentArray == "asDocumentArray" %}
+            {#use dummy-prototype-field to get id and name prototype for adding new document#}
+            {{ formmacros.field(documents.vars.prototype.dummyprototypefield) }}
 
-        {% do documents.setRendered %}
+            {% do documents.setRendered %}
+        {% endif %}
     {% endif %}
 
 {% endmacro %}
 
+{% macro singleDocumentContainer(container,document,cycle,prototype,dropzoneInit,documentType,asFormOrEntity,formRest) %}
 
+    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
+    {% if formRest is not defined %}
+        {% set formRest = true %}
+    {% endif %}
+
+    {% if asFormOrEntity is not defined or not asFormOrEntity or asFormOrEntity == "" %}
+        {% set asFormOrEntity = "asForm" %}
+    {% endif %}
+
+    {% if document is defined or prototype == 'prototype' %}
+
+        {% if "show" in cycle %}
+            {% set showFlag = true %}
+        {% else %}
+            {% set showFlag = false %}
+        {% endif %}
+
+        {% set dz_maxFiles = 1 %}
+
+        {% if documentType is not defined %}
+            {% set dz_documentType = "" %}
+        {% else %}
+            {% set dz_documentType = documentType %}
+        {% endif %}
+
+        {#dropzoneInit:{{ dropzoneInit }}<br>#}
+        {% if dropzoneInit is not defined %}
+            {#dropzoneInit is not defined<br>#}
+            {% set dropzoneInit = 'default' %}
+            {% set addRemoveLink = 'default' %}
+        {% endif %}
+
+        {% if dropzoneInit == 'inactive' %}
+            {#dropzoneInit == true<br>#}
+            {% set dropzoneActiveClass = "file-upload-dropzone-inactive" %}
+            {% set addRemoveLink = false %}
+        {% elseif dropzoneInit == 'active' %}
+            {#dropzoneInit == false<br>#}
+            {% set dropzoneActiveClass = "file-upload-dropzone-active" %}
+            {% set addRemoveLink = true %}
+        {% elseif dropzoneInit == 'default' %}
+            {#dropzoneInit == 'default'<br>#}
+            {% if showFlag %}
+                {% set dropzoneActiveClass = "file-upload-dropzone-inactive" %}
+                {% set addRemoveLink = false %}
+            {% else %}
+                {% set dropzoneActiveClass = "file-upload-dropzone-active" %}
+                {% set addRemoveLink = true %}
+            {% endif %}
+        {% else %}
+            {#dropzoneInactive else<br>#}
+            {% if showFlag %}
+                {% set dropzoneActiveClass = "file-upload-dropzone-inactive" %}
+                {% set addRemoveLink = false %}
+            {% else %}
+                {% set dropzoneActiveClass = "file-upload-dropzone-active" %}
+                {% set addRemoveLink = true %}
+            {% endif %}
+        {% endif %}
+
+
+        <div class="dropzone file-upload-dropzone {{ dropzoneActiveClass }}" style="min-height: 150px; margin-bottom: 5px;">
+
+            {% if not showFlag %}
+
+                <input type="hidden" id="documentcontainer-documentspercontainer" value="{{ dz_maxFiles }}">
+                <input type="hidden" id="documentcontainer-document-type" value="{{ dz_documentType }}">
+                <div class="dz-message" style="padding-bottom:5px;"><span>Drag and drop files here to upload or click to select a file (Maximum {{ dz_maxFiles }} files, 10 MB each)</span></div>
+
+            {% else %}
+
+                <div class="dz-message" style="padding-bottom:5px;"><span></span></div>
+
+            {% endif %}
+
+            {% set documents = [document] %}
+
+            {{ usermacros.document( documents, cycle, prototype, addRemoveLink, asFormOrEntity, "asSingleDocument" ) }}
+
+            {#render field "other". id of this field will be used to get the containerid in js#}
+            {% if container is not null %}
+                {% if not showFlag %}
+                    {% if container.others is defined %}
+                        {{ form_widget(container.others) }}
+                    {% endif %}
+
+                    {% if formRest %}
+                        {{ form_rest(container) }}
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+
+        </div>
+
+    {% endif %}
+
+{% endmacro %}
 
 {% macro getInstitutionalTree( entity, linktype ) %}
 
