@@ -21,6 +21,7 @@ namespace Oleg\TranslationalResearchBundle\Util;
 use Doctrine\Common\Collections\ArrayCollection;
 use Oleg\TranslationalResearchBundle\Entity\Invoice;
 use Oleg\TranslationalResearchBundle\Entity\InvoiceItem;
+use Oleg\TranslationalResearchBundle\Entity\TransResSiteParameters;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
@@ -1148,15 +1149,57 @@ class TransResRequestUtil
         return $invoiceItemsArr;
     }
     
-    public function getInvoiceLogo() {
+    public function getInvoiceLogo($invoice, $transresRequest=null) {
+
+        //Get $transresRequest if null
+        if( !$transresRequest ) {
+            $transresRequests = $invoice->getTransresRequests();
+            echo "count=" . count($transresRequests) . "<br>";
+            if (count($transresRequests) > 0) {
+                $transresRequest = $transresRequests[0];
+            }
+        }
+
+        if( !$transresRequest ) {
+            return $this->getDefaultStaticLogo();
+        }
+
+        //Get project's projectSpecialty
+        $project = $transresRequest->getProject();
+        $projectSpecialty = $project->getProjectSpecialty();
+        $projectSpecialtyAbbreviation = $projectSpecialty->getAbbreviation();
+
+        //find site parameters
+        $siteParameter = $this->findCreateSiteParameterEntity($projectSpecialtyAbbreviation);
+        if( !$siteParameter ) {
+            return $this->getDefaultStaticLogo();
+            //throw new \Exception("getInvoiceLogo: SiteParameter is not found by specialty '" . $projectSpecialtyAbbreviation . "'");
+        }
+
+        if( $siteParameter ) {
+            $logoDocument = $siteParameter->getTransresLogo();
+            if( $logoDocument ) {
+
+            }
+        }
+
+        return $this->getDefaultStaticLogo();
+
+        //Default Logo
+        //<img src="{{ asset(bundleFileName) }}" alt="{{ title }}"/>
+//        $filename = "wcmc_logo.jpg";
+//        $bundleFileName = "bundles\\olegtranslationalresearch\\images\\".$filename;
+//        return $bundleFileName;
+
+//        $title = "WCMC";
+//        $html = '<img src="'.$bundleFileName.'" alt="'.$title.'"/>';
+//        return $html;
+    }
+    public function getDefaultStaticLogo() {
         //<img src="{{ asset(bundleFileName) }}" alt="{{ title }}"/>
         $filename = "wcmc_logo.jpg";
         $bundleFileName = "bundles\\olegtranslationalresearch\\images\\".$filename;
         return $bundleFileName;
-
-        $title = "WCMC";
-        $html = '<img src="'.$bundleFileName.'" alt="'.$title.'"/>';
-        return $html;
     }
 
     public function sendRequestNotificationEmails($transresRequest, $subject, $body, $testing=false) {
@@ -1536,6 +1579,13 @@ class TransResRequestUtil
             $entity = new TransResSiteParameters($user);
 
             $entity->setProjectSpecialty($specialty);
+
+            //remove null Logo document if exists
+            $logoDocument = $entity->getTransresLogo();
+            if( $logoDocument ) {
+                $entity->setTransresLogo(null);
+                $em->remove($logoDocument);
+            }
 
             $em->persist($entity);
             $em->flush($entity);

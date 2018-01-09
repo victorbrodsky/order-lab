@@ -115,6 +115,77 @@ class DocumentRepository extends EntityRepository {
         return $documentHolder;
     }
 
+    public function processSingleDocument($form, $documentHolder, $docfieldname=null, $docType=null) {
+
+        if( $documentHolder == null ) {
+            return $documentHolder;
+        }
+
+        //testing
+//        $class = new \ReflectionClass($documentHolder);
+//        $className = $class->getShortName();
+//        echo "<br><br>className=".$className."<br>";
+
+        if( $docfieldname ) {
+            //use $docfieldname to construct set and get methods
+        } else {
+            $docfieldname = "Document";
+        }
+
+        $setMethod = "set".$docfieldname;
+        $getMethod = "get".$docfieldname;
+        //echo "getMethod=".$getMethod."<br>";
+
+        if( !$documentHolder->$getMethod() ) {
+            //echo "return: no documents<br>";
+            return null;
+        }
+
+        //get type by $documentHolder class
+        if( !$docType ) {
+            $docType = $this->getDocumentTypeByHolder($documentHolder);
+        }
+
+        ////////////////// Process Single Document //////////////
+        $doc = $documentHolder->$getMethod();
+        //echo "original doc id=".$doc->getId().", originalname=".$doc->getOriginalname().", uniquename=".$doc->getUniquename()."<br>";
+
+        if( $doc ) {
+
+            $documentHolder->$setMethod(null);
+
+            //get the document id:
+            // name="oleg_translationalresearchbundle_siteparameter[transresLogo][dummyprototypefield][0][id]"
+            $dummyfieldArr = $form->get("transresLogo")->get("dummyprototypefield")->getData();
+            $documentId = $dummyfieldArr[0]['id'];
+            //echo "documentId=".$documentId."<br>";
+
+            if( $documentId ) {
+
+                $docDb = $this->_em->getRepository('OlegUserdirectoryBundle:Document')->find($documentId);
+                if ($docDb) {
+
+                    //echo "docDb id=".$docDb->getId()."<br>";
+                    //set type if not set
+                    if (!$docDb->getType() && $docType) {
+                        $docDb->setType($docType);
+                    }
+                    
+                    $documentHolder->$setMethod($docDb);
+                } else {
+                    //exit("Document not found by id=".$documentId);
+                }
+
+            } //if
+        }
+        ////////////////// EOF Process Single Document //////////////
+
+//        $doc = $documentHolder->$getMethod();
+//        echo "final doc id=".$doc->getId().", originalname=".$doc->getOriginalname().", uniquename=".$doc->getUniquename()."<br>";
+//        exit('eof document processing');
+
+        return $documentHolder;
+    }
 
 
 
@@ -153,6 +224,9 @@ class DocumentRepository extends EntityRepository {
 //                break;
 //            case 'StateLicense':
 //                $doctypeStr = 'Certificate of Qualification Document';
+//                break;
+//            case 'TransResSiteParameters':
+//                $doctypeStr = 'Invoice Logo';
 //                break;
             default:
                 //$doctypeStr = 'Generic Document';

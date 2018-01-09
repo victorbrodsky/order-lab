@@ -297,6 +297,7 @@ class Project {
 
     /**
      * IRB Approval Letter
+     * TODO: test
      *
      * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
      * @ORM\JoinTable(name="transres_project_irbApprovalLetter",

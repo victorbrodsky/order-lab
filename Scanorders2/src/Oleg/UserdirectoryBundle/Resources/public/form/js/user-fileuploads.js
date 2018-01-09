@@ -486,10 +486,10 @@ function constractDocumentIdFieldHtml(commentHolder,documentid) {
     var beginIdStr = res['beginIdStr'];
     var beginNameStr = res['beginNameStr'];
 
-    //console.log("documentid="+documentid);
-    //console.log("documentCount="+documentCount);
-    //console.log("beginIdStr="+beginIdStr);
-    //console.log("beginNameStr="+beginNameStr);
+    console.log("documentid="+documentid);
+    console.log("documentCount="+documentCount);
+    console.log("beginIdStr="+beginIdStr);
+    console.log("beginNameStr="+beginNameStr);
 
     //var documentCount = maxFiles + comments.length;    //'1'; //maximum number of comments is limited, so use this number
 
@@ -633,11 +633,11 @@ function getElementInfoById( id, name ) {
     //id: oleg_userdirectorybundle_user[publicComments][0][documents][__documentsid__][id]
     var idArr = id.split("__documentsid__");
     var beginIdStr = idArr[0];
-    //console.log('beginIdStr='+beginIdStr);
+    console.log('beginIdStr='+beginIdStr);
 
     var nameArr = name.split("[__documentsid__]");
     var beginNameStr = nameArr[0];
-    //console.log('beginNameStr='+beginNameStr);
+    console.log('beginNameStr='+beginNameStr);
 
 
     var res = new Array();

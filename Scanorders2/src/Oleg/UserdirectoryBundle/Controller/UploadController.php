@@ -64,12 +64,17 @@ class UploadController extends Controller {
         //echo "commentid=".$commentid."<br>";
         //echo "commentclass=".$commentclass."<br>";
 
+        //$logger = $this->container->get('logger');
+        //$logger->notice("deleteFileMethod: documentid=".$documentid);
+        //$logger->notice("deleteFileMethod: commentclass=".$commentclass);
+
         //exit('my uploader');
 
         //find document with id
         $em = $this->getDoctrine()->getManager();
         $document = $em->getRepository('OlegUserdirectoryBundle:Document')->find($documentid);
         //echo "document=".$document." => ";
+        //$logger->notice("deleteFileMethod: documentDob=".$document);
 
         $count = 0;
 
@@ -78,11 +83,28 @@ class UploadController extends Controller {
             //document absolute path
             $documentPath = $document->getServerPath();
             //echo "documentPath=".$documentPath."<br>";
-            $logger = $this->container->get('logger');
-            $logger->notice("documentPath=".$documentPath);
+            //$logger->notice("documentPath=".$documentPath);
 
             //find object where document is belongs
             //$comment = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:'.$commentclass)->findOneBy(array('id'=>$commentid,'documents'=>$document));
+
+            //set $commentid and $commentclass to the document entity name
+            //example: entityNamespace="Oleg\TranslationalResearchBundle\Entity", entityName="TransResSiteParameters", entityId=111)
+            if( !$commentid or $commentid == 'undefined' ) {
+                $entityId = $document->getEntityId();           //TransResSiteParameters
+                $commentid = $entityId;
+            }
+            if( !$commentclass or $commentclass == 'undefined' ) {
+                $entityName = $document->getEntityName();           //TransResSiteParameters
+                $entityNamespace = $document->getEntityNamespace(); //Oleg\TranslationalResearchBundle\Entity
+                if( $entityName && $entityNamespace ) {
+                    //OlegTranslationalResearchBundle:TransResSiteParameters
+                    $entityNamespace = str_replace("\\","",$entityNamespace);
+                    $entityNamespace = str_replace("Entity","",$entityNamespace);
+                    $commentclass = $entityNamespace.":".$entityName;
+                    //$logger->notice("commentclass=".$commentclass);
+                }
+            }
 
             if( $commentid && $commentid != 'undefined' && $commentclass && $commentclass != 'undefined' ) {
 
@@ -96,6 +118,7 @@ class UploadController extends Controller {
                 $comments = $query->getResult();
 
                 //echo "comment count=".count($comments)." ";
+                //$logger->notice("comment count=".count($comments));
                 if( count($comments) > 1 ) {
                     throw new \Exception( 'More than one holder found, count='.count($comments) );
                 }
@@ -157,6 +180,9 @@ class UploadController extends Controller {
                 break;
             case "OlegUserdirectoryBundle:Examination":
                 $str = "comment.scores";
+                break;
+            case "OlegTranslationalResearchBundle:TransResSiteParameters":
+                $str = "comment.transresLogo";
                 break;
             default:
                 $str = "comment.documents";

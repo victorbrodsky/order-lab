@@ -397,8 +397,12 @@
         {% if asDocumentArray == "asDocumentArray" %}
             {#use dummy-prototype-field to get id and name prototype for adding new document#}
             {{ formmacros.field(documents.vars.prototype.dummyprototypefield) }}
-
             {% do documents.setRendered %}
+        {% else %}
+            {#For single document without prototype: use dummy field to get id and name for adding new document#}
+            {% set document = documents[0] %}
+            {{ formmacros.field(document.dummyprototypefield) }}
+            {% do document.setRendered %}
         {% endif %}
     {% endif %}
 

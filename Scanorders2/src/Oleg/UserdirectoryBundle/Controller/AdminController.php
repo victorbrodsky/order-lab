@@ -3357,6 +3357,9 @@ class AdminController extends Controller
             'Fellowship Reprimand',
             'Fellowship Legal Suit',
 
+            'Invoice Logo',
+            'Invoice PDF'
+
         );
 
 

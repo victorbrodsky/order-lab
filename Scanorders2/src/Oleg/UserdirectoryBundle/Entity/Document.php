@@ -23,6 +23,17 @@
  * To change this template use File | Settings | File Templates.
  */
 
+///**
+// * Single document implementation:
+// * 1) add interface method removeDocument
+// * 2) modify setter method (i.e. setTransresLogo): add $transresLogo->createUseObject($this);
+// * 3) add in setHolderDocumentsDql: case "OlegTranslationalResearchBundle:TransResSiteParameters" => "comment.transresLogo";
+// *
+// * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
+// * @ORM\JoinColumn(name="transresLogo_id", referencedColumnName="id", nullable=true)
+// **/
+//private $transresLogo;
+
 namespace Oleg\UserdirectoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
