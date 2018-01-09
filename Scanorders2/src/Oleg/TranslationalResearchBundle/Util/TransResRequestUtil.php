@@ -1154,7 +1154,7 @@ class TransResRequestUtil
         //Get $transresRequest if null
         if( !$transresRequest ) {
             $transresRequests = $invoice->getTransresRequests();
-            echo "count=" . count($transresRequests) . "<br>";
+            //echo "count=" . count($transresRequests) . "<br>";
             if (count($transresRequests) > 0) {
                 $transresRequest = $transresRequests[0];
             }
@@ -1179,7 +1179,12 @@ class TransResRequestUtil
         if( $siteParameter ) {
             $logoDocument = $siteParameter->getTransresLogo();
             if( $logoDocument ) {
-
+                $docPath = $logoDocument->getAbsoluteUploadFullPath();
+                //$docPath = $logoDocument->getRelativeUploadFullPath();
+                //echo "docPath=" . $docPath . "<br>";
+                if( $docPath ) {
+                    return $docPath;
+                }
             }
         }
 
