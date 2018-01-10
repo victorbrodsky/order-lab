@@ -163,7 +163,8 @@ class TransResSiteParametersController extends Controller
             $siteParameter->setUpdateUser($user);
 
             //process document
-            $em->getRepository('OlegUserdirectoryBundle:Document')->processSingleDocument($form,$siteParameter,"transresLogo");
+            //$em->getRepository('OlegUserdirectoryBundle:Document')->processSingleDocument($form,$siteParameter,"transresLogo");
+            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($siteParameter,"transresLogo");
 
             $em->flush();
 

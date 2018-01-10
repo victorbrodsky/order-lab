@@ -358,7 +358,7 @@
                 <div class="dz-details">
                     {#<div class="dz-filename"><span data-dz-name>{{ documentObj.uniquename }}</span></div>#}
                     <div class="dz-size" data-dz-size><strong>{{ documentObj.getSizeStr() }}</strong></div>
-                    {{ usermacros.showDocumentAsImage(documentObj,'Document', 'data-dz-thumbnail') }}
+                    {{ usermacros.showDocumentAsImage(documentObj,'Document','data-dz-thumbnail') }}
                 </div>
                 <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
                 <div class="dz-success-mark"><span>✔</span></div>
@@ -2321,75 +2321,52 @@
         {% endif %}
     {% endif %}
 
-    {% if '.pdf' in documentEntity.getAbsoluteUploadFullPath %}
-        {#pdf!!!#}
-        {#<a href="{{ documentEntity.getAbsoluteUploadFullPath }}" target="_blank">#}
-        {#<object {{ atr }} alt="{{ alt~" "~documentEntity.getOriginalname }}"#}
-                {#data="{{ documentEntity.getAbsoluteUploadFullPath }}"#}
-                {#type="application/pdf"#}
-                {#class="{{ objectClass }}"#}
-        {#>#}
-        {#</object>#}
-        {#</a>#}
-        <a href="{{ path(sitename~'_file_view', { 'id': documentEntity.id}) }}" target="_blank">
-            <object {{ atr }} alt="{{ alt~" "~documentEntity.getOriginalnameClean }}"
-                  data="{{ path(sitename~'_file_view', { 'id': documentEntity.id, 'viewType':'snapshot'}) }}"
+    {#{% set docPath = documentEntity.getAbsoluteUploadFullPath() %}#}
+    {% set docPath = path(sitename~'_file_view', { 'id': documentEntity.id, 'viewType':'snapshot'}) %}
+    {% set docAlt = alt~" "~documentEntity.getOriginalnameClean ~" "~ documentEntity.getCreatedate|date("'Y-m-d H:i:s'") %}
+
+    <a href="{{ path(sitename~'_file_view', { 'id': documentEntity.id}) }}" target="_blank">
+
+        {% if '.pdf' in docPath %}
+            <object {{ atr }} alt="{{ docAlt }}"
+                  data="{{ docPath }}"
+                  style="display:block; max-width:100%; max-height:100%;"
                   type="application/pdf"
                   class="{{ objectClass }}"
             >
             </object>
-        </a>
-    {% elseif '.doc' in documentEntity.getAbsoluteUploadFullPath %}
-        {#doc!!!#}
-        {#<a href="{{ documentEntity.getAbsoluteUploadFullPath }}" target="_blank">#}
-        {#<object {{ atr }} alt="{{ alt~" "~documentEntity.getOriginalname }}"#}
-                {#data="{{ documentEntity.getAbsoluteUploadFullPath }}"#}
-                {#type="application/msword"#}
-                {#style="display:block; max-width:100%; max-height:100%;"#}
-                {#class="{{ objectClass }}"#}
-        {#>#}
-        {#</object>#}
-        {#</a>#}
-        <a href="{{ path(sitename~'_file_view', { 'id': documentEntity.id}) }}" target="_blank">
-            <object {{ atr }} alt="{{ alt~" "~documentEntity.getOriginalnameClean }}"
-                  data="{{ path(sitename~'_file_view', { 'id': documentEntity.id, 'viewType':'snapshot'}) }}"
+        {% elseif '.doc' in docPath %}
+            <object {{ atr }} alt="{{ docAlt }}"
+                  data="{{ docPath }}"
+                  style="display:block; max-width:100%; max-height:100%;"
                   type="application/msword"
                   class="{{ objectClass }}"
             >
             </object>
-        </a>
-    {% elseif '.tif' in documentEntity.getAbsoluteUploadFullPath %}
-        <a href="{{ path(sitename~'_file_view', { 'id': documentEntity.id}) }}" target="_blank">
-            {#<embed  {{ atr }} alt="{{ alt~" "~documentEntity.getOriginalnameClean }}"#}
-                              {#src="{{ path(sitename~'_file_view', { 'id': documentEntity.id, 'viewType':'snapshot'}) }}"#}
+        {% elseif '.tif' in docPath %}
+            {#<embed  {{ atr }} alt="{{ docAlt }}"#}
+                              {#src="{{ docPath }}"#}
                               {#type="image/tiff"#}
                               {#class="{{ objectClass }}"#}
                               {#negative=yes#}
             {#>#}
-            <object {{ atr }} alt="{{ alt~" "~documentEntity.getOriginalnameClean }}"
-                              data="{{ path(sitename~'_file_view', { 'id': documentEntity.id, 'viewType':'snapshot'}) }}"
+            <object {{ atr }} alt="{{ docAlt }}"
+                              data="{{ docPath }}"
+                              style="display:block; max-width:100%; max-height:100%;"
                               type="image/tiff"
                               class="{{ objectClass }}"
             >
             </object>
-        </a>
-    {% else %}
-        {#img!!!#}
-        <a href="{{ path(sitename~'_file_view', { 'id': documentEntity.id}) }}" target="_blank">
-            {#<img {{ atr }}#}
-                 {#src="{{ documentEntity.getAbsoluteUploadFullPath }}"#}
-                 {#alt="{{ alt }}"#}
-                 {#alt="{{ alt~" "~documentEntity.getOriginalname }}"#}
-                 {#style="display:block; max-width:100%; max-height:100%;"#}
-                 {#class="{{ objectClass }}"#}
-            {#/>#}
+        {% else %}
             <img {{ atr }}
-                src="{{ path(sitename~'_file_view', { 'id': documentEntity.id, 'viewType':'snapshot'}) }}"
-                alt="{{ alt~" "~documentEntity.getOriginalnameClean }}"
+                src="{{ docPath }}"
+                alt="{{ docAlt }}"
+                style="display:block; max-width:100%; max-height:100%;"
                 class="{{ objectClass }}"
             />
-        </a>
-    {% endif %}
+        {% endif %}
+
+    </a>
 
 {% endmacro %}
 

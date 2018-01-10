@@ -48,24 +48,19 @@ class SiteParameterType extends AbstractType
             'attr' => array('class' => 'textarea form-control')
         ));
 
-//        $builder->add('transresLogo', null, array(
-//            'label' => "Logo:",
-//            'required' => false,
-//            'attr' => array('class' => 'textarea form-control')
-//        ));
-//        $builder->add('transresLogo', null, array(
-//            //'entry_type' => DocumentType::class,
-//            'label' => 'Logo:',
-//            'required' => false,
-//        ));
-        $builder->add('transresLogo', DocumentType::class, array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\Document',
-            'label' => false
+        $builder->add('transresLogos', CollectionType::class, array(
+            'entry_type' => DocumentType::class,
+            'label' => 'Logo(s):',
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__documentsid__',
         ));
 //        $builder->add('transresLogo', DocumentType::class, array(
-//            'form_custom_value' => $this->params,
-//            'required' => false,
-//            'label' => false
+//            'data_class' => 'Oleg\UserdirectoryBundle\Entity\Document',
+//            'label' => false,
 //        ));
 
 

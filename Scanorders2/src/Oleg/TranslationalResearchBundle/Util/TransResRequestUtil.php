@@ -1177,8 +1177,10 @@ class TransResRequestUtil
         }
 
         if( $siteParameter ) {
-            $logoDocument = $siteParameter->getTransresLogo();
-            if( $logoDocument ) {
+            $logoDocuments = $siteParameter->getTransresLogos();
+            echo " logo count=".count($logoDocuments)."<br>";
+            if( count($logoDocuments) > 0 ) {
+                $logoDocument = $logoDocuments->first(); //DESC order => the most recent first
                 $docPath = $logoDocument->getAbsoluteUploadFullPath();
                 //$docPath = $logoDocument->getRelativeUploadFullPath();
                 //echo "docPath=" . $docPath . "<br>";
@@ -1189,16 +1191,6 @@ class TransResRequestUtil
         }
 
         return $this->getDefaultStaticLogo();
-
-        //Default Logo
-        //<img src="{{ asset(bundleFileName) }}" alt="{{ title }}"/>
-//        $filename = "wcmc_logo.jpg";
-//        $bundleFileName = "bundles\\olegtranslationalresearch\\images\\".$filename;
-//        return $bundleFileName;
-
-//        $title = "WCMC";
-//        $html = '<img src="'.$bundleFileName.'" alt="'.$title.'"/>';
-//        return $html;
     }
     public function getDefaultStaticLogo() {
         //<img src="{{ asset(bundleFileName) }}" alt="{{ title }}"/>

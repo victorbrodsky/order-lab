@@ -88,23 +88,23 @@ class UploadController extends Controller {
             //find object where document is belongs
             //$comment = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:'.$commentclass)->findOneBy(array('id'=>$commentid,'documents'=>$document));
 
-            //set $commentid and $commentclass to the document entity name
-            //example: entityNamespace="Oleg\TranslationalResearchBundle\Entity", entityName="TransResSiteParameters", entityId=111)
-            if( !$commentid or $commentid == 'undefined' ) {
-                $entityId = $document->getEntityId();           //TransResSiteParameters
-                $commentid = $entityId;
-            }
-            if( !$commentclass or $commentclass == 'undefined' ) {
-                $entityName = $document->getEntityName();           //TransResSiteParameters
-                $entityNamespace = $document->getEntityNamespace(); //Oleg\TranslationalResearchBundle\Entity
-                if( $entityName && $entityNamespace ) {
-                    //OlegTranslationalResearchBundle:TransResSiteParameters
-                    $entityNamespace = str_replace("\\","",$entityNamespace);
-                    $entityNamespace = str_replace("Entity","",$entityNamespace);
-                    $commentclass = $entityNamespace.":".$entityName;
-                    //$logger->notice("commentclass=".$commentclass);
-                }
-            }
+//            //set $commentid and $commentclass to the document entity name
+//            //example: entityNamespace="Oleg\TranslationalResearchBundle\Entity", entityName="TransResSiteParameters", entityId=111)
+//            if( !$commentid or $commentid == 'undefined' ) {
+//                $entityId = $document->getEntityId();           //TransResSiteParameters
+//                $commentid = $entityId;
+//            }
+//            if( !$commentclass or $commentclass == 'undefined' ) {
+//                $entityName = $document->getEntityName();           //TransResSiteParameters
+//                $entityNamespace = $document->getEntityNamespace(); //Oleg\TranslationalResearchBundle\Entity
+//                if( $entityName && $entityNamespace ) {
+//                    //OlegTranslationalResearchBundle:TransResSiteParameters
+//                    $entityNamespace = str_replace("\\","",$entityNamespace);
+//                    $entityNamespace = str_replace("Entity","",$entityNamespace);
+//                    $commentclass = $entityNamespace.":".$entityName;
+//                    //$logger->notice("commentclass=".$commentclass);
+//                }
+//            }
 
             if( $commentid && $commentid != 'undefined' && $commentclass && $commentclass != 'undefined' ) {
 
@@ -181,9 +181,9 @@ class UploadController extends Controller {
             case "OlegUserdirectoryBundle:Examination":
                 $str = "comment.scores";
                 break;
-            case "OlegTranslationalResearchBundle:TransResSiteParameters":
-                $str = "comment.transresLogo";
-                break;
+//            case "OlegTranslationalResearchBundle:TransResSiteParameters":
+//                $str = "comment.transresLogo";
+//                break;
             default:
                 $str = "comment.documents";
         }

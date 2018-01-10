@@ -77,6 +77,19 @@
             </div>
         {% endif %}
 
+        {% if form.transresLogos is defined %}
+            <p>
+            <div class="well form-element-holder user-documents">
+                <label class="col-xs-12 control-label">Logo(s) - the most recent will be used</label>
+                <div class="row withpaddingtop">
+                    <div class="col-xs-12">
+                        {{ usermacros.documentsContainer(form,form.transresLogos,cycle,'noprototype',8,'default','Invoice Logo','asForm',false) }}
+                    </div>
+                </div>
+            </div>
+            </p>
+        {% endif %}
+
 
         {{ formmacros.field(form.transresFromHeader) }}
         {{ formmacros.field(form.transresFooter) }}

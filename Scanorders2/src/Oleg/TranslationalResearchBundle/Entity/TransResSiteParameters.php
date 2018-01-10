@@ -78,16 +78,27 @@ class TransResSiteParameters {
      */
     private $transresFooter;
 
+//    /**
+//     * Single document implementation:
+//     * 1) add interface method removeDocument
+//     * 2) modify setter method (i.e. setTransresLogo): add $transresLogo->createUseObject($this);
+//     * 3) add in setHolderDocumentsDql: case "OlegTranslationalResearchBundle:TransResSiteParameters" => "comment.transresLogo";
+//     *
+//     * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
+//     * @ORM\JoinColumn(name="transresLogo_id", referencedColumnName="id", nullable=true)
+//     **/
+//    private $transresLogo;
     /**
-     * Single document implementation:
-     * 1) add interface method removeDocument
-     * 2) modify setter method (i.e. setTransresLogo): add $transresLogo->createUseObject($this);
-     * 3) add in setHolderDocumentsDql: case "OlegTranslationalResearchBundle:TransResSiteParameters" => "comment.transresLogo";
+     * Default Logos
      *
-     * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
-     * @ORM\JoinColumn(name="transresLogo_id", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="transres_transResSiteParameters_transresLogo",
+     *      joinColumns={@ORM\JoinColumn(name="transResSiteParameter_id", referencedColumnName="id", onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="transresLogo_id", referencedColumnName="id", onDelete="CASCADE")}
+     *      )
+     * @ORM\OrderBy({"createdate" = "DESC"})
      **/
-    private $transresLogo;
+    private $transresLogos;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -99,6 +110,8 @@ class TransResSiteParameters {
     public function __construct($user=null) {
         $this->setCreator($user);
         $this->setCreateDate(new \DateTime());
+
+        $this->transresLogos = new ArrayCollection();
     }
 
 
@@ -232,29 +245,47 @@ class TransResSiteParameters {
         $this->transresFooter = $transresFooter;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getTransresLogo()
-    {
-        return $this->transresLogo;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getTransresLogo()
+//    {
+//        return $this->transresLogo;
+//    }
+//
+//    /**
+//     * @param mixed $transresLogo
+//     */
+//    public function setTransresLogo($transresLogo)
+//    {
+//        if( $transresLogo ) {
+//            $transresLogo->createUseObject($this);
+//        }
+//
+//        $this->transresLogo = $transresLogo;
+//    }
+//    //interface method to remove document
+//    public function removeDocument($document) {
+//        $document->clearUseObject();
+//        $this->setTransresLogo(null);
+//    }
 
-    /**
-     * @param mixed $transresLogo
-     */
-    public function setTransresLogo($transresLogo)
+    public function addTransresLogo($item)
     {
-        if( $transresLogo ) {
-            $transresLogo->createUseObject($this);
+        if( $item && !$this->transresLogos->contains($item) ) {
+            $this->transresLogos->add($item);
+            $item->createUseObject($this);
         }
-
-        $this->transresLogo = $transresLogo;
+        return $this;
     }
-    //interface method to remove document
-    public function removeDocument($document) {
-        $document->clearUseObject();
-        $this->setTransresLogo(null);
+    public function removeTransresLogo($item)
+    {
+        $this->transresLogos->removeElement($item);
+        $item->clearUseObject();
+    }
+    public function getTransresLogos()
+    {
+        return $this->transresLogos;
     }
 
     /**
