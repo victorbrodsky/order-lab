@@ -282,24 +282,49 @@ class InvoiceType extends AbstractType
                 'label' => 'Save and Generate PDF Invoice',
                 'attr' => array('class' => 'btn btn-primary')
             ));
-            $builder->add('saveAndGeneratePdfAndSend', SubmitType::class, array(
-                'label' => 'Save, Generate PDF Invoice and Send by Email',
+            $builder->add('saveAndGeneratePdfAndSendByEmail', SubmitType::class, array(
+                'label' => 'Save, Generate PDF Invoice and Send PDF Invoice by Email',
                 'attr' => array('class' => 'btn btn-warning')
             ));
         }
-        if( $this->params['cycle'] === "edit" && $this->params['invoice']->getLatestVersion() === true ) {
-            $builder->add('edit', SubmitType::class, array(
-                'label' => 'Update Invoice',
-                'attr' => array('class' => 'btn btn-primary')
-            ));
-            $builder->add('saveAndGeneratePdf', SubmitType::class, array(
-                'label' => 'Save and Generate PDF Invoice',
-                'attr' => array('class' => 'btn btn-primary')
-            ));
-            $builder->add('saveAndGeneratePdfAndSend', SubmitType::class, array(
-                'label' => 'Save, Generate PDF Invoice and Send by Email',
-                'attr' => array('class' => 'btn btn-warning')
-            ));
+        if( $this->params['invoice']->getLatestVersion() === true ) {
+            if( $this->params['cycle'] == "edit" ) {
+
+                if (count($this->params['invoice']->getDocuments()) > 0) {
+                    $generatePrefix = "Re-Generate";
+                } else {
+                    $generatePrefix = "Generate";
+                }
+
+                $builder->add('edit', SubmitType::class, array(
+                    'label' => 'Update Invoice',
+                    'attr' => array('class' => 'btn btn-primary')
+                ));
+                $builder->add('saveAndGeneratePdf', SubmitType::class, array(
+                    'label' => "Save and $generatePrefix PDF Invoice",
+                    'attr' => array('class' => 'btn btn-primary')
+                ));
+                $builder->add('saveAndGeneratePdfAndSendByEmail', SubmitType::class, array(
+                    'label' => "Save, $generatePrefix PDF Invoice and Send PDF Invoice by Email",
+                    'attr' => array('class' => 'btn btn-warning')
+                ));
+
+                if (count($this->params['invoice']->getDocuments()) > 0) {
+                    $builder->add('sendByEmail', SubmitType::class, array(
+                        'label' => 'Send the Most Recent Invoice PDF by Email',
+                        'attr' => array('class' => 'btn btn-warning')
+                    ));
+                }
+
+            }
+
+//            if( $this->params['cycle'] == "show" ) {
+//                $builder->add('sendByEmail', SubmitType::class, array(
+//                    'label' => 'Send the Most Recent Invoice PDF by Email',
+//                    'disabled' => false,
+//                    'attr' => array('class' => 'btn btn-warning')
+//                ));
+//            }
         }
 
     }

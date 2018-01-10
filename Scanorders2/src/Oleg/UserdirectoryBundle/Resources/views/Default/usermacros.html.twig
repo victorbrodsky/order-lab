@@ -371,7 +371,7 @@
                     <div style="overflow:hidden; white-space:nowrap;">
                         {% if documentObj.id %}
                             <a target="_blank"
-                               href="{{ path(sitename~'_file_download', { 'id': documentObj.id }) }}">{{ documentObj.originalname }} (created on {{ documentObj.createdate|date('m/d/Y H:i:s') }})</a>
+                               href="{{ path(sitename~'_file_download', { 'id': documentObj.id }) }}">{{ documentObj.originalname }} (uploaded {{ documentObj.createdate|date('m/d/Y H:i:s') }})</a>
                         {% endif %}
                     </div>
                 </div>

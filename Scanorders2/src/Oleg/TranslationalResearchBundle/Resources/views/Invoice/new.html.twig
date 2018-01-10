@@ -220,16 +220,29 @@
 
         <p>
             {% if form.save is defined %}
+                <p>
                 {{ form_widget(form.save) }}
+                </p>
             {% endif %}
             {% if form.edit is defined %}
+                <p>
                 {{ form_widget(form.edit) }}
+                </p>
             {% endif %}
             {% if form.saveAndGeneratePdf is defined %}
+                <p>
                 {{ form_widget(form.saveAndGeneratePdf) }}
+                </p>
             {% endif %}
-            {% if form.saveAndGeneratePdfAndSend is defined %}
-                {{ form_widget(form.saveAndGeneratePdfAndSend) }}
+            {% if form.saveAndGeneratePdfAndSendByEmail is defined %}
+                <p>
+                {{ form_widget(form.saveAndGeneratePdfAndSendByEmail) }}
+                </p>
+            {% endif %}
+            {% if form.sendByEmail is defined %}
+                <p>
+                {{ form_widget(form.sendByEmail) }}
+                </p>
             {% endif %}
         </p>
 
@@ -258,6 +271,12 @@
         <p>
             <a href="{{ path('translationalresearch_invoice_generate_pdf', {'oid': invoice.oid }) }}" target="_blank">Generate Invoice's PDF</a>
         </p>
+
+        {% if invoice.documents|length > 0 %}
+            {#Send the Most Recent Invoice PDF by Email#}
+            <a href="{{ path('translationalresearch_invoice_send_pdf_email', {'oid': invoice.oid }) }}"
+            >Send the Most Recent Invoice PDF by Email</a>
+        {% endif %}
 
     {% endif %}
 

@@ -416,15 +416,18 @@ class InvoiceController extends Controller
 
             $msg = $transresRequestUtil->createSubmitNewInvoice($transresRequest,$invoice,$form);
 
-            if( $form->getClickedButton() && 'saveAndGeneratePdf' === $form->getClickedButton()->getName() ) {
-                //TODO: save and generate Invoice PDF
-            }
-
-            if( $form->getClickedButton() && 'saveAndGeneratePdfAndSend' === $form->getClickedButton()->getName() ) {
-                //TODO: save, generate Invoice PDF and send by email to recipient
-            }
+//            if( $form->getClickedButton() && 'saveAndGeneratePdf' === $form->getClickedButton()->getName() ) {
+//                //TODO: save and generate Invoice PDF
+//            }
+//
+//            if( $form->getClickedButton() && 'saveAndGeneratePdfAndSend' === $form->getClickedButton()->getName() ) {
+//                //TODO: save, generate Invoice PDF and send by email to recipient
+//            }
+            $msg2 = $this->processInvoiceAfterSave($invoice,$form);
 
             //$msg = "New Invoice has been successfully created for the request ID ".$transresRequest->getOid();
+
+            $msg = $msg . $msg2;
 
             $this->get('session')->getFlashBag()->add(
                 'notice',
@@ -535,9 +538,13 @@ class InvoiceController extends Controller
 
             //update oid: don't update Invoice version on edit. Only the last version can be edited.
 
-            $this->getDoctrine()->getManager()->flush();
+            $em->flush();
+
+            $msg2 = $this->processInvoiceAfterSave($invoice,$editForm);
 
             $msg = "Invoice with ID ".$invoice->getOid()." has been updated.";
+
+            $msg = $msg . $msg2;
 
             $this->get('session')->getFlashBag()->add(
                 'notice',
@@ -871,5 +878,47 @@ class InvoiceController extends Controller
 
         $response = new Response($res);
         return $response;
+    }
+
+    /**
+     * @Route("/send-invoice-pdf-by-email/{oid}", name="translationalresearch_invoice_send_pdf_email")
+     * @Method({"GET"})
+     */
+    public function sendByEmailAction( Request $request, $oid ) {
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $transresRequestUtil = $this->get('transres_request_util');
+        $em = $this->getDoctrine()->getManager();
+
+        $invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($oid);
+        if( !$invoice ) {
+            throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
+        }
+
+        if( false === $transresRequestUtil->isInvoiceBillingContact($invoice,$user) ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+        }
+
+        //Send the most recent Invoice PDF by Email
+
+        return $this->redirectToRoute('translationalresearch_invoice_show', array('oid' => $invoice->getOid()));
+    }
+
+    public function processInvoiceAfterSave( $invoice, $form ) {
+
+        $msg = "";
+
+        if( $form->getClickedButton() && 'saveAndGeneratePdf' === $form->getClickedButton()->getName() ) {
+            //TODO: save and generate Invoice PDF
+        }
+
+        if( $form->getClickedButton() && 'saveAndGeneratePdfAndSendByEmail' === $form->getClickedButton()->getName() ) {
+            //TODO: save, generate Invoice PDF and send by email to recipient
+        }
+
+        if( $form->getClickedButton() && 'sendByEmail' === $form->getClickedButton()->getName() ) {
+            //TODO: send by email to recipient
+        }
+
+        return $msg;
     }
 }

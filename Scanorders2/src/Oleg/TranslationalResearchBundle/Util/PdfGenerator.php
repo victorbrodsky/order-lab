@@ -115,12 +115,12 @@ class PdfGenerator
     protected function constructUniqueFileName($entity,$filenameStr) {
 
         $logger = $this->container->get('logger');
-
-        $userServiceUtil = $this->container->get('user_service_utility');
         $user = $this->secTokenStorage->getToken()->getUser();
 
         $currentDate = new \DateTime();
-        $currentDate = $userServiceUtil->convertToUserTimezone($currentDate,$user);
+
+        //$userServiceUtil = $this->container->get('user_service_utility');
+        //$currentDate = $userServiceUtil->convertToUserTimezone($currentDate,$user);
 
         $subjectUser = $entity->getSubmitter();
         $submitterName = $subjectUser->getUsernameShortest();
@@ -132,13 +132,14 @@ class PdfGenerator
 
         $serverTimezone = date_default_timezone_get(); //server timezone
 
+        //h-i-s-a
         $filename =
             $filenameStr.
             "-".$entity->getOId().
             //"-".$subjectUser->getLastNameUppercase().
             //"-".$subjectUser->getFirstNameUppercase().
             $submitterName.
-            "-generated-on-".$currentDate->format('m-d-Y').'-at-'.$currentDate->format('h-i-s-a').'_'.$serverTimezone.
+            "-generated-on-".$currentDate->format('m-d-Y').'-at-'.$currentDate->format('H-i-s').'_'.$serverTimezone.
             ".pdf";
 
         //replace all white spaces to _

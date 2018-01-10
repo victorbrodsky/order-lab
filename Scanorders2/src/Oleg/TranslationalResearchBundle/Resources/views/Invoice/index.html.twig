@@ -79,6 +79,7 @@
                             <li>
                                 <a href="{{ path('translationalresearch_invoice_show', {'oid': invoice.oid }) }}">Show Invoice</a>
                             </li>
+
                             {% if invoice.latestVersion %}
                                 <li>
                                     <a href="{{ path('translationalresearch_invoice_edit', {'oid': invoice.oid }) }}">Edit Invoice</a>
@@ -101,6 +102,13 @@
                                     <a href="{{ path('translationalresearch_invoice_generate_pdf', {'oid': invoice.oid }) }}"
                                     >Generate PDF Invoice</a>
                                 </li>
+
+                                {% if invoice.documents|length > 0 %}
+                                    {#Send the Most Recent Invoice PDF by Email#}
+                                    <a href="{{ path('translationalresearch_invoice_send_pdf_email', {'oid': invoice.oid }) }}"
+                                    >Send the Most Recent Invoice PDF by Email</a>
+                                {% endif %}
+
                             {% endif %}
 
                             {% if invoice.documents|length > 0 %}
