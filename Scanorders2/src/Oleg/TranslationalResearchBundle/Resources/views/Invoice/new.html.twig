@@ -274,8 +274,10 @@
 
         {% if invoice.documents|length > 0 %}
             {#Send the Most Recent Invoice PDF by Email#}
-            <a href="{{ path('translationalresearch_invoice_send_pdf_email', {'oid': invoice.oid }) }}"
+            <p>
+            <a class="btn btn-warning" href="{{ path('translationalresearch_invoice_send_pdf_email', {'oid': invoice.oid }) }}"
             >Send the Most Recent Invoice PDF by Email</a>
+            </p>
         {% endif %}
 
     {% endif %}
