@@ -58,11 +58,6 @@ class SiteParameterType extends AbstractType
             'prototype' => true,
             'prototype_name' => '__documentsid__',
         ));
-//        $builder->add('transresLogo', DocumentType::class, array(
-//            'data_class' => 'Oleg\UserdirectoryBundle\Entity\Document',
-//            'label' => false,
-//        ));
-
 
         //Buttons
         if( $this->params['cycle'] === "new" ) {

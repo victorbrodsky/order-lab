@@ -370,7 +370,8 @@
                 <div class="file-upload-showlink">
                     <div style="overflow:hidden; white-space:nowrap;">
                         {% if documentObj.id %}
-                            <a target="_blank" href="{{ path(sitename~'_file_download', { 'id': documentObj.id }) }}">{{ documentObj.originalname }} ({{ documentObj.createdate|date('m/d/Y') }})</a>
+                            <a target="_blank"
+                               href="{{ path(sitename~'_file_download', { 'id': documentObj.id }) }}">{{ documentObj.originalname }} (created on {{ documentObj.createdate|date('m/d/Y H:i:s') }})</a>
                         {% endif %}
                     </div>
                 </div>
@@ -2321,45 +2322,51 @@
         {% endif %}
     {% endif %}
 
-    {#{% set docPath = documentEntity.getAbsoluteUploadFullPath() %}#}
-    {% set docPath = path(sitename~'_file_view', { 'id': documentEntity.id, 'viewType':'snapshot'}) %}
-    {% set docAlt = alt~" "~documentEntity.getOriginalnameClean ~" "~ documentEntity.getCreatedate|date("'Y-m-d H:i:s'") %}
+    {% set docAbsPath = documentEntity.getAbsoluteUploadFullPath() %}
+    {% set docSnapshotPath = path(sitename~'_file_view', { 'id': documentEntity.id, 'viewType':'snapshot'}) %}
+    {#docAbsPath={{ docAbsPath }}<br>#}
 
     <a href="{{ path(sitename~'_file_view', { 'id': documentEntity.id}) }}" target="_blank">
 
-        {% if '.pdf' in docPath %}
-            <object {{ atr }} alt="{{ docAlt }}"
-                  data="{{ docPath }}"
-                  style="display:block; max-width:100%; max-height:100%;"
+        {% if '.pdf' in docAbsPath %}
+            {#pdf!!!#}
+            <object {{ atr }}
+                  {#alt="{{ docAlt }}"#}
+                  data="{{ docSnapshotPath }}"
+                  {#style="display:block; max-width:100%; max-height:100%;"#}
                   type="application/pdf"
                   class="{{ objectClass }}"
             >
             </object>
-        {% elseif '.doc' in docPath %}
-            <object {{ atr }} alt="{{ docAlt }}"
-                  data="{{ docPath }}"
-                  style="display:block; max-width:100%; max-height:100%;"
+        {% elseif '.doc' in docAbsPath %}
+            <object {{ atr }}
+                  {#alt="{{ docAlt }}"#}
+                  data="{{ docSnapshotPath }}"
+                  {#style="display:block; max-width:100%; max-height:100%;"#}
                   type="application/msword"
                   class="{{ objectClass }}"
             >
             </object>
-        {% elseif '.tif' in docPath %}
+        {% elseif '.tif' in docAbsPath %}
             {#<embed  {{ atr }} alt="{{ docAlt }}"#}
-                              {#src="{{ docPath }}"#}
+                              {#src="{{ docSnapshotPath }}"#}
                               {#type="image/tiff"#}
                               {#class="{{ objectClass }}"#}
                               {#negative=yes#}
             {#>#}
-            <object {{ atr }} alt="{{ docAlt }}"
-                              data="{{ docPath }}"
-                              style="display:block; max-width:100%; max-height:100%;"
-                              type="image/tiff"
-                              class="{{ objectClass }}"
+            <object {{ atr }}
+                    {#alt="{{ docAlt }}"#}
+                    data="{{ docSnapshotPath }}"
+                    {#style="display:block; max-width:100%; max-height:100%;"#}
+                    type="image/tiff"
+                    class="{{ objectClass }}"
             >
             </object>
         {% else %}
+            {#img!!!#}
+            {% set docAlt = alt~" "~documentEntity.getOriginalnameClean ~" "~ documentEntity.getCreatedate|date("'Y-m-d H:i:s'") %}
             <img {{ atr }}
-                src="{{ docPath }}"
+                src="{{ docSnapshotPath }}"
                 alt="{{ docAlt }}"
                 style="display:block; max-width:100%; max-height:100%;"
                 class="{{ objectClass }}"

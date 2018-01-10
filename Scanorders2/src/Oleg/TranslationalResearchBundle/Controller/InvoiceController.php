@@ -416,8 +416,12 @@ class InvoiceController extends Controller
 
             $msg = $transresRequestUtil->createSubmitNewInvoice($transresRequest,$invoice,$form);
 
-            if( $form->getClickedButton() && 'saveAndSend' === $form->getClickedButton()->getName() ) {
-                //TODO: generate and send PDF
+            if( $form->getClickedButton() && 'saveAndGeneratePdf' === $form->getClickedButton()->getName() ) {
+                //TODO: save and generate Invoice PDF
+            }
+
+            if( $form->getClickedButton() && 'saveAndGeneratePdfAndSend' === $form->getClickedButton()->getName() ) {
+                //TODO: save, generate Invoice PDF and send by email to recipient
             }
 
             //$msg = "New Invoice has been successfully created for the request ID ".$transresRequest->getOid();
@@ -625,14 +629,14 @@ class InvoiceController extends Controller
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
-        //Get $transresRequest (Assume invoice has a single $transresRequest)
-        $transresRequest = null;
-        $transresRequests = $invoice->getTransresRequests();
-        if( count($transresRequests) > 0 ) {
-            $transresRequest = $transresRequests[0];
-        }
+//        //Get $transresRequest (Assume invoice has a single $transresRequest)
+//        $transresRequest = null;
+//        $transresRequests = $invoice->getTransresRequests();
+//        if( count($transresRequests) > 0 ) {
+//            $transresRequest = $transresRequests[0];
+//        }
 
-        $res = $transresPdfUtil->generateInvoicePdf($transresRequest,$invoice,$user);
+        $res = $transresPdfUtil->generateInvoicePdf($invoice,$user);
         
         $filename = $res['filename'];
         $pdf = $res['pdf'];

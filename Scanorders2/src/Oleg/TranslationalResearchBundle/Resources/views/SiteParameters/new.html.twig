@@ -45,38 +45,6 @@
 
         <hr />
 
-        {% if form.transresLogo is defined %}
-            <div class="well form-element-holder user-documents">
-                <label class="col-xs-12 control-label">Logo</label>
-                <div class="row withpaddingtop">
-                    <div class="col-xs-12">
-                        {#
-                        container,
-                        documents,
-                        cycle,
-                        prototype,
-                        dropzoneInit, ('default')
-                        documentType, ('')
-                        asFormOrEntity,
-                        formRest
-                        #}
-                        {{
-                            usermacros.singleDocumentContainer(
-                                form,
-                                form.transresLogo,
-                                cycle,
-                                'noprototype',
-                                'default',
-                                'Logo',
-                                'asForm',
-                                false
-                            )
-                        }}
-                    </div>
-                </div>
-            </div>
-        {% endif %}
-
         {% if form.transresLogos is defined %}
             <p>
             <div class="well form-element-holder user-documents">
@@ -116,7 +84,7 @@
 
     {% if cycle == "edit" %}
         <p>
-            <a class="btn btn-primary" href="{{ path(translationalresearch_sitename~'_standalone_siteparameters_show',{'specialtyStr':siteParameter.getProjectSpecialty().getAbbreviation() }) }}">Cancel</a>
+            <a class="btn btn-default" href="{{ path(translationalresearch_sitename~'_standalone_siteparameters_show',{'specialtyStr':siteParameter.getProjectSpecialty().getAbbreviation() }) }}">Cancel</a>
         </p>
     {% endif %}
 

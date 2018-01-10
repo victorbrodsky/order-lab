@@ -1178,7 +1178,6 @@ class TransResRequestUtil
 
         if( $siteParameter ) {
             $logoDocuments = $siteParameter->getTransresLogos();
-            echo " logo count=".count($logoDocuments)."<br>";
             if( count($logoDocuments) > 0 ) {
                 $logoDocument = $logoDocuments->first(); //DESC order => the most recent first
                 $docPath = $logoDocument->getAbsoluteUploadFullPath();

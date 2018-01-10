@@ -276,20 +276,28 @@ class InvoiceType extends AbstractType
         if( $this->params['cycle'] === "new" ) {
             $builder->add('save', SubmitType::class, array(
                 'label' => 'Generate Invoice',
-                'attr' => array('class' => 'btn btn-warning')
+                'attr' => array('class' => 'btn btn-primary')
             ));
-            $builder->add('saveAndSend', SubmitType::class, array(
-                'label' => 'Generate and Send Invoice',
+            $builder->add('saveAndGeneratePdf', SubmitType::class, array(
+                'label' => 'Save and Generate PDF Invoice',
+                'attr' => array('class' => 'btn btn-primary')
+            ));
+            $builder->add('saveAndGeneratePdfAndSend', SubmitType::class, array(
+                'label' => 'Save, Generate PDF Invoice and Send by Email',
                 'attr' => array('class' => 'btn btn-warning')
             ));
         }
         if( $this->params['cycle'] === "edit" && $this->params['invoice']->getLatestVersion() === true ) {
             $builder->add('edit', SubmitType::class, array(
                 'label' => 'Update Invoice',
-                'attr' => array('class' => 'btn btn-warning')
+                'attr' => array('class' => 'btn btn-primary')
             ));
-            $builder->add('saveAndSend', SubmitType::class, array(
-                'label' => 'Generate and Send Invoice',
+            $builder->add('saveAndGeneratePdf', SubmitType::class, array(
+                'label' => 'Save and Generate PDF Invoice',
+                'attr' => array('class' => 'btn btn-primary')
+            ));
+            $builder->add('saveAndGeneratePdfAndSend', SubmitType::class, array(
+                'label' => 'Save, Generate PDF Invoice and Send by Email',
                 'attr' => array('class' => 'btn btn-warning')
             ));
         }

@@ -33,7 +33,7 @@ class PdfGenerator
     }
 
 
-    public function generateInvoicePdf( $entity, $authorUser ) {
+    public function generateInvoicePdf( $invoice, $authorUser ) {
 
         ini_set('max_execution_time', 300); //300 seconds = 5 minutes
         $logger = $this->container->get('logger');
@@ -48,8 +48,8 @@ class PdfGenerator
         //$transresRequest = $entity->getTransresRequests()->first();
 
         //generate file name
-        $fileFullReportUniqueName = $this->constructUniqueFileName($entity,"Invoice-PDF");
-        $logger->notice("Start to generate PDF Invoice ID=".$entity->getOid()."; filename=".$fileFullReportUniqueName);
+        $fileFullReportUniqueName = $this->constructUniqueFileName($invoice,"Invoice-PDF");
+        $logger->notice("Start to generate PDF Invoice ID=".$invoice->getOid()."; filename=".$fileFullReportUniqueName);
 
         //check and create Report and temp folders
         $reportsUploadPath = "transres/InvoicePDF";  //$userSecUtil->getSiteSettingParameter('reportsUploadPathFellApp');
@@ -60,7 +60,7 @@ class PdfGenerator
         $uploadReportPath = $this->uploadDir.'/'.$reportsUploadPath;
 
         $reportPath = $this->container->get('kernel')->getRootDir() . '/../web/' . $uploadReportPath;
-        echo "reportPath=".$reportPath."<br>";
+        //echo "reportPath=".$reportPath."<br>";
         //$reportPath = realpath($reportPath);
         //echo "reportPath=".$reportPath."<br>";
 
@@ -69,34 +69,34 @@ class PdfGenerator
             chmod($reportPath, 0700);
         }
 
-        //$outdir = $reportPath.'/temp_'.$entity->getOid().'/';
-        //$outdir = $reportPath.'/'.$entity->getOid().'/';
+        //$outdir = $reportPath.'/temp_'.$invoice->getOid().'/';
+        //$outdir = $reportPath.'/'.$invoice->getOid().'/';
         $outdir = $reportPath.'/';
 
         //echo "before generateApplicationPdf id=".$id."; outdir=".$outdir."<br>";
         //0) generate application pdf
-        //$applicationFilePath = $outdir . "application_ID" . $entity->getOid() . ".pdf";
+        //$applicationFilePath = $outdir . "application_ID" . $invoice->getOid() . ".pdf";
         $applicationFilePath = $outdir . $fileFullReportUniqueName;
 
-        $this->generatePdf($entity,$applicationFilePath);
+        $this->generatePdf($invoice,$applicationFilePath);
         //$logger->notice("Successfully Generated Application PDF from HTML for ID=".$id."; file=".$applicationFilePath);
 
         //$filenamePdf = $reportPath . '/' . $fileFullReportUniqueName;
 
         //4) add PDF to invoice DB
         $filesize = filesize($applicationFilePath);
-        $documentPdf = $this->createInvoicePdfDB($entity,"document",$authorUser,$fileFullReportUniqueName,$uploadReportPath,$filesize,'Invoice PDF');
+        $documentPdf = $this->createInvoicePdfDB($invoice,"document",$authorUser,$fileFullReportUniqueName,$uploadReportPath,$filesize,'Invoice PDF');
         if( $documentPdf ) {
             $documentPdfId = $documentPdf->getId();
         } else {
             $documentPdfId = null;
         }
 
-        $event = "PDF for Invoice with ID".$entity->getOid()." has been successfully created " . $fileFullReportUniqueName . " (PDF document ID".$documentPdfId.")";
+        $event = "PDF for Invoice with ID".$invoice->getOid()." has been successfully created " . $fileFullReportUniqueName . " (PDF document ID".$documentPdfId.")";
         //echo $event."<br>";
         //$logger->notice($event);
 
-        $userSecUtil->createUserEditEvent($this->container->getParameter('translationalresearch.sitename'),$event,$authorUser,$entity,null,'Invoice PDF Created');
+        $userSecUtil->createUserEditEvent($this->container->getParameter('translationalresearch.sitename'),$event,$authorUser,$invoice,null,'Invoice PDF Created');
 
         //delete application temp folder
         //$this->deleteDir($outdir);
@@ -116,7 +116,12 @@ class PdfGenerator
 
         $logger = $this->container->get('logger');
 
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $user = $this->secTokenStorage->getToken()->getUser();
+
         $currentDate = new \DateTime();
+        $currentDate = $userServiceUtil->convertToUserTimezone($currentDate,$user);
+
         $subjectUser = $entity->getSubmitter();
         $submitterName = $subjectUser->getUsernameShortest();
         $submitterName = str_replace(" ","-",$submitterName);
@@ -129,7 +134,7 @@ class PdfGenerator
 
         $filename =
             $filenameStr.
-            "-ID".$entity->getOId().
+            "-".$entity->getOId().
             //"-".$subjectUser->getLastNameUppercase().
             //"-".$subjectUser->getFirstNameUppercase().
             $submitterName.

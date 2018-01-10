@@ -78,16 +78,6 @@ class TransResSiteParameters {
      */
     private $transresFooter;
 
-//    /**
-//     * Single document implementation:
-//     * 1) add interface method removeDocument
-//     * 2) modify setter method (i.e. setTransresLogo): add $transresLogo->createUseObject($this);
-//     * 3) add in setHolderDocumentsDql: case "OlegTranslationalResearchBundle:TransResSiteParameters" => "comment.transresLogo";
-//     *
-//     * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
-//     * @ORM\JoinColumn(name="transresLogo_id", referencedColumnName="id", nullable=true)
-//     **/
-//    private $transresLogo;
     /**
      * Default Logos
      *
@@ -244,31 +234,6 @@ class TransResSiteParameters {
     {
         $this->transresFooter = $transresFooter;
     }
-
-//    /**
-//     * @return mixed
-//     */
-//    public function getTransresLogo()
-//    {
-//        return $this->transresLogo;
-//    }
-//
-//    /**
-//     * @param mixed $transresLogo
-//     */
-//    public function setTransresLogo($transresLogo)
-//    {
-//        if( $transresLogo ) {
-//            $transresLogo->createUseObject($this);
-//        }
-//
-//        $this->transresLogo = $transresLogo;
-//    }
-//    //interface method to remove document
-//    public function removeDocument($document) {
-//        $document->clearUseObject();
-//        $this->setTransresLogo(null);
-//    }
 
     public function addTransresLogo($item)
     {

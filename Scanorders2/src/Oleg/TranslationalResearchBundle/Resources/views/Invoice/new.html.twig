@@ -225,8 +225,11 @@
             {% if form.edit is defined %}
                 {{ form_widget(form.edit) }}
             {% endif %}
-            {% if form.saveAndSend is defined %}
-                {{ form_widget(form.saveAndSend) }}
+            {% if form.saveAndGeneratePdf is defined %}
+                {{ form_widget(form.saveAndGeneratePdf) }}
+            {% endif %}
+            {% if form.saveAndGeneratePdfAndSend is defined %}
+                {{ form_widget(form.saveAndGeneratePdfAndSend) }}
             {% endif %}
         </p>
 
@@ -260,7 +263,7 @@
 
     {% if cycle == "edit" %}
         <p>
-            <a class="btn btn-primary" href="{{ path(translationalresearch_sitename~'_invoice_show',{'oid': invoice.oid }) }}">Cancel</a>
+            <a class="btn btn-default" href="{{ path(translationalresearch_sitename~'_invoice_show',{'oid': invoice.oid }) }}">Cancel</a>
         </p>
 
         {#{% if is_granted('ROLE_TRANSRES_ADMIN') %}#}
