@@ -1576,12 +1576,12 @@ class TransResRequestUtil
 
             $entity->setProjectSpecialty($specialty);
 
-            //remove null Logo document if exists
-            $logoDocument = $entity->getTransresLogo();
-            if( $logoDocument ) {
-                $entity->setTransresLogo(null);
-                $em->remove($logoDocument);
-            }
+//            //remove null Logo document if exists
+//            $logoDocument = $entity->getTransresLogo();
+//            if( $logoDocument ) {
+//                $entity->setTransresLogo(null);
+//                $em->remove($logoDocument);
+//            }
 
             $em->persist($entity);
             $em->flush($entity);
