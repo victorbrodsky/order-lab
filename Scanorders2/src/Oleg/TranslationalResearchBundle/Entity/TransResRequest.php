@@ -450,6 +450,7 @@ class TransResRequest {
     {
         if( $item && !$this->invoices->contains($item) ) {
             $this->invoices->add($item);
+            $item->addTransresRequest($this);
         }
         return $this;
     }

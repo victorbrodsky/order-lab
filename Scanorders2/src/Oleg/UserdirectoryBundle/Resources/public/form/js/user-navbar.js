@@ -280,6 +280,10 @@ function setTranslationalResearchNavBar() {
         id = 'translationalresearch-allmenu-invoices';
     }
 
+    if( full.indexOf("/translational-research/site-parameters/") !== -1 ) {
+        id = 'translationalresearch-default-siteparameters';
+    }
+    
     id = commonNavBar(full,id);
 
     //if( full.indexOf("/translational-research/event-log/event-log-per-user-per-event-type/") !== -1 ) {

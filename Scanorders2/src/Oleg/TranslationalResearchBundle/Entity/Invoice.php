@@ -111,7 +111,7 @@ class Invoice {
      * Pre-Populated by Request's contact (Billing Contact: "Bill To")
      *
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
-     * @ORM\JoinColumn(name="salesperson", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="principalInvestigator", referencedColumnName="id", nullable=true)
      */
     private $principalInvestigator;
 

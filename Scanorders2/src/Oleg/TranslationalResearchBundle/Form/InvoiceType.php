@@ -272,19 +272,22 @@ class InvoiceType extends AbstractType
         ));
 
 
+        //data-toggle="modal" data-target="#exampleModal"
+        //"data-toggle"=>"modal", "data-target"=>"#pleaseWaitModal"
+
         //Buttons
         if( $this->params['cycle'] === "new" ) {
             $builder->add('save', SubmitType::class, array(
                 'label' => 'Generate Invoice',
-                'attr' => array('class' => 'btn btn-primary')
+                'attr' => array('class' => 'btn btn-primary btn-with-wait')
             ));
             $builder->add('saveAndGeneratePdf', SubmitType::class, array(
                 'label' => 'Save and Generate PDF Invoice',
-                'attr' => array('class' => 'btn btn-primary')
+                'attr' => array('class' => 'btn btn-primary btn-with-wait', "data-toggle"=>"modal", "data-target"=>"#pleaseWaitModal")
             ));
             $builder->add('saveAndGeneratePdfAndSendByEmail', SubmitType::class, array(
-                'label' => 'Save, Generate PDF Invoice and Send PDF Invoice by Email',
-                'attr' => array('class' => 'btn btn-warning')
+                'label' => 'Save, Generate PDF Invoice and Send PDF Invoice by Email to PI',
+                'attr' => array('class' => 'btn btn-warning btn-with-wait', "data-toggle"=>"modal", "data-target"=>"#pleaseWaitModal")
             ));
         }
         if( $this->params['invoice']->getLatestVersion() === true ) {
@@ -298,23 +301,23 @@ class InvoiceType extends AbstractType
 
                 $builder->add('edit', SubmitType::class, array(
                     'label' => 'Update Invoice',
-                    'attr' => array('class' => 'btn btn-primary')
+                    'attr' => array('class' => 'btn btn-primary btn-with-wait')
                 ));
                 $builder->add('saveAndGeneratePdf', SubmitType::class, array(
                     'label' => "Save and $generatePrefix PDF Invoice",
-                    'attr' => array('class' => 'btn btn-primary')
+                    'attr' => array('class' => 'btn btn-primary btn-with-wait', "data-toggle"=>"modal", "data-target"=>"#pleaseWaitModal") //'onClick'=>"this.disabled=true; this.value = 'Please Wait!';"
                 ));
                 $builder->add('saveAndGeneratePdfAndSendByEmail', SubmitType::class, array(
-                    'label' => "Save, $generatePrefix PDF Invoice and Send PDF Invoice by Email",
-                    'attr' => array('class' => 'btn btn-warning')
+                    'label' => "Save, $generatePrefix PDF Invoice and Send PDF Invoice by Email to PI",
+                    'attr' => array('class' => 'btn btn-warning btn-with-wait', "data-toggle"=>"modal", "data-target"=>"#pleaseWaitModal")
                 ));
 
-                if (count($this->params['invoice']->getDocuments()) > 0) {
-                    $builder->add('sendByEmail', SubmitType::class, array(
-                        'label' => 'Send the Most Recent Invoice PDF by Email',
-                        'attr' => array('class' => 'btn btn-warning')
-                    ));
-                }
+//                if (count($this->params['invoice']->getDocuments()) > 0) {
+//                    $builder->add('sendByEmail', SubmitType::class, array(
+//                        'label' => 'Send the Most Recent Invoice PDF by Email',
+//                        'attr' => array('class' => 'btn btn-warning')
+//                    ));
+//                }
 
             }
 

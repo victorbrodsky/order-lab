@@ -1406,7 +1406,7 @@ class TransResRequestUtil
 
         return $invoice;
     }
-    public function createSubmitNewInvoice($transresRequest,$invoice) {
+    public function createSubmitNewInvoice( $transresRequest, $invoice ) {
         $transresUtil = $this->container->get('transres_util');
 
         $invoice = $this->generateInvoiceOid($transresRequest,$invoice);
@@ -1590,5 +1590,90 @@ class TransResRequestUtil
         }
 
         return null;
+    }
+
+    //send by email to recipient (principalInvestigator)
+    public function sendInvoicePDFByEmail($invoice) {
+
+        $emailUtil = $this->container->get('user_mailer_utility');
+        $transresUtil = $this->container->get('transres_util');
+
+        $msg = "";
+        $transresRequest = null;
+        $siteParameter = null;
+        $attachmentPath = null;
+        $ccs = null;
+
+        $pi = $invoice->getPrincipalInvestigator();
+
+        if( !$pi ) {
+            return "There is no PI. Email has not been sent.";
+        }
+
+        $piEmail = $pi->getSingleEmail();
+        if( !$piEmail ) {
+            return "There is no PI's email. Email has not been sent.";
+        }
+
+        //Attachment: Invoice PDF
+        $invoicePDF = $invoice->getRecentPDF();
+        if( $invoicePDF ) {
+            $attachmentPath = $invoicePDF->getAbsoluteUploadFullPath();
+        }
+
+
+        $salesperson = $invoice->getSalesperson();
+        if( $salesperson ) {
+            $salespersonEmail = $salesperson->getSingleEmail();
+            if( $salespersonEmail ) {
+                $ccs = $salespersonEmail;
+            }
+        }
+
+        if( !$ccs ) {
+            $submitter = $invoice->getSubmitter();
+            if( $submitter ) {
+                $submitterEmail = $submitter->getSingleEmail();
+                if( $submitterEmail ) {
+                    $ccs = $submitterEmail;
+                }
+            }
+        }
+
+        //find default site parameters
+        $transresRequests = $invoice->getTransresRequests();
+        //echo "count=" . count($transresRequests) . "<br>";
+        if (count($transresRequests) > 0) {
+            $transresRequest = $transresRequests[0];
+
+            $project = $transresRequest->getProject();
+            $projectSpecialty = $project->getProjectSpecialty();
+            $projectSpecialtyAbbreviation = $projectSpecialty->getAbbreviation();
+
+            $siteParameter = $this->findCreateSiteParameterEntity($projectSpecialtyAbbreviation);
+            if( !$siteParameter ) {
+                throw new \Exception("SiteParameter is not found by specialty '" . $projectSpecialtyAbbreviation . "'");
+            }
+        }
+
+        if( $siteParameter ) {
+            $emailBody = $siteParameter->getTransresNotificationEmail();
+        } else {
+            $emailBody = "Please find the attached invoice in PDF.";
+        }
+
+        //send by email
+        $subject = "Invoice for the Request ID ".$transresRequest->getOid();
+
+        //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
+        $emailUtil->sendEmail( $piEmail, $subject, $emailBody, $ccs, $ccs, $attachmentPath );
+
+        //event log
+        $eventType = "Invoice PDF sent";
+        $transresUtil->setEventLog($transresRequest,$eventType,$emailBody);
+
+        $msg = $subject . " has been sent by email to " . $piEmail . " with CC to " . $ccs;
+
+        return $msg;
     }
 }

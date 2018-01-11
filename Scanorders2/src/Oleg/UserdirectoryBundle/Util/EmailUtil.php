@@ -41,7 +41,7 @@ class EmailUtil {
 
     //$emails: single or array of emails
     //$ccs: single or array of emails
-    public function sendEmail( $emails, $subject, $message, $ccs=null, $fromEmail=null ) {
+    public function sendEmail( $emails, $subject, $message, $ccs=null, $fromEmail=null, $attachmentPath=null ) {
 
         //testing
         //$emails = "oli2002@med.cornell.edu, cinava@yahoo.com";
@@ -77,7 +77,7 @@ class EmailUtil {
         }
 
         $emails = $this->checkEmails($emails);
-        //$ccs = $this->checkEmails($ccs);
+        $ccs = $this->checkEmails($ccs);
 
         if( $this->em ) {
             $smtpServerAddress = $userutil->getSiteSetting($this->em,'smtpServerAddress');
@@ -119,6 +119,11 @@ class EmailUtil {
             )
             */
 
+        // Optionally add any attachments
+        if( $attachmentPath ) {
+            $transport->attach(\Swift_Attachment::fromPath($attachmentPath));
+        }
+
         //When using send() the message will be sent just like it would be sent if you used your mail client.
         // An integer is returned which includes the number of successful recipients.
         // If none of the recipients could be sent to then zero will be returned, which equates to a boolean false.
@@ -140,6 +145,10 @@ class EmailUtil {
     }
 
     public function checkEmails($emails) {
+
+        if( !$emails ) {
+            return $emails;
+        }
 
         if( is_array($emails) ) {
             return $emails;

@@ -414,16 +414,22 @@ class InvoiceController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             //exit('new');
 
-            $msg = $transresRequestUtil->createSubmitNewInvoice($transresRequest,$invoice,$form);
+            $msg = $transresRequestUtil->createSubmitNewInvoice($transresRequest,$invoice);
 
-//            if( $form->getClickedButton() && 'saveAndGeneratePdf' === $form->getClickedButton()->getName() ) {
-//                //TODO: save and generate Invoice PDF
-//            }
+            //Testing
+//            $invoices = $transresRequest->getInvoices();
+//            echo "count invoices=".count($invoices)."<br>";
 //
-//            if( $form->getClickedButton() && 'saveAndGeneratePdfAndSend' === $form->getClickedButton()->getName() ) {
-//                //TODO: save, generate Invoice PDF and send by email to recipient
+//            $transresRequest = null;
+//            $transresRequests = $invoice->getTransresRequests();
+//            echo "count transresRequests=".count($transresRequests)."<br>";
+//            if( count($transresRequests) > 0 ) {
+//                $transresRequest = $transresRequests[0];
 //            }
-            $msg2 = $this->processInvoiceAfterSave($invoice,$form);
+//            echo "transresRequest=".$transresRequest."<br>";
+//            exit('1');
+
+            $msg2 = $this->processInvoiceAfterSave($invoice,$form,$user);
 
             //$msg = "New Invoice has been successfully created for the request ID ".$transresRequest->getOid();
 
@@ -478,6 +484,7 @@ class InvoiceController extends Controller
         if( count($transresRequests) > 0 ) {
             $transresRequest = $transresRequests[0];
         }
+        //echo "transresRequest=".$transresRequest."<br>";
 
         return array(
             'transresRequest' => $transresRequest,
@@ -540,7 +547,7 @@ class InvoiceController extends Controller
 
             $em->flush();
 
-            $msg2 = $this->processInvoiceAfterSave($invoice,$editForm);
+            $msg2 = $this->processInvoiceAfterSave($invoice,$editForm,$user);
 
             $msg = "Invoice with ID ".$invoice->getOid()." has been updated.";
 
@@ -899,24 +906,62 @@ class InvoiceController extends Controller
         }
 
         //Send the most recent Invoice PDF by Email
+        $msg = $transresRequestUtil->sendInvoicePDFByEmail($invoice);
+
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            $msg
+        );
+
 
         return $this->redirectToRoute('translationalresearch_invoice_show', array('oid' => $invoice->getOid()));
     }
 
-    public function processInvoiceAfterSave( $invoice, $form ) {
+    public function processInvoiceAfterSave( $invoice, $form, $user ) {
 
+        $transresPdfUtil = $this->get('transres_pdf_generator');
+        $transresRequestUtil = $this->get('transres_request_util');
+
+        $newline = "<br>"; //"\n";
         $msg = "";
 
+        //echo "clicked btn=".$form->getClickedButton()->getName()."<br>";
+        //exit('1');
+
         if( $form->getClickedButton() && 'saveAndGeneratePdf' === $form->getClickedButton()->getName() ) {
-            //TODO: save and generate Invoice PDF
+            //save and generate Invoice PDF
+            //1) supposed that invoice has been already saved
+            //2) generate Invoice PDF
+            $res = $transresPdfUtil->generateInvoicePdf($invoice,$user);
+
+            $filename = $res['filename'];
+            //$pdf = $res['pdf'];
+            $size = $res['size'];
+
+            $msg = "PDF has been created for Invoice ID " . $invoice->getOid() . "; filename=".$filename."; size=".$size;
         }
 
         if( $form->getClickedButton() && 'saveAndGeneratePdfAndSendByEmail' === $form->getClickedButton()->getName() ) {
-            //TODO: save, generate Invoice PDF and send by email to recipient
+            //save, generate Invoice PDF and send by email to recipient (principalInvestigator)
+            //1) supposed that invoice has been already saved
+            //2) generate Invoice PDF
+            $res = $transresPdfUtil->generateInvoicePdf($invoice,$user);
+
+            $filename = $res['filename'];
+            //$pdf = $res['pdf'];
+            $size = $res['size'];
+
+            $msg = "PDF has been created for Invoice ID " . $invoice->getOid() . "; filename=".$filename."; size=".$size;
+
+            //3) send by email to recipient (principalInvestigator)
+            //Send the most recent Invoice PDF by Email
+            $msgSendByEmail = $transresRequestUtil->sendInvoicePDFByEmail($invoice);
+
+            $msg = $msg . $newline . $msgSendByEmail;
         }
 
-        if( $form->getClickedButton() && 'sendByEmail' === $form->getClickedButton()->getName() ) {
-            //TODO: send by email to recipient
+        if( !$msg ) {
+            $msg = $newline . $msg;
         }
 
         return $msg;

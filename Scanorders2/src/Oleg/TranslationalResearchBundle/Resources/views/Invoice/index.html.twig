@@ -104,9 +104,11 @@
                                 </li>
 
                                 {% if invoice.documents|length > 0 %}
-                                    {#Send the Most Recent Invoice PDF by Email#}
-                                    <a href="{{ path('translationalresearch_invoice_send_pdf_email', {'oid': invoice.oid }) }}"
-                                    >Send the Most Recent Invoice PDF by Email</a>
+                                    <li>
+                                        {#Send the Most Recent Invoice PDF by Email#}
+                                        <a href="{{ path('translationalresearch_invoice_send_pdf_email', {'oid': invoice.oid }) }}"
+                                        >Send the Most Recent Invoice PDF by Email to PI</a>
+                                    </li>
                                 {% endif %}
 
                             {% endif %}

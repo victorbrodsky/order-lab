@@ -239,11 +239,11 @@
                 {{ form_widget(form.saveAndGeneratePdfAndSendByEmail) }}
                 </p>
             {% endif %}
-            {% if form.sendByEmail is defined %}
-                <p>
-                {{ form_widget(form.sendByEmail) }}
-                </p>
-            {% endif %}
+            {#{% if form.sendByEmail is defined %}#}
+                {#<p>#}
+                {#{{ form_widget(form.sendByEmail) }}#}
+                {#</p>#}
+            {#{% endif %}#}
         </p>
 
 
@@ -276,7 +276,7 @@
             {#Send the Most Recent Invoice PDF by Email#}
             <p>
             <a class="btn btn-warning" href="{{ path('translationalresearch_invoice_send_pdf_email', {'oid': invoice.oid }) }}"
-            >Send the Most Recent Invoice PDF by Email</a>
+            >Send the Most Recent Invoice PDF by Email to PI</a>
             </p>
         {% endif %}
 
@@ -310,6 +310,24 @@
         {#</p>#}
     {#{% endif %}#}
 
+
+    <!-- Modal -->
+    <div class="modal fade" id="pleaseWaitModal" tabindex="-1" role="dialog" aria-labelledby="pleaseWaitModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                {#<div class="modal-header">#}
+                {#</div>#}
+                <div class="modal-body">
+                    <br><br><br>
+                    Please Wait ...
+                    <br><br><br>
+                </div>
+                {#<div class="modal-footer">#}
+                {#</div>#}
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
 
 
@@ -327,6 +345,8 @@
             transresInvoiceItemListeneres();
 
             transresInvoicePiListeneres();
+
+            //transresInvoiceBtnOnClick();
 
         });
 
@@ -457,8 +477,16 @@
             });
         }
 
+        //"Please Wait" for any clicked btn
+//        function transresInvoiceBtnOnClick() {
+//            $('.btn-with-wait').on("click", function(e) {
+//                //console.log("on click .btn-with-wait");
+//                $(this).html('Please Wait ...');
+//                //$(this).attr("disabled", true);
+//            });
+//        }
+
 
     </script>
 
 {% endblock %}
-
