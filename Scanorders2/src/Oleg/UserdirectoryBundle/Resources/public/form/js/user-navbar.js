@@ -244,16 +244,16 @@ function setTranslationalResearchNavBar() {
     //    id = 'translationalresearch-new-project-ap-cp-project';
     //}
     if( full.indexOf("/translational-research/project/new/") !== -1 ) {
-        id = 'translationalresearch-new-project';
+        id = 'translationalresearch-projects';
     }
-
     if( full.indexOf("/translational-research/my-projects") !== -1 ) {
-        id = 'translationalresearch-my-projects';
+        id = 'translationalresearch-projects';
+    }
+    if( full.indexOf("/translational-research/projects-assigned-to-me-for-review") !== -1 ) {
+        id = 'translationalresearch-projects';
     }
 
-    if( full.indexOf("/translational-research/projects-assigned-to-me-for-review") !== -1 ) {
-        id = 'translationalresearch-my-review-projects';
-    }
+
 
     if( full.indexOf("/translational-research/workflow") !== -1 ) {
         id = 'translationalresearch-project-workflow';

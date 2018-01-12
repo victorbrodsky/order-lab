@@ -54,33 +54,80 @@
 
                     {% if is_granted('ROLE_TRANSRES_REQUESTER') %}
 
-                        {% if specialties|length > 0 %}
-                        <li id="nav-bar-translationalresearch-new-project" class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">New Project<b class="caret"></b></a>
+                        {#{% if specialties|length > 0 %}#}
+                            {#<li id="nav-bar-translationalresearch-new-project" class="dropdown">#}
+                                {#<a href="#" class="dropdown-toggle" data-toggle="dropdown">New Project<b class="caret"></b></a>#}
+                                {#<ul class="dropdown-menu">#}
+
+                                {#{% for specialty in specialties %}#}
+                                    {#<li>#}
+                                        {#<a href="{{ path(translationalresearch_sitename~'_project_new',{'specialtyStr':specialty.getAbbreviation()}) }}"#}
+                                        {#>{{ specialty.getName() }}</a>#}
+                                    {#</li>#}
+                                {#{% endfor %}#}
+
+                                {#</ul>#}
+                            {#</li>#}
+                        {#{% endif %}#}
+
+
+                        <li id="nav-bar-translationalresearch-projects" class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Projects<b class="caret"></b></a>
                             <ul class="dropdown-menu">
 
-                            {% for specialty in specialties %}
-                                <li>
-                                    <a href="{{ path(translationalresearch_sitename~'_project_new',{'specialtyStr':specialty.getAbbreviation()}) }}"
-                                    >{{ specialty.getName() }}</a>
+                                <li id="nav-bar-translationalresearch-home" class="hidden-xs divider-vertical">
+                                    <a href="{{ path(translationalresearch_sitename~'_project_index') }}"
+                                    >All Projects</a>
                                 </li>
-                            {% endfor %}
+
+                                {% if specialties|length > 0 %}
+                                    {% for specialty in specialties %}
+                                        <li>
+                                            <a href="{{ path(translationalresearch_sitename~'_project_index',{'filter[projectSpecialty]':specialty.id}) }}"
+                                            >All {{ specialty.getName() }} Projects</a>
+                                        </li>
+                                    {% endfor %}
+                                {% endif %}
+
+                                <hr style="margin-top: 10px; margin-bottom: 10px;">
+
+                                <li id="nav-bar-translationalresearch-my-projects">
+                                    <a href="{{ path(translationalresearch_sitename~'_my_project_index') }}"
+                                    >My Projects</a>
+                                </li>
+
+                                {% if transres_util.hasReviewerRoles() %}
+                                    <li id="nav-bar-translationalresearch-my-review-projects">
+                                        <a href="{{ path(translationalresearch_sitename~'_my_review_project_index') }}">Projects Assigned To Me For Review</a>
+                                    </li>
+                                {% endif %}
+
+                                {% if specialties|length > 0 %}
+                                    <hr style="margin-top: 10px; margin-bottom: 10px;">
+                                    {% for specialty in specialties %}
+                                        <li>
+                                            <a href="{{ path(translationalresearch_sitename~'_project_new',{'specialtyStr':specialty.getAbbreviation()}) }}"
+                                            >New {{ specialty.getName() }} Project</a>
+                                        </li>
+                                    {% endfor %}
+                                    {#<hr>#}
+                                {% endif %}
 
                             </ul>
                         </li>
-                        {% endif %}
+
 
                     {% endif %}
 
-                    {% if is_granted('ROLE_TRANSRES_REQUESTER') %}
-                        <li id="nav-bar-translationalresearch-my-projects"><a href="{{ path(translationalresearch_sitename~'_my_project_index') }}">My Projects</a></li>
-                    {% endif %}
+                    {#{% if is_granted('ROLE_TRANSRES_REQUESTER') %}#}
+                        {#<li id="nav-bar-translationalresearch-my-projects"><a href="{{ path(translationalresearch_sitename~'_my_project_index') }}">My Projects</a></li>#}
+                    {#{% endif %}#}
 
-                    {% if transres_util.hasReviewerRoles() %}
-                        <li id="nav-bar-translationalresearch-my-review-projects">
-                            <a href="{{ path(translationalresearch_sitename~'_my_review_project_index') }}">Projects Assigned To Me For Review</a>
-                        </li>
-                    {% endif %}
+                    {#{% if transres_util.hasReviewerRoles() %}#}
+                        {#<li id="nav-bar-translationalresearch-my-review-projects">#}
+                            {#<a href="{{ path(translationalresearch_sitename~'_my_review_project_index') }}">Projects Assigned To Me For Review</a>#}
+                        {#</li>#}
+                    {#{% endif %}#}
 
                     {% if is_granted('ROLE_TRANSRES_REQUESTER') %}
                         <li id="nav-bar-translationalresearch-allmenu-requests" class="dropdown">
