@@ -276,7 +276,7 @@
             {% set generateLabel = "Generate Invoice PDF" %}
         {% endif %}
         <p>
-            <a class="btn btn-primary" href="{{ path('translationalresearch_invoice_generate_pdf', {'oid': invoice.oid }) }}" target="_blank"
+            <a class="btn btn-primary" href="{{ path('translationalresearch_invoice_generate_pdf', {'oid': invoice.oid }) }}"
             >{{ generateLabel }}</a>
         </p>
 
@@ -317,7 +317,7 @@
     {% if transresRequest is defined %}
         <br>
         <p>
-            <a href="{{ path('translationalresearch_invoice_index', {'id': transresRequest.id }) }}" target="_blank">Show All Invoices for this Request ID {{ transresRequest.oid }}</a>
+            <a href="{{ path('translationalresearch_invoice_index', {'id': transresRequest.id }) }}" target="_blank">Show All Invoices for the same Request ID {{ transresRequest.oid }}</a>
         </p>
     {% endif %}
 

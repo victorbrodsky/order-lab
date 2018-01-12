@@ -93,14 +93,19 @@
                             {#</li>#}
 
                             {#{% if is_granted('ROLE_TRANSRES_ADMIN') %}#}
-                                <li>
-                                    <a href="{{ path('translationalresearch_invoice_download', {'oid': invoice.oid }) }}"
-                                    >PDF Invoice Preview</a>
-                                </li>
+                                {#<li>#}
+                                    {#<a href="{{ path('translationalresearch_invoice_download', {'oid': invoice.oid }) }}"#}
+                                    {#>PDF Invoice Preview</a>#}
+                                {#</li>#}
 
+                                {% if invoice.documents|length > 0 %}
+                                    {% set generateLabel = "Regenerate Invoice PDF" %}
+                                {% else %}
+                                    {% set generateLabel = "Generate Invoice PDF" %}
+                                {% endif %}
                                 <li>
                                     <a href="{{ path('translationalresearch_invoice_generate_pdf', {'oid': invoice.oid }) }}"
-                                    >Generate PDF Invoice</a>
+                                    >{{ generateLabel }}</a>
                                 </li>
 
                                 {% if invoice.documents|length > 0 %}
