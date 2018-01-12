@@ -124,9 +124,21 @@
                 <td>Subtotal ($)</td>
                 <td>{{ invoice.subTotal }}</td>
             </tr>
+
             <tr>
                 <td COLSPAN=3 ALIGN=CENTER></td>
-                <td><b>Total Amt ($)</b></td>
+                <td>Discount ($)</td>
+                <td>{{ invoice.discountNumeric }}</td>
+            </tr>
+            <tr>
+                <td COLSPAN=3 ALIGN=CENTER></td>
+                <td>Discount (%)</td>
+                <td>{{ invoice.discountPercent }}</td>
+            </tr>
+
+            <tr>
+                <td COLSPAN=3 ALIGN=CENTER></td>
+                <td><b>Total ($)</b></td>
                 <td>{{ invoice.total }}</td>
             </tr>
             <tr>

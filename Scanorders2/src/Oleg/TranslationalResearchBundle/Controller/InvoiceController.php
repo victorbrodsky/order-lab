@@ -48,6 +48,8 @@ class InvoiceController extends Controller
         $transresRequestUtil = $this->get('transres_request_util');
         $routeName = $request->get('_route');
         $advancedFilter = 0;
+        $title = "List of Invoices";
+        $metaTitle = null;
 
         $repository = $em->getRepository('OlegTranslationalResearchBundle:Invoice');
         $dql =  $repository->createQueryBuilder("invoice");
@@ -61,7 +63,14 @@ class InvoiceController extends Controller
         $dqlParameters = array();
 
         if( $routeName == "translationalresearch_invoice_index" ) {
-            $title = "List of Invoices for Request ID ".$transresRequest->getOid();
+
+            //Title
+            $requestUrl = $transresRequestUtil->getRequestShowUrl($transresRequest);
+            $thisLink = "<a href=".$requestUrl.">"."Request ID ".$transresRequest->getOid()."</a>";
+            //$title = "List of Invoices for Request ID ".$transresRequest->getOid();
+            $title = "List of Invoices for " . $thisLink;
+            $metaTitle = "List of Invoices for Request ID ".$transresRequest->getOid();
+
             $dql->where("transresRequests.id = :transresRequestId");
             $dqlParameters["transresRequestId"] = $transresRequest->getId();
         }
@@ -375,10 +384,15 @@ class InvoiceController extends Controller
 
         //$latestVersion = $transresRequestUtil->getLatestInvoiceVersion($transresRequest);
 
+        if( !$metaTitle ) {
+            $metaTitle = $title;
+        }
+
         return array(
             'invoices' => $invoices,
             'transresRequest' => $transresRequest,
             'title' => $title,
+            'metaTitle' => $metaTitle,
             'filterform' => $filterform->createView(),
             'advancedFilter' => $advancedFilter,
             //'latestVersion' => $latestVersion

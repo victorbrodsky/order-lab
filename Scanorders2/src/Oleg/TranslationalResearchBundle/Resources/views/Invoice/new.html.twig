@@ -246,12 +246,13 @@
             {#{% endif %}#}
         </p>
 
-
     {{ form_end(form) }}
+
 
     {% if cycle == "show" and invoice.latestVersion %}
         <p>
-            <a class="btn btn-warning" href="{{ path(translationalresearch_sitename~'_invoice_edit',{'oid':invoice.oid}) }}">Edit Invoice</a>
+            <a class="btn btn-primary" href="{{ path(translationalresearch_sitename~'_invoice_edit',{'oid':invoice.oid}) }}"
+            >Edit Invoice</a>
         </p>
 
         {#<p>#}
@@ -264,12 +265,19 @@
             {#{% endif %}#}
         {#</p>#}
 
-        <p>
-            <a href="{{ path('translationalresearch_invoice_download', {'oid': invoice.oid }) }}" target="_blank">PDF Invoice Preview</a>
-        </p>
+        {#<p>#}
+            {#<a href="{{ path('translationalresearch_invoice_download', {'oid': invoice.oid }) }}" target="_blank"#}
+            {#>PDF Invoice Preview</a>#}
+        {#</p>#}
 
+        {% if invoice.documents|length > 0 %}
+            {% set generateLabel = "Regenerate Invoice PDF" %}
+        {% else %}
+            {% set generateLabel = "Generate Invoice PDF" %}
+        {% endif %}
         <p>
-            <a href="{{ path('translationalresearch_invoice_generate_pdf', {'oid': invoice.oid }) }}" target="_blank">Generate Invoice's PDF</a>
+            <a class="btn btn-primary" href="{{ path('translationalresearch_invoice_generate_pdf', {'oid': invoice.oid }) }}" target="_blank"
+            >{{ generateLabel }}</a>
         </p>
 
         {% if invoice.documents|length > 0 %}
@@ -280,9 +288,20 @@
             </p>
         {% endif %}
 
+        <p>
+            <a href="{{ path('translationalresearch_invoice_download', {'oid': invoice.oid }) }}" target="_blank"
+            >PDF Invoice Preview</a>
+        </p>
+
     {% endif %}
 
     {% if cycle == "edit" %}
+
+        {#<p>#}
+            {#<a href="{{ path('translationalresearch_invoice_download', {'oid': invoice.oid }) }}" target="_blank"#}
+            {#>PDF Invoice Preview</a>#}
+        {#</p>#}
+
         <p>
             <a class="btn btn-default" href="{{ path(translationalresearch_sitename~'_invoice_show',{'oid': invoice.oid }) }}">Cancel</a>
         </p>
@@ -320,7 +339,7 @@
                 <div class="modal-body">
                     <br><br><br>
                     Please Wait ...
-                    <br><br><br>
+                    <br><br><br><br><br>
                 </div>
                 {#<div class="modal-footer">#}
                 {#</div>#}

@@ -3,14 +3,14 @@
 {% import "OlegTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}
 
 {% block title %}
-    {{ title }}
+    Requests for Project ID {{ project.oid }}
 {% endblock %}
 
 
 {% block content %}
 
     <h4 class="text-info" align="center">
-        {{ title }}
+        {{ title|raw }}
     </h4>
 
     <p>

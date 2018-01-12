@@ -294,7 +294,7 @@ class InvoiceType extends AbstractType
             if( $this->params['cycle'] == "edit" ) {
 
                 if (count($this->params['invoice']->getDocuments()) > 0) {
-                    $generatePrefix = "Re-Generate";
+                    $generatePrefix = "Regenerate";
                 } else {
                     $generatePrefix = "Generate";
                 }

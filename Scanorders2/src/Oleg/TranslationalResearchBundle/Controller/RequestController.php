@@ -37,6 +37,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
 /**
@@ -467,7 +468,6 @@ class RequestController extends Controller
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $routeName = $request->get('_route');
-        $title = "Requests for the project ID ".$project->getOid();
         $formnode = false;
 
         //////// create filter //////////
@@ -650,6 +650,18 @@ class RequestController extends Controller
             $paginationParams
         );
         //echo "transresRequests count=".count($transresRequests)."<br>";
+
+        //Title
+        $projectUrl = $this->container->get('router')->generate(
+            'translationalresearch_project_show',
+            array(
+                'id' => $project->getId(),
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        $projectLink = "<a href=".$projectUrl.">"."Project ID ".$project->getOid()."</a>";
+        //$title = "Requests for the project ID ".$project->getOid();
+        $title = "Requests for ".$projectLink;
 
         $requestTotalFeeHtml = $transresRequestUtil->getTransResRequestTotalFeeHtml($project);
         if( $requestTotalFeeHtml ) {
