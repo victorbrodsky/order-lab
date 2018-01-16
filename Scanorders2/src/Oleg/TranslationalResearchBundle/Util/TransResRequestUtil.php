@@ -1314,11 +1314,14 @@ class TransResRequestUtil
         //Get PI
         $pi = $invoice->getPrincipalInvestigator();
         if( !$pi ) {
-            return "There is no PI. Email has not been sent.";
+            //return "There is no PI. Email has not been sent.";
+            throw new \Exception("There is no PI. Email has not been sent.");
+
         }
         $piEmail = $pi->getSingleEmail();
         if( !$piEmail ) {
-            return "There is no PI's email. Email has not been sent.";
+            //return "There is no PI's email. Email has not been sent.";
+            throw new \Exception("There is no PI's email. Email has not been sent.");
         }
 
         $body = $body . $newline."To issue the invoice to ".$pi.
