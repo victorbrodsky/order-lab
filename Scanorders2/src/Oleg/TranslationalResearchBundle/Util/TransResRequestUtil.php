@@ -1315,8 +1315,9 @@ class TransResRequestUtil
         $pi = $invoice->getPrincipalInvestigator();
         if( !$pi ) {
             //return "There is no PI. Email has not been sent.";
-            throw new \Exception("There is no PI. Email has not been sent.");
-
+            //throw new \Exception("There is no PI. Email has not been sent.");
+            //Use submitter
+            $pi = $invoice->getSubmitter();
         }
         $piEmail = $pi->getSingleEmail();
         if( !$piEmail ) {
