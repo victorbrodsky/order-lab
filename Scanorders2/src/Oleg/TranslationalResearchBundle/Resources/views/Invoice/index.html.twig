@@ -121,11 +121,11 @@
                                 <li>
                                     Change status to ...
                                 </li>
+                                <hr>
 
                             {% endif %}
 
                             {% if invoice.documents|length > 0 %}
-                                <hr>
                                 <li>
                                     <a target="_blank"
                                        href="{{ path('translationalresearch_invoice_download_recent', {'oid': invoice.oid }) }}"
