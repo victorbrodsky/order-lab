@@ -1459,12 +1459,14 @@ class TransResRequestUtil
     }
     public function createSubmitNewInvoice( $transresRequest, $invoice ) {
         $transresUtil = $this->container->get('transres_util');
-        $transresRequestUtil = $this->container->get('transres_request_util');
+        //$transresRequestUtil = $this->container->get('transres_request_util');
 
         $invoice = $this->generateInvoiceOid($transresRequest,$invoice);
 
         //use the values in Invoice’s Quantity fields to overwrite/update the associated Request’s "Completed #" fields
-        $transresRequestUtil->updateRequestCompletedFieldsByInvoice($invoice);
+        $this->updateRequestCompletedFieldsByInvoice($invoice);
+
+        $this->updateInvoiceStatus($invoice);
 
         $this->em->persist($invoice);
         $this->em->flush();
@@ -1516,6 +1518,21 @@ class TransResRequestUtil
         }
 
         return $transresRequest;
+    }
+
+    public function updateInvoiceStatus($invoice) {
+        $paid = $invoice->getPaid();
+
+        //Change invoice status to "Partially Paid" if the paid amount is not equal to total amount.
+        if( $paid && $paid != $invoice->getTotal() ) {
+            $invoice->setStatus("Paid Partially");
+        }
+
+        if( $paid && $paid == $invoice->getTotal() ) {
+            $invoice->setStatus("Paid in Full");
+        }
+
+        return $invoice;
     }
     
     public function isInvoiceBillingContact( $invoice, $user ) {
@@ -1751,6 +1768,9 @@ class TransResRequestUtil
 
         //Change Invoice status to Unpaid/Issued
         $invoice->setStatus("Unpaid/Issued");
+        //TODO: what if paid == total? Should we use $transresRequestUtil->updateInvoiceStatus($invoice);
+        //overwrite status if paid is not null: "Paid Partially" or "Paid in Full"
+        $this->updateInvoiceStatus($invoice);
         $this->em->persist($invoice);
         $this->em->flush($invoice);
 

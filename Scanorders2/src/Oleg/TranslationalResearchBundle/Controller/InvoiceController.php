@@ -567,6 +567,8 @@ class InvoiceController extends Controller
             //use the values in Invoice’s Quantity fields to overwrite/update the associated Request’s "Completed #" fields
             $transresRequestUtil->updateRequestCompletedFieldsByInvoice($invoice);
 
+            $transresRequestUtil->updateInvoiceStatus($invoice);
+
             $em->flush();
 
             $msg2 = $this->processInvoiceAfterSave($invoice,$editForm,$user);
