@@ -892,7 +892,7 @@ class TransResRequestUtil
                     if( 1 ) {
                         //Create new invoice entity and pdf
                         $invoice = $this->createNewInvoice($transresRequest, $user);
-                        $invoice = $this->createSubmitNewInvoice($transresRequest, $invoice);
+                        $msgInvoice = $this->createSubmitNewInvoice($transresRequest, $invoice);
 
                         //generate Invoice PDF
                         $res = $transresPdfUtil->generateInvoicePdf($invoice,$user);
