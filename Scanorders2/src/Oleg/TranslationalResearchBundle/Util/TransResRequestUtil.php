@@ -1453,6 +1453,7 @@ class TransResRequestUtil
         $total = $this->getTransResRequestFeeHtml($transresRequest);
         $invoice->setSubTotal($total);
         $invoice->setTotal($total);
+        $invoice->setDue($total);
 
         return $invoice;
     }
