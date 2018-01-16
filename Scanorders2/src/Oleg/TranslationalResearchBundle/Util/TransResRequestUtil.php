@@ -1298,7 +1298,7 @@ class TransResRequestUtil
         );
 
         $body = "Please review the draft invoice pdf for request ".$transresRequest->getOid().
-            " of project ".$projectTitle.":".$invoicePdfViewUrl.$newline;
+            " of project ".$projectTitle.":".$newline.$invoicePdfViewUrl.$newline;
 
         //2) To issue the invoice to FirstNameOfSubmitter LastNameOfSubmitter (WCMC CWID: xxx) at
         // submitter'semail@some.com as it, please follow this link
@@ -1337,7 +1337,7 @@ class TransResRequestUtil
             UrlGeneratorInterface::ABSOLUTE_URL
         );
 
-        $body = $body . $newline. "To edit the invoice and generate an updated copy, please follow this link:" .
+        $body = $body . $newline. "To edit the invoice and generate an updated copy, please follow this link:".$newline.
             $editInvoiceUrl.$newline;
 
         //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
