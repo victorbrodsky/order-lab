@@ -159,7 +159,7 @@
                 <div class = "input-group">
                     {{ form_widget(form.subTotal) }}
                     <span class = "input-group-addon btn" onclick="transresUpdateSubTotal();">
-                        Calculate
+                        Recalculate
                     </span>
                 </div>
             </div>
@@ -181,8 +181,8 @@
                 <div class = "input-group">
                     {{ form_widget(form.total) }}
                     <span class = "input-group-addon btn" onclick="transresUpdateTotal();">
-                            Calculate
-                        </span>
+                        Recalculate
+                    </span>
                 </div>
             </div>
             <div class="col-xs-4" align="right">
@@ -192,6 +192,11 @@
 
         {% if form.paid is defined %}
             {{ formmacros.field_left(form.paid) }}
+        {% endif %}
+
+        {#"Balance Due" (total - paid)#}
+        {% if form.due is defined %}
+            {{ formmacros.field_left(form.due) }}
         {% endif %}
 
         <br>
@@ -394,6 +399,7 @@
             $('.invoiceitem-total').on('input', function(event) {
                 //console.log("transresUpdateSubTotal: triggered by manually update row total");
                 transresUpdateSubTotal();
+                //transresUpdateDue();
             });
 
             $('.invoice-discountNumeric').on('input', function(event) {
@@ -403,6 +409,10 @@
             $('.invoice-discountPercent').on('input', function(event) {
                 $('.invoice-discountNumeric').val(null);
                 transresUpdateTotal();
+            });
+
+            $('.invoice-paid').on('input', function(event) {
+                transresUpdateDue();
             });
         }
 
@@ -426,7 +436,6 @@
         }
 
         function transresUpdateTotal() {
-
             var discount = 0;
             var discountNumeric = $(".invoice-discountNumeric").val();
             var discountPercent = $(".invoice-discountPercent").val();
@@ -445,6 +454,8 @@
 
             total = transresRoundDecimal(total);
             $(".invoice-total").val(total);
+
+            transresUpdateDue();
         }
 
         function transresRoundDecimal(value) {
@@ -504,6 +515,19 @@
 //                //$(this).attr("disabled", true);
 //            });
 //        }
+
+        function transresUpdateDue() {
+            var total = $(".invoice-total").val();
+            var paid = $(".invoice-paid").val();
+            var due = parseFloat(total);
+
+            if( total && paid ) {
+                due = parseFloat(total) - parseFloat(paid);
+                due = transresRoundDecimal(due);
+            }
+
+            $(".invoice-due").val(due);
+        }
 
 
     </script>

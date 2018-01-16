@@ -95,6 +95,11 @@ class TransResSiteParameters {
      */
     private $transresNotificationEmail;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $transresNotificationEmailSubject;
+
 
 
     public function __construct($user=null) {
@@ -268,6 +273,23 @@ class TransResSiteParameters {
     {
         $this->transresNotificationEmail = $transresNotificationEmail;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getTransresNotificationEmailSubject()
+    {
+        return $this->transresNotificationEmailSubject;
+    }
+
+    /**
+     * @param mixed $transresNotificationEmailSubject
+     */
+    public function setTransresNotificationEmailSubject($transresNotificationEmailSubject)
+    {
+        $this->transresNotificationEmailSubject = $transresNotificationEmailSubject;
+    }
+
 
 
     public function __toString(){

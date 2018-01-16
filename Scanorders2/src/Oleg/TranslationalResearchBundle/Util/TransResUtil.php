@@ -2462,4 +2462,17 @@ class TransResUtil
 
         return $ids;
     }
+
+    public function replaceTextByNamingConvention( $text, $project, $transresRequest, $invoice ) {
+        if( $project )
+            $text = str_replace("[[PROJECT ID]]", $project->getOid(), $text);
+
+        if( $transresRequest )
+            $text = str_replace("[[REQUEST ID]]", $transresRequest->getOid(), $text);
+
+        if( $invoice )
+            $text = str_replace("[[INVOICE ID]]", $invoice->getOid(), $text);
+
+        return $text;
+    }
 }

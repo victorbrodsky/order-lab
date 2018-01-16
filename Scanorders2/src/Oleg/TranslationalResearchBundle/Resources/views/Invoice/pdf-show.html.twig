@@ -50,6 +50,9 @@
             <p>
                 Salesperson: {{ invoice.salesperson.getUsernameOptimal() }}
             </p>
+            <p>
+                Status: {{ invoice.status }}
+            </p>
         </div>
     </div>
 
@@ -143,8 +146,14 @@
             </tr>
             <tr>
                 <td COLSPAN=3 ALIGN=CENTER></td>
-                <td><b>{{ invoice.status }}</b></td>
+                {#<td><b>{{ invoice.status }}</b></td>#}
+                <td><b>Paid ($)</b></td>
                 <td>{{ invoice.paid }}</td>
+            </tr>
+            <tr>
+                <td COLSPAN=3 ALIGN=CENTER></td>
+                <td>Balance Due ($)</td>
+                <td>{{ invoice.due }}</td>
             </tr>
         </table>
     </div>

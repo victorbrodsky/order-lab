@@ -200,6 +200,11 @@ class Invoice {
     private $paid;
 
     /**
+     * @ORM\Column(type="decimal", precision=15, scale=2, nullable=true)
+     */
+    private $due;
+
+    /**
      * @ORM\OneToMany(targetEntity="InvoiceItem", mappedBy="invoice", cascade={"persist","remove"})
      */
     private $invoiceItems;
@@ -618,6 +623,22 @@ class Invoice {
     public function setPaid($paid)
     {
         $this->paid = $paid;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDue()
+    {
+        return $this->due;
+    }
+
+    /**
+     * @param mixed $due
+     */
+    public function setDue($due)
+    {
+        $this->due = $due;
     }
 
     

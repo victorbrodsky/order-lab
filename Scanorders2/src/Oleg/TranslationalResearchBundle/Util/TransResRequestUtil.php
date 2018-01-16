@@ -1357,6 +1357,7 @@ class TransResRequestUtil
         }
 
         $invoice = new Invoice($user);
+        $invoice->setStatus("Pending");
 
         $invoice = $this->generateInvoiceOid($transresRequest,$invoice);
 
@@ -1457,8 +1458,12 @@ class TransResRequestUtil
     }
     public function createSubmitNewInvoice( $transresRequest, $invoice ) {
         $transresUtil = $this->container->get('transres_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
 
         $invoice = $this->generateInvoiceOid($transresRequest,$invoice);
+
+        //use the values in Invoice’s Quantity fields to overwrite/update the associated Request’s "Completed #" fields
+        $transresRequestUtil->updateRequestCompletedFieldsByInvoice($invoice);
 
         $this->em->persist($invoice);
         $this->em->flush();
@@ -1474,6 +1479,42 @@ class TransResRequestUtil
         $transresUtil->setEventLog($invoice,$eventType,$msg);
 
         return $msg;
+    }
+
+    public function updateRequestCompletedFieldsByInvoice($invoice) {
+        $transresUtil = $this->container->get('transres_util');
+        $transresRequest = null;
+        //Get $transresRequest if null
+        $transresRequests = $invoice->getTransresRequests();
+        //echo "count=" . count($transresRequests) . "<br>";
+        if (count($transresRequests) > 0) {
+            $transresRequest = $transresRequests[0];
+        }
+
+        if( !$transresRequest ) {
+            return null;
+        }
+
+        foreach( $invoice->getInvoiceItems() as $invoiceItem ) {
+            $requestProduct = $invoiceItem->getProduct();
+            if( !$requestProduct ) {
+                continue;
+            }
+            $requestQuant = $requestProduct->getCompleted();
+            $invoiceQuant = $invoiceItem->getQuantity();
+            if( $invoiceQuant && $requestQuant != $invoiceQuant ) {
+
+                //eventLog changes
+                $eventType = "Request Updated";
+                $msg = "Request's (".$transresRequest->getOid(). ") completed value ".$requestQuant.
+                    " has been updated by the invoice's (".$invoice->getOid() . ") quantity value " . $invoiceQuant;
+                $transresUtil->setEventLog($transresRequest,$eventType,$msg);
+
+                $requestProduct->setCompleted($invoiceQuant);
+            }
+        }
+
+        return $transresRequest;
     }
     
     public function isInvoiceBillingContact( $invoice, $user ) {
@@ -1707,28 +1748,34 @@ class TransResRequestUtil
             }
         }
 
-        if( $siteParameter ) {
-            $emailBody = $siteParameter->getTransresNotificationEmail();
-        } else {
-            $emailBody = "Please find the attached invoice in PDF.";
-        }
-
         //Change Invoice status to Unpaid/Issued
         $invoice->setStatus("Unpaid/Issued");
         $this->em->persist($invoice);
         $this->em->flush($invoice);
 
-        //send by email
-        $subject = "Invoice for the Request ID ".$transresRequest->getOid();
+        if( $siteParameter ) {
+            $emailBody = $siteParameter->getTransresNotificationEmail();
+            $emailBody = $transresUtil->replaceTextByNamingConvention($emailBody,$project,$transresRequest,$invoice);
+        } else {
+            $emailBody = "Please find the attached invoice in PDF.";
+        }
 
+        if( $siteParameter ) {
+            $emailSubject = $siteParameter->getTransresNotificationEmailSubject();
+            $emailSubject = $transresUtil->replaceTextByNamingConvention($emailSubject,$project,$transresRequest,$invoice);
+        } else {
+            $emailSubject = "Pathology Translational Research Invoice ".$invoice->getOid();
+        }
+
+        //send by email
         //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-        $emailUtil->sendEmail( $piEmail, $subject, $emailBody, $ccs, $ccs, $attachmentPath );
+        $emailUtil->sendEmail( $piEmail, $emailSubject, $emailBody, $ccs, $ccs, $attachmentPath );
 
         //event log
         $eventType = "Invoice PDF sent";
         $transresUtil->setEventLog($transresRequest,$eventType,$emailBody);
 
-        $msg = $subject . " has been sent by email to " . $piEmail . " with CC to " . $ccs;
+        $msg = $emailSubject . " has been sent by email to " . $piEmail . " with CC to " . $ccs;
 
         return $msg;
     }

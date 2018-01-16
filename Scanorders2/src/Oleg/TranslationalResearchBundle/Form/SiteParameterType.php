@@ -48,6 +48,12 @@ class SiteParameterType extends AbstractType
             'attr' => array('class' => 'textarea form-control')
         ));
 
+        $builder->add('transresNotificationEmailSubject', null, array(
+            'label' => "Email Notification Subject:",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+
         $builder->add('transresLogos', CollectionType::class, array(
             'entry_type' => DocumentType::class,
             'label' => 'Logo(s):',

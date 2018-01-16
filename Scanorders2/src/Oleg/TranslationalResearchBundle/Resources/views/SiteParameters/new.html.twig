@@ -61,8 +61,15 @@
 
         {{ formmacros.field(form.transresFromHeader) }}
         {{ formmacros.field(form.transresFooter) }}
+
+        <hr>
+        <p>
+            Please use naming notation: [[PROJECT ID]] is for Project ID,  [[REQUEST ID]] is for Request ID and  [[INVOICE ID]] is for Invoice ID
+        </p>
+        {{ formmacros.field(form.transresNotificationEmailSubject) }}
         {{ formmacros.field(form.transresNotificationEmail) }}
         {#{{ formmacros.field(form.transresLogo) }}#}
+        <hr>
 
         <p>
             {% if form.save is defined %}

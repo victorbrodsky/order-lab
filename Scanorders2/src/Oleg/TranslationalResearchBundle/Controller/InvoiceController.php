@@ -531,7 +531,7 @@ class InvoiceController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $transresUtil = $this->get('transres_util');
-        //$transresRequestUtil = $this->get('transres_request_util');
+        $transresRequestUtil = $this->get('transres_request_util');
 
         $invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($oid);
         if( !$invoice ) {
@@ -563,6 +563,9 @@ class InvoiceController extends Controller
             $invoice->setUpdateUser($user);
 
             //update oid: don't update Invoice version on edit. Only the last version can be edited.
+
+            //use the values in Invoice’s Quantity fields to overwrite/update the associated Request’s "Completed #" fields
+            $transresRequestUtil->updateRequestCompletedFieldsByInvoice($invoice);
 
             $em->flush();
 
