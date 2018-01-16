@@ -819,6 +819,7 @@ class TransResRequestUtil
         //echo "transitionName=".$transitionName."<br>";
         $user = $this->secTokenStorage->getToken()->getUser();
         $transresUtil = $this->container->get('transres_util');
+        $transresPdfUtil = $this->get('transres_pdf_generator');
         $break = "\r\n";
         $addMsg = "";
 
@@ -887,17 +888,23 @@ class TransResRequestUtil
                 //Exception: Changing the status of request to "Approved/Ready for Invoicing" should send an email notification
                 // to the users with the role of "Translational Research Billing Administrator"
                 if( $to == "approvedInvoicing" ) {
-                    //TODO: what if the Request has been moved to this stage multiple times?
-                    if(0) {
-                        $this->sendRequestBillingNotificationEmails($transresRequest, $label, $originalStateLabel, $testing);
-
+                    //what if the Request has been moved to this stage multiple times?
+                    if( 1 ) {
                         //Create new invoice entity and pdf
                         $invoice = $this->createNewInvoice($transresRequest, $user);
                         $invoice = $this->createSubmitNewInvoice($transresRequest, $invoice);
 
-                        //TODO: generate and send PDF
+                        //generate Invoice PDF
+                        $res = $transresPdfUtil->generateInvoicePdf($invoice,$user);
+                        $filename = $res['filename'];
+                        $pdf = $res['pdf'];
+                        $size = $res['size'];
+                        $msgPdf = "PDF has been created with filename=".$filename."; size=".$size;
+
+                        $this->sendRequestBillingNotificationEmails($transresRequest, $invoice, $label, $originalStateLabel, $testing);
 
                         $addMsg = $addMsg . "<br>New Invoice ID" . $invoice->getOid() . " has been successfully created for the request ID " . $transresRequest->getOid();
+                        $addMsg = $addMsg . "<br>" . $msgPdf;
                     }
                 }
 
@@ -1248,9 +1255,11 @@ class TransResRequestUtil
 
     }
 
-    public function sendRequestBillingNotificationEmails($transresRequest,$newStateLabel,$originalStateLabel,$testing=false) {
+    public function sendRequestBillingNotificationEmails($transresRequest,$invoice,$newStateLabel,$originalStateLabel,$testing=false) {
         $transResFormNodeUtil = $this->container->get('transres_formnode_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
         $emailUtil = $this->container->get('user_mailer_utility');
+
         $senderEmail = null; //Admin email
         $newline = "\r\n";
 
@@ -1279,17 +1288,53 @@ class TransResRequestUtil
         //Subject: Draft Translation Research Invoice for Request [Request ID] of Project [Project Title]
         $subject = "Draft Translation Research Invoice for Request ".$transresRequest->getOid()." of Project ".$projectTitle;
 
-        $body = "Please review the draft invoice for request ".$transresRequest->getOid()." of project ".$projectTitle.":".$newline;
-
-        $newInvoiceUrl = $this->container->get('router')->generate(
-            'translationalresearch_invoice_new',
+        //1) Preview Invoice PDF
+        $invoicePdfViewUrl = $this->container->get('router')->generate(
+            'translationalresearch_invoice_download_recent',
             array(
-                'id'=>$transresRequest->getId()
+                'oid'=>$invoice->getOid()
             ),
             UrlGeneratorInterface::ABSOLUTE_URL
         );
 
-        $body = $body . $newInvoiceUrl;
+        $body = "Please review the draft invoice pdf for request ".$transresRequest->getOid().
+            " of project ".$projectTitle.":".$invoicePdfViewUrl.$newline;
+
+        //2) To issue the invoice to FirstNameOfSubmitter LastNameOfSubmitter (WCMC CWID: xxx) at
+        // submitter'semail@some.com as it, please follow this link
+        //Send the most recent Invoice PDF by Email (sendInvoicePDFByEmail)
+        $sendPdfEmailUrl = $this->container->get('router')->generate(
+            'translationalresearch_invoice_send_pdf_email',
+            array(
+                'oid'=>$invoice->getOid()
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+
+        //Get PI
+        $pi = $invoice->getPrincipalInvestigator();
+        if( !$pi ) {
+            return "There is no PI. Email has not been sent.";
+        }
+        $piEmail = $pi->getSingleEmail();
+        if( !$piEmail ) {
+            return "There is no PI's email. Email has not been sent.";
+        }
+
+        $body = $body . $newline."To issue the invoice to ".$pi.
+            " at email ".$piEmail." please follow this link:".$newline.$sendPdfEmailUrl.$newline;
+
+        //3 To edit the invoice and generate an updated copy, please follow this link
+        $editInvoiceUrl = $this->container->get('router')->generate(
+            'translationalresearch_invoice_edit',
+            array(
+                'oid'=>$invoice->getOid()
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+
+        $body = $body . $newline. "To edit the invoice and generate an updated copy, please follow this link:" .
+            $editInvoiceUrl.$newline;
 
         //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
         $emailUtil->sendEmail( $emails, $subject, $body, null, $senderEmail );
@@ -1661,6 +1706,11 @@ class TransResRequestUtil
         } else {
             $emailBody = "Please find the attached invoice in PDF.";
         }
+
+        //Change Invoice status to Unpaid/Issued
+        $invoice->setStatus("Unpaid/Issued");
+        $this->em->persist($invoice);
+        $this->em->flush($invoice);
 
         //send by email
         $subject = "Invoice for the Request ID ".$transresRequest->getOid();

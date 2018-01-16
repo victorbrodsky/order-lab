@@ -103,7 +103,8 @@ class InvoiceController extends Controller
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
-                        'filter[submitter]' => $user->getId()
+                        'filter[submitter]' => $user->getId(),
+                        //'type' => $filterType
                     )
                 );
             }
@@ -384,6 +385,10 @@ class InvoiceController extends Controller
 
         //$latestVersion = $transresRequestUtil->getLatestInvoiceVersion($transresRequest);
 
+        //echo "filterType=".$filterType."<br>";
+        if( $filterType ) {
+            $title = $filterType;
+        }
         if( !$metaTitle ) {
             $metaTitle = $title;
         }
