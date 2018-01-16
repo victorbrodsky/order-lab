@@ -819,7 +819,7 @@ class TransResRequestUtil
         //echo "transitionName=".$transitionName."<br>";
         $user = $this->secTokenStorage->getToken()->getUser();
         $transresUtil = $this->container->get('transres_util');
-        $transresPdfUtil = $this->get('transres_pdf_generator');
+        $transresPdfUtil = $this->container->get('transres_pdf_generator');
         $break = "\r\n";
         $addMsg = "";
 
