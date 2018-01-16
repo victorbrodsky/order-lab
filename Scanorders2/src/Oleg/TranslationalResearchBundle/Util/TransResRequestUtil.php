@@ -1798,7 +1798,7 @@ class TransResRequestUtil
 
         //event log
         $eventType = "Invoice PDF Issued";
-        $transresUtil->setEventLog($transresRequest,$eventType,$msg);
+        $transresUtil->setEventLog($invoice,$eventType,$msg);
 
         return $msg;
     }
