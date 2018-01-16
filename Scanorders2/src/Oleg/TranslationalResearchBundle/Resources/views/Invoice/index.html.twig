@@ -116,9 +116,16 @@
                                     </li>
                                 {% endif %}
 
+                                <hr>
+                                {#Add actions in the invoice list - "Change status to ..."#}
+                                <li>
+                                    Change status to ...
+                                </li>
+
                             {% endif %}
 
                             {% if invoice.documents|length > 0 %}
+                                <hr>
                                 <li>
                                     <a target="_blank"
                                        href="{{ path('translationalresearch_invoice_download_recent', {'oid': invoice.oid }) }}"
