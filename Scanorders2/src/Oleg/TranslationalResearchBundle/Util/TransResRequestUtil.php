@@ -1793,11 +1793,12 @@ class TransResRequestUtil
         //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
         $emailUtil->sendEmail( $piEmail, $emailSubject, $emailBody, $ccs, $ccs, $attachmentPath );
 
-        //event log
-        $eventType = "Invoice PDF sent";
-        $transresUtil->setEventLog($transresRequest,$eventType,$emailBody);
+        $msg =  "Invoice ".$invoice->getOid()." PDF has been sent by email to " . $piEmail . " with CC to " . $ccs;
+        $msg = $msg . ".<br> Subject: " . $emailSubject . ".<br> Body: " . $emailBody;
 
-        $msg = $emailSubject . " has been sent by email to " . $piEmail . " with CC to " . $ccs;
+        //event log
+        $eventType = "Invoice PDF Issued";
+        $transresUtil->setEventLog($transresRequest,$eventType,$msg);
 
         return $msg;
     }
