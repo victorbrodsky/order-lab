@@ -46,16 +46,17 @@ class InvoiceType extends AbstractType
 //            'attr' => array('class' => 'datepicker form-control'),
 //            'required' => false,
 //        ));
-
+        
         $builder->add('status', ChoiceType::class, array( //flipped
             'label' => 'Status',
-            'choices' => array(
-                "Pending" => "Pending",
-                "Unpaid/Issued" => "Unpaid/Issued",
-                "Paid in Full" => "Paid in Full",
-                "Paid Partially" => "Paid Partially",
-                "Canceled" => "Canceled"
-            ),
+//            'choices' => array(
+//                "Pending" => "Pending",
+//                "Unpaid/Issued" => "Unpaid/Issued",
+//                "Paid in Full" => "Paid in Full",
+//                "Paid Partially" => "Paid Partially",
+//                "Canceled" => "Canceled"
+//            ),
+            'choices' => $this->params['statuses'],
             'multiple' => false,
             'required' => true,
             'attr' => array('class' => 'combobox combobox-width')

@@ -12,6 +12,13 @@
     </h4>
     <br>
 
+    {% if transresRequest %}
+        <p>
+            <a href="{{ path('translationalresearch_invoice_new', {'id': transresRequest.id}) }}">Create a new invoice</a>
+        </p>
+        <br>
+    {% endif %}
+
     {{ transresRequestMacros.transresInvoiceFilter(filterform,advancedFilter) }}
     <br>
 
@@ -80,19 +87,18 @@
                                 <a href="{{ path('translationalresearch_invoice_show', {'oid': invoice.oid }) }}">Show Invoice</a>
                             </li>
 
-                            {% if invoice.latestVersion %}
+                            {% if invoice.latestVersion and is_granted('ROLE_TRANSRES_BILLING_ADMIN') %}
                                 <li>
                                     <a href="{{ path('translationalresearch_invoice_edit', {'oid': invoice.oid }) }}">Edit Invoice</a>
                                 </li>
 
-                            {#<li>#}
-                                {#<a#}
-                                    {#general-data-confirm="Are you sure you want to delete this invoice?"#}
-                                    {#href="{{ path('translationalresearch_invoice_delete', {'id': invoice.id}) }}"#}
-                                {#>Delete</a>#}
-                            {#</li>#}
+                                {#<li>#}
+                                    {#<a#}
+                                        {#general-data-confirm="Are you sure you want to delete this invoice?"#}
+                                        {#href="{{ path('translationalresearch_invoice_delete', {'id': invoice.id}) }}"#}
+                                    {#>Delete</a>#}
+                                {#</li>#}
 
-                            {#{% if is_granted('ROLE_TRANSRES_ADMIN') %}#}
                                 {#<li>#}
                                     {#<a href="{{ path('translationalresearch_invoice_download', {'oid': invoice.oid }) }}"#}
                                     {#>PDF Invoice Preview</a>#}
@@ -104,23 +110,44 @@
                                     {% set generateLabel = "Generate Invoice PDF" %}
                                 {% endif %}
                                 <li>
-                                    <a href="{{ path('translationalresearch_invoice_generate_pdf', {'oid': invoice.oid }) }}"
+                                    <a
+                                        general-data-confirm="Are you sure you want to {{ generateLabel|lower }} for this invoice {{ invoice.oid }}?"
+                                        href="{{ path('translationalresearch_invoice_generate_pdf', {'oid': invoice.oid }) }}"
                                     >{{ generateLabel }}</a>
                                 </li>
 
                                 {% if invoice.documents|length > 0 %}
                                     <li>
                                         {#Send the Most Recent Invoice PDF by Email#}
-                                        <a href="{{ path('translationalresearch_invoice_send_pdf_email', {'oid': invoice.oid }) }}"
+                                        <a
+                                            general-data-confirm="Are you sure you want to send the most recent invoice {{ invoice.oid }} pdf by email to PI?"
+                                            href="{{ path('translationalresearch_invoice_send_pdf_email', {'oid': invoice.oid }) }}"
                                         >Send the Most Recent Invoice PDF by Email to PI</a>
                                     </li>
                                 {% endif %}
 
                                 <hr>
                                 {#Add actions in the invoice list - "Change status to ..."#}
-                                <li>
-                                    Change status to ...
-                                </li>
+                                {% set statuses = transres_request_util.getInvoiceStatuses() %}
+                                {% for status in statuses %}
+                                    {% if status != invoice.status %}
+                                        {% if status == "Paid Partially" %}
+                                            {{ transresRequestMacros.unpaidModal(invoice) }}
+                                            <a data-toggle="modal" data-target="#modal_update_invoice_{{ invoice.oid }}"
+                                            >Change status to {{ status }}</a>
+                                        {% else %}
+                                            <li>
+                                                <a
+                                                    general-data-confirm="Are you sure you want to change the status of this invoice {{ invoice.oid }} to {{ status }}?"
+                                                    href="{{ path('translationalresearch_invoice_change_status', {'oid':invoice.oid, 'status':status }) }}"
+                                                >Change status to {{ status }}</a>
+                                            </li>
+                                        {% endif %}
+
+                                        {% endif %}
+
+                                    {% endif %}
+                                {% endfor %}
                                 <hr>
 
                             {% endif %}
@@ -150,3 +177,48 @@
         </p>
     {% endif %}
 {% endblock %}
+
+
+{% block additionaljs %}
+
+<script type="text/javascript">
+
+    $(document).ready(function() {
+
+    });
+
+    function transresUpdateInvoice(invoiceOid) {
+        console.log("transresUpdateInvoice: invoiceOid="+invoiceOid);
+
+//        $.ajax({
+//            url: urlCommentSubmit,
+//            type: 'POST',
+//            data: {id: id, selectednote: selectednote, text: text},
+//            timeout: _ajaxTimeout,
+//            success: function (data) {
+//                //console.log("OK submit a new comment");
+//                comment_modal.modal('hide');
+//                cleanModal();
+//                if( _reload_page_after_modal == '1' ) {
+//                    window.parent.location.reload();
+//                }
+//            },
+//            error: function ( x, t, m ) {
+//
+//                if( t === "timeout" ) {
+//                    getAjaxTimeoutMsg();
+//                }
+//
+//                //console.log("Error submit a new comment");
+//                var errormsg = '<div class="alert alert-danger">Error submitting a new comment</div>';
+//                $('#modal_error_'+id).html(errormsg);
+//                return false;
+//                //comment_modal.modal('hide');
+//            }
+//        });
+    }
+
+</script>
+
+{% endblock %}
+

@@ -1802,4 +1802,14 @@ class TransResRequestUtil
 
         return $msg;
     }
+
+    public function getInvoiceStatuses() {
+        return array(
+            "Pending" => "Pending",
+            "Unpaid/Issued" => "Unpaid/Issued",
+            "Paid in Full" => "Paid in Full",
+            "Paid Partially" => "Paid Partially",
+            "Canceled" => "Canceled"
+        );
+    }
 }

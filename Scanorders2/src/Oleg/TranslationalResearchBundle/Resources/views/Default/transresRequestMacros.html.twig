@@ -541,3 +541,44 @@
         {{ form_end(filterform) }}
     </div>
 {% endmacro %}
+
+
+{% macro unpaidModal( invoice ) %}
+    <!-- Modal -->
+    <div class="modal fade" id="modal_update_invoice_{{ invoice.oid }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close invoice_modal_close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title text-center" id="myModalLabel">Update Invoice {{ invoice.oid }}</h4>
+                </div>
+                <div class="modal-body">
+
+                    <div id="modal_error_{{ invoice.oid }}" class="modal_error_div"></div>
+
+                    <form id="change_invoice_form" >
+
+                        <div class="row">
+                            <div class="col-xs-12">
+
+                                <p>
+                                    {#<textarea  type="textarea" class="textarea form-control">#}
+                                    <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
+                                    <input id="invoice-paid" name="invoice-paid" class="form-control" placeholder="Paid" type="text" required>
+                                </p>
+
+                            </div>
+                        </div>
+
+                        <div class="center-block">
+                            <input id="updateInvoiceBtn" class="btn btn-primary center-block" type="button" value="Update Invoice" onclick="transresUpdateInvoice({{ invoice.oid }});" />
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+

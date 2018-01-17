@@ -81,7 +81,8 @@ class InvoiceController extends Controller
         $params = array(
             'routeName'=>$routeName,
             'transresRequest'=>$transresRequest,
-            'versions'=>$versions
+            'versions'=>$versions,
+            'statuses' => $transresRequestUtil->getInvoiceStatuses(),
         );
         $filterform = $this->createForm(FilterInvoiceType::class, null,array(
             'method' => 'GET',
@@ -642,7 +643,7 @@ class InvoiceController extends Controller
             $transresUtil->setEventLog($invoice,$eventType,$msg);
         }
 
-        return $this->redirectToRoute('translationalresearch_invoice_index_all');
+        return $this->redirectToRoute('translationalresearch_invoice_index_filter', array('type'=>"All Invoices"));
     }
 
     /**
@@ -827,6 +828,7 @@ class InvoiceController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
+        $transresRequestUtil = $this->get('transres_request_util');
 
         if( !$transresRequest ) {
             $transresRequests = $invoice->getTransresRequests();
@@ -855,6 +857,7 @@ class InvoiceController extends Controller
             'em' => $em,
             'user' => $user,
             'invoice' => $invoice,
+            'statuses' => $transresRequestUtil->getInvoiceStatuses(),
             'principalInvestigators' => $principalInvestigators,
             //'piEm' => $piEm,
             'SecurityAuthChecker' => $this->get('security.authorization_checker'),
@@ -989,5 +992,59 @@ class InvoiceController extends Controller
         }
 
         return $msg;
+    }
+
+    /**
+     * @Route("/change-status/{oid}", name="translationalresearch_invoice_change_status")
+     * @Method({"GET"})
+     */
+    public function changeStatusAction( Request $request, $oid ) {
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $transresRequestUtil = $this->get('transres_request_util');
+        $transresUtil = $this->get('transres_util');
+        $em = $this->getDoctrine()->getManager();
+
+        $invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($oid);
+        if( !$invoice ) {
+            throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
+        }
+
+        if( false === $transresRequestUtil->isInvoiceBillingContact($invoice,$user) ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+        }
+
+        $status = trim( $request->get('status') );
+
+        $msg = "Invoice's (ID ".$invoice->getOid().") status has not been updated to '" . $status . "'";
+
+        if( $status ) {
+            $invoice->setStatus($status);
+            $msg = "Changed Invoice's (ID ".$invoice->getOid().") status to '".$status."'";
+
+            //If change to unpaid status, then display popup modale with paid amount.
+
+            //If change status to fully paid, then update the invoice's paid amount with total amount.
+            if( $status == "Paid in Full" ) {
+                $total = $invoice->getTotal();
+                if( $total ) {
+                    $invoice->setPaid($total);
+                    $msg = $msg."<br>"."Invoice paid value set to '".$total."'";
+                }
+            }
+
+            $em->persist($invoice);
+            $em->flush();
+
+            $eventType = "Invoice Updated";
+            $transresUtil->setEventLog($invoice,$eventType,$msg);
+        }
+
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            $msg
+        );
+
+        //return $this->redirectToRoute('translationalresearch_invoice_show', array('oid' => $invoice->getOid()));
+        return $this->redirectToRoute('translationalresearch_invoice_index_filter', array('id'=>null,'type'=>"All Invoices"));
     }
 }

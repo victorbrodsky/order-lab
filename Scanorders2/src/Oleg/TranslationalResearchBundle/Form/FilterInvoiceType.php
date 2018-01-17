@@ -43,13 +43,14 @@ class FilterInvoiceType extends AbstractType
 
         $builder->add('status', ChoiceType::class, array( //flipped
             'label' => false,
-            'choices' => array(
-                "Pending" => "Pending",
-                "Unpaid/Issued" => "Unpaid/Issued",
-                "Paid in Full" => "Paid in Full",
-                "Paid Partially" => "Paid Partially",
-                "Canceled" => "Canceled"
-            ),
+//            'choices' => array(
+//                "Pending" => "Pending",
+//                "Unpaid/Issued" => "Unpaid/Issued",
+//                "Paid in Full" => "Paid in Full",
+//                "Paid Partially" => "Paid Partially",
+//                "Canceled" => "Canceled"
+//            ),
+            'choices' => $this->params['statuses'],
             'multiple' => true,
             'required' => false,
             'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Status")

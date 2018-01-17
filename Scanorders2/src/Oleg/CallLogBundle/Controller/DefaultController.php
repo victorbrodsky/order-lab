@@ -58,7 +58,7 @@ class DefaultController extends Controller
      */
     public function resourcesAction(Request $request)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_CALLLOG_PATHOLOGY_ATTENDING') ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_CALLLOG_USER') ) {
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
