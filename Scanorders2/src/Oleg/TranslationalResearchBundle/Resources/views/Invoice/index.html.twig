@@ -133,7 +133,7 @@
                                     {% if status != invoice.status %}
                                         {% if status == "Paid Partially" %}
                                             {{ transresRequestMacros.unpaidModal(invoice) }}
-                                            <a data-toggle="modal" data-target="#modal_update_invoice_{{ invoice.oid }}"
+                                            <a href="#" data-toggle="modal" data-target="#modal_update_invoice_{{ invoice.oid }}"
                                             >Change status to {{ status }}</a>
                                         {% else %}
                                             <li>
@@ -143,7 +143,7 @@
                                                 >Change status to {{ status }}</a>
                                             </li>
                                         {% endif %}
-                                        
+
                                     {% endif %}
                                 {% endfor %}
                                 <hr>
