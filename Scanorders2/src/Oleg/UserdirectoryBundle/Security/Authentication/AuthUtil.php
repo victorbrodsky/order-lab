@@ -183,13 +183,14 @@ class AuthUtil {
 
         $usernamePrefix = $userSecUtil->getUsernamePrefix($token->getUsername());
         if( in_array($usernamePrefix, $this->supportedUsertypesLdap) == false ) {
-            $this->logger->notice('LDAP Authentication: the usertype '.$usernamePrefix.' can not be authenticated by ' . implode(', ',$this->supportedUsertypesLdap));
+            $this->logger->notice('LDAP Authentication: the usertype ['.$usernamePrefix.'] can not be authenticated by ' . implode(', ',$this->supportedUsertypesLdap));
             return NULL;
         }
 
         //first search this user if exists in ldap directory
         $searchRes = $this->searchLdap($usernameClean);
         if( $searchRes == NULL || count($searchRes) == 0 ) {
+            $this->logger->error("searchLdap can not find user by usernameClean=".$usernameClean);
             return NULL;
         }
 
@@ -199,6 +200,7 @@ class AuthUtil {
         $ldapRes = $this->ldapBind($usernameClean,$token->getCredentials());
         if( $ldapRes == NULL ) {
             //exit('ldap failed');
+            $this->logger->error("searchLdap can not bind user by usernameClean=".$usernameClean);
             return NULL;
         }
         //exit('ldap success');
@@ -210,12 +212,14 @@ class AuthUtil {
         if( $user ) {
             //echo "DB user found=".$user->getUsername()."<br>";
             //exit();
+            $this->logger->notice("findUserByUsername: user found by token->getUsername()=".$token->getUsername());
             return $user;
         }
 
         //echo "1<br>";
 
         //////////////////// constract a new user ////////////////////
+        $this->logger->notice("LdapAuthentication: create a new user found by token->getUsername()=".$token->getUsername());
         $user = $userSecUtil->constractNewUser($token->getUsername());
         //echo "user=".$user->getUsername()."<br>";
 
@@ -422,12 +426,12 @@ class AuthUtil {
         }
 
         if( count($users) == 0  ) {
-            $this->logger->warning('No user found with identifierUsername='.$identifierUsername);
+            $this->logger->warning('No user found with identifierUsername='.$identifierUsername."; identifierKeytypeStr=".$identifierKeytypeStr);
             return NULL;
         }
 
         if( count($users) > 1 ) {
-            $this->logger->warning('Multiple users found with identifierUsername='.$identifierUsername);
+            $this->logger->warning('Multiple users found with identifierUsername='.$identifierUsername."; identifierKeytypeStr=".$identifierKeytypeStr);
             return NULL;
         }
 
