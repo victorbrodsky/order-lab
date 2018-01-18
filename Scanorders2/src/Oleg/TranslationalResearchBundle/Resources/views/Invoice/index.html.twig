@@ -12,29 +12,6 @@
     </h4>
     <br>
 
-    <!-- Modal -->
-    <div id="myModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Modal Header</h4>
-                </div>
-                <div class="modal-body">
-                    <p>Some text in the modal.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>
-
     {% if transresRequest %}
         <p>
             <a href="{{ path('translationalresearch_invoice_new', {'id': transresRequest.id}) }}">Create a new invoice</a>
@@ -63,6 +40,34 @@
         </thead>
         <tbody data-link="row">
         {% for invoice in invoices %}
+
+
+            {#<!-- Modal -->#}
+            {#<div id="myModal" class="modal fade" role="dialog">#}
+                {#<div class="modal-dialog">#}
+
+                    {#<!-- Modal content-->#}
+                    {#<div class="modal-content">#}
+                        {#<div class="modal-header">#}
+                            {#<button type="button" class="close" data-dismiss="modal">&times;</button>#}
+                            {#<h4 class="modal-title">Modal Header</h4>#}
+                        {#</div>#}
+                        {#<div class="modal-body">#}
+                            {#<p>Some text in the modal.</p>#}
+                        {#</div>#}
+                        {#<div class="modal-footer">#}
+                            {#<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>#}
+                        {#</div>#}
+                    {#</div>#}
+
+                {#</div>#}
+            {#</div>#}
+            {#<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>#}
+            {#<!-- Modal -->#}
+
+            {{ transresRequestMacros.unpaidModal(invoice) }}
+
+
             <tr>
                 <td>
                     <a href="{{ path('translationalresearch_invoice_show', {'oid': invoice.oid }) }}">{{ invoice.oid }}</a>
@@ -155,12 +160,10 @@
                                 {% for status in statuses %}
                                     {% if status != invoice.status %}
                                         {% if status == "Paid Partially" %}
-                                            {#{{ transresRequestMacros.unpaidModal(invoice) }}#}
                                             <li>
                                                 <a href="#" data-toggle="modal" data-target="#modal_update_invoice_{{ invoice.oid }}"
                                                 >Change status to {{ status }}</a>
                                             </li>
-                                            <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>
                                         {% else %}
                                             <li>
                                                 <a
@@ -213,6 +216,12 @@
 
     function transresUpdateInvoice(invoiceOid) {
         console.log("transresUpdateInvoice: invoiceOid="+invoiceOid);
+
+        //var form = $("#change_invoice_form_"+invoiceOid);
+        //var paid = form.find("#invoice-paid").val();
+
+        var paid = $("#invoice-paid-"+invoiceOid).val();
+        console.log("paid="+paid);
 
 //        $.ajax({
 //            url: urlCommentSubmit,

@@ -543,7 +543,7 @@
 {% endmacro %}
 
 
-{% macro unpaidModal_old( invoice ) %}
+{% macro unpaidModal( invoice ) %}
     <!-- Modal -->
     <div class="modal fade" id="modal_update_invoice_{{ invoice.oid }}" role="dialog">
         <div class="modal-dialog">
@@ -556,30 +556,24 @@
 
                     <div id="modal_error_{{ invoice.oid }}" class="modal_error_div"></div>
 
-                    First name: <input type="text" name="fname"><br>
-                    Last name: <input type="text" name="lname"><br>
+                    <form id="change_invoice_form_{{ invoice.oid }}" >
 
-                    {#<form id="change_invoice_form_{{ invoice.oid }}" >#}
+                        <div class="row">
+                            <div class="col-xs-12">
 
-                        {#<div class="row">#}
-                            {#<div class="col-xs-12">#}
-
-                                {#<p>#}
-                                    {#<textarea  type="textarea" class="textarea form-control">#}
+                                <p>
                                     {#<input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />#}
-                                    {#<input id="invoice-paid" name="invoice-paid" class="form-control" placeholder="Paid" type="text" required>#}
-                                    {#First name: <input type="text" name="fname"><br>#}
-                                    {#Last name: <input type="text" name="lname"><br>#}
-                                {#</p>#}
+                                    <input id="invoice-paid-{{ invoice.oid }}" class="invoice-paid" name="invoice-paid" class="form-control" placeholder="Paid" type="text" required>
+                                </p>
 
-                            {#</div>#}
-                        {#</div>#}
+                            </div>
+                        </div>
 
-                        {#<div class="center-block">#}
-                            {#<input id="updateInvoiceBtn" class="btn btn-primary center-block" type="button" value="Update Invoice" onclick="transresUpdateInvoice({{ invoice.oid }});" />#}
-                        {#</div>#}
+                        <div class="center-block">
+                            <input id="updateInvoiceBtn" class="btn btn-primary center-block" type="button" value="Update Invoice" onclick="transresUpdateInvoice({{ invoice.oid }});" />
+                        </div>
 
-                    {#</form>#}
+                    </form>
 
                 </div>
             </div>
@@ -588,7 +582,7 @@
 {% endmacro %}
 
 
-{% macro unpaidModal( invoice ) %}
+{% macro unpaidModal_test( invoice ) %}
 <!-- Modal -->
 <div id="modal_update_invoice_{{ invoice.oid }}" class="modal fade" role="dialog">
     <div class="modal-dialog">
