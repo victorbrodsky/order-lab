@@ -174,6 +174,7 @@ class AuthUtil {
 
     public function LdapAuthentication($token, $userProvider) {
 
+        $this->logger->notice("LdapAuthentication: LDAP authenticate user by token->getUsername()=".$token->getUsername());
         //echo "LdapAuthentication<br>";
         //exit();
 
