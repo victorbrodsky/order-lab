@@ -521,6 +521,7 @@ class AuthUtil {
         //echo "output:<br>";
         //print_r($output);
         //echo "<br>";
+        $this->logger->notice("ldapBindWindows: return=".$return.". outputArr=[".implode(";",$output)."]");
 
         if( $return == 1 && count($output) > 0 ) {
             if( $output[0] == 'LDAP_SUCCESS' ) {
