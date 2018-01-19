@@ -414,7 +414,7 @@ class InvoiceController extends Controller
      */
     public function newAction(Request $request, TransResRequest $transresRequest)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
@@ -526,7 +526,7 @@ class InvoiceController extends Controller
     public function editAction(Request $request, $oid)
     {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
@@ -999,6 +999,11 @@ class InvoiceController extends Controller
      * @Method({"GET"})
      */
     public function changeStatusAction( Request $request, $oid ) {
+
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ) {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $transresRequestUtil = $this->get('transres_request_util');
         $transresUtil = $this->get('transres_util');
@@ -1046,5 +1051,46 @@ class InvoiceController extends Controller
 
         //return $this->redirectToRoute('translationalresearch_invoice_show', array('oid' => $invoice->getOid()));
         return $this->redirectToRoute('translationalresearch_invoice_index_filter', array('id'=>null,'type'=>"All Invoices"));
+    }
+
+    /**
+     * @Route("/update-invoice-ajax/", name="translationalresearch_invoice_update_ajax", options={"expose"=true})
+     * @Method({"POST"})
+     */
+    public function updateInvoiceAjaxAction( Request $request ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ) {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
+        $transresRequestUtil = $this->get('transres_request_util');
+        $transresUtil = $this->get('transres_util');
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+        $res = "NotOK";
+
+        $oid = trim( $request->get('invoiceOid') );
+        $paid = trim( $request->get('paid') );
+
+        $invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($oid);
+        if( !$invoice ) {
+            throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
+        }
+
+        if( false === $transresRequestUtil->isInvoiceBillingContact($invoice,$user) ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+        }
+
+        $invoice->setPaid($paid);
+        $em->persist($invoice);
+        $em->flush();
+
+        $eventType = "Invoice Updated";
+        $msg = "Invoice's (ID ".$invoice->getOid().") Paid ($) value has been updated to '" . $paid . "'";
+        $transresUtil->setEventLog($invoice,$eventType,$msg);
+
+        $res = "OK";
+
+        $response = new Response($res);
+        return $response;
     }
 }

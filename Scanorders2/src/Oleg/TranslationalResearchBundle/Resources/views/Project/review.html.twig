@@ -212,7 +212,7 @@
             async: false
         }).success(function(response) {
             console.log(response);
-            if( response != "NotOK" ) {
+            if( response != "NotOK" ) { //if( response == "NotOK" ) ???
                 $(".transres-alert").find(".alert").html(response);
                 $(".transres-alert").show();
             }

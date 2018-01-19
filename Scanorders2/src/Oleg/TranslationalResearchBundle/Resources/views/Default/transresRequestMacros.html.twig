@@ -548,32 +548,91 @@
     <div class="modal fade" id="modal_update_invoice_{{ invoice.oid }}" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
+
                 <div class="modal-header">
                     <button type="button" class="close invoice_modal_close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title text-center">Update Invoice {{ invoice.oid }}</h4>
+                    <h4 class="modal-title text-center">Change invoice {{ invoice.oid }} status to 'Paid Partially'</h4>
                 </div>
+
                 <div class="modal-body">
 
                     <div id="modal_error_{{ invoice.oid }}" class="modal_error_div"></div>
 
-                    <form id="change_invoice_form_{{ invoice.oid }}" >
+                    {#<form id="change_invoice_form_{{ invoice.oid }}" >#}
 
                         <div class="row">
                             <div class="col-xs-12">
 
-                                <p>
+                                {#<p>#}
                                     {#<input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />#}
-                                    <input id="invoice-paid-{{ invoice.oid }}" class="invoice-paid" name="invoice-paid" class="form-control" placeholder="Paid" type="text" required>
+                                    {#<input id="invoice-paid-{{ invoice.oid }}" class="invoice-paid" name="invoice-paid" class="form-control" placeholder="Paid" type="text" required>#}
+                                {#</p>#}
+
+                                {#{{ formmacros.simplefield( "Paid ($):", invoice.paid, "", "disabled" ) }}#}
+
+                                <p>
+                                <div class="row">
+                                    <div class="col-xs-6" align="right">
+                                        <strong>Subtotal ($):</strong>
+                                    </div>
+                                    <div class="col-xs-6" align="left">
+                                        <input class="form-control invoice-subtotal-{{ invoice.oid }}" type="text" value="{{ invoice.subTotal }}" disabled>
+                                    </div>
+                                </div>
                                 </p>
+
+                                {% if invoice.discountNumeric %}
+                                    <p>
+                                    <div class="row">
+                                        <div class="col-xs-6" align="right">
+                                            <strong>Discount ($):</strong>
+                                        </div>
+                                        <div class="col-xs-6" align="left">
+                                            <input class="form-control invoice-discountNumeric-{{ invoice.oid }}" type="text" value="{{ invoice.discountNumeric }}" disabled>
+                                        </div>
+                                    </div>
+                                    </p>
+                                {% endif %}
+
+                                {% if invoice.discountPercent %}
+                                    <p>
+                                    <div class="row">
+                                        <div class="col-xs-6" align="right">
+                                            <strong>Discount (%):</strong>
+                                        </div>
+                                        <div class="col-xs-6" align="left">
+                                            <input class="form-control invoice-discountPercent-{{ invoice.oid }}" type="text" value="{{ invoice.discountPercent }}" disabled>
+                                        </div>
+                                    </div>
+                                    </p>
+                                {% endif %}
+
+                                <p>
+                                    <div class="row">
+                                        <div class="col-xs-6" align="right">
+                                            <strong>Update Paid ($):</strong>
+                                        </div>
+                                        <div class="col-xs-6" align="left">
+                                            <input
+                                                id="invoice-paid-{{ invoice.oid }}"
+                                                class="form-control invoice-paid"
+                                                type="text"
+                                                value="{{ invoice.paid }}" required>
+                                        </div>
+                                    </div>
+                                </p>
+
 
                             </div>
                         </div>
 
                         <div class="center-block">
-                            <input id="updateInvoiceBtn" class="btn btn-primary center-block" type="button" value="Update Invoice" onclick="transresUpdateInvoice({{ invoice.oid }});" />
+                            <button class="btn btn-primary"
+                                    type="button"
+                                    onclick="transresUpdateInvoice('{{ invoice.oid }}');"
+                            >Update Invoice 'Paid' value and Status to 'Paid Partially'</button>
                         </div>
-
-                    </form>
+                    {#</form>#}
 
                 </div>
             </div>
@@ -582,26 +641,29 @@
 {% endmacro %}
 
 
-{% macro unpaidModal_test( invoice ) %}
-<!-- Modal -->
-<div id="modal_update_invoice_{{ invoice.oid }}" class="modal fade" role="dialog">
-    <div class="modal-dialog">
+{#{% macro unpaidModal_test( invoice ) %}#}
+{#<!-- Modal -->#}
+{#<div id="myModal" class="modal fade" role="dialog">#}
+    {#<div class="modal-dialog">#}
 
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Modal Header</h4>
-            </div>
-            <div class="modal-body">
-                <p>Some text in the modal.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
-        </div>
+        {#<!-- Modal content-->#}
+        {#<div class="modal-content">#}
+            {#<div class="modal-header">#}
+                {#<button type="button" class="close" data-dismiss="modal">&times;</button>#}
+                {#<h4 class="modal-title">Modal Header</h4>#}
+            {#</div>#}
+            {#<div class="modal-body">#}
+                {#<p>Some text in the modal.</p>#}
 
-    </div>
-</div>
-{% endmacro %}
+                {#<button type="button" onclick="transresUpdateInvoice();">Click Me!</button>#}
+
+            {#</div>#}
+            {#<div class="modal-footer">#}
+                {#<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>#}
+            {#</div>#}
+        {#</div>#}
+
+    {#</div>#}
+{#</div>#}
+{#{% endmacro %}#}
 

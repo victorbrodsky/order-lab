@@ -1157,6 +1157,6 @@ class Project {
     }
 
     public function __toString() {
-        return "Project id=".$this->getId();
+        return "Project id=[".$this->getId()."]";
     }
 }

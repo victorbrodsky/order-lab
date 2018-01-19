@@ -12,6 +12,7 @@
     </h4>
     <br>
 
+
     {% if transresRequest %}
         <p>
             <a href="{{ path('translationalresearch_invoice_new', {'id': transresRequest.id}) }}">Create a new invoice</a>
@@ -41,32 +42,7 @@
         <tbody data-link="row">
         {% for invoice in invoices %}
 
-
-            {#<!-- Modal -->#}
-            {#<div id="myModal" class="modal fade" role="dialog">#}
-                {#<div class="modal-dialog">#}
-
-                    {#<!-- Modal content-->#}
-                    {#<div class="modal-content">#}
-                        {#<div class="modal-header">#}
-                            {#<button type="button" class="close" data-dismiss="modal">&times;</button>#}
-                            {#<h4 class="modal-title">Modal Header</h4>#}
-                        {#</div>#}
-                        {#<div class="modal-body">#}
-                            {#<p>Some text in the modal.</p>#}
-                        {#</div>#}
-                        {#<div class="modal-footer">#}
-                            {#<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>#}
-                        {#</div>#}
-                    {#</div>#}
-
-                {#</div>#}
-            {#</div>#}
-            {#<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>#}
-            {#<!-- Modal -->#}
-
             {{ transresRequestMacros.unpaidModal(invoice) }}
-
 
             <tr>
                 <td>
@@ -162,7 +138,7 @@
                                         {% if status == "Paid Partially" %}
                                             <li>
                                                 <a href="#" data-toggle="modal" data-target="#modal_update_invoice_{{ invoice.oid }}"
-                                                >Change status to {{ status }}</a>
+                                                >Change status to {{ status }} (update 'Paid' value)</a>
                                             </li>
                                         {% else %}
                                             <li>
@@ -223,32 +199,26 @@
         var paid = $("#invoice-paid-"+invoiceOid).val();
         console.log("paid="+paid);
 
-//        $.ajax({
-//            url: urlCommentSubmit,
-//            type: 'POST',
-//            data: {id: id, selectednote: selectednote, text: text},
-//            timeout: _ajaxTimeout,
-//            success: function (data) {
-//                //console.log("OK submit a new comment");
-//                comment_modal.modal('hide');
-//                cleanModal();
-//                if( _reload_page_after_modal == '1' ) {
-//                    window.parent.location.reload();
-//                }
-//            },
-//            error: function ( x, t, m ) {
-//
-//                if( t === "timeout" ) {
-//                    getAjaxTimeoutMsg();
-//                }
-//
-//                //console.log("Error submit a new comment");
-//                var errormsg = '<div class="alert alert-danger">Error submitting a new comment</div>';
-//                $('#modal_error_'+id).html(errormsg);
-//                return false;
-//                //comment_modal.modal('hide');
-//            }
-//        });
+        var url = Routing.generate('translationalresearch_invoice_update_ajax');
+
+        $.ajax({
+            url: url,
+            timeout: _ajaxTimeout,
+            type: "POST",
+            data: {invoiceOid: invoiceOid, paid: paid},
+            async: false,
+        }).success(function(response) {
+            //console.log(response);
+            if( response == "OK" ) {
+                //reload parent page
+                window.location.reload(true);
+            }
+        }).done(function() {
+            //lbtn.stop();
+        }).error(function(jqXHR, textStatus, errorThrown) {
+            console.log('Error : ' + errorThrown);
+        });
+
     }
 
 </script>

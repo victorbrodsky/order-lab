@@ -35,9 +35,6 @@ class InvoiceType extends AbstractType
 
         //$builder->add('createDate')->add('updateDate')->add('oid')->add('invoiceNumber')->add('dueDate')->add('status')->add('to')->add('discountNumeric')->add('discountPercent')->add('submitter')->add('updateUser')->add('transresRequests')->add('salesperson');
 
-        $testing = false;
-        $testing = true;
-
 //        $builder->add('createDate', DateType::class, array(
 //            'widget' => 'single_text',
 //            'label' => "Create Date:",
@@ -138,16 +135,14 @@ class InvoiceType extends AbstractType
             ));
         //}
 
-        //if(!$testing) {
-            $builder->add('dueDate', DateType::class, array(
-                'widget' => 'single_text',
-                'label' => "Due Date:",
-                //'disabled' => true,
-                'format' => 'MM/dd/yyyy',
-                'attr' => array('class' => 'datepicker form-control'),
-                'required' => false,
-            ));
-        //}
+        $builder->add('dueDate', DateType::class, array(
+            'widget' => 'single_text',
+            'label' => "Due Date:",
+            //'disabled' => true,
+            'format' => 'MM/dd/yyyy',
+            'attr' => array('class' => 'datepicker form-control'),
+            'required' => false,
+        ));
 
         $builder->add('invoiceFrom', null, array(
             'label' => "From:",
@@ -193,23 +188,21 @@ class InvoiceType extends AbstractType
 //            'attr' => array('class' => 'textarea form-control')
 //        ));
 
-        //if(!$testing) {
-            //InvoiceItems
-            $builder->add('invoiceItems', CollectionType::class, array(
-                'entry_type' => InvoiceItemType::class,
-                'entry_options' => array(
-                    //'data_class' => 'Oleg\TranslationalResearchBundle\Entity\AdminReview',
-                    'form_custom_value' => $this->params
-                ),
-                'label' => false,
-                'required' => false,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'by_reference' => false,
-                'prototype' => true,
-                'prototype_name' => '__invoiceitems__',
-            ));
-        //}
+        //InvoiceItems
+        $builder->add('invoiceItems', CollectionType::class, array(
+            'entry_type' => InvoiceItemType::class,
+            'entry_options' => array(
+                //'data_class' => 'Oleg\TranslationalResearchBundle\Entity\AdminReview',
+                'form_custom_value' => $this->params
+            ),
+            'label' => false,
+            'required' => false,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__invoiceitems__',
+        ));
 
 //        $builder->add('invoiceAddItems', CollectionType::class, array(
 //            'entry_type' => InvoiceAddItemType::class,

@@ -95,7 +95,7 @@ class ProjectFormNodeController extends ProjectController
         $specialty = $transresUtil->getSpecialtyObject($specialtyStr);
 
         $testing = false;
-        $testing = true;
+        //$testing = true;
 
 //        $project = new Project($user);
 //        $project->setVersion(1);
