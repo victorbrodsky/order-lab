@@ -127,6 +127,50 @@ class InvoiceController extends Controller
                     )
                 );
             }
+
+            //Personal Invoices
+//            if( $filterType == "Invoices Sent to Me" ) {
+//                return $this->redirectToRoute(
+//                    'translationalresearch_invoice_index_filter',
+//                    array(
+//                        'filter[principalInvestigator]' => $user->getId(),
+//                    )
+//                );
+//            }
+//            if( $filterType == "Invoices I Issued" ) {
+//                return $this->redirectToRoute(
+//                    'translationalresearch_invoice_index_filter',
+//                    array(
+//                        'filter[submitter]' => $user->getId(),
+//                        'filter[salesperson]' => $user->getId(),
+//                    )
+//                );
+//            }
+            if( $filterType == "Invoices where I am a Salesperson" ) {
+                return $this->redirectToRoute(
+                    'translationalresearch_invoice_index_filter',
+                    array(
+                        'filter[salesperson]' => $user->getId(),
+                    )
+                );
+            }
+            if( $filterType == "Invoices where I am a PI" ) {
+                return $this->redirectToRoute(
+                    'translationalresearch_invoice_index_filter',
+                    array(
+                        'filter[principalInvestigator]' => $user->getId(),
+                    )
+                );
+            }
+            if( $filterType == "Unpaid Invoices sent to Me" ) {
+                return $this->redirectToRoute(
+                    'translationalresearch_invoice_index_filter',
+                    array(
+                        //'filter[submitter]' => $user->getId(),
+                    )
+                );
+            }
+
             //Latest
             if( $filterType == "Latest Versions of All Invoices" ) {
                 return $this->redirectToRoute(
@@ -291,6 +335,7 @@ class InvoiceController extends Controller
         
 
         if( $submitter ) {
+            //echo "Submitter=$submitter<br>";
             $dql->andWhere("submitter.id = :submitterId");
             $dqlParameters["submitterId"] = $submitter->getId();
         }
@@ -315,7 +360,8 @@ class InvoiceController extends Controller
 //            $advancedFilter++;
 //        }
         if( $principalInvestigator ) {
-            $dql->andWhere("principalInvestigator.id == :principalInvestigatorId");
+            //echo "PI=$principalInvestigator <br>";
+            $dql->andWhere("principalInvestigator.id = :principalInvestigatorId");
             $dqlParameters["principalInvestigatorId"] = $principalInvestigator->getId();
             $advancedFilter++;
         }
@@ -333,6 +379,7 @@ class InvoiceController extends Controller
         }
 
         if( $salesperson ) {
+            //echo "salesperson=$salesperson<br>";
             $dql->andWhere("salesperson.id = :salespersonId");
             $dqlParameters["salespersonId"] = $salesperson->getId();
             $advancedFilter++;
@@ -1033,6 +1080,11 @@ class InvoiceController extends Controller
                 $total = $invoice->getTotal();
                 if( $total ) {
                     $invoice->setPaid($total);
+
+                    //update "Balance Due"
+                    $due = $invoice->getTotal() - $invoice->getPaid();
+                    $invoice->setDue($due);
+
                     $msg = $msg."<br>"."Invoice paid value set to '".$total."'";
                 }
             }
@@ -1081,11 +1133,21 @@ class InvoiceController extends Controller
         }
 
         $invoice->setPaid($paid);
+
+        //Re-Calculate Balance Due
+        $due = $invoice->getTotal() - $invoice->getPaid();
+        $invoice->setDue($due);
+
+        //change-status
+        $status = "Paid Partially";
+        $invoice->setStatus("Paid Partially");
+
         $em->persist($invoice);
         $em->flush();
 
         $eventType = "Invoice Updated";
-        $msg = "Invoice's (ID ".$invoice->getOid().") Paid ($) value has been updated to '" . $paid . "'";
+        $msg = "Invoice's (ID ".$invoice->getOid().") Paid ($) value has been updated to '" . $paid . "'"
+            . " and status changed to '$status'";
         $transresUtil->setEventLog($invoice,$eventType,$msg);
 
         $res = "OK";

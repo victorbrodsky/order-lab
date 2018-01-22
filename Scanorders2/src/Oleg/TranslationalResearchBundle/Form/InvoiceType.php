@@ -252,14 +252,14 @@ class InvoiceType extends AbstractType
                 'required' => false,
                 'attr' => array('class' => 'form-control invoice-paid')
             ));
-
-            $builder->add('due', NumberType::class, array(
-                'label' => "Balance Due ($):",
-                'scale' => 2,
-                'required' => false,
-                'attr' => array('class' => 'form-control invoice-due', 'readonly'=>'readonly')
-            ));
         }
+
+        $builder->add('due', NumberType::class, array(
+            'label' => "Balance Due ($):",
+            'scale' => 2,
+            'required' => false,
+            'attr' => array('class' => 'form-control invoice-due', 'readonly'=>'readonly')
+        ));
 
         $builder->add('documents', CollectionType::class, array(
             'entry_type' => DocumentType::class,

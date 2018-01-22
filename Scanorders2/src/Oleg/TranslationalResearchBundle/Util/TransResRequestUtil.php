@@ -1040,21 +1040,25 @@ class TransResRequestUtil
 
             $category = $product->getCategory();
 
-            //ItemCode
-            $itemCode = $category->getProductId();
-            $invoiceItem->setItemCode($itemCode);
+            if( $category ) {
+                //ItemCode
+                $itemCode = $category->getProductId();
+                $invoiceItem->setItemCode($itemCode);
 
-            //Description
-            $name = $category->getName();
-            $invoiceItem->setDescription($name);
+                //Description
+                $name = $category->getName();
+                $invoiceItem->setDescription($name);
 
-            //UnitPrice
-            $fee = $category->getFee();
-            $invoiceItem->setUnitPrice($fee);
+                //UnitPrice
+                $fee = $category->getFee();
+                $invoiceItem->setUnitPrice($fee);
+            }
 
-            //Total
-            $total = intval($requested) * intval($fee);
-            $invoiceItem->setTotal($total);
+            if( $requested && $fee ) {
+                //Total
+                $total = intval($requested) * intval($fee);
+                $invoiceItem->setTotal($total);
+            }
 
             $invoiceItemsArr->add($invoiceItem);
         }
@@ -1622,9 +1626,19 @@ class TransResRequestUtil
     public function getInvoiceFilterPresetType() {
         $filterTypes = array(
             'All Invoices',
-            'My Invoices',
             'All Issued Invoices',
             'All Pending Invoices',
+
+            '[[hr]]',
+
+            'My Invoices',
+            //"Invoices Sent to Me", -  the same as "Invoices where I am a PI"
+            //"Invoices I Issued", - the same as "Invoices where I am a Salesperson"
+            "Invoices where I am a Salesperson",
+            "Invoices where I am a PI",
+            "Unpaid Invoices sent to Me",
+
+            '[[hr]]',
 
             "Latest Versions of All Invoices",
             "Latest Versions of Issued (Unpaid) Invoices",
@@ -1633,6 +1647,8 @@ class TransResRequestUtil
             "Latest Versions of Partially Paid Invoices",
             "Latest Versions of Paid and Partially Paid Invoices",
             "Latest Versions of Canceled Invoices",
+
+            '[[hr]]',
 
             "Old Versions of All Invoices",
             "Old Versions of Issued (Unpaid) Invoices",

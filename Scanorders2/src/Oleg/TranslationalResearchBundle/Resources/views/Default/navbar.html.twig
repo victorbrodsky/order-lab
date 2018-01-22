@@ -150,12 +150,16 @@
                         </li>
                     {% endif %}
 
-                    {% if is_granted('ROLE_TRANSRES_BILLING_ADMIN') %}
+                    {% if is_granted('ROLE_TRANSRES_USER') %}
                         {% macro createFilterType( filterTypes ) %}
                             {% for filterType in filterTypes %}
-                                <li id="nav-bar-translationalresearch-all-invoices-my">
-                                    <a href="{{ path(translationalresearch_sitename~'_invoice_index_filter',{'type':filterType}) }}">{{ filterType }}</a>
-                                </li>
+                                {% if filterType == "[[hr]]" %}
+                                    <hr>
+                                {% else %}
+                                    <li id="nav-bar-translationalresearch-all-invoices-my">
+                                        <a href="{{ path(translationalresearch_sitename~'_invoice_index_filter',{'type':filterType}) }}">{{ filterType }}</a>
+                                    </li>
+                                {% endif %}
                             {% endfor %}
                         {% endmacro %}
                         <li id="nav-bar-translationalresearch-allmenu-invoices" class="dropdown">

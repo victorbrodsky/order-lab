@@ -985,8 +985,12 @@ class RequestController extends Controller
         if( $cycle == "edit" ) {
             $disabled = false;
             $params['saveAsUpdate'] = true;
-            $params['saveAsDraft'] = true;
-            $params['saveAsComplete'] = true;
+            if( $transresRequest->getProgressState() != 'draft' ) {
+                $params['saveAsDraft'] = true;
+            }
+            if( $transresRequest->getProgressState() == 'draft' ) {
+                $params['saveAsComplete'] = true;
+            }
         }
 
         if( $cycle == "set-state" ) {

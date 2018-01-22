@@ -608,6 +608,17 @@
                                 {% endif %}
 
                                 <p>
+                                <div class="row">
+                                    <div class="col-xs-6" align="right">
+                                        <strong>Total ($):</strong>
+                                    </div>
+                                    <div class="col-xs-6" align="left">
+                                        <input class="form-control invoice-total-{{ invoice.oid }}" type="text" value="{{ invoice.total }}" disabled>
+                                    </div>
+                                </div>
+                                </p>
+
+                                <p>
                                     <div class="row">
                                         <div class="col-xs-6" align="right">
                                             <strong>Update Paid ($):</strong>

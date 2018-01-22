@@ -524,9 +524,9 @@
 
             if( total && paid ) {
                 due = parseFloat(total) - parseFloat(paid);
-                due = transresRoundDecimal(due);
             }
 
+            due = transresRoundDecimal(due);
             $(".invoice-due").val(due);
         }
 
