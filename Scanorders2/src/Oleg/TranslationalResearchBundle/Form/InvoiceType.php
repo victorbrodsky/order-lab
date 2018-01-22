@@ -135,6 +135,12 @@ class InvoiceType extends AbstractType
             ));
         //}
 
+        $builder->add('fundedAccountNumber', null, array(
+            'label' => "WCM account number (if funded):",
+            'required' => false,
+            'attr' => array('class' => 'form-control')
+        ));
+
         $builder->add('dueDate', DateType::class, array(
             'widget' => 'single_text',
             'label' => "Due Date:",

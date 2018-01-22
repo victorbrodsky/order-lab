@@ -224,6 +224,12 @@ class Invoice {
      */
     private $latestVersion;
 
+    /**
+     * fundedAccountNumber - pre-populated from request's $fundedAccountNumber
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $fundedAccountNumber;
+
 
     public function __construct($user=null) {
         $this->setSubmitter($user);
@@ -641,8 +647,21 @@ class Invoice {
         $this->due = $due;
     }
 
-    
+    /**
+     * @return mixed
+     */
+    public function getFundedAccountNumber()
+    {
+        return $this->fundedAccountNumber;
+    }
 
+    /**
+     * @param mixed $fundedAccountNumber
+     */
+    public function setFundedAccountNumber($fundedAccountNumber)
+    {
+        $this->fundedAccountNumber = $fundedAccountNumber;
+    }
 
     public function getTransresRequests()
     {

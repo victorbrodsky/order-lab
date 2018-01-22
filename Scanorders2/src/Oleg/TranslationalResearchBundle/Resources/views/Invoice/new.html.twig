@@ -115,6 +115,10 @@
             {{ formmacros.field_left(form.oid) }}
         {% endif %}
 
+        {% if form.fundedAccountNumber is defined %}
+            {{ formmacros.field_left(form.fundedAccountNumber) }}
+        {% endif %}
+
         {% if form.dueDate is defined %}
             {{ formmacros.fieldDateLabel_left(form.dueDate,'allow-future-date') }}
         {% endif %}

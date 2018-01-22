@@ -1376,6 +1376,12 @@ class TransResRequestUtil
             $invoice->setSalesperson($transresRequestContact);
         }
 
+        //pre-populate fundedAccountNumber
+        $transresFundedAccountNumber = $transresRequest->getFundedAccountNumber();
+        if( $transresFundedAccountNumber ) {
+            $invoice->setFundedAccountNumber($transresFundedAccountNumber);
+        }
+
         ////////////// from //////////////
         if( $siteParameter->getTransresFromHeader() ) {
             $from = $siteParameter->getTransresFromHeader();
@@ -1631,12 +1637,13 @@ class TransResRequestUtil
 
             '[[hr]]',
 
-            'My Invoices',
+            //'My Invoices',
             //"Invoices Sent to Me", -  the same as "Invoices where I am a PI"
-            //"Invoices I Issued", - the same as "Invoices where I am a Salesperson"
+            "Invoices I Issued (I am a Submitter)", //the same as "Invoices where I am a Salesperson"
             "Invoices where I am a Salesperson",
             "Invoices where I am a PI",
-            "Unpaid Invoices sent to Me",
+            //"Unpaid Invoices sent to Me",
+            "Unpaid Invoices where I am a PI",
 
             '[[hr]]',
 

@@ -27,6 +27,7 @@
         <thead>
             <tr>
                 <th>{{ knp_pagination_sortable(invoices, 'Invoice Number', 'invoice.oid') }}</th>
+                <th>{{ knp_pagination_sortable(invoices, 'WCM Account (if funded)', 'invoice.fundedAccountNumber') }}</th>
                 <th>{{ knp_pagination_sortable(invoices, 'Salesperson', 'salesperson.displayName') }}</th>
                 <th>{{ knp_pagination_sortable(invoices, 'Create Date', 'invoice.createDate') }}</th>
                 <th>{{ knp_pagination_sortable(invoices, 'Update Date', 'invoice.updateDate') }}</th>
@@ -48,6 +49,7 @@
                 <td>
                     <a href="{{ path('translationalresearch_invoice_show', {'oid': invoice.oid }) }}">{{ invoice.oid }}</a>
                 </td>
+                <td>{{ invoice.fundedAccountNumber }}</td>
                 <td>{{ invoice.salesperson }}</td>
                 <td>{% if invoice.createDate %}{{ invoice.createDate|date('Y-m-d H:i:s') }}{% endif %}</td>
                 <td>{% if invoice.updateDate %}{{ invoice.updateDate|date('Y-m-d H:i:s') }}{% endif %}</td>
