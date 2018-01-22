@@ -21,7 +21,7 @@
 
     {% set sitename = translationalresearch_sitename %}
 
-    {{ form_start(form,{'id':'transresProjectForm'}) }}
+    {{ form_start(form,{'attr':{'id':'transresProjectForm', 'onsubmit':'return transresValidateProjectForm(this);'}}) }}
     {#{{ form_start(form) }}#}
 
         {{ transres.getProjectReviewPrototypeFormData(form,cycle,sitename) }}
@@ -60,6 +60,9 @@
 
         {% if form.saveAsDraft is defined %}
             {{ form_widget(form.saveAsDraft) }}
+        {% endif %}
+        {% if form.submitIrbReview is defined %}
+            {{ form_widget(form.submitIrbReview) }}
         {% endif %}
         {#{% if form.saveAsComplete is defined %}#}
             {#{{ form_widget(form.saveAsComplete) }}#}

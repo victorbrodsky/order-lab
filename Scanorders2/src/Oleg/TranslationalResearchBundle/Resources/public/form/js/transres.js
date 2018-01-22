@@ -20,12 +20,12 @@ $(document).ready(function() {
     console.log('transres form ready');
     transresIrbApprovalLetterListener();
 
-    $('form[name="oleg_translationalresearchbundle_project"]').submit(function(ev) {
-        ev.preventDefault(); // to stop the form from submitting
-        /* Validations go here */
-        transresValidateProjectForm(this);
-        //this.submit(); // If all the validations succeeded
-    });
+    // $('form[name="oleg_translationalresearchbundle_project"]').submit(function(ev) {
+    //     //return; //testing
+    //     ev.preventDefault(); // to stop the form from submitting
+    //     /* Validations go here */
+    //     transresValidateProjectForm(this);
+    // });
 
 });
 
@@ -49,7 +49,7 @@ function transresIrbApprovalLetterListener() {
     });
 }
 
-
+//form with multiple buttons don't use form.submit(); because it does not pass buttons in the post
 function transresValidateProjectForm(projectForm) {
 
     var validated = true;
@@ -140,7 +140,11 @@ function transresValidateProjectForm(projectForm) {
     //console.log("No Error");
     //return false; //testing
 
-    projectForm.submit(); // If all the validations succeeded
+    //projectForm[0].submit(); //submit by regular js (without jquery)
+    //var form = document.getElementsByName("oleg_translationalresearchbundle_project");
+    //var form = document.getElementById("transresProjectForm");
+    //form.submit();
+    //projectForm.submit(); // If all the validations succeeded
 }
 
 

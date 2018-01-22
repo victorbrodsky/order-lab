@@ -164,6 +164,10 @@ class ProjectFormNodeController extends ProjectController
 
             //exit("Project submitted");
 
+            $startProjectReview = false;
+
+            $msg = "Project with ID ".$project->getOid()." has been successfully created";
+
             //new
             if ($form->getClickedButton() && 'saveAsDraft' === $form->getClickedButton()->getName()) {
                 //Save Project as Draft => state='draft'
@@ -174,6 +178,11 @@ class ProjectFormNodeController extends ProjectController
             if ($form->getClickedButton() && 'submitIrbReview' === $form->getClickedButton()->getName()) {
                 //Submit to IRB review
                 $project->setState('irb_review');
+
+                $startProjectReview = true;
+
+                $label = $transresUtil->getStateLabelByName($project->getState());
+                $msg = "Project ID ".$project->getOid()." has been successfully create and sent to the status '$label'";
             }
 
             $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($project,"document");
@@ -207,8 +216,6 @@ class ProjectFormNodeController extends ProjectController
 //            }
             $transresUtil->copyFormNodeFieldsToProject($project);
 
-            $msg = "Project with ID ".$project->getOid()." has been successfully created";
-
             if( $testing ) {
                 exit('form is submitted and finished, msg='.$msg);
             }
@@ -221,6 +228,15 @@ class ProjectFormNodeController extends ProjectController
             $eventType = "Project Created";
             $msg = $msg . " by ".$project->getSubmitter()->getUsernameOptimal();
             $transresUtil->setEventLog($project,$eventType,$msg,$testing);
+
+            if( $startProjectReview ) {
+                //send confirmation email
+                $break = "\r\n";
+                //get project url
+                $projectUrl = $transresUtil->getProjectShowUrl($project);
+                $emailBody = $msg . $break.$break. "Please click on the URL below to view this project:".$break.$projectUrl;
+                $transresUtil->sendNotificationEmails($project,null,$msg,$emailBody,$testing);
+            }
 
             return $this->redirectToRoute('translationalresearch_project_show', array('id' => $project->getId()));
         }
@@ -359,6 +375,8 @@ class ProjectFormNodeController extends ProjectController
 //                    $project->setState('completed');
 //                }
 //            }
+
+            //exit('before set state to irb_review');
             if ($form->getClickedButton() && 'submitIrbReview' === $form->getClickedButton()->getName()) {
                 //Submit to IRB review
                 if( $project->getState() == 'draft' ) {
@@ -366,7 +384,7 @@ class ProjectFormNodeController extends ProjectController
                     $startProjectReview = true;
 
                     $label = $transresUtil->getStateLabelByName($project->getState());
-                    $msg = "Project ID ".$project->getOid()." has been sent to the status '$label' from '".$originalStateLabel."'";
+                    $msg = "Project ID ".$project->getOid()." has been successfully updated and sent to the status '$label' from '".$originalStateLabel."'";
                 }
             }
 

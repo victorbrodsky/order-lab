@@ -742,8 +742,11 @@ class ProjectController extends Controller
 
         if( $cycle == "new" ) {
             $disabled = false;
-            $params['saveAsDraft'] = true;
-            //$params['saveAsComplete'] = true;
+
+            if( $transresUtil->isRequesterOrAdmin($project) === true ) {
+                $params['saveAsDraft'] = true;
+                $params['submitIrbReview'] = true;
+            }
 
             if( $params['admin'] === false ) {
                 $params['showIrbReviewer'] = false;
