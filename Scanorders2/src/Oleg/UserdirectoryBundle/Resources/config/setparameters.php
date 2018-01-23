@@ -84,13 +84,13 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
 
     if( $params && count($params) >= 1 ) {
 
-        $aDLDAPServerAddress = null;
-        $aDLDAPServerPort = null;
-        $aDLDAPServerOu = null;
-        $aDLDAPServerAccountUserName = null;
-        $aDLDAPServerAccountPassword = null;
-        $ldapExePath = null;
-        $ldapExeFilename = null;
+//        $aDLDAPServerAddress = null;
+//        $aDLDAPServerPort = null;
+//        $aDLDAPServerOu = null;
+//        $aDLDAPServerAccountUserName = null;
+//        $aDLDAPServerAccountPassword = null;
+//        $ldapExePath = null;
+//        $ldapExeFilename = null;
 
         $smtpServerAddress = null;
         $defaultSiteEmail = null;
@@ -135,23 +135,22 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
 
         while( $row = $params->fetch() ) {
 
-            if( array_key_exists('aDLDAPServerAddress', $row) )
-                $aDLDAPServerAddress = $row['aDLDAPServerAddress'];
-            if( array_key_exists('aDLDAPServerPort', $row) )
-                $aDLDAPServerPort = $row['aDLDAPServerPort'];
-            if( array_key_exists('aDLDAPServerOu', $row) )
-                $aDLDAPServerOu = $row['aDLDAPServerOu'];
-            if( array_key_exists('aDLDAPServerAccountUserName', $row) )
-                $aDLDAPServerAccountUserName = $row['aDLDAPServerAccountUserName'];
-            if( array_key_exists('aDLDAPServerAccountPassword', $row) )
-                $aDLDAPServerAccountPassword = $row['aDLDAPServerAccountPassword'];
-
-            if (array_key_exists('ldapExePath', $row)) {
-                $ldapExePath = $row['ldapExePath'];
-            }
-            if (array_key_exists('ldapExeFilename', $row)) {
-                $ldapExeFilename = $row['ldapExeFilename'];
-            }
+//            if( array_key_exists('aDLDAPServerAddress', $row) )
+//                $aDLDAPServerAddress = $row['aDLDAPServerAddress'];
+//            if( array_key_exists('aDLDAPServerPort', $row) )
+//                $aDLDAPServerPort = $row['aDLDAPServerPort'];
+//            if( array_key_exists('aDLDAPServerOu', $row) )
+//                $aDLDAPServerOu = $row['aDLDAPServerOu'];
+//            if( array_key_exists('aDLDAPServerAccountUserName', $row) )
+//                $aDLDAPServerAccountUserName = $row['aDLDAPServerAccountUserName'];
+//            if( array_key_exists('aDLDAPServerAccountPassword', $row) )
+//                $aDLDAPServerAccountPassword = $row['aDLDAPServerAccountPassword'];
+//            if (array_key_exists('ldapExePath', $row)) {
+//                $ldapExePath = $row['ldapExePath'];
+//            }
+//            if (array_key_exists('ldapExeFilename', $row)) {
+//                $ldapExeFilename = $row['ldapExeFilename'];
+//            }
 
             if( array_key_exists('smtpServerAddress', $row) )
                 $smtpServerAddress = $row['smtpServerAddress'];
@@ -273,20 +272,20 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
         $container->setParameter('contentabout_page',$contentabout_page);
 
         //ldap
-        if( $aDLDAPServerAddress )
-            $container->setParameter('ldaphost',$aDLDAPServerAddress);
-        if( $aDLDAPServerPort )
-            $container->setParameter('ldapport',$aDLDAPServerPort);
-        if( $aDLDAPServerAccountUserName )
-            $container->setParameter('ldapusername',$aDLDAPServerAccountUserName);
-        if( $aDLDAPServerAccountPassword )
-            $container->setParameter('ldappassword',$aDLDAPServerAccountPassword);
-        if( $aDLDAPServerOu )
-            $container->setParameter('ldapou',$aDLDAPServerOu);
-        if( $ldapExePath )
-            $container->setParameter('ldapexepath',$ldapExePath);
-        if( $ldapExeFilename )
-            $container->setParameter('ldapexefilename',$ldapExeFilename);
+//        if( $aDLDAPServerAddress )
+//            $container->setParameter('ldaphost',$aDLDAPServerAddress);
+//        if( $aDLDAPServerPort )
+//            $container->setParameter('ldapport',$aDLDAPServerPort);
+//        if( $aDLDAPServerAccountUserName )
+//            $container->setParameter('ldapusername',$aDLDAPServerAccountUserName);
+//        if( $aDLDAPServerAccountPassword )
+//            $container->setParameter('ldappassword',$aDLDAPServerAccountPassword);
+//        if( $aDLDAPServerOu )
+//            $container->setParameter('ldapou',$aDLDAPServerOu);
+//        if( $ldapExePath )
+//            $container->setParameter('ldapexepath',$ldapExePath);
+//        if( $ldapExeFilename )
+//            $container->setParameter('ldapexefilename',$ldapExeFilename);
 
         //maintenance
 //        $container->setParameter('maintenance',$maintenance);

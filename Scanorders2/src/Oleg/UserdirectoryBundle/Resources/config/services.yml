@@ -14,13 +14,13 @@ parameters:
   department_name: your_value
 
   #ldap
-  ldaphost: your_value
-  ldapport: your_value
-  ldapou: your_value
-  ldapusername: your_value
-  ldappassword: your_value
-  ldapexepath: ../src/Oleg/UserdirectoryBundle/Util/
-  ldapexefilename: LdapSaslCustom.exe
+#  ldaphost: your_value
+#  ldapport: your_value
+#  ldapou: your_value
+#  ldapusername: your_value
+#  ldappassword: your_value
+#  ldapexepath: ../src/Oleg/UserdirectoryBundle/Util/
+#  ldapexefilename: LdapSaslCustom.exe
 
   #titles
   mainhome_title:
