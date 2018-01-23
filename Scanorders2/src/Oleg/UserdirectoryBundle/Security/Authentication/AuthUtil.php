@@ -507,6 +507,7 @@ class AuthUtil {
         $LDAPPort = escapeshellarg($LDAPPort);
         $username = escapeshellarg($username);
         $password = escapeshellarg($password);
+        $this->logger->notice("ldapBindWindows: command=[$command]; LDAPHost=[$LDAPHost]; LDAPPort=[$LDAPPort]; username=[$username]");
 
         $commandParams = escapeshellcmd($command.' '.$LDAPHost.' '.$LDAPPort.' '.$username.' '.$password);
         //echo "commandParams=".$commandParams."<br>";
