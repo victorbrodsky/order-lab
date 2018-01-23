@@ -476,7 +476,8 @@ class AuthUtil {
     //return NULL if failed
     public function ldapBind( $username, $password ) {
         if( substr(php_uname(), 0, 7) == "Windows" ){
-            return $this->ldapBindWindows($username,$password);
+            //return $this->ldapBindWindows($username,$password);
+            return $this->ldapBindUnix($username,$password);
         }
         else {
             return $this->ldapBindUnix($username,$password);
@@ -552,6 +553,7 @@ class AuthUtil {
         $res = ldap_sasl_bind($cnx,NULL,$password,$mech,NULL,$username,NULL);
         if( !$res ) {
             //echo $mech." - could not sasl bind to LDAP by SASL<br>";
+            $this->logger->notice("ldapBindUnix: res=".$res);
             ldap_error($cnx);
             ldap_unbind($cnx);
             return NULL;
