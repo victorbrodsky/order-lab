@@ -476,8 +476,7 @@ class AuthUtil {
     //return NULL if failed
     public function ldapBind( $username, $password ) {
         if( substr(php_uname(), 0, 7) == "Windows" ){
-            //return $this->ldapBindWindows($username,$password);
-            return $this->ldapBindUnix($username,$password);
+            return $this->ldapBindWindows($username,$password);
         }
         else {
             return $this->ldapBindUnix($username,$password);
