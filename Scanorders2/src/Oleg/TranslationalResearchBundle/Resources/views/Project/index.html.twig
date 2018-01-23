@@ -99,6 +99,12 @@
                 {#<th>{{ knp_pagination_sortable(projects, 'Expiration Date', 'project.expirationDate') }}</th>#}
                 <th>IRB Expiration Date</th>
                 <th>Requests</th>
+
+                <th title="Number of the Latest Issued Invoices"># Issued Invoices</th>
+                <th title="Total Amount of the Latest Issued Invoices">Total($)</th>
+                <th title="Paid Amount of the Latest Issued Invoices">Paid($)</th>
+                <th title="Due Amount of the Latest Issued Invoices">Due($)</th>
+
                 <th>Actions</th>
             </tr>
         </thead>
@@ -175,6 +181,29 @@
 
                 <td>
                     {{ project.getRequests()|length }}
+                </td>
+
+                {#Invoices #}
+                {% set invoicesInfos = transres_util.getInvoicesInfosByProject(project) %}
+                <td>
+                    {{ invoicesInfos.count }}
+                </td>
+                {#Subtotal of Issued Invoices#}
+                <td>
+                    {% if invoicesInfos.total is not null %}
+                        ${{ invoicesInfos.total }}
+                    {% endif %}
+                </td>
+                {#Subtotal of Issued Paid Invoices#}
+                <td>
+                    {% if invoicesInfos.paid is not null %}
+                        ${{ invoicesInfos.paid }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if invoicesInfos.due is not null %}
+                        ${{ invoicesInfos.due }}
+                    {% endif %}
                 </td>
 
                 <td class="rowlink-skip">

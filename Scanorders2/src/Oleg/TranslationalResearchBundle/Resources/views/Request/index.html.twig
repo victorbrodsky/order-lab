@@ -43,8 +43,11 @@
                 <th>{{ knp_pagination_sortable(transresRequests, 'Billing Progress Status', 'transresRequest.billingState') }}</th>
                 {#<th>{{ knp_pagination_sortable(projects, 'Expiration Date', 'project.expirationDate') }}</th>#}
                 <th>Products/Services</th>
-                <th>Fee</th>
-                <th># Invoices</th>
+                <th title="Total Calculated Request's Fee">Total Fees($)</th>
+                <th title="Number of All Invoices"># Invoices</th>
+                <th title="Total Amount of the Latest Issued Invoices">Invoice Total($)</th>
+                <th title="Paid Amount of the Latest Issued Invoices">Invoice Paid($)</th>
+                <th title="Due Amount of the Latest Issued Invoices">Invoice Due($)</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -100,7 +103,6 @@
                 </td>
 
                 <td>
-                    {#{{ principalInvestigator }}<br>#}
                     {% set fee = transres_request_util.getTransResRequestFeeHtml(transresRequest) %}
                     {% if fee %}
                         ${{ fee|raw }}
@@ -113,6 +115,24 @@
                         <a data-toggle="tooltip" title="Show All Invoice"
                            href="{{ path(translationalresearch_sitename~'_invoice_index', { 'id': transresRequest.id }) }} "
                         >{{ invoicesCount }}</a>
+                    {% endif %}
+                </td>
+
+                {#Invoices #}
+                {% set invoicesInfos = transres_request_util.getInvoicesInfosByRequest(transresRequest) %}
+                <td>
+                    {% if invoicesInfos.total is not null %}
+                        ${{ invoicesInfos.total }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if invoicesInfos.paid is not null %}
+                        ${{ invoicesInfos.paid }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if invoicesInfos.due is not null %}
+                        ${{ invoicesInfos.due }}
                     {% endif %}
                 </td>
 

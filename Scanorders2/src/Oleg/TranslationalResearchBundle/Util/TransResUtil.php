@@ -2475,4 +2475,47 @@ class TransResUtil
 
         return $text;
     }
+
+
+    //get Issued Invoices
+    public function getInvoicesInfosByProject($project) {
+        $transresRequestUtil = $this->container->get('transres_request_util');
+        $invoicesInfos = array();
+        $count = 0;
+        $total = 0;
+        $paid = 0;
+        $due = 0;
+
+        foreach($project->getRequests() as $request) {
+            $res = $transresRequestUtil->getInvoicesInfosByRequest($request);
+            $count = $count + $res['count'];
+            $total = $total + $res['total'];
+            $paid = $paid + $res['paid'];
+            $due = $due + $res['due'];
+        }
+
+        if( $count > 0 ) {
+            if ($total > 0) {
+                $total = $transresRequestUtil->toDecimal($total);
+            }
+            if ($paid > 0) {
+                $paid = $transresRequestUtil->toDecimal($paid);
+            }
+            if ($due > 0) {
+                $due = $transresRequestUtil->toDecimal($due);
+            }
+        } else {
+            $total = null;
+            $paid = null;
+            $due = null;
+        }
+
+        $invoicesInfos['count'] = $count;
+        $invoicesInfos['total'] = $total;
+        $invoicesInfos['paid'] = $paid;
+        $invoicesInfos['due'] = $due;
+
+        return $invoicesInfos;
+    }
+
 }

@@ -1835,4 +1835,58 @@ class TransResRequestUtil
             "Canceled" => "Canceled"
         );
     }
+
+    //get Issued Invoices
+    public function getInvoicesInfosByRequest($request) {
+        $invoicesInfos = array();
+        $count = 0;
+        $total = 0.00;
+        $paid = 0.00;
+        $due = 0.00;
+
+        foreach( $request->getInvoices() as $invoice ) {
+            if( $invoice->getLatestVersion() ) {
+                if ($invoice->getStatus() == "Unpaid/Issued" ||
+                    $invoice->getStatus() == "Paid in Full" ||
+                    $invoice->getStatus() == "Paid Partially"
+                ) {
+                    $count++;
+                    $total = $total + $invoice->getTotal();
+                    $paid = $paid + $invoice->getPaid();
+                    $due = $due + $invoice->getDue();
+                }
+            }
+        }
+
+        //echo "total=$total<br>";
+        //echo "paid=$paid<br>";
+
+        if( $count > 0 ) {
+            if ($total > 0) {
+                $total = $this->toDecimal($total);
+            }
+            if ($paid > 0) {
+                $paid = $this->toDecimal($paid);
+            }
+            if ($due > 0) {
+                $due = $this->toDecimal($due);
+            }
+        } else {
+            $total = null;
+            $paid = null;
+            $due = null;
+        }
+
+        echo "paid=$paid<br>";
+
+        $invoicesInfos['count'] = $count;
+        $invoicesInfos['total'] = $total;
+        $invoicesInfos['paid'] = $paid;
+        $invoicesInfos['due'] = $due;
+
+        return $invoicesInfos;
+    }
+    public function toDecimal($number) {
+        return number_format((float)$number, 2, '.', '');
+    }
 }
