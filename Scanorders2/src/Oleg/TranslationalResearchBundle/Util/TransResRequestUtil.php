@@ -1877,7 +1877,7 @@ class TransResRequestUtil
             $due = null;
         }
 
-        echo "paid=$paid<br>";
+        //echo "paid=$paid<br>";
 
         $invoicesInfos['count'] = $count;
         $invoicesInfos['total'] = $total;
