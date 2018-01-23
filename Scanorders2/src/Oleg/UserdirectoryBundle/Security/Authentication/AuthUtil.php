@@ -492,18 +492,18 @@ class AuthUtil {
 
         //Ldap authentication using exe script
         //$LDAPHost = $this->container->getParameter('ldaphost');
-        $LDAPHost = $userSecUtil->getSiteSettingParameter('ldaphost');
+        $LDAPHost = $userSecUtil->getSiteSettingParameter('aDLDAPServerAddress');
 
         //$LDAPPort = $this->container->getParameter('ldapport');
-        $LDAPPort = $userSecUtil->getSiteSettingParameter('ldapport');
+        $LDAPPort = $userSecUtil->getSiteSettingParameter('aDLDAPServerPort');
 
         //$exePath = "../src/Oleg/UserdirectoryBundle/Util/";
         //$exePath = $this->container->getParameter('ldapexepath');
-        $exePath = $userSecUtil->getSiteSettingParameter('ldapexepath');
+        $exePath = $userSecUtil->getSiteSettingParameter('ldapExePath');
 
         //$exeFile = "LdapSaslCustom.exe";
         //$exeFile = $this->container->getParameter('ldapexefilename');
-        $exeFile = $userSecUtil->getSiteSettingParameter('ldapexefilename');
+        $exeFile = $userSecUtil->getSiteSettingParameter('ldapExeFilename');
 
         $command = $exePath.$exeFile;
         //$command = $exeFile;
@@ -545,7 +545,7 @@ class AuthUtil {
         $userSecUtil = $this->container->get('user_security_utility');
         $this->logger->warning("Unix system detected. Must be tested!");
         //$LDAPHost = $this->container->getParameter('ldaphost');
-        $LDAPHost = $userSecUtil->getSiteSettingParameter('ldaphost');
+        $LDAPHost = $userSecUtil->getSiteSettingParameter('aDLDAPServerAddress');
         $mech = "GSSAPI";
         $cnx = $this->connectToLdap($LDAPHost);
 
@@ -568,13 +568,13 @@ class AuthUtil {
         $userSecUtil = $this->container->get('user_security_utility');
 
         //$LDAPHost = $this->container->getParameter('ldaphost');
-        $LDAPHost = $userSecUtil->getSiteSettingParameter('ldaphost');
+        $LDAPHost = $userSecUtil->getSiteSettingParameter('aDLDAPServerAddress');
         //echo "LDAPHost=".$LDAPHost."<br>";
 
         //$dn = "CN=Users,DC=a,DC=wcmc-ad,DC=net";
         $dn = "CN=Users";
         //$ldapDc = $this->container->getParameter('ldapou');
-        $ldapDc = $userSecUtil->getSiteSettingParameter('ldapou');
+        $ldapDc = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu');
         $dcArr = explode(".",$ldapDc);
         foreach( $dcArr as $dc ) {
             $dn = $dn . ",DC=".$dc;
@@ -582,9 +582,9 @@ class AuthUtil {
         //echo "dn=".$dn."<br>";
 
         //$LDAPUserAdmin = $this->container->getParameter('ldapusername');
-        $LDAPUserAdmin = $userSecUtil->getSiteSettingParameter('ldapusername');
+        $LDAPUserAdmin = $userSecUtil->getSiteSettingParameter('aDLDAPServerAccountUserName');
         //$LDAPUserPasswordAdmin = $this->container->getParameter('ldappassword');
-        $LDAPUserPasswordAdmin = $userSecUtil->getSiteSettingParameter('ldappassword');
+        $LDAPUserPasswordAdmin = $userSecUtil->getSiteSettingParameter('aDLDAPServerAccountPassword');
 
         //$filter="(ObjectClass=Person)";
         $filter="(cn=".$username.")";
