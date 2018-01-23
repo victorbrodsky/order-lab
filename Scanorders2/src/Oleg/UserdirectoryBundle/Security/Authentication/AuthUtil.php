@@ -550,7 +550,7 @@ class AuthUtil {
         $mech = "GSSAPI";
         $cnx = $this->connectToLdap($LDAPHost);
 
-        $res = ldap_sasl_bind($cnx,NULL,$password,$mech,NULL,$username,NULL);
+        $res = ldap_sasl_bind($cnx,NULL,$password,$mech,NULL,$username);
         if( !$res ) {
             //echo $mech." - could not sasl bind to LDAP by SASL<br>";
             $this->logger->notice("ldapBindUnix: res=".$res);
