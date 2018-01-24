@@ -263,6 +263,10 @@
                                 {% endif %}
 
                                 {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+                                    <li><a href="{{ path('employees_logger_allsites') }}">Gloabal Event Log</a></li>
+                                {% endif %}
+
+                                {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
                                     <li class="divider"></li>
                                     <li><a href="{{ path(employees_sitename~'_import_users_excel') }}">Import Users</a></li>
                                     <li><a href="{{ path(employees_sitename~'_siteparameters') }}">Site Settings</a></li>
