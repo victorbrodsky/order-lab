@@ -2482,9 +2482,10 @@ class TransResUtil
         $transresRequestUtil = $this->container->get('transres_request_util');
         $invoicesInfos = array();
         $count = 0;
-        $total = 0;
-        $paid = 0;
-        $due = 0;
+        $total = 0.00;
+        $paid = 0.00;
+        $due = 0.00;
+        $countRequest = 0;
 
         foreach($project->getRequests() as $request) {
             $res = $transresRequestUtil->getInvoicesInfosByRequest($request);
@@ -2492,9 +2493,11 @@ class TransResUtil
             $total = $total + $res['total'];
             $paid = $paid + $res['paid'];
             $due = $due + $res['due'];
+            $countRequest++;
         }
+        //echo $project->getOid().": countRequest=$countRequest: ";
 
-        if( $count > 0 ) {
+        if( $count > 0 && $countRequest > 0 ) {
             if ($total > 0) {
                 $total = $transresRequestUtil->toDecimal($total);
             }
@@ -2504,11 +2507,14 @@ class TransResUtil
             if ($due > 0) {
                 $due = $transresRequestUtil->toDecimal($due);
             }
+            //echo "value<br>";
         } else {
+            //echo "total=$total<br>";
             $total = null;
             $paid = null;
             $due = null;
         }
+        //echo "total=$total<br>";
 
         $invoicesInfos['count'] = $count;
         $invoicesInfos['total'] = $total;

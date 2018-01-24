@@ -209,6 +209,26 @@ class LoggerFilterType extends AbstractType
             'attr' => array('class' => 'form-control form-control-modif limit-font-size submit-on-enter-field'),
         ));
 
+        if( !isset($this->params['sitename']) ) {
+            $builder->add('sites', EntityType::class, array(
+                'class' => 'OlegUserdirectoryBundle:SiteList',
+                'choice_label' => 'abbreviation',
+                'label' => false,
+                'required' => false,
+                'multiple' => true,
+                'attr' => array('class' => 'combobox', 'placeholder' => 'Site'),
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.name", "ASC")
+                        ->setParameters(array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+            ));
+        }
+
 //        //Capacity
 //        if( $this->params['sitename'] == "calllog" ) {
 //            $capacities = array(

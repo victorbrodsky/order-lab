@@ -295,6 +295,9 @@ class UserSecurityUtil {
     // fellowship-applications => fellapp
     // fellapp => fellapp
     public function getSiteBySitename( $sitename, $asObject=true ) {
+        if( !$sitename ) {
+            return null;
+        }
         $repository = $this->em->getRepository('OlegUserdirectoryBundle:SiteList');
         $dql =  $repository->createQueryBuilder("list");
         $dql->select('list');

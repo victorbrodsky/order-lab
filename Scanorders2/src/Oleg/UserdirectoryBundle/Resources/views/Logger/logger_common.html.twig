@@ -119,6 +119,12 @@
         <br>
 
         <div class="row">
+            {% if loggerfilter.sites is defined %}
+                <div class="col-xs-2">
+                    {{ form_row(loggerfilter.sites) }}
+                </div>
+            {% endif %}
+
             {#OptionalFields#}
             {% if loggerfilter.capacity is defined %}
                 <div class="col-xs-2">
@@ -232,7 +238,7 @@
                     {% else %}
                         <td class="rowlink-skip">
                             {% if entity.user %}
-                                <a href="{{ path(scan_sitename~'_showuser', { 'id': entity.user.id }) }}" target="_blank">{{ entity.user.getUserNameStr() }}</a>
+                                <a href="{{ path(employees_sitename~'_showuser', { 'id': entity.user.id }) }}" target="_blank">{{ entity.user.getUserNameStr() }}</a>
                             {% endif %}
                         </td>
                     {% endif %}

@@ -54,6 +54,21 @@ class LoggerController extends Controller
     }
 
     /**
+     * Lists all Logger entities across all sites.
+     *
+     * @Route("/all-sites/", name="employees_logger_allsites")
+     * @Method("GET")
+     * @Template("OlegUserdirectoryBundle:Logger:index.html.twig")
+     */
+    public function indexAllAction(Request $request)
+    {
+        $params = array(
+            'allsites'=>true
+        );
+        return $this->listLogger($params,$request);
+    }
+
+    /**
      * Lists audit log for a specific user
      *
      * @Route("/user/{id}", name="employees_logger_user_with_id")
@@ -151,6 +166,7 @@ class LoggerController extends Controller
         $eventStr = ( array_key_exists('eventStr', $params) ? $params['eventStr'] : null);
         $postData = ( array_key_exists('postData', $params) ? $params['postData'] : null);
         $onlyheader = ( array_key_exists('onlyheader', $params) ? $params['onlyheader'] : null);
+        //$acrossSites = ( array_key_exists('acrossSites', $params) ? $params['acrossSites'] : false);
 
         //echo "entityId=".$entityId."<br>";
 
@@ -158,7 +174,12 @@ class LoggerController extends Controller
 
         //get site name from abbreviation $sitename
         $userSecUtil = $this->get('user_security_utility');
-        $sitenameFull = $userSecUtil->getSiteBySitename($sitename)->getName();
+        $sitenameObject = $userSecUtil->getSiteBySitename($sitename);
+        if( $sitenameObject ) {
+            $sitenameFull = $sitenameObject->getName();
+        } else {
+            $sitenameFull = "All Sites";
+        }
 
         $roles = $em->getRepository('OlegUserdirectoryBundle:Roles')->findAll();
         $rolesArr = array();
@@ -179,11 +200,13 @@ class LoggerController extends Controller
 
         //$dql->where("logger.entityId IS NOT NULL AND loggerEntity IS NULL");
 
-        if( $allsites == null || $allsites == false ) {
-            //echo "sitename=".$sitename."<br>";
-            //$dql->andWhere("logger.siteName = '".$sitename."'");
-            //$dql->andWhere("site.abbreviation = '".$sitename."' OR logger.siteName ='".$sitename."'");
-            $dql->andWhere("site.abbreviation = '".$sitename."'");
+        if( $sitename ) {
+            if ($allsites == null || $allsites == false) {
+                //echo "sitename=".$sitename."<br>";
+                //$dql->andWhere("logger.siteName = '".$sitename."'");
+                //$dql->andWhere("site.abbreviation = '".$sitename."' OR logger.siteName ='".$sitename."'");
+                $dql->andWhere("site.abbreviation = '" . $sitename . "'");
+            }
         }
 
         $createLogger = null;
@@ -398,6 +421,10 @@ class LoggerController extends Controller
         $objectTypes = $filterform['objectType']->getData();
         $objectId = $filterform['objectId']->getData();
 
+        if( isset($filterform['sites']) ) {
+            $sites = $filterform['sites']->getData();
+        }
+
         $currentUser = $this->get('security.token_storage')->getToken()->getUser();
 
         //echo "eventTypes=".$eventTypes."<br>";
@@ -512,6 +539,21 @@ class LoggerController extends Controller
                 }
             }
             $dql->andWhere($where);
+
+            $filtered = true;
+        }
+
+        if( $sites ) {
+            $sitesStr = "";
+            foreach( $sites as $site ) {
+                if( $sitesStr ) {
+                    $sitesStr .= " OR ";
+                }
+                $sitesStr .= "site.id = " . $site->getId();
+            }
+            if( $sitesStr ) {
+                $dql->andWhere($sitesStr);
+            }
 
             $filtered = true;
         }
