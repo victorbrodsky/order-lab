@@ -2524,4 +2524,166 @@ class TransResUtil
         return $invoicesInfos;
     }
 
+    public function createProjectListExcel($projects) {
+
+        $transresRequestUtil = $this->container->get('transres_request_util');
+        $transResFormNodeUtil = $this->container->get('transres_formnode_util');
+
+        $author = $this->container->get('security.token_storage')->getToken()->getUser();
+        //$transformer = new DateTimeToStringTransformer(null,null,'d/m/Y');
+
+        $ea = new \PHPExcel(); // ea is short for Excel Application
+
+        $ea->getProperties()
+            ->setCreator($author."")
+            ->setTitle('Projects')
+            ->setLastModifiedBy($author."")
+            ->setDescription('Projects list in Excel format')
+            ->setSubject('PHP Excel manipulation')
+            ->setKeywords('excel php office phpexcel lakers')
+            ->setCategory('programming')
+        ;
+
+        $ews = $ea->getSheet(0);
+        $ews->setTitle('Projects');
+
+        //align all cells to left
+        $style = array(
+            'alignment' => array(
+                'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+            )
+        );
+        //$ews->getDefaultStyle()->applyFromArray($style);
+        $ews->getParent()->getDefaultStyle()->applyFromArray($style);
+
+        $ews->setCellValue('A1', 'ID'); // Sets cell 'a1' to value 'ID
+        $ews->setCellValue('B1', 'Submission Date');
+        $ews->setCellValue('C1', 'Principal Investigator(s)');
+        $ews->setCellValue('D1', 'Project Title');
+        $ews->setCellValue('E1', 'Funding');
+        $ews->setCellValue('F1', 'Status');
+        $ews->setCellValue('G1', 'Approval Date');
+        $ews->setCellValue('H1', 'IRB Expiration Date');
+
+        $ews->setCellValue('I1', 'Requests');
+        $ews->setCellValue('J1', '# Issued Invoices');
+        $ews->setCellValue('K1', 'Total($)');
+        $ews->setCellValue('L1', 'Paid($)');
+        $ews->setCellValue('M1', 'Due($)');
+
+        $totalRequests = 0;
+        $totalInvoices = 0;
+        $totalTotal = 0;
+        $paidTotal = 0;
+        $dueTotal = 0;
+
+        $row = 2;
+        foreach( $projects as $project ) {
+
+            $ews->setCellValue('A'.$row, $project->getOid());
+            $ews->setCellValue('B'.$row, $this->convertDateToStr($project->getCreateDate()) );
+
+            $piArr = array();
+            foreach( $project->getPrincipalInvestigators() as $pi) {
+                $piArr[] = $pi->getUsernameOptimal();
+            }
+            $ews->setCellValue('C'.$row, implode("\n",$piArr));
+            $ews->getStyle('C'.$row)->getAlignment()->setWrapText(true);
+
+            $ews->setCellValue('D'.$row, $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"Title"));
+
+            //Funding
+            if( $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"Funded") ) {
+                $funded = "Funded";
+            } else {
+                $funded = "Not Funded";
+            }
+            $ews->setCellValue('E'.$row, $funded);
+
+            //Status
+            $ews->setCellValue('F'.$row, $this->getStateLabelByName($project->getState()));
+
+            //Approval Date
+            $ews->setCellValue('G'.$row, $this->convertDateToStr($project->getApprovalDate()) );
+
+            //IRB Expiration Date
+            $ews->setCellValue('H'.$row, $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"IRB Expiration Date"));
+
+            //Requests
+            $requestsCount = count($project->getRequests());
+            $totalRequests = $totalRequests + $requestsCount;
+            $ews->setCellValue('I'.$row, $requestsCount);
+
+            $invoicesInfos = $this->getInvoicesInfosByProject($project);
+
+            //# Issued Invoices
+            $invoicesCount = $invoicesInfos['count'];
+            $totalInvoices = $totalInvoices + $invoicesCount;
+            $ews->setCellValue('J'.$row, $invoicesCount);
+
+            //# Total($)
+            $total = $invoicesInfos['total'];
+            $totalTotal = $totalTotal + $total;
+            if( $total ) {
+                $ews->setCellValue('K' . $row, "$".$total);
+            }
+
+            //# Paid($)
+            $paid = $invoicesInfos['paid'];
+            $paidTotal = $paidTotal + $paid;
+            if( $paid ) {
+                $ews->setCellValue('L' . $row, "$".$paid);
+            }
+
+            //# Due($)
+            $due = $invoicesInfos['due'];
+            $dueTotal = $dueTotal + $due;
+            if( $due ) {
+                $ews->setCellValue('M' . $row, "$".$due);
+            }
+
+            $row = $row + 2;
+        }
+
+        //Total
+        $row++;
+        $ews->setCellValue('H'.$row, "Totals");
+        //Requests total
+        $ews->setCellValue('I'.$row, $totalRequests);
+        //Invoices total
+        $ews->setCellValue('J'.$row, $totalInvoices);
+        //Total total
+        $ews->setCellValue('K'.$row, $totalTotal);
+        //Paid total
+        $ews->setCellValue('L'.$row, $paidTotal);
+        //Due total
+        $ews->setCellValue('M'.$row, $dueTotal);
+
+        //exit("ids=".$fellappids);
+
+
+        // Auto size columns for each worksheet
+        \PHPExcel_Shared_Font::setAutoSizeMethod(\PHPExcel_Shared_Font::AUTOSIZE_METHOD_EXACT);
+        foreach ($ea->getWorksheetIterator() as $worksheet) {
+
+            $ea->setActiveSheetIndex($ea->getIndex($worksheet));
+
+            $sheet = $ea->getActiveSheet();
+            $cellIterator = $sheet->getRowIterator()->current()->getCellIterator();
+            $cellIterator->setIterateOnlyExistingCells(true);
+            /** @var PHPExcel_Cell $cell */
+            foreach ($cellIterator as $cell) {
+                $sheet->getColumnDimension($cell->getColumn())->setAutoSize(true);
+            }
+        }
+
+
+        return $ea;
+    }
+    public function convertDateToStr($datetime) {
+        if( $datetime ) {
+            return $datetime->format("Y-m-d H:i:s");
+        }
+        return null;
+    }
 }

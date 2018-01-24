@@ -12,6 +12,14 @@
     <h4 class="text-info" align="center">
         {{ title }}
     </h4>
+    <p>
+        <a href="{{ path('translationalresearch_download_projects_excel', {}, true) }}">
+            <i class="fa fa-file-excel-o"></i> Displayed Projects Summaries in Excel</a>
+        {#<a href="{{ path('translationalresearch_download_projects_excel') }}"#}
+           {#data-toggle="tooltip" title="Download Displayed Application Summaries in Excel">#}
+            {#<i class="fa fa-file-excel-o"></i>#}
+        {#</a>#}
+    </p>
 
     <div class="well form-search">
         {{ form_start(filterform) }}

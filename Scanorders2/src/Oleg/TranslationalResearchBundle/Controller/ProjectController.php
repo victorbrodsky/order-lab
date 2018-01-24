@@ -951,5 +951,40 @@ class ProjectController extends Controller
         return $response;
     }
 
+    /**
+     * @Route("/download-projects-excel/", name="translationalresearch_download_projects_excel")
+     */
+    public function downloadApplicantListExcelAction(Request $request) {
+
+        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER')) {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $transresUtil = $this->container->get('transres_util');
+
+        //[YEAR] [WCMC (top level of actual institution)] [FELLOWSHIP-TYPE] Fellowship Candidate Data generated on [DATE] at [TIME] EST.xls
+        $fileName = "Projects ".date('m/d/Y H:i').".xlsx";
+        $fileName = str_replace("  ", " ", $fileName);
+        $fileName = str_replace(" ", "-", $fileName);
+
+        $projects = $em->getRepository('OlegTranslationalResearchBundle:Project')->findAll();
+
+        $excelBlob = $transresUtil->createProjectListExcel($projects);
+
+        $writer = \PHPExcel_IOFactory::createWriter($excelBlob, 'Excel2007');
+        //ob_end_clean();
+        //$writer->setIncludeCharts(true);
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+
+        header('Content-Disposition: attachment;filename="'.$fileName.'"');
+        //header('Content-Disposition: attachment;filename="fileres.xlsx"');
+
+        // Write file to the browser
+        $writer->save('php://output');
+
+        exit();
+    }
 
 }
