@@ -511,11 +511,11 @@ class AuthUtil {
         //echo "command=".$command."<br>";
         $this->logger->notice("ldapBindWindows: command=[$command]; LDAPHost=[$LDAPHost]; LDAPPort=[$LDAPPort]; username=[$username]; token=[$password]");
 
-        $command = w32escapeshellarg($command); //escapeshellarg
-        $LDAPHost = w32escapeshellarg($LDAPHost);
-        $LDAPPort = w32escapeshellarg($LDAPPort);
-        $username = w32escapeshellarg($username);
-        $password = w32escapeshellarg($password); //TODO: escapeshellarg: replaces %(percent sign) with a space
+        $command = $this->w32escapeshellarg($command); //escapeshellarg
+        $LDAPHost = $this->w32escapeshellarg($LDAPHost);
+        $LDAPPort = $this->w32escapeshellarg($LDAPPort);
+        $username = $this->w32escapeshellarg($username);
+        $password = $this->w32escapeshellarg($password); //TODO: escapeshellarg: replaces %(percent sign) with a space
         $this->logger->notice("ldapBindWindows: command=[$command]; LDAPHost=[$LDAPHost]; LDAPPort=[$LDAPPort]; username=[$username]; token=[$password]");
 
         $commandParams = escapeshellcmd($command.' '.$LDAPHost.' '.$LDAPPort.' '.$username.' '.$password);
