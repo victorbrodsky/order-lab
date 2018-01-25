@@ -191,7 +191,7 @@ class AuthUtil {
         //first search this user if exists in ldap directory
         $searchRes = $this->searchLdap($usernameClean);
         if( $searchRes == NULL || count($searchRes) == 0 ) {
-            $this->logger->error("searchLdap can not find user by usernameClean=".$usernameClean);
+            $this->logger->error("LdapAuthentication: can not find user by usernameClean=".$usernameClean);
             return NULL;
         }
 
@@ -201,7 +201,7 @@ class AuthUtil {
         $ldapRes = $this->ldapBind($usernameClean,$token->getCredentials());
         if( $ldapRes == NULL ) {
             //exit('ldap failed');
-            $this->logger->error("searchLdap can not bind user by usernameClean=".$usernameClean);
+            $this->logger->error("LdapAuthentication: can not bind user by usernameClean=".$usernameClean);
             return NULL;
         }
         //exit('ldap success');
@@ -599,8 +599,8 @@ class AuthUtil {
             ldap_error($cnx);
             ldap_unbind($cnx);
             //exit("error");
-            //return NULL;
-            return -1;  //"Could not bind to LDAP server";
+            return NULL;
+            //return -1;  //"Could not bind to LDAP server";
         } else {
         	//echo "OK simple LDAP: user=".$LDAPUserAdmin."<br>";
         }
