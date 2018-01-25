@@ -39,7 +39,7 @@
                     {{ form_widget(filterform.searchTitle) }}
                 </div>
                 <div class="col-xs-1" align="left">
-                    <button id="Search_button" type="submit" class="btn btn-default">Filter</button>
+                    <button id="filter-btn" type="submit" class="btn btn-default">Filter</button>
                 </div>
             </div>
 
@@ -345,4 +345,12 @@
 
 {% block additionalcss %}
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/bmatznerfontawesome/css/font-awesome.min.css') }}" />
+{% endblock %}
+
+{% block additionaljs %}
+    {% javascripts
+        '@OlegTranslationalResearchBundle/Resources/public/form/js/transres-filterbtn.js'
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 {% endblock %}

@@ -219,3 +219,12 @@
     {% endif %}
 
 {% endblock %}
+
+
+{% block additionaljs %}
+    {% javascripts
+    '@OlegTranslationalResearchBundle/Resources/public/form/js/transres-filterbtn.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}
