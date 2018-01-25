@@ -248,7 +248,9 @@ class ProjectController extends Controller
             $title = "My Review Projects, where I am a reviewer";
         }
 
-        $limit = 30;
+        $dql->orderBy('project.id', 'DESC');
+
+        $limit = 5; //30
         $query = $em->createQuery($dql);
 
         if( count($dqlParameters) > 0 ) {
@@ -261,6 +263,8 @@ class ProjectController extends Controller
             'defaultSortFieldName' => 'project.id',
             'defaultSortDirection' => 'DESC'
         );
+
+        $allPrjects = $query->getResult();
 
         $paginator  = $this->get('knp_paginator');
         $projects = $paginator->paginate(
@@ -279,7 +283,8 @@ class ProjectController extends Controller
 
         return array(
             'projects' => $projects,
-            'title' => $title,
+            'allPrjects' => $allPrjects,
+            'title' => $title . " (" . count($projects) . " of " . count($allPrjects) . ")",
             'filterform' => $filterform->createView(),
             'eventObjectTypeId' => $eventObjectTypeId,
             'advancedFilter' => $advancedFilter
@@ -952,13 +957,15 @@ class ProjectController extends Controller
     }
 
     /**
-     * @Route("/download-projects-excel/", name="translationalresearch_download_projects_excel")
+     * @Route("/download-projects-excel/{ids}", name="translationalresearch_download_projects_excel")
      */
-    public function downloadApplicantListExcelAction(Request $request) {
+    public function downloadApplicantListExcelAction(Request $request, $ids) {
 
         if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER')) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
+
+        //exit("ids=".$ids);
 
         $em = $this->getDoctrine()->getManager();
         $transresUtil = $this->container->get('transres_util');
@@ -968,9 +975,11 @@ class ProjectController extends Controller
         $fileName = str_replace("  ", " ", $fileName);
         $fileName = str_replace(" ", "-", $fileName);
 
-        $projects = $em->getRepository('OlegTranslationalResearchBundle:Project')->findAll();
+        //$projects = $em->getRepository('OlegTranslationalResearchBundle:Project')->findAll();
 
-        $excelBlob = $transresUtil->createProjectListExcel($projects);
+        $projectIdsArr = explode(',', $ids);
+
+        $excelBlob = $transresUtil->createProjectListExcel($projectIdsArr);
 
         $writer = \PHPExcel_IOFactory::createWriter($excelBlob, 'Excel2007');
         //ob_end_clean();

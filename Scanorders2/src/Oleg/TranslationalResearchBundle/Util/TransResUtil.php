@@ -2524,7 +2524,7 @@ class TransResUtil
         return $invoicesInfos;
     }
 
-    public function createProjectListExcel($projects) {
+    public function createProjectListExcel($projectIdsArr) {
 
         $transresRequestUtil = $this->container->get('transres_request_util');
         $transResFormNodeUtil = $this->container->get('transres_formnode_util');
@@ -2556,6 +2556,12 @@ class TransResUtil
         //$ews->getDefaultStyle()->applyFromArray($style);
         $ews->getParent()->getDefaultStyle()->applyFromArray($style);
 
+        $styleBoldArray = array(
+            'font' => array(
+                'bold' => true
+            )
+        );
+
         $ews->setCellValue('A1', 'ID'); // Sets cell 'a1' to value 'ID
         $ews->setCellValue('B1', 'Submission Date');
         $ews->setCellValue('C1', 'Principal Investigator(s)');
@@ -2578,7 +2584,12 @@ class TransResUtil
         $dueTotal = 0;
 
         $row = 2;
-        foreach( $projects as $project ) {
+        foreach( $projectIdsArr as $projectId ) {
+
+            $project = $this->em->getRepository('OlegTranslationalResearchBundle:Project')->find($projectId);
+            if( !$project ) {
+                continue;
+            }
 
             $ews->setCellValue('A'.$row, $project->getOid());
             $ews->setCellValue('B'.$row, $this->convertDateToStr($project->getCreateDate()) );
@@ -2625,39 +2636,63 @@ class TransResUtil
             $total = $invoicesInfos['total'];
             $totalTotal = $totalTotal + $total;
             if( $total ) {
-                $ews->setCellValue('K' . $row, "$".$total);
+                $ews->setCellValue('K' . $row, $total);
             }
 
             //# Paid($)
             $paid = $invoicesInfos['paid'];
             $paidTotal = $paidTotal + $paid;
             if( $paid ) {
-                $ews->setCellValue('L' . $row, "$".$paid);
+                $ews->setCellValue('L' . $row, $paid);
+
             }
 
             //# Due($)
             $due = $invoicesInfos['due'];
             $dueTotal = $dueTotal + $due;
             if( $due ) {
-                $ews->setCellValue('M' . $row, "$".$due);
+                $ews->setCellValue('M' . $row, $due);
             }
 
-            $row = $row + 2;
+            $row = $row + 1;
         }
 
         //Total
-        $row++;
+        //$row++;
         $ews->setCellValue('H'.$row, "Totals");
+        $ews->getStyle('H'.$row)->applyFromArray($styleBoldArray);
         //Requests total
-        $ews->setCellValue('I'.$row, $totalRequests);
+        $ews->setCellValue('I' . $row, $totalRequests);
+        $ews->getStyle('I'.$row)->applyFromArray($styleBoldArray);
         //Invoices total
         $ews->setCellValue('J'.$row, $totalInvoices);
+        $ews->getStyle('J'.$row)->applyFromArray($styleBoldArray);
         //Total total
-        $ews->setCellValue('K'.$row, $totalTotal);
+        if( $totalTotal > 0 ) {
+            $ews->setCellValue('K' . $row, $totalTotal);
+            $ews->getStyle('K'.$row)->applyFromArray($styleBoldArray);
+        }
         //Paid total
-        $ews->setCellValue('L'.$row, $paidTotal);
+        if( $paidTotal > 0 ) {
+            $ews->setCellValue('L' . $row, $paidTotal);
+            $ews->getStyle('L'.$row)->applyFromArray($styleBoldArray);
+        }
         //Due total
-        $ews->setCellValue('M'.$row, $dueTotal);
+        if( $dueTotal > 0 ) {
+            $ews->setCellValue('M' . $row, $dueTotal);
+            $ews->getStyle('M'.$row)->applyFromArray($styleBoldArray);
+        }
+
+        //format columns to currency format 2:$row
+        $ews->getStyle('K2:K'.$row)
+            ->getNumberFormat()
+            ->setFormatCode(\PHPExcel_Style_NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+        $ews->getStyle('L2:L'.$row)
+            ->getNumberFormat()
+            ->setFormatCode(\PHPExcel_Style_NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+        $ews->getStyle('M2:M'.$row)
+            ->getNumberFormat()
+            ->setFormatCode(\PHPExcel_Style_NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
 
         //exit("ids=".$fellappids);
 
@@ -2683,6 +2718,19 @@ class TransResUtil
     public function convertDateToStr($datetime) {
         if( $datetime ) {
             return $datetime->format("Y-m-d H:i:s");
+        }
+        return null;
+    }
+
+    public function getProjectsIdsStr($projects) {
+        $idsArr = array();
+        foreach($projects as $project) {
+            if( $project->getId() ) {
+                $idsArr[] = $project->getId();
+            }
+        }
+        if( count($idsArr) > 0 ) {
+            return implode(",",$idsArr);
         }
         return null;
     }

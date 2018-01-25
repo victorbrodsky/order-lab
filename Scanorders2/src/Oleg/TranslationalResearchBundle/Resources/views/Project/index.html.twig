@@ -13,12 +13,16 @@
         {{ title }}
     </h4>
     <p>
-        <a href="{{ path('translationalresearch_download_projects_excel', {}, true) }}">
-            <i class="fa fa-file-excel-o"></i> Displayed Projects Summaries in Excel</a>
+        <a href="{{ path('translationalresearch_download_projects_excel',{'ids':transres_util.getProjectsIdsStr(allPrjects)}) }}">
+            <i class="fa fa-file-excel-o"></i> Resulting Projects Summaries in Excel</a>
+
         {#<a href="{{ path('translationalresearch_download_projects_excel') }}"#}
            {#data-toggle="tooltip" title="Download Displayed Application Summaries in Excel">#}
             {#<i class="fa fa-file-excel-o"></i>#}
         {#</a>#}
+
+        {#<a href="{{ path('translationalresearch_download_projects_excel') }}"#}
+        {#>Displayed Projects Summaries in Excel <span class="glyphicon glyphicon-envelope"></span></a>#}
     </p>
 
     <div class="well form-search">
@@ -337,4 +341,8 @@
         <a class="btn btn-primary" href="{{ path(translationalresearch_sitename~'_project_new_selector') }}">Create a new project</a>
     </p>
 
+{% endblock %}
+
+{% block additionalcss %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/bmatznerfontawesome/css/font-awesome.min.css') }}" />
 {% endblock %}
