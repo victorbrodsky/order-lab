@@ -202,7 +202,7 @@ class AuthUtil {
         $ldapRes = $this->ldapBind($usernameClean,$token->getCredentials());
         if( $ldapRes == NULL ) {
             //exit('ldap failed');
-            $this->logger->error("LdapAuthentication: can not bind user by usernameClean=".$usernameClean."; token=".$token->getCredentials());
+            $this->logger->error("LdapAuthentication: can not bind user by usernameClean=[".$usernameClean."]; token=[".$token->getCredentials()."]");
             return NULL;
         }
         //exit('ldap success');
@@ -509,14 +509,15 @@ class AuthUtil {
         $command = $exePath.$exeFile;
         //$command = $exeFile;
         //echo "command=".$command."<br>";
-        $this->logger->notice("ldapBindWindows: command=[$command]; LDAPHost=[$LDAPHost]; LDAPPort=[$LDAPPort]; username=[$username]; token=[$password]");
+        //$this->logger->notice("ldapBindWindows: command=[$command]; LDAPHost=[$LDAPHost]; LDAPPort=[$LDAPPort]; username=[$username]; token=[$password]");
 
         $command = $this->w32escapeshellarg($command); //escapeshellarg
         $LDAPHost = $this->w32escapeshellarg($LDAPHost);
         $LDAPPort = $this->w32escapeshellarg($LDAPPort);
         $username = $this->w32escapeshellarg($username);
         $password = $this->w32escapeshellarg($password); //TODO: escapeshellarg: replaces %(percent sign) with a space
-        $this->logger->notice("ldapBindWindows: command=[$command]; LDAPHost=[$LDAPHost]; LDAPPort=[$LDAPPort]; username=[$username]; token=[$password]");
+        //$this->logger->notice("ldapBindWindows: command=[$command]; LDAPHost=[$LDAPHost]; LDAPPort=[$LDAPPort]; username=[$username]; token=[$password]");
+        $this->logger->notice("ldapBindWindows: command=[$command]; LDAPHost=[$LDAPHost]; LDAPPort=[$LDAPPort]; username=[$username]");
 
         $commandParams = escapeshellcmd($command.' '.$LDAPHost.' '.$LDAPPort.' '.$username.' '.$password);
         //echo "commandParams=".$commandParams."<br>";
