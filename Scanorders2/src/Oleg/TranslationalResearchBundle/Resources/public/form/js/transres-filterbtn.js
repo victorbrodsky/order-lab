@@ -30,9 +30,17 @@ function changeFilterColorButton() {
     filterForm.find('.datepicker-only-year').on('change',function() {
         chnageBtnColorGreen(filterBtn);
     });
+    filterForm.find('.datepicker').on('change',function() {
+        chnageBtnColorGreen(filterBtn);
+    });
 
     //combobox
     filterForm.find('.combobox').on('change',function() {
+        chnageBtnColorGreen(filterBtn);
+    });
+
+    //select
+    filterForm.find('select').on('change',function() {
         chnageBtnColorGreen(filterBtn);
     });
 
