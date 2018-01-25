@@ -250,7 +250,7 @@ class ProjectController extends Controller
 
         $dql->orderBy('project.id', 'DESC');
 
-        $limit = 5; //30
+        $limit = 30;
         $query = $em->createQuery($dql);
 
         if( count($dqlParameters) > 0 ) {
