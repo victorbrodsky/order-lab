@@ -196,12 +196,13 @@ class AuthUtil {
         }
 
         //echo "user exists in ldap directory<br>";
+        $this->logger->notice("LdapAuthentication: user found in LDAP by usernameClean=".$usernameClean);
 
         //if user exists in ldap, try bind this user and password
         $ldapRes = $this->ldapBind($usernameClean,$token->getCredentials());
         if( $ldapRes == NULL ) {
             //exit('ldap failed');
-            $this->logger->error("LdapAuthentication: can not bind user by usernameClean=".$usernameClean);
+            $this->logger->error("LdapAuthentication: can not bind user by usernameClean=".$usernameClean."; token=".$token->getCredentials());
             return NULL;
         }
         //exit('ldap success');
@@ -508,13 +509,14 @@ class AuthUtil {
         $command = $exePath.$exeFile;
         //$command = $exeFile;
         //echo "command=".$command."<br>";
+        $this->logger->notice("ldapBindWindows: command=[$command]; LDAPHost=[$LDAPHost]; LDAPPort=[$LDAPPort]; username=[$username]; token=[$password]");
 
         $command = escapeshellarg($command);
         $LDAPHost = escapeshellarg($LDAPHost);
         $LDAPPort = escapeshellarg($LDAPPort);
         $username = escapeshellarg($username);
-        $password = escapeshellarg($password);
-        $this->logger->notice("ldapBindWindows: command=[$command]; LDAPHost=[$LDAPHost]; LDAPPort=[$LDAPPort]; username=[$username]");
+        $password = escapeshellarg($password); //TODO: replaces %(percent sign) with a space
+        $this->logger->notice("ldapBindWindows: command=[$command]; LDAPHost=[$LDAPHost]; LDAPPort=[$LDAPPort]; username=[$username]; token=[$password]");
 
         $commandParams = escapeshellcmd($command.' '.$LDAPHost.' '.$LDAPPort.' '.$username.' '.$password);
         //echo "commandParams=".$commandParams."<br>";
@@ -595,6 +597,7 @@ class AuthUtil {
 
         $res = ldap_bind($cnx,$LDAPUserAdmin,$LDAPUserPasswordAdmin);
         if( !$res ) {
+            $this->logger->error("searchLdap: ldap_bind failed with admin authentication username=".$LDAPUserAdmin);
         	//echo "Could not bind to LDAP: user=".$LDAPUserAdmin."<br>";
             ldap_error($cnx);
             ldap_unbind($cnx);
