@@ -511,12 +511,11 @@ class AuthUtil {
         //echo "command=".$command."<br>";
         $this->logger->notice("ldapBindWindows: command=[$command]; LDAPHost=[$LDAPHost]; LDAPPort=[$LDAPPort]; username=[$username]; token=[$password]");
 
-        setlocale(LC_CTYPE, "en_US.UTF-8");
-        $command = escapeshellarg($command);
-        $LDAPHost = escapeshellarg($LDAPHost);
-        $LDAPPort = escapeshellarg($LDAPPort);
-        $username = escapeshellarg($username);
-        $password = escapeshellarg($password); //TODO: replaces %(percent sign) with a space
+        $command = w32escapeshellarg($command); //escapeshellarg
+        $LDAPHost = w32escapeshellarg($LDAPHost);
+        $LDAPPort = w32escapeshellarg($LDAPPort);
+        $username = w32escapeshellarg($username);
+        $password = w32escapeshellarg($password); //TODO: escapeshellarg: replaces %(percent sign) with a space
         $this->logger->notice("ldapBindWindows: command=[$command]; LDAPHost=[$LDAPHost]; LDAPPort=[$LDAPPort]; username=[$username]; token=[$password]");
 
         $commandParams = escapeshellcmd($command.' '.$LDAPHost.' '.$LDAPPort.' '.$username.' '.$password);
@@ -542,6 +541,11 @@ class AuthUtil {
 
         return NULL;
     }
+
+    public function w32escapeshellarg($s) {
+        return '"' . addcslashes($s, '\\"') . '"';
+    }
+
 
     //TODO: must be tested on unix environment
     public function ldapBindUnix( $username, $password ) {
