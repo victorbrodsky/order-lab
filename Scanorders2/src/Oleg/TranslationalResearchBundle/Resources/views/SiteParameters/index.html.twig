@@ -124,7 +124,7 @@
     {% if transresRequest %}
         <br>
         <p>
-            <a href="{{ path('translationalresearch_invoice_new', {'id': transresRequest.id}) }}">Create a new invoice</a>
+            <a class="btn btn-primary" href="{{ path('translationalresearch_invoice_new', {'id': transresRequest.id}) }}">Create a new invoice</a>
         </p>
     {% endif %}
 {% endblock %}

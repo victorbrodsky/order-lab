@@ -94,7 +94,7 @@ class DeidentifierSearchType extends AbstractType
             'choice_label' => 'getNodeNameWithRoot',
             'required' => true,
             'multiple' => false,
-            'empty_value' => false,
+            //'empty_value' => false,
             //'attr' => array('class' => 'combobox combobox-width combobox-institution')
             'attr' => $institutionAttr
         ));

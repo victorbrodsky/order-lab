@@ -319,7 +319,7 @@ class MessageObjectType extends AbstractType
             'label' => 'Order data visible to members of (Institutional PHI Scope):',
             'required'=> true,
             'multiple' => false,
-            'empty_value' => false,
+            //'empty_value' => false,
             'class' => 'OlegUserdirectoryBundle:Institution',
             'choices' => $institutions,
             'attr' => array('class' => 'combobox combobox-width combobox-institution')

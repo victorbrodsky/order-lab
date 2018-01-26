@@ -350,7 +350,7 @@ class MessageType extends AbstractType
             'choice_label' => 'getNodeNameWithRoot',
             'required' => true,
             'multiple' => false,
-            'empty_value' => false,
+            //'empty_value' => false,
             'class' => 'OlegUserdirectoryBundle:Institution',
             'choices' => $institutions,
             'attr' => array('class' => 'combobox combobox-width combobox-institution')
