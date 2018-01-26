@@ -394,6 +394,10 @@ class TransResUtil
     }
 
     public function isProjectEditableByRequester( $project ) {
+        if( $project && $this->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
+            return false;
+        }
+
         $state = $project->getState();
         if( strpos($state, '_rejected') !== false || $state == 'draft' ) { //|| strpos($state, "_missinginfo") !== false
             if( $this->isProjectRequester($project) === true ) {
@@ -406,7 +410,12 @@ class TransResUtil
         return false;
     }
     public function isProjectRequester( $project ) {
+        if( $project && $this->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
+            return false;
+        }
+
         $user = $this->secTokenStorage->getToken()->getUser();
+
         if( $project->getSubmitter() && $project->getSubmitter()->getId() == $user->getId() ) {
             return true;
         }
@@ -433,6 +442,9 @@ class TransResUtil
         return false;
     }
     public function isRequesterOrAdmin( $project ) {
+        if( $project && $this->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
+            return false;
+        }
         if( $this->isProjectRequester($project) === true ) {
             return true;
         }
@@ -468,6 +480,9 @@ class TransResUtil
         return false;
     }
     public function isProjectReviewer( $project ) {
+        if( $project && $this->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
+            return false;
+        }
         $user = $this->secTokenStorage->getToken()->getUser();
         if( $this->isReviewsReviewer($user,$project->getIrbReviews()) ) {
             return true;
@@ -1633,6 +1648,10 @@ class TransResUtil
             $project = $review->getProject();
         }
 
+        if( $project && $this->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
+            return false;
+        }
+
 //        $workflow = $this->container->get('state_machine.transres_project');
 //        $transitions = $workflow->getEnabledTransitions($project);
 //
@@ -1676,6 +1695,11 @@ class TransResUtil
 
     //return true if the project is in missinginfo state and logged in user is a requester or admin
     public function isProjectStateRequesterResubmit($project) {
+
+        if( $project && $this->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
+            return false;
+        }
+
         $stateStr = $this->getAllowedFromState($project);
         if( !$stateStr ) {
             return false;
@@ -1694,6 +1718,10 @@ class TransResUtil
 
     //return true if the project is in review state and logged in user is a reviewer or admin
     public function isProjectStateReviewer($project,$user) {
+
+        if( $project && $this->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
+            return false;
+        }
 
         $stateStr = $this->getAllowedFromState($project); //must be equal to the current project state
         if( !$stateStr ) {
@@ -2591,6 +2619,10 @@ class TransResUtil
                 continue;
             }
 
+            if( $this->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
+                continue;
+            }
+
             $ews->setCellValue('A'.$row, $project->getOid());
             $ews->setCellValue('B'.$row, $this->convertDateToStr($project->getCreateDate()) );
 
@@ -2734,4 +2766,39 @@ class TransResUtil
         }
         return null;
     }
+
+    public function isUserAllowedSpecialtyObject( $specialtyObject, $user=null ) {
+        if( !$specialtyObject ) {
+            return false;
+        }
+
+        if( !$user ) {
+            $user = $this->secTokenStorage->getToken()->getUser();
+        }
+
+        $role = null;
+
+        if( $specialtyObject->getAbbreviation() == "hematopathology" ) {
+            $role = "ROLE_TRANSRES_HEMATOPATHOLOGY";
+        }
+        if( $specialtyObject->getAbbreviation() == "ap-cp" ) {
+            $role = "ROLE_TRANSRES_APCP";
+        }
+
+        if( $role ) {
+            //check security context
+            if( $this->secAuth->isGranted($role) ) {
+                return true;
+            }
+
+            //check user's roles
+            if( $user && $user->hasRole($role) ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
 }

@@ -174,7 +174,7 @@ class AuthUtil {
 
     public function LdapAuthentication($token, $userProvider) {
 
-        $this->logger->notice("LdapAuthentication: LDAP authenticate user by token->getUsername()=".$token->getUsername());
+        //$this->logger->notice("LdapAuthentication: LDAP authenticate user by token->getUsername()=".$token->getUsername());
         //echo "LdapAuthentication<br>";
         //exit();
 
@@ -196,13 +196,14 @@ class AuthUtil {
         }
 
         //echo "user exists in ldap directory<br>";
-        $this->logger->notice("LdapAuthentication: user found in LDAP by usernameClean=".$usernameClean);
+        //$this->logger->notice("LdapAuthentication: user found in LDAP by usernameClean=".$usernameClean);
 
         //if user exists in ldap, try bind this user and password
         $ldapRes = $this->ldapBind($usernameClean,$token->getCredentials());
         if( $ldapRes == NULL ) {
             //exit('ldap failed');
-            $this->logger->error("LdapAuthentication: can not bind user by usernameClean=[".$usernameClean."]; token=[".$token->getCredentials()."]");
+            //$this->logger->error("LdapAuthentication: can not bind user by usernameClean=[".$usernameClean."]; token=[".$token->getCredentials()."]");
+            $this->logger->error("LdapAuthentication: can not bind user by usernameClean=[".$usernameClean."];");
             return NULL;
         }
         //exit('ldap success');

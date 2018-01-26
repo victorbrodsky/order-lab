@@ -1496,10 +1496,23 @@ class AdminController extends Controller
             "ROLE_TRANSRES_BILLING_ADMIN" => array(
                 "Translational Research Billing Administrator",
                 "Create, View, Edit and Send an Invoice for Translational Research Project",
-                30,
+                50,
                 "translational-research"
             ),
 
+            "ROLE_TRANSRES_HEMATOPATHOLOGY" => array(
+                "Translational Research Hematopathology User",
+                "Access to the Hematopathology Projects, Requests and Invoices",
+                50,
+                "translational-research"
+            ),
+
+            "ROLE_TRANSRES_APCP" => array(
+                "Translational Research AP/CP User",
+                "Access to the AP/CP Projects, Requests and Invoices",
+                50,
+                "translational-research"
+            ),
 
         );
 

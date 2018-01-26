@@ -65,10 +65,9 @@ class RequestController extends Controller
         $transresUtil = $this->get('transres_util');
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
+
         $cycle = "new";
-
         $formnode = false;
-
         $testing = false;
         //$testing = true;
 
@@ -81,6 +80,15 @@ class RequestController extends Controller
         $title = "Create a new Request";
 
         if( $project ) {
+
+            if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
+                $this->get('session')->getFlashBag()->add(
+                    'warning',
+                    "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
+                );
+                return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+            }
+
             $transresRequest->setProject($project);
             $title = "Create a new Request for project ID ".$project->getOid();
 
@@ -251,6 +259,14 @@ class RequestController extends Controller
 
         $project = $transresRequest->getProject();
 
+        if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
+            );
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
         //$projectFundedAccountNumber = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"If funded, please provide account number");
         //if( $projectFundedAccountNumber ) {
         //    $transresRequest->setFundedAccountNumber($projectFundedAccountNumber);
@@ -419,6 +435,14 @@ class RequestController extends Controller
         $cycle = "show";
         $project = $transresRequest->getProject();
 
+        if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
+            );
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
         $form = $this->createRequestForm($transresRequest,$cycle,$request); //show
 
         //$deleteForm = $this->createDeleteForm($project);
@@ -469,6 +493,14 @@ class RequestController extends Controller
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $routeName = $request->get('_route');
         $formnode = false;
+
+        if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
+            );
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
 
         //////// create filter //////////
         $progressStateArr = $transresRequestUtil->getProgressStateArr();
@@ -1122,6 +1154,14 @@ class RequestController extends Controller
 
         $projectId = trim( $request->get('projectId') );
         $project = $em->getRepository('OlegTranslationalResearchBundle:Project')->find($projectId);
+
+        if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
+            );
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
 
         if(
             $transresUtil->isAdminOrPrimaryReviewer() ||

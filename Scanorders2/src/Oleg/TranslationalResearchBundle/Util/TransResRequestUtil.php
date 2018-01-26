@@ -1889,4 +1889,23 @@ class TransResRequestUtil
     public function toDecimal($number) {
         return number_format((float)$number, 2, '.', '');
     }
+
+    //check if user allowed to access by the project's specialty
+    public function isUserAllowedAccessInvoice($invoice) {
+        $transresUtil = $this->container->get('transres_util');
+        $transresRequest = null;
+        $transresRequests = $invoice->getTransresRequests();
+        if( count($transresRequests) > 0 ) {
+            $transresRequest = $transresRequests[0];
+        } else {
+            return true;
+        }
+
+        $project = $transresRequest->getProject();
+        if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) ) {
+            return true;
+        }
+
+        return false;
+    }
 }

@@ -83,35 +83,18 @@ class ProjectFormNodeController extends ProjectController
         $cycle = "new";
 
         //$specialty is a url prefix (i.e. "new-ap-cp-project")
-//        $specialtyAbbreviation = SpecialtyList::getProjectAbbreviationFromUrlPrefix($specialty);
-//        if( !$specialtyAbbreviation ) {
-//            throw new \Exception( "Project specialty abbreviation is not found by name '".$specialty."'" );
-//        }
-//        $specialty = $em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation($specialtyAbbreviation);
-//        if( !$specialty ) {
-//            throw new \Exception( "Project specialty is not found by name '".$specialtyAbbreviation."'" );
-//        }
-        //$specialty is a url prefix (i.e. "new-ap-cp-project")
         $specialty = $transresUtil->getSpecialtyObject($specialtyStr);
+
+        if( $transresUtil->isUserAllowedSpecialtyObject($specialty) === false ) {
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                "You don't have a permission to access the $specialty project specialty"
+            );
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
 
         $testing = false;
         //$testing = true;
-
-//        $project = new Project($user);
-//        $project->setVersion(1);
-//
-//        $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
-//        $project->setInstitution($institution);
-//
-//        //set order category
-//        $categoryStr = "HemePath Translational Research Project";  //"Pathology Call Log Entry";
-//        //$categoryStr = "Nesting Test"; //testing
-//        $messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
-//
-//        if( !$messageCategory ) {
-//            throw new \Exception( "Message category is not found by name '".$categoryStr."'" );
-//        }
-//        $project->setMessageCategory($messageCategory);
 
         $project = $this->createProjectEntity($user,null);
 
@@ -132,16 +115,6 @@ class ProjectFormNodeController extends ProjectController
         $transresUtil->addDefaultStateReviewers($project);
 
         $form = $this->createProjectForm($project,$cycle,$request);
-//        $form->handleRequest($request);
-//
-//        if ($form->isSubmitted() && $form->isValid()) {
-//
-//            $em = $this->getDoctrine()->getManager();
-//            $em->persist($project);
-//            $em->flush();
-//
-//            return $this->redirectToRoute('translationalresearch_project_show', array('id' => $project->getId()));
-//        }
 
         $messageTypeId = true;//testing
         $formnodetrigger = 1;
@@ -282,6 +255,14 @@ class ProjectFormNodeController extends ProjectController
         ) {
             //ok
         } else {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
+        if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
+            );
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 

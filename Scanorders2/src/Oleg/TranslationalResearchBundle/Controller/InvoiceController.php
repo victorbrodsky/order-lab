@@ -488,11 +488,21 @@ class InvoiceController extends Controller
         }
 
         //$em = $this->getDoctrine()->getManager();
-        //$transresUtil = $this->get('transres_util');
+        $transresUtil = $this->get('transres_util');
         $transresRequestUtil = $this->get('transres_request_util');
         $user = $this->get('security.token_storage')->getToken()->getUser();
         //$user = null; //testing
         $cycle = "new";
+
+        $project = $transresRequest->getProject();
+
+        if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
+            );
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
 
         $invoice = $transresRequestUtil->createNewInvoice($transresRequest,$user);
 
@@ -554,10 +564,20 @@ class InvoiceController extends Controller
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
+        $transresRequestUtil = $this->get('transres_request_util');
         $em = $this->getDoctrine()->getManager();
         $invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($oid);
         if( !$invoice ) {
             throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
+        }
+
+        // Check if user allowed to access by the project's specialty
+        if( $transresRequestUtil->isUserAllowedAccessInvoice($invoice) === false ) {
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                "You don't have a permission to access this specialty"
+            );
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
         $cycle = "show";
@@ -617,6 +637,22 @@ class InvoiceController extends Controller
 
         }
 
+        // Check if user allowed to access by the project's specialty
+        if( $transresRequestUtil->isUserAllowedAccessInvoice($invoice) === false ) {
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                "You don't have a permission to access this specialty"
+            );
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
+        //Get $transresRequest (Assume invoice has a single $transresRequest)
+        $transresRequest = null;
+        $transresRequests = $invoice->getTransresRequests();
+        if( count($transresRequests) > 0 ) {
+            $transresRequest = $transresRequests[0];
+        }
+
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $cycle = "edit";
 
@@ -657,13 +693,6 @@ class InvoiceController extends Controller
             $transresUtil->setEventLog($invoice,$eventType,$msg);
 
             return $this->redirectToRoute('translationalresearch_invoice_show', array('oid' => $invoice->getOid()));
-        }
-
-        //Get $transresRequest (Assume invoice has a single $transresRequest)
-        $transresRequest = null;
-        $transresRequests = $invoice->getTransresRequests();
-        if( count($transresRequests) > 0 ) {
-            $transresRequest = $transresRequests[0];
         }
 
         return array(
@@ -737,12 +766,14 @@ class InvoiceController extends Controller
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
-//        //Get $transresRequest (Assume invoice has a single $transresRequest)
-//        $transresRequest = null;
-//        $transresRequests = $invoice->getTransresRequests();
-//        if( count($transresRequests) > 0 ) {
-//            $transresRequest = $transresRequests[0];
-//        }
+        // Check if user allowed to access by the project's specialty
+        if( $transresRequestUtil->isUserAllowedAccessInvoice($invoice) === false ) {
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                "You don't have a permission to access this specialty"
+            );
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
 
         $res = $transresPdfUtil->generateInvoicePdf($invoice,$user);
         
@@ -778,6 +809,7 @@ class InvoiceController extends Controller
         $logger = $this->container->get('logger');
         //$routeName = $request->get('_route');
         $userSecUtil = $this->container->get('user_security_utility');
+        $transresRequestUtil = $this->get('transres_request_util');
 
         //download: user or localhost
         //$user = $this->get('security.token_storage')->getToken()->getUser();
@@ -803,6 +835,15 @@ class InvoiceController extends Controller
         $invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($oid);
         if( !$invoice ) {
             throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
+        }
+
+        // Check if user allowed to access by the project's specialty
+        if( $transresRequestUtil->isUserAllowedAccessInvoice($invoice) === false ) {
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                "You don't have a permission to access this specialty"
+            );
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
         $cycle = "download";
@@ -850,6 +891,15 @@ class InvoiceController extends Controller
 
         if( false === $transresRequestUtil->isInvoiceBillingContact($invoice,$user) ) {
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+        }
+
+        // Check if user allowed to access by the project's specialty
+        if( $transresRequestUtil->isUserAllowedAccessInvoice($invoice) === false ) {
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                "You don't have a permission to access this specialty"
+            );
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
         //get the most recent PDF document
@@ -1001,6 +1051,15 @@ class InvoiceController extends Controller
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
+        // Check if user allowed to access by the project's specialty
+        if( $transresRequestUtil->isUserAllowedAccessInvoice($invoice) === false ) {
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                "You don't have a permission to access this specialty"
+            );
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
         //Send the most recent Invoice PDF by Email
         $msg = $transresRequestUtil->sendInvoicePDFByEmail($invoice);
 
@@ -1087,6 +1146,15 @@ class InvoiceController extends Controller
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
+        // Check if user allowed to access by the project's specialty
+        if( $transresRequestUtil->isUserAllowedAccessInvoice($invoice) === false ) {
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                "You don't have a permission to access this specialty"
+            );
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
         $status = trim( $request->get('status') );
 
         $msg = "Invoice's (ID ".$invoice->getOid().") status has not been updated to '" . $status . "'";
@@ -1152,6 +1220,15 @@ class InvoiceController extends Controller
 
         if( false === $transresRequestUtil->isInvoiceBillingContact($invoice,$user) ) {
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+        }
+
+        // Check if user allowed to access by the project's specialty
+        if( $transresRequestUtil->isUserAllowedAccessInvoice($invoice) === false ) {
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                "You don't have a permission to access this specialty"
+            );
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
         $invoice->setPaid($paid);
