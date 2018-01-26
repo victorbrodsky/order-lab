@@ -2388,6 +2388,7 @@ class TransResUtil
 
         //$transresRequestUtil = $this->container->get('transres_request_util');
 
+        $user = $this->secTokenStorage->getToken()->getUser();
         $repository = $this->em->getRepository('OlegTranslationalResearchBundle:Project');
         $dql =  $repository->createQueryBuilder("project");
         $dql->select('project');
@@ -2395,6 +2396,47 @@ class TransResUtil
         //state
         $dql->where("project.state=:state");
         $dql->andWhere("project.irbExpirationDate >= CURRENT_DATE()");
+
+        //user specialty, if not admin
+        if( !$this->secAuth->isGranted("ROLE_TRANSRES_ADMIN") ) {
+            $specialtyIds = array();
+            $specialties = $this->getTransResProjectSpecialties();
+            foreach ($specialties as $specialtyObject) {
+                $hasRole = false;
+                $role = null;
+                if ($specialtyObject->getAbbreviation() == "hematopathology") {
+                    $role = "ROLE_TRANSRES_HEMATOPATHOLOGY";
+                }
+                if ($specialtyObject->getAbbreviation() == "ap-cp") {
+                    $role = "ROLE_TRANSRES_APCP";
+                }
+                if ($role) {
+                    //check security context
+                    if ($this->secAuth->isGranted($role)) {
+                        $hasRole = true;
+                    }
+
+                    //check user's roles
+                    if ($user && $user->hasRole($role)) {
+                        $hasRole = true;
+                    }
+                    if( $hasRole ) {
+                        //$specialtyIds[] = "'".$specialtyObject->getId()."'";
+                        $specialtyIds[] = $specialtyObject->getId();
+                    }
+                }
+            }
+
+            if( count($specialtyIds) > 0 ) {
+                $dql->leftJoin("project.projectSpecialty", "projectSpecialty");
+                $specialtyStr = "projectSpecialty.id IN (".implode(",",$specialtyIds).")";
+                //echo "specialtyStr=$specialtyStr<br>";
+                $dql->andWhere($specialtyStr);
+            } else {
+                $dql->leftJoin("project.projectSpecialty", "projectSpecialty");
+                $dql->andWhere("projectSpecialty.id IS NULL");
+            }
+        }
 
         $parameters = array(
             "state" => "final_approved",
