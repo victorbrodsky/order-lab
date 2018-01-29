@@ -150,6 +150,15 @@ class InvoiceType extends AbstractType
             'required' => false,
         ));
 
+        $builder->add('paidDate', DateType::class, array(
+            'widget' => 'single_text',
+            'label' => "Paid Date:",
+            //'disabled' => true,
+            'format' => 'MM/dd/yyyy',
+            'attr' => array('class' => 'datepicker form-control'),
+            'required' => false,
+        ));
+
         $builder->add('invoiceFrom', null, array(
             'label' => "From:",
             'required' => false,
@@ -278,6 +287,12 @@ class InvoiceType extends AbstractType
             'prototype_name' => '__documentsid__',
         ));
 
+        $builder->add('comment', null, array(
+            'label' => "Comment:",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control transres-invoice-comment')
+        ));
+
 
         //data-toggle="modal" data-target="#exampleModal"
         //"data-toggle"=>"modal", "data-target"=>"#pleaseWaitModal"
@@ -311,11 +326,11 @@ class InvoiceType extends AbstractType
                     'attr' => array('class' => 'btn btn-primary btn-with-wait')
                 ));
                 $builder->add('saveAndGeneratePdf', SubmitType::class, array(
-                    'label' => "Save and $generatePrefix PDF Invoice",
+                    'label' => "Update and $generatePrefix PDF Invoice",
                     'attr' => array('class' => 'btn btn-primary btn-with-wait', "data-toggle"=>"modal", "data-target"=>"#pleaseWaitModal") //'onClick'=>"this.disabled=true; this.value = 'Please Wait!';"
                 ));
                 $builder->add('saveAndGeneratePdfAndSendByEmail', SubmitType::class, array(
-                    'label' => "Save, $generatePrefix PDF Invoice and Send PDF Invoice by Email to PI",
+                    'label' => "Update, $generatePrefix PDF Invoice and Send PDF Invoice by Email to PI",
                     'attr' => array('class' => 'btn btn-warning btn-with-wait', "data-toggle"=>"modal", "data-target"=>"#pleaseWaitModal")
                 ));
 

@@ -203,6 +203,14 @@
             {{ formmacros.field_left(form.due) }}
         {% endif %}
 
+        {% if form.paidDate is defined %}
+            {{ formmacros.fieldDateLabel_left(form.paidDate,'allow-future-date') }}
+        {% endif %}
+
+        {% if form.comment is defined %}
+            {{ formmacros.field_left(form.comment) }}
+        {% endif %}
+
         <br>
         <hr>
         {% if form.footer is defined %}
@@ -263,16 +271,6 @@
             <a class="btn btn-primary" href="{{ path(translationalresearch_sitename~'_invoice_edit',{'oid':invoice.oid}) }}"
             >Edit Invoice</a>
         </p>
-
-        {#<p>#}
-            {#{% if is_granted('ROLE_TRANSRES_ADMIN') %}#}
-                {#{{ form_start(delete_form) }}#}
-                {#{{ form_start(delete_form,{'attr':{'onsubmit':"return confirm('Do you really want to delete this invoice?');"}}) }}#}
-                    {#<input class="btn btn-danger" type="submit" value="Delete">#}
-                {#{{ form_end(delete_form) }}#}
-                {#<br><br>#}
-            {#{% endif %}#}
-        {#</p>#}
 
         {#<p>#}
             {#<a href="{{ path('translationalresearch_invoice_download', {'oid': invoice.oid }) }}" target="_blank"#}
@@ -337,6 +335,18 @@
             {#<a href="{{ path(translationalresearch_sitename~'_request_index',{'id':project.id}) }}">Back to the request list</a>#}
         {#</p>#}
     {#{% endif %}#}
+
+    {% if delete_form is defined %}
+        <p>
+            {% if is_granted('ROLE_TRANSRES_ADMIN') %}
+                {#{{ form_start(delete_form) }}#}
+                {{ form_start(delete_form,{'attr':{'onsubmit':"return confirm('Do you really want to delete this invoice?');"}}) }}
+                <input class="btn btn-danger" type="submit" value="Delete">
+                {{ form_end(delete_form) }}
+                <br><br>
+            {% endif %}
+        </p>
+    {% endif %}
 
 
     <!-- Modal -->

@@ -17,19 +17,19 @@
         {{ requestTotalFeeHtml|raw }}
     </p>
 
-    {{ transresRequestMacros.transresRequestsFilter(filterform,advancedFilter) }}
-
-    <br>
-
     {% set isRequestCanBeCreated = transres_request_util.isRequestCanBeCreated(project) %}
     {% if isRequestCanBeCreated == 1 %}
-        <br>
+        {#<br>#}
         <p>
             <a class="btn btn-primary" href="{{ path(translationalresearch_sitename~'_request_new', {'id':project.id}) }}"
             >Create a new Request</a>
         </p>
-        <br>
+        {#<br>#}
     {% endif %}
+
+    {{ transresRequestMacros.transresRequestsFilter(filterform,advancedFilter) }}
+
+    <br>
 
     {#<table class="table table-hover table-condensed text-left table-bordered">#}
     <table class="records_list table table-condensed text-left my-table-class">

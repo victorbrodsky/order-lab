@@ -44,9 +44,6 @@ class PdfGenerator
             $authorUser = $userSecUtil->findSystemUser();
         }
 
-        //Assume invoice has only one request: one request has many invoices
-        //$transresRequest = $entity->getTransresRequests()->first();
-
         //generate file name
         $fileFullReportUniqueName = $this->constructUniqueFileName($invoice,"Invoice-PDF");
         $logger->notice("Start to generate PDF Invoice ID=".$invoice->getOid()."; filename=".$fileFullReportUniqueName);

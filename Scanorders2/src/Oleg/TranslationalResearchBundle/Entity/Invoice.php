@@ -73,10 +73,15 @@ class Invoice {
      */
     private $oid;
 
+//    /**
+//     * @ORM\ManyToOne(targetEntity="TransResRequest", mappedBy="invoices")
+//     */
+//    private $transresRequests;
     /**
-     * @ORM\ManyToMany(targetEntity="TransResRequest", mappedBy="invoices")
+     * @ORM\ManyToOne(targetEntity="TransResRequest", inversedBy="invoices")
+     * @ORM\JoinColumn(name="transresRequest_id", referencedColumnName="id")
      */
-    private $transresRequests;
+    private $transresRequest;
 
     /**
      * The same as OID (remove it?)
@@ -230,13 +235,25 @@ class Invoice {
      */
     private $fundedAccountNumber;
 
+    /**
+     * @var string
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $comment;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $paidDate;
+
 
     public function __construct($user=null) {
         $this->setSubmitter($user);
         $this->setCreateDate(new \DateTime());
         $this->setVersion(1);
 
-        $this->transresRequests = new ArrayCollection();
+        //$this->transresRequests = new ArrayCollection();
         $this->invoiceItems = new ArrayCollection();
 //        $this->invoiceAddItems = new ArrayCollection();
         $this->documents = new ArrayCollection();
@@ -663,20 +680,20 @@ class Invoice {
         $this->fundedAccountNumber = $fundedAccountNumber;
     }
 
-    public function getTransresRequests()
+    /**
+     * @return mixed
+     */
+    public function getTransresRequest()
     {
-        return $this->transresRequests;
+        return $this->transresRequest;
     }
-    public function addTransresRequest($item)
+
+    /**
+     * @param mixed $transresRequest
+     */
+    public function setTransresRequest($transresRequest)
     {
-        if( $item && !$this->transresRequests->contains($item) ) {
-            $this->transresRequests->add($item);
-        }
-        return $this;
-    }
-    public function removeTransresRequest($item)
-    {
-        $this->transresRequests->removeElement($item);
+        $this->transresRequest = $transresRequest;
     }
 
     public function getInvoiceItems()
@@ -694,6 +711,38 @@ class Invoice {
     public function removeInvoiceItem($item)
     {
         $this->invoiceItems->removeElement($item);
+    }
+
+    /**
+     * @return string
+     */
+    public function getComment()
+    {
+        return $this->comment;
+    }
+
+    /**
+     * @param string $comment
+     */
+    public function setComment($comment)
+    {
+        $this->comment = $comment;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getPaidDate()
+    {
+        return $this->paidDate;
+    }
+
+    /**
+     * @param \DateTime $paidDate
+     */
+    public function setPaidDate($paidDate)
+    {
+        $this->paidDate = $paidDate;
     }
 
 //    public function getInvoiceAddItems()

@@ -244,10 +244,14 @@
 {#{% endblock %}#}
 
 {% block additionaljs %}
+
     {% javascripts
-    '@OlegTranslationalResearchBundle/Resources/public/form/js/transres-filterbtn.js'
+        '@OlegTranslationalResearchBundle/Resources/public/form/js/transres-filterbtn.js'
     %}
-    <script type="text/javascript" src="{{ asset_url }}">
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <script type="text/javascript">
 
         function transresUpdateInvoice(invoiceOid) {
             console.log("transresUpdateInvoice: invoiceOid="+invoiceOid);
@@ -258,13 +262,16 @@
             var paid = $("#invoice-paid-"+invoiceOid).val();
             console.log("paid="+paid);
 
+            var comment = $("#invoice-comment-"+invoiceOid).val();
+            console.log("comment="+comment);
+
             var url = Routing.generate('translationalresearch_invoice_update_ajax');
 
             $.ajax({
                 url: url,
                 timeout: _ajaxTimeout,
                 type: "POST",
-                data: {invoiceOid: invoiceOid, paid: paid},
+                data: {invoiceOid: invoiceOid, paid: paid, comment: comment},
                 async: false,
             }).success(function(response) {
                 //console.log(response);
@@ -281,5 +288,5 @@
         }
 
     </script>
-    {% endjavascripts %}
+
 {% endblock %}

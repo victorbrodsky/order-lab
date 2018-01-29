@@ -126,9 +126,13 @@ class TransResRequest {
      */
     private $project;
 
+//    /**
+//     * @ORM\OneToMany(targetEntity="Invoice", inversedBy="transresRequests")
+//     * @ORM\JoinTable(name="transres_request_invoice")
+//     */
+//    private $invoices;
     /**
-     * @ORM\ManyToMany(targetEntity="Invoice", inversedBy="transresRequests")
-     * @ORM\JoinTable(name="transres_request_invoice")
+     * @ORM\OneToMany(targetEntity="Invoice", mappedBy="transresRequest", cascade={"persist","remove"})
      */
     private $invoices;
 
@@ -450,7 +454,7 @@ class TransResRequest {
     {
         if( $item && !$this->invoices->contains($item) ) {
             $this->invoices->add($item);
-            $item->addTransresRequest($this);
+            $item->setTransresRequest($this);
         }
         return $this;
     }

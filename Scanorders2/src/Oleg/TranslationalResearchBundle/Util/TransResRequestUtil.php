@@ -1164,11 +1164,7 @@ class TransResRequestUtil
 
         //Get $transresRequest if null
         if( !$transresRequest ) {
-            $transresRequests = $invoice->getTransresRequests();
-            //echo "count=" . count($transresRequests) . "<br>";
-            if (count($transresRequests) > 0) {
-                $transresRequest = $transresRequests[0];
-            }
+            $transresRequest = $invoice->getTransresRequest();
         }
 
         if( !$transresRequest ) {
@@ -1496,14 +1492,8 @@ class TransResRequestUtil
 
     public function updateRequestCompletedFieldsByInvoice($invoice) {
         $transresUtil = $this->container->get('transres_util');
-        $transresRequest = null;
-        //Get $transresRequest if null
-        $transresRequests = $invoice->getTransresRequests();
-        //echo "count=" . count($transresRequests) . "<br>";
-        if (count($transresRequests) > 0) {
-            $transresRequest = $transresRequests[0];
-        }
 
+        $transresRequest = $invoice->getTransresRequest();
         if( !$transresRequest ) {
             return null;
         }
@@ -1589,11 +1579,11 @@ class TransResRequestUtil
         $repository = $this->em->getRepository('OlegTranslationalResearchBundle:Invoice');
         $dql = $repository->createQueryBuilder("invoice");
         $dql->select('invoice');
-        $dql->leftJoin('invoice.transresRequests','transresRequests');
+        $dql->leftJoin('invoice.transresRequest','transresRequest');
 
         $dqlParameters = array();
 
-        $dql->andWhere("transresRequests.id = :transresRequestId");
+        $dql->andWhere("transresRequest.id = :transresRequestId");
 
         $dql->orderBy("invoice.version","DESC");
         $dql->setMaxResults(1);
@@ -1775,11 +1765,8 @@ class TransResRequestUtil
         }
 
         //find default site parameters
-        $transresRequests = $invoice->getTransresRequests();
-        //echo "count=" . count($transresRequests) . "<br>";
-        if (count($transresRequests) > 0) {
-            $transresRequest = $transresRequests[0];
-
+        $transresRequest = $invoice->getTransresRequest();
+        if( $transresRequest ) {
             $project = $transresRequest->getProject();
             $projectSpecialty = $project->getProjectSpecialty();
             $projectSpecialtyAbbreviation = $projectSpecialty->getAbbreviation();
@@ -1893,10 +1880,9 @@ class TransResRequestUtil
     //check if user allowed to access by the project's specialty
     public function isUserAllowedAccessInvoice($invoice) {
         $transresUtil = $this->container->get('transres_util');
-        $transresRequest = null;
-        $transresRequests = $invoice->getTransresRequests();
-        if( count($transresRequests) > 0 ) {
-            $transresRequest = $transresRequests[0];
+        $transresRequest = $invoice->getTransresRequest();
+        if( $transresRequest ) {
+            //ok
         } else {
             return true;
         }

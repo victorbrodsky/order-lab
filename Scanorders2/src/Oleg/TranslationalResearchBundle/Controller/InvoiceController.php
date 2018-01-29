@@ -57,7 +57,7 @@ class InvoiceController extends Controller
 
         $dql->leftJoin('invoice.submitter','submitter');
         $dql->leftJoin('invoice.salesperson','salesperson');
-        $dql->leftJoin('invoice.transresRequests','transresRequests');
+        $dql->leftJoin('invoice.transresRequest','transresRequest');
         $dql->leftJoin('invoice.principalInvestigator','principalInvestigator');
 
         $dqlParameters = array();
@@ -71,7 +71,7 @@ class InvoiceController extends Controller
             $title = "List of Invoices for " . $thisLink;
             $metaTitle = "List of Invoices for Request ID ".$transresRequest->getOid();
 
-            $dql->where("transresRequests.id = :transresRequestId");
+            $dql->where("transresRequest.id = :transresRequestId");
             $dqlParameters["transresRequestId"] = $transresRequest->getId();
         }
 
@@ -515,19 +515,6 @@ class InvoiceController extends Controller
 
             $msg = $transresRequestUtil->createSubmitNewInvoice($transresRequest,$invoice);
 
-            //Testing
-//            $invoices = $transresRequest->getInvoices();
-//            echo "count invoices=".count($invoices)."<br>";
-//
-//            $transresRequest = null;
-//            $transresRequests = $invoice->getTransresRequests();
-//            echo "count transresRequests=".count($transresRequests)."<br>";
-//            if( count($transresRequests) > 0 ) {
-//                $transresRequest = $transresRequests[0];
-//            }
-//            echo "transresRequest=".$transresRequest."<br>";
-//            exit('1');
-
             $msg2 = $this->processInvoiceAfterSave($invoice,$form,$user);
 
             //$msg = "New Invoice has been successfully created for the request ID ".$transresRequest->getOid();
@@ -585,21 +572,16 @@ class InvoiceController extends Controller
 
         $form = $this->createInvoiceForm($invoice,$cycle);
 
-        //$deleteForm = $this->createDeleteForm($invoice);
+        $deleteForm = $this->createDeleteForm($invoice);
 
-        //Get $transresRequest (Assume invoice has a single $transresRequest)
-        $transresRequest = null;
-        $transresRequests = $invoice->getTransresRequests();
-        if( count($transresRequests) > 0 ) {
-            $transresRequest = $transresRequests[0];
-        }
+        $transresRequest = $invoice->getTransresRequest();
         //echo "transresRequest=".$transresRequest."<br>";
 
         return array(
             'transresRequest' => $transresRequest,
             'invoice' => $invoice,
             'form' => $form->createView(),
-            //'delete_form' => $deleteForm->createView(),
+            'delete_form' => $deleteForm->createView(),
             'cycle' => $cycle,
             'title' => "Invoice ID ".$invoice->getOid(),
         );
@@ -647,11 +629,7 @@ class InvoiceController extends Controller
         }
 
         //Get $transresRequest (Assume invoice has a single $transresRequest)
-        $transresRequest = null;
-        $transresRequests = $invoice->getTransresRequests();
-        if( count($transresRequests) > 0 ) {
-            $transresRequest = $transresRequests[0];
-        }
+        $transresRequest = $invoice->getTransresRequest();
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $cycle = "edit";
@@ -713,7 +691,7 @@ class InvoiceController extends Controller
      */
     public function deleteAction(Request $request, Invoice $invoice)
     {
-        exit("Delete is not allowed.");
+        //exit("Delete is not allowed.");
 
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
@@ -950,10 +928,7 @@ class InvoiceController extends Controller
         $transresRequestUtil = $this->get('transres_request_util');
 
         if( !$transresRequest ) {
-            $transresRequests = $invoice->getTransresRequests();
-            if( count($transresRequests) > 0 ) {
-                $transresRequest = $transresRequests[0];
-            }
+            $transresRequest = $invoice->getTransresRequest();
         }
 
 //        $principalInvestigators = $invoice->getPrincipalInvestigators();
@@ -968,7 +943,9 @@ class InvoiceController extends Controller
         //$piEm = $this->getDoctrine()->getManager('default');
 
         //PIs of the request's pis
-        $principalInvestigators = $transresRequest->getPrincipalInvestigators();
+        if( $transresRequest ) {
+            $principalInvestigators = $transresRequest->getPrincipalInvestigators();
+        }
         //echo "pi count=".count($principalInvestigators)."<br>";
         
         $params = array(
@@ -1212,6 +1189,7 @@ class InvoiceController extends Controller
 
         $oid = trim( $request->get('invoiceOid') );
         $paid = trim( $request->get('paid') );
+        $comment = trim( $request->get('comment') );
 
         $invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($oid);
         if( !$invoice ) {
@@ -1230,6 +1208,8 @@ class InvoiceController extends Controller
             );
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
+
+        $invoice->setComment($comment);
 
         $invoice->setPaid($paid);
 
