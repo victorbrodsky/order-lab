@@ -192,6 +192,12 @@ class FilterRequestType extends AbstractType
             },
         ));
 
+        $builder->add('fundingNumber', TextType::class, array(
+            'required'=>false,
+            'label' => false,
+            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'Search by Funding Number'),
+        ));
+
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -39,9 +39,10 @@
                 <th>{{ knp_pagination_sortable(transresRequests, 'ID', 'transresRequest.oid') }}</th>
                 <th>{{ knp_pagination_sortable(transresRequests, 'Submitter', 'submitterInfos.displayName') }}</th>
                 <th>{{ knp_pagination_sortable(transresRequests, 'Creation Date', 'transresRequest.createDate') }}</th>
+                <th>{{ knp_pagination_sortable(transresRequests, 'Funding Number', 'transresRequest.fundedAccountNumber') }}</th>
                 <th>{{ knp_pagination_sortable(transresRequests, 'Work Progress Status', 'transresRequest.progressState') }}</th>
                 <th>{{ knp_pagination_sortable(transresRequests, 'Billing Progress Status', 'transresRequest.billingState') }}</th>
-                {#<th>{{ knp_pagination_sortable(projects, 'Expiration Date', 'project.expirationDate') }}</th>#}
+
                 <th>Products/Services</th>
                 <th title="Total Calculated Request's Fee">Total Fees($)</th>
                 <th title="Number of All Invoices"># Invoices</th>
@@ -84,6 +85,10 @@
                     {% if transresRequest.createDate %}
                         {{ transresRequest.createDate|date('Y-m-d H:i:s') }}
                     {% endif %}
+                </td>
+
+                <td>
+                    {{ transresRequest.fundedAccountNumber }}
                 </td>
 
                 <td>

@@ -125,6 +125,7 @@ class ProjectController extends Controller
         $searchId = $filterform['searchId']->getData();
         $searchTitle = $filterform['searchTitle']->getData();
         $searchIrbNumber = $filterform['searchIrbNumber']->getData();
+        $fundingNumber = $filterform['fundingNumber']->getData();
 //        $archived = $filterform['completed']->getData();
 //        $complete = $filterform['review']->getData();
 //        $interviewee = $filterform['missinginfo']->getData();
@@ -160,6 +161,11 @@ class ProjectController extends Controller
         if( $searchIrbNumber ) {
             $irbnumberIds = $transresUtil->getProjectIdsFormNodeByFieldName($searchIrbNumber,"IRB Number");
             $dql->andWhere("project.id IN (".implode(",",$irbnumberIds).")");
+            $advancedFilter++;
+        }
+        if( $fundingNumber ) {
+            $fundingNumberIds = $transresUtil->getProjectIdsFormNodeByFieldName($fundingNumber,"If funded, please provide account number");
+            $dql->andWhere("project.id IN (".implode(",",$fundingNumberIds).")");
             $advancedFilter++;
         }
         //////////////// EOF get Projects IDs with the form node filter ////////////////

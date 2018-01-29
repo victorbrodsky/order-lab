@@ -646,6 +646,9 @@ class Invoice {
     public function setPaid($paid)
     {
         $this->paid = $paid;
+        if( $paid ) {
+            $this->setPaidDate(new \DateTime());
+        }
     }
 
     /**

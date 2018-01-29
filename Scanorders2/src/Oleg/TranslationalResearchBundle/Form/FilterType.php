@@ -132,6 +132,12 @@ class FilterType extends AbstractType
             'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'Search by IRB number'),
         ));
 
+        $builder->add('fundingNumber', TextType::class, array(
+            'required'=>false,
+            'label' => false,
+            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'Search by Funding Number'),
+        ));
+
 //        $builder->add('completed', CheckboxType::class, array(
 //            'required'=>false,
 //            'label' => 'Completed',

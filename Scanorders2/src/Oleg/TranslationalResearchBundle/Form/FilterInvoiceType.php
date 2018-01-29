@@ -149,6 +149,12 @@ class FilterInvoiceType extends AbstractType
             'attr' => array('class' => 'form-control', 'placeholder' => "Version")
         ));
 
+        $builder->add('fundingNumber', TextType::class, array(
+            'required'=>false,
+            'label' => false,
+            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'Search by Funding Number'),
+        ));
+
 //        $builder->add('complexFilterList', null, array(
 //            'label' => false,
 //            'required' => false,

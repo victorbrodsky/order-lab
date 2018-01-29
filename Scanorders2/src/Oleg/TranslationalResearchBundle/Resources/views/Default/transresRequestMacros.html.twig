@@ -453,6 +453,16 @@
                         </div>
                     </div>
 
+                    <div class="row">
+                        <div class="col-xs-4">
+                            {{ form_widget(filterform.fundingNumber) }}
+                        </div>
+                        <div class="col-xs-4">
+                        </div>
+                        <div class="col-xs-4">
+                        </div>
+                    </div>
+
                 </div> <!-- panel-body -->
             </div> <!-- panel-collapse -->
 
@@ -530,6 +540,7 @@
                             {{ form_widget(filterform.version) }}
                         </div>
                         <div class="col-xs-4">
+                            {{ form_widget(filterform.fundingNumber) }}
                         </div>
                         <div class="col-xs-4">
                         </div>
@@ -639,11 +650,16 @@
                                         <strong>Comment:</strong>
                                     </div>
                                     <div class="col-xs-6" align="left">
-                                        <input
-                                                id="invoice-comment-{{ invoice.oid }}"
-                                                class="form-control invoice-comment"
-                                                type="text"
-                                                value="{{ invoice.comment }}" required>
+                                        {#<textarea#}
+                                                {#id="invoice-comment-{{ invoice.oid }}"#}
+                                                {#class="textarea form-control invoice-comment"#}
+                                                {#type="text"#}
+                                                {#value="{{ invoice.comment }}" required>#}
+
+                                         <textarea
+                                            required
+                                            id="invoice-comment-{{ invoice.oid }}"
+                                            class="textarea form-control invoice-comment">{{ invoice.comment }}</textarea>
                                     </div>
                                 </div>
                                 </p>

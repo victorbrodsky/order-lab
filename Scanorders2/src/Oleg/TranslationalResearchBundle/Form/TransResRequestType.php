@@ -173,7 +173,7 @@ class TransResRequestType extends AbstractType
 
         //////////////// fields /////////////////////////
         $builder->add('fundedAccountNumber',null, array(
-            'label' => "WCM account number:",
+            'label' => "Funding Number:",
             'required' => false,
             'attr' => array('class' => 'form-control tarnsresrequest-fundedAccountNumber'),
         ));

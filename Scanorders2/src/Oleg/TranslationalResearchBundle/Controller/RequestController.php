@@ -530,6 +530,7 @@ class RequestController extends Controller
         $principalInvestigators = $filterform['principalInvestigators']->getData();
         $accountNumber = $filterform['accountNumber']->getData();
         $billingContact = $filterform['billingContact']->getData();
+        $fundingNumber = $filterform['fundingNumber']->getData();
         //////// EOF create filter //////////
 
         $advancedFilter = 0;
@@ -649,6 +650,12 @@ class RequestController extends Controller
         if( $accountNumber ) {
             $dql->andWhere("transresRequest.fundedAccountNumber = :fundedAccountNumber");
             $dqlParameters["fundedAccountNumber"] = $accountNumber;
+            $advancedFilter++;
+        }
+        
+        if( $fundingNumber ) {
+            $dql->andWhere("transresRequest.fundedAccountNumber = :fundedAccountNumber");
+            $dqlParameters["fundedAccountNumber"] = $fundingNumber;
             $advancedFilter++;
         }
 
