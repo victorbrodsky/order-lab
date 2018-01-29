@@ -136,7 +136,7 @@ class InvoiceType extends AbstractType
         //}
 
         $builder->add('fundedAccountNumber', null, array(
-            'label' => "WCM account number (if funded):",
+            'label' => "Funding Number:",
             'required' => false,
             'attr' => array('class' => 'form-control')
         ));

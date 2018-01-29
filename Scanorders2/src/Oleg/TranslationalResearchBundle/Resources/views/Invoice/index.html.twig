@@ -27,7 +27,7 @@
         <thead>
             <tr>
                 <th>{{ knp_pagination_sortable(invoices, 'Invoice Number', 'invoice.oid') }}</th>
-                <th>{{ knp_pagination_sortable(invoices, 'WCM Account (if funded)', 'invoice.fundedAccountNumber') }}</th>
+                <th>{{ knp_pagination_sortable(invoices, 'Funding Number', 'invoice.fundedAccountNumber') }}</th>
                 <th>{{ knp_pagination_sortable(invoices, 'Salesperson', 'salesperson.displayName') }}</th>
                 <th>{{ knp_pagination_sortable(invoices, 'Create Date', 'invoice.createDate') }}</th>
                 <th>{{ knp_pagination_sortable(invoices, 'Update Date', 'invoice.updateDate') }}</th>

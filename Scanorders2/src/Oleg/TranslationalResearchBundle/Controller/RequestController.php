@@ -654,8 +654,8 @@ class RequestController extends Controller
         }
         
         if( $fundingNumber ) {
-            $dql->andWhere("transresRequest.fundedAccountNumber = :fundedAccountNumber");
-            $dqlParameters["fundedAccountNumber"] = $fundingNumber;
+            $dql->andWhere("transresRequest.fundedAccountNumber LIKE :fundedAccountNumber");
+            $dqlParameters["fundedAccountNumber"] = "%".$fundingNumber."%";
             $advancedFilter++;
         }
 

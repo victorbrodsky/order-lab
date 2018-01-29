@@ -334,6 +334,7 @@ class InvoiceController extends Controller
             $startDate = $filterform['startDate']->getData();
             $endDate = $filterform['endDate']->getData();
             $version = $filterform['version']->getData();
+            $fundingNumber = $filterform['fundingNumber']->getData();
         }
         ////// EOF create filter //////////
 
@@ -428,6 +429,12 @@ class InvoiceController extends Controller
                 $dql->andWhere('invoice.version = :version');
                 $dqlParameters['version'] = $version;
             }
+            $advancedFilter++;
+        }
+
+        if( $fundingNumber ) {
+            $dql->andWhere("invoice.fundedAccountNumber LIKE :fundedAccountNumber");
+            $dqlParameters["fundedAccountNumber"] = "%".$fundingNumber."%";
             $advancedFilter++;
         }
 
