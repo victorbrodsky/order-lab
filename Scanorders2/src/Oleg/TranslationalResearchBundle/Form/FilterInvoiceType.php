@@ -146,7 +146,7 @@ class FilterInvoiceType extends AbstractType
             'label' => false,
             'choices' => $this->params['versions'],
             'required' => false,
-            'attr' => array('class' => 'form-control', 'placeholder' => "Version")
+            'attr' => array('class' => 'combobox', 'placeholder' => "Version")
         ));
 
         $builder->add('fundingNumber', TextType::class, array(
