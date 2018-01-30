@@ -69,7 +69,7 @@ class ProjectType extends AbstractType
             $builder->add('approvalDate', DateType::class, array(
                 'widget' => 'single_text',
                 'label' => "Approval Date:",
-                'disabled' => true,
+                //'disabled' => true,
                 'format' => 'MM/dd/yyyy',
                 'attr' => array('class' => 'datepicker form-control'),
                 'required' => false,

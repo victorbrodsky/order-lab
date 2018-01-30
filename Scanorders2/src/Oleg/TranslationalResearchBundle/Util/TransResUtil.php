@@ -600,6 +600,10 @@ class TransResUtil
                     }
                 }
 
+                if( $to === "final_approved" ) {
+                    $project->setApprovalDate(new \DateTime());
+                }
+
                 $workflow->apply($project, $transitionName);
                 //change state
                 $project->setState($to); //i.e. 'irb_review'
@@ -2632,7 +2636,7 @@ class TransResUtil
             )
         );
 
-        $ews->setCellValue('A1', 'ID'); // Sets cell 'a1' to value 'ID
+        $ews->setCellValue('A1', 'Project ID'); // Sets cell 'a1' to value 'ID
         $ews->setCellValue('B1', 'Submission Date');
         $ews->setCellValue('C1', 'Principal Investigator(s)');
         $ews->setCellValue('D1', 'Project Title');
@@ -2641,11 +2645,13 @@ class TransResUtil
         $ews->setCellValue('G1', 'Approval Date');
         $ews->setCellValue('H1', 'IRB Expiration Date');
 
-        $ews->setCellValue('I1', 'Requests');
+        $ews->setCellValue('I1', 'Request ID');
         $ews->setCellValue('J1', '# Issued Invoices');
-        $ews->setCellValue('K1', 'Total($)');
-        $ews->setCellValue('L1', 'Paid($)');
-        $ews->setCellValue('M1', 'Due($)');
+        $ews->setCellValue('K1', 'Latest Invoice Total($)');
+        $ews->setCellValue('L1', 'Latest Invoice Paid($)');
+        $ews->setCellValue('M1', 'Latest Invoice Due($)');
+
+        $ews->getStyle('A1:M1')->applyFromArray($styleBoldArray);
 
         $totalRequests = 0;
         $totalInvoices = 0;
@@ -2695,41 +2701,116 @@ class TransResUtil
             $ews->setCellValue('H'.$row, $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"IRB Expiration Date"));
 
             //Requests
-            $requestsCount = count($project->getRequests());
-            $totalRequests = $totalRequests + $requestsCount;
-            $ews->setCellValue('I'.$row, $requestsCount);
+//            $requestsCount = count($project->getRequests());
+//            $totalRequests = $totalRequests + $requestsCount;
+//            $ews->setCellValue('I'.$row, $requestsCount);
+//
+//            $invoicesInfos = $this->getInvoicesInfosByProject($project);
+//
+//            //# Issued Invoices
+//            $invoicesCount = $invoicesInfos['count'];
+//            $totalInvoices = $totalInvoices + $invoicesCount;
+//            $ews->setCellValue('J'.$row, $invoicesCount);
+//
+//            //# Total($)
+//            $total = $invoicesInfos['total'];
+//            $totalTotal = $totalTotal + $total;
+//            if( $total ) {
+//                $ews->setCellValue('K' . $row, $total);
+//            }
+//
+//            //# Paid($)
+//            $paid = $invoicesInfos['paid'];
+//            $paidTotal = $paidTotal + $paid;
+//            if( $paid ) {
+//                $ews->setCellValue('L' . $row, $paid);
+//
+//            }
+//
+//            //# Due($)
+//            $due = $invoicesInfos['due'];
+//            $dueTotal = $dueTotal + $due;
+//            if( $due ) {
+//                $ews->setCellValue('M' . $row, $due);
+//            }
+//
+//            $row = $row + 1;
 
-            $invoicesInfos = $this->getInvoicesInfosByProject($project);
+            $projectRequests = 0;
+            $projectTotalInvoices = 0;
+            $projectTotalTotal = 0;
+            $projectTotalPaid = 0;
+            $projectTotalDue = 0;
 
-            //# Issued Invoices
-            $invoicesCount = $invoicesInfos['count'];
-            $totalInvoices = $totalInvoices + $invoicesCount;
-            $ews->setCellValue('J'.$row, $invoicesCount);
+            foreach($project->getRequests() as $request) {
+                $latestInvoice = $transresRequestUtil->getLatestInvoice($request);
 
-            //# Total($)
-            $total = $invoicesInfos['total'];
-            $totalTotal = $totalTotal + $total;
-            if( $total ) {
-                $ews->setCellValue('K' . $row, $total);
+                //Request ID
+                $ews->setCellValue('I'.$row, $request->getOid());
+
+                //# Issued Invoices
+                $invoicesCount = count($request->getInvoices());
+                $totalInvoices = $totalInvoices + $invoicesCount;
+                $projectTotalInvoices = $projectTotalInvoices + $invoicesCount;
+                $ews->setCellValue('J'.$row, $invoicesCount);
+
+                if( $latestInvoice ) {
+                    //# Total($)
+                    $total = $latestInvoice->getTotal();
+                    $totalTotal = $totalTotal + $total;
+                    $projectTotalTotal = $projectTotalTotal + $total;
+                    if ($total) {
+                        $ews->setCellValue('K' . $row, $total);
+                    }
+
+                    //# Paid($)
+                    $paid = $latestInvoice->getPaid();
+                    $paidTotal = $paidTotal + $paid;
+                    $projectTotalPaid = $projectTotalPaid + $paid;
+                    if ($paid) {
+                        $ews->setCellValue('L' . $row, $paid);
+
+                    }
+
+                    //# Due($)
+                    $due = $latestInvoice->getDue();
+                    $dueTotal = $dueTotal + $due;
+                    $projectTotalDue = $projectTotalDue + $due;
+                    if ($due) {
+                        $ews->setCellValue('M' . $row, $due);
+                    }
+                }
+
+                $projectRequests = $projectRequests + 1;
+
+                $row = $row + 1;
             }
 
-            //# Paid($)
-            $paid = $invoicesInfos['paid'];
-            $paidTotal = $paidTotal + $paid;
-            if( $paid ) {
-                $ews->setCellValue('L' . $row, $paid);
+            $totalRequests = $totalRequests + $projectRequests;
 
-            }
+            //Request Total
+            $ews->setCellValue('I'.$row, "Project Totals");
+            $ews->getStyle('I'.$row)->applyFromArray($styleBoldArray);
 
-            //# Due($)
-            $due = $invoicesInfos['due'];
-            $dueTotal = $dueTotal + $due;
-            if( $due ) {
-                $ews->setCellValue('M' . $row, $due);
-            }
+            //This Project Total Invoices
+            $ews->setCellValue('J'.$row, $projectTotalInvoices);
+            $ews->getStyle('J'.$row)->applyFromArray($styleBoldArray);
+
+            //This Project Total Total
+            $ews->setCellValue('K'.$row, $projectTotalTotal);
+            $ews->getStyle('K'.$row)->applyFromArray($styleBoldArray);
+
+            //This Project Total Paid
+            $ews->setCellValue('L'.$row, $projectTotalPaid);
+            $ews->getStyle('L'.$row)->applyFromArray($styleBoldArray);
+
+            //This Project Total Due
+            $ews->setCellValue('M'.$row, $projectTotalDue);
+            $ews->getStyle('M'.$row)->applyFromArray($styleBoldArray);
 
             $row = $row + 1;
-        }
+            $row = $row + 1;
+        }//project
 
         //Total
         //$row++;

@@ -26,7 +26,8 @@
                     {% endif %}
 
                     {% if form.approvalDate is defined %}
-                        {{ formmacros.field(form.approvalDate) }}
+                        {#{{ formmacros.field(form.approvalDate) }}#}
+                        {{ formmacros.fieldDateLabel(form.approvalDate,'allow-future-date') }}
                     {% endif %}
 
                     {% if form.createDate is defined or form.submitter is defined %}
