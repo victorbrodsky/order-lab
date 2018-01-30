@@ -226,6 +226,28 @@
                         </ul>
                     </li>
 
+
+                    {% if is_granted('ROLE_TRANSRES_ADMIN') %}
+
+                        <li id="nav-bar-translationalresearch-dashboard" class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dashboard<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_dashboard_pilevel') }}"
+                                    >PI Level</a>
+                                </li>
+
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_dashboard_fundedlevel') }}"
+                                    >Funded Project Level</a>
+                                </li>
+
+                            </ul>
+                        </li>
+
+                    {% endif %}
+
                 </ul>
 
             {% endif %}

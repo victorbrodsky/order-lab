@@ -20,6 +20,7 @@ namespace Oleg\UserdirectoryBundle\Controller;
 use Doctrine\Common\Collections\ArrayCollection;
 use Oleg\UserdirectoryBundle\Entity\PerSiteSettings;
 use Oleg\UserdirectoryBundle\Form\AccessRequestType;
+use Oleg\UserdirectoryBundle\Form\AuthorizedUserFilterType;
 use Oleg\UserdirectoryBundle\Form\PerSiteSettingsType;
 use Oleg\UserdirectoryBundle\Entity\User;
 use Oleg\UserdirectoryBundle\Form\AuthorizitaionUserType;
@@ -1170,7 +1171,26 @@ class AccessRequestController extends Controller
             return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
         }
 
+        $em = $this->getDoctrine()->getManager();
         //echo "sitename=".$this->siteName."<br>";
+
+        /////////// Filter ////////////
+        $siteRoles = $em->getRepository('OlegUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName($this->siteName,"");
+        $siteRolesArr = array();
+        foreach($siteRoles as $siteRole) {
+            $siteRolesArr[$siteRole->getAlias()] = $siteRole->getId();
+        }
+        $params = array(
+            'roles'=>$siteRolesArr,
+        );
+        $filterform = $this->createForm(AuthorizedUserFilterType::class, null,array(
+            'method' => 'GET',
+            'form_custom_value'=>$params
+        ));
+        $filterform->handleRequest($request);
+        $roles = $filterform['roles']->getData();
+        //echo "roles=".implode(", ",$roles)."<br>";
+        /////////// EOF Filter ////////////
 
         //new simple user form: user type, user id
         $params = array(
@@ -1201,6 +1221,7 @@ class AccessRequestController extends Controller
 
         return array(
             'form' => $form->createView(),
+            'filterform' => $filterform->createView(),
             'users' => $users,
             'sitename' => $this->siteName,
             'sitenameshowuser' => $this->siteNameShowuser,

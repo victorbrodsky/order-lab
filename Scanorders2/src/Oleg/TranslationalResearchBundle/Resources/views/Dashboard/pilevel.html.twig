@@ -1,0 +1,39 @@
+{% extends "OlegTranslationalResearchBundle::Default/base.html.twig" %}
+
+{% import "OlegTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block content %}
+    <h4 class="text-info" align="center">
+        {{ title|raw }}
+    </h4>
+    <br>
+
+    <table class="records_list table table-condensed text-left">
+        <thead>
+            <tr>
+                PI
+            </tr>
+            <tr>
+                # Projects
+            </tr>
+        </thead>
+        <tbody data-link="row">
+        {% for info in infos %}
+
+            <tr>
+                <td class="rowlink-skip">
+                    {{ info }}
+                </td>
+                <td class="rowlink-skip">
+                    info
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

@@ -894,9 +894,13 @@ class TransResUtil
         $reviewerRole = $roles['reviewer'];
         //$reviewerDelegateRole = $roles['reviewerDelegate'];
 
+        $specialtyObject = $defaultReviewer->getProjectSpecialty();
+        $reviewerSpecialtyRole = $this->getSpecialtyRole($specialtyObject);
+
         $reviewer = $defaultReviewer->getReviewer();
         if( $reviewer ) {
             $reviewer->addRole($reviewerRole);
+            $reviewer->addRole($reviewerSpecialtyRole);
         }
         //remove role: make sure if the user is not a default reviewer in all other objects. Or don't remove role at all.
         //if( $originalReviewer && $originalReviewer != $reviewer ) {
@@ -910,6 +914,7 @@ class TransResUtil
         $reviewerDelegate = $defaultReviewer->getReviewerDelegate();
         if( $reviewerDelegate ) {
             $reviewerDelegate->addRole($reviewerRole);
+            $reviewerDelegate->addRole($reviewerSpecialtyRole);
         }
 
         //remove role: make sure if the user is not a default reviewer in all other objects. Or don't remove role at all.
@@ -2407,13 +2412,14 @@ class TransResUtil
             $specialties = $this->getTransResProjectSpecialties();
             foreach ($specialties as $specialtyObject) {
                 $hasRole = false;
-                $role = null;
-                if ($specialtyObject->getAbbreviation() == "hematopathology") {
-                    $role = "ROLE_TRANSRES_HEMATOPATHOLOGY";
-                }
-                if ($specialtyObject->getAbbreviation() == "ap-cp") {
-                    $role = "ROLE_TRANSRES_APCP";
-                }
+//                $role = null;
+//                if ($specialtyObject->getAbbreviation() == "hematopathology") {
+//                    $role = "ROLE_TRANSRES_HEMATOPATHOLOGY";
+//                }
+//                if ($specialtyObject->getAbbreviation() == "ap-cp") {
+//                    $role = "ROLE_TRANSRES_APCP";
+//                }
+                $role = $this->getSpecialtyRole($specialtyObject);
                 if ($role) {
                     //check security context
                     if ($this->secAuth->isGranted($role)) {
@@ -2899,14 +2905,14 @@ class TransResUtil
             $user = $this->secTokenStorage->getToken()->getUser();
         }
 
-        $role = null;
-
-        if( $specialtyObject->getAbbreviation() == "hematopathology" ) {
-            $role = "ROLE_TRANSRES_HEMATOPATHOLOGY";
-        }
-        if( $specialtyObject->getAbbreviation() == "ap-cp" ) {
-            $role = "ROLE_TRANSRES_APCP";
-        }
+//        $role = null;
+//        if( $specialtyObject->getAbbreviation() == "hematopathology" ) {
+//            $role = "ROLE_TRANSRES_HEMATOPATHOLOGY";
+//        }
+//        if( $specialtyObject->getAbbreviation() == "ap-cp" ) {
+//            $role = "ROLE_TRANSRES_APCP";
+//        }
+        $role = $this->getSpecialtyRole($specialtyObject);
 
         if( $role ) {
             //check security context
@@ -2923,5 +2929,15 @@ class TransResUtil
         return false;
     }
 
+    public function getSpecialtyRole($specialtyObject) {
+        $role = null;
+        if( $specialtyObject->getAbbreviation() == "hematopathology" ) {
+            $role = "ROLE_TRANSRES_HEMATOPATHOLOGY";
+        }
+        if( $specialtyObject->getAbbreviation() == "ap-cp" ) {
+            $role = "ROLE_TRANSRES_APCP";
+        }
+        return $role;
+    }
 
 }

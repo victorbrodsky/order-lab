@@ -283,6 +283,10 @@ function setTranslationalResearchNavBar() {
     if( full.indexOf("/translational-research/site-parameters/") !== -1 ) {
         id = 'translationalresearch-default-siteparameters';
     }
+
+    if( full.indexOf("/translational-research/dashboard/") !== -1 ) {
+        id = 'translationalresearch-dashboard';
+    }
     
     id = commonNavBar(full,id);
 
