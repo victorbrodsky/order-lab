@@ -446,22 +446,21 @@
                             {{ form_widget(filterform.billingContact, {'attr': {'placeholder': 'Billing Contact'}}) }}
                         </div>
                         <div class="col-xs-4">
-                            {{ form_widget(filterform.accountNumber, {'attr': {'placeholder': 'WCM Account Number'}}) }}
+                            {{ form_widget(filterform.fundingNumber) }}
                         </div>
                         <div class="col-xs-4">
                             {{ form_widget(filterform.comment,{'attr': {'placeholder': 'Comment Search'}}) }}
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="col-xs-4">
-                            {{ form_widget(filterform.fundingNumber) }}
-                        </div>
-                        <div class="col-xs-4">
-                        </div>
-                        <div class="col-xs-4">
-                        </div>
-                    </div>
+                    {#<div class="row">#}
+                        {#<div class="col-xs-4">#}
+                        {#</div>#}
+                        {#<div class="col-xs-4">#}
+                        {#</div>#}
+                        {#<div class="col-xs-4">#}
+                        {#</div>#}
+                    {#</div>#}
 
                 </div> <!-- panel-body -->
             </div> <!-- panel-collapse -->

@@ -1136,7 +1136,7 @@ class FormNodeUtil
 
     //Get all formnode from bottom to top. Split the row into two columns so that the values all begin at the same point.
     //$holderEntity - message; $formNodeHolderEntity - message category
-    public function getFormNodeHolderShortInfo( $holderEntity, $formNodeHolderEntity, $table=true, $trclassname, $withValue=true ) {
+    public function getFormNodeHolderShortInfo( $holderEntity, $formNodeHolderEntity, $table=true, $trclassname, $withValue=true, $colspan=9 ) {
         if( !$holderEntity ) {
             return null;
         }
@@ -1177,11 +1177,11 @@ class FormNodeUtil
             $resultsArr[] = $thisResult;
         }
 
-        $result = $this->mergeResults( $resultsArr, $table, $trclassname, $testing );
+        $result = $this->mergeResults( $resultsArr, $table, $trclassname, $colspan, $testing );
 
         if( $table ) {
             //http://jsfiddle.net/dqq5B/524/
-            $result = '<td colspan=9><table class = "table table-hover table-condensed">' . $result . '</table></td>';
+            $result = '<td colspan='.$colspan.'><table class = "table table-hover table-condensed">' . $result . '</table></td>';
         } else {
             //$result = '<td colspan=9>'.implode($separator,$result).'</td>';
         }
@@ -1460,7 +1460,7 @@ class FormNodeUtil
         //return $result;
         return $result;
     }
-    public function mergeResults( $resultsArr, $table, $trclassname, $testing=false ) {
+    public function mergeResults( $resultsArr, $table, $trclassname, $colspan, $testing=false ) {
         if( $table ) {
             //echo "result is a string for html table<br>";
             $space = "&nbsp;";
@@ -1478,6 +1478,9 @@ class FormNodeUtil
             print_r($resultsArr);
             print "</pre>#########<br>";
         }
+
+        $colspan1 = 3;
+        $colspan2 = $colspan - 3;
 
         $finalResultsArr = array();
 
@@ -1533,7 +1536,7 @@ class FormNodeUtil
                     $result = $result .
                         //'<tr class="' . $trclassname . '">' .
                         $tr .
-                        '<td colspan=9 class="rowlink-skip">' . $sectionName . '</td>' .
+                        '<td colspan='.$colspan.' class="rowlink-skip">' . $sectionName . '</td>' .
                         '</tr>';
                 } else {
                     //excel array
@@ -1553,8 +1556,8 @@ class FormNodeUtil
                         $result = $result .
                             //'<tr class="' . $trclassname . '">' .
                             $tr .
-                            '<td colspan=3 class="rowlink-skip" style="width:20%">' . $formNodeName . '</td>' .
-                            '<td colspan=6 class="rowlink-skip" style="width:80%">' . $nameValueArr['value'] . '</td>' .
+                            '<td colspan='.$colspan1.' class="rowlink-skip" style="width:20%">' . $formNodeName . '</td>' .
+                            '<td colspan='.$colspan2.' class="rowlink-skip" style="width:80%">' . $nameValueArr['value'] . '</td>' .
                             '</tr>';
                     } else {
                         //excel array

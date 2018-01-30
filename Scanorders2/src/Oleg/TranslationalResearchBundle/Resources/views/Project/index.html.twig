@@ -341,7 +341,7 @@
                 <td style="display: none">
                     <a href="{{ path(translationalresearch_sitename~'_project_show', { 'id': project.id }) }}" target="_blank">Show/Review Project</a>
                 </td>
-                {{ user_formnode_utility.getFormNodeHolderShortInfo(project,project.messageCategory,1,trclassname)|raw }}
+                {{ user_formnode_utility.getFormNodeHolderShortInfo(project,project.messageCategory,1,trclassname,true,14)|raw }}
             </tr>
         {% endfor %}
         </tbody>

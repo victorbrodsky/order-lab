@@ -1585,7 +1585,7 @@ class TransResRequestUtil
 
         $dql->andWhere("transresRequest.id = :transresRequestId");
 
-        $dql->orderBy("invoice.version","DESC");
+        $dql->orderBy("invoice.version","DESC"); //$dql->orderBy("invoice.id","DESC");
         $dql->setMaxResults(1);
 
         $dqlParameters["transresRequestId"] = $transresRequest->getId();
@@ -1597,8 +1597,6 @@ class TransResRequestUtil
         }
 
         $existingInvoices = $query->getResult();
-
-        $version = 1;
 
         if( count($existingInvoices) > 0 ) {
             $existingInvoice = $existingInvoices[0];
@@ -1824,24 +1822,25 @@ class TransResRequestUtil
     }
 
     //get Issued Invoices
-    public function getInvoicesInfosByRequest($request) {
+    public function getInvoicesInfosByRequest($transresRequest) {
         $invoicesInfos = array();
         $count = 0;
         $total = 0.00;
         $paid = 0.00;
         $due = 0.00;
 
-        foreach( $request->getInvoices() as $invoice ) {
+        foreach( $transresRequest->getInvoices() as $invoice ) {
             if( $invoice->getLatestVersion() ) {
-                if ($invoice->getStatus() == "Unpaid/Issued" ||
-                    $invoice->getStatus() == "Paid in Full" ||
-                    $invoice->getStatus() == "Paid Partially"
-                ) {
+//                if(
+//                    $invoice->getStatus() == "Unpaid/Issued" ||
+//                    $invoice->getStatus() == "Paid in Full" ||
+//                    $invoice->getStatus() == "Paid Partially"
+//                ) {
                     $count++;
                     $total = $total + $invoice->getTotal();
                     $paid = $paid + $invoice->getPaid();
                     $due = $due + $invoice->getDue();
-                }
+//                }
             }
         }
 
@@ -1893,5 +1892,33 @@ class TransResRequestUtil
         }
 
         return false;
+    }
+
+    public function getLatestInvoice( $transresRequest ) {
+        $repository = $this->em->getRepository('OlegTranslationalResearchBundle:Invoice');
+        $dql =  $repository->createQueryBuilder("invoice");
+        $dql->select('invoice');
+
+        $dql->leftJoin('invoice.transresRequest','transresRequest');
+
+        $dql->where("transresRequest.id = :transresRequestId");
+        $dql->orderBy("invoice.id","DESC");
+
+        $query = $this->em->createQuery($dql);
+
+        $query->setParameters(array(
+            "transresRequestId" => $transresRequest->getId()
+        ));
+
+        $invoices = $query->getResult();
+
+        if( count($invoices) > 0 ) {
+            $latestInvoice = $invoices[0];
+            if( $latestInvoice->getLatestVersion() ) {
+                return $latestInvoice;
+            }
+        }
+
+        return null;
     }
 }

@@ -85,7 +85,7 @@
                 <td class="rowlink-skip">
                     {#{{ invoice.documents|length }}#}
                     {% if invoice.documents|length > 0 %}
-                        <a  data-toggle="tooltip" title="Show the most recent PDF"
+                        <a  data-toggle="tooltip" title="Show the Latest PDF"
                             target="_blank"
                             href="{{ path('translationalresearch_invoice_download_recent', {'oid': invoice.oid }) }}"
                         >{{ invoice.documents|length }}</a>
@@ -136,11 +136,11 @@
 
                                 {% if invoice.documents|length > 0 %}
                                     <li>
-                                        {#Send the Most Recent Invoice PDF by Email#}
+                                        {#Send the Latest Invoice PDF by Email#}
                                         <a
-                                            general-data-confirm="Are you sure you want to send the most recent invoice {{ invoice.oid }} pdf by email to PI?"
+                                            general-data-confirm="Are you sure you want to send the latest invoice {{ invoice.oid }} pdf by email to PI?"
                                             href="{{ path('translationalresearch_invoice_send_pdf_email', {'oid': invoice.oid }) }}"
-                                        >Send the Most Recent Invoice PDF by Email to PI</a>
+                                        >Send the Latest Invoice PDF by Email to PI</a>
                                     </li>
                                 {% endif %}
 
@@ -173,7 +173,7 @@
                                 <li>
                                     <a target="_blank"
                                        href="{{ path('translationalresearch_invoice_download_recent', {'oid': invoice.oid }) }}"
-                                    >Show The Most Recent PDF Invoice</a>
+                                    >Show The Latest PDF Invoice</a>
                                 </li>
                             {% endif %}
 
@@ -247,46 +247,9 @@
 
     {% javascripts
         '@OlegTranslationalResearchBundle/Resources/public/form/js/transres-filterbtn.js'
+        '@OlegTranslationalResearchBundle/Resources/public/form/js/invoice.js'
     %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
-
-    <script type="text/javascript">
-
-        function transresUpdateInvoice(invoiceOid) {
-            console.log("transresUpdateInvoice: invoiceOid="+invoiceOid);
-
-            //var form = $("#change_invoice_form_"+invoiceOid);
-            //var paid = form.find("#invoice-paid").val();
-
-            var paid = $("#invoice-paid-"+invoiceOid).val();
-            console.log("paid="+paid);
-
-            var comment = $("#invoice-comment-"+invoiceOid).val();
-            console.log("comment="+comment);
-
-            var url = Routing.generate('translationalresearch_invoice_update_ajax');
-
-            $.ajax({
-                url: url,
-                timeout: _ajaxTimeout,
-                type: "POST",
-                data: {invoiceOid: invoiceOid, paid: paid, comment: comment},
-                async: false,
-            }).success(function(response) {
-                //console.log(response);
-                if( response == "OK" ) {
-                    //reload parent page
-                    window.location.reload(true);
-                }
-            }).done(function() {
-                //lbtn.stop();
-            }).error(function(jqXHR, textStatus, errorThrown) {
-                console.log('Error : ' + errorThrown);
-            });
-
-        }
-
-    </script>
 
 {% endblock %}

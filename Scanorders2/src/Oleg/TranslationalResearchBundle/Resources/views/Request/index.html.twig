@@ -3,7 +3,11 @@
 {% import "OlegTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}
 
 {% block title %}
-    Requests for Project ID {{ project.oid }}
+    {% if project %}
+        Requests for Project ID {{ project.oid }}
+    {% else %}
+        {{ title|raw }}
+    {% endif %}
 {% endblock %}
 
 
@@ -17,14 +21,16 @@
         {{ requestTotalFeeHtml|raw }}
     </p>
 
-    {% set isRequestCanBeCreated = transres_request_util.isRequestCanBeCreated(project) %}
-    {% if isRequestCanBeCreated == 1 %}
-        {#<br>#}
-        <p>
-            <a class="btn btn-primary" href="{{ path(translationalresearch_sitename~'_request_new', {'id':project.id}) }}"
-            >Create a new Request</a>
-        </p>
-        {#<br>#}
+    {% if project %}
+        {% set isRequestCanBeCreated = transres_request_util.isRequestCanBeCreated(project) %}
+        {% if isRequestCanBeCreated == 1 %}
+            {#<br>#}
+            <p>
+                <a class="btn btn-primary" href="{{ path(translationalresearch_sitename~'_request_new', {'id':project.id}) }}"
+                >Create a new Request</a>
+            </p>
+            {#<br>#}
+        {% endif %}
     {% endif %}
 
     {{ transresRequestMacros.transresRequestsFilter(filterform,advancedFilter) }}
@@ -37,6 +43,9 @@
             <tr>
                 {#<th>Id</th>#}
                 <th>{{ knp_pagination_sortable(transresRequests, 'ID', 'transresRequest.oid') }}</th>
+                {% if not project %}
+                    <th>{{ knp_pagination_sortable(transresRequests, 'Project ID', 'project.id') }}</th>
+                {% endif %}
                 <th>{{ knp_pagination_sortable(transresRequests, 'Submitter', 'submitterInfos.displayName') }}</th>
                 <th>{{ knp_pagination_sortable(transresRequests, 'Creation Date', 'transresRequest.createDate') }}</th>
                 <th>{{ knp_pagination_sortable(transresRequests, 'Funding Number', 'transresRequest.fundedAccountNumber') }}</th>
@@ -45,7 +54,8 @@
 
                 <th>Products/Services</th>
                 <th title="Total Calculated Request's Fee">Total Fees($)</th>
-                <th title="Number of All Invoices"># Invoices</th>
+                <th title="Number of All Invoices">#Invoices</th>
+                <th title="Status of the Latest Invoice">Invoice Status</th>
                 <th title="Total Amount of the Latest Issued Invoices">Invoice Total($)</th>
                 <th title="Paid Amount of the Latest Issued Invoices">Invoice Paid($)</th>
                 <th title="Due Amount of the Latest Issued Invoices">Invoice Due($)</th>
@@ -55,6 +65,11 @@
 
         {% set count = 0 %}
         {% for transresRequest in transresRequests %}
+
+            {% set latestInvoice = transres_request_util.getLatestInvoice(transresRequest) %}
+            {% if latestInvoice and latestInvoice.oid %}
+                {{ transresRequestMacros.unpaidModal(latestInvoice) }}
+            {% endif %}
 
             {% if count is odd %}
                 {% set trclassname = "table-row-separator-gray" %}
@@ -73,6 +88,13 @@
                 <td>
                     <a href="{{ path(translationalresearch_sitename~'_request_show', { 'id': transresRequest.id }) }}" target="_blank">{{ transresRequest.oid }}</a>
                 </td>
+
+                {% if not project %}
+                    <td class="rowlink-skip">
+                        <a href="{{ path(translationalresearch_sitename~'_project_show', { 'id': transresRequest.project.id }) }}"
+                           target="_blank">{{ transresRequest.project.getOid() }}</a>
+                    </td>
+                {% endif %}
 
                 <td class="rowlink-skip">
                     {#{{ principalInvestigator }}<br>#}
@@ -121,6 +143,12 @@
                            href="{{ path(translationalresearch_sitename~'_invoice_index', { 'id': transresRequest.id }) }} "
                         >{{ invoicesCount }}</a>
                     {% endif %}
+                </td>
+
+                <td>
+                {% if latestInvoice and latestInvoice.oid %}
+                    {{ latestInvoice.status }}
+                {% endif %}
                 </td>
 
                 {#Invoices #}
@@ -191,6 +219,85 @@
                                 >Create New Invoices</a>
                             </li>
 
+                            {% if latestInvoice and latestInvoice.oid %}
+
+                                <li class="divider"></li>
+
+                                <li>
+                                    <a href="{{ path('translationalresearch_invoice_show', {'oid': latestInvoice.oid }) }}">Show Latest Invoice</a>
+                                </li>
+
+                                {% if latestInvoice.latestVersion and is_granted('ROLE_TRANSRES_BILLING_ADMIN') %}
+                                    <li>
+                                        <a href="{{ path('translationalresearch_invoice_edit', {'oid': latestInvoice.oid }) }}">Edit Latest Invoice</a>
+                                    </li>
+
+                                    {% if latestInvoice.documents|length > 0 %}
+                                        <li>
+                                            <a target="_blank"
+                                               href="{{ path('translationalresearch_invoice_download_recent', {'oid': latestInvoice.oid }) }}"
+                                            >Show The Latest PDF Invoice</a>
+                                        </li>
+                                    {% endif %}
+
+                                    {% if latestInvoice.documents|length > 0 %}
+                                        {% set generateLabel = "Regenerate Latest Invoice PDF" %}
+                                    {% else %}
+                                        {% set generateLabel = "Generate Latest Invoice PDF" %}
+                                    {% endif %}
+                                    <li>
+                                        <a
+                                                general-data-confirm="Are you sure you want to {{ generateLabel|lower }} for this invoice {{ latestInvoice.oid }}?"
+                                                href="{{ path('translationalresearch_invoice_generate_pdf', {'oid': latestInvoice.oid }) }}"
+                                        >{{ generateLabel }}</a>
+                                    </li>
+
+                                    {% if latestInvoice.documents|length > 0 %}
+                                        <li>
+                                            {#Send the Latest Invoice PDF by Email#}
+                                            <a
+                                                    general-data-confirm="Are you sure you want to send the latest invoice {{ latestInvoice.oid }} pdf by email to PI?"
+                                                    href="{{ path('translationalresearch_invoice_send_pdf_email', {'oid': latestInvoice.oid }) }}"
+                                            >Send the Latest Invoice PDF by Email to PI</a>
+                                        </li>
+                                    {% endif %}
+
+                                    <hr>
+                                    {#Add actions in the invoice list - "Change status to ..."#}
+                                    {% set statuses = transres_request_util.getInvoiceStatuses() %}
+                                    {% for status in statuses %}
+                                        {% if status != latestInvoice.status %}
+                                            {% if status == "Paid Partially" %}
+                                                <li>
+                                                    <a href="#" data-toggle="modal" data-target="#modal_update_invoice_{{ latestInvoice.oid }}"
+                                                    >Change the Latest Invoice Status to {{ status }} (update 'Paid' value)</a>
+                                                </li>
+                                            {% else %}
+                                                <li>
+                                                    <a
+                                                            general-data-confirm="Are you sure you want to change the status of this invoice {{ latestInvoice.oid }} to {{ status }}?"
+                                                            href="{{ path('translationalresearch_invoice_change_status', {'oid':latestInvoice.oid, 'status':status }) }}"
+                                                    >Change the Latest Invoice Status to {{ status }}</a>
+                                                </li>
+                                            {% endif %}
+
+                                        {% endif %}
+                                    {% endfor %}
+                                    <hr>
+
+                                {% endif %}
+
+                                {#{% if latestInvoice.documents|length > 0 %}#}
+                                    {#<li>#}
+                                        {#<a target="_blank"#}
+                                           {#href="{{ path('translationalresearch_invoice_download_recent', {'oid': latestInvoice.oid }) }}"#}
+                                        {#>Show The Latest PDF Invoice</a>#}
+                                    {#</li>#}
+                                {#{% endif %}#}
+
+                            {% endif %}
+
+
                         </ul>
 
                     </div>
@@ -214,13 +321,15 @@
     {#{{ render(controller('OlegTranslationalResearchBundle:Project:threadComments', { 'id': "3-9-committee_review" })) }}#}
     {#{% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': "3-9-committee_review"} %}#}
 
-    {% if isRequestCanBeCreated == 1 %}
-        <br>
-        <p>
-            <a class="btn btn-primary" href="{{ path(translationalresearch_sitename~'_request_new', {'id':project.id}) }}"
-            >Create a new Request</a>
-        </p>
-        <br>
+    {% if project %}
+        {% if isRequestCanBeCreated == 1 %}
+            <br>
+            <p>
+                <a class="btn btn-primary" href="{{ path(translationalresearch_sitename~'_request_new', {'id':project.id}) }}"
+                >Create a new Request</a>
+            </p>
+            <br>
+        {% endif %}
     {% endif %}
 
 {% endblock %}
@@ -229,6 +338,7 @@
 {% block additionaljs %}
     {% javascripts
     '@OlegTranslationalResearchBundle/Resources/public/form/js/transres-filterbtn.js'
+    '@OlegTranslationalResearchBundle/Resources/public/form/js/invoice.js'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}

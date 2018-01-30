@@ -288,10 +288,10 @@
         </p>
 
         {% if invoice.documents|length > 0 %}
-            {#Send the Most Recent Invoice PDF by Email#}
+            {#Send the Latest Invoice PDF by Email#}
             <p>
             <a class="btn btn-warning" href="{{ path('translationalresearch_invoice_send_pdf_email', {'oid': invoice.oid }) }}"
-            >Send the Most Recent Invoice PDF by Email to PI</a>
+            >Send the Latest Invoice PDF by Email to PI</a>
             </p>
         {% endif %}
 

@@ -528,7 +528,7 @@ class RequestController extends Controller
         $startDate = $filterform['startDate']->getData();
         $endDate = $filterform['endDate']->getData();
         $principalInvestigators = $filterform['principalInvestigators']->getData();
-        $accountNumber = $filterform['accountNumber']->getData();
+        //$accountNumber = $filterform['accountNumber']->getData();
         $billingContact = $filterform['billingContact']->getData();
         $fundingNumber = $filterform['fundingNumber']->getData();
         //////// EOF create filter //////////
@@ -647,11 +647,11 @@ class RequestController extends Controller
             $advancedFilter++;
         }
 
-        if( $accountNumber ) {
-            $dql->andWhere("transresRequest.fundedAccountNumber = :fundedAccountNumber");
-            $dqlParameters["fundedAccountNumber"] = $accountNumber;
-            $advancedFilter++;
-        }
+//        if( $accountNumber ) {
+//            $dql->andWhere("transresRequest.fundedAccountNumber = :fundedAccountNumber");
+//            $dqlParameters["fundedAccountNumber"] = $accountNumber;
+//            $advancedFilter++;
+//        }
         
         if( $fundingNumber ) {
             $dql->andWhere("transresRequest.fundedAccountNumber LIKE :fundedAccountNumber");
@@ -718,11 +718,11 @@ class RequestController extends Controller
     }
 
     /**
-     * Finds and displays all my requests
+     * Finds and displays all my requests (all-requests.html.twig)
      *
      * @Route("/my-requests", name="translationalresearch_my_requests")
      * @Route("/all-requests", name="translationalresearch_all_requests")
-     * @Template("OlegTranslationalResearchBundle:Request:all-requests.html.twig")
+     * @Template("OlegTranslationalResearchBundle:Request:index.html.twig")
      * @Method("GET")
      */
     public function myRequestsAction(Request $request)
@@ -731,7 +731,7 @@ class RequestController extends Controller
             return $this->redirect($this->generateUrl($this->container->getParameter('translationalresearch.sitename') . '-nopermission'));
         }
 
-        $transresUtil = $this->container->get('transres_util');
+        //$transresUtil = $this->container->get('transres_util');
         $transresRequestUtil = $this->container->get('transres_request_util');
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -764,8 +764,9 @@ class RequestController extends Controller
         $startDate = $filterform['startDate']->getData();
         $endDate = $filterform['endDate']->getData();
         $principalInvestigators = $filterform['principalInvestigators']->getData();
-        $accountNumber = $filterform['accountNumber']->getData();
+        //$accountNumber = $filterform['accountNumber']->getData();
         $billingContact = $filterform['billingContact']->getData();
+        $fundingNumber = $filterform['fundingNumber']->getData();
 
         if( isset($filterform['submitter']) ) {
             $submitter = $filterform['submitter']->getData();
@@ -864,9 +865,15 @@ class RequestController extends Controller
             $advancedFilter++;
         }
 
-        if( $accountNumber ) {
-            $dql->andWhere("transresRequest.fundedAccountNumber = :fundedAccountNumber");
-            $dqlParameters["fundedAccountNumber"] = $accountNumber;
+//        if( $accountNumber ) {
+//            $dql->andWhere("transresRequest.fundedAccountNumber = :fundedAccountNumber");
+//            $dqlParameters["fundedAccountNumber"] = $accountNumber;
+//            $advancedFilter++;
+//        }
+
+        if( $fundingNumber ) {
+            $dql->andWhere("transresRequest.fundedAccountNumber LIKE :fundedAccountNumber");
+            $dqlParameters["fundedAccountNumber"] = "%".$fundingNumber."%";
             $advancedFilter++;
         }
 
@@ -926,6 +933,7 @@ class RequestController extends Controller
 
         return array(
             'transresRequests' => $transresRequests,
+            'project' => null,
             'filterform' => $filterform->createView(),
             'title' => $title,
             'requestTotalFeeHtml' => null, //$requestTotalFeeHtml

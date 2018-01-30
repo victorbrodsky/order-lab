@@ -135,11 +135,11 @@ class FilterRequestType extends AbstractType
             'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'To Submission Date'), //'title'=>'End Year', 'data-toggle'=>'tooltip',
         ));
 
-        $builder->add('accountNumber', TextType::class, array(
-            'required'=>false,
-            'label' => false,
-            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'Search by IRB number'),
-        ));
+//        $builder->add('accountNumber', TextType::class, array(
+//            'required'=>false,
+//            'label' => false,
+//            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'Search by IRB number'),
+//        ));
 
         $builder->add('billingContact', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',

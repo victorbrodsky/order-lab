@@ -21,25 +21,25 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 class TransResSiteParametersController extends Controller
 {
 
-    /**
-     * Lists all SiteParameters entities.
-     *
-     * @Route("/list/{specialtyStr}", name="translationalresearch_standalone_siteparameters_index")
-     * @Template("OlegTranslationalResearchBundle:SiteParameters:index.html.twig")
-     * @Method("GET")
-     */
-    public function indexAction(Request $request, $specialtyStr)
-    {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
-        }
-
-
-
-        return array(
-            //
-        );
-    }
+//    /**
+//     * Lists all SiteParameters entities.
+//     *
+//     * @Route("/list/{specialtyStr}", name="translationalresearch_standalone_siteparameters_index")
+//     * @Template("OlegTranslationalResearchBundle:SiteParameters:index.html.twig")
+//     * @Method("GET")
+//     */
+//    public function indexAction(Request $request, $specialtyStr)
+//    {
+//        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
+//            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+//        }
+//
+//
+//
+//        return array(
+//            //
+//        );
+//    }
 
 //    /**
 //     * Creates a new SiteParameters entity.
