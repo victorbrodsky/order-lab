@@ -1176,12 +1176,8 @@ class AccessRequestController extends Controller
 
         /////////// Filter ////////////
         $siteRoles = $em->getRepository('OlegUserdirectoryBundle:User')->findRolesBySiteAndPartialRoleName($this->siteName,"");
-        $siteRolesArr = array();
-        foreach($siteRoles as $siteRole) {
-            $siteRolesArr[$siteRole->getAlias()] = $siteRole->getId();
-        }
         $params = array(
-            'roles'=>$siteRolesArr,
+            'roles'=>$siteRoles,
         );
         $filterform = $this->createForm(AuthorizedUserFilterType::class, null,array(
             'method' => 'GET',
@@ -1189,6 +1185,7 @@ class AccessRequestController extends Controller
         ));
         $filterform->handleRequest($request);
         $roles = $filterform['roles']->getData();
+        $condition = $filterform['condition']->getData();
         //echo "roles=".implode(", ",$roles)."<br>";
         /////////// EOF Filter ////////////
 
@@ -1201,7 +1198,21 @@ class AccessRequestController extends Controller
         $form = $this->createForm(SimpleUserType::class,null,array('form_custom_value'=>$params));
 
         $userSecUtil = $this->get('user_security_utility');
-        $query = $userSecUtil->getQueryUserBySite( $this->siteName );
+        //$query = $userSecUtil->getQueryUserBySite( $this->siteName );
+
+        $dql = $userSecUtil->getDqlUserBySite($this->siteName);
+
+        if( $roles ) {
+            $rolesArr = array();
+            foreach ($roles as $role) {
+                $rolesArr[] = "user.roles LIKE " . "'%" . $role->getName() . "%'";
+            }
+            //$rolesStr = implode(" OR ",$rolesArr);
+            $rolesStr = implode(" $condition ",$rolesArr);
+            $dql->andWhere($rolesStr);
+        }
+
+        $query = $em->createQuery($dql);
 
         //echo "query=".$query->getSql()."<br>";
         //$users = $query->getResult();

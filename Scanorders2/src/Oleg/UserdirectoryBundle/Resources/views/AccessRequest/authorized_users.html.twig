@@ -50,7 +50,10 @@
         <div class="well form-search">
             {{ form_start(filterform) }}
                 <div class="row">
-                    <div class="col-xs-10" align="right">
+                    <div class="col-xs-2" align="right">
+                        {{ form_widget(filterform.condition) }}
+                    </div>
+                    <div class="col-xs-8" align="right">
                         {{ form_widget(filterform.roles) }}
                     </div>
                     <div class="col-xs-2" align="left">

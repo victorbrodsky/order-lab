@@ -20,6 +20,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
 use Oleg\UserdirectoryBundle\Form\PerSiteSettingsType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -43,12 +44,25 @@ class AuthorizedUserFilterType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        $builder->add('roles', ChoiceType::class, array(
-            'choices' => $this->params['roles'],
-            //'choices_as_values' => true,
-            'label' => false,   //ucfirst($this->params['sitename']) . ' Role(s):',
-            'attr' => array('class' => 'combobox', 'placeholder'=>'Search by Roles'),
+        $builder->add('roles', EntityType::class, array(
+            'class' => 'OlegUserdirectoryBundle:Roles',
+            'label'=>false,
+            'choice_label' => 'alias',
+            'required'=> false,
             'multiple' => true,
+            'choices' => $this->params['roles'],
+            'attr' => array('class' => 'combobox', 'placeholder'=>'Search by Roles'),
+        ));
+
+        $builder->add('condition', ChoiceType::class, array(
+            'label'=>false,
+            'required'=> true,
+            'multiple' => false,
+            'choices' => array(
+                'AND' => 'AND',
+                'OR' => 'OR',
+            ),
+            'attr' => array('class' => 'combobox', 'placeholder'=>'Search Condition'),
         ));
 
     }
