@@ -1,6 +1,7 @@
 {% extends "OlegTranslationalResearchBundle::Default/base.html.twig" %}
 
-{% import "OlegTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}
+{#{% import "OlegTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}#}
+{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
 {% block title %}
     {{ title }}
@@ -12,28 +13,94 @@
     </h4>
     <br>
 
-    <table class="records_list table table-condensed text-left">
-        <thead>
-            <tr>
-                PI
-            </tr>
-            <tr>
-                # Projects
-            </tr>
-        </thead>
-        <tbody data-link="row">
-        {% for info in infos %}
+    {#<table class="records_list table table-condensed text-left">#}
+        {#<thead>#}
+            {#<tr>#}
+                {#PI#}
+            {#</tr>#}
+            {#<tr>#}
+                {## Projects#}
+            {#</tr>#}
+        {#</thead>#}
+        {#<tbody data-link="row">#}
+        {#{% for info in infos %}#}
 
-            <tr>
-                <td class="rowlink-skip">
-                    {{ info }}
-                </td>
-                <td class="rowlink-skip">
-                    info
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            {#<tr>#}
+                {#<td class="rowlink-skip">#}
+                    {#{{ info }}#}
+                {#</td>#}
+                {#<td class="rowlink-skip">#}
+                    {#info#}
+                {#</td>#}
+            {#</tr>#}
+        {#{% endfor %}#}
+        {#</tbody>#}
+    {#</table>#}
+
+    <div class="well form-search">
+        {{ form_start(filterform) }}
+        <div class="row">
+            <div class="col-xs-4">
+                {{ formmacros.fielddate(filterform.startDate,'allow-future-date') }}
+            </div>
+            <div class="col-xs-4">
+                {{ formmacros.fielddate(filterform.endDate,'allow-future-date') }}
+            </div>
+            <div class="col-xs-2">
+                <button id="filter-btn" type="submit" class="btn btn-default">Filter</button>
+            </div>
+        </div>
+        {{ form_end(filterform) }}
+    </div>
+
+
+    {#<div class="chart"></div>#}
+
+    <div id="myDiv" align="center"><!-- Plotly chart will be drawn inside this DIV --></div>
 
 {% endblock %}
+
+
+{% block additionaljs %}
+
+    {% javascripts
+    '@OlegUserdirectoryBundle/Resources/public/charts/plotly/plotly.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    {#<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>#}
+    {#<script src="https://cdnjs.cloudflare.com/ajax/libs/numeric/1.2.6/numeric.min.js"></script>#}
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+
+//            var data = [{
+//                values: [19, 26, 55],
+//                labels: ['Residential', 'Non-Residential', 'Utility'],
+//                type: 'pie'
+//            }];
+//            var layout = {
+//                height: 400,
+//                width: 500
+//            };
+
+            var layout = {{ layoutArray|json_encode|raw }};
+
+            var data = {{ dataArray|json_encode|raw }};
+            console.log("data:");
+            console.log(data);
+
+            Plotly.newPlot('myDiv', data, layout);
+
+        });
+    </script>
+
+{% endblock %}
+
+
+{#{% block additionalcss %}#}
+    {#<style type="text/css">#}
+    {#</style>#}
+{#{% endblock %}#}
+
