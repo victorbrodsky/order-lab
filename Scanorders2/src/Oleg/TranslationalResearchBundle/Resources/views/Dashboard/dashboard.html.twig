@@ -89,7 +89,7 @@
 
             var charts = {{ chartsArray|json_encode|raw }};
 
-            if( charts.length() == 0 ) {
+            if( charts.length == 0 ) {
                 document.getElementById("charts").innerHTML = "No Data to Display";
             }
 
