@@ -56,7 +56,9 @@
 
     {#<div class="chart"></div>#}
 
-    <div id="myDiv" align="center"><!-- Plotly chart will be drawn inside this DIV --></div>
+    <div id="charts" align="center">
+        <!-- Plotly chart will be drawn inside this DIV -->
+    </div>
 
 {% endblock %}
 
@@ -85,13 +87,28 @@
 //                width: 500
 //            };
 
-            var layout = {{ layoutArray|json_encode|raw }};
+            var charts = {{ chartsArray|json_encode|raw }};
 
-            var data = {{ dataArray|json_encode|raw }};
-            console.log("data:");
-            console.log(data);
+            for( var i = 0; i < charts.length; i++ ) {
 
-            Plotly.newPlot('myDiv', data, layout);
+                var divId = 'chart-'+i;
+                var div = document.createElement("div");
+                div.setAttribute('id', divId);
+                document.getElementById("charts").appendChild(div);
+
+                var layout = charts[i]['layout'];
+                var data = charts[i]['data'];
+
+                //var layout = {{ layoutArray|json_encode|raw }};
+                //var data = {{ dataArray|json_encode|raw }};
+
+                console.log("data:");
+                console.log(data);
+
+                Plotly.newPlot(divId, data, layout);
+            }
+
+
 
         });
     </script>
