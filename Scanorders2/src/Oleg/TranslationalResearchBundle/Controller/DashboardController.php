@@ -88,11 +88,6 @@ class DashboardController extends Controller
 //            }];
 
         $chartsArray = array();
-        $dataArray = array();
-        $chartDataArray = array();
-        $labels = array();
-        $values = array();
-        $type = 'pie';
 
         //$labels = array('Residential', 'Non-Residential', 'Utility');
         //$values = array(19, 26, 55);
@@ -164,6 +159,10 @@ class DashboardController extends Controller
             //echo "fundedCount=".$fundedCount."<br>";
             //echo "unfundedCount=".$unfundedCount."<br>";
 
+            $dataArray = array();
+            $chartDataArray = array();
+            $type = 'pie';
+
             $labels = array('Number of Funded Projects','Number of Un-Funded Projects');
             $values = array($fundedCount,$unfundedCount);
 
@@ -194,6 +193,11 @@ class DashboardController extends Controller
     }
 
     public function addChart( $chartsArray, $dataArr, $title, $type='pie' ) {
+
+        if( count($dataArr) == 0 ) {
+            return $chartsArray;
+        }
+
         $layoutArray['title'] = $title;
 
         foreach( $dataArr as $name => $value ) {
