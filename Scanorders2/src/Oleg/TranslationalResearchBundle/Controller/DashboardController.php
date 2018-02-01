@@ -36,8 +36,6 @@ class DashboardController extends Controller
 
         //////////// Filter ////////////
         //default date range from today to 1 year back
-//        $today = new \DateTime();
-//        $todayStr = $today->format('m/d/Y');
         $params = array(
             //'startDate' => $today,
             //'endDate' => $today
@@ -49,33 +47,6 @@ class DashboardController extends Controller
         $filterform->handleRequest($request);
         //////////// EOF Filter ////////////
 
-        //$startDate = $filterform['startDate']->getData();
-        //$endDate = $filterform['endDate']->getData();
-
-//        $startDate = $filterform['startDate']->getData();
-//        if( isset($startDate) ) {
-//            echo "startDate=".$filterform['startDate']->format("m/d/Y")."<br>";
-//            exit('dates are set');
-//        } else {
-//            exit('not set');
-//        }
-//        if( isset($filterform['startDate']) || isset($filterform['endDate']) ) {
-//            //dates are set
-//            //$startDate = $filterform['startDate']->getData();
-//            //$endDate = $filterform['endDate']->getData();
-//            //echo "startDate=".$startDate->format("m/d/Y")."<br>";
-//            //exit('dates are set');
-//        } else {
-//            //exit('not set');
-//            return $this->redirectToRoute(
-//                $routeName,
-//                array(
-//                    'filter[startDate]' => $todayStr,
-//                    'filter[endDate]' => $todayStr,
-//                )
-//            );
-//        }
-
         $layoutArray = array(
             'height' => 600,
             'width' =>  600,
@@ -86,11 +57,10 @@ class DashboardController extends Controller
 //                labels: ['Residential', 'Non-Residential', 'Utility'],
 //                type: 'pie'
 //            }];
-
-        $chartsArray = array();
-
         //$labels = array('Residential', 'Non-Residential', 'Utility');
         //$values = array(19, 26, 55);
+
+        $chartsArray = array();
 
         $projects = $this->getProjectPis($filterform);
 
@@ -126,7 +96,7 @@ class DashboardController extends Controller
             }
 
             //Projects per PI
-            $chartsArray = $this->addChart( $chartsArray, $piTotalArr, "Number of Projects per PI");
+            $chartsArray = $this->addChart( $chartsArray, $piProjectCountArr, "Number of Projects per PI");
 
             //Total per PI
             $chartsArray = $this->addChart( $chartsArray, $piTotalArr, "Total($) of Projects per PI");
