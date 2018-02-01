@@ -21,7 +21,7 @@ class DashboardController extends Controller
     /**
      * @Route("/pi-level/", name="translationalresearch_dashboard_pilevel")
      * @Route("/funded-level/", name="translationalresearch_dashboard_fundedlevel")
-     * @Template("OlegTranslationalResearchBundle:Dashboard:pilevel.html.twig")
+     * @Template("OlegTranslationalResearchBundle:Dashboard:dashboard.html.twig")
      */
     public function piLevelAction( Request $request ) {
 

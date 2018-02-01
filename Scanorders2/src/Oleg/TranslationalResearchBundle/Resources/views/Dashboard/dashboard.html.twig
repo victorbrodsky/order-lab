@@ -89,6 +89,10 @@
 
             var charts = {{ chartsArray|json_encode|raw }};
 
+            if( charts.length() == 0 ) {
+                document.getElementById("charts").innerHTML = "No Data to Display";
+            }
+
             for( var i = 0; i < charts.length; i++ ) {
 
                 var divId = 'chart-'+i;
