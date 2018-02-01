@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Validator\Constraints\Date;
 
 
 /**
@@ -34,7 +35,13 @@ class DashboardController extends Controller
         $infos = array();
 
         //////////// Filter ////////////
-        $params = array();
+        //default date range from today to 1 year back
+//        $today = new \DateTime();
+//        $todayStr = $today->format('m/d/Y');
+        $params = array(
+            //'startDate' => $today,
+            //'endDate' => $today
+        );
         $filterform = $this->createForm(FilterDashboardType::class, null,array(
             'method' => 'GET',
             'form_custom_value'=>$params
@@ -42,9 +49,36 @@ class DashboardController extends Controller
         $filterform->handleRequest($request);
         //////////// EOF Filter ////////////
 
+        //$startDate = $filterform['startDate']->getData();
+        //$endDate = $filterform['endDate']->getData();
+
+//        $startDate = $filterform['startDate']->getData();
+//        if( isset($startDate) ) {
+//            echo "startDate=".$filterform['startDate']->format("m/d/Y")."<br>";
+//            exit('dates are set');
+//        } else {
+//            exit('not set');
+//        }
+//        if( isset($filterform['startDate']) || isset($filterform['endDate']) ) {
+//            //dates are set
+//            //$startDate = $filterform['startDate']->getData();
+//            //$endDate = $filterform['endDate']->getData();
+//            //echo "startDate=".$startDate->format("m/d/Y")."<br>";
+//            //exit('dates are set');
+//        } else {
+//            //exit('not set');
+//            return $this->redirectToRoute(
+//                $routeName,
+//                array(
+//                    'filter[startDate]' => $todayStr,
+//                    'filter[endDate]' => $todayStr,
+//                )
+//            );
+//        }
+
         $layoutArray = array(
-            'height' => 800,
-            'width' =>  800,
+            'height' => 600,
+            'width' =>  600,
         );
 
 //            var data = [{
@@ -85,7 +119,7 @@ class DashboardController extends Controller
                     }
                     $piProjectCountArr[$userName] = $count;
 
-                    //Total per PI
+                    //Total($) per PI
                     $invoicesInfos = $transresUtil->getInvoicesInfosByProject($project);
                     if (isset($piTotalArr[$userName])) {
                         $total = $piTotalArr[$userName] + $invoicesInfos['total'];
@@ -97,48 +131,10 @@ class DashboardController extends Controller
             }
 
             //Projects per PI
-            $layoutArray['title'] = "Number of Projects per PI";
-
-            foreach ($piProjectCountArr as $name => $value) {
-                $labels[] = $name;
-                $values[] = $value;
-            }
-
-            $chartDataArray['values'] = $values;
-            $chartDataArray['labels'] = $labels;
-            $chartDataArray['type'] = $type;
-            $dataArray[] = $chartDataArray;
-
-            //$chartsArray['layout'] = $layoutArray;
-            //$chartsArray['data'] = $dataArray;
-
-            $chartsArray[] = array(
-                'layout' => $layoutArray,
-                'data' => $dataArray
-            );
-            //Projects per PI
+            $chartsArray = $this->addChart( $chartsArray, $piTotalArr, "Number of Projects per PI");
 
             //Total per PI
-            $layoutArray['title'] = "Total($) of Projects per PI";
-
-            foreach ($piTotalArr as $name => $value) {
-                $labels[] = $name;
-                $values[] = $value;
-            }
-
-            $chartDataArray['values'] = $values;
-            $chartDataArray['labels'] = $labels;
-            $chartDataArray['type'] = $type;
-            $dataArray[] = $chartDataArray;
-
-            //$chartsArray['layout'] = $layoutArray;
-            //$chartsArray['data'] = $dataArray;
-
-            $chartsArray[] = array(
-                'layout' => $layoutArray,
-                'data' => $dataArray
-            );
-            //Total per PI
+            $chartsArray = $this->addChart( $chartsArray, $piTotalArr, "Total($) of Projects per PI");
 
         }
 
@@ -155,6 +151,15 @@ class DashboardController extends Controller
                 } else {
                     $unfundedCount++;
                 }
+
+                //Number of partially paid to Total Invoices
+                $invoicesInfos = $transresUtil->getInvoicesInfosByProject($project);
+                if (isset($piTotalArr[$userName])) {
+                    $total = $piTotalArr[$userName] + $invoicesInfos['total'];
+                } else {
+                    $total = $invoicesInfos['total'];
+                }
+                $piTotalArr[$userName] = $total;
             }
             //echo "fundedCount=".$fundedCount."<br>";
             //echo "unfundedCount=".$unfundedCount."<br>";
@@ -188,6 +193,30 @@ class DashboardController extends Controller
         );
     }
 
+    public function addChart( $chartsArray, $dataArr, $title, $type='pie' ) {
+        $layoutArray['title'] = $title;
+
+        foreach( $dataArr as $name => $value ) {
+            $labels[] = $name;
+            $values[] = $value;
+        }
+
+        $chartDataArray = array();
+        $chartDataArray['values'] = $values;
+        $chartDataArray['labels'] = $labels;
+        $chartDataArray['type'] = $type;
+        $dataArray[] = $chartDataArray;
+
+        //$chartsArray['layout'] = $layoutArray;
+        //$chartsArray['data'] = $dataArray;
+
+        $chartsArray[] = array(
+            'layout' => $layoutArray,
+            'data' => $dataArray
+        );
+
+        return $chartsArray;
+    }
 
 //    /**
 //     * @Route("/funded-level/", name="translationalresearch_dashboard_fundedlevel")
