@@ -198,11 +198,19 @@ class DashboardController extends Controller
             return $chartsArray;
         }
 
+        $labels = array();
+        $values = array();
         $layoutArray['title'] = $title;
 
         foreach( $dataArr as $name => $value ) {
-            $labels[] = $name;
-            $values[] = $value;
+            if( $value ) {
+                $labels[] = $name;
+                $values[] = $value;
+            }
+        }
+
+        if( count($values) == 0 ) {
+            return $chartsArray;
         }
 
         $chartDataArray = array();
