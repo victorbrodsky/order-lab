@@ -67,7 +67,7 @@ class DashboardController extends Controller
         //Projects per PIs
         if( $routeName == "translationalresearch_dashboard_pilevel" ) {
 
-            $title = "Dashboard: Projects per PI";
+            $title = "Dashboard: PI Level";
             $piProjectCountArr = array();
             $piTotalArr = array();
 
@@ -104,7 +104,7 @@ class DashboardController extends Controller
         }
 
         if( $routeName == "translationalresearch_dashboard_fundedlevel" ) {
-            $title = "Dashboard: Funded vs Un-Funded Projects";
+            $title = "Dashboard: Project Level";
             $layoutArray['title'] = "Number of Funded vs Un-Funded Projects";
             $nameValueArr = array();
             $fundedCount = 0;
