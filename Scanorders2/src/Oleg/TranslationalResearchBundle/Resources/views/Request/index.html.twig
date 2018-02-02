@@ -262,28 +262,33 @@
                                         </li>
                                     {% endif %}
 
-                                    <hr>
+                                    {#<hr>#}
                                     {#Add actions in the invoice list - "Change status to ..."#}
-                                    {% set statuses = transres_request_util.getInvoiceStatuses() %}
-                                    {% for status in statuses %}
-                                        {% if status != latestInvoice.status %}
-                                            {% if status == "Paid Partially" %}
-                                                <li>
-                                                    <a href="#" data-toggle="modal" data-target="#modal_update_invoice_{{ latestInvoice.oid }}"
-                                                    >Change the Latest Invoice Status to {{ status }} (update 'Paid' value)</a>
-                                                </li>
-                                            {% else %}
-                                                <li>
-                                                    <a
-                                                            general-data-confirm="Are you sure you want to change the status of this invoice {{ latestInvoice.oid }} to {{ status }}?"
-                                                            href="{{ path('translationalresearch_invoice_change_status', {'oid':latestInvoice.oid, 'status':status }) }}"
-                                                    >Change the Latest Invoice Status to {{ status }}</a>
-                                                </li>
-                                            {% endif %}
+                                    {#{% set statuses = transres_request_util.getInvoiceStatuses() %}#}
+                                    {#{% for status in statuses %}#}
+                                        {#{% if status != latestInvoice.status %}#}
+                                            {#{% if status == "Paid Partially" %}#}
+                                                {#<li>#}
+                                                    {#<a href="#" data-toggle="modal" data-target="#modal_update_invoice_{{ latestInvoice.oid }}"#}
+                                                    {#>Change the Latest Invoice Status to {{ status }} (update 'Paid' value)</a>#}
+                                                {#</li>#}
+                                            {#{% else %}#}
+                                                {#<li>#}
+                                                    {#<a#}
+                                                            {#general-data-confirm="Are you sure you want to change the status of this invoice {{ latestInvoice.oid }} to {{ status }}?"#}
+                                                            {#href="{{ path('translationalresearch_invoice_change_status', {'oid':latestInvoice.oid, 'status':status }) }}"#}
+                                                    {#>Change the Latest Invoice Status to {{ status }}</a>#}
+                                                {#</li>#}
+                                            {#{% endif %}#}
 
-                                        {% endif %}
-                                    {% endfor %}
-                                    <hr>
+                                        {#{% endif %}#}
+                                    {#{% endfor %}#}
+                                    {#<hr>#}
+
+                                    <li>
+                                        <a href="#" data-toggle="modal" data-target="#modal_update_invoice_{{ latestInvoice.oid }}"
+                                        >Update Invoice Status</a>
+                                    </li>
 
                                 {% endif %}
 

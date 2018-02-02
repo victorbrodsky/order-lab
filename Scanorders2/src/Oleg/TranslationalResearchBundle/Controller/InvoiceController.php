@@ -1197,6 +1197,7 @@ class InvoiceController extends Controller
         $oid = trim( $request->get('invoiceOid') );
         $paid = trim( $request->get('paid') );
         $comment = trim( $request->get('comment') );
+        $status = trim( $request->get('status') );
 
         $invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($oid);
         if( !$invoice ) {
@@ -1225,8 +1226,8 @@ class InvoiceController extends Controller
         $invoice->setDue($due);
 
         //change-status
-        $status = "Paid Partially";
-        $invoice->setStatus("Paid Partially");
+        //$status = "Paid Partially";
+        $invoice->setStatus($status);
 
         $em->persist($invoice);
         $em->flush();
