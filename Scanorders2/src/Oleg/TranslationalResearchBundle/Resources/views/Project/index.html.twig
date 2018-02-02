@@ -14,7 +14,7 @@
     </h4>
     <p>
         <a href="{{ path('translationalresearch_download_projects_excel',{'ids':transres_util.getProjectsIdsStr(allPrjects)}) }}">
-            <i class="fa fa-file-excel-o"></i> Import Resulting Projects Summaries to Excel</a>
+            <i class="fa fa-file-excel-o"></i> Export Resulting Projects Summaries to Excel</a>
     </p>
 
     <div class="well form-search">
@@ -271,7 +271,7 @@
 
                             <li>
                                 <a href="{{ path('translationalresearch_download_projects_excel',{'ids':project.id}) }}">
-                                    <i class="fa fa-file-excel-o"></i> Import Project Summaries to Excel</a>
+                                    <i class="fa fa-file-excel-o"></i> Export Project Summaries to Excel</a>
                             </li>
 
                             {#{% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}#}
