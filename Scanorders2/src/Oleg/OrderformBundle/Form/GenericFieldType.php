@@ -18,6 +18,7 @@
 namespace Oleg\OrderformBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -46,11 +47,24 @@ class GenericFieldType extends AbstractType
             $attr = $this->attr;
         }
 
-        $builder->add('field', $this->genAttr['type'], array(
-            'label' => $this->genAttr['label'],
-            'required' => false,
-            'attr' =>$attr
-        ));
+        if( $this->genAttr['type'] == "text" ) {
+            $builder->add('field', TextType::class, array(
+                'label' => $this->genAttr['label'],
+                'required' => false,
+                'attr' =>$attr
+            ));
+        } else {
+            $builder->add('field', null, array(
+                'label' => $this->genAttr['label'],
+                'required' => false,
+                'attr' =>$attr
+            ));
+        }
+//        $builder->add('field', $this->genAttr['type'], array(
+//            'label' => $this->genAttr['label'],
+//            'required' => false,
+//            'attr' =>$attr
+//        ));
 
         $builder->add('others', ArrayFieldType::class, array(
             'data_class' => $this->genAttr['class'],

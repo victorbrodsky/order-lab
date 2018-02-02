@@ -801,6 +801,7 @@ class RequestController extends Controller
         $dql->leftJoin('transresRequest.submitter','submitter');
         $dql->leftJoin('transresRequest.project','project');
         $dql->leftJoin('submitter.infos','submitterInfos');
+        $dql->leftJoin('transresRequest.principalInvestigators','principalInvestigators');
 
         $dqlParameters = array();
 
