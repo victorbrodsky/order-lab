@@ -449,7 +449,19 @@
                             {{ form_widget(filterform.fundingNumber) }}
                         </div>
                         <div class="col-xs-4">
+                            {{ form_widget(filterform.fundingType) }}
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <div class="row">
+                        <div class="col-xs-4">
                             {{ form_widget(filterform.comment,{'attr': {'placeholder': 'Comment Search'}}) }}
+                        </div>
+                        <div class="col-xs-4">
+                        </div>
+                        <div class="col-xs-4">
                         </div>
                     </div>
 
@@ -542,6 +554,7 @@
                             {{ form_widget(filterform.fundingNumber) }}
                         </div>
                         <div class="col-xs-4">
+                            {{ form_widget(filterform.fundingType) }}
                         </div>
                     </div>
 

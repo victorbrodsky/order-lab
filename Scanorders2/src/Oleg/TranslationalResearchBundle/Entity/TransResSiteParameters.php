@@ -91,14 +91,28 @@ class TransResSiteParameters {
     private $transresLogos;
 
     /**
+     * Email body for notification email when Invoice PDF is sent to PI
      * @ORM\Column(type="text", nullable=true)
      */
     private $transresNotificationEmail;
 
     /**
+     * Email subject for notification email when Invoice PDF is sent to PI
      * @ORM\Column(type="text", nullable=true)
      */
     private $transresNotificationEmailSubject;
+
+    /**
+     * Email body for notification email is being to send to the Request's PI when Request status is changed to "Completed and Notified"
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $requestCompletedNotifiedEmail;
+
+    /**
+     * Email subject for notification email is being to send to to the Request's PI when Request status is changed to "Completed and Notified"
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $requestCompletedNotifiedEmailSubject;
 
 
 
@@ -290,6 +304,39 @@ class TransResSiteParameters {
         $this->transresNotificationEmailSubject = $transresNotificationEmailSubject;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getRequestCompletedNotifiedEmail()
+    {
+        return $this->requestCompletedNotifiedEmail;
+    }
+
+    /**
+     * @param mixed $requestCompletedNotifiedEmail
+     */
+    public function setRequestCompletedNotifiedEmail($requestCompletedNotifiedEmail)
+    {
+        $this->requestCompletedNotifiedEmail = $requestCompletedNotifiedEmail;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRequestCompletedNotifiedEmailSubject()
+    {
+        return $this->requestCompletedNotifiedEmailSubject;
+    }
+
+    /**
+     * @param mixed $requestCompletedNotifiedEmailSubject
+     */
+    public function setRequestCompletedNotifiedEmailSubject($requestCompletedNotifiedEmailSubject)
+    {
+        $this->requestCompletedNotifiedEmailSubject = $requestCompletedNotifiedEmailSubject;
+    }
+
+    
 
 
     public function __toString(){

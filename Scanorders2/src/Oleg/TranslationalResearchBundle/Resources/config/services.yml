@@ -267,6 +267,7 @@ framework:
                 - other
                 - suspended
                 - completed
+                - completedNotified
             transitions:
                 draft_active:
                     from: draft
@@ -289,6 +290,25 @@ framework:
                 completed_canceled:
                     from: completed
                     to: canceled
+                completed_completedNotified:
+                    from: completed
+                    to: completedNotified
+                completedNotified_completed:
+                    from: completedNotified
+                    to: completed
+                completedNotified_canceled:
+                    from: completedNotified
+                    to: canceled
+                canceled_completedNotified:
+                    from: canceled
+                    to: completedNotified
+                completedNotified_active:
+                    from: completedNotified
+                    to: active
+                active_completedNotified:
+                    from: active
+                    to: completedNotified
+
                 #active to pending
                 active_investigator:
                     from: active

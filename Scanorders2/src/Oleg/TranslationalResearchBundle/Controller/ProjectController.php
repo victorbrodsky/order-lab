@@ -79,6 +79,7 @@ class ProjectController extends Controller
         }
 
         $transresUtil = $this->container->get('transres_util');
+        $transResFormNodeUtil = $this->container->get('transres_formnode_util');
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $routeName = $request->get('_route');
@@ -126,6 +127,7 @@ class ProjectController extends Controller
         $searchTitle = $filterform['searchTitle']->getData();
         $searchIrbNumber = $filterform['searchIrbNumber']->getData();
         $fundingNumber = $filterform['fundingNumber']->getData();
+        $fundingType = $filterform['fundingType']->getData();
 //        $archived = $filterform['completed']->getData();
 //        $complete = $filterform['review']->getData();
 //        $interviewee = $filterform['missinginfo']->getData();
@@ -166,6 +168,23 @@ class ProjectController extends Controller
         if( $fundingNumber ) {
             $fundingNumberIds = $transresUtil->getProjectIdsFormNodeByFieldName($fundingNumber,"If funded, please provide account number");
             $dql->andWhere("project.id IN (".implode(",",$fundingNumberIds).")");
+            $advancedFilter++;
+        }
+        if( $fundingType ) {
+            //echo "fundingType=" . $fundingType . "<br>";
+            $compareType = NULL;
+            if( $fundingType == "Funded" ) {
+                $compareType = 1;
+            }
+            if( $fundingType == "Non-Funded" ) {
+                $compareType = 0;
+            }
+            if( isset($compareType) ) {
+                //$transResFormNodeUtil->getProjectFormNodeFieldByName(project,"Funded");
+                $fundingNumberIds = $transresUtil->getProjectIdsFormNodeByFieldName($compareType, "Funded");
+                //echo "fundingNumberIds:" . implode(",", $fundingNumberIds) . "<br>";
+                $dql->andWhere("project.id IN (" . implode(",", $fundingNumberIds) . ")");
+            }
             $advancedFilter++;
         }
         //////////////// EOF get Projects IDs with the form node filter ////////////////
@@ -1023,7 +1042,11 @@ class ProjectController extends Controller
 
         //exit("ids=".$ids);
 
-        $em = $this->getDoctrine()->getManager();
+        if( count($ids) == 0 ) {
+            exit("No Projects to Export to Excel");
+        }
+
+        //$em = $this->getDoctrine()->getManager();
         $transresUtil = $this->container->get('transres_util');
 
         //[YEAR] [WCMC (top level of actual institution)] [FELLOWSHIP-TYPE] Fellowship Candidate Data generated on [DATE] at [TIME] EST.xls

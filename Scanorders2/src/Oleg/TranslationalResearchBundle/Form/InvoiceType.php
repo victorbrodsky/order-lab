@@ -299,10 +299,10 @@ class InvoiceType extends AbstractType
 
         //Buttons
         if( $this->params['cycle'] === "new" ) {
-            $builder->add('save', SubmitType::class, array(
-                'label' => 'Generate Invoice',
-                'attr' => array('class' => 'btn btn-primary btn-with-wait')
-            ));
+//            $builder->add('save', SubmitType::class, array(
+//                'label' => 'Generate Invoice',
+//                'attr' => array('class' => 'btn btn-primary btn-with-wait')
+//            ));
             $builder->add('saveAndGeneratePdf', SubmitType::class, array(
                 'label' => 'Save and Generate PDF Invoice',
                 'attr' => array('class' => 'btn btn-primary btn-with-wait', "data-toggle"=>"modal", "data-target"=>"#pleaseWaitModal")
@@ -321,10 +321,10 @@ class InvoiceType extends AbstractType
                     $generatePrefix = "Generate";
                 }
 
-                $builder->add('edit', SubmitType::class, array(
-                    'label' => 'Update Invoice',
-                    'attr' => array('class' => 'btn btn-primary btn-with-wait')
-                ));
+//                $builder->add('edit', SubmitType::class, array(
+//                    'label' => 'Update Invoice',
+//                    'attr' => array('class' => 'btn btn-primary btn-with-wait')
+//                ));
                 $builder->add('saveAndGeneratePdf', SubmitType::class, array(
                     'label' => "Update and $generatePrefix PDF Invoice",
                     'attr' => array('class' => 'btn btn-primary btn-with-wait', "data-toggle"=>"modal", "data-target"=>"#pleaseWaitModal") //'onClick'=>"this.disabled=true; this.value = 'Please Wait!';"

@@ -12,10 +12,12 @@
     <h4 class="text-info" align="center">
         {{ title }}
     </h4>
+    {% if allPrjects|length > 0 %}
     <p>
         <a href="{{ path('translationalresearch_download_projects_excel',{'ids':transres_util.getProjectsIdsStr(allPrjects)}) }}">
-            <i class="fa fa-file-excel-o"></i> Export Resulting Projects Summaries to Excel</a>
+            <i class="fa fa-file-excel-o"></i> Export Resulting {{ allPrjects|length }} Projects Summaries to Excel</a>
     </p>
+    {% endif %}
 
     <div class="well form-search">
         {{ form_start(filterform) }}
@@ -83,6 +85,7 @@
                             {{ form_widget(filterform.fundingNumber) }}
                         </div>
                         <div class="col-xs-4">
+                            {{ form_widget(filterform.fundingType) }}
                         </div>
                         <div class="col-xs-4">
                         </div>
@@ -104,14 +107,8 @@
                 <th>{{ knp_pagination_sortable(projects, 'Submission Date', 'project.createDate') }}</th>
                 {#<th>{{ knp_pagination_sortable(projects, 'IRB#', 'project.irbNumber') }}</th>#}
                 <th>{{ knp_pagination_sortable(projects, 'Principal Investigator(s)', 'principalInvestigatorsInfos.displayName') }}</th>
-                <th>
-                    {#{{ knp_pagination_sortable(projects, 'Project Title', 'project.title') }}#}
-                    Project Title
-                </th>
-                <th>
-                    {#{{ knp_pagination_sortable(projects, 'Project Funded', 'project.funded') }}#}
-                    Funding
-                </th>
+                <th>Project Title</th>
+                <th>Funding</th>
                 <th>{{ knp_pagination_sortable(projects, 'Status', 'project.state') }}</th>
                 <th>{{ knp_pagination_sortable(projects, 'Approval Date', 'project.approvalDate') }}</th>
                 {#<th>{{ knp_pagination_sortable(projects, 'Expiration Date', 'project.expirationDate') }}</th>#}
@@ -171,7 +168,7 @@
                     {% if transres_formnode_util.getProjectFormNodeFieldByName(project,"Funded") %}
                         Funded
                     {% else %}
-                        Not Funded
+                        Not-Funded
                     {% endif %}
                 </td>
 

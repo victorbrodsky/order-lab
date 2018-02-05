@@ -335,7 +335,8 @@ class TransResRequestUtil
             'block',
             'suspended',
             'other',
-            'completed'
+            'completed',
+            'completedNotified'
         );
 
         $stateChoiceArr = array();
@@ -420,6 +421,9 @@ class TransResRequestUtil
                 break;
             case "completed":
                 $state = "Completed";
+                break;
+            case "completedNotified":
+                $state = "Completed and Notified";
                 break;
 
             default:
@@ -701,11 +705,11 @@ class TransResRequestUtil
         return 1;
     }
 
-    public function getReviewEnabledLinkActions( $transresRequest, $statMachineType ) {
+    public function getReviewEnabledLinkActions( $transresRequest, $statMachineType, $asHrefArray=true ) {
         //exit("get review links");
         $transresUtil = $this->container->get('transres_util');
-        $project = $transresRequest->getProject();
-        $user = $this->secTokenStorage->getToken()->getUser();
+        //$project = $transresRequest->getProject();
+        //$user = $this->secTokenStorage->getToken()->getUser();
 
         $links = array();
 
@@ -755,6 +759,11 @@ class TransResRequestUtil
                     continue; //skip this $to state
                 }
 
+                //exception: Only admin can set status to "completedNotified"
+                if( $to == "completedNotified" && !$this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') ) {
+                    continue; //skip this $to state
+                }
+
                 //add user's validation: $from=irb_review => user has role _IRB_REVIEW_
 //                if( false === $this->isUserAllowedFromThisStateByRole($from) ) {
 //                    continue;
@@ -778,20 +787,26 @@ class TransResRequestUtil
                 //$label = ucfirst($transitionName)." (mark as ".ucfirst($to);
                 $label = $this->getRequestStateLabelByName($to,$statMachineType);
 
-                $classTransition = $this->getHtmlClassTransition($transitionName);
+                if( $asHrefArray ) {
+                    $classTransition = $this->getHtmlClassTransition($transitionName);
 
-                $generalDataConfirmation = "general-data-confirm='Are you sure you want to $label?'";
+                    $generalDataConfirmation = "general-data-confirm='Are you sure you want to $label?'";
 
-                //don't show confirmation modal
+                    //don't show confirmation modal
 //                if( strpos($transitionName, "missinginfo") !== false ) {
 //                    $generalDataConfirmation = "";
 //                }
 
-                $thisLink = "<a ".
-                    //"general-data-confirm='Are you sure you want to $label?'".
-                    $generalDataConfirmation.
-                    "href=".$thisUrl." class='".$classTransition."'>".$label."</a>";
-                $links[] = $thisLink;
+                    $thisLink = "<a " .
+                        //"general-data-confirm='Are you sure you want to $label?'".
+                        $generalDataConfirmation .
+                        "href=" . $thisUrl . " class='" . $classTransition . "'>" . $label . "</a>";
+
+                    $links[] = $thisLink;
+
+                } else {
+                    $links[] = array('url'=>$thisUrl,'label'=>$label);
+                }
 
             }//foreach
 
@@ -901,11 +916,23 @@ class TransResRequestUtil
                         $size = $res['size'];
                         $msgPdf = "PDF has been created with filename=".$filename."; size=".$size;
 
-                        $this->sendRequestBillingNotificationEmails($transresRequest, $invoice, $label, $originalStateLabel, $testing);
-
                         $addMsg = $addMsg . "<br>New Invoice ID" . $invoice->getOid() . " has been successfully created for the request ID " . $transresRequest->getOid();
                         $addMsg = $addMsg . "<br>" . $msgPdf;
+
+                        $emailMsg = $this->sendRequestBillingNotificationEmails($transresRequest,$invoice,$testing);
+
+                        $addMsg = $addMsg . "<br>" . $emailMsg;
                     }
+                }
+
+                if( $to == "completed" ) {
+                    $emailMsg = $this->sendRequestCompletedEmails($transresRequest,$statMachineType,$label,$testing);
+                    $addMsg = $addMsg . "<br>" . $emailMsg;
+                }
+
+                if( $to == "completedNotified" ) {
+                    $emailMsg = $this->sendRequestCompletedNotifiedEmails($transresRequest,$statMachineType,$label,$testing);
+                    $addMsg = $addMsg . "<br>" . $emailMsg;
                 }
 
                 //event log
@@ -1255,9 +1282,10 @@ class TransResRequestUtil
 
     }
 
-    public function sendRequestBillingNotificationEmails($transresRequest,$invoice,$newStateLabel,$originalStateLabel,$testing=false) {
+    public function sendRequestBillingNotificationEmails($transresRequest,$invoice,$testing=false) {
         $transResFormNodeUtil = $this->container->get('transres_formnode_util');
-        $transresRequestUtil = $this->container->get('transres_request_util');
+        //$transresRequestUtil = $this->container->get('transres_request_util');
+        $transresUtil = $this->container->get('transres_util');
         $emailUtil = $this->container->get('user_mailer_utility');
 
         $senderEmail = null; //Admin email
@@ -1267,6 +1295,14 @@ class TransResRequestUtil
         $projectTitle = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"Title");
         
         $emails = array();
+
+        //0) get ROLE_TRANSRES_BILLING_ADMIN
+        $adminUsers = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole("ROLE_TRANSRES_ADMIN");
+        foreach( $adminUsers as $user ) {
+            if( $user ) {
+                $emails[] = $user->getSingleEmail();
+            }
+        }
 
         //1) get ROLE_TRANSRES_BILLING_ADMIN
         $billingUsers = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole("ROLE_TRANSRES_BILLING_ADMIN");
@@ -1342,6 +1378,123 @@ class TransResRequestUtil
 
         //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
         $emailUtil->sendEmail( $emails, $subject, $body, null, $senderEmail );
+
+        $body = "Notification Email has been sent:".$newline.$body;
+        $eventType = "Email Sent";
+        if( !$testing ) {
+            $transresUtil->setEventLog($transresRequest, $eventType, $body, $testing);
+        }
+
+        return "Notification Email has been sent to ".implode(", ",$emails);
+    }
+
+    //email to sys admins saying "Completed with link in the body of the email to change request status to "Completed and Notified"
+    public function sendRequestCompletedEmails($transresRequest,$statMachineType,$label,$testing=false) {
+        $transResFormNodeUtil = $this->container->get('transres_formnode_util');
+        $transresUtil = $this->container->get('transres_util');
+        $emailUtil = $this->container->get('user_mailer_utility');
+
+        $senderEmail = null; //Admin email
+        $newline = "\r\n";
+
+        $project = $transresRequest->getProject();
+        $projectTitle = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"Title");
+
+        $emails = array();
+
+        //1) get ROLE_TRANSRES_BILLING_ADMIN
+        $adminUsers = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole("ROLE_TRANSRES_ADMIN");
+        foreach( $adminUsers as $user ) {
+            if( $user ) {
+                $emails[] = $user->getSingleEmail();
+            }
+        }
+
+        //Subject: Draft Translation Research Invoice for Request [Request ID] of Project [Project Title]
+        $subject = "Request ".$transresRequest->getOid()." has been sent to ".$label;
+
+        $body = $subject . ".". $newline."Please confirm the '$label' status by clicking the following link ".
+            "and changing the status to 'Completed and Notified':".$newline;
+
+        //2 get allowed transactions as array with labels, data
+        $linksArray = $this->getReviewEnabledLinkActions($transresRequest,$statMachineType,false);
+
+        foreach($linksArray as $link) {
+            if( $link['label'] == "Completed and Notified" ) {
+                $body = $body . $link['url'] . $newline;
+            }
+        }
+
+        //3) Send email        $emails, $subject, $message, $ccs=null, $fromEmail=null
+        $emailUtil->sendEmail( $emails, $subject, $body, null, $senderEmail );
+
+        //4) set event log
+        if( !$testing ) {
+            $body = "Notification Email has been sent to ".implode(", ",$emails).":<br>".$body;
+            $body = str_replace($newline,"<br>",$body);
+            $eventType = "Email Sent";
+            $transresUtil->setEventLog($transresRequest, $eventType, $body, $testing);
+        }
+
+        return "Notification Email has been sent to ".implode(", ",$emails);
+    }
+
+    //send a second email to both Requestrs and PIs
+    public function sendRequestCompletedNotifiedEmails($transresRequest,$statMachineType,$label,$testing=false) {
+        $transresUtil = $this->container->get('transres_util');
+        $emailUtil = $this->container->get('user_mailer_utility');
+
+        $senderEmail = null;
+        $newline = "\r\n";
+        $emails = array();
+
+        //get Request's PI emails
+        $pis = $transresRequest->getPrincipalInvestigators();
+        foreach( $pis as $pi ) {
+            if( $pi ) {
+                $emails[] = $pi->getSingleEmail();
+            }
+        }
+
+        //find default site parameters
+        if( $transresRequest ) {
+            $project = $transresRequest->getProject();
+            $projectSpecialty = $project->getProjectSpecialty();
+            $projectSpecialtyAbbreviation = $projectSpecialty->getAbbreviation();
+
+            $siteParameter = $this->findCreateSiteParameterEntity($projectSpecialtyAbbreviation);
+            if( !$siteParameter ) {
+                throw new \Exception("SiteParameter is not found by specialty '" . $projectSpecialtyAbbreviation . "'");
+            }
+        }
+
+        if( $siteParameter ) {
+            $emailBody = $siteParameter->getRequestCompletedNotifiedEmail();
+            $emailBody = $transresUtil->replaceTextByNamingConvention($emailBody,$project,$transresRequest,null);
+        } else {
+            $emailBody = "Request ".$transresRequest->getOid()." status has been changed to 'Completed and Notified'";
+        }
+
+        if( $siteParameter ) {
+            $emailSubject = $siteParameter->getRequestCompletedNotifiedEmailSubject();
+            $emailSubject = $transresUtil->replaceTextByNamingConvention($emailSubject,$project,$transresRequest,null);
+        } else {
+            $emailSubject = "Request ".$transresRequest->getOid()." status has been changed to 'Completed and Notified'";
+        }
+
+        //send by email
+        //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
+        $emailUtil->sendEmail( $emails, $emailSubject, $emailBody, null, $senderEmail );
+
+        //4) set event log
+        if( !$testing ) {
+            $body = "Notification Email has been sent to ".implode(", ",$emails).":<br>".$emailBody;
+            $body = str_replace($newline,"<br>",$body);
+            $eventType = "Email Sent";
+            $transresUtil->setEventLog($transresRequest, $eventType, $body, $testing);
+        }
+
+        return "Notification Email has been sent to ".implode(", ",$emails);
     }
 
     public function createNewInvoice($transresRequest,$user) {

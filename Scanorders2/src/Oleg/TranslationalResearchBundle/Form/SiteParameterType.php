@@ -43,13 +43,13 @@ class SiteParameterType extends AbstractType
         ));
 
         $builder->add('transresNotificationEmail', null, array(
-            'label' => "Email Notification Body:",
+            'label' => "Email Notification Body when Invoice PDF is sent to PI:",
             'required' => false,
             'attr' => array('class' => 'textarea form-control')
         ));
 
         $builder->add('transresNotificationEmailSubject', null, array(
-            'label' => "Email Notification Subject:",
+            'label' => "Email Notification Subject when Invoice PDF is sent to PI:",
             'required' => false,
             'attr' => array('class' => 'textarea form-control')
         ));
@@ -63,6 +63,18 @@ class SiteParameterType extends AbstractType
             'by_reference' => false,
             'prototype' => true,
             'prototype_name' => '__documentsid__',
+        ));
+
+        $builder->add('requestCompletedNotifiedEmail', null, array(
+            'label' => "Email Notification Body to the Request's PI when Request status is changed to 'Completed and Notified':",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+
+        $builder->add('requestCompletedNotifiedEmailSubject', null, array(
+            'label' => "Email Notification Subject to the Request's PI when Request status is changed to 'Completed and Notified':",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
         ));
 
         //Buttons

@@ -531,6 +531,7 @@ class RequestController extends Controller
         //$accountNumber = $filterform['accountNumber']->getData();
         $billingContact = $filterform['billingContact']->getData();
         $fundingNumber = $filterform['fundingNumber']->getData();
+        $fundingType = $filterform['fundingType']->getData();
         //////// EOF create filter //////////
 
         $advancedFilter = 0;
@@ -659,6 +660,18 @@ class RequestController extends Controller
             $advancedFilter++;
         }
 
+        if( $fundingType ) {
+            //echo "fundingType=" . $fundingType . "<br>";
+            if( $fundingType == "Funded" ) {
+                $dql->andWhere("transresRequest.fundedAccountNumber IS NOT NULL");
+                $advancedFilter++;
+            }
+            if( $fundingType == "Non-Funded" ) {
+                $dql->andWhere("transresRequest.fundedAccountNumber IS NULL");
+                $advancedFilter++;
+            }
+        }
+
         if( count($ids) > 0 ) {
             //$dql->andWhere("transresRequest.id IN (:ids)");
             //$dqlParameters["ids"] = implode(",",$ids);
@@ -767,6 +780,7 @@ class RequestController extends Controller
         //$accountNumber = $filterform['accountNumber']->getData();
         $billingContact = $filterform['billingContact']->getData();
         $fundingNumber = $filterform['fundingNumber']->getData();
+        $fundingType = $filterform['fundingType']->getData();
 
         if( isset($filterform['submitter']) ) {
             $submitter = $filterform['submitter']->getData();
@@ -876,6 +890,18 @@ class RequestController extends Controller
             $dql->andWhere("transresRequest.fundedAccountNumber LIKE :fundedAccountNumber");
             $dqlParameters["fundedAccountNumber"] = "%".$fundingNumber."%";
             $advancedFilter++;
+        }
+
+        if( $fundingType ) {
+            //echo "fundingType=" . $fundingType . "<br>";
+            if( $fundingType == "Funded" ) {
+                $dql->andWhere("transresRequest.fundedAccountNumber IS NOT NULL");
+                $advancedFilter++;
+            }
+            if( $fundingType == "Non-Funded" ) {
+                $dql->andWhere("transresRequest.fundedAccountNumber IS NULL");
+                $advancedFilter++;
+            }
         }
 
         if( $principalInvestigators && count($principalInvestigators)>0 ) {

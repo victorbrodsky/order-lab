@@ -623,17 +623,23 @@ class FormNodeUtil
         }
 
         //$parameterValue = $value;
-        if( $value && $compareType == "exact" ) {
+        if( isset($value) && $compareType == "exact" ) {
             $dql->andWhere('list.value = :value');
-        }
-        if( $value && $compareType == "like" ) {
-            $dql->andWhere('list.value LIKE :value');
-            //$parameterValue = "'%".$value."%'";
-            //$parameterValue = "%".$value."%";
-            $value = '%'.$value.'%';
-        }
-        if( $value && $compareType ) {
             $queryParameters['value'] = $value;
+        }
+        if( isset($value) && $compareType == "like" ) {
+            $dql->andWhere('list.value LIKE :value');
+            $value = '%'.$value.'%';
+            $queryParameters['value'] = $value;
+        }
+
+        //all objects with not null value
+        if( $compareType == "is-not-null" ) {
+            $dql->andWhere('list.value IS NOT NULL');
+        }
+        //all objects with NULL
+        if( $compareType == "is-null" ) {
+            $dql->andWhere('list.value IS NULL');
         }
 
         $dql->orderBy('list.arraySectionIndex','DESC');

@@ -2498,9 +2498,10 @@ class TransResUtil
         }
     }
     
-    public function getProjectIdsFormNodeByFieldName( $search, $fieldName ) {
+    public function getProjectIdsFormNodeByFieldName( $search, $fieldName, $compareType="like" ) {
         $ids = array();
-        if( !$search ) {
+        if( !isset($search) ) {
+            //echo "no search=".$search."<br>";
             return $ids;
         }
         //echo "search=".$search."<br>";
@@ -2527,7 +2528,7 @@ class TransResUtil
             "entityName" => "Project",
             "entityNamespace" => "Oleg\\TranslationalResearchBundle\\Entity",
         );
-        $objectTypeDropdowns = $formNodeUtil->getFormNodeListRecordsByReceivingObjectValue($fieldFormNode,$search,$mapper,"like");
+        $objectTypeDropdowns = $formNodeUtil->getFormNodeListRecordsByReceivingObjectValue($fieldFormNode,$search,$mapper,$compareType);
         //echo "objectTypeDropdowns=".count($objectTypeDropdowns)."<br>";
 
         //3
@@ -2656,8 +2657,9 @@ class TransResUtil
         $ews->setCellValue('K1', 'Latest Invoice Total($)');
         $ews->setCellValue('L1', 'Latest Invoice Paid($)');
         $ews->setCellValue('M1', 'Latest Invoice Due($)');
+        $ews->setCellValue('N1', 'Latest Invoice Comment');
 
-        $ews->getStyle('A1:M1')->applyFromArray($styleBoldArray);
+        $ews->getStyle('A1:N1')->applyFromArray($styleBoldArray);
 
         $totalRequests = 0;
         $totalInvoices = 0;
@@ -2784,6 +2786,14 @@ class TransResUtil
                     $projectTotalDue = $projectTotalDue + $due;
                     if ($due) {
                         $ews->setCellValue('M' . $row, $due);
+                    }
+
+                    //Comment
+                    $comment = $latestInvoice->getComment();
+                    if( $comment ) {
+                        $ews->setCellValue('N' . $row, $comment);
+                        $ews->getStyle('N' . $row)
+                            ->getAlignment()->setWrapText(true);
                     }
                 }
 
