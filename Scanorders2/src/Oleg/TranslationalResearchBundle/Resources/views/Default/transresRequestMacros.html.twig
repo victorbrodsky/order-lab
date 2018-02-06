@@ -610,36 +610,48 @@
                                     <strong>Subtotal ($):</strong>
                                 </div>
                                 <div class="col-xs-6" align="left">
-                                    <input class="form-control invoice-subtotal-{{ invoice.oid }}" type="text" value="{{ invoice.subTotal }}" disabled>
+                                    <input
+                                            class="form-control invoice-subTotal invoice-subtotal-{{ invoice.oid }}"
+                                            type="text" value="{{ invoice.subTotal }}" disabled>
                                 </div>
                             </div>
                             </p>
 
-                            {% if invoice.discountNumeric %}
+                            {#{% if invoice.discountNumeric %}#}
                                 <p>
                                 <div class="row">
                                     <div class="col-xs-6" align="right">
                                         <strong>Discount ($):</strong>
                                     </div>
                                     <div class="col-xs-6" align="left">
-                                        <input class="form-control invoice-discountNumeric-{{ invoice.oid }}" type="text" value="{{ invoice.discountNumeric }}" disabled>
+                                        <input
+                                                id="invoice-discountNumeric-{{ invoice.oid }}"
+                                                class="form-control invoice-discountNumeric"
+                                                type="text"
+                                                oninput="transresDiscountNumericUpdate();"
+                                                value="{{ invoice.discountNumeric }}">
                                     </div>
                                 </div>
                                 </p>
-                            {% endif %}
+                            {#{% endif %}#}
 
-                            {% if invoice.discountPercent %}
+                            {#{% if invoice.discountPercent %}#}
                                 <p>
                                 <div class="row">
                                     <div class="col-xs-6" align="right">
                                         <strong>Discount (%):</strong>
                                     </div>
                                     <div class="col-xs-6" align="left">
-                                        <input class="form-control invoice-discountPercent-{{ invoice.oid }}" type="text" value="{{ invoice.discountPercent }}" disabled>
+                                        <input
+                                                id="invoice-discountPercent-{{ invoice.oid }}"
+                                                class="form-control invoice-discountPercent"
+                                                type="text"
+                                                oninput="transresDiscountPercentUpdate();"
+                                                value="{{ invoice.discountPercent }}">
                                     </div>
                                 </div>
                                 </p>
-                            {% endif %}
+                            {#{% endif %}#}
 
                             <p>
                             <div class="row">
@@ -647,7 +659,9 @@
                                     <strong>Total ($):</strong>
                                 </div>
                                 <div class="col-xs-6" align="left">
-                                    <input class="form-control invoice-total-{{ invoice.oid }}" type="text" value="{{ invoice.total }}" disabled>
+                                    <input id="invoice-total-{{ invoice.oid }}"
+                                           class="form-control invoice-total"
+                                           type="text" value="{{ invoice.total }}" disabled>
                                 </div>
                             </div>
                             </p>
@@ -655,14 +669,30 @@
                             <p>
                                 <div class="row">
                                     <div class="col-xs-6" align="right">
-                                        <strong>Update Paid ($):</strong>
+                                        <strong>Paid ($):</strong>
                                     </div>
                                     <div class="col-xs-6" align="left">
                                         <input
                                             id="invoice-paid-{{ invoice.oid }}"
                                             class="form-control invoice-paid"
                                             type="text"
-                                            value="{{ invoice.paid }}" required>
+                                            oninput="transresUpdateDue();"
+                                            value="{{ invoice.paid }}">
+                                    </div>
+                                </div>
+                            </p>
+
+                            <p>
+                                <div class="row">
+                                    <div class="col-xs-6" align="right">
+                                        <strong>Balance Due ($):</strong>
+                                    </div>
+                                    <div class="col-xs-6" align="left">
+                                        <input
+                                                id="invoice-due-{{ invoice.oid }}"
+                                                class="form-control invoice-due"
+                                                type="text"
+                                                value="{{ invoice.due }}" disabled>
                                     </div>
                                 </div>
                             </p>
@@ -680,7 +710,6 @@
                                             {#value="{{ invoice.comment }}" required>#}
 
                                      <textarea
-                                        required
                                         id="invoice-comment-{{ invoice.oid }}"
                                         class="textarea form-control invoice-comment">{{ invoice.comment }}</textarea>
                                 </div>
@@ -698,16 +727,16 @@
                     {#</div>#}
 
                     {% set statuses = transres_request_util.getInvoiceStatuses() %}
-                    <div class="center-block">
+                    <div class="center-block updateInvoiceBtnHolder">
                     {% for status in statuses %}
-                        {% if status != invoice.status %}
+                        {#{% if status != invoice.status %}#}
                             <p>
-                            <button class="btn btn-primary"
+                            <button class="btn btn-primary updateInvoiceBtn"
                                     type="button"
                                     onclick="transresUpdateInvoiceStatus('{{ invoice.oid }}','{{ status }}');"
                             >Update Invoice Status to '{{ status }}'</button>
                             </p>
-                        {% endif %}
+                        {#{% endif %}#}
                     {% endfor %}
                     </div>
 

@@ -647,6 +647,10 @@ class InvoiceController extends Controller
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
+        $invoiceSerializedOriginalStr = $invoice->getSerializeStr();
+        //echo "invoiceSerializedOriginalStr=$invoiceSerializedOriginalStr<br>";
+        //exit();
+
         //Get $transresRequest (Assume invoice has a single $transresRequest)
         $transresRequest = $invoice->getTransresRequest();
 
@@ -687,6 +691,16 @@ class InvoiceController extends Controller
 
             $eventType = "Invoice Updated";
             $msg = "Invoice with ID ".$invoice->getOid()." has been updated.";
+
+            //changes
+            //$invoiceUpdatedDb = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($invoice->getOid());
+            $invoiceSerializedUpdatedStr = $invoice->getSerializeStr();
+            if( $invoiceSerializedUpdatedStr != $invoiceSerializedOriginalStr ) {
+                $chanesStr =    "<strong>Original Invoice:</strong><br>" . $invoiceSerializedOriginalStr . "<br>" .
+                                "<strong>Updated Invoice:</strong><br>" . $invoiceSerializedUpdatedStr;
+                $msg = $msg . "<br>" . $chanesStr;
+            }
+
             $transresUtil->setEventLog($invoice,$eventType,$msg);
 
             return $this->redirectToRoute('translationalresearch_invoice_show', array('oid' => $invoice->getOid()));
@@ -1202,12 +1216,18 @@ class InvoiceController extends Controller
 
         $transresRequestUtil = $this->get('transres_request_util');
         $transresUtil = $this->get('transres_util');
+        $transresPdfUtil = $this->get('transres_pdf_generator');
+
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
         $res = "NotOK";
 
         $oid = trim( $request->get('invoiceOid') );
         $paid = trim( $request->get('paid') );
+        $total = trim( $request->get('total') );
+        $discountNumeric = trim( $request->get('discountNumeric') );
+        $discountPercent = trim( $request->get('discountPercent') );
+        $due = trim( $request->get('due') );
         $comment = trim( $request->get('comment') );
         $status = trim( $request->get('status') );
 
@@ -1229,12 +1249,36 @@ class InvoiceController extends Controller
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
+        $invoiceSerializedOriginalStr = $invoice->getSerializeStr();
+
+
+        if( $discountNumeric == 0 ) {
+            $discountNumeric = NULL;
+        }
+        if( $discountPercent == 0 ) {
+            $discountPercent = NULL;
+        }
+        if( $paid == 0 ) {
+            $paid = NULL;
+        }
+        if( $due == 0 ) {
+            $due = NULL;
+        }
+        if( $total == 0 ) {
+            $total = NULL;
+        }
+
         $invoice->setComment($comment);
 
         $invoice->setPaid($paid);
 
+        $invoice->setDiscountNumeric($discountNumeric);
+        $invoice->setDiscountPercent($discountPercent);
+
+        $invoice->setTotal($total);
+
         //Re-Calculate Balance Due
-        $due = $invoice->getTotal() - $invoice->getPaid();
+        //$due = $invoice->getTotal() - $invoice->getPaid();
         $invoice->setDue($due);
 
         //change-status
@@ -1247,7 +1291,20 @@ class InvoiceController extends Controller
         $eventType = "Invoice Updated";
         $msg = "Invoice's (ID ".$invoice->getOid().") Paid ($) value has been updated to '" . $paid . "'"
             . " and status changed to '$status'";
+
+        //changes
+        //$invoiceUpdatedDb = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($invoice->getOid());
+        $invoiceSerializedUpdatedStr = $invoice->getSerializeStr();
+        if( $invoiceSerializedUpdatedStr != $invoiceSerializedOriginalStr ) {
+            $chanesStr =    "<strong>Original Invoice:</strong><br>" . $invoiceSerializedOriginalStr . "<br>" .
+                "<strong>Updated Invoice:</strong><br>" . $invoiceSerializedUpdatedStr;
+            $msg = $msg . "<br>" . $chanesStr;
+        }
+
         $transresUtil->setEventLog($invoice,$eventType,$msg);
+
+        //generate Invoice PDF
+        $transresPdfUtil->generateInvoicePdf($invoice,$user);
 
         $res = "OK";
 

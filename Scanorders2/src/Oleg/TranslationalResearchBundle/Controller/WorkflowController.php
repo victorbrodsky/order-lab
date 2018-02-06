@@ -344,6 +344,7 @@ class WorkflowController extends Controller
         $transresUtil = $this->container->get('transres_util');
         $transresRequestUtil = $this->container->get('transres_request_util');
 
+        //TODO: who can change the status of the Request? Do we need an additional role "ROLE_TRANSRES_TECHNICIAN"?
         if(
             $transresUtil->isAdminOrPrimaryReviewer() === false &&
             $transresRequestUtil->isRequestStateReviewer($transresRequest,$statMachineType) === false

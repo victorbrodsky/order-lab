@@ -645,10 +645,11 @@ class Invoice {
      */
     public function setPaid($paid)
     {
-        $this->paid = $paid;
-        if( $paid ) {
+        if( $this->paid != $paid ) {
+            //exit("change paid date");
             $this->setPaidDate(new \DateTime());
         }
+        $this->paid = $paid;
     }
 
     /**
@@ -796,6 +797,37 @@ class Invoice {
         $oid = $transresRequestOid . "-V" . $this->getVersion();
         $this->setOid($oid);
         return $oid;
+    }
+
+    public function getSerializeStr() {
+        //$str = serialize($this);
+
+        $paidDateStr = "";
+        if( $this->getPaidDate() ) {
+            $paidDateStr = $this->getPaidDate()->format('m/d/Y');
+        }
+
+        $str =
+            "Status=".$this->getStatus().";<br>".
+            "PI=".$this->getPrincipalInvestigator().";<br>".
+            "Salesperson=".$this->getSalesperson().";<br>".
+            "To=".$this->getInvoiceTo().";<br>".
+            "Subtotal($)=".$this->toDecimal($this->getSubTotal())."; ".
+            "Discount($)=".$this->toDecimal($this->getDiscountNumeric())."; ".
+            "Discount(%)=".$this->getDiscountPercent()."; ".
+            "Total($)=".$this->toDecimal($this->getTotal())."; ".
+            "Paid($)=".$this->toDecimal($this->getPaid())."; ".
+            "Balance Due($)=".$this->toDecimal($this->getDue()).";<br>".
+            "Paid Date=".$paidDateStr.";<br>".
+            "Comment=".$this->getComment().";";
+
+        return $str;
+    }
+    public function toDecimal($number) {
+        if( !$number ) {
+            return $number;
+        }
+        return number_format((float)$number, 2, '.', '');
     }
 
 }
