@@ -345,7 +345,8 @@ class WorkflowController extends Controller
         $transresRequestUtil = $this->container->get('transres_request_util');
 
         if(
-            $transresUtil->isUserAllowedReview($transresRequest) === false
+            $transresUtil->isAdminOrPrimaryReviewer() === false &&
+            $transresRequestUtil->isRequestStateReviewer($transresRequest,$statMachineType) === false
         ) {
             //exit("no permission");
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );

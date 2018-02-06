@@ -31,22 +31,22 @@ $(document).ready(function() {
 
 //Will this project involve human tissue?
 function transresIrbApprovalLetterListener() {
-    $(".involveHumanTissue").on("input", function(e) {
-        var involveHumanTissue = $(this).val();
-
+    $(".involveHumanTissue").on("change", function(e) {
         var involveHumanTissue = $(".involveHumanTissue").find('input[name="oleg_translationalresearchbundle_project[involveHumanTissue]"]:checked').val();
-
-        //console.log("involveHumanTissue="+involveHumanTissue);
-
-        if( involveHumanTissue == "Yes" ) {
-            $(".user-humanTissueForms").show();
-        }
-
-        if( involveHumanTissue == "No" ) {
-            $(".user-humanTissueForms").hide();
-        }
-
+        //console.log("change: checked value involveHumanTissue="+involveHumanTissue);
+        transresShowHideHumanTissueUploadSection(involveHumanTissue);
     });
+}
+function transresShowHideHumanTissueUploadSection(involveHumanTissue) {
+    if( involveHumanTissue == "Yes" ) {
+        //console.log("humanTissueForms show");
+        $(".user-humanTissueForms").show();
+    }
+
+    if( involveHumanTissue == "No" ) {
+        //console.log("humanTissueForms hide");
+        $(".user-humanTissueForms").hide();
+    }
 }
 
 //form with multiple buttons don't use form.submit(); because it does not pass buttons in the post

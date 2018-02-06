@@ -1110,11 +1110,12 @@ class RequestController extends Controller
     public function reviewProgressAction(Request $request, TransResRequest $transresRequest)
     {
         $transresUtil = $this->container->get('transres_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
 
         if(
-            $transresUtil->isAdminOrPrimaryReviewer()
-            //||
-            //$transresUtil->isProjectReviewer($transresRequest)
+            $transresUtil->isAdminOrPrimaryReviewer() ||
+            $transresRequestUtil->isRequestProgressReviewable($transresRequest) ||
+            $transresRequestUtil->isRequestProgressReviewer($transresRequest)
         ) {
             //ok
         } else {
@@ -1148,11 +1149,12 @@ class RequestController extends Controller
     public function reviewBillingAction(Request $request, TransResRequest $transresRequest)
     {
         $transresUtil = $this->container->get('transres_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
 
         if(
-            $transresUtil->isAdminOrPrimaryReviewer()
-            //||
-            //$transresUtil->isProjectReviewer($transresRequest)
+            $transresUtil->isAdminOrPrimaryReviewer() ||
+            $transresRequestUtil->isRequestBillingReviewable($transresRequest) ||
+            $transresRequestUtil->isRequestBillingReviewer($transresRequest)
         ) {
             //ok
         } else {

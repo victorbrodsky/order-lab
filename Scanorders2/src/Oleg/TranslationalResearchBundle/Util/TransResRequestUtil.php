@@ -593,6 +593,7 @@ class TransResRequestUtil
         return $ids;
     }
 
+    /////////////////// Main method to check if the current user can change the Request's State ///////////////////
     //Used by twig Request's review to check if message ...Please review this request...
     //For now it is only isAdminOrPrimaryReviewer
     public function isRequestStateReviewer($transresRequest,$statMachineType) {
@@ -604,20 +605,24 @@ class TransResRequestUtil
         }
         return false;
     }
-    //For now it is only isAdminOrPrimaryReviewer
+    //Main method to check if the current user can change the Request's Progress State
     public function isRequestProgressReviewer($transresRequest) {
         return $this->isRequestReviewer($transresRequest);
     }
+    //Main method to check if the current user can change the Request's Billing State
     public function isRequestBillingReviewer($transresRequest) {
         return $this->isRequestReviewer($transresRequest);
     }
-    //Request can be reviewd only by isAdminOrPrimaryReviewer
+    /////////////////// EOF Main method to check if the current user can change the Request's State ///////////////////
+
+    //Request can be reviewed only by isAdminOrPrimaryReviewer
     public function isRequestReviewer($transresRequest) {
         $transresUtil = $this->container->get('transres_util');
         $project = $transresRequest->getProject();
 
+        //For now it is only isAdminOrPrimaryReviewer
         if( $transresUtil->isAdminOrPrimaryReviewer() ) {
-            return true;
+            return true; //admin or primary reviewer or delegate
         }
 
 //        if( $transresUtil->isProjectRequester($project) ) {
