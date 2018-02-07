@@ -18,6 +18,7 @@
 namespace Oleg\TranslationalResearchBundle\Util;
 
 
+use Doctrine\ORM\EntityRepository;
 use Oleg\TranslationalResearchBundle\Entity\AdminReview;
 use Oleg\TranslationalResearchBundle\Entity\CommitteeReview;
 use Oleg\TranslationalResearchBundle\Entity\FinalReview;
@@ -2948,6 +2949,18 @@ class TransResUtil
             $role = "ROLE_TRANSRES_APCP";
         }
         return $role;
+    }
+
+    public function userQueryBulder() {
+        return function(EntityRepository $er) {
+            return $er->createQueryBuilder('list')
+                ->leftJoin("list.employmentStatus", "employmentStatus")
+                ->leftJoin("employmentStatus.employmentType", "employmentType")
+                ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+                //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
+                ->leftJoin("list.infos", "infos")
+                ->orderBy("infos.displayName","ASC");
+        };
     }
 
 }

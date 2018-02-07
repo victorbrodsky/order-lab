@@ -346,6 +346,8 @@ class DefaultReviewerController extends Controller
 
     private function createDefaultReviewForm($cycle,$defaultReviewer) {
 
+        $transresUtil = $this->container->get('transres_util');
+        
         if( $cycle == "new" ) {
             $disabled = false;
         }
@@ -356,7 +358,10 @@ class DefaultReviewerController extends Controller
             $disabled = false;
         }
 
-        $params = array('showPrimaryReview'=>false);
+        $params = array(
+            'showPrimaryReview'=>false,
+            'transresUtil' => $transresUtil
+        );
 
         //echo "state=[".$defaultReviewer->getState()."]<br>";
         if( $defaultReviewer->getState() == "committee_review" ) {

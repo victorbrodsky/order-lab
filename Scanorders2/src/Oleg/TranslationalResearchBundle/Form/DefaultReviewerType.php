@@ -45,15 +45,7 @@ class DefaultReviewerType extends AbstractType
             'required'=> false,
             'multiple' => false,
             'attr' => array('class'=>'combobox combobox-width'),
-            'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->leftJoin("list.employmentStatus", "employmentStatus")
-                    ->leftJoin("employmentStatus.employmentType", "employmentType")
-                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
-                    ->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
-                    ->leftJoin("list.infos", "infos")
-                    ->orderBy("infos.displayName","ASC");
-            },
+            'query_builder' => $this->params['transresUtil']->userQueryBulder()
         ));
 
         $builder->add( 'reviewerDelegate', EntityType::class, array(
@@ -62,15 +54,7 @@ class DefaultReviewerType extends AbstractType
             'required'=> false,
             'multiple' => false,
             'attr' => array('class'=>'combobox combobox-width'),
-            'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->leftJoin("list.employmentStatus", "employmentStatus")
-                    ->leftJoin("employmentStatus.employmentType", "employmentType")
-                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
-                    ->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
-                    ->leftJoin("list.infos", "infos")
-                    ->orderBy("infos.displayName","ASC");
-            },
+            'query_builder' => $this->params['transresUtil']->userQueryBulder()
         ));
 
         $builder->add( 'projectSpecialty', EntityType::class, array(
