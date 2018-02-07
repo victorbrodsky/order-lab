@@ -2951,7 +2951,7 @@ class TransResUtil
         return $role;
     }
 
-    public function userQueryBulder() {
+    public function userQueryBuilder() {
         return function(EntityRepository $er) {
             return $er->createQueryBuilder('list')
                 ->leftJoin("list.employmentStatus", "employmentStatus")

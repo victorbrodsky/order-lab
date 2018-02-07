@@ -234,7 +234,7 @@ class ProjectType extends AbstractType
             'required'=> true,
             'multiple' => true,
             'attr' => array('class'=>'combobox combobox-width'),
-            'query_builder' => $this->params['transresUtil']->userQueryBulder()
+            'query_builder' => $this->params['transresUtil']->userQueryBuilder()
         ));
 
         $builder->add( 'coInvestigators', EntityType::class, array(
@@ -243,7 +243,7 @@ class ProjectType extends AbstractType
             'required'=> false,
             'multiple' => true,
             'attr' => array('class'=>'combobox combobox-width'),
-            'query_builder' => $this->params['transresUtil']->userQueryBulder()
+            'query_builder' => $this->params['transresUtil']->userQueryBuilder()
         ));
 
 //        $builder->add( 'irbSubmitter', EntityType::class, array(
@@ -268,7 +268,7 @@ class ProjectType extends AbstractType
             'required'=> false,
             'multiple' => true,
             'attr' => array('class'=>'combobox combobox-width'),
-            'query_builder' => $this->params['transresUtil']->userQueryBulder()
+            'query_builder' => $this->params['transresUtil']->userQueryBuilder()
         ));
 
         $builder->add( 'contacts', EntityType::class, array(
@@ -286,7 +286,7 @@ class ProjectType extends AbstractType
 //                    ->leftJoin("list.infos", "infos")
 //                    ->orderBy("infos.displayName","ASC");
 //            },
-            'query_builder' => $this->params['transresUtil']->userQueryBulder()
+            'query_builder' => $this->params['transresUtil']->userQueryBuilder()
         ));
 
         $builder->add( 'billingContact', EntityType::class, array(
@@ -295,7 +295,7 @@ class ProjectType extends AbstractType
             'required'=> false,
             'multiple' => false,
             'attr' => array('class'=>'combobox combobox-width'),
-            'query_builder' => $this->params['transresUtil']->userQueryBulder()
+            'query_builder' => $this->params['transresUtil']->userQueryBuilder()
         ));
 
         //Reviews

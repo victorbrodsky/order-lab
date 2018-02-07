@@ -45,7 +45,7 @@ class DefaultReviewerType extends AbstractType
             'required'=> false,
             'multiple' => false,
             'attr' => array('class'=>'combobox combobox-width'),
-            'query_builder' => $this->params['transresUtil']->userQueryBulder()
+            'query_builder' => $this->params['transresUtil']->userQueryBuilder()
         ));
 
         $builder->add( 'reviewerDelegate', EntityType::class, array(
@@ -54,7 +54,7 @@ class DefaultReviewerType extends AbstractType
             'required'=> false,
             'multiple' => false,
             'attr' => array('class'=>'combobox combobox-width'),
-            'query_builder' => $this->params['transresUtil']->userQueryBulder()
+            'query_builder' => $this->params['transresUtil']->userQueryBuilder()
         ));
 
         $builder->add( 'projectSpecialty', EntityType::class, array(
