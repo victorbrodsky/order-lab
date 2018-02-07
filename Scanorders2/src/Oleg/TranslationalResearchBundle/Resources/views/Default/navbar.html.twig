@@ -14,6 +14,18 @@
     limitations under the License.
 #}
 
+{% macro createFilterRequestType( filterTypes ) %}
+    {% for filterType in filterTypes %}
+        {% if filterType == "[[hr]]" %}
+            <hr>
+        {% else %}
+            <li>
+                <a href="{{ path(translationalresearch_sitename~'_request_index_filter',{'type':filterType}) }}">{{ filterType }}</a>
+            </li>
+        {% endif %}
+    {% endfor %}
+{% endmacro %}
+
 {% block navbar %}
 
     <nav class="navbar navbar-default" role="navigation">
@@ -138,13 +150,18 @@
                                 <a href="{{ path(translationalresearch_sitename~'_new_standalone_request') }}">New Request</a>
                             </li>
 
-                            <li id="nav-bar-translationalresearch-my-requests">
-                                <a href="{{ path(translationalresearch_sitename~'_my_requests') }}">My Requests</a>
-                            </li>
+                            {#<li id="nav-bar-translationalresearch-my-requests">#}
+                                {#<a href="{{ path(translationalresearch_sitename~'_my_requests') }}">My Requests</a>#}
+                            {#</li>#}
 
-                            <li id="nav-bar-translationalresearch-all-requests">
-                                <a href="{{ path(translationalresearch_sitename~'_all_requests') }}">All Requests</a>
-                            </li>
+                            {#<li id="nav-bar-translationalresearch-all-requests">#}
+                                {#<a href="{{ path(translationalresearch_sitename~'_all_requests') }}">All Requests</a>#}
+                            {#</li>#}
+
+                            <hr>
+
+                            {% set filterRequestTypes = transres_request_util.getRequestFilterPresetType() %}
+                            {{ _self.createFilterRequestType(filterRequestTypes) }}
 
                             </ul>
                         </li>

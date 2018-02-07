@@ -607,24 +607,18 @@ class TransResRequestUtil
     }
     //Main method to check if the current user can change the Request's Progress State
     public function isRequestProgressReviewer($transresRequest) {
-        return $this->isRequestReviewer($transresRequest);
-    }
-    //Main method to check if the current user can change the Request's Billing State
-    public function isRequestBillingReviewer($transresRequest) {
-        return $this->isRequestReviewer($transresRequest);
-    }
-    /////////////////// EOF Main method to check if the current user can change the Request's State ///////////////////
-
-    //Request can be reviewed only by isAdminOrPrimaryReviewer
-    public function isRequestReviewer($transresRequest) {
         $transresUtil = $this->container->get('transres_util');
-        $project = $transresRequest->getProject();
 
         //For now it is only isAdminOrPrimaryReviewer
         if( $transresUtil->isAdminOrPrimaryReviewer() ) {
             return true; //admin or primary reviewer or delegate
         }
 
+        if( $this->secAuth->isGranted('ROLE_TRANSRES_TECHNICIAN') ) {
+            return true;
+        }
+
+//        $project = $transresRequest->getProject();
 //        if( $transresUtil->isProjectRequester($project) ) {
 //            return true;
 //        }
@@ -635,6 +629,31 @@ class TransResRequestUtil
 
         return false;
     }
+    //Main method to check if the current user can change the Request's Billing State
+    public function isRequestBillingReviewer($transresRequest) {
+        $transresUtil = $this->container->get('transres_util');
+
+        //For now it is only isAdminOrPrimaryReviewer
+        if( $transresUtil->isAdminOrPrimaryReviewer() ) {
+            return true; //admin or primary reviewer or delegate
+        }
+
+        if( $this->secAuth->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ) {
+            return true;
+        }
+
+//        $project = $transresRequest->getProject();
+//        if( $transresUtil->isProjectRequester($project) ) {
+//            return true;
+//        }
+
+//        if( $this->isRequestRequester($transresRequest) ) {
+//            return true;
+//        }
+
+        return false;
+    }
+    /////////////////// EOF Main method to check if the current user can change the Request's State ///////////////////
 
     //return true if request's submitter or principalInvestigators
     public function isRequestRequester( $transresRequest ) {
@@ -845,13 +864,11 @@ class TransResRequestUtil
 
         if( $statMachineType == 'progress' ) {
             $workflow = $this->container->get('state_machine.transres_request_progress');
-            $transitions = $workflow->getEnabledTransitions($transresRequest);
             $originalStateStr = $transresRequest->getProgressState();
             $setState = "setProgressState";
         }
         if( $statMachineType == 'billing' ) {
             $workflow = $this->container->get('state_machine.transres_request_billing');
-            $transitions = $workflow->getEnabledTransitions($transresRequest);
             $originalStateStr = $transresRequest->getBillingState();
             $setState = "setBillingState";
         }
@@ -869,6 +886,18 @@ class TransResRequestUtil
             $to = $tos[0];
         }
         //echo "to=".$to."<br>";
+
+        if( $to == "completedNotified" ) {
+            //only Admin can change the status to completedNotified
+            if( !$this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') ) {
+                $toLabel = $this->getRequestStateLabelByName($to,$statMachineType);
+                $this->container->get('session')->getFlashBag()->add(
+                    'warning',
+                    "Only Admin can change the status of the Request to " . $toLabel
+                );
+                return false;
+            }
+        }
 
         //$label = $this->getTransitionLabelByName($transitionName);
         //$label = $transitionName;
@@ -1810,6 +1839,26 @@ class TransResRequestUtil
             "Old Versions of Partially Paid Invoices",
             "Old Versions of Paid and Partially Paid Invoices",
             "Old Versions of Canceled Invoices"
+        );
+
+        return $filterTypes;
+    }
+
+    public function getRequestFilterPresetType() {
+        $filterTypes = array(
+            'My Requests',
+            'All Requests',
+            'All AP/CP Requests',
+            'All Hematopathology Requests',
+            '[[hr]]',
+            //'All Pending Requests',
+            'All Active Requests',
+            'All Completed Requests',
+            'All Completed and Notified Requests',
+            //'[[hr]]',
+
+            //'Pending AP/CP Requests',
+            //'Pending Hematopathology Requests'
         );
 
         return $filterTypes;

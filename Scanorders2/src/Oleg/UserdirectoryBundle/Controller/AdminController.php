@@ -1514,6 +1514,13 @@ class AdminController extends Controller
                 "translational-research"
             ),
 
+            "ROLE_TRANSRES_TECHNICIAN" => array(
+                "Translational Research Technician",
+                "View and Edit a Translational Research Request",
+                30,
+                "translational-research"
+            ),
+
         );
 
         $username = $this->get('security.token_storage')->getToken()->getUser();

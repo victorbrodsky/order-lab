@@ -100,7 +100,18 @@ class FosCommentListener implements EventSubscriberInterface {
         }
 
         $eventType = "Comment Posted";
-        $resArr = $this->getMsgSubjectAndBody($comment,$entity);
+        if( $entity->getEntityName() == "Project" ) {
+            $eventType = "Project Comment Posted";
+            $stateStr = $this->getStateStrFromComment($comment);
+            $stateLabel = $transresUtil->getStateLabelByName($stateStr);
+        }
+
+        if( $entity->getEntityName() == "Request" ) {
+            $eventType = "Request Comment Posted";
+            $stateLabel = null;
+        }
+
+        $resArr = $this->getMsgSubjectAndBody($comment,$entity,$stateLabel);
         $body = $resArr['body'];
         $transresUtil->setEventLog($entity,$eventType,$body);
 
@@ -152,7 +163,8 @@ class FosCommentListener implements EventSubscriberInterface {
         $break = "\r\n";
 
         if( !$resArr ) {
-            $resArr = $this->getMsgSubjectAndBody($comment, $entity);
+            $stateLabel = $transresUtil->getStateLabelByName($stateStr);
+            $resArr = $this->getMsgSubjectAndBody($comment,$entity,$stateLabel);
         }
 
         $subject = $resArr['subject'];
@@ -206,7 +218,13 @@ class FosCommentListener implements EventSubscriberInterface {
         $break = "\r\n";
 
         if( !$resArr ) {
-            $resArr = $this->getMsgSubjectAndBody($comment, $entity);
+            //$stateStr = $this->getStateStrFromComment($comment);
+            //$stateStr = $comment->getThread()->getId();
+            //$stateLabel = $transresUtil->getStateLabelByName($stateStr);
+            //$transresRequestUtil = $this->container->get('transres_request_util');
+            //$stateLabel = $transresRequestUtil->getRequestLabelByStateMachineType();
+            //$stateLabel = $transresRequestUtil->getProgressStateLabelByName($stateStr);
+            $resArr = $this->getMsgSubjectAndBody($comment,$entity);
         }
 
         $subject = $resArr['subject'];
@@ -220,13 +238,12 @@ class FosCommentListener implements EventSubscriberInterface {
         $emailUtil->sendEmail( $emails, $subject, $body, null, $senderEmail );
     }
 
-    public function getMsgSubjectAndBody($comment,$entity) {
-        $transresUtil = $this->container->get('transres_util');
+    public function getMsgSubjectAndBody($comment,$entity,$stateLabel=null) {
         $break = "\r\n";
-
-        $stateStr = $this->getStateStrFromComment($comment);
-        $stateLabel = $transresUtil->getStateLabelByName($stateStr);
-        $subject = "New Comment for ".$entity->getEntityName()." ID ".$entity->getOid()." has been posted for the stage '".$stateLabel."'";
+        if( $stateLabel ) {
+            $stateLabel = " for the stage '".$stateLabel."'";
+        }
+        $subject = "New Comment for ".$entity->getEntityName()." ID ".$entity->getOid()." has been posted".$stateLabel;
         $body = $subject . ":" . $break . $comment->getBody();
 
         return array('subject'=>$subject, 'body'=>$body);
@@ -392,9 +409,12 @@ class FosCommentListener implements EventSubscriberInterface {
     }
 
     public function getStateStrFromComment($comment) {
-        $entity = null;
+        //$logger = $this->container->get('logger');
+        //$entity = null;
         //get state from "transres-request-20-billing" or "transres-Project-9-irb_review"
         $threadId = $comment->getThread()->getId();
+        //echo "threadId=".$threadId."<br>";
+        //$logger->notice("threadId=".$threadId);
         $idArr = explode("-",$threadId);
 
         $stateStr = null;

@@ -572,7 +572,13 @@ class InvoiceController extends Controller
 
         $transresRequestUtil = $this->get('transres_request_util');
         $em = $this->getDoctrine()->getManager();
+
+        //1) try to find by oid
         $invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($oid);
+        if( !$invoice ) {
+            //2) try to find by id
+            $invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->find($oid);
+        }
         if( !$invoice ) {
             throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
         }

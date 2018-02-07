@@ -235,9 +235,11 @@ class RequestController extends Controller
      */
     public function editAction(Request $request, TransResRequest $transresRequest)
     {
-
-        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER')) {
-            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        if(
+            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER') &&
+            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
+        ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
         $transResFormNodeUtil = $this->get('transres_formnode_util');
@@ -423,7 +425,10 @@ class RequestController extends Controller
      */
     public function showAction(Request $request, TransResRequest $transresRequest)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
+        if(
+            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER') &&
+            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
+        ) {
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
@@ -483,7 +488,10 @@ class RequestController extends Controller
      */
     public function indexAction(Request $request, Project $project)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
+        if(
+            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER') &&
+            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
+        ) {
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
@@ -733,23 +741,28 @@ class RequestController extends Controller
     /**
      * Finds and displays all my requests (all-requests.html.twig)
      *
-     * @Route("/my-requests", name="translationalresearch_my_requests")
-     * @Route("/all-requests", name="translationalresearch_all_requests")
+     * //@Route("/my-requests", name="translationalresearch_my_requests")
+     * //@Route("/all-requests", name="translationalresearch_all_requests")
+     *
+     * @Route("/requests/list/", name="translationalresearch_request_index_filter")
      * @Template("OlegTranslationalResearchBundle:Request:index.html.twig")
      * @Method("GET")
      */
     public function myRequestsAction(Request $request)
     {
-        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER')) {
-            return $this->redirect($this->generateUrl($this->container->getParameter('translationalresearch.sitename') . '-nopermission'));
+        if(
+            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER') &&
+            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
+        ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
-        //$transresUtil = $this->container->get('transres_util');
+        $transresUtil = $this->container->get('transres_util');
         $transresRequestUtil = $this->container->get('transres_request_util');
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $routeName = $request->get('_route');
-        $title = "My Requests";
+        $title = "Requests";
         $formnode = false;
 
         $advancedFilter = 0;
@@ -781,6 +794,8 @@ class RequestController extends Controller
         $billingContact = $filterform['billingContact']->getData();
         $fundingNumber = $filterform['fundingNumber']->getData();
         $fundingType = $filterform['fundingType']->getData();
+        $filterType = trim( $request->get('type') );
+        $filterTitle = trim( $request->get('title') );
 
         if( isset($filterform['submitter']) ) {
             $submitter = $filterform['submitter']->getData();
@@ -808,6 +823,77 @@ class RequestController extends Controller
         }
         //////////////// EOF get Requests IDs with the form node filter ////////////////
 
+        if( $filterType ) {
+            if( $filterType == "All Requests" ) {
+                $title = "All Requests";
+            }
+            if( $filterType == "My Requests" ) {
+                return $this->redirectToRoute(
+                    'translationalresearch_request_index_filter',
+                    array(
+                        'filter[submitter]' => $user->getId(),
+                        'title' => $filterType,
+                    )
+                );
+            }
+            if( $filterType == "All AP/CP Requests" ) {
+                $projectSpecialtyObject = $transresUtil->getSpecialtyObject("ap-cp");
+                return $this->redirectToRoute(
+                    'translationalresearch_request_index_filter',
+                    array(
+                        'filter[projectSpecialty]' => $projectSpecialtyObject->getId(),
+                        'title' => $filterType,
+                    )
+                );
+            }
+            if( $filterType == "All Hematopathology Requests" ) {
+                $projectSpecialtyObject = $transresUtil->getSpecialtyObject("hematopathology");
+                return $this->redirectToRoute(
+                    'translationalresearch_request_index_filter',
+                    array(
+                        'filter[projectSpecialty]' => $projectSpecialtyObject->getId(),
+                        'title' => $filterType,
+                    )
+                );
+            }
+//            if( $filterType == "All Pending Requests" ) {
+//                return $this->redirectToRoute(
+//                    'translationalresearch_request_index_filter',
+//                    array(
+//                        'filter[progressState][0]' => "active",
+//                        'title' => $filterType,
+//                    )
+//                );
+//            }
+            if( $filterType == "All Active Requests" ) {
+                return $this->redirectToRoute(
+                    'translationalresearch_request_index_filter',
+                    array(
+                        'filter[progressState][0]' => "active",
+                        'title' => $filterType,
+                    )
+                );
+            }
+            if( $filterType == "All Completed Requests" ) {
+                return $this->redirectToRoute(
+                    'translationalresearch_request_index_filter',
+                    array(
+                        'filter[progressState][0]' => "completed",
+                        'title' => $filterType,
+                    )
+                );
+            }
+            if( $filterType == "All Completed and Notified Requests" ) {
+                return $this->redirectToRoute(
+                    'translationalresearch_request_index_filter',
+                    array(
+                        'filter[progressState][0]' => "completedNotified",
+                        'title' => $filterType,
+                    )
+                );
+            }
+        }
+
         $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
         $dql =  $repository->createQueryBuilder("transresRequest");
         $dql->select('transresRequest');
@@ -819,15 +905,17 @@ class RequestController extends Controller
 
         $dqlParameters = array();
 
-        if( $routeName == "translationalresearch_my_requests" ) {
-            $title = "My Requests";
-            $dql->andWhere("submitter.id = :submitterId");
-            $dqlParameters["submitterId"] = $user->getId();
-        }
+//        if( $filterType ) {
+//            if( $filterType == "My Requests" ) {
+//                $title = "My Requests";
+//                $dql->andWhere("submitter.id = :submitterId");
+//                $dqlParameters["submitterId"] = $user->getId();
+//            }
+//        }
 
-        if( $routeName == "translationalresearch_all_requests" ) {
-            $title = "All Requests";
-        }
+//        if( $routeName == "translationalresearch_all_requests" ) {
+//            $title = "All Requests";
+//        }
 
         ///////// filters //////////
         if( $projectSpecialty ) {
@@ -945,6 +1033,8 @@ class RequestController extends Controller
 
         //echo "query=".$query->getSql()."<br>";
 
+        $allTransresRequests = $query->getResult();
+
         $paginationParams = array(
             'defaultSortFieldName' => 'transresRequest.id',
             'defaultSortDirection' => 'DESC'
@@ -958,8 +1048,15 @@ class RequestController extends Controller
             $paginationParams
         );
 
+        if( $filterTitle ) {
+            $title = $filterTitle;
+        }
+
+        $title = $title . " (" . count($transresRequests) . " of " . count($allTransresRequests) . ")";
+
         return array(
             'transresRequests' => $transresRequests,
+            'allTransresRequests' => $allTransresRequests,
             'project' => null,
             'filterform' => $filterform->createView(),
             'title' => $title,
@@ -1186,7 +1283,7 @@ class RequestController extends Controller
      */
     public function updateIrbExpDateAction( Request $request ) {
         //set permission: project irb reviewer or admin
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_OBSERVER') ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
