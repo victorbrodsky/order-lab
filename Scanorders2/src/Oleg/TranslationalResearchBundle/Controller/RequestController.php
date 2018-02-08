@@ -285,6 +285,10 @@ class RequestController extends Controller
             $originalProducts->add($product);
         }
 
+        //get Table $jsonData
+        $jsonData = $this->getTableData($transresRequest);
+        print_r($jsonData);
+
         $form = $this->createRequestForm($transresRequest,$cycle,$request); //edit
 
 //        $messageTypeId = true;//testing
@@ -416,7 +420,8 @@ class RequestController extends Controller
             'entityName' => $className,
             'entityId' => $transresRequest->getId(),
             'sitename' => $this->container->getParameter('translationalresearch.sitename'),
-            'routeName' => $request->get('_route')
+            'routeName' => $request->get('_route'),
+            'handsometableData' => json_encode($jsonData)
         );
     }
 
@@ -489,6 +494,30 @@ class RequestController extends Controller
         return $res;
     }
 
+    public function getTableData($transresRequest) {
+        $jsonData = array();
+
+        foreach($transresRequest->getDataResults() as $dataResult) {
+            $rowArr = array();
+
+            //System
+            $rowArr['System']['id'] = $dataResult->getId();
+            $rowArr['System']['value'] = $dataResult->getSystem();
+
+            //Accession ID
+            $rowArr['Accession ID']['id'] = $dataResult->getId();
+            $rowArr['Accession ID']['value'] = $dataResult->getAccessionId();
+
+            //System
+            $rowArr['Barcode']['id'] = $dataResult->getId();
+            $rowArr['Barcode']['value'] = $dataResult->getBarcode();
+
+            $jsonData[] = $rowArr;
+        }
+
+        return $jsonData;
+    }
+
     /**
      * Finds and displays a request entity.
      *
@@ -521,6 +550,10 @@ class RequestController extends Controller
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
+        //get Table $jsonData
+        $jsonData = $this->getTableData($transresRequest);
+        print_r($jsonData);
+
         $form = $this->createRequestForm($transresRequest,$cycle,$request); //show
 
         //$deleteForm = $this->createDeleteForm($project);
@@ -546,7 +579,8 @@ class RequestController extends Controller
             'form' => $form->createView(),
             'cycle' => $cycle,
             'title' => "Request ".$transresRequest->getOid() . $feeHtml,
-            'routeName' => $request->get('_route')
+            'routeName' => $request->get('_route'),
+            'handsometableData' => json_encode($jsonData)
             //'delete_form' => $deleteForm->createView(),
             //'review_forms' => $reviewFormViews
         );

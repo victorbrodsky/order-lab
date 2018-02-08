@@ -405,6 +405,7 @@ function handsonTableInit() {
     if( typeof _handsometableDataArr != 'undefined' && _handsometableDataArr.length != 0 ) {
         rows = _handsometableDataArr.length+1;
     }
+    console.log('handsonTableInit rows='+rows);
 
     // make init data, i=0 to skip the first row
     for( var i=1; i<rows; i++ ) {   //foreach row
@@ -416,16 +417,18 @@ function handsonTableInit() {
             if( 'default' in _columnData_scanorder[ii] ) {
                 var index = _columnData_scanorder[ii]['default'];
                 rowElement[ii] = _columnData_scanorder[ii]['columns']['source'][index];
+                console.log('assign rowElement='+rowElement[ii]);
             } else {
+                console.log('assign rowElement is null');
                 rowElement[ii] = null;
             }
 
             //load data
-            //console.log('load data for row='+i);
+            console.log('load data for row='+i);
             //if( typeof _handsometableDataArr != 'undefined' ) {
             if( typeof _handsometableDataArr != 'undefined' && _handsometableDataArr.length > 0 ) {
                 var headerTitle = _columnData_scanorder[ii]['header'];
-                //console.log('headerTitle='+headerTitle);
+                console.log('headerTitle='+headerTitle);
                 //console.log( _handsometableDataArr[i-1] );
                 if( typeof headerTitle != 'undefined' && typeof _handsometableDataArr[i-1] != 'undefined' &&
                     headerTitle != '' && (i-1<_handsometableDataArr.length) && headerTitle in _handsometableDataArr[i-1]
@@ -433,7 +436,7 @@ function handsonTableInit() {
                     if( _handsometableDataArr[i-1][headerTitle] ) {
                         var cellValue = _handsometableDataArr[i-1][headerTitle]["value"];
                         //var cellId = _handsometableDataArr[i-1][headerTitle]["id"];
-                        //console.log('cellValue='+cellValue+", cellId="+cellId);
+                        console.log('cellValue='+cellValue);
                         //var value = _handsometableDataArr[i-1][headerTitle];
                         //console.log( "value="+value );
                         if( cellValue != null && cellValue != "" ) {
@@ -445,7 +448,7 @@ function handsonTableInit() {
 
         }//foreach column
 
-        //console.log(rowElement);
+        console.log(rowElement);
         data.push(rowElement);
 
     }//foreach row
