@@ -177,6 +177,10 @@ class TransResRequest {
 
     //////////////// EOF fields /////////////////////////
 
+    /**
+     * @ORM\OneToMany(targetEntity="DataResult", mappedBy="transresRequest", cascade={"persist","remove"})
+     */
+    private $dataResults;
 
 
     public function __construct($user=null) {
@@ -187,6 +191,7 @@ class TransResRequest {
         $this->invoices = new ArrayCollection();
         $this->products = new ArrayCollection();
         $this->principalInvestigators = new ArrayCollection();
+        $this->dataResults = new ArrayCollection();
     }
 
 
@@ -544,6 +549,23 @@ class TransResRequest {
     public function setContact($contact)
     {
         $this->contact = $contact;
+    }
+
+    public function getDataResults()
+    {
+        return $this->dataResults;
+    }
+    public function addDataResult($item)
+    {
+        if( $item && !$this->dataResults->contains($item) ) {
+            $this->dataResults->add($item);
+            $item->setTransresRequest($this);
+        }
+        return $this;
+    }
+    public function removeDataResult($item)
+    {
+        $this->dataResults->removeElement($item);
     }
     //////////////// EOF fields /////////////////////////
 

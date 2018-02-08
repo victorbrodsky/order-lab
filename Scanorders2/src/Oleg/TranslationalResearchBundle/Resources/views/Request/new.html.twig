@@ -45,6 +45,8 @@
 
         {{ transresRequestMacros.transresRequestBody(form,transresRequest,cycle,sitename) }}
 
+        {{ transresRequestMacros.transresRequestHandsontable(form,transresRequest,cycle) }}
+
         {{ transresRequestMacros.transresRequestInfo(form,transresRequest,cycle) }}
 
         {% if form.updateDate is defined or form.updateUser is defined  %}
@@ -92,7 +94,38 @@
 
 {% endblock %}
 
+
+
+{% block additionalcss %}
+
+    {% stylesheets '@FOSCommentBundle/Resources/public/css/comments.css' %}
+    <link rel="stylesheet" href="{{ asset_url }}" type="text/css" />
+    {% endstylesheets %}
+
+    {% stylesheets
+    'bundles/olegtranslationalresearch/form/css/comments.css' filter='cssrewrite'
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
+    {% stylesheets
+    'bundles/olegorderform/handsontable/jquery.handsontable.full.css' filter='cssrewrite'
+    'bundles/olegorderform/form/css/handsontable.css' filter='cssrewrite'
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
+{% endblock %}
+
+
 {% block additionaljs %}
+
+    {% javascripts
+    '@OlegOrderformBundle/Resources/public/handsontable/jquery.handsontable.full.js'
+    '@OlegTranslationalResearchBundle/Resources/public/form/js/handsontable.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 
     <script type="text/javascript">
 
@@ -110,6 +143,11 @@
                     transresPrepopulateFundedAccountNumber( $(this) );
                 });
             //}
+
+            if( '{{ handsometableData }}' != '' ) {
+                var _handsometableDataArr = JSON.parse('{{ handsometableData|escape('js') }}');
+            }
+
         });
 
         function transresPrepopulateFundedAccountNumber( projectField ) {

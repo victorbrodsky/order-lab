@@ -26,6 +26,7 @@ namespace Oleg\TranslationalResearchBundle\Controller;
 
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Oleg\TranslationalResearchBundle\Entity\DataResult;
 use Oleg\TranslationalResearchBundle\Entity\Product;
 use Oleg\TranslationalResearchBundle\Entity\Project;
 use Oleg\TranslationalResearchBundle\Entity\TransResRequest;
@@ -159,6 +160,8 @@ class RequestController extends Controller
                 }
             }
 
+            $this->processTableData($transresRequest,$form,$user);
+            
             //new
             if ($form->getClickedButton() && 'saveAsDraft' === $form->getClickedButton()->getName()) {
                 //Save Project as Draft => state='draft'
@@ -336,6 +339,7 @@ class RequestController extends Controller
                 }
             }
 
+            $this->processTableData($transresRequest,$form,$user);
 
             //edit
             if ($form->getClickedButton() && 'saveAsDraft' === $form->getClickedButton()->getName()) {
@@ -414,6 +418,75 @@ class RequestController extends Controller
             'sitename' => $this->container->getParameter('translationalresearch.sitename'),
             'routeName' => $request->get('_route')
         );
+    }
+
+    public function processTableData($transresRequest,$form,$user) {
+        //////////////// process handsontable rows ////////////////
+        $datajson = $form->get('datalocker')->getData();
+
+        $data = json_decode($datajson, true);
+        //var_dump($data);
+
+        if( $data == null ) {
+            throw new \Exception( 'Table order data is null.' );
+        }
+
+        //$headers = array_shift($data);
+        $headers = $data["header"];
+        //var_dump($headers);
+        //echo "<br><br>";
+
+        //echo "entity inst=".$entity->getInstitution()."<br>";
+        //exit();
+
+        foreach( $data["row"] as $row ) {
+            //echo "<br>row:<br>";
+            //var_dump($row);
+            //echo "<br>";
+            //exit();
+
+            $systemArr = $this->getValueByHeaderName('System',$row,$headers);
+            $systemValue = $systemArr['val'];
+            //echo "systemValue=".$systemValue." <br>";
+
+            $accArr = $this->getValueByHeaderName('Accession ID',$row,$headers);
+            $accValue = $accArr['val'];
+            //echo "accValue=".$accValue." <br>";
+
+            $barcodeArr = $this->getValueByHeaderName('Barcode',$row,$headers);
+            $barcodeValue = $barcodeArr['val'];
+            //echo "barcodeValue=".$barcodeValue." <br>";
+
+            if( $systemValue || $accValue || $barcodeValue ) {
+                $dataResult = new DataResult($user);
+                $dataResult->setSystem($systemValue);
+                $dataResult->setAccessionId($accValue);
+                $dataResult->setBarcode($barcodeValue);
+
+                $transresRequest->addDataResult($dataResult);
+            }
+
+        }//foreach row
+        //////////////// process handsontable rows ////////////////
+    }
+    public function getValueByHeaderName($header, $row, $headers) {
+
+        $res = array();
+
+        $key = array_search($header, $headers);
+
+        $res['val'] = $row[$key]['value'];
+
+        $id = null;
+
+        if( array_key_exists('id', $row[$key]) ) {
+            $id = $row[$key]['id'];
+            //echo "id=".$id.", val=".$res['val']."<br>";
+        }
+
+        $res['id'] = $id;
+
+        return $res;
     }
 
     /**

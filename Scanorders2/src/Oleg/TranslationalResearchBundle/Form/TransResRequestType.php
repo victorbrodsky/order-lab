@@ -26,6 +26,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -207,7 +208,7 @@ class TransResRequestType extends AbstractType
                     ->leftJoin("list.employmentStatus", "employmentStatus")
                     ->leftJoin("employmentStatus.employmentType", "employmentType")
                     ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
-                    ->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
+                    //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
                     ->leftJoin("list.infos", "infos")
                     ->orderBy("infos.displayName","ASC");
             },
@@ -224,7 +225,7 @@ class TransResRequestType extends AbstractType
                     ->leftJoin("list.employmentStatus", "employmentStatus")
                     ->leftJoin("employmentStatus.employmentType", "employmentType")
                     ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
-                    ->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
+                    //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
                     ->leftJoin("list.infos", "infos")
                     ->orderBy("infos.displayName","ASC");
             },
@@ -244,32 +245,36 @@ class TransResRequestType extends AbstractType
             'prototype' => true,
             'prototype_name' => '__products__',
         ));
-        //////////////// EOF fields /////////////////////////
 
+        $builder->add('datalocker',HiddenType::class, array(
+            "mapped" => false,
+            'attr' => array('class' => 'transres-datalocker-field')
+        ));
+        //////////////// EOF fields /////////////////////////
 
 
         if( $this->params['saveAsDraft'] === true ) {
             $builder->add('saveAsDraft', SubmitType::class, array(
                 'label' => 'Save Request as Draft',
-                'attr' => array('class' => 'btn btn-warning')
+                'attr' => array('class' => 'btn btn-warning', 'onclick'=>'validateHandsonTable();')
             ));
         }
         if( $this->params['saveAsUpdate'] === true ) {
             $builder->add('saveAsUpdate', SubmitType::class, array(
                 'label' => 'Update',
-                'attr' => array('class'=>'btn btn-warning')
+                'attr' => array('class'=>'btn btn-warning', 'onclick'=>'validateHandsonTable();')
             ));
         }
         if( $this->params['saveAsComplete'] === true ) {
             $builder->add('saveAsComplete', SubmitType::class, array(
                 'label' => 'Complete Submission',
-                'attr' => array('class'=>'btn btn-warning')
+                'attr' => array('class'=>'btn btn-warning', 'onclick'=>'validateHandsonTable();')
             ));
         }
         if( $this->params['updateRequest'] === true ) {
             $builder->add('updateRequest', SubmitType::class, array(
                 'label' => 'Update Request',
-                'attr' => array('class'=>'btn btn-warning')
+                'attr' => array('class'=>'btn btn-warning', 'onclick'=>'validateHandsonTable();')
             ));
         }
 

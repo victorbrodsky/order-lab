@@ -747,3 +747,27 @@
 {% endmacro %}
 
 
+{% macro transresRequestHandsontable( form, transresRequest, cycle ) %}
+
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="transresRequestTableHeading">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#transresRequestTable" aria-expanded="true">
+                        Request Table Results
+                    </a>
+                </h4>
+            </div>
+            <div id="transresRequestTable" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="transresRequestTableHeading">
+                <div class="panel-body">
+
+                    <p>
+                        <div id="transresDataTable" class="text-center" align="middle" style="overflow: scroll"></div>
+                    </p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endmacro %}
