@@ -45,7 +45,9 @@
 
         {{ transresRequestMacros.transresRequestBody(form,transresRequest,cycle,sitename) }}
 
-        {{ transresRequestMacros.transresRequestHandsontable(form,transresRequest,cycle) }}
+        {% if cycle != "new" %}
+            {{ transresRequestMacros.transresRequestHandsontable(form,transresRequest,cycle) }}
+        {% endif %}
 
         {{ transresRequestMacros.transresRequestInfo(form,transresRequest,cycle) }}
 
@@ -129,6 +131,8 @@
 
     <script type="text/javascript">
 
+        var _handsometableDataArr = [];
+
         $(document).ready(function() {
 
             //if( $('#oleg_translationalresearchbundle_request_project') ) {
@@ -144,8 +148,15 @@
                 });
             //}
 
-            if( '{{ handsometableData }}' != '' ) {
-                var _handsometableDataArr = JSON.parse('{{ handsometableData|escape('js') }}');
+            var tableFormCycle = '{{ cycle }}';
+            //console.log('tableFormCycle='+tableFormCycle);
+
+            if( tableFormCycle != "new" ) {
+                var _handsometableDataArr = {{ handsometableData|json_encode|raw }};
+                //console.log('init _handsometableDataArr:');
+                //console.log(_handsometableDataArr);
+
+                handsonTableInit(_handsometableDataArr, tableFormCycle);
             }
 
         });

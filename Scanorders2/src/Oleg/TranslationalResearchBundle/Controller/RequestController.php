@@ -285,9 +285,18 @@ class RequestController extends Controller
             $originalProducts->add($product);
         }
 
+        // Create an ArrayCollection of the current DataResult objects in the database
+        $originalDataResults = new ArrayCollection();
+        foreach($transresRequest->getDataResults() as $dataResult) {
+            $originalDataResults->add($dataResult);
+        }
+
         //get Table $jsonData
         $jsonData = $this->getTableData($transresRequest);
-        print_r($jsonData);
+        //print_r($jsonData);
+//        echo 'jsonData:<pre>';
+//        print_r($jsonData);
+//        echo  '</pre>';
 
         $form = $this->createRequestForm($transresRequest,$cycle,$request); //edit
 
@@ -343,7 +352,22 @@ class RequestController extends Controller
                 }
             }
 
-            $this->processTableData($transresRequest,$form,$user);
+            $addedDataResults = $this->processTableData($transresRequest,$form,$user);
+
+            // remove the relationship between the tag and the Task
+            foreach($originalDataResults as $dataResult) {
+                //echo "??? remove dataResult ID=".$dataResult->getId()."<br>";
+                if (false === $addedDataResults->contains($dataResult)) {
+                    // remove the Task from the Tag
+                    //echo "remove dataResult ID=".$dataResult->getId()."<br>";
+                    $transresRequest->getDataResults()->removeElement($dataResult);
+                    // if it was a many-to-one relationship, remove the relationship like this
+                    $dataResult->setTransresRequest(null);
+                    $em->persist($dataResult);
+                    // if you wanted to delete the Tag entirely, you can also do that
+                    $em->remove($dataResult);
+                }
+            }
 
             //edit
             if ($form->getClickedButton() && 'saveAsDraft' === $form->getClickedButton()->getName()) {
@@ -421,16 +445,27 @@ class RequestController extends Controller
             'entityId' => $transresRequest->getId(),
             'sitename' => $this->container->getParameter('translationalresearch.sitename'),
             'routeName' => $request->get('_route'),
-            'handsometableData' => json_encode($jsonData)
+            //'handsometableData' => json_encode($jsonData)
+            'handsometableData' => $jsonData
         );
     }
 
-    public function processTableData($transresRequest,$form,$user) {
+    public function processTableData( $transresRequest, $form, $user ) {
+        $em = $this->getDoctrine()->getManager();
         //////////////// process handsontable rows ////////////////
         $datajson = $form->get('datalocker')->getData();
+//        echo "<br>datajson:<br>";
+//        var_dump($datajson);
+//        echo "<br>";
+//        echo 'datajson:<pre>';
+//        print_r($datajson);
+//        echo  '</pre>';
 
         $data = json_decode($datajson, true);
-        //var_dump($data);
+        //$data = $datajson;
+//        echo 'data:<pre>';
+//        print_r($data);
+//        echo  '</pre>';
 
         if( $data == null ) {
             throw new \Exception( 'Table order data is null.' );
@@ -444,26 +479,63 @@ class RequestController extends Controller
         //echo "entity inst=".$entity->getInstitution()."<br>";
         //exit();
 
+        $addedDataResults = new ArrayCollection();
+
         foreach( $data["row"] as $row ) {
-            //echo "<br>row:<br>";
-            //var_dump($row);
-            //echo "<br>";
+//            echo "<br>row:<br>";
+//            var_dump($row);
+//            echo "<br>";
             //exit();
 
             $systemArr = $this->getValueByHeaderName('System',$row,$headers);
+//            echo "<br>systemArr:<br>";
+//            var_dump($systemArr);
+//            echo "<br>";
+
             $systemValue = $systemArr['val'];
+            $systemId = $systemArr['id'];
+            //echo "systemId=".$systemId." <br>";
             //echo "systemValue=".$systemValue." <br>";
 
             $accArr = $this->getValueByHeaderName('Accession ID',$row,$headers);
             $accValue = $accArr['val'];
+            $accId = $accArr['id'];
             //echo "accValue=".$accValue." <br>";
 
             $barcodeArr = $this->getValueByHeaderName('Barcode',$row,$headers);
             $barcodeValue = $barcodeArr['val'];
+            $barcodeId = $barcodeArr['id'];
+            //echo "barcodeId=".$barcodeId." <br>";
             //echo "barcodeValue=".$barcodeValue." <br>";
 
             if( $systemValue || $accValue || $barcodeValue ) {
-                $dataResult = new DataResult($user);
+                //get $dataResult object
+                $dataResult = null;
+                $objectId = null;
+                if( $systemId || $accId || $barcodeId ) {
+                    if( $systemId ) {
+                        $objectId = $systemId;
+                    }
+                    if( !$objectId && $accId ) {
+                        $objectId = $accId;
+                    }
+                    if( !$objectId && $barcodeId ) {
+                        $objectId = $barcodeId;
+                    }
+                }
+
+                if( $objectId ) {
+                    $dataResult = $em->getRepository('OlegTranslationalResearchBundle:DataResult')->find($objectId);
+                    //echo "dataResult found=".$dataResult->getSystem()."<br>";
+                }
+                //exit();
+
+                if( $dataResult ) {
+                    $addedDataResults->add($dataResult);
+                } else {
+                    $dataResult = new DataResult($user);
+                }
+
                 $dataResult->setSystem($systemValue);
                 $dataResult->setAccessionId($accValue);
                 $dataResult->setBarcode($barcodeValue);
@@ -472,7 +544,8 @@ class RequestController extends Controller
             }
 
         }//foreach row
-        //////////////// process handsontable rows ////////////////
+
+        return $addedDataResults;
     }
     public function getValueByHeaderName($header, $row, $headers) {
 
@@ -491,6 +564,7 @@ class RequestController extends Controller
 
         $res['id'] = $id;
 
+        echo "key=".$key.": id=".$res['id'].", val=".$res['val']."<br>";
         return $res;
     }
 
@@ -552,7 +626,10 @@ class RequestController extends Controller
 
         //get Table $jsonData
         $jsonData = $this->getTableData($transresRequest);
-        print_r($jsonData);
+        //print_r($jsonData);
+//        echo 'jsonData:<pre>';
+//        print_r($jsonData);
+//        echo  '</pre>';
 
         $form = $this->createRequestForm($transresRequest,$cycle,$request); //show
 
@@ -580,7 +657,8 @@ class RequestController extends Controller
             'cycle' => $cycle,
             'title' => "Request ".$transresRequest->getOid() . $feeHtml,
             'routeName' => $request->get('_route'),
-            'handsometableData' => json_encode($jsonData)
+            //'handsometableData' => json_encode($jsonData)
+            'handsometableData' => $jsonData
             //'delete_form' => $deleteForm->createView(),
             //'review_forms' => $reviewFormViews
         );
