@@ -25,6 +25,7 @@ use Oleg\UserdirectoryBundle\Entity\Publication;
 //use Symfony\Component\Translation\Translator;
 //use Symfony\Component\Translation\Loader\ArrayLoader;
 use Oleg\UserdirectoryBundle\Form\LabelType;
+use Oleg\UserdirectoryBundle\Form\UserSimpleType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -1540,6 +1541,126 @@ class UserController extends Controller
 //            'method' => 'POST',
 //        ));
         $form = $this->createForm(UserType::class, $user, array(
+            'disabled' => false,
+            'action' => $this->generateUrl( $this->container->getParameter('employees.sitename').'_create_user' ),
+            'method' => 'POST',
+            'form_custom_value' => $params,
+        ));
+
+        //return $this->container->get('templating')->renderResponse('FOSUserBundle:Profile:show.html.'.$this->container->getParameter('fos_user.template.engine'), array('user' => $user));
+        return array(
+            'entity' => $user,
+            'form' => $form->createView(),
+            'cycle' => 'create_user',
+            'user_id' => '',
+            'sitename' => $this->container->getParameter('employees.sitename'),
+            'userclone' => $subjectUser,
+            'postData' => $request->query->all(),
+            'title' => 'Create New User'
+        );
+
+    }
+
+    /**
+     * @Route("/user/new/simple/", name="employees_new_simple_user")
+     * @Method("GET")
+     * @Template("OlegUserdirectoryBundle:Profile:new_simple_user.html.twig")
+     */
+    public function newSimpleUserAction(Request $request,$id=null)
+    {
+
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $userGenerator = $this->container->get('user_generator');
+
+        //echo "user id=".$id."<br>";
+        //exit();
+
+        $userManager = $this->container->get('fos_user.user_manager');
+        $user = $userManager->createUser();
+
+        $creator = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $userGenerator->addDefaultLocations($user,$creator);
+
+        $userSecUtil = $this->get('user_security_utility');
+        $userkeytype = $userSecUtil->getDefaultUsernameType();
+        $user->setKeytype($userkeytype);
+
+        $user->setPassword("");
+
+        //set optional user-type and user-name
+        $userType = $request->query->get('user-type');
+        if( $userType ) {
+            $keytypeObj = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->find($userType);
+            $user->setKeytype($keytypeObj);
+        }
+
+        $userName = $request->query->get('user-name');
+        if( $userName ) {
+            $user->setPrimaryPublicUserId($userName);
+        }
+
+        //Only show this profile to members of the following institution(s): default preset choices WCMC, NYP
+        $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+        $nyp = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("NYP");
+        //echo "add inst:".$wcmc."; ".$nyp."<br>";
+        $user->getPreferences()->addShowToInstitution($wcmc);
+        $user->getPreferences()->addShowToInstitution($nyp);
+
+        //set empty collections
+        $this->addEmptyCollections($user);
+
+        //clone user
+        $subjectUser = null;
+        if( $id && $id != "" ) {
+            $subjectUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
+            $userUtil = new UserUtil();
+            $user = $userUtil->makeUserClone($subjectUser,$user);
+        } else {
+            //organizationalGroupDefault - match it to the organizational group selected in the "Defaults for an Organizational Group" in Site Settings,
+            // then load the corresponding default values into the page on initial load
+            $userUtil = new UserUtil();
+            $user = $userUtil->populateDefaultUserFields($creator,$user,$em);
+        }
+
+//        //add EIN identifier to credentials
+//        $identEin = new Identifier();
+//        $identKeytypeEin = $em->getRepository('OlegUserdirectoryBundle:IdentifierTypeList')->findOneByName("WCMC Employee Identification Number (EIN)");
+//        if( $identKeytypeEin ) {
+//            $identEin->setKeytype($identKeytypeEin);
+//        }
+//        $user->getCredentials()->addIdentifier($identEin);
+
+//        //add NPI identifier to credentials
+//        $identNpi = new Identifier();
+//        $identKeytypeNpi = $em->getRepository('OlegUserdirectoryBundle:IdentifierTypeList')->findOneByName("National Provider Identifier (NPI)");
+//        if( $identKeytypeNpi ) {
+//            $identNpi->setKeytype($identKeytypeNpi);
+//        }
+//        $user->getCredentials()->addIdentifier($identNpi);
+
+        //Roles
+        $rolesArr = $this->getUserRoles(); //new user form
+
+        $params = array(
+            'cycle' => 'create',
+            'user' => $user,
+            'cloneuser' => $subjectUser,
+            'roles' => $rolesArr,
+            'container' => $this->container,
+            'em' => $em
+        );
+
+//        $form = $this->createForm(new UserType($params), $user, array(
+//            'disabled' => false,
+//            'action' => $this->generateUrl( $this->container->getParameter('employees.sitename').'_create_user' ),
+//            'method' => 'POST',
+//        ));
+        $form = $this->createForm(UserSimpleType::class, $user, array(
             'disabled' => false,
             'action' => $this->generateUrl( $this->container->getParameter('employees.sitename').'_create_user' ),
             'method' => 'POST',
