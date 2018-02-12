@@ -69,17 +69,21 @@ class TransResSiteParameters {
     private $projectSpecialty;
 
     /**
+     * invoice header
+     *
      * @ORM\Column(type="text", nullable=true)
      */
     private $transresFromHeader;
 
     /**
+     * invoice footer
+     *
      * @ORM\Column(type="text", nullable=true)
      */
     private $transresFooter;
 
     /**
-     * Default Logos
+     * Default Invoice Logos
      *
      * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
      * @ORM\JoinTable(name="transres_transResSiteParameters_transresLogo",
@@ -114,6 +118,13 @@ class TransResSiteParameters {
      */
     private $requestCompletedNotifiedEmailSubject;
 
+    /**
+     * Invoice's invoiceSalesperson
+     *
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\JoinColumn(name="invoiceSalesperson", referencedColumnName="id", nullable=true)
+     */
+    private $invoiceSalesperson;
 
 
     public function __construct($user=null) {
@@ -336,6 +347,22 @@ class TransResSiteParameters {
         $this->requestCompletedNotifiedEmailSubject = $requestCompletedNotifiedEmailSubject;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getInvoiceSalesperson()
+    {
+        return $this->invoiceSalesperson;
+    }
+
+    /**
+     * @param mixed $invoiceSalesperson
+     */
+    public function setInvoiceSalesperson($invoiceSalesperson)
+    {
+        $this->invoiceSalesperson = $invoiceSalesperson;
+    }
+    
     
 
 

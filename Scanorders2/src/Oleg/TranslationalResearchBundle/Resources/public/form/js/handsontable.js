@@ -226,7 +226,8 @@ var _rowToProcessArr = [];
 var _columnData_scanorder = [
     { header:'System', columns:{} },
     { header:'Accession ID', columns:{} },
-    { header:'Barcode', columns:{} }
+    { header:'Barcode', columns:{} },
+    { header:'Comment', columns:{} }
 ];
 
 $(document).ready(function() {

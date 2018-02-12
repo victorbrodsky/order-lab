@@ -750,7 +750,7 @@
 {% macro transresRequestHandsontable( form, transresRequest, cycle ) %}
 
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-        <div class="panel panel-default">
+        <div class="panel panel-info">
             <div class="panel-heading" role="tab" id="transresRequestTableHeading">
                 <h4 class="panel-title">
                     <a role="button" data-toggle="collapse" data-parent="#accordion" href="#transresRequestTable" aria-expanded="true">
@@ -761,6 +761,42 @@
             <div id="transresRequestTable" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="transresRequestTableHeading">
                 <div class="panel-body">
                     <div id="transresDataTable" class="text-center" align="middle" style="overflow: scroll"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endmacro %}
+
+{% macro transresRequestComment( form, transresRequest, cycle ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-info">
+            <div class="panel-heading" role="tab" id="transresRequestCommentHeading">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#transresRequestComment" aria-expanded="true">
+                        Request Comment and Documents
+                    </a>
+                </h4>
+            </div>
+            <div id="transresRequestComment" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="transresRequestCommentHeading">
+                <div class="panel-body">
+
+                    {{ formmacros.field(form.comment) }}
+
+                    <p>
+                    <div class="well form-element-holder user-documents">
+                        <label class="col-xs-12 control-label">Request Document(s)</label>
+                        <div class="row withpaddingtop">
+                            <div class="col-xs-12">
+                                {{ usermacros.documentsContainer(form,form.documents,cycle,'noprototype',8,'default','Request Document','asForm',false) }}
+                            </div>
+                        </div>
+                    </div>
+                    </p>
+
                 </div>
             </div>
         </div>

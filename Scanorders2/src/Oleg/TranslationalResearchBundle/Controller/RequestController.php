@@ -160,6 +160,8 @@ class RequestController extends Controller
                 }
             }
 
+            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($transresRequest,"document");
+
             $this->processTableData($transresRequest,$form,$user);
             
             //new
@@ -352,6 +354,8 @@ class RequestController extends Controller
                 }
             }
 
+            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($transresRequest,"document");
+
             $addedDataResults = $this->processTableData($transresRequest,$form,$user);
 
             // remove the relationship between the tag and the Task
@@ -508,7 +512,11 @@ class RequestController extends Controller
             //echo "barcodeId=".$barcodeId." <br>";
             //echo "barcodeValue=".$barcodeValue." <br>";
 
-            if( $systemValue || $accValue || $barcodeValue ) {
+            $commentArr = $this->getValueByHeaderName('Comment',$row,$headers);
+            $commentValue = $commentArr['val'];
+            $commentId = $commentArr['id'];
+
+            if( $systemValue || $accValue || $barcodeValue || $commentValue) {
                 //get $dataResult object
                 $dataResult = null;
                 $objectId = null;
@@ -521,6 +529,9 @@ class RequestController extends Controller
                     }
                     if( !$objectId && $barcodeId ) {
                         $objectId = $barcodeId;
+                    }
+                    if( !$objectId && $commentId ) {
+                        $objectId = $commentId;
                     }
                 }
 
@@ -539,6 +550,7 @@ class RequestController extends Controller
                 $dataResult->setSystem($systemValue);
                 $dataResult->setAccessionId($accValue);
                 $dataResult->setBarcode($barcodeValue);
+                $dataResult->setComment($commentValue);
 
                 $transresRequest->addDataResult($dataResult);
             }
@@ -582,9 +594,14 @@ class RequestController extends Controller
             $rowArr['Accession ID']['id'] = $dataResult->getId();
             $rowArr['Accession ID']['value'] = $dataResult->getAccessionId();
 
-            //System
+            //Barcode
             $rowArr['Barcode']['id'] = $dataResult->getId();
             $rowArr['Barcode']['value'] = $dataResult->getBarcode();
+
+            //Comment
+            $rowArr['Comment']['id'] = $dataResult->getId();
+            $rowArr['Comment']['value'] = $dataResult->getComment();
+
 
             $jsonData[] = $rowArr;
         }
@@ -1041,15 +1058,67 @@ class RequestController extends Controller
                     )
                 );
             }
-//            if( $filterType == "All Pending Requests" ) {
-//                return $this->redirectToRoute(
-//                    'translationalresearch_request_index_filter',
-//                    array(
-//                        'filter[progressState][0]' => "active",
-//                        'title' => $filterType,
-//                    )
-//                );
-//            }
+
+            //"Pending" is all status except, Canceled, Completed, CompletedNotified
+            if( $filterType == "All Pending Requests" ) {
+                return $this->redirectToRoute(
+                    'translationalresearch_request_index_filter',
+                    array(
+                        'filter[progressState][0]' => "active",
+                        'filter[progressState][1]' => "investigator",
+                        'filter[progressState][2]' => "histo",
+                        'filter[progressState][3]' => "ihc",
+                        'filter[progressState][4]' => "mol",
+                        'filter[progressState][5]' => "retrieval",
+                        'filter[progressState][6]' => "payment",
+                        'filter[progressState][7]' => "slidescanning",
+                        'filter[progressState][8]' => "block",
+                        'filter[progressState][9]' => "other",
+                        'title' => $filterType,
+                    )
+                );
+            }
+            if( $filterType == "All AP/CP Pending Requests" ) {
+                $projectSpecialtyObject = $transresUtil->getSpecialtyObject("ap-cp");
+                return $this->redirectToRoute(
+                    'translationalresearch_request_index_filter',
+                    array(
+                        'filter[projectSpecialty]' => $projectSpecialtyObject->getId(),
+                        'filter[progressState][0]' => "active",
+                        'filter[progressState][1]' => "investigator",
+                        'filter[progressState][2]' => "histo",
+                        'filter[progressState][3]' => "ihc",
+                        'filter[progressState][4]' => "mol",
+                        'filter[progressState][5]' => "retrieval",
+                        'filter[progressState][6]' => "payment",
+                        'filter[progressState][7]' => "slidescanning",
+                        'filter[progressState][8]' => "block",
+                        'filter[progressState][9]' => "other",
+                        'title' => $filterType,
+                    )
+                );
+            }
+            if( $filterType == "All Hematopathology Pending Requests" ) {
+                $projectSpecialtyObject = $transresUtil->getSpecialtyObject("hematopathology");
+                return $this->redirectToRoute(
+                    'translationalresearch_request_index_filter',
+                    array(
+                        'filter[projectSpecialty]' => $projectSpecialtyObject->getId(),
+                        'filter[progressState][0]' => "active",
+                        'filter[progressState][1]' => "investigator",
+                        'filter[progressState][2]' => "histo",
+                        'filter[progressState][3]' => "ihc",
+                        'filter[progressState][4]' => "mol",
+                        'filter[progressState][5]' => "retrieval",
+                        'filter[progressState][6]' => "payment",
+                        'filter[progressState][7]' => "slidescanning",
+                        'filter[progressState][8]' => "block",
+                        'filter[progressState][9]' => "other",
+                        'title' => $filterType,
+                    )
+                );
+            }
+
             if( $filterType == "All Active Requests" ) {
                 return $this->redirectToRoute(
                     'translationalresearch_request_index_filter',
@@ -1059,6 +1128,29 @@ class RequestController extends Controller
                     )
                 );
             }
+            if( $filterType == "All AP/CP Active Requests" ) {
+                $projectSpecialtyObject = $transresUtil->getSpecialtyObject("ap-cp");
+                return $this->redirectToRoute(
+                    'translationalresearch_request_index_filter',
+                    array(
+                        'filter[projectSpecialty]' => $projectSpecialtyObject->getId(),
+                        'filter[progressState][0]' => "active",
+                        'title' => $filterType,
+                    )
+                );
+            }
+            if( $filterType == "All Hematopathology Active Requests" ) {
+                $projectSpecialtyObject = $transresUtil->getSpecialtyObject("hematopathology");
+                return $this->redirectToRoute(
+                    'translationalresearch_request_index_filter',
+                    array(
+                        'filter[projectSpecialty]' => $projectSpecialtyObject->getId(),
+                        'filter[progressState][0]' => "active",
+                        'title' => $filterType,
+                    )
+                );
+            }
+
             if( $filterType == "All Completed Requests" ) {
                 return $this->redirectToRoute(
                     'translationalresearch_request_index_filter',
@@ -1068,6 +1160,29 @@ class RequestController extends Controller
                     )
                 );
             }
+            if( $filterType == "All AP/CP Completed Requests" ) {
+                $projectSpecialtyObject = $transresUtil->getSpecialtyObject("ap-cp");
+                return $this->redirectToRoute(
+                    'translationalresearch_request_index_filter',
+                    array(
+                        'filter[projectSpecialty]' => $projectSpecialtyObject->getId(),
+                        'filter[progressState][0]' => "completed",
+                        'title' => $filterType,
+                    )
+                );
+            }
+            if( $filterType == "All Hematopathology Completed Requests" ) {
+                $projectSpecialtyObject = $transresUtil->getSpecialtyObject("hematopathology");
+                return $this->redirectToRoute(
+                    'translationalresearch_request_index_filter',
+                    array(
+                        'filter[projectSpecialty]' => $projectSpecialtyObject->getId(),
+                        'filter[progressState][0]' => "completed",
+                        'title' => $filterType,
+                    )
+                );
+            }
+
             if( $filterType == "All Completed and Notified Requests" ) {
                 return $this->redirectToRoute(
                     'translationalresearch_request_index_filter',
@@ -1075,6 +1190,36 @@ class RequestController extends Controller
                         'filter[progressState][0]' => "completedNotified",
                         'title' => $filterType,
                     )
+                );
+            }
+            if( $filterType == "All AP/CP Completed and Notified Requests" ) {
+                $projectSpecialtyObject = $transresUtil->getSpecialtyObject("ap-cp");
+                return $this->redirectToRoute(
+                    'translationalresearch_request_index_filter',
+                    array(
+                        'filter[projectSpecialty]' => $projectSpecialtyObject->getId(),
+                        'filter[progressState][0]' => "completedNotified",
+                        'title' => $filterType,
+                    )
+                );
+            }
+            if( $filterType == "All Hematopathology Completed and Notified Requests" ) {
+                $projectSpecialtyObject = $transresUtil->getSpecialtyObject("hematopathology");
+                return $this->redirectToRoute(
+                    'translationalresearch_request_index_filter',
+                    array(
+                        'filter[projectSpecialty]' => $projectSpecialtyObject->getId(),
+                        'filter[progressState][0]' => "completedNotified",
+                        'title' => $filterType,
+                    )
+                );
+            }
+
+            //not pre-set filter
+            if( $filterType != "All Requests" ) {
+                $this->get('session')->getFlashBag()->add(
+                    'notice',
+                    "Filter pre-set type '$filterType' is not defined"
                 );
             }
         }

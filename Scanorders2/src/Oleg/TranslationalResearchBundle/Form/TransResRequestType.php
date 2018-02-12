@@ -250,6 +250,23 @@ class TransResRequestType extends AbstractType
             "mapped" => false,
             'attr' => array('class' => 'transres-datalocker-field')
         ));
+
+        $builder->add('documents', CollectionType::class, array(
+            'entry_type' => DocumentType::class,
+            'label' => 'Document(s):',
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__documentsid__',
+        ));
+
+        $builder->add('comment', null, array(
+            'label' => "Comment:",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
         //////////////// EOF fields /////////////////////////
 
 

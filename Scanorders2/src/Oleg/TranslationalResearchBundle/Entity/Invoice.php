@@ -97,7 +97,7 @@ class Invoice {
     private $dueDate;
 
     /**
-     * Pre-Populated by Request's contact (Billing Contact)
+     * Is not the same as Request's contact (Billing Contact). Pre-populated from default salesperson setting
      *
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(name="salesperson", referencedColumnName="id", nullable=true)
@@ -119,6 +119,14 @@ class Invoice {
      * @ORM\JoinColumn(name="principalInvestigator", referencedColumnName="id", nullable=true)
      */
     private $principalInvestigator;
+
+    /**
+     * Billing contact (from PI side) is populated from Request's  billing contact ($contact)
+     *
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\JoinColumn(name="billingContact", referencedColumnName="id", nullable=true)
+     */
+    private $billingContact;
 
     /**
      * Invoice status
@@ -453,6 +461,22 @@ class Invoice {
     public function setPrincipalInvestigator($principalInvestigator)
     {
         $this->principalInvestigator = $principalInvestigator;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBillingContact()
+    {
+        return $this->billingContact;
+    }
+
+    /**
+     * @param mixed $billingContact
+     */
+    public function setBillingContact($billingContact)
+    {
+        $this->billingContact = $billingContact;
     }
 
 //    public function getPrincipalInvestigators()

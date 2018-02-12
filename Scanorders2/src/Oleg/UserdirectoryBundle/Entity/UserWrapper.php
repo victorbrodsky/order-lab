@@ -80,6 +80,16 @@ class UserWrapper extends ListAbstract {
      */
     private $userWrapperEmail;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $userWrapperFirstName;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $userWrapperLastName;
+
     //Specialty: [link to the platform list manager's specialty list items here
     // http://collage.med.cornell.edu/order/directory/admin/list-manager/id/69 - allow more than one]
     /**
@@ -176,8 +186,37 @@ class UserWrapper extends ListAbstract {
         $this->userWrapperSource = $userWrapperSource;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getUserWrapperFirstName()
+    {
+        return $this->userWrapperFirstName;
+    }
 
+    /**
+     * @param mixed $userWrapperFirstName
+     */
+    public function setUserWrapperFirstName($userWrapperFirstName)
+    {
+        $this->userWrapperFirstName = $userWrapperFirstName;
+    }
 
+    /**
+     * @return mixed
+     */
+    public function getUserWrapperLastName()
+    {
+        return $this->userWrapperLastName;
+    }
+
+    /**
+     * @param mixed $userWrapperLastName
+     */
+    public function setUserWrapperLastName($userWrapperLastName)
+    {
+        $this->userWrapperLastName = $userWrapperLastName;
+    }
 
     /**
      * @param mixed $userStr

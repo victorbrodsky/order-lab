@@ -163,7 +163,7 @@ class TransResRequest {
     private $supportEndDate;
 
     /**
-     * Billing contact for Invoice
+     * Billing contact is populated from Project's $billingContact
      *
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(name="contact", referencedColumnName="id", nullable=true)
@@ -182,6 +182,24 @@ class TransResRequest {
      */
     private $dataResults;
 
+    /**
+     * @var string
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $comment;
+
+    /**
+     * Request Documents
+     *
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="transres_request_document",
+     *      joinColumns={@ORM\JoinColumn(name="request_id", referencedColumnName="id", onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")}
+     *      )
+     * @ORM\OrderBy({"createdate" = "ASC"})
+     **/
+    private $documents;
+
 
     public function __construct($user=null) {
         $this->setSubmitter($user);
@@ -192,6 +210,7 @@ class TransResRequest {
         $this->products = new ArrayCollection();
         $this->principalInvestigators = new ArrayCollection();
         $this->dataResults = new ArrayCollection();
+        $this->documents = new ArrayCollection();
     }
 
 
@@ -566,6 +585,40 @@ class TransResRequest {
     public function removeDataResult($item)
     {
         $this->dataResults->removeElement($item);
+    }
+
+    public function addDocument($item)
+    {
+        if( $item && !$this->documents->contains($item) ) {
+            $this->documents->add($item);
+            $item->createUseObject($this);
+        }
+        return $this;
+    }
+    public function removeDocument($item)
+    {
+        $this->documents->removeElement($item);
+        $item->clearUseObject();
+    }
+    public function getDocuments()
+    {
+        return $this->documents;
+    }
+
+    /**
+     * @return string
+     */
+    public function getComment()
+    {
+        return $this->comment;
+    }
+
+    /**
+     * @param string $comment
+     */
+    public function setComment($comment)
+    {
+        $this->comment = $comment;
     }
     //////////////// EOF fields /////////////////////////
 

@@ -64,6 +64,12 @@ class DataResult {
      */
     private $barcode;
 
+    /**
+     * @var text
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $comment;
+
 
 
     public function __construct($user=null) {
@@ -183,5 +189,23 @@ class DataResult {
     {
         $this->barcode = $barcode;
     }
+
+    /**
+     * @return text
+     */
+    public function getComment()
+    {
+        return $this->comment;
+    }
+
+    /**
+     * @param text $comment
+     */
+    public function setComment($comment)
+    {
+        $this->comment = $comment;
+    }
+
+    
 
 }

@@ -49,6 +49,8 @@
             {{ transresRequestMacros.transresRequestHandsontable(form,transresRequest,cycle) }}
         {% endif %}
 
+        {{ transresRequestMacros.transresRequestComment(form,transresRequest,cycle) }}
+
         {{ transresRequestMacros.transresRequestInfo(form,transresRequest,cycle) }}
 
         {% if form.updateDate is defined or form.updateUser is defined  %}

@@ -116,6 +116,14 @@ class Project {
      * )
      **/
     private $principalInvestigators;
+    /**
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\UserWrapper", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="transres_projectPI_userWrapper",
+     *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="userWrapper_id", referencedColumnName="id")}
+     *      )
+     **/
+    private $userWrapperPIs;
 
     /**
      * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
@@ -135,12 +143,9 @@ class Project {
      **/
     private $pathologists;
 
-//    /**
-//     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
-//     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
-//     */
-//    private $contact;
     /**
+     * Project's "Contact" filed is pre-populated with the current user (Submitter)
+     *
      * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
      * @ORM\JoinTable(name="transres_project_contact",
      *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id")},
@@ -347,11 +352,10 @@ class Project {
 
 
     public function __construct($user=null) {
-        $this->setSubmitter($user);
-        $this->setState('draft');
-        $this->setCreateDate(new \DateTime());
 
         $this->principalInvestigators = new ArrayCollection();
+        $this->userWrapperPIs = new ArrayCollection();
+
         $this->coInvestigators = new ArrayCollection();
         $this->pathologists = new ArrayCollection();
         $this->contacts = new ArrayCollection();
@@ -369,6 +373,11 @@ class Project {
         $this->requests = new ArrayCollection();
 
         //$this->formVersions = new ArrayCollection();
+
+        $this->setSubmitter($user);
+        $this->addContact($user);
+        $this->setState('draft');
+        $this->setCreateDate(new \DateTime());
     }
 
 
@@ -737,6 +746,24 @@ class Project {
     {
         $this->principalInvestigators->removeElement($item);
     }
+
+    public function getUserWrapperPIs()
+    {
+        return $this->userWrapperPIs;
+    }
+    public function addUserWrapperPI($item)
+    {
+        if( $item && !$this->userWrapperPIs->contains($item) ) {
+            $this->userWrapperPIs->add($item);
+        }
+        return $this;
+    }
+    public function removeUserWrapperPI($item)
+    {
+        $this->userWrapperPIs->removeElement($item);
+    }
+
+
 
     public function getCoInvestigators()
     {

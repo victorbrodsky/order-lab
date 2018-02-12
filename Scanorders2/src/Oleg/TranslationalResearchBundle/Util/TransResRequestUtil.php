@@ -1301,7 +1301,7 @@ class TransResRequestUtil
         }
         $emails = array_merge($emails,$piEmailArr);
 
-        //c contact
+        //contact
         if( $transresRequest->getContact() ) {
             $contactEmail = $transresRequest->getContact()->getSingleEmail();
             if( $submitterEmail ) {
@@ -1316,6 +1316,7 @@ class TransResRequestUtil
 
     }
 
+    //Changing the status of request to "Approved/Ready for Invoicing" (approvedInvoicing) should send an email notification
     public function sendRequestBillingNotificationEmails($transresRequest,$invoice,$testing=false) {
         $transResFormNodeUtil = $this->container->get('transres_formnode_util');
         //$transresRequestUtil = $this->container->get('transres_request_util');
@@ -1346,14 +1347,14 @@ class TransResRequestUtil
             }
         }
 
-        //2) Request's billing contact
-        $billingContact = $transresRequest->getContact();
-        if( $billingContact ) {
-            $billingContactEmail = $billingContact->getSingleEmail();
-            if( $billingContactEmail ) {
-                $emails[] = $billingContactEmail;
-            }
-        }
+//        //2) Request's billing contact (PI side)
+//        $billingContact = $transresRequest->getContact();
+//        if( $billingContact ) {
+//            $billingContactEmail = $billingContact->getSingleEmail();
+//            if( $billingContactEmail ) {
+//                $emails[] = $billingContactEmail;
+//            }
+//        }
 
         //Subject: Draft Translation Research Invoice for Request [Request ID] of Project [Project Title]
         $subject = "Draft Translation Research Invoice for Request ".$transresRequest->getOid()." of Project ".$projectTitle;
@@ -1389,14 +1390,25 @@ class TransResRequestUtil
             //Use submitter
             $pi = $invoice->getSubmitter();
         }
+        $piEmailArr = array();
         $piEmail = $pi->getSingleEmail();
-        if( !$piEmail ) {
+        if( $piEmail ) {
+            $piEmailArr[] = $piEmail;
+        } else {
             //return "There is no PI's email. Email has not been sent.";
             throw new \Exception("There is no PI's email. Email has not been sent.");
         }
+        //Invoice's Billing Contact
+        $invoiceBillingContact = $invoice->getBillingContact();
+        if( $invoiceBillingContact ) {
+            $invoiceBillingContactEmail = $invoiceBillingContact->getSingleEmail();
+            if( $invoiceBillingContactEmail) {
+                $piEmailArr[] = $invoiceBillingContactEmail;
+            }
+        }
 
         $body = $body . $newline."To issue the invoice to ".$pi.
-            " at email ".$piEmail." please follow this link:".$newline.$sendPdfEmailUrl.$newline;
+            " at email ".implode(", ",$piEmailArr)." please follow this link:".$newline.$sendPdfEmailUrl.$newline;
 
         //3 To edit the invoice and generate an updated copy, please follow this link
         $editInvoiceUrl = $this->container->get('router')->generate(
@@ -1553,10 +1565,12 @@ class TransResRequestUtil
         $newline = "\n";
         //$newline = "<br>";
 
-        //pre-populate salesperson
-        $transresRequestContact = $transresRequest->getContact();
-        if( $transresRequestContact ) {
-            $invoice->setSalesperson($transresRequestContact);
+        //pre-populate salesperson from default salesperson
+        if( $siteParameter->getInvoiceSalesperson() ) {
+            $salesperson = $siteParameter->getInvoiceSalesperson();
+            if( $salesperson ) {
+                $invoice->setSalesperson($salesperson);
+            }
         }
 
         //pre-populate fundedAccountNumber
@@ -1634,6 +1648,12 @@ class TransResRequestUtil
             if( $userlabel ) {
                 $invoice->setInvoiceTo($userlabel);
             }
+        }
+
+        //Pre-set PI's Billiong Contact from Request's contact
+        $transreqContact = $transresRequest->getContact();
+        if( $transreqContact ) {
+            $invoice->setBillingContact($transreqContact);
         }
 
         //populate invoice items corresponding to the multiple requests
@@ -1851,10 +1871,21 @@ class TransResRequestUtil
             'All AP/CP Requests',
             'All Hematopathology Requests',
             '[[hr]]',
-            //'All Pending Requests',
+            'All Pending Requests',
+            'All AP/CP Pending Requests',
+            'All Hematopathology Pending Requests',
+            '[[hr]]',
             'All Active Requests',
+            'All AP/CP Active Requests',
+            'All Hematopathology Active Requests',
+            '[[hr]]',
             'All Completed Requests',
+            'All AP/CP Completed Requests',
+            'All Hematopathology Completed Requests',
+            '[[hr]]',
             'All Completed and Notified Requests',
+            'All AP/CP Completed and Notified Requests',
+            'All Hematopathology Completed and Notified Requests',
             //'[[hr]]',
 
             //'Pending AP/CP Requests',
@@ -1930,6 +1961,7 @@ class TransResRequestUtil
         $siteParameter = null;
         $attachmentPath = null;
         $ccs = null;
+        $piEmailArr = array();
 
         $pi = $invoice->getPrincipalInvestigator();
 
@@ -1940,8 +1972,21 @@ class TransResRequestUtil
         }
 
         $piEmail = $pi->getSingleEmail();
-        if( !$piEmail ) {
-            return "There is no PI's email. Email has not been sent.";
+        if( $piEmail ) {
+            $piEmailArr[] = $piEmail;
+        }
+
+        //Invoice's Billing Contact
+        $invoiceBillingContact = $invoice->getBillingContact();
+        if( $invoiceBillingContact ) {
+            $invoiceBillingContactEmail = $invoiceBillingContact->getSingleEmail();
+            if( $invoiceBillingContactEmail) {
+                $piEmailArr[] = $invoiceBillingContactEmail;
+            }
+        }
+
+        if( count($piEmailArr) == 0 ) {
+            return "There are no PI and/or Billing Contact emails. Email has not been sent.";
         }
 
         //Attachment: Invoice PDF
@@ -2006,9 +2051,9 @@ class TransResRequestUtil
 
         //send by email
         //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-        $emailUtil->sendEmail( $piEmail, $emailSubject, $emailBody, $ccs, $ccs, $attachmentPath );
+        $emailUtil->sendEmail( $piEmailArr, $emailSubject, $emailBody, $ccs, $ccs, $attachmentPath );
 
-        $msg =  "Invoice ".$invoice->getOid()." PDF has been sent by email to " . $piEmail . " with CC to " . $ccs;
+        $msg =  "Invoice ".$invoice->getOid()." PDF has been sent by email to " . implode(", ",$piEmailArr) . " with CC to " . $ccs;
         $msg = $msg . ".<br> Subject: " . $emailSubject . ".<br> Body: " . $emailBody;
 
         //event log

@@ -54,6 +54,24 @@ class SiteParameterType extends AbstractType
             'attr' => array('class' => 'textarea form-control')
         ));
 
+        $builder->add('invoiceSalesperson', EntityType::class, array(
+            'class' => 'OlegUserdirectoryBundle:User',
+            'label' => "Invoice Salesperson:",
+            //'disabled' => true,
+            'required' => false,
+            'multiple' => false,
+            'attr' => array('class' => 'combobox combobox-width'),
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->leftJoin("list.employmentStatus", "employmentStatus")
+                    ->leftJoin("employmentStatus.employmentType", "employmentType")
+                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+                    //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
+                    ->leftJoin("list.infos", "infos")
+                    ->orderBy("infos.displayName", "ASC");
+            },
+        ));
+
         $builder->add('transresLogos', CollectionType::class, array(
             'entry_type' => DocumentType::class,
             'label' => 'Logo(s):',
@@ -76,6 +94,7 @@ class SiteParameterType extends AbstractType
             'required' => false,
             'attr' => array('class' => 'textarea form-control')
         ));
+
 
         //Buttons
         if( $this->params['cycle'] === "new" ) {
