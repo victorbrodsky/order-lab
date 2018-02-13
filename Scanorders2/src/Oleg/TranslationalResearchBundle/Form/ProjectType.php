@@ -228,9 +228,11 @@ class ProjectType extends AbstractType
 //            'attr' => array('class' => 'form-control')
 //        ));
 
+        $addUserOnFly = '(<a href="javascript:void(0)" onclick="addNewUserOnFly(this);">Add New</a>)';
+
         $builder->add( 'principalInvestigators', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
-            'label'=> "Principal Investigator(s):",
+            'label'=> "Principal Investigator(s) $addUserOnFly:",
             'required'=> true,
             'multiple' => true,
             'attr' => array('class'=>'combobox combobox-width'),
@@ -239,7 +241,7 @@ class ProjectType extends AbstractType
 
         $builder->add( 'coInvestigators', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
-            'label'=> "Co-Investigator(s):",
+            'label'=> "Co-Investigator(s) $addUserOnFly:",
             'required'=> false,
             'multiple' => true,
             'attr' => array('class'=>'combobox combobox-width'),
@@ -264,7 +266,7 @@ class ProjectType extends AbstractType
 
         $builder->add( 'pathologists', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
-            'label'=> "WCMC Pathologist(s) Involved:",
+            'label'=> "WCMC Pathologist(s) Involved $addUserOnFly:",
             'required'=> false,
             'multiple' => true,
             'attr' => array('class'=>'combobox combobox-width'),
@@ -273,7 +275,7 @@ class ProjectType extends AbstractType
 
         $builder->add( 'contacts', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
-            'label'=> "Contact(s):",
+            'label'=> "Contact(s) $addUserOnFly:",
             'required'=> false,
             'multiple' => true,
             'attr' => array('class'=>'combobox combobox-width'),
@@ -291,7 +293,7 @@ class ProjectType extends AbstractType
 
         $builder->add( 'billingContact', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
-            'label'=> "Billing Contact:",
+            'label'=> "Billing Contact $addUserOnFly:",
             'required'=> false,
             'multiple' => false,
             'attr' => array('class'=>'combobox combobox-width'),

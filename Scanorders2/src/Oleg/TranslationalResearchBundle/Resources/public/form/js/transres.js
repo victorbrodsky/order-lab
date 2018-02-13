@@ -145,6 +145,7 @@ function transresValidateProjectForm(projectForm) {
     //var form = document.getElementById("transresProjectForm");
     //form.submit();
     //projectForm.submit(); // If all the validations succeeded
+
 }
 
 

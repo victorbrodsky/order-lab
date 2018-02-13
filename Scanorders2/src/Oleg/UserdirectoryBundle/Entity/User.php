@@ -124,6 +124,8 @@ class User extends BaseUser {
     private $infos;
 
     /**
+     * system, excel, manual, ldap
+     *
      * @ORM\Column(name="createdby", type="string", nullable=true)
      */
     private $createdby;

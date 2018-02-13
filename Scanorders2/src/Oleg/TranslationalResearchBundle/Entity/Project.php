@@ -116,14 +116,6 @@ class Project {
      * )
      **/
     private $principalInvestigators;
-    /**
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\UserWrapper", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="transres_projectPI_userWrapper",
-     *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="userWrapper_id", referencedColumnName="id")}
-     *      )
-     **/
-    private $userWrapperPIs;
 
     /**
      * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
@@ -354,8 +346,6 @@ class Project {
     public function __construct($user=null) {
 
         $this->principalInvestigators = new ArrayCollection();
-        $this->userWrapperPIs = new ArrayCollection();
-
         $this->coInvestigators = new ArrayCollection();
         $this->pathologists = new ArrayCollection();
         $this->contacts = new ArrayCollection();
@@ -745,22 +735,6 @@ class Project {
     public function removePrincipalInvestigator($item)
     {
         $this->principalInvestigators->removeElement($item);
-    }
-
-    public function getUserWrapperPIs()
-    {
-        return $this->userWrapperPIs;
-    }
-    public function addUserWrapperPI($item)
-    {
-        if( $item && !$this->userWrapperPIs->contains($item) ) {
-            $this->userWrapperPIs->add($item);
-        }
-        return $this;
-    }
-    public function removeUserWrapperPI($item)
-    {
-        $this->userWrapperPIs->removeElement($item);
     }
 
 

@@ -298,7 +298,7 @@
                         <div class="well well-sm">
                         <div style="text-align: center;">
                             <p>
-                                <strong>{{ form.billingContact.vars.label }}</strong>
+                                <strong>{{ form.billingContact.vars.label|raw }}</strong>
                                 {% if project.billingContact %}
                                     {{ usermacros.personInfo(project.billingContact, cycle, 'translationalresearch') }}
                                 {% else %}
@@ -309,7 +309,17 @@
                         </div>
                         {% do form.billingContact.setRendered %}
                     {% else %}
-                        {{ formmacros.field(form.billingContact) }}
+                        {#{{ formmacros.field(form.billingContact) }}#}
+                        <p>
+                        <div class="row">
+                            <div class="col-xs-6" align="right">
+                                <strong>{{ form.billingContact.vars.label|raw }}</strong>
+                            </div>
+                            <div class="col-xs-6" align="left">
+                                {{ form_widget(form.billingContact) }}
+                            </div>
+                        </div>
+                        </p>
                     {% endif %}
 
                 </div>
@@ -350,7 +360,24 @@
         </div>
         {% do usersForm.setRendered %}
     {% else %}
-        {{ formmacros.field(usersForm) }}
+        {#{{ formmacros.field(usersForm) }}#}
+
+        <p>
+        <div class="row">
+            <div class="col-xs-6" align="right">
+                <strong>{{ usersForm.vars.label|raw }}</strong>
+            </div>
+            <div class="col-xs-6" align="left">
+                {{ form_widget(usersForm) }}
+                {#<div class = "input-group">#}
+                    {#{{ form_widget(usersForm) }}#}
+                    {#<span class = "input-group-addon btn" onclick="addNewUserOnFly(this)">#}
+                        {#Add New#}
+                    {#</span>#}
+                {#</div>#}
+            </div>
+        </div>
+        </p>
     {% endif %}
 {% endmacro %}
 

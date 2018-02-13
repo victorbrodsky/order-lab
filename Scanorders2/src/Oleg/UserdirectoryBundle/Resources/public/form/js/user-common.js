@@ -1349,3 +1349,47 @@ function waitfor(test, expectedValue, msec, count, source, callback) {
     }
     callback();
 }
+
+function addNewUserOnFly( btn ) {
+    console.log("Add New User on Fly");
+
+    constructAddNewUserModal();
+
+}
+
+function constructAddNewUserModal() {
+    console.log("construct modal");
+
+     var modalHtml =
+                '<div id="user-add-new-user" class="modal fade">' +
+                '<div class="modal-dialog">' +
+                '<div class="modal-content">' +
+                '<div class="modal-header text-center">' +
+                '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
+                '<h3 id="dataConfirmLabel">Confirmation</h3>' +
+                '</div>' +
+                '<div class="modal-body text-center">' +
+                '</div>' +
+                '<div class="modal-footer">' +
+                '<button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Cancel</button>' +
+                '<a class="btn btn-primary general-data-confirm-ok" id="dataConfirmOK">OK</a>' +
+                '<button style="display: none;" class="btn btn-primary">OK</button>' +
+                '</div>' +
+                '</div>' +
+                '</div>' +
+                '</div>';
+
+        $('body').append(modalHtml);
+
+        $('#user-add-new-user').modal({show:true});
+
+        //add listnere to ok button to "Please wait ..." and disable button on click
+        $('.general-data-confirm-ok').on('click', function(event){
+            //alert("on modal js: dataConfirmOK clicked");
+            var footer = $(this).closest('.modal-footer');
+            footer.html('Please wait ...');
+        });
+
+        return false;
+
+}
