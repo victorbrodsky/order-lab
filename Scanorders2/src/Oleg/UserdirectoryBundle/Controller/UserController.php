@@ -26,6 +26,7 @@ use Oleg\UserdirectoryBundle\Entity\Publication;
 //use Symfony\Component\Translation\Loader\ArrayLoader;
 use Oleg\UserdirectoryBundle\Form\LabelType;
 use Oleg\UserdirectoryBundle\Form\UserSimpleType;
+use Oleg\UserdirectoryBundle\Security\Authentication\AuthUtil;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -36,6 +37,7 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Config\Definition\Exception\ForbiddenOverwriteException;
 
@@ -1679,6 +1681,114 @@ class UserController extends Controller
             'title' => 'Create New User'
         );
 
+    }
+    /**
+     * @Route("/add-new-user-ajax/", name="employees_add_new_user_ajax", options={"expose"=true})
+     * @Method("POST")
+     */
+    public function addNewUserAjaxAction(Request $request)
+    {
+
+        if( false === $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY') ) {
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
+        $resArr = array(
+            "flag" => "NOTOK",
+            "error" => "Unknown Error"
+        );
+
+        $cwid = $request->get('cwid');
+        $email = $request->get('email');
+        $displayname = $request->get('displayname');
+        $firstname = $request->get('firstname');
+        $lastname = $request->get('lastname');
+        $phone = $request->get('phone');
+
+        //echo "cwid=$cwid<br>";
+
+        $em = $this->getDoctrine()->getManager();
+        $userSecUtil = $this->get('user_security_utility');
+        $publicUserId = null;
+        $username = null;
+
+        $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($cwid);
+        if( $user ) {
+            $publicUserId = $cwid;
+        }
+
+        if( !$user ) {
+            $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByEmailCanonical($email);
+            if ($user) {
+                $emailParts = explode("@",$email);
+                if( count($emailParts) == 2 ) {
+                    $publicUserId = $emailParts[0];
+                }
+            }
+        }
+
+        if( $user ) {
+            $thisUrl = $this->container->get('router')->generate(
+                'employees_showuser',
+                array(
+                    'id'=>$user->getId()
+                ),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $thisLink = '<a target="_blank" href='.$thisUrl.'>'.$user.'</a>';
+
+            $resArr["error"] = "User $thisLink is already exists.";
+
+            $json = json_encode($resArr);
+            $response = new Response($json);
+            $response->headers->set('Content-Type', 'application/json');
+            return $response;
+        }
+
+        //first search this user if exists in ldap directory
+        $authUtil = new AuthUtil($this->container,$em);
+        $searchRes = $authUtil->searchLdap($cwid);
+        if( $searchRes == NULL || count($searchRes) == 0 ) {
+            $msg = "LdapAuthentication: can not find user by cwid=".$cwid;
+            echo "msg=$msg <br>";
+            //create local user: oli2002c_@_local-user
+            $username = $publicUserId . "_@_" . "local-user";
+        } else {
+            //create WCMC LDAP user: oli2002c_@_wcmc-cwid
+            echo "create WCMC LDAP user<br>";
+            $username = $publicUserId . "_@_" . "wcmc-cwid";
+        }
+
+        $user = $userSecUtil->constractNewUser($username); //publicUserId_@_wcmc-cwid
+
+        //$createdBy = "Manually by Translational Research WCM User";
+        $createdBy = "manual";
+        $createdBy = "manual-transres";
+        $user->setCreatedby($createdBy);
+
+        exit();
+
+
+        //$em->persist($user);
+        //$em->flush();
+
+        //record create user to Event Log
+        $event = "User ".$user." has been created by ".$user."<br>";
+        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil->createUserEditEvent(
+            $this->container->getParameter('employees.sitename'),
+            $event,
+            $creator,
+            $user,
+            $request,
+            'New user record added'
+        );
+
+
+        $json = json_encode($resArr);
+        $response = new Response($json);
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
     }
 
 

@@ -1350,11 +1350,118 @@ function waitfor(test, expectedValue, msec, count, source, callback) {
     callback();
 }
 
-function addNewUserOnFly( btn ) {
+function addNewUserOnFly( btnEl ) {
     console.log("Add New User on Fly");
 
     constructAddNewUserModal();
 
+    // var btn = document.getElementById("add-user-btn-add");
+    // var lbtn = Ladda.create( btn );
+    // lbtn.stop();
+}
+
+function addNewUserAction( btnEl ) {
+
+    $('#add-user-danger-box').hide();
+    $('#add-user-danger-box').html(null);
+
+    var btn = document.getElementById("add-user-btn-add");
+    //var btn = btnEl.get(0);
+    var lbtn = Ladda.create( btn );
+    lbtn.start();
+    $("#user-add-btn-dismiss").hide();
+    $("#user-add-btn-cancel").hide();
+
+    var transTime = 500;
+
+    console.log("addNewUserAction: Add New User Ajax");
+
+    var cwid = $("#add-new-user-cwid").val();
+    console.log("cwid="+cwid);
+    //var userid = $("#add-new-user-userid").val();
+    //console.log("userid="+userid);
+    var email = $("#add-new-user-email").val();
+    console.log("email="+email);
+    var displayname = $("#add-new-user-displayname").val();
+    console.log("displayname="+displayname);
+    var firstname = $("#add-new-user-firstname").val();
+    console.log("firstname="+firstname);
+    var lastname = $("#add-new-user-lastname").val();
+    console.log("lastname="+lastname);
+    var phone = $("#add-new-user-phone").val();
+    console.log("phone="+phone);
+
+    //1) validate email
+    if( email ) {
+        //if( mrntype && mrn || lastname ) {
+        //ok
+    } else {
+        $('#add-user-danger-box').html("Please enter a new user email address");
+        $('#add-user-danger-box').show(transTime);
+
+        lbtn.stop();
+        $("#user-add-btn-dismiss").show();
+        $("#user-add-btn-cancel").show();
+
+        return false;
+    }
+
+    console.log("addNewUserAction: call ajax to check if user exists");
+
+    //2) try to create a new user
+    var url = Routing.generate('employees_add_new_user_ajax');
+    $.ajax({
+        url: url,
+        timeout: _ajaxTimeout,
+        //type: "GET",
+        type: "POST",
+        data: {
+            cwid: cwid,
+            email: email,
+            displayname: displayname,
+            firstname: firstname,
+            lastname: lastname,
+            phone: phone
+        },
+        dataType: 'json',
+        async: asyncflag
+    }).success(function(response) {
+        console.log(response);
+
+        if( response.flag == "NOTOK" ) {
+            console.log('NOTOK');
+            lbtn.stop();
+            $("#user-add-btn-dismiss").show();
+            $("#user-add-btn-cancel").show();
+
+            $('#add-user-danger-box').html(response.error);
+            $('#add-user-danger-box').show(transTime);
+        } else {
+            console.log('OK');
+            updateUserComboboxes(response);
+            //$("#user-add-btn-dismiss").click();
+            document.getElementById("user-add-btn-dismiss").click();
+        }
+
+    }).done(function() {
+        lbtn.stop();
+        $("#user-add-btn-dismiss").show();
+        $("#user-add-btn-cancel").show();
+    }).error(function(jqXHR, textStatus, errorThrown) {
+        console.log('Error : ' + errorThrown);
+        lbtn.stop();
+        $("#user-add-btn-dismiss").show();
+        $("#user-add-btn-cancel").show();
+
+        $('#add-user-danger-box').html('Error : ' + errorThrown);
+        $('#add-user-danger-box').show(transTime);
+    });
+
+}
+
+function updateUserComboboxes(response) {
+    console.log("update user comboboxes; response:");
+    console.log(response);
 }
 
 function constructAddNewUserModal() {
@@ -1365,15 +1472,24 @@ function constructAddNewUserModal() {
                 '<div class="modal-dialog">' +
                 '<div class="modal-content">' +
                 '<div class="modal-header text-center">' +
-                '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
-                '<h3 id="dataConfirmLabel">Confirmation</h3>' +
+                '<button id="user-add-btn-dismiss" type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
+                '<h3 id="dataConfirmLabel">Add New User</h3>' +
                 '</div>' +
                 '<div class="modal-body text-center">' +
+
+                    getNewUserField("cwid","Primary Public User ID or CWID")+
+                    getNewUserField("email","Email",true)+
+                    getNewUserField("displayname","Display Name")+
+                    getNewUserField("firstname","First Name")+
+                    getNewUserField("lastname","Last Name")+
+                    getNewUserField("phone","Phone")+
+
+                    '<div id="add-user-danger-box" class="alert alert-danger" style="display: none;"></div>' +
+
                 '</div>' +
                 '<div class="modal-footer">' +
-                '<button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Cancel</button>' +
-                '<a class="btn btn-primary general-data-confirm-ok" id="dataConfirmOK">OK</a>' +
-                '<button style="display: none;" class="btn btn-primary">OK</button>' +
+                '<button id="user-add-btn-cancel" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Cancel</button>' +
+                '<a class="btn btn-primary add-user-btn-add" id="add-user-btn-add" onclick="addNewUserAction(this)">Add</a>' +
                 '</div>' +
                 '</div>' +
                 '</div>' +
@@ -1381,15 +1497,57 @@ function constructAddNewUserModal() {
 
         $('body').append(modalHtml);
 
-        $('#user-add-new-user').modal({show:true});
+        $('#user-add-new-user').modal(
+            {
+                show:true,
+                keyboard: false,
+                backdrop: 'static'
+            }
+        );
 
-        //add listnere to ok button to "Please wait ..." and disable button on click
-        $('.general-data-confirm-ok').on('click', function(event){
-            //alert("on modal js: dataConfirmOK clicked");
-            var footer = $(this).closest('.modal-footer');
-            footer.html('Please wait ...');
+        $("#user-add-new-user").on('hidden.bs.modal', function () {
+            console.log("hidden.bs.modal");
+            //$(this).data('bs.modal', null);
+            //$(this).data('modal', null);
+            $( '.modal' ).modal( 'hide' ).data( 'bs.modal', null );
+
+            $( '.modal' ).remove();
+            $( '.modal-backdrop' ).remove();
+            $( 'body' ).removeClass( "modal-open" );
         });
 
-        return false;
+        //add listnere to ok button to "Please wait ..." and disable button on click
+        // $('.general-data-confirm-ok').on('click', function(event){
+        //     var footer = $(this).closest('.modal-footer');
+        //     footer.html('Please wait ...');
+        // });
 
+        return false;
+}
+
+function getNewUserField( fieldStr, fieldLabel, requiredFlag) {
+
+    if( requiredFlag === undefined ) {
+        requiredFlag = false;
+    }
+
+    var required = "";
+    if( requiredFlag === true ) {
+        required = "required";
+    }
+    //console.log("required="+required);
+
+    var html =
+        '<p>'+
+            '<div class="row">'+
+                '<div class="col-xs-6 '+required+'" align="right">'+
+                    '<strong>'+fieldLabel+':</strong>'+
+                '</div>'+
+                '<div class="col-xs-6" align="left">'+
+                    '<input id="add-new-user-'+fieldStr+'" class="form-control user-'+fieldStr+'" type="text" value="">'+
+                '</div>'+
+            '</div>'+
+        '</p>';
+
+    return html;
 }
