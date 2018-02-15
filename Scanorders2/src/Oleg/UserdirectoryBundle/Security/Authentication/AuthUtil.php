@@ -602,7 +602,7 @@ class AuthUtil {
 
         $cnx = $this->connectToLdap($LDAPHost);
 
-        $res = ldap_bind($cnx,$LDAPUserAdmin,$LDAPUserPasswordAdmin);
+        $res = @ldap_bind($cnx,$LDAPUserAdmin,$LDAPUserPasswordAdmin);
         if( !$res ) {
             $this->logger->error("searchLdap: ldap_bind failed with admin authentication username=".$LDAPUserAdmin);
         	//echo "Could not bind to LDAP: user=".$LDAPUserAdmin."<br>";

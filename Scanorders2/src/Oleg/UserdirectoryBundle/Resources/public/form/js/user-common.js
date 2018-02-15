@@ -1350,17 +1350,18 @@ function waitfor(test, expectedValue, msec, count, source, callback) {
     callback();
 }
 
-function addNewUserOnFly( btnEl ) {
+//btnDom - is the 'this' button attached to the field where a new user is to be created
+function addNewUserOnFly( btnDom ) {
     console.log("Add New User on Fly");
 
-    constructAddNewUserModal();
+    constructAddNewUserModal(btnDom);
 
     // var btn = document.getElementById("add-user-btn-add");
     // var lbtn = Ladda.create( btn );
     // lbtn.stop();
 }
 
-function addNewUserAction( btnEl ) {
+function addNewUserAction( fieldId ) {
 
     $('#add-user-danger-box').hide();
     $('#add-user-danger-box').html(null);
@@ -1374,7 +1375,7 @@ function addNewUserAction( btnEl ) {
 
     var transTime = 500;
 
-    console.log("addNewUserAction: Add New User Ajax");
+    console.log("add New UserAction: Add New User Ajax");
 
     var cwid = $("#add-new-user-cwid").val();
     console.log("cwid="+cwid);
@@ -1406,7 +1407,7 @@ function addNewUserAction( btnEl ) {
         return false;
     }
 
-    console.log("addNewUserAction: call ajax to check if user exists");
+    console.log("add New UserAction: call ajax to check if user exists");
 
     //2) try to create a new user
     var url = Routing.generate('employees_add_new_user_ajax');
@@ -1438,7 +1439,7 @@ function addNewUserAction( btnEl ) {
             $('#add-user-danger-box').show(transTime);
         } else {
             console.log('OK');
-            updateUserComboboxes(response);
+            updateUserComboboxes(response,fieldId);
             //$("#user-add-btn-dismiss").click();
             document.getElementById("user-add-btn-dismiss").click();
         }
@@ -1459,13 +1460,58 @@ function addNewUserAction( btnEl ) {
 
 }
 
-function updateUserComboboxes(response) {
+function updateUserComboboxes(response,fieldId) {
     console.log("update user comboboxes; response:");
     console.log(response);
+
+    var userId = response.userId;
+    var userName = response.userName;
+    console.log("userId="+userId+"; userName="+userName);
+
+    //find combobox select2 element
+
+
+    //$(".combobox").select2({data: [{id: userId, text: userName}]});
+    //$(".combobox").select2('data', {id: userId, text: userName});
+    //$(".combobox").select2('val', userId);
+
+    //var newOption = new Option(userName, userId, false, false);
+    //$(".combobox").append(newOption).trigger('change');
+
+    $("select.combobox").each(function(){
+
+        if( $(this).find("option[value='" + userId + "']").length ) {
+            //$("#state").val(userId).trigger("change");
+        } else {
+
+            console.log("fieldId="+fieldId+"=?="+$(this).attr('id'));
+            if( fieldId == $(this).attr('id') ) {
+                console.log("set this user fieldId="+fieldId);
+                var newOption = new Option(userName, userId, true, true);
+            } else {
+                console.log("just add this user fieldId="+fieldId);
+                var newOption = new Option(userName, userId, false, false);
+            }
+            $(this).append(newOption).trigger('change');
+
+        }
+
+    });
+
+    //$(".combobox").select2('val', userId);
 }
 
-function constructAddNewUserModal() {
+function constructAddNewUserModal(btnDom) {
     console.log("construct modal");
+
+    //get field id (assume select box)
+    var comboboxEl = $(btnDom).closest('.row').find('select.combobox');
+    console.log("comboboxEl:");
+    console.log(comboboxEl);
+    //var fieldId = $(btnDom).closest('.raw').find('select.combobox').attr('id');
+    var fieldId = comboboxEl.attr('id');
+    fieldId = "'"+fieldId+"'";
+    console.log("fieldId="+fieldId);
 
      var modalHtml =
                 '<div id="user-add-new-user" class="modal fade">' +
@@ -1489,7 +1535,7 @@ function constructAddNewUserModal() {
                 '</div>' +
                 '<div class="modal-footer">' +
                 '<button id="user-add-btn-cancel" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Cancel</button>' +
-                '<a class="btn btn-primary add-user-btn-add" id="add-user-btn-add" onclick="addNewUserAction(this)">Add</a>' +
+                '<a class="btn btn-primary add-user-btn-add" id="add-user-btn-add" onclick="addNewUserAction('+fieldId+')">Add</a>' +
                 '</div>' +
                 '</div>' +
                 '</div>' +

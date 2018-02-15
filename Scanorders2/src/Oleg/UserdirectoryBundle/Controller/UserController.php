@@ -1750,24 +1750,37 @@ class UserController extends Controller
         $searchRes = $authUtil->searchLdap($cwid);
         if( $searchRes == NULL || count($searchRes) == 0 ) {
             $msg = "LdapAuthentication: can not find user by cwid=".$cwid;
-            echo "msg=$msg <br>";
+            //echo "msg=$msg <br>";
             //create local user: oli2002c_@_local-user
             $username = $publicUserId . "_@_" . "local-user";
         } else {
             //create WCMC LDAP user: oli2002c_@_wcmc-cwid
-            echo "create WCMC LDAP user<br>";
+            //echo "create WCMC LDAP user<br>";
             $username = $publicUserId . "_@_" . "wcmc-cwid";
         }
 
         $user = $userSecUtil->constractNewUser($username); //publicUserId_@_wcmc-cwid
 
         //$createdBy = "Manually by Translational Research WCM User";
-        $createdBy = "manual";
+        //$createdBy = "manual";
         $createdBy = "manual-transres";
         $user->setCreatedby($createdBy);
 
-        exit();
+        $user->setLocked(true);
 
+        $resArr["flag"] = "OK";
+        $resArr["error"] = null;
+        $resArr['userId'] = $user->getId();
+        $resArr['userName'] = $user."";
+
+        $resArr['userId'] = $cwid;
+        $resArr['userName'] = "New User $cwid";
+
+        $json = json_encode($resArr);
+        $response = new Response($json);
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+        exit();
 
         //$em->persist($user);
         //$em->flush();
