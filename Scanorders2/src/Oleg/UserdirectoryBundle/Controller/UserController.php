@@ -24,6 +24,7 @@ use Oleg\UserdirectoryBundle\Entity\PerSiteSettings;
 use Oleg\UserdirectoryBundle\Entity\Publication;
 //use Symfony\Component\Translation\Translator;
 //use Symfony\Component\Translation\Loader\ArrayLoader;
+use Oleg\UserdirectoryBundle\Entity\UserInfo;
 use Oleg\UserdirectoryBundle\Form\LabelType;
 use Oleg\UserdirectoryBundle\Form\UserSimpleType;
 use Oleg\UserdirectoryBundle\Security\Authentication\AuthUtil;
@@ -1725,6 +1726,18 @@ class UserController extends Controller
             }
         }
 
+        if( !$displayname ) {
+            if( $firstname && $lastname ) {
+                $displayname = $firstname . " " . $lastname;
+            }
+            if( $firstname && !$lastname ) {
+                $displayname = $firstname;
+            }
+            if( !$firstname && $lastname ) {
+                $displayname = $lastname;
+            }
+        }
+
         //echo "publicUserId=$publicUserId<br>";
 
         if( $publicUserId ) {
@@ -1782,7 +1795,13 @@ class UserController extends Controller
         //add site specific role
         //$user->addRole('ROLE_TRANSRES_USER');
 
-        //set user properties
+        //create user info
+        if( count($user->getInfos()) == 0 ) {
+            $userInfo = new UserInfo();
+            $user->addInfo($userInfo);
+        }
+
+        //set user info
         $user->setEmail($email);
         $user->setFirstName($firstname);
         $user->setLastName($lastname);
