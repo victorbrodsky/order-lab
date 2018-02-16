@@ -226,6 +226,11 @@ var _rowToProcessArr = [];
 var _columnData_scanorder = [
     { header:'System', columns:{} },
     { header:'Accession ID', columns:{} },
+    { header:'Part ID', columns:{} },
+    { header:'Block ID', columns:{} },
+    { header:'Slide ID', columns:{} },
+    { header:'Stain Name', columns:{} },
+    { header:'Other ID', columns:{} },
     { header:'Barcode', columns:{} },
     { header:'Comment', columns:{} }
 ];

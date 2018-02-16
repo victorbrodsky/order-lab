@@ -227,8 +227,8 @@ class ProjectType extends AbstractType
 //            'label' => "Please check the box if this project is ready for committee to review:",
 //            'attr' => array('class' => 'form-control')
 //        ));
-
-        $addUserOnFly = '(<a href="javascript:void(0)" onclick="addNewUserOnFly(this);">Add New</a>)';
+        $sitename = "'translationalresearch'";
+        $addUserOnFly = '(<a href="javascript:void(0)" onclick="addNewUserOnFly(this,'.$sitename.');">Add New</a>)';
 
         $builder->add( 'principalInvestigators', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
@@ -279,17 +279,17 @@ class ProjectType extends AbstractType
             'required'=> false,
             'multiple' => true,
             'attr' => array('class'=>'combobox combobox-width'),
-            'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->leftJoin("list.employmentStatus", "employmentStatus")
-                    ->leftJoin("employmentStatus.employmentType", "employmentType")
-                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
-                    //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
-                    ->andWhere("list.id = 21 OR list.id = 22 OR list.id = 23")
-                    ->leftJoin("list.infos", "infos")
-                    ->orderBy("infos.displayName","ASC");
-            },
-            //'query_builder' => $this->params['transresUtil']->userQueryBuilder()
+//            'query_builder' => function(EntityRepository $er) {
+//                return $er->createQueryBuilder('list')
+//                    ->leftJoin("list.employmentStatus", "employmentStatus")
+//                    ->leftJoin("employmentStatus.employmentType", "employmentType")
+//                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+//                    //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
+//                    ->andWhere("list.id = 21 OR list.id = 22 OR list.id = 23")
+//                    ->leftJoin("list.infos", "infos")
+//                    ->orderBy("infos.displayName","ASC");
+//            },
+            'query_builder' => $this->params['transresUtil']->userQueryBuilder()
         ));
 
         $builder->add( 'billingContact', EntityType::class, array(

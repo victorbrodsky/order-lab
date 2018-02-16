@@ -1690,15 +1690,20 @@ class UserController extends Controller
     public function addNewUserAjaxAction(Request $request)
     {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY') ) {
-            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        if (false === $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
         }
+
+        return $this->addNewUserAjax($request); //$this->container->getParameter('employees.sitename')
+    }
+    public function addNewUserAjax($request) {
 
         $resArr = array(
             "flag" => "NOTOK",
             "error" => "Unknown Error"
         );
 
+        $sitename = $request->get('sitename');
         $publicUserId = $request->get('cwid');
         $email = $request->get('email');
         $displayname = $request->get('displayname');
@@ -1785,7 +1790,7 @@ class UserController extends Controller
         //add site specific creation string
         //$createdBy = "Manually by Translational Research WCM User";
         //$createdBy = "manual";
-        $createdBy = "manual-transres";
+        $createdBy = "manual-".$sitename;
         $user->setCreatedby($createdBy);
 
         $user->setLocked(true);
@@ -1830,7 +1835,7 @@ class UserController extends Controller
         $event = "User ".$user." has been created by ".$creator."<br>";
         $userSecUtil = $this->get('user_security_utility');
         $userSecUtil->createUserEditEvent(
-            $this->container->getParameter('employees.sitename'),
+            $sitename,
             $event,
             $creator,
             $user,

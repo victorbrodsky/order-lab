@@ -506,6 +506,29 @@ class RequestController extends Controller
             $accId = $accArr['id'];
             //echo "accValue=".$accValue." <br>";
 
+
+
+            $partArr = $this->getValueByHeaderName('Part ID',$row,$headers);
+            $partValue = $partArr['val'];
+            $partId = $partArr['id'];
+
+            $blockArr = $this->getValueByHeaderName('Block ID',$row,$headers);
+            $blockValue = $blockArr['val'];
+            $blockId = $blockArr['id'];
+
+            $slideArr = $this->getValueByHeaderName('Slide ID',$row,$headers);
+            $slideValue = $slideArr['val'];
+            $slideId = $slideArr['id'];
+
+            $stainArr = $this->getValueByHeaderName('Stain Name',$row,$headers);
+            $stainValue = $stainArr['val'];
+            $stainId = $stainArr['id'];
+
+            $otherArr = $this->getValueByHeaderName('Other ID',$row,$headers);
+            $otherValue = $otherArr['val'];
+            $otherId = $otherArr['id'];
+
+
             $barcodeArr = $this->getValueByHeaderName('Barcode',$row,$headers);
             $barcodeValue = $barcodeArr['val'];
             $barcodeId = $barcodeArr['id'];
@@ -548,7 +571,14 @@ class RequestController extends Controller
                 }
 
                 $dataResult->setSystem($systemValue);
+
                 $dataResult->setAccessionId($accValue);
+                $dataResult->setPartId($partValue);
+                $dataResult->setBlockId($blockValue);
+                $dataResult->setSlideId($slideValue);
+                $dataResult->setStainName($stainValue);
+                $dataResult->setOtherId($otherValue);
+
                 $dataResult->setBarcode($barcodeValue);
                 $dataResult->setComment($commentValue);
 
@@ -593,6 +623,26 @@ class RequestController extends Controller
             //Accession ID
             $rowArr['Accession ID']['id'] = $dataResult->getId();
             $rowArr['Accession ID']['value'] = $dataResult->getAccessionId();
+
+            //Part ID
+            $rowArr['Part ID']['id'] = $dataResult->getId();
+            $rowArr['Part ID']['value'] = $dataResult->getPartId();
+
+            //Block ID
+            $rowArr['Block ID']['id'] = $dataResult->getId();
+            $rowArr['Block ID']['value'] = $dataResult->getBlockId();
+
+            //Slide ID
+            $rowArr['Slide ID']['id'] = $dataResult->getId();
+            $rowArr['Slide ID']['value'] = $dataResult->getSlideId();
+
+            //Stain Name
+            $rowArr['Stain Name']['id'] = $dataResult->getId();
+            $rowArr['Stain Name']['value'] = $dataResult->getStainName();
+
+            //Other ID
+            $rowArr['Other ID']['id'] = $dataResult->getId();
+            $rowArr['Other ID']['value'] = $dataResult->getOtherId();
 
             //Barcode
             $rowArr['Barcode']['id'] = $dataResult->getId();

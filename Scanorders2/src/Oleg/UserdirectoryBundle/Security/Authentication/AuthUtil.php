@@ -80,7 +80,8 @@ class AuthUtil {
             //exit();
             //return $user;
 
-            if( $this->canLogin($user) === false ) {
+            if( !$this->canLogin($user) ) {
+                //exit("User can not login");
                 return NULL;
             }
 
@@ -710,7 +711,7 @@ class AuthUtil {
     //return ldap connection
     public function connectToLdap( $LDAPHost ) {
 
-        $cnx = ldap_connect($LDAPHost);
+        $cnx = @ldap_connect($LDAPHost);
         if( !$cnx ) {
             $this->logger->warning("Ldap: Could not connect to LDAP");
             return NULL;
@@ -738,15 +739,16 @@ class AuthUtil {
     }
 
     public function canLogin($user) {
-        if( $user->getLocked() === false ) {
-            return true;
+        if( $user->getLocked() ) {
+            $this->logger->warning("User is locked");
+            return false;
+        }
+        if( !$user->isEnabled() ) {
+            $this->logger->warning("User is not enabled");
+            return false;
         }
 
-        if( $user->isEnabled() === true ) {
-            return true;
-        }
-
-        return false;
+        return true;
     }
 
 

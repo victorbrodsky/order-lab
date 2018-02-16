@@ -70,6 +70,36 @@ class DataResult {
      */
     private $comment;
 
+    /**
+     * @var string
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $blockId;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $partId;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $slideId;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $stainName;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $otherId;
+
 
 
     public function __construct($user=null) {
@@ -206,6 +236,87 @@ class DataResult {
         $this->comment = $comment;
     }
 
+    /**
+     * @return string
+     */
+    public function getBlockId()
+    {
+        return $this->blockId;
+    }
+
+    /**
+     * @param string $blockId
+     */
+    public function setBlockId($blockId)
+    {
+        $this->blockId = $blockId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPartId()
+    {
+        return $this->partId;
+    }
+
+    /**
+     * @param string $partId
+     */
+    public function setPartId($partId)
+    {
+        $this->partId = $partId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSlideId()
+    {
+        return $this->slideId;
+    }
+
+    /**
+     * @param string $slideId
+     */
+    public function setSlideId($slideId)
+    {
+        $this->slideId = $slideId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStainName()
+    {
+        return $this->stainName;
+    }
+
+    /**
+     * @param string $stainName
+     */
+    public function setStainName($stainName)
+    {
+        $this->stainName = $stainName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOtherId()
+    {
+        return $this->otherId;
+    }
+
+    /**
+     * @param string $otherId
+     */
+    public function setOtherId($otherId)
+    {
+        $this->otherId = $otherId;
+    }
+
     
+
 
 }

@@ -1351,17 +1351,17 @@ function waitfor(test, expectedValue, msec, count, source, callback) {
 }
 
 //btnDom - is the 'this' button attached to the field where a new user is to be created
-function addNewUserOnFly( btnDom ) {
+function addNewUserOnFly( btnDom, sitename ) {
     console.log("Add New User on Fly");
 
-    constructAddNewUserModal(btnDom);
+    constructAddNewUserModal(btnDom,sitename);
 
     // var btn = document.getElementById("add-user-btn-add");
     // var lbtn = Ladda.create( btn );
     // lbtn.stop();
 }
 
-function addNewUserAction( fieldId ) {
+function addNewUserAction( fieldId, sitename ) {
 
     $('#add-user-danger-box').hide();
     $('#add-user-danger-box').html(null);
@@ -1417,6 +1417,7 @@ function addNewUserAction( fieldId ) {
         //type: "GET",
         type: "POST",
         data: {
+            sitename: sitename,
             cwid: cwid,
             email: email,
             displayname: displayname,
@@ -1501,7 +1502,7 @@ function updateUserComboboxes(response,fieldId) {
     //$(".combobox").select2('val', userId);
 }
 
-function constructAddNewUserModal(btnDom) {
+function constructAddNewUserModal(btnDom,sitename) {
     console.log("construct modal");
 
     //get field id (assume select box)
@@ -1512,6 +1513,9 @@ function constructAddNewUserModal(btnDom) {
     var fieldId = comboboxEl.attr('id');
     fieldId = "'"+fieldId+"'";
     console.log("fieldId="+fieldId);
+
+    sitename = "'"+sitename+"'";
+    console.log("sitename="+sitename);
 
      var modalHtml =
                 '<div id="user-add-new-user" class="modal fade">' +
@@ -1535,7 +1539,7 @@ function constructAddNewUserModal(btnDom) {
                 '</div>' +
                 '<div class="modal-footer">' +
                 '<button id="user-add-btn-cancel" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Cancel</button>' +
-                '<a class="btn btn-primary add-user-btn-add" id="add-user-btn-add" onclick="addNewUserAction('+fieldId+')">Add</a>' +
+                '<a class="btn btn-primary add-user-btn-add" id="add-user-btn-add" onclick="addNewUserAction('+fieldId+','+sitename+')">Add</a>' +
                 '</div>' +
                 '</div>' +
                 '</div>' +

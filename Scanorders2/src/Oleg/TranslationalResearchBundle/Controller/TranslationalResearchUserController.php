@@ -33,6 +33,7 @@ class TranslationalResearchUserController extends UserController
      * @Template("OlegUserdirectoryBundle:Profile:show_user.html.twig")
      */
     public function showUserOptimizedAction( Request $request, $id ) {
+        //exit("sitename=".$this->container->getParameter('translationalresearch.sitename')); //result:translationalresearch
         return $this->showUserOptimized($request, $id, $this->container->getParameter('translationalresearch.sitename'));
     }
 
@@ -71,6 +72,20 @@ class TranslationalResearchUserController extends UserController
         }
 
         return $this->updateUser( $request, $id, $this->container->getParameter('translationalresearch.sitename') );
+    }
+
+    /**
+     * @Route("/generated-users/", name="translationalresearch_generated_users")
+     * @Method("GET")
+     */
+    public function generatedUsersAction(Request $request)
+    {
+
+        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN')) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+
+        exit("Under implementation...");
     }
 
 }
