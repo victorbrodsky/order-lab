@@ -1698,33 +1698,41 @@ class UserController extends Controller
             "error" => "Unknown Error"
         );
 
-        $cwid = $request->get('cwid');
+        $publicUserId = $request->get('cwid');
         $email = $request->get('email');
         $displayname = $request->get('displayname');
         $firstname = $request->get('firstname');
         $lastname = $request->get('lastname');
         $phone = $request->get('phone');
 
-        //echo "cwid=$cwid<br>";
+        //echo "publicUserId=$publicUserId<br>";
 
+        $creator = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
         $userSecUtil = $this->get('user_security_utility');
-        $publicUserId = null;
         $username = null;
 
-        $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($cwid);
-        if( $user ) {
-            $publicUserId = $cwid;
+        if( !$publicUserId ) {
+            //If the Email that is entered ends with @nyp.org OR @med.cornell.edu ,
+            // pre-fill the Public Identifier (CWID) field with the first portion of the email (before @).
+            $emailParts = explode("@",$email);
+            if( count($emailParts) == 2 ) {
+                $firstEmailPart = $emailParts[0];
+                $secondEmailPart = $emailParts[1];
+                //if( $secondEmailPart == "nyp.org" || $secondEmailPart == "med.cornell.edu" ) {
+                    $publicUserId = $firstEmailPart;
+                //}
+            }
+        }
+
+        //echo "publicUserId=$publicUserId<br>";
+
+        if( $publicUserId ) {
+            $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($publicUserId);
         }
 
         if( !$user ) {
             $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByEmailCanonical($email);
-            if ($user) {
-                $emailParts = explode("@",$email);
-                if( count($emailParts) == 2 ) {
-                    $publicUserId = $emailParts[0];
-                }
-            }
         }
 
         if( $user ) {
@@ -1747,9 +1755,9 @@ class UserController extends Controller
 
         //first search this user if exists in ldap directory
         $authUtil = new AuthUtil($this->container,$em);
-        $searchRes = $authUtil->searchLdap($cwid);
+        $searchRes = $authUtil->searchLdap($publicUserId);
         if( $searchRes == NULL || count($searchRes) == 0 ) {
-            $msg = "LdapAuthentication: can not find user by cwid=".$cwid;
+            $msg = "LdapAuthentication: can not find user by publicUserId=".$publicUserId;
             //echo "msg=$msg <br>";
             //create local user: oli2002c_@_local-user
             $username = $publicUserId . "_@_" . "local-user";
@@ -1761,6 +1769,7 @@ class UserController extends Controller
 
         $user = $userSecUtil->constractNewUser($username); //publicUserId_@_wcmc-cwid
 
+        //add site specific creation string
         //$createdBy = "Manually by Translational Research WCM User";
         //$createdBy = "manual";
         $createdBy = "manual-transres";
@@ -1768,25 +1777,38 @@ class UserController extends Controller
 
         $user->setLocked(true);
 
+        //add roles
+        $user->addRole('ROLE_USERDIRECTORY_OBSERVER');
+        //add site specific role
+        //$user->addRole('ROLE_TRANSRES_USER');
+
+        //set user properties
+        $user->setEmail($email);
+        $user->setFirstName($firstname);
+        $user->setLastName($lastname);
+        $user->setDisplayName($displayname);
+        $user->setPreferredPhone($phone);
+
         $resArr["flag"] = "OK";
         $resArr["error"] = null;
         $resArr['userId'] = $user->getId();
         $resArr['userName'] = $user."";
 
-        $resArr['userId'] = $cwid;
-        $resArr['userName'] = "New User $cwid";
+        //$resArr['userId'] = $publicUserId;
+        //$resArr['userName'] = "New User $publicUserId";
 
-        $json = json_encode($resArr);
-        $response = new Response($json);
-        $response->headers->set('Content-Type', 'application/json');
-        return $response;
-        exit();
+        //testing
+//        $json = json_encode($resArr);
+//        $response = new Response($json);
+//        $response->headers->set('Content-Type', 'application/json');
+//        return $response;
+//        exit();
 
-        //$em->persist($user);
-        //$em->flush();
+        $em->persist($user);
+        $em->flush();
 
         //record create user to Event Log
-        $event = "User ".$user." has been created by ".$user."<br>";
+        $event = "User ".$user." has been created by ".$creator."<br>";
         $userSecUtil = $this->get('user_security_utility');
         $userSecUtil->createUserEditEvent(
             $this->container->getParameter('employees.sitename'),
@@ -1796,7 +1818,6 @@ class UserController extends Controller
             $request,
             'New user record added'
         );
-
 
         $json = json_encode($resArr);
         $response = new Response($json);

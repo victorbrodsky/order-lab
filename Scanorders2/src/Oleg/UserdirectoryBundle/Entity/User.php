@@ -1002,13 +1002,18 @@ class User extends BaseUser {
 
     //for "friendsofsymfony/user-bundle" > "v2.0.0-alpha3" => locked field is removed
     public function setLocked( $value ) {
-        $this->setEnabled($value);
+        $this->setEnabled(!$value);
     }
     public function getLocked() {
-        return $this->isEnabled();
+        return !$this->isEnabled();
     }
     public function isLocked() {
-        return $this->isEnabled();
+        return !$this->isEnabled();
+//        if( $this->isEnabled() ) {
+//            return false;
+//        } else {
+//            return true;
+//        }
     }
 
     /////////////////////////// user's info mapper 7+2: //////////////////////////////////////

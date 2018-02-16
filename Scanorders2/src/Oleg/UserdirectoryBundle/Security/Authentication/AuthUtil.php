@@ -80,6 +80,10 @@ class AuthUtil {
             //exit();
             //return $user;
 
+            if( $this->canLogin($user) === false ) {
+                return NULL;
+            }
+
             //check password
             $encoder = $this->container->get('security.password_encoder');
             $encoded = $encoder->encodePassword($user, $token->getCredentials());
@@ -163,7 +167,11 @@ class AuthUtil {
 
         if( $user ) {
             //echo "Aperio user found=".$user->getUsername()."<br>";
-            //exit();
+
+            if( $this->canLogin($user) === false ) {
+                return NULL;
+            }
+
             return $user;
         }
 
@@ -215,7 +223,14 @@ class AuthUtil {
         if( $user ) {
             //echo "DB user found=".$user->getUsername()."<br>";
             //exit();
+
             $this->logger->notice("findUserByUsername: user found by token->getUsername()=".$token->getUsername());
+
+            if( $this->canLogin($user) === false ) {
+                $this->logger->warning("User cannot login");
+                return NULL;
+            }
+
             return $user;
         }
 
@@ -341,6 +356,10 @@ class AuthUtil {
                     $this->addEventLog($subjectUser,$identifierKeytypeStr,$identifierUsername);
                 }
 
+                if( $this->canLogin($user) === false ) {
+                    return NULL;
+                }
+
                 return $user;
             }
 
@@ -361,6 +380,10 @@ class AuthUtil {
                     $this->addEventLog($subjectUser,$identifierKeytypeStr,$identifierUsername);
                 }
 
+                if( $this->canLogin($user) === false ) {
+                    return NULL;
+                }
+
                 return $user;
             }
 
@@ -374,6 +397,10 @@ class AuthUtil {
 
                 if( $user ) {
                     $this->addEventLog($subjectUser,$identifierKeytypeStr,$identifierUsername);
+                }
+
+                if( $this->canLogin($user) === false ) {
+                    return NULL;
                 }
 
                 return $user;
@@ -708,6 +735,18 @@ class AuthUtil {
         }
 
         return $cnx;
+    }
+
+    public function canLogin($user) {
+        if( $user->getLocked() === false ) {
+            return true;
+        }
+
+        if( $user->isEnabled() === true ) {
+            return true;
+        }
+
+        return false;
     }
 
 
