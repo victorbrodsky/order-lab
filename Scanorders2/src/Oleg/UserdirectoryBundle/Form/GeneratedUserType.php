@@ -20,9 +20,11 @@ namespace Oleg\UserdirectoryBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
 use Oleg\UserdirectoryBundle\Form\PerSiteSettingsType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -89,6 +91,43 @@ class GeneratedUserType extends AbstractType
 //            'first_options'  => array('label' => 'Password:'),
 //            'second_options' => array('label' => 'Repeat Password:'),
 //        ));
+
+        $builder->add('infos', CollectionType::class, array(
+            'entry_type' => UserInfoType::class,
+            'label' => false,
+            'required' => false,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__infos__',
+        ));
+
+
+        $builder->add('primaryPublicUserId', null, array(
+            'label' => '* Primary Public User ID:',
+            //'disabled' => $readOnly,   //($this->cycle == 'create' ? false : true ), //it is not possible to edit keytype for existed user
+            'attr' => array('class'=>'form-control'), //'readonly'=>$readOnly
+        ));
+
+        $builder->add('keytype', EntityType::class, array(
+            'class' => 'OlegUserdirectoryBundle:UsernameType',
+            //'disabled' => ($this->cycle == 'create' ? false : true ), //it is not possible to edit keytype for existed user
+            'choice_label' => 'name',
+            'label' => "Primary Public User ID Type:",
+            'required' => true,
+            'multiple' => false,
+            'attr' => array('class'=>'combobox combobox-width user-keytype-field'), //'readonly'=>false
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->orderBy("list.orderinlist","ASC")
+                    ->setParameters( array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
+            },
+        ));
 
     }
 

@@ -1460,9 +1460,12 @@ class AccessRequestController extends Controller
             return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
         }
 
-        //$em = $this->getDoctrine()->getManager();
+        $em = $this->getDoctrine()->getManager();
         $currentUser = $this->get('security.token_storage')->getToken()->getUser();
         $securityUtil = $this->get('order_security_utility');
+
+        $originalPrimaryPublicUserId = $user->getPrimaryPublicUserId();
+        $originalKeytype = $user->getKeytype();
 
         $rolesArr = $securityUtil->getSiteRolesKeyValue($this->siteName);
 
@@ -1476,6 +1479,36 @@ class AccessRequestController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             //exit('new');
+
+            //update username
+            if( $originalKeytype != $user->getKeytype() && $originalPrimaryPublicUserId != $user->getPrimaryPublicUserId() ) {
+                $user->setUniqueUsername();
+            }
+
+            if( !$user->getPassword() && $user->getKeytype()->getName() == "Local User" ) {
+                exit("set password");
+                //$user->setPassword();
+
+                //encrypt password
+                //$this->encryptPassword($user,$user->getPassword(),true); //createUser
+                //$this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
+                //hashPassword($user)
+
+                //$password = "111";
+                $tokenGenerator = $this->container->get('fos_user.util.token_generator');
+                $password = substr($tokenGenerator->generateToken(), 0, 8); // 8 chars
+
+                $encoder = $this->container->get('security.password_encoder');
+                $encoded = $encoder->encodePassword($user, $password);
+
+                $hashedPassword = $encoder->encodePassword($plainPassword, $user->getSalt());
+                $user->setPassword($hashedPassword);
+
+                $user->setPassword($encoded);
+            }
+
+            $em->persist($user);
+            $em->flush($user);
 
             if( $user->getLocked() ) {
                 $lockedStr = "Locked";
@@ -1529,7 +1562,7 @@ class AccessRequestController extends Controller
             $userSecUtil = $this->get('user_security_utility');
             $userSecUtil->createUserEditEvent($this->siteName,$event,$currentUser,$user,$request,'User Record Approved');
 
-            return $this->redirectToRoute($this->siteName.'_generated_user_management', array('id' => $user->getId()));
+            return $this->redirectToRoute($this->siteName.'_generated_users');
         }
 
         return array(

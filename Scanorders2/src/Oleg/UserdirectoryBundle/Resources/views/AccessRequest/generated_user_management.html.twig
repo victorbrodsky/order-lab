@@ -63,6 +63,32 @@
         {{ formmacros.field(form.author) }}
         {{ formmacros.fieldDateLabel(form.createDate,'regular-datepicker') }}
 
+        <hr>
+
+        {{ formmacros.field(form.keytype) }}
+        {{ formmacros.field(form.primaryPublicUserId) }}
+
+        {% for info in form.infos %}
+            {{ formmacros.field(info.displayName) }}
+
+            {#{{ formmacros.field(info.salutation) }}#}
+            {% do info.salutation.setRendered %}
+
+            {{ formmacros.field(info.firstName) }}
+            {{ formmacros.field_notempty(info.middleName,cycle) }}
+            {{ formmacros.field(info.lastName) }}
+
+            {#{{ formmacros.field_notempty(info.suffix,cycle) }}#}
+            {% do info.suffix.setRendered %}
+
+            {{ usermacros.emailPhoneField(info.email,cycle,'email',"") }}
+            {{ usermacros.emailPhoneField(info.preferredPhone,cycle,'phone',"") }}
+
+            {#{{ formmacros.field_notempty(info.initials,cycle) }}#}
+            {% do info.initials.setRendered %}
+
+        {% endfor %}
+
         {{ formmacros.checkbox(form.locked) }}
 
         {#<div id="user-password-box" style="display:none;">#}
