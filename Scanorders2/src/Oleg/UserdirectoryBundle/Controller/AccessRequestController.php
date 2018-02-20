@@ -1477,14 +1477,47 @@ class AccessRequestController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             //exit('new');
 
-            $emailNotification = $form['emailNotification']->getData();
-            if( $emailNotification ) {
-                $sendEmail = true;
+            if( $user->getLocked() ) {
+                $lockedStr = "Locked";
             } else {
-                $sendEmail = false;
+                $lockedStr = "Unlocked";
             }
 
-            $msg = "User $user has been reviewed.";
+            /////////////////// send emailNotification ///////////////////
+            $emailNotification = $form['emailNotification']->getData();
+            if( $emailNotification ) {
+
+                $userSecUtil = $this->get('user_security_utility');
+
+                if( $currentUser->getEmail() ) {
+                    $adminEmail = $currentUser->getEmail();
+                    $adminEmailStr = " (".$adminEmail.")";
+                } else {
+                    $adminEmailStr = "";
+                }
+
+                $roles = $userSecUtil->getUserRolesBySite( $user, $this->siteName );
+                $siteLink = $this->generateUrl( $this->siteName.'_home', array(), UrlGeneratorInterface::ABSOLUTE_URL );
+                $sitenameFull = $this->siteNameStr." site";
+                $newline = "\r\n";
+
+                $subject = "Your access for ".$sitenameFull." has been updated";
+
+                $msg = $user->getUsernameOptimal().",".$newline.$newline.
+                    "Your manually created account for ".$sitenameFull." (".$siteLink.") has been updated.".$newline.
+                    "Current roles: " . implode(", ",$roles).$newline.
+                    "Status: ".$lockedStr.$newline.
+                    "For additional details please email ".$currentUser->getUsernameOptimal().$adminEmailStr.".".$newline.$newline.
+                    $currentUser->getUsernameOptimal().$adminEmailStr;
+
+                $email = $user->getEmail();
+                $emailUtil = $this->get('user_mailer_utility');
+                //                    $email, $subject, $message, $em, $ccs=null, $adminemail=null
+                $emailUtil->sendEmail( $email, $subject, $msg, null, $adminEmail );
+            }
+            /////////////////// EOF send emailNotification ///////////////////
+
+            $msg = "Manually created user $user has been reviewed. Status: ".$lockedStr;
 
             $this->get('session')->getFlashBag()->add(
                 'notice',
@@ -1492,14 +1525,17 @@ class AccessRequestController extends Controller
             );
 
             //Event Log
-            $event = "User information of ".$user." has been changed by ".$currentUser.":"."<br>";
+            $event = "User information of ".$user." has been changed by ".$currentUser."; Status: $lockedStr"."<br>";
             $userSecUtil = $this->get('user_security_utility');
             $userSecUtil->createUserEditEvent($this->siteName,$event,$currentUser,$user,$request,'User Record Approved');
 
-            return $this->redirectToRoute($this->siteName.'_show', array('id' => $user->getId()));
+            return $this->redirectToRoute($this->siteName.'_generated_user_management', array('id' => $user->getId()));
         }
 
         return array(
+            'sitename' => $this->siteName,
+            'sitenameshowuser' => $this->siteNameShowuser,
+            'sitenamefull' => $this->siteNameStr,
             'user' => $user,
             'form' => $form->createView(),
             'title' => "Review Manually Created User ".$user,

@@ -19,6 +19,7 @@ namespace Oleg\TranslationalResearchBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Oleg\UserdirectoryBundle\Controller\AuthorizedUserController;
+use Oleg\UserdirectoryBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -206,9 +207,9 @@ class TranslationalResearchAccessRequestController extends AccessRequestControll
      * @Template("OlegUserdirectoryBundle:AccessRequest:generated_user_management.html.twig")
      * @Method({"GET", "POST"})
      */
-    public function generatedUserManagementAction(Request $request)
+    public function generatedUserManagementAction(Request $request, User $user)
     {
-        return parent::generatedUserManagementAction($request);
+        return parent::generatedUserManagementAction($request,$user);
     }
 
 }

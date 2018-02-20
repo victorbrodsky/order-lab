@@ -47,6 +47,7 @@ class GeneratedUserType extends AbstractType
         $builder->add('author', null, array(
             'label' => "Created By:",
             'multiple' => false,
+            'disabled' => true,
             'attr' => array('class' => 'combobox'),
         ));
 
@@ -55,14 +56,21 @@ class GeneratedUserType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
+            'disabled' => true,
             'attr' => array('class' => 'datepicker form-control'),
+        ));
+
+        $builder->add('locked', CheckboxType::class, array(
+            'required' => false,
+            'label' => 'Prevent user from logging in (lock):',
+            'attr' => array('class'=>'form-control form-control-modif')
         ));
 
         $builder->add('roles', ChoiceType::class, array(
             'choices' => $this->params['roles'],
             'choices_as_values' => true,
             'label' => ucfirst($this->params['sitename']) . ' Role(s):',
-            'attr' => array('class' => 'combobox combobox-width'),
+            'attr' => array('class' => 'combobox'),
             'multiple' => true,
         ));
 
@@ -73,6 +81,14 @@ class GeneratedUserType extends AbstractType
             'data' => true,
             'attr' => array('class' => 'form-control'),
         ));
+
+//        $builder->add('password', RepeatedType::class, array(
+//            'invalid_message' => 'Please make sure the passwords match',
+//            'options' => array('attr' => array('class' => 'password-field form-control')),
+//            'required' => true,
+//            'first_options'  => array('label' => 'Password:'),
+//            'second_options' => array('label' => 'Repeat Password:'),
+//        ));
 
     }
 

@@ -36,27 +36,9 @@
 
 {#This form is used for access request and authorization management#}
 
-{% if accreq is defined %}
-    {% if accreq.status == 0 %}
-        {#STATUS_ACTIVE#}
-        {% set titleStr = "This user has an active request to access the "~sitenamefull~" site. You can update the role and other details below." %}
-    {% elseif accreq.status == 1 %}
-        {#STATUS_DECLINED#}
-        {% set titleStr = "This user has declined to request access to the "~sitenamefull~" site. You can update the role and other details below." %}
-    {% elseif accreq.status == 2 %}
-        {#STATUS_APPROVED#}
-        {% set titleStr = "This user is already authorized to access the "~sitenamefull~" site. You can update the role and other details below." %}
-    {% else %}
-        {% set titleStr = "Specify role and accessible data for the user being authorized to access the "~sitenamefull %}
-    {% endif %}
-{% else %}
-    {% set titleStr = "Specify role and accessible data for the user being authorized to access the "~sitenamefull %}
-{% endif %}
-
 {% block title %}
-    {{ titleStr }}
+    {{ title }}
 {% endblock %}
-
 
 
 {% block content %}
@@ -65,19 +47,14 @@
     {% import "OlegUserdirectoryBundle::Default/userformmacros.html.twig" as userform %}
 
     <h3 class="text-info">
-        {{ titleStr }}
+        {{ title }}
     </h3>
 
     <br>
 
     {{ userform.snapshot_steve(user,sitenameshowuser,'edit') }}
 
-    {#{% if accreq is defined %}#}
-    {#{% if routenameshort == 'accessrequest_management' %}#}
-        {#{% set actionPath = path(sitename~'_accessrequest_management_submit',{'id':accreq.id}) %}#}
-    {#{% else %}#}
-        {#{% set actionPath = path(sitename~'_authorization_user_management_submit',{'id':entity.id}) %}#}
-    {#{% endif %}#}
+    <br>
 
 
     {#<form id="accessrequest_management" action="{{ actionPath }}" method="POST">#}
@@ -86,11 +63,17 @@
         {{ formmacros.field(form.author) }}
         {{ formmacros.fieldDateLabel(form.createDate,'regular-datepicker') }}
 
+        {{ formmacros.checkbox(form.locked) }}
+
+        {#<div id="user-password-box" style="display:none;">#}
+            {#{{ formmacros.field(form.password.first) }}#}
+            {#{{ formmacros.field(form.password.second) }}#}
+        {#</div>#}
+
         {{ formmacros.field(form.roles) }}
 
         {{ formmacros.checkbox(form.emailNotification) }}
 
-        <hr>
 
         <br>
 
