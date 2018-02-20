@@ -232,6 +232,7 @@ var _columnData_scanorder = [
     { header:'Stain Name', columns:{} },
     { header:'Other ID', columns:{} },
     { header:'Barcode', columns:{} },
+    { header:'Barcode Image', columns:{} },
     { header:'Comment', columns:{} }
 ];
 

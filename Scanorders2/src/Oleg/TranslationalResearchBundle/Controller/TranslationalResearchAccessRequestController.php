@@ -188,4 +188,27 @@ class TranslationalResearchAccessRequestController extends AccessRequestControll
 //        return parent::addAuthorizedUserSubmitAction($request);
 //    }
 
+    /**
+     * @Route("/generated-users/", name="translationalresearch_generated_users")
+     * @Method("GET")
+     * @Template("OlegUserdirectoryBundle:AccessRequest:generated_users.html.twig")
+     */
+    public function generatedUsersAction(Request $request)
+    {
+//        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN')) {
+//            return $this->redirect($this->generateUrl('employees-nopermission'));
+//        }
+
+        return parent::generatedUsersAction($request);
+    }
+    /**
+     * @Route("/generated-user/{id}", name="translationalresearch_generated_user_management")
+     * @Template("OlegUserdirectoryBundle:AccessRequest:generated_user_management.html.twig")
+     * @Method({"GET", "POST"})
+     */
+    public function generatedUserManagementAction(Request $request)
+    {
+        return parent::generatedUserManagementAction($request);
+    }
+
 }

@@ -100,6 +100,11 @@ class DataResult {
      */
     private $otherId;
 
+//    /**
+//     * @var string
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $barcodeImage;
 
 
     public function __construct($user=null) {

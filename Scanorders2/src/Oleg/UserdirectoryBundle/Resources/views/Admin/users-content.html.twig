@@ -282,7 +282,11 @@
                             {% endif %}
                         {% endfor %}
                     </td>
-                    <td>{{ entity.lastLogin|date('Y-m-d H:i:s') }}</td>
+                    <td>
+                        {% if entity.lastLogin %}
+                            {{ entity.lastLogin|date('Y-m-d H:i:s') }}
+                        {% endif %}
+                    </td>
                     <td>
                         {% if entity.locked == 1 %}
                             Yes

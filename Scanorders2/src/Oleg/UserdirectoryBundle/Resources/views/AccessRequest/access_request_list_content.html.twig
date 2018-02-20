@@ -74,7 +74,11 @@
                     {% endif %}
                 {% endfor %}
             </td>
-            <td>{{ entity.user.lastLogin|date('Y-m-d h:i A T') }}</td>
+            <td>
+                {% if entity.user and entity.user.lastLogin %}
+                    {{ entity.user.lastLogin|date('Y-m-d h:i A T') }}
+                {% endif %}
+            </td>
 
             <td>
                 {% if entity.updatedate %}

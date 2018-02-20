@@ -21,6 +21,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Oleg\UserdirectoryBundle\Entity\PerSiteSettings;
 use Oleg\UserdirectoryBundle\Form\AccessRequestType;
 use Oleg\UserdirectoryBundle\Form\AuthorizedUserFilterType;
+use Oleg\UserdirectoryBundle\Form\GeneratedUserType;
 use Oleg\UserdirectoryBundle\Form\PerSiteSettingsType;
 use Oleg\UserdirectoryBundle\Entity\User;
 use Oleg\UserdirectoryBundle\Form\AuthorizitaionUserType;
@@ -1238,7 +1239,6 @@ class AccessRequestController extends Controller
             'sitenameshowuser' => $this->siteNameShowuser,
             'sitenamefull'=>$this->siteNameStr
         );
-
     }
 
 
@@ -1379,5 +1379,131 @@ class AccessRequestController extends Controller
 //        exit("submit a new autorized user");
 //
 //    }
+
+
+    /**
+     * @Route("/generated-users/", name="employees_generated_users")
+     * @Method("GET")
+     * @Template("OlegUserdirectoryBundle:AccessRequest:generated_users.html.twig")
+     */
+    public function generatedUsersAction(Request $request)
+    {
+//        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR')) {
+//            return $this->redirect($this->generateUrl('employees-nopermission'));
+//        }
+        if (false === $this->get('security.authorization_checker')->isGranted($this->roleEditor)) {
+            return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
+        }
+
+        //return $this->generatedUsers($request,$this->container->getParameter('employees.sitename'));
+
+        //exit("Under implementation for " . $this->siteName);
+
+        $em = $this->getDoctrine()->getManager();
+
+        $createdby = "manual-".$this->siteName;
+
+        $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:User');
+        $dql =  $repository->createQueryBuilder("user");
+        $dql->select('user');
+        $dql->leftJoin('user.infos','infos');
+        $dql->leftJoin('user.keytype','keytype');
+        $dql->where("user.createdby = '" . $createdby . "'" );
+
+        //$request = $this->get('request');
+        $postData = $request->query->all();
+        if( !isset($postData['sort']) ) {
+            $dql->orderBy("user.createDate","DESC");
+        }
+
+        //pass sorting parameters directly to query; Somehow, knp_paginator stoped correctly create pagination according to sorting parameters
+//		if( isset($postData['sort']) ) {
+//            $dql = $dql . " ORDER BY $postData[sort] $postData[direction]";
+//        }
+
+        $limit = 30;
+        $query = $em->createQuery($dql);
+        $paginator  = $this->get('knp_paginator');
+        $users = $paginator->paginate(
+            $query,
+            $request->query->get('page', 1), /*page number*/
+            $limit,     /*limit per page*/
+            array(
+                'defaultSortFieldName' => 'user.createDate',
+                'defaultSortDirection' => 'DESC',
+                //'wrap-queries'=>true
+            )
+            //array('wrap-queries'=>true)         //don't need it with "doctrine/orm": "v2.4.8"
+        );
+
+        //echo "query=".$query->getSql()."<br>";
+        //$users = $query->getResult();
+        //echo "users count=".count($users)."<br>";
+        //exit('1');
+
+        return array(
+            'users' => $users,
+            'sitename' => $this->siteName,
+            'sitenameshowuser' => $this->siteNameShowuser,
+            'sitenamefull'=>$this->siteNameStr
+        );
+    }
+
+    /**
+     * @Route("/generated-user/{id}", name="employees_generated_user_management")
+     * @Template("OlegUserdirectoryBundle:AccessRequest:generated_user_management.html.twig")
+     * @Method({"GET", "POST"})
+     */
+    public function generatedUserManagementAction(Request $request, User $user)
+    {
+        if (false === $this->get('security.authorization_checker')->isGranted($this->roleEditor)) {
+            return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
+        }
+
+        //$em = $this->getDoctrine()->getManager();
+        $currentUser = $this->get('security.token_storage')->getToken()->getUser();
+        $securityUtil = $this->get('order_security_utility');
+
+        $rolesArr = $securityUtil->getSiteRolesKeyValue($this->siteName);
+
+        $params = array(
+            'sitename' => $this->siteNameStr,
+            'roles' => $rolesArr,
+        );
+        $form = $this->createForm(GeneratedUserType::class, $user, array('form_custom_value'=>$params));
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            //exit('new');
+
+            $emailNotification = $form['emailNotification']->getData();
+            if( $emailNotification ) {
+                $sendEmail = true;
+            } else {
+                $sendEmail = false;
+            }
+
+            $msg = "User $user has been reviewed.";
+
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                $msg
+            );
+
+            //Event Log
+            $event = "User information of ".$user." has been changed by ".$currentUser.":"."<br>";
+            $userSecUtil = $this->get('user_security_utility');
+            $userSecUtil->createUserEditEvent($this->siteName,$event,$currentUser,$user,$request,'User Record Approved');
+
+            return $this->redirectToRoute($this->siteName.'_show', array('id' => $user->getId()));
+        }
+
+        return array(
+            'user' => $user,
+            'form' => $form->createView(),
+            'title' => "Review Manually Created User ".$user,
+        );
+    }
 
 }

@@ -1866,12 +1866,14 @@ class UserController extends Controller
         }
 
         $em = $this->getDoctrine()->getManager();
+        $author = $this->get('security.token_storage')->getToken()->getUser();
 
         //$user = new User();
         $userManager = $this->container->get('fos_user.user_manager');
         $user = $userManager->createUser();
 
         $user->setCreatedby('manual');
+        $user->setAuthor($author);
 
         //Roles
         $rolesArr = $this->getUserRoles(); //create user form
@@ -4571,6 +4573,5 @@ class UserController extends Controller
             'title' => "Users Label Print Management and Preview"
         );
     }
-
 
 }

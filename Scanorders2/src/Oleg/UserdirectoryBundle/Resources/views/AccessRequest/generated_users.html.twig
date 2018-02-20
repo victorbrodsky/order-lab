@@ -37,7 +37,7 @@
 
 
 {% block title %}
-    Authorized Users for {{ sitenamefull }}
+    Generated Users for {{ sitenamefull }}
 {% endblock %}
 
 
@@ -46,43 +46,25 @@
 
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
-    {% if filterform is defined %}
-        <div class="well form-search">
-            {{ form_start(filterform) }}
-                <div class="row">
-                    <div class="col-xs-2" align="right">
-                        {{ form_widget(filterform.condition) }}
-                    </div>
-                    <div class="col-xs-8" align="right">
-                        {{ form_widget(filterform.roles) }}
-                    </div>
-                    <div class="col-xs-2" align="left">
-                        <button id="filter-btn" type="submit" class="btn btn-default">Filter</button>
-                    </div>
-                </div>
-            {{ form_end(filterform) }}
-        </div>
-    {% endif %}
+    {#{% if filterform is defined %}#}
+        {#<div class="well form-search">#}
+            {#{{ form_start(filterform) }}#}
+                {#<div class="row">#}
+                    {#<div class="col-xs-2" align="right">#}
+                        {#{{ form_widget(filterform.condition) }}#}
+                    {#</div>#}
+                    {#<div class="col-xs-8" align="right">#}
+                        {#{{ form_widget(filterform.roles) }}#}
+                    {#</div>#}
+                    {#<div class="col-xs-2" align="left">#}
+                        {#<button id="filter-btn" type="submit" class="btn btn-default">Filter</button>#}
+                    {#</div>#}
+                {#</div>#}
+            {#{{ form_end(filterform) }}#}
+        {#</div>#}
+    {#{% endif %}#}
 
-    <h3 class="text-info">Authorized Users for {{ sitenamefull }}</h3>
-
-    {#<p>#}
-        {#<a class="btn btn-default btn-info" href="{{ path(sitenameshowuser~'_add_authorized_user') }}">Add Authorized User</a>#}
-    {#</p>#}
-
-    <hr>
-
-    {#<form id="add_authorized_user_form" action="{{ path(sitename~'_add_authorized_user') }}" method="GET">#}
-    {{ form_start(form, {'action': path(sitename~'_add_authorized_user'), 'method': 'GET', 'attr': {'id': 'add_authorized_user_form'}}) }}
-        {{ formmacros.field(form.keytype) }}
-        {{ formmacros.field(form.primaryPublicUserId) }}
-        <p>
-            <button type='submit' class="btn btn-info btn-sm">Add Authorized User</button>
-        </p>
-    {#</form>#}
-    {{ form_end(form) }}
-
-    <hr>
+    <h3 class="text-info">Generated Users for {{ sitenamefull }}</h3>
 
     <br>
 
@@ -103,10 +85,10 @@
         <tbody data-link="row" class="rowlink">
         {% for user in users %}
 
-            <td style="display: none">
-                <a href="{{ path(sitename~'_authorization_user_management', { 'id': user.id }) }}" target="_blank">Authorization Management</a>
-            </td>
-            <td class="rowlink-skip">
+            {#<td style="display: none">#}
+                {#<a href="{{ path(sitename~'_authorization_user_management', { 'id': user.id }) }}" target="_blank">Authorization Management</a>#}
+            {#</td>#}
+            <td>
                 <a href="{{ path(sitenameshowuser~'_showuser', { 'id': user.id }) }}" target="_blank">{{ user }}</a>
             </td>
             <td>{{ user.keytype }}</td>
@@ -147,8 +129,8 @@
                         {#</li>#}
 
                         <li>
-                            <a general-data-confirm="Are you sure you would like to stop {{ user }} from being able to access {{ sitenamefull }}?"
-                               href="{{ path(sitename~'_authorization_remove', { 'userId': user.id }) }}">Revoke Access Authorization
+                            <a
+                               href="{{ path(sitename~'_generated_user_management', { 'id': user.id }) }}">Review User
                             </a>
                         </li>
 

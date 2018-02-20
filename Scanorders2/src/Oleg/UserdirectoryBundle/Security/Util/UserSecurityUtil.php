@@ -691,7 +691,7 @@ class UserSecurityUtil {
     public function constractNewUser($username) {
 
         $serviceContainer = $this->container;
-        $em = $this->em;
+        $author = $this->secToken->getToken()->getUser();
         $userManager = $serviceContainer->get('fos_user.user_manager');
         $userSecUtil = $serviceContainer->get('user_security_utility');
 
@@ -730,6 +730,9 @@ class UserSecurityUtil {
         $userGenerator->addDefaultLocations($user,null);
 
         $user->setPassword("");
+
+        $user->setAuthor($author);
+        $user->setCreateDate(new \DateTime());
 
         //$userManager->updateUser($user);
 

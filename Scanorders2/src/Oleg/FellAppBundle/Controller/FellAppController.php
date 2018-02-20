@@ -549,6 +549,7 @@ class FellAppController extends Controller {
         $applicant = new User($addobjects);
         $applicant->setPassword("");
         $applicant->setCreatedby('manual');
+        $applicant->setAuthor($user);
 
         $fellowshipApplication = new FellowshipApplication($user);
         $fellowshipApplication->setTimestamp(new \DateTime());
@@ -1249,6 +1250,7 @@ class FellAppController extends Controller {
             $applicant = new User($addobjects);
             $applicant->setPassword("");
             $applicant->setCreatedby('manual');
+            $applicant->setAuthor($user);
             $applicant->addFellowshipApplication($fellowshipApplication);
         }
 

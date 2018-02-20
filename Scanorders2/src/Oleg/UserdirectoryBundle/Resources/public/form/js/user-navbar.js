@@ -558,6 +558,9 @@ function commonNavBar(full,id) {
     if( full.indexOf("/account-requests") !== -1 ) {
         id = 'admin';
     }
+    if( full.indexOf("/generated-users") !== -1 ) {
+        id = 'admin';
+    }
     if( full.indexOf("/listusers") !== -1 ) {
         id = 'admin';
     }

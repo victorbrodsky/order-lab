@@ -535,6 +535,10 @@ class RequestController extends Controller
             //echo "barcodeId=".$barcodeId." <br>";
             //echo "barcodeValue=".$barcodeValue." <br>";
 
+            $barcodeImageArr = $this->getValueByHeaderName('Barcode Image',$row,$headers);
+            $barcodeImageValue = $barcodeImageArr['val'];
+            $barcodeImageId = $barcodeImageArr['id'];
+
             $commentArr = $this->getValueByHeaderName('Comment',$row,$headers);
             $commentValue = $commentArr['val'];
             $commentId = $commentArr['id'];
@@ -580,6 +584,8 @@ class RequestController extends Controller
                 $dataResult->setOtherId($otherValue);
 
                 $dataResult->setBarcode($barcodeValue);
+                //$dataResult->setBarcodeImage($barcodeImageValue);
+
                 $dataResult->setComment($commentValue);
 
                 $transresRequest->addDataResult($dataResult);

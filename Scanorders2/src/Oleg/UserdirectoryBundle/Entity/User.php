@@ -260,6 +260,17 @@ class User extends BaseUser {
      */
     private $testingAccount;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
+     */
+    private $author;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $createDate;
 
 
     function __construct( $addobjects=true )
@@ -306,6 +317,8 @@ class User extends BaseUser {
         $this->setLocked(false);
         $this->setEnabled(true);
 
+        $this->setCreateDate(new \DateTime());
+
         parent::__construct();
     }
 
@@ -329,6 +342,37 @@ class User extends BaseUser {
         $this->id = null;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getAuthor()
+    {
+        return $this->author;
+    }
+
+    /**
+     * @param mixed $author
+     */
+    public function setAuthor($author)
+    {
+        $this->author = $author;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreateDate()
+    {
+        return $this->createDate;
+    }
+
+    /**
+     * @param \DateTime $createDate
+     */
+    public function setCreateDate($createDate)
+    {
+        $this->createDate = $createDate;
+    }
 
     /**
      * @param mixed $avatar

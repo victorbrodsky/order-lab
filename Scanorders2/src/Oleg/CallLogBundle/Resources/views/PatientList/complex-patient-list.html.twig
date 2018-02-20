@@ -223,10 +223,13 @@
     {{ calllogmacros.patientInfoSection(patientForm,cycle,holderId,'Add Patient',formtype) }}
 
     {#Manage Patient Lists#}
-    <br>
-    <p>
-        <a href="{{ path('platform_list_manager', { 'listId': platformListManagerRootListId }) }}" target="_blank">Manage Patient Lists</a>
-    </p>
+    {% if is_granted('ROLE_CALLLOG_DATA_QUALITY') %}
+        <br>
+        <p>
+            <a href="{{ path('platform_list_manager', { 'listId': platformListManagerRootListId }) }}"
+               target="_blank">Manage Patient Lists</a>
+        </p>
+    {% endif %}
 
     {#Call Case List#}
     {#<table class="table table-hover table-condensed table-striped text-left">#}
