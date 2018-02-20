@@ -1463,6 +1463,12 @@ class AccessRequestController extends Controller
         $em = $this->getDoctrine()->getManager();
         $currentUser = $this->get('security.token_storage')->getToken()->getUser();
         $securityUtil = $this->get('order_security_utility');
+        $newline = "\r\n";
+
+        //set minimum role
+        if( count($user->getRoles()) == 0 ) {
+            $user->addRole($this->roleUser);
+        }
 
         $originalPrimaryPublicUserId = $user->getPrimaryPublicUserId();
         $originalKeytype = $user->getKeytype();
@@ -1480,31 +1486,44 @@ class AccessRequestController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             //exit('new');
 
-            //update username
-            if( $originalKeytype != $user->getKeytype() && $originalPrimaryPublicUserId != $user->getPrimaryPublicUserId() ) {
-                $user->setUniqueUsername();
+            //set minimum role
+            //Validate role
+            if( count($user->getRoles()) == 0 ) {
+                $user->addRole($this->roleUser);
             }
 
+            //update username
+            if( $originalKeytype != $user->getKeytype() && $originalPrimaryPublicUserId != $user->getPrimaryPublicUserId() ) {
+
+                $newUsername = $user->createUniqueUsername();
+
+                //TODO: validate if the user with new username does not exists
+
+                $user->setUsernameForce($newUsername);
+                $user->setUsernameCanonicalForce($newUsername);
+            }
+
+            $passwordNote = "";
             if( !$user->getPassword() && $user->getKeytype()->getName() == "Local User" ) {
-                exit("set password");
-                //$user->setPassword();
+                //exit("set password");
 
                 //encrypt password
-                //$this->encryptPassword($user,$user->getPassword(),true); //createUser
-                //$this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
-                //hashPassword($user)
+                if( !$user->getSalt() ) {
+                    $salt = rtrim(str_replace('+', '.', base64_encode(random_bytes(32))), '=');
+                    $user->setSalt($salt);
+                }
 
                 //$password = "111";
                 $tokenGenerator = $this->container->get('fos_user.util.token_generator');
-                $password = substr($tokenGenerator->generateToken(), 0, 8); // 8 chars
+                $plainPassword = substr($tokenGenerator->generateToken(), 0, 8); // 8 chars
+                //exit("set password=[".$plainPassword."]");
 
                 $encoder = $this->container->get('security.password_encoder');
-                $encoded = $encoder->encodePassword($user, $password);
-
-                $hashedPassword = $encoder->encodePassword($plainPassword, $user->getSalt());
-                $user->setPassword($hashedPassword);
-
+                $encoded = $encoder->encodePassword($user, $plainPassword);
                 $user->setPassword($encoded);
+
+                $passwordNote = "Temporary Password (without single quotes): '".$plainPassword."'".$newline;
+                $passwordNote = $passwordNote . "Please change your password in 'My Profile' page".$newline;
             }
 
             $em->persist($user);
@@ -1532,14 +1551,14 @@ class AccessRequestController extends Controller
                 $roles = $userSecUtil->getUserRolesBySite( $user, $this->siteName );
                 $siteLink = $this->generateUrl( $this->siteName.'_home', array(), UrlGeneratorInterface::ABSOLUTE_URL );
                 $sitenameFull = $this->siteNameStr." site";
-                $newline = "\r\n";
 
-                $subject = "Your access for ".$sitenameFull." has been updated";
+                $subject = "Your manually created account for ".$sitenameFull." has been updated";
 
                 $msg = $user->getUsernameOptimal().",".$newline.$newline.
                     "Your manually created account for ".$sitenameFull." (".$siteLink.") has been updated.".$newline.
                     "Current roles: " . implode(", ",$roles).$newline.
                     "Status: ".$lockedStr.$newline.
+                    $passwordNote.
                     "For additional details please email ".$currentUser->getUsernameOptimal().$adminEmailStr.".".$newline.$newline.
                     $currentUser->getUsernameOptimal().$adminEmailStr;
 
@@ -1558,7 +1577,8 @@ class AccessRequestController extends Controller
             );
 
             //Event Log
-            $event = "User information of ".$user." has been changed by ".$currentUser."; Status: $lockedStr"."<br>";
+            $event = "Manually created account ".$user." for ".$sitenameFull." has been changed by ".$currentUser."; Status: $lockedStr"."<br>";
+            $event = $event. "<br>" . $passwordNote;
             $userSecUtil = $this->get('user_security_utility');
             $userSecUtil->createUserEditEvent($this->siteName,$event,$currentUser,$user,$request,'User Record Approved');
 

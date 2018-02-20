@@ -117,7 +117,7 @@ class GeneratedUserType extends AbstractType
             'label' => "Primary Public User ID Type:",
             'required' => true,
             'multiple' => false,
-            'attr' => array('class'=>'combobox combobox-width user-keytype-field'), //'readonly'=>false
+            'attr' => array('class'=>'combobox combobox-width'), //user-keytype-field 'readonly'=>false
             'query_builder' => function(EntityRepository $er) {
                 return $er->createQueryBuilder('list')
                     ->where("list.type = :typedef OR list.type = :typeadd")

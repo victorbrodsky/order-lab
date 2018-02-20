@@ -731,6 +731,10 @@ class UserSecurityUtil {
 
         $user->setPassword("");
 
+        //set salt
+        $salt = rtrim(str_replace('+', '.', base64_encode(random_bytes(32))), '=');
+        $user->setSalt($salt);
+
         $user->setAuthor($author);
         $user->setCreateDate(new \DateTime());
 
