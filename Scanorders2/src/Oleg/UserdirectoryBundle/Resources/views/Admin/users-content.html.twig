@@ -134,7 +134,7 @@
             {% if sitename != employees_sitename %}
                 <th>{{ knp_pagination_sortable(entities, 'Role(s)', 'user.roles') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Last Login', 'user.lastLogin') }}</th>
-                <th>{{ knp_pagination_sortable(entities, 'Locked', 'user.locked') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Locked', 'user.enabled') }}</th>
             {% endif %}
 
             {% else %}

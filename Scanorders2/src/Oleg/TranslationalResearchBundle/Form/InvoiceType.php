@@ -45,14 +45,7 @@ class InvoiceType extends AbstractType
 //        ));
         
         $builder->add('status', ChoiceType::class, array( //flipped
-            'label' => 'Status',
-//            'choices' => array(
-//                "Pending" => "Pending",
-//                "Unpaid/Issued" => "Unpaid/Issued",
-//                "Paid in Full" => "Paid in Full",
-//                "Paid Partially" => "Paid Partially",
-//                "Canceled" => "Canceled"
-//            ),
+            'label' => 'Status:',
             'choices' => $this->params['statuses'],
             'multiple' => false,
             'required' => true,

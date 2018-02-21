@@ -26,6 +26,7 @@ use Oleg\UserdirectoryBundle\Form\PerSiteSettingsType;
 use Oleg\UserdirectoryBundle\Entity\User;
 use Oleg\UserdirectoryBundle\Form\AuthorizitaionUserType;
 use Oleg\UserdirectoryBundle\Form\SimpleUserType;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -1431,7 +1432,7 @@ class AccessRequestController extends Controller
             array(
                 'defaultSortFieldName' => 'user.createDate',
                 'defaultSortDirection' => 'DESC',
-                //'wrap-queries'=>true
+                'wrap-queries'=>true
             )
             //array('wrap-queries'=>true)         //don't need it with "doctrine/orm": "v2.4.8"
         );
@@ -1466,9 +1467,9 @@ class AccessRequestController extends Controller
         $newline = "\r\n";
 
         //set minimum role
-        if( count($user->getRoles()) == 0 ) {
-            $user->addRole($this->roleUser);
-        }
+        //if( count($user->getRoles()) == 0 ) {
+        //    $user->addRole($this->roleUser);
+        //}
 
         $originalPrimaryPublicUserId = $user->getPrimaryPublicUserId();
         $originalKeytype = $user->getKeytype();
@@ -1483,51 +1484,108 @@ class AccessRequestController extends Controller
 
         $form->handleRequest($request);
 
+        //validate
+        if( !$user->getKeytype() ) {
+            $form->get('keytype')->addError(new FormError('Primary Public User ID Type is not set.'));
+        }
+
+        if( !$user->getPrimaryPublicUserId() ) {
+            $form->get('primaryPublicUserId')->addError(new FormError('Primary Public User ID.'));
+        }
+
+        //validate and update username
+        if( $originalKeytype != $user->getKeytype() && $originalPrimaryPublicUserId != $user->getPrimaryPublicUserId() ) {
+            $newUsername = $user->createUniqueUsername();
+
+            //check if user already exists in DB
+            $userManager = $this->container->get('fos_user.user_manager');
+            $newUserDb = $userManager->findUserByUsername($newUsername);
+            if( $newUserDb ) {
+                //Error
+                $form->get('primaryPublicUserId')->addError(new FormError('The user with the current Primary Public User ID and Type is already exists.'));
+            }
+
+            $user->setUsernameForce($newUsername);
+            $user->setUsernameCanonicalForce($newUsername);
+        }
+
+        if( !$user->getFirstName() ) {
+            $form->get('infos')[0]->get('firstName')->addError(new FormError('First Name is not set.'));
+        }
+
+        if( !$user->getLastName() ) {
+            $form->get('infos')[0]->get('lastName')->addError(new FormError('Last Name is not set.'));
+        }
+
+        if( !$user->getEmail() ) {
+            $form->get('infos')[0]->get('email')->addError(new FormError('Email is not set.'));
+        }
+
+        //Validate role
+        $originalUserSiteRoles = $securityUtil->getUserRolesBySite( $user, $this->siteName, true );
+        if( count($originalUserSiteRoles) == 0 ) {
+            //Error
+            $form->get('roles')->addError(new FormError('At least one role must be assigned.'));
+        }
+
         if ($form->isSubmitted() && $form->isValid()) {
             //exit('new');
 
             //set minimum role
             //Validate role
-            if( count($user->getRoles()) == 0 ) {
-                $user->addRole($this->roleUser);
-            }
+//            if( count($user->getRoles()) == 0 ) {
+//                $user->addRole($this->roleUser);
+//            }
 
-            //update username
-            if( $originalKeytype != $user->getKeytype() && $originalPrimaryPublicUserId != $user->getPrimaryPublicUserId() ) {
-
-                $newUsername = $user->createUniqueUsername();
-
-                //TODO: validate if the user with new username does not exists
-
-                $user->setUsernameForce($newUsername);
-                $user->setUsernameCanonicalForce($newUsername);
-            }
+//            //update username
+//            if( $originalKeytype != $user->getKeytype() && $originalPrimaryPublicUserId != $user->getPrimaryPublicUserId() ) {
+//
+//                $newUsername = $user->createUniqueUsername();
+//
+//                //validate if the user with new username does not exists
+//                //check if user already exists in DB
+//                $userManager = $this->container->get('fos_user.user_manager');
+//                $newUser = $userManager->findUserByUsername($newUsername);
+//                if( !$newUser ) {
+//
+//                }
+//
+//                $user->setUsernameForce($newUsername);
+//                $user->setUsernameCanonicalForce($newUsername);
+//            }
 
             $passwordNote = "";
             if( !$user->getPassword() && $user->getKeytype()->getName() == "Local User" ) {
                 //exit("set password");
 
-                //encrypt password
+                //check salt
                 if( !$user->getSalt() ) {
                     $salt = rtrim(str_replace('+', '.', base64_encode(random_bytes(32))), '=');
                     $user->setSalt($salt);
                 }
 
-                //$password = "111";
+                //generate random password
                 $tokenGenerator = $this->container->get('fos_user.util.token_generator');
                 $plainPassword = substr($tokenGenerator->generateToken(), 0, 8); // 8 chars
                 //exit("set password=[".$plainPassword."]");
 
-                $encoder = $this->container->get('security.password_encoder');
-                $encoded = $encoder->encodePassword($user, $plainPassword);
+                //encode password
+                $encoderService = $this->container->get('security.encoder_factory');
+                $encoder = $encoderService->getEncoder($user);
+                $encoded = $encoder->encodePassword($plainPassword, $user->getSalt());
+                //exit("set encoded=[".$encoded."]");
+
                 $user->setPassword($encoded);
 
                 $passwordNote = "Temporary Password (without single quotes): '".$plainPassword."'".$newline;
                 $passwordNote = $passwordNote . "Please change your password in 'My Profile' page".$newline;
             }
 
-            $em->persist($user);
-            $em->flush($user);
+            //$em->persist($user);
+            //$em->flush($user);
+
+            //$em->persist();
+            $em->flush();
 
             if( $user->getLocked() ) {
                 $lockedStr = "Locked";

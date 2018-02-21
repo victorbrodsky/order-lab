@@ -25,7 +25,7 @@
 
     {% set sitename = translationalresearch_sitename %}
 
-    {{ form_start(form,{'attr':{'id':'transresProjectForm', 'onsubmit':'return transresValidateProjectForm(this);'}}) }}
+    {{ form_start(form,{'attr':{'id':'transresProjectForm', 'onsubmit':'return transresValidateProjectForm();'}}) }}
     {#{{ form_start(form) }}#}
 
         {{ transres.getProjectReviewPrototypeFormData(form,cycle,sitename) }}

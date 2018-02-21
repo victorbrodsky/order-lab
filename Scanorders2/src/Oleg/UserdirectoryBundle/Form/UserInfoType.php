@@ -35,7 +35,8 @@ class UserInfoType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
         $builder->add('firstName', null, array(
-            'label' => '* First Name:',
+            'label' => 'First Name:',
+            'required' => true,
             'attr' => array('class'=>'form-control user-firstName') //'required'=>'required'
         ));
         $builder->add('middleName', null, array(
@@ -43,11 +44,13 @@ class UserInfoType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
         $builder->add('lastName', null, array(
-            'label' => '* Last Name:',
+            'label' => 'Last Name:',
+            'required' => true,
             'attr' => array('class'=>'form-control user-lastName') //'required'=>'required'
         ));
         $builder->add('email', EmailType::class, array(
-            'label' => '* Preferred Email:',
+            'label' => 'Preferred Email:',
+            'required' => true,
             'attr' => array('class'=>'form-control user-email')
         ));
         $builder->add('displayName', null, array(

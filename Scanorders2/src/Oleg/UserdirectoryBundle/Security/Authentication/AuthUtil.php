@@ -86,19 +86,21 @@ class AuthUtil {
             }
 
             //check password
-            $encoder = $this->container->get('security.password_encoder');
-            $encoded = $encoder->encodePassword($user, $token->getCredentials());
-            //echo "token getPassword=".$token->getCredentials()."<br>";
-            //echo "getPassword=".$user->getPassword()."<br>";
-            //echo "encoded=".$encoded."<br>";
-            //exit();
-            //echo "compare: [".$user->getPassword()."] == [$encoded] <br>";
-            //if( StringUtils::equals($user->getPassword(), $encoded) ) { //depreciated
-            if( hash_equals($user->getPassword(), $encoded) ) {
-                //exit('equal');
+//            $encoder = $this->container->get('security.password_encoder');
+//            $encoded = $encoder->encodePassword($user, $token->getCredentials());
+//            if( hash_equals($user->getPassword(), $encoded) ) {
+//                //exit('equal');
+//                return $user;
+//            } else {
+//                //exit('not equal');
+//                return NULL;
+//            }
+
+            $encoderService = $this->container->get('security.encoder_factory');
+            $encoder = $encoderService->getEncoder($user);
+            if( $encoder->isPasswordValid($user->getPassword(), $token->getCredentials(), $user->getSalt()) ) {
                 return $user;
             } else {
-                //exit('not equal');
                 return NULL;
             }
 
@@ -544,7 +546,7 @@ class AuthUtil {
         $LDAPHost = $this->w32escapeshellarg($LDAPHost);
         $LDAPPort = $this->w32escapeshellarg($LDAPPort);
         $username = $this->w32escapeshellarg($username);
-        $password = $this->w32escapeshellarg($password); //TODO: escapeshellarg: replaces %(percent sign) with a space
+        $password = $this->w32escapeshellarg($password); //escapeshellarg: replaces %(percent sign) with a space
         //$this->logger->notice("ldapBindWindows: command=[$command]; LDAPHost=[$LDAPHost]; LDAPPort=[$LDAPPort]; username=[$username]; token=[$password]");
         $this->logger->notice("ldapBindWindows: command=[$command]; LDAPHost=[$LDAPHost]; LDAPPort=[$LDAPPort]; username=[$username]");
 

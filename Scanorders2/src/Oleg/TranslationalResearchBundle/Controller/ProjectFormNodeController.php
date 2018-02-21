@@ -94,7 +94,7 @@ class ProjectFormNodeController extends ProjectController
         }
 
         $testing = false;
-        //$testing = true;
+        $testing = true;
 
         $project = $this->createProjectEntity($user,null);
 

@@ -29,7 +29,6 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransf
 
 use Oleg\UserdirectoryBundle\Util\UserUtil;
 use Oleg\UserdirectoryBundle\Security\Authentication\AuthUtil;
-use Symfony\Component\Security\Core\Util\StringUtils;
 
 //TODO: optimise by removing foreach loops:
 //create optimalShortName: return abbr, or return short, or return name
@@ -1418,9 +1417,13 @@ class UtilController extends Controller {
 
         $subjectUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($userid);
 
-        $encoder = $this->container->get('security.password_encoder');
-        $encoded = $encoder->encodePassword($subjectUser, $userpassword);
-        $bool = StringUtils::equals($subjectUser->getPassword(), $encoded);
+        //$encoder = $this->container->get('security.password_encoder');
+        //$encoded = $encoder->encodePassword($subjectUser, $userpassword);
+        //$bool = StringUtils::equals($subjectUser->getPassword(), $encoded);
+
+        $encoderService = $this->get('security.encoder_factory');
+        $encoder = $encoderService->getEncoder($user);
+        $bool = $encoder->isPasswordValid($subjectUser->getPassword(), $userpassword, $user->getSalt());
 
         if( $bool ) {
             $output = 'ok';

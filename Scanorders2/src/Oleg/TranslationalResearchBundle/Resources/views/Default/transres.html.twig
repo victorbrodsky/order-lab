@@ -294,33 +294,40 @@
                     {% endif %}
                     {{ transres.usersInfo(form.contacts,contacts,cycle) }}
 
-                    {% if cycle == "show" %}
-                        <div class="well well-sm">
-                        <div style="text-align: center;">
-                            <p>
-                                <strong>{{ form.billingContact.vars.label|raw }}</strong>
-                                {% if project.billingContact %}
-                                    {{ usermacros.personInfo(project.billingContact, cycle, 'translationalresearch') }}
-                                {% else %}
-                                    None
-                                {% endif %}
-                            </p>
-                        </div>
-                        </div>
-                        {% do form.billingContact.setRendered %}
-                    {% else %}
+                    {#{% if cycle == "show" %}#}
+                        {#<div class="well well-sm">#}
+                        {#<div style="text-align: center;">#}
+                            {#<p>#}
+                                {#<strong>{{ form.billingContact.vars.label|raw }}</strong>#}
+                                {#{% if project.billingContact %}#}
+                                    {#{{ usermacros.personInfo(project.billingContact, cycle, 'translationalresearch') }}#}
+                                {#{% else %}#}
+                                    {#None#}
+                                {#{% endif %}#}
+                            {#</p>#}
+                        {#</div>#}
+                        {#</div>#}
+                        {#{% do form.billingContact.setRendered %}#}
+                    {#{% else %}#}
                         {#{{ formmacros.field(form.billingContact) }}#}
-                        <p>
-                        <div class="row">
-                            <div class="col-xs-6" align="right">
-                                <strong>{{ form.billingContact.vars.label|raw }}</strong>
-                            </div>
-                            <div class="col-xs-6" align="left">
-                                {{ form_widget(form.billingContact) }}
-                            </div>
-                        </div>
-                        </p>
+                        {#<p>#}
+                        {#<div class="row">#}
+                            {#<div class="col-xs-6" align="right">#}
+                                {#<strong>{{ form.billingContact.vars.label|raw }}</strong>#}
+                            {#</div>#}
+                            {#<div class="col-xs-6" align="left">#}
+                                {#{{ form_widget(form.billingContact) }}#}
+                            {#</div>#}
+                        {#</div>#}
+                        {#</p>#}
+                    {#{% endif %}#}
+
+                    {% if cycle == "show" %}
+                        {% set billingContacts = [project.billingContact] %}
+                    {% else %}
+                        {% set billingContacts = null %}
                     {% endif %}
+                    {{ transres.usersInfo(form.billingContact,billingContacts,cycle,'required') }}
 
                 </div>
             </div>
@@ -340,7 +347,7 @@
     {% endif %}
 {% endmacro %}
 
-{% macro usersInfo( usersForm, usersEntity, cycle ) %}
+{% macro usersInfo( usersForm, usersEntity, cycle, required ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
     {% if cycle == "show" %}
@@ -362,10 +369,18 @@
     {% else %}
         {#{{ formmacros.field(usersForm) }}#}
 
+        {% set requiredClass = '' %}
+        {% if usersForm.vars.required %}
+            {% set requiredClass = 'required' %}
+        {% endif %}
+        {% if required is defined and required == 'required' %}
+            {% set requiredClass = 'required' %}
+        {% endif %}
+
         <p>
         <div class="row">
-            <div class="col-xs-6" align="right">
-                <strong>{{ usersForm.vars.label|raw }}</strong>
+            <div class="col-xs-6 {{ requiredClass }}" align="right">
+                <label>{{ usersForm.vars.label|raw }}</label>
             </div>
             <div class="col-xs-6" align="left">
                 {{ form_widget(usersForm) }}

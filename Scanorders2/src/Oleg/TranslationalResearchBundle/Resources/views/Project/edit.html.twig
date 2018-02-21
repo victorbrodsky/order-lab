@@ -37,7 +37,7 @@
     </p>
 
     {#{{ form_start(edit_form) }}#}
-    {{ form_start(edit_form,{'attr':{'id':'transresProjectForm', 'onsubmit':'return transresValidateProjectForm(this);'}}) }}
+    {{ form_start(edit_form,{'attr':{'id':'transresProjectForm', 'onsubmit':'return transresValidateProjectForm();'}}) }}
 
         {{ transres.getProjectReviewPrototypeFormData(edit_form,cycle,sitename) }}
 
@@ -63,6 +63,8 @@
         {% if edit_form.updateProject is defined %}
             {{ form_widget(edit_form.updateProject) }}
         {% endif %}
+
+        <div id="please-wait" style="display: none;">Please Wait ...</div>
 
     {{ form_end(edit_form) }}
 

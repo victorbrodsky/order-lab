@@ -50,7 +50,9 @@ function transresShowHideHumanTissueUploadSection(involveHumanTissue) {
 }
 
 //form with multiple buttons don't use form.submit(); because it does not pass buttons in the post
-function transresValidateProjectForm(projectForm) {
+function transresValidateProjectForm() {
+
+    console.log("Validate project");
 
     var validated = true;
     var label = null;
@@ -59,19 +61,7 @@ function transresValidateProjectForm(projectForm) {
     $("#projectError").hide();
     $("#projectError").html(null);
 
-    //involveHumanTissue
-    var involveHumanTissue = $(".involveHumanTissue").find('input[name="oleg_translationalresearchbundle_project[involveHumanTissue]"]:checked').val();
-    //console.log("involveHumanTissue="+involveHumanTissue);
-    if( !involveHumanTissue ) {
-        //console.log("Error: involveHumanTissue is NULL!");
-        //var msg = "Please upload a completed human tissue form";
-        var msg = "Please answer the required question: 'Will this project involve human tissue?'";
-        $("#projectError").show();
-        $("#projectError").html(msg);
-
-        validated = false;
-        return false;
-    }
+    transresHideBtn();
 
     //required
     $( ".required" ).each(function( index ) {
@@ -84,10 +74,11 @@ function transresValidateProjectForm(projectForm) {
         var inputField = holder.find(".form-control");
         if( inputField.length > 0 ) {
             value = inputField.val();
-            //console.log("label="+label+"; value="+value);
+            console.log("label="+label+"; value="+value);
             if( !value ) {
-                //console.log("Error Input form-control");
+                console.log("Error Input form-control");
                 validated = false;
+                transresShowBtn();
                 return false;
             }
         }
@@ -96,10 +87,11 @@ function transresValidateProjectForm(projectForm) {
         var selectField = holder.find("select.combobox");
         if( selectField.length > 0 ) {
             value = selectField.val();
-            //console.log("label="+label+"; value="+value);
+            console.log("label="+label+"; value="+value);
             if( !value ) {
-                //console.log("Error Select select combobox");
+                console.log("Error Select select combobox");
                 validated = false;
+                transresShowBtn();
                 return false;
             }
         }
@@ -108,10 +100,11 @@ function transresValidateProjectForm(projectForm) {
         var inputSelectField = holder.find("input.combobox");
         if( inputSelectField.length > 0 ) {
             value = inputSelectField.val();
-            //console.log("label="+label+"; value="+value);
+            console.log("label="+label+"; value="+value);
             if( !value ) {
-                //console.log("Error Select input combobox");
+                console.log("Error Select input combobox");
                 validated = false;
+                transresShowBtn();
                 return false;
             }
         }
@@ -119,10 +112,27 @@ function transresValidateProjectForm(projectForm) {
     });
 
     if( validated == false ) {
-        //console.log("Error: required value is NULL! label="+label+"; value="+value);
+        console.log("Error: required value is NULL! label="+label+"; value="+value);
         var msg = "The required field '" + label + "' is empty";
         $("#projectError").show();
         $("#projectError").html(msg);
+
+        transresShowBtn();
+        return false;
+    }
+
+    //involveHumanTissue
+    var involveHumanTissue = $(".involveHumanTissue").find('input[name="oleg_translationalresearchbundle_project[involveHumanTissue]"]:checked').val();
+    //console.log("involveHumanTissue="+involveHumanTissue);
+    if( !involveHumanTissue ) {
+        console.log("Error: involveHumanTissue is NULL!");
+        //var msg = "Please upload a completed human tissue form";
+        var msg = "Please answer the required question: 'Will this project involve human tissue?'";
+        $("#projectError").show();
+        $("#projectError").html(msg);
+
+        validated = false;
+        transresShowBtn();
         return false;
     }
 
@@ -133,6 +143,8 @@ function transresValidateProjectForm(projectForm) {
             var msg = "Please upload a completed human tissue form";
             $("#projectError").show();
             $("#projectError").html(msg);
+
+            transresShowBtn();
             return false;
         }
     }
@@ -148,4 +160,12 @@ function transresValidateProjectForm(projectForm) {
 
 }
 
+function transresHideBtn() {
+    $('button').hide();
+    $('#please-wait').show();
+}
+function transresShowBtn() {
+    $('button').show();
+    $('#please-wait').hide();
+}
 

@@ -227,12 +227,16 @@ class ProjectType extends AbstractType
 //            'label' => "Please check the box if this project is ready for committee to review:",
 //            'attr' => array('class' => 'form-control')
 //        ));
-        $sitename = "'translationalresearch'";
-        $addUserOnFly = '(<a href="javascript:void(0)" onclick="addNewUserOnFly(this,'.$sitename.');">Add New</a>)';
+
+        $addUserOnFly = "";
+        if( $this->params['cycle'] != "show" ) {
+            $sitename = "'translationalresearch'";
+            $addUserOnFly = ' (<a href="javascript:void(0)" onclick="addNewUserOnFly(this,' . $sitename . ');">Add New</a>)';
+        }
 
         $builder->add( 'principalInvestigators', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
-            'label'=> "Principal Investigator(s) $addUserOnFly:",
+            'label'=> "Principal Investigator(s)$addUserOnFly:",
             'required'=> true,
             'multiple' => true,
             'attr' => array('class'=>'combobox combobox-width'),
@@ -241,8 +245,8 @@ class ProjectType extends AbstractType
 
         $builder->add( 'coInvestigators', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
-            'label'=> "Co-Investigator(s) $addUserOnFly:",
-            'required'=> false,
+            'label'=> "Co-Investigator(s)$addUserOnFly:",
+            'required'=> true,
             'multiple' => true,
             'attr' => array('class'=>'combobox combobox-width'),
             'query_builder' => $this->params['transresUtil']->userQueryBuilder()
@@ -266,7 +270,7 @@ class ProjectType extends AbstractType
 
         $builder->add( 'pathologists', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
-            'label'=> "WCMC Pathologist(s) Involved $addUserOnFly:",
+            'label'=> "WCMC Pathologist(s) Involved$addUserOnFly:",
             'required'=> false,
             'multiple' => true,
             'attr' => array('class'=>'combobox combobox-width'),
@@ -275,8 +279,8 @@ class ProjectType extends AbstractType
 
         $builder->add( 'contacts', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
-            'label'=> "Contact(s) $addUserOnFly:",
-            'required'=> false,
+            'label'=> "Contact(s)$addUserOnFly:",
+            'required'=> true,
             'multiple' => true,
             'attr' => array('class'=>'combobox combobox-width'),
 //            'query_builder' => function(EntityRepository $er) {
@@ -294,7 +298,7 @@ class ProjectType extends AbstractType
 
         $builder->add( 'billingContact', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
-            'label'=> "Billing Contact $addUserOnFly:",
+            'label'=> "Billing Contact$addUserOnFly:",
             'required'=> false,
             'multiple' => false,
             'attr' => array('class'=>'combobox combobox-width'),

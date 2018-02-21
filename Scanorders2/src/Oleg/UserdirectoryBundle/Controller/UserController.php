@@ -1698,6 +1698,9 @@ class UserController extends Controller
     }
     public function addNewUserAjax($request) {
 
+        $testing = false;
+        //$testing = true;
+
         $resArr = array(
             "flag" => "NOTOK",
             "error" => "Unknown Error"
@@ -1813,11 +1816,6 @@ class UserController extends Controller
         $user->setDisplayName($displayname);
         $user->setPreferredPhone($phone);
 
-        $resArr["flag"] = "OK";
-        $resArr["error"] = null;
-        $resArr['userId'] = $user->getId();
-        $resArr['userName'] = $user."";
-
         //$resArr['userId'] = $publicUserId;
         //$resArr['userName'] = "New User $publicUserId";
 
@@ -1828,20 +1826,35 @@ class UserController extends Controller
 //        return $response;
 //        exit();
 
-        $em->persist($user);
-        $em->flush();
+        if( !$testing ) {
+            $em->persist($user);
+            $em->flush();
 
-        //record create user to Event Log
-        $event = "User ".$user." has been created by ".$creator."<br>";
-        $userSecUtil = $this->get('user_security_utility');
-        $userSecUtil->createUserEditEvent(
-            $sitename,
-            $event,
-            $creator,
-            $user,
-            $request,
-            'New user record added'
-        );
+            //record create user to Event Log
+            $event = "User " . $user . " has been created by " . $creator . "<br>";
+            $userSecUtil = $this->get('user_security_utility');
+            $userSecUtil->createUserEditEvent(
+                $sitename,
+                $event,
+                $creator,
+                $user,
+                $request,
+                'New user record added'
+            );
+        } else {
+            //$resArr["flag"] = "NOTOK";
+            //$resArr["error"] = "Testing Mode!";
+        }
+
+        $resArr["flag"] = "OK";
+        $resArr["error"] = null;
+        $resArr['userId'] = $user->getId();
+        $resArr['userName'] = $user."";
+
+        if( $testing ) {
+            $resArr['userId'] = 111; //testing user id
+            $resArr['userName'] = "New User $publicUserId"; //dummy username
+        }
 
         $json = json_encode($resArr);
         $response = new Response($json);

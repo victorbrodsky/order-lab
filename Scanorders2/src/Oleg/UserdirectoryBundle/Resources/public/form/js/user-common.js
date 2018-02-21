@@ -1352,13 +1352,80 @@ function waitfor(test, expectedValue, msec, count, source, callback) {
 
 //btnDom - is the 'this' button attached to the field where a new user is to be created
 function addNewUserOnFly( btnDom, sitename ) {
-    console.log("Add New User on Fly");
-
+    //console.log("Add New User on Fly");
     constructAddNewUserModal(btnDom,sitename);
+}
+function constructAddNewUserModal(btnDom,sitename) {
+    //console.log("construct modal");
 
-    // var btn = document.getElementById("add-user-btn-add");
-    // var lbtn = Ladda.create( btn );
-    // lbtn.stop();
+    //get field id (assume select box)
+    var comboboxEl = $(btnDom).closest('.row').find('select.combobox');
+    //console.log("comboboxEl:");
+    //console.log(comboboxEl);
+    //var fieldId = $(btnDom).closest('.raw').find('select.combobox').attr('id');
+    var fieldId = comboboxEl.attr('id');
+    fieldId = "'"+fieldId+"'";
+    //console.log("fieldId="+fieldId);
+
+    sitename = "'"+sitename+"'";
+    //console.log("sitename="+sitename);
+
+    var modalHtml =
+        '<div id="user-add-new-user" class="modal fade">' +
+        '<div class="modal-dialog">' +
+        '<div class="modal-content">' +
+        '<div class="modal-header text-center">' +
+        '<button id="user-add-btn-dismiss" type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
+        '<h3 id="dataConfirmLabel">Add New User</h3>' +
+        '</div>' +
+        '<div class="modal-body text-center">' +
+
+        getNewUserField("cwid","Primary Public User ID or CWID")+
+        getNewUserField("email","Email",true)+
+        getNewUserField("displayname","Display Name")+
+        getNewUserField("firstname","First Name")+
+        getNewUserField("lastname","Last Name")+
+        getNewUserField("phone","Phone")+
+
+        '<div id="add-user-danger-box" class="alert alert-danger" style="display: none;"></div>' +
+
+        '</div>' +
+        '<div class="modal-footer">' +
+        '<button id="user-add-btn-cancel" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Cancel</button>' +
+        '<a class="btn btn-primary add-user-btn-add" id="add-user-btn-add" onclick="addNewUserAction('+fieldId+','+sitename+')">Add</a>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '</div>';
+
+    $('body').append(modalHtml);
+
+    $('#user-add-new-user').modal(
+        {
+            show:true,
+            keyboard: false,
+            backdrop: 'static'
+        }
+    );
+
+    $("#user-add-new-user").on('hidden.bs.modal', function () {
+        //console.log("hidden.bs.modal");
+        //$(this).data('bs.modal', null);
+        //$(this).data('modal', null);
+        $( '.modal' ).modal( 'hide' ).data( 'bs.modal', null );
+
+        $( '.modal' ).remove();
+        $( '.modal-backdrop' ).remove();
+        $( 'body' ).removeClass( "modal-open" );
+    });
+
+    //add listnere to ok button to "Please wait ..." and disable button on click
+    // $('.general-data-confirm-ok').on('click', function(event){
+    //     var footer = $(this).closest('.modal-footer');
+    //     footer.html('Please wait ...');
+    // });
+
+    return false;
 }
 
 function addNewUserAction( fieldId, sitename ) {
@@ -1375,22 +1442,22 @@ function addNewUserAction( fieldId, sitename ) {
 
     var transTime = 500;
 
-    console.log("add New UserAction: Add New User Ajax");
+    //console.log("add New UserAction: Add New User Ajax");
 
     var cwid = $("#add-new-user-cwid").val();
-    console.log("cwid="+cwid);
+    //console.log("cwid="+cwid);
     //var userid = $("#add-new-user-userid").val();
     //console.log("userid="+userid);
     var email = $("#add-new-user-email").val();
-    console.log("email="+email);
+    //console.log("email="+email);
     var displayname = $("#add-new-user-displayname").val();
-    console.log("displayname="+displayname);
+    //console.log("displayname="+displayname);
     var firstname = $("#add-new-user-firstname").val();
-    console.log("firstname="+firstname);
+    //console.log("firstname="+firstname);
     var lastname = $("#add-new-user-lastname").val();
-    console.log("lastname="+lastname);
+    //console.log("lastname="+lastname);
     var phone = $("#add-new-user-phone").val();
-    console.log("phone="+phone);
+    //console.log("phone="+phone);
 
     //1) validate email
     if( email ) {
@@ -1407,7 +1474,7 @@ function addNewUserAction( fieldId, sitename ) {
         return false;
     }
 
-    console.log("add New UserAction: call ajax to check if user exists");
+    //console.log("add New UserAction: call ajax to check if user exists");
 
     //2) try to create a new user
     var url = Routing.generate('employees_add_new_user_ajax');
@@ -1428,10 +1495,10 @@ function addNewUserAction( fieldId, sitename ) {
         dataType: 'json',
         async: asyncflag
     }).success(function(response) {
-        console.log(response);
+        //console.log(response);
 
         if( response.flag == "NOTOK" ) {
-            console.log('NOTOK');
+            //console.log('NOTOK');
             lbtn.stop();
             $("#user-add-btn-dismiss").show();
             $("#user-add-btn-cancel").show();
@@ -1439,7 +1506,7 @@ function addNewUserAction( fieldId, sitename ) {
             $('#add-user-danger-box').html(response.error);
             $('#add-user-danger-box').show(transTime);
         } else {
-            console.log('OK');
+            //console.log('OK');
             updateUserComboboxes(response,fieldId);
             //$("#user-add-btn-dismiss").click();
             document.getElementById("user-add-btn-dismiss").click();
@@ -1462,12 +1529,12 @@ function addNewUserAction( fieldId, sitename ) {
 }
 
 function updateUserComboboxes(response,fieldId) {
-    console.log("update user comboboxes; response:");
-    console.log(response);
+    //console.log("update user comboboxes; response:");
+    //console.log(response);
 
     var userId = response.userId;
     var userName = response.userName;
-    console.log("userId="+userId+"; userName="+userName);
+    //console.log("userId="+userId+"; userName="+userName);
 
     //find combobox select2 element
 
@@ -1485,12 +1552,12 @@ function updateUserComboboxes(response,fieldId) {
             //$("#state").val(userId).trigger("change");
         } else {
 
-            console.log("fieldId="+fieldId+"=?="+$(this).attr('id'));
+            //console.log("fieldId="+fieldId+"=?="+$(this).attr('id'));
             if( fieldId == $(this).attr('id') ) {
-                console.log("set this user fieldId="+fieldId);
+                //console.log("set this user fieldId="+fieldId);
                 var newOption = new Option(userName, userId, true, true);
             } else {
-                console.log("just add this user fieldId="+fieldId);
+                //console.log("just add this user fieldId="+fieldId);
                 var newOption = new Option(userName, userId, false, false);
             }
             $(this).append(newOption).trigger('change');
@@ -1500,79 +1567,6 @@ function updateUserComboboxes(response,fieldId) {
     });
 
     //$(".combobox").select2('val', userId);
-}
-
-function constructAddNewUserModal(btnDom,sitename) {
-    console.log("construct modal");
-
-    //get field id (assume select box)
-    var comboboxEl = $(btnDom).closest('.row').find('select.combobox');
-    console.log("comboboxEl:");
-    console.log(comboboxEl);
-    //var fieldId = $(btnDom).closest('.raw').find('select.combobox').attr('id');
-    var fieldId = comboboxEl.attr('id');
-    fieldId = "'"+fieldId+"'";
-    console.log("fieldId="+fieldId);
-
-    sitename = "'"+sitename+"'";
-    console.log("sitename="+sitename);
-
-     var modalHtml =
-                '<div id="user-add-new-user" class="modal fade">' +
-                '<div class="modal-dialog">' +
-                '<div class="modal-content">' +
-                '<div class="modal-header text-center">' +
-                '<button id="user-add-btn-dismiss" type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
-                '<h3 id="dataConfirmLabel">Add New User</h3>' +
-                '</div>' +
-                '<div class="modal-body text-center">' +
-
-                    getNewUserField("cwid","Primary Public User ID or CWID")+
-                    getNewUserField("email","Email",true)+
-                    getNewUserField("displayname","Display Name")+
-                    getNewUserField("firstname","First Name")+
-                    getNewUserField("lastname","Last Name")+
-                    getNewUserField("phone","Phone")+
-
-                    '<div id="add-user-danger-box" class="alert alert-danger" style="display: none;"></div>' +
-
-                '</div>' +
-                '<div class="modal-footer">' +
-                '<button id="user-add-btn-cancel" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Cancel</button>' +
-                '<a class="btn btn-primary add-user-btn-add" id="add-user-btn-add" onclick="addNewUserAction('+fieldId+','+sitename+')">Add</a>' +
-                '</div>' +
-                '</div>' +
-                '</div>' +
-                '</div>';
-
-        $('body').append(modalHtml);
-
-        $('#user-add-new-user').modal(
-            {
-                show:true,
-                keyboard: false,
-                backdrop: 'static'
-            }
-        );
-
-        $("#user-add-new-user").on('hidden.bs.modal', function () {
-            console.log("hidden.bs.modal");
-            //$(this).data('bs.modal', null);
-            //$(this).data('modal', null);
-            $( '.modal' ).modal( 'hide' ).data( 'bs.modal', null );
-
-            $( '.modal' ).remove();
-            $( '.modal-backdrop' ).remove();
-            $( 'body' ).removeClass( "modal-open" );
-        });
-
-        //add listnere to ok button to "Please wait ..." and disable button on click
-        // $('.general-data-confirm-ok').on('click', function(event){
-        //     var footer = $(this).closest('.modal-footer');
-        //     footer.html('Please wait ...');
-        // });
-
-        return false;
 }
 
 function getNewUserField( fieldStr, fieldLabel, requiredFlag) {

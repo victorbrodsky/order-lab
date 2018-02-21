@@ -95,7 +95,7 @@ class GeneratedUserType extends AbstractType
         $builder->add('infos', CollectionType::class, array(
             'entry_type' => UserInfoType::class,
             'label' => false,
-            'required' => false,
+            //'required' => true,
             'allow_add' => true,
             'allow_delete' => true,
             'by_reference' => false,
@@ -105,7 +105,7 @@ class GeneratedUserType extends AbstractType
 
 
         $builder->add('primaryPublicUserId', null, array(
-            'label' => '* Primary Public User ID:',
+            'label' => 'Primary Public User ID:',
             //'disabled' => $readOnly,   //($this->cycle == 'create' ? false : true ), //it is not possible to edit keytype for existed user
             'attr' => array('class'=>'form-control'), //'readonly'=>$readOnly
         ));

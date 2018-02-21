@@ -229,7 +229,8 @@ class UserType extends AbstractType
             $primaryPublicUserIdAttr['readonly'] = true;
         }
         $builder->add('primaryPublicUserId', null, array(
-            'label' => '* Primary Public User ID:',
+            'label' => 'Primary Public User ID:',
+            'required' => true,
             //'disabled' => $readOnly,   //($this->cycle == 'create' ? false : true ), //it is not possible to edit keytype for existed user
             //'attr' => array('class'=>'form-control', 'readonly'=>$readOnly),
             'attr' => $primaryPublicUserIdAttr
@@ -279,7 +280,7 @@ class UserType extends AbstractType
         $builder->add('infos', CollectionType::class, array(
             'entry_type' => UserInfoType::class,
             'label' => false,
-            'required' => false,
+            //'required' => false,
             'allow_add' => true,
             'allow_delete' => true,
             'by_reference' => false,
@@ -292,7 +293,7 @@ class UserType extends AbstractType
 
 
 
-    public function addKeytype($builder,$label='* Primary Public User ID Type:',$class='combobox combobox-width user-keytype-field') {
+    public function addKeytype($builder,$label='Primary Public User ID Type:',$class='combobox combobox-width user-keytype-field') {
         $attr = array('class'=>$class);
         if( $this->readonly ) {
             $attr['readonly'] = true;
