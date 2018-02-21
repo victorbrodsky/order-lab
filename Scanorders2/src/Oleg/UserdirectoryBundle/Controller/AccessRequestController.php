@@ -1636,7 +1636,7 @@ class AccessRequestController extends Controller
 
             //Event Log
             $event = "Manually created account ".$user." for ".$sitenameFull." has been changed by ".$currentUser."; Status: $lockedStr"."<br>";
-            $event = $event. "<br>" . $passwordNote;
+            //$event = $event. "<br>" . $passwordNote; //for testing only. Disable for prod to hide plain password in the event log.
             $userSecUtil = $this->get('user_security_utility');
             $userSecUtil->createUserEditEvent($this->siteName,$event,$currentUser,$user,$request,'User Record Approved');
 

@@ -1778,7 +1778,7 @@ class UserController extends Controller
         $authUtil = new AuthUtil($this->container,$em);
         $searchRes = $authUtil->searchLdap($publicUserId);
         if( $searchRes == NULL || count($searchRes) == 0 ) {
-            $msg = "LdapAuthentication: can not find user by publicUserId=".$publicUserId;
+            //$msg = "LdapAuthentication: can not find user by publicUserId=".$publicUserId;
             //echo "msg=$msg <br>";
             //create local user: oli2002c_@_local-user
             $username = $publicUserId . "_@_" . "local-user";
