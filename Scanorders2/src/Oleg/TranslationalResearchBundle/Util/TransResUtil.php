@@ -2654,7 +2654,7 @@ class TransResUtil
         $ews->setCellValue('H1', 'IRB Expiration Date');
 
         $ews->setCellValue('I1', 'Request ID');
-        $ews->setCellValue('J1', '# Issued Invoices');
+        $ews->setCellValue('J1', 'Invoice(s) Issued');
         $ews->setCellValue('K1', 'Latest Invoice Total($)');
         $ews->setCellValue('L1', 'Latest Invoice Paid($)');
         $ews->setCellValue('M1', 'Latest Invoice Due($)');
@@ -2680,70 +2680,35 @@ class TransResUtil
                 continue;
             }
 
-            $ews->setCellValue('A'.$row, $project->getOid());
-            $ews->setCellValue('B'.$row, $this->convertDateToStr($project->getCreateDate()) );
-
-            $piArr = array();
-            foreach( $project->getPrincipalInvestigators() as $pi) {
-                $piArr[] = $pi->getUsernameOptimal();
-            }
-            $ews->setCellValue('C'.$row, implode("\n",$piArr));
-            $ews->getStyle('C'.$row)->getAlignment()->setWrapText(true);
-
-            $ews->setCellValue('D'.$row, $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"Title"));
-
-            //Funding
-            if( $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"Funded") ) {
-                $funded = "Funded";
-            } else {
-                $funded = "Not Funded";
-            }
-            $ews->setCellValue('E'.$row, $funded);
-
-            //Status
-            $ews->setCellValue('F'.$row, $this->getStateLabelByName($project->getState()));
-
-            //Approval Date
-            $ews->setCellValue('G'.$row, $this->convertDateToStr($project->getApprovalDate()) );
-
-            //IRB Expiration Date
-            $ews->setCellValue('H'.$row, $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"IRB Expiration Date"));
-
-            //Requests
-//            $requestsCount = count($project->getRequests());
-//            $totalRequests = $totalRequests + $requestsCount;
-//            $ews->setCellValue('I'.$row, $requestsCount);
+//            $ews->setCellValue('A'.$row, $project->getOid());
+//            $ews->setCellValue('B'.$row, $this->convertDateToStr($project->getCreateDate()) );
 //
-//            $invoicesInfos = $this->getInvoicesInfosByProject($project);
-//
-//            //# Issued Invoices
-//            $invoicesCount = $invoicesInfos['count'];
-//            $totalInvoices = $totalInvoices + $invoicesCount;
-//            $ews->setCellValue('J'.$row, $invoicesCount);
-//
-//            //# Total($)
-//            $total = $invoicesInfos['total'];
-//            $totalTotal = $totalTotal + $total;
-//            if( $total ) {
-//                $ews->setCellValue('K' . $row, $total);
+//            $piArr = array();
+//            foreach( $project->getPrincipalInvestigators() as $pi) {
+//                $piArr[] = $pi->getUsernameOptimal();
 //            }
+//            $ews->setCellValue('C'.$row, implode("\n",$piArr));
+//            $ews->getStyle('C'.$row)->getAlignment()->setWrapText(true);
 //
-//            //# Paid($)
-//            $paid = $invoicesInfos['paid'];
-//            $paidTotal = $paidTotal + $paid;
-//            if( $paid ) {
-//                $ews->setCellValue('L' . $row, $paid);
+//            $ews->setCellValue('D'.$row, $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"Title"));
 //
+//            //Funding
+//            if( $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"Funded") ) {
+//                $funded = "Funded";
+//            } else {
+//                $funded = "Not Funded";
 //            }
+//            $ews->setCellValue('E'.$row, $funded);
 //
-//            //# Due($)
-//            $due = $invoicesInfos['due'];
-//            $dueTotal = $dueTotal + $due;
-//            if( $due ) {
-//                $ews->setCellValue('M' . $row, $due);
-//            }
+//            //Status
+//            $ews->setCellValue('F'.$row, $this->getStateLabelByName($project->getState()));
 //
-//            $row = $row + 1;
+//            //Approval Date
+//            $ews->setCellValue('G'.$row, $this->convertDateToStr($project->getApprovalDate()) );
+//
+//            //IRB Expiration Date
+//            $ews->setCellValue('H'.$row, $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"IRB Expiration Date"));
+            $ews = $this->fillOutProjectCells($ews,$row,$project);
 
             $projectRequests = 0;
             $projectTotalInvoices = 0;
@@ -2752,6 +2717,9 @@ class TransResUtil
             $projectTotalDue = 0;
 
             foreach($project->getRequests() as $request) {
+
+                $ews = $this->fillOutProjectCells($ews,$row,$project);
+
                 $latestInvoice = $transresRequestUtil->getLatestInvoice($request);
 
                 //Request ID
@@ -2889,9 +2857,43 @@ class TransResUtil
     }
     public function convertDateToStr($datetime) {
         if( $datetime ) {
-            return $datetime->format("Y-m-d H:i:s");
+            return $datetime->format("m/d/Y");
         }
         return null;
+    }
+    public function fillOutProjectCells($ews, $row, $project) {
+        $transResFormNodeUtil = $this->container->get('transres_formnode_util');
+
+        $ews->setCellValue('A'.$row, $project->getOid());
+        $ews->setCellValue('B'.$row, $this->convertDateToStr($project->getCreateDate()) );
+
+        $piArr = array();
+        foreach( $project->getPrincipalInvestigators() as $pi) {
+            $piArr[] = $pi->getUsernameOptimal();
+        }
+        $ews->setCellValue('C'.$row, implode("\n",$piArr));
+        $ews->getStyle('C'.$row)->getAlignment()->setWrapText(true);
+
+        $ews->setCellValue('D'.$row, $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"Title"));
+
+        //Funding
+        if( $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"Funded") ) {
+            $funded = "Funded";
+        } else {
+            $funded = "Not Funded";
+        }
+        $ews->setCellValue('E'.$row, $funded);
+
+        //Status
+        $ews->setCellValue('F'.$row, $this->getStateLabelByName($project->getState()));
+
+        //Approval Date
+        $ews->setCellValue('G'.$row, $this->convertDateToStr($project->getApprovalDate()) );
+
+        //IRB Expiration Date
+        $ews->setCellValue('H'.$row, $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"IRB Expiration Date"));
+
+        return $ews;
     }
 
     public function getProjectsIdsStr($projects) {

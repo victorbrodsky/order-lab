@@ -1491,6 +1491,14 @@ class RequestController extends Controller
         $billingStateChoiceArr = $transresRequestUtil->getBillingStateArr();
         $progressStateChoiceArr = $transresRequestUtil->getProgressStateArr();
 
+        //categoryListLink
+        $categoryListUrl = $this->container->get('router')->generate(
+            'transresrequestcategorytypes-list',
+            array(),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        $categoryListLink = " (<a target='_blank' href=" . $categoryListUrl . ">" . "Category Type List Management" . "</a>)";
+        
         $params = array(
             'cycle' => $cycle,
             'em' => $em,
@@ -1507,6 +1515,7 @@ class RequestController extends Controller
             'availableProjects' => null,
             'billingStateChoiceArr' => $billingStateChoiceArr,
             'progressStateChoiceArr' => $progressStateChoiceArr,
+            'categoryListLink' => $categoryListLink
         );
 
         $params['admin'] = false;

@@ -363,7 +363,17 @@
         {#{{ formmacros.field(formproduct.id) }}#}
         {{ form_widget(formproduct.id) }}
 
-        {{ formmacros.field(formproduct.category) }}
+        {#{{ formmacros.field(formproduct.category) }}#}
+        <p>
+        <div class="row">
+            <div class="col-xs-6" align="right">
+                <label>{{ formproduct.category.vars.label|raw }}</label>
+            </div>
+            <div class="col-xs-6" align="left">
+                {{ form_widget(formproduct.category) }}
+            </div>
+        </div>
+        </p>
 
         {{ formmacros.field(formproduct.requested) }}
 
