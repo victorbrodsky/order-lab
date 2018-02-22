@@ -161,6 +161,10 @@
                 handsonTableInit(_handsometableDataArr, tableFormCycle);
             }
 
+            $('.table-barcode').on("change", function(event) {
+                transresTableBarcodeGeneration( $(this) );
+            });
+
         });
 
         function transresPrepopulateFundedAccountNumber( projectField ) {
@@ -199,6 +203,28 @@
                 $("#oleg_translationalresearchbundle_request_fundedAccountNumber").val(null);
             }
         }
+
+
+
+        function transresTableBarcodeGeneration( barcodeField ) {
+            //generate barcode
+            var barcode = null;
+            var image = '<img src="https://www.imgonline.com.ua/examples/random-pixels.jpg" alt="Smiley face" height="42" width="42">';
+
+            //put barcode image to '.table-barcode-image'
+            barcodeField.closest(".table-barcode-image").html(image);
+
+            let canvas = document.createElement('canvas');
+            bwipjs(canvas, options, function(err, cvs) {
+                if (err) {
+                    // handle the error
+                } else {
+                    // Don't need the second param since we have the canvas in scope...
+                    document.getElementById(myimg).src = canvas.toDataURL('image/png');
+                }
+            });
+        }
+
 
     </script>
 
