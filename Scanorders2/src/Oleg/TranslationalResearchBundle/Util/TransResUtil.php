@@ -2644,10 +2644,18 @@ class TransResUtil
             )
         );
 
-        $styleLightGreen = array(
+        $styleLastRow = array(
             'fill' => array(
                 'type' => \PHPExcel_Style_Fill::FILL_SOLID,
                 'color' => array('rgb' => 'ebf1de')
+            ),
+            'borders' => array(
+//                'bottom' => array(
+//                    'style' => \PHPExcel_Style_Border::BORDER_THIN
+//                ),
+                'allborders' => array(
+                    'style' => \PHPExcel_Style_Border::BORDER_THIN
+                )
             )
         );
 
@@ -2808,7 +2816,7 @@ class TransResUtil
             $ews->getStyle('M'.$row)->applyFromArray($styleBoldArray);
 
             //set color light green to the last Total row
-            $ews->getStyle('A'.$row.':'.'N'.$row)->applyFromArray($styleLightGreen);
+            $ews->getStyle('A'.$row.':'.'N'.$row)->applyFromArray($styleLastRow);
 
             $row = $row + 1;
         }//project
