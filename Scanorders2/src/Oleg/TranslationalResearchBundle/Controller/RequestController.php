@@ -1493,7 +1493,7 @@ class RequestController extends Controller
 
         //categoryListLink
         $categoryListUrl = $this->container->get('router')->generate(
-            'transresrequestcategorytypes-list',
+            'transresrequestcategorytypes-list_translationalresearch',
             array(),
             UrlGeneratorInterface::ABSOLUTE_URL
         );

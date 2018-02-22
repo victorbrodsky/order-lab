@@ -17,7 +17,7 @@
 {#macro for list#}
 
 
-{% macro listIndex( entities, pathbase, withCreateNewEntityLink, linkToListId ) %}
+{% macro listIndex( entities, pathbase, withCreateNewEntityLink, linkToListId, postPath ) %}
 
     {% import _self as listmacros %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
@@ -147,10 +147,10 @@
         {% for entity in entities %}
             <tr>
                 <td>
-                    {% if linkToListId %}
+                    {% if linkToListId and not postPath %}
                         <a class="list-row-mainlink" href="{{ path('platform_list_manager_element', { 'linkToListId':linkToListId,'entityId': entity.id }) }}">{{ entity.id }}</a>
                     {% else %}
-                        <a class="list-row-mainlink" href="{{ path(pathbase~'_show', { 'id': entity.id }) }}">{{ entity.id }}</a>
+                        <a class="list-row-mainlink" href="{{ path(pathbase~'_show'~postPath, { 'id': entity.id }) }}">{{ entity.id }}</a>
                     {% endif %}
                 </td>
                 <td>{{ entity.name }}</td>
@@ -354,7 +354,7 @@
     </div>
 
     {% if withCreateNewEntityLink == true %}
-        <a href="{{ path(pathbase~'_new') }}">
+        <a href="{{ path(pathbase~'_new'~postPath) }}">
             Create a new entry
         </a>
     {% endif %}
@@ -382,7 +382,7 @@
 {% endmacro %}
 
 
-{% macro listNew( form, pathbase ) %}
+{% macro listNew( form, pathbase, postPath ) %}
 
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import _self as listmacros %}
@@ -494,7 +494,7 @@
     {% endif %}
 
     {{ form_widget(form.submit) }}
-    <a class="btn btn-info" type="button" href="{{ path(pathbase~'-list') }}">Cancel</a>
+    <a class="btn btn-info" type="button" href="{{ path(pathbase~'-list'~postPath) }}">Cancel</a>
 
     {{ form(form) }}
 
@@ -502,7 +502,7 @@
 
     <br>
     <p>
-        <a href="{{ path(pathbase~'-list') }}">
+        <a href="{{ path(pathbase~'-list'~postPath) }}">
             Back to the list
         </a>
     </p>
@@ -512,7 +512,7 @@
 
 
 
-{% macro listEdit( entity, edit_form, delete_form, pathbase, cycle ) %}
+{% macro listEdit( entity, edit_form, delete_form, pathbase, cycle, postPath ) %}
 
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import _self as listmacros %}
@@ -631,7 +631,7 @@
         <br />
         <p>
             {{ form_widget(edit_form.submit) }}
-            <a class="btn btn-info" type="button" href="{{ path(pathbase~'_show', { 'id': entity.id }) }}">Cancel</a>
+            <a class="btn btn-info" type="button" href="{{ path(pathbase~'_show'~postPath, { 'id': entity.id }) }}">Cancel</a>
             {#<a href="{{ path('platform_list_manager_element', { 'linkToListId':linkToListId,'id': entity.id }) }}">Cancel</a>#}
         </p>
     {% endif %}
@@ -650,14 +650,14 @@
 
     {% if cycle == 'show' and (is_granted('ROLE_USERDIRECTORY_EDITOR') or is_granted('ROLE_SCANORDER_PROCESSOR')) %}
         <p>
-            <a class="btn btn-success" href="{{ path(pathbase~'_edit', { 'id': entity.id }) }}">Edit</a>
+            <a class="btn btn-success" href="{{ path(pathbase~'_edit'~postPath, { 'id': entity.id }) }}">Edit</a>
         </p>
     {% endif %}
 
     <br />
 
     <p>
-        <a href="{{ path(pathbase~'-list') }}">Back to the list</a>
+        <a href="{{ path(pathbase~'-list'~postPath) }}">Back to the list</a>
     </p>
 
 {% endmacro %}

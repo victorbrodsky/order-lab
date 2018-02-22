@@ -40,6 +40,9 @@ use Oleg\UserdirectoryBundle\Util\ErrorHelper;
 class ListController extends Controller
 {
 
+    protected $sitename = "employees";
+    protected $postPath = null;
+
     //@Method({"GET","POST"}) @Method("GET") //TODO: why method GET does not work for handleRequest https://symfony.com/doc/current/form/action_method.html
     /**
      * Lists all entities.
@@ -343,7 +346,8 @@ class ListController extends Controller
             'pathbase' => $pathbase,
             'withCreateNewEntityLink' => $createNew,
             'filterform' => $filterform->createView(),
-            'routename' => $routeName
+            'routename' => $routeName,
+            'sitename' => $this->sitename,
         );
     }
 
@@ -465,7 +469,8 @@ class ListController extends Controller
 
         return $this->createList($request);
     }
-    public function createList($request) {
+    public function createList( $request ) {
+
         $routeName = $request->get('_route');
 
         $pieces = explode("_", $routeName);
@@ -492,14 +497,15 @@ class ListController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl($pathbase.'_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl($pathbase.'_show'.$this->postPath, array('id' => $entity->getId())));
         }
 
         return array(
             'entity' => $entity,
             'form'   => $form->createView(),
             'displayName' => $mapper['displayName'],
-            'pathbase' => $pathbase
+            'pathbase' => $pathbase,
+            'sitename' => $this->sitename
         );
     }
 
@@ -524,7 +530,7 @@ class ListController extends Controller
         $options['em'] = $this->getDoctrine()->getManager();
 
         $form = $this->createForm(GenericListType::class, $entity, array(
-            'action' => $this->generateUrl($pathbase.'_create'),
+            'action' => $this->generateUrl($pathbase.'_create'.$this->postPath),
             //'method' => 'POST',
             'data_class' => $mapper['fullClassName'],
             'form_custom_value' => $options,
@@ -654,7 +660,8 @@ class ListController extends Controller
 
         return $this->newList($request);
     }
-    public function newList($request,$pid=null) {
+    public function newList( $request, $pid=null ) {
+
         $routeName = $request->get('_route');
         $pieces = explode("_", $routeName);
         $pathbase = $pieces[0];
@@ -691,7 +698,8 @@ class ListController extends Controller
             'entity' => $entity,
             'form'   => $form->createView(),
             'displayName' => $mapper['displayName'],
-            'pathbase' => $pathbase
+            'pathbase' => $pathbase,
+            'sitename' => $this->sitename
         );
     }
 
@@ -815,7 +823,8 @@ class ListController extends Controller
 
         return $this->showList($request,$id);
     }
-    public function showList($request,$id) {
+    public function showList( $request, $id ) {
+
         $routeName = $request->get('_route');
         $pieces = explode("_", $routeName);
         $pathbase = $pieces[0];
@@ -841,7 +850,8 @@ class ListController extends Controller
             'edit_form' => $form->createView(),
             'delete_form' => null,  //$deleteForm->createView(),
             'displayName' => $mapper['displayName'],
-            'pathbase' => $pathbase
+            'pathbase' => $pathbase,
+            'sitename' => $this->sitename
         );
     }
 
@@ -963,7 +973,8 @@ class ListController extends Controller
 
         return $this->editList($request,$id);
     }
-    public function editList($request,$id) {
+    public function editList( $request, $id ) {
+
         $routeName = $request->get('_route');
         $pieces = explode("_", $routeName);
         $pathbase = $pieces[0];
@@ -981,7 +992,7 @@ class ListController extends Controller
         //add permissions
         //$this->addPermissions($entity);
 
-        $editForm = $this->createEditForm($entity,$mapper,$pathbase,'edit');
+        $editForm = $this->createEditForm($entity,$mapper,$pathbase,'edit',false);
         $deleteForm = $this->createDeleteForm($id,$pathbase);
 
         return array(
@@ -989,7 +1000,8 @@ class ListController extends Controller
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
             'displayName' => $mapper['displayName'],
-            'pathbase' => $pathbase
+            'pathbase' => $pathbase,
+            'sitename' => $this->sitename
         );
     }
 
@@ -1024,7 +1036,7 @@ class ListController extends Controller
         $options['em'] = $this->getDoctrine()->getManager();
 
         $form = $this->createForm(GenericListType::class, $entity, array(
-            'action' => $this->generateUrl($pathbase.'_show', array('id' => $entity->getId())),
+            'action' => $this->generateUrl($pathbase.'_show'.$this->postPath, array('id' => $entity->getId())),
             'method' => 'PUT',
             'disabled' => $disabled,
             'data_class' => $mapper['fullClassName'],
@@ -1156,7 +1168,8 @@ class ListController extends Controller
 
         return $this->updateList($request, $id);
     }
-    public function updateList($request, $id) {
+    public function updateList( $request, $id ) {
+
         $routeName = $request->get('_route');
         $pieces = explode("_", $routeName);
         $pathbase = $pieces[0];
@@ -1267,7 +1280,7 @@ class ListController extends Controller
 
             $em->flush();
 
-            return $this->redirect($this->generateUrl($pathbase.'_show', array('id' => $id)));
+            return $this->redirect($this->generateUrl($pathbase.'_show'.$this->postPath, array('id' => $id)));
         }
 
         return array(
@@ -1275,7 +1288,8 @@ class ListController extends Controller
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
             'displayName' => $mapper['displayName'],
-            'pathbase' => $pathbase
+            'pathbase' => $pathbase,
+            'sitename' => $this->sitename
         );
     }
 
