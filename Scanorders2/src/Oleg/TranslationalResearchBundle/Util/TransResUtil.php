@@ -2644,6 +2644,13 @@ class TransResUtil
             )
         );
 
+        $styleLightGreen = array(
+            'fill' => array(
+                'type' => \PHPExcel_Style_Fill::FILL_SOLID,
+                'color' => array('rgb' => 'ebf1de')
+            )
+        );
+
         $ews->setCellValue('A1', 'Project ID'); // Sets cell 'a1' to value 'ID
         $ews->setCellValue('B1', 'Submission Date');
         $ews->setCellValue('C1', 'Principal Investigator(s)');
@@ -2725,11 +2732,16 @@ class TransResUtil
                 //Request ID
                 $ews->setCellValue('I'.$row, $request->getOid());
 
-                //# Issued Invoices
-                $invoicesCount = count($request->getInvoices());
-                $totalInvoices = $totalInvoices + $invoicesCount;
-                $projectTotalInvoices = $projectTotalInvoices + $invoicesCount;
-                $ews->setCellValue('J'.$row, $invoicesCount);
+                //Invoice(s) Issued (Latest)
+                $latestInvoice = $transresRequestUtil->getLatestInvoice($request);
+                //$latestInvoicesCount = count($request->getInvoices());
+                $latestInvoicesCount = 0;
+                if( $latestInvoice ) {
+                    $latestInvoicesCount = 1;
+                    $totalInvoices++;
+                    $projectTotalInvoices++;
+                }
+                $ews->setCellValue('J'.$row, $latestInvoicesCount);
 
                 if( $latestInvoice ) {
                     //# Total($)
@@ -2773,6 +2785,8 @@ class TransResUtil
 
             $totalRequests = $totalRequests + $projectRequests;
 
+            $ews = $this->fillOutProjectCells($ews,$row,$project);
+
             //Request Total
             $ews->setCellValue('I'.$row, "Project Totals");
             $ews->getStyle('I'.$row)->applyFromArray($styleBoldArray);
@@ -2793,7 +2807,9 @@ class TransResUtil
             $ews->setCellValue('M'.$row, $projectTotalDue);
             $ews->getStyle('M'.$row)->applyFromArray($styleBoldArray);
 
-            $row = $row + 1;
+            //set color light green to the last Total row
+            $ews->getStyle('A'.$row.':'.'N'.$row)->applyFromArray($styleLightGreen);
+
             $row = $row + 1;
         }//project
 
