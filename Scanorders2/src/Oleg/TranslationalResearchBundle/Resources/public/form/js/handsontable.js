@@ -222,6 +222,40 @@ var _rowToProcessArr = [];
 //     }
 // };
 
+//from: http://past.handsontable.com/demo/renderers_html.html
+var imageRenderer = function (instance, td, row, col, prop, value, cellProperties) {
+    var escaped = Handsontable.helper.stringify(value),
+        img;
+
+    if (escaped.indexOf('http') === 0) {
+        img = document.createElement('IMG');
+
+        img.src = value;
+        img.height = 42;
+        img.width = 42;
+        //img.margin = "5px 5px 5px 5px";
+        //img.style.cssText = "margin: 5px;";
+        img.style.marginTop = "5px";
+        img.style.marginBottom = "5px";
+
+        // Handsontable.dom.addEvent(img, 'mousedown', function (e){
+        //     e.preventDefault(); // prevent selection quirk
+        // });
+
+        $(td).html(null);
+        //$(td).text(null);
+
+        //Handsontable.dom.empty(td);
+        td.appendChild(img);
+    }
+    else {
+        // render as text
+        Handsontable.renderers.TextRenderer.apply(this, arguments);
+    }
+
+    return td;
+};
+
 //total 33
 var _columnData_scanorder = [
     { header:'System', columns:{} },
@@ -232,7 +266,7 @@ var _columnData_scanorder = [
     { header:'Stain Name', columns:{} },
     { header:'Other ID', columns:{} },
     { header:'Barcode', columns:{} },
-    { header:'Barcode Image', columns:{} },
+    { header:'Barcode Image', columns:{renderer:imageRenderer} },
     { header:'Comment', columns:{} }
 ];
 
@@ -344,6 +378,16 @@ function handsonTableInit(handsometableDataArr,tableFormCycle) {
         data: data,
         colHeaders: _colHeader,
         columns: columnsType,
+
+        //colWidths: [200, 200, 200, 60],
+        // colHeaders: ["Title", "Description", "Comments", "Cover"],
+        // columns: [
+        //     {data: "System", renderer: "html"},
+        //     {data: "Accession ID", renderer: "html"},
+        //     {data: "Part ID", renderer: "html"},
+        //     {data: "cover", renderer: coverRenderer}
+        // ],
+
         minSpareRows: 1,
         contextMenu: ['row_above', 'row_below', 'remove_row'],
         manualColumnMove: true,
@@ -359,8 +403,8 @@ function handsonTableInit(handsometableDataArr,tableFormCycle) {
                 cellProperties.readOnly = true;
             }
 
-            console.log("c="+c);
-            console.log(_columnData_scanorder[c]);
+            //console.log("c="+c);                      //c=7
+            //console.log(_columnData_scanorder[c]);    //_columnData_scanorder[c].header="Barcode"
             if( c > 0 ) {
                 var headerTitle = _columnData_scanorder[c]['header'];
                 if( typeof headerTitle != 'undefined' && headerTitle != '' &&
@@ -369,13 +413,65 @@ function handsonTableInit(handsometableDataArr,tableFormCycle) {
                     handsometableDataArr[r][headerTitle] != null
                 ) {
                     var cellId = handsometableDataArr[r][headerTitle]["id"];
-                    console.log("cellId="+cellId);
+                    //console.log("cellId="+cellId);
                     cellProperties.id = cellId;
-                    console.log('cellProperties:');
-                    console.log(cellProperties);
+                    //console.log('cellProperties:');
+                    //console.log(cellProperties);
                 }
             }
             return cellProperties;
+        },
+        afterChange: function (change, source) {
+            if (source === 'loadData') {
+                return; //don't save this change
+            }
+
+            if (change != null) {
+                var changeData = change[0];
+                console.log("changeData:");
+                console.log(changeData);
+
+                var rowNumber = changeData[0];
+                var columnNumber = changeData[1];
+                var oldValue = changeData[2];
+                var newValue = changeData[3];
+                //console.log("prop="+prop);
+                console.log("oldValue="+oldValue+"; newValue="+newValue);
+
+                //console.log("header="+_columnData_scanorder[columnNumber].header);
+                //if( _columnData_scanorder[columnNumber].header != "Barcode") {
+                //    return;
+                //}
+                if( columnNumber != 7 ) {
+                    return;
+                }
+
+                // if( _sotable ) {
+                //     console.log("_sotable exists");
+                //     var ht = _sotable;
+                // } else {
+                //     console.log("_sotable does not exists");
+                //     var ht = $(_htableid).handsontable('getInstance');
+                // }
+
+
+
+                //var barcode = _sotable.getDataAtRowProp(rowNumber, 'Barcode');
+
+                if( oldValue != newValue ) {
+                    transresBarcodeParser(rowNumber,newValue);
+                }
+
+                if( oldValue != newValue ) {
+                    var barcodeImage = transresTableBarcodeGeneration(newValue);
+                    console.log("barcodeImage=" + barcodeImage);
+                    //barcodeImage = barcodeImage.replace('&lt;', '<').replace('&gt;', '>');
+                    //barcodeImage = '"' + barcodeImage + '"';
+
+                    //_sotable.setDataAtRowProp(rowNumber, 'Barcode Image', barcodeImage);
+                    _sotable.setDataAtCell(rowNumber, columnNumber + 1, barcodeImage);
+                }
+            }
         }
     });
 
@@ -386,12 +482,127 @@ function handsonTableInit(handsometableDataArr,tableFormCycle) {
     //set scan order table object as global reference
     _sotable = $(_htableid).handsontable('getInstance');
 
-
-
 }
 
 
+function transresTableBarcodeGeneration( barcodeField ) {
+    console.log("generate barcode");
+    //generate barcode
+    var barcode = null;
+    //var image = '<img src="https://www.imgonline.com.ua/examples/random-pixels.jpg" height="42" width="42">';
+    //var image = "https://www.imgonline.com.ua/examples/random-pixels.jpg";
+    var image = "https://arifdiyanto.files.wordpress.com/2015/11/qrcodeuk.gif";
+    console.log("image="+image);
 
+    //var imageEl = '<img src="' + image + '" height="42" width="42">';
+    //$("#test-barcode-image").html(imageEl);
+
+    //return image;
+
+    //$("#test-barcode-image").html(image);
+    //return image;
+
+    //put barcode image to '.table-barcode-image'
+    //barcodeField.closest(".table-barcode-image").html(image);
+
+    // var canvas = document.createElement('canvas');
+    // bwipjs(canvas, options, function(err, cvs) {
+    //     console.log("bwipjs function");
+    //     if (err) {
+    //         // handle the error
+    //         console.log(err);
+    //     } else {
+    //         console.log("set barcode image");
+    //         // Don't need the second param since we have the canvas in scope...
+    //         document.getElementById('test-datamatrix').src = canvas.toDataURL('image/png');
+    //     }
+    // });
+
+    //transresGenerateBarcode();
+
+    return image;
+}
+
+
+// const BWIPJS  = require('./bwipjs');
+// const BWIPP   = require('./bwipp');
+// const fontlib = require('./node-fonts');
+
+function transresGenerateBarcode() {
+    // Initialize a barcode writer object.  This is the interface between
+    // the low-level BWIPP code, the font-manager, and the Bitmap object.
+    // The `fontlib` parameter is the font-manager, either the FreeType
+    // interface or the bitmapped-fonts interface.
+    // The boolean `monochrome` flag indicates whether to use
+    // anti-aliased (false) or monochrome (true) font rendering.
+    var bw = new BWIPJS(fontlib, false /*use anti-aliased fonts*/);
+
+    // Add a bitmap instance
+    bw.bitmap(new Bitmap);
+
+    // Set the x,y scaling factors
+    bw.scale(2, 2);
+
+    // Create an options object.  See the bwipjs and BWIPP documentation
+    // for possible values.
+    // You can use any plain JavaScript values.  Numbers, bools and strings.
+    var opts = {
+        parsefnc:true,
+        includetext:true,
+        alttext:"(00)1234567890",
+    };
+
+    // Call into the BWIPP cross-compiled code.   BWIPP() is a factory
+    // method that returns a function object.  You can call the
+    // function object multiple times (and reuse the BWIPJS object as
+    // well), but you will likely need to create a new Bitmap object
+    // prior to each call.
+    try {
+        // This call is synchronous and can be CPU intensive.
+        // Will throw if a runtime error is encountered
+        BWIPP()(bw, 'code128', "^FNC1001234567890", opts);
+
+        // If you are using bitmapped fonts with asynchronous loading (browser),
+        // you must allow the font-manager to load any required fonts.
+        // Node.js does not use this and calls bw.render() directly.
+        bwipjs_fonts.loadfonts(function(err) {
+            if (err) {
+                // handle the font loading error
+            } else {
+                // Tell bwip-js to render the image.  This will invoke
+                // the interfaces on your Bitmap object.  The callback is passed
+                // to Bitmap.finalize().  That interface should call it when done,
+                // supplying any expected parameters.
+                bw.render(callback);
+            }
+        });
+    } catch (e) {
+        // handle error
+    }
+}
+
+function transresBarcodeParser( rowNumber, barcodeStr ) {
+    //S13-20926 A1 5 08/12/14
+
+    var barcodeArr = barcodeStr.split(" ");
+    console.log("barcodeArr len="+barcodeArr.length);
+
+    //1) get Accession
+    if( barcodeArr.length > 1 ) {
+        var accession = barcodeArr[0];
+        console.log("accession="+accession);
+        _sotable.setDataAtCell(rowNumber,1,accession);
+
+        var partBlock = barcodeArr[1];
+        console.log("partBlock.length="+partBlock.length);
+
+        if( partBlock.length > 1 ) {
+            console.log("Part="+partBlock.charAt(0));
+            _sotable.setDataAtCell(rowNumber, 2, partBlock.charAt(0));
+            _sotable.setDataAtCell(rowNumber, 3, partBlock.charAt(1));
+        }
+    }
+}
 
 // function setDataCell( row, col, value ) {
 //

@@ -49,7 +49,15 @@
             {{ transresRequestMacros.transresRequestHandsontable(form,transresRequest,cycle) }}
         {% endif %}
 
-        <div id="test-barcode-image"></div>
+        {#<p>#}
+            {#Table Triggered:<br>#}
+            {#<div id="test-barcode-image"></div>#}
+        {#</p>#}
+
+        {#<p>#}
+            {#Datamatrix Triggered:<br>#}
+            {#<div id="test-datamatrix"></div>#}
+        {#</p>#}
 
         {{ transresRequestMacros.transresRequestComment(form,transresRequest,cycle) }}
 
@@ -131,6 +139,7 @@
     '@OlegTranslationalResearchBundle/Resources/public/form/js/handsontable.js'
     '@OlegUserdirectoryBundle/Resources/public/bwip-js/bwipjs.js'
     '@OlegUserdirectoryBundle/Resources/public/bwip-js/bwipp-min.js'
+    '@OlegUserdirectoryBundle/Resources/public/bwip-js/freetype.js'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
@@ -165,9 +174,9 @@
                 handsonTableInit(_handsometableDataArr, tableFormCycle);
             }
 
-            $('.table-barcode').on("change", function(event) {
-                transresTableBarcodeGeneration( $(this) );
-            });
+//            $('.table-barcode').on("change", function(event) {
+//                transresTableBarcodeGeneration( $(this) );
+//            });
 
         });
 
@@ -210,28 +219,28 @@
 
 
 
-        function transresTableBarcodeGeneration( barcodeField ) {
-            console.log("generate barcode");
-            //generate barcode
-            var barcode = null;
-            var image = '<img src="https://www.imgonline.com.ua/examples/random-pixels.jpg" alt="Smiley face" height="42" width="42">';
-
-            //put barcode image to '.table-barcode-image'
-            barcodeField.closest(".table-barcode-image").html(image);
-
-            let canvas = document.createElement('canvas');
-            bwipjs(canvas, options, function(err, cvs) {
-                console.log("bwipjs function");
-                if (err) {
-                    // handle the error
-                    console.log(err);
-                } else {
-                    console.log("set barcode image");
-                    // Don't need the second param since we have the canvas in scope...
-                    document.getElementById('test-barcode-image').src = canvas.toDataURL('image/png');
-                }
-            });
-        }
+//        function transresTableBarcodeGeneration( barcodeField ) {
+//            console.log("generate barcode");
+//            //generate barcode
+//            var barcode = null;
+//            var image = '<img src="https://www.imgonline.com.ua/examples/random-pixels.jpg" alt="Smiley face" height="42" width="42">';
+//
+//            //put barcode image to '.table-barcode-image'
+//            barcodeField.closest(".table-barcode-image").html(image);
+//
+//            let canvas = document.createElement('canvas');
+//            bwipjs(canvas, options, function(err, cvs) {
+//                console.log("bwipjs function");
+//                if (err) {
+//                    // handle the error
+//                    console.log(err);
+//                } else {
+//                    console.log("set barcode image");
+//                    // Don't need the second param since we have the canvas in scope...
+//                    document.getElementById('test-barcode-image').src = canvas.toDataURL('image/png');
+//                }
+//            });
+//        }
 
 
     </script>
