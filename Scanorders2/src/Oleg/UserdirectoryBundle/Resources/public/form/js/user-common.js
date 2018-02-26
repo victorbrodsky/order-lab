@@ -1351,11 +1351,11 @@ function waitfor(test, expectedValue, msec, count, source, callback) {
 }
 
 //btnDom - is the 'this' button attached to the field where a new user is to be created
-function addNewUserOnFly( btnDom, sitename ) {
+function addNewUserOnFly( btnDom, sitename, otherUserParam ) {
     //console.log("Add New User on Fly");
-    constructAddNewUserModal(btnDom,sitename);
+    constructAddNewUserModal(btnDom,sitename,otherUserParam);
 }
-function constructAddNewUserModal(btnDom,sitename) {
+function constructAddNewUserModal(btnDom,sitename,otherUserParam) {
     //console.log("construct modal");
 
     //get field id (assume select box)
@@ -1368,6 +1368,7 @@ function constructAddNewUserModal(btnDom,sitename) {
     //console.log("fieldId="+fieldId);
 
     sitename = "'"+sitename+"'";
+    otherUserParam = "'"+otherUserParam+"'";
     //console.log("sitename="+sitename);
 
     var modalHtml =
@@ -1392,7 +1393,7 @@ function constructAddNewUserModal(btnDom,sitename) {
         '</div>' +
         '<div class="modal-footer">' +
         '<button id="user-add-btn-cancel" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Cancel</button>' +
-        '<a class="btn btn-primary add-user-btn-add" id="add-user-btn-add" onclick="addNewUserAction('+fieldId+','+sitename+')">Add</a>' +
+        '<a class="btn btn-primary add-user-btn-add" id="add-user-btn-add" onclick="addNewUserAction('+fieldId+','+sitename+','+otherUserParam+')">Add</a>' +
         '</div>' +
         '</div>' +
         '</div>' +
@@ -1428,7 +1429,7 @@ function constructAddNewUserModal(btnDom,sitename) {
     return false;
 }
 
-function addNewUserAction( fieldId, sitename ) {
+function addNewUserAction( fieldId, sitename, otherUserParam ) {
 
     $('#add-user-danger-box').hide();
     $('#add-user-danger-box').html(null);
@@ -1477,7 +1478,7 @@ function addNewUserAction( fieldId, sitename ) {
     //console.log("add New UserAction: call ajax to check if user exists");
 
     //2) try to create a new user
-    var url = Routing.generate('employees_add_new_user_ajax');
+    var url = Routing.generate(sitename+'_add_new_user_ajax');
     $.ajax({
         url: url,
         timeout: _ajaxTimeout,
@@ -1485,6 +1486,7 @@ function addNewUserAction( fieldId, sitename ) {
         type: "POST",
         data: {
             sitename: sitename,
+            otherUserParam: otherUserParam,
             cwid: cwid,
             email: email,
             displayname: displayname,

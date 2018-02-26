@@ -77,6 +77,7 @@
             <th>{{ knp_pagination_sortable(users, 'User ID', 'user.primaryPublicUserId') }}</th>
             <th>{{ knp_pagination_sortable(users, 'Email', 'infos.email') }}</th>
             <th>{{ knp_pagination_sortable(users, 'Phone Number', 'infos.preferredPhone') }}</th>
+            <th>{{ knp_pagination_sortable(users, 'Parameter', 'user.otherUserParam') }}</th>
             <th>{{ knp_pagination_sortable(users, 'Role(s)', 'user.roles') }}</th>
             {#<th>{{ knp_pagination_sortable(users, 'Last Login', 'user.lastLogin') }}</th>#}
             <th>{{ knp_pagination_sortable(users, 'Locked/Unlocked', 'user.enabled') }}</th>
@@ -96,6 +97,7 @@
             <td>{{ user.primaryPublicUserId }}</td>
             <td>{{ user.email }}</td>
             <td>{{ user.preferredPhone }}</td>
+            <td>{{ user.otherUserParam }}</td>
             <td>
                 {% for role in user_security_utility.getUserRolesBySite(user, sitename, true) %}
                     {% if role.name != "ROLE_USER" %}
@@ -139,6 +141,13 @@
                         <li>
                             <a
                                href="{{ path(sitename~'_generated_user_management', { 'id': user.id }) }}">Review User
+                            </a>
+                        </li>
+
+                        <li>
+                            <a
+                                general-data-confirm="Are you sure you would like to approve {{ entity.user }} to access {{ sitenamefull }}?"
+                                href="{{ path(sitename~'_generated_user_approve', { 'id': user.id }) }}">Approve User
                             </a>
                         </li>
 

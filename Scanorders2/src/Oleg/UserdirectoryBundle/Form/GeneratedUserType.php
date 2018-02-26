@@ -129,6 +129,12 @@ class GeneratedUserType extends AbstractType
             },
         ));
 
+        $builder->add('otherUserParam', null, array(
+            'label' => 'Optional Parameter:',
+            'disabled' => true,
+            'attr' => array('class'=>'form-control'),
+        ));
+
     }
 
     /**

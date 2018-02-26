@@ -131,6 +131,13 @@ class User extends BaseUser {
     private $createdby;
 
     /**
+     * otherUserParam: used for creation a new user on the fly and pass additional parameters, for example, transres project's specialty Hema or APCP
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $otherUserParam;
+
+    /**
      * @ORM\OneToOne(targetEntity="UserPreferences", inversedBy="user", cascade={"persist","remove"})
      */
     private $preferences;
@@ -485,6 +492,22 @@ class User extends BaseUser {
     public function getCreatedby()
     {
         return $this->createdby;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOtherUserParam()
+    {
+        return $this->otherUserParam;
+    }
+
+    /**
+     * @param mixed $otherUserParam
+     */
+    public function setOtherUserParam($otherUserParam)
+    {
+        $this->otherUserParam = $otherUserParam;
     }
 
     //

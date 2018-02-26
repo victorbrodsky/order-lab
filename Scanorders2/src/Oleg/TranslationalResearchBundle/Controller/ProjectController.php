@@ -739,6 +739,7 @@ class ProjectController extends Controller
             'transresUtil' => $transresUtil,
             'SecurityAuthChecker' => $this->get('security.authorization_checker'),
             'project' => $project,
+            'otherUserParam' => $project->getProjectSpecialty()->getAbbreviation(),
             'routeName' => $routeName,
             'disabledReviewerFields' => true,
             'disabledState' => true,

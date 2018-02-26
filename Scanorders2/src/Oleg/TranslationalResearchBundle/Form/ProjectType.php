@@ -231,7 +231,8 @@ class ProjectType extends AbstractType
         $addUserOnFly = "";
         if( $this->params['cycle'] != "show" ) {
             $sitename = "'translationalresearch'";
-            $addUserOnFly = ' (<a href="javascript:void(0)" onclick="addNewUserOnFly(this,' . $sitename . ');">Add New</a>)';
+            $otherUserParam = "'".$this->params['otherUserParam']."'";
+            $addUserOnFly = ' (<a href="javascript:void(0)" onclick="addNewUserOnFly(this,' . $sitename . ','.$otherUserParam.');">Add New</a>)';
         }
 
         $builder->add( 'principalInvestigators', EntityType::class, array(

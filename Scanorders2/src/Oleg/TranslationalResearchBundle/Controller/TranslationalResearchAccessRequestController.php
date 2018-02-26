@@ -212,4 +212,13 @@ class TranslationalResearchAccessRequestController extends AccessRequestControll
         return parent::generatedUserManagementAction($request,$user);
     }
 
+    /**
+     * @Route("/generated-user/approve/{id}", name="translationalresearch_generated_user_approve")
+     * @Method({"GET", "POST"})
+     */
+    public function generatedUserApproveAction(Request $request, User $user)
+    {
+        return parent::generatedUserApproveAction($request,$user);
+    }
+
 }

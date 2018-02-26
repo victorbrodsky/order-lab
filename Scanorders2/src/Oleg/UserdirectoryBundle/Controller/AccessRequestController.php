@@ -1554,32 +1554,33 @@ class AccessRequestController extends Controller
 //                $user->setUsernameCanonicalForce($newUsername);
 //            }
 
-            $passwordNote = "";
-            if( !$user->getPassword() && $user->getKeytype()->getName() == "Local User" ) {
-                //exit("set password");
-
-                //check salt
-                if( !$user->getSalt() ) {
-                    $salt = rtrim(str_replace('+', '.', base64_encode(random_bytes(32))), '=');
-                    $user->setSalt($salt);
-                }
-
-                //generate random password
-                $tokenGenerator = $this->container->get('fos_user.util.token_generator');
-                $plainPassword = substr($tokenGenerator->generateToken(), 0, 8); // 8 chars
-                //exit("set password=[".$plainPassword."]");
-
-                //encode password
-                $encoderService = $this->container->get('security.encoder_factory');
-                $encoder = $encoderService->getEncoder($user);
-                $encoded = $encoder->encodePassword($plainPassword, $user->getSalt());
-                //exit("set encoded=[".$encoded."]");
-
-                $user->setPassword($encoded);
-
-                $passwordNote = "Temporary Password (without single quotes): '".$plainPassword."'".$newline;
-                $passwordNote = $passwordNote . "Please change your password in 'My Profile' page".$newline;
-            }
+//            $passwordNote = "";
+//            if( !$user->getPassword() && $user->getKeytype()->getName() == "Local User" ) {
+//                //exit("set password");
+//
+//                //check salt
+//                if( !$user->getSalt() ) {
+//                    $salt = rtrim(str_replace('+', '.', base64_encode(random_bytes(32))), '=');
+//                    $user->setSalt($salt);
+//                }
+//
+//                //generate random password
+//                $tokenGenerator = $this->container->get('fos_user.util.token_generator');
+//                $plainPassword = substr($tokenGenerator->generateToken(), 0, 8); // 8 chars
+//                //exit("set password=[".$plainPassword."]");
+//
+//                //encode password
+//                $encoderService = $this->container->get('security.encoder_factory');
+//                $encoder = $encoderService->getEncoder($user);
+//                $encoded = $encoder->encodePassword($plainPassword, $user->getSalt());
+//                //exit("set encoded=[".$encoded."]");
+//
+//                $user->setPassword($encoded);
+//
+//                $passwordNote = "Temporary Password (without single quotes): '".$plainPassword."'".$newline;
+//                $passwordNote = $passwordNote . "Please change your password in 'My Profile' page".$newline;
+//            }
+            $passwordNote = $this->setUserPassword($user);
 
             //$em->persist($user);
             //$em->flush($user);
@@ -1651,6 +1652,117 @@ class AccessRequestController extends Controller
             'form' => $form->createView(),
             'title' => "Review Manually Created User ".$user,
         );
+    }
+
+    /**
+     * @Route("/generated-user/approve/{id}", name="employees_generated_user_approve")
+     * @Method({"GET", "POST"})
+     */
+    public function generatedUserApproveAction(Request $request, User $user)
+    {
+        if (false === $this->get('security.authorization_checker')->isGranted($this->roleEditor)) {
+            return $this->redirect($this->generateUrl($this->siteName . "-nopermission"));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $currentUser = $this->get('security.token_storage')->getToken()->getUser();
+        $securityUtil = $this->get('order_security_utility');
+        $newline = "\r\n";
+
+        //unlock the user
+        $user->setLocked(false);
+
+        $em->flush();
+
+        $lockedStr = "Unlocked";
+
+
+        ///////////////// Password ///////////////////
+        $passwordNote = $this->setUserPassword($user);
+        ///////////////// EOF Password //////////////////
+
+        /////////////////// send emailNotification ///////////////////
+        $emailNotification = true;
+        if( $emailNotification ) {
+
+            $userSecUtil = $this->get('user_security_utility');
+
+            if( $currentUser->getEmail() ) {
+                $adminEmail = $currentUser->getEmail();
+                $adminEmailStr = " (".$adminEmail.")";
+            } else {
+                $adminEmailStr = "";
+            }
+
+            $roles = $userSecUtil->getUserRolesBySite( $user, $this->siteName );
+            $siteLink = $this->generateUrl( $this->siteName.'_home', array(), UrlGeneratorInterface::ABSOLUTE_URL );
+            $sitenameFull = $this->siteNameStr." site";
+
+            $subject = "Your manually created account for ".$sitenameFull." has been updated";
+
+            $msg = $user->getUsernameOptimal().",".$newline.$newline.
+                "Your manually created account for ".$sitenameFull." (".$siteLink.") has been updated.".$newline.
+                "Current roles: " . implode(", ",$roles).$newline.
+                "Status: ".$lockedStr.$newline.
+                $passwordNote.
+                "For additional details please email ".$currentUser->getUsernameOptimal().$adminEmailStr.".".$newline.$newline.
+                $currentUser->getUsernameOptimal().$adminEmailStr;
+
+            $email = $user->getEmail();
+            $emailUtil = $this->get('user_mailer_utility');
+            //                    $email, $subject, $message, $em, $ccs=null, $adminemail=null
+            $emailUtil->sendEmail( $email, $subject, $msg, null, $adminEmail );
+        }
+        /////////////////// EOF send emailNotification ///////////////////
+
+        $msg = "Manually created user $user has been approved. Status: ".$lockedStr;
+
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            $msg
+        );
+
+        //Event Log
+        $event = "Manually created account ".$user." for ".$sitenameFull." has been approved by ".$currentUser."; Status: $lockedStr"."<br>";
+        $event = $event. "<br>" . $passwordNote; //for testing only. Disable for prod to hide plain password in the event log.
+        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil->createUserEditEvent($this->siteName,$event,$currentUser,$user,$request,'User Record Approved');
+
+
+
+        return $this->redirectToRoute($this->siteName.'_generated_users');
+    }
+
+    public function setUserPassword( $user ) {
+        $newline = "\r\n";
+        $passwordNote = "";
+        if( !$user->getPassword() && $user->getKeytype()->getName() == "Local User" ) {
+            //exit("set password");
+
+            //check salt
+            if( !$user->getSalt() ) {
+                $salt = rtrim(str_replace('+', '.', base64_encode(random_bytes(32))), '=');
+                $user->setSalt($salt);
+            }
+
+            //generate random password
+            $tokenGenerator = $this->container->get('fos_user.util.token_generator');
+            $plainPassword = substr($tokenGenerator->generateToken(), 0, 8); // 8 chars
+            //exit("set password=[".$plainPassword."]");
+
+            //encode password
+            $encoderService = $this->container->get('security.encoder_factory');
+            $encoder = $encoderService->getEncoder($user);
+            $encoded = $encoder->encodePassword($plainPassword, $user->getSalt());
+            //exit("set encoded=[".$encoded."]");
+
+            $user->setPassword($encoded);
+
+            $passwordNote = "Temporary Password (without single quotes): '".$plainPassword."'".$newline;
+            $passwordNote = $passwordNote . "Please change your password in 'My Profile' page".$newline;
+        }
+
+        return $passwordNote;
     }
 
 }

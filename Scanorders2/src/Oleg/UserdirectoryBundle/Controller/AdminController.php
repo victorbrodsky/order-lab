@@ -1425,6 +1425,13 @@ class AdminController extends Controller
 //                80,
 //                "translational-research"
 //            ),
+        
+            "ROLE_TRANSRES_EXECUTIVE" => array(
+                "Executive Committee",
+                "Full View Access for Translational Research site",
+                80,
+                "translational-research"
+            ),
 
             "ROLE_TRANSRES_PRIMARY_REVIEWER" => array(
                 "Translational Research Primary Reviewer",

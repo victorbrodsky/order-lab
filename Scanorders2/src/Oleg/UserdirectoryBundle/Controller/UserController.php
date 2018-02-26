@@ -1689,7 +1689,6 @@ class UserController extends Controller
      */
     public function addNewUserAjaxAction(Request $request)
     {
-
         if (false === $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
@@ -1707,6 +1706,7 @@ class UserController extends Controller
         );
 
         $sitename = $request->get('sitename');
+        $otherUserParam = $request->get('otherUserParam');
         $publicUserId = $request->get('cwid');
         $email = $request->get('email');
         $displayname = $request->get('displayname');
@@ -1758,7 +1758,7 @@ class UserController extends Controller
 
         if( $user ) {
             $thisUrl = $this->container->get('router')->generate(
-                'employees_showuser',
+                $sitename.'_showuser',
                 array(
                     'id'=>$user->getId()
                 ),
@@ -1796,6 +1796,8 @@ class UserController extends Controller
         $createdBy = "manual-".$sitename;
         $user->setCreatedby($createdBy);
 
+        $user->setOtherUserParam($otherUserParam);
+
         $user->setLocked(true);
 
         //add roles
@@ -1815,6 +1817,8 @@ class UserController extends Controller
         $user->setLastName($lastname);
         $user->setDisplayName($displayname);
         $user->setPreferredPhone($phone);
+
+        $this->processOtherUserParam($user,$otherUserParam);
 
         //$resArr['userId'] = $publicUserId;
         //$resArr['userName'] = "New User $publicUserId";
@@ -1860,6 +1864,9 @@ class UserController extends Controller
         $response = new Response($json);
         $response->headers->set('Content-Type', 'application/json');
         return $response;
+    }
+    public function processOtherUserParam($user,$otherUserParam) {
+        return false;
     }
 
 

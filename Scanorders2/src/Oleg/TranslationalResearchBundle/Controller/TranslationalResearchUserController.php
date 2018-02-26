@@ -73,6 +73,28 @@ class TranslationalResearchUserController extends UserController
 
         return $this->updateUser( $request, $id, $this->container->getParameter('translationalresearch.sitename') );
     }
-    
+
+    /**
+     * @Route("/add-new-user-ajax/", name="translationalresearch_add_new_user_ajax", options={"expose"=true})
+     * @Method("POST")
+     */
+    public function addNewUserAjaxAction(Request $request)
+    {
+        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER')) {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
+        return $this->addNewUserAjax($request); //$this->container->getParameter('employees.sitename')
+    }
+    public function processOtherUserParam($user,$otherUserParam) {
+        if( $otherUserParam == "hematopathology" ) {
+            $user->addRole("ROLE_TRANSRES_HEMATOPATHOLOGY");
+        }
+        if( $otherUserParam == "ap-cp" ) {
+            $user->addRole("ROLE_TRANSRES_APCP");
+        }
+        
+        return true;
+    }
 
 }
