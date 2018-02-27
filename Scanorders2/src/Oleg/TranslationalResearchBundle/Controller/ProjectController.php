@@ -137,79 +137,118 @@ class ProjectController extends Controller
 
         //force to set project specialty filter for non-admin users
         if( $transresUtil->isAdminOrPrimaryReviewer() === false ) {
-            $projectSpecialtyFilter = array();
-            //$projectSpecialtyFilter = new ArrayCollection();
+            //$projectSpecialtyDeniedFilter = array();
+            $projectSpecialtyAllowedArr = new ArrayCollection();
+            $projectSpecialtyDeniedArr = new ArrayCollection();
+            $projectSpecialtyReturn = array();
+
             //check is user is hematopathology user
             $specialtyHemaObject = $transresUtil->getSpecialtyObject("hematopathology");
-
-//            $res = $transresUtil->hasProjectSpecialty($projectSpecialties,$specialtyHemaObject);
-//            if( $res ) {
-//                echo "res true<br>";
-//            } else {
-//                echo "res false<br>";
-//            }
-
-            if( $transresUtil->hasProjectSpecialty($projectSpecialties,$specialtyHemaObject) ) {
-                if ($transresUtil->isUserAllowedSpecialtyObject($specialtyHemaObject, $user)) {
-                    //$projectSpecialties[] = $specialtyHemaObject;
-                    //$projectSpecialtyFilter['filter[projectSpecialty][0]'] = $specialtyHemaObject->getId();
-                    $projectSpecialtyFilter[] = $specialtyHemaObject;
-                    //$projectSpecialtyFilter->add($specialtyHemaObject);
-                }
-//                else {
-//                    //echo "remove ".$specialtyHemaObject."<br>";
-//                    //remove hema
-//                    //$projectSpecialties = $transresUtil->removeProjectSpecialty($projectSpecialties,$specialtyHemaObject);
-//                }
+            if( $transresUtil->isUserAllowedSpecialtyObject($specialtyHemaObject, $user) ) {
+                $projectSpecialtyAllowedArr->add($specialtyHemaObject);
+            } else {
+                $projectSpecialtyDeniedArr->add($specialtyHemaObject);
             }
 
             //check is user is ap-cp user
             $specialtyAPCPObject = $transresUtil->getSpecialtyObject("ap-cp");
-            if( $transresUtil->hasProjectSpecialty($projectSpecialties,$specialtyAPCPObject) ) {
-                if ($transresUtil->isUserAllowedSpecialtyObject($specialtyAPCPObject, $user)) {
-                    //$projectSpecialties[] = $specialtyAPCPObject;
-                    //$projectSpecialtyFilter['filter[projectSpecialty][1]'] = $specialtyAPCPObject->getId();
-                    $projectSpecialtyFilter[] = $specialtyAPCPObject;
-                    //$projectSpecialtyFilter->add($specialtyAPCPObject);
-                }
-//                else {
-//                    //echo "remove ".$specialtyAPCPObject."<br>";
-//                    //remove ap-cp
-//                    //$projectSpecialties = $transresUtil->removeProjectSpecialty($projectSpecialties,$specialtyAPCPObject);
-//                }
+            if( $transresUtil->isUserAllowedSpecialtyObject($specialtyAPCPObject, $user) ) {
+                $projectSpecialtyAllowedArr->add($specialtyAPCPObject);
+            } else {
+                $projectSpecialtyDeniedArr->add($specialtyAPCPObject);
             }
-
 
             echo "count(projectSpecialties)= ".count($projectSpecialties)."<br>";
-            echo "count(projectSpecialtyFilter)= ".count($projectSpecialtyFilter)."<br>";
-            if( count($projectSpecialtyFilter) > 0 ) {
+            //echo "count(projectSpecialtyDeniedArr)= ".count($projectSpecialtyDeniedArr)."<br>";
 
-                $projectSpecialtiesArr = $projectSpecialties->toArray();
+            //1) check if $projectSpecialties is not set => set $projectSpecialties as $projectSpecialtyAllowedArr
+            if( count($projectSpecialties) == 0 ) {
+                $projectSpecialtyReturn = $transresUtil->getReturnIndexSpecialtyArray($projectSpecialtyAllowedArr);
+                return $this->redirectToRoute(
+                    $routeName,
+                    $projectSpecialtyReturn
+                );
+            } else {
+                //2)
+                //$diff = $transresUtil->getObjectDiff($projectSpecialties,$projectSpecialtyDeniedArr);
+                //if( count($diff) > 0 ) {
 
-                //check if $projectSpecialtyFilter is not equal to $projectSpecialties
-                $diff = $transresUtil->getObjectDiff($projectSpecialtyFilter,$projectSpecialtiesArr);
+                    $tempProjectSpecialties = new ArrayCollection();
+                    foreach ($projectSpecialties as $projectSpecialty) {
+                        $tempProjectSpecialties->add($projectSpecialty);
+                    }
+                    foreach( $projectSpecialtyDeniedArr as $projectSpecialtyDenied ) {
+                        if( $tempProjectSpecialties->contains($projectSpecialtyDenied) ) {
+                            $tempProjectSpecialties->removeElement($projectSpecialtyDenied);
+                        }
+                    }
 
-//                $diff = array_udiff($first_array, $second_array,
-//                    function ($obj_a, $obj_b) {
-//                        return $obj_a->id - $obj_b->id;
-//                    }
-//                );
+                    //$projectSpecialtiesArr = $projectSpecialties->toArray();
+                    $diff = $transresUtil->getObjectDiff($projectSpecialties->toArray(),$tempProjectSpecialties->toArray());
 
-                if( count($diff) > 0 ) {
-
-                    //print_r($projectSpecialtyFilter);
-                    //exit('1');
-                    return $this->redirectToRoute(
-                        $routeName,
-                        $projectSpecialtyFilter
-                    //array(
-                    //    'filter[projectSpecialty][0]' => $specialtyHemaObject->getId(),
-                    //    'filter[projectSpecialty][1]' => $specialtyAPCPObject->getId(),
-                    //)
-                    );
-                }
+                    if( count($diff) > 0 ) {
+                        $projectSpecialtyReturn = $transresUtil->getReturnIndexSpecialtyArray($tempProjectSpecialties);
+                        return $this->redirectToRoute(
+                            $routeName,
+                            $projectSpecialtyReturn
+                        );
+                    }
+                //}
             }
-        }
+
+
+//            if( 0 && count($projectSpecialtyDeniedArr) > 0 ) {
+//
+//                //$projectSpecialtiesArr = $projectSpecialties->toArray();
+//
+//                $tempProjectSpecialties = new ArrayCollection();
+//                if( $projectSpecialties ) {
+//                    foreach ($projectSpecialties as $projectSpecialty) {
+//                        $tempProjectSpecialties->add($projectSpecialty);
+//                    }
+//                } else {
+//                    foreach ($projectSpecialties as $projectSpecialty) {
+//                        $tempProjectSpecialties->add($projectSpecialty);
+//                    }
+//                }
+//
+//                foreach( $projectSpecialtyDeniedArr as $projectSpecialtyDenied ) {
+//                    if( $tempProjectSpecialties->contains($projectSpecialtyDenied) ) {
+//                        $tempProjectSpecialties->removeElement($projectSpecialtyDenied);
+//                    }
+//                }
+//
+//                //check if $projectSpecialtyFilter is not equal to $projectSpecialties
+//                $diff = $transresUtil->getObjectDiff($projectSpecialties,$tempProjectSpecialties);
+//
+//                if( count($diff) > 0 ) {
+//
+//                    //print_r($projectSpecialtyFilter);
+//                    exit('1');
+//                    return $this->redirectToRoute(
+//                        $routeName,
+//                        $tempProjectSpecialties
+//                    //array(
+//                    //    'filter[projectSpecialty][0]' => $specialtyHemaObject->getId(),
+//                    //    'filter[projectSpecialty][1]' => $specialtyAPCPObject->getId(),
+//                    //)
+//                    );
+//                }
+//            }
+//            if( count($projectSpecialtyReturn) ) {
+//                print_r($projectSpecialtyReturn);
+//                //exit('1');
+//                return $this->redirectToRoute(
+//                    $routeName,
+//                    $projectSpecialtyReturn
+//                    //array(
+//                    //    'filter[projectSpecialty][0]' => $specialtyHemaObject->getId(),
+//                    //    'filter[projectSpecialty][1]' => $specialtyAPCPObject->getId(),
+//                    //)
+//                );
+//            }
+
+        }//if not admin
 
 
         //////////////////// Start Filter ////////////////////

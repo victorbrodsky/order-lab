@@ -3028,19 +3028,14 @@ class TransResUtil
         }
         $projectSpecialties->removeElement($projectSpecialty);
         return $projectSpecialties;
-
-//        if(($key = array_search($projectSpecialty, $projectSpecialties, $strict)) !== FALSE) {
-//            unset($projectSpecialties[$key]);
+    }
+    public function getObjectDiff($first_array,$second_array) {
+//        if( !$first_array && $second_array ) {
+//            return $second_array;
 //        }
-//        return $projectSpecialties;
-    }
-    function compare_objects($obj_a, $obj_b) {
-        if( $obj_a->getId() == $obj_b->getId() ) {
-            return 0;
-        }
-        return -1;
-    }
-    function getObjectDiff($first_array,$second_array) {
+//        if( $first_array && !$second_array ) {
+//            return $first_array;
+//        }
         $diff = array_udiff($first_array, $second_array,
             function ($obj_a, $obj_b) {
                 if( $obj_a->getId() == $obj_b->getId() ) {
@@ -3050,6 +3045,20 @@ class TransResUtil
             }
         );
         return $diff;
-        //return array_udiff($first_array, $second_array, 'compare_objects');
+    }
+    public function getReturnIndexSpecialtyArray( $projectSpecialtyArr ) {
+        //array(
+        //    'filter[projectSpecialty][0]' => $specialtyHemaObject->getId(),
+        //    'filter[projectSpecialty][1]' => $specialtyAPCPObject->getId(),
+        //)
+        $resArr = array();
+
+        $count = 0;
+        foreach($projectSpecialtyArr as $projectSpecialty) {
+            $resArr["filter[projectSpecialty][".$count."]"] = $projectSpecialty->getId();
+            $count++;
+        }
+
+        return $resArr;
     }
 }
