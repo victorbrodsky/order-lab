@@ -365,8 +365,10 @@ class InvoiceController extends Controller
         }
 
         if( $status ) {
-            $statusStr = "'".implode("','",$status)."'";
-            $dql->andWhere("invoice.status IN (".$statusStr.")");
+            //$statusStr = "'".implode("','",$status)."'";
+            //$dql->andWhere("invoice.status IN (".$statusStr.")");
+            $dql->andWhere("invoice.status IN (:statuses)");
+            $dqlParameters["statuses"] = $status;
         }
 
         if( $idSearch ) {

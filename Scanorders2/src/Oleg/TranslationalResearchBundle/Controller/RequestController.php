@@ -855,12 +855,12 @@ class RequestController extends Controller
 
         if( $progressStates && count($progressStates)>0 ) {
             $dql->andWhere("transresRequest.progressState IN (:progressStates)");
-            $dqlParameters["progressStates"] = implode(",",$progressStates);
+            $dqlParameters["progressStates"] = $progressStates;
         }
 
         if( $billingStates && count($billingStates)>0 ) {
             $dql->andWhere("transresRequest.billingState IN (:billingStates)");
-            $dqlParameters["billingStates"] = implode(",",$billingStates);
+            $dqlParameters["billingStates"] = $billingStates;
         }
 
         if( !$formnode ) {
@@ -884,7 +884,7 @@ class RequestController extends Controller
             foreach($principalInvestigators as $principalInvestigator) {
                 $principalInvestigatorsIdsArr[] = $principalInvestigator->getId();
             }
-            $dqlParameters["principalInvestigators"] = implode(",",$principalInvestigatorsIdsArr);
+            $dqlParameters["principalInvestigators"] = $principalInvestigatorsIdsArr;
             $advancedFilter++;
         }
 
@@ -939,9 +939,9 @@ class RequestController extends Controller
         }
 
         if( count($ids) > 0 ) {
-            //$dql->andWhere("transresRequest.id IN (:ids)");
-            //$dqlParameters["ids"] = implode(",",$ids);
-            $dql->andWhere("transresRequest.id IN (".implode(",",$ids).")");
+            //$dql->andWhere("transresRequest.id IN (".implode(",",$ids).")");
+            $dql->andWhere("transresRequest.id IN (:ids)");
+            $dqlParameters["ids"] = $ids;
         }
         ///////// EOF filters //////////
 
@@ -1326,13 +1326,17 @@ class RequestController extends Controller
         }
 
         if( $progressStates && count($progressStates)>0 ) {
+            //$dql->andWhere("transresRequest.progressState IN (:progressStates)");
+            //$dqlParameters["progressStates"] = implode(",",$progressStates);
             $dql->andWhere("transresRequest.progressState IN (:progressStates)");
-            $dqlParameters["progressStates"] = implode(",",$progressStates);
+            $dqlParameters["progressStates"] = $progressStates;
         }
 
         if( $billingStates && count($billingStates)>0 ) {
+            //$dql->andWhere("transresRequest.billingState IN (:billingStates)");
+            //$dqlParameters["billingStates"] = implode(",",$billingStates);
             $dql->andWhere("transresRequest.billingState IN (:billingStates)");
-            $dqlParameters["billingStates"] = implode(",",$billingStates);
+            $dqlParameters["billingStates"] = $billingStates;
         }
 
         if( $startDate ) {
@@ -1384,7 +1388,7 @@ class RequestController extends Controller
             foreach($principalInvestigators as $principalInvestigator) {
                 $principalInvestigatorsIdsArr[] = $principalInvestigator->getId();
             }
-            $dqlParameters["principalInvestigators"] = implode(",",$principalInvestigatorsIdsArr);
+            $dqlParameters["principalInvestigators"] = $principalInvestigatorsIdsArr;   //implode(",",$principalInvestigatorsIdsArr);
             $advancedFilter++;
         }
 
@@ -1406,7 +1410,8 @@ class RequestController extends Controller
         if( count($ids) > 0 ) {
             //$dql->andWhere("transresRequest.id IN (:ids)");
             //$dqlParameters["ids"] = implode(",",$ids);
-            $dql->andWhere("transresRequest.id IN (".implode(",",$ids).")");
+            $dql->andWhere("transresRequest.id IN (:ids)");
+            $dqlParameters["ids"] = $ids;
         }
         ///////// EOF filters //////////
 

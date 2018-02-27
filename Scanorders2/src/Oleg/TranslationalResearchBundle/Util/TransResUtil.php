@@ -3021,7 +3021,7 @@ class TransResUtil
 
         return false;
     }
-    function removeProjectSpecialty( $projectSpecialties, $projectSpecialty, $strict = TRUE )
+    public function removeProjectSpecialty( $projectSpecialties, $projectSpecialty, $strict = TRUE )
     {
         if( !$projectSpecialties ) {
             return $projectSpecialties;
@@ -3033,5 +3033,23 @@ class TransResUtil
 //            unset($projectSpecialties[$key]);
 //        }
 //        return $projectSpecialties;
+    }
+    function compare_objects($obj_a, $obj_b) {
+        if( $obj_a->getId() == $obj_b->getId() ) {
+            return 0;
+        }
+        return -1;
+    }
+    function getObjectDiff($first_array,$second_array) {
+        $diff = array_udiff($first_array, $second_array,
+            function ($obj_a, $obj_b) {
+                if( $obj_a->getId() == $obj_b->getId() ) {
+                    return 0;
+                }
+                return -1;
+            }
+        );
+        return $diff;
+        //return array_udiff($first_array, $second_array, 'compare_objects');
     }
 }

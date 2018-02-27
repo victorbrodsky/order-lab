@@ -421,7 +421,7 @@ class CallEntryController extends Controller
             if( count($entryTagsArr) > 0 ) {
                 $dql->leftJoin("calllogEntryMessage.entryTags", "entryTags");
                 $dql->andWhere("entryTags.id IN (:entryTags)");
-                $queryParameters['entryTags'] = implode(",", $entryTagsArr);
+                $queryParameters['entryTags'] = $entryTagsArr;  //implode(",", $entryTagsArr);
             }
         }
 

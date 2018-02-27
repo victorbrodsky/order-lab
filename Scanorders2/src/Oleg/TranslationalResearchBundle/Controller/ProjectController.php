@@ -138,41 +138,76 @@ class ProjectController extends Controller
         //force to set project specialty filter for non-admin users
         if( $transresUtil->isAdminOrPrimaryReviewer() === false ) {
             $projectSpecialtyFilter = array();
+            //$projectSpecialtyFilter = new ArrayCollection();
             //check is user is hematopathology user
             $specialtyHemaObject = $transresUtil->getSpecialtyObject("hematopathology");
-            if( $transresUtil->hasProjectSpecialty($projectSpecialties,$specialtyHemaObject) == false ) {
+
+//            $res = $transresUtil->hasProjectSpecialty($projectSpecialties,$specialtyHemaObject);
+//            if( $res ) {
+//                echo "res true<br>";
+//            } else {
+//                echo "res false<br>";
+//            }
+
+            if( $transresUtil->hasProjectSpecialty($projectSpecialties,$specialtyHemaObject) ) {
                 if ($transresUtil->isUserAllowedSpecialtyObject($specialtyHemaObject, $user)) {
                     //$projectSpecialties[] = $specialtyHemaObject;
-                    $projectSpecialtyFilter['filter[projectSpecialty][0]'] = $specialtyHemaObject->getId();
-                } else {
-                    //remove hema
-                    $projectSpecialties = $transresUtil->removeProjectSpecialty($projectSpecialties,$specialtyHemaObject);
+                    //$projectSpecialtyFilter['filter[projectSpecialty][0]'] = $specialtyHemaObject->getId();
+                    $projectSpecialtyFilter[] = $specialtyHemaObject;
+                    //$projectSpecialtyFilter->add($specialtyHemaObject);
                 }
+//                else {
+//                    //echo "remove ".$specialtyHemaObject."<br>";
+//                    //remove hema
+//                    //$projectSpecialties = $transresUtil->removeProjectSpecialty($projectSpecialties,$specialtyHemaObject);
+//                }
             }
 
             //check is user is ap-cp user
             $specialtyAPCPObject = $transresUtil->getSpecialtyObject("ap-cp");
-            if( $transresUtil->hasProjectSpecialty($projectSpecialties,$specialtyAPCPObject) == false ) {
+            if( $transresUtil->hasProjectSpecialty($projectSpecialties,$specialtyAPCPObject) ) {
                 if ($transresUtil->isUserAllowedSpecialtyObject($specialtyAPCPObject, $user)) {
                     //$projectSpecialties[] = $specialtyAPCPObject;
-                    $projectSpecialtyFilter['filter[projectSpecialty][1]'] = $specialtyAPCPObject->getId();
-                } else {
-                    //remove ap-cp
-                    $projectSpecialties = $transresUtil->removeProjectSpecialty($projectSpecialties,$specialtyAPCPObject);
+                    //$projectSpecialtyFilter['filter[projectSpecialty][1]'] = $specialtyAPCPObject->getId();
+                    $projectSpecialtyFilter[] = $specialtyAPCPObject;
+                    //$projectSpecialtyFilter->add($specialtyAPCPObject);
                 }
+//                else {
+//                    //echo "remove ".$specialtyAPCPObject."<br>";
+//                    //remove ap-cp
+//                    //$projectSpecialties = $transresUtil->removeProjectSpecialty($projectSpecialties,$specialtyAPCPObject);
+//                }
             }
 
+
+            echo "count(projectSpecialties)= ".count($projectSpecialties)."<br>";
+            echo "count(projectSpecialtyFilter)= ".count($projectSpecialtyFilter)."<br>";
             if( count($projectSpecialtyFilter) > 0 ) {
-                //print_r($projectSpecialtyFilter);
-                //exit('1');
-                return $this->redirectToRoute(
-                    $routeName,
-                    $projectSpecialtyFilter
+
+                $projectSpecialtiesArr = $projectSpecialties->toArray();
+
+                //check if $projectSpecialtyFilter is not equal to $projectSpecialties
+                $diff = $transresUtil->getObjectDiff($projectSpecialtyFilter,$projectSpecialtiesArr);
+
+//                $diff = array_udiff($first_array, $second_array,
+//                    function ($obj_a, $obj_b) {
+//                        return $obj_a->id - $obj_b->id;
+//                    }
+//                );
+
+                if( count($diff) > 0 ) {
+
+                    //print_r($projectSpecialtyFilter);
+                    //exit('1');
+                    return $this->redirectToRoute(
+                        $routeName,
+                        $projectSpecialtyFilter
                     //array(
                     //    'filter[projectSpecialty][0]' => $specialtyHemaObject->getId(),
                     //    'filter[projectSpecialty][1]' => $specialtyAPCPObject->getId(),
                     //)
-                );
+                    );
+                }
             }
         }
 
@@ -190,13 +225,17 @@ class ProjectController extends Controller
             foreach($projectSpecialties as $projectSpecialty) {
                 $projectSpecialtyIdsArr[] = $projectSpecialty->getId();
             }
-            $dql->andWhere("projectSpecialty.id IN (".implode(",",$projectSpecialtyIdsArr).")");
+            //$dql->andWhere("projectSpecialty.id IN (".implode(",",$projectSpecialtyIdsArr).")");
+            $dql->andWhere("projectSpecialty.id IN (:projectSpecialtyIdsArr)");
+            $dqlParameters["projectSpecialtyIdsArr"] = $projectSpecialtyIdsArr;
         }
 
         //echo "count states=".count($states)."<br>";
         if( $states && count($states) > 0 ) {
             $dql->andWhere("project.state IN (:states)");
-            $dqlParameters["states"] = implode(",",$states);
+            $dqlParameters["states"] = $states; //implode(",",$states);
+            //$statesStr = "'".implode("','",$states)."'";
+            //$dql->andWhere("project.state IN (".$statesStr.")");
             $advancedFilter++;
         }
 
@@ -209,17 +248,22 @@ class ProjectController extends Controller
         //////////////// get Projects IDs with the form node filter ////////////////
         if( $searchTitle ) {
             $titleIds = $transresUtil->getProjectIdsFormNodeByFieldName($searchTitle,"Title");
-            $dql->andWhere("project.id IN (".implode(",",$titleIds).")");
-            //$ids = array_merge($ids, $titleIds);
+            //$dql->andWhere("project.id IN (".implode(",",$titleIds).")");
+            $dql->andWhere("project.id IN (:titleIds)");
+            $dqlParameters["titleIds"] = $titleIds;
         }
         if( $searchIrbNumber ) {
             $irbnumberIds = $transresUtil->getProjectIdsFormNodeByFieldName($searchIrbNumber,"IRB Number");
-            $dql->andWhere("project.id IN (".implode(",",$irbnumberIds).")");
+            //$dql->andWhere("project.id IN (".implode(",",$irbnumberIds).")");
+            $dql->andWhere("project.id IN (:irbnumberIds)");
+            $dqlParameters["irbnumberIds"] = $irbnumberIds;
             $advancedFilter++;
         }
         if( $fundingNumber ) {
             $fundingNumberIds = $transresUtil->getProjectIdsFormNodeByFieldName($fundingNumber,"If funded, please provide account number");
-            $dql->andWhere("project.id IN (".implode(",",$fundingNumberIds).")");
+            //$dql->andWhere("project.id IN (".implode(",",$fundingNumberIds).")");
+            $dql->andWhere("project.id IN (:fundingNumberIds)");
+            $dqlParameters["fundingNumberIds"] = $fundingNumberIds;
             $advancedFilter++;
         }
         if( $fundingType ) {
@@ -233,9 +277,10 @@ class ProjectController extends Controller
             }
             if( isset($compareType) ) {
                 //$transResFormNodeUtil->getProjectFormNodeFieldByName(project,"Funded");
-                $fundingNumberIds = $transresUtil->getProjectIdsFormNodeByFieldName($compareType, "Funded");
+                $fundedIds = $transresUtil->getProjectIdsFormNodeByFieldName($compareType, "Funded");
                 //echo "fundingNumberIds:" . implode(",", $fundingNumberIds) . "<br>";
-                $dql->andWhere("project.id IN (" . implode(",", $fundingNumberIds) . ")");
+                $dql->andWhere("project.id IN (:fundedIds)");
+                $dqlParameters["fundedIds"] = $fundedIds;
             }
             $advancedFilter++;
         }
@@ -247,7 +292,7 @@ class ProjectController extends Controller
             foreach($principalInvestigators as $principalInvestigator) {
                 $principalInvestigatorsIdsArr[] = $principalInvestigator->getId();
             }
-            $dqlParameters["principalInvestigators"] = implode(",",$principalInvestigatorsIdsArr);
+            $dqlParameters["principalInvestigators"] = $principalInvestigatorsIdsArr; //implode(",",$principalInvestigatorsIdsArr);
             $advancedFilter++;
         }
 
@@ -331,11 +376,15 @@ class ProjectController extends Controller
         $limit = 30;
         $query = $em->createQuery($dql);
 
+
         if( count($dqlParameters) > 0 ) {
             $query->setParameters($dqlParameters);
+            //foreach( $dqlParameters as $key=>$value) {
+            //    $query->setParameter($key, $value);
+            //}
         }
 
-        echo "query=".$query->getSql()."<br>";
+        //echo "query=".$query->getSql()."<br>";
 
         $paginationParams = array(
             'defaultSortFieldName' => 'project.id',

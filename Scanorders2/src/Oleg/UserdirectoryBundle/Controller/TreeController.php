@@ -220,7 +220,7 @@ class TreeController extends Controller {
         }
 
         $query = $em->createQuery($dql);
-        $query->setParameters($params);
+        //$query->setParameters($params);
         foreach( $params as $key=>$value) {
             $query->setParameter($key, $value);
             //if( $key == 'types' ) {

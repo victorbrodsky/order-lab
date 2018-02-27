@@ -222,6 +222,8 @@ class CallLogUtil
 
         if( $existingPatientIds ) {
             $dql->andWhere("patient.id NOT IN (" . implode(",", $existingPatientIds) . ")");
+            //$dql->andWhere("patient.id NOT IN (:existingPatientIds)");
+            //$parameters['existingPatientIds'] = $existingPatientIds;
         }
 
         $dql->orderBy("patient.id","ASC"); //show latest first
