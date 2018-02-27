@@ -107,9 +107,17 @@ class ProjectController extends Controller
 
         $dqlParameters = array();
 
+        //get allowed and denied projectSpecialties
+        $projectSpecialtyAllowedRes = $transresUtil->getAllowedProjectSpecialty($user);
+        $projectSpecialtyAllowedArr = $projectSpecialtyAllowedRes['projectSpecialtyAllowedArr'];
+        $projectSpecialtyDeniedArr = $projectSpecialtyAllowedRes['projectSpecialtyDeniedArr'];
+
         //////// create filter //////////
         $stateChoiceArr = $transresUtil->getStateChoisesArr();
-        $params = array('stateChoiceArr'=>$stateChoiceArr);
+        $params = array(
+            'stateChoiceArr' => $stateChoiceArr,
+            'projectSpecialtyAllowedArr' => $projectSpecialtyAllowedArr
+        );
         $filterform = $this->createForm(FilterType::class, null,array(
             'method' => 'GET',
             'form_custom_value'=>$params
@@ -137,29 +145,23 @@ class ProjectController extends Controller
 
         //force to set project specialty filter for non-admin users
         if( $transresUtil->isAdminOrPrimaryReviewer() === false ) {
-            //$projectSpecialtyDeniedFilter = array();
-            $projectSpecialtyAllowedArr = new ArrayCollection();
-            $projectSpecialtyDeniedArr = new ArrayCollection();
-            $projectSpecialtyReturn = array();
-
-            //check is user is hematopathology user
-            $specialtyHemaObject = $transresUtil->getSpecialtyObject("hematopathology");
-            if( $transresUtil->isUserAllowedSpecialtyObject($specialtyHemaObject, $user) ) {
-                $projectSpecialtyAllowedArr->add($specialtyHemaObject);
-            } else {
-                $projectSpecialtyDeniedArr->add($specialtyHemaObject);
-            }
-
-            //check is user is ap-cp user
-            $specialtyAPCPObject = $transresUtil->getSpecialtyObject("ap-cp");
-            if( $transresUtil->isUserAllowedSpecialtyObject($specialtyAPCPObject, $user) ) {
-                $projectSpecialtyAllowedArr->add($specialtyAPCPObject);
-            } else {
-                $projectSpecialtyDeniedArr->add($specialtyAPCPObject);
-            }
-
-            echo "count(projectSpecialties)= ".count($projectSpecialties)."<br>";
-            //echo "count(projectSpecialtyDeniedArr)= ".count($projectSpecialtyDeniedArr)."<br>";
+//            $projectSpecialtyAllowedArr = new ArrayCollection();
+//            $projectSpecialtyDeniedArr = new ArrayCollection();
+//            //check is user is hematopathology user
+//            $specialtyHemaObject = $transresUtil->getSpecialtyObject("hematopathology");
+//            if( $transresUtil->isUserAllowedSpecialtyObject($specialtyHemaObject, $user) ) {
+//                $projectSpecialtyAllowedArr->add($specialtyHemaObject);
+//            } else {
+//                $projectSpecialtyDeniedArr->add($specialtyHemaObject);
+//            }
+//
+//            //check is user is ap-cp user
+//            $specialtyAPCPObject = $transresUtil->getSpecialtyObject("ap-cp");
+//            if( $transresUtil->isUserAllowedSpecialtyObject($specialtyAPCPObject, $user) ) {
+//                $projectSpecialtyAllowedArr->add($specialtyAPCPObject);
+//            } else {
+//                $projectSpecialtyDeniedArr->add($specialtyAPCPObject);
+//            }
 
             //1) check if $projectSpecialties is not set => set $projectSpecialties as $projectSpecialtyAllowedArr
             if( count($projectSpecialties) == 0 ) {
@@ -169,102 +171,36 @@ class ProjectController extends Controller
                     $projectSpecialtyReturn
                 );
             } else {
-                //2)
-                //$diff = $transresUtil->getObjectDiff($projectSpecialties,$projectSpecialtyDeniedArr);
-                //if( count($diff) > 0 ) {
-
-                    $tempProjectSpecialties = new ArrayCollection();
-                    foreach ($projectSpecialties as $projectSpecialty) {
-                        $tempProjectSpecialties->add($projectSpecialty);
+                //2) construct $tempAllowedProjectSpecialties containing only allowed specialty from the $projectSpecialties
+                $tempAllowedProjectSpecialties = new ArrayCollection();
+                foreach($projectSpecialties as $projectSpecialty) {
+                    if( !$projectSpecialtyDeniedArr->contains($projectSpecialty) ) {
+                        $tempAllowedProjectSpecialties->add($projectSpecialty);
                     }
-                    foreach( $projectSpecialtyDeniedArr as $projectSpecialtyDenied ) {
-                        if( $tempProjectSpecialties->contains($projectSpecialtyDenied) ) {
-                            $tempProjectSpecialties->removeElement($projectSpecialtyDenied);
-                        }
-                    }
+                }
 
-                    //$projectSpecialtiesArr = $projectSpecialties->toArray();
-                    $diff = $transresUtil->getObjectDiff($projectSpecialties->toArray(),$tempProjectSpecialties->toArray());
+                //to prevent redirection loop, check if $projectSpecialties is different than $tempAllowedProjectSpecialties
+                $diff = $transresUtil->getObjectDiff($projectSpecialties->toArray(),$tempAllowedProjectSpecialties->toArray());
 
-                    if( count($diff) > 0 ) {
-                        $projectSpecialtyReturn = $transresUtil->getReturnIndexSpecialtyArray($tempProjectSpecialties);
-                        return $this->redirectToRoute(
-                            $routeName,
-                            $projectSpecialtyReturn
-                        );
-                    }
-                //}
+                if( count($diff) > 0 ) {
+                    $projectSpecialtyReturn = $transresUtil->getReturnIndexSpecialtyArray($tempAllowedProjectSpecialties);
+                    return $this->redirectToRoute(
+                        $routeName,
+                        $projectSpecialtyReturn
+                    );
+                }
             }
-
-
-//            if( 0 && count($projectSpecialtyDeniedArr) > 0 ) {
-//
-//                //$projectSpecialtiesArr = $projectSpecialties->toArray();
-//
-//                $tempProjectSpecialties = new ArrayCollection();
-//                if( $projectSpecialties ) {
-//                    foreach ($projectSpecialties as $projectSpecialty) {
-//                        $tempProjectSpecialties->add($projectSpecialty);
-//                    }
-//                } else {
-//                    foreach ($projectSpecialties as $projectSpecialty) {
-//                        $tempProjectSpecialties->add($projectSpecialty);
-//                    }
-//                }
-//
-//                foreach( $projectSpecialtyDeniedArr as $projectSpecialtyDenied ) {
-//                    if( $tempProjectSpecialties->contains($projectSpecialtyDenied) ) {
-//                        $tempProjectSpecialties->removeElement($projectSpecialtyDenied);
-//                    }
-//                }
-//
-//                //check if $projectSpecialtyFilter is not equal to $projectSpecialties
-//                $diff = $transresUtil->getObjectDiff($projectSpecialties,$tempProjectSpecialties);
-//
-//                if( count($diff) > 0 ) {
-//
-//                    //print_r($projectSpecialtyFilter);
-//                    exit('1');
-//                    return $this->redirectToRoute(
-//                        $routeName,
-//                        $tempProjectSpecialties
-//                    //array(
-//                    //    'filter[projectSpecialty][0]' => $specialtyHemaObject->getId(),
-//                    //    'filter[projectSpecialty][1]' => $specialtyAPCPObject->getId(),
-//                    //)
-//                    );
-//                }
-//            }
-//            if( count($projectSpecialtyReturn) ) {
-//                print_r($projectSpecialtyReturn);
-//                //exit('1');
-//                return $this->redirectToRoute(
-//                    $routeName,
-//                    $projectSpecialtyReturn
-//                    //array(
-//                    //    'filter[projectSpecialty][0]' => $specialtyHemaObject->getId(),
-//                    //    'filter[projectSpecialty][1]' => $specialtyAPCPObject->getId(),
-//                    //)
-//                );
-//            }
 
         }//if not admin
 
 
         //////////////////// Start Filter ////////////////////
         if( $projectSpecialties && count($projectSpecialties) > 0 ) {
-            foreach($projectSpecialties as $thisProjectSpecialty) {
-                echo "thisProjectSpecialty=$thisProjectSpecialty <br>";
-            }
             $dql->leftJoin('project.projectSpecialty','projectSpecialty');
-            //$dql->andWhere("projectSpecialty.id = :projectSpecialtyId");
-            //$dqlParameters["projectSpecialtyId"] = $projectSpecialty->getId();
-            //$dql->andWhere("projectSpecialty.id IN (:projectSpecialtyIds)");
             $projectSpecialtyIdsArr = array();
             foreach($projectSpecialties as $projectSpecialty) {
                 $projectSpecialtyIdsArr[] = $projectSpecialty->getId();
             }
-            //$dql->andWhere("projectSpecialty.id IN (".implode(",",$projectSpecialtyIdsArr).")");
             $dql->andWhere("projectSpecialty.id IN (:projectSpecialtyIdsArr)");
             $dqlParameters["projectSpecialtyIdsArr"] = $projectSpecialtyIdsArr;
         }

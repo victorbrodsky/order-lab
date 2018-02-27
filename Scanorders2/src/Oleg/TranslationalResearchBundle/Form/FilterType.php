@@ -41,6 +41,10 @@ class FilterType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
+//        foreach($this->params["projectSpecialtyAllowedArr"] as $specialty){
+//            echo "specialty=".$specialty."<br>";
+//        }
+
         $builder->add('projectSpecialty', EntityType::class, array(
             'class' => 'OlegTranslationalResearchBundle:SpecialtyList',
             //'choice_label' => 'name',
@@ -48,16 +52,17 @@ class FilterType extends AbstractType
             //'disabled' => ($this->params['admin'] ? false : true),
             'required'=> false,
             'multiple' => true,
+            'choices' => $this->params["projectSpecialtyAllowedArr"],
             'attr' => array('class'=>'combobox combobox-width'),
-            'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where("list.type = :typedef OR list.type = :typeadd")
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
-            },
+//            'query_builder' => function(EntityRepository $er) {
+//                return $er->createQueryBuilder('list')
+//                    ->where("list.type = :typedef OR list.type = :typeadd")
+//                    ->orderBy("list.orderinlist","ASC")
+//                    ->setParameters( array(
+//                        'typedef' => 'default',
+//                        'typeadd' => 'user-added',
+//                    ));
+//            },
         ));
 
         $builder->add('state',ChoiceType::class, array(

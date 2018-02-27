@@ -179,17 +179,18 @@ class FilterRequestType extends AbstractType
             'class' => 'OlegTranslationalResearchBundle:SpecialtyList',
             'label' => false,   //'Project Specialty',
             'required'=> false,
-            'multiple' => false,
+            'multiple' => true,
+            'choices' => $this->params["projectSpecialtyAllowedArr"],
             'attr' => array('class'=>'combobox combobox-width'),
-            'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where("list.type = :typedef OR list.type = :typeadd")
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
-            },
+//            'query_builder' => function(EntityRepository $er) {
+//                return $er->createQueryBuilder('list')
+//                    ->where("list.type = :typedef OR list.type = :typeadd")
+//                    ->orderBy("list.orderinlist","ASC")
+//                    ->setParameters( array(
+//                        'typedef' => 'default',
+//                        'typeadd' => 'user-added',
+//                    ));
+//            },
         ));
 
         $builder->add('fundingNumber', TextType::class, array(

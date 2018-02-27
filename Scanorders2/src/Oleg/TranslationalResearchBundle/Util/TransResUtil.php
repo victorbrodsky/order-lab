@@ -18,6 +18,7 @@
 namespace Oleg\TranslationalResearchBundle\Util;
 
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
 use Oleg\TranslationalResearchBundle\Entity\AdminReview;
 use Oleg\TranslationalResearchBundle\Entity\CommitteeReview;
@@ -3004,38 +3005,35 @@ class TransResUtil
         };
     }
 
-    public function hasProjectSpecialty( $projectSpecialties, $projectSpecialty ) {
-
-        if( $projectSpecialties && $projectSpecialties->contains($projectSpecialty) ) {
-            return true;
-        }
-
-        return false;
-
-        //return true;
-//        foreach($projectSpecialties as $thisProjectSpecialty ) {
-//            if( $projectSpecialty->getId() == $thisProjectSpecialty->getId() ) {
-//                return true;
-//            }
-//        }
-
-        return false;
-    }
-    public function removeProjectSpecialty( $projectSpecialties, $projectSpecialty, $strict = TRUE )
+    public function getAllowedProjectSpecialty( $user )
     {
-        if( !$projectSpecialties ) {
-            return $projectSpecialties;
+        $projectSpecialtyAllowedArr = new ArrayCollection();
+        $projectSpecialtyDeniedArr = new ArrayCollection();
+
+        //check is user is hematopathology user
+        $specialtyHemaObject = $this->getSpecialtyObject("hematopathology");
+        if( $this->isUserAllowedSpecialtyObject($specialtyHemaObject, $user) ) {
+            $projectSpecialtyAllowedArr->add($specialtyHemaObject);
+        } else {
+            $projectSpecialtyDeniedArr->add($specialtyHemaObject);
         }
-        $projectSpecialties->removeElement($projectSpecialty);
-        return $projectSpecialties;
+
+        //check is user is ap-cp user
+        $specialtyAPCPObject = $this->getSpecialtyObject("ap-cp");
+        if( $this->isUserAllowedSpecialtyObject($specialtyAPCPObject, $user) ) {
+            $projectSpecialtyAllowedArr->add($specialtyAPCPObject);
+        } else {
+            $projectSpecialtyDeniedArr->add($specialtyAPCPObject);
+        }
+
+        $res = array(
+            'projectSpecialtyAllowedArr' => $projectSpecialtyAllowedArr,
+            'projectSpecialtyDeniedArr' => $projectSpecialtyDeniedArr
+        );
+
+        return $res;
     }
     public function getObjectDiff($first_array,$second_array) {
-//        if( !$first_array && $second_array ) {
-//            return $second_array;
-//        }
-//        if( $first_array && !$second_array ) {
-//            return $first_array;
-//        }
         $diff = array_udiff($first_array, $second_array,
             function ($obj_a, $obj_b) {
                 if( $obj_a->getId() == $obj_b->getId() ) {
@@ -3047,10 +3045,6 @@ class TransResUtil
         return $diff;
     }
     public function getReturnIndexSpecialtyArray( $projectSpecialtyArr ) {
-        //array(
-        //    'filter[projectSpecialty][0]' => $specialtyHemaObject->getId(),
-        //    'filter[projectSpecialty][1]' => $specialtyAPCPObject->getId(),
-        //)
         $resArr = array();
 
         $count = 0;

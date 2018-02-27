@@ -666,7 +666,7 @@ class RequestController extends Controller
     }
 
     /**
-     * Finds and displays a request entity.
+     * Displays the list of requests for the given project.
      *
      * @Route("/request/show/{id}", name="translationalresearch_request_show")
      * @Template("OlegTranslationalResearchBundle:Request:new.html.twig")
@@ -767,6 +767,34 @@ class RequestController extends Controller
             );
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
+
+
+        //Redirect according project ID
+//        //Title
+//        $projectUrl = $this->container->get('router')->generate(
+//            'translationalresearch_project_show',
+//            array(
+//                'id' => $project->getId(),
+//            ),
+//            UrlGeneratorInterface::ABSOLUTE_URL
+//        );
+//        $projectLink = "<a href=" . $projectUrl . ">" . "Project ID " . $project->getOid() . "</a>";
+//        //$title = "Requests for the project ID ".$project->getOid();
+//        $title = "Requests for " . $projectLink;
+//
+//        $requestTotalFeeHtml = $transresRequestUtil->getTransResRequestTotalFeeHtml($project);
+//        if ($requestTotalFeeHtml) {
+//            $requestTotalFeeHtml = " (" . $requestTotalFeeHtml . ")";
+//        }
+
+        return $this->redirectToRoute(
+            'translationalresearch_request_index_filter',
+            array(
+                'filter[project]' => $project->getId(),
+                //'title' => $title . $requestTotalFeeHtml
+            )
+        );
+        exit('1');
 
         //////// create filter //////////
         $progressStateArr = $transresRequestUtil->getProgressStateArr();
@@ -997,10 +1025,7 @@ class RequestController extends Controller
     }
 
     /**
-     * Finds and displays all my requests (all-requests.html.twig)
-     *
-     * //@Route("/my-requests", name="translationalresearch_my_requests")
-     * //@Route("/all-requests", name="translationalresearch_all_requests")
+     * Finds and displays the filtered requests lists
      *
      * @Route("/requests/list/", name="translationalresearch_request_index_filter")
      * @Template("OlegTranslationalResearchBundle:Request:index.html.twig")
@@ -1025,10 +1050,20 @@ class RequestController extends Controller
 
         $advancedFilter = 0;
 
+        //get allowed and denied projectSpecialties
+        $projectSpecialtyAllowedRes = $transresUtil->getAllowedProjectSpecialty($user);
+        $projectSpecialtyAllowedArr = $projectSpecialtyAllowedRes['projectSpecialtyAllowedArr'];
+        //$projectSpecialtyDeniedArr = $projectSpecialtyAllowedRes['projectSpecialtyDeniedArr'];
+
         //////// create filter //////////
         $progressStateArr = $transresRequestUtil->getProgressStateArr();
         $billingStateArr = $transresRequestUtil->getBillingStateArr();
-        $params = array('progressStateArr'=>$progressStateArr,'billingStateArr'=>$billingStateArr,'routeName'=>$routeName);
+        $params = array(
+            'progressStateArr'=>$progressStateArr,
+            'billingStateArr'=>$billingStateArr,
+            'routeName'=>$routeName,
+            'projectSpecialtyAllowedArr' => $projectSpecialtyAllowedArr
+        );
         $filterform = $this->createForm(FilterRequestType::class, null,array(
             'method' => 'GET',
             'form_custom_value'=>$params
@@ -1041,7 +1076,7 @@ class RequestController extends Controller
         $progressStates = $filterform['progressState']->getData();
         $billingStates = $filterform['billingState']->getData();
         $category = $filterform['category']->getData();
-        $projectSpecialty = $filterform['projectSpecialty']->getData();
+        $projectSpecialties = $filterform['projectSpecialty']->getData();
         $projectFilter = $filterform['project']->getData();
 
         $searchStr = $filterform['comment']->getData();
@@ -1304,10 +1339,19 @@ class RequestController extends Controller
 //        }
 
         ///////// filters //////////
-        if( $projectSpecialty ) {
+//        if( $projectSpecialty ) {
+//            $dql->leftJoin('project.projectSpecialty','projectSpecialty');
+//            $dql->andWhere("projectSpecialty.id = :projectSpecialtyId");
+//            $dqlParameters["projectSpecialtyId"] = $projectSpecialty->getId();
+//        }
+        if( $projectSpecialties && count($projectSpecialties) > 0 ) {
             $dql->leftJoin('project.projectSpecialty','projectSpecialty');
-            $dql->andWhere("projectSpecialty.id = :projectSpecialtyId");
-            $dqlParameters["projectSpecialtyId"] = $projectSpecialty->getId();
+            $projectSpecialtyIdsArr = array();
+            foreach($projectSpecialties as $projectSpecialty) {
+                $projectSpecialtyIdsArr[] = $projectSpecialty->getId();
+            }
+            $dql->andWhere("projectSpecialty.id IN (:projectSpecialtyIdsArr)");
+            $dqlParameters["projectSpecialtyIdsArr"] = $projectSpecialtyIdsArr;
         }
 
         if( $projectFilter ) {
@@ -1443,6 +1487,25 @@ class RequestController extends Controller
             $title = $filterTitle;
         }
 
+        //Title
+        if( $project ) {
+            $projectUrl = $this->container->get('router')->generate(
+                'translationalresearch_project_show',
+                array(
+                    'id' => $project->getId(),
+                ),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $projectLink = "<a href=" . $projectUrl . ">" . "Project ID " . $project->getOid() . "</a>";
+            //$title = "Requests for the project ID ".$project->getOid();
+            $title = "Requests for " . $projectLink;
+
+            $requestTotalFeeHtml = $transresRequestUtil->getTransResRequestTotalFeeHtml($project);
+            if ($requestTotalFeeHtml) {
+                $requestTotalFeeHtml = " (" . $requestTotalFeeHtml . ")";
+            }
+        }
+
         $title = $title . " (" . count($transresRequests) . " of " . count($allTransresRequests) . ")";
 
         return array(
@@ -1450,9 +1513,10 @@ class RequestController extends Controller
             'allTransresRequests' => $allTransresRequests,
             'project' => null,
             'filterform' => $filterform->createView(),
-            'title' => $title,
+            'title' => $title.$requestTotalFeeHtml,
             'requestTotalFeeHtml' => null, //$requestTotalFeeHtml
-            'advancedFilter' => $advancedFilter
+            'advancedFilter' => $advancedFilter,
+            'project' => $project
         );
     }
 
