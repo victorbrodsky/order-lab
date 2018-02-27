@@ -117,7 +117,7 @@ class ProjectController extends Controller
 
         $filterform->handleRequest($request);
 
-        $projectSpecialty = $filterform['projectSpecialty']->getData();
+        $projectSpecialties = $filterform['projectSpecialty']->getData();
         $states = $filterform['state']->getData();
         $principalInvestigators = $filterform['principalInvestigators']->getData();
         $submitter = $filterform['submitter']->getData();
@@ -135,14 +135,66 @@ class ProjectController extends Controller
 //        $reject = $filterform['closed']->getData();
         //////// EOF create filter //////////
 
-        if( $projectSpecialty ) {
+        //force to set project specialty filter for non-admin users
+        if( $transresUtil->isAdminOrPrimaryReviewer() === false ) {
+            $projectSpecialtyFilter = array();
+            //check is user is hematopathology user
+            $specialtyHemaObject = $transresUtil->getSpecialtyObject("hematopathology");
+            if( $transresUtil->hasProjectSpecialty($projectSpecialties,$specialtyHemaObject) == false ) {
+                if ($transresUtil->isUserAllowedSpecialtyObject($specialtyHemaObject, $user)) {
+                    //$projectSpecialties[] = $specialtyHemaObject;
+                    $projectSpecialtyFilter['filter[projectSpecialty][0]'] = $specialtyHemaObject->getId();
+                } else {
+                    //remove hema
+                    $projectSpecialties = $transresUtil->removeProjectSpecialty($projectSpecialties,$specialtyHemaObject);
+                }
+            }
+
+            //check is user is ap-cp user
+            $specialtyAPCPObject = $transresUtil->getSpecialtyObject("ap-cp");
+            if( $transresUtil->hasProjectSpecialty($projectSpecialties,$specialtyAPCPObject) == false ) {
+                if ($transresUtil->isUserAllowedSpecialtyObject($specialtyAPCPObject, $user)) {
+                    //$projectSpecialties[] = $specialtyAPCPObject;
+                    $projectSpecialtyFilter['filter[projectSpecialty][1]'] = $specialtyAPCPObject->getId();
+                } else {
+                    //remove ap-cp
+                    $projectSpecialties = $transresUtil->removeProjectSpecialty($projectSpecialties,$specialtyAPCPObject);
+                }
+            }
+
+            if( count($projectSpecialtyFilter) > 0 ) {
+                //print_r($projectSpecialtyFilter);
+                //exit('1');
+                return $this->redirectToRoute(
+                    $routeName,
+                    $projectSpecialtyFilter
+                    //array(
+                    //    'filter[projectSpecialty][0]' => $specialtyHemaObject->getId(),
+                    //    'filter[projectSpecialty][1]' => $specialtyAPCPObject->getId(),
+                    //)
+                );
+            }
+        }
+
+
+        //////////////////// Start Filter ////////////////////
+        if( $projectSpecialties && count($projectSpecialties) > 0 ) {
+            foreach($projectSpecialties as $thisProjectSpecialty) {
+                echo "thisProjectSpecialty=$thisProjectSpecialty <br>";
+            }
             $dql->leftJoin('project.projectSpecialty','projectSpecialty');
-            $dql->andWhere("projectSpecialty.id = :projectSpecialtyId");
-            $dqlParameters["projectSpecialtyId"] = $projectSpecialty->getId();
+            //$dql->andWhere("projectSpecialty.id = :projectSpecialtyId");
+            //$dqlParameters["projectSpecialtyId"] = $projectSpecialty->getId();
+            //$dql->andWhere("projectSpecialty.id IN (:projectSpecialtyIds)");
+            $projectSpecialtyIdsArr = array();
+            foreach($projectSpecialties as $projectSpecialty) {
+                $projectSpecialtyIdsArr[] = $projectSpecialty->getId();
+            }
+            $dql->andWhere("projectSpecialty.id IN (".implode(",",$projectSpecialtyIdsArr).")");
         }
 
         //echo "count states=".count($states)."<br>";
-        if( $states && count($states)>0 ) {
+        if( $states && count($states) > 0 ) {
             $dql->andWhere("project.state IN (:states)");
             $dqlParameters["states"] = implode(",",$states);
             $advancedFilter++;
@@ -272,6 +324,7 @@ class ProjectController extends Controller
             $dqlParameters["userId"] = $user->getId();
             $title = "My Review Projects, where I am a reviewer";
         }
+        //////////////////// EOF Start Filter ////////////////////
 
         $dql->orderBy('project.id', 'DESC');
 
@@ -282,7 +335,7 @@ class ProjectController extends Controller
             $query->setParameters($dqlParameters);
         }
 
-        //echo "query=".$query->getSql()."<br>";
+        echo "query=".$query->getSql()."<br>";
 
         $paginationParams = array(
             'defaultSortFieldName' => 'project.id',

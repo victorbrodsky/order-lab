@@ -2361,14 +2361,9 @@ class TransResUtil
         return $projectUrl;
     }
 
-    //$specialtyStr: new-ap-cp-project, ap-cp
+    //$specialtyStr: hematopathology, ap-cp
     public function getSpecialtyObject($specialtyAbbreviation) {
         //echo "specialtyStr=".$specialtyStr."<br>";
-        //$specialty is a url prefix (i.e. "new-ap-cp-project")
-//        $specialtyAbbreviation = SpecialtyList::getProjectAbbreviationFromUrlPrefix($specialtyStr);
-//        if( !$specialtyAbbreviation ) {
-//            throw new \Exception( "Project specialty abbreviation is not found by name '".$specialtyStr."'" );
-//        }
         $specialty = $this->em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation($specialtyAbbreviation);
         if( !$specialty ) {
             throw new \Exception( "Project specialty is not found by name '".$specialtyAbbreviation."'" );
@@ -2963,6 +2958,26 @@ class TransResUtil
             }
         }
 
+        //exception for executive role: check by partial role name
+        if( $role == "ROLE_TRANSRES_HEMATOPATHOLOGY" ) {
+            $execRole = "ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY";
+            if( $this->secAuth->isGranted($execRole) ) {
+                return true;
+            }
+            if( $user && $user->hasRole($execRole) ) {
+                return true;
+            }
+        }
+        if( $role == "ROLE_TRANSRES_APCP" ) {
+            $execRole = "ROLE_TRANSRES_EXECUTIVE_APCP";
+            if( $this->secAuth->isGranted($execRole) ) {
+                return true;
+            }
+            if( $user && $user->hasRole($execRole) ) {
+                return true;
+            }
+        }
+
         return false;
     }
 
@@ -2989,4 +3004,34 @@ class TransResUtil
         };
     }
 
+    public function hasProjectSpecialty( $projectSpecialties, $projectSpecialty ) {
+
+        if( $projectSpecialties && $projectSpecialties->contains($projectSpecialty) ) {
+            return true;
+        }
+
+        return false;
+
+        //return true;
+//        foreach($projectSpecialties as $thisProjectSpecialty ) {
+//            if( $projectSpecialty->getId() == $thisProjectSpecialty->getId() ) {
+//                return true;
+//            }
+//        }
+
+        return false;
+    }
+    function removeProjectSpecialty( $projectSpecialties, $projectSpecialty, $strict = TRUE )
+    {
+        if( !$projectSpecialties ) {
+            return $projectSpecialties;
+        }
+        $projectSpecialties->removeElement($projectSpecialty);
+        return $projectSpecialties;
+
+//        if(($key = array_search($projectSpecialty, $projectSpecialties, $strict)) !== FALSE) {
+//            unset($projectSpecialties[$key]);
+//        }
+//        return $projectSpecialties;
+    }
 }

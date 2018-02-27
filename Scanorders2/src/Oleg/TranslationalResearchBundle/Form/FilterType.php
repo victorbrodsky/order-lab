@@ -47,7 +47,7 @@ class FilterType extends AbstractType
             'label' => false,   //'Project Specialty',
             //'disabled' => ($this->params['admin'] ? false : true),
             'required'=> false,
-            'multiple' => false,
+            'multiple' => true,
             'attr' => array('class'=>'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
                 return $er->createQueryBuilder('list')

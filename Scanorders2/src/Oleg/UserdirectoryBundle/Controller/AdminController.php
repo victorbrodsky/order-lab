@@ -1425,10 +1425,16 @@ class AdminController extends Controller
 //                80,
 //                "translational-research"
 //            ),
-        
-            "ROLE_TRANSRES_EXECUTIVE" => array(
-                "Executive Committee",
-                "Full View Access for Translational Research site",
+
+            "ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY" => array(
+                "Hematopathology Executive Committee",
+                "Full View Access for Hematopathology Translational Research site",
+                80,
+                "translational-research"
+            ),
+            "ROLE_TRANSRES_EXECUTIVE_APCP" => array(
+                "AP/CP Executive Committee",
+                "Full View Access for AP/CP Translational Research site",
                 80,
                 "translational-research"
             ),

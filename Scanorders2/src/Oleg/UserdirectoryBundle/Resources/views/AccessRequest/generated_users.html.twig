@@ -144,12 +144,14 @@
                             </a>
                         </li>
 
-                        <li>
-                            <a
-                                general-data-confirm="Are you sure you would like to approve {{ entity.user }} to access {{ sitenamefull }}?"
-                                href="{{ path(sitename~'_generated_user_approve', { 'id': user.id }) }}">Approve User
-                            </a>
-                        </li>
+                        {% if user.locked %}
+                            <li>
+                                <a
+                                    general-data-confirm="Are you sure you would like to approve {{ user }} to access {{ sitenamefull }}?"
+                                    href="{{ path(sitename~'_generated_user_approve', { 'id': user.id }) }}">Approve User
+                                </a>
+                            </li>
+                        {% endif %}
 
                     </ul>
 
