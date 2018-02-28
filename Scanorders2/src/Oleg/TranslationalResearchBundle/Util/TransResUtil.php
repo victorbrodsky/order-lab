@@ -2167,7 +2167,7 @@ class TransResUtil
 
     }
     //get all users with admin and ROLE_TRANSRES_PRIMARY_REVIEWER, ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE
-    public function getTransResAdminEmails($asEmail=true) {
+    public function getTransResAdminEmails($asEmail=true, $onlyAdmin=false) {
         $users = array();
 
         $admins = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole("ROLE_TRANSRES_ADMIN");
@@ -2179,6 +2179,10 @@ class TransResUtil
                     $users[] = $user;
                 }
             }
+        }
+
+        if( $onlyAdmin ) {
+            return $users;
         }
 
         $primarys = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole("ROLE_TRANSRES_PRIMARY_REVIEWER");

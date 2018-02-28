@@ -12,6 +12,9 @@
     <h4 class="text-info" align="center">
         {{ title }}
     </h4>
+
+{% if filterError is not defined and not filterError %}
+
     {% if allPrjects|length > 0 %}
     <p>
         <a href="{{ path('translationalresearch_download_projects_excel',{'ids':transres_util.getProjectsIdsStr(allPrjects)}) }}">
@@ -348,6 +351,8 @@
     <p>
         <a class="btn btn-primary" href="{{ path(translationalresearch_sitename~'_project_new_selector') }}">Create a new project</a>
     </p>
+
+{% endif %}
 
 {% endblock %}
 

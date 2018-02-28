@@ -806,6 +806,18 @@ class RequestController extends Controller
         $projectSpecialtyAllowedArr = $projectSpecialtyAllowedRes['projectSpecialtyAllowedArr'];
         //$projectSpecialtyDeniedArr = $projectSpecialtyAllowedRes['projectSpecialtyDeniedArr'];
 
+        if( count($projectSpecialtyAllowedArr) == 0 ) {
+            $sysAdminEmailArr = $transresUtil->getTransResAdminEmails(true,true);
+            $errorMsg = "You don't have any allowed project specialty in your profile.".
+                "<br>Please contact the system admin(s):".
+                "<br>".implode(", ",$sysAdminEmailArr);
+            //no allowed specialty
+            return array(
+                'filterError' => true,
+                'title' => $errorMsg,
+            );
+        }
+
         //////// create filter //////////
         $progressStateArr = $transresRequestUtil->getProgressStateArr();
         $billingStateArr = $transresRequestUtil->getBillingStateArr();

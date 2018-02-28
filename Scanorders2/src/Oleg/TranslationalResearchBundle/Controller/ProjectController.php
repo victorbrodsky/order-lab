@@ -113,6 +113,7 @@ class ProjectController extends Controller
         $projectSpecialtyDeniedArr = $projectSpecialtyAllowedRes['projectSpecialtyDeniedArr'];
 
         //////// create filter //////////
+        //$filterError = true;
         $stateChoiceArr = $transresUtil->getStateChoisesArr();
         $params = array(
             'stateChoiceArr' => $stateChoiceArr,
@@ -122,6 +123,22 @@ class ProjectController extends Controller
             'method' => 'GET',
             'form_custom_value'=>$params
         ));
+
+        if( count($projectSpecialtyAllowedArr) == 0 ) {
+            $sysAdminEmailArr = $transresUtil->getTransResAdminEmails(true,true);
+            $errorMsg = "You don't have any allowed project specialty in your profile.".
+                        "<br>Please contact the system admin(s):".
+                        "<br>".implode(", ",$sysAdminEmailArr);
+            //no allowed specialty
+            return array(
+                'filterError' => true,
+                //'allPrjects' => array(),
+                'title' => $errorMsg,
+                //'filterform' => $filterform->createView(),
+                //'eventObjectTypeId' => null,
+                //'advancedFilter' => $advancedFilter
+            );
+        }
 
         $filterform->handleRequest($request);
 
@@ -145,26 +162,8 @@ class ProjectController extends Controller
 
         //force to set project specialty filter for non-admin users
         if( $transresUtil->isAdminOrPrimaryReviewer() === false ) {
-//            $projectSpecialtyAllowedArr = new ArrayCollection();
-//            $projectSpecialtyDeniedArr = new ArrayCollection();
-//            //check is user is hematopathology user
-//            $specialtyHemaObject = $transresUtil->getSpecialtyObject("hematopathology");
-//            if( $transresUtil->isUserAllowedSpecialtyObject($specialtyHemaObject, $user) ) {
-//                $projectSpecialtyAllowedArr->add($specialtyHemaObject);
-//            } else {
-//                $projectSpecialtyDeniedArr->add($specialtyHemaObject);
-//            }
-//
-//            //check is user is ap-cp user
-//            $specialtyAPCPObject = $transresUtil->getSpecialtyObject("ap-cp");
-//            if( $transresUtil->isUserAllowedSpecialtyObject($specialtyAPCPObject, $user) ) {
-//                $projectSpecialtyAllowedArr->add($specialtyAPCPObject);
-//            } else {
-//                $projectSpecialtyDeniedArr->add($specialtyAPCPObject);
-//            }
-
             //1) check if $projectSpecialties is not set => set $projectSpecialties as $projectSpecialtyAllowedArr
-            if( count($projectSpecialties) == 0 ) {
+            if (count($projectSpecialties) == 0) {
                 $projectSpecialtyReturn = $transresUtil->getReturnIndexSpecialtyArray($projectSpecialtyAllowedArr);
                 return $this->redirectToRoute(
                     $routeName,
@@ -173,16 +172,16 @@ class ProjectController extends Controller
             } else {
                 //2) construct $tempAllowedProjectSpecialties containing only allowed specialty from the $projectSpecialties
                 $tempAllowedProjectSpecialties = new ArrayCollection();
-                foreach($projectSpecialties as $projectSpecialty) {
-                    if( !$projectSpecialtyDeniedArr->contains($projectSpecialty) ) {
+                foreach ($projectSpecialties as $projectSpecialty) {
+                    if (!$projectSpecialtyDeniedArr->contains($projectSpecialty)) {
                         $tempAllowedProjectSpecialties->add($projectSpecialty);
                     }
                 }
 
                 //to prevent redirection loop, check if $projectSpecialties is different than $tempAllowedProjectSpecialties
-                $diff = $transresUtil->getObjectDiff($projectSpecialties->toArray(),$tempAllowedProjectSpecialties->toArray());
+                $diff = $transresUtil->getObjectDiff($projectSpecialties->toArray(), $tempAllowedProjectSpecialties->toArray());
 
-                if( count($diff) > 0 ) {
+                if (count($diff) > 0) {
                     $projectSpecialtyReturn = $transresUtil->getReturnIndexSpecialtyArray($tempAllowedProjectSpecialties);
                     return $this->redirectToRoute(
                         $routeName,
@@ -190,7 +189,6 @@ class ProjectController extends Controller
                     );
                 }
             }
-
         }//if not admin
 
 
