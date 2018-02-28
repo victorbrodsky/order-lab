@@ -10,7 +10,7 @@
 {% block content %}
 
     <h4 class="text-info" align="center">
-        {{ title }}
+        {{ title|raw }}
     </h4>
 
 {% if filterError is not defined and not filterError %}

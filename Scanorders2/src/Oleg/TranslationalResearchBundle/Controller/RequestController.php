@@ -749,12 +749,12 @@ class RequestController extends Controller
      */
     public function indexAction(Request $request, Project $project)
     {
-        if(
-            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER') &&
-            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
-        ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
-        }
+//        if(
+//            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER') &&
+//            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
+//        ) {
+//            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+//        }
 
         $transresUtil = $this->container->get('transres_util');
 
@@ -784,12 +784,12 @@ class RequestController extends Controller
      */
     public function myRequestsAction(Request $request)
     {
-        if(
-            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER') &&
-            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
-        ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
-        }
+//        if(
+//            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER') &&
+//            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
+//        ) {
+//            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+//        }
 
         $transresUtil = $this->container->get('transres_util');
         $transresRequestUtil = $this->container->get('transres_request_util');
@@ -860,6 +860,26 @@ class RequestController extends Controller
             $project = $filterform['project']->getData();
         }
         //////// EOF create filter //////////
+
+        if( $project ) {
+            if ($transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false) {
+                //exit('project exists');
+                $this->get('session')->getFlashBag()->add(
+                    'warning',
+                    "You don't have a permission to access the " . $project->getProjectSpecialty() . " project specialty"
+                );
+                return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+            }
+        } else {
+            //exit('project does not exists');
+            if (
+                false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER') &&
+                false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
+            ) {
+                return $this->redirect($this->generateUrl($this->container->getParameter('translationalresearch.sitename') . '-nopermission'));
+            }
+        }
+        //exit('reqs');
 
         //////////////// get Requests IDs with the form node filter ////////////////
         $ids = array();

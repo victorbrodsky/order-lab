@@ -167,7 +167,7 @@
                         </li>
                     {% endif %}
 
-                    {% if is_granted('ROLE_TRANSRES_USER') %}
+                    {% if is_granted('ROLE_TRANSRES_BILLING_ADMIN') %}
                         {% macro createFilterType( filterTypes ) %}
                             {% for filterType in filterTypes %}
                                 {% if filterType == "[[hr]]" %}
