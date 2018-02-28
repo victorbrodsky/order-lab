@@ -103,7 +103,8 @@ class DefaultReviewerController extends Controller
 
         $paginationParams = array(
             'defaultSortFieldName' => 'defaultReviewer.id',
-            'defaultSortDirection' => 'DESC'
+            'defaultSortDirection' => 'DESC',
+            'wrap-queries' => true
         );
 
         $paginator  = $this->get('knp_paginator');

@@ -356,12 +356,12 @@ class RequestController extends Controller
 
             $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($transresRequest,"document");
 
-            $addedDataResults = $this->processTableData($transresRequest,$form,$user);
+            $updatedDataResults = $this->processTableData($transresRequest,$form,$user);
 
             // remove the relationship between the tag and the Task
             foreach($originalDataResults as $dataResult) {
                 //echo "??? remove dataResult ID=".$dataResult->getId()."<br>";
-                if (false === $addedDataResults->contains($dataResult)) {
+                if (false === $updatedDataResults->contains($dataResult)) {
                     // remove the Task from the Tag
                     //echo "remove dataResult ID=".$dataResult->getId()."<br>";
                     $transresRequest->getDataResults()->removeElement($dataResult);
@@ -454,6 +454,7 @@ class RequestController extends Controller
         );
     }
 
+    //return created/updated array of DataResult objects existing in the Request
     public function processTableData( $transresRequest, $form, $user ) {
         $em = $this->getDoctrine()->getManager();
         //////////////// process handsontable rows ////////////////
@@ -471,8 +472,12 @@ class RequestController extends Controller
 //        print_r($data);
 //        echo  '</pre>';
 
+        $updatedDataResults = new ArrayCollection();
+
         if( $data == null ) {
-            throw new \Exception( 'Table order data is null.' );
+            exit('Table order data is null.');
+            //throw new \Exception( 'Table order data is null.' );
+            return $updatedDataResults;
         }
 
         //$headers = array_shift($data);
@@ -482,8 +487,6 @@ class RequestController extends Controller
 
         //echo "entity inst=".$entity->getInstitution()."<br>";
         //exit();
-
-        $addedDataResults = new ArrayCollection();
 
         foreach( $data["row"] as $row ) {
 //            echo "<br>row:<br>";
@@ -569,7 +572,7 @@ class RequestController extends Controller
                 //exit();
 
                 if( $dataResult ) {
-                    $addedDataResults->add($dataResult);
+                    $updatedDataResults->add($dataResult);
                 } else {
                     $dataResult = new DataResult($user);
                 }
@@ -593,7 +596,7 @@ class RequestController extends Controller
 
         }//foreach row
 
-        return $addedDataResults;
+        return $updatedDataResults;
     }
     public function getValueByHeaderName($header, $row, $headers) {
 
