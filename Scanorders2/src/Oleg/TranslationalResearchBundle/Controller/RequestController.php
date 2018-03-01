@@ -790,6 +790,9 @@ class RequestController extends Controller
 //        ) {
 //            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
 //        }
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+        }
 
         $transresUtil = $this->container->get('transres_util');
         $transresRequestUtil = $this->container->get('transres_request_util');
@@ -804,13 +807,14 @@ class RequestController extends Controller
         //get allowed and denied projectSpecialties
         $projectSpecialtyAllowedRes = $transresUtil->getAllowedProjectSpecialty($user);
         $projectSpecialtyAllowedArr = $projectSpecialtyAllowedRes['projectSpecialtyAllowedArr'];
-        //$projectSpecialtyDeniedArr = $projectSpecialtyAllowedRes['projectSpecialtyDeniedArr'];
+        $projectSpecialtyDeniedArr = $projectSpecialtyAllowedRes['projectSpecialtyDeniedArr'];
 
         if( count($projectSpecialtyAllowedArr) == 0 ) {
             $sysAdminEmailArr = $transresUtil->getTransResAdminEmails(true,true);
             $errorMsg = "You don't have any allowed project specialty in your profile.".
                 "<br>Please contact the system admin(s):".
                 "<br>".implode(", ",$sysAdminEmailArr);
+            //exit($errorMsg);
             //no allowed specialty
             return array(
                 'filterError' => true,
@@ -834,6 +838,7 @@ class RequestController extends Controller
 
         $filterform->handleRequest($request);
         $submitter = null;
+        $project = null;
 
         $submitter = $filterform['submitter']->getData();
         $progressStates = $filterform['progressState']->getData();
@@ -852,6 +857,8 @@ class RequestController extends Controller
         $fundingType = $filterform['fundingType']->getData();
         $filterType = trim( $request->get('type') );
         $filterTitle = trim( $request->get('title') );
+        echo "filterType=$filterType<br>";
+        //exit();
 
         if( isset($filterform['submitter']) ) {
             $submitter = $filterform['submitter']->getData();
@@ -859,27 +866,108 @@ class RequestController extends Controller
         if( isset($filterform['project']) ) {
             $project = $filterform['project']->getData();
         }
+//        if( isset($filterform['projectSpecialty']) ) {
+//            $projectSpecialties = $filterform['projectSpecialty']->getData();
+//        } else {
+//            $projectSpecialties = $projectSpecialtyAllowedArr;
+//        }
         //////// EOF create filter //////////
 
-        if( $project ) {
-            if ($transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false) {
-                //exit('project exists');
-                $this->get('session')->getFlashBag()->add(
-                    'warning',
-                    "You don't have a permission to access the " . $project->getProjectSpecialty() . " project specialty"
-                );
-                return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
-            }
-        } else {
-            //exit('project does not exists');
-            if (
-                false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER') &&
-                false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
-            ) {
-                return $this->redirect($this->generateUrl($this->container->getParameter('translationalresearch.sitename') . '-nopermission'));
+        //echo "project=".$project."<br>";
+        //echo "project ID=".$project->getId()."; INFO=".$project->getProjectInfoName()."<br>";
+        //exit('project='.$project);
+
+        if(0) {
+            if ($project) {
+                if ($transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false) {
+                    exit('project exists, but specialty not allowed.');
+                    $this->get('session')->getFlashBag()->add(
+                        'warning',
+                        "You don't have a permission to access the " . $project->getProjectSpecialty() . " project specialty"
+                    );
+                    return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+                }
+            } else {
+                if (!$filterType) {
+                    if (
+                        false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER') &&
+                        false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
+                    ) {
+                        exit('project does not exists and not requester and filterType is not set');
+                        return $this->redirect($this->generateUrl($this->container->getParameter('translationalresearch.sitename') . '-nopermission'));
+                    }
+                }
             }
         }
         //exit('reqs');
+
+
+        //force to set project specialty filter for non-admin users
+        if( $transresUtil->isAdminOrPrimaryReviewer() === false ) {
+
+            //1) check if $projectSpecialties is not set => set $projectSpecialties as $projectSpecialtyAllowedArr
+//            if (count($projectSpecialties) == 0) {
+//                $projectSpecialtyReturn = $transresUtil->getReturnIndexSpecialtyArray($projectSpecialtyAllowedArr,$project,$filterType);
+//
+//                print_r($projectSpecialtyReturn);
+//                //exit('111');
+//
+//                return $this->redirectToRoute(
+//                    $routeName,
+//                    $projectSpecialtyReturn
+//                );
+//            } else {
+//                //2) construct $tempAllowedProjectSpecialties containing only allowed specialty from the $projectSpecialties
+//                $tempAllowedProjectSpecialties = new ArrayCollection();
+//                foreach ($projectSpecialties as $projectSpecialty) {
+//                    if (!$projectSpecialtyDeniedArr->contains($projectSpecialty)) {
+//                        $tempAllowedProjectSpecialties->add($projectSpecialty);
+//                    }
+//                }
+//
+//                //to prevent redirection loop, check if $projectSpecialties is different than $tempAllowedProjectSpecialties
+//                $diff = $transresUtil->getObjectDiff($projectSpecialties->toArray(), $tempAllowedProjectSpecialties->toArray());
+//
+//                if (count($diff) > 0) {
+//                    $projectSpecialtyReturn = $transresUtil->getReturnIndexSpecialtyArray($tempAllowedProjectSpecialties,$project,$filterType);
+//                    return $this->redirectToRoute(
+//                        $routeName,
+//                        $projectSpecialtyReturn
+//                    );
+//                }
+//            }
+
+            //TODO: fix no specialty cases
+            if( 0 && count($projectSpecialties) == 0 ) {
+                //echo "allowed spec=".count($projectSpecialtyAllowedArr)."<br>";
+                //echo "filterType=".$filterType."<br>";
+                $projectSpecialtyReturn = $transresUtil->getReturnIndexSpecialtyArray($projectSpecialtyAllowedArr,$project,$filterType);
+                //print_r($projectSpecialtyReturn);
+                //exit("no spec");
+                return $this->redirectToRoute(
+                    $routeName,
+                    $projectSpecialtyReturn
+                );
+            }
+
+            if( count($projectSpecialties) == 0 ) {
+                $projectSpecialties = $projectSpecialtyAllowedArr;
+            }
+
+            //if specialty contains $projectSpecialtyDeniedArr => exit
+            foreach($projectSpecialties as $thisProjectSpecialty) {
+                if( $projectSpecialtyDeniedArr->contains($thisProjectSpecialty) ) {
+                    $this->get('session')->getFlashBag()->add(
+                        'warning',
+                        "You project specialty $thisProjectSpecialty conflicting with your allowed specialty"
+                    );
+
+                    return $this->redirect($this->generateUrl($this->container->getParameter('translationalresearch.sitename') . '-nopermission'));
+                }
+            }
+
+        }//if not admin
+
 
         //////////////// get Requests IDs with the form node filter ////////////////
         $ids = array();
@@ -899,11 +987,17 @@ class RequestController extends Controller
         }
         //////////////// EOF get Requests IDs with the form node filter ////////////////
 
+        //exit('start filtering requests');
+
         if( $filterType ) {
+            $filterTypeDone = false;
+
             if( $filterType == "All Requests" ) {
                 $title = "All Requests";
+                $filterTypeDone = true;
             }
             if( $filterType == "My Requests" ) {
+                //exit('start filtering '.$filterType);
                 return $this->redirectToRoute(
                     'translationalresearch_request_index_filter',
                     array(
@@ -1090,13 +1184,23 @@ class RequestController extends Controller
             }
 
             //not pre-set filter
-            if( $filterType != "All Requests" ) {
+//            if( $filterType != "All Requests" ) {
+//                $this->get('session')->getFlashBag()->add(
+//                    'notice',
+//                    "Filter pre-set type '$filterType' is not defined"
+//                );
+//            }
+
+            if( !$filterTypeDone ) {
                 $this->get('session')->getFlashBag()->add(
                     'notice',
                     "Filter pre-set type '$filterType' is not defined"
                 );
+                exit("Filter Type not known ".$filterType);
             }
         }
+
+        //exit("Start filtering...");
 
         $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
         $dql =  $repository->createQueryBuilder("transresRequest");

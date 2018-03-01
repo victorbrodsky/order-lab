@@ -1864,33 +1864,70 @@ class TransResRequestUtil
         return $filterTypes;
     }
 
+    //get allowed filter project types for logged in user
     public function getRequestFilterPresetType() {
-        $filterTypes = array(
-            'My Requests',
-            'All Requests',
-            'All AP/CP Requests',
-            'All Hematopathology Requests',
-            '[[hr]]',
-            'All Pending Requests',
-            'All AP/CP Pending Requests',
-            'All Hematopathology Pending Requests',
-            '[[hr]]',
-            'All Active Requests',
-            'All AP/CP Active Requests',
-            'All Hematopathology Active Requests',
-            '[[hr]]',
-            'All Completed Requests',
-            'All AP/CP Completed Requests',
-            'All Hematopathology Completed Requests',
-            '[[hr]]',
-            'All Completed and Notified Requests',
-            'All AP/CP Completed and Notified Requests',
-            'All Hematopathology Completed and Notified Requests',
-            //'[[hr]]',
+        $transresUtil = $this->container->get('transres_util');
+        $user = $this->secTokenStorage->getToken()->getUser();
+        $allowHema = false;
+        $allowAPCP = false;
 
-            //'Pending AP/CP Requests',
-            //'Pending Hematopathology Requests'
-        );
+        $specialtyHemaObject = $transresUtil->getSpecialtyObject("hematopathology");
+        if( $transresUtil->isUserAllowedSpecialtyObject($specialtyHemaObject, $user) ) {
+            $allowHema = true;
+        }
+
+        $specialtyAPCPObject = $transresUtil->getSpecialtyObject("ap-cp");
+        if( $transresUtil->isUserAllowedSpecialtyObject($specialtyAPCPObject, $user) ) {
+            $allowAPCP = true;
+        }
+
+        $filterTypes = array('My Requests');
+
+        $filterTypes[] = 'All Requests';
+        if( $allowHema ) {
+            $filterTypes[] = 'All Hematopathology Requests';
+        }
+        if( $allowAPCP ) {
+            $filterTypes[] = 'All AP/CP Requests';
+        }
+        $filterTypes[] = '[[hr]]';
+
+        $filterTypes[] = 'All Pending Requests';
+        if( $allowHema ) {
+            $filterTypes[] = 'All Hematopathology Pending Requests';
+        }
+        if( $allowAPCP ) {
+            $filterTypes[] = 'All AP/CP Pending Requests';
+        }
+        $filterTypes[] = '[[hr]]';
+
+        $filterTypes[] = 'All Active Requests';
+        if( $allowHema ) {
+            $filterTypes[] = 'All Hematopathology Active Requests';
+        }
+        if( $allowAPCP ) {
+            $filterTypes[] = 'All AP/CP Active Requests';
+        }
+        $filterTypes[] = '[[hr]]';
+
+        $filterTypes[] = 'All Completed Requests';
+        if( $allowHema ) {
+            $filterTypes[] = 'All Hematopathology Completed Requests';
+        }
+        if( $allowAPCP ) {
+            $filterTypes[] = 'All AP/CP Completed Requests';
+        }
+        $filterTypes[] = '[[hr]]';
+
+
+        $filterTypes[] = 'All Completed and Notified Requests';
+        if( $allowHema ) {
+            $filterTypes[] = 'All Hematopathology Completed and Notified Requests';
+        }
+        if( $allowAPCP ) {
+            $filterTypes[] = 'All AP/CP Completed and Notified Requests';
+        }
+        //$filterTypes[] = '[[hr]]';
 
         return $filterTypes;
     }

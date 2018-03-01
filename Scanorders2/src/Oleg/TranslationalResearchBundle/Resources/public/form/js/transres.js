@@ -49,7 +49,8 @@ function transresShowHideHumanTissueUploadSection(involveHumanTissue) {
     }
 }
 
-//form with multiple buttons don't use form.submit(); because it does not pass buttons in the post
+//form with multiple buttons don't use form.submit(); because it does not pass buttons in the post.
+//Therefore use button 'onclick'=>'transresValidateProjectForm();' in php form type
 function transresValidateProjectForm() {
 
     console.log("Validate project");
@@ -74,7 +75,7 @@ function transresValidateProjectForm() {
         var inputField = holder.find(".form-control");
         if( inputField.length > 0 ) {
             value = inputField.val();
-            console.log("label="+label+"; value="+value);
+            //console.log("label="+label+"; value="+value);
             if( !value ) {
                 console.log("Error Input form-control");
                 validated = false;
@@ -87,7 +88,7 @@ function transresValidateProjectForm() {
         var selectField = holder.find("select.combobox");
         if( selectField.length > 0 ) {
             value = selectField.val();
-            console.log("label="+label+"; value="+value);
+            //console.log("label="+label+"; value="+value);
             if( !value ) {
                 console.log("Error Select select combobox");
                 validated = false;
@@ -100,7 +101,7 @@ function transresValidateProjectForm() {
         var inputSelectField = holder.find("input.combobox");
         if( inputSelectField.length > 0 ) {
             value = inputSelectField.val();
-            console.log("label="+label+"; value="+value);
+            //console.log("label="+label+"; value="+value);
             if( !value ) {
                 console.log("Error Select input combobox");
                 validated = false;

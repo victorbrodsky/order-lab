@@ -396,7 +396,9 @@ class ProjectFormNodeController extends ProjectController
             $msg = $msg . " by ".$project->getUpdateUser()->getUsernameOptimal();
 
             if( $testing ) {
-                exit('form is submitted and finished, msg='.$msg);
+                echo "<br>Enf of form submit<br>";
+                echo "Clicked button=".$form->getClickedButton()->getName()."<br>";
+                exit('Form is submitted and finished, msg='.$msg);
             }
 
             $this->get('session')->getFlashBag()->add(

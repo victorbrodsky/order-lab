@@ -2317,12 +2317,23 @@ class TransResUtil
     }
 
     public function getTransResProjectSpecialties() {
+        $user = $this->secTokenStorage->getToken()->getUser();
+
         $specialties = $this->em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->findBy(
             array(
                 'type' => array("default","user-added")
             )
         );
-        return $specialties;
+
+        $allowedSpecialties = array();
+
+        foreach($specialties as $specialty) {
+            if( $this->isUserAllowedSpecialtyObject($specialty, $user) ) {
+                $allowedSpecialties[] = $specialty;
+            }
+        }
+
+        return $allowedSpecialties;
     }
 
     public function getCommentAuthorNameByLoggedUser( $comment ) {
@@ -3048,14 +3059,26 @@ class TransResUtil
         );
         return $diff;
     }
-    public function getReturnIndexSpecialtyArray( $projectSpecialtyArr ) {
+    public function getReturnIndexSpecialtyArray( $projectSpecialtyArr, $project=null, $filterType=null ) {
         $resArr = array();
 
         $count = 0;
         foreach($projectSpecialtyArr as $projectSpecialty) {
+            //echo "spec=".$projectSpecialty."<br>";
             $resArr["filter[projectSpecialty][".$count."]"] = $projectSpecialty->getId();
             $count++;
         }
+
+        if( $project && $project->getId() ) {
+            $resArr["filter[project]"] = $project->getId();
+        }
+
+        if( $filterType ) {
+            $resArr["type"] = $filterType;
+            $resArr["title"] = $filterType;
+        }
+
+        //print_r($resArr);
 
         return $resArr;
     }
