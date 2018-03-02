@@ -15,10 +15,10 @@
 
 {% if filterError is not defined and not filterError %}
 
-    {% if allPrjects|length > 0 %}
+    {% if allProjects|length > 0 %}
     <p>
-        <a href="{{ path('translationalresearch_download_projects_excel',{'ids':transres_util.getProjectsIdsStr(allPrjects)}) }}">
-            <i class="fa fa-file-excel-o"></i> Export Resulting {{ allPrjects|length }} Projects Summaries to Excel</a>
+        <a href="{{ path('translationalresearch_download_projects_excel',{'ids':transres_util.getProjectsIdsStr(allProjects)}) }}">
+            <i class="fa fa-file-excel-o"></i> Export Resulting {{ allProjects|length }} Projects Summaries to Excel</a>
     </p>
     {% endif %}
 

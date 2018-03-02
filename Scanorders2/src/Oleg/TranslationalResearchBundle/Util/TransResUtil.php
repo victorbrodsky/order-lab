@@ -500,6 +500,18 @@ class TransResUtil
         }
         return false;
     }
+    public function isAdminOrPrimaryReviewerOrExecutive() {
+        if(
+            $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') ||
+            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') ||
+            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE') ||
+            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') ||
+            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP')
+        ) {
+            return true;
+        }
+        return false;
+    }
 
     public function printTransition($transition) {
         echo $transition->getName().": ";

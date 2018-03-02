@@ -1883,6 +1883,10 @@ class TransResRequestUtil
 
         $filterTypes = array('My Requests');
 
+        if( $transresUtil->isAdminOrPrimaryReviewerOrExecutive() === false ) {
+            return $filterTypes;
+        }
+
         $filterTypes[] = 'All Requests';
         if( $allowHema ) {
             $filterTypes[] = 'All Hematopathology Requests';

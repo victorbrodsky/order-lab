@@ -132,7 +132,7 @@ class ProjectController extends Controller
             //no allowed specialty
             return array(
                 'filterError' => true,
-                //'allPrjects' => array(),
+                //'allProjects' => array(),
                 'title' => $errorMsg,
                 //'filterform' => $filterform->createView(),
                 //'eventObjectTypeId' => null,
@@ -193,6 +193,17 @@ class ProjectController extends Controller
 
 
         //////////////////// Start Filter ////////////////////
+
+        //Non admin, Primary Reviewers and Executive can see all projects.
+        // All other users can view only their projects (where they are requesters: PI, Pathologists Involved, Co-Investigators, Contacts, Billing Contacts)
+        if(
+            $transresUtil->isAdminOrPrimaryReviewer() === false &&
+            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') === false &&
+            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') === false
+        ) {
+
+        }
+
         if( $projectSpecialties && count($projectSpecialties) > 0 ) {
             $dql->leftJoin('project.projectSpecialty','projectSpecialty');
             $projectSpecialtyIdsArr = array();
@@ -291,9 +302,18 @@ class ProjectController extends Controller
         }
 
 
-        if( $routeName == "translationalresearch_my_project_index" ) {
+        //Non admin, Primary Reviewers and Executive can see all projects.
+        // All other users can view only their projects (where they are requesters: PI, Pathologists Involved, Co-Investigators, Contacts, Billing Contacts)
+        if( $transresUtil->isAdminOrPrimaryReviewerOrExecutive() ) {
+            $showOnlyMyProjects = false;
+        } else {
+            $showOnlyMyProjects = true;
+        }
+
+        if( $showOnlyMyProjects || $routeName == "translationalresearch_my_project_index" ) {
             $dql->leftJoin('project.coInvestigators','coInvestigators');
             $dql->leftJoin('project.pathologists','pathologists');
+            $dql->leftJoin('project.billingContact','billingContact');
             $dql->leftJoin('project.contacts','contacts');
 
             $dql->andWhere(
@@ -301,6 +321,7 @@ class ProjectController extends Controller
                 "coInvestigators.id = :userId OR ".
                 "pathologists.id = :userId OR ".
                 "contacts.id = :userId OR ".
+                "billingContact.id = :userId OR ".
                 "submitter.id = :userId"
             );
 
@@ -364,7 +385,7 @@ class ProjectController extends Controller
             'defaultSortDirection' => 'DESC'
         );
 
-        $allPrjects = $query->getResult();
+        $allProjects = $query->getResult();
 
         $paginator  = $this->get('knp_paginator');
         $projects = $paginator->paginate(
@@ -383,8 +404,8 @@ class ProjectController extends Controller
 
         return array(
             'projects' => $projects,
-            'allPrjects' => $allPrjects,
-            'title' => $title . " (" . count($projects) . " of " . count($allPrjects) . ")",
+            'allProjects' => $allProjects,
+            'title' => $title . " (" . count($projects) . " of " . count($allProjects) . ")",
             'filterform' => $filterform->createView(),
             'eventObjectTypeId' => $eventObjectTypeId,
             'advancedFilter' => $advancedFilter

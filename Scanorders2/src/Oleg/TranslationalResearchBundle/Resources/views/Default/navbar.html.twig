@@ -87,21 +87,24 @@
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Projects<b class="caret"></b></a>
                             <ul class="dropdown-menu">
 
-                                <li id="nav-bar-translationalresearch-home" class="hidden-xs divider-vertical">
-                                    <a href="{{ path(translationalresearch_sitename~'_project_index') }}"
-                                    >All Projects</a>
-                                </li>
+                                {#show it only to admin, primary reviewers and executives#}
+                                {% if transres_util.isAdminOrPrimaryReviewerOrExecutive() %}
+                                    <li id="nav-bar-translationalresearch-home" class="hidden-xs divider-vertical">
+                                        <a href="{{ path(translationalresearch_sitename~'_project_index') }}"
+                                        >All Projects</a>
+                                    </li>
 
-                                {% if specialties|length > 0 %}
-                                    {% for specialty in specialties %}
-                                        <li>
-                                            <a href="{{ path(translationalresearch_sitename~'_project_index',{'filter[projectSpecialty]':specialty.id}) }}"
-                                            >All {{ specialty.getName() }} Projects</a>
-                                        </li>
-                                    {% endfor %}
+                                    {% if specialties|length > 0 %}
+                                        {% for specialty in specialties %}
+                                            <li>
+                                                <a href="{{ path(translationalresearch_sitename~'_project_index',{'filter[projectSpecialty]':specialty.id}) }}"
+                                                >All {{ specialty.getName() }} Projects</a>
+                                            </li>
+                                        {% endfor %}
+                                    {% endif %}
+
+                                    <hr style="margin-top: 10px; margin-bottom: 10px;">
                                 {% endif %}
-
-                                <hr style="margin-top: 10px; margin-bottom: 10px;">
 
                                 <li id="nav-bar-translationalresearch-my-projects">
                                     <a href="{{ path(translationalresearch_sitename~'_my_project_index') }}"

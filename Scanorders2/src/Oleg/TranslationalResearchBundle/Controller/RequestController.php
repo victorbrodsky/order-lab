@@ -997,6 +997,7 @@ class RequestController extends Controller
                 $title = "All Requests";
                 $filterTypeDone = true;
             }
+
             if( $filterType == "My Requests" ) {
                 //exit('start filtering '.$filterType);
                 return $this->redirectToRoute(
@@ -1227,6 +1228,42 @@ class RequestController extends Controller
 //        }
 
         ///////// filters //////////
+
+        //Non admin, Primary Reviewers and Executive can see all projects.
+        // All other users can view only their projects (where they are requesters: PI, Pathologists Involved, Co-Investigators, Contacts, Billing Contacts)
+        if( $transresUtil->isAdminOrPrimaryReviewerOrExecutive() ) {
+            $showOnlyMyProjects = false;
+        } else {
+            $showOnlyMyProjects = true;
+        }
+        if( $showOnlyMyProjects ) {
+            $dql->leftJoin('transresRequest.contact','contact');
+            $dql->leftJoin('project.principalInvestigators','projectPrincipalInvestigators');
+            $dql->leftJoin('project.coInvestigators','projectCoInvestigators');
+            $dql->leftJoin('project.pathologists','projectPathologists');
+            $dql->leftJoin('project.billingContact','projectBillingContact');
+            $dql->leftJoin('project.contacts','projectContacts');
+            $dql->leftJoin('project.submitter','projectSubmitter');
+
+            $dql->andWhere(
+                //Request requesters
+                "principalInvestigators.id = :userId OR ".
+                "contact.id = :userId OR ".
+                "submitter.id = :userId OR ".
+                //project's requesters
+                "projectPrincipalInvestigators.id = :userId OR ".
+                "projectCoInvestigators.id = :userId OR ".
+                "projectPathologists.id = :userId OR ".
+                "projectContacts.id = :userId OR ".
+                "projectBillingContact.id = :userId OR ".
+                "projectSubmitter.id = :userId"
+
+            );
+
+            $dqlParameters["userId"] = $user->getId();
+            $filterTitle = "My Requests, where I am a requester directly or where I am a project's requester";
+        }
+
 //        if( $projectSpecialty ) {
 //            $dql->leftJoin('project.projectSpecialty','projectSpecialty');
 //            $dql->andWhere("projectSpecialty.id = :projectSpecialtyId");
