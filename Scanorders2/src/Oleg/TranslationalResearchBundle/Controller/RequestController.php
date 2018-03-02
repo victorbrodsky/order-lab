@@ -969,6 +969,13 @@ class RequestController extends Controller
 
         }//if not admin
 
+        //Non admin, Primary Reviewers and Executive can see all projects.
+        // All other users can view only their projects (where they are requesters: PI, Pathologists Involved, Co-Investigators, Contacts, Billing Contacts)
+        if( $transresUtil->isAdminOrPrimaryReviewerOrExecutive() ) {
+            $showOnlyMyProjects = false;
+        } else {
+            $showOnlyMyProjects = true;
+        }
 
         //////////////// get Requests IDs with the form node filter ////////////////
         $ids = array();
@@ -1228,15 +1235,10 @@ class RequestController extends Controller
 //        }
 
         ///////// filters //////////
-
-        //Non admin, Primary Reviewers and Executive can see all projects.
-        // All other users can view only their projects (where they are requesters: PI, Pathologists Involved, Co-Investigators, Contacts, Billing Contacts)
-        if( $transresUtil->isAdminOrPrimaryReviewerOrExecutive() ) {
-            $showOnlyMyProjects = false;
-        } else {
-            $showOnlyMyProjects = true;
-        }
         if( $showOnlyMyProjects ) {
+
+            $submitter = null;
+
             $dql->leftJoin('transresRequest.contact','contact');
             $dql->leftJoin('project.principalInvestigators','projectPrincipalInvestigators');
             $dql->leftJoin('project.coInvestigators','projectCoInvestigators');
@@ -1384,7 +1386,7 @@ class RequestController extends Controller
         }
         ///////// EOF filters //////////
 
-        $limit = 30;
+        $limit = 10;
         $query = $em->createQuery($dql);
 
         if( count($dqlParameters) > 0 ) {

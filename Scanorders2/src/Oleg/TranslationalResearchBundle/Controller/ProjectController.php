@@ -367,7 +367,7 @@ class ProjectController extends Controller
 
         $dql->orderBy('project.id', 'DESC');
 
-        $limit = 30;
+        $limit = 10;
         $query = $em->createQuery($dql);
 
 
@@ -394,6 +394,9 @@ class ProjectController extends Controller
             $limit,                                         /*limit per page*/
             $paginationParams
         );
+
+        //$allProjects = $query->getResult();
+        //$allProjects = $projects->getTotalItemCount();
 
         $eventObjectType = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->findOneByName("Project");
         if( $eventObjectType ) {

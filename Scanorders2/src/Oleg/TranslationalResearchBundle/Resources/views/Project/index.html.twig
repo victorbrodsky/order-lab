@@ -344,6 +344,11 @@
         </tbody>
     </table>
 
+    {# display navigation #}
+    <div class="navigation">
+        {{ knp_pagination_render(projects) }}
+    </div>
+
     {#{{ render(controller('OlegTranslationalResearchBundle:Project:threadComments', { 'id': "3-9-committee_review" })) }}#}
     {#{% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': "3-9-committee_review"} %}#}
 

@@ -1187,6 +1187,7 @@ class AccessRequestController extends Controller
         ));
         $filterform->handleRequest($request);
         $roles = $filterform['roles']->getData();
+        $search = $filterform['search']->getData();
         $condition = $filterform['condition']->getData();
         //echo "roles=".implode(", ",$roles)."<br>";
         /////////// EOF Filter ////////////
@@ -1204,14 +1205,21 @@ class AccessRequestController extends Controller
 
         $dql = $userSecUtil->getDqlUserBySite($this->siteName);
 
-        if( $roles ) {
+        if( $roles && count($roles) > 0 ) {
             $rolesArr = array();
             foreach ($roles as $role) {
                 $rolesArr[] = "user.roles LIKE " . "'%" . $role->getName() . "%'";
             }
             //$rolesStr = implode(" OR ",$rolesArr);
-            $rolesStr = implode(" $condition ",$rolesArr);
+            $rolesStr = implode(" $condition ", $rolesArr);
             $dql->andWhere($rolesStr);
+        }
+
+        if( $search ) {
+            $searchStr = "user.primaryPublicUserId LIKE " . "'%" . $search . "%'";
+            $searchStr = $searchStr . " OR " . "infos.email LIKE " . "'%" . $search . "%'";
+
+            $dql->andWhere($searchStr);
         }
 
         $query = $em->createQuery($dql);
