@@ -145,16 +145,10 @@ class Project {
      * )
      **/
     private $contacts;
-
-//    /**
-//     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
-//     * @ORM\JoinTable(name="transres_project_billingContact",
-//     *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id")},
-//     *      inverseJoinColumns={@ORM\JoinColumn(name="billingContact_id", referencedColumnName="id")}
-//     * )
-//     **/
-//    private $billingContacts;
+    
     /**
+     * user who will process the billing invoice (who will pay) for this PI's project
+     *
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
      */

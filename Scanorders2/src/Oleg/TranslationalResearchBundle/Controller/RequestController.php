@@ -678,6 +678,7 @@ class RequestController extends Controller
     public function showAction(Request $request, TransResRequest $transresRequest)
     {
         if(
+            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') &&
             false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER') &&
             false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
         ) {
