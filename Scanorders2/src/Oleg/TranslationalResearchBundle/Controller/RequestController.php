@@ -857,7 +857,7 @@ class RequestController extends Controller
         $fundingType = $filterform['fundingType']->getData();
         $filterType = trim( $request->get('type') );
         $filterTitle = trim( $request->get('title') );
-        echo "filterType=$filterType<br>";
+        //echo "filterType=$filterType<br>";
         //exit();
 
         if( isset($filterform['submitter']) ) {

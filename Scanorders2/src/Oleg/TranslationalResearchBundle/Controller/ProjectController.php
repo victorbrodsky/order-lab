@@ -179,7 +179,7 @@ class ProjectController extends Controller
                 }
 
                 //to prevent redirection loop, check if $projectSpecialties is different than $tempAllowedProjectSpecialties
-                $diff = $transresUtil->getObjectDiff($projectSpecialties->toArray(), $tempAllowedProjectSpecialties->toArray());
+                $diff = $transresUtil->getObjectDiff($projectSpecialties, $tempAllowedProjectSpecialties->toArray());
 
                 if (count($diff) > 0) {
                     $projectSpecialtyReturn = $transresUtil->getReturnIndexSpecialtyArray($tempAllowedProjectSpecialties);

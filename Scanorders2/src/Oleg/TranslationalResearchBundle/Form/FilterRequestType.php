@@ -180,11 +180,18 @@ class FilterRequestType extends AbstractType
             $projectSpecialtyAllowedArr[] = $spec;
         }
 
+        if( count($projectSpecialtyAllowedArr) == 1 ) {
+            $disabled = true;
+        } else {
+            $disabled = false;
+        }
+
         $builder->add('projectSpecialty', EntityType::class, array(
             'class' => 'OlegTranslationalResearchBundle:SpecialtyList',
             'label' => false,   //'Project Specialty',
-            'required'=> true,
+            'required'=> false,
             'multiple' => true,
+            'disabled' => $disabled,
             'choices' => $this->params["projectSpecialtyAllowedArr"],
             'data' => $projectSpecialtyAllowedArr,
             'attr' => array('class'=>'combobox combobox-width'),

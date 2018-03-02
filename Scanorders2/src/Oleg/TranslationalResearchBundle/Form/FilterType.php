@@ -45,14 +45,26 @@ class FilterType extends AbstractType
 //            echo "specialty=".$specialty."<br>";
 //        }
 
+        $projectSpecialtyAllowedArr = array();
+        foreach($this->params["projectSpecialtyAllowedArr"] as $spec) {
+            $projectSpecialtyAllowedArr[] = $spec;
+        }
+
+        if( count($this->params["projectSpecialtyAllowedArr"]) == 1 ) {
+            $disabled = true;
+        } else {
+            $disabled = false;
+        }
+
         $builder->add('projectSpecialty', EntityType::class, array(
             'class' => 'OlegTranslationalResearchBundle:SpecialtyList',
             //'choice_label' => 'name',
-            'label' => false,   //'Project Specialty',
-            //'disabled' => ($this->params['admin'] ? false : true),
+            'label' => false,
+            'disabled' => $disabled,
             'required'=> false,
             'multiple' => true,
             'choices' => $this->params["projectSpecialtyAllowedArr"],
+            'data' => $projectSpecialtyAllowedArr,
             'attr' => array('class'=>'combobox combobox-width'),
 //            'query_builder' => function(EntityRepository $er) {
 //                return $er->createQueryBuilder('list')
