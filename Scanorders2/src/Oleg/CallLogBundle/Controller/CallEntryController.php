@@ -440,6 +440,7 @@ class CallEntryController extends Controller
                 ////$dql->andWhere("mrn.field LIKE :search OR lastname.field LIKE :search OR message.messageTitle LIKE :search OR authorInfos.displayName LIKE :search OR messageCategory.name LIKE :search");
                 if( $metaphone ) {
                     $userServiceUtil->getMetaphoneLike("lastname.field","lastname.fieldMetaphone",$searchFilter,$dql,$queryParameters);
+                    $dql->andWhere("lastname.status='valid'");
                 } else {
                     //search can be both: lastname or mrn number
                     //$dql->andWhere("lastname.field LIKE :search");
@@ -472,6 +473,8 @@ class CallEntryController extends Controller
                                 $queryParameters['searchMrn'] = $searchFilter;
                                 $queryParameters['keytype'] = $mrntypeFilter; //->getId()?
                                 $dql->andWhere($lastnameOrMrn);
+                                $dql->andWhere("lastname.status='valid'");
+                                $dql->andWhere("firstname.status='valid'");
                             }
                             if( $latentLastname && !$latentFirstname ) {
                                 //echo "2: [$latentLastname]<br>";
@@ -480,6 +483,7 @@ class CallEntryController extends Controller
                                 $queryParameters['searchMrn'] = $searchFilter;
                                 $queryParameters['keytype'] = $mrntypeFilter; //->getId()?
                                 $dql->andWhere($lastnameOrMrn);
+                                $dql->andWhere("lastname.status='valid'");
                             }
                         }
                     }
@@ -649,6 +653,7 @@ class CallEntryController extends Controller
                 if( $metaphone ) {
                     $userServiceUtil->getMetaphoneLike("lastname.field", "lastname.fieldMetaphone", $calllogsearch, $dql, $queryParameters);
                 } else {
+                    $dql->andWhere("lastname.status='valid'");
                     $dql->andWhere("lastname.field LIKE :search");
                     $queryParameters['search'] = "%".$calllogsearch."%";
                 }
