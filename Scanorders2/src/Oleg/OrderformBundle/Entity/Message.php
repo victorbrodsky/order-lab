@@ -1773,9 +1773,15 @@ class Message {
     //NOT USED
     public function getOrderSimpleDate() {
 
-        //use this simple orderdate. Below logic is for testing when orderdate has been updated by error before this update bug fixed
+        //Also, we can use OneToOne message.signeeInfo.modifiedOn date
+        if( $this->getSigneeInfo() && $this->getSigneeInfo()->getModifiedOn() ) {
+            return $this->getSigneeInfo()->getModifiedOn();
+        }
+
+        //use this simple orderdate
         return $this->getOrderdate();
 
+        //Below logic is for testing when orderdate has been updated by error before this update bug fixed
         $date = null;
 
         //substitute message orderdate by encounter creationdate if order date more than encounter date
