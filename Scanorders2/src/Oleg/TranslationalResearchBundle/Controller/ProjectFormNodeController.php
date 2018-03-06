@@ -50,7 +50,7 @@ class ProjectFormNodeController extends ProjectController
      */
     public function newProjectSelectorAction(Request $request)
     {
-        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER')) {
+        if (false == $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_ANONYMOUSLY')) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
@@ -73,7 +73,7 @@ class ProjectFormNodeController extends ProjectController
      */
     public function newFormNodeAction(Request $request, $specialtyStr)
     {
-        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER')) {
+        if (false == $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_ANONYMOUSLY')) { //IS_AUTHENTICATED_ANONYMOUSLY, ROLE_TRANSRES_REQUESTER
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 

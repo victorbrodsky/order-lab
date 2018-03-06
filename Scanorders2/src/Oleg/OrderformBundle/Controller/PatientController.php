@@ -272,6 +272,9 @@ class PatientController extends Controller
             //echo "increase memory_limit <br>";
             //ini_set('memory_limit', '-1'); //dangerous!
             ini_set('memory_limit', '3072M');
+        } else {
+            //echo "no increase memory_limit <br>";
+            ini_set('memory_limit', '3072M');
         }
 
 //        $showtreedepth = true; //show all levels

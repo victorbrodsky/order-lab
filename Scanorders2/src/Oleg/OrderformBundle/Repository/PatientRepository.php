@@ -232,24 +232,26 @@ class PatientRepository extends ArrayFieldAbstractRepository
 //        }
 //        return $patient;
 
+        $testing = false;
+        //$testing = true;
+
         //suffix
-        $this->processLatestEncounterCommonPatientField( $patient, $user, $source, "Suffix" );
+        $this->processLatestEncounterCommonPatientField( $patient, $user, $source, "Suffix", $testing );
 
         //lastname
-        $this->processLatestEncounterCommonPatientField( $patient, $user, $source, "Lastname" );
+        $this->processLatestEncounterCommonPatientField( $patient, $user, $source, "Lastname", $testing );
 
         //firstname
-        $this->processLatestEncounterCommonPatientField( $patient, $user, $source, "Firstname" );
+        $this->processLatestEncounterCommonPatientField( $patient, $user, $source, "Firstname", $testing );
 
         //middlename
-        $this->processLatestEncounterCommonPatientField( $patient, $user, $source, "Middlename" );
+        $this->processLatestEncounterCommonPatientField( $patient, $user, $source, "Middlename", $testing );
 
         //sex
-        $this->processLatestEncounterCommonPatientField( $patient,$user, $source, "Sex" );
+        $this->processLatestEncounterCommonPatientField( $patient,$user, $source, "Sex", $testing );
 
-        $testing = false;
         if( $testing ) {
-            exit();
+            exit('exit copy common encounter fields to patient');
         }
     }
 
@@ -257,6 +259,7 @@ class PatientRepository extends ArrayFieldAbstractRepository
         if( !$patient || !$fieldStr ) {
             return null;
         }
+
 
         //$fieldStr = "Lastname";
         $fieldlc = strtolower($fieldStr);

@@ -64,14 +64,14 @@ class AuthorizedUserFilterType extends AbstractType
         ));
 
         $builder->add('condition', ChoiceType::class, array(
-            'label'=>false,
+            'label' => 'Search Condition for Role filter',
             'required'=> true,
             'multiple' => false,
             'choices' => array(
                 'AND' => 'AND',
                 'OR' => 'OR',
             ),
-            'attr' => array('class' => 'combobox', 'placeholder'=>'Search Condition'),
+            'attr' => array('class' => 'combobox', 'placeholder'=>'Search Condition for Role filter'),
         ));
 
     }

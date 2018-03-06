@@ -404,6 +404,9 @@ security:
        - { path: ^/translational-research/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
        - { path: ^/translational-research/account-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
 
+       - { path: ^/translational-research/project/new/hematopathology, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/translational-research/translational-research/project/new/ap-cp, role: IS_AUTHENTICATED_ANONYMOUSLY }
+
        - { path: ^/translational-research/invoice/download-invoice-pdf/, roles: IS_AUTHENTICATED_ANONYMOUSLY, ips: [127.0.0.1, ::1] }
        - { path: ^/translational-research/invoice/download-invoice-pdf/, roles: ROLE_TRANSRES_USER }
 
