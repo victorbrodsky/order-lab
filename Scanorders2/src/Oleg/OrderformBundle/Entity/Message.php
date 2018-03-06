@@ -537,7 +537,6 @@ class Message {
     }
 
     public function __clone() {
-
         //throw new \Exception('Cloning message');
 
         if( $this->getId() ) {
@@ -738,11 +737,15 @@ class Message {
 //     * @ORM\PrePersist
 //     */
     public function setOrderdate($date=null) {
+        //exit('exit setOrderdate');
         if( $date ) {
+            //echo "date provided <br>";
             $this->orderdate = $date;
         } else {
+            //echo "date now <br>";
             $this->orderdate = new \DateTime();
         }
+        //exit('exit setOrderdate for message ID='.$this->getId());
     }
 
     /**
@@ -1755,19 +1758,45 @@ class Message {
     }
 
     //[submitted timestamp in MM/DD/YYYY HH:MM 24HR format] by SubmitterFirstName SubmitterLastName, MD
+    //NOT USED
     public function getSubmitterInfoSimpleDate() {
-        $info = $this->getOrderSimpleDateStr();
+        $info = "Undefined Date";
+        $infoDate = $this->getOrderSimpleDate();
+        if( $infoDate ) {
+            $info = $infoDate->format('m/d/Y') . " at " . $infoDate->format('H:i:s');
+        }
         if( $this->getProvider() ) {
             $info = $info . " by ".$this->getProvider()->getUsernameOptimal();
         }
         return $info;
     }
-    public function getOrderSimpleDateStr() {
-        $info = "";
-        if( $this->getOrderdate() ) {
-            $info = $this->getOrderdate()->format('m/d/Y') . " at " . $this->getOrderdate()->format('h:i a (T)');
+    //NOT USED
+    public function getOrderSimpleDate() {
+        //$info = "";
+        $date = null;
+
+        //substitute message orderdate by encounter creationdate if order date more than encounter date
+        $lastEncounterDate = null;
+        if( count($this->getEncounter()) > 0 ) {
+            $lastEncounterDate = $this->getEncounter()->last()->getCreationDate();
         }
-        return $info;
+        $orderdate = $this->getOrderdate();
+        //echo "lastEncounterDate=".$lastEncounterDate->format('m/d/Y h:i')."; orderdate=".$orderdate->format('m/d/Y h:i')."<br>";
+        if( $lastEncounterDate && $orderdate ) {
+            if( $orderdate > $lastEncounterDate ) {
+                $date = $lastEncounterDate;
+            } else {
+                $date = $orderdate;
+            }
+        }
+
+        return $date;
+
+//        if( $date ) {
+//            //$info = $date->format('m/d/Y') . " at " . $date->format('H:i:s a (T)');
+//            $info = $date->format('m/d/Y') . " at " . $date->format('H:i:s');
+//        }
+//        return $info;
     }
 
     public function getFormVersionsInfo() {

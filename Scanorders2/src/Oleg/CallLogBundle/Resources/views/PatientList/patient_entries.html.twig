@@ -123,7 +123,7 @@
                     <td>
                         {% for encounter in message.encounter %}
                             {% set encounterDate = encounter.obtainStatusField('date','valid') %}
-                            {{ encounterDate.field|date('m/d/Y',encounterDate.timezone) }} {{ encounterDate.time|date('H:i',encounterDate.timezone) }}
+                            {{ encounterDate.field|date('m/d/Y',encounterDate.timezone) }} {{ encounterDate.time|date('H:i:s',encounterDate.timezone) }}
                             <br>
                         {% endfor %}
                     </td>
@@ -132,12 +132,15 @@
                     <td>
                         {% if message.version > 1 %}
                             {% if message.editorInfos|length > 0 %}
-                                {{  message.editorInfos|last.modifiedOn|date('m/d/Y H:i') }}
+                                {#{{  message.editorInfos|last.modifiedOn|date('m/d/Y H:i') }}#}
+                                {{  message.editorInfos|last.modifiedOn|date('m/d/Y') ~ " at " ~ message.editorInfos|last.modifiedOn|date('H:i:s') }}
                             {% else %}
-                                {{ message.orderdate|date('m/d/Y H:i') }}
+                                {#{{ message.orderdate|date('m/d/Y H:i') }}#}
+                                {{ calllog_util.getOrderSimpleDateStr(message,"") }}
                             {% endif %}
                         {% else %}
-                            {{ message.orderdate|date('m/d/Y H:i') }}
+                            {#{{ message.orderdate|date('m/d/Y H:i') }}#}
+                            {{ calllog_util.getOrderSimpleDateStr(message,"") }}
                         {% endif %}
                     </td>
 

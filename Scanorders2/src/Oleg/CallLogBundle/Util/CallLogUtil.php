@@ -2183,4 +2183,57 @@ class CallLogUtil
         return $date;
     }
 
+
+    public function getSubmitterInfoSimpleDate($message) {
+        $info = $this->getOrderSimpleDateStr($message);
+        if( $message && $message->getProvider() ) {
+            $info = $info . " by ".$message->getProvider()->getUsernameOptimal();
+        }
+        return $info;
+    }
+
+    public function getOrderSimpleDateStr( $message, $delimiter = " at " ) {
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+
+        $dateStr = "Undefined Date";
+
+        if( !$message ) {
+            return $dateStr;
+        }
+
+        $date = $message->getOrderSimpleDate();
+
+        $dateTz = $userServiceUtil->convertToUserTimezone($date,$user);
+
+        if( $dateTz ) {
+            $dateStr = $dateTz->format('m/d/Y') . $delimiter . $dateTz->format('H:i:s');
+        }
+
+        return $dateStr;
+    }
+
+    public function getInitialMessage($message) {
+        $initialMessage = null;
+        $oid = $message->getOid();
+        $parameters = array();
+
+        $repository = $this->em->getRepository('OlegOrderformBundle:Message');
+        $dql = $repository->createQueryBuilder("message");
+
+        $dql->where("message.oid = :oid");
+        $parameters['oid'] = $oid;
+
+        $dql->orderBy('message.version','ASC');
+
+        $query = $this->em->createQuery($dql);
+        $query->setParameters($parameters);
+        $messages = $query->getResult();
+
+        if( count($messages) > 0 ) {
+            $initialMessage = $messages[0]; //first message
+        }
+
+        return $initialMessage;
+    }
 }

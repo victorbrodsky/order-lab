@@ -148,6 +148,7 @@ class MessageObjectType extends AbstractType
         }
 
         if( $this->keyInArrayAndTrue($this->params,'message.orderdate') ) {
+            //echo "add orderdate <br>";
             $builder->add('orderdate', DateType::class,array(
                 'widget' => 'single_text',
                 'label' => "Generation Date:",
@@ -157,6 +158,7 @@ class MessageObjectType extends AbstractType
                 'required' => false,
             ));
         }
+        //exit("formtype after orderdate");
 
         $builder->add('provider', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',

@@ -126,7 +126,7 @@
             <div id="allMessages" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
                 <div class="panel-body text-center">
                     {% for thisMessage in allMessages %}
-                        {% set thisMessageInfo = "ID "~thisMessage.getMessageOidVersion ~ " " ~ thisMessage.getSubmitterInfoSimpleDate %}
+                        {% set thisMessageInfo = "ID "~thisMessage.getMessageOidVersion ~ " " ~ calllog_util.getSubmitterInfoSimpleDate(thisMessage) %}
                         {% set thisMessageInfo = thisMessageInfo ~ " [" ~ thisMessage.getMessageStatus ~ "]" %}
                         <p>
                             <a href="{{ path('calllog_callentry_view', {'messageOid': thisMessage.oid, 'messageVersion':thisMessage.version}) }}">{{ thisMessageInfo }}</a>

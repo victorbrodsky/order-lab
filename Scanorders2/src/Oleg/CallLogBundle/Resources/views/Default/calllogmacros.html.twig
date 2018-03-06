@@ -1008,18 +1008,28 @@
 
                 {#Last Modified: add tooltip orderdate: Initially submitted: MM/DD/YYY HH:MM:SS (hours in 24 hour format)#}
                 {% if message.version > 1 %}
+                    {% set initialMessage = calllog_util.getInitialMessage(message) %}
                     <td data-toggle="tooltip"
                         data-container="body"
-                        title="Initially submitted: {{ message.orderdate|date('m/d/Y') ~ " at " ~ message.orderdate|date('H:i:s') }}">
+                        {#title="Initially submitted: {{ message.orderdate|date('m/d/Y') ~ " at " ~ message.orderdate|date('H:i:s') }}"#}
+                        title="Initially submitted: {{ calllog_util.getOrderSimpleDateStr(initialMessage) }}"
+                    >
+                        {#message.id={{ message.id }}<br>#}
+                        {#message.version={{ message.version }}<br>#}
+                        {#message.editorInfos|length={{ message.editorInfos|length }}<br>#}
                         {% if message.editorInfos|length > 0 %}
                             {{  message.editorInfos|last.modifiedOn|date('m/d/Y') ~ " at " ~ message.editorInfos|last.modifiedOn|date('H:i:s') }}
                         {% else %}
-                            {{ message.orderdate|date('m/d/Y') ~ " at " ~ message.orderdate|date('H:i:s') }}
+                            {#{{ message.orderdate|date('m/d/Y') ~ " at " ~ message.orderdate|date('H:i:s') }}#}
+                            {{ calllog_util.getOrderSimpleDateStr(message) }}
                         {% endif %}
                     </td>
                 {% else %}
                     <td>
-                        {{ message.orderdate|date('m/d/Y') ~ " at " ~ message.orderdate|date('H:i:s') }}
+                        {#message.id={{ message.id }}<br>#}
+                        {#message.version={{ message.version }}<br>#}
+                        {#{{ message.orderdate|date('m/d/Y') ~ " at " ~ message.orderdate|date('H:i:s') }}#}
+                        {{ calllog_util.getOrderSimpleDateStr(message) }}
                     </td>
                 {% endif %}
 

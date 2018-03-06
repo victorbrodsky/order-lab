@@ -160,7 +160,7 @@ class PatientController extends Controller
 
         //message fields
         $params['endpoint.system'] = true;
-        $params['message.orderdate'] = true;
+        $params['message.orderdate'] = false;   //true;
         $params['message.provider'] = true;
         $params['message.proxyuser'] = true;
         $params['message.externalIds'] = true;
@@ -302,7 +302,7 @@ class PatientController extends Controller
 
         //message fields
         $params['endpoint.system'] = true;
-        $params['message.orderdate'] = true;
+        $params['message.orderdate'] = false; //true;
         $params['message.provider'] = true;
         $params['message.proxyuser'] = true;
         $params['message.externalIds'] = false;
@@ -434,7 +434,7 @@ class PatientController extends Controller
         );
 
         $params['endpoint.system'] = true;
-        $params['message.orderdate'] = true;
+        $params['message.orderdate'] = false; //true;
         $params['message.provider'] = true;
         $params['message.proxyuser'] = true;
         $params['message.externalIds'] = false;
@@ -509,6 +509,7 @@ class PatientController extends Controller
         return $this->updatePatient($request,$id,$parameters);
     }
     public function updatePatient( $request, $id, $parameters ) {   //$datastructure, $showpath, $updatepath) {
+
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('OlegOrderformBundle:Patient')->find($id);
@@ -547,7 +548,7 @@ class PatientController extends Controller
         );
 
         $params['endpoint.system'] = true;
-        $params['message.orderdate'] = true;
+        $params['message.orderdate'] = false; //true;
         $params['message.provider'] = true;
         $params['message.proxyuser'] = true;
         $params['message.externalIds'] = false;
