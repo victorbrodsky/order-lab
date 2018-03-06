@@ -685,16 +685,44 @@ class CallEntryController extends Controller
 
         //check potential merged MRN
         if( $mergeMrn ) {
-            $mergedPatientIds = array();
-            $mergedPatients = $calllogUtil->getMergedPatients($mergeMrn);
-            foreach($mergedPatients as $mergedPatient) {
-                echo "mergedPatient=".$mergedPatient->getId()."<br>";
-                $mergedPatientIds[] = $mergedPatient->getId();
-            }
-            echo "mergedPatient count=".count($mergedPatientIds)."<br>";
-            if( count($mergedPatientIds) > 0 ) {
-                $dql->orWhere("patient.id IN (:mergeMrns)");
-                $queryParameters['mergeMrns'] = $mergedPatientIds;
+
+//            if(0) {
+//                $mergedPatientIds = array();
+//                $mergedPatients = $calllogUtil->getMergedPatients($mergeMrn);
+//                foreach ($mergedPatients as $mergedPatient) {
+//                    echo "mergedPatient=" . $mergedPatient->getId() . "<br>";
+//                    $mergedPatientIds[] = $mergedPatient->getId();
+//                }
+//                echo "mergedPatient count=" . count($mergedPatientIds) . "<br>";
+//                if (count($mergedPatientIds) > 0) {
+//                    $dql->orWhere("patient.id IN (:mergeMrns)");
+//                    $queryParameters['mergeMrns'] = $mergedPatientIds;
+//                }
+//            }
+
+            if( isset($queryParameters['keytype']) ) {
+                $mergedPatients = array();
+                $mergedPatientIds = array();
+
+                $mergeMrnKeytype = $queryParameters['keytype'];
+                $thisPatient = $em->getRepository('OlegOrderformBundle:Patient')->findByValidMrnAndMrntype($mergeMrn,$mergeMrnKeytype);
+                if( $thisPatient ) {
+                    //echo "thisPatient=".$thisPatient."<br>";
+                    $mergedPatients = $calllogUtil->getAllMergedPatients(array($thisPatient));
+                    //echo "mergedPatients=".count($mergedPatients)."<br>";
+                }
+
+                foreach ($mergedPatients as $mergedPatient) {
+                    if( $thisPatient->getId() != $mergedPatient->getId() ) {
+                        //echo "mergedPatient=" . $mergedPatient->getId() . "<br>";
+                        $mergedPatientIds[] = $mergedPatient->getId();
+                    }
+                }
+                //echo "mergedPatient count=" . count($mergedPatientIds) . "<br>";
+                if (count($mergedPatientIds) > 0) {
+                    $dql->orWhere("patient.id IN (:mergePatientIds)");
+                    $queryParameters['mergePatientIds'] = $mergedPatientIds;
+                }
             }
 
 //            $keyTypeMerge = $em->getRepository('OlegOrderformBundle:MrnType')->findOneByName("Merge ID");
@@ -715,14 +743,14 @@ class CallEntryController extends Controller
 //            }
         }
 
-        //$query = $em->createQuery($dql);
-        //$messages = $query->getResult();
 
         //$limit = 10;
         $query = $em->createQuery($dql);
         $query->setParameters($queryParameters);
 
         //echo "query=".$query->getSql()."<br>";
+        //$messages = $query->getResult();
+        //echo "messages count=".count($messages)."<br>";
 
         $res = array(
             'query' => $query,

@@ -194,7 +194,39 @@ class PatientRepository extends ArrayFieldAbstractRepository
     }
 
 
+    public function findByValidMrnAndMrntype($mrnStr, $mrntype=null) {
+        //echo "mrnStr=".$mrnStr."; mrntypeId=".$mrntype->getId()."<br>";
+        $queryParameters = array();
 
+        $dql = $this->_em->createQueryBuilder()
+            ->from('OlegOrderformBundle:Patient', 'patient')
+            ->select("patient")
+            ->leftJoin("patient.mrn", "mrn")
+            ->leftJoin("mrn.keytype", "keytype")
+            ->where("mrn.field = :mrnStr");
+
+        $queryParameters['mrnStr'] = $mrnStr;
+
+        //$mrntype=null;
+        if( $mrntype ) {
+            $dql->andWhere("keytype.id = :keytypeId");
+            $queryParameters['keytypeId'] = $mrntype->getId();
+        }
+
+        $query = $dql->getQuery();
+
+        $query->setParameters($queryParameters);
+
+        $patients = $query->getResult();
+        //echo "patient count=".count($patients)."<br>";
+
+        $patient = NULL;
+        if( count($patients) > 0 ) {
+            $patient = $patients[0];
+        }
+
+        return $patient;
+    }
 
 
     public function findByMrntypeString($mrntypeStr) {
