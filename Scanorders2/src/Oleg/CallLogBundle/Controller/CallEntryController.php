@@ -452,6 +452,7 @@ class CallEntryController extends Controller
                         $queryParameters['searchMrn'] = $searchFilter;
                         $queryParameters['keytype'] = $mrntypeFilter; //->getId()?
                         $dql->andWhere($lastnameOrMrn);
+                        $dql->andWhere("lastname.status='valid'");
                     } else {
                         //If a comma is present, treat the string to the left of the comma as the Beginning of a last name
                         // and the string to the right of the comma (if any non-space characters are present) as the Beginning of a last name.
