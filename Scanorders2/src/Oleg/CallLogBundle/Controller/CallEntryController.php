@@ -719,8 +719,8 @@ class CallEntryController extends Controller
         $query->setParameters($queryParameters);
 
         //echo "query=".$query->getSql()."<br>";
-        $messages = $query->getResult();
-        echo "messages count=".count($messages)."<br>";
+        //$messages = $query->getResult();
+        //echo "messages count=".count($messages)."<br>";
 
         $res = array(
             'query' => $query,
