@@ -688,8 +688,10 @@ class CallEntryController extends Controller
             $mergedPatientIds = array();
             $mergedPatients = $calllogUtil->getMergedPatients($mergeMrn);
             foreach($mergedPatients as $mergedPatient) {
+                echo "mergedPatient=".$mergedPatient->getId()."<br>";
                 $mergedPatientIds[] = $mergedPatient->getId();
             }
+            echo "mergedPatient count=".count($mergedPatientIds)."<br>";
             if( count($mergedPatientIds) > 0 ) {
                 $dql->orWhere("patient.id IN (:mergeMrns)");
                 $queryParameters['mergeMrns'] = $mergedPatientIds;
