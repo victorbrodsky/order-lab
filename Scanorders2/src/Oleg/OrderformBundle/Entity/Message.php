@@ -1783,7 +1783,7 @@ class Message {
         $orderdate = $this->getOrderdate();
         echo "lastEncounterDate=".$lastEncounterDate->format('m/d/Y h:i')."; orderdate=".$orderdate->format('m/d/Y h:i')."<br>";
         if( $lastEncounterDate && $orderdate ) {
-            if( $orderdate > $lastEncounterDate ) {
+            if( 0 && $orderdate > $lastEncounterDate ) {
                 $date = $lastEncounterDate;
             } else {
                 $date = $orderdate;
