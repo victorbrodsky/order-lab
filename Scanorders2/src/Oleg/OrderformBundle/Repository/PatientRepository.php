@@ -194,8 +194,8 @@ class PatientRepository extends ArrayFieldAbstractRepository
     }
 
 
-    public function findByValidMrnAndMrntype($mrnStr, $mrntype=null) {
-        //echo "mrnStr=".$mrnStr."; mrntypeId=".$mrntype->getId()."<br>";
+    public function findByValidMrnAndMrntype($mrnStr, $mrntypeId=null) {
+        //echo "mrnStr=".$mrnStr."; mrntypeId=".$mrntypeId."<br>";
         $queryParameters = array();
 
         $dql = $this->_em->createQueryBuilder()
@@ -208,9 +208,9 @@ class PatientRepository extends ArrayFieldAbstractRepository
         $queryParameters['mrnStr'] = $mrnStr;
 
         //$mrntype=null;
-        if( $mrntype ) {
+        if( $mrntypeId ) {
             $dql->andWhere("keytype.id = :keytypeId");
-            $queryParameters['keytypeId'] = $mrntype->getId();
+            $queryParameters['keytypeId'] = $mrntypeId; //$mrntype->getId();
         }
 
         $query = $dql->getQuery();

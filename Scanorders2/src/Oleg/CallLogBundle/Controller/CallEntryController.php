@@ -654,7 +654,7 @@ class CallEntryController extends Controller
                 $queryParameters['search'] = $calllogsearch;
                 //add AND type MRN Type="NYH MRN"
                 $dql->andWhere("mrn.keytype = :keytype");
-                $queryParameters['keytype'] = $defaultMrnType->getId();
+                $queryParameters['keytype'] = $defaultMrnType;  //$defaultMrnType->getId();
                 $mergeMrn = $calllogsearch;
             }
             if( $calllogsearchtype == 'Last Name' || $calllogsearchtype == 'Last Name similar to' ) {
@@ -693,7 +693,18 @@ class CallEntryController extends Controller
                 $mergeMrnKeytype = $queryParameters['keytype'];
             }
 
-            $thisPatient = $em->getRepository('OlegOrderformBundle:Patient')->findByValidMrnAndMrntype($mergeMrn,$mergeMrnKeytype);
+            //if ( strval($mergeMrnKeytype) != strval(intval($mergeMrnKeytype)) ) {
+            if( is_object($mergeMrnKeytype) ) {
+                //string
+                $mergeMrnKeytypeId = $mergeMrnKeytype->getId();
+            } else {
+                //integer
+                $mergeMrnKeytypeId = $mergeMrnKeytype;
+            }
+            //$mergeMrnKeytypeId = $mergeMrnKeytype->getId();
+            //echo "mergeMrnKeytypeId=".$mergeMrnKeytypeId."<br>";
+
+            $thisPatient = $em->getRepository('OlegOrderformBundle:Patient')->findByValidMrnAndMrntype($mergeMrn,$mergeMrnKeytypeId);
             if( $thisPatient ) {
                 //echo "thisPatient=".$thisPatient."<br>";
                 $mergedPatients = $calllogUtil->getAllMergedPatients(array($thisPatient));
@@ -707,7 +718,7 @@ class CallEntryController extends Controller
                 }
             }
             //echo "mergedPatient count=" . count($mergedPatientIds) . "<br>";
-            if (count($mergedPatientIds) > 0) {
+            if( count($mergedPatientIds) > 0 ) {
                 $dql->orWhere("patient.id IN (:mergePatientIds)");
                 $queryParameters['mergePatientIds'] = $mergedPatientIds;
             }
