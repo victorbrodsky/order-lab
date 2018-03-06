@@ -1774,8 +1774,8 @@ class Message {
     public function getOrderSimpleDate() {
 
         //use this simple orderdate. Below logic is for testing when orderdate has been updated by error before this update bug fixed
-        return $this->getOrderdate();
-        
+        //return $this->getOrderdate();
+
         $date = null;
 
         //substitute message orderdate by encounter creationdate if order date more than encounter date
@@ -1784,7 +1784,7 @@ class Message {
             $lastEncounterDate = $this->getEncounter()->last()->getCreationDate();
         }
         $orderdate = $this->getOrderdate();
-        //echo "lastEncounterDate=".$lastEncounterDate->format('m/d/Y h:i')."; orderdate=".$orderdate->format('m/d/Y h:i')."<br>";
+        echo "lastEncounterDate=".$lastEncounterDate->format('m/d/Y h:i')."; orderdate=".$orderdate->format('m/d/Y h:i')."<br>";
         if( $lastEncounterDate && $orderdate ) {
             if( $orderdate > $lastEncounterDate ) {
                 $date = $lastEncounterDate;
