@@ -376,6 +376,8 @@ class CallEntryController extends Controller
         $dql->addOrderBy("editorInfos.modifiedOn","DESC");
 
         //filter
+        $mergeMrn = null;
+
         $advancedFilter = 0;
         //$defaultAdvancedFilter = false;
         $queryParameters = array();
@@ -434,6 +436,7 @@ class CallEntryController extends Controller
         }
 
         if( $searchFilter ) {
+
             //echo "searchFilter=$searchFilter; mrntypeFilter=".$mrntypeFilter->getId()."<br>";
             if ( strval($searchFilter) != strval(intval($searchFilter)) ) {
                 //echo "lastname.field string: $searchFilter<br>";
@@ -454,6 +457,7 @@ class CallEntryController extends Controller
                         $queryParameters['keytype'] = $mrntypeFilter; //->getId()?
                         $dql->andWhere($lastnameOrMrn);
                         $dql->andWhere("lastname.status='valid'");
+                        $mergeMrn = $searchFilter;
                     } else {
                         //If a comma is present, treat the string to the left of the comma as the Beginning of a last name
                         // and the string to the right of the comma (if any non-space characters are present) as the Beginning of a last name.
@@ -475,6 +479,7 @@ class CallEntryController extends Controller
                                 $dql->andWhere($lastnameOrMrn);
                                 $dql->andWhere("lastname.status='valid'");
                                 $dql->andWhere("firstname.status='valid'");
+                                $mergeMrn = $searchFilter;
                             }
                             if( $latentLastname && !$latentFirstname ) {
                                 //echo "2: [$latentLastname]<br>";
@@ -484,6 +489,7 @@ class CallEntryController extends Controller
                                 $queryParameters['keytype'] = $mrntypeFilter; //->getId()?
                                 $dql->andWhere($lastnameOrMrn);
                                 $dql->andWhere("lastname.status='valid'");
+                                $mergeMrn = $searchFilter;
                             }
                         }
                     }
@@ -493,6 +499,7 @@ class CallEntryController extends Controller
                 //echo "integer $searchFilter<br>";
                 $dql->andWhere("mrn.field = :search");
                 $queryParameters['search'] = $searchFilter;
+                $mergeMrn = $searchFilter;
 
                 if( $mrntypeFilter ) {
                     $dql->andWhere("mrn.keytype = :keytype");
@@ -648,6 +655,7 @@ class CallEntryController extends Controller
                 //add AND type MRN Type="NYH MRN"
                 $dql->andWhere("mrn.keytype = :keytype");
                 $queryParameters['keytype'] = $defaultMrnType->getId();
+                $mergeMrn = $calllogsearch;
             }
             if( $calllogsearchtype == 'Last Name' || $calllogsearchtype == 'Last Name similar to' ) {
                 if( $metaphone ) {
@@ -675,6 +683,35 @@ class CallEntryController extends Controller
         //exit('2');
         ///////////////// EOF search in navbar /////////////////
 
+        //check potential merged MRN
+        if( $mergeMrn ) {
+            $mergedPatientIds = array();
+            $mergedPatients = $calllogUtil->getMergedPatients($mergeMrn);
+            foreach($mergedPatients as $mergedPatient) {
+                $mergedPatientIds[] = $mergedPatient->getId();
+            }
+            if( count($mergedPatientIds) > 0 ) {
+                $dql->orWhere("patient.id IN (:mergeMrns)");
+                $queryParameters['mergeMrns'] = $mergedPatientIds;
+            }
+
+//            $keyTypeMerge = $em->getRepository('OlegOrderformBundle:MrnType')->findOneByName("Merge ID");
+//            if( $keyTypeMerge ) {
+//                $dql->orWhere("mrn.field = :mergeMrn AND mrn.keytype = :mergeKeytype");
+//                //$queryParameters['mergeMrn'] = "%".$mergeMrn."%";
+//                $queryParameters['mergeMrn'] = $mergeMrn;
+//                $queryParameters['mergeKeytype'] = $keyTypeMerge->getId();
+//            }
+
+            //add keytype "Merge ID" with the same mrn
+//            $mrnMergeCriterion = "";
+//            $keyTypeMerge = $em->getRepository('OlegOrderformBundle:MrnType')->findOneByName("Merge ID");
+//            if( $keyTypeMerge ) {
+//                $keyTypeMergeId = $keyTypeMerge->getId();
+//                echo "keyTypeMergeId=".$keyTypeMergeId."<br>";
+//                $mrnMergeCriterion =  " OR (mrn.field = :searchMrn AND mrn.keytype = $keyTypeMergeId)";
+//            }
+        }
 
         //$query = $em->createQuery($dql);
         //$messages = $query->getResult();
