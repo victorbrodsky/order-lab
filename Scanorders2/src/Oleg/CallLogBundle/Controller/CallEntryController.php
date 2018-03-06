@@ -1665,6 +1665,7 @@ class CallEntryController extends Controller
         //$patientsData = $this->searchPatient( $request, true, null, false ); //testing
         $patientsData = $this->searchPatient( $request, true);
 
+        $allowCreateNewPatient = true;
         $patients = $patientsData['patients'];
         $searchedStr = $patientsData['searchStr'];
         $searchedArr[] = "(Searched for ".$searchedStr.")";
@@ -1687,6 +1688,7 @@ class CallEntryController extends Controller
                 //MRN 001 of MRN type NYH MRN appears to belong to a patient with a last name of LLL, first name of FFFF, and a MM/DD/YYYY date of birth.
                 $patientInfoStrict = $patientStrict->obtainPatientInfoShort();
                 $searchedArr[] = "<br>MRN $mrnStrict of MRN type $mrntypeStrict appears to belong to a patient $patientInfoStrict";
+                $allowCreateNewPatient = false;
             }
         }
 
@@ -1768,6 +1770,7 @@ class CallEntryController extends Controller
         $resData = array();
         $resData['patients'] = $patientsArr;
         $resData['searchStr'] = implode("; ",$searchedArr);
+        $resData['allowCreateNewPatient'] = $allowCreateNewPatient;
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -2327,6 +2330,7 @@ class CallEntryController extends Controller
         }
 
         //first check if the patient already exists
+        //TODO: this check does not work?! pass params with only mrn and mrntype
         $turnOffMetaphone = true;
         $patientsData = $this->searchPatient($request,false,null,$turnOffMetaphone);
         $patients = $patientsData['patients'];

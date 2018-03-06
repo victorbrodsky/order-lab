@@ -184,7 +184,7 @@ function addnewCalllogPatient(holderId) {
         if( data.output == "OK" ) {
 
             //console.log("patien has been created: output OK");
-            populatePatientsInfo(data.patients,creationStr,holderId,true);
+            populatePatientsInfo(data.patients,creationStr,holderId,true,null);
 
             //console.log("Patient has been created");
             //hide find patient and add new patient
@@ -560,7 +560,7 @@ function findCalllogPatient(holderId,formtype,mrntype,mrn) {
     }
 
     var singleMatch = false;
-    if( mrn && mrntype || dob && lastname ) {
+    if( (mrn && mrntype) || (dob && lastname) ) {
         singleMatch = true;
     }
 
@@ -580,6 +580,7 @@ function findCalllogPatient(holderId,formtype,mrntype,mrn) {
         var dataOk = false;
         var data = resData.patients;
         var searchedStr = resData.searchStr;
+        var allowCreateNewPatient = resData.allowCreateNewPatient;
 
         if( data ) {
             var firstKey = Object.keys(data)[0];
@@ -587,13 +588,13 @@ function findCalllogPatient(holderId,formtype,mrntype,mrn) {
                 var firstElement = data[firstKey];
                 if( firstElement && firstElement.hasOwnProperty("id") ) {
                     //console.log("patient found: searchedStr="+searchedStr);
-                    populatePatientsInfo(data, searchedStr, holderId, singleMatch);
+                    populatePatientsInfo(data, searchedStr, holderId, singleMatch, allowCreateNewPatient);
                     dataOk = true;
                 }
             }
             if( data.length == 0 ) {
                 //console.log("no patient found: searchedStr="+searchedStr);
-                populatePatientsInfo(data, searchedStr, holderId, singleMatch);
+                populatePatientsInfo(data, searchedStr, holderId, singleMatch, allowCreateNewPatient);
                 dataOk = true;
             }
         }
@@ -616,13 +617,13 @@ function callloghasNumber(myString) {
     return (/\d/.test(myString));
 }
 
-function populatePatientsInfo(patients,searchedStr,holderId,singleMatch) {
+function populatePatientsInfo(patients,searchedStr,holderId,singleMatch,allowCreateNewPatient) {
 
     var holder = getHolder(holderId);
 
     //var patLen = patients.length;
     var patLen = getPatientsLength(patients);
-    //console.log('patLen='+patLen);
+    console.log('patLen='+patLen);
 
     //clear matching patient section
     holder.find('#calllog-matching-patients').hide(_transTime);
@@ -713,7 +714,7 @@ function populatePatientsInfo(patients,searchedStr,holderId,singleMatch) {
 
     if( patLen == 0 && processed == false ) {
 
-        //console.log("No matching patient records found.");
+        console.log("No matching patient records found.");
         //"No matching patient records found." and unlock fields
         holder.find('#calllog-danger-box').html("No matching patient records found. "+searchedStr+".");
         holder.find('#calllog-danger-box').show(_transTime);
@@ -721,20 +722,24 @@ function populatePatientsInfo(patients,searchedStr,holderId,singleMatch) {
         disableAllFields(false,holderId);
 
         //un-hide/show a button called "Add New Patient Registration"
-        holder.find('#addnew_patient_button').show(_transTime);
+        if( allowCreateNewPatient ) {
+            holder.find('#addnew_patient_button').show(_transTime);
+        }
         processed = true;
     }
 
     if( processed == false && (patLen >= 1 || (!singleMatch && patLen == 1 )) ) {
 
-        //console.log("show table with found patients");
+        console.log("show table with found patients");
         //show table with found patients
         populatePatientInfo(null,false,false,holderId); //multiple patients found
         disableAllFields(false,holderId);
 
         //un-hide/show a button called "Add New Patient Registration" because no unique patient has been found
         if( patLen > 1 ) {
-            holder.find('#addnew_patient_button').show(_transTime);
+            if( allowCreateNewPatient ) {
+                holder.find('#addnew_patient_button').show(_transTime);
+            }
         }
 
         createPatientsTableCalllog(patients,holderId);
