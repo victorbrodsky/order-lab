@@ -2330,9 +2330,7 @@ class CallEntryController extends Controller
         }
 
         //first check if the patient already exists
-        //TODO: this check does not work?! pass params with only mrn and mrntype
-        //check only by mrn
-        //search again, but only by mrn
+        //check only by mrn: pass params with only mrn and mrntype
         $mrnParams = array();
         $mrnParams['mrntype'] = $mrntype;
         $mrnParams['mrn'] = $mrn;
@@ -2347,6 +2345,7 @@ class CallEntryController extends Controller
                 $output .= "MRN: " . $mrn . "<br>";
             }
 
+            $searchedArr = array();
             foreach( $patientsStrict as $patientStrict ) {
                 $mrnRes = $patientStrict->obtainStatusField('mrn', "valid");
                 $mrntypeStrict = $mrnRes->getKeytype();
@@ -2354,6 +2353,9 @@ class CallEntryController extends Controller
                 //MRN 001 of MRN type NYH MRN appears to belong to a patient with a last name of LLL, first name of FFFF, and a MM/DD/YYYY date of birth.
                 $patientInfoStrict = $patientStrict->obtainPatientInfoShort();
                 $searchedArr[] = "<br>MRN $mrnStrict of MRN type $mrntypeStrict appears to belong to a patient $patientInfoStrict";
+            }
+            if( count($searchedArr) > 0 ) {
+                $output .= implode("<br>",$searchedArr);
             }
 
             $res['patients'] = null;
