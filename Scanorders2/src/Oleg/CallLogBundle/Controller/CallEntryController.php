@@ -2331,6 +2331,38 @@ class CallEntryController extends Controller
 
         //first check if the patient already exists
         //TODO: this check does not work?! pass params with only mrn and mrntype
+        //check only by mrn
+        //search again, but only by mrn
+        $mrnParams = array();
+        $mrnParams['mrntype'] = $mrntype;
+        $mrnParams['mrn'] = $mrn;
+        $patientsDataStrict = $this->searchPatient( $request, true, $mrnParams );
+        $patientsStrict = $patientsDataStrict['patients'];
+        if( count($patientsStrict) > 0 ) {
+            $output = "Can not create a new Patient. The patient with specified MRN already exists:<br>";
+            if( $mrntype ) {
+                $output .= "MRN Type: ".$keytypeEntity."<br>";
+            }
+            if( $mrn ) {
+                $output .= "MRN: " . $mrn . "<br>";
+            }
+
+            foreach( $patientsStrict as $patientStrict ) {
+                $mrnRes = $patientStrict->obtainStatusField('mrn', "valid");
+                $mrntypeStrict = $mrnRes->getKeytype();
+                $mrnStrict = $mrnRes->getField();
+                //MRN 001 of MRN type NYH MRN appears to belong to a patient with a last name of LLL, first name of FFFF, and a MM/DD/YYYY date of birth.
+                $patientInfoStrict = $patientStrict->obtainPatientInfoShort();
+                $searchedArr[] = "<br>MRN $mrnStrict of MRN type $mrntypeStrict appears to belong to a patient $patientInfoStrict";
+            }
+
+            $res['patients'] = null;
+            $res['output'] = $output;
+            $response->setContent(json_encode($res));
+            return $response;
+        }
+
+        //search by the rest of the parameters
         $turnOffMetaphone = true;
         $patientsData = $this->searchPatient($request,false,null,$turnOffMetaphone);
         $patients = $patientsData['patients'];
@@ -2341,14 +2373,18 @@ class CallEntryController extends Controller
             if( $mrntype ) {
                 $output .= "MRN Type: ".$keytypeEntity."<br>";
             }
-            if( $mrn )
-                $output .= "MRN: ".$mrn."<br>";
-            if( $lastname )
-                $output .= "Last Name: ".$lastname."<br>";
-            if( $firstname )
-                $output .= "First Name: ".$firstname."<br>";
-            if( $dob )
-                $output .= "DOB: ".$dob."<br>";
+            if( $mrn ) {
+                $output .= "MRN: " . $mrn . "<br>";
+            }
+            if( $lastname ) {
+                $output .= "Last Name: " . $lastname . "<br>";
+            }
+            if( $firstname ) {
+                $output .= "First Name: " . $firstname . "<br>";
+            }
+            if( $dob ) {
+                $output .= "DOB: " . $dob . "<br>";
+            }
 
             $res['patients'] = null;
             $res['output'] = $output;
