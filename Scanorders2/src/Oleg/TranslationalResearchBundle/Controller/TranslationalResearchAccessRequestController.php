@@ -221,4 +221,16 @@ class TranslationalResearchAccessRequestController extends AccessRequestControll
         return parent::generatedUserApproveAction($request,$user);
     }
 
+    /**
+     * @Route("/account-confirmation/{id}/{redirectPath}/{specialty}", name="translationalresearch_account-confirmation")
+     * @Template("OlegTranslationalResearchBundle:AccessRequest:account_confirmation.html.twig")
+     * @Method({"GET", "POST"})
+     */
+    public function accountConfirmationAction(Request $request, User $user, $redirectPath, $specialty)
+    {
+
+        exit('accountConfirmationAction');
+
+    }
+
 }
