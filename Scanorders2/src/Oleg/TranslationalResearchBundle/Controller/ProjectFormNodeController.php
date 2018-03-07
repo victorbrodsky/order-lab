@@ -73,17 +73,37 @@ class ProjectFormNodeController extends ProjectController
      */
     public function newFormNodeAction(Request $request, $specialtyStr)
     {
-        if (false == $this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_ANONYMOUSLY')) { //IS_AUTHENTICATED_ANONYMOUSLY, ROLE_TRANSRES_REQUESTER
+        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER')) { //IS_AUTHENTICATED_ANONYMOUSLY, ROLE_TRANSRES_REQUESTER
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
         $transresUtil = $this->container->get('transres_util');
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
-        $cycle = "new";
 
         //$specialty is a url prefix (i.e. "new-ap-cp-project")
         $specialty = $transresUtil->getSpecialtyObject($specialtyStr);
+
+        ///////////////// check if user does not have ROLE_TRANSRES_REQUESTER and specialty role //////////////////
+//        $flushUser = false;
+//        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER') ) {
+//            $user->addRole('ROLE_TRANSRES_REQUESTER');
+//            $flushUser = true;
+//        }
+//        if( $specialty ) {
+//            $specialtyRole = $transresUtil->getSpecialtyRole($specialty);
+//            if( false == $this->get('security.authorization_checker')->isGranted($specialtyRole) ) {
+//                $user->addRole($specialtyRole);
+//                $flushUser = true;
+//            }
+//        }
+//        if( $flushUser ) {
+//            exit('flush user');
+//            //$em->flush($user);
+//        }
+        ///////////////// EOF check if user does not have ROLE_TRANSRES_REQUESTER and specialty role //////////////////
+
+        $cycle = "new";
 
         if( $transresUtil->isUserAllowedSpecialtyObject($specialty) === false ) {
             $this->get('session')->getFlashBag()->add(

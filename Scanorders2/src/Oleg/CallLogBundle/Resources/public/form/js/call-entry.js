@@ -623,7 +623,7 @@ function populatePatientsInfo(patients,searchedStr,holderId,singleMatch,allowCre
 
     //var patLen = patients.length;
     var patLen = getPatientsLength(patients);
-    console.log('patLen='+patLen);
+    //console.log('patLen='+patLen);
 
     //clear matching patient section
     holder.find('#calllog-matching-patients').hide(_transTime);
@@ -714,7 +714,7 @@ function populatePatientsInfo(patients,searchedStr,holderId,singleMatch,allowCre
 
     if( patLen == 0 && processed == false ) {
 
-        console.log("No matching patient records found.");
+        //console.log("No matching patient records found.");
         //"No matching patient records found." and unlock fields
         holder.find('#calllog-danger-box').html("No matching patient records found. "+searchedStr+".");
         holder.find('#calllog-danger-box').show(_transTime);
@@ -730,7 +730,7 @@ function populatePatientsInfo(patients,searchedStr,holderId,singleMatch,allowCre
 
     if( processed == false && (patLen >= 1 || (!singleMatch && patLen == 1 )) ) {
 
-        console.log("show table with found patients");
+        //console.log("show table with found patients");
         //show table with found patients
         populatePatientInfo(null,false,false,holderId); //multiple patients found
         disableAllFields(false,holderId);

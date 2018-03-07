@@ -51,7 +51,48 @@ class TranslationalResearchLoginSuccessHandler extends LoginSuccessHandler {
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token) {
-        return parent::onAuthenticationSuccess($request,$token);
+
+        $redirectResponse = parent::onAuthenticationSuccess($request,$token);
+
+//        if( $this->secAuth->isGranted('ROLE_TRANSRES_USER') ) {
+//            return $redirectResponse;
+//        }
+
+        $user = $token->getUser();
+        $url = $redirectResponse->getTargetUrl();
+        echo "url=".$url."<br>";
+
+        //$targetPath = $request->getSession()->get('_security.ldap_translationalresearch_firewall.target_path');
+        //$targetPath = $redirectResponse->getTargetPath();
+        //echo "targetPath=".$targetPath."<br>";
+
+        //If new project creation page "order/translational-research/project/new/" and if user does have ROLE_TRANSRES_REQUESTER and specialty role
+        // assign these minimum roles to submit a new project
+        if( strpos($url,"order/translational-research/project/new/") !== false ) {
+
+
+            $flushUser = false;
+            if( false == $this->secAuth->isGranted('ROLE_TRANSRES_REQUESTER') ) {
+                $user->addRole('ROLE_TRANSRES_REQUESTER');
+                $flushUser = true;
+            }
+//            if( $specialty ) {
+//                $specialtyRole = $transresUtil->getSpecialtyRole($specialty);
+//                if( false == $this->get('security.authorization_checker')->isGranted($specialtyRole) ) {
+//                    $user->addRole($specialtyRole);
+//                    $flushUser = true;
+//                }
+//            }
+            if( $flushUser ) {
+                exit('flush user');
+                //$em->flush($user);
+            }
+
+        }
+
+        return $redirectResponse;
+
+        //return parent::onAuthenticationSuccess($request,$token);
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception) {

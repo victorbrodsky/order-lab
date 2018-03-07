@@ -1539,56 +1539,10 @@ class AccessRequestController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             //exit('new');
 
-            //set minimum role
-            //Validate role
-//            if( count($user->getRoles()) == 0 ) {
-//                $user->addRole($this->roleUser);
-//            }
-
-//            //update username
-//            if( $originalKeytype != $user->getKeytype() && $originalPrimaryPublicUserId != $user->getPrimaryPublicUserId() ) {
-//
-//                $newUsername = $user->createUniqueUsername();
-//
-//                //validate if the user with new username does not exists
-//                //check if user already exists in DB
-//                $userManager = $this->container->get('fos_user.user_manager');
-//                $newUser = $userManager->findUserByUsername($newUsername);
-//                if( !$newUser ) {
-//
-//                }
-//
-//                $user->setUsernameForce($newUsername);
-//                $user->setUsernameCanonicalForce($newUsername);
-//            }
-
-//            $passwordNote = "";
-//            if( !$user->getPassword() && $user->getKeytype()->getName() == "Local User" ) {
-//                //exit("set password");
-//
-//                //check salt
-//                if( !$user->getSalt() ) {
-//                    $salt = rtrim(str_replace('+', '.', base64_encode(random_bytes(32))), '=');
-//                    $user->setSalt($salt);
-//                }
-//
-//                //generate random password
-//                $tokenGenerator = $this->container->get('fos_user.util.token_generator');
-//                $plainPassword = substr($tokenGenerator->generateToken(), 0, 8); // 8 chars
-//                //exit("set password=[".$plainPassword."]");
-//
-//                //encode password
-//                $encoderService = $this->container->get('security.encoder_factory');
-//                $encoder = $encoderService->getEncoder($user);
-//                $encoded = $encoder->encodePassword($plainPassword, $user->getSalt());
-//                //exit("set encoded=[".$encoded."]");
-//
-//                $user->setPassword($encoded);
-//
-//                $passwordNote = "Temporary Password (without single quotes): '".$plainPassword."'".$newline;
-//                $passwordNote = $passwordNote . "Please change your password in 'My Profile' page".$newline;
-//            }
             $passwordNote = $this->setUserPassword($user);
+
+            //add user observer role
+            $user->addRole("ROLE_USERDIRECTORY_OBSERVER");
 
             //$em->persist($user);
             //$em->flush($user);
@@ -1680,14 +1634,16 @@ class AccessRequestController extends Controller
         //unlock the user
         $user->setLocked(false);
 
-        $em->flush();
-
-        $lockedStr = "Unlocked";
-
-
         ///////////////// Password ///////////////////
         $passwordNote = $this->setUserPassword($user);
         ///////////////// EOF Password //////////////////
+
+        //add user observer role
+        $user->addRole("ROLE_USERDIRECTORY_OBSERVER");
+
+        $em->flush();
+
+        $lockedStr = "Unlocked";
 
         /////////////////// send emailNotification ///////////////////
         $emailNotification = true;
@@ -1732,11 +1688,9 @@ class AccessRequestController extends Controller
 
         //Event Log
         $event = "Manually created account ".$user." for ".$sitenameFull." has been approved by ".$currentUser."; Status: $lockedStr"."<br>";
-        $event = $event. "<br>" . $passwordNote; //for testing only. Disable for prod to hide plain password in the event log.
+        //$event = $event. "<br>" . $passwordNote; //for testing only. Disable for prod to hide plain password in the event log.
         $userSecUtil = $this->get('user_security_utility');
         $userSecUtil->createUserEditEvent($this->siteName,$event,$currentUser,$user,$request,'User Record Approved');
-
-
 
         return $this->redirectToRoute($this->siteName.'_generated_users');
     }
