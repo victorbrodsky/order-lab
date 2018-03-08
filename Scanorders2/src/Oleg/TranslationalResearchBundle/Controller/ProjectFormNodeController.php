@@ -73,7 +73,8 @@ class ProjectFormNodeController extends ProjectController
      */
     public function newFormNodeAction(Request $request, $specialtyStr)
     {
-        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER')) { //IS_AUTHENTICATED_ANONYMOUSLY, ROLE_TRANSRES_REQUESTER
+        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_USER')) { //ROLE_USER, IS_AUTHENTICATED_ANONYMOUSLY, ROLE_TRANSRES_REQUESTER
+            //exit('NOT GRANTED: new project '.$specialtyStr);
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
@@ -81,28 +82,43 @@ class ProjectFormNodeController extends ProjectController
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
-        echo $user->getId().": Display Name=".$user->getEmail()."<br>";
-
         //$specialty is a url prefix (i.e. "new-ap-cp-project")
         $specialty = $transresUtil->getSpecialtyObject($specialtyStr);
 
         ///////////////// check if user does not have ROLE_TRANSRES_REQUESTER and specialty role //////////////////
-//        $flushUser = false;
-//        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER') ) {
-//            $user->addRole('ROLE_TRANSRES_REQUESTER');
-//            $flushUser = true;
-//        }
-//        if( $specialty ) {
-//            $specialtyRole = $transresUtil->getSpecialtyRole($specialty);
-//            if( false == $this->get('security.authorization_checker')->isGranted($specialtyRole) ) {
-//                $user->addRole($specialtyRole);
-//                $flushUser = true;
-//            }
-//        }
-//        if( $flushUser ) {
-//            exit('flush user');
-//            //$em->flush($user);
-//        }
+        $flushUser = false;
+        $roleMsgArr = array();
+        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER') ) {
+            $user->addRole('ROLE_TRANSRES_REQUESTER');
+            $flushUser = true;
+            $roleMsgArr[] = "ROLE_TRANSRES_REQUESTER" . " role has been added";
+        }
+        if( $specialty ) {
+            $specialtyRole = $transresUtil->getSpecialtyRole($specialty);
+            if( false == $this->get('security.authorization_checker')->isGranted($specialtyRole) ) {
+                $user->addRole($specialtyRole);
+                $flushUser = true;
+                $roleMsgArr[] = $specialtyRole . " role has been added";
+            }
+        }
+        if( $flushUser ) {
+            //exit('flush user');
+            $em->flush($user);
+
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                "Permission to create a new $specialty project has been automatically granted by the system. Your activities will be recorded."
+            );
+
+            ///////////////// Event Log /////////////////
+            $sitename = $this->container->getParameter('translationalresearch.sitename');
+            $userSecUtil = $this->container->get('user_security_utility');
+            $eventType = "User record updated";
+            $eventMsg = "User information of " . $user . " has been automatically changed to be able to access a new $specialtyStr project page:" . "<br>";
+            $eventMsg = $eventMsg . implode("<br>",$roleMsgArr);
+            $userSecUtil->createUserEditEvent($sitename, $eventMsg, $user, $user, $request, $eventType);
+            ///////////////// EOF Event Log /////////////////
+        }
         ///////////////// EOF check if user does not have ROLE_TRANSRES_REQUESTER and specialty role //////////////////
 
         $cycle = "new";
@@ -112,6 +128,7 @@ class ProjectFormNodeController extends ProjectController
                 'warning',
                 "You don't have a permission to access the $specialty project specialty"
             );
+            //exit('NO SPECIALTY: new project '.$specialtyStr);
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 

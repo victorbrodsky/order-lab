@@ -92,37 +92,37 @@
 
     {{ form_start(form) }}
 
-    {#{{ formmacros.field(form.keytype) }}#}
-    {#{{ formmacros.field(form.primaryPublicUserId) }}#}
+        {#{{ formmacros.field(form.keytype) }}#}
+        {#{{ formmacros.field(form.primaryPublicUserId) }}#}
 
-    {#{% if form.username is defined %}#}
-        {#{{ formmacros.field(form.username) }}#}
-    {#{% endif %}#}
+        {#{% if form.username is defined %}#}
+            {#{{ formmacros.field(form.username) }}#}
+        {#{% endif %}#}
 
-    {% for info in form.infos %}
-        {{ formmacros.field(info.displayName) }}
-        {{ formmacros.field(info.salutation) }}
-        {{ formmacros.field(info.firstName) }}
-        {{ formmacros.field(info.middleName) }}
-        {{ formmacros.field(info.lastName) }}
-        {{ formmacros.field(info.suffix) }}
-        {{ usermacros.emailPhoneField(info.email,cycle,'email',"") }}
-        {{ usermacros.emailPhoneField(info.preferredPhone,cycle,'phone',"") }}
-        {{ formmacros.field_notempty(info.initials,cycle) }}
-    {% endfor %}
+        {% for info in form.infos %}
+            {{ formmacros.field(info.displayName) }}
+            {{ formmacros.field(info.salutation) }}
+            {{ formmacros.field(info.firstName) }}
+            {{ formmacros.field(info.middleName) }}
+            {{ formmacros.field(info.lastName) }}
+            {{ formmacros.field(info.suffix) }}
+            {{ usermacros.emailPhoneField(info.email,cycle,'email',"") }}
+            {{ usermacros.emailPhoneField(info.preferredPhone,cycle,'phone',"") }}
+            {{ formmacros.field_notempty(info.initials,cycle) }}
+        {% endfor %}
 
 
-    {#<p>#}
-        {#<button class="btn btn-success" type="button">Update</button>#}
-    {#</p>#}
-    {% if form.update is defined %}
-        <p>
-            {{ form_widget(form.update) }}
-        </p>
-    {% endif %}
+        {#<p>#}
+            {#<button class="btn btn-success" type="button">Update</button>#}
+        {#</p>#}
+        {% if form.update is defined %}
+            <p>
+                {{ form_widget(form.update) }}
+            </p>
+        {% endif %}
 
-    {#{{ form_end(form,{'render_rest': false}) }}#}
-    {{ form_end(form) }}
+    {{ form_end(form,{'render_rest': false}) }}
+    {#{{ form_end(form) }}#}
 
     <br>
     <p>

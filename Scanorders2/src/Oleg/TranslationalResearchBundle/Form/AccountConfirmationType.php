@@ -43,8 +43,8 @@ class AccountConfirmationType extends AbstractType
             //'allow_add' => true,
             //'allow_delete' => true,
             //'by_reference' => true,
-            'prototype' => true,
-            'prototype_name' => '__infos__',
+            //'prototype' => true,
+            //'prototype_name' => '__infos__',
         ));
 
         $builder->add('update', SubmitType::class, array(
@@ -62,7 +62,7 @@ class AccountConfirmationType extends AbstractType
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\User',
             'form_custom_value' => null,
-            //'csrf_protection' => false,
+            'csrf_protection' => false,
         ));
     }
 

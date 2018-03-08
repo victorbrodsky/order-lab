@@ -59,13 +59,11 @@ class TranslationalResearchLoginSuccessHandler extends LoginSuccessHandler {
         //get original target path
         $indexLastRoute = '_security.'.$this->firewallName.'.target_path';
         $targetUrl = $request->getSession()->get($indexLastRoute);
-        //exit("exit targetUrl=".$targetUrl);
 
         $redirectResponse = parent::onAuthenticationSuccess($request,$token);
 
         $url = $redirectResponse->getTargetUrl();
-        echo "targetUrl=".$targetUrl."; url=".$url."<br>";
-        //exit("exit url=".$url);
+        //echo "targetUrl=".$targetUrl."; url=".$url."<br>";
 
         //IF: new project creation page "order/translational-research/project/new/" and if user does have ROLE_TRANSRES_REQUESTER and specialty role
         //THEN: assign minimum role for new project page "ROLE_TRANSRES_REQUESTER"
@@ -96,7 +94,6 @@ class TranslationalResearchLoginSuccessHandler extends LoginSuccessHandler {
 
                 ///////////////// Event Log /////////////////
                 $userSecUtil = $this->container->get('user_security_utility');
-                $specialtyStr = basename($url);
                 $eventType = "User record updated";
                 $eventMsg = "User information of " . $user . " has been automatically changed to be able to access a new $specialtyStr project page:" . "<br>";
                 $eventMsg = $eventMsg . implode("<br>",$roleMsgArr);
@@ -104,17 +101,21 @@ class TranslationalResearchLoginSuccessHandler extends LoginSuccessHandler {
                 ///////////////// EOF Event Log /////////////////
 
                 ///////////////// Redirect to account confirmation page /////////////////
-                $specialtyStr = basename($url);
                 $redirectPath = "translationalresearch_project_new";
                 $confirmationUrl = $this->router->generate('translationalresearch_account_confirmation',
                     array(
-                        'id' => $user->getId(),
+                        //'id' => $user->getId(),
                         'redirectPath' => $redirectPath,
                         'specialty' => $specialtyStr
                     )
                 );
                 //echo "set redirect to $confirmationUrl <br>";
                 //exit('exit '.$confirmationUrl);
+
+                $this->get('session')->getFlashBag()->add(
+                    'notice',
+                    "Permission to create a new $specialtyObject project has been automatically granted by the system. Your activities will be recorded."
+                );
 
                 $response = new RedirectResponse($confirmationUrl);
                 return $response;
@@ -128,9 +129,8 @@ class TranslationalResearchLoginSuccessHandler extends LoginSuccessHandler {
         return $redirectResponse;
     }
 
-    //overwrite parent basic user chack for minimum role
+    //overwrite parent basic user check for minimum role
     public function checkBasicRole($user,$targetUrl=null) {
-        //exit("transreq checkBasicRole: targetUrl=".$targetUrl);
         if( strpos($targetUrl,"order/translational-research/project/new/") !== false ) {
             //allow new users to continue to the new project page
             return;

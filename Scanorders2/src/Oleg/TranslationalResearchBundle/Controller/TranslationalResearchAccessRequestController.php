@@ -223,11 +223,11 @@ class TranslationalResearchAccessRequestController extends AccessRequestControll
     }
 
     /**
-     * @Route("/account-confirmation/{id}/{redirectPath}/{specialty}", name="translationalresearch_account_confirmation")
+     * @Route("/account-confirmation/{redirectPath}/{specialty}", name="translationalresearch_account_confirmation")
      * @Template("OlegTranslationalResearchBundle:AccessRequest:account_confirmation.html.twig")
      * @Method({"GET", "POST"})
      */
-    public function accountConfirmationAction(Request $request, User $user, $redirectPath, $specialty)
+    public function accountConfirmationAction(Request $request, $redirectPath, $specialty)
     {
         //echo "user=".$user."; redirectPath=".$redirectPath."; specialty=".$specialty."<br>";
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
@@ -235,10 +235,9 @@ class TranslationalResearchAccessRequestController extends AccessRequestControll
         }
 
         $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $sitename = $this->container->getParameter('translationalresearch.sitename');
         $cycle = "new";
-
-        $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId());
 
         $params = array(
             'cycle' => $cycle,
@@ -246,42 +245,21 @@ class TranslationalResearchAccessRequestController extends AccessRequestControll
             'user' => $user,
         );
         $form = $this->createForm(AccountConfirmationType::class, $user, array(
-            //'disabled' => false,
-            //'action' => $this->generateUrl( $this->container->getParameter('employees.sitename').'_create_user' ),
-            //'method' => 'POST',
             'form_custom_value' => $params,
         ));
 
         $form->handleRequest($request);
 
-//        if( $form->isSubmitted() ) {
-//            echo "form submitted<br>";
-//        }
-//        if( $form->isValid() ) {
-//            echo "form valid<br>";
-//        }
 
-        //if( $form->isSubmitted() && $form->isValid() ) {
-        if( $form->isSubmitted() ) {
+        if( $form->isSubmitted() && $form->isValid() ) {
 
-            echo $user->getId().": Display Name=".$user->getEmail()."<br>";
-            
+            //echo $user->getId().": Display Name=".$user->getEmail()."<br>";
             //exit('accountConfirmationAction submit');
 
-            $em->persist($user);
-            $em->flush($user);
-
-            echo $user->getId().": Display Name=".$user->getEmail()."<br>";
-
-            $updateduser = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId());
-            echo $updateduser->getId().": Display Name=".$updateduser->getEmail()."<br>";
-
-            //exit('accountConfirmationAction submit');
+            $em->flush();
 
             return $this->redirectToRoute($redirectPath, array('specialtyStr' => $specialty));
         }
-
-        //exit('accountConfirmationAction start form');
 
         return array(
             'user' => $user,

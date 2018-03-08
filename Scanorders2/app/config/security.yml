@@ -406,7 +406,7 @@ security:
 
        - { path: ^/translational-research/project/new/hematopathology, role: ROLE_USER }
        - { path: ^/translational-research/project/new/ap-cp, role: ROLE_USER }
-       - { path: ^/translational-research/account-confirmation/, role: ROLE_USER }
+#       - { path: ^/translational-research/account-confirmation/, role: ROLE_USER }
 
        - { path: ^/translational-research/invoice/download-invoice-pdf/, roles: IS_AUTHENTICATED_ANONYMOUSLY, ips: [127.0.0.1, ::1] }
        - { path: ^/translational-research/invoice/download-invoice-pdf/, roles: ROLE_TRANSRES_USER }
