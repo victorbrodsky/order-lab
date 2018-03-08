@@ -81,6 +81,8 @@ class ProjectFormNodeController extends ProjectController
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
+        echo $user->getId().": Display Name=".$user->getEmail()."<br>";
+
         //$specialty is a url prefix (i.e. "new-ap-cp-project")
         $specialty = $transresUtil->getSpecialtyObject($specialtyStr);
 

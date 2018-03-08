@@ -39,12 +39,17 @@ class AccountConfirmationType extends AbstractType
         $builder->add('infos', CollectionType::class, array(
             'entry_type' => UserInfoType::class,
             'label' => false,
-            //'required' => false,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'by_reference' => false,
+            'required' => true,
+            //'allow_add' => true,
+            //'allow_delete' => true,
+            //'by_reference' => true,
             'prototype' => true,
             'prototype_name' => '__infos__',
+        ));
+
+        $builder->add('update', SubmitType::class, array(
+            'label' => "Update",
+            'attr' => array('class' => 'btn btn-warning')
         ));
 
     }
@@ -56,7 +61,8 @@ class AccountConfirmationType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Oleg\UserdirectoryBundle\Entity\User',
-            'form_custom_value' => null
+            'form_custom_value' => null,
+            //'csrf_protection' => false,
         ));
     }
 

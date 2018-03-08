@@ -230,9 +230,7 @@ class TranslationalResearchAccessRequestController extends AccessRequestControll
     public function accountConfirmationAction(Request $request, User $user, $redirectPath, $specialty)
     {
         //echo "user=".$user."; redirectPath=".$redirectPath."; specialty=".$specialty."<br>";
-
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
-            //exit('exit: no role ROLE_TRANSRES_USER');
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
@@ -240,7 +238,7 @@ class TranslationalResearchAccessRequestController extends AccessRequestControll
         $sitename = $this->container->getParameter('translationalresearch.sitename');
         $cycle = "new";
 
-        //$form = $this->createInvoiceForm($invoice,$cycle,$transresRequest);
+        $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId());
 
         $params = array(
             'cycle' => $cycle,
@@ -256,10 +254,29 @@ class TranslationalResearchAccessRequestController extends AccessRequestControll
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+//        if( $form->isSubmitted() ) {
+//            echo "form submitted<br>";
+//        }
+//        if( $form->isValid() ) {
+//            echo "form valid<br>";
+//        }
+
+        //if( $form->isSubmitted() && $form->isValid() ) {
+        if( $form->isSubmitted() ) {
+
+            echo $user->getId().": Display Name=".$user->getEmail()."<br>";
+            
             //exit('accountConfirmationAction submit');
 
+            $em->persist($user);
             $em->flush($user);
+
+            echo $user->getId().": Display Name=".$user->getEmail()."<br>";
+
+            $updateduser = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId());
+            echo $updateduser->getId().": Display Name=".$updateduser->getEmail()."<br>";
+
+            //exit('accountConfirmationAction submit');
 
             return $this->redirectToRoute($redirectPath, array('specialtyStr' => $specialty));
         }
