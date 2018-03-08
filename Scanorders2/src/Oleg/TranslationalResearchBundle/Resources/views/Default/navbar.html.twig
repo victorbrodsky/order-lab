@@ -174,7 +174,11 @@
                         </li>
                     {#{% endif %}#}
 
-                    {% if is_granted('ROLE_TRANSRES_BILLING_ADMIN') or is_granted('ROLE_TRANSRES_EXECUTIVE') %}
+                    {% if
+                        is_granted('ROLE_TRANSRES_BILLING_ADMIN') or
+                        is_granted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') or
+                        is_granted('ROLE_TRANSRES_EXECUTIVE_APCP')
+                    %}
                         {% macro createFilterType( filterTypes ) %}
                             {% for filterType in filterTypes %}
                                 {% if filterType == "[[hr]]" %}

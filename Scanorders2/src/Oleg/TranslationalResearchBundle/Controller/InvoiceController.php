@@ -891,7 +891,7 @@ class InvoiceController extends Controller
      */
     public function downloadRecentPdfAction(Request $request, $oid)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
@@ -908,7 +908,11 @@ class InvoiceController extends Controller
             throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
         }
 
-        if( false === $transresRequestUtil->isInvoiceBillingContact($invoice,$user) ) {
+        if(
+            false === $transresRequestUtil->isInvoiceBillingContact($invoice,$user) &&
+            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') &&
+            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP')
+        ) {
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
