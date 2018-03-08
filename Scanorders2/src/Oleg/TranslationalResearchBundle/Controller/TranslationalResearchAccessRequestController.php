@@ -227,7 +227,7 @@ class TranslationalResearchAccessRequestController extends AccessRequestControll
      * @Template("OlegTranslationalResearchBundle:AccessRequest:account_confirmation.html.twig")
      * @Method({"GET", "POST"})
      */
-    public function accountConfirmationAction(Request $request, $redirectPath, $specialty)
+    public function accountConfirmationAction(Request $request, $redirectPath, $specialty=null)
     {
         //echo "user=".$user."; redirectPath=".$redirectPath."; specialty=".$specialty."<br>";
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
@@ -258,7 +258,11 @@ class TranslationalResearchAccessRequestController extends AccessRequestControll
 
             $em->flush();
 
-            return $this->redirectToRoute($redirectPath, array('specialtyStr' => $specialty));
+            if( $specialty ) {
+                return $this->redirectToRoute($redirectPath, array('specialtyStr' => $specialty));
+            } else {
+                return $this->redirectToRoute($redirectPath);
+            }
         }
 
         return array(
