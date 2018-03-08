@@ -12,10 +12,19 @@
     </h4>
     <br>
 
+    <p>
+        If you collaborating with Hematopathology group click on "Create New Hemaptopathology Project", <br>
+        for all others click on the "Create New AP/CP Project". <br>
+        To see the current list of the Hematopathology group click
+        <a target="_blank" href="https://pathology.weill.cornell.edu/clinical-services/hematopathology/immunopathology">here</a>.
+    </p>
+    <br>
+
 
     {% for specialty in specialties %}
         <p>
-            <a class="btn btn-primary" href="{{ path(translationalresearch_sitename~'_project_new',{'specialtyStr':specialty.getAbbreviation()}) }}">{{ specialty.getName() }}</a>
+            <a class="btn btn-primary" href="{{ path(translationalresearch_sitename~'_project_new',{'specialtyStr':specialty.getAbbreviation()}) }}"
+            >Create New {{ specialty.getName() }} Project</a>
         </p>
     {% endfor %}
 

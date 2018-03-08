@@ -2328,7 +2328,7 @@ class TransResUtil
         return $emails;
     }
 
-    public function getTransResProjectSpecialties() {
+    public function getTransResProjectSpecialties( $userAllowed=true ) {
         $user = $this->secTokenStorage->getToken()->getUser();
 
         $specialties = $this->em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->findBy(
@@ -2340,9 +2340,14 @@ class TransResUtil
         $allowedSpecialties = array();
 
         foreach($specialties as $specialty) {
-            if( $this->isUserAllowedSpecialtyObject($specialty, $user) ) {
+            if( $userAllowed ) {
+                if( $this->isUserAllowedSpecialtyObject($specialty, $user) ) {
+                    $allowedSpecialties[] = $specialty;
+                }
+            } else {
                 $allowedSpecialties[] = $specialty;
             }
+
         }
 
         return $allowedSpecialties;
@@ -3093,5 +3098,54 @@ class TransResUtil
         //print_r($resArr);
 
         return $resArr;
+    }
+
+    //check if user does not have ROLE_TRANSRES_REQUESTER and specialty role
+    public function addMinimumRolesToCreateProject( $specialtyObject=null ) {
+        $user = $this->secTokenStorage->getToken()->getUser();
+        $flushUser = false;
+        $roleAddedArr = array();
+        if( false == $this->secAuth->isGranted('ROLE_TRANSRES_REQUESTER') ) {
+            $user->addRole('ROLE_TRANSRES_REQUESTER');
+            $flushUser = true;
+            $roleAddedArr[] = "ROLE_TRANSRES_REQUESTER";
+        }
+        if( $specialtyObject ) {
+            $specialtyRole = $this->getSpecialtyRole($specialtyObject);
+            if( false == $this->secAuth->isGranted($specialtyRole) ) {
+                $user->addRole($specialtyRole);
+                $flushUser = true;
+                $roleAddedArr[] = $specialtyRole;
+            }
+            $specialtyStr = $specialtyObject."";
+        } else {
+            $specialtyStr = null;
+        }
+        if( $flushUser ) {
+            //exit('flush user');
+            $this->em->flush($user);
+
+            $this->container->get('session')->getFlashBag()->add(
+                'notice',
+                "Permission to create a new $specialtyStr project has been automatically granted by the system. Your activities will be recorded."
+            );
+
+            ///////////////// Event Log /////////////////
+            $sitename = $this->container->getParameter('translationalresearch.sitename');
+            $userSecUtil = $this->container->get('user_security_utility');
+            $eventType = "User record updated";
+            $eventMsg = "User information of " . $user . " has been automatically changed to be able to access a new $specialtyStr project page" . "<br>";
+
+            if( count($roleAddedArr) > 0 ) {
+                $eventMsg = $eventMsg . "Added roles:" . implode(", ", $roleAddedArr);
+            }
+
+            $userSecUtil->createUserEditEvent($sitename, $eventMsg, $user, $user, null, $eventType);
+            ///////////////// EOF Event Log /////////////////
+
+            return $roleAddedArr;
+        }
+
+        return null;
     }
 }

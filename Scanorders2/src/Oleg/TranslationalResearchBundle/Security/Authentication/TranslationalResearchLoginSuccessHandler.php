@@ -65,46 +65,67 @@ class TranslationalResearchLoginSuccessHandler extends LoginSuccessHandler {
         $url = $redirectResponse->getTargetUrl();
         //echo "targetUrl=".$targetUrl."; url=".$url."<br>";
 
-        //IF: new project creation page "order/translational-research/project/new/" and if user does have ROLE_TRANSRES_REQUESTER and specialty role
+        //IF: new project creation page "order/translational-research/project/new" and if user does have ROLE_TRANSRES_REQUESTER and specialty role
         //THEN: assign minimum role for new project page "ROLE_TRANSRES_REQUESTER"
         //THEN: redirect to confirmation page
         //THEN: from confirmation page redirect to new project page
-        if( $targetUrl == $url && strpos($url,"order/translational-research/project/new/") !== false ) {
+        if( $targetUrl == $url && strpos($url,"order/translational-research/project/new") !== false ) {
 
-            if( false == $this->secAuth->isGranted('ROLE_TRANSRES_REQUESTER') ) {
-
-                ///////////////// update user roles ////////////////////
-                $transresUtil = $this->container->get('transres_util');
-                $specialtyStr = basename($url);
+            //get specialty
+            $transresUtil = $this->container->get('transres_util');
+            $specialtyObject = null;
+            $specialtyStr = basename($url);
+            //echo "specialtyStr=".$specialtyStr."<br>";
+            if( $specialtyStr == "hematopathology" || $specialtyStr == "ap-cp" ) {
                 $specialtyObject = $transresUtil->getSpecialtyObject($specialtyStr);
+            }
 
-                if( $specialtyObject ) {
-                    $specialtyRole = $transresUtil->getSpecialtyRole($specialtyObject);
-                    if( false == $this->secAuth->isGranted($specialtyRole) ) {
-                        $user->addRole($specialtyRole);
-                        $roleMsgArr[] = $specialtyRole . " role has been added";
-                    }
-                }
+            //check if user does not have ROLE_TRANSRES_REQUESTER and specialty role
+            $transresUtil = $this->container->get('transres_util');
+            $roleAddedArr = $transresUtil->addMinimumRolesToCreateProject($specialtyObject);
 
-                $user->addRole('ROLE_TRANSRES_REQUESTER');
-                $roleMsgArr[] = "ROLE_TRANSRES_REQUESTER" . " role has been added";
+            //if( false == $this->secAuth->isGranted('ROLE_TRANSRES_REQUESTER') ) {
+            //if roles has been added then redirect to account confirmation page
+            if( count($roleAddedArr) > 0 ) {
 
-                $em->flush($user);
+//                ///////////////// update user roles ////////////////////
+//                $transresUtil = $this->container->get('transres_util');
+//                $specialtyObject = null;
+//                $specialtyStr = basename($url);
+//                echo "specialtyStr=".$specialtyStr."<br>";
+//                if( $specialtyStr == "hematopathology" || $specialtyStr == "ap-cp" ) {
+//                    $specialtyObject = $transresUtil->getSpecialtyObject($specialtyStr);
+//                }
+//                if( $specialtyObject ) {
+//                    $specialtyRole = $transresUtil->getSpecialtyRole($specialtyObject);
+//                    if( false == $this->secAuth->isGranted($specialtyRole) ) {
+//                        $user->addRole($specialtyRole);
+//                        $roleMsgArr[] = $specialtyRole . " role has been added";
+//                    }
+//                }
+//
+//                $user->addRole('ROLE_TRANSRES_REQUESTER');
+//                $roleMsgArr[] = "ROLE_TRANSRES_REQUESTER" . " role has been added";
+//
+//                $em->flush($user);
+
+                //check if user does not have ROLE_TRANSRES_REQUESTER and specialty role
+                //$transresUtil = $this->container->get('transres_util');
+                //$roleAddedArr = $transresUtil->addMinimumRolesToCreateProject($specialtyObject);
                 ///////////////// EOF update user roles ////////////////////
 
                 ///////////////// Event Log /////////////////
-                $userSecUtil = $this->container->get('user_security_utility');
-                $eventType = "User record updated";
-                $eventMsg = "User information of " . $user . " has been automatically changed to be able to access a new $specialtyStr project page:" . "<br>";
-                $eventMsg = $eventMsg . implode("<br>",$roleMsgArr);
-                $userSecUtil->createUserEditEvent($this->siteName, $eventMsg, $user, $user, $request, $eventType);
+//                $userSecUtil = $this->container->get('user_security_utility');
+//                $eventType = "User record updated";
+//                $eventMsg = "User information of " . $user . " has been automatically changed to be able to access a new $specialtyStr project page:" . "<br>";
+//                $eventMsg = $eventMsg . implode("<br>",$roleMsgArr);
+//                $userSecUtil->createUserEditEvent($this->siteName, $eventMsg, $user, $user, $request, $eventType);
                 ///////////////// EOF Event Log /////////////////
 
                 ///////////////// Redirect to account confirmation page /////////////////
                 $redirectPath = "translationalresearch_project_new";
                 $confirmationUrl = $this->router->generate('translationalresearch_account_confirmation',
                     array(
-                        //'id' => $user->getId(),
                         'redirectPath' => $redirectPath,
                         'specialty' => $specialtyStr
                     )
@@ -112,10 +133,10 @@ class TranslationalResearchLoginSuccessHandler extends LoginSuccessHandler {
                 //echo "set redirect to $confirmationUrl <br>";
                 //exit('exit '.$confirmationUrl);
 
-                $this->get('session')->getFlashBag()->add(
-                    'notice',
-                    "Permission to create a new $specialtyObject project has been automatically granted by the system. Your activities will be recorded."
-                );
+//                $this->container->get('session')->getFlashBag()->add(
+//                    'notice',
+//                    "Permission to create a new $specialtyObject project has been automatically granted by the system. Your activities will be recorded."
+//                );
 
                 $response = new RedirectResponse($confirmationUrl);
                 return $response;
@@ -131,7 +152,7 @@ class TranslationalResearchLoginSuccessHandler extends LoginSuccessHandler {
 
     //overwrite parent basic user check for minimum role
     public function checkBasicRole($user,$targetUrl=null) {
-        if( strpos($targetUrl,"order/translational-research/project/new/") !== false ) {
+        if( strpos($targetUrl,"order/translational-research/project/new") !== false ) {
             //allow new users to continue to the new project page
             return;
         }
