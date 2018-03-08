@@ -18,6 +18,7 @@
 namespace Oleg\TranslationalResearchBundle\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Oleg\TranslationalResearchBundle\Form\AccountConfirmationType;
 use Oleg\UserdirectoryBundle\Controller\AuthorizedUserController;
 use Oleg\UserdirectoryBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
@@ -222,15 +223,98 @@ class TranslationalResearchAccessRequestController extends AccessRequestControll
     }
 
     /**
-     * @Route("/account-confirmation/{id}/{redirectPath}/{specialty}", name="translationalresearch_account-confirmation")
+     * @Route("/account-confirmation/{id}/{redirectPath}/{specialty}", name="translationalresearch_account_confirmation")
      * @Template("OlegTranslationalResearchBundle:AccessRequest:account_confirmation.html.twig")
      * @Method({"GET", "POST"})
      */
     public function accountConfirmationAction(Request $request, User $user, $redirectPath, $specialty)
     {
+        //echo "user=".$user."; redirectPath=".$redirectPath."; specialty=".$specialty."<br>";
 
-        exit('accountConfirmationAction');
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
+            //exit('exit: no role ROLE_TRANSRES_USER');
+            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+        }
 
+        $em = $this->getDoctrine()->getManager();
+        $sitename = $this->container->getParameter('translationalresearch.sitename');
+        $cycle = "new";
+
+        //$form = $this->createInvoiceForm($invoice,$cycle,$transresRequest);
+
+        $params = array(
+            'cycle' => $cycle,
+            'em' => $em,
+            'user' => $user,
+        );
+        $form = $this->createForm(AccountConfirmationType::class, $user, array(
+            //'disabled' => false,
+            //'action' => $this->generateUrl( $this->container->getParameter('employees.sitename').'_create_user' ),
+            //'method' => 'POST',
+            'form_custom_value' => $params,
+        ));
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            //exit('accountConfirmationAction submit');
+
+            $em->flush($user);
+
+            return $this->redirectToRoute($redirectPath, array('specialtyStr' => $specialty));
+        }
+
+        //exit('accountConfirmationAction start form');
+
+        return array(
+            'user' => $user,
+            'form' => $form->createView(),
+            'title' => "Profile Details for ".$user,
+            'cycle' => $cycle,
+            'sitename' => $sitename,
+            'redirectPath' => $redirectPath,
+            'specialty' => $specialty
+        );
     }
+
+//    public function createAccountConfirmationForm( $invoice, $cycle, $transresRequest=null ) {
+//
+//        $em = $this->getDoctrine()->getManager();
+//        $user = $this->get('security.token_storage')->getToken()->getUser();
+//
+//        $params = array(
+//            'cycle' => $cycle,
+//            'em' => $em,
+//            'user' => $user,
+//            'invoice' => $invoice,
+//            'statuses' => $transresRequestUtil->getInvoiceStatuses(),
+//            'principalInvestigators' => $principalInvestigators,
+//            //'piEm' => $piEm,
+//            'SecurityAuthChecker' => $this->get('security.authorization_checker'),
+//        );
+//
+//        if( $cycle == "new" ) {
+//            $disabled = false;
+//        }
+//
+//        if( $cycle == "show" ) {
+//            $disabled = true;
+//        }
+//
+//        if( $cycle == "edit" ) {
+//            $disabled = false;
+//        }
+//
+//        if( $cycle == "download" ) {
+//            $disabled = true;
+//        }
+//
+//        $form = $this->createForm(InvoiceType::class, $invoice, array(
+//            'form_custom_value' => $params,
+//            'disabled' => $disabled,
+//        ));
+//
+//        return $form;
+//    }
 
 }

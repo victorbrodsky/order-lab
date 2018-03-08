@@ -78,6 +78,10 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
         $userUtil = new UserUtil();
         //$secUtil = $this->container->get('user_security_utility');
 
+        //I should be redirected to the URL I was trying to visit after login.
+        $indexLastRoute = '_security.'.$this->firewallName.'.target_path';
+        $lastRoute = $request->getSession()->get($indexLastRoute);
+
         $options['sitename'] = $this->siteName;
 
         //echo "userdirectory: employees authentication success: Success. User=".$user.", setCreatedby=".$user->getCreatedby()."<br>";
@@ -119,11 +123,12 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 
         //detect if the user was first time logged in by ldap: assign role UNAPPROVED user
         //all users must have at least an OBSERVER role
-        if( !$this->secAuth->isGranted($this->roleUser)  ) {
-            //echo "assign role UNAPPROVED user <br>";
-            //exit('UNAPPROVED user');
-            $user->addRole($this->roleUnapproved);
-        }
+//        if( !$this->secAuth->isGranted($this->roleUser)  ) {
+//            //echo "assign role UNAPPROVED user <br>";
+//            //exit('UNAPPROVED user');
+//            $user->addRole($this->roleUnapproved);
+//        }
+        $this->checkBasicRole($user,$lastRoute);
 
         if( $this->secAuth->isGranted($this->roleUnapproved) ) {
             $options['eventtype'] = 'Unapproved User Login Attempt';
@@ -152,10 +157,6 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 
         //$response = new RedirectResponse($this->router->generate($this->siteName.'_home'));
         //return $response;
-
-        //I should be redirected to the URL I was trying to visit after login.
-        $indexLastRoute = '_security.'.$this->firewallName.'.target_path';
-        $lastRoute = $request->getSession()->get($indexLastRoute);
 
         $loginpos = strpos($lastRoute, '/login');
         $nopermpos = strpos($lastRoute, '/no-permission');
@@ -208,6 +209,14 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 
         return $response;
 
+    }
+
+    public function checkBasicRole($user,$targetUrl=null) {
+        if( !$this->secAuth->isGranted($this->roleUser)  ) {
+            //echo "assign role UNAPPROVED user <br>";
+            //exit('UNAPPROVED user');
+            $user->addRole($this->roleUnapproved);
+        }
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)

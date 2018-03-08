@@ -52,51 +52,86 @@ class TranslationalResearchLoginSuccessHandler extends LoginSuccessHandler {
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token) {
 
+        //exit("onAuthenticationSuccess");
+
+        $em = $this->em;
+        $user = $token->getUser();
+
+        //get original target path
+        $indexLastRoute = '_security.'.$this->firewallName.'.target_path';
+        $targetUrl = $request->getSession()->get($indexLastRoute);
+        //exit("exit targetUrl=".$targetUrl);
+
+        //if( strpos($targetUrl,"order/translational-research/project/new/") !== false ) {
+//            $user->addRole('ROLE_TRANSRES_REQUESTER');
+//            $em->flush($user);
+            //disable verification !$this->secAuth->isGranted($this->roleUser)
+        //}
+
         $redirectResponse = parent::onAuthenticationSuccess($request,$token);
 
 //        if( $this->secAuth->isGranted('ROLE_TRANSRES_USER') ) {
 //            return $redirectResponse;
 //        }
 
-        $user = $token->getUser();
         $url = $redirectResponse->getTargetUrl();
-        echo "url=".$url."<br>";
-        //exit("exit");
+        echo "targetUrl=".$targetUrl."; url=".$url."<br>";
+        //exit("exit url=".$url);
 
         //$targetPath = $request->getSession()->get('_security.ldap_translationalresearch_firewall.target_path');
         //$targetPath = $redirectResponse->getTargetPath();
         //echo "targetPath=".$targetPath."<br>";
 
-        //If new project creation page "order/translational-research/project/new/" and if user does have ROLE_TRANSRES_REQUESTER and specialty role
-        // assign these minimum roles to submit a new project
-        if( strpos($url,"order/translational-research/project/new/") !== false ) {
+        //If: new project creation page "order/translational-research/project/new/" and if user does have ROLE_TRANSRES_REQUESTER and specialty role
+        //THEN: assign minimum role for new project page "ROLE_USER" - general system role
+        //IF: user does not have Last Name, First Name, email, phone number
+        //THEN: redirect to confirmation page
+        //THEN: from confirmation page redirect to new project page
+        if( $targetUrl == $url && strpos($url,"order/translational-research/project/new/") !== false ) {
 
             if( false == $this->secAuth->isGranted('ROLE_TRANSRES_REQUESTER') ) {
 
-//                $user->addRole('ROLE_TRANSRES_REQUESTER');
-//                $roleMsgArr[] = "ROLE_TRANSRES_REQUESTER" . " role has been added";
-//
-//                //Event Log
-//                $userSecUtil = $this->container->get('user_security_utility');
-//                $specialtyStr = basename($url);
-//                $eventType = "User record updated";
-//                $eventMsg = "User information of " . $user . " has been automatically changed to be able to access a new project page:" . "<br>";
-//                $eventMsg = $eventMsg . "New project for $specialtyStr specialty" . "<br>";
-//                $eventMsg = $eventMsg . "ROLE_TRANSRES_REQUESTER" . " role has been added";
-//                $userSecUtil->createUserEditEvent($this->siteName, $eventMsg, $user, $user, $request, $eventType);
+                $transresUtil = $this->container->get('transres_util');
+                $specialtyStr = basename($url);
+                $specialtyObject = $transresUtil->getSpecialtyObject($specialtyStr);
+
+                if( $specialtyObject ) {
+                    $specialtyRole = $transresUtil->getSpecialtyRole($specialtyObject);
+                    if( false == $this->secAuth->isGranted($specialtyRole) ) {
+                        $user->addRole($specialtyRole);
+                        $roleMsgArr[] = $specialtyRole . " role has been added";
+                    }
+                }
+
+                $user->addRole('ROLE_TRANSRES_REQUESTER');
+
+                $em->flush($user);
+
+                $roleMsgArr[] = "ROLE_TRANSRES_REQUESTER" . " role has been added";
+
+                //Event Log
+                $userSecUtil = $this->container->get('user_security_utility');
+                $specialtyStr = basename($url);
+                $eventType = "User record updated";
+                $eventMsg = "User information of " . $user . " has been automatically changed to be able to access a new $specialtyStr project page:" . "<br>";
+                //$eventMsg = $eventMsg . "New project for $specialtyStr specialty" . "<br>";
+                $eventMsg = $eventMsg . "ROLE_TRANSRES_REQUESTER" . " role has been added";
+                $userSecUtil->createUserEditEvent($this->siteName, $eventMsg, $user, $user, $request, $eventType);
 
                 $specialtyStr = basename($url);
                 $redirectPath = "translationalresearch_project_new";
-                $confirmationUrl = $this->router->generate('translationalresearch_account-confirmation',
+                $confirmationUrl = $this->router->generate('translationalresearch_account_confirmation',
                     array(
                         'id' => $user->getId(),
                         'redirectPath' => $redirectPath,
                         'specialty' => $specialtyStr
                     )
                 );
+
                 echo "set redirect to $confirmationUrl <br>";
-                $response = new RedirectResponse($confirmationUrl);
                 //exit('exit '.$confirmationUrl);
+
+                $response = new RedirectResponse($confirmationUrl);
                 return $response;
             }
 
@@ -191,6 +226,17 @@ class TranslationalResearchLoginSuccessHandler extends LoginSuccessHandler {
         //return $redirectResponse;
 
         //return parent::onAuthenticationSuccess($request,$token);
+    }
+
+    //overwrite parent basic user chack for minimum role
+    public function checkBasicRole($user,$targetUrl=null) {
+        //exit("transreq checkBasicRole: targetUrl=".$targetUrl);
+        if( strpos($targetUrl,"order/translational-research/project/new/") !== false ) {
+            //allow new users to continue to the new project page
+            return;
+        }
+        //parent (general) check
+        parent::checkBasicRole($user,$targetUrl);
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception) {
