@@ -62,7 +62,6 @@ class DashboardController extends Controller
         //$values = array(19, 26, 55);
 
         $chartsArray = array();
-        $invoicesInfosArr = array();
 
         $projects = $this->getProjectPis($filterform);
 
@@ -76,7 +75,6 @@ class DashboardController extends Controller
 
             foreach ($projects as $project) {
                 $invoicesInfos = $transresUtil->getInvoicesInfosByProject($project);
-                $invoicesInfosArr[] = $invoicesInfos;
                 $pis = $project->getPrincipalInvestigators();
                 foreach ($pis as $pi) {
                     $userName = $pi->getUsernameOptimal();
