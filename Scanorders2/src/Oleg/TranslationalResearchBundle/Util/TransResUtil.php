@@ -3148,4 +3148,26 @@ class TransResUtil
 
         return null;
     }
+
+    public function getNumberOfFundedRequests( $project ) {
+        $repository = $this->em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
+        $dql =  $repository->createQueryBuilder("request");
+        $dql->select('request');
+        $dql->leftJoin("request.project", "project");
+
+        $dql->where("project.id=:projectId");
+        $dql->andWhere('request.fundedAccountNumber IS NOT NULL');
+
+        $parameters = array("projectId"=>$project->getId());
+
+        $query = $dql->getQuery();
+
+        $query->setParameters($parameters);
+
+        $requests = $query->getResult();
+
+        $count = count($requests);
+
+        return $count;
+    }
 }

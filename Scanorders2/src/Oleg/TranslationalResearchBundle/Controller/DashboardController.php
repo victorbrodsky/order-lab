@@ -20,7 +20,8 @@ class DashboardController extends Controller
 
     /**
      * @Route("/pi-level/", name="translationalresearch_dashboard_pilevel")
-     * @Route("/funded-level/", name="translationalresearch_dashboard_fundedlevel")
+     * @Route("/project-level/", name="translationalresearch_dashboard_projectlevel")
+     * @Route("/invoice-level/", name="translationalresearch_dashboard_invoicelevel")
      * @Template("OlegTranslationalResearchBundle:Dashboard:dashboard.html.twig")
      */
     public function piLevelAction( Request $request ) {
@@ -61,6 +62,7 @@ class DashboardController extends Controller
         //$values = array(19, 26, 55);
 
         $chartsArray = array();
+        $invoicesInfosArr = array();
 
         $projects = $this->getProjectPis($filterform);
 
@@ -70,8 +72,11 @@ class DashboardController extends Controller
             $title = "Dashboard: PI Level";
             $piProjectCountArr = array();
             $piTotalArr = array();
+            $piRequestsArr = array();
 
             foreach ($projects as $project) {
+                $invoicesInfos = $transresUtil->getInvoicesInfosByProject($project);
+                $invoicesInfosArr[] = $invoicesInfos;
                 $pis = $project->getPrincipalInvestigators();
                 foreach ($pis as $pi) {
                     $userName = $pi->getUsernameOptimal();
@@ -85,13 +90,23 @@ class DashboardController extends Controller
                     $piProjectCountArr[$userName] = $count;
 
                     //Total($) per PI
-                    $invoicesInfos = $transresUtil->getInvoicesInfosByProject($project);
+                    //$invoicesInfos = $transresUtil->getInvoicesInfosByProject($project);
                     if (isset($piTotalArr[$userName])) {
                         $total = $piTotalArr[$userName] + $invoicesInfos['total'];
                     } else {
                         $total = $invoicesInfos['total'];
                     }
                     $piTotalArr[$userName] = $total;
+
+                    //#Requests per PI
+                    //$requestsCount = count($project->getRequests());
+                    $requestsCount = $transresUtil->getNumberOfFundedRequests($project);
+                    if (isset($piRequestsArr[$userName])) {
+                        $total = $piRequestsArr[$userName] + $requestsCount;
+                    } else {
+                        $total = $requestsCount;
+                    }
+                    $piRequestsArr[$userName] = $total;
                 }
             }
 
@@ -101,9 +116,13 @@ class DashboardController extends Controller
             //Total per PI
             $chartsArray = $this->addChart( $chartsArray, $piTotalArr, "Total($) of Projects per PI");
 
+            //We likes to see which funded PI”s are using the TRP lab,
+            // so we can try to capture a (Top Ten PI’s) and the percent of services they requested from TRP lab.
+            $chartsArray = $this->addChart( $chartsArray, $piRequestsArr, "Number of Funded Requests per PI");
+
         }
 
-        if( $routeName == "translationalresearch_dashboard_fundedlevel" ) {
+        if( $routeName == "translationalresearch_dashboard_projectlevel" ) {
             $title = "Dashboard: Project Level";
             $layoutArray['title'] = "Number of Funded vs Un-Funded Projects";
             $nameValueArr = array();
@@ -151,6 +170,26 @@ class DashboardController extends Controller
         }
 
 
+        //Lastly, we would like to capture in a pie chart
+        // the Totals (Billed – Paid – Outstanding) by either percentage or Total values.
+        if( $routeName == "translationalresearch_dashboard_invoicelevel" ) {
+            $invoiceDataArr = array();
+            $total = 0;
+            $paid = 0;
+            $due = 0;
+            foreach($projects as $project) {
+                $invoicesInfos = $transresUtil->getInvoicesInfosByProject($project);
+                $total = $total + $invoicesInfos['total'];
+                $paid = $paid + $invoicesInfos['paid'];
+                $due = $due + $invoicesInfos['due'];
+            }
+
+            $invoiceDataArr['Total Billed($)'] = $total;
+            $invoiceDataArr['Paid($)'] = $paid;
+            $invoiceDataArr['Outstanding($)'] = $due;
+
+            $chartsArray = $this->addChart( $chartsArray, $invoiceDataArr, "Billed – Paid – Outstanding");
+        }
 
         return array(
             'infos' => $infos,
