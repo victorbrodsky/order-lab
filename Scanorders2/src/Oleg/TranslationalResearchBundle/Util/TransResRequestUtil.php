@@ -244,23 +244,25 @@ class TransResRequestUtil
             'entityId' => $entity->getId(),
         );
 
-        $results = $formNodeUtil->getFormNodeValueByFormnodeAndReceivingmapper($fieldFormNode,$entityMapper,true);
-
         $resArr = array();
-        foreach( $results as $result ) {
-            $arraySectionIndex = $result->getArraySectionIndex();
-            //echo "result ID= ".$result->getId()." <br>";
-            //$formNodeValue = $formNodeUtil->processFormNodeValue($fieldFormNode,$result,$result->getValue(),true);
-            //echo "formNodeValue= $formNodeValue <br>";
-            //$dropdownObject = $formNodeUtil->getReceivingObject($fieldFormNode,$result->getId());
-            //echo "dropdownObject ID= ".$dropdownObject->getId()." <br>";
-            $dropdownObject = $this->em->getRepository('OlegTranslationalResearchBundle:RequestCategoryTypeList')->find($result->getValue());
-            //echo "category=".$dropdownObject."<br>";
-            $thisRes = array(
-                'arraySectionIndex'=>$arraySectionIndex,
-                'dropdownObject'=>$dropdownObject
-            );
-            $resArr[] = $thisRes;
+
+        $results = $formNodeUtil->getFormNodeValueByFormnodeAndReceivingmapper($fieldFormNode,$entityMapper,true);
+        if( $results ) {
+            foreach ($results as $result) {
+                $arraySectionIndex = $result->getArraySectionIndex();
+                //echo "result ID= ".$result->getId()." <br>";
+                //$formNodeValue = $formNodeUtil->processFormNodeValue($fieldFormNode,$result,$result->getValue(),true);
+                //echo "formNodeValue= $formNodeValue <br>";
+                //$dropdownObject = $formNodeUtil->getReceivingObject($fieldFormNode,$result->getId());
+                //echo "dropdownObject ID= ".$dropdownObject->getId()." <br>";
+                $dropdownObject = $this->em->getRepository('OlegTranslationalResearchBundle:RequestCategoryTypeList')->find($result->getValue());
+                //echo "category=".$dropdownObject."<br>";
+                $thisRes = array(
+                    'arraySectionIndex' => $arraySectionIndex,
+                    'dropdownObject' => $dropdownObject
+                );
+                $resArr[] = $thisRes;
+            }
         }
 
         return $resArr;

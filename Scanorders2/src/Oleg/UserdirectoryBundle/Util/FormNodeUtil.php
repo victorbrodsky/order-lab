@@ -132,7 +132,7 @@ class FormNodeUtil
 
         //$key = $formNode->getId();
         //$formValue = $data['formnode'][$key];
-        echo $formNode. ": " .$formNode->getId().": formValue=" . $formValue . "<br>";
+        //echo $formNode. ": " .$formNode->getId().": formValue=" . $formValue . "<br>";
 
 //        if( $formValue === 0 ) {
 //            exit("value is zero");
@@ -152,11 +152,11 @@ class FormNodeUtil
         if( is_array($formValue) ) {
 
             if( array_key_exists('arraysectioncount', $formValue) ) {
-                echo $formNode.": ".$formNodeObjectName.": formValue is arraysectioncount <br>";
+                //echo $formNode.": ".$formNodeObjectName.": formValue is arraysectioncount <br>";
                 //record section array index including parent index: 0-0, 0-1 (array section 1 (index 0) includes two array sections (indexes 0 and 1))
                 $this->createArraysectionListRecord($formNode, $formValue, $holderEntity, $testing);
             } else {
-                echo $formNodeObjectName.": formValue is regular array <br>";
+                //echo $formNodeObjectName.": formValue is regular array <br>";
                 foreach( $formValue as $thisFormValue ) {
                     $this->createFormNodeListRecord($formNode, $thisFormValue, $holderEntity, $testing);
                 }
@@ -451,7 +451,7 @@ class FormNodeUtil
     }
     public function createSingleFormNodeListRecord( $formNode, $formValue, $holderEntity, $noflush=false, $params=null ) {
 
-        echo "createSingleFormNodeListRecord: formnode-".$formNode->getId().": formValue=" . $formValue ."<br>";
+//        echo "createSingleFormNodeListRecord: formnode-".$formNode->getId().": formValue=" . $formValue ."<br>";
 //        if( $params ) {
 //            echo "params:<br>";
 //            echo "arraySectionIndex=".$params['arraySectionIndex']."; arraySectionId=" . $params['arraySectionId'] ."<br>";
@@ -467,7 +467,7 @@ class FormNodeUtil
 
             $newListElement = $this->getUniqueFormNodeListRecord($formNode,$holderEntity);
             if( $newListElement ) {
-                echo $formNode.": (isEditable) formValue=".$formValue."<br>";
+                //echo $formNode.": (isEditable) formValue=".$formValue."<br>";
                 //if value is null => still update this value
                 //if( isset($formValue) ) {
                     $newListElement->setValue($formValue);
@@ -478,7 +478,7 @@ class FormNodeUtil
                     $this->em->flush($newListElement); //testing
                 }
 
-                echo "Editable => return existing listelement <br>";
+                //echo "Editable => return existing listelement <br>";
                 return $newListElement;
             }
 
@@ -2238,6 +2238,12 @@ class FormNodeUtil
             return null;
         }
 
+        $formNodeType = $formNode->getType();
+        if( $formNodeType == 'disabled' || $formNodeType == 'draft' ) {
+            return null;
+        }
+
+//        echo "formNode=".$formNode."<br>";
 //        $class = new \ReflectionClass($object);
 //        $className = $class->getShortName();          //ObjectTypeText
 //        $classNamespace = $class->getNamespaceName(); //Oleg\UserdirectoryBundle\Entity
@@ -3200,7 +3206,7 @@ class FormNodeUtil
 
         //Link all "Other" to $otherIssueNode
         if(1) {
-            echo "<br>Processing 'Other Issue':<br>";
+            //echo "<br>Processing 'Other Issue':<br>";
             $this->setMessageCategoryListLink("Other", $otherIssueFormNode, "Microbiology");
             $this->setMessageCategoryListLink("Other", $otherIssueFormNode, "Coagulation");
             $this->setMessageCategoryListLink("Other", $otherIssueFormNode, "Hematology");
