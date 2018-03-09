@@ -166,6 +166,23 @@ class FilterType extends AbstractType
             'attr' => array('class' => 'combobox', 'placeholder'=>'Funded vs Non-Funded'),
         ));
 
+        $builder->add('searchProjectType', EntityType::class, array(
+            'class' => 'OlegTranslationalResearchBundle:ProjectTypeList',
+            'label'=> false,
+            'required'=> false,
+            'multiple' => false,
+            'attr' => array('class'=>'combobox combobox-width submit-on-enter-field', 'placeholder'=>'Search by Project Type'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->orderBy("list.orderinlist","ASC")
+                    ->setParameters( array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
+            },
+        ));
+
 //        $builder->add('completed', CheckboxType::class, array(
 //            'required'=>false,
 //            'label' => 'Completed',

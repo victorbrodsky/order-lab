@@ -153,6 +153,7 @@ class ProjectController extends Controller
         $searchIrbNumber = $filterform['searchIrbNumber']->getData();
         $fundingNumber = $filterform['fundingNumber']->getData();
         $fundingType = $filterform['fundingType']->getData();
+        $searchProjectType = $filterform['searchProjectType']->getData();
 //        $archived = $filterform['completed']->getData();
 //        $complete = $filterform['review']->getData();
 //        $interviewee = $filterform['missinginfo']->getData();
@@ -230,11 +231,18 @@ class ProjectController extends Controller
         }
 
         //////////////// get Projects IDs with the form node filter ////////////////
+        if( $searchProjectType ) {
+            $projectTypeIds = $transresUtil->getProjectIdsFormNodeByFieldName($searchProjectType->getId(),"Project Type");
+            $dql->andWhere("project.id IN (:projectTypeIds)");
+            $dqlParameters["projectTypeIds"] = $projectTypeIds;
+            $advancedFilter++;
+        }
         if( $searchTitle ) {
             $titleIds = $transresUtil->getProjectIdsFormNodeByFieldName($searchTitle,"Title");
             //$dql->andWhere("project.id IN (".implode(",",$titleIds).")");
             $dql->andWhere("project.id IN (:titleIds)");
             $dqlParameters["titleIds"] = $titleIds;
+            $advancedFilter++;
         }
         if( $searchIrbNumber ) {
             $irbnumberIds = $transresUtil->getProjectIdsFormNodeByFieldName($searchIrbNumber,"IRB Number");
@@ -277,7 +285,6 @@ class ProjectController extends Controller
                 $principalInvestigatorsIdsArr[] = $principalInvestigator->getId();
             }
             $dqlParameters["principalInvestigators"] = $principalInvestigatorsIdsArr; //implode(",",$principalInvestigatorsIdsArr);
-            $advancedFilter++;
         }
 
         if( $submitter ) {

@@ -98,7 +98,8 @@ class TransResFormNodeUtil
         $objectTypeCheckbox = $formNodeUtil->getObjectTypeByName('Form Field - Checkbox');
         $objectTypeDate = $formNodeUtil->getObjectTypeByName('Form Field - Full Date');
 
-        $objectTypeDropDownAllowNewEntries = $formNodeUtil->getObjectTypeByName('Form Field - Dropdown Menu - Allow Multiple Selections - Allow New Entries');
+        //$objectTypeDropDownAllowNewEntries = $formNodeUtil->getObjectTypeByName('Form Field - Dropdown Menu - Allow Multiple Selections - Allow New Entries');
+        $objectTypeDropDownAllowNewEntries = $formNodeUtil->getObjectTypeByName('Form Field - Dropdown Menu - Allow New Entries');
         if( !$objectTypeDropDownAllowNewEntries ) {
             exit('object type not found by name='.'Form Field - Dropdown Menu - Allow Multiple Selections - Allow New Entries');
         }

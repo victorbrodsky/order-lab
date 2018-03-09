@@ -13,7 +13,7 @@
     <br>
 
 
-    {% if transresRequest %}
+    {% if transresRequest and is_granted('ROLE_TRANSRES_BILLING_ADMIN') %}
         <p>
             <a class="btn btn-default" href="{{ path('translationalresearch_invoice_new', {'id': transresRequest.id}) }}">Create a new invoice</a>
         </p>
@@ -194,7 +194,7 @@
         </tbody>
     </table>
 
-    {% if transresRequest %}
+    {% if transresRequest and is_granted('ROLE_TRANSRES_BILLING_ADMIN') %}
         <br>
         <p>
             <a class="btn btn-default" href="{{ path('translationalresearch_invoice_new', {'id': transresRequest.id}) }}">Create a new invoice</a>

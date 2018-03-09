@@ -57,15 +57,19 @@ class RequestController extends Controller
      */
     public function newFormNodeAction(Request $request, Project $project=null)
     {
-        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER')) {
-            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
-        }
-
         $transResFormNodeUtil = $this->get('transres_formnode_util');
         $transresRequestUtil = $this->get('transres_request_util');
         $transresUtil = $this->get('transres_util');
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
+
+        if(
+            false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER') &&
+            $transresUtil->isProjectRequester($project) === false
+        ) {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
 
         $cycle = "new";
         $formnode = false;
@@ -240,14 +244,7 @@ class RequestController extends Controller
      */
     public function editAction(Request $request, TransResRequest $transresRequest)
     {
-        if(
-            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER') &&
-            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
-        ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
-        }
-
-        $transResFormNodeUtil = $this->get('transres_formnode_util');
+        //$transResFormNodeUtil = $this->get('transres_formnode_util');
         $transresRequestUtil = $this->container->get('transres_request_util');
         $transresUtil = $this->container->get('transres_util');
         $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -265,6 +262,14 @@ class RequestController extends Controller
         //$testing = true;
 
         $project = $transresRequest->getProject();
+
+        if(
+            false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER') &&
+            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN') &&
+            $transresUtil->isProjectRequester($project) === false
+        ) {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
 
         if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
             $this->get('session')->getFlashBag()->add(
@@ -475,7 +480,7 @@ class RequestController extends Controller
         $updatedDataResults = new ArrayCollection();
 
         if( $data == null ) {
-            exit('Table order data is null.');
+            //exit('Table order data is null.');
             //throw new \Exception( 'Table order data is null.' );
             return $updatedDataResults;
         }
@@ -677,14 +682,6 @@ class RequestController extends Controller
      */
     public function showAction(Request $request, TransResRequest $transresRequest)
     {
-        if(
-            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') &&
-            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER') &&
-            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
-        ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
-        }
-
         $transresUtil = $this->container->get('transres_util');
         $transresRequestUtil = $this->container->get('transres_request_util');
         //$em = $this->getDoctrine()->getManager();
@@ -692,6 +689,17 @@ class RequestController extends Controller
 
         $cycle = "show";
         $project = $transresRequest->getProject();
+
+        if(
+            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') &&
+            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP') &&
+            false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER') &&
+            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN') &&
+            $transresUtil->isProjectRequester($project) === false
+        ) {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
 
         if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
             $this->get('session')->getFlashBag()->add(
@@ -976,6 +984,10 @@ class RequestController extends Controller
         } else {
             $showOnlyMyProjects = true;
         }
+        if( $submitter ) {
+            $showOnlyMyProjects = false;
+        }
+        //echo 'showOnlyMyProjects='.$showOnlyMyProjects."<br>";
 
         //////////////// get Requests IDs with the form node filter ////////////////
         $ids = array();
@@ -1005,7 +1017,17 @@ class RequestController extends Controller
                 $filterTypeDone = true;
             }
 
-            if( $filterType == "My Requests" ) {
+//            if( $filterType == "My Requests" ) {
+//                //exit('start filtering '.$filterType);
+//                return $this->redirectToRoute(
+//                    'translationalresearch_request_index_filter',
+//                    array(
+//                        'filter[submitter]' => $user->getId(),
+//                        'title' => $filterType,
+//                    )
+//                );
+//            }
+            if( $filterType == "My Submitted Requests" ) {
                 //exit('start filtering '.$filterType);
                 return $this->redirectToRoute(
                     'translationalresearch_request_index_filter',
@@ -1015,6 +1037,20 @@ class RequestController extends Controller
                     )
                 );
             }
+            if( $filterType == "Requests for My Projects" ) {
+                //exit('start filtering '.$filterType);
+                //where I'm a project's requester
+                $filterTypeDone = true;
+                $showOnlyMyProjects = true;
+//                return $this->redirectToRoute(
+//                    'translationalresearch_request_index_filter',
+//                    array(
+//                        'filter[submitter]' => $user->getId(),
+//                        'title' => $filterType,
+//                    )
+//                );
+            }
+
             if( $filterType == "All AP/CP Requests" ) {
                 $projectSpecialtyObject = $transresUtil->getSpecialtyObject("ap-cp");
                 return $this->redirectToRoute(
@@ -1263,7 +1299,7 @@ class RequestController extends Controller
             );
 
             $dqlParameters["userId"] = $user->getId();
-            $filterTitle = "My Requests, where I am a requester directly or where I am a project's requester";
+            $filterTitle = "Requests for My Project (where I am a requester directly or where I am a project's requester)";
         }
 
 //        if( $projectSpecialty ) {

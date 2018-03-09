@@ -700,7 +700,11 @@ class TransResRequestUtil
         $transResFormNodeUtil = $this->container->get('transres_formnode_util');
 
         //1) is_granted('ROLE_TRANSRES_REQUESTER')
-        if( $this->secAuth->isGranted('ROLE_TRANSRES_REQUESTER') === false && $transresUtil->isAdminOrPrimaryReviewer() === false ) {
+        if(
+            $transresUtil->isProjectRequester($project) === false &&
+            $this->secAuth->isGranted('ROLE_TRANSRES_REQUESTER') === false &&
+            $transresUtil->isAdminOrPrimaryReviewer() === false
+        ) {
             return -1;
         }
 
@@ -1881,7 +1885,7 @@ class TransResRequestUtil
             $allowAPCP = true;
         }
 
-        $filterTypes = array('My Requests');
+        $filterTypes = array('My Submitted Requests','Requests for My Projects');
 
         if( $transresUtil->isAdminOrPrimaryReviewerOrExecutive() === false ) {
             return $filterTypes;

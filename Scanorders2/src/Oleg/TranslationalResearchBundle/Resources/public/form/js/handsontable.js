@@ -683,6 +683,10 @@ function transresBarcodeParser( rowNumber, barcodeStr ) {
 function validateHandsonTable() {
     console.log("validateHandsonTable");
 
+    if( !_sotable ) {
+        return true;
+    }
+
     var countRow = _sotable.countRows();
     console.log("countRow="+countRow);
     for( var row=0; row<countRow-1; row++ ) { //for each row (except the last one)

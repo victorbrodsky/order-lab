@@ -609,7 +609,7 @@ class FormNodeUtil
         $dql->where('list.entityName = :entityName AND list.entityNamespace = :entityNamespace');
         $dql->andWhere('list.formNode = :formNodeId');
 
-        //echo "entityNamespace=".$mapper['entityNamespace']."; entityName=".$mapper['entityName']."; formNodeId=".$formNode->getId()."<br>";
+        //echo "value=[".$value."]: entityNamespace=".$mapper['entityNamespace']."; entityName=".$mapper['entityName']."; formNodeId=".$formNode->getId()."<br>";
         $queryParameters = array(
             'entityName' => $mapper['entityName'],  //"TransResRequest",
             'entityNamespace' => $mapper['entityNamespace'],    //"Oleg\\TranslationalResearchBundle\\Entity",

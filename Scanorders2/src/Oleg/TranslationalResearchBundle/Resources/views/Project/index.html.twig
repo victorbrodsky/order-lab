@@ -33,7 +33,7 @@
                     {{ form_widget(filterform.searchId) }}
                 </div>
                 <div class="col-xs-4">
-                    {{ form_widget(filterform.searchTitle) }}
+                    {{ form_widget(filterform.principalInvestigators, {'attr': {'placeholder': 'Principal Investigators'}}) }}
                 </div>
             </div>
 
@@ -75,7 +75,7 @@
                             {{ form_widget(filterform.searchIrbNumber) }}
                         </div>
                         <div class="col-xs-4">
-                            {{ form_widget(filterform.principalInvestigators, {'attr': {'placeholder': 'Principal Investigators'}}) }}
+                            {{ form_widget(filterform.searchTitle) }}
                         </div>
                         <div class="col-xs-4">
                             {{ form_widget(filterform.submitter, {'attr': {'placeholder': 'Submitter'}}) }}
@@ -91,6 +91,7 @@
                             {{ form_widget(filterform.fundingType) }}
                         </div>
                         <div class="col-xs-4">
+                            {{ form_widget(filterform.searchProjectType) }}
                         </div>
                     </div>
 

@@ -1218,6 +1218,10 @@ class AccessRequestController extends Controller
         if( $search ) {
             $searchStr = "user.primaryPublicUserId LIKE " . "'%" . $search . "%'";
             $searchStr = $searchStr . " OR " . "infos.email LIKE " . "'%" . $search . "%'";
+            $searchStr = $searchStr . " OR " . "infos.lastName LIKE " . "'%" . $search . "%'";
+            $searchStr = $searchStr . " OR " . "infos.firstName LIKE " . "'%" . $search . "%'";
+            $searchStr = $searchStr . " OR " . "infos.displayName LIKE " . "'%" . $search . "%'";
+            $searchStr = $searchStr . " OR " . "infos.preferredPhone LIKE " . "'%" . $search . "%'";
 
             $dql->andWhere($searchStr);
         }

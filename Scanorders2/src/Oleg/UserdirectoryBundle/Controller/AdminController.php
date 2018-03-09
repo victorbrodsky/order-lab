@@ -21,6 +21,7 @@ namespace Oleg\UserdirectoryBundle\Controller;
 use Oleg\FellAppBundle\Entity\FellAppRank;
 use Oleg\FellAppBundle\Entity\FellAppStatus;
 use Oleg\FellAppBundle\Entity\LanguageProficiency;
+use Oleg\TranslationalResearchBundle\Entity\ProjectTypeList;
 use Oleg\TranslationalResearchBundle\Entity\RequestCategoryTypeList;
 use Oleg\TranslationalResearchBundle\Entity\SpecialtyList;
 use Oleg\UserdirectoryBundle\Entity\AuthorshipRoles;
@@ -725,6 +726,7 @@ class AdminController extends Controller
         $count_setFormNodeVersion = $this->setFormNodeVersion();
         $count_generateLifeForm = $this->generateLifeForm();
         $count_generateTransResProjectSpecialty = $this->generateTransResProjectSpecialty();
+        $count_generateTransResProjectTypeList = $this->generateTransResProjectTypeList();
         $count_generateTransResRequestCategoryType = $this->generateTransResRequestCategoryType();
 
         $count_generatePlatformListManagerList = $this->generatePlatformListManagerList();
@@ -818,6 +820,7 @@ class AdminController extends Controller
             'FormNodeVersion='.$count_setFormNodeVersion.', '.
             'LifeForms='.$count_generateLifeForm.', '.
             'TransResProjectSpecialty='.$count_generateTransResProjectSpecialty.', '.
+            'ProjectTypeList='.$count_generateTransResProjectTypeList.', '.
             'TransResRequestCategoryType='.$count_generateTransResRequestCategoryType.', '.
             'PlatformListManagerList='.$count_generatePlatformListManagerList.', '.
 
@@ -7951,6 +7954,40 @@ class AdminController extends Controller
             $this->setDefaultList($listEntity,$count,$username,$name);
 
             $listEntity->setAbbreviation($abbreviation);
+
+            //exit('exit generateObjectTypeActions');
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+    public function generateTransResProjectTypeList() {
+
+        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "Exploratory Research (Preliminary Study)",
+            "Experimental Research (Descriptive Study)",
+            "Clinical Research (Case Study)",
+            "Clinical trial (JCTO & Clinical Trials)",
+            "Education/Teaching (Pathology Faculty)"
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository('OlegTranslationalResearchBundle:ProjectTypeList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new ProjectTypeList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
 
             //exit('exit generateObjectTypeActions');
             $em->persist($listEntity);

@@ -150,6 +150,9 @@ class ProjectFormNodeController extends ProjectController
 
             $msg = "Project with ID ".$project->getOid()." has been successfully created";
 
+
+            //exit("clickedButton=".$form->getClickedButton()->getName());
+
             //new
             if ($form->getClickedButton() && 'saveAsDraft' === $form->getClickedButton()->getName()) {
                 //Save Project as Draft => state='draft'
@@ -365,6 +368,8 @@ class ProjectFormNodeController extends ProjectController
 //                    $project->setState('completed');
 //                }
 //            }
+
+            //exit("clickedButton=".$form->getClickedButton()->getName());
 
             //exit('before set state to irb_review');
             if ($form->getClickedButton() && 'submitIrbReview' === $form->getClickedButton()->getName()) {

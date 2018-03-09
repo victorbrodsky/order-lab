@@ -55,6 +55,9 @@ function transresValidateProjectForm() {
 
     console.log("Validate project");
 
+    //e.preventDefault();
+    //e.stopImmediatePropagation();
+
     var validated = true;
     var label = null;
     var value = null;
@@ -64,11 +67,12 @@ function transresValidateProjectForm() {
 
     transresHideBtn();
 
-    //required
+    //required class loop
     $( ".required" ).each(function( index ) {
         //console.log( "Required: "+index + ": " + $( this ).text() );
         label = $( this ).text();   //$(this).find("label").text();
         value = null;
+
         var holder = $(this).closest(".row");
 
         //input
@@ -77,9 +81,9 @@ function transresValidateProjectForm() {
             value = inputField.val();
             //console.log("label="+label+"; value="+value);
             if( !value ) {
-                console.log("Error Input form-control");
+                console.log("Error Input form-control. label="+label);
                 validated = false;
-                transresShowBtn();
+                //transresShowBtn();
                 return false;
             }
         }
@@ -90,9 +94,9 @@ function transresValidateProjectForm() {
             value = selectField.val();
             //console.log("label="+label+"; value="+value);
             if( !value ) {
-                console.log("Error Select select combobox");
+                console.log("Error Select select combobox. label="+label);
                 validated = false;
-                transresShowBtn();
+                //transresShowBtn();
                 return false;
             }
         }
@@ -103,9 +107,9 @@ function transresValidateProjectForm() {
             value = inputSelectField.val();
             //console.log("label="+label+"; value="+value);
             if( !value ) {
-                console.log("Error Select input combobox");
+                console.log("Error Select input combobox. label="+label);
                 validated = false;
-                transresShowBtn();
+                //transresShowBtn();
                 return false;
             }
         }
@@ -132,7 +136,7 @@ function transresValidateProjectForm() {
         $("#projectError").show();
         $("#projectError").html(msg);
 
-        validated = false;
+        //validated = false;
         transresShowBtn();
         return false;
     }

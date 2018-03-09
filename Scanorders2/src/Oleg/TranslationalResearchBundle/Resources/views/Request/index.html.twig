@@ -216,10 +216,12 @@
                                 <a href="{{ path(translationalresearch_sitename~'_invoice_index', { 'id': transresRequest.id }) }} "
                                 >Show All Invoice</a>
                             </li>
-                            <li>
-                                <a href="{{ path(translationalresearch_sitename~'_invoice_new', { 'id': transresRequest.id }) }} "
-                                >Create New Invoices</a>
-                            </li>
+                            {% if is_granted('ROLE_TRANSRES_BILLING_ADMIN') %}
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_invoice_new', { 'id': transresRequest.id }) }} "
+                                    >Create New Invoice</a>
+                                </li>
+                            {% endif %}
 
                             {% if latestInvoice and latestInvoice.oid %}
 
