@@ -197,7 +197,7 @@ class FosCommentListener implements EventSubscriberInterface {
         if( $contact ) {
             $contactEmail = $contact->getSingleEmail();
             if( $contactEmail ) {
-                $emails = array_merge($emails,array($emails));
+                $emails = array_merge($emails,array($contactEmail));
             }
         }
 
@@ -212,6 +212,9 @@ class FosCommentListener implements EventSubscriberInterface {
         $emails = array_merge($emails,$piEmailArr);
 
         $emails = array_unique($emails);
+
+        //print_r($emails);
+        //exit("request comment email");
 
         $senderEmail = null; //Admin email
 

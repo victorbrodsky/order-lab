@@ -98,6 +98,7 @@ class DashboardController extends Controller
 
                     //#Requests per PI
                     //$requestsCount = count($project->getRequests());
+                    //TODO: select top 10
                     $requestsCount = $transresUtil->getNumberOfFundedRequests($project);
                     if (isset($piRequestsArr[$userName])) {
                         $total = $piRequestsArr[$userName] + $requestsCount;
