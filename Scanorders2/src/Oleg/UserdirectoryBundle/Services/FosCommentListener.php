@@ -83,7 +83,7 @@ class FosCommentListener implements EventSubscriberInterface {
         $resArr = $this->setCommentEventLog($event,$comment,$entity);
 
         //send only emails (Comment takes lots of time - couple seconds delay)
-        //$this->sendCommentEmails($comment,$entity,$resArr);
+        $this->sendCommentEmails($comment,$entity,$resArr);
     }
 
 

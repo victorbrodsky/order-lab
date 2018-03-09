@@ -164,7 +164,9 @@
 
                 <td>
                     {#{{ project.title }}#}
-                    {{ transres_formnode_util.getProjectFormNodeFieldByName(project,"Title") }}
+                    {% set projectTitle = transres_formnode_util.getProjectFormNodeFieldByName(project,"Title") %}
+                    {#{{ transres_formnode_util.getProjectFormNodeFieldByName(project,"Title") }}#}
+                    {{ projectTitle|length > 30 ? projectTitle|slice(0, 30) ~ '...' : projectTitle  }}
                 </td>
 
                 <td>

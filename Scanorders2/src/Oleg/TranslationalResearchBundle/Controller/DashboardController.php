@@ -116,7 +116,7 @@ class DashboardController extends Controller
 
             //We likes to see which funded PI”s are using the TRP lab,
             // so we can try to capture a (Top Ten PI’s) and the percent of services they requested from TRP lab.
-            $chartsArray = $this->addChart( $chartsArray, $piRequestsArr, "Number of Funded Requests per PI");
+            $chartsArray = $this->addChart( $chartsArray, $piRequestsArr, "Number of Funded Requests per 10 top PI");
 
         }
 

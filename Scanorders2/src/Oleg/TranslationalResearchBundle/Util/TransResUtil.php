@@ -3126,7 +3126,7 @@ class TransResUtil
             $this->em->flush($user);
 
             $this->container->get('session')->getFlashBag()->add(
-                'notice',
+                'warning',
                 "Permission to create a new $specialtyStr project has been automatically granted by the system. Your activities will be recorded."
             );
 
