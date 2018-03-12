@@ -108,7 +108,7 @@
             <tr>
                 {#<th>Id</th>#}
                 <th>{{ knp_pagination_sortable(projects, 'ID', 'project.oid') }}</th>
-                <th>{{ knp_pagination_sortable(projects, 'Submission Date', 'project.createDate') }}</th>
+                <th>{{ knp_pagination_sortable(projects, 'Submitted', 'project.createDate') }}</th>
                 {#<th>{{ knp_pagination_sortable(projects, 'IRB#', 'project.irbNumber') }}</th>#}
                 <th>{{ knp_pagination_sortable(projects, 'Principal Investigator(s)', 'principalInvestigatorsInfos.displayName') }}</th>
                 <th>Project Title</th>
@@ -150,7 +150,7 @@
                 </td>
 
                 <td>
-                    {{ project.createDate|date('Y-m-d H:i:s') }}
+                    {{ project.createDate|date('Y-m-d') }}
                 </td>
 
                 <td class="rowlink-skip">
@@ -185,13 +185,13 @@
 
                 <td>
                     {% if project.approvalDate %}
-                        {{ project.approvalDate|date('Y-m-d H:i:s') }}
+                        {{ project.approvalDate|date('Y-m-d') }}
                     {% endif %}
                 </td>
 
                 {#<td>#}
                     {#{% if project.expirationDate %}#}
-                        {#{{ project.expirationDate|date('Y-m-d H:i:s') }}#}
+                        {#{{ project.expirationDate|date('Y-m-d') }}#}
                     {#{% endif %}#}
                 {#</td>#}
 

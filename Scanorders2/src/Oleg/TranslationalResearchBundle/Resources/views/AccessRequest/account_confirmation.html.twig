@@ -53,6 +53,8 @@
 
 {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+{% import "OlegUserdirectoryBundle::Default/userformmacros.html.twig" as userform %}
+
 
 
 {% if title is not defined %}
@@ -74,15 +76,41 @@
 
         {% for info in form.infos %}
             {{ formmacros.field(info.displayName) }}
-            {{ formmacros.field(info.salutation) }}
+            {#{{ formmacros.field(info.salutation) }}#}
             {{ formmacros.field(info.firstName) }}
-            {{ formmacros.field(info.middleName) }}
+            {#{{ formmacros.field(info.middleName) }}#}
             {{ formmacros.field(info.lastName) }}
-            {{ formmacros.field(info.suffix) }}
+            {#{{ formmacros.field(info.suffix) }}#}
             {{ usermacros.emailPhoneField(info.email,cycle,'email',"") }}
             {{ usermacros.emailPhoneField(info.preferredPhone,cycle,'phone',"") }}
-            {{ formmacros.field_notempty(info.initials,cycle) }}
+            {#{{ formmacros.field_notempty(info.initials,cycle) }}#}
         {% endfor %}
+
+        {#<div id="AdministrativeTitles" class="panel-collapse collapse">#}
+            {#<div class="panel-body">#}
+
+                {#{% if endDateAdminTitle %}#}
+                    {#<p><button type='button' class="btn btn-default btn-sm" data-toggle="button" onClick="collapseObject(this)">Show previous titles</button></p>#}
+                {#{% endif %}#}
+
+                <div class="user-administrativeTitles-holder" style="background-color:inherit;">
+                    {% for administrativeTitle in form.administrativeTitles %}
+                        {{ userform.baseTitle(administrativeTitle,cycle,'user-administrativeTitles','noprototype',sitename) }}
+                        {% do administrativeTitle.status.setRendered %}
+                        {% do administrativeTitle.orderinlist.setRendered %}
+                        {% do administrativeTitle.priority.setRendered %}
+                        {% do administrativeTitle.name.setRendered %}
+                        {% do administrativeTitle.boss.setRendered %}
+                        {% do administrativeTitle.startDate.setRendered %}
+                        {% do administrativeTitle.startDate.setRendered %}
+                        {% do administrativeTitle.effort.setRendered %}
+                        {% do administrativeTitle.userPositions.setRendered %}
+                    {% endfor %}
+                    {#{{ usermacros.addNewObjectBtn(cycle,'user-administrativeTitles','Add Administrative Title') }}#}
+                </div>
+
+            {#</div>#}
+        {#</div>#}
 
 
         {% if form.update is defined %}

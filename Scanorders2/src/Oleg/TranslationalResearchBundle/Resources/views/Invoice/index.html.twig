@@ -29,8 +29,8 @@
                 <th>{{ knp_pagination_sortable(invoices, 'Invoice Number', 'invoice.oid') }}</th>
                 <th>{{ knp_pagination_sortable(invoices, 'Funding Number', 'invoice.fundedAccountNumber') }}</th>
                 <th>{{ knp_pagination_sortable(invoices, 'Salesperson', 'salesperson.displayName') }}</th>
-                <th>{{ knp_pagination_sortable(invoices, 'Create Date', 'invoice.createDate') }}</th>
-                <th>{{ knp_pagination_sortable(invoices, 'Update Date', 'invoice.updateDate') }}</th>
+                <th>{{ knp_pagination_sortable(invoices, 'Submitted', 'invoice.createDate') }}</th>
+                <th>{{ knp_pagination_sortable(invoices, 'Updated', 'invoice.updateDate') }}</th>
                 <th>{{ knp_pagination_sortable(invoices, 'Version', 'invoice.version') }}</th>
                 <th>{{ knp_pagination_sortable(invoices, 'Due Date', 'invoice.dueDate') }}</th>
                 <th>{{ knp_pagination_sortable(invoices, 'Status', 'invoice.status') }}</th>
@@ -53,15 +53,15 @@
                 </td>
                 <td>{{ invoice.fundedAccountNumber }}</td>
                 <td>{{ invoice.salesperson }}</td>
-                <td>{% if invoice.createDate %}{{ invoice.createDate|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>{% if invoice.updateDate %}{{ invoice.updateDate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if invoice.createDate %}{{ invoice.createDate|date('Y-m-d') }}{% endif %}</td>
+                <td>{% if invoice.updateDate %}{{ invoice.updateDate|date('Y-m-d') }}{% endif %}</td>
                 <td>
                     {{ invoice.version }}
                     {% if invoice.latestVersion %}
                         (Latest)
                     {% endif %}
                 </td>
-                <td>{% if invoice.dueDate %}{{ invoice.dueDate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if invoice.dueDate %}{{ invoice.dueDate|date('Y-m-d') }}{% endif %}</td>
                 <td>{{ invoice.status }}</td>
                 <td>
                     {#{{ invoice.invoiceTo }}#}

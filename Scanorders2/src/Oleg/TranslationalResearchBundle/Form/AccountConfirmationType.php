@@ -3,6 +3,7 @@
 namespace Oleg\TranslationalResearchBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
+use Oleg\UserdirectoryBundle\Form\AdministrativeTitleType;
 use Oleg\UserdirectoryBundle\Form\UserInfoType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -50,6 +51,29 @@ class AccountConfirmationType extends AbstractType
         $builder->add('update', SubmitType::class, array(
             'label' => "Update",
             'attr' => array('class' => 'btn btn-warning')
+        ));
+
+
+        $params = array(
+            'disabled'=>false,
+            'label'=>'Administrative',
+            'fullClassName'=>'Oleg\UserdirectoryBundle\Entity\AdministrativeTitle',
+            'formname'=>'administrativetitletype',
+            'cycle'=>$this->cycle
+        );
+        $params = array_merge($this->params, $params);
+        $builder->add('administrativeTitles', CollectionType::class, array(
+            'entry_type' => AdministrativeTitleType::class,
+            'entry_options' => array(
+                'form_custom_value' => $params
+            ),
+            'label' => false,
+            'required' => false,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__administrativetitles__',
         ));
 
     }

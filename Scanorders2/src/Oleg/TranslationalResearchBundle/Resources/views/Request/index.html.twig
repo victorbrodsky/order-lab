@@ -49,7 +49,7 @@
                     <th>{{ knp_pagination_sortable(transresRequests, 'Project ID', 'project.id') }}</th>
                 {% endif %}
                 <th>{{ knp_pagination_sortable(transresRequests, 'Submitter', 'submitterInfos.displayName') }}</th>
-                <th>{{ knp_pagination_sortable(transresRequests, 'Creation Date', 'transresRequest.createDate') }}</th>
+                <th>{{ knp_pagination_sortable(transresRequests, 'Submitted', 'transresRequest.createDate') }}</th>
                 <th>{{ knp_pagination_sortable(transresRequests, 'Funding Number', 'transresRequest.fundedAccountNumber') }}</th>
                 <th>{{ knp_pagination_sortable(transresRequests, 'Work Progress Status', 'transresRequest.progressState') }}</th>
                 <th>{{ knp_pagination_sortable(transresRequests, 'Billing Progress Status', 'transresRequest.billingState') }}</th>
@@ -107,7 +107,7 @@
 
                 <td>
                     {% if transresRequest.createDate %}
-                        {{ transresRequest.createDate|date('Y-m-d H:i:s') }}
+                        {{ transresRequest.createDate|date('Y-m-d') }}
                     {% endif %}
                 </td>
 

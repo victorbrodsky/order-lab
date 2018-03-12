@@ -20,6 +20,7 @@ namespace Oleg\TranslationalResearchBundle\Controller;
 use Doctrine\Common\Collections\ArrayCollection;
 use Oleg\TranslationalResearchBundle\Form\AccountConfirmationType;
 use Oleg\UserdirectoryBundle\Controller\AuthorizedUserController;
+use Oleg\UserdirectoryBundle\Entity\AdministrativeTitle;
 use Oleg\UserdirectoryBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -223,6 +224,8 @@ class TranslationalResearchAccessRequestController extends AccessRequestControll
     }
 
     /**
+     * Example: http://localhost/order/translational-research/account-confirmation/translationalresearch_project_new/hematopathology
+     *
      * @Route("/account-confirmation/{redirectPath}/{specialty}", name="translationalresearch_account_confirmation")
      * @Template("OlegTranslationalResearchBundle:AccessRequest:account_confirmation.html.twig")
      * @Method({"GET", "POST"})
@@ -238,6 +241,11 @@ class TranslationalResearchAccessRequestController extends AccessRequestControll
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $sitename = $this->container->getParameter('translationalresearch.sitename');
         $cycle = "new";
+
+        if( count($user->getAdministrativeTitles()) == 0 ) {
+            $user->addAdministrativeTitle(new AdministrativeTitle($user));
+        }
+        echo "admins=".count($user->getAdministrativeTitles())."<br>";
 
         $params = array(
             'cycle' => $cycle,

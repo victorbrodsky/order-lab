@@ -215,6 +215,7 @@ class RequestController extends Controller
             $transresUtil->setEventLog($transresRequest,$eventType,$msg);
 
             $subject = "New Request has been successfully submitted for the project ID ".$project->getOid();
+            $msg = str_replace("<br>","\r\n",$msg);
             $transresRequestUtil->sendRequestNotificationEmails($transresRequest,$subject,$msg,$testing);
 
             return $this->redirectToRoute('translationalresearch_request_show', array('id' => $transresRequest->getId()));
@@ -430,6 +431,7 @@ class RequestController extends Controller
             $transresUtil->setEventLog($transresRequest,$eventType,$msg);
 
             $subject = "Request ".$transresRequest->getOid()." has been successfully updated for the project ID ".$project->getOid();
+            $msg = str_replace("<br>","\r\n",$msg);
             $transresRequestUtil->sendRequestNotificationEmails($transresRequest,$subject,$msg,$testing);
 
             return $this->redirectToRoute('translationalresearch_request_show', array('id' => $transresRequest->getId()));
