@@ -519,7 +519,11 @@ class ProjectController extends Controller
         //$reviewFormViews = $transresUtil->getReviewForm($project,$user);
 
         $eventType = "Project Viewed";
+
         $msg = "Project ID ".$project->getOid() ." has been viewed on the show page.";
+        $label = $transresUtil->getStateLabelByName($project->getState());
+        $msg = $msg . " The project current status is ".$label.".";
+
         $transresUtil->setEventLog($project,$eventType,$msg);
 
         $eventObjectType = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->findOneByName("Project");

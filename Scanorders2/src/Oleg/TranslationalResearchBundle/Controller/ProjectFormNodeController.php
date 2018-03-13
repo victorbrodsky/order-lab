@@ -147,7 +147,7 @@ class ProjectFormNodeController extends ProjectController
             //exit("Project submitted");
 
             $startProjectReview = false;
-            $label = null;
+            //$label = null;
 
             //exit("clickedButton=".$form->getClickedButton()->getName());
 
@@ -164,7 +164,7 @@ class ProjectFormNodeController extends ProjectController
 
                 $startProjectReview = true;
 
-                $label = $transresUtil->getStateLabelByName($project->getState());
+                //$label = $transresUtil->getStateLabelByName($project->getState());
                 //$msg = "Project ID ".$project->getOid()." has been successfully create and sent to the status '$label'";
             }
 
@@ -199,10 +199,25 @@ class ProjectFormNodeController extends ProjectController
 //            }
             $transresUtil->copyFormNodeFieldsToProject($project);
 
+            $label = $transresUtil->getStateLabelByName($project->getState());
 
-            $msg = "Project with ID ".$project->getOid()." has been successfully created";
+            //Thank you for your submission! Your project request has been assigned an ID
+            // of "[ID]" and will be reviewed. You should receive notifications of approval
+            // status updates by email. You can also log back in to this site to review
+            // the status of your project request, submit your subsequent work requests
+            // (upon project request approval), and see your associated invoices (if any) as well.
+            $msg = "Thank you for your submission! Your project request has been assigned an ID of ".$project->getOid().".".
+                " The project current status is ".$label.".".
+                " You can also log back in to this site to review the status of your project request, ".
+                "submit your subsequent work requests (upon project request approval), and see your associated invoices (if any) as well.";
             if( $startProjectReview ) {
-                $msg = "Project ID ".$project->getOid()." has been successfully created and sent to the status '$label'";
+                //$msg = "Project ID ".$project->getOid()." has been successfully created and sent to the status '$label'";
+                $msg = "Thank you for your submission! Your project request has been assigned an ID of ".$project->getOid().
+                    " and will be reviewed. ".
+                    " The project current status is ".$label.".".
+                    " You should receive notifications of approval status updates by email.".
+                    " You can also log back in to this site to review the status of your project request, ".
+                    "submit your subsequent work requests (upon project request approval), and see your associated invoices (if any) as well.";
             }
 
             if( $testing ) {
@@ -215,7 +230,7 @@ class ProjectFormNodeController extends ProjectController
             );
 
             $eventType = "Project Created";
-            $msg = $msg . " by ".$project->getSubmitter()->getUsernameOptimal();
+            //$msg = $msg . " by ".$project->getSubmitter()->getUsernameOptimal();
             $transresUtil->setEventLog($project,$eventType,$msg,$testing);
 
             if( $startProjectReview ) {
@@ -350,7 +365,7 @@ class ProjectFormNodeController extends ProjectController
             $originalStateStr = $project->getState();
             $originalStateLabel = $transresUtil->getStateLabelByName($originalStateStr);
 
-            $msg = "Project ID ".$project->getOid() ." has been successfully updated";
+            $msg = "Project ID ".$project->getOid() ." has been successfully updated.";
 
             //////////// remove the relationship between the review and the project ////////////
             $transresUtil->removeReviewsFromProject($project,$originalIrbReviews,$project->getIrbReviews());
@@ -383,7 +398,7 @@ class ProjectFormNodeController extends ProjectController
                     $startProjectReview = true;
 
                     $label = $transresUtil->getStateLabelByName($project->getState());
-                    $msg = "Project ID ".$project->getOid()." has been successfully updated and sent to the status '$label' from '".$originalStateLabel."'";
+                    $msg = "Project ID ".$project->getOid()." has been successfully updated and the status has been changed from $originalStateLabel to $label";
                 }
             }
 
@@ -411,7 +426,10 @@ class ProjectFormNodeController extends ProjectController
             //update project's irbExpirationDate and fundedAccountNumber
             $transresUtil->copyFormNodeFieldsToProject($project);
 
-            $msg = $msg . " by ".$project->getUpdateUser()->getUsernameOptimal();
+            $msg = $msg . " by ".$project->getUpdateUser()->getUsernameOptimal().".";
+
+            $label = $transresUtil->getStateLabelByName($project->getState());
+            $msg = $msg . " The project current status is ".$label.".";
 
             if( $testing ) {
                 echo "<br>Enf of form submit<br>";
@@ -441,7 +459,11 @@ class ProjectFormNodeController extends ProjectController
         }
 
         $eventType = "Project Viewed";
+
         $msg = "Project ID ".$project->getOid() ." has been viewed on the edit page.";
+        $label = $transresUtil->getStateLabelByName($project->getState());
+        $msg = $msg . " The project current status is ".$label.".";
+
         $transresUtil->setEventLog($project,$eventType,$msg,$testing);
 
         return array(
