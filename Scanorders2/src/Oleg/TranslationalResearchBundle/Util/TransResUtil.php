@@ -844,18 +844,16 @@ class TransResUtil
         }
         foreach($projectReviewers as $projectReviewer ) {
             //echo "userID=".$reviewerUser->getId().": review ID=".$projectReviewer->getId()."<br>";
-            if( $projectReviewer->getReviewer()->getId() ) {
+            if( $projectReviewer->getReviewer() && $projectReviewer->getReviewer()->getId() ) {
                 //echo "userID=".$reviewerUser->getId().": reviewerID=".$projectReviewer->getReviewer()->getId()."<br>";
                 if ($projectReviewer->getReviewer()->getId() == $reviewerUser->getId()) {
                     return true;
                 }
             }
-            if( $projectReviewer->getReviewerDelegate() ) {
-                if($projectReviewer->getReviewerDelegate()->getId()) {
-                    //echo "userID=".$reviewerUser->getId().": ReviewerDelegateID=".$projectReviewer->getReviewerDelegate()->getId()."<br>";
-                    if ($projectReviewer->getReviewerDelegate()->getId() == $reviewerUser->getId()) {
-                        return true;
-                    }
+            if($projectReviewer->getReviewerDelegate() && $projectReviewer->getReviewerDelegate()->getId()) {
+                //echo "userID=".$reviewerUser->getId().": ReviewerDelegateID=".$projectReviewer->getReviewerDelegate()->getId()."<br>";
+                if ($projectReviewer->getReviewerDelegate()->getId() == $reviewerUser->getId()) {
+                    return true;
                 }
             }
         }

@@ -147,9 +147,7 @@ class ProjectFormNodeController extends ProjectController
             //exit("Project submitted");
 
             $startProjectReview = false;
-
-            $msg = "Project with ID ".$project->getOid()." has been successfully created";
-
+            $label = null;
 
             //exit("clickedButton=".$form->getClickedButton()->getName());
 
@@ -167,7 +165,7 @@ class ProjectFormNodeController extends ProjectController
                 $startProjectReview = true;
 
                 $label = $transresUtil->getStateLabelByName($project->getState());
-                $msg = "Project ID ".$project->getOid()." has been successfully create and sent to the status '$label'";
+                //$msg = "Project ID ".$project->getOid()." has been successfully create and sent to the status '$label'";
             }
 
             $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($project,"document");
@@ -200,6 +198,12 @@ class ProjectFormNodeController extends ProjectController
 //                $em->flush($project);
 //            }
             $transresUtil->copyFormNodeFieldsToProject($project);
+
+
+            $msg = "Project with ID ".$project->getOid()." has been successfully created";
+            if( $startProjectReview ) {
+                $msg = "Project ID ".$project->getOid()." has been successfully created and sent to the status '$label'";
+            }
 
             if( $testing ) {
                 exit('form is submitted and finished, msg='.$msg);
