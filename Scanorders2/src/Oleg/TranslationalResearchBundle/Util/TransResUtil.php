@@ -3100,14 +3100,17 @@ class TransResUtil
 
     //check if user does not have ROLE_TRANSRES_REQUESTER and specialty role
     public function addMinimumRolesToCreateProject( $specialtyObject=null ) {
+        $userSecUtil = $this->container->get('user_security_utility');
         $user = $this->secTokenStorage->getToken()->getUser();
         $flushUser = false;
         $roleAddedArr = array();
+
         if( false == $this->secAuth->isGranted('ROLE_TRANSRES_REQUESTER') ) {
             $user->addRole('ROLE_TRANSRES_REQUESTER');
             $flushUser = true;
             $roleAddedArr[] = "ROLE_TRANSRES_REQUESTER";
         }
+
         if( $specialtyObject ) {
             $specialtyRole = $this->getSpecialtyRole($specialtyObject);
             if( false == $this->secAuth->isGranted($specialtyRole) ) {
@@ -3119,6 +3122,16 @@ class TransResUtil
         } else {
             $specialtyStr = null;
         }
+
+        $environment = $userSecUtil->getSiteSettingParameter('environment');
+        if( $environment != 'live' ) {
+            if (false == $this->secAuth->isGranted('ROLE_TESTER')) {
+                $user->addRole('ROLE_TESTER');
+                $flushUser = true;
+                $roleAddedArr[] = 'ROLE_TESTER';
+            }
+        }
+
         if( $flushUser ) {
             //exit('flush user');
             $this->em->flush($user);

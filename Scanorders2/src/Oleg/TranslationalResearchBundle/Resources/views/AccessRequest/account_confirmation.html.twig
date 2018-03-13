@@ -95,7 +95,11 @@
 
                 <div class="user-administrativeTitles-holder" style="background-color:inherit;">
                     {% for administrativeTitle in form.administrativeTitles %}
-                        {{ userform.baseTitle(administrativeTitle,cycle,'user-administrativeTitles','noprototype',sitename) }}
+                        {#{{ userform.baseTitle(administrativeTitle,cycle,'user-administrativeTitles','noprototype',sitename) }}#}
+
+                        {% if administrativeTitle.institution is defined %}
+                            {{ treemacros.compositeTreeNode(administrativeTitle.institution,cycle,'noprototype') }}
+                        {% endif %}
                         {% do administrativeTitle.status.setRendered %}
                         {% do administrativeTitle.orderinlist.setRendered %}
                         {% do administrativeTitle.priority.setRendered %}
@@ -106,6 +110,7 @@
                         {% do administrativeTitle.effort.setRendered %}
                         {% do administrativeTitle.userPositions.setRendered %}
                     {% endfor %}
+                    {% do administrativeTitle.setRendered %}
                     {#{{ usermacros.addNewObjectBtn(cycle,'user-administrativeTitles','Add Administrative Title') }}#}
                 </div>
 
