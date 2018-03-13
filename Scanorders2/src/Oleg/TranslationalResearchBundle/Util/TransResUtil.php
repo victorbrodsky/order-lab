@@ -867,7 +867,7 @@ class TransResUtil
         }
         //echo "reviewer ID=".$review->getId()."<br>";
 
-        if ($review->getReviewer()->getId() ) {
+        if ($review->getReviewer() && $review->getReviewer()->getId() ) {
             if ($review->getReviewer()->getId() == $reviewerUser->getId()) {
                 return true;
             }
