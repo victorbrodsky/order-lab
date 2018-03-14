@@ -589,9 +589,13 @@
 </div>
 
     {#Defaults for an Organizational Group#}
-    {% include 'OlegUserdirectoryBundle:SiteParameters:organizational-group-defaults.html.twig' %}
+    {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+        {% include 'OlegUserdirectoryBundle:SiteParameters:organizational-group-defaults.html.twig' %}
+    {% endif %}
 
-    {% include 'OlegUserdirectoryBundle:SiteParameters:third-party-software-content.html.twig' %}
+    {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+        {% include 'OlegUserdirectoryBundle:SiteParameters:third-party-software-content.html.twig' %}
+    {% endif %}
 
     {% if (sitename == "employees" or sitename == "fellapp") and is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
         {% include 'OlegUserdirectoryBundle:SiteParameters:fellapp-content.html.twig' %}
@@ -600,6 +604,16 @@
     {% if (sitename == "employees" or sitename == "calllog") and is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
         {% include 'OlegUserdirectoryBundle:SiteParameters:calllog-content.html.twig' %}
     {% endif %}
+
+    {#{% if (sitename == "employees" or sitename == "translationalresearch") and is_granted('ROLE_TRANSRES_ADMIN') %}#}
+        {#{% include 'TransResSiteParameters:SiteParameters:calllog-content.html.twig' %}#}
+        {#{% set specialties = transres_util.getTransResProjectSpecialties() %}#}
+        {#{% for specialty in specialties %}#}
+            {#specialty.getAbbreviation()={{ specialty.getAbbreviation() }}<br>#}
+            {#This render will not work because underlying method will not correctly usermacros.document will not get current url correctly#}
+            {#{{ render(controller('OlegTranslationalResearchBundle:TransResSiteParameters:show', {'specialtyStr':specialty.getAbbreviation()})) }}#}
+        {#{% endfor %}#}
+    {#{% endif %}#}
 
     {#<br>#}
     {#<p>#}

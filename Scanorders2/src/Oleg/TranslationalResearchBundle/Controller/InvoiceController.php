@@ -99,14 +99,6 @@ class InvoiceController extends Controller
                 //filter nothing
                 $title = "All Invoices";
             }
-//            if( $filterType == "My Invoices" ) {
-//                return $this->redirectToRoute(
-//                    'translationalresearch_invoice_index_filter',
-//                    array(
-//                        'filter[submitter]' => $user->getId(),
-//                    )
-//                );
-//            }
             if( $filterType == "All Issued Invoices" ) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
@@ -129,6 +121,17 @@ class InvoiceController extends Controller
             }
 
             //Personal Invoices
+            //TODO:
+            if( $filterType == "My Invoices (I am Submitter, Salesperson or PI)" ) {
+                return $this->redirectToRoute(
+                    'translationalresearch_invoice_index_filter',
+                    array(
+                        'filter[submitter]' => $user->getId(),
+                        'filter[salesperson]' => $user->getId(),
+                        'filter[principalInvestigator]' => $user->getId(),
+                    )
+                );
+            }
 //            if( $filterType == "Invoices Sent to Me" ) {
 //                return $this->redirectToRoute(
 //                    'translationalresearch_invoice_index_filter',

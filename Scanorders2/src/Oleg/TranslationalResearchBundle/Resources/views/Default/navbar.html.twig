@@ -175,6 +175,7 @@
                     {#{% endif %}#}
 
                     {% if
+                        is_granted('ROLE_TRANSRES_REQUESTER') or
                         is_granted('ROLE_TRANSRES_BILLING_ADMIN') or
                         is_granted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') or
                         is_granted('ROLE_TRANSRES_EXECUTIVE_APCP')
@@ -217,19 +218,19 @@
                                 </ul>
                             </li>
 
-                            <li id="nav-bar-translationalresearch-default-siteparameters" class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Default Site Settings<b class="caret"></b></a>
-                                <ul class="dropdown-menu">
+                            {#<li id="nav-bar-translationalresearch-default-siteparameters" class="dropdown">#}
+                                {#<a href="#" class="dropdown-toggle" data-toggle="dropdown">Default Site Settings<b class="caret"></b></a>#}
+                                {#<ul class="dropdown-menu">#}
 
-                                    {% for specialty in specialties %}
-                                        <li>
-                                            <a href="{{ path(translationalresearch_sitename~'_standalone_siteparameters_show',{'specialtyStr':specialty.getAbbreviation()}) }}"
-                                            >Default Site Settings for {{ specialty.getName() }}</a>
-                                        </li>
-                                    {% endfor %}
+                                    {#{% for specialty in specialties %}#}
+                                        {#<li>#}
+                                            {#<a href="{{ path(translationalresearch_sitename~'_standalone_siteparameters_show',{'specialtyStr':specialty.getAbbreviation()}) }}"#}
+                                            {#>Default Site Settings for {{ specialty.getName() }}</a>#}
+                                        {#</li>#}
+                                    {#{% endfor %}#}
 
-                                </ul>
-                            </li>
+                                {#</ul>#}
+                            {#</li>#}
                         {% endif %}
 
                     {% endif %}
@@ -307,7 +308,19 @@
                             <li class="divider"></li>
                             <li><a href="{{ path(translationalresearch_sitename~'_logger') }}">Event Log</a></li>
 
+                            {% if is_granted('ROLE_TRANSRES_ADMIN') %}
+                                {#<li><a href="{{ path(translationalresearch_sitename~'_siteparameters') }}">Site Settings</a></li>#}
+                                <hr>
+                                {% for specialty in specialties %}
+                                    <li>
+                                        <a href="{{ path(translationalresearch_sitename~'_standalone_siteparameters_show',{'specialtyStr':specialty.getAbbreviation()}) }}"
+                                        >Default Site Settings for {{ specialty.getName() }}</a>
+                                    </li>
+                                {% endfor %}
+                            {% endif %}
+
                             {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+                                <hr>
                                 <li><a href="{{ path('user_admin_index') }}">List Manager</a></li>
                                 <li><a href="{{ path('platformlistmanager-list') }}">Platform List Manager</a></li>
                                 <li><a href="{{ path('user_admin_hierarchy_index') }}">Hierarchy Manager</a></li>

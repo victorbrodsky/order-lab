@@ -7510,6 +7510,8 @@ class AdminController extends Controller
         $types = array(
             "A+",
             "A-",
+            "AB-",
+            "AB+",
             "B+",
             "B-",
             "O+",
@@ -7669,6 +7671,7 @@ class AdminController extends Controller
         $types = array(
             "HLA",
             "HPA",
+            "HLA and HPA",
             "None"
         );
 

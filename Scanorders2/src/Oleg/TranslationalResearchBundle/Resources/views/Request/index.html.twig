@@ -17,7 +17,7 @@
         {{ title|raw }}
     </h4>
 
-{% if filterError is not defined and not filterError %}
+{% if filterError is not defined or (filterError is defined and not filterError) %}
 
     <p>
         {{ requestTotalFeeHtml|raw }}

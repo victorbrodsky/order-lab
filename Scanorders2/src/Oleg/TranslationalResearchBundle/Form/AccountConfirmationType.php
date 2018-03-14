@@ -49,7 +49,7 @@ class AccountConfirmationType extends AbstractType
         ));
 
         $builder->add('update', SubmitType::class, array(
-            'label' => "Update",
+            'label' => "Confirm",
             'attr' => array('class' => 'btn btn-warning')
         ));
 

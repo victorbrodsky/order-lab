@@ -54,6 +54,7 @@
 {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 {% import "OlegUserdirectoryBundle::Default/userformmacros.html.twig" as userform %}
+{% import "OlegUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
 
 
 
@@ -95,22 +96,24 @@
 
                 <div class="user-administrativeTitles-holder" style="background-color:inherit;">
                     {% for administrativeTitle in form.administrativeTitles %}
+                        {#administrativeTitle.vars.value.id={{ administrativeTitle.vars.value.id }}<br>#}
                         {#{{ userform.baseTitle(administrativeTitle,cycle,'user-administrativeTitles','noprototype',sitename) }}#}
 
                         {% if administrativeTitle.institution is defined %}
+                            {#administrativeTitle.institution defined<br>#}
                             {{ treemacros.compositeTreeNode(administrativeTitle.institution,cycle,'noprototype') }}
                         {% endif %}
-                        {% do administrativeTitle.status.setRendered %}
-                        {% do administrativeTitle.orderinlist.setRendered %}
-                        {% do administrativeTitle.priority.setRendered %}
-                        {% do administrativeTitle.name.setRendered %}
-                        {% do administrativeTitle.boss.setRendered %}
-                        {% do administrativeTitle.startDate.setRendered %}
-                        {% do administrativeTitle.startDate.setRendered %}
-                        {% do administrativeTitle.effort.setRendered %}
-                        {% do administrativeTitle.userPositions.setRendered %}
+                        {#{% do administrativeTitle.status.setRendered %}#}
+                        {#{% do administrativeTitle.orderinlist.setRendered %}#}
+                        {#{% do administrativeTitle.priority.setRendered %}#}
+                        {#{% do administrativeTitle.name.setRendered %}#}
+                        {#{% do administrativeTitle.boss.setRendered %}#}
+                        {#{% do administrativeTitle.startDate.setRendered %}#}
+                        {#{% do administrativeTitle.startDate.setRendered %}#}
+                        {#{% do administrativeTitle.effort.setRendered %}#}
+                        {#{% do administrativeTitle.userPositions.setRendered %}#}
+                        {% do administrativeTitle.setRendered %}
                     {% endfor %}
-                    {% do administrativeTitle.setRendered %}
                     {#{{ usermacros.addNewObjectBtn(cycle,'user-administrativeTitles','Add Administrative Title') }}#}
                 </div>
 
@@ -119,6 +122,7 @@
 
 
         {% if form.update is defined %}
+            <br>
             <p>
                 {{ form_widget(form.update) }}
             </p>
@@ -126,9 +130,9 @@
 
     {{ form_end(form,{'render_rest': false}) }}
 
-    <br>
-    <p>
-        <a class="btn btn-default" href="{{ path(redirectPath,{'specialtyStr':specialty}) }}">Skip</a>
-    </p>
+    {#<br>#}
+    {#<p>#}
+        {#<a class="btn btn-default" href="{{ path(redirectPath,{'specialtyStr':specialty}) }}">Skip</a>#}
+    {#</p>#}
 
 {% endblock %}

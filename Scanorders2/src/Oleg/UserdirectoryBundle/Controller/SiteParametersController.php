@@ -86,6 +86,17 @@ class SiteParametersController extends Controller
         $routeArr = explode("_", $routeName);
         $sitename = $routeArr[0];
 
+//        if( $sitename == "translationalresearch" ) {
+//            //exception for transres site
+//            if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
+//                return $this->redirect( $this->generateUrl('employees-nopermission') );
+//            }
+//        } else {
+//            if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+//                return $this->redirect( $this->generateUrl('employees-nopermission') );
+//            }
+//        }
+
         $disabled = true;
 
         $passw = "*******";

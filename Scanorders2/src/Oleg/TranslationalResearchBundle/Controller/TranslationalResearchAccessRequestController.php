@@ -245,7 +245,7 @@ class TranslationalResearchAccessRequestController extends AccessRequestControll
         if( count($user->getAdministrativeTitles()) == 0 ) {
             $user->addAdministrativeTitle(new AdministrativeTitle($user));
         }
-        echo "admins=".count($user->getAdministrativeTitles())."<br>";
+        //echo "admins=".count($user->getAdministrativeTitles())."<br>";
 
         $params = array(
             'cycle' => $cycle,

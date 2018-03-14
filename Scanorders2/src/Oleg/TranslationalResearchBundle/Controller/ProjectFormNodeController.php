@@ -147,7 +147,6 @@ class ProjectFormNodeController extends ProjectController
             //exit("Project submitted");
 
             $startProjectReview = false;
-            //$label = null;
 
             //exit("clickedButton=".$form->getClickedButton()->getName());
 
@@ -161,11 +160,7 @@ class ProjectFormNodeController extends ProjectController
             if ($form->getClickedButton() && 'submitIrbReview' === $form->getClickedButton()->getName()) {
                 //Submit to IRB review
                 $project->setState('irb_review');
-
                 $startProjectReview = true;
-
-                //$label = $transresUtil->getStateLabelByName($project->getState());
-                //$msg = "Project ID ".$project->getOid()." has been successfully create and sent to the status '$label'";
             }
 
             $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($project,"document");
@@ -199,22 +194,26 @@ class ProjectFormNodeController extends ProjectController
 //            }
             $transresUtil->copyFormNodeFieldsToProject($project);
 
-            $label = $transresUtil->getStateLabelByName($project->getState());
+            //$label = $transresUtil->getStateLabelByName($project->getState());
 
-            //Thank you for your submission! Your project request has been assigned an ID
-            // of "[ID]" and will be reviewed. You should receive notifications of approval
-            // status updates by email. You can also log back in to this site to review
-            // the status of your project request, submit your subsequent work requests
-            // (upon project request approval), and see your associated invoices (if any) as well.
-            $msg = "Thank you for your submission! Your project request has been assigned an ID of ".$project->getOid().".".
-                " The project current status is ".$label.".".
-                " You can also log back in to this site to review the status of your project request, ".
-                "submit your subsequent work requests (upon project request approval), and see your associated invoices (if any) as well.";
+            //Draft message:
+            //Your project request draft has been saved and assigned ID [id].
+            // In order to initiate the review of your project request,
+            // please make sure to complete your submission once your draft is ready.
+            // Project requests with a “draft” status will not be reviewed until they are finalized and submitted.
+            $msg = "Your project request draft has been saved and assigned ID ".$project->getOid().".".
+                " In order to initiate the review of your project request,".
+                " please make sure to complete your submission once your draft is ready.".
+                " Project requests with a 'draft' status will not be reviewed until they are finalized and submitted.";
             if( $startProjectReview ) {
                 //$msg = "Project ID ".$project->getOid()." has been successfully created and sent to the status '$label'";
+                //Thank you for your submission! Your project request has been assigned an ID
+                // of "[ID]" and will be reviewed. You should receive notifications of approval
+                // status updates by email. You can also log back in to this site to review
+                // the status of your project request, submit your subsequent work requests
+                // (upon project request approval), and see your associated invoices (if any) as well.
                 $msg = "Thank you for your submission! Your project request has been assigned an ID of ".$project->getOid().
-                    " and will be reviewed. ".
-                    " The project current status is ".$label.".".
+                    " and will be reviewed.".
                     " You should receive notifications of approval status updates by email.".
                     " You can also log back in to this site to review the status of your project request, ".
                     "submit your subsequent work requests (upon project request approval), and see your associated invoices (if any) as well.";
@@ -230,7 +229,6 @@ class ProjectFormNodeController extends ProjectController
             );
 
             $eventType = "Project Created";
-            //$msg = $msg . " by ".$project->getSubmitter()->getUsernameOptimal();
             $transresUtil->setEventLog($project,$eventType,$msg,$testing);
 
             if( $startProjectReview ) {
