@@ -17,7 +17,6 @@
 
 namespace Oleg\UserdirectoryBundle\Util;
 
-use Oleg\UserdirectoryBundle\Util\UserUtil;
 
 /**
  * Description of EmailUtil
@@ -48,9 +47,9 @@ class EmailUtil {
         //$emails = "oli2002@med.cornell.edu";
         //$ccs = null;
 
+        $userSecUtil = $this->container->get('user_security_utility');
         $logger = $this->container->get('logger');
         //set_time_limit(0); //set time limit to 600 sec == 10 min
-        $userutil = new UserUtil();
 
         //echo "emails=".$emails."<br>";
         //echo "ccs=".$ccs."<br>";
@@ -73,14 +72,14 @@ class EmailUtil {
         }
 
         if( !$fromEmail ) {
-            $fromEmail = $userutil->getSiteSetting($this->em,'siteEmail');
+            $fromEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
         }
 
         $emails = $this->checkEmails($emails);
         $ccs = $this->checkEmails($ccs);
 
         if( $this->em ) {
-            $smtpServerAddress = $userutil->getSiteSetting($this->em,'smtpServerAddress');
+            $smtpServerAddress = $userSecUtil->getSiteSettingParameter('smtpServerAddress');
             $smtp_host_ip = gethostbyname($smtpServerAddress);
             //$logger->notice("smtpServerAddress=".$smtpServerAddress." => smtp_host_ip=".$smtp_host_ip);
             $transport = \Swift_Message::newInstance($smtp_host_ip);
@@ -172,8 +171,8 @@ class EmailUtil {
 
         $result = false;
 
-        $userutil = new UserUtil();
-        $smtp = $userutil->getSiteSetting($this->em,'smtpServerAddress');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $smtp = $userSecUtil->getSiteSettingParameter('smtpServerAddress');
         //echo "smtp=" . $smtp . "<br>";
 
         $fp = fsockopen($smtp, 25, $errno, $errstr, 9) ;
@@ -220,11 +219,11 @@ class EmailUtil {
     }
 
     public function initEmail($em,$fromEmail=null) {
-        $userutil = new UserUtil();
-        $smtp = $userutil->getSiteSetting($em,'smtpServerAddress');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $smtp = $userSecUtil->getSiteSettingParameter('smtpServerAddress');
 
         if( !$fromEmail ) {
-            $fromEmail = $userutil->getSiteSetting($em,'siteEmail');
+            $fromEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
         }
 
         //exit("smtp=".$smtp);

@@ -247,6 +247,8 @@ class UserSecurityUtil {
         if( $maintenance ) {
 
             $msg = $userUtil->getSiteSetting($this->em,'MaintenancelogoutmsgWithDate');
+            //$userSecUtil = $this->container->get('user_security_utility');
+            //$msg = $userSecUtil->getSiteSettingParameter('MaintenancelogoutmsgWithDate');
 
         } else {
 

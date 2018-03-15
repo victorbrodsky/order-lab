@@ -34,8 +34,8 @@ class ScanEmailUtil extends EmailUtil {
         }
 
         //get admin email
-        $userutil = new UserUtil();
-        $adminemail = $userutil->getSiteSetting($this->em,'siteEmail');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $adminemail = $userSecUtil->getSiteSettingParameter('siteEmail');
 
         if( $text ) {
             $message = $text;

@@ -54,7 +54,7 @@ class MaintenanceListener {
         $this->secAuthChecker = $container->get('security.authorization_checker');
         $this->secTokenStorage = $container->get('security.token_storage');
 
-        $this->userUtil = new UserUtil();
+        //$this->userUtil = new UserUtil();
     }
 
 
@@ -69,8 +69,32 @@ class MaintenanceListener {
             return;
         }
 
+        $userSecUtil = $this->container->get('user_security_utility');
+
         $controller = $event->getRequest()->attributes->get('_controller');
         //echo "controller=".$controller."<br>";
+
+        //translationalresearch site check accessibility
+        //$transresBlockAccess = $this->userUtil->getSiteSetting($this->em,'transresBlockAccess');
+        $transresBlockAccess = $userSecUtil->getSiteSettingParameter('transresBlockAccess');
+        //$transresBlockAccess = true;
+        //$transresBlockAccess = false;
+        if( $transresBlockAccess ) {
+            if (strpos($controller, 'Oleg\TranslationalResearchBundle') !== false) {
+
+                $session = $this->container->get('session');
+                $session->getFlashBag()->add(
+                    'warning',
+                    "Translational Research site is currently not accessible"
+                );
+
+                $blockAccessRoute = 'main_common_home';
+                $url = $this->container->get('router')->generate($blockAccessRoute);
+                $response = new RedirectResponse($url);
+                $event->setResponse($response);
+            }
+        }
+
         if( 
                 strpos($controller,'Oleg\UserdirectoryBundle') !== false || 
                 strpos($controller,'Oleg\OrderformBundle') !== false ||
@@ -94,7 +118,8 @@ class MaintenanceListener {
 
         /////////////// maintanance from DB. Container parameter will be updated only after cleaning the cache //////////////
         //$userUtil = new UserUtil();
-        $maintenance = $this->userUtil->getSiteSetting($this->em,'maintenance');
+        //$maintenance = $this->userUtil->getSiteSetting($this->em,'maintenance');
+        $maintenance = $userSecUtil->getSiteSettingParameter('maintenance');
 
         //echo "maint list =".$maintenance."<br>";
 

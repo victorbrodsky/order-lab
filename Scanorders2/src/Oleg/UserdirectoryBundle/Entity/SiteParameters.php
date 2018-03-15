@@ -208,6 +208,12 @@ class SiteParameters {
      */
     private $maintenanceloginmsg;
 
+    //Accessibility
+    /**
+     * @ORM\Column(type="boolean",nullable=true)
+     */
+    private $transresBlockAccess;
+
     //uploads path
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -1410,6 +1416,22 @@ class SiteParameters {
     {
         $msg = str_replace("[[datetime]]", $this->getUntilDate(), $this->getMaintenancelogoutmsg());
         return $msg;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTransresBlockAccess()
+    {
+        return $this->transresBlockAccess;
+    }
+
+    /**
+     * @param mixed $transresBlockAccess
+     */
+    public function setTransresBlockAccess($transresBlockAccess)
+    {
+        $this->transresBlockAccess = $transresBlockAccess;
     }
 
     /**
