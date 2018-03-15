@@ -1058,7 +1058,7 @@ class RequestController extends Controller
                 return $this->redirectToRoute(
                     'translationalresearch_request_index_filter',
                     array(
-                        'filter[projectSpecialty]' => $projectSpecialtyObject->getId(),
+                        'filter[projectSpecialty][]' => $projectSpecialtyObject->getId(),
                         'title' => $filterType,
                     )
                 );
@@ -1068,7 +1068,7 @@ class RequestController extends Controller
                 return $this->redirectToRoute(
                     'translationalresearch_request_index_filter',
                     array(
-                        'filter[projectSpecialty]' => $projectSpecialtyObject->getId(),
+                        'filter[projectSpecialty][]' => $projectSpecialtyObject->getId(),
                         'title' => $filterType,
                     )
                 );
@@ -1098,7 +1098,7 @@ class RequestController extends Controller
                 return $this->redirectToRoute(
                     'translationalresearch_request_index_filter',
                     array(
-                        'filter[projectSpecialty]' => $projectSpecialtyObject->getId(),
+                        'filter[projectSpecialty][]' => $projectSpecialtyObject->getId(),
                         'filter[progressState][0]' => "active",
                         'filter[progressState][1]' => "investigator",
                         'filter[progressState][2]' => "histo",
@@ -1118,7 +1118,7 @@ class RequestController extends Controller
                 return $this->redirectToRoute(
                     'translationalresearch_request_index_filter',
                     array(
-                        'filter[projectSpecialty]' => $projectSpecialtyObject->getId(),
+                        'filter[projectSpecialty][]' => $projectSpecialtyObject->getId(),
                         'filter[progressState][0]' => "active",
                         'filter[progressState][1]' => "investigator",
                         'filter[progressState][2]' => "histo",
@@ -1148,7 +1148,7 @@ class RequestController extends Controller
                 return $this->redirectToRoute(
                     'translationalresearch_request_index_filter',
                     array(
-                        'filter[projectSpecialty]' => $projectSpecialtyObject->getId(),
+                        'filter[projectSpecialty][]' => $projectSpecialtyObject->getId(),
                         'filter[progressState][0]' => "active",
                         'title' => $filterType,
                     )
@@ -1159,7 +1159,7 @@ class RequestController extends Controller
                 return $this->redirectToRoute(
                     'translationalresearch_request_index_filter',
                     array(
-                        'filter[projectSpecialty]' => $projectSpecialtyObject->getId(),
+                        'filter[projectSpecialty][]' => $projectSpecialtyObject->getId(),
                         'filter[progressState][0]' => "active",
                         'title' => $filterType,
                     )
@@ -1180,7 +1180,7 @@ class RequestController extends Controller
                 return $this->redirectToRoute(
                     'translationalresearch_request_index_filter',
                     array(
-                        'filter[projectSpecialty]' => $projectSpecialtyObject->getId(),
+                        'filter[projectSpecialty][]' => $projectSpecialtyObject->getId(),
                         'filter[progressState][0]' => "completed",
                         'title' => $filterType,
                     )
@@ -1191,7 +1191,7 @@ class RequestController extends Controller
                 return $this->redirectToRoute(
                     'translationalresearch_request_index_filter',
                     array(
-                        'filter[projectSpecialty]' => $projectSpecialtyObject->getId(),
+                        'filter[projectSpecialty][]' => $projectSpecialtyObject->getId(),
                         'filter[progressState][0]' => "completed",
                         'title' => $filterType,
                     )
@@ -1212,7 +1212,7 @@ class RequestController extends Controller
                 return $this->redirectToRoute(
                     'translationalresearch_request_index_filter',
                     array(
-                        'filter[projectSpecialty]' => $projectSpecialtyObject->getId(),
+                        'filter[projectSpecialty][]' => $projectSpecialtyObject->getId(),
                         'filter[progressState][0]' => "completedNotified",
                         'title' => $filterType,
                     )
@@ -1223,7 +1223,7 @@ class RequestController extends Controller
                 return $this->redirectToRoute(
                     'translationalresearch_request_index_filter',
                     array(
-                        'filter[projectSpecialty]' => $projectSpecialtyObject->getId(),
+                        'filter[projectSpecialty][]' => $projectSpecialtyObject->getId(),
                         'filter[progressState][0]' => "completedNotified",
                         'title' => $filterType,
                     )
@@ -1426,14 +1426,16 @@ class RequestController extends Controller
 
         $limit = 10;
         $query = $em->createQuery($dql);
+        $query2 = $em->createQuery($dql);
 
         if( count($dqlParameters) > 0 ) {
             $query->setParameters($dqlParameters);
+            $query2->setParameters($dqlParameters);
         }
 
         //echo "query=".$query->getSql()."<br>";
 
-        $allTransresRequests = $query->getResult();
+        //$allTransresRequests = $query->getResult();
 
         $paginationParams = array(
             'defaultSortFieldName' => 'transresRequest.id',
@@ -1471,7 +1473,17 @@ class RequestController extends Controller
             }
         }
 
-        $title = $title . " (" . count($transresRequests) . " of " . count($allTransresRequests) . ")";
+        $allTransresRequests = $query2->getResult();
+        if( count($allTransresRequests) > 0 ) {
+            $pageNumber = $transresRequests->getCurrentPageNumber();
+            $items = $transresRequests->getItems();
+            $startPageItems = (intval($pageNumber) - 1) * intval($limit) + 1;
+            $endPageItems = intval($startPageItems) + count($items) - 1;
+            //echo "pageNumber=$pageNumber; items=".count($items)."; startPageItems=".$startPageItems."; endPageItems=".$endPageItems."<br>";
+            $title = $title . " (" . $startPageItems . " of " . $endPageItems . ", Total " . count($allTransresRequests) . ")";
+        } else {
+            $title = $title . " (Total " . count($allTransresRequests) . ")";
+        }
 
         return array(
             'transresRequests' => $transresRequests,

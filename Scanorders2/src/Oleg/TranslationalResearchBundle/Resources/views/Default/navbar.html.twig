@@ -17,7 +17,7 @@
 {% macro createFilterRequestType( filterTypes ) %}
     {% for filterType in filterTypes %}
         {% if filterType == "[[hr]]" %}
-            <hr>
+            <hr style="margin-top: 10px; margin-bottom: 10px;">
         {% else %}
             <li>
                 <a href="{{ path(translationalresearch_sitename~'_request_index_filter',{'type':filterType}) }}">{{ filterType }}</a>
@@ -87,6 +87,19 @@
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Project Requests<b class="caret"></b></a>
                             <ul class="dropdown-menu">
 
+                                {% if is_granted('ROLE_TRANSRES_REQUESTER') %}
+                                    {% if specialties|length > 0 %}
+                                        {% for specialty in specialties %}
+                                            <li>
+                                                <a href="{{ path(translationalresearch_sitename~'_project_new',{'specialtyStr':specialty.getAbbreviation()}) }}"
+                                                >New {{ specialty.getName() }} Project</a>
+                                            </li>
+                                        {% endfor %}
+                                        {#<hr>#}
+                                        <hr style="margin-top: 10px; margin-bottom: 10px;">
+                                    {% endif %}
+                                {% endif %}
+
                                 {#show it only to admin, primary reviewers and executives#}
                                 {% if transres_util.isAdminOrPrimaryReviewerOrExecutive() %}
                                     <li id="nav-bar-translationalresearch-home" class="hidden-xs divider-vertical">
@@ -97,7 +110,7 @@
                                     {% if specialties|length > 0 %}
                                         {% for specialty in specialties %}
                                             <li>
-                                                <a href="{{ path(translationalresearch_sitename~'_project_index',{'filter[projectSpecialty]':specialty.id}) }}"
+                                                <a href="{{ path(translationalresearch_sitename~'_project_index',{'filter[projectSpecialty][]':specialty.id}) }}"
                                                 >All {{ specialty.getName() }} Projects</a>
                                             </li>
                                         {% endfor %}
@@ -115,19 +128,6 @@
                                     <li id="nav-bar-translationalresearch-my-review-projects">
                                         <a href="{{ path(translationalresearch_sitename~'_my_review_project_index') }}">Projects Assigned To Me For Review</a>
                                     </li>
-                                {% endif %}
-
-                                {% if is_granted('ROLE_TRANSRES_REQUESTER') %}
-                                    {% if specialties|length > 0 %}
-                                        <hr style="margin-top: 10px; margin-bottom: 10px;">
-                                        {% for specialty in specialties %}
-                                            <li>
-                                                <a href="{{ path(translationalresearch_sitename~'_project_new',{'specialtyStr':specialty.getAbbreviation()}) }}"
-                                                >New {{ specialty.getName() }} Project</a>
-                                            </li>
-                                        {% endfor %}
-                                        {#<hr>#}
-                                    {% endif %}
                                 {% endif %}
 
                             </ul>
@@ -165,7 +165,7 @@
                                 {#<a href="{{ path(translationalresearch_sitename~'_all_requests') }}">All Requests</a>#}
                             {#</li>#}
 
-                            <hr>
+                            <hr style="margin-top: 10px; margin-bottom: 10px;">
 
                             {% set filterRequestTypes = transres_request_util.getRequestFilterPresetType() %}
                             {{ _self.createFilterRequestType(filterRequestTypes) }}
@@ -183,7 +183,7 @@
                         {% macro createFilterType( filterTypes ) %}
                             {% for filterType in filterTypes %}
                                 {% if filterType == "[[hr]]" %}
-                                    <hr>
+                                    <hr style="margin-top: 10px; margin-bottom: 10px;">
                                 {% else %}
                                     <li id="nav-bar-translationalresearch-all-invoices-my">
                                         <a href="{{ path(translationalresearch_sitename~'_invoice_index_filter',{'type':filterType}) }}">{{ filterType }}</a>
@@ -241,15 +241,15 @@
                         <ul class="dropdown-menu">
 
                             <li>
-                                <a href="{{ path(translationalresearch_sitename~'_workflow_show',{'type':'project'}) }}">Project Status Progress</a>
+                                <a href="{{ path(translationalresearch_sitename~'_workflow_show',{'type':'project'}) }}">Project Request Approval Status Progress</a>
                             </li>
 
                             <li>
-                                <a href="{{ path(translationalresearch_sitename~'_workflow_show',{'type':'request-billing'}) }}">Request Billing Progress</a>
+                                <a href="{{ path(translationalresearch_sitename~'_workflow_show',{'type':'request-billing'}) }}">Work Request Billing Progress</a>
                             </li>
 
                             <li>
-                                <a href="{{ path(translationalresearch_sitename~'_workflow_show',{'type':'request-work-progress'}) }}">Request Work Progress</a>
+                                <a href="{{ path(translationalresearch_sitename~'_workflow_show',{'type':'request-work-progress'}) }}">Work Request Completion Progress</a>
                             </li>
 
                         </ul>
@@ -310,7 +310,7 @@
 
                             {% if is_granted('ROLE_TRANSRES_ADMIN') %}
                                 {#<li><a href="{{ path(translationalresearch_sitename~'_siteparameters') }}">Site Settings</a></li>#}
-                                <hr>
+                                <hr style="margin-top: 10px; margin-bottom: 10px;">
                                 {% for specialty in specialties %}
                                     <li>
                                         <a href="{{ path(translationalresearch_sitename~'_standalone_siteparameters_show',{'specialtyStr':specialty.getAbbreviation()}) }}"
@@ -320,7 +320,7 @@
                             {% endif %}
 
                             {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
-                                <hr>
+                                <hr style="margin-top: 10px; margin-bottom: 10px;">
                                 <li><a href="{{ path('user_admin_index') }}">List Manager</a></li>
                                 <li><a href="{{ path('platformlistmanager-list') }}">Platform List Manager</a></li>
                                 <li><a href="{{ path('user_admin_hierarchy_index') }}">Hierarchy Manager</a></li>

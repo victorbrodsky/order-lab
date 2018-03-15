@@ -75,17 +75,16 @@ class MaintenanceListener {
         //echo "controller=".$controller."<br>";
 
         //translationalresearch site check accessibility
-        //$transresBlockAccess = $this->userUtil->getSiteSetting($this->em,'transresBlockAccess');
-        $transresBlockAccess = $userSecUtil->getSiteSettingParameter('transresBlockAccess');
-        //$transresBlockAccess = true;
-        //$transresBlockAccess = false;
-        if( $transresBlockAccess ) {
-            if (strpos($controller, 'Oleg\TranslationalResearchBundle') !== false) {
+        if (strpos($controller, 'Oleg\TranslationalResearchBundle') !== false) {
+            $transresBlockAccess = $userSecUtil->getSiteSettingParameter('transresBlockAccess');
+            if ($transresBlockAccess) {
+
+                $systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
 
                 $session = $this->container->get('session');
                 $session->getFlashBag()->add(
                     'warning',
-                    "Translational Research site is currently not accessible"
+                    "Translational Research site is currently not accessible. If you have any questions, please contact the $systemEmail."
                 );
 
                 $blockAccessRoute = 'main_common_home';
@@ -94,6 +93,7 @@ class MaintenanceListener {
                 $event->setResponse($response);
             }
         }
+
 
         if( 
                 strpos($controller,'Oleg\UserdirectoryBundle') !== false || 

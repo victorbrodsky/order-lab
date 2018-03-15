@@ -1839,7 +1839,7 @@ class TransResRequestUtil
             '[[hr]]',
 
             //TODO: show by role. My Invoices to requester
-            'My Invoices (I am Submitter, Salesperson or PI)',
+            //'My Invoices (I am Submitter, Salesperson or PI)',
             //"Invoices Sent to Me", -  the same as "Invoices where I am a PI"
             "Invoices I Issued (I am a Submitter)", //the same as "Invoices where I am a Salesperson"
             "Invoices where I am a Salesperson",

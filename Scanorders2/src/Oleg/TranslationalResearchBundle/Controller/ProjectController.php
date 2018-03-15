@@ -376,13 +376,12 @@ class ProjectController extends Controller
 
         $limit = 10;
         $query = $em->createQuery($dql);
+        $query2 = $em->createQuery($dql);
 
 
         if( count($dqlParameters) > 0 ) {
             $query->setParameters($dqlParameters);
-            //foreach( $dqlParameters as $key=>$value) {
-            //    $query->setParameter($key, $value);
-            //}
+            $query2->setParameters($dqlParameters);
         }
 
         //echo "query=".$query->getSql()."<br>";
@@ -392,18 +391,27 @@ class ProjectController extends Controller
             'defaultSortDirection' => 'DESC'
         );
 
-        $allProjects = $query->getResult();
-
         $paginator  = $this->get('knp_paginator');
         $projects = $paginator->paginate(
             $query,
             $request->query->get('page', 1),   /*page number*/
-            $limit,                                         /*limit per page*/
+            $limit,                            /*limit per page*/
             $paginationParams
         );
 
-        //$allProjects = $query->getResult();
-        //$allProjects = $projects->getTotalItemCount();
+        //$allProjects = array();
+        $allProjects = $query2->getResult();
+        if( count($allProjects) > 0 ) {
+            //$allProjects = $projects->getTotalItemCount();
+            $pageNumber = $projects->getCurrentPageNumber();
+            $items = $projects->getItems();
+            $startPageItems = (intval($pageNumber) - 1) * intval($limit) + 1;
+            $endPageItems = intval($startPageItems) + count($items) - 1;
+            //echo "pageNumber=$pageNumber; items=".count($items)."; startPageItems=".$startPageItems."; endPageItems=".$endPageItems."<br>";
+            $title = $title . " (" . $startPageItems . " of " . $endPageItems . ", Total " . count($allProjects) . ")";
+        } else {
+            $title = $title . " (Total " . count($allProjects) . ")";
+        }
 
         $eventObjectType = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->findOneByName("Project");
         if( $eventObjectType ) {
@@ -415,7 +423,7 @@ class ProjectController extends Controller
         return array(
             'projects' => $projects,
             'allProjects' => $allProjects,
-            'title' => $title . " (" . count($projects) . " of " . count($allProjects) . ")",
+            'title' => $title,
             'filterform' => $filterform->createView(),
             'eventObjectTypeId' => $eventObjectTypeId,
             'advancedFilter' => $advancedFilter
