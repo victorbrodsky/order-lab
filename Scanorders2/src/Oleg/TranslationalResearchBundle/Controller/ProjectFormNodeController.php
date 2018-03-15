@@ -363,7 +363,7 @@ class ProjectFormNodeController extends ProjectController
             $originalStateStr = $project->getState();
             $originalStateLabel = $transresUtil->getStateLabelByName($originalStateStr);
 
-            $msg = "Project ID ".$project->getOid() ." has been successfully updated.";
+            $msg = "Project ID ".$project->getOid() ." has been successfully updated";
 
             //////////// remove the relationship between the review and the project ////////////
             $transresUtil->removeReviewsFromProject($project,$originalIrbReviews,$project->getIrbReviews());
@@ -396,7 +396,7 @@ class ProjectFormNodeController extends ProjectController
                     $startProjectReview = true;
 
                     $label = $transresUtil->getStateLabelByName($project->getState());
-                    $msg = "Project ID ".$project->getOid()." has been successfully updated and the status has been changed from $originalStateLabel to $label";
+                    $msg = "Project ID ".$project->getOid()." has been successfully updated and the status has been changed from '$originalStateLabel' to '$label'";
                 }
             }
 
@@ -427,7 +427,7 @@ class ProjectFormNodeController extends ProjectController
             $msg = $msg . " by ".$project->getUpdateUser()->getUsernameOptimal().".";
 
             $label = $transresUtil->getStateLabelByName($project->getState());
-            $msg = $msg . " The project current status is ".$label.".";
+            $msg = $msg . " The project current status is '".$label."'.";
 
             if( $testing ) {
                 echo "<br>Enf of form submit<br>";
@@ -460,7 +460,7 @@ class ProjectFormNodeController extends ProjectController
 
         $msg = "Project ID ".$project->getOid() ." has been viewed on the edit page.";
         $label = $transresUtil->getStateLabelByName($project->getState());
-        $msg = $msg . " The project current status is ".$label.".";
+        $msg = $msg . " The project current status is '".$label."'.";
 
         $transresUtil->setEventLog($project,$eventType,$msg,$testing);
 

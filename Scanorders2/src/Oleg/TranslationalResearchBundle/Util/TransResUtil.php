@@ -529,7 +529,9 @@ class TransResUtil
     public function getTransitionByName( $project, $transitionName ) {
         $workflow = $this->container->get('state_machine.transres_project');
         $transitions = $workflow->getEnabledTransitions($project);
+        //echo $transitionName.": count=".count($transitions)."<br>";
         foreach( $transitions as $transition ) {
+            //echo "transitionName:".$transition->getName()." == " . $transitionName;
             if( $transition->getName() == $transitionName ) {
                 return $transition;
             }
@@ -557,11 +559,16 @@ class TransResUtil
         if( !$to ) {
             //Get Transition and $to
             $transition = $transresUtil->getTransitionByName($project, $transitionName);
-            $tos = $transition->getTos();
-            if (count($tos) != 1) {
-                throw new \Exception('Available to state is not a single state; count=' . $tos . ": " . implode(",", $tos));
+            if( $transition ) {
+                $tos = $transition->getTos();
+                if (count($tos) != 1) {
+                    throw new \Exception('Available to state is not a single state; count=' . $tos . ": " . implode(",", $tos));
+                }
+                $to = $tos[0];
+            } else {
+                $to = null;
+                //exit("transition is null transitionName=".$transitionName);
             }
-            $to = $tos[0];
         }
         //echo "to=".$to."<br>";
 
@@ -589,10 +596,11 @@ class TransResUtil
                             $this->em->flush($review);
                         }
 
-                        $recommended = true;
+                        //$recommended = true;
                         $label = $this->getStateLabelByName($project->getState());
-                        $subject = "Project ID ".$project->getOid(). " (" .$label. "). Recommendation: ".$review->getDecision();
+                        $subject = "Project ID ".$project->getOid(). " has been reviewed by a committee member with recommendation: ".$review->getDecision();
                         $body = $subject;
+
                         //get project url
                         $projectUrl = $transresUtil->getProjectShowUrl($project);
                         $emailBody = $body . $break.$break. "Please click on the URL below to view this project:".$break.$projectUrl;
@@ -602,12 +610,13 @@ class TransResUtil
 
                         //event log
                         //$this->setEventLog($project,$review,$transitionName,$originalStateStr,$body,$testing);
+                        $emailBody = str_replace($break,"<br>",$emailBody);
                         $eventType = "Review Submitted";
-                        $this->setEventLog($project,$eventType,$body,$testing);
+                        $this->setEventLog($project,$eventType,$emailBody,$testing);
 
                         $this->container->get('session')->getFlashBag()->add(
                             'notice',
-                            "Successful action: ".$label
+                            $subject
                         );
 
                         return true;
@@ -630,25 +639,28 @@ class TransResUtil
                     $this->em->flush();
                 }
 
-                $recommended = false;
+                //$recommended = false;
                 $label = $this->getTransitionLabelByName($transitionName,$review);
-                $subject = "Project ID ".$project->getOid()." has been sent to the status '$label' from '".$originalStateLabel."'";
-                $body = $subject;
+                $subject = "Project ID ".$project->getOid()." status has been changed from '$originalStateLabel' to '$label'";
+
+                $statusChangeMsg = $this->getNotificationMsgByStates($originalStateStr,$to,$project);
+                //$body = $statusChangeMsg;
                 //get project url
                 $projectUrl = $transresUtil->getProjectShowUrl($project);
-                $emailBody = $body . $break.$break. "Please click on the URL below to view this project:".$break.$projectUrl;
+                $emailBody = $statusChangeMsg . $break.$break. "Please click on the URL below to view this project:".$break.$projectUrl;
 
                 //send confirmation email
                 $this->sendNotificationEmails($project,$review,$subject,$emailBody,$testing);
 
                 //event log
                 //$this->setEventLog($project,$review,$transitionName,$originalStateStr,$body,$testing);
+                $emailBody = str_replace($break,"<br>",$emailBody);
                 $eventType = "Review Submitted";
-                $this->setEventLog($project,$eventType,$body,$testing);
+                $this->setEventLog($project,$eventType,$emailBody,$testing);
 
                 $this->container->get('session')->getFlashBag()->add(
                     'notice',
-                    "Successful action: ".$label
+                    $statusChangeMsg    //"Successful action: ".$label
                 );
                 return true;
             } catch (\LogicException $e) {
@@ -1133,8 +1145,9 @@ class TransResUtil
                         $label = $label . " as Primary Reviewer";
                         $labeled = $labeled . " as Primary Reviewer";
                     } else {
-                        $label = "Recommend Approval Committee Review";
-                        $labeled = "Recommended Approval Committee Review";
+                        $userInfo = $this->getReviewerInfo($review);
+                        $label = "Recommend Approval Committee Review".$userInfo;
+                        $labeled = "Recommended Approval Committee Review".$userInfo;
                     }
                 }
                 break;
@@ -1145,8 +1158,9 @@ class TransResUtil
                     if( $review->getPrimaryReview() === true ) {
                         $label = $label . " as Primary Reviewer";
                     } else {
-                        $label = "Recommend Reject Committee Review";
-                        $labeled = "Recommended Reject Committee Review";
+                        $userInfo = $this->getReviewerInfo($review);
+                        $label = "Recommend Reject Committee Review".$userInfo;
+                        $labeled = "Recommended Reject Committee Review".$userInfo;
                     }
                 }
                 break;
@@ -1200,6 +1214,17 @@ class TransResUtil
         }
 
         return $returnLabel;
+    }
+
+    public function getReviewerInfo($review) {
+        $userInfo = "";
+        if( $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') ) {
+            $reviewer = $review->getReviewer();
+            if( $reviewer ) {
+                $userInfo = " as " . $reviewer->getDisplayName();
+            }
+        }
+        return $userInfo;
     }
 
     public function getStateLabelByProject( $project ) {
@@ -1915,13 +1940,13 @@ class TransResUtil
         //exit("exit appliedTransition=".$appliedTransition);
 
         if( $appliedTransition ) {
-            $recommended = false;
+            //$recommended = false;
             $eventType = "Review Submitted";
             $label = $this->getTransitionLabelByName($appliedTransition,$review);
             $subject = "Project ID ".$project->getOid()." has been sent to the status '$label'";
             $body = "Project ID ".$project->getOid()." has been sent to the status '$label'";
         } else {
-            $recommended = true;
+            //$recommended = true;
             $eventType = "Review Submitted";
             $label = $this->getStateLabelByName($project->getState());
             $subject = "Project ID ".$project->getOid(). " (" .$label. "). Recommendation: ".$review->getDecision();
@@ -1981,7 +2006,7 @@ class TransResUtil
 
         $appliedTransition = null;
 
-        echo "decision=".$review->getDecision()."<br>";
+        //echo "decision=".$review->getDecision()."<br>";
         if( $review->getDecision() == null ) {
             return $appliedTransition;
         }
@@ -1999,9 +2024,9 @@ class TransResUtil
         $workflow = $this->container->get('state_machine.transres_project');
         $transitions = $workflow->getEnabledTransitions($project);
 
-        echo "<pre>";
-        print_r($transitions);
-        echo "</pre><br><br>";
+        //echo "<pre>";
+        //print_r($transitions);
+        //echo "</pre><br><br>";
 
         $transitionNameYes = null;
         $toYes = null;
@@ -3180,5 +3205,50 @@ class TransResUtil
         $count = count($requests);
 
         return $count;
+    }
+
+    //$fromStateStr and $toStateStr - state string from workflow (i.e. 'irb_review')
+    public function getNotificationMsgByStates( $fromStateStr, $toStateStr, $project ) {
+        $transResFormNodeUtil = $this->container->get('transres_formnode_util');
+
+        $msg = null;
+
+        $id = $project->getOid();
+        $title = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"Title");
+        $fromLabel = $this->getStateSimpleLabelByName($fromStateStr);
+        $toLabel = $this->getStateSimpleLabelByName($toStateStr);
+
+        //Case1: irb_review -> admin_review
+        //Project ID [xxx] "[project title]" has successfully passed the "IRB review" stage and is now awaiting "Admin review".
+        if( strpos($fromStateStr, "_review") !== false && strpos($toStateStr, "_review") !== false ) {
+            $msg = "Project ID $id '".$title."' has successfully passed the '".$fromLabel."' stage and is now awaiting '".$toLabel."'.";
+        }
+
+        //Case2: final_review -> final_approved
+        //Project ID [xxx] "[project title]" has successfully passed all stages of review and received final approval.
+        if( strpos($fromStateStr, "_review") !== false && strpos($toStateStr, "_approved") !== false ) {
+            $msg = "Project ID $id '".$title."' has successfully passed all stages of review and received final approval.";
+        }
+
+        //Case3: irb_review -> irb_rejected
+        if( strpos($fromStateStr, "_review") !== false && strpos($toStateStr, "_rejected") !== false ) {
+            $msg = "Project ID $id '".$title."' has been rejected on the '".$fromLabel."' stage.";
+        }
+
+        //Case4: irb_review -> irb_missinginfo
+        if( strpos($fromStateStr, "_review") !== false && strpos($toStateStr, "_missinginfo") !== false ) {
+            $msg = "Additional information has been requested for the project with ID $id '".$title."' for the '".$fromLabel."' stage.";
+        }
+
+        //Case5: irb_missinginfo -> irb_review
+        if( strpos($fromStateStr, "_missinginfo") !== false && strpos($toStateStr, "_review") !== false ) {
+            $msg = "Project ID $id '".$title."' has been re-submitted back to the '".$toLabel."' stage.";
+        }
+
+        if( !$msg ) {
+            $msg = "The status of the project ID $id '".$title."' has been changed from '".$fromLabel."' to '".$toLabel."'.";
+        }
+
+        return $msg;
     }
 }
