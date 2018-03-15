@@ -41,7 +41,7 @@
 
                 <td>
                     {% if defaultReviewer.createDate %}
-                        {{ defaultReviewer.createDate|date('Y-m-d H:i:s') }}
+                        {{ defaultReviewer.createDate|date('m/d/Y H:i:s') }}
                     {% endif %}
                 </td>
                 {#<td>{{ transres_util.getStateSimpleLabelByName(defaultReviewer.state) }}</td>#}

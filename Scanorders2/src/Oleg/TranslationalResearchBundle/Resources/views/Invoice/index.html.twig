@@ -53,15 +53,15 @@
                 </td>
                 <td>{{ invoice.fundedAccountNumber }}</td>
                 <td>{{ invoice.salesperson }}</td>
-                <td>{% if invoice.createDate %}{{ invoice.createDate|date('Y-m-d') }}{% endif %}</td>
-                <td>{% if invoice.updateDate %}{{ invoice.updateDate|date('Y-m-d') }}{% endif %}</td>
+                <td>{% if invoice.createDate %}{{ invoice.createDate|date('m/d/Y') }}{% endif %}</td>
+                <td>{% if invoice.updateDate %}{{ invoice.updateDate|date('m/d/Y') }}{% endif %}</td>
                 <td>
                     {{ invoice.version }}
                     {% if invoice.latestVersion %}
                         (Latest)
                     {% endif %}
                 </td>
-                <td>{% if invoice.dueDate %}{{ invoice.dueDate|date('Y-m-d') }}{% endif %}</td>
+                <td>{% if invoice.dueDate %}{{ invoice.dueDate|date('m/d/Y') }}{% endif %}</td>
                 <td>{{ invoice.status }}</td>
                 <td>
                     {#{{ invoice.invoiceTo }}#}

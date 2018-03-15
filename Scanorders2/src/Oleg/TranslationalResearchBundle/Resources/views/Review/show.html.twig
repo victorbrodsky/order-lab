@@ -19,11 +19,11 @@
             </tr>
             <tr>
                 <th>Createdate</th>
-                <td>{% if irbReview.createdate %}{{ irbReview.createdate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if irbReview.createdate %}{{ irbReview.createdate|date('m/d/Y H:i:s') }}{% endif %}</td>
             </tr>
             <tr>
                 <th>Updatedate</th>
-                <td>{% if irbReview.updatedate %}{{ irbReview.updatedate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if irbReview.updatedate %}{{ irbReview.updatedate|date('m/d/Y H:i:s') }}{% endif %}</td>
             </tr>
             <tr>
                 <th>Decision</th>

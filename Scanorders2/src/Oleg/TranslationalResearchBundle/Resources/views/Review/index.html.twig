@@ -22,8 +22,8 @@
                 <td><a href="{{ path('translationalresearch_review_show', { 'id': irbReview.id }) }}">{{ irbReview.assignment }}</a></td>
                 <td>{{ irbReview.id }}</td>
                 <td>{{ irbReview.type }}</td>
-                <td>{% if irbReview.createdate %}{{ irbReview.createdate|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>{% if irbReview.updatedate %}{{ irbReview.updatedate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if irbReview.createdate %}{{ irbReview.createdate|date('m/d/Y H:i:s') }}{% endif %}</td>
+                <td>{% if irbReview.updatedate %}{{ irbReview.updatedate|date('m/d/Y H:i:s') }}{% endif %}</td>
                 <td>{{ irbReview.decision }}</td>
                 <td>{{ irbReview.comment }}</td>
                 <td>

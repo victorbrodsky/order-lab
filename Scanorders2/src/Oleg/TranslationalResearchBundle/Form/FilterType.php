@@ -136,23 +136,23 @@ class FilterType extends AbstractType
         $builder->add('searchId', TextType::class, array(
             'required'=>false,
             'label' => false,
-            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'Search by ID'),
+            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'Project Request ID'),
         ));
         $builder->add('searchTitle', TextType::class, array(
             'required'=>false,
             'label' => false,
-            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'Search by Title'),
+            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'Project Request ID'),
         ));
         $builder->add('searchIrbNumber', TextType::class, array(
             'required'=>false,
             'label' => false,
-            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'Search by IRB number'),
+            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'IRB Number'),
         ));
 
         $builder->add('fundingNumber', TextType::class, array(
             'required'=>false,
             'label' => false,
-            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'Search by Funding Number'),
+            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'Fund Number'),
         ));
 
         $builder->add('fundingType',ChoiceType::class, array(
@@ -171,7 +171,7 @@ class FilterType extends AbstractType
             'label'=> false,
             'required'=> false,
             'multiple' => false,
-            'attr' => array('class'=>'combobox combobox-width submit-on-enter-field', 'placeholder'=>'Search by Project Type'),
+            'attr' => array('class'=>'combobox combobox-width submit-on-enter-field', 'placeholder'=>'Project Type'),
             'query_builder' => function(EntityRepository $er) {
                 return $er->createQueryBuilder('list')
                     ->where("list.type = :typedef OR list.type = :typeadd")

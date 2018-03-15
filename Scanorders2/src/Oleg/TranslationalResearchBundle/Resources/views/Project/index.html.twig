@@ -19,7 +19,7 @@
     {% if allProjects|length > 0 %}
     <p>
         <a href="{{ path('translationalresearch_download_projects_excel',{'ids':transres_util.getProjectsIdsStr(allProjects)}) }}">
-            <i class="fa fa-file-excel-o"></i> Export Resulting {{ allProjects|length }} Projects Summaries to Excel</a>
+            <i class="fa fa-file-excel-o"></i> Export matching project summaries to Excel</a>
     </p>
     {% endif %}
 
@@ -120,7 +120,7 @@
                 <th>IRB Expiration Date</th>
                 <th>Requests</th>
 
-                <th title="Number of the Latest Issued Invoices"># Issued Invoices</th>
+                <th title="Number of the Latest Issued Invoices">Issued Invoices</th>
                 <th title="Total Amount of the Latest Issued Invoices">Total($)</th>
                 <th title="Paid Amount of the Latest Issued Invoices">Paid($)</th>
                 <th title="Due Amount of the Latest Issued Invoices">Due($)</th>
@@ -151,7 +151,7 @@
                 </td>
 
                 <td>
-                    {{ project.createDate|date('Y-m-d') }}
+                    {{ project.createDate|date('m/d/Y') }}
                 </td>
 
                 <td class="rowlink-skip">
@@ -186,13 +186,13 @@
 
                 <td>
                     {% if project.approvalDate %}
-                        {{ project.approvalDate|date('Y-m-d') }}
+                        {{ project.approvalDate|date('m/d/Y') }}
                     {% endif %}
                 </td>
 
                 {#<td>#}
                     {#{% if project.expirationDate %}#}
-                        {#{{ project.expirationDate|date('Y-m-d') }}#}
+                        {#{{ project.expirationDate|date('m/d/Y') }}#}
                     {#{% endif %}#}
                 {#</td>#}
 
@@ -201,8 +201,15 @@
                     {{ transres_formnode_util.getProjectFormNodeFieldByName(project,"IRB Expiration Date") }}
                 </td>
 
-                <td>
-                    {{ project.getRequests()|length }}
+                {#Requests#}
+                <td class="rowlink-skip">
+                    {#{{ project.getRequests()|length }}#}
+                    {% if project.getRequests()|length > 0 %}
+                        <a href="{{ path(translationalresearch_sitename~'_request_index', { 'id': project.id }) }}"
+                           target="_blank">{{ project.getRequests()|length }}</a>
+                    {% else %}
+                        {{ project.getRequests()|length }}
+                    {% endif %}
                 </td>
 
                 {#Invoices #}
@@ -210,6 +217,7 @@
                 <td>
                     {{ invoicesInfos.count }}
                 </td>
+
                 {#Subtotal of Issued Invoices#}
                 <td>
                     {% if invoicesInfos.total is not null %}
@@ -275,7 +283,7 @@
 
                             <li>
                                 <a href="{{ path('translationalresearch_download_projects_excel',{'ids':project.id}) }}">
-                                    <i class="fa fa-file-excel-o"></i> Export Project Summaries to Excel</a>
+                                    <i class="fa fa-file-excel-o"></i> Export Project Summary to Excel</a>
                             </li>
 
                             {#{% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}#}
@@ -358,7 +366,7 @@
 
     <br>
     <p>
-        <a class="btn btn-primary" href="{{ path(translationalresearch_sitename~'_project_new_selector') }}">Create a new project</a>
+        <a class="btn btn-primary" href="{{ path(translationalresearch_sitename~'_project_new_selector') }}">New Project Request</a>
     </p>
 
 {% endif %}

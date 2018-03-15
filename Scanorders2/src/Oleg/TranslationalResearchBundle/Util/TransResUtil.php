@@ -2357,7 +2357,8 @@ class TransResUtil
         $specialties = $this->em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->findBy(
             array(
                 'type' => array("default","user-added")
-            )
+            ),
+            array('orderinlist' => 'ASC')
         );
 
         $allowedSpecialties = array();
