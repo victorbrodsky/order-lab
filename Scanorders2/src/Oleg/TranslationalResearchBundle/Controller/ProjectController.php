@@ -530,7 +530,7 @@ class ProjectController extends Controller
 
         $msg = "Project ID ".$project->getOid() ." has been viewed on the show page.";
         $label = $transresUtil->getStateLabelByName($project->getState());
-        $msg = $msg . " The project current status is ".$label.".";
+        $msg = $msg . " The project's current status is ".$label.".";
 
         $transresUtil->setEventLog($project,$eventType,$msg);
 

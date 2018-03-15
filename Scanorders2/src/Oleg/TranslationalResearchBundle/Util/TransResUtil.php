@@ -1159,8 +1159,9 @@ class TransResUtil
                         $label = $label . " as Primary Reviewer";
                     } else {
                         $userInfo = $this->getReviewerInfo($review);
-                        $label = "Recommend Reject Committee Review".$userInfo;
-                        $labeled = "Recommended Reject Committee Review".$userInfo;
+                        //$label = "Recommend Reject Committee Review".$userInfo;
+                        $label = "Recommend Rejection as a result of Committee Review".$userInfo;
+                        $labeled = "Recommended Rejection as a result of Committee Review".$userInfo;
                     }
                 }
                 break;
@@ -3233,7 +3234,7 @@ class TransResUtil
 
         //Case3: irb_review -> irb_rejected
         if( strpos($fromStateStr, "_review") !== false && strpos($toStateStr, "_rejected") !== false ) {
-            $msg = "Project ID $id '".$title."' has been rejected on the '".$fromLabel."' stage.";
+            $msg = "Project ID $id '".$title."' has been rejected as a result of '".$fromLabel."'.";
         }
 
         //Case4: irb_review -> irb_missinginfo
@@ -3243,7 +3244,7 @@ class TransResUtil
 
         //Case5: irb_missinginfo -> irb_review
         if( strpos($fromStateStr, "_missinginfo") !== false && strpos($toStateStr, "_review") !== false ) {
-            $msg = "Project ID $id '".$title."' has been re-submitted back to the '".$toLabel."' stage.";
+            $msg = "Project ID $id '".$title."' has been re-submitted for '".$toLabel."' stage.";
         }
 
         if( !$msg ) {

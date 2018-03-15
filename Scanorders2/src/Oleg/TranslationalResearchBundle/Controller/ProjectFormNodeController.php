@@ -427,7 +427,7 @@ class ProjectFormNodeController extends ProjectController
             $msg = $msg . " by ".$project->getUpdateUser()->getUsernameOptimal().".";
 
             $label = $transresUtil->getStateLabelByName($project->getState());
-            $msg = $msg . " The project current status is '".$label."'.";
+            $msg = $msg . " The project's current status is '".$label."'.";
 
             if( $testing ) {
                 echo "<br>Enf of form submit<br>";
@@ -460,7 +460,7 @@ class ProjectFormNodeController extends ProjectController
 
         $msg = "Project ID ".$project->getOid() ." has been viewed on the edit page.";
         $label = $transresUtil->getStateLabelByName($project->getState());
-        $msg = $msg . " The project current status is '".$label."'.";
+        $msg = $msg . " The project's current status is '".$label."'.";
 
         $transresUtil->setEventLog($project,$eventType,$msg,$testing);
 
