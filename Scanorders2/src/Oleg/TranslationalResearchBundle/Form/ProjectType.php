@@ -495,7 +495,7 @@ class ProjectType extends AbstractType
 
         if( $this->params['saveAsDraft'] === true ) {
             $builder->add('saveAsDraft', SubmitType::class, array(
-                'label' => 'Save Project as Draft',
+                'label' => 'Save Draft Project Request',
                 //'attr' => array('class' => 'btn btn-warning', 'onclick'=>'transresValidateProjectForm();')
                 'attr' => array('class' => 'btn btn-warning')
             ));
@@ -508,9 +508,9 @@ class ProjectType extends AbstractType
 //        }
         if( $this->params['submitIrbReview'] === true ) {
             $builder->add('submitIrbReview', SubmitType::class, array(
-                'label' => 'Submit Irb Review',
+                'label' => 'Submit for Review', //'Submit Irb Review',
                 //'attr' => array('class'=>'btn btn-warning', 'onclick'=>'transresValidateProjectForm();')
-                'attr' => array('class'=>'btn btn-warning')
+                'attr' => array('class'=>'btn btn-success')
             ));
         }
         if( $this->params['updateProject'] === true ) {

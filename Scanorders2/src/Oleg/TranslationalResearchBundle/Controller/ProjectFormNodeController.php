@@ -247,7 +247,7 @@ class ProjectFormNodeController extends ProjectController
             'project' => $project,
             'form' => $form->createView(),
             'cycle' => $cycle,
-            'title' => "Create ".$specialty->getName()." Project",
+            'title' => $specialty->getName()." Project Request",
             'formnodetrigger' => $formnodetrigger,
             'formnodeTopHolderId' => $formnodeTopHolderId
         );

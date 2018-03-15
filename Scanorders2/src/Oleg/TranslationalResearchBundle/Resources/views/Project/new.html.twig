@@ -18,10 +18,10 @@
         {{ title }}
     </h4>
 
-    <p>
-        <a href="{{ path('employees_new_simple_user') }}">Add a New User</a>
-    </p>
-    <br>
+    {#<p>#}
+        {#<a href="{{ path('employees_new_simple_user') }}">Add a New User</a>#}
+    {#</p>#}
+    {#<br>#}
 
     {% set sitename = translationalresearch_sitename %}
 
@@ -35,9 +35,16 @@
 
         {{ transres.projectFormEdit(form,project,cycle) }}
 
-        {{ transres.projectInfo(form,project,cycle) }}
-
-        {{ transres.projectReviews(form,cycle,sitename) }}
+        {#show it only to: System Administrator, TRP Technician, Platform Administrator, Deputy Platform Administrator roles#}
+        {% if
+            is_granted('ROLE_TRANSRES_ADMIN') or
+            is_granted('ROLE_TRANSRES_PRIMARY_REVIEWER') or
+            is_granted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE') or
+            is_granted('ROLE_TRANSRES_TECHNICIAN')
+        %}
+            {{ transres.projectInfo(form,project,cycle) }}
+            {{ transres.projectReviews(form,cycle,sitename) }}
+        {% endif %}
 
 
         {% if form.updateDate is defined or form.updateUser is defined  %}

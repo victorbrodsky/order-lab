@@ -1081,7 +1081,7 @@ class TransResUtil
         switch ($transitionName) {
             //initial stages
             case "to_draft":
-                $label = "Save Project as Draft";
+                $label = "Save Draft Project Request";
                 $labeled = "Saved as Draft";
                 break;
 //            case "to_completed":
@@ -3152,7 +3152,7 @@ class TransResUtil
 
         $environment = $userSecUtil->getSiteSettingParameter('environment');
         if( $environment != 'live' ) {
-            if (false == $this->secAuth->isGranted('ROLE_TESTER')) {
+            if( false == $this->secAuth->isGranted('ROLE_TESTER') ) {
                 $user->addRole('ROLE_TESTER');
                 $flushUser = true;
                 $roleAddedArr[] = 'ROLE_TESTER';
