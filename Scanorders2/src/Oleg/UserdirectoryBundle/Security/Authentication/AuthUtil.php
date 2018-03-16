@@ -227,7 +227,7 @@ class AuthUtil {
             //echo "DB user found=".$user->getUsername()."<br>";
             //exit();
 
-            $this->logger->notice("findUserByUsername: user found by token->getUsername()=".$token->getUsername());
+            $this->logger->notice("findUserByUsername: existing user found in DB by token->getUsername()=".$token->getUsername());
 
             if( $this->canLogin($user) === false ) {
                 $this->logger->warning("User cannot login");
@@ -235,6 +235,8 @@ class AuthUtil {
             }
 
             return $user;
+        } else {
+            $this->logger->warning("findUserByUsername: Can not find existing user in DB by token->getUsername()=".$token->getUsername());
         }
 
         //echo "1<br>";
