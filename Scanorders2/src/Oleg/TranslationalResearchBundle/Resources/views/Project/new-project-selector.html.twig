@@ -12,19 +12,30 @@
     </h4>
     <br>
 
+    {#<p>#}
+        {#If you collaborating with Hematopathology group click on "Create New Hemaptopathology Project", <br>#}
+        {#for all others click on the "Create New AP/CP Project". <br>#}
+        {#To see the current list of the Hematopathology group click#}
+        {#<a target="_blank" href="https://pathology.weill.cornell.edu/clinical-services/hematopathology/immunopathology">here</a>.#}
+    {#</p>#}
+
     <p>
-        If you collaborating with Hematopathology group click on "Create New Hemaptopathology Project", <br>
-        for all others click on the "Create New AP/CP Project". <br>
-        To see the current list of the Hematopathology group click
-        <a target="_blank" href="https://pathology.weill.cornell.edu/clinical-services/hematopathology/immunopathology">here</a>.
+        If your project request involves collaboration with any
+        <a target="_blank" href="https://pathology.weill.cornell.edu/clinical-services/hematopathology/immunopathology"
+        >Weill Cornell Hematopathology faculty members</a>,<br>
+        please press the "New Hematopathology Project Request" button.<br>
+        For all other project requests, please press the "New AP/CP Project Request" button.<br>
+        To see the <a target="_blank" href="https://pathology.weill.cornell.edu/clinical-services/hematopathology/immunopathology"
+        >current list of the current Weill Cornell Hematopathology faculty members, please click here</a>.
     </p>
+
     <br>
 
 
     {% for specialty in specialties %}
         <p>
             <a class="btn btn-primary" href="{{ path(translationalresearch_sitename~'_project_new',{'specialtyStr':specialty.getAbbreviation()}) }}"
-            >Create New {{ specialty.getName() }} Project</a>
+            >New {{ specialty.getName() }} Project Request</a>
         </p>
     {% endfor %}
 

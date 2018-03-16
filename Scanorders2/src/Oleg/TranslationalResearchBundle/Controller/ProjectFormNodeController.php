@@ -62,7 +62,7 @@ class ProjectFormNodeController extends ProjectController
 
         return array(
             'specialties' => $specialties,
-            'title' => "New Project Selector"
+            'title' => "Please select the specialty for your project request"
         );
     }
 
