@@ -220,7 +220,7 @@
                 {#all issued invoices associated with the project#}
                 <td class="rowlink-skip">
                     {% if invoicesInfos.count > 0 %}
-                        <a data-toggle="tooltip" title="Show all issued invoice associated with this project"
+                        <a target="_blank" data-toggle="tooltip" title="Show all issued invoice associated with this project"
                            href="{{ path(translationalresearch_sitename~'_invoice_index_filter', {
                                'filter[idSearch]': project.oid,
                                'filter[status][0]': 'Unpaid/Issued',
@@ -379,10 +379,12 @@
     {#{{ render(controller('OlegTranslationalResearchBundle:Project:threadComments', { 'id': "3-9-committee_review" })) }}#}
     {#{% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': "3-9-committee_review"} %}#}
 
-    <br>
-    <p>
-        <a class="btn btn-primary" href="{{ path(translationalresearch_sitename~'_project_new_selector') }}">New Project Request</a>
-    </p>
+    {% if is_granted('ROLE_TRANSRES_REQUESTER') %}
+        <br>
+        <p>
+            <a class="btn btn-primary" href="{{ path(translationalresearch_sitename~'_project_new_selector') }}">New Project Request</a>
+        </p>
+    {% endif %}
 
 {% endif %}
 
