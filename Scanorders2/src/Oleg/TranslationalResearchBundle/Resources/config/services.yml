@@ -135,8 +135,13 @@ framework:
                     from: committee_review
                     to: committee_missinginfo
                 committee_review_resubmit:
-                     from: committee_missinginfo
-                     to: committee_review
+                    from: committee_missinginfo
+                    to: committee_review
+
+                committee_finalreview_approved:
+                    from: committee_review
+                    to: final_approved
+
                 #FINAL Review
                 final_review_approved:
                     from: final_review

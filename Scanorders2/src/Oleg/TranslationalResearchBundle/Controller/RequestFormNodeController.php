@@ -184,7 +184,7 @@ class RequestFormNodeController extends Controller
     public function editAction(Request $request, TransResRequest $transresRequest)
     {
 
-        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER')) {
+        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER') ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 

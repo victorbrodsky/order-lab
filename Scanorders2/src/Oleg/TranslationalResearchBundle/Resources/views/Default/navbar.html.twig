@@ -101,7 +101,7 @@
                                 {% endif %}
 
                                 {#show it only to admin, primary reviewers and executives#}
-                                {% if transres_util.isAdminOrPrimaryReviewerOrExecutive() %}
+                                {% if transres_util.isAdminOrPrimaryReviewerOrExecutive() or is_granted('ROLE_TRANSRES_TECHNICIAN') %}
                                     <li id="nav-bar-translationalresearch-home" class="hidden-xs divider-vertical">
                                         <a href="{{ path(translationalresearch_sitename~'_project_index') }}"
                                         >All Projects</a>

@@ -661,3 +661,9 @@ Bootstrap NavBar not collapsing as expected - separating onto two lines.
     content: "*";
     color: red;
 }
+
+.btn-orange {
+    color: #fff;
+    background-color: #FF6600;
+    border-color: #FF6600;
+}

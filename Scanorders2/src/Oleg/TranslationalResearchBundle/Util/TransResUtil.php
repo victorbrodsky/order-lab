@@ -1446,6 +1446,9 @@ class TransResUtil
         //irb_review_missinginfo => IRB Review Missinginfo
         //irb_review_resubmit => IRB Review Resubmit
         if( strpos($transitionName, "_approved") !== false ) {
+            if( strpos($transitionName, "finalreview_approved") !== false ) {
+                return "btn btn-primary transres-review-submit"; //btn-primary
+            }
             return "btn btn-success transres-review-submit";
         }
         if( strpos($transitionName, "_missinginfo") !== false ) {

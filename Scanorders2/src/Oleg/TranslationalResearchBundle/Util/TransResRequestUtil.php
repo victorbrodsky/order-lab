@@ -1916,6 +1916,9 @@ class TransResRequestUtil
         if( $transresUtil->isAdminOrPrimaryReviewerOrExecutive() === false ) {
             return $filterTypes;
         }
+        if( $this->secAuth->isGranted('ROLE_TRANSRES_TECHNICIAN') === false ) {
+            return $filterTypes;
+        }
 
         $filterTypes[] = 'All Requests';
         if( $allowHema ) {
