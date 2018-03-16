@@ -131,10 +131,10 @@
 
                                 <li id="nav-bar-translationalresearch-my-review-projects">
                                     <a href="{{ path(translationalresearch_sitename~'_my_review_project_index',{
-                                        'filter[state][]':'irb_review',
-                                        'filter[state][]':'admin_review',
-                                        'filter[state][]':'committee_review',
-                                        'filter[state][]':'final_review'} ) }}"
+                                        'filter[state][0]':'irb_review',
+                                        'filter[state][1]':'admin_review',
+                                        'filter[state][2]':'committee_review',
+                                        'filter[state][3]':'final_review'} ) }}"
                                     >Projects Pending My Review</a>
                                 </li>
                                 {#{% endif %}#}
