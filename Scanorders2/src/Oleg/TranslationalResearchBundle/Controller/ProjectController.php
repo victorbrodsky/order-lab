@@ -196,13 +196,13 @@ class ProjectController extends Controller
 
         //////////////////// Start Filter ////////////////////
 
-        //Non admin, Primary Reviewers and Executive can see all projects.
+        //Non admin, Primary Reviewers, Technicians and Executive can see all projects.
         // All other users can view only their projects (where they are requesters: PI, Pathologists Involved, Co-Investigators, Contacts, Billing Contacts)
         if(
             $transresUtil->isAdminOrPrimaryReviewer() === false &&
             $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN') === false &&
             $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') === false &&
-            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') === false
+            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP') === false
         ) {
 
         }
@@ -313,7 +313,7 @@ class ProjectController extends Controller
 
         //Non admin, Primary Reviewers and Executive can see all projects.
         // All other users can view only their projects (where they are requesters: PI, Pathologists Involved, Co-Investigators, Contacts, Billing Contacts)
-        if( $transresUtil->isAdminOrPrimaryReviewerOrExecutive() ) {
+        if( $transresUtil->isAdminOrPrimaryReviewerOrExecutive() || $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN') ) {
             $showOnlyMyProjects = false;
         } else {
             $showOnlyMyProjects = true;
