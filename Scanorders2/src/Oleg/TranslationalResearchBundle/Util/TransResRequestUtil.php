@@ -1837,7 +1837,6 @@ class TransResRequestUtil
 
         if(
             $transresUtil->isAdminOrPrimaryReviewer() ||
-            $this->secAuth->isGranted('ROLE_TRANSRES_TECHNICIAN') ||
             $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') ||
             $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP')
         ) {
@@ -1895,7 +1894,7 @@ class TransResRequestUtil
         }
     }
 
-    //get allowed filter project types for logged in user
+    //get allowed filter request types for logged in user
     public function getRequestFilterPresetType() {
         $transresUtil = $this->container->get('transres_util');
         $user = $this->secTokenStorage->getToken()->getUser();
@@ -1914,10 +1913,7 @@ class TransResRequestUtil
 
         $filterTypes = array('My Submitted Requests','Requests for My Projects');
 
-        if( $transresUtil->isAdminOrPrimaryReviewerOrExecutive() === false ) {
-            return $filterTypes;
-        }
-        if( $this->secAuth->isGranted('ROLE_TRANSRES_TECHNICIAN') === false ) {
+        if( $transresUtil->isAdminOrPrimaryReviewerOrExecutive() === false && $this->secAuth->isGranted('ROLE_TRANSRES_TECHNICIAN') === false ) {
             return $filterTypes;
         }
 
