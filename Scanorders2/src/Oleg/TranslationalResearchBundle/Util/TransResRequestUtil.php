@@ -1831,44 +1831,67 @@ class TransResRequestUtil
     }
 
     public function getInvoiceFilterPresetType() {
-        $filterTypes = array(
-            'All Invoices',
-            'All Issued Invoices',
-            'All Pending Invoices',
 
-            '[[hr]]',
+        $transresUtil = $this->container->get('transres_util');
+        //$filterTypes = array();
 
-            //TODO: show by role. My Invoices to requester
-            //'My Invoices (I am Submitter, Salesperson or PI)',
-            //"Invoices Sent to Me", -  the same as "Invoices where I am a PI"
-            "Invoices I Issued (I am a Submitter)", //the same as "Invoices where I am a Salesperson"
-            "Invoices where I am a Salesperson",
-            "Invoices where I am a PI",
-            //"Unpaid Invoices sent to Me",
-            "Unpaid Invoices where I am a PI",
+        if(
+            $transresUtil->isAdminOrPrimaryReviewer() ||
+            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') ||
+            $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP')
+        ) {
+            //Show all invoices filter
+            $filterTypes = array(
+                'All Invoices',
+                'All Issued Invoices',
+                'All Pending Invoices',
 
-            '[[hr]]',
+                '[[hr]]',
 
-            "Latest Versions of All Invoices",
-            "Latest Versions of Issued (Unpaid) Invoices",
-            "Latest Versions of Pending (Unissued) Invoices",
-            "Latest Versions of Paid Invoices",
-            "Latest Versions of Partially Paid Invoices",
-            "Latest Versions of Paid and Partially Paid Invoices",
-            "Latest Versions of Canceled Invoices",
+                //'My Invoices (I am Submitter, Salesperson or PI)',
+                //"Invoices Sent to Me", -  the same as "Invoices where I am a PI"
+                "Invoices I Issued (I am a Submitter)", //the same as "Invoices where I am a Salesperson"
+                "Invoices where I am a Salesperson",
+                "Invoices where I am a PI",
+                //"Unpaid Invoices sent to Me",
+                "Unpaid Invoices where I am a PI",
 
-            '[[hr]]',
+                '[[hr]]',
 
-            "Old Versions of All Invoices",
-            "Old Versions of Issued (Unpaid) Invoices",
-            "Old Versions of Pending (Unissued) Invoices",
-            "Old Versions of Paid Invoices",
-            "Old Versions of Partially Paid Invoices",
-            "Old Versions of Paid and Partially Paid Invoices",
-            "Old Versions of Canceled Invoices"
-        );
+                "Latest Versions of All Invoices",
+                "Latest Versions of Issued (Unpaid) Invoices",
+                "Latest Versions of Pending (Unissued) Invoices",
+                "Latest Versions of Paid Invoices",
+                "Latest Versions of Partially Paid Invoices",
+                "Latest Versions of Paid and Partially Paid Invoices",
+                "Latest Versions of Canceled Invoices",
 
-        return $filterTypes;
+                '[[hr]]',
+
+                "Old Versions of All Invoices",
+                "Old Versions of Issued (Unpaid) Invoices",
+                "Old Versions of Pending (Unissued) Invoices",
+                "Old Versions of Paid Invoices",
+                "Old Versions of Partially Paid Invoices",
+                "Old Versions of Paid and Partially Paid Invoices",
+                "Old Versions of Canceled Invoices"
+            );
+
+            return $filterTypes;
+        } else {
+            //Show only My Invoices
+            $filterTypes = array(
+                //'My Invoices (I am Submitter, Salesperson or PI)',
+                //"Invoices Sent to Me", -  the same as "Invoices where I am a PI"
+                "Invoices I Issued (I am a Submitter)", //the same as "Invoices where I am a Salesperson"
+                "Invoices where I am a Salesperson",
+                "Invoices where I am a PI",
+                //"Unpaid Invoices sent to Me",
+                "Unpaid Invoices where I am a PI",
+            );
+
+            return $filterTypes;
+        }
     }
 
     //get allowed filter project types for logged in user

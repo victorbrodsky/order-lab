@@ -183,12 +183,12 @@
                         </li>
                     {#{% endif %}#}
 
-                    {% if
-                        is_granted('ROLE_TRANSRES_REQUESTER') or
-                        is_granted('ROLE_TRANSRES_BILLING_ADMIN') or
-                        is_granted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') or
-                        is_granted('ROLE_TRANSRES_EXECUTIVE_APCP')
-                    %}
+                    {#{% if#}
+                        {#is_granted('ROLE_TRANSRES_REQUESTER') or#}
+                        {#is_granted('ROLE_TRANSRES_BILLING_ADMIN') or#}
+                        {#is_granted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') or#}
+                        {#is_granted('ROLE_TRANSRES_EXECUTIVE_APCP')#}
+                    {#%}#}
                         {% macro createFilterType( filterTypes ) %}
                             {% for filterType in filterTypes %}
                                 {% if filterType == "[[hr]]" %}
@@ -207,7 +207,7 @@
                                 {{ _self.createFilterType(filterTypes) }}
                             </ul>
                         </li>
-                    {% endif %}
+                    {#{% endif %}#}
 
                     {% if is_granted('ROLE_TRANSRES_ADMIN') %}
                         {#<li id="nav-bar-translationalresearch-default-reviewers"><a href="{{ path(translationalresearch_sitename~'_default-reviewer_index') }}">Default Reviewers</a></li>#}
