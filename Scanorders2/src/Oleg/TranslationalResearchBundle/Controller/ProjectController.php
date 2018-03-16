@@ -371,7 +371,7 @@ class ProjectController extends Controller
             );
 
             $dqlParameters["userId"] = $user->getId();
-            $title = "My Review Projects, where I am a reviewer";
+            $title = "Projects Assigned to Me For Review";
         }
         //////////////////// EOF Start Filter ////////////////////
 
