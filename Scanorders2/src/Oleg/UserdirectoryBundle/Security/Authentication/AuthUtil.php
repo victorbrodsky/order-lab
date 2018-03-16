@@ -455,6 +455,7 @@ class AuthUtil {
 
         if( count($users) == 1 ) {
             $singleUser = $users[0];
+            $this->logger->warning('Ok: User found with identifierUsername='.$identifierUsername."; identifierKeytypeStr=".$identifierKeytypeStr);
             return $singleUser;
         }
 

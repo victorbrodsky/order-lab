@@ -68,6 +68,7 @@ class ProjectController extends Controller
      * @Route("/projects/", name="translationalresearch_project_index")
      * @Route("/my-projects/", name="translationalresearch_my_project_index")
      * @Route("/projects-assigned-to-me-for-review/", name="translationalresearch_my_review_project_index")
+     * @Route("/projects-pending-my-review/", name="translationalresearch_my_pending_review_project_index")
      * @Template("OlegTranslationalResearchBundle:Project:index.html.twig")
      * @Method("GET")
      */
@@ -336,6 +337,7 @@ class ProjectController extends Controller
             $title = "My Projects, where I am a requester";
         }
 
+        //|| $routeName == "translationalresearch_my_pending_review_project_index"
         if( $routeName == "translationalresearch_my_review_project_index" ) {
             $dql->leftJoin('project.irbReviews','irbReviews');
             $dql->leftJoin('irbReviews.reviewer','irbReviewer');

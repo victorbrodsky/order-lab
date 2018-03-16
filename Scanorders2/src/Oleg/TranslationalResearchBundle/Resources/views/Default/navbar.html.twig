@@ -124,11 +124,20 @@
                                     >My Projects</a>
                                 </li>
 
-                                {% if transres_util.hasReviewerRoles() %}
-                                    <li id="nav-bar-translationalresearch-my-review-projects">
-                                        <a href="{{ path(translationalresearch_sitename~'_my_review_project_index') }}">Projects Assigned To Me For Review</a>
-                                    </li>
-                                {% endif %}
+                                {#{% if transres_util.hasReviewerRoles() %}#}
+                                <li id="nav-bar-translationalresearch-my-review-projects">
+                                    <a href="{{ path(translationalresearch_sitename~'_my_review_project_index') }}">Projects Assigned To Me For Review</a>
+                                </li>
+
+                                <li id="nav-bar-translationalresearch-my-review-projects">
+                                    <a href="{{ path(translationalresearch_sitename~'_my_review_project_index',{
+                                        'filter[state][]':'irb_review',
+                                        'filter[state][]':'admin_review',
+                                        'filter[state][]':'committee_review',
+                                        'filter[state][]':'final_review'} ) }}"
+                                    >Projects Pending My Review</a>
+                                </li>
+                                {#{% endif %}#}
 
                             </ul>
                         </li>
