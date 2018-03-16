@@ -1837,6 +1837,7 @@ class TransResRequestUtil
 
         if(
             $transresUtil->isAdminOrPrimaryReviewer() ||
+            $this->secAuth->isGranted('ROLE_TRANSRES_TECHNICIAN') ||
             $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') ||
             $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP')
         ) {

@@ -1197,6 +1197,11 @@ class TransResUtil
                 $labeled = "Resubmitted to Final Review";
                 break;
 
+            case "committee_finalreview_approved":
+                $label = "Provide Final Approval";
+                $labeled = "Provided Final Approval";
+                break;
+
             default:
                 $label = null;
                 $labeled = null;
@@ -1216,7 +1221,6 @@ class TransResUtil
 
         return $returnLabel;
     }
-
     public function getReviewerInfo($review) {
         $userInfo = "";
         if( $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') ) {
