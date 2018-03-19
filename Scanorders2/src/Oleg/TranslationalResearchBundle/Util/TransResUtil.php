@@ -611,6 +611,12 @@ class TransResUtil
                 //$review->setDecision($decision);
                 $review->setDecisionByTransitionName($transitionName);
 
+                //TODO: if committee_finalreview_approved => set final review decision to approve
+                //because we search pending project assigned to me by decision == NULL?
+//                if( $transitionName == "committee_finalreview_approved" ) {
+//
+//                }
+
                 $review->setReviewedBy($user);
 
                 //check if like/dislike
@@ -659,6 +665,11 @@ class TransResUtil
                 //check and add reviewers for this state by role? Do it when project is created?
                 //$this->addDefaultStateReviewers($project);
 
+                $eventResetMsg = null;
+                if( $originalStateStr != $project->getState() ) {
+                    $eventResetMsg = $this->resetReviewDecision($project);
+                }
+
                 //write to DB
                 if( !$testing ) {
                     $this->em->flush();
@@ -679,6 +690,7 @@ class TransResUtil
 
                 //event log
                 //$this->setEventLog($project,$review,$transitionName,$originalStateStr,$body,$testing);
+                $emailBody = $emailBody . $eventResetMsg;
                 $emailBody = str_replace($break,"<br>",$emailBody);
                 $eventType = "Review Submitted";
                 $this->setEventLog($project,$eventType,$emailBody,$testing);
@@ -936,11 +948,51 @@ class TransResUtil
         return $project;
     }
 
-    //TODO: Change review's decision according to the current state
+    //Change review's decision according to the current state
     public function resetReviewDecision($project) {
-        $status = $project->getStatus();
-        if( $status ) {
+        $state = $project->getState();
+        //echo "state=".$state."<br>";
+        if( !$state ) {
+            return null;
+        }
 
+        $reset = false;
+
+        if( $state == "irb_review" || $state == "draft" ) { //strpos($state, "irb_") !== false
+            $this->setProjectDecision($project->getIrbReviews(),NULL);
+            $this->setProjectDecision($project->getAdminReviews(),NULL);
+            $this->setProjectDecision($project->getCommitteeReviews(),NULL);
+            $this->setProjectDecision($project->getFinalReviews(),NULL);
+            $reset = true;
+        }
+        if( $state == "admin_review" ) {
+            $this->setProjectDecision($project->getAdminReviews(),NULL);
+            $this->setProjectDecision($project->getCommitteeReviews(),NULL);
+            $this->setProjectDecision($project->getFinalReviews(),NULL);
+            $reset = true;
+        }
+        if( $state == "committee_review" ) {
+            $this->setProjectDecision($project->getCommitteeReviews(),NULL);
+            $this->setProjectDecision($project->getFinalReviews(),NULL);
+            $reset = true;
+        }
+        if( $state == "final_review" ) {
+            $this->setProjectDecision($project->getFinalReviews(),NULL);
+            $reset = true;
+        }
+
+        $msg = null;
+        if( $reset ) {
+            $msg = "Reset $state state's reviews decisions and all children reviews to pending";
+        }
+
+        $msg = "<br>".$msg;
+
+        return $msg;
+    }
+    public function setProjectDecision($reviews,$decision) {
+        foreach($reviews as $review) {
+            $review->setDecision($decision);
         }
     }
 

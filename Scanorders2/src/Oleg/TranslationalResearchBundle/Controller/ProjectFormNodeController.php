@@ -334,7 +334,7 @@ class ProjectFormNodeController extends ProjectController
         foreach ($project->getFinalReviews() as $review) {
             $originalFinalReviews->add($review);
         }
-        $originalProjectStatus = $project->getStatus();
+        $originalProjectState = $project->getState();
         ///////////// EOF get originals /////////////
 
         $form = $this->createProjectForm($project,$cycle,$request);
@@ -407,10 +407,10 @@ class ProjectFormNodeController extends ProjectController
             $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($project,"irbApprovalLetter");
             $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($project,"humanTissueForm");
 
-            //TODO: Change review's decision according to the state (if state has been changed manually)
-            //$review->setDecisionByTransitionName($transitionName);
-            if( $originalProjectStatus != $project->getStatus ) {
-                $transresUtil->resetReviewDecision($project);
+            //Change review's decision according to the state (if state has been changed manually)
+            $eventResetMsg = null;
+            if( $originalProjectState != $project->getState() ) {
+                $eventResetMsg = $transresUtil->resetReviewDecision($project);
             }
 
             if( !$testing ) {
@@ -451,7 +451,7 @@ class ProjectFormNodeController extends ProjectController
 
             //eventlog
             $eventType = "Project Updated";
-            $transresUtil->setEventLog($project,$eventType,$msg,$testing);
+            $transresUtil->setEventLog($project,$eventType,$msg.$eventResetMsg,$testing);
 
             if( $startProjectReview ) {
                 //send confirmation email
