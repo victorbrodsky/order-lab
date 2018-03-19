@@ -80,7 +80,7 @@ class ProjectController extends Controller
         }
 
         $transresUtil = $this->container->get('transres_util');
-        $transResFormNodeUtil = $this->container->get('transres_formnode_util');
+        //$transResFormNodeUtil = $this->container->get('transres_formnode_util');
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $routeName = $request->get('_route');
@@ -94,6 +94,19 @@ class ProjectController extends Controller
             }
         }
 
+//        if( $routeName == "translationalresearch_my_pending_review_project_index" ) {
+//            return $this->redirectToRoute(
+//                'translationalresearch_my_review_project_index',
+//                array(
+//                    'filter[state][0]' => 'irb_review',
+//                    'filter[state][1]' => 'admin_review',
+//                    'filter[state][2]' => 'committee_review',
+//                    'filter[state][3]' => 'final_review',
+//                    'filter[preroute]' => 'translationalresearch_my_pending_review_project_index'
+//                )
+//            );
+//        }
+
         //$projects = $em->getRepository('OlegTranslationalResearchBundle:Project')->findAll();
 
         $repository = $em->getRepository('OlegTranslationalResearchBundle:Project');
@@ -103,6 +116,22 @@ class ProjectController extends Controller
         $dql->leftJoin('project.submitter','submitter');
         $dql->leftJoin('project.principalInvestigators','principalInvestigators');
         $dql->leftJoin('principalInvestigators.infos','principalInvestigatorsInfos');
+
+        $dql->leftJoin('project.irbReviews','irbReviews');
+        $dql->leftJoin('irbReviews.reviewer','irbReviewer');
+        $dql->leftJoin('irbReviews.reviewerDelegate','irbReviewerDelegate');
+
+        $dql->leftJoin('project.adminReviews','adminReviews');
+        $dql->leftJoin('adminReviews.reviewer','adminReviewer');
+        $dql->leftJoin('adminReviews.reviewerDelegate','adminReviewerDelegate');
+
+        $dql->leftJoin('project.committeeReviews','committeeReviews');
+        $dql->leftJoin('committeeReviews.reviewer','committeeReviewer');
+        $dql->leftJoin('committeeReviews.reviewerDelegate','committeeReviewerDelegate');
+
+        $dql->leftJoin('project.finalReviews','finalReviews');
+        $dql->leftJoin('finalReviews.reviewer','finalReviewer');
+        $dql->leftJoin('finalReviews.reviewerDelegate','finalReviewerDelegate');
 
         $advancedFilter = 0;
 
@@ -160,6 +189,9 @@ class ProjectController extends Controller
 //        $interviewee = $filterform['missinginfo']->getData();
 //        $active = $filterform['approved']->getData();
 //        $reject = $filterform['closed']->getData();
+        if( isset($filterform['preroute']) ) {
+            $preroute = $filterform['preroute']->getData();
+        }
         //////// EOF create filter //////////
 
         //force to set project specialty filter for non-admin users
@@ -312,12 +344,17 @@ class ProjectController extends Controller
 
 
         //Non admin, Primary Reviewers and Executive can see all projects.
-        // All other users can view only their projects (where they are requesters: PI, Pathologists Involved, Co-Investigators, Contacts, Billing Contacts)
-        if( $transresUtil->isAdminOrPrimaryReviewerOrExecutive() || $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN') ) {
+        // All other users can view only their projects
+        // (where they are requesters: PI, Pathologists Involved, Co-Investigators, Contacts, Billing Contacts or reviewers)
+        if( 
+            $transresUtil->isAdminOrPrimaryReviewerOrExecutive() || 
+            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
+        ) {
             $showOnlyMyProjects = false;
         } else {
             $showOnlyMyProjects = true;
         }
+        //echo "showOnlyMyProjects=$showOnlyMyProjects <br>";
 
         if( $showOnlyMyProjects || $routeName == "translationalresearch_my_project_index" ) {
             $dql->leftJoin('project.coInvestigators','coInvestigators');
@@ -325,53 +362,52 @@ class ProjectController extends Controller
             $dql->leftJoin('project.billingContact','billingContact');
             $dql->leftJoin('project.contacts','contacts');
 
-            $dql->andWhere(
+            $showOnlyMyProjectsCriterion =
                 "principalInvestigators.id = :userId OR ".
                 "coInvestigators.id = :userId OR ".
                 "pathologists.id = :userId OR ".
                 "contacts.id = :userId OR ".
                 "billingContact.id = :userId OR ".
                 "submitter.id = :userId"
-            );
+            ;
+
+            $myReviewProjectsCriterion = $this->getProjectWhereIamReviewer();
+            $showOnlyMyProjectsCriterion = $showOnlyMyProjectsCriterion . " OR " . $myReviewProjectsCriterion;
+
+            $dql->andWhere($showOnlyMyProjectsCriterion);
 
             $dqlParameters["userId"] = $user->getId();
             $title = "My Projects, where I am a requester";
         }
 
-        //|| $routeName == "translationalresearch_my_pending_review_project_index"
         if( $routeName == "translationalresearch_my_review_project_index" ) {
-            $dql->leftJoin('project.irbReviews','irbReviews');
-            $dql->leftJoin('irbReviews.reviewer','irbReviewer');
-            $dql->leftJoin('irbReviews.reviewerDelegate','irbReviewerDelegate');
-
-            $dql->leftJoin('project.adminReviews','adminReviews');
-            $dql->leftJoin('adminReviews.reviewer','adminReviewer');
-            $dql->leftJoin('adminReviews.reviewerDelegate','adminReviewerDelegate');
-
-            $dql->leftJoin('project.committeeReviews','committeeReviews');
-            $dql->leftJoin('committeeReviews.reviewer','committeeReviewer');
-            $dql->leftJoin('committeeReviews.reviewerDelegate','committeeReviewerDelegate');
-
-            $dql->leftJoin('project.finalReviews','finalReviews');
-            $dql->leftJoin('finalReviews.reviewer','finalReviewer');
-            $dql->leftJoin('finalReviews.reviewerDelegate','finalReviewerDelegate');
-
-            $dql->andWhere(
-                "irbReviewer.id = :userId OR ".
-                "irbReviewerDelegate.id = :userId OR ".
-
-                "adminReviewer.id = :userId OR ".
-                "adminReviewerDelegate.id = :userId OR ".
-
-                "committeeReviewer.id = :userId OR ".
-                "committeeReviewerDelegate.id = :userId OR ".
-
-                "finalReviewer.id = :userId OR ".
-                "finalReviewerDelegate.id = :userId"
-            );
+            $myReviewProjectsCriterion = $this->getProjectWhereIamReviewer();
+            $dql->andWhere($myReviewProjectsCriterion);
 
             $dqlParameters["userId"] = $user->getId();
             $title = "Projects Assigned to Me For Review";
+
+//            if( $preroute == "translationalresearch_my_pending_review_project_index" ) {
+//                $title = "Projects Pending My Review";
+//            }
+        }
+
+        if( $routeName == "translationalresearch_my_pending_review_project_index" ) {
+            //Pending my review: I'm a reviewer and project's review where I'm a reviewer has decision = NULL ("Pending Review")
+            $myPendingProjectsCriterion =
+                "((irbReviewer.id = :userId OR irbReviewerDelegate.id = :userId) AND irbReviews.decision IS NULL)".
+                " OR ".
+                "((adminReviewer.id = :userId OR adminReviewerDelegate.id = :userId) AND adminReviews.decision IS NULL)".
+                " OR ".
+                "((committeeReviewer.id = :userId OR committeeReviewerDelegate.id = :userId) AND committeeReviews.decision IS NULL)".
+                " OR ".
+                "((finalReviewer.id = :userId OR finalReviewerDelegate.id = :userId) AND finalReviews.decision IS NULL)"
+            ;
+
+            $dql->andWhere($myPendingProjectsCriterion);
+
+            $dqlParameters["userId"] = $user->getId();
+            $title = "Projects Pending My Review";
         }
         //////////////////// EOF Start Filter ////////////////////
 
@@ -433,6 +469,23 @@ class ProjectController extends Controller
         );
     }
 
+    public function getProjectWhereIamReviewer() {
+        $criterion =
+            "irbReviewer.id = :userId OR ".
+            "irbReviewerDelegate.id = :userId OR ".
+
+            "adminReviewer.id = :userId OR ".
+            "adminReviewerDelegate.id = :userId OR ".
+
+            "committeeReviewer.id = :userId OR ".
+            "committeeReviewerDelegate.id = :userId OR ".
+
+            "finalReviewer.id = :userId OR ".
+            "finalReviewerDelegate.id = :userId"
+        ;
+
+        return $criterion;
+    }
 
 
     /**

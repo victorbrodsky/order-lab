@@ -936,6 +936,14 @@ class TransResUtil
         return $project;
     }
 
+    //TODO: Change review's decision according to the current state
+    public function resetReviewDecision($project) {
+        $status = $project->getStatus();
+        if( $status ) {
+
+        }
+    }
+
     public function processDefaultReviewersRole( $defaultReviewer, $originalReviewer=null, $originalReviewerDelegate=null ) {
 
         $roles = $defaultReviewer->getRoleByState();
@@ -1273,7 +1281,7 @@ class TransResUtil
 //                break;
 
             case "irb_review":
-                $state = "In IRB Review";
+                $state = "IRB Review";
                 break;
             case "irb_rejected":
                 $state = "IRB Review Rejected";
@@ -1283,7 +1291,7 @@ class TransResUtil
                 break;
 
             case "admin_review":
-                $state = "In Admin Review";
+                $state = "Admin Review";
                 break;
             case "admin_rejected":
                 $state = "Admin Review Rejected";
@@ -1293,7 +1301,7 @@ class TransResUtil
                 break;
 
             case "committee_review":
-                $state = "In Committee Review";
+                $state = "Committee Review";
                 break;
             case "committee_rejected":
                 $state = "Committee Review Rejected";
@@ -1303,7 +1311,7 @@ class TransResUtil
                 break;
 
             case "final_review":
-                $state = "In Final Approval";
+                $state = "Final Approval";
                 break;
             case "final_approved":
                 $state = "Approved";
@@ -2143,7 +2151,7 @@ class TransResUtil
 
                 $this->container->get('session')->getFlashBag()->add(
                     'notice',
-                    "Successful transition: ".$transitionNameFinal."; Project is ".$this->getStateLabelByProject($project)
+                    "Successful transition: ".$transitionNameFinal."; Project request is in ".$this->getStateLabelByProject($project)." stage."
                 );
 
             } catch (LogicException $e) {
@@ -3200,10 +3208,10 @@ class TransResUtil
             //exit('flush user');
             $this->em->flush($user);
 
-            $this->container->get('session')->getFlashBag()->add(
-                'warning',
-                "Permission to create a new $specialtyStr project has been automatically granted by the system. Your activities will be recorded."
-            );
+//            $this->container->get('session')->getFlashBag()->add(
+//                'warning',
+//                "Permission to create a new $specialtyStr project has been automatically granted by the system. Your activities will be recorded."
+//            );
 
             ///////////////// Event Log /////////////////
             $sitename = $this->container->getParameter('translationalresearch.sitename');

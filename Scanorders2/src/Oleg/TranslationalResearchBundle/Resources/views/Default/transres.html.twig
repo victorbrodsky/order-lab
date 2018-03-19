@@ -511,9 +511,8 @@
 
         {% if transres_util.isProjectStateReviewer(project,app.user) %}
             <p><strong>
-                This project is {{ transres_util.getStateLabelByProject(project) }} stage.
-                Please review this request, enter a comment (if any),
-                and press the green, red, or orange (optional) button to enter your opinion:
+                This project request is in {{ transres_util.getStateLabelByProject(project) }} stage.
+                Please review this request, enter a comment (if any), and press the green or the red button to submit your opinion.
             </strong></p>
         {% endif %}
 

@@ -23,6 +23,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -182,6 +183,12 @@ class FilterType extends AbstractType
                     ));
             },
         ));
+
+//        $builder->add('preroute', HiddenType::class, array( //TextType HiddenType
+//            'required'=>false,
+//            'label' => false,
+//            'attr' => array('class'=>'form-control'),
+//        ));
 
 //        $builder->add('completed', CheckboxType::class, array(
 //            'required'=>false,
