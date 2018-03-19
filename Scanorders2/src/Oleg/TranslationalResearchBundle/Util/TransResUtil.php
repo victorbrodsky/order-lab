@@ -84,7 +84,7 @@ class TransResUtil
                 );
 
                 //$label = ucfirst($transitionName)." (mark as ".ucfirst($to);
-                $label = $this->getTransitionLabelByName($transitionName);
+                $label = $this->getTransitionLabelByName($transitionName); //not used
 
                 $classTransition = $this->getHtmlClassTransition($transitionName);
 
@@ -169,9 +169,9 @@ class TransResUtil
         }
 
         //add current state of the review object
-        if( $review->getDecision() ) {
-            $links[] = "<p>(Current " . $review->getSubmittedReviewerInfo() . ")</p>";
-        }
+        //if( $review->getDecision() ) {
+        //    $links[] = "<p>(Existing " . $review->getSubmittedReviewerInfo() . ")</p>";
+        //}
 
 //        $stateStr = $this->getAllowedFromState($project);
 //
@@ -202,6 +202,19 @@ class TransResUtil
             if( $review->getStateStr() === "committee_review" ) {
                 if( strpos($transitionName, "missinginfo") !== false ) {
                     continue;
+                }
+                //show "Provide Final Approval" only if user is primary committee reviewer and final reviewer for this project
+                if( $transitionName == "committee_finalreview_approved" ) {
+                    $committeReviewer = $this->isProjectStateReviewer($project,$user,"committee_review",true);
+                    $finalReviewer = $this->isProjectStateReviewer($project,$user,"final_review",true);
+                    if( $committeReviewer && $finalReviewer ) {
+                        //show link to committee_finalreview_approved
+                    } else {
+                        //echo "not primary or committee reviewer <br>";
+                        if( !$this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') ) {
+                            continue;
+                        }
+                    }
                 }
             }
 
@@ -234,22 +247,22 @@ class TransResUtil
                 );
 
                 //$label = ucfirst($transitionName)." (mark as ".ucfirst($to);
-                $label = $this->getTransitionLabelByName($transitionName,$review);
+                $label = $this->getTransitionLabelByName($transitionName,$review); //main
 
                 $classTransition = $this->getHtmlClassTransition($transitionName);
 
                 $generalDataConfirmation = "general-data-confirm='Are you sure you want to $label?'";
 
-                //don't show confirmation modal
-//                if( strpos($transitionName, "missinginfo") !== false ) {
-//                    $generalDataConfirmation = "";
-//                }
-
                 //add class to distinguish irb_review update IRB expiration date
                 if( $review->getStateStr() == "irb_review" ) {
                     $classTransition = $classTransition . " transres-irb_review";
-                    $generalDataConfirmation = "";;
+                    //$generalDataConfirmation = "";
                 }
+
+                //don't show confirmation modal for missinginfo, because missinginfo has JS alert for empty comment
+                //if( strpos($transitionName, "missinginfo") !== false ) {
+                    //$generalDataConfirmation = "";
+                //}
 
                 $thisLink = "<a ".
                     //"general-data-confirm='Are you sure you want to $label?'".
@@ -311,7 +324,7 @@ class TransResUtil
                 );
 
                 //$label = ucfirst($transitionName)." (mark as ".ucfirst($to);
-                $label = $this->getTransitionLabelByName($transitionName);
+                $label = $this->getTransitionLabelByName($transitionName); //not used
 
                 $classTransition = $this->getHtmlClassTransition($transitionName);
 
@@ -572,9 +585,6 @@ class TransResUtil
         }
         //echo "to=".$to."<br>";
 
-        $label = $this->getTransitionLabelByName($transitionName);
-        //echo "label=".$label."<br>";
-
         $originalStateStr = $project->getState();
         $originalStateLabel = $this->getStateLabelByName($originalStateStr);
 
@@ -597,7 +607,7 @@ class TransResUtil
                         }
 
                         //$recommended = true;
-                        $label = $this->getStateLabelByName($project->getState());
+                        //$label = $this->getStateLabelByName($project->getState());
                         $subject = "Project ID ".$project->getOid(). " has been reviewed by a committee member with recommendation: ".$review->getDecision();
                         $body = $subject;
 
@@ -640,7 +650,7 @@ class TransResUtil
                 }
 
                 //$recommended = false;
-                $label = $this->getTransitionLabelByName($transitionName,$review);
+                $label = $this->getTransitionLabelByName($transitionName,$review); //set transition
                 $subject = "Project ID ".$project->getOid()." status has been changed from '$originalStateLabel' to '$label'";
 
                 $statusChangeMsg = $this->getNotificationMsgByStates($originalStateStr,$to,$project);
@@ -664,12 +674,11 @@ class TransResUtil
                 );
                 return true;
             } catch (\LogicException $e) {
-
                 //event log
 
                 $this->container->get('session')->getFlashBag()->add(
                     'warning',
-                    "Action failed: ".$label
+                    "Action failed: ".$this->getTransitionLabelByName($transitionName)
                 );
                 return false;
             }//try
@@ -1089,112 +1098,106 @@ class TransResUtil
 //                $labeled = "Completed Submission";
 //                break;
             case "to_review":
-                $label = "Submit to IRB Review";
+                $label = "Submit Project Request to IRB Review";
                 $labeled = "Submitted to IRB Review";
                 break;
             //final stages
             case "approved_closed":
-                $label = "Close Project";
-                $labeled = "Closed";
+                $label = "Close Project Request";
+                $labeled = "Closed Project Request";
                 break;
             case "closed_approved":
-                $label = "Re-Open previously Final Approved Project";
-                $labeled = "Re-Opened (previously Final Approved Project)";
+                $label = "Re-Open previously Final Approved Project Request";
+                $labeled = "Re-Opened (previously Final Approved Project Request)";
                 break;
 
 //            ///// Main Actions /////
             case "irb_review_approved":
-                $label = "Approve IRB Review";
-                $labeled = "Approved IRB Review";
+                $label = "Approve Project Request as a Result of IRB Review";
+                $labeled = "Approved Project Request as a Result of IRB Review";
                 break;
             case "irb_review_rejected":
-                $label = "Reject IRB Review";
-                $labeled = "Rejected IRB Review";
+                $label = "Reject Project Request as a Result of IRB Review";
+                $labeled = "Rejected Project Request as a Result of IRB Review";
                 break;
             case "irb_review_missinginfo":
                 $label = "Request additional information from submitter for IRB Review";
                 $labeled = "Requested additional information from submitter for IRB Review";
                 break;
             case "irb_review_resubmit":
-                $label = "Resubmit to IRB Review";
-                $labeled = "Resubmitted to IRB Review";
+                $label = "Resubmit Project Request to IRB Review";
+                $labeled = "Resubmitted Project Request to IRB Review";
                 break;
 
             case "admin_review_approved":
-                $label = "Approve Admin Review";
-                $labeled = "Approved Admin Review";
+                $label = "Approve Project Request as a Result of Admin Review";
+                $labeled = "Approved Project Request as a Result of Admin Review";
                 break;
             case "admin_review_rejected":
-                $label = "Reject Admin Review";
-                $labeled = "Rejected Admin Review";
+                $label = "Reject Project Request as a Result of Admin Review";
+                $labeled = "Rejected Project Request as a Result of Admin Review";
                 break;
             case "admin_review_missinginfo":
                 $label = "Request additional information from submitter for Admin Review";
                 $labeled = "Requested additional information from submitter for Admin Review";
                 break;
             case "admin_review_resubmit":
-                $label = "Resubmit to Admin Review";
-                $labeled = "Resubmitted to Admin Review";
+                $label = "Resubmit Project Request to Admin Review";
+                $labeled = "Resubmitted Project Request to Admin Review";
                 break;
 
             case "committee_review_approved":
-                $label = "Approve Committee Review";
-                $labeled = "Approved Committee Review";
-                if( method_exists($review, 'getPrimaryReview') ) {
-                    if( $review->getPrimaryReview() === true ) {
-                        $label = $label . " as Primary Reviewer";
-                        $labeled = $labeled . " as Primary Reviewer";
-                    } else {
-                        $userInfo = $this->getReviewerInfo($review);
-                        $label = "Recommend Approval Committee Review".$userInfo;
-                        $labeled = "Recommended Approval Committee Review".$userInfo;
-                    }
+                $label = "Approve Project Request as a Result of Committee Review";
+                $labeled = "Approved Project Request as a Result of Committee Review";
+                if( !$this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') ) {
+                    $label = $label . " as Primary Reviewer";
+                    $labeled = $labeled . " as Primary Reviewer";
+                } else {
+                    $userInfo = $this->getReviewerInfo($review);
+                    $label = "Recommend Approval as a Result of Committee Review".$userInfo;
+                    $labeled = "Recommended Approval as a Result of Committee Review".$userInfo;
                 }
                 break;
             case "committee_review_rejected":
-                $label = "Reject Committee Review";
-                $labeled = "Rejected Committee Review";
-                if( method_exists($review, 'getPrimaryReview') ) {
-                    if( $review->getPrimaryReview() === true ) {
-                        $label = $label . " as Primary Reviewer";
-                    } else {
-                        $userInfo = $this->getReviewerInfo($review);
-                        //$label = "Recommend Reject Committee Review".$userInfo;
-                        $label = "Recommend Rejection as a result of Committee Review".$userInfo;
-                        $labeled = "Recommended Rejection as a result of Committee Review".$userInfo;
-                    }
+                $label = "Reject Project Request as a Result of Committee Review";
+                $labeled = "Rejected Project Request as a Result of Committee Review";
+                if( !$this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') ) {
+                    $label = $label . " as Primary Reviewer";
+                } else {
+                    $userInfo = $this->getReviewerInfo($review);
+                    //$label = "Recommend Reject Committee Review".$userInfo;
+                    $label = "Recommend Rejection as a Result of Committee Review".$userInfo;
+                    $labeled = "Recommended Rejection as a Result of Committee Review".$userInfo;
                 }
                 break;
             case "committee_review_missinginfo":
                 $label = "Request additional information from submitter for Committee Review";
                 $labeled = "Requested additional information from submitter for Committee Review";
-                if( method_exists($review, 'getPrimaryReview') ) {
-                    if( $review->getPrimaryReview() === true ) {
-                        $label = $label . " as Primary Reviewer";
-                        $labeled = $labeled . " as Primary Reviewer";
-                    }
+                if( $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') ) {
+                    $label = $label . " as Primary Reviewer";
+                    $labeled = $labeled . " as Primary Reviewer";
                 }
                 break;
             case "committee_review_resubmit":
-                $label = "Resubmit to Committee Review";
-                $labeled = "Resubmitted to Committee Review";
+                $label = "Resubmit Project Request to Committee Review";
+                $labeled = "Resubmitted Project Request to Committee Review";
                 break;
 
             case "final_review_approved":
-                $label = "Approve Final Review";
-                $labeled = "Approved Final Review";
+                $label = "Approve Project Request as a Result of Final Review";
+                $labeled = "Approved Project Request as a Result of Final Review";
                 break;
             case "final_review_rejected":
-                $label = "Reject Final Review";
-                $labeled = "Rejected Final Review";
+                $label = "Reject Project Request as a Result of Final Review";
+                $labeled = "Rejected Project Request as a Result of Final Review";
                 break;
             case "final_review_missinginfo":
                 $label = "Request additional information from submitter for Final Review";
                 $labeled = "Requested additional information from submitter for Final Review";
                 break;
             case "final_review_resubmit":
-                $label = "Resubmit to Final Review";
-                $labeled = "Resubmitted to Final Review";
+                $label = "Resubmit Project Request to Final Review";
+                $labeled = "Resubmitted Project Request to Final Review";
                 break;
 
             case "committee_finalreview_approved":
@@ -1456,7 +1459,7 @@ class TransResUtil
             return "btn btn-success transres-review-submit";
         }
         if( strpos($transitionName, "_missinginfo") !== false ) {
-            return "btn btn-warning transres-review-submit";
+            return "btn btn-warning transres-review-submit transres-missinginfo";
         }
         if( strpos($transitionName, "_rejected") !== false ) {
             return "btn btn-danger transres-review-submit";
@@ -1771,13 +1774,16 @@ class TransResUtil
     }
 
     //return true if the project is in review state and logged in user is a reviewer or admin
-    public function isProjectStateReviewer($project,$user) {
+    public function isProjectStateReviewer($project, $user, $stateStr=null, $onlyReviewer=false) {
 
         if( $project && $this->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
             return false;
         }
 
-        $stateStr = $this->getAllowedFromState($project); //must be equal to the current project state
+        if( !$stateStr ) {
+            $stateStr = $this->getAllowedFromState($project); //must be equal to the current project state
+        }
+
         if( !$stateStr ) {
             return false;
         }
@@ -1799,10 +1805,12 @@ class TransResUtil
 
         //echo $stateStr.": reviews count=".count($reviews)."<br>";
         if( count($reviews) > 0 ) {
-            if ($this->isAdminOrPrimaryReviewer()) {
-                return true;
+            if( $onlyReviewer == false ) {
+                if( $this->isAdminOrPrimaryReviewer() ) {
+                    return true;
+                }
             }
-            if ($this->isReviewsReviewer($user, $reviews)) {
+            if( $this->isReviewsReviewer($user, $reviews) ) {
                 return true;
             }
         }
@@ -1950,7 +1958,7 @@ class TransResUtil
         if( $appliedTransition ) {
             //$recommended = false;
             $eventType = "Review Submitted";
-            $label = $this->getTransitionLabelByName($appliedTransition,$review);
+            $label = $this->getTransitionLabelByName($appliedTransition,$review);//not used
             $subject = "Project ID ".$project->getOid()." has been sent to the status '$label'";
             $body = "Project ID ".$project->getOid()." has been sent to the status '$label'";
         } else {

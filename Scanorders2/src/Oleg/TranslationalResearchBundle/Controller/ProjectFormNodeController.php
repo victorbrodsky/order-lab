@@ -201,6 +201,7 @@ class ProjectFormNodeController extends ProjectController
             // In order to initiate the review of your project request,
             // please make sure to complete your submission once your draft is ready.
             // Project requests with a “draft” status will not be reviewed until they are finalized and submitted.
+            $emailSubject = "Your project request draft has been saved and assigned ID ".$project->getOid();
             $msg = "Your project request draft has been saved and assigned ID ".$project->getOid().".".
                 " In order to initiate the review of your project request,".
                 " please make sure to complete your submission once your draft is ready.".
@@ -212,6 +213,7 @@ class ProjectFormNodeController extends ProjectController
                 // status updates by email. You can also log back in to this site to review
                 // the status of your project request, submit your subsequent work requests
                 // (upon project request approval), and see your associated invoices (if any) as well.
+                $emailSubject = "Your project request has been assigned an ID of ".$project->getOid();
                 $msg = "Thank you for your submission! Your project request has been assigned an ID of ".$project->getOid().
                     " and will be reviewed.".
                     " You should receive notifications of approval status updates by email.".
@@ -237,7 +239,7 @@ class ProjectFormNodeController extends ProjectController
                 //get project url
                 $projectUrl = $transresUtil->getProjectShowUrl($project);
                 $emailBody = $msg . $break.$break. "Please click on the URL below to view this project:".$break.$projectUrl;
-                $transresUtil->sendNotificationEmails($project,null,$msg,$emailBody,$testing);
+                $transresUtil->sendNotificationEmails($project,null,$emailSubject,$emailBody,$testing);
             }
 
             return $this->redirectToRoute('translationalresearch_project_show', array('id' => $project->getId()));
