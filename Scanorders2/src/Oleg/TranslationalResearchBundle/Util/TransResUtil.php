@@ -205,6 +205,8 @@ class TransResUtil
                 }
                 //show "Provide Final Approval" only if user is primary committee reviewer and final reviewer for this project
                 if( $transitionName == "committee_finalreview_approved" ) {
+                    //There should be only one Orange "Provide Final Approval" button for primary reviewer
+
                     $committeReviewer = $this->isProjectStateReviewer($project,$user,"committee_review",true);
                     $finalReviewer = $this->isProjectStateReviewer($project,$user,"final_review",true);
                     if( $committeReviewer && $finalReviewer ) {
@@ -1149,33 +1151,40 @@ class TransResUtil
             case "committee_review_approved":
                 $label = "Approve Project Request as a Result of Committee Review";
                 $labeled = "Approved Project Request as a Result of Committee Review";
-                if( !$this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') ) {
-                    $label = $label . " as Primary Reviewer";
-                    $labeled = $labeled . " as Primary Reviewer";
-                } else {
-                    $userInfo = $this->getReviewerInfo($review);
-                    $label = "Recommend Approval as a Result of Committee Review".$userInfo;
-                    $labeled = "Recommended Approval as a Result of Committee Review".$userInfo;
+                if( method_exists($review, 'getPrimaryReview') ) {
+                    if ($review->getPrimaryReview() === true) {
+                        //$label = $label . " as Primary Reviewer";
+                        //$labeled = $labeled . " as Primary Reviewer";
+                    } else {
+                        $userInfo = $this->getReviewerInfo($review);
+                        $label = "Recommend Approval as a Result of Committee Review" . $userInfo;
+                        $labeled = "Recommended Approval as a Result of Committee Review" . $userInfo;
+                    }
                 }
                 break;
             case "committee_review_rejected":
                 $label = "Reject Project Request as a Result of Committee Review";
                 $labeled = "Rejected Project Request as a Result of Committee Review";
-                if( !$this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') ) {
-                    $label = $label . " as Primary Reviewer";
-                } else {
-                    $userInfo = $this->getReviewerInfo($review);
-                    //$label = "Recommend Reject Committee Review".$userInfo;
-                    $label = "Recommend Rejection as a Result of Committee Review".$userInfo;
-                    $labeled = "Recommended Rejection as a Result of Committee Review".$userInfo;
+                if( method_exists($review, 'getPrimaryReview') ) {
+                    if ($review->getPrimaryReview() === true) {
+                        //$label = $label . " as Primary Reviewer";
+                        //$labeled = $labeled . " as Primary Reviewer";
+                    } else {
+                        $userInfo = $this->getReviewerInfo($review);
+                        //$label = "Recommend Reject Committee Review".$userInfo;
+                        $label = "Recommend Rejection as a Result of Committee Review" . $userInfo;
+                        $labeled = "Recommended Rejection as a Result of Committee Review" . $userInfo;
+                    }
                 }
                 break;
             case "committee_review_missinginfo":
                 $label = "Request additional information from submitter for Committee Review";
                 $labeled = "Requested additional information from submitter for Committee Review";
-                if( $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') ) {
-                    $label = $label . " as Primary Reviewer";
-                    $labeled = $labeled . " as Primary Reviewer";
+                if( method_exists($review, 'getPrimaryReview') ) {
+                    if ($review->getPrimaryReview() === true) {
+                        $label = $label . " as Primary Reviewer";
+                        $labeled = $labeled . " as Primary Reviewer";
+                    }
                 }
                 break;
             case "committee_review_resubmit":
@@ -1229,7 +1238,7 @@ class TransResUtil
         if( $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') ) {
             $reviewer = $review->getReviewer();
             if( $reviewer ) {
-                $userInfo = " as " . $reviewer->getDisplayName();
+                $userInfo = " (as " . $reviewer->getDisplayName() . ")";
             }
         }
         return $userInfo;
