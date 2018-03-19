@@ -203,10 +203,23 @@ class TransResUtil
                 if( strpos($transitionName, "missinginfo") !== false ) {
                     continue;
                 }
+
+                //don't show "Recommend..." buttons to primary reviewer for committee_review stage
+                $finalReviewer = $this->isProjectStateReviewer($project,$user,"final_review",true);
+                if( $review->getPrimaryReview() === false && $finalReviewer ) {
+                    continue;
+                }
+
                 //show "Provide Final Approval" only if user is primary committee reviewer and final reviewer for this project
                 if( $transitionName == "committee_finalreview_approved" ) {
                     //There should be only one Orange "Provide Final Approval" button for primary reviewer
+                    if( method_exists($review, 'getPrimaryReview') ) {
+                        if( $review->getPrimaryReview() === false ) {
+                            continue;
+                        }
+                    }
 
+                    //show "Provide Final Approval" only if user is primary committee reviewer and final reviewer for this project
                     $committeReviewer = $this->isProjectStateReviewer($project,$user,"committee_review",true);
                     $finalReviewer = $this->isProjectStateReviewer($project,$user,"final_review",true);
                     if( $committeReviewer && $finalReviewer ) {
