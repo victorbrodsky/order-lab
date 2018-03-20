@@ -394,6 +394,7 @@ class ProjectController extends Controller
 
         if( $routeName == "translationalresearch_my_pending_review_project_index" ) {
             //Pending my review: I'm a reviewer and project's review where I'm a reviewer has decision = NULL ("Pending Review")
+            //TODO: should filter current state, and corresponding current state review:decision is NULL (pending) and reviewer is logged in user?
             $myPendingProjectsCriterion =
                 "((irbReviewer.id = :userId OR irbReviewerDelegate.id = :userId) AND irbReviews.decision IS NULL)".
                 " OR ".

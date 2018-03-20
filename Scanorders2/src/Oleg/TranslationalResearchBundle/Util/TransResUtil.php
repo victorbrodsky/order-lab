@@ -195,9 +195,9 @@ class TransResUtil
             $transitionName = $transition->getName();
             //echo "transitionName=".$transitionName."<br>";
 
-            if( $this->isExceptionTransition($transitionName) === true ) {
-                continue;
-            }
+//            if( $this->isExceptionTransition($transitionName) === true ) {
+//                continue;
+//            }
 
             if( $review->getStateStr() === "committee_review" ) {
                 if( strpos($transitionName, "missinginfo") !== false ) {
@@ -358,15 +358,15 @@ class TransResUtil
     }
 
     //$transitionName - transition name, for example, committee_review_missinginfo or final_review_missinginfo
-    public function isExceptionTransition( $transitionName ) {
-        if( $transitionName == "committee_review_missinginfo" ) {
-            return true;
-        }
-        if( $transitionName == "final_review_missinginfo" ) {
-            return true;
-        }
-        return false;
-    }
+//    public function isExceptionTransition( $transitionName ) {
+//        if( $transitionName == "committee_review_missinginfo" ) {
+//            return true;
+//        }
+//        if( $transitionName == "final_review_missinginfo" ) {
+//            return true;
+//        }
+//        return false;
+//    }
 
     //NOT USED
     //get Review links for this user: irb_review => "IRB Review" or "IRB Review as Admin"
@@ -1282,16 +1282,16 @@ class TransResUtil
                     }
                 }
                 break;
-            case "committee_review_missinginfo":
-                $label = "Request additional information from submitter for Committee Review";
-                $labeled = "Requested additional information from submitter for Committee Review";
-                if( method_exists($review, 'getPrimaryReview') ) {
-                    if ($review->getPrimaryReview() === true) {
-                        $label = $label . " as Primary Reviewer";
-                        $labeled = $labeled . " as Primary Reviewer";
-                    }
-                }
-                break;
+//            case "committee_review_missinginfo":
+//                $label = "Request additional information from submitter for Committee Review";
+//                $labeled = "Requested additional information from submitter for Committee Review";
+//                if( method_exists($review, 'getPrimaryReview') ) {
+//                    if ($review->getPrimaryReview() === true) {
+//                        $label = $label . " as Primary Reviewer";
+//                        $labeled = $labeled . " as Primary Reviewer";
+//                    }
+//                }
+//                break;
             case "committee_review_resubmit":
                 $label = "Resubmit Project Request to Committee Review";
                 $labeled = "Resubmitted Project Request to Committee Review";
@@ -1305,10 +1305,10 @@ class TransResUtil
                 $label = "Reject Project Request as a Result of Final Review";
                 $labeled = "Rejected Project Request as a Result of Final Review";
                 break;
-            case "final_review_missinginfo":
-                $label = "Request additional information from submitter for Final Review";
-                $labeled = "Requested additional information from submitter for Final Review";
-                break;
+//            case "final_review_missinginfo":
+//                $label = "Request additional information from submitter for Final Review";
+//                $labeled = "Requested additional information from submitter for Final Review";
+//                break;
             case "final_review_resubmit":
                 $label = "Resubmit Project Request to Final Review";
                 $labeled = "Resubmitted Project Request to Final Review";
@@ -1390,22 +1390,22 @@ class TransResUtil
             case "committee_rejected":
                 $state = "Committee Review Rejected";
                 break;
-            case "committee_missinginfo":
-                $state = "Pending additional information from submitter for Committee Review";
-                break;
+//            case "committee_missinginfo":
+//                $state = "Pending additional information from submitter for Committee Review";
+//                break;
 
             case "final_review":
-                $state = "Final Approval";
+                $state = "Final Review";
                 break;
             case "final_approved":
                 $state = "Approved";
                 break;
             case "final_rejected":
-                $state = "Final Approval Rejected";
+                $state = "Final Review Rejected";
                 break;
-            case "final_missinginfo":
-                $state = "Pending additional information from submitter for Final Review";
-                break;
+//            case "final_missinginfo":
+//                $state = "Pending additional information from submitter for Final Review";
+//                break;
 
             case "closed":
                 $state = "Closed";
@@ -1456,22 +1456,22 @@ class TransResUtil
             case "committee_rejected":
                 $state = "Committee Review Rejected";
                 break;
-            case "committee_missinginfo":
-                $state = "Request additional information from submitter for Committee Review";
-                break;
+//            case "committee_missinginfo":
+//                $state = "Request additional information from submitter for Committee Review";
+//                break;
 
             case "final_review":
-                $state = "Final Approval";
+                $state = "Final Review";
                 break;
             case "final_approved":
                 $state = "Approved";
                 break;
             case "final_rejected":
-                $state = "Final Approval Rejected";
+                $state = "Final Review Rejected";
                 break;
-            case "final_missinginfo":
-                $state = "Request additional information from submitter for Final Review";
-                break;
+//            case "final_missinginfo":
+//                $state = "Request additional information from submitter for Final Review";
+//                break;
 
             case "closed":
                 $state = "Closed";
@@ -1538,12 +1538,12 @@ class TransResUtil
 
             'committee_review',
             'committee_rejected',
-            'committee_missinginfo',
+//            'committee_missinginfo',
 
             'final_review',
             'final_approved',
             'final_rejected',
-            'final_missinginfo',
+//            'final_missinginfo',
 
             'closed'
         );

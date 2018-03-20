@@ -77,12 +77,12 @@ framework:
                 - committee_review
 #                - committee_approved
                 - committee_rejected
-                - committee_missinginfo
+#                - committee_missinginfo
                 # final
                 - final_review
                 - final_approved
                 - final_rejected
-                - final_missinginfo
+#                - final_missinginfo
                 # closed
                 - closed
 
@@ -131,12 +131,12 @@ framework:
                 committee_review_rejected:
                     from: committee_review
                     to: committee_rejected
-                committee_review_missinginfo:
-                    from: committee_review
-                    to: committee_missinginfo
-                committee_review_resubmit:
-                    from: committee_missinginfo
-                    to: committee_review
+#                committee_review_missinginfo:
+#                    from: committee_review
+#                    to: committee_missinginfo
+#                committee_review_resubmit:
+#                    from: committee_missinginfo
+#                    to: committee_review
 
                 committee_finalreview_approved:
                     from: committee_review
@@ -149,12 +149,12 @@ framework:
                 final_review_rejected:
                     from: final_review
                     to: final_rejected
-                final_review_missinginfo:
-                    from: final_review
-                    to: final_missinginfo
-                final_review_resubmit:
-                     from: final_missinginfo
-                     to: final_review
+#                final_review_missinginfo:
+#                    from: final_review
+#                    to: final_missinginfo
+#                final_review_resubmit:
+#                     from: final_missinginfo
+#                     to: final_review
 
                 #Closed
                 approved_closed:
