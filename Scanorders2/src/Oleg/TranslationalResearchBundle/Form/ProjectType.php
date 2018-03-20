@@ -229,7 +229,7 @@ class ProjectType extends AbstractType
 //        ));
 
         $addUserOnFly = "";
-        if( $this->params['cycle'] != "show" ) {
+        if( $this->params['cycle'] == "new" || $this->params['cycle'] == "edit" ) {
             $sitename = "'translationalresearch'";
             $otherUserParam = "'".$this->params['otherUserParam']."'";
             $addUserOnFly = ' (<a href="javascript:void(0)" onclick="addNewUserOnFly(this,' . $sitename . ','.$otherUserParam.');">Add New</a>)';
