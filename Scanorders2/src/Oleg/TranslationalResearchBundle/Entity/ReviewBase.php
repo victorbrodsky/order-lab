@@ -305,10 +305,14 @@ class ReviewBase
 
         $this->setDecision($decision);
 
-        return null;
+        return $decision;
     }
 
     public function getEntityName() {
         return "Project";
+    }
+
+    public function __toString() {
+        return "Review id=[".$this->getId()."], state=".$this->getStateStr();
     }
 }

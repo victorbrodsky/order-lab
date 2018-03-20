@@ -76,7 +76,7 @@
     {{ form_start(form) }}
 
         {% for info in form.infos %}
-            {{ formmacros.field(info.displayName) }}
+            {#{{ formmacros.field(info.displayName) }}#}
             {#{{ formmacros.field(info.salutation) }}#}
             {{ formmacros.field(info.firstName) }}
             {#{{ formmacros.field(info.middleName) }}#}
@@ -87,38 +87,27 @@
             {#{{ formmacros.field_notempty(info.initials,cycle) }}#}
         {% endfor %}
 
-        {#<div id="AdministrativeTitles" class="panel-collapse collapse">#}
-            {#<div class="panel-body">#}
-
-                {#{% if endDateAdminTitle %}#}
-                    {#<p><button type='button' class="btn btn-default btn-sm" data-toggle="button" onClick="collapseObject(this)">Show previous titles</button></p>#}
-                {#{% endif %}#}
-
-                <div class="user-administrativeTitles-holder" style="background-color:inherit;">
-                    {% for administrativeTitle in form.administrativeTitles %}
-                        {#administrativeTitle.vars.value.id={{ administrativeTitle.vars.value.id }}<br>#}
-                        {#{{ userform.baseTitle(administrativeTitle,cycle,'user-administrativeTitles','noprototype',sitename) }}#}
-
-                        {% if administrativeTitle.institution is defined %}
-                            {#administrativeTitle.institution defined<br>#}
-                            {{ treemacros.compositeTreeNode(administrativeTitle.institution,cycle,'noprototype') }}
-                        {% endif %}
-                        {#{% do administrativeTitle.status.setRendered %}#}
-                        {#{% do administrativeTitle.orderinlist.setRendered %}#}
-                        {#{% do administrativeTitle.priority.setRendered %}#}
-                        {#{% do administrativeTitle.name.setRendered %}#}
-                        {#{% do administrativeTitle.boss.setRendered %}#}
-                        {#{% do administrativeTitle.startDate.setRendered %}#}
-                        {#{% do administrativeTitle.startDate.setRendered %}#}
-                        {#{% do administrativeTitle.effort.setRendered %}#}
-                        {#{% do administrativeTitle.userPositions.setRendered %}#}
-                        {% do administrativeTitle.setRendered %}
-                    {% endfor %}
-                    {#{{ usermacros.addNewObjectBtn(cycle,'user-administrativeTitles','Add Administrative Title') }}#}
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="panel-title text-left">
+                    <a data-toggle="collapse" href="#AdministrativeTitles">
+                        Administrative Title
+                    </a>
+                </h4>
+            </div>
+            <div id="AdministrativeTitles" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    <div class="user-administrativeTitles-holder" style="background-color:inherit;">
+                        {% for administrativeTitle in form.administrativeTitles %}
+                            {% if administrativeTitle.institution is defined %}
+                                {{ treemacros.compositeTreeNode(administrativeTitle.institution,cycle,'noprototype') }}
+                            {% endif %}
+                            {% do administrativeTitle.setRendered %}
+                        {% endfor %}
+                    </div>
                 </div>
-
-            {#</div>#}
-        {#</div>#}
+            </div>
+        </div>
 
 
         {% if form.update is defined %}

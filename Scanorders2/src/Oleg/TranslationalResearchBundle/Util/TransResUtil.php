@@ -611,11 +611,14 @@ class TransResUtil
                 //$review->setDecision($decision);
                 $review->setDecisionByTransitionName($transitionName);
 
-                //TODO: if committee_finalreview_approved => set final review decision to approve
-                //because we search pending project assigned to me by decision == NULL?
-//                if( $transitionName == "committee_finalreview_approved" ) {
-//
-//                }
+                //if committee_finalreview_approved => set final review decision to approve
+                //because we search pending project assigned to me by decision == NULL
+                if( $transitionName == "committee_finalreview_approved" ) {
+                    $finalReviews = $project->getFinalReviews();
+                    foreach($finalReviews as $finalReview) {
+                        $finalReview->setDecisionByTransitionName($transitionName);
+                    }
+                }
 
                 $review->setReviewedBy($user);
 
@@ -667,7 +670,7 @@ class TransResUtil
 
                 $eventResetMsg = null;
                 if( $originalStateStr != $project->getState() ) {
-                    $eventResetMsg = $this->resetReviewDecision($project);
+                    $eventResetMsg = $this->resetReviewDecision($project,$review);
                 }
 
                 //write to DB
@@ -948,36 +951,59 @@ class TransResUtil
         return $project;
     }
 
-    //Change review's decision according to the current state
-    public function resetReviewDecision($project) {
+    //Change review's decision according to the current state, because we search pending project assigned to me by decision == NULL
+    public function resetReviewDecision($project, $review=null)
+    {
         $state = $project->getState();
-        //echo "state=".$state."<br>";
+
+        //echo "state=" . $state . "<br>";
+        //if ($review) {
+        //    echo "review getStateStr=" . $review->getStateStr() . "<br>";
+        //}
+        //exit();
+
         if( !$state ) {
             return null;
         }
 
+        $pending = NULL;
+        $approved = "approved";
         $reset = false;
 
         if( $state == "irb_review" || $state == "draft" ) { //strpos($state, "irb_") !== false
-            $this->setProjectDecision($project->getIrbReviews(),NULL);
-            $this->setProjectDecision($project->getAdminReviews(),NULL);
-            $this->setProjectDecision($project->getCommitteeReviews(),NULL);
-            $this->setProjectDecision($project->getFinalReviews(),NULL);
+            //set before stages
+            //set after stages
+            $this->setProjectDecision($project->getIrbReviews(),$pending);
+            $this->setProjectDecision($project->getAdminReviews(),$pending);
+            $this->setProjectDecision($project->getCommitteeReviews(),$pending);
+            $this->setProjectDecision($project->getFinalReviews(),$pending);
             $reset = true;
         }
         if( $state == "admin_review" ) {
-            $this->setProjectDecision($project->getAdminReviews(),NULL);
-            $this->setProjectDecision($project->getCommitteeReviews(),NULL);
-            $this->setProjectDecision($project->getFinalReviews(),NULL);
+            //set before stages
+            $this->setProjectDecision($project->getIrbReviews(),$approved);
+            //set after stages
+            $this->setProjectDecision($project->getAdminReviews(),$pending);
+            $this->setProjectDecision($project->getCommitteeReviews(),$pending);
+            $this->setProjectDecision($project->getFinalReviews(),$pending);
             $reset = true;
         }
         if( $state == "committee_review" ) {
-            $this->setProjectDecision($project->getCommitteeReviews(),NULL);
-            $this->setProjectDecision($project->getFinalReviews(),NULL);
+            //set before stages
+            $this->setProjectDecision($project->getIrbReviews(),$approved);
+            $this->setProjectDecision($project->getAdminReviews(),$approved);
+            //set after stages
+            $this->setProjectDecision($project->getCommitteeReviews(),$pending);
+            $this->setProjectDecision($project->getFinalReviews(),$pending);
             $reset = true;
         }
         if( $state == "final_review" ) {
-            $this->setProjectDecision($project->getFinalReviews(),NULL);
+            //set before stages
+            $this->setProjectDecision($project->getIrbReviews(),$approved);
+            $this->setProjectDecision($project->getAdminReviews(),$approved);
+            $this->setProjectDecision($project->getCommitteeReviews(),$approved);
+            //set after stages
+            $this->setProjectDecision($project->getFinalReviews(),$pending);
             $reset = true;
         }
 
@@ -992,7 +1018,13 @@ class TransResUtil
     }
     public function setProjectDecision($reviews,$decision) {
         foreach($reviews as $review) {
-            $review->setDecision($decision);
+            if( $review->getStateStr() === "committee_review" ) {
+                if( $review->getPrimaryReview() === true ) {
+                    $review->setDecision($decision);
+                }
+            } else {
+                $review->setDecision($decision);
+            }
         }
     }
 

@@ -401,7 +401,8 @@ class ProjectController extends Controller
                 " OR ".
                 "((committeeReviewer.id = :userId OR committeeReviewerDelegate.id = :userId) AND committeeReviews.decision IS NULL)".
                 " OR ".
-                "((finalReviewer.id = :userId OR finalReviewerDelegate.id = :userId) AND finalReviews.decision IS NULL)"
+                "((finalReviewer.id = :userId OR finalReviewerDelegate.id = :userId) AND finalReviews.decision IS NULL)".
+                " AND project.state LIKE '%_review'"
             ;
 
             $dql->andWhere($myPendingProjectsCriterion);
