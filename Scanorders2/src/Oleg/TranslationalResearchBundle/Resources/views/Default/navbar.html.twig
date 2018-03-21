@@ -324,16 +324,16 @@
                             <li class="divider"></li>
                             <li><a href="{{ path(translationalresearch_sitename~'_logger') }}">Event Log</a></li>
 
-                            {% if is_granted('ROLE_TRANSRES_ADMIN') %}
+                            {#{% if is_granted('ROLE_TRANSRES_ADMIN') %}#}
                                 {#<li><a href="{{ path(translationalresearch_sitename~'_siteparameters') }}">Site Settings</a></li>#}
-                                <hr style="margin-top: 10px; margin-bottom: 10px;">
-                                {% for specialty in specialties %}
-                                    <li>
-                                        <a href="{{ path(translationalresearch_sitename~'_standalone_siteparameters_show',{'specialtyStr':specialty.getAbbreviation()}) }}"
-                                        >Default Site Settings for {{ specialty.getName() }}</a>
-                                    </li>
-                                {% endfor %}
-                            {% endif %}
+                                {#<hr style="margin-top: 10px; margin-bottom: 10px;">#}
+                                {#{% for specialty in specialties %}#}
+                                    {#<li>#}
+                                        {#<a href="{{ path(translationalresearch_sitename~'_standalone_siteparameters_show',{'specialtyStr':specialty.getAbbreviation()}) }}"#}
+                                        {#>Default Site Settings for {{ specialty.getName() }}</a>#}
+                                    {#</li>#}
+                                {#{% endfor %}#}
+                            {#{% endif %}#}
 
                             {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
                                 <hr style="margin-top: 10px; margin-bottom: 10px;">

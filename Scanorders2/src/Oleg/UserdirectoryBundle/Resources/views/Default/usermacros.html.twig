@@ -306,28 +306,34 @@
 
     {#get sitename#}
     {% set sitename = employees_sitename %} {#default sitename#}
-    {% set currentPath = path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) %}
-    {% if '/scan/' in currentPath %}
-        {% set sitename = scan_sitename %}
+    {% set requestRoute = app.request.attributes.get('_route') %}
+    {% set requestAttributes = app.request.attributes.get('_route_params') %}
+    {% if requestRoute and requestAttributes %}
+        {% set currentPath = path(requestRoute,requestAttributes) %}
+        {#currentPath={{ currentPath }}<br>#}
+        {% if '/scan/' in currentPath %}
+            {% set sitename = scan_sitename %}
+        {% endif %}
+        {% if '/directory/' in currentPath %}
+            {% set sitename = employees_sitename %}
+        {% endif %}
+        {% if '/fellowship-applications/' in currentPath %}
+            {% set sitename = fellapp_sitename %}
+        {% endif %}
+        {% if '/deidentifier/' in currentPath %}
+            {% set sitename = deidentifier_sitename %}
+        {% endif %}
+        {% if '/vacation-request/' in currentPath %}
+            {% set sitename = vacreq_sitename %}
+        {% endif %}
+        {% if '/call-log-book/' in currentPath %}
+            {% set sitename = calllog_sitename %}
+        {% endif %}
+        {% if '/translational-research/' in currentPath %}
+            {% set sitename = translationalresearch_sitename %}
+        {% endif %}
     {% endif %}
-    {% if '/directory/' in currentPath %}
-        {% set sitename = employees_sitename %}
-    {% endif %}
-    {% if '/fellowship-applications/' in currentPath %}
-        {% set sitename = fellapp_sitename %}
-    {% endif %}
-    {% if '/deidentifier/' in currentPath %}
-        {% set sitename = deidentifier_sitename %}
-    {% endif %}
-    {% if '/vacation-request/' in currentPath %}
-        {% set sitename = vacreq_sitename %}
-    {% endif %}
-    {% if '/call-log-book/' in currentPath %}
-        {% set sitename = calllog_sitename %}
-    {% endif %}
-    {% if '/translational-research/' in currentPath %}
-        {% set sitename = translationalresearch_sitename %}
-    {% endif %}
+    {#EOF get sitename#}
 
     {% if asFormOrEntity is not defined or not asFormOrEntity or asFormOrEntity == "" %}
         {% set asFormOrEntity = "asForm" %}
@@ -2295,31 +2301,36 @@
         {% set objectClass = "objectMaxFull" %}
     {% endif %}
 
-    {#get sitename#}
     {% if sitename is not defined or not sitename %}
+        {#get sitename#}
         {% set sitename = employees_sitename %} {#default sitename#}
-        {% set currentPath = path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) %}
-        {% if '/scan/' in currentPath %}
-            {% set sitename = scan_sitename %}
+        {% set requestRoute = app.request.attributes.get('_route') %}
+        {% set requestAttributes = app.request.attributes.get('_route_params') %}
+        {% if requestRoute and requestAttributes %}
+            {% set currentPath = path(requestRoute,requestAttributes) %}
+            {% if '/scan/' in currentPath %}
+                {% set sitename = scan_sitename %}
+            {% endif %}
+            {% if '/directory/' in currentPath %}
+                {% set sitename = employees_sitename %}
+            {% endif %}
+            {% if '/fellowship-applications/' in currentPath %}
+                {% set sitename = fellapp_sitename %}
+            {% endif %}
+            {% if '/deidentifier/' in currentPath %}
+                {% set sitename = deidentifier_sitename %}
+            {% endif %}
+            {% if '/vacation-request/' in currentPath %}
+                {% set sitename = vacreq_sitename %}
+            {% endif %}
+            {% if '/call-log-book/' in currentPath %}
+                {% set sitename = calllog_sitename %}
+            {% endif %}
+            {% if '/translational-research/' in currentPath %}
+                {% set sitename = translationalresearch_sitename %}
+            {% endif %}
         {% endif %}
-        {% if '/directory/' in currentPath %}
-            {% set sitename = employees_sitename %}
-        {% endif %}
-        {% if '/fellowship-applications/' in currentPath %}
-            {% set sitename = fellapp_sitename %}
-        {% endif %}
-        {% if '/deidentifier/' in currentPath %}
-            {% set sitename = deidentifier_sitename %}
-        {% endif %}
-        {% if '/vacation-request/' in currentPath %}
-            {% set sitename = vacreq_sitename %}
-        {% endif %}
-        {% if '/call-log-book/' in currentPath %}
-            {% set sitename = calllog_sitename %}
-        {% endif %}
-        {% if '/translational-research/' in currentPath %}
-            {% set sitename = translationalresearch_sitename %}
-        {% endif %}
+        {#EOF get sitename#}
     {% endif %}
 
     {% set docAbsPath = documentEntity.getAbsoluteUploadFullPath() %}

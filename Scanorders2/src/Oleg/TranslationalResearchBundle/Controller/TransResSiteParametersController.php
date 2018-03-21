@@ -129,6 +129,39 @@ class TransResSiteParametersController extends Controller
     }
 
     /**
+     * Finds and displays site parameters entity.
+     *
+     * @Route("/show-content/{specialtyStr}", name="translationalresearch_standalone_siteparameters_show_content")
+     * @Template("OlegTranslationalResearchBundle:SiteParameters:show-content.html.twig")
+     * @Method("GET")
+     */
+    public function showContentAction(Request $request, $specialtyStr)
+    {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+        }
+
+        $transresRequestUtil = $this->get('transres_request_util');
+        $cycle = "show";
+
+        $siteParameter = $transresRequestUtil->findCreateSiteParameterEntity($specialtyStr);
+        if( !$siteParameter ) {
+            throw new \Exception("SiteParameter is not found by specialty '" . $specialtyStr . "'");
+        }
+        //echo "siteParameter=".$siteParameter."<br>";
+        //exit();
+
+        $form = $this->createSiteParameterForm($siteParameter,$cycle);
+
+        return array(
+            'siteParameter' => $siteParameter,
+            'form' => $form->createView(),
+            'cycle' => $cycle,
+            'title' => $siteParameter,
+        );
+    }
+
+    /**
      * Displays a form to edit an existing entity.
      *
      * @Route("/edit/{specialtyStr}", name="translationalresearch_standalone_siteparameters_edit")

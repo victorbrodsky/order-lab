@@ -28,63 +28,65 @@
 
     {% set sitename = translationalresearch_sitename %}
 
-    {{ form_start(form) }}
+    {#{{ form_start(form) }}#}
 
-        <div id="form-prototype-data"
-             data-userurllink = "{{ usermacros.userUrlLink()|e }}"
-             data-uploadurl = "{{ oneup_uploader_endpoint('transres_gallery') }}"
-             data-userid = "{{ app.user.id }}"
-        ></div>
+        {#<div id="form-prototype-data"#}
+             {#data-userurllink = "{{ usermacros.userUrlLink()|e }}"#}
+             {#data-uploadurl = "{{ oneup_uploader_endpoint('transres_gallery') }}"#}
+             {#data-userid = "{{ app.user.id }}"#}
+        {#></div>#}
 
-        {% if form.createDate is defined %}
-            {{ formmacros.field_left(form.createDate) }}
-        {% endif %}
-        {% if form.creator is defined %}
-            {{ formmacros.field_left(form.creator) }}
-        {% endif %}
+        {#{% if form.createDate is defined %}#}
+            {#{{ formmacros.field_left(form.createDate) }}#}
+        {#{% endif %}#}
+        {#{% if form.creator is defined %}#}
+            {#{{ formmacros.field_left(form.creator) }}#}
+        {#{% endif %}#}
 
-        <hr />
+        {#<hr />#}
 
-        {% if form.transresLogos is defined %}
-            <p>
-            <div class="well form-element-holder user-documents">
-                <label class="col-xs-12 control-label">Logo(s) - the most recent will be used</label>
-                <div class="row withpaddingtop">
-                    <div class="col-xs-12">
-                        {{ usermacros.documentsContainer(form,form.transresLogos,cycle,'noprototype',8,'default','Invoice Logo','asForm',false) }}
-                    </div>
-                </div>
-            </div>
-            </p>
-        {% endif %}
-
-
-        {{ formmacros.field(form.transresFromHeader) }}
-        {{ formmacros.field(form.transresFooter) }}
-        {{ formmacros.field(form.invoiceSalesperson) }}
-
-        <hr>
-        <p>
-            Please use naming notation: [[PROJECT ID]] is for Project ID,  [[REQUEST ID]] is for Request ID and  [[INVOICE ID]] is for Invoice ID
-        </p>
-        {{ formmacros.field(form.transresNotificationEmailSubject) }}
-        {{ formmacros.field(form.transresNotificationEmail) }}
-
-        {{ formmacros.field(form.requestCompletedNotifiedEmailSubject) }}
-        {{ formmacros.field(form.requestCompletedNotifiedEmail) }}
-        <hr>
-
-        <p>
-            {% if form.save is defined %}
-                {{ form_widget(form.save) }}
-            {% endif %}
-            {% if form.edit is defined %}
-                {{ form_widget(form.edit) }}
-            {% endif %}
-        </p>
+        {#{% if form.transresLogos is defined %}#}
+            {#<p>#}
+            {#<div class="well form-element-holder user-documents">#}
+                {#<label class="col-xs-12 control-label">Logo(s) - the most recent will be used</label>#}
+                {#<div class="row withpaddingtop">#}
+                    {#<div class="col-xs-12">#}
+                        {#{{ usermacros.documentsContainer(form,form.transresLogos,cycle,'noprototype',8,'default','Invoice Logo','asForm',false) }}#}
+                    {#</div>#}
+                {#</div>#}
+            {#</div>#}
+            {#</p>#}
+        {#{% endif %}#}
 
 
-    {{ form_end(form) }}
+        {#{{ formmacros.field(form.transresFromHeader) }}#}
+        {#{{ formmacros.field(form.transresFooter) }}#}
+        {#{{ formmacros.field(form.invoiceSalesperson) }}#}
+
+        {#<hr>#}
+        {#<p>#}
+            {#Please use naming notation: [[PROJECT ID]] is for Project ID,  [[REQUEST ID]] is for Request ID and  [[INVOICE ID]] is for Invoice ID#}
+        {#</p>#}
+        {#{{ formmacros.field(form.transresNotificationEmailSubject) }}#}
+        {#{{ formmacros.field(form.transresNotificationEmail) }}#}
+
+        {#{{ formmacros.field(form.requestCompletedNotifiedEmailSubject) }}#}
+        {#{{ formmacros.field(form.requestCompletedNotifiedEmail) }}#}
+        {#<hr>#}
+
+        {#<p>#}
+            {#{% if form.save is defined %}#}
+                {#{{ form_widget(form.save) }}#}
+            {#{% endif %}#}
+            {#{% if form.edit is defined %}#}
+                {#{{ form_widget(form.edit) }}#}
+            {#{% endif %}#}
+        {#</p>#}
+
+
+    {#{{ form_end(form) }}#}
+
+    {{ transres.siteSettings(form,cycle,sitename) }}
 
     {% if cycle == "show" %}
         <p>
