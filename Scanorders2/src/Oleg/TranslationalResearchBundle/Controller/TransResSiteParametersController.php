@@ -148,8 +148,6 @@ class TransResSiteParametersController extends Controller
         if( !$siteParameter ) {
             throw new \Exception("SiteParameter is not found by specialty '" . $specialtyStr . "'");
         }
-        //echo "siteParameter=".$siteParameter."<br>";
-        //exit();
 
         $form = $this->createSiteParameterForm($siteParameter,$cycle);
 
