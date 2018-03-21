@@ -51,6 +51,10 @@ class SiteParametersController extends Controller
      */
     public function indexAction(Request $request)
     {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('employees-nopermission') );
+        }
+
         //testing
 //        $userServiceUtil = $this->container->get('user_service_utility');
 //        if( $userServiceUtil->isWinOs() ) {
@@ -64,9 +68,9 @@ class SiteParametersController extends Controller
 
     public function indexParameters($request) {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl('employees-nopermission') );
-        }
+//        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+//            return $this->redirect( $this->generateUrl('employees-nopermission') );
+//        }
 
         //testing email
         //$emailUtil = $this->container->get('user_mailer_utility');

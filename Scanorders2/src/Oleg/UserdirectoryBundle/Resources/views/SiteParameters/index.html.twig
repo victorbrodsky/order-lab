@@ -625,13 +625,6 @@
 
     {% if (sitename == "employees" or sitename == "translationalresearch") and is_granted('ROLE_TRANSRES_ADMIN') %}
         {% include 'OlegUserdirectoryBundle:SiteParameters:transres-content.html.twig' %}
-        {#{% include 'TransResSiteParameters:SiteParameters:calllog-content.html.twig' %}#}
-        {#{% set specialties = transres_util.getTransResProjectSpecialties() %}#}
-        {#{% for specialty in specialties %}#}
-            {#specialty.getAbbreviation()={{ specialty.getAbbreviation() }}<br>#}
-            {#This render will not work because underlying method will not correctly usermacros.document will not get current url correctly#}
-            {#{{ render(controller('OlegTranslationalResearchBundle:TransResSiteParameters:show', {'specialtyStr':specialty.getAbbreviation()})) }}#}
-        {#{% endfor %}#}
     {% endif %}
 
     {#<br>#}

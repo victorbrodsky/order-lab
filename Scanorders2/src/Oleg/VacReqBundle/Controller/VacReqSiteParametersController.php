@@ -45,6 +45,9 @@ class VacReqSiteParametersController extends SiteParametersController
      */
     public function indexAction(Request $request)
     {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        }
         return $this->indexParameters($request);
     }
 
