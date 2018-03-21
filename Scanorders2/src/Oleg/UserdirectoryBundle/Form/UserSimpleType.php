@@ -108,32 +108,15 @@ class UserSimpleType extends AbstractType
 
         $this->formConstructor($options['form_custom_value']);
 
-
-        //hook for extended class
-        $this->addHookFields($builder);
-
-        //dummy user clone field
-//        if( $this->cycle == "create" ) {
-//            $this->cloneUser($builder);
-//        }
-
-        //keytype
-        $this->addKeytype($builder);
-
-        //Name and Preferred Contact Info
         $this->userNamePreferredContactInfo($builder);
-
-        $this->userPassword($builder);
 
         $this->addUserInfos($builder);
 
-        //Global User Preferences
-        $this->globalUserPreferences($builder);
 
 //        $this->addPerSiteSettings($builder);
 //
 //        //Titles
-//        $this->titlesSections($builder);
+        $this->titlesSections($builder);
 //
 //        $this->userTrainings($builder);
 //
@@ -175,43 +158,6 @@ class UserSimpleType extends AbstractType
         return 'oleg_userdirectorybundle_user';
     }
 
-    public function addHookFields($builder) {
-        //empty
-    }
-
-
-
-    //builder add methods
-
-    public function cloneUser($builder) {
-
-        $options = array(
-            'class' => 'OlegUserdirectoryBundle:User',
-            'label' => "Clone:",
-            'multiple' => false,
-            'attr' => array('class'=>'combobox combobox-width user-userclone-field'),
-            'required' => false,
-            'mapped' => false,
-            'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('user')
-                        ->leftJoin("user.employmentStatus", "employmentStatus")
-                        ->leftJoin("employmentStatus.employmentType", "employmentType")
-                        ->where("user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system' AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)")
-                        ->orderBy("user.primaryPublicUserId","ASC");
-                },
-        );
-
-        //if( $this->subjectUser->getPrimaryPublicUserId() && $this->subjectUser->getPrimaryPublicUserId() != "" ) {
-        if( $this->cloneUser ) {
-            $options['data'] = $this->cloneUser;
-        }
-
-        $builder->add('userclone',EntityType::class,$options);
-
-        return $builder;
-    }
-
-
     public function userNamePreferredContactInfo($builder) {
 
         //echo "cycle=".$this->cycle."<br>";
@@ -234,44 +180,9 @@ class UserSimpleType extends AbstractType
             'attr' => $primaryPublicUserIdAttr
         ));
 
-        $builder->add('avatar', DocumentType::class, array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\Document',
-            'label' => false
-        ));
 
         return $builder;
     }
-
-    public function userPassword($builder) {
-
-        //show password only for a new user or for an existing user with keytype 'local-user'
-        if( !$this->subjectUser->getId() || ($this->subjectUser->getId() && $this->subjectUser->getKeytype() && $this->subjectUser->getKeytype()->getAbbreviation() == 'local-user') ) {
-            //continue
-        } else {
-            //echo "no password";
-            return;
-        }
-
-        if( $this->cycle == "show" ) {
-            return;
-        }
-
-//        if( $this->cycle != "create" ) {
-//            $fieldType = 'password';
-//        } else {
-//            $fieldType = null;
-//        }
-
-        $builder->add('password', RepeatedType::class, array(
-            //'type' => $fieldType,
-            'invalid_message' => 'Please make sure the passwords match',
-            'options' => array('attr' => array('class' => 'password-field form-control')),
-            'required' => true,
-            'first_options'  => array('label' => 'Password:'),
-            'second_options' => array('label' => 'Repeat Password:'),
-        ));
-    }
-
 
     public function addUserInfos($builder) {
 
@@ -287,81 +198,6 @@ class UserSimpleType extends AbstractType
         ));
 
         return $builder;
-    }
-
-
-
-    public function addKeytype($builder,$label='Primary Public User ID Type:',$class='combobox combobox-width user-keytype-field') {
-        $attr = array('class'=>$class);
-        if( $this->readonly ) {
-            $attr['readonly'] = true;
-        }
-        if( $this->cycle != 'create' ) {
-            $attr['readonly'] = true;
-        }
-        //echo $this->cycle.": attr="."<br>";
-        //print_r($attr);
-        $builder->add('keytype', EntityType::class, array(
-            'class' => 'OlegUserdirectoryBundle:UsernameType',
-            //'disabled' => ($this->cycle == 'create' ? false : true ), //it is not possible to edit keytype for existed user
-            'choice_label' => 'name',
-            'label' => $label,
-            'required' => true,
-            'multiple' => false,
-            'attr' => $attr,    //array('class'=>'combobox combobox-width user-keytype-field','readonly'=>$readonlyAttr ),
-            'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->where("list.type = :typedef OR list.type = :typeadd")
-                        ->orderBy("list.orderinlist","ASC")
-                        ->setParameters( array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
-                },
-        ));
-        return $builder;
-    }
-
-
-    public function globalUserPreferences($builder) {
-
-//        if( !$this->hasRoleSimpleView ) {
-//            $builder->add('preferences', UserPreferencesType::class, array(
-//                'form_custom_value' => $this->params,
-//                'data_class' => 'Oleg\UserdirectoryBundle\Entity\UserPreferences',
-//                'label' => false,
-//                'required' => false,
-//            ));
-//        }
-
-        //Roles
-        if( $this->roles && ($this->cycle == "show" || $this->roleAdmin) ) {
-            $attr = array('class' => 'combobox combobox-width');
-            $builder->add('roles', ChoiceType::class, array( //flipped
-                'choices' => $this->roles,
-                'choices_as_values' => true,
-                'invalid_message' => 'invalid value: user roles',
-                'label' => 'Role(s):',
-                'attr' => $attr,
-                'multiple' => true,
-            ));
-        }
-
-
-        return $builder;
-    }
-
-    public function addPerSiteSettings($builder) {
-        if( !$this->hasRoleSimpleView ) {
-            $builder->add('perSiteSettings', PerSiteSettingsType::class, array(
-                'form_custom_value_user' => null,
-                'form_custom_value_roleAdmin' => $this->roleAdmin,
-                'form_custom_value' => $this->params,
-                'data_class' => 'Oleg\UserdirectoryBundle\Entity\PerSiteSettings',
-                'label' => false,
-                'required' => false,
-            ));
-        }
     }
 
     public function titlesSections($builder) {
@@ -383,303 +219,39 @@ class UserSimpleType extends AbstractType
             'prototype_name' => '__administrativetitles__',
         ));
 
-        $params = array('disabled'=>$this->readonly,'label'=>'Academic Appointment','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\AppointmentTitle','formname'=>'appointmenttitletype','cycle'=>$this->cycle);
-        $params = array_merge($this->params, $params);
-        $builder->add('appointmentTitles', CollectionType::class, array(
-            'entry_type' => AppointmentTitleType::class,
-            'entry_options' => array(
-                'form_custom_value' => $params
-            ),
-            'label' => false,
-            'required' => false,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__appointmenttitles__',
-        ));
-
-        $params = array('disabled'=>$this->readonly,'label'=>'Medical Appointment','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\MedicalTitle','formname'=>'medicaltitletype','cycle'=>$this->cycle);
-        $params = array_merge($this->params, $params);
-        $builder->add('medicalTitles', CollectionType::class, array(
-            'entry_type' => MedicalTitleType::class,
-            'entry_options' => array(
-                'form_custom_value' => $params
-            ),
-            'label' => false,
-            'required' => false,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__medicaltitles__',
-        ));
-
-        return $builder;
-    }
-
-    public function userTrainings($builder) {
-        $params = array('disabled'=>$this->readonly,'admin'=>$this->roleAdmin,'currentUser'=>$this->currentUser,'cycle'=>$this->cycle,'em'=>$this->em,'subjectUser'=>$this->subjectUser,'container'=>$this->container);
-        $builder->add('trainings', CollectionType::class, array(
-            'entry_type' => TrainingType::class,
-            'entry_options' => array(
-                'form_custom_value' => $params,
-                'form_custom_value_entity' => null
-            ),
-            'label' => false,
-            'required' => false,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__trainings__',
-        ));
+//        $params = array('disabled'=>$this->readonly,'label'=>'Academic Appointment','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\AppointmentTitle','formname'=>'appointmenttitletype','cycle'=>$this->cycle);
+//        $params = array_merge($this->params, $params);
+//        $builder->add('appointmentTitles', CollectionType::class, array(
+//            'entry_type' => AppointmentTitleType::class,
+//            'entry_options' => array(
+//                'form_custom_value' => $params
+//            ),
+//            'label' => false,
+//            'required' => false,
+//            'allow_add' => true,
+//            'allow_delete' => true,
+//            'by_reference' => false,
+//            'prototype' => true,
+//            'prototype_name' => '__appointmenttitles__',
+//        ));
+//
+//        $params = array('disabled'=>$this->readonly,'label'=>'Medical Appointment','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\MedicalTitle','formname'=>'medicaltitletype','cycle'=>$this->cycle);
+//        $params = array_merge($this->params, $params);
+//        $builder->add('medicalTitles', CollectionType::class, array(
+//            'entry_type' => MedicalTitleType::class,
+//            'entry_options' => array(
+//                'form_custom_value' => $params
+//            ),
+//            'label' => false,
+//            'required' => false,
+//            'allow_add' => true,
+//            'allow_delete' => true,
+//            'by_reference' => false,
+//            'prototype' => true,
+//            'prototype_name' => '__medicaltitles__',
+//        ));
 
         return $builder;
     }
 
-    public function userLocations($builder) {
-        $params = array(
-            'disabled'=>$this->readonly,
-            'admin'=>$this->roleAdmin,
-            'currentUser'=>$this->currentUser,
-            'cycle'=>$this->cycle,
-            'em'=>$this->em,
-            'subjectUser'=>$this->subjectUser,
-            'container'=>$this->container
-        );
-        $builder->add('locations', CollectionType::class, array(
-            'entry_type' => LocationType::class,
-            'entry_options' => array(
-                'form_custom_value' => $params
-            ),
-            'label' => false,
-            'required' => false,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__locations__',
-        ));
-
-        return $builder;
-    }
-
-    public function employmentStatus($builder) {
-        if( $this->roleAdmin || ($this->currentUser == false && $this->cycle == "show") ) {
-            $params = array('em'=>$this->params['em'],'disabled'=>$this->readonly,'currentUser'=>$this->currentUser,'admin'=>$this->roleAdmin);
-            $builder->add('employmentStatus', CollectionType::class, array(
-                'entry_type' => EmploymentStatusType::class,
-                'entry_options' => array(
-                    'form_custom_value' => $params
-                ),
-                'label' => false,
-                'required' => false,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'by_reference' => false,
-                'prototype' => true,
-                'prototype_name' => '__employmentstatus__',
-            ));
-        }
-
-        return $builder;
-    }
-
-    public function researchUser($builder) {
-        
-if(1){    
-        //it takes 4 seconds to load
-        $params = array('disabled'=>$this->readonly,'admin'=>$this->roleAdmin,'subjectUser'=>$this->subjectUser,'cycle'=>$this->cycle,'em'=>$this->em,'container'=>$this->container);
-        $builder->add('researchLabs', CollectionType::class, array(
-            'entry_type' => ResearchLabType::class,
-            'entry_options' => array(
-                'form_custom_value' => $params
-            ),
-            'label' => false,
-            'required' => false,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__researchlabs__',
-        ));
-}
-        if( !$this->hasRoleSimpleView ) {
-            //it takes 7 seconds to load
-            $params = array('disabled'=>$this->readonly,'admin'=>$this->roleAdmin,'subjectUser'=>$this->subjectUser,'cycle'=>$this->cycle,'em'=>$this->em);
-            $builder->add('grants', CollectionType::class, array(
-                'entry_type' => GrantType::class,
-                'entry_options' => array(
-                    'form_custom_value' => $params
-                ),
-                'label' => false,
-                'required' => false,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'by_reference' => false,
-                'prototype' => true,
-                'prototype_name' => '__grants__',
-            ));
-
-            $params = array('disabled'=>$this->readonly,'admin'=>$this->roleAdmin,'currentUser'=>$this->currentUser,'cycle'=>$this->cycle,'em'=>$this->em,'subjectUser'=>$this->subjectUser);
-            $builder->add('publications', CollectionType::class, array(
-                'entry_type' => PublicationType::class,
-                'entry_options' => array(
-                    'form_custom_value' => $params
-                ),
-                'label' => false,
-                'required' => false,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'by_reference' => false,
-                'prototype' => true,
-                'prototype_name' => '__publications__',
-            ));
-
-            $params = array('disabled'=>$this->readonly,'admin'=>$this->roleAdmin,'currentUser'=>$this->currentUser,'cycle'=>$this->cycle,'em'=>$this->em,'subjectUser'=>$this->subjectUser);
-            $builder->add('books', CollectionType::class, array(
-                'entry_type' => BookType::class,
-                'entry_options' => array(
-                    'form_custom_value' => $params
-                ),
-                'label' => false,
-                'required' => false,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'by_reference' => false,
-                'prototype' => true,
-                'prototype_name' => '__books__',
-            ));
-
-            $params = array('disabled'=>$this->readonly,'admin'=>$this->roleAdmin,'currentUser'=>$this->currentUser,'cycle'=>$this->cycle,'em'=>$this->em,'subjectUser'=>$this->subjectUser);
-            $builder->add('lectures', CollectionType::class, array(
-                'entry_type' => LectureType::class,
-                'entry_options' => array(
-                    'form_custom_value' => $params
-                ),
-                'label' => false,
-                'required' => false,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'by_reference' => false,
-                'prototype' => true,
-                'prototype_name' => '__lectures__',
-            ));
-        }
-
-        return $builder;
-    }
-
-    public function addCredentials($builder) {
-        if( $this->roleAdmin || $this->currentUser ) {
-            $params = array('container'=>$this->container,'em'=>$this->em,'cycle'=>$this->cycle,'roleAdmin'=>$this->roleAdmin);
-            $builder->add('credentials', CredentialsType::class, array(
-                'form_custom_value' => $params,
-                'data_class' => 'Oleg\UserdirectoryBundle\Entity\Credentials',
-                'label' => false,
-                'required' => false,
-            ));
-        }
-
-        return $builder;
-    }
-
-    public function addComments($builder) {
-        $readOnlyComment = true;
-        if( $this->currentUser || $this->readonly == false ) {
-            $readOnlyComment = false;
-        }
-
-        $params = array('disabled'=>$readOnlyComment,'label'=>'Public','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\PublicComment','formname'=>'publiccomments','em'=>$this->params['em']);
-        $builder->add('publicComments', CollectionType::class, array(
-            'entry_type' => PublicCommentType::class,
-            'entry_options' => array(
-                'form_custom_value' => $params
-            ),
-            'label' => false,
-            'required' => false,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__publiccomments__',
-        ));
-
-        if( $this->roleAdmin || $this->currentUser ) {
-            $params = array('roleAdmin'=>$this->roleAdmin,'disabled'=>$readOnlyComment,'label'=>'Private','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\PrivateComment','formname'=>'privatecomments','em'=>$this->params['em']);
-            $builder->add('privateComments', CollectionType::class, array(
-                'entry_type' => PrivateCommentType::class,
-                'entry_options' => array(
-                    'form_custom_value' => $params
-                ),
-                'label' => false,
-                'required' => false,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'by_reference' => false,
-                'prototype' => true,
-                'prototype_name' => '__privatecomments__',
-            ));
-        }
-
-        if( $this->roleAdmin ) {
-            $params = array('disabled'=>$this->readonly,'label'=>'Administrative','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\AdminComment','formname'=>'admincomments','em'=>$this->params['em']);
-            $builder->add('adminComments', CollectionType::class, array(
-                'entry_type' => AdminCommentType::class,
-                'entry_options' => array(
-                    'form_custom_value' => $params
-                ),
-                'label' => false,
-                'required' => false,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'by_reference' => false,
-                'prototype' => true,
-                'prototype_name' => '__admincomments__',
-            ));
-        }
-
-        if( $this->roleAdmin || ($this->currentUser && $this->cycle == 'show') ) {
-            $params = array('disabled'=>$this->readonly,'label'=>'Confidential','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\ConfidentialComment','formname'=>'confidentialcomments','em'=>$this->params['em']);
-            $builder->add('confidentialComments', CollectionType::class, array(
-                'entry_type' => ConfidentialCommentType::class,
-                'entry_options' => array(
-                    'form_custom_value' => $params
-                ),
-                'label' => false,
-                'required' => false,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'by_reference' => false,
-                'prototype' => true,
-                'prototype_name' => '__confidentialcomments__',
-            ));
-        }
-
-        return $builder;
-    }
-
-
-    public function addFellowshipApplication($builder) {
-        //testing: why fellowshipApplications should be shown in the user profile page?
-        return $builder;
-        //exit('addFellowshipApplication to user profile not implemented');
-
-        $builder->add('fellowshipApplications', CollectionType::class, array(
-            'entry_type' => FellowshipApplicationType::class,
-            'entry_options' => array(
-                'form_custom_value' => $this->params
-            ),
-            'label' => false,
-            'required' => false,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__fellowshipapplications__',
-        ));
-
-        return $builder;
-    }
 }

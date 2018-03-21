@@ -84,7 +84,7 @@ class ProjectController extends Controller
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $routeName = $request->get('_route');
-        $title = "Projects";
+        $title = "Project Requests";
 
         if( $routeName == "translationalresearch_project_index" ) {
             if( $transresUtil->isAdminOrPrimaryReviewer() === false ) {
@@ -377,7 +377,7 @@ class ProjectController extends Controller
             $dql->andWhere($showOnlyMyProjectsCriterion);
 
             $dqlParameters["userId"] = $user->getId();
-            $title = "My Projects, where I am a requester";
+            $title = "My Project Requests, where I am a requester";
         }
 
         if( $routeName == "translationalresearch_my_review_project_index" ) {
@@ -385,10 +385,10 @@ class ProjectController extends Controller
             $dql->andWhere($myReviewProjectsCriterion);
 
             $dqlParameters["userId"] = $user->getId();
-            $title = "Projects Assigned to Me For Review";
+            $title = "Project Requests Assigned to Me For Review";
 
 //            if( $preroute == "translationalresearch_my_pending_review_project_index" ) {
-//                $title = "Projects Pending My Review";
+//                $title = "Project Requests Pending My Review";
 //            }
         }
 
@@ -409,7 +409,7 @@ class ProjectController extends Controller
             $dql->andWhere($myPendingProjectsCriterion);
 
             $dqlParameters["userId"] = $user->getId();
-            $title = "Projects Pending My Review";
+            $title = "Project Requests Pending My Review";
         }
         //////////////////// EOF Start Filter ////////////////////
 
@@ -442,17 +442,19 @@ class ProjectController extends Controller
 
         //$allProjects = array();
         $allProjects = $query2->getResult();
-        if( count($allProjects) > 0 ) {
-            //$allProjects = $projects->getTotalItemCount();
-            $pageNumber = $projects->getCurrentPageNumber();
-            $items = $projects->getItems();
-            $startPageItems = (intval($pageNumber) - 1) * intval($limit) + 1;
-            $endPageItems = intval($startPageItems) + count($items) - 1;
-            //echo "pageNumber=$pageNumber; items=".count($items)."; startPageItems=".$startPageItems."; endPageItems=".$endPageItems."<br>";
-            $title = $title . " (" . $startPageItems . " of " . $endPageItems . ", Total " . count($allProjects) . ")";
-        } else {
-            $title = $title . " (Total " . count($allProjects) . ")";
-        }
+        $allGlobalProjects = $em->getRepository('OlegTranslationalResearchBundle:Project')->findAll();
+        $title = $title . " (Matching " . count($allProjects) . ", Total " . count($allGlobalProjects) . ")";
+//        if( count($allProjects) > 0 ) {
+//            //$allProjects = $projects->getTotalItemCount();
+//            $pageNumber = $projects->getCurrentPageNumber();
+//            $items = $projects->getItems();
+//            $startPageItems = (intval($pageNumber) - 1) * intval($limit) + 1;
+//            $endPageItems = intval($startPageItems) + count($items) - 1;
+//            //echo "pageNumber=$pageNumber; items=".count($items)."; startPageItems=".$startPageItems."; endPageItems=".$endPageItems."<br>";
+//            $title = $title . " (" . $startPageItems . " of " . $endPageItems . ", Total " . count($allProjects) . ")";
+//        } else {
+//            $title = $title . " (Total " . count($allProjects) . ")";
+//        }
 
         $eventObjectType = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->findOneByName("Project");
         if( $eventObjectType ) {

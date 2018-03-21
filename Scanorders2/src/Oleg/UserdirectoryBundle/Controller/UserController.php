@@ -1565,23 +1565,21 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/user/new/simple/", name="employees_new_simple_user")
+     * url: http://localhost/order/directory/user/new/simple-ajax-form/
+     *
+     * @Route("/user/new/simple-ajax-form/", name="employees_new_simple_user", options={"expose"=true})
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:Profile:new_simple_user.html.twig")
      */
-    public function newSimpleUserAction(Request $request,$id=null)
+    public function newSimpleUserAction(Request $request)
     {
-
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USER') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
 
         $em = $this->getDoctrine()->getManager();
 
         $userGenerator = $this->container->get('user_generator');
-
-        //echo "user id=".$id."<br>";
-        //exit();
 
         $userManager = $this->container->get('fos_user.user_manager');
         $user = $userManager->createUser();
@@ -1619,32 +1617,10 @@ class UserController extends Controller
 
         //clone user
         $subjectUser = null;
-        if( $id && $id != "" ) {
-            $subjectUser = $em->getRepository('OlegUserdirectoryBundle:User')->find($id);
-            $userUtil = new UserUtil();
-            $user = $userUtil->makeUserClone($subjectUser,$user);
-        } else {
-            //organizationalGroupDefault - match it to the organizational group selected in the "Defaults for an Organizational Group" in Site Settings,
-            // then load the corresponding default values into the page on initial load
-            $userUtil = new UserUtil();
-            $user = $userUtil->populateDefaultUserFields($creator,$user,$em);
-        }
-
-//        //add EIN identifier to credentials
-//        $identEin = new Identifier();
-//        $identKeytypeEin = $em->getRepository('OlegUserdirectoryBundle:IdentifierTypeList')->findOneByName("WCMC Employee Identification Number (EIN)");
-//        if( $identKeytypeEin ) {
-//            $identEin->setKeytype($identKeytypeEin);
-//        }
-//        $user->getCredentials()->addIdentifier($identEin);
-
-//        //add NPI identifier to credentials
-//        $identNpi = new Identifier();
-//        $identKeytypeNpi = $em->getRepository('OlegUserdirectoryBundle:IdentifierTypeList')->findOneByName("National Provider Identifier (NPI)");
-//        if( $identKeytypeNpi ) {
-//            $identNpi->setKeytype($identKeytypeNpi);
-//        }
-//        $user->getCredentials()->addIdentifier($identNpi);
+        //organizationalGroupDefault - match it to the organizational group selected in the "Defaults for an Organizational Group" in Site Settings,
+        // then load the corresponding default values into the page on initial load
+        $userUtil = new UserUtil();
+        $user = $userUtil->populateDefaultUserFields($creator,$user,$em);
 
         //Roles
         $rolesArr = $this->getUserRoles(); //new user form
@@ -1665,8 +1641,8 @@ class UserController extends Controller
 //        ));
         $form = $this->createForm(UserSimpleType::class, $user, array(
             'disabled' => false,
-            'action' => $this->generateUrl( $this->container->getParameter('employees.sitename').'_create_user' ),
-            'method' => 'POST',
+            //'action' => $this->generateUrl( $this->container->getParameter('employees.sitename').'_create_user' ),
+            //'method' => 'POST',
             'form_custom_value' => $params,
         ));
 
@@ -1679,7 +1655,7 @@ class UserController extends Controller
             'sitename' => $this->container->getParameter('employees.sitename'),
             'userclone' => $subjectUser,
             'postData' => $request->query->all(),
-            'title' => 'Create New User'
+            //'title' => 'Create New User'
         );
 
     }
@@ -4594,4 +4570,57 @@ class UserController extends Controller
         );
     }
 
+
+//    /**
+//     * @Route("/account-creation/", name="employees_account_creation")
+//     * @Template("OlegTranslationalResearchBundle:AccessRequest:account_confirmation.html.twig")
+//     * @Method({"GET", "POST"})
+//     */
+//    public function accountConfirmationAction(Request $request)
+//    {
+//        //echo "user=".$user."; redirectPath=".$redirectPath."; specialty=".$specialty."<br>";
+//        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
+//            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+//        }
+//
+//        $em = $this->getDoctrine()->getManager();
+//        $user = $this->get('security.token_storage')->getToken()->getUser();
+//        $sitename = $this->container->getParameter('translationalresearch.sitename');
+//        $cycle = "new";
+//
+//        if( count($user->getAdministrativeTitles()) == 0 ) {
+//            $user->addAdministrativeTitle(new AdministrativeTitle($user));
+//        }
+//        //echo "admins=".count($user->getAdministrativeTitles())."<br>";
+//
+//        $params = array(
+//            'cycle' => $cycle,
+//            'em' => $em,
+//            'user' => $user,
+//        );
+//        $form = $this->createForm(AccountConfirmationType::class, $user, array(
+//            'form_custom_value' => $params,
+//        ));
+//
+//        $form->handleRequest($request);
+//
+//
+//        if( $form->isSubmitted() && $form->isValid() ) {
+//
+//            //echo $user->getId().": Display Name=".$user->getEmail()."<br>";
+//            //exit('accountConfirmationAction submit');
+//
+//            $em->flush();
+//
+//            return $this->redirect($this->generateUrl($sitename.'_showuser', array('id' => $id)));
+//        }
+//
+//        return array(
+//            'user' => $user,
+//            'form' => $form->createView(),
+//            'title' => "Profile Details for ".$user,
+//            'cycle' => $cycle,
+//            'sitename' => $sitename,
+//        );
+//    }
 }
