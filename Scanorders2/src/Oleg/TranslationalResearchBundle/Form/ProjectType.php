@@ -240,7 +240,7 @@ class ProjectType extends AbstractType
             'label'=> "Principal Investigator(s)$addUserOnFly:",
             'required'=> true,
             'multiple' => true,
-            'attr' => array('class'=>'combobox combobox-width'),
+            'attr' => array('class'=>'combobox combobox-width add-new-user-on-enter', 'data-otheruserparam'=>$this->params['otherUserParam']),
             'query_builder' => $this->params['transresUtil']->userQueryBuilder()
         ));
 
@@ -249,7 +249,7 @@ class ProjectType extends AbstractType
             'label'=> "Co-Investigator(s)$addUserOnFly:",
             'required'=> true,
             'multiple' => true,
-            'attr' => array('class'=>'combobox combobox-width'),
+            'attr' => array('class'=>'combobox combobox-width add-new-user-on-enter', 'data-otheruserparam'=>$this->params['otherUserParam']),
             'query_builder' => $this->params['transresUtil']->userQueryBuilder()
         ));
 
@@ -271,10 +271,10 @@ class ProjectType extends AbstractType
 
         $builder->add( 'pathologists', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
-            'label'=> "WCMC Pathologist(s) Involved$addUserOnFly:",
+            'label'=> "WCM Pathologist(s) Involved$addUserOnFly:",
             'required'=> false,
             'multiple' => true,
-            'attr' => array('class'=>'combobox combobox-width'),
+            'attr' => array('class'=>'combobox combobox-width add-new-user-on-enter', 'data-otheruserparam'=>$this->params['otherUserParam']),
             'query_builder' => $this->params['transresUtil']->userQueryBuilder()
         ));
 
@@ -283,7 +283,7 @@ class ProjectType extends AbstractType
             'label'=> "Contact(s)$addUserOnFly:",
             'required'=> true,
             'multiple' => true,
-            'attr' => array('class'=>'combobox combobox-width'),
+            'attr' => array('class'=>'combobox combobox-width add-new-user-on-enter', 'data-otheruserparam'=>$this->params['otherUserParam']),
 //            'query_builder' => function(EntityRepository $er) {
 //                return $er->createQueryBuilder('list')
 //                    ->leftJoin("list.employmentStatus", "employmentStatus")
@@ -302,7 +302,7 @@ class ProjectType extends AbstractType
             'label'=> "Billing Contact$addUserOnFly:",
             'required'=> false,
             'multiple' => false,
-            'attr' => array('class'=>'combobox combobox-width'),
+            'attr' => array('class'=>'combobox combobox-width add-new-user-on-enter', 'data-otheruserparam'=>$this->params['otherUserParam']),
             'query_builder' => $this->params['transresUtil']->userQueryBuilder()
         ));
 

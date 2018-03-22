@@ -36,34 +36,49 @@
         {{ usermacros.emailPhoneField(info.preferredPhone,cycle,'phone',"") }}
     {% endfor %}
 
-    <div class="panel panel-primary">
-        <div class="panel-heading">
-            <h4 class="panel-title text-left">
-                <a data-toggle="collapse" href="#AdministrativeTitles">
-                    Administrative Title(s)
-                </a>
-            </h4>
-        </div>
-        <div id="AdministrativeTitles" class="panel-collapse collapse in">
-            <div class="panel-body">
+    {#<div class="panel panel-primary">#}
+        {#<div class="panel-heading">#}
+            {#<h4 class="panel-title text-left">#}
+                {#<a data-toggle="collapse" href="#AdministrativeTitles">#}
+                    {#Administrative Title(s)#}
+                {#</a>#}
+            {#</h4>#}
+        {#</div>#}
+        {#<div id="AdministrativeTitles" class="panel-collapse collapse in">#}
+            {#<div class="panel-body">#}
 
-                <div class="user-administrativeTitles-holder">
-                    {% for administrativeTitle in form.administrativeTitles %}
+                {#<div class="user-administrativeTitles-holder">#}
+                    {#{% for administrativeTitle in form.administrativeTitles %}#}
                         {#{{ userform.baseTitle(administrativeTitle,cycle,'user-administrativeTitles','noprototype',sitename) }}#}
 
-                        {% if administrativeTitle.name is defined %}
-                            {{ formmacros.field(administrativeTitle.name) }}
-                        {% endif %}
+                        {#{% if administrativeTitle.name is defined %}#}
+                            {#{{ formmacros.field(administrativeTitle.name) }}#}
+                        {#{% endif %}#}
 
-                        {% if administrativeTitle.institution is defined %}
-                            {{ treemacros.compositeTreeNode(administrativeTitle.institution,cycle,'noprototype') }}
-                        {% endif %}
+                        {#{% if administrativeTitle.institution is defined %}#}
+                            {#{{ treemacros.compositeTreeNode(administrativeTitle.institution,cycle,'noprototype') }}#}
+                        {#{% endif %}#}
 
-                    {% endfor %}
-                </div>
+                    {#{% endfor %}#}
+                {#</div>#}
 
-            </div>
-        </div>
+            {#</div>#}
+        {#</div>#}
+    {#</div>#}
+
+    <div class="user-administrativeTitles-holder">
+        {% for administrativeTitle in form.administrativeTitles %}
+            {#{{ userform.baseTitle(administrativeTitle,cycle,'user-administrativeTitles','noprototype',sitename) }}#}
+
+            {% if administrativeTitle.name is defined %}
+                {{ formmacros.field(administrativeTitle.name) }}
+            {% endif %}
+
+            {% if administrativeTitle.institution is defined %}
+                {{ treemacros.compositeTreeNode(administrativeTitle.institution,cycle,'noprototype') }}
+            {% endif %}
+
+        {% endfor %}
     </div>
 
 {{ form_end(form,{'render_rest': false}) }}

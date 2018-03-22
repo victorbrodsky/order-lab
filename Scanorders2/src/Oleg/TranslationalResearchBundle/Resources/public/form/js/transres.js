@@ -20,6 +20,8 @@ $(document).ready(function() {
     console.log('transres form ready');
     transresIrbApprovalLetterListener();
 
+    transresNewUserListener();
+
     // $('form[name="oleg_translationalresearchbundle_project"]').submit(function(ev) {
     //     //return; //testing
     //     ev.preventDefault(); // to stop the form from submitting
@@ -174,3 +176,41 @@ function transresShowBtn() {
     $('#please-wait').hide();
 }
 
+function transresNewUserListener() {
+    console.log("transresNewUserListener");
+    //oleg_translationalresearchbundle_project_principalInvestigators
+    //.select2-search-field
+    $('.add-new-user-on-enter').find('.select2-search-field > input.select2-input').on('keyup', function (e) {
+        console.log('00 key');
+        if (e.keyCode === 13)
+        {
+            //console.log("value="+this.value);
+            //console.log("target value="+e.target.value);
+            alert('Multiple Enter key');
+            transresOpenNewUserModal(this,e);
+            //$(this).closest('.col-xs-6').find('a').click();
+            //constructAddNewUserModalByAjax(btnDom,sitename,otherUserParam,thisElement);
+        }
+    });
+    //.select2-search
+    $('.add-new-user-on-enter').find('.select2-search > input.select2-input').on('keyup', function (e) {
+        if (e.keyCode === 13)
+        {
+            //console.log("value="+this.value);
+            //console.log("target value="+e.target.value);
+            alert('Single Enter key');
+            transresOpenNewUserModal(this);
+            //$(this).closest('.col-xs-6').find('a').click();
+            //constructAddNewUserModalByAjax(btnDom,sitename,otherUserParam,thisElement);
+        }
+    });
+}
+function transresOpenNewUserModal(thisElement) {
+    console.log("value="+thisElement.value);
+    //console.log("target value="+e.target.value);
+    //$(thisElement).closest('.col-xs-6').find('a').click();
+    var btnDom = $(thisElement).closest('.row').find('a'); //.click();
+    var sitename = "translationalresearch";
+    var otherUserParam = null;
+    constructAddNewUserModalByAjax(btnDom,sitename,otherUserParam,thisElement);
+}

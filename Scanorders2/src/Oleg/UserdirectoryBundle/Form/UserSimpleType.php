@@ -112,28 +112,7 @@ class UserSimpleType extends AbstractType
 
         $this->addUserInfos($builder);
 
-
-//        $this->addPerSiteSettings($builder);
-//
-//        //Titles
         $this->titlesSections($builder);
-//
-//        $this->userTrainings($builder);
-//
-//        $this->userLocations($builder);
-//
-//        //visible only to admin or user himself on view
-//        $this->employmentStatus($builder);
-//
-//        $this->researchUser($builder);
-//
-//        $this->addCredentials($builder);
-//
-//        $this->addComments($builder);
-//
-//        if( $this->params['showfellapp'] ) {
-//            $this->addFellowshipApplication($builder);
-//        }
 
     }
 
@@ -173,8 +152,8 @@ class UserSimpleType extends AbstractType
             $primaryPublicUserIdAttr['readonly'] = true;
         }
         $builder->add('primaryPublicUserId', null, array(
-            'label' => 'Primary Public User ID:',
-            'required' => true,
+            'label' => 'CWID:',
+            'required' => false,
             //'disabled' => $readOnly,   //($this->cycle == 'create' ? false : true ), //it is not possible to edit keytype for existed user
             //'attr' => array('class'=>'form-control', 'readonly'=>$readOnly),
             'attr' => $primaryPublicUserIdAttr

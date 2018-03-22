@@ -1579,6 +1579,22 @@ class UserController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
+        $comboboxValue = $request->get('comboboxValue');
+        echo "comboboxValue=$comboboxValue<br>";
+
+        $comboboxValueArr = explode(" ",$comboboxValue);
+        if( count($comboboxValueArr) > 1 ) {
+            //1- If the entered string contains at least one space (John Smith),
+            // take the word after the last space and populate it into the "Last Name" field of the modal (Smith).
+            // Populate the "First Name" field of the modal with everything before the last space (John).
+            $firstName = $comboboxValueArr[0];
+            $lastName = $comboboxValueArr[1];
+        } else {
+            //2- If the string contains no spaces, populate the Last Name field of the modal with the entire string (JohnSmith)
+            $firstName = null;
+            $lastName = $comboboxValue;
+        }
+
         $userGenerator = $this->container->get('user_generator');
 
         $userManager = $this->container->get('fos_user.user_manager');
@@ -1624,6 +1640,16 @@ class UserController extends Controller
 
         //Roles
         $rolesArr = $this->getUserRoles(); //new user form
+
+
+        //create user info if not exists
+        if( count($user->getInfos()) == 0 ) {
+            //$userInfo = new UserInfo();
+            //$user->addInfo($userInfo);
+        }
+        //set user info
+        $user->setFirstName($firstName);
+        $user->setLastName($lastName);
 
         $params = array(
             'cycle' => 'create',
@@ -1681,6 +1707,7 @@ class UserController extends Controller
             "error" => "Unknown Error"
         );
 
+        $fieldId = $request->get('fieldId');
         $sitename = $request->get('sitename');
         $otherUserParam = $request->get('otherUserParam');
         $publicUserId = $request->get('cwid');
@@ -1689,6 +1716,8 @@ class UserController extends Controller
         $firstname = $request->get('firstname');
         $lastname = $request->get('lastname');
         $phone = $request->get('phone');
+        $administrativetitle = $request->get('administrativetitle');
+        $institution = $request->get('institution');
 
         //echo "publicUserId=$publicUserId<br>";
 
@@ -1742,7 +1771,32 @@ class UserController extends Controller
             );
             $thisLink = '<a target="_blank" href='.$thisUrl.'>'.$user.'</a>';
 
-            $resArr["error"] = "User $thisLink is already exists.";
+            $fieldId = "'".$fieldId."'";
+            $selectExistingPerson =
+                '<a onclick="selectExistingUserComboboxes('.$user->getId().','.$fieldId.');"'.
+                ' href="javascript:;"'.
+                '>click here to select this existing person</a>'
+            ;
+
+            $systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
+//            $systemAdministrator =
+//                '<a onclick="selectExistingUser('.$user->getId().');" href='.
+//                $thisUrl.'>contact the system administrator</a>'
+//            ;
+            $systemAdministrator = "contact the system administrator $systemEmail";
+
+            //A person with the CWID of "xxx007" already has an account on this system and
+            // should be listed in the dropdown menus of the Project Request page.
+            // Please <click here to select this existing person>, change the CWID of the new,
+            // different person you would like to add, or <contact the system administrator>
+            // if you believe you discovered an issue.
+            $resArr["error"] =
+                "A person $thisLink already has an account on this system and" .
+                " should be listed in the dropdown menus of the Project Request page." .
+                "<br>Please $selectExistingPerson, change the CWID of the new," .
+                "<br>different person you would like to add, or $systemAdministrator" .
+                " if you believe you discovered an issue."
+            ;
 
             $json = json_encode($resArr);
             $response = new Response($json);
@@ -1793,6 +1847,28 @@ class UserController extends Controller
         $user->setLastName($lastname);
         $user->setDisplayName($displayname);
         $user->setPreferredPhone($phone);
+
+        //set administrativeTitles
+        if( count($user->getAdministrativeTitles()) == 0 ) {
+            $user->addAdministrativeTitle(new AdministrativeTitle($user));
+        }
+        $adminTitles = $user->getAdministrativeTitles();
+        if( count($adminTitles) > 0 ) {
+            $adminTitle = $adminTitles[0];
+            if( $administrativetitle ) {
+                $administrativetitleObject = $userSecUtil->getObjectByNameTransformer($creator, $administrativetitle, "UserdirectoryBundle", "AdministrativeTitle");
+                //echo "administrativetitleObject=".$administrativetitleObject->getId()."<br>";
+                $adminTitle->setName($administrativetitleObject); //AdministrativeTitle
+            }
+
+            if( $institution ) {
+                $institutionObject = $userSecUtil->getObjectByNameTransformer($creator, $institution, "UserdirectoryBundle", "Institution");
+                //echo "institutionObject=".$institutionObject->getId()."<br>";
+                $adminTitle->setInstitution($institutionObject); //Institution
+            }
+        }
+        //echo "admins=".count($user->getAdministrativeTitles())."<br>";
+        //exit();
 
         $this->processOtherUserParam($user,$otherUserParam);
 
