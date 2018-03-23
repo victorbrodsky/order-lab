@@ -356,6 +356,8 @@ class ProjectController extends Controller
         }
         //echo "showOnlyMyProjects=$showOnlyMyProjects <br>";
 
+        //TODO: show Draft only to the requesters and admins
+
         if( $showOnlyMyProjects || $routeName == "translationalresearch_my_project_index" ) {
             $dql->leftJoin('project.coInvestigators','coInvestigators');
             $dql->leftJoin('project.pathologists','pathologists');
