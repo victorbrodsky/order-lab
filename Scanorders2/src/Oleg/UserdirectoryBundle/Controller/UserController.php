@@ -1580,7 +1580,7 @@ class UserController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $comboboxValue = $request->get('comboboxValue');
-        echo "comboboxValue=$comboboxValue<br>";
+        //echo "comboboxValue=$comboboxValue<br>";
 
         $comboboxValueArr = explode(" ",$comboboxValue);
         if( count($comboboxValueArr) > 1 ) {

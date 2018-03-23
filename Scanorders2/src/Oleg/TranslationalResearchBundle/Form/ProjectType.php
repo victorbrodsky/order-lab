@@ -83,42 +83,46 @@ class ProjectType extends AbstractType
 //            ));
 //        }
 
-        if( $this->project->getCreateDate() ) {
+        if(
+            $this->params['cycle'] != 'new' &&
+            $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN') &&
+            $this->project->getCreateDate()
+        ) {
             $builder->add('createDate', DateType::class, array(
                 'widget' => 'single_text',
                 'label' => "Submission Date:",
                 'disabled' => true,
                 'format' => 'MM/dd/yyyy',
-                'attr' => array('class' => 'datepicker form-control', 'readonly'=>true),
+                'attr' => array('class' => 'datepicker form-control', 'readonly' => true),
                 'required' => false,
             ));
 
             $builder->add('submitter', null, array(
                 'label' => "Submitted By:",
                 'disabled' => true,
-                'attr' => array('class'=>'combobox combobox-width', 'readonly'=>true)
+                'attr' => array('class' => 'combobox combobox-width', 'readonly' => true)
+            ));
+
+            $builder->add('projectSpecialty', EntityType::class, array(
+                'class' => 'OlegTranslationalResearchBundle:SpecialtyList',
+                'choice_label' => 'name',
+                'label' => 'Project Specialty:',
+                //'disabled' => ($this->params['admin'] ? false : true),
+                'disabled' => true,
+                'required' => false,
+                'multiple' => false,
+                'attr' => array('class' => 'combobox combobox-width'),
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist", "ASC")
+                        ->setParameters(array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
             ));
         }
-
-        $builder->add( 'projectSpecialty', EntityType::class, array(
-            'class' => 'OlegTranslationalResearchBundle:SpecialtyList',
-            'choice_label' => 'name',
-            'label'=>'Project Specialty:',
-            //'disabled' => ($this->params['admin'] ? false : true),
-            'disabled' => true,
-            'required'=> false,
-            'multiple' => false,
-            'attr' => array('class'=>'combobox combobox-width'),
-            'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where("list.type = :typedef OR list.type = :typeadd")
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
-            },
-        ));
 
 //        $builder->add('oid', null, array(
 //            'label' => "Project ID:",

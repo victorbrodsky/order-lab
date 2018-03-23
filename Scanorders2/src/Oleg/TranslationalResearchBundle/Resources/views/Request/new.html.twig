@@ -59,9 +59,13 @@
             {#<div id="test-datamatrix"></div>#}
         {#</p>#}
 
+        {{ transresRequestMacros.transresRequestDetails(form,transresRequest,cycle,sitename) }}
+
         {{ transresRequestMacros.transresRequestComment(form,transresRequest,cycle) }}
 
-        {{ transresRequestMacros.transresRequestInfo(form,transresRequest,cycle) }}
+        {% if cycle != "new" and is_granted('ROLE_TRANSRES_ADMIN') %}
+            {{ transresRequestMacros.transresRequestInfo(form,transresRequest,cycle) }}
+        {% endif %}
 
         {% if form.updateDate is defined or form.updateUser is defined  %}
             <div class="well well-sm">

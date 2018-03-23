@@ -97,6 +97,7 @@ class TransResFormNodeUtil
         $objectTypeString = $formNodeUtil->getObjectTypeByName('Form Field - Free Text, Single Line');
         $objectTypeCheckbox = $formNodeUtil->getObjectTypeByName('Form Field - Checkbox');
         $objectTypeDate = $formNodeUtil->getObjectTypeByName('Form Field - Full Date');
+        $objectTypeNumericString = $formNodeUtil->getObjectTypeByName('Form Field - Free Text, Single Line, Numeric, Unsigned Positive Integer');
 
         //$objectTypeDropDownAllowNewEntries = $formNodeUtil->getObjectTypeByName('Form Field - Dropdown Menu - Allow Multiple Selections - Allow New Entries');
         $objectTypeDropDownAllowNewEntries = $formNodeUtil->getObjectTypeByName('Form Field - Dropdown Menu - Allow New Entries');
@@ -210,7 +211,7 @@ class TransResFormNodeUtil
         $formParams = array(
             'parent' => $projectSection,
             'name' => "Estimated Total Costs ($)",
-            'objectType' => $objectTypeString,
+            'objectType' => $objectTypeNumericString,
         );
         $newField = $formNodeUtil->createV2FormNode($formParams);
 

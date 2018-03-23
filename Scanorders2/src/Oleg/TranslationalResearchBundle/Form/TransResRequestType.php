@@ -55,14 +55,14 @@ class TransResRequestType extends AbstractType
 
         if( $this->params['cycle'] != 'new' ) {
 
-            $builder->add('billingState',ChoiceType::class, array(
+            $builder->add('billingState', ChoiceType::class, array(
                 'label' => 'Billing State:',
                 'required' => false,
                 'choices' => $this->params['billingStateChoiceArr'],
                 'attr' => array('class' => 'combobox'),
             ));
 
-            $builder->add('progressState',ChoiceType::class, array(
+            $builder->add('progressState', ChoiceType::class, array(
                 'label' => 'Progress State:',
                 'required' => false,
                 'choices' => $this->params['progressStateChoiceArr'],
@@ -79,20 +79,24 @@ class TransResRequestType extends AbstractType
 //            ));
         }
 
-        if( $this->transresRequest->getCreateDate() ) {
+        if(
+            $this->params['cycle'] != 'new' &&
+            $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN') &&
+            $this->transresRequest->getCreateDate()
+        ) {
             $builder->add('createDate', DateType::class, array(
                 'widget' => 'single_text',
                 'label' => "Create Date:",
                 'disabled' => true,
                 'format' => 'MM/dd/yyyy',
-                'attr' => array('class' => 'datepicker form-control', 'readonly'=>true),
+                'attr' => array('class' => 'datepicker form-control', 'readonly' => true),
                 'required' => false,
             ));
 
             $builder->add('submitter', null, array(
                 'label' => "Created By:",
                 'disabled' => true,
-                'attr' => array('class'=>'combobox combobox-width', 'readonly'=>true)
+                'attr' => array('class' => 'combobox combobox-width', 'readonly' => true)
             ));
         }
 
@@ -187,11 +191,17 @@ class TransResRequestType extends AbstractType
 //            'required' => false,
 //        ));
 
-        if( $this->params['cycle'] != 'new' ) {
+        if( $this->params['cycle'] != 'new' && $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN') ) {
+//            if( $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN') ) {
+//                $disabledSupportEndDate = false;
+//            } else {
+//                $disabledSupportEndDate = true;
+//            }
             $builder->add('supportEndDate', DateType::class, array(
                 'widget' => 'single_text',
                 'label' => "Support End Date:",
                 'format' => 'MM/dd/yyyy',
+                //'disabled' => $disabledSupportEndDate,
                 'attr' => array('class' => 'datepicker form-control'),
                 'required' => false,
             ));
@@ -214,10 +224,17 @@ class TransResRequestType extends AbstractType
             },
         ));
 
+        //availableProjects
+        if( $this->params['availableProjects'] === null ) {
+            $disabledPi = true;
+        } else {
+            $disabledPi = false;
+        }
         $builder->add('principalInvestigators', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
-            'label'=> "Principal Investigator(s):",
-            'required'=> false,
+            'label' => "Principal Investigator(s):",
+            'required' => false,
+            'disabled' => $disabledPi,
             'multiple' => true,
             'attr' => array('class'=>'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
