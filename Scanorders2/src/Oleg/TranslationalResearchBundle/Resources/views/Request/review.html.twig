@@ -28,23 +28,39 @@
         <button type="button" class="btn btn-default btn-sm" onClick="extendAll()" >Expand All</button>
     </p>
 
+    <br>
+
     {{ form_start(form) }}
+
+        <div id="form-prototype-data"
+             data-userurllink = "{{ usermacros.userUrlLink()|e }}"
+             data-uploadurl = "{{ oneup_uploader_endpoint('transres_gallery') }}"
+             data-userid = "{{ app.user.id }}"
+
+             data-prototype-transres-products = "{{ transresRequestMacros.productForm(form.products,cycle,'transres-products','prototype',sitename,1)|e }}"
+        ></div>
 
     {% if form.project is defined %}
         {{ formmacros.field(form.project) }}
     {% endif %}
 
-    {% if form.fundedAccountNumber is defined %}
+    {#{% if form.fundedAccountNumber is defined %}#}
         {#{% if project.getFundedAccountNumber() %}#}
             {#<p>Current project's funded account number: {{ project.getFundedAccountNumber() }}</p>#}
         {#{% endif %}#}
-        {{ formmacros.field(form.fundedAccountNumber) }}
-    {% endif %}
+        {#{{ formmacros.field(form.fundedAccountNumber) }}#}
+    {#{% endif %}#}
 
     {{ transresRequestMacros.transresRequestInfo(form,transresRequest,cycle) }}
 
     {#{{ transresRequestMacros.transresRequestFormShow(form,transresRequest,cycle) }}#}
     {{ transresRequestMacros.transresRequestBody(form,transresRequest,cycle,sitename) }}
+
+    {{ transresRequestMacros.transresRequestHandsontable(form,transresRequest,cycle) }}
+
+    {{ transresRequestMacros.transresRequestDetails(form,transresRequest,cycle,sitename) }}
+
+    {{ transresRequestMacros.transresRequestComment(form,transresRequest,cycle) }}
 
     {{ form_end(form) }}
 
@@ -62,11 +78,52 @@
 
 
 
+
+{% block additionalcss %}
+
+    {% stylesheets '@FOSCommentBundle/Resources/public/css/comments.css' %}
+    <link rel="stylesheet" href="{{ asset_url }}" type="text/css" />
+    {% endstylesheets %}
+
+    {% stylesheets
+    'bundles/olegtranslationalresearch/form/css/comments.css' filter='cssrewrite'
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
+    {% stylesheets
+    'bundles/olegorderform/handsontable/jquery.handsontable.full.css' filter='cssrewrite'
+    'bundles/olegorderform/form/css/handsontable.css' filter='cssrewrite'
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
+{% endblock %}
+
+
 {% block additionaljs %}
+
+    {% javascripts
+        '@OlegOrderformBundle/Resources/public/handsontable/jquery.handsontable.full.js'
+        '@OlegTranslationalResearchBundle/Resources/public/form/js/handsontable.js'
+        '@OlegUserdirectoryBundle/Resources/public/bwip-js/bwipjs.js'
+        '@OlegUserdirectoryBundle/Resources/public/bwip-js/bwipp-min.js'
+        '@OlegUserdirectoryBundle/Resources/public/bwip-js/freetype.js'
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 
 <script type="text/javascript">
 
+    var _handsometableDataArr = [];
+
     $(document).ready(function() {
+
+        var tableFormCycle = '{{ cycle }}';
+        if( tableFormCycle != "new" ) {
+            var _handsometableDataArr = {{ handsometableData|json_encode|raw }};
+            handsonTableInit(_handsometableDataArr, tableFormCycle);
+        }
 
         //transres-review-submit
         $('.transres-review-submit').click(function(event) {

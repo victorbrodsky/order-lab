@@ -65,27 +65,6 @@
                     {#Product or Service Panel +/-#}
                     {{ transresRequestMacros.productSections(form,cycle,sitename) }}
 
-                    {#<br>#}
-
-                    {#{% if form.billingState is defined %}#}
-                        {#{{ formmacros.field(form.billingState) }}#}
-                    {#{% endif %}#}
-                    {#{% if form.progressState is defined %}#}
-                        {#{{ formmacros.field(form.progressState) }}#}
-                    {#{% endif %}#}
-                    {#{% if form.fundedAccountNumber is defined %}#}
-                        {#{{ formmacros.field(form.fundedAccountNumber) }}#}
-                    {#{% endif %}#}
-                    {#{% if form.supportStartDate is defined %}#}
-                        {#{{ formmacros.fieldDateLabel(form.supportStartDate,'allow-future-date') }}#}
-                    {#{% endif %}#}
-                    {#{% if form.supportEndDate is defined %}#}
-                        {#{{ formmacros.fieldDateLabel(form.supportEndDate,'allow-future-date') }}#}
-                    {#{% endif %}#}
-
-                    {#{{ formmacros.field(form.principalInvestigators) }}#}
-                    {#{{ formmacros.field(form.contact) }}#}
-
                     {#{{ transresRequestMacros.transresRequestFormEdit(form,null,cycle) }}#}
 
                 </div>

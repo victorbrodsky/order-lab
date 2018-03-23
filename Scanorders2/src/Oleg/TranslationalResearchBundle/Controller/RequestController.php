@@ -1668,12 +1668,16 @@ class RequestController extends Controller
         $msg = "Request ".$transresRequest->getOid() ." has been viewed on the progress review page.";
         $transresUtil->setEventLog($transresRequest,$eventType,$msg);
 
+        //get Table $jsonData
+        $jsonData = $this->getTableData($transresRequest);
+
         return array(
             'transresRequest' => $transresRequest,
             'form' => $form->createView(),
             'cycle' => $cycle,
             'statMachineType' => 'progress',
             'title' => "Progress Review Request ".$transresRequest->getOid(),
+            'handsometableData' => $jsonData
         );
     }
 

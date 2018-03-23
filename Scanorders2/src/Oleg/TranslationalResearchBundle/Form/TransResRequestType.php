@@ -56,14 +56,14 @@ class TransResRequestType extends AbstractType
         if( $this->params['cycle'] != 'new' ) {
 
             $builder->add('billingState', ChoiceType::class, array(
-                'label' => 'Billing State:',
+                'label' => 'Billing Status:',
                 'required' => false,
                 'choices' => $this->params['billingStateChoiceArr'],
                 'attr' => array('class' => 'combobox'),
             ));
 
             $builder->add('progressState', ChoiceType::class, array(
-                'label' => 'Progress State:',
+                'label' => 'Progress Status:',
                 'required' => false,
                 'choices' => $this->params['progressStateChoiceArr'],
                 'attr' => array('class' => 'combobox'),
