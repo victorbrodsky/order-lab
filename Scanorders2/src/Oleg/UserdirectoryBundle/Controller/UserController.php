@@ -1587,8 +1587,10 @@ class UserController extends Controller
             //1- If the entered string contains at least one space (John Smith),
             // take the word after the last space and populate it into the "Last Name" field of the modal (Smith).
             // Populate the "First Name" field of the modal with everything before the last space (John).
-            $firstName = $comboboxValueArr[0];
-            $lastName = $comboboxValueArr[1];
+            //$firstName = $comboboxValueArr[0];
+            $firstName = array_shift($comboboxValueArr);
+            //$lastName = $comboboxValueArr[1];
+            $lastName = implode(" ",$comboboxValueArr);
         } else {
             //2- If the string contains no spaces, populate the Last Name field of the modal with the entire string (JohnSmith)
             $firstName = null;
@@ -1732,7 +1734,7 @@ class UserController extends Controller
             $emailParts = explode("@",$email);
             if( count($emailParts) == 2 ) {
                 $firstEmailPart = $emailParts[0];
-                $secondEmailPart = $emailParts[1];
+                //$secondEmailPart = $emailParts[1];
                 //if( $secondEmailPart == "nyp.org" || $secondEmailPart == "med.cornell.edu" ) {
                     $publicUserId = $firstEmailPart;
                 //}
@@ -1856,7 +1858,7 @@ class UserController extends Controller
         if( count($adminTitles) > 0 ) {
             $adminTitle = $adminTitles[0];
             if( $administrativetitle ) {
-                $administrativetitleObject = $userSecUtil->getObjectByNameTransformer($creator, $administrativetitle, "UserdirectoryBundle", "AdministrativeTitle");
+                $administrativetitleObject = $userSecUtil->getObjectByNameTransformer($creator, $administrativetitle, "UserdirectoryBundle", "AdminTitleList");
                 //echo "administrativetitleObject=".$administrativetitleObject->getId()."<br>";
                 $adminTitle->setName($administrativetitleObject); //AdministrativeTitle
             }

@@ -1365,6 +1365,9 @@ function constructAddNewUserModalByAjax(btnDom,sitename,otherUserParam1,selectEl
     var holder = $(btnDom).closest('.row');
     console.log(holder);
     var otherUserParam = holder.find('select.add-new-user-on-enter').data("otheruserparam");
+    if( otherUserParam === undefined ) {
+        otherUserParam = holder.find('select.add-new-user-on-enter').data("otheruserparam");
+    }
     console.log("otherUserParam="+otherUserParam);
     
     var comboboxValue = null;
@@ -1372,7 +1375,7 @@ function constructAddNewUserModalByAjax(btnDom,sitename,otherUserParam1,selectEl
         comboboxValue = selectElement.value;
         //console.log("selectElement exists: comboboxValue="+comboboxValue);
     }
-    console.log("comboboxValue="+comboboxValue);
+    //console.log("comboboxValue="+comboboxValue);
     
     // var holder = $(this).closest('.col-xs-6');
     // var comboboxValue2 = holder.find('.select2-search > input.select2-input').select2('val');
@@ -1391,10 +1394,6 @@ function constructAddNewUserModalByAjax(btnDom,sitename,otherUserParam1,selectEl
         async: asyncflag
     }).success(function(response) {
         //console.log(response);
-        //var template = response;
-        //$('#'+replaceTargetId).html(response); //Change the html of the div with the id = "your_div"
-        //specificRegularCombobox(replaceTargetId);
-        //regularCombobox( $('#'+replaceTargetId) );
         constructAddNewUserModalByForm(btnDom,sitename,otherUserParam,response)
     }).done(function() {
         //lbtn.stop();
@@ -1408,9 +1407,6 @@ function constructAddNewUserModalByForm(btnDom,sitename,otherUserParam,newUserFo
 
     //get field id (assume select box)
     var comboboxEl = $(btnDom).closest('.row').find('select.combobox');
-    //console.log("comboboxEl:");
-    //console.log(comboboxEl);
-    //var fieldId = $(btnDom).closest('.raw').find('select.combobox').attr('id');
     var fieldId = comboboxEl.attr('id');
     fieldId = "'"+fieldId+"'";
     //console.log("fieldId="+fieldId);
@@ -1418,8 +1414,6 @@ function constructAddNewUserModalByForm(btnDom,sitename,otherUserParam,newUserFo
     sitename = "'"+sitename+"'";
     otherUserParam = "'"+otherUserParam+"'";
     //console.log("sitename="+sitename);
-
-    //var newUserForm = null;
 
     var modalHtml =
         '<div id="user-add-new-user" class="modal fade">' +
@@ -1454,10 +1448,12 @@ function constructAddNewUserModalByForm(btnDom,sitename,otherUserParam,newUserFo
         }
     );
 
+    // $('#user-add-new-user').on('shown.bs.modal', function () {
+    //     $('#oleg_userdirectorybundle_user_primaryPublicUserId').focus();
+    // });
+
     $("#user-add-new-user").on('hidden.bs.modal', function () {
         //console.log("hidden.bs.modal");
-        //$(this).data('bs.modal', null);
-        //$(this).data('modal', null);
         $( '.modal' ).modal( 'hide' ).data( 'bs.modal', null );
 
         $( '.modal' ).remove();
@@ -1465,93 +1461,8 @@ function constructAddNewUserModalByForm(btnDom,sitename,otherUserParam,newUserFo
         $( 'body' ).removeClass( "modal-open" );
     });
 
-    //add listnere to ok button to "Please wait ..." and disable button on click
-    // $('.general-data-confirm-ok').on('click', function(event){
-    //     var footer = $(this).closest('.modal-footer');
-    //     footer.html('Please wait ...');
-    // });
-
     return false;
 }
-// function constructAddNewUserModal(btnDom,sitename,otherUserParam) {
-//     console.log("construct modal");
-//
-//     //get field id (assume select box)
-//     var comboboxEl = $(btnDom).closest('.row').find('select.combobox');
-//     //console.log("comboboxEl:");
-//     //console.log(comboboxEl);
-//     //var fieldId = $(btnDom).closest('.raw').find('select.combobox').attr('id');
-//     var fieldId = comboboxEl.attr('id');
-//     fieldId = "'"+fieldId+"'";
-//     //console.log("fieldId="+fieldId);
-//
-//     sitename = "'"+sitename+"'";
-//     otherUserParam = "'"+otherUserParam+"'";
-//     //console.log("sitename="+sitename);
-//
-//     var modalHtml =
-//         '<div id="user-add-new-user" class="modal fade">' +
-//         '<div class="modal-dialog">' +
-//         '<div class="modal-content">' +
-//         '<div class="modal-header text-center">' +
-//         '<button id="user-add-btn-dismiss" type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
-//         '<h3 id="dataConfirmLabel">Add name and contact info for an unlisted person</h3>' +
-//         '</div>' +
-//         '<div class="modal-body text-center">' +
-//
-//         getNewUserField("cwid","CWID")+
-//         getNewUserField("email","Email",true)+
-//         //getNewUserField("displayname","Display Name")+
-//         getNewUserField("firstname","First Name",true)+
-//         getNewUserField("lastname","Last Name",true)+
-//         getNewUserField("phone","Phone")+
-//         getNewUserCombobox("administrativetitletype","Administrative Title")+
-//         getNewUserTreeCombobox()+
-//
-//         '<div id="add-user-danger-box" class="alert alert-danger" style="display: none;"></div>' +
-//
-//         '</div>' +
-//         '<div class="modal-footer">' +
-//         '<button id="user-add-btn-cancel" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Cancel</button>' +
-//         '<a class="btn btn-primary add-user-btn-add" id="add-user-btn-add" onclick="addNewUserAction('+fieldId+','+sitename+','+otherUserParam+')">Add</a>' +
-//         '</div>' +
-//         '</div>' +
-//         '</div>' +
-//         '</div>';
-//
-//     $('body').append(modalHtml);
-//
-//     getComboboxGeneric($('body'),'administrativetitletype',_addmintitles,false);
-//     getComboboxCompositetree($('body'));
-//     //getComboboxGeneric(newForm,'administrativetitletype',_addmintitles,false);
-//
-//     $('#user-add-new-user').modal(
-//         {
-//             show:true,
-//             keyboard: false,
-//             backdrop: 'static'
-//         }
-//     );
-//
-//     $("#user-add-new-user").on('hidden.bs.modal', function () {
-//         //console.log("hidden.bs.modal");
-//         //$(this).data('bs.modal', null);
-//         //$(this).data('modal', null);
-//         $( '.modal' ).modal( 'hide' ).data( 'bs.modal', null );
-//
-//         $( '.modal' ).remove();
-//         $( '.modal-backdrop' ).remove();
-//         $( 'body' ).removeClass( "modal-open" );
-//     });
-//
-//     //add listnere to ok button to "Please wait ..." and disable button on click
-//     // $('.general-data-confirm-ok').on('click', function(event){
-//     //     var footer = $(this).closest('.modal-footer');
-//     //     footer.html('Please wait ...');
-//     // });
-//
-//     return false;
-// }
 
 function addNewUserAction( fieldId, sitename, otherUserParam ) {
 
@@ -1678,16 +1589,6 @@ function updateUserComboboxes(response,fieldId) {
     var userName = response.userName;
     //console.log("userId="+userId+"; userName="+userName);
 
-    //find combobox select2 element
-
-
-    //$(".combobox").select2({data: [{id: userId, text: userName}]});
-    //$(".combobox").select2('data', {id: userId, text: userName});
-    //$(".combobox").select2('val', userId);
-
-    //var newOption = new Option(userName, userId, false, false);
-    //$(".combobox").append(newOption).trigger('change');
-
     $("select.combobox").each(function(){
 
         if( $(this).find("option[value='" + userId + "']").length ) {
@@ -1708,91 +1609,9 @@ function updateUserComboboxes(response,fieldId) {
 
     });
 
-    //$(".combobox").select2('val', userId);
 }
 
 function selectExistingUserComboboxes(userId,fieldId) {
     $('#'+fieldId).val(userId).trigger("change");
     document.getElementById("user-add-btn-dismiss").click();
 }
-
-// function getNewUserField( fieldStr, fieldLabel, requiredFlag) {
-//
-//     if( requiredFlag === undefined ) {
-//         requiredFlag = false;
-//     }
-//
-//     var required = "";
-//     if( requiredFlag === true ) {
-//         required = "required";
-//     }
-//     //console.log("required="+required);
-//
-//     var html =
-//         '<p>'+
-//             '<div class="row">'+
-//                 '<div class="col-xs-6 '+required+'" align="right">'+
-//                     '<strong>'+fieldLabel+':</strong>'+
-//                 '</div>'+
-//                 '<div class="col-xs-6" align="left">'+
-//                     '<input id="add-new-user-'+fieldStr+'" class="form-control user-'+fieldStr+'" type="text" value="">'+
-//                 '</div>'+
-//             '</div>'+
-//         '</p>';
-//
-//     return html;
-// }
-// function getNewUserCombobox(fieldStr, fieldLabel, requiredFlag) {
-//     // <input id="administrativeTitles_0_name" name="oleg_userdirectorybundle_user[administrativeTitles][0][name]"
-//     // class="ajax-combobox-administrativetitletype"
-//     // tabindex="-1"
-//     // title="Administrative Title:"
-//     // style="display: none;"
-//     // type="text">
-//
-//     if( requiredFlag === undefined ) {
-//         requiredFlag = false;
-//     }
-//
-//     var required = "";
-//     if( requiredFlag === true ) {
-//         required = "required";
-//     }
-//
-//     var html =
-//         '<p>'+
-//             '<div class="row">'+
-//                 '<div class="col-xs-6 '+required+'" align="right">'+
-//                     '<strong>'+fieldLabel+':</strong>'+
-//                 '</div>'+
-//                 '<div class="col-xs-6" align="left">'+
-//                     //'<input id="add-new-user-'+fieldStr+'" class="ajax-combobox-'+fieldStr+'" title="'+fieldLabel+':" style="display: none;" type="text">'+
-//                     '<input id="add-new-user-'+fieldStr+'" class="ajax-combobox-'+fieldStr+'" title="'+fieldLabel+':" type="text">'+
-//                 '</div>'+
-//             '</div>'+
-//         '</p>';
-//
-//     //console.log("html="+html);
-//
-//     return html;
-// }
-// function getNewUserTreeCombobox() {
-//
-//     var html =
-//         '<div class="composite-tree-holder">'+
-//             '<div class="row treenode">'+
-//                 '<div class="col-xs-6" align="right">'+
-//                     '<label for="institution">Institution or Collaboration:</label>'+
-//                 '</div>'+
-//             '<div class="col-xs-6" align="left">'+
-//                 '<div class="ajax-combobox-compositetree" id="institution" style="width: 100%;">'+
-//                     '<input id="institution" class="ajax-combobox-compositetree" '+
-//                         'data-compositetree-bundlename="UserdirectoryBundle" data-compositetree-classname="Institution" '+
-//                         'value="29" '+
-//                         'title="Department:" type="text">'+
-//                 '</div>'+
-//             '</div>'+
-//         '</div>';
-//
-//     return html;
-// }
