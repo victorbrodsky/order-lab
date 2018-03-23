@@ -380,7 +380,8 @@ class TransResRequestUtil
     }
 
 
-    public function getProgressStateLabelByName( $stateName ) {
+    public function getProgressStateLabelByName( $stateName, $asButtonLabel=false ) {
+        $buttonLabel = null;
         switch ($stateName) {
             case "draft":
                 $state = "Draft";
@@ -390,6 +391,7 @@ class TransResRequestUtil
                 break;
             case "canceled":
                 $state = "Canceled";
+                $buttonLabel = "Request Cancellation";
                 break;
             case "investigator":
                 $state = "Investigator";
@@ -430,11 +432,21 @@ class TransResRequestUtil
 
             default:
                 $state = "<$stateName>";
-
+                $buttonLabel = "<$stateName>";
         }
+
+        if( !$buttonLabel ) {
+            $buttonLabel = $state;
+        }
+
+        if( $asButtonLabel ) {
+            return $buttonLabel;
+        }
+
         return $state;
     }
-    public function getBillingStateLabelByName( $stateName ) {
+    public function getBillingStateLabelByName( $stateName, $asButtonLabel=false ) {
+        $buttonLabel = null;
         switch ($stateName) {
             case "draft":
                 $state = "Draft";
@@ -447,6 +459,7 @@ class TransResRequestUtil
                 break;
             case "canceled":
                 $state = "Canceled";
+                $buttonLabel = "Request Cancellation";
                 break;
             case "missinginfo":
                 $state = "Pending additional information from submitter";
@@ -468,14 +481,23 @@ class TransResRequestUtil
                 $state = "<$stateName>";
 
         }
+
+        if( !$buttonLabel ) {
+            $buttonLabel = $state;
+        }
+
+        if( $asButtonLabel ) {
+            return $buttonLabel;
+        }
+
         return $state;
     }
-    public function getRequestStateLabelByName( $stateName, $statMachineType ) {
+    public function getRequestStateLabelByName( $stateName, $statMachineType, $asButtonLabel=false ) {
         if( $statMachineType == 'progress' ) {
-            return $this->getProgressStateLabelByName($stateName);
+            return $this->getProgressStateLabelByName($stateName,$asButtonLabel);
         }
         if( $statMachineType == 'billing' ) {
-            return $this->getBillingStateLabelByName($stateName);
+            return $this->getBillingStateLabelByName($stateName,$asButtonLabel);
         }
         return "<".$stateName.">";
     }
@@ -815,7 +837,7 @@ class TransResRequestUtil
                 //$thisUrl = "#";
 
                 //$label = ucfirst($transitionName)." (mark as ".ucfirst($to);
-                $label = $this->getRequestStateLabelByName($to,$statMachineType);
+                $label = $this->getRequestStateLabelByName($to,$statMachineType,true);
 
                 if( $asHrefArray ) {
                     $classTransition = $this->getHtmlClassTransition($transitionName);

@@ -786,7 +786,7 @@
             <div class="panel-heading" role="tab" id="transresRequestTableHeading">
                 <h4 class="panel-title">
                     <a role="button" data-toggle="collapse" data-parent="#accordion" href="#transresRequestTable" aria-expanded="true">
-                        Request Table Results
+                        List of Deliverables
                     </a>
                 </h4>
             </div>
@@ -809,14 +809,12 @@
             <div class="panel-heading" role="tab" id="transresRequestCommentHeading">
                 <h4 class="panel-title">
                     <a role="button" data-toggle="collapse" data-parent="#accordion" href="#transresRequestComment" aria-expanded="true">
-                        Request Comment and Documents
+                        Request Documents and Comment
                     </a>
                 </h4>
             </div>
             <div id="transresRequestComment" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="transresRequestCommentHeading">
                 <div class="panel-body">
-
-                    {{ formmacros.field(form.comment) }}
 
                     <p>
                     <div class="well form-element-holder user-documents">
@@ -828,6 +826,8 @@
                         </div>
                     </div>
                     </p>
+
+                    {{ formmacros.field(form.comment) }}
 
                 </div>
             </div>
