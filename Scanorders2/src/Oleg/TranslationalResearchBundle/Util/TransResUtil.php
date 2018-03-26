@@ -1559,6 +1559,17 @@ class TransResUtil
 
         return $stateChoiceArr;
     }
+    public function getDefaultStatesArr() {
+        $defaultStatesArr = array();
+        $states = $this->getStateChoisesArr();
+        foreach($states as $state) {
+            if( $state != 'draft' && $state != 'closed' ) {
+                $defaultStatesArr[] = $state;
+            }
+        }
+
+        return $defaultStatesArr;
+    }
 
     public function getHtmlClassTransition( $transitionName ) {
 

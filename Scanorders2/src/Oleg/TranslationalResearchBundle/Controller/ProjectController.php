@@ -133,6 +133,11 @@ class ProjectController extends Controller
         $dql->leftJoin('finalReviews.reviewer','finalReviewer');
         $dql->leftJoin('finalReviews.reviewerDelegate','finalReviewerDelegate');
 
+        $dql->leftJoin('project.coInvestigators','coInvestigators');
+        $dql->leftJoin('project.pathologists','pathologists');
+        $dql->leftJoin('project.billingContact','billingContact');
+        $dql->leftJoin('project.contacts','contacts');
+
         $advancedFilter = 0;
 
         $dqlParameters = array();
@@ -145,8 +150,10 @@ class ProjectController extends Controller
         //////// create filter //////////
         //$filterError = true;
         $stateChoiceArr = $transresUtil->getStateChoisesArr();
+        //$defaultStatesArr = $transresUtil->getDefaultStatesArr();
         $params = array(
             'stateChoiceArr' => $stateChoiceArr,
+            //'defaultStatesArr' => $defaultStatesArr,
             'projectSpecialtyAllowedArr' => $projectSpecialtyAllowedArr
         );
         $filterform = $this->createForm(FilterType::class, null,array(
@@ -342,6 +349,15 @@ class ProjectController extends Controller
             $advancedFilter++;
         }
 
+        //In the project list, show Draft projects only to the project's requester and to admins
+        if( $this->isAdminOrPrimaryReviewer() === false ) {
+            $showOnlyMyProjectsCriterion = $this->getProjectWhereIamRequester();
+            $dql->andWhere($showOnlyMyProjectsCriterion);
+            $dqlParameters["userId"] = $user->getId();
+            //show projects where Iam requester
+            
+            //OR show projects with state!= draft and state != closed
+        }
 
         //Non admin, Primary Reviewers and Executive can see all projects.
         // All other users can view only their projects
@@ -356,22 +372,21 @@ class ProjectController extends Controller
         }
         //echo "showOnlyMyProjects=$showOnlyMyProjects <br>";
 
-        //TODO: show Draft only to the requesters and admins
-
         if( $showOnlyMyProjects || $routeName == "translationalresearch_my_project_index" ) {
-            $dql->leftJoin('project.coInvestigators','coInvestigators');
-            $dql->leftJoin('project.pathologists','pathologists');
-            $dql->leftJoin('project.billingContact','billingContact');
-            $dql->leftJoin('project.contacts','contacts');
+//            $dql->leftJoin('project.coInvestigators','coInvestigators');
+//            $dql->leftJoin('project.pathologists','pathologists');
+//            $dql->leftJoin('project.billingContact','billingContact');
+//            $dql->leftJoin('project.contacts','contacts');
 
-            $showOnlyMyProjectsCriterion =
-                "principalInvestigators.id = :userId OR ".
-                "coInvestigators.id = :userId OR ".
-                "pathologists.id = :userId OR ".
-                "contacts.id = :userId OR ".
-                "billingContact.id = :userId OR ".
-                "submitter.id = :userId"
-            ;
+//            $showOnlyMyProjectsCriterion =
+//                "principalInvestigators.id = :userId OR ".
+//                "coInvestigators.id = :userId OR ".
+//                "pathologists.id = :userId OR ".
+//                "contacts.id = :userId OR ".
+//                "billingContact.id = :userId OR ".
+//                "submitter.id = :userId"
+//            ;
+            $showOnlyMyProjectsCriterion = $this->getProjectWhereIamRequester();
 
             $myReviewProjectsCriterion = $this->getProjectWhereIamReviewer();
             $showOnlyMyProjectsCriterion = $showOnlyMyProjectsCriterion . " OR " . $myReviewProjectsCriterion;
@@ -475,6 +490,17 @@ class ProjectController extends Controller
         );
     }
 
+    public function getProjectWhereIamRequester() {
+        $showOnlyMyProjectsCriterion =
+            "principalInvestigators.id = :userId OR ".
+            "coInvestigators.id = :userId OR ".
+            "pathologists.id = :userId OR ".
+            "contacts.id = :userId OR ".
+            "billingContact.id = :userId OR ".
+            "submitter.id = :userId"
+        ;
+        return $showOnlyMyProjectsCriterion;
+    }
     public function getProjectWhereIamReviewer() {
         $criterion =
             "irbReviewer.id = :userId OR ".
