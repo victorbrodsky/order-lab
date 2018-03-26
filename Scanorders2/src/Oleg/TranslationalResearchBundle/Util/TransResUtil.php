@@ -2587,6 +2587,7 @@ class TransResUtil
         return false;
     }
 
+    //get list of projects: 1) state final_approved, 2) irbExpirationDate, 3) logged in user is requester
     public function getAvailableProjects() {
 
         //$transresRequestUtil = $this->container->get('transres_request_util');
@@ -2596,9 +2597,50 @@ class TransResUtil
         $dql =  $repository->createQueryBuilder("project");
         $dql->select('project');
 
-        //state
+        $dql->leftJoin('project.submitter','submitter');
+        $dql->leftJoin('project.principalInvestigators','principalInvestigators');
+        $dql->leftJoin('principalInvestigators.infos','principalInvestigatorsInfos');
+
+        $dql->leftJoin('project.irbReviews','irbReviews');
+        $dql->leftJoin('irbReviews.reviewer','irbReviewer');
+        $dql->leftJoin('irbReviews.reviewerDelegate','irbReviewerDelegate');
+
+        $dql->leftJoin('project.adminReviews','adminReviews');
+        $dql->leftJoin('adminReviews.reviewer','adminReviewer');
+        $dql->leftJoin('adminReviews.reviewerDelegate','adminReviewerDelegate');
+
+        $dql->leftJoin('project.committeeReviews','committeeReviews');
+        $dql->leftJoin('committeeReviews.reviewer','committeeReviewer');
+        $dql->leftJoin('committeeReviews.reviewerDelegate','committeeReviewerDelegate');
+
+        $dql->leftJoin('project.finalReviews','finalReviews');
+        $dql->leftJoin('finalReviews.reviewer','finalReviewer');
+        $dql->leftJoin('finalReviews.reviewerDelegate','finalReviewerDelegate');
+
+        $dql->leftJoin('project.coInvestigators','coInvestigators');
+        $dql->leftJoin('project.pathologists','pathologists');
+        $dql->leftJoin('project.billingContact','billingContact');
+        $dql->leftJoin('project.contacts','contacts');
+
+        //1) state final_approved
         $dql->where("project.state=:state");
+        $parameters = array("state" => "final_approved");
+
+        //2) irbExpirationDate
         $dql->andWhere("project.irbExpirationDate >= CURRENT_DATE()");
+
+        //3) logged in user is requester (only if not admin)
+        if( !$this->secAuth->isGranted("ROLE_TRANSRES_ADMIN") ) {
+            $myRequestProjectsCriterion =
+                "principalInvestigators.id = :userId OR " .
+                "coInvestigators.id = :userId OR " .
+                "pathologists.id = :userId OR " .
+                "contacts.id = :userId OR " .
+                "billingContact.id = :userId OR " .
+                "submitter.id = :userId";
+            $dql->andWhere($myRequestProjectsCriterion);
+            $parameters["userId"] = $user->getId();
+        }
 
         //user specialty, if not admin
         if( !$this->secAuth->isGranted("ROLE_TRANSRES_ADMIN") ) {
@@ -2641,11 +2683,6 @@ class TransResUtil
                 $dql->andWhere("projectSpecialty.id IS NULL");
             }
         }
-
-        $parameters = array(
-            "state" => "final_approved",
-            //"today" => new \DateTime()
-        );
 
         $query = $dql->getQuery();
 

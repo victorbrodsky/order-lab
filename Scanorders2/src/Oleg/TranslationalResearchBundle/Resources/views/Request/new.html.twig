@@ -156,14 +156,13 @@
 
             //if( $('#oleg_translationalresearchbundle_request_project') ) {
                 //var projectId = $('#oleg_translationalresearchbundle_request_project').val();
-                transresPrepopulateFundedAccountNumber( $('#oleg_translationalresearchbundle_request_project') );
+                transresPrepopulateProjectDetails( $('#oleg_translationalresearchbundle_request_project') );
 
                 //update tarnsresrequest-fundedAccountNumber by tarnsresrequest-project
                 $('#oleg_translationalresearchbundle_request_project').on("change", function(event) {
                     //console.log("project changed: change");
                     //var projectId = $(this).val();
-                    //transresPrepopulateFundedAccountNumber(projectId);
-                    transresPrepopulateFundedAccountNumber( $(this) );
+                    transresPrepopulateProjectDetails( $(this) );
                 });
             //}
 
@@ -184,7 +183,7 @@
 
         });
 
-        function transresPrepopulateFundedAccountNumber( projectField ) {
+        function transresPrepopulateProjectDetails( projectField ) {
             var projectId = null;    //$('#oleg_translationalresearchbundle_request_project');
             if( projectField.length ) {
                 projectId = projectField.val();
@@ -208,7 +207,15 @@
                     async: asyncflag
                 }).success(function(response) {
                     //console.log(response);
+
+                    //set fundedAccountNumber
                     $("#oleg_translationalresearchbundle_request_fundedAccountNumber").val(response.fundedAccountNumber);
+
+                    //set oleg_translationalresearchbundle_request_principalInvestigators
+                    $("#oleg_translationalresearchbundle_request_principalInvestigators").select2('val',response.principalInvestigators);
+
+                    //set BillingContact oleg_translationalresearchbundle_request_contact
+                    $("#oleg_translationalresearchbundle_request_contact").select2('val',response.contact);
                 }).done(function() {
                     //
                 }).error(function(jqXHR, textStatus, errorThrown) {

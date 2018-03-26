@@ -1240,10 +1240,23 @@ class ProjectController extends Controller
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
+        $projectPisArr = array();
+        foreach($project->getPrincipalInvestigators() as $pi) {
+            $projectPisArr[] = $pi->getId();
+        }
+
+        $billingContactId = null;
+        $billingContact = $project->getBillingContact();
+        if( $billingContact ) {
+            $billingContactId = $project->getBillingContact()->getId();
+        }
+
         $output = array(
             "fundedAccountNumber" => $project->getFundedAccountNumber(),
-            "irbExpirationDate" => $project->getIrbExpirationDate()->format("m/d/Y")
-        );
+            "irbExpirationDate" => $project->getIrbExpirationDate()->format("m/d/Y"),
+            "principalInvestigators" => $projectPisArr,
+            "contact" => $billingContactId //BillingContact
+        ); 
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
