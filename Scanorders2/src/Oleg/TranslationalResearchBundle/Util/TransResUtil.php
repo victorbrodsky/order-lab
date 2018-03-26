@@ -1563,7 +1563,7 @@ class TransResUtil
         $defaultStatesArr = array();
         $states = $this->getStateChoisesArr();
         foreach($states as $state) {
-            if( $state != 'draft' && $state != 'closed' ) {
+            if( $state != 'draft' ) {
                 $defaultStatesArr[] = $state;
             }
         }

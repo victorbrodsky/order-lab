@@ -67,6 +67,7 @@ class ProjectController extends Controller
      *
      * @Route("/projects/", name="translationalresearch_project_index")
      * @Route("/my-projects/", name="translationalresearch_my_project_index")
+     * @Route("/projects-where-i-am-requester/", name="translationalresearch_my_request_project_index")
      * @Route("/projects-assigned-to-me-for-review/", name="translationalresearch_my_review_project_index")
      * @Route("/projects-pending-my-review/", name="translationalresearch_my_pending_review_project_index")
      * @Template("OlegTranslationalResearchBundle:Project:index.html.twig")
@@ -237,14 +238,14 @@ class ProjectController extends Controller
 
         //Non admin, Primary Reviewers, Technicians and Executive can see all projects.
         // All other users can view only their projects (where they are requesters: PI, Pathologists Involved, Co-Investigators, Contacts, Billing Contacts)
-        if(
-            $transresUtil->isAdminOrPrimaryReviewer() === false &&
-            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN') === false &&
-            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') === false &&
-            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP') === false
-        ) {
-
-        }
+//        if(
+//            $transresUtil->isAdminOrPrimaryReviewer() === false &&
+//            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN') === false &&
+//            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') === false &&
+//            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP') === false
+//        ) {
+//
+//        }
 
         if( $projectSpecialties && count($projectSpecialties) > 0 ) {
             $dql->leftJoin('project.projectSpecialty','projectSpecialty');
@@ -350,13 +351,17 @@ class ProjectController extends Controller
         }
 
         //In the project list, show Draft projects only to the project's requester and to admins
-        if( $this->isAdminOrPrimaryReviewer() === false ) {
-            $showOnlyMyProjectsCriterion = $this->getProjectWhereIamRequester();
-            $dql->andWhere($showOnlyMyProjectsCriterion);
-            $dqlParameters["userId"] = $user->getId();
+        if( $transresUtil->isAdminOrPrimaryReviewer() === false ) {
             //show projects where Iam requester
-            
-            //OR show projects with state!= draft and state != closed
+            $showOnlyMyProjectsCriterion = $this->getProjectWhereIamRequester();
+
+            //OR show projects with state!= draft
+            $allowedStatesCriterion = "project.state != 'draft'";
+
+            $limitedProjectsCriterion = "(".$showOnlyMyProjectsCriterion . ")" . " OR " . $allowedStatesCriterion;
+
+            $dql->andWhere($limitedProjectsCriterion);
+            $dqlParameters["userId"] = $user->getId();
         }
 
         //Non admin, Primary Reviewers and Executive can see all projects.
@@ -392,6 +397,14 @@ class ProjectController extends Controller
             $showOnlyMyProjectsCriterion = $showOnlyMyProjectsCriterion . " OR " . $myReviewProjectsCriterion;
 
             $dql->andWhere($showOnlyMyProjectsCriterion);
+
+            $dqlParameters["userId"] = $user->getId();
+            $title = "My Project Requests, where I am a requester or a reviewer";
+        }
+
+        if( $routeName == "translationalresearch_my_request_project_index" ) {
+            $myRequestProjectsCriterion = $this->getProjectWhereIamRequester();
+            $dql->andWhere($myRequestProjectsCriterion);
 
             $dqlParameters["userId"] = $user->getId();
             $title = "My Project Requests, where I am a requester";
