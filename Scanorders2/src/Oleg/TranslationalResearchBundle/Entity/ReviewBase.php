@@ -106,8 +106,9 @@ class ReviewBase
 
     public function __construct($reviewer=null) {
         $this->setReviewer($reviewer);
-        $this->setStatus('valid');
         $this->setCreatedate(new \DateTime());
+
+        $this->setStatus($this->getStateStr());
 
         //$this->comments = new ArrayCollection();
     }
@@ -307,6 +308,24 @@ class ReviewBase
 
         return $decision;
     }
+
+//    public function getStateFromEntity() {
+////        $state = NULL;
+////        $className = get_class($this);
+////        if( $className == "IrbReview" ) {
+////            $state = "irb_review";
+////        }
+////        if( $className == "IrbReview" ) {
+////            $state = "irb_review";
+////        }
+////        if( $className == "IrbReview" ) {
+////            $state = "irb_review";
+////        }
+////        if( $className == "IrbReview" ) {
+////            $state = "irb_review";
+////        }
+//        //return $state;
+//    }
 
     public function getEntityName() {
         return "Project";

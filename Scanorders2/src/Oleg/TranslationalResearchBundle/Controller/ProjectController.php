@@ -399,7 +399,7 @@ class ProjectController extends Controller
             $dql->andWhere($showOnlyMyProjectsCriterion);
 
             $dqlParameters["userId"] = $user->getId();
-            $title = "My Project Requests, where I am a requester or a reviewer";
+            $title = "My Project Requests, where I am a Requester or a Reviewer";
         }
 
         if( $routeName == "translationalresearch_my_request_project_index" ) {
@@ -407,7 +407,7 @@ class ProjectController extends Controller
             $dql->andWhere($myRequestProjectsCriterion);
 
             $dqlParameters["userId"] = $user->getId();
-            $title = "My Project Requests, where I am a requester";
+            $title = "My Project Requests, Where I am a Requester";
         }
 
         if( $routeName == "translationalresearch_my_review_project_index" ) {
@@ -425,15 +425,39 @@ class ProjectController extends Controller
         if( $routeName == "translationalresearch_my_pending_review_project_index" ) {
             //Pending my review: I'm a reviewer and project's review where I'm a reviewer has decision = NULL ("Pending Review")
             //TODO: should filter current state, and corresponding current state review:decision is NULL (pending) and reviewer is logged in user?
+//            $myPendingProjectsCriterion =
+//                "((irbReviewer.id = :userId OR irbReviewerDelegate.id = :userId) AND irbReviews.decision IS NULL)".
+//                " OR ".
+//                "((adminReviewer.id = :userId OR adminReviewerDelegate.id = :userId) AND adminReviews.decision IS NULL)".
+//                " OR ".
+//                "((committeeReviewer.id = :userId OR committeeReviewerDelegate.id = :userId) AND committeeReviews.decision IS NULL)".
+//                " OR ".
+//                "((finalReviewer.id = :userId OR finalReviewerDelegate.id = :userId) AND finalReviews.decision IS NULL)"
+//                ." AND project.state LIKE '%_review'"
+//                //." AND project.state LIKE 'irb_review'"
+//                //." AND (project.state=irbReviews.status OR project.state=adminReviews.status OR project.state=committeeReviews.status OR project.state=finalReviews.status)"
+//            ;
+//            $myPendingProjectsCriterion =
+//                "((irbReviewer.id = :userId OR irbReviewerDelegate.id = :userId) AND project.state=irbReviews.status)".
+//                " OR ".
+//                "((adminReviewer.id = :userId OR adminReviewerDelegate.id = :userId) AND project.state=adminReviews.status)".
+//                " OR ".
+//                "((committeeReviewer.id = :userId OR committeeReviewerDelegate.id = :userId) AND project.state=committeeReviews.status)".
+//                " OR ".
+//                "((finalReviewer.id = :userId OR finalReviewerDelegate.id = :userId) AND project.state=finalReviews.status)"
+//                ." AND project.state LIKE '%_review'"
+//                //." AND (project.state=irbReviews.status OR project.state=adminReviews.status OR project.state=committeeReviews.status OR project.state=finalReviews.status)"
+//            ;
             $myPendingProjectsCriterion =
-                "((irbReviewer.id = :userId OR irbReviewerDelegate.id = :userId) AND irbReviews.decision IS NULL)".
+                "((irbReviewer.id = :userId OR irbReviewerDelegate.id = :userId) AND project.state='irb_review')".
                 " OR ".
-                "((adminReviewer.id = :userId OR adminReviewerDelegate.id = :userId) AND adminReviews.decision IS NULL)".
+                "((adminReviewer.id = :userId OR adminReviewerDelegate.id = :userId) AND project.state='admin_review')".
                 " OR ".
-                "((committeeReviewer.id = :userId OR committeeReviewerDelegate.id = :userId) AND committeeReviews.decision IS NULL)".
+                "((committeeReviewer.id = :userId OR committeeReviewerDelegate.id = :userId) AND project.state='committee_review')".
                 " OR ".
-                "((finalReviewer.id = :userId OR finalReviewerDelegate.id = :userId) AND finalReviews.decision IS NULL)".
-                " AND project.state LIKE '%_review'"
+                "((finalReviewer.id = :userId OR finalReviewerDelegate.id = :userId) AND project.state='final_review')"
+                ." AND project.state LIKE '%_review'"
+                //." AND (project.state=irbReviews.status OR project.state=adminReviews.status OR project.state=committeeReviews.status OR project.state=finalReviews.status)"
             ;
 
             $dql->andWhere($myPendingProjectsCriterion);
