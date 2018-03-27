@@ -1003,12 +1003,15 @@
 
                 {#ID#}
                 <td>
-                    {% set messageStatusStr = null %}
-                    {% if message.messageStatus and "Draft" in message.messageStatus.name %}
-                        {% set messageStatusStr = "(draft)" %}
-                    {% endif %}
+                    {#{% set messageStatusStr = null %}#}
+                    {#{% if message.messageStatus and "Draft" in message.messageStatus.name %}#}
+                        {#{% set messageStatusStr = "<br>Draft" %}#}
+                    {#{% endif %}#}
                     {#{{ 'messageOid': message.oid, 'messageVersion':message.version }}#}
-                    <a href="{{ path(calllog_sitename~'_callentry_view', { 'messageOid': message.oid, 'messageVersion':message.version }) }}" target="_blank">{{ message.getMessageOidVersion }}{{ messageStatusStr }}</a>
+                    <a href="{{ path(calllog_sitename~'_callentry_view', { 'messageOid': message.oid, 'messageVersion':message.version }) }}" target="_blank">{{ message.getMessageOidVersion }}</a>
+                    {% if message.messageStatus and "Draft" in message.messageStatus.name %}
+                        <br>Draft
+                    {% endif %}
                 </td>
 
                 {#Last Modified: add tooltip orderdate: Initially submitted: MM/DD/YYY HH:MM:SS (hours in 24 hour format)#}
