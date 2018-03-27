@@ -613,12 +613,12 @@ class TransResUtil
 
                 //if committee_finalreview_approved => set final review decision to approve
                 //because we search pending project assigned to me by decision == NULL
-                if( $transitionName == "committee_finalreview_approved" ) {
-                    $finalReviews = $project->getFinalReviews();
-                    foreach($finalReviews as $finalReview) {
-                        $finalReview->setDecisionByTransitionName($transitionName);
-                    }
-                }
+//                if( $transitionName == "committee_finalreview_approved" ) {
+//                    $finalReviews = $project->getFinalReviews();
+//                    foreach($finalReviews as $finalReview) {
+//                        $finalReview->setDecisionByTransitionName($transitionName);
+//                    }
+//                }
 
                 $review->setReviewedBy($user);
 
@@ -669,9 +669,9 @@ class TransResUtil
                 //$this->addDefaultStateReviewers($project);
 
                 $eventResetMsg = null;
-                if( $originalStateStr != $project->getState() ) {
-                    $eventResetMsg = $this->resetReviewDecision($project,$review);
-                }
+//                if( $originalStateStr != $project->getState() ) {
+//                    $eventResetMsg = $this->resetReviewDecision($project,$review);
+//                }
 
                 //write to DB
                 if( !$testing ) {

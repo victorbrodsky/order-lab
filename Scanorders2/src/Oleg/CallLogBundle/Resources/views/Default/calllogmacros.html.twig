@@ -1001,9 +1001,14 @@
             <tbody data-link="row" class="rowlink table-tbody-hover {{ trclassname }}">
             <tr style="border-bottom: 1px solid #C6C6C6;">
 
+                {#ID#}
                 <td>
+                    {% set messageStatusStr = null %}
+                    {% if message.messageStatus and "Draft" in message.messageStatus.name %}
+                        {% set messageStatusStr = "(draft)" %}
+                    {% endif %}
                     {#{{ 'messageOid': message.oid, 'messageVersion':message.version }}#}
-                    <a href="{{ path(calllog_sitename~'_callentry_view', { 'messageOid': message.oid, 'messageVersion':message.version }) }}" target="_blank">{{ message.getMessageOidVersion }}</a>
+                    <a href="{{ path(calllog_sitename~'_callentry_view', { 'messageOid': message.oid, 'messageVersion':message.version }) }}" target="_blank">{{ message.getMessageOidVersion }}{{ messageStatusStr }}</a>
                 </td>
 
                 {#Last Modified: add tooltip orderdate: Initially submitted: MM/DD/YYY HH:MM:SS (hours in 24 hour format)#}
@@ -1090,14 +1095,27 @@
                     {% if message.messageStatus and message.messageStatus.name == "Draft" %}
                         {% if message.provider %}
                             {#{{ message.provider.getUsernameOptimal }}<br>#}
-                            <a href="{{ path('calllog_home', { 'filter[author]': message.provider.id, 'filter[messageStatus]': "All except deleted" }) }}" target="_blank">{{ message.provider.getUsernameOptimal|raw }}</a>
+                            {#<a href="{{ path('calllog_home', { 'filter[author]': message.provider.id, 'filter[messageStatus]': "All except deleted" }) }}" target="_blank">{{ message.provider.getUsernameOptimal|raw }}</a>#}
+                            {% set thisAuthor = message.provider %}
                         {% endif %}
                     {% else %}
                         {% if message.signeeInfo and message.signeeInfo.modifiedBy %}
+                            {% set thisAuthor = message.signeeInfo.modifiedBy %}
+                        {% else %}
+                            {% set thisAuthor = message.provider %}
+                        {% endif %}
+                        {#{% if thisAuthor %}#}
                             {#{{ message.signeeInfo.modifiedBy.getUsernameOptimal }}<br>#}
                             {#<a href="{{ path('calllog_showuser', { 'id': message.signeeInfo.modifiedBy.id }) }}" target="_blank">{{ message.signeeInfo.modifiedBy.getUsernameOptimal }}</a><br>#}
-                            <a href="{{ path('calllog_home', { 'filter[author]': message.signeeInfo.modifiedBy.id, 'filter[messageStatus]': "All except deleted" }) }}" target="_blank">{{ message.signeeInfo.modifiedBy.getUsernameOptimal|raw }}</a>
-                        {% endif %}
+                            {#<a href="{{ path('calllog_home', { 'filter[author]': message.signeeInfo.modifiedBy.id, 'filter[messageStatus]': "All except deleted" }) }}" target="_blank">{{ message.signeeInfo.modifiedBy.getUsernameOptimal|raw }}</a>#}
+                            {#<a href="{{ path('calllog_home', { 'filter[author]': thisAuthor.id, 'filter[messageStatus]': "All except deleted" }) }}" target="_blank">{{ thisAuthor.getUsernameOptimal|raw }}</a>#}
+                        {#{% endif %}#}
+                    {% endif %}
+                    {% if thisAuthor is defined and thisAuthor %}
+                        {#{{ message.signeeInfo.modifiedBy.getUsernameOptimal }}<br>#}
+                        {#<a href="{{ path('calllog_showuser', { 'id': message.signeeInfo.modifiedBy.id }) }}" target="_blank">{{ message.signeeInfo.modifiedBy.getUsernameOptimal }}</a><br>#}
+                        {#<a href="{{ path('calllog_home', { 'filter[author]': message.signeeInfo.modifiedBy.id, 'filter[messageStatus]': "All except deleted" }) }}" target="_blank">{{ message.signeeInfo.modifiedBy.getUsernameOptimal|raw }}</a>#}
+                        <a href="{{ path('calllog_home', { 'filter[author]': thisAuthor.id, 'filter[messageStatus]': "All except deleted" }) }}" target="_blank">{{ thisAuthor.getUsernameOptimal|raw }}</a>
                     {% endif %}
                 </td>
 

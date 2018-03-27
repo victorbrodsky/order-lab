@@ -409,9 +409,9 @@ class ProjectFormNodeController extends ProjectController
 
             //Change review's decision according to the state (if state has been changed manually)
             $eventResetMsg = null;
-            if( $originalProjectState != $project->getState() ) {
-                $eventResetMsg = $transresUtil->resetReviewDecision($project);
-            }
+//            if( $originalProjectState != $project->getState() ) {
+//                $eventResetMsg = $transresUtil->resetReviewDecision($project);
+//            }
 
             if( !$testing ) {
                 $em->persist($project);
