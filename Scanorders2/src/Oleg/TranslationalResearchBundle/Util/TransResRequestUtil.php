@@ -346,7 +346,6 @@ class TransResRequestUtil
 //            'draft',
 //            'active',
 //            'canceled',
-//            'cancellationRequest',
 //            'investigator',
 //            'histo',
 //            'ihc',
@@ -363,7 +362,6 @@ class TransResRequestUtil
         $stateArr = array(
             'draft',
             'active',
-            'cancellationRequest',
             'canceled',
             'completed',
             'completedNotified',
@@ -416,6 +414,11 @@ class TransResRequestUtil
 
 
     public function getProgressStateLabelByName( $stateName, $asButtonLabel=false ) {
+        if( $asButtonLabel ) {
+            $singleQuote = "&#39;";
+        } else {
+            $singleQuote = "'";
+        }
         $buttonLabel = null;
         switch ($stateName) {
             
@@ -425,15 +428,11 @@ class TransResRequestUtil
                 break;
             case "active":
                 $state = "Active";
-                $buttonLabel = "Revert to Active";
+                $buttonLabel = "Revert to ".$singleQuote."Active".$singleQuote;
                 break;
             case "canceled":
                 $state = "Canceled";
                 $buttonLabel = "Cancel";
-                break;
-            case "cancellationRequest":
-                $state = "Request Cancellation";
-                $buttonLabel = "Request Cancellation";
                 break;
             case "completed":
                 $state = "Completed";
@@ -444,7 +443,7 @@ class TransResRequestUtil
 
             //7 cases
             case "pendingInvestigatorInput":
-                $state = "Pending Investigator's Input";
+                $state = "Pending Investigator".$singleQuote."s Input";
                 break;
             case "pendingHistology":
                 $state = "Pending Histology";
@@ -481,6 +480,11 @@ class TransResRequestUtil
         return $state;
     }
     public function getBillingStateLabelByName( $stateName, $asButtonLabel=false ) {
+        if( $asButtonLabel ) {
+            $singleQuote = "&#39;";
+        } else {
+            $singleQuote = "'";
+        }
         $buttonLabel = null;
         switch ($stateName) {
             case "draft":
@@ -488,7 +492,7 @@ class TransResRequestUtil
                 break;
             case "active":
                 $state = "Active";
-                $buttonLabel = "Revert to Active";
+                $buttonLabel = "Revert to ".$singleQuote."Active".$singleQuote;
                 break;
             case "approvedInvoicing":
                 $state = "Approved/Ready for Invoicing";
@@ -537,7 +541,7 @@ class TransResRequestUtil
         }
         return "<".$stateName.">";
     }
-    public function getRequestLabelByStateMachineType( $transresRequest, $statMachineType ) {
+    public function getRequestLabelByStateMachineType( $transresRequest, $statMachineType) {
         if( $statMachineType == 'progress' ) {
             return $this->getRequestStateLabelByName($transresRequest->getProgressState(),$statMachineType);
         }
@@ -868,13 +872,6 @@ class TransResRequestUtil
                 if( $to == "canceled" ) {
                     //do not show canceled for non-admin and non-technician
                     if( !$this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') && !$this->secAuth->isGranted('ROLE_TRANSRES_TECHNICIAN') ) {
-                        continue; //skip this $to state
-                    }
-                }
-
-                if( $to == "cancellationRequest" ) {
-                    //do not show cancellationRequest for admin and technician
-                    if( $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') || $this->secAuth->isGranted('ROLE_TRANSRES_TECHNICIAN') ) {
                         continue; //skip this $to state
                     }
                 }

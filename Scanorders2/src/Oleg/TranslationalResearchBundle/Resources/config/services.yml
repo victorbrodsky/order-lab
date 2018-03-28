@@ -258,10 +258,9 @@ framework:
             supports:
                 - Oleg\TranslationalResearchBundle\Entity\TransResRequest
             places:
-                #6 places
+                #5 places
                 - draft
                 - active
-                - cancellationRequest
                 - canceled
                 - completed
                 - completedNotified
@@ -298,9 +297,6 @@ framework:
                 completed_completedNotified:
                     from: completed
                     to: completedNotified
-                completed_cancellationRequest:
-                    from: completed
-                    to: cancellationRequest
                 completedNotified_completed:
                     from: completedNotified
                     to: completed
@@ -316,15 +312,6 @@ framework:
                 active_completedNotified:
                     from: active
                     to: completedNotified
-                active_cancellationRequest:
-                    from: active
-                    to: cancellationRequest
-                cancellationRequest_active:
-                    from: cancellationRequest
-                    to: active
-                completedNotified_cancellationRequest:
-                    from: completedNotified
-                    to: cancellationRequest
 
                 #active to pending
                 active_pendingInvestigatorInput:
@@ -372,28 +359,51 @@ framework:
                     from: pendingTissueMicroArray
                     to: completed
 
+                #pending to active
+                pendingInvestigatorInput_active:
+                    from: pendingInvestigatorInput
+                    to: active
+                pendingHistology_active:
+                    from: pendingHistology
+                    to: active
+                pendingImmunohistochemistry_active:
+                    from: pendingImmunohistochemistry
+                    to: active
+                pendingMolecular_active:
+                    from: pendingMolecular
+                    to: active
+                pendingCaseRetrieval_active:
+                    from: pendingCaseRetrieval
+                    to: active
+                pendingSlideScanning_active:
+                    from: pendingSlideScanning
+                    to: active
+                pendingTissueMicroArray_active:
+                    from: pendingTissueMicroArray
+                    to: active
+
                 #completed to all other statuses EXCEPT Draft
-                completed_pendingInvestigatorInput:
-                    from: completed
-                    to: pendingInvestigatorInput
-                completed_pendingHistology:
-                    from: completed
-                    to: pendingHistology
-                completed_pendingImmunohistochemistry:
-                    from: completed
-                    to: pendingImmunohistochemistry
-                completed_pendingMolecular:
-                    from: completed
-                    to: pendingMolecular
-                completed_pendingCaseRetrieval:
-                    from: completed
-                    to: pendingCaseRetrieval
-                completed_pendingSlideScanning:
-                    from: completed
-                    to: pendingSlideScanning
-                completed_pendingTissueMicroArray:
-                    from: completed
-                    to: pendingTissueMicroArray
+#                completed_pendingInvestigatorInput:
+#                    from: completed
+#                    to: pendingInvestigatorInput
+#                completed_pendingHistology:
+#                    from: completed
+#                    to: pendingHistology
+#                completed_pendingImmunohistochemistry:
+#                    from: completed
+#                    to: pendingImmunohistochemistry
+#                completed_pendingMolecular:
+#                    from: completed
+#                    to: pendingMolecular
+#                completed_pendingCaseRetrieval:
+#                    from: completed
+#                    to: pendingCaseRetrieval
+#                completed_pendingSlideScanning:
+#                    from: completed
+#                    to: pendingSlideScanning
+#                completed_pendingTissueMicroArray:
+#                    from: completed
+#                    to: pendingTissueMicroArray
 
                 #pendingInvestigatorInput to all others
                 pendingInvestigatorInput_pendingHistology:

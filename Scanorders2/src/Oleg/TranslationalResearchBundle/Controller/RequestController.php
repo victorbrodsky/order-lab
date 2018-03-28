@@ -1077,23 +1077,10 @@ class RequestController extends Controller
             //"Pending" is all status except, Canceled, Completed, CompletedNotified
             if( $filterType == "All Pending Requests" ) {
                 $pendingRequestArr = $transresRequestUtil->getFilterPendingRequestArr($filterType);
-                
+
                 return $this->redirectToRoute(
                     'translationalresearch_request_index_filter',
                     $pendingRequestArr
-//                    array(
-//                        'filter[progressState][0]' => "active",
-//                        'filter[progressState][1]' => "investigator",
-//                        'filter[progressState][2]' => "histo",
-//                        'filter[progressState][3]' => "ihc",
-//                        'filter[progressState][4]' => "mol",
-//                        'filter[progressState][5]' => "retrieval",
-//                        'filter[progressState][6]' => "payment",
-//                        'filter[progressState][7]' => "slidescanning",
-//                        'filter[progressState][8]' => "block",
-//                        'filter[progressState][9]' => "other",
-//                        'title' => $filterType,
-//                    )
                 );
             }
             if( $filterType == "All AP/CP Pending Requests" ) {
@@ -1105,20 +1092,6 @@ class RequestController extends Controller
                 return $this->redirectToRoute(
                     'translationalresearch_request_index_filter',
                     $pendingRequestArr
-//                    array(
-//                        'filter[projectSpecialty][]' => $projectSpecialtyObject->getId(),
-//                        'filter[progressState][0]' => "active",
-//                        'filter[progressState][1]' => "investigator",
-//                        'filter[progressState][2]' => "histo",
-//                        'filter[progressState][3]' => "ihc",
-//                        'filter[progressState][4]' => "mol",
-//                        'filter[progressState][5]' => "retrieval",
-//                        'filter[progressState][6]' => "payment",
-//                        'filter[progressState][7]' => "slidescanning",
-//                        'filter[progressState][8]' => "block",
-//                        'filter[progressState][9]' => "other",
-//                        'title' => $filterType,
-//                    )
                 );
             }
             if( $filterType == "All Hematopathology Pending Requests" ) {
