@@ -80,12 +80,12 @@ class WorkflowController extends Controller
             $this->windowsCmdRunAsync($type,$filename);
         }
         if( $type == "request-billing" ) {
-            $title = "Request Billing Workflow";
+            $title = "Work Request Billing Progress Workflow";
             $filename = "request_billing.png";
             $this->windowsCmdRunAsync($type,$filename);
         }
         if( $type == "request-work-progress" ) {
-            $title = "Request Project Work Workflow";
+            $title = "Work Request Completion Progress Workflow";
             $filename = "request_progress.png";
             $this->windowsCmdRunAsync($type,$filename);
         }

@@ -260,17 +260,15 @@ framework:
             places:
                 - draft
                 - active
+                - cancelationRequest
                 - canceled
-                - investigator
-                - histo
-                - ihc
-                - mol
-                - retrieval
-                - payment
-                - slidescanning
-                - block
-                - other
-                - suspended
+                - pendingInvestigatorInput
+                - pendingHistology
+                - pendingImmunohistochemistry
+                - pendingMolecular
+                - pendingCaseRetrieval
+                - pendingTissueMicroArray
+                - pendingSlideScanning
                 - completed
                 - completedNotified
             transitions:
@@ -313,97 +311,77 @@ framework:
                 active_completedNotified:
                     from: active
                     to: completedNotified
+                active_cancelationRequest:
+                    from: active
+                    to: cancelationRequest
+                cancelationRequest_active:
+                    from: cancelationRequest
+                    to: active
 
                 #active to pending
-                active_investigator:
+                active_pendingInvestigatorInput:
                     from: active
-                    to: investigator
-                active_histo:
+                    to: pendingInvestigatorInput
+                active_pendingHistology:
                     from: active
-                    to: histo
-                active_ihc:
+                    to: pendingHistology
+                active_pendingImmunohistochemistry:
                     from: active
-                    to: ihc
-                active_mol:
+                    to: pendingImmunohistochemistry
+                active_pendingMolecular:
                     from: active
-                    to: mol
-                active_retrieval:
+                    to: pendingMolecular
+                active_pendingCaseRetrieval:
                     from: active
-                    to: retrieval
-                active_payment:
+                    to: pendingCaseRetrieval
+                active_pendingSlideScanning:
                     from: active
-                    to: payment
-                active_slidescanning:
+                    to: pendingSlideScanning
+                active_pendingTissueMicroArray:
                     from: active
-                    to: slidescanning
-                active_block:
-                    from: active
-                    to: block
-                active_suspended:
-                    from: active
-                    to: suspended
-                active_other:
-                    from: active
-                    to: other
+                    to: pendingTissueMicroArray
                 #pending to completed
-                investigator_completed:
-                    from: investigator
+                pendingInvestigatorInput_completed:
+                    from: pendingInvestigatorInput
                     to: completed
-                histo_completed:
-                    from: histo
+                pendingHistology_completed:
+                    from: pendingHistology
                     to: completed
-                ihc_completed:
-                    from: ihc
+                pendingImmunohistochemistry_completed:
+                    from: pendingImmunohistochemistry
                     to: completed
-                mol_completed:
-                    from: mol
+                pendingMolecular_completed:
+                    from: pendingMolecular
                     to: completed
-                retrieval_completed:
-                    from: retrieval
+                pendingCaseRetrieval_completed:
+                    from: pendingCaseRetrieval
                     to: completed
-                payment_completed:
-                    from: payment
+                pendingSlideScanning_completed:
+                    from: pendingSlideScanning
                     to: completed
-                slidescanning_completed:
-                    from: slidescanning
-                    to: completed
-                block_completed:
-                    from: block
-                    to: completed
-                suspended_completed:
-                    from: suspended
-                    to: completed
-                other_completed:
-                    from: other
+                pendingTissueMicroArray_completed:
+                    from: pendingTissueMicroArray
                     to: completed
                 #completed to all other statuses EXCEPT Draft
-                completed_investigator:
+                completed_pendingInvestigatorInput:
                     from: completed
-                    to: investigator
-                completed_histo:
+                    to: pendingInvestigatorInput
+                completed_pendingHistology:
                     from: completed
-                    to: histo
-                completed_ihc:
+                    to: pendingHistology
+                completed_pendingImmunohistochemistry:
                     from: completed
-                    to: ihc
-                completed_mol:
+                    to: pendingImmunohistochemistry
+                completed_pendingMolecular:
                     from: completed
-                    to: mol
-                completed_retrieval:
+                    to: pendingMolecular
+                completed_pendingCaseRetrieval:
                     from: completed
-                    to: retrieval
-                completed_payment:
+                    to: pendingCaseRetrieval
+                completed_pendingSlideScanning:
                     from: completed
-                    to: payment
-                completed_slidescanning:
+                    to: pendingSlideScanning
+                completed_pendingTissueMicroArray:
                     from: completed
-                    to: slidescanning
-                completed_block:
-                    from: completed
-                    to: block
-                completed_suspended:
-                    from: completed
-                    to: suspended
-                completed_other:
-                    from: completed
-                    to: other
+                    to: pendingTissueMicroArray
+

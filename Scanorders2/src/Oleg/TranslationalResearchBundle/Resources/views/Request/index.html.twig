@@ -51,8 +51,8 @@
                 <th>{{ knp_pagination_sortable(transresRequests, 'Submitter', 'submitterInfos.displayName') }}</th>
                 <th>{{ knp_pagination_sortable(transresRequests, 'Submitted', 'transresRequest.createDate') }}</th>
                 <th>{{ knp_pagination_sortable(transresRequests, 'Funding Number', 'transresRequest.fundedAccountNumber') }}</th>
-                <th>{{ knp_pagination_sortable(transresRequests, 'Work Progress Status', 'transresRequest.progressState') }}</th>
-                <th>{{ knp_pagination_sortable(transresRequests, 'Billing Progress Status', 'transresRequest.billingState') }}</th>
+                <th>{{ knp_pagination_sortable(transresRequests, 'Completion Status', 'transresRequest.progressState') }}</th>
+                <th>{{ knp_pagination_sortable(transresRequests, 'Billing Status', 'transresRequest.billingState') }}</th>
 
                 <th>Products/Services</th>
                 <th title="Total Calculated Request's Fee">Total Fees</th>
@@ -196,7 +196,7 @@
                             {% if transres_util.isAdminOrPrimaryReviewer() or transres_request_util.isRequestProgressReviewer(transresRequest) %}
                                 <li>
                                     <a href="{{ path(translationalresearch_sitename~'_request_review_progress_state', { 'id': transresRequest.id }) }} "
-                                    >Change Work Progress Status</a>
+                                    >Change Completion Status</a>
                                 </li>
                             {% endif %}
                             {% endif %}
@@ -205,7 +205,7 @@
                             {% if transres_util.isAdminOrPrimaryReviewer() or transres_request_util.isRequestBillingReviewer(transresRequest) %}
                                 <li>
                                     <a href="{{ path(translationalresearch_sitename~'_request_review_billing_state', { 'id': transresRequest.id }) }} "
-                                    >Change Billing Progress Status</a>
+                                    >Change Billing Status</a>
                                 </li>
                             {% endif %}
                             {% endif %}
