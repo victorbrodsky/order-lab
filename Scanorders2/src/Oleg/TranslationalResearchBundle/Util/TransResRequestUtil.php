@@ -425,10 +425,11 @@ class TransResRequestUtil
                 break;
             case "active":
                 $state = "Active";
+                $buttonLabel = "Revert to 'Active'";
                 break;
             case "canceled":
                 $state = "Canceled";
-                $buttonLabel = "Canceled";
+                $buttonLabel = "Cancel";
                 break;
             case "cancellationRequest":
                 $state = "Request Cancellation";
@@ -487,13 +488,14 @@ class TransResRequestUtil
                 break;
             case "active":
                 $state = "Active";
+                $buttonLabel = "Revert to 'Active'";
                 break;
             case "approvedInvoicing":
                 $state = "Approved/Ready for Invoicing";
                 break;
             case "canceled":
                 $state = "Canceled";
-                $buttonLabel = "Canceled";
+                $buttonLabel = "Cancel";
                 break;
             case "missinginfo":
                 $state = "Pending additional information from submitter";
@@ -545,8 +547,21 @@ class TransResRequestUtil
         return "<Unknown State for ".$transresRequest.">";
     }
 
-    public function getHtmlClassTransition( $stateStr ) {
-        return "btn btn-success transres-review-submit";
+    public function getHtmlClassTransition( $transitionName ) {
+        //echo "transitionName=$transitionName<br>"; //canceled_active
+        //return "btn btn-success transres-review-submit";
+
+        if( strpos($transitionName, "_cancel") !== false ) {
+            return "btn btn-danger transres-review-submit"; //btn-primary
+        }
+        if( strpos($transitionName, "_pending") !== false ) {
+            return "btn btn-warning transres-review-submit";
+        }
+        if( strpos($transitionName, "_completed") !== false ) {
+            return "btn btn-success transres-review-submit";
+        }
+
+        return "btn btn-primary transres-review-submit";
     }
 
     //get Request IDs for specified RequestCategoryTypeList
@@ -850,6 +865,20 @@ class TransResRequestUtil
                     continue; //skip this $to state
                 }
 
+                if( $to == "canceled" ) {
+                    //do not show canceled for non-admin and non-technician
+                    if( !$this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') && !$this->secAuth->isGranted('ROLE_TRANSRES_TECHNICIAN') ) {
+                        continue; //skip this $to state
+                    }
+                }
+
+                if( $to == "cancellationRequest" ) {
+                    //do not show cancellationRequest for admin and technician
+                    if( $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') || $this->secAuth->isGranted('ROLE_TRANSRES_TECHNICIAN') ) {
+                        continue; //skip this $to state
+                    }
+                }
+
                 //add user's validation: $from=irb_review => user has role _IRB_REVIEW_
 //                if( false === $this->isUserAllowedFromThisStateByRole($from) ) {
 //                    continue;
@@ -949,9 +978,23 @@ class TransResRequestUtil
         }
         //echo "to=".$to."<br>";
 
+        //exception
         if( $to == "completedNotified" ) {
             //only Admin can change the status to completedNotified
             if( !$this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') ) {
+                $toLabel = $this->getRequestStateLabelByName($to,$statMachineType);
+                $this->container->get('session')->getFlashBag()->add(
+                    'warning',
+                    "Only Admin can change the status of the Request to " . $toLabel
+                );
+                return false;
+            }
+        }
+
+        //exception
+        if( $to == "canceled" ) {
+            //only Admin can change the status to canceled
+            if( !$this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') && !$this->secAuth->isGranted('ROLE_TRANSRES_TECHNICIAN') ) {
                 $toLabel = $this->getRequestStateLabelByName($to,$statMachineType);
                 $this->container->get('session')->getFlashBag()->add(
                     'warning',
