@@ -425,7 +425,7 @@ class TransResRequestUtil
                 break;
             case "active":
                 $state = "Active";
-                $buttonLabel = "Revert to 'Active'";
+                $buttonLabel = "Revert to Active";
                 break;
             case "canceled":
                 $state = "Canceled";
@@ -488,7 +488,7 @@ class TransResRequestUtil
                 break;
             case "active":
                 $state = "Active";
-                $buttonLabel = "Revert to 'Active'";
+                $buttonLabel = "Revert to Active";
                 break;
             case "approvedInvoicing":
                 $state = "Approved/Ready for Invoicing";
