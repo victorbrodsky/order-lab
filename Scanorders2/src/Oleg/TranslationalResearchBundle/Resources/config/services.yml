@@ -258,10 +258,14 @@ framework:
             supports:
                 - Oleg\TranslationalResearchBundle\Entity\TransResRequest
             places:
+                #6 places
                 - draft
                 - active
-                - cancelationRequest
+                - cancellationRequest
                 - canceled
+                - completed
+                - completedNotified
+                #7 pending places
                 - pendingInvestigatorInput
                 - pendingHistology
                 - pendingImmunohistochemistry
@@ -269,8 +273,6 @@ framework:
                 - pendingCaseRetrieval
                 - pendingTissueMicroArray
                 - pendingSlideScanning
-                - completed
-                - completedNotified
             transitions:
                 draft_active:
                     from: draft
@@ -296,6 +298,9 @@ framework:
                 completed_completedNotified:
                     from: completed
                     to: completedNotified
+                completed_cancellationRequest:
+                    from: completed
+                    to: cancellationRequest
                 completedNotified_completed:
                     from: completedNotified
                     to: completed
@@ -311,12 +316,15 @@ framework:
                 active_completedNotified:
                     from: active
                     to: completedNotified
-                active_cancelationRequest:
+                active_cancellationRequest:
                     from: active
-                    to: cancelationRequest
-                cancelationRequest_active:
-                    from: cancelationRequest
+                    to: cancellationRequest
+                cancellationRequest_active:
+                    from: cancellationRequest
                     to: active
+                completedNotified_cancellationRequest:
+                    from: completedNotified
+                    to: cancellationRequest
 
                 #active to pending
                 active_pendingInvestigatorInput:
@@ -340,6 +348,7 @@ framework:
                 active_pendingTissueMicroArray:
                     from: active
                     to: pendingTissueMicroArray
+
                 #pending to completed
                 pendingInvestigatorInput_completed:
                     from: pendingInvestigatorInput
@@ -362,6 +371,7 @@ framework:
                 pendingTissueMicroArray_completed:
                     from: pendingTissueMicroArray
                     to: completed
+
                 #completed to all other statuses EXCEPT Draft
                 completed_pendingInvestigatorInput:
                     from: completed
@@ -383,5 +393,145 @@ framework:
                     to: pendingSlideScanning
                 completed_pendingTissueMicroArray:
                     from: completed
+                    to: pendingTissueMicroArray
+
+                #pendingInvestigatorInput to all others
+                pendingInvestigatorInput_pendingHistology:
+                    from: pendingInvestigatorInput
+                    to: pendingHistology
+                pendingInvestigatorInput_pendingCaseRetrieval:
+                    from: pendingInvestigatorInput
+                    to: pendingCaseRetrieval
+                pendingInvestigatorInput_pendingImmunohistochemistry:
+                    from: pendingInvestigatorInput
+                    to: pendingImmunohistochemistry
+                pendingInvestigatorInput_pendingMolecular:
+                    from: pendingInvestigatorInput
+                    to: pendingMolecular
+                pendingInvestigatorInput_pendingTissueMicroArray:
+                    from: pendingInvestigatorInput
+                    to: pendingTissueMicroArray
+                pendingInvestigatorInput_pendingSlideScanning:
+                    from: pendingInvestigatorInput
+                    to: pendingSlideScanning
+
+                #pendingHistology to all others
+                pendingHistology_pendingInvestigatorInput:
+                    from: pendingHistology
+                    to: pendingInvestigatorInput
+                pendingHistology_pendingCaseRetrieval:
+                    from: pendingHistology
+                    to: pendingCaseRetrieval
+                pendingHistology_pendingImmunohistochemistry:
+                    from: pendingHistology
+                    to: pendingImmunohistochemistry
+                pendingHistology_pendingMolecular:
+                    from: pendingHistology
+                    to: pendingMolecular
+                pendingHistology_pendingTissueMicroArray:
+                    from: pendingHistology
+                    to: pendingTissueMicroArray
+                pendingHistology_pendingSlideScanning:
+                    from: pendingHistology
+                    to: pendingSlideScanning
+
+                #pendingImmunohistochemistry to all others
+                pendingImmunohistochemistry_pendingInvestigatorInput:
+                    from: pendingImmunohistochemistry
+                    to: pendingInvestigatorInput
+                pendingImmunohistochemistry_pendingCaseRetrieval:
+                    from: pendingImmunohistochemistry
+                    to: pendingCaseRetrieval
+                pendingImmunohistochemistry_pendingHistology:
+                    from: pendingImmunohistochemistry
+                    to: pendingHistology
+                pendingImmunohistochemistry_pendingMolecular:
+                    from: pendingImmunohistochemistry
+                    to: pendingMolecular
+                pendingImmunohistochemistry_pendingTissueMicroArray:
+                    from: pendingImmunohistochemistry
+                    to: pendingTissueMicroArray
+                pendingImmunohistochemistry_pendingSlideScanning:
+                    from: pendingImmunohistochemistry
+                    to: pendingSlideScanning
+
+                #pendingMolecular to all others
+                pendingMolecular_pendingInvestigatorInput:
+                    from: pendingMolecular
+                    to: pendingInvestigatorInput
+                pendingMolecular_pendingCaseRetrieval:
+                    from: pendingMolecular
+                    to: pendingCaseRetrieval
+                pendingMolecular_pendingHistology:
+                    from: pendingMolecular
+                    to: pendingHistology
+                pendingMolecular_pendingImmunohistochemistry:
+                    from: pendingMolecular
+                    to: pendingImmunohistochemistry
+                pendingMolecular_pendingTissueMicroArray:
+                    from: pendingMolecular
+                    to: pendingTissueMicroArray
+                pendingMolecular_pendingSlideScanning:
+                    from: pendingMolecular
+                    to: pendingSlideScanning
+
+                #pendingCaseRetrieval to all others
+                pendingCaseRetrieval_pendingInvestigatorInput:
+                    from: pendingCaseRetrieval
+                    to: pendingInvestigatorInput
+                pendingCaseRetrieval_pendingMolecular:
+                    from: pendingCaseRetrieval
+                    to: pendingMolecular
+                pendingCaseRetrieval_pendingHistology:
+                    from: pendingCaseRetrieval
+                    to: pendingHistology
+                pendingCaseRetrieval_pendingImmunohistochemistry:
+                    from: pendingCaseRetrieval
+                    to: pendingImmunohistochemistry
+                pendingCaseRetrieval_pendingTissueMicroArray:
+                    from: pendingCaseRetrieval
+                    to: pendingTissueMicroArray
+                pendingCaseRetrieval_pendingSlideScanning:
+                    from: pendingCaseRetrieval
+                    to: pendingSlideScanning
+
+                #pendingTissueMicroArray to all others
+                pendingTissueMicroArray_pendingInvestigatorInput:
+                    from: pendingTissueMicroArray
+                    to: pendingInvestigatorInput
+                pendingTissueMicroArray_pendingMolecular:
+                    from: pendingTissueMicroArray
+                    to: pendingMolecular
+                pendingTissueMicroArray_pendingHistology:
+                    from: pendingTissueMicroArray
+                    to: pendingHistology
+                pendingTissueMicroArray_pendingImmunohistochemistry:
+                    from: pendingTissueMicroArray
+                    to: pendingImmunohistochemistry
+                pendingTissueMicroArray_pendingCaseRetrieval:
+                    from: pendingTissueMicroArray
+                    to: pendingCaseRetrieval
+                pendingTissueMicroArray_pendingSlideScanning:
+                    from: pendingTissueMicroArray
+                    to: pendingSlideScanning
+
+                #pendingSlideScanning to all others
+                pendingSlideScanning_pendingInvestigatorInput:
+                    from: pendingSlideScanning
+                    to: pendingInvestigatorInput
+                pendingSlideScanning_pendingMolecular:
+                    from: pendingSlideScanning
+                    to: pendingMolecular
+                pendingSlideScanning_pendingHistology:
+                    from: pendingSlideScanning
+                    to: pendingHistology
+                pendingSlideScanning_pendingImmunohistochemistry:
+                    from: pendingSlideScanning
+                    to: pendingImmunohistochemistry
+                pendingSlideScanning_pendingCaseRetrieval:
+                    from: pendingSlideScanning
+                    to: pendingCaseRetrieval
+                pendingSlideScanning_pendingTissueMicroArray:
+                    from: pendingSlideScanning
                     to: pendingTissueMicroArray
 

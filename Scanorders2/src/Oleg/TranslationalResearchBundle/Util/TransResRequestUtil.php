@@ -322,23 +322,58 @@ class TransResRequestUtil
         return null;
     }
 
+    public function getFilterPendingRequestArr($title=null) {
+        $res = array(
+            'filter[progressState][0]' => "active",
+            'filter[progressState][1]' => "pendingInvestigatorInput",
+            'filter[progressState][2]' => "pendingHistology",
+            'filter[progressState][3]' => "pendingImmunohistochemistry",
+            'filter[progressState][4]' => "pendingMolecular",
+            'filter[progressState][5]' => "pendingCaseRetrieval",
+            'filter[progressState][6]' => "pendingTissueMicroArray",
+            'filter[progressState][7]' => "pendingSlideScanning"
+        );
+
+        if( $title ) {
+            $res['title'] = $title;
+        }
+
+        return $res;
+    }
+
     public function getProgressStateArr() {
+//        $stateArr = array(
+//            'draft',
+//            'active',
+//            'canceled',
+//            'cancellationRequest',
+//            'investigator',
+//            'histo',
+//            'ihc',
+//            'mol',
+//            'retrieval',
+//            'payment',
+//            'slidescanning',
+//            'block',
+//            'suspended',
+//            'other',
+//            'completed',
+//            'completedNotified'
+//        );
         $stateArr = array(
             'draft',
             'active',
+            'cancellationRequest',
             'canceled',
-            'investigator',
-            'histo',
-            'ihc',
-            'mol',
-            'retrieval',
-            'payment',
-            'slidescanning',
-            'block',
-            'suspended',
-            'other',
             'completed',
-            'completedNotified'
+            'completedNotified',
+            'pendingInvestigatorInput',
+            'pendingHistology',
+            'pendingImmunohistochemistry',
+            'pendingMolecular',
+            'pendingCaseRetrieval',
+            'pendingTissueMicroArray',
+            'pendingSlideScanning'
         );
 
         $stateChoiceArr = array();
@@ -383,6 +418,8 @@ class TransResRequestUtil
     public function getProgressStateLabelByName( $stateName, $asButtonLabel=false ) {
         $buttonLabel = null;
         switch ($stateName) {
+            
+            //6 cases
             case "draft":
                 $state = "Draft";
                 break;
@@ -391,43 +428,40 @@ class TransResRequestUtil
                 break;
             case "canceled":
                 $state = "Canceled";
+                $buttonLabel = "Canceled";
+                break;
+            case "cancellationRequest":
+                $state = "Request Cancellation";
                 $buttonLabel = "Request Cancellation";
-                break;
-            case "investigator":
-                $state = "Investigator";
-                break;
-            case "histo":
-                $state = "Histo";
-                break;
-            case "ihc":
-                $state = "Ihc";
-                break;
-            case "mol":
-                $state = "Mol";
-                break;
-            case "retrieval":
-                $state = "Retrieval";
-                break;
-            case "payment":
-                $state = "Payment";
-                break;
-            case "slidescanning":
-                $state = "Slide Scanning";
-                break;
-            case "block":
-                $state = "Block";
-                break;
-            case "suspended":
-                $state = "Suspended";
-                break;
-            case "other":
-                $state = "Other";
                 break;
             case "completed":
                 $state = "Completed";
                 break;
             case "completedNotified":
                 $state = "Completed and Notified";
+                break;
+
+            //7 cases
+            case "pendingInvestigatorInput":
+                $state = "Pending Investigator's Input";
+                break;
+            case "pendingHistology":
+                $state = "Pending Histology";
+                break;
+            case "pendingImmunohistochemistry":
+                $state = "Pending Immunohistochemistry";
+                break;
+            case "pendingMolecular":
+                $state = "Pending Molecular";
+                break;
+            case "pendingCaseRetrieval":
+                $state = "Pending Case Retrieval";
+                break;
+            case "pendingTissueMicroArray":
+                $state = "Pending Tissue MicroArray";
+                break;
+            case "pendingSlideScanning":
+                $state = "Pending Slide Scanning";
                 break;
 
             default:
@@ -459,7 +493,7 @@ class TransResRequestUtil
                 break;
             case "canceled":
                 $state = "Canceled";
-                $buttonLabel = "Request Cancellation";
+                $buttonLabel = "Canceled";
                 break;
             case "missinginfo":
                 $state = "Pending additional information from submitter";
