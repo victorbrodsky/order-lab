@@ -573,7 +573,7 @@ class AccessRequestController extends Controller
             array(
                 'defaultSortFieldName' => 'accreq.createdate',
                 'defaultSortDirection' => 'DESC',
-                //'wrap-queries'=>true
+                'wrap-queries'=>true
             )
         );
 

@@ -583,7 +583,8 @@ class UserUtil {
             $pagination = $paginator->paginate(
                 $query,
                 $request->query->get('page', 1), /*page number*/
-                $limit/*limit per page*/
+                $limit,/*limit per page*/
+                array('wrap-queries'=>true)
             );
         } else {
             $pagination = $query->getResult();

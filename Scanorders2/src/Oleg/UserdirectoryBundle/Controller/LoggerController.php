@@ -333,7 +333,7 @@ class LoggerController extends Controller
         $pagination = $paginator->paginate(
             $query,
             $request->query->get('page', 1), /*page number*/
-            $limit/*limit per page*/
+            $limit                          /*limit per page*/
         );
         //echo "<br>pagination=".count($pagination)."<br>";
 

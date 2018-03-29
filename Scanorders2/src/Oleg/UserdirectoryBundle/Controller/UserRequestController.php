@@ -70,7 +70,7 @@ class UserRequestController extends Controller
         $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:UserRequest');
         $dql =  $repository->createQueryBuilder("accreq");
         $dql->select('accreq');
-        //$dql->leftJoin("accreq.division", "division");
+        $dql->leftJoin("accreq.systemAccountRequest", "systemAccountRequest");
 
         $dql->where("accreq.siteName = :siteName");
 		
@@ -96,7 +96,8 @@ class UserRequestController extends Controller
         $pagination = $paginator->paginate(
             $query,
             $request->query->get('page', 1), /*page number*/
-            $limit/*limit per page*/
+            $limit, /*limit per page*/
+            array('wrap-queries' => true)
         );
 
         $forms = array();

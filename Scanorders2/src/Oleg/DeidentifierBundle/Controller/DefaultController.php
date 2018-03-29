@@ -233,7 +233,7 @@ class DefaultController extends Controller
                 $query,
                 $request->query->get('page', 1),   /*page number*/
                 $limit,                            /*limit per page*/
-                array('defaultSortFieldName' => 'accessionAccession.id', 'defaultSortDirection' => 'asc')
+                array('defaultSortFieldName' => 'accessionAccession.id', 'defaultSortDirection' => 'asc', 'wrap-queries'=>true)
             );
 
             //echo "pagination count=" . count($pagination) . "<br>";

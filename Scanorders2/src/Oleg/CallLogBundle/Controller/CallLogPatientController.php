@@ -368,7 +368,7 @@ class CallLogPatientController extends PatientController {
             array(
                 'defaultSortFieldName' => 'patient.id',
                 'defaultSortDirection' => 'DESC',
-                //'wrap-queries'=>true
+                'wrap-queries'=>true
             )
         );
         //$patients = $query->getResult();

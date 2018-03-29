@@ -194,7 +194,8 @@
 
                 <td>
                     {% if project.approvalDate %}
-                        {{ project.approvalDate|date('m/d/Y') }}
+                        {#show in the original timezone#}
+                        {{ project.approvalDate|date('m/d/Y',false) }}
                     {% endif %}
                 </td>
 

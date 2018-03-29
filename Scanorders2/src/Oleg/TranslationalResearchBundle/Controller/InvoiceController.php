@@ -57,6 +57,7 @@ class InvoiceController extends Controller
 
         $dql->leftJoin('invoice.submitter','submitter');
         $dql->leftJoin('invoice.salesperson','salesperson');
+        $dql->leftJoin('salesperson.infos','salespersonInfos');
         $dql->leftJoin('invoice.transresRequest','transresRequest');
         $dql->leftJoin('invoice.principalInvestigator','principalInvestigator');
 
@@ -465,7 +466,8 @@ class InvoiceController extends Controller
 
         $paginationParams = array(
             'defaultSortFieldName' => 'invoice.id',
-            'defaultSortDirection' => 'DESC'
+            'defaultSortDirection' => 'DESC',
+            'wrap-queries' => true
         );
 
         $paginator  = $this->get('knp_paginator');

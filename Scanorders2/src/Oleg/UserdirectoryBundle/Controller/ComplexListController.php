@@ -173,7 +173,7 @@ class ComplexListController extends Controller
             $query,
             $request->query->get('page', 1), /*page number*/
             $limit /*limit per page*/
-            ,array('defaultSortFieldName' => 'ent.orderinlist', 'defaultSortDirection' => 'asc')
+            ,array('defaultSortFieldName' => 'ent.orderinlist', 'defaultSortDirection' => 'asc', 'wrap-queries'=>true)
         );
 
         return array(

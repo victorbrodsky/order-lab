@@ -314,7 +314,8 @@ class FellAppController extends Controller {
             $query,
             $request->query->get('page', 1), /*page number*/
             //$request->query->getInt('page', 1),
-            $limit      /*limit per page*/
+            $limit,      /*limit per page*/
+            array('wrap-queries' => true)
         );
 
 
