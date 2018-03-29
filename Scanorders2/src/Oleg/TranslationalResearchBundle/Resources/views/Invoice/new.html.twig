@@ -31,7 +31,7 @@
 
     {% if transresRequest is defined %}
         <p>
-            <a href="{{ path('translationalresearch_invoice_index', {'id': transresRequest.id }) }}" target="_blank">Show All Invoices for this Request ID {{ transresRequest.oid }}</a>
+            <a href="{{ path('translationalresearch_invoice_index', {'id': transresRequest.id }) }}" target="_blank">Show All Associated Invoices for this Request ID {{ transresRequest.oid }}</a>
         </p>
     {% endif %}
 
@@ -328,7 +328,7 @@
     {% if transresRequest is defined %}
         <br>
         <p>
-            <a href="{{ path('translationalresearch_invoice_index', {'id': transresRequest.id }) }}" target="_blank">Show All Invoices for the same Request ID {{ transresRequest.oid }}</a>
+            <a href="{{ path('translationalresearch_invoice_index', {'id': transresRequest.id }) }}" target="_blank">Show All Associated Invoices for the same Request ID {{ transresRequest.oid }}</a>
         </p>
     {% endif %}
 
