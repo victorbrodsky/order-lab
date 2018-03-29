@@ -281,15 +281,17 @@
             {#>PDF Invoice Preview</a>#}
         {#</p>#}
 
-        {% if invoice.documents|length > 0 %}
-            {% set generateLabel = "Regenerate Invoice PDF" %}
-        {% else %}
-            {% set generateLabel = "Generate Invoice PDF" %}
+        {% if is_granted('ROLE_TRANSRES_BILLING_ADMIN') %}
+            {% if invoice.documents|length > 0 %}
+                {% set generateLabel = "Regenerate Invoice PDF" %}
+            {% else %}
+                {% set generateLabel = "Generate Invoice PDF" %}
+            {% endif %}
+            <p>
+                <a class="btn btn-primary" href="{{ path('translationalresearch_invoice_generate_pdf', {'oid': invoice.oid }) }}"
+                >{{ generateLabel }}</a>
+            </p>
         {% endif %}
-        <p>
-            <a class="btn btn-primary" href="{{ path('translationalresearch_invoice_generate_pdf', {'oid': invoice.oid }) }}"
-            >{{ generateLabel }}</a>
-        </p>
 
         {% if invoice.documents|length > 0 %}
             {#Send the Latest Invoice PDF by Email#}

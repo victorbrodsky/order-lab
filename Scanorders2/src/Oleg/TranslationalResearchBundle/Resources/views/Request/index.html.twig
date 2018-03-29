@@ -44,7 +44,7 @@
         <thead>
             <tr>
                 {#<th>Id</th>#}
-                <th>{{ knp_pagination_sortable(transresRequests, 'ID', 'transresRequest.oid') }}</th>
+                <th>{{ knp_pagination_sortable(transresRequests, 'ID', 'transresRequest.id') }}</th>
                 {% if not project %}
                     <th>{{ knp_pagination_sortable(transresRequests, 'Project ID', 'project.id') }}</th>
                 {% endif %}

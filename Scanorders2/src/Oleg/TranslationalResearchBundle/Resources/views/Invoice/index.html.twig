@@ -26,7 +26,7 @@
     <table class="records_list table table-condensed text-left">
         <thead>
             <tr>
-                <th>{{ knp_pagination_sortable(invoices, 'Invoice Number', 'invoice.oid') }}</th>
+                <th>{{ knp_pagination_sortable(invoices, 'Invoice Number', 'invoice.id') }}</th>
                 <th>{{ knp_pagination_sortable(invoices, 'Funding Number', 'invoice.fundedAccountNumber') }}</th>
                 <th>{{ knp_pagination_sortable(invoices, 'Salesperson', 'salesperson.displayName') }}</th>
                 <th>{{ knp_pagination_sortable(invoices, 'Submitted', 'invoice.createDate') }}</th>
