@@ -1,7 +1,7 @@
 fos_comment_comment_new_headline_first:       Be the first to comment
 fos_comment_comment_new_headline:             Add New Comment
 #fos_comment_comment_new_submit:               Post
-fos_comment_comment_new_submit:               Add Comment Without Changing Project Request Status
+fos_comment_comment_new_submit:               Add Comment Without Changing Status
 fos_comment_comment_new_cancel:               Cancel
 
 fos_comment_comment_edit_submit:              Post

@@ -575,14 +575,22 @@ class LoggerController extends Controller
     public function createLoggerFilter($request,$params) {
         $userid = $params['entityId'];
         //echo "userid=".$userid."<br>";
+
+        //disabled
+//        $disbaled = false;
+//        if( isset($params['disabled']) && $params['disabled'] ) {
+//            $disbaled = true;
+//        }
+
         $routename = $request->get('_route');
         //echo "route=".$routename."<br>";
         //Start Date, Start Time, End Date, End Time, User [Select2 dropdown), Event Type [Entity Updated], [Free Text Search value for Event column] [Filter Button]
         return $this->createForm(LoggerFilterType::class, null, array(
-            'method'=>'GET',
+            'method' => 'GET',
+            //'disabled' => $disbaled,
             'action' => $this->generateUrl($routename, array('id' => $userid)),
             'attr' => array('class'=>'well form-search'),
-            'form_custom_value'=>$params,
+            'form_custom_value' => $params,
         ));
     }
     public function processOptionalFields( $dql, &$dqlParameters, $filterform, $filtered ) {

@@ -185,6 +185,7 @@ class LoggerFilterType extends AbstractType
         $builder->add('objectType', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:EventObjectTypeList',
             //'disabled' => $this->hideObjectType,
+            //'disabled' => true,
             //'placeholder' => 'Fellowship Type',
             'choice_label' => 'name',
             'label' => false,
@@ -205,6 +206,7 @@ class LoggerFilterType extends AbstractType
         $builder->add('objectId', TextType::class, array(
             //'disabled' => $this->hideObjectId,
             'required' => false,
+            //'disabled' => true,
             'label' => false,
             'attr' => array('class' => 'form-control form-control-modif limit-font-size submit-on-enter-field'),
         ));

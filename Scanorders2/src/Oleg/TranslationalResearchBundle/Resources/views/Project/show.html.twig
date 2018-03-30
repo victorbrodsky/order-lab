@@ -38,6 +38,9 @@
             <a class="btn btn-primary"
                href="{{ path('translationalresearch_event-log-per-object_log', { 'filter[objectType][]': eventObjectTypeId, 'filter[objectId]': project.id}) }}"
                target="_blank">View Event Log</a>
+            {#<a class="btn btn-primary"#}
+               {#href="{{ path('translationalresearch_event-log-per-object_log', { 'objectType': eventObjectTypeId, 'objectId': project.id}) }}"#}
+               {#target="_blank">View Event Log</a>#}
         {% endif %}
         <br><br>
     {% endif %}

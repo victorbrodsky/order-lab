@@ -1638,9 +1638,11 @@ class RequestController extends Controller
         $transresRequestUtil = $this->container->get('transres_request_util');
 
         if(
-            $transresUtil->isAdminOrPrimaryReviewer() ||
-            $transresRequestUtil->isRequestProgressReviewable($transresRequest) ||
-            $transresRequestUtil->isRequestProgressReviewer($transresRequest)
+            $transresRequestUtil->isRequestProgressReviewable($transresRequest) && //check state
+            (
+                $transresUtil->isAdminOrPrimaryReviewer() ||
+                $transresRequestUtil->isRequestProgressReviewer($transresRequest)
+            )
         ) {
             //ok
         } else {
@@ -1681,9 +1683,11 @@ class RequestController extends Controller
         $transresRequestUtil = $this->container->get('transres_request_util');
 
         if(
-            $transresUtil->isAdminOrPrimaryReviewer() ||
-            $transresRequestUtil->isRequestBillingReviewable($transresRequest) ||
-            $transresRequestUtil->isRequestBillingReviewer($transresRequest)
+            $transresRequestUtil->isRequestProgressReviewable($transresRequest) && //check state
+            (
+                $transresUtil->isAdminOrPrimaryReviewer() ||
+                $transresRequestUtil->isRequestProgressReviewer($transresRequest)
+            )
         ) {
             //ok
         } else {

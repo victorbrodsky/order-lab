@@ -305,8 +305,8 @@ function handsonTableInit(handsometableDataArr,tableFormCycle) {
     if( handsometableDataArr && typeof handsometableDataArr != 'undefined' && handsometableDataArr.length != 0 ) {
         rows = handsometableDataArr.length+1;
     }
-    console.log('handsonTableInit rows='+rows+":");
-    console.log(handsometableDataArr);
+    //console.log('handsonTableInit rows='+rows+":");
+    //console.log(handsometableDataArr);
 
     // make init data, i=0 to skip the first row
     for( var i=1; i<rows; i++ ) {   //foreach row
@@ -318,18 +318,18 @@ function handsonTableInit(handsometableDataArr,tableFormCycle) {
             if( 'default' in _columnData_scanorder[ii] ) {
                 var index = _columnData_scanorder[ii]['default'];
                 rowElement[ii] = _columnData_scanorder[ii]['columns']['source'][index];
-                console.log('assign rowElement='+rowElement[ii]);
+                //console.log('assign rowElement='+rowElement[ii]);
             } else {
-                console.log('assign rowElement is null');
+                //console.log('assign rowElement is null');
                 rowElement[ii] = null;
             }
 
             //load data
-            console.log('load data for row='+i);
+            //console.log('load data for row='+i);
             //if( typeof handsometableDataArr != 'undefined' ) {
             if( handsometableDataArr && typeof handsometableDataArr != 'undefined' && handsometableDataArr.length > 0 ) {
                 var headerTitle = _columnData_scanorder[ii]['header'];
-                console.log('headerTitle='+headerTitle);
+                //console.log('headerTitle='+headerTitle);
                 //console.log( handsometableDataArr[i-1] );
                 if( typeof headerTitle != 'undefined' && typeof handsometableDataArr[i-1] != 'undefined' &&
                     headerTitle != '' && (i-1<handsometableDataArr.length) && headerTitle in handsometableDataArr[i-1]
@@ -337,13 +337,13 @@ function handsonTableInit(handsometableDataArr,tableFormCycle) {
                 // if( typeof headerTitle != 'undefined' && typeof handsometableDataArr[i-1] != 'undefined' &&
                 //     headerTitle != '' && (i-1<handsometableDataArr.length)
                 // ) {
-                    console.log('handsometableDataArr[i-1]:(');
-                    console.log(handsometableDataArr[i-1]);
-                    console.log(')');
+                    //console.log('handsometableDataArr[i-1]:(');
+                    //console.log(handsometableDataArr[i-1]);
+                    //console.log(')');
                     if( handsometableDataArr[i-1][headerTitle] ) {
                         var cellValue = handsometableDataArr[i-1][headerTitle]["value"];
                         //var cellId = handsometableDataArr[i-1][headerTitle]["id"];
-                        console.log('cellValue='+cellValue);
+                        //console.log('cellValue='+cellValue);
                         //var value = handsometableDataArr[i-1][headerTitle];
                         //console.log( "value="+value );
                         if( cellValue != null && cellValue != "" ) {
@@ -355,7 +355,7 @@ function handsonTableInit(handsometableDataArr,tableFormCycle) {
 
         }//foreach column
 
-        console.log(rowElement);
+        //console.log(rowElement);
         data.push(rowElement);
 
     }//foreach row
@@ -369,8 +369,8 @@ function handsonTableInit(handsometableDataArr,tableFormCycle) {
     //console.log(columnsType);
     //$('#multi-dataTable').doubleScroll();
 
-    console.log("data:");
-    console.log(data);
+    //console.log("data:");
+    //console.log(data);
     //console.log(_colHeader);
     //console.log(columnsType);
 
@@ -428,15 +428,15 @@ function handsonTableInit(handsometableDataArr,tableFormCycle) {
 
             if (change != null) {
                 var changeData = change[0];
-                console.log("changeData:");
-                console.log(changeData);
+                //console.log("changeData:");
+                //console.log(changeData);
 
                 var rowNumber = changeData[0];
                 var columnNumber = changeData[1];
                 var oldValue = changeData[2];
                 var newValue = changeData[3];
                 //console.log("prop="+prop);
-                console.log("oldValue="+oldValue+"; newValue="+newValue);
+                //console.log("oldValue="+oldValue+"; newValue="+newValue);
 
                 //console.log("header="+_columnData_scanorder[columnNumber].header);
                 //if( _columnData_scanorder[columnNumber].header != "Barcode") {
@@ -681,23 +681,23 @@ function transresBarcodeParser( rowNumber, barcodeStr ) {
 // }
 
 function validateHandsonTable() {
-    console.log("validateHandsonTable");
+    //console.log("validateHandsonTable");
 
     if( !_sotable ) {
         return true;
     }
 
     var countRow = _sotable.countRows();
-    console.log("countRow="+countRow);
+    //console.log("countRow="+countRow);
     for( var row=0; row<countRow-1; row++ ) { //for each row (except the last one)
-        console.log("row="+row);
+        //console.log("row="+row);
         _rowToProcessArr.push(row);
     } //for each row
 
     //get rows data from _rowToProcessArr
     assignDataToDatalocker();
 
-    console.log("END !!!!!!!!!!!");
+    //console.log("END !!!!!!!!!!!");
     //return true;
     return false;
 }
@@ -715,21 +715,21 @@ function assignDataToDatalocker() {
     };
     //data.push(headers);
 
-    console.log("_rowToProcessArr.length="+_rowToProcessArr.length);
+    //console.log("_rowToProcessArr.length="+_rowToProcessArr.length);
 
     for( var i=0; i<_rowToProcessArr.length; i++ ) {
-        console.log("data row="+_rowToProcessArr[i]);
+        //console.log("data row="+_rowToProcessArr[i]);
         //data.push( _sotable.getDataAtRow( _rowToProcessArr[i] ) );
         var row = _rowToProcessArr[i];
         var rowArr = [];
         //add cell id to datalocker for each field
         for( var col=0; col<headers.length; col++ ) {
             //var cellid = _sotable.getCellMeta(row,cell).id;
-            console.log("_sotable.getCellMeta(row,col):");
-            console.log(_sotable.getCellMeta(row,col));
+            //console.log("_sotable.getCellMeta(row,col):");
+            //console.log(_sotable.getCellMeta(row,col));
             var cellId = _sotable.getCellMeta(row,col).id;
             var cellValue =  _sotable.getDataAtCell(row,col);
-            console.log("("+row+","+col+"): cellId="+cellId+", cellValue="+cellValue);
+            //console.log("("+row+","+col+"): cellId="+cellId+", cellValue="+cellValue);
             rowArr.push({
                 "id"    : cellId,
                 "value" : cellValue
@@ -739,7 +739,7 @@ function assignDataToDatalocker() {
         data.row.push(rowArr);
 
     }
-    console.log(data);
+    //console.log(data);
 
     // if( _btnClickedName != null ) {
     //     $("#oleg_orderformbundle_messagetype_clickedbtn").val( _btnClickedName );
@@ -749,8 +749,8 @@ function assignDataToDatalocker() {
     //http://itanex.blogspot.com/2013/05/saving-handsontable-data.html
     var jsonstr = JSON.stringify(data);
     //var jsonstr = data;
-    console.log("jsonstr:");
-    console.log(jsonstr);
+    //console.log("jsonstr:");
+    //console.log(jsonstr);
     $("#oleg_translationalresearchbundle_request_datalocker").val( jsonstr );
 }
 

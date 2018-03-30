@@ -121,6 +121,14 @@ class TranslationalResearchLoggerController extends LoggerController
             return $this->redirect($this->generateUrl('calllog-nopermission'));
         }
 
+        //permission if user change filter parameter
+//        //Start Date, Start Time, End Date, End Time, User [Select2 dropdown), Event Type [Entity Updated], [Free Text Search value for Event column] [Filter Button]
+//        //$filterform = $this->createForm(new LoggerFilterType($params), null);
+//        $filterform = $this->createLoggerFilter($request,$params);
+//
+//        //$filterform->submit($request);
+//        $filterform->handleRequest($request);
+
         //filter[objectType][]=4
         //filter[objectId]=178
 
@@ -133,8 +141,77 @@ class TranslationalResearchLoggerController extends LoggerController
 //        echo "$objectTypes, $objectId <br>";
 //        exit();
 
-        $params = array('sitename'=>$this->container->getParameter('translationalresearch.sitename'));
+        $params = array(
+            'sitename' => $this->container->getParameter('translationalresearch.sitename'),
+            //'objectType' => $objectType,
+            //'objectId' => $objectId
+            //'disabled' => true
+            //'disabledObjectType' => true,
+            //'disabledObjectId' => true
+        );
+
         $loggerFormParams = $this->listLogger($params,$request);
+
+        $filterform = $loggerFormParams['filterform'];
+        $objectTypes = $filterform['objectType']->getData();
+        $objectId = $filterform['objectId']->getData();
+        //echo "objectId=".$objectId."<br>";
+
+        if( count($objectTypes) > 0 ) {
+            $objectType = $objectTypes[0];
+        } else {
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                "Object Type is not defined."
+            );
+            return $this->redirect($this->generateUrl('calllog-nopermission'));
+        }
+
+        //permission: check if user has permission to view the specified object
+        $em = $this->getDoctrine()->getManager();
+
+        $objectNamespace = "Oleg\\TranslationalResearchBundle\\Entity";
+
+        //Oleg\UserdirectoryBundle\Entity
+        $objectNamespaceArr = explode("\\",$objectNamespace);
+        $objectNamespaceClean = $objectNamespaceArr[0].$objectNamespaceArr[1];
+
+        $objectName = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->find($objectType);
+        if( !$objectName ) {
+            throw $this->createNotFoundException('Unable to find EventObjectTypeList by objectType id='.$objectType);
+        }
+
+        //echo "objectName=".$objectName."<br>";
+        if( $objectName != "Project" ) {
+            return $this->redirect($this->generateUrl('calllog-nopermission'));
+        }
+
+        $subjectEntity = $em->getRepository($objectNamespaceClean.':'.$objectName)->find($objectId);
+        if( !$subjectEntity ) {
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                "Object not found by ID ".$objectId
+            );
+            return $this->redirect($this->generateUrl('calllog-nopermission'));
+        }
+
+
+        $transresUtil = $this->container->get('transres_util');
+
+        if( $transresUtil->isUserAllowedSpecialtyObject($subjectEntity->getProjectSpecialty()) === false ) {
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                "You don't have a permission to access the ".$subjectEntity->getProjectSpecialty()." project specialty"
+            );
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
+        //$builder = $filterform->getBuilder();
+
+        //$objectTypes = $filterform['objectType']->getData();
+        //$objectId = $filterform['objectId']->getData();
+
+        $loggerFormParams['hideObjectId'] = true;
 
         return $loggerFormParams;
     }
