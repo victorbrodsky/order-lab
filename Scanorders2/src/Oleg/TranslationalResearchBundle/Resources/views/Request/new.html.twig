@@ -93,10 +93,21 @@
 
 
     {% if cycle == "show" %}
-        <br>
-        <p>
-            <a class="btn btn-default" href="{{ path(translationalresearch_sitename~'_request_edit', { 'id': transresRequest.id }) }}">Edit Request</a>
-        </p>
+        {% if
+            is_granted('ROLE_TRANSRES_ADMIN') or
+            is_granted('ROLE_TRANSRES_TECHNICIAN') or
+            (
+                transres_util.isProjectRequester(transresRequest.project) and
+                transresRequest.getProgressState() == 'draft'
+            )
+        %}
+            <br>
+            <p>
+                <a class="btn btn-default"
+                   href="{{ path(translationalresearch_sitename~'_request_edit', { 'id': transresRequest.id }) }}"
+                >Edit Request</a>
+            </p>
+        {% endif %}
     {% endif %}
 
 

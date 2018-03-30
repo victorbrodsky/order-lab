@@ -148,7 +148,14 @@
                                 <a href="{{ path(translationalresearch_sitename~'_request_formnode_show', { 'id': transresRequest.id }) }}" target="_blank">Show Request</a>
                             </li>
 
-                            {% if is_granted('ROLE_TRANSRES_ADMIN') or transresRequest.submitter.id == app.user.id %}
+                            {% if
+                                is_granted('ROLE_TRANSRES_ADMIN') or
+                                is_granted('ROLE_TRANSRES_TECHNICIAN') or
+                                (
+                                    transres_util.isProjectRequester(transresRequest.project) and
+                                    transresRequest.getProgressState() == 'draft'
+                                )
+                            %}
                                 <li>
                                     <a href="{{ path(translationalresearch_sitename~'_request_formnode_edit', { 'id': transresRequest.id }) }}" target="_blank">Edit Request</a>
                                 </li>

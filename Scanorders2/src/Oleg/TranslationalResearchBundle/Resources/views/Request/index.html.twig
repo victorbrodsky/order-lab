@@ -185,7 +185,15 @@
                             </li>
 
 
-                            {% if is_granted('ROLE_TRANSRES_ADMIN') or transresRequest.submitter.id == app.user.id %}
+                            {#transresRequest.submitter.id == app.user.id and#}
+                            {% if
+                                is_granted('ROLE_TRANSRES_ADMIN') or
+                                is_granted('ROLE_TRANSRES_TECHNICIAN') or
+                                (
+                                    transres_util.isProjectRequester(transresRequest.project) and
+                                    transresRequest.getProgressState() == 'draft'
+                                )
+                            %}
                                 <li>
                                     <a href="{{ path(translationalresearch_sitename~'_request_edit', { 'id': transresRequest.id }) }}"
                                     >Edit Request</a>

@@ -382,6 +382,29 @@ framework:
                     from: pendingTissueMicroArray
                     to: active
 
+                #pending to canceled
+                pendingInvestigatorInput_canceled:
+                    from: pendingInvestigatorInput
+                    to: canceled
+                pendingHistology_canceled:
+                    from: pendingHistology
+                    to: canceled
+                pendingImmunohistochemistry_canceled:
+                    from: pendingImmunohistochemistry
+                    to: canceled
+                pendingMolecular_canceled:
+                    from: pendingMolecular
+                    to: canceled
+                pendingCaseRetrieval_canceled:
+                    from: pendingCaseRetrieval
+                    to: canceled
+                pendingSlideScanning_canceled:
+                    from: pendingSlideScanning
+                    to: canceled
+                pendingTissueMicroArray_canceled:
+                    from: pendingTissueMicroArray
+                    to: canceled
+
                 #completed to all other statuses EXCEPT Draft
 #                completed_pendingInvestigatorInput:
 #                    from: completed

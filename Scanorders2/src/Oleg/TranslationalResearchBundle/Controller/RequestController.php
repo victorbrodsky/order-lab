@@ -272,6 +272,18 @@ class RequestController extends Controller
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
+        if( $transresUtil->isProjectRequester($project) ) {
+            if( $transresRequest->getProgressState() != 'draft' ) {
+                $stageLabel = $transresRequestUtil->getRequestStateLabelByName($transresRequest->getProgressState(),'progress');
+                $this->get('session')->getFlashBag()->add(
+                    'warning',
+                    "You can not edit this Working Request, because it's not in the Draft stage. Current stage is ".$stageLabel
+                );
+                //return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+                return $this->redirectToRoute('translationalresearch_request_show', array('id' => $transresRequest->getId()));
+            }
+        }
+
         if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
             $this->get('session')->getFlashBag()->add(
                 'warning',
@@ -1583,12 +1595,14 @@ class RequestController extends Controller
 
         if( $cycle == "edit" ) {
             $disabled = false;
-            $params['saveAsUpdate'] = true;
-            if( $transresRequest->getProgressState() != 'draft' ) {
+            if( $transresRequest->getProgressState() == 'draft' ) {
                 $params['saveAsDraft'] = true;
             }
             if( $transresRequest->getProgressState() == 'draft' ) {
                 $params['saveAsComplete'] = true;
+            }
+            if( $transresRequest->getProgressState() == 'draft' ) {
+                $params['saveAsUpdate'] = true;
             }
         }
 
