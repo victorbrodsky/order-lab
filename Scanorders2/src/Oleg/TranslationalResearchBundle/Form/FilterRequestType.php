@@ -70,12 +70,22 @@ class FilterRequestType extends AbstractType
                 'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Project"),
             ));
         } else {
+//            $builder->add('project', EntityType::class, array(
+//                'class' => 'OlegTranslationalResearchBundle:Project',
+//                'choice_label' => "getProjectInfoName",
+//                'required' => false,
+//                'label' => false,
+//                'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Project"),
+//            ));
             $builder->add('project', EntityType::class, array(
                 'class' => 'OlegTranslationalResearchBundle:Project',
-                'choice_label' => "getProjectInfoName",
+                'choice_label' => 'getProjectInfoName',
+                'choices' => $this->params['availableProjects'],
+                //'disabled' => ($this->params['admin'] ? false : true),
+                //'disabled' => true,
                 'required' => false,
-                'label' => false,
-                'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Project"),
+                'multiple' => false,
+                'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Project")
             ));
         }
         

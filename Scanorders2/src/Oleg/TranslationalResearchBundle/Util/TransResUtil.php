@@ -2587,8 +2587,8 @@ class TransResUtil
         return false;
     }
 
-    //get list of projects: 1) state final_approved, 2) irbExpirationDate, 3) logged in user is requester
-    public function getAvailableProjects() {
+    //get list of projects: 1) state final_approved, 2) irbExpirationDate, 3) logged in user is requester, 4) reviewer
+    public function getAvailableProjects( $finalApproved=true, $notExpired=true, $requester=true, $reviewer=true ) {
 
         //$transresRequestUtil = $this->container->get('transres_request_util');
 
@@ -2622,24 +2622,52 @@ class TransResUtil
         $dql->leftJoin('project.billingContact','billingContact');
         $dql->leftJoin('project.contacts','contacts');
 
+        $dqlParameters = array();
+
         //1) state final_approved
-        $dql->where("project.state=:state");
-        $parameters = array("state" => "final_approved");
+        if( $finalApproved ) {
+            $dql->andWhere("project.state = 'final_approved'");
+            //$dqlParameters = array("state" => "final_approved");
+        }
 
         //2) irbExpirationDate
-        $dql->andWhere("project.irbExpirationDate >= CURRENT_DATE()");
+        if( $notExpired ) {
+            $dql->andWhere("project.irbExpirationDate >= CURRENT_DATE()");
+        }
 
         //3) logged in user is requester (only if not admin)
-        if( !$this->secAuth->isGranted("ROLE_TRANSRES_ADMIN") ) {
-            $myRequestProjectsCriterion =
-                "principalInvestigators.id = :userId OR " .
-                "coInvestigators.id = :userId OR " .
-                "pathologists.id = :userId OR " .
-                "contacts.id = :userId OR " .
-                "billingContact.id = :userId OR " .
-                "submitter.id = :userId";
-            $dql->andWhere($myRequestProjectsCriterion);
-            $parameters["userId"] = $user->getId();
+        if( $requester ) {
+            if (!$this->secAuth->isGranted("ROLE_TRANSRES_ADMIN")) {
+                $myRequestProjectsCriterion =
+                    "principalInvestigators.id = :userId OR " .
+                    "coInvestigators.id = :userId OR " .
+                    "pathologists.id = :userId OR " .
+                    "contacts.id = :userId OR " .
+                    "billingContact.id = :userId OR " .
+                    "submitter.id = :userId";
+
+                $dqlParameters["userId"] = $user->getId();
+                $dql->andWhere($myRequestProjectsCriterion);
+            }
+        }
+
+        //4 logged in user is reviewer (only if not admin)
+        if( $reviewer ) {
+            $myReviewProjectsCriterion =
+                "irbReviewer.id = :userId OR ".
+                "irbReviewerDelegate.id = :userId OR ".
+
+                "adminReviewer.id = :userId OR ".
+                "adminReviewerDelegate.id = :userId OR ".
+
+                "committeeReviewer.id = :userId OR ".
+                "committeeReviewerDelegate.id = :userId OR ".
+
+                "finalReviewer.id = :userId OR ".
+                "finalReviewerDelegate.id = :userId"
+            ;
+            $dqlParameters["userId"] = $user->getId();
+            $dql->andWhere($myReviewProjectsCriterion);
         }
 
         //user specialty, if not admin
@@ -2690,7 +2718,9 @@ class TransResUtil
         //echo "reviewId=".$reviewId."<br>";
         //echo "query=".$query->getSql()."<br>";
 
-        $query->setParameters($parameters);
+        if( count($dqlParameters) > 0 ) {
+            $query->setParameters($dqlParameters);
+        }
 
         $projects = $query->getResult();
 
@@ -2706,6 +2736,129 @@ class TransResUtil
 //        }
 //
 //        return $finalProjects;
+    }
+    //logged in user requester or reviewer or submitter
+    public function getAvailableRequesterOrReviewerProjects() {
+        $user = $this->secTokenStorage->getToken()->getUser();
+        $repository = $this->em->getRepository('OlegTranslationalResearchBundle:Project');
+        $dql =  $repository->createQueryBuilder("project");
+        $dql->select('project');
+
+        $dql->leftJoin('project.submitter','submitter');
+        $dql->leftJoin('project.principalInvestigators','principalInvestigators');
+        $dql->leftJoin('principalInvestigators.infos','principalInvestigatorsInfos');
+
+        $dql->leftJoin('project.irbReviews','irbReviews');
+        $dql->leftJoin('irbReviews.reviewer','irbReviewer');
+        $dql->leftJoin('irbReviews.reviewerDelegate','irbReviewerDelegate');
+
+        $dql->leftJoin('project.adminReviews','adminReviews');
+        $dql->leftJoin('adminReviews.reviewer','adminReviewer');
+        $dql->leftJoin('adminReviews.reviewerDelegate','adminReviewerDelegate');
+
+        $dql->leftJoin('project.committeeReviews','committeeReviews');
+        $dql->leftJoin('committeeReviews.reviewer','committeeReviewer');
+        $dql->leftJoin('committeeReviews.reviewerDelegate','committeeReviewerDelegate');
+
+        $dql->leftJoin('project.finalReviews','finalReviews');
+        $dql->leftJoin('finalReviews.reviewer','finalReviewer');
+        $dql->leftJoin('finalReviews.reviewerDelegate','finalReviewerDelegate');
+
+        $dql->leftJoin('project.coInvestigators','coInvestigators');
+        $dql->leftJoin('project.pathologists','pathologists');
+        $dql->leftJoin('project.billingContact','billingContact');
+        $dql->leftJoin('project.contacts','contacts');
+
+        $dql->leftJoin("project.projectSpecialty", "projectSpecialty");
+
+        $dqlParameters = array();
+
+        //1) logged in user is requester (only if not admin)
+        if(
+            //!$this->secAuth->isGranted("ROLE_TRANSRES_ADMIN") &&
+            //!$this->secAuth->isGranted("ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY")  &&
+            //!$this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP')
+            !$this->isAdminOrPrimaryReviewerOrExecutive() &&
+            !$this->secAuth->isGranted("ROLE_TRANSRES_TECHNICIAN")
+        ) {
+            $myRequestProjectsCriterion =
+                "principalInvestigators.id = :userId OR " .
+                "coInvestigators.id = :userId OR " .
+                "pathologists.id = :userId OR " .
+                "contacts.id = :userId OR " .
+                "billingContact.id = :userId OR " .
+                "submitter.id = :userId";
+
+            $dqlParameters["userId"] = $user->getId();
+
+            //2) logged in user is reviewer (only if not admin)
+            $myReviewProjectsCriterion =
+                "irbReviewer.id = :userId OR " .
+                "irbReviewerDelegate.id = :userId OR " .
+
+                "adminReviewer.id = :userId OR " .
+                "adminReviewerDelegate.id = :userId OR " .
+
+                "committeeReviewer.id = :userId OR " .
+                "committeeReviewerDelegate.id = :userId OR " .
+
+                "finalReviewer.id = :userId OR " .
+                "finalReviewerDelegate.id = :userId";
+            $dqlParameters["userId"] = $user->getId();
+
+            $dql->where($myRequestProjectsCriterion . " OR " . $myReviewProjectsCriterion);
+
+            $specialtyIds = array();
+            $specialties = $this->getTransResProjectSpecialties();
+            foreach ($specialties as $specialtyObject) {
+                $hasRole = false;
+//                $role = null;
+//                if ($specialtyObject->getAbbreviation() == "hematopathology") {
+//                    $role = "ROLE_TRANSRES_HEMATOPATHOLOGY";
+//                }
+//                if ($specialtyObject->getAbbreviation() == "ap-cp") {
+//                    $role = "ROLE_TRANSRES_APCP";
+//                }
+                $role = $this->getSpecialtyRole($specialtyObject);
+                if ($role) {
+                    //check security context
+                    if ($this->secAuth->isGranted($role)) {
+                        $hasRole = true;
+                    }
+
+                    //check user's roles
+                    if ($user && $user->hasRole($role)) {
+                        $hasRole = true;
+                    }
+                    if ($hasRole) {
+                        //$specialtyIds[] = "'".$specialtyObject->getId()."'";
+                        $specialtyIds[] = $specialtyObject->getId();
+                    }
+                }
+
+                if (count($specialtyIds) > 0) {
+                    $specialtyStr = "projectSpecialty.id IN (" . implode(",", $specialtyIds) . ")";
+                    //echo "specialtyStr=$specialtyStr<br>";
+                    $dql->andWhere($specialtyStr);
+                } else {
+                    $dql->andWhere("projectSpecialty.id IS NULL");
+                }
+            }
+        } //if admin
+
+        $query = $dql->getQuery();
+
+        //echo "projectId=".$project->getId()."<br>";
+        //echo "reviewId=".$reviewId."<br>";
+        //echo "query=".$query->getSql()."<br>";
+
+        if( count($dqlParameters) > 0 ) {
+            $query->setParameters($dqlParameters);
+        }
+
+        $projects = $query->getResult();
+
+        return $projects;
     }
 
     public function copyFormNodeFieldsToProject( $project, $flushDb=true ) {

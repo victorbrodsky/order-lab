@@ -846,13 +846,15 @@ class RequestController extends Controller
         }
 
         //////// create filter //////////
+        $availableProjects = $transresUtil->getAvailableRequesterOrReviewerProjects();
         $progressStateArr = $transresRequestUtil->getProgressStateArr();
         $billingStateArr = $transresRequestUtil->getBillingStateArr();
         $params = array(
             'progressStateArr'=>$progressStateArr,
             'billingStateArr'=>$billingStateArr,
             'routeName'=>$routeName,
-            'projectSpecialtyAllowedArr' => $projectSpecialtyAllowedArr
+            'projectSpecialtyAllowedArr' => $projectSpecialtyAllowedArr,
+            'availableProjects' => $availableProjects
         );
         $filterform = $this->createForm(FilterRequestType::class, null,array(
             'method' => 'GET',
@@ -1583,7 +1585,7 @@ class RequestController extends Controller
             $params['saveAsComplete'] = true;
 
             if( $routeName == "translationalresearch_new_standalone_request" ) {
-                $availableProjects = $transresUtil->getAvailableProjects();
+                $availableProjects = $transresUtil->getAvailableProjects(true,true,true,false);
                 $params['availableProjects'] = $availableProjects;
             }
         }

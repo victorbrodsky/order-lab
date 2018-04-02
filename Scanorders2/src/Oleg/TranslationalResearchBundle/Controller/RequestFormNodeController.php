@@ -709,7 +709,7 @@ class RequestFormNodeController extends Controller
             $params['saveAsComplete'] = true;
 
             if( $routeName == "translationalresearch_new_standalone_request_formnode" ) {
-                $availableProjects = $transresUtil->getAvailableProjects();
+                $availableProjects = $transresUtil->getAvailableProjects(true,true,true,false);
                 $params['availableProjects'] = $availableProjects;
             }
         }

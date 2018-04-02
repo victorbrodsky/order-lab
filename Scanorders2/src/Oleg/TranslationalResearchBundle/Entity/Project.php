@@ -1144,7 +1144,7 @@ class Project {
 
     //Project ID - Project Title - Submitted by FirstName LastName on MM/DD/YYYY at HH:MM
     public function getProjectInfoName() {
-        return "Project ID " . $this->getOid() . " - Submitted by ".$this->getSubmitter()->getUsernameOptimal() . " on ".$this->getCreateDate()->format('m/d/Y') . " at ".$this->getCreateDate()->format('H:i:s');
+        return "Project ID " . $this->getOid() . " - Submitted by ".$this->getSubmitter()->getUsernameOptimal() . " on ".$this->getCreateDate()->format('m/d/Y'); //. " at ".$this->getCreateDate()->format('H:i:s')
     }
 
     public function getEntityName() {
