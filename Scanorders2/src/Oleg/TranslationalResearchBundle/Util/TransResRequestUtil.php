@@ -995,7 +995,7 @@ class TransResRequestUtil
                 $toLabel = $this->getRequestStateLabelByName($to,$statMachineType);
                 $this->container->get('session')->getFlashBag()->add(
                     'warning',
-                    "Only Admin can change the status of the Request to " . $toLabel
+                    "Only Admin and Technician can change the status of the Request to " . $toLabel
                 );
                 return false;
             }

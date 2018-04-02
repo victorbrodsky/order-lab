@@ -2622,6 +2622,8 @@ class TransResUtil
         $dql->leftJoin('project.billingContact','billingContact');
         $dql->leftJoin('project.contacts','contacts');
 
+        $dql->orderBy("project.id","DESC");
+
         $dqlParameters = array();
 
         //1) state final_approved
@@ -2770,6 +2772,8 @@ class TransResUtil
         $dql->leftJoin('project.contacts','contacts');
 
         $dql->leftJoin("project.projectSpecialty", "projectSpecialty");
+
+        $dql->orderBy("project.id","DESC");
 
         $dqlParameters = array();
 

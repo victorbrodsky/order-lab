@@ -28,6 +28,7 @@
     {% set sitename = translationalresearch_sitename %}
 
     {{ form_start(form) }}
+    {#{{ form_start(form,{'attr':{'onsubmit':'return transresValidateRequest();'}}) }}#}
 
         <div id="form-prototype-data"
              data-userurllink = "{{ usermacros.userUrlLink()|e }}"
@@ -86,6 +87,14 @@
             {{ form_widget(form.saveAsDraft) }}
         {% endif %}
         {% if form.saveAsComplete is defined %}
+            <div class="alert alert-success" role="alert" style="margin-top: 30px; margin-bottom: 5px;">
+                {#This is a danger alert with <a href="#" class="alert-link">an example link</a>. Give it a click if you like.#}
+                <input type="checkbox" id="confirmationSubmit" name="confirm" value="confirm">
+                <label for="subscribeNews">I have verified the contents of this work request and authorize the department of pathology to charge the listed fund number for the listed amount.</label>
+            </div>
+
+            <div id="projectError" class="alert alert-danger" style="display: none; margin: 5px;"></div>
+
             {{ form_widget(form.saveAsComplete) }}
         {% endif %}
 
@@ -193,6 +202,29 @@
 //            });
 
         });
+
+        function transresValidateRequest() {
+
+            //validate submit confirmation
+            $("#projectError").hide();
+            $("#projectError").html(null);
+            var confirmationSubmit = $('#confirmationSubmit');
+            if( confirmationSubmit.length ) {
+                if( confirmationSubmit.is(':checked') ) {
+                    //ok confirmed
+                    console.log("ok confirmed");
+                } else {
+                    var msg = "Please confirm the agreement in order to submit a new work request.";
+                    $("#projectError").show();
+                    $("#projectError").html(msg);
+                    console.log("not confirmed");
+                    return false;
+                }
+            }
+            console.log("transresValidateRequest: finished");
+
+            transresValidateHandsonTable();
+        }
 
         function transresPrepopulateProjectDetails( projectField ) {
             var projectId = null;    //$('#oleg_translationalresearchbundle_request_project');

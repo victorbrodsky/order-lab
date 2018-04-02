@@ -290,25 +290,27 @@ class TransResRequestType extends AbstractType
         if( $this->params['saveAsDraft'] === true ) {
             $builder->add('saveAsDraft', SubmitType::class, array(
                 'label' => 'Save Request as Draft',
-                'attr' => array('class' => 'btn btn-warning', 'onclick'=>'validateHandsonTable();')
+                'attr' => array('class' => 'btn btn-warning', 'onclick'=>'transresValidateHandsonTable();') //'onclick'=>'transresValidateHandsonTable();'
             ));
         }
         if( $this->params['saveAsUpdate'] === true ) {
             $builder->add('saveAsUpdate', SubmitType::class, array(
                 'label' => 'Update',
-                'attr' => array('class'=>'btn btn-warning', 'onclick'=>'validateHandsonTable();')
+                'attr' => array('class'=>'btn btn-warning', 'onclick'=>'transresValidateHandsonTable();') //'onclick'=>'transresValidateHandsonTable();'
             ));
         }
         if( $this->params['saveAsComplete'] === true ) {
             $builder->add('saveAsComplete', SubmitType::class, array(
                 'label' => 'Complete Submission',
-                'attr' => array('class'=>'btn btn-warning', 'onclick'=>'validateHandsonTable();')
+                'attr' => array('class'=>'btn btn-warning', 'onclick'=>'return transresValidateRequest();') //'general-data-confirm'=>"Are you sure you want to submit this Working Request?"
             ));
+            //, 'onsubmit'=>'transresValidateRequest();'
+            //'onclick'=>'transresValidateHandsonTable();',
         }
         if( $this->params['updateRequest'] === true ) {
             $builder->add('updateRequest', SubmitType::class, array(
                 'label' => 'Update Request',
-                'attr' => array('class'=>'btn btn-warning', 'onclick'=>'validateHandsonTable();')
+                'attr' => array('class'=>'btn btn-warning', 'onclick'=>'transresValidateHandsonTable();')
             ));
         }
 

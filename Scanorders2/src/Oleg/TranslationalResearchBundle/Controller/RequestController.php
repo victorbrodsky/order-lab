@@ -73,6 +73,7 @@ class RequestController extends Controller
 
         $cycle = "new";
         $formnode = false;
+
         $testing = false;
         //$testing = true;
 
@@ -167,7 +168,11 @@ class RequestController extends Controller
             $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($transresRequest,"document");
 
             $this->processTableData($transresRequest,$form,$user);
-            
+
+            if( $testing ) {
+                echo "Btn clicked=".$form->getClickedButton()->getName()."<br>";
+            }
+
             //new
             if ($form->getClickedButton() && 'saveAsDraft' === $form->getClickedButton()->getName()) {
                 //Save Project as Draft => state='draft'
@@ -1597,7 +1602,7 @@ class RequestController extends Controller
 
         if( $cycle == "edit" ) {
             $disabled = false;
-            if( $transresRequest->getProgressState() == 'draft' ) {
+            if( $transresRequest->getProgressState() != 'draft' ) {
                 $params['saveAsDraft'] = true;
             }
             if( $transresRequest->getProgressState() == 'draft' ) {

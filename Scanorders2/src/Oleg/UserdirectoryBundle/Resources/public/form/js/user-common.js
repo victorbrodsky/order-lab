@@ -947,6 +947,7 @@ function setGeoLocation( holder, data ) {
 //confirm modal: modified from http://www.petefreitag.com/item/809.cfm
 function generalConfirmAction() {
 
+    //$('a[general-data-confirm], button[general-data-confirm]')
     $('a[general-data-confirm]').click(function(ev) {
 
         var href = $(this).attr('href');

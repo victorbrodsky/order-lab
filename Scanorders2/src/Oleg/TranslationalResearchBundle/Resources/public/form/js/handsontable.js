@@ -680,7 +680,7 @@ function transresBarcodeParser( rowNumber, barcodeStr ) {
 //     }
 // }
 
-function validateHandsonTable() {
+function transresValidateHandsonTable() {
     //console.log("validateHandsonTable");
 
     if( !_sotable ) {
@@ -695,7 +695,7 @@ function validateHandsonTable() {
     } //for each row
 
     //get rows data from _rowToProcessArr
-    assignDataToDatalocker();
+    transresAssignDataToDatalocker();
 
     //console.log("END !!!!!!!!!!!");
     //return true;
@@ -703,7 +703,7 @@ function validateHandsonTable() {
 }
 
 //get rows data from _rowToProcessArr and assign this to datalocker field
-function assignDataToDatalocker() {
+function transresAssignDataToDatalocker() {
 
     var headers = _sotable.getColHeader();
 
