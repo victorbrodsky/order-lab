@@ -1,18 +1,22 @@
-oleg_translational_research_invoice:
-    resource: "@OlegTranslationalResearchBundle/Controller/InvoiceController.php"
-    type:     annotation
-
-oleg_translational_research_default_reviewer:
-    resource: "@OlegTranslationalResearchBundle/Controller/DefaultReviewerController.php"
-    type:     annotation
-
-oleg_translational_research_review:
-    resource: "@OlegTranslationalResearchBundle/Controller/ReviewBaseController.php"
-    type:     annotation
-
-oleg_translational_research_project:
-    resource: "@OlegTranslationalResearchBundle/Controller/ProjectController.php"
-    type:     annotation
+#oleg_userdirectory_sign_up:
+#    resource: "@OlegUserdirectoryBundle/Controller/SignUpController.php"
+#    type:     annotation
+#
+#oleg_translational_research_invoice:
+#    resource: "@OlegTranslationalResearchBundle/Controller/InvoiceController.php"
+#    type:     annotation
+#
+#oleg_translational_research_default_reviewer:
+#    resource: "@OlegTranslationalResearchBundle/Controller/DefaultReviewerController.php"
+#    type:     annotation
+#
+#oleg_translational_research_review:
+#    resource: "@OlegTranslationalResearchBundle/Controller/ReviewBaseController.php"
+#    type:     annotation
+#
+#oleg_translational_research_project:
+#    resource: "@OlegTranslationalResearchBundle/Controller/ProjectController.php"
+#    type:     annotation
 
 
 main_common_home:

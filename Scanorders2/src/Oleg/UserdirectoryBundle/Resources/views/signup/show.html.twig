@@ -1,0 +1,88 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Signup</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ signUp.id }}</td>
+            </tr>
+            <tr>
+                <th>Createdate</th>
+                <td>{% if signUp.createdate %}{{ signUp.createdate|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Updatedate</th>
+                <td>{% if signUp.updatedate %}{{ signUp.updatedate|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Username</th>
+                <td>{{ signUp.userName }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ signUp.email }}</td>
+            </tr>
+            <tr>
+                <th>Firstname</th>
+                <td>{{ signUp.firstName }}</td>
+            </tr>
+            <tr>
+                <th>Lastname</th>
+                <td>{{ signUp.lastName }}</td>
+            </tr>
+            <tr>
+                <th>Phone</th>
+                <td>{{ signUp.phone }}</td>
+            </tr>
+            <tr>
+                <th>Salt</th>
+                <td>{{ signUp.salt }}</td>
+            </tr>
+            <tr>
+                <th>Hashpassword</th>
+                <td>{{ signUp.hashPassword }}</td>
+            </tr>
+            <tr>
+                <th>Registrationlinkid</th>
+                <td>{{ signUp.registrationLinkID }}</td>
+            </tr>
+            <tr>
+                <th>Registrationstatus</th>
+                <td>{{ signUp.registrationStatus }}</td>
+            </tr>
+            <tr>
+                <th>Ip</th>
+                <td>{{ signUp.ip }}</td>
+            </tr>
+            <tr>
+                <th>Useragent</th>
+                <td>{{ signUp.useragent }}</td>
+            </tr>
+            <tr>
+                <th>Width</th>
+                <td>{{ signUp.width }}</td>
+            </tr>
+            <tr>
+                <th>Height</th>
+                <td>{{ signUp.height }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('signup_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('signup_edit', { 'id': signUp.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}

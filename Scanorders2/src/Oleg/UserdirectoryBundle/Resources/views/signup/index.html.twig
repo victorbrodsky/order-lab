@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Signups list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Createdate</th>
+                <th>Updatedate</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Firstname</th>
+                <th>Lastname</th>
+                <th>Phone</th>
+                <th>Salt</th>
+                <th>Hashpassword</th>
+                <th>Registrationlinkid</th>
+                <th>Registrationstatus</th>
+                <th>Ip</th>
+                <th>Useragent</th>
+                <th>Width</th>
+                <th>Height</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for signUp in signUps %}
+            <tr>
+                <td><a href="{{ path('signup_show', { 'id': signUp.id }) }}">{{ signUp.id }}</a></td>
+                <td>{% if signUp.createdate %}{{ signUp.createdate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if signUp.updatedate %}{{ signUp.updatedate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{{ signUp.userName }}</td>
+                <td>{{ signUp.email }}</td>
+                <td>{{ signUp.firstName }}</td>
+                <td>{{ signUp.lastName }}</td>
+                <td>{{ signUp.phone }}</td>
+                <td>{{ signUp.salt }}</td>
+                <td>{{ signUp.hashPassword }}</td>
+                <td>{{ signUp.registrationLinkID }}</td>
+                <td>{{ signUp.registrationStatus }}</td>
+                <td>{{ signUp.ip }}</td>
+                <td>{{ signUp.useragent }}</td>
+                <td>{{ signUp.width }}</td>
+                <td>{{ signUp.height }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('signup_show', { 'id': signUp.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('signup_edit', { 'id': signUp.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('signup_new') }}">Create a new signUp</a>
+        </li>
+    </ul>
+{% endblock %}

@@ -693,9 +693,12 @@ class UserSecurityUtil {
     public function constractNewUser($username) {
 
         $serviceContainer = $this->container;
-        $author = $this->secToken->getToken()->getUser();
+
         $userManager = $serviceContainer->get('fos_user.user_manager');
         $userSecUtil = $serviceContainer->get('user_security_utility');
+
+        $author = $userSecUtil->findSystemUser();
+        //$author = $this->secToken->getToken()->getUser();
 
         $usernamePrefix = $userSecUtil->getUsernamePrefix($username);
         $usernameClean = $userSecUtil->createCleanUsername($username);
