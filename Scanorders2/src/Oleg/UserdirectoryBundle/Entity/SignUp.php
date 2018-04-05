@@ -159,7 +159,7 @@ class SignUp {
 
 
     public function __construct() {
-        $this->setRegistrationStatus("requested");
+        $this->setRegistrationStatus("Requested");
         $this->setCreatedate( new \DateTime() );
     }
 

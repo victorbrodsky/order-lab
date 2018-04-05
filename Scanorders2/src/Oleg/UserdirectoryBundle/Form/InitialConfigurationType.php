@@ -23,6 +23,7 @@ use Oleg\UserdirectoryBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -81,7 +82,7 @@ class InitialConfigurationType extends AbstractType
             'options' => array('attr' => array('class' => 'password-field form-control')),
             'required' => true,
             'mapped' => false,
-            'type' => 'password',
+            'type' => PasswordType::class,
             'first_options'  => array('label' => 'New password for the Administrator account:'),
             'second_options' => array('label' => 'Repeat password:'),
         ));

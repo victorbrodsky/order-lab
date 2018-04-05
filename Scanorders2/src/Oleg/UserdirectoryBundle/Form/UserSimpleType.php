@@ -198,38 +198,6 @@ class UserSimpleType extends AbstractType
             'prototype_name' => '__administrativetitles__',
         ));
 
-//        $params = array('disabled'=>$this->readonly,'label'=>'Academic Appointment','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\AppointmentTitle','formname'=>'appointmenttitletype','cycle'=>$this->cycle);
-//        $params = array_merge($this->params, $params);
-//        $builder->add('appointmentTitles', CollectionType::class, array(
-//            'entry_type' => AppointmentTitleType::class,
-//            'entry_options' => array(
-//                'form_custom_value' => $params
-//            ),
-//            'label' => false,
-//            'required' => false,
-//            'allow_add' => true,
-//            'allow_delete' => true,
-//            'by_reference' => false,
-//            'prototype' => true,
-//            'prototype_name' => '__appointmenttitles__',
-//        ));
-//
-//        $params = array('disabled'=>$this->readonly,'label'=>'Medical Appointment','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\MedicalTitle','formname'=>'medicaltitletype','cycle'=>$this->cycle);
-//        $params = array_merge($this->params, $params);
-//        $builder->add('medicalTitles', CollectionType::class, array(
-//            'entry_type' => MedicalTitleType::class,
-//            'entry_options' => array(
-//                'form_custom_value' => $params
-//            ),
-//            'label' => false,
-//            'required' => false,
-//            'allow_add' => true,
-//            'allow_delete' => true,
-//            'by_reference' => false,
-//            'prototype' => true,
-//            'prototype_name' => '__medicaltitles__',
-//        ));
-
         return $builder;
     }
 

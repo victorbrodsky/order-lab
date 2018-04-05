@@ -22,40 +22,42 @@ class SignUpType extends AbstractType
 
         $builder->add( 'userName', TextType::class, array(
             'label'=>'User Name:',
+            'disabled' => true,
             //'required'=> true,
             'attr' => array('class'=>'form-control'),
         ));
 
-        //password RepeatedType::class
-        $builder->add( 'hashPassword', PasswordType::class, array(
-            //'mapped' => false,
-            'label'=>'Password:',
-            'attr' => array('class' => 'form-control')
+        $builder->add( 'firstName', TextType::class, array(
+            'label'=>'First Name:',
+            //'required'=> true,
+            'attr' => array('class'=>'form-control'),
         ));
 
-//        $builder->add('hashPassword', RepeatedType::class, array(
-//            //'mapped' => false,
-//            //'error_bubbling' => true,
-//            'invalid_message' => 'Please make sure the passwords match',
-//            'options' => array('attr' => array('class' => 'password-field form-control')),
-//            //'required' => true,
-//            'type' => PasswordType::class,
-//            'first_options'  => array('label' => 'Password:', 'error_bubbling' => true),
-//            'second_options' => array('label' => 'Repeat Password:'),
-//            'error_bubbling' => true
-//        ));
+        $builder->add( 'lastName', TextType::class, array(
+            'label'=>'Last Name:',
+            //'required'=> true,
+            'attr' => array('class'=>'form-control'),
+        ));
+
+        $builder->add( 'phone', TextType::class, array(
+            'label'=>'Phone Number:',
+            //'required'=> true,
+            'attr' => array('class'=>'form-control'),
+        ));
 
         $builder->add( 'email', EmailType::class, array(
             'label'=>'Email:',
+            'disabled' => true,
             //'required'=> true, //does not work here
             'attr' => array('class'=>'form-control'), //form-control-modif email-mask
         ));
 
-        $builder->add('submit', SubmitType::class, array(
-            'label' => 'Sign Up',
+        $builder->add('activate', SubmitType::class, array(
+            'label' => 'Activate Account',
             'attr' => array('class' => 'btn btn-primary') //'onclick'=>'transresValidateHandsonTable();'
         ));
 
+        $this->titlesSections($builder);
     }
     
     /**
@@ -76,5 +78,30 @@ class SignUpType extends AbstractType
         return 'oleg_userdirectorybundle_signup';
     }
 
+    public function titlesSections($builder) {
+        //Administrative Titles
+        $params = array(
+            'disabled'=>false,
+            'label'=>'Administrative',
+            'fullClassName'=>'Oleg\UserdirectoryBundle\Entity\AdministrativeTitle',
+            'formname'=>'administrativetitletype',
+            'cycle'=>'new'
+        );
+        $builder->add('administrativeTitles', CollectionType::class, array(
+            'entry_type' => AdministrativeTitleType::class,
+            'entry_options' => array(
+                'form_custom_value' => $params
+            ),
+            'label' => false,
+            'required' => false,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__administrativetitles__',
+        ));
+
+        return $builder;
+    }
 
 }
