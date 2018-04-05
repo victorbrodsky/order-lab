@@ -498,14 +498,16 @@ class UserSecurityUtil {
     public function createUserEditEvent($sitename,$event,$user,$subjectEntities,$request,$action='Unknown Event') {
 
         $logger = $this->container->get('logger');
-
-        if( !$user ) {
-            $logger->warning("createUserEditEvent: "."User is not defined for $sitename for event=".$event);
-            return null;
-        }
-
         $em = $this->em;
-        $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId());
+
+        //if( !$user ) {
+        //    $logger->warning("createUserEditEvent: "."User is not defined for $sitename for event=".$event);
+        //    return null;
+        //}
+
+        if( $user ) {
+            $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId());
+        }
 
         $eventLog = $this->constructEventLog($sitename,$user,$request);
 

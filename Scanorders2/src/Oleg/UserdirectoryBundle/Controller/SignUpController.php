@@ -3,6 +3,7 @@
 namespace Oleg\UserdirectoryBundle\Controller;
 
 use Oleg\UserdirectoryBundle\Entity\SignUp;
+use Oleg\UserdirectoryBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -58,6 +59,7 @@ class SignUpController extends Controller
     public function newSignUpAction(Request $request)
     {
 
+        $userServiceUtil = $this->get('user_service_utility');
         $em = $this->getDoctrine()->getManager();
         $signUp = new Signup();
         $form = $this->createForm('Oleg\UserdirectoryBundle\Form\SignUpType', $signUp);
@@ -79,13 +81,40 @@ class SignUpController extends Controller
 
         if( $form->isSubmitted() && $form->isValid() ) {
 
-            //TODO: hash password
+            //1)hash password
+            //$salt = uniqid(mt_rand(), true);
+            $salt = rtrim(str_replace('+', '.', base64_encode(random_bytes(32))), '=');
+            echo "salt=$salt<br>";
+            $encoder = $this->container->get('security.password_encoder');
+            $dummyUser = new User();
+            $dummyUser->setSalt($salt);
+            $encoded = $encoder->encodePassword($dummyUser,$password);
+            echo "encoded=$encoded<br>";
+            $signUp->setSalt($salt);
+            $signUp->setHashPassword($encoded);
+            unset($dummyUser);
+
+            //2) Generate unique REGISTRATION-LINK-ID
+            $registrationLinkId = $userServiceUtil->getUniqueRegistrationLinkId($signUp->getEmail());
+            $signUp->setRegistrationLinkID($registrationLinkId);
 
             exit('flush');
             $em->persist($signUp);
-            $em->flush();
+            $em->flush($signUp);
 
-            return $this->redirectToRoute('signup_show', array('id' => $signUp->getId()));
+            //Event Log
+            //$author = $this->get('security.token_storage')->getToken()->getUser();
+            $author = null;
+            $event = "New user registration has been created:<br>".$signUp;
+            $userSecUtil = $this->get('user_security_utility');
+            $userSecUtil->createUserEditEvent($this->siteName,$event,$author,$signUp,$request,'User SignUp Created');
+
+            //Email
+            $emailUtil = $this->container->get('user_mailer_utility');
+            //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
+            $emailUtil->sendEmail($signUp->getEmail(), $subject, $body);
+
+            return $this->redirectToRoute('employees_signup_show', array('id' => $signUp->getId()));
         }
         //exit('new');
 
