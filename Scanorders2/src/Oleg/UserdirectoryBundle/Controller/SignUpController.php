@@ -5,7 +5,9 @@ namespace Oleg\UserdirectoryBundle\Controller;
 use Oleg\UserdirectoryBundle\Entity\SignUp;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Signup controller.
@@ -14,10 +16,22 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component
  */
 class SignUpController extends Controller
 {
+
+    protected $router;
+    protected $siteName;
+    protected $siteNameShowuser;
+    protected $siteNameStr;
+
+    public function __construct() {
+        $this->siteName = 'employees'; //controller is not setup yet, so we can't use $this->container->getParameter('employees.sitename');
+        $this->siteNameShowuser = 'employees';
+        $this->siteNameStr = 'Employee Directory';
+    }
+
     /**
      * Lists all signUp entities.
      *
-     * @Route("/", name="signup_index")
+     * @Route("/", name="employees_signup_index")
      * @Method("GET")
      */
     public function indexAction()
@@ -28,39 +42,66 @@ class SignUpController extends Controller
 
         return $this->render('OlegUserdirectoryBundle:SignUp:index.html.twig', array(
             'signUps' => $signUps,
+            'title' => "Sign Up for ".$this->siteNameStr,
+            'sitenamefull' => $this->siteNameStr,
+            'sitename' => $this->siteName
         ));
     }
 
     /**
+     * http://localhost/order/directory/sign-up/new
      * Creates a new signUp entity.
      *
-     * @Route("/new", name="signup_new")
+     * @Route("/new", name="employees_signup_new")
      * @Method({"GET", "POST"})
      */
-    public function newAction(Request $request)
+    public function newSignUpAction(Request $request)
     {
+
+        $em = $this->getDoctrine()->getManager();
         $signUp = new Signup();
         $form = $this->createForm('Oleg\UserdirectoryBundle\Form\SignUpType', $signUp);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+        $password = $form->get("password")->getData();
+
+        if( $form->isSubmitted() ) {
+            if( !$password ) {
+                $form->get('password')->addError(new FormError('Please make sure your password is between 8 and 25 characters and contains at least one letter and at least one number.'));
+            }
+            if( !$signUp->getUserName() ) {
+                $form->get('userName')->addError(new FormError('Please enter your User Name.'));
+            }
+            //if( !$signUp->getEmail() ) {
+            //    $form->get('email')->addError(new FormError('The email value should not be blank.'));
+            //}
+        }
+
+        if( $form->isSubmitted() && $form->isValid() ) {
+
+            //TODO: hash password
+
+            exit('flush');
             $em->persist($signUp);
             $em->flush();
 
             return $this->redirectToRoute('signup_show', array('id' => $signUp->getId()));
         }
+        //exit('new');
 
         return $this->render('OlegUserdirectoryBundle:SignUp:new.html.twig', array(
             'signUp' => $signUp,
             'form' => $form->createView(),
+            'title' => "Sign Up for ".$this->siteNameStr,
+            'sitenamefull' => $this->siteNameStr,
+            'sitename' => $this->siteName
         ));
     }
 
     /**
      * Finds and displays a signUp entity.
      *
-     * @Route("/{id}", name="signup_show")
+     * @Route("/{id}", name="employees_signup_show")
      * @Method("GET")
      */
     public function showAction(SignUp $signUp)
@@ -76,7 +117,7 @@ class SignUpController extends Controller
     /**
      * Displays a form to edit an existing signUp entity.
      *
-     * @Route("/{id}/edit", name="signup_edit")
+     * @Route("/{id}/edit", name="employees_signup_edit")
      * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, SignUp $signUp)
@@ -93,6 +134,9 @@ class SignUpController extends Controller
 
         return $this->render('OlegUserdirectoryBundle:SignUp:new.html.twig', array(
             'signUp' => $signUp,
+            'title' => "Sign Up for ".$this->siteNameStr,
+            'sitenamefull' => $this->siteNameStr,
+            'sitename' => $this->siteName,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         ));
@@ -101,7 +145,7 @@ class SignUpController extends Controller
     /**
      * Deletes a signUp entity.
      *
-     * @Route("/{id}", name="signup_delete")
+     * @Route("/{id}", name="employees_signup_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, SignUp $signUp)

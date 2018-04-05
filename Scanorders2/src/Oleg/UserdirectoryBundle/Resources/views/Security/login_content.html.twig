@@ -120,11 +120,15 @@
             {#<a href="{{ path('accountrequest_new') }}">Request an Aperio eSlide Manager account</a> if you can't log in.#}
         {#</p>#}
     {#{% endif %}#}
-    {#{% if title == "HemePath Translational Research" %}#}
+    {% if user_service_utility.isSelfSignUp(sitename) %}
+        <p>
+            <a href="{{ path(sitename~'_signup_new') }}">Sign up for an account</a> if you have no <a href="http://weill.cornell.edu/its/identity-security/identity/cwid/">CWID</a>.
+        </p>
+    {% else %}
         <p>
             <a href="{{ path(sitename~'_accountrequest_new') }}">Request a new account</a> if you can't log in.
         </p>
-    {#{% endif %}#}
+    {% endif %}
 
 </div>
 
