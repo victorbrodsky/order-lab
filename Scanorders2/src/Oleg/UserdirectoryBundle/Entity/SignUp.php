@@ -239,9 +239,9 @@ class SignUp {
      * @param \DateTime $updatedate
      * @ORM\PreUpdate
      */
-    public function setUpdatedate($updatedate)
+    public function setUpdatedate()
     {
-        $this->updatedate = $updatedate;
+        $this->updatedate = new \DateTime();
     }
 
     /**

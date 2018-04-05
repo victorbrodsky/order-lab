@@ -84,8 +84,18 @@
         <p class="alert alert-danger center-block" align="middle" style="width: 70%;">{{ flashMessage|raw }}</p>
     {% endfor %}
 
-    {% if message is defined %}
-        {{ message }}
+    {% if messageSuccess is defined %}
+        {#{{ messageSuccess }}#}
+        <div class="alert alert-success">
+            {{ messageSuccess }}
+        </div>
+    {% endif %}
+
+    {% if messageDanger is defined %}
+        {#{{ messageDanger }}#}
+        <div class="alert alert-danger">
+            {{ messageDanger }}
+        </div>
     {% endif %}
 
     {% include 'OlegUserdirectoryBundle::Default/footer.html.twig' %}

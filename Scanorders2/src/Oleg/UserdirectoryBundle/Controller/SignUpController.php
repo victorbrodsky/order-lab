@@ -70,7 +70,7 @@ class SignUpController extends Controller
         $form->handleRequest($request);
 
         $password = $signUp->getHashPassword();
-        echo "password=$password<br>";
+        //echo "password=$password<br>";
 
         if( $form->isSubmitted() ) {
 
@@ -90,7 +90,7 @@ class SignUpController extends Controller
                 }
             }
             if( $passwordErrorCount > 0 ) {
-                echo "email error: $passwordErrorCount<br>";
+                //echo "email error: $passwordErrorCount<br>";
                 $passwordError = "Please make sure your password is between 8 and 25 characters and ".
                     "contains at least one letter and at least one number.";
                 $form->get('hashPassword')->addError(new FormError($passwordError));
@@ -146,12 +146,12 @@ class SignUpController extends Controller
             //1)hash password
             //$salt = uniqid(mt_rand(), true);
             $salt = rtrim(str_replace('+', '.', base64_encode(random_bytes(32))), '=');
-            echo "salt=$salt<br>";
+            //echo "salt=$salt<br>";
             $encoder = $this->container->get('security.password_encoder');
             $dummyUser = new User();
             $dummyUser->setSalt($salt);
             $encoded = $encoder->encodePassword($dummyUser,$password);
-            echo "encoded=$encoded<br>";
+            //echo "encoded=$encoded<br>";
             $signUp->setSalt($salt);
             $signUp->setHashPassword($encoded);
             unset($dummyUser);
@@ -229,7 +229,11 @@ class SignUpController extends Controller
 //            );
 
             //return $this->redirectToRoute('employees_signup_show', array('id' => $signUp->getId()));
-            return $this->render('OlegUserdirectoryBundle:SignUp:confirmation.html.twig',array('title'=>"Registration Confirmation",'message'=>$confirmation));
+            return $this->render('OlegUserdirectoryBundle:SignUp:confirmation.html.twig',
+                array(
+                    'title'=>"Registration Confirmation",
+                    'messageSuccess'=>$confirmation)
+            );
         }
         //exit('new');
 
@@ -258,7 +262,12 @@ class SignUpController extends Controller
 //                'notice',
 //                $confirmation
 //            );
-            return $this->render('OlegUserdirectoryBundle:SignUp:confirmation.html.twig',array('title'=>"Invalid Activation Link",'message'=>$confirmation));
+            return $this->render('OlegUserdirectoryBundle:SignUp:confirmation.html.twig',
+                array(
+                    'title'=>"Invalid Activation Link",
+                    'messageDanger'=>$confirmation
+                )
+            );
         }
 
         //If the activation link is visited more than 48 hours after the timestamp in the timestamp column,
