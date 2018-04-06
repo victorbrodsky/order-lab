@@ -174,9 +174,9 @@ class SignUpController extends Controller
             $dummyUser = new User();
             $dummyUser->setSalt($salt);
 
-            //$encoder = $this->container->get('security.password_encoder');
-            $encoderService = $this->container->get('security.encoder_factory');
-            $encoder = $encoderService->getEncoder($dummyUser);
+            $encoder = $this->container->get('security.password_encoder');
+            //$encoderService = $this->container->get('security.encoder_factory');
+            //$encoder = $encoderService->getEncoder($dummyUser);
 
             $encoded = $encoder->encodePassword($dummyUser,$password);
             //echo "encoded=$encoded<br>";
@@ -307,7 +307,7 @@ class SignUpController extends Controller
 
         //If the activation link is visited more than 48 hours after the timestamp in the timestamp column,
         // show the following message on the page: “This activation link has expired. Please <sign up> again.”
-        if(0) {
+        if(0) { //TODO:
             $signupUrl = $this->container->get('router')->generate(
                 $this->siteName."_signup_new",
                 array(),
@@ -325,9 +325,8 @@ class SignUpController extends Controller
 
         //If the “Registration Status” of the Registration Link ID equals “Activated”,
         // show the following message: “This activation link has already been used. Please <log in> using your account.”
-        if( 0 && $signUp->getRegistrationStatus() == "Activated" ) { //caused redirection
+        if( $signUp->getRegistrationStatus() == "Activated" ) {
             $orderUrl = $this->container->get('router')->generate(
-            //'main_common_home',
                 $this->pathHome,
                 array(),
                 UrlGeneratorInterface::ABSOLUTE_URL

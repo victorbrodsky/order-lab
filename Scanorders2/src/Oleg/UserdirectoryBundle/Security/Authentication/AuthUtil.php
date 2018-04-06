@@ -76,6 +76,7 @@ class AuthUtil {
         //exit();
 
         if( $user ) {
+            $this->logger->notice("Local Authentication: local user found by usernameClean=".$usernameClean);
             //echo "DB user found=".$user->getUsername()."<br>";
             //exit();
             //return $user;
@@ -101,6 +102,7 @@ class AuthUtil {
             if( $encoder->isPasswordValid($user->getPassword(), $token->getCredentials(), $user->getSalt()) ) {
                 return $user;
             } else {
+                $this->logger->notice("Local Authentication: password is invalid");
                 return NULL;
             }
 
