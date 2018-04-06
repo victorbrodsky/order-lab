@@ -1804,7 +1804,7 @@ class UserController extends Controller
             $response = new Response($json);
             $response->headers->set('Content-Type', 'application/json');
             return $response;
-        }
+        }//if user
 
         //first search this user if exists in ldap directory
         $authUtil = new AuthUtil($this->container,$em);
@@ -2491,10 +2491,13 @@ class UserController extends Controller
     }
 
     //create empty collections
-    public function addEmptyCollections($entity) {
+    public function addEmptyCollections($entity,$user=null) {
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        if( !$user ) {
+            $user = $this->get('security.token_storage')->getToken()->getUser();
+        }
 
         if( count($entity->getAdministrativeTitles()) == 0 ) {
             $entity->addAdministrativeTitle(new AdministrativeTitle($user));

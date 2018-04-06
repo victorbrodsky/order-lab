@@ -23,6 +23,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -54,53 +55,55 @@ class UserSimpleType extends AbstractType
         $this->params = $params;
 
         $this->cycle = $params['cycle'];
-        $this->subjectUser = $params['user'];
-        $this->cloneUser = $params['cloneuser'];
-        $this->em = $params['em'];
+//        $this->subjectUser = $params['user'];
+//        $this->cloneUser = $params['cloneuser'];
+//        $this->em = $params['em'];
 
         //$this->sc = $params['sc'];
-        $this->container = $params['container'];
-        $this->secAuthChecker = $this->container->get('security.authorization_checker');
-        $this->secTokenStorage = $this->container->get('security.token_storage');
+//        $this->container = $params['container'];
+//        if( $this->container ) {
+//            $this->secAuthChecker = $this->container->get('security.authorization_checker');
+//            $this->secTokenStorage = $this->container->get('security.token_storage');
+//        }
 
-        if( !array_key_exists('showfellapp', $params) ) {
-            $this->params['showfellapp'] = null;
-        }
+//        if( !array_key_exists('showfellapp', $params) ) {
+//            $this->params['showfellapp'] = null;
+//        }
 
-        if( array_key_exists('roles', $params) ) {
-            $this->roles = $params['roles'];
-        } else {
-            $this->roles = null;
-        }
+//        if( array_key_exists('roles', $params) ) {
+//            $this->roles = $params['roles'];
+//        } else {
+//            $this->roles = null;
+//        }
 
         //echo "cycle=".$this->cycle."<br>";
-        if( $this->secAuthChecker->isGranted('ROLE_USERDIRECTORY_EDITOR') || $this->secAuthChecker->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            //echo "role ADMIN<br>";
-            $this->roleAdmin = true;
-        } else {
-            //echo "role not ADMIN<br>";
-            $this->roleAdmin = false;
-
-        }
+//        $this->roleAdmin = false;
+//        if( $this->secAuthChecker->isGranted('ROLE_USERDIRECTORY_EDITOR') || $this->secAuthChecker->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+//            //echo "role ADMIN<br>";
+//            $this->roleAdmin = true;
+//        } else {
+//            //echo "role not ADMIN<br>";
+//            $this->roleAdmin = false;
+//        }
         //echo "0 roleAdmin=".$this->roleAdmin."<br>";
 
         $this->readonly = false;
         //$readonlyAttr = 'false';
-        if( !$this->roleAdmin ) {
-            $this->readonly = true;
-            //$readonlyAttr = 'true';
-        }
+//        if( !$this->roleAdmin ) {
+//            $this->readonly = true;
+//            //$readonlyAttr = 'true';
+//        }
 
-        $this->currentUser = false;
-        $user = $this->secTokenStorage->getToken()->getUser();
-        if( $user->getId() === $this->subjectUser->getId() ) {
-            $this->currentUser = true;
-        }
+//        $this->currentUser = false;
+//        $user = $this->secTokenStorage->getToken()->getUser();
+//        if( $user->getId() === $this->subjectUser->getId() ) {
+//            $this->currentUser = true;
+//        }
 
         $this->hasRoleSimpleView = false;
-        if( array_key_exists('container', $this->params) ) {
-            $this->hasRoleSimpleView = $this->params['container']->get('security.token_storage')->getToken()->getUser()->hasRole("ROLE_USERDIRECTORY_SIMPLEVIEW");
-        }
+//        if( array_key_exists('container', $this->params) ) {
+//            $this->hasRoleSimpleView = $this->params['container']->get('security.token_storage')->getToken()->getUser()->hasRole("ROLE_USERDIRECTORY_SIMPLEVIEW");
+//        }
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -108,12 +111,22 @@ class UserSimpleType extends AbstractType
 
         $this->formConstructor($options['form_custom_value']);
 
-        $this->userNamePreferredContactInfo($builder);
+        //form start
+
+        if( !isset($this->params['hidePrimaryPublicUserId']) ) {
+            $this->userNamePreferredContactInfo($builder);
+        }
 
         $this->addUserInfos($builder);
 
         $this->titlesSections($builder);
 
+        if( isset($this->params['activateBtn']) ) {
+            $builder->add('activate', SubmitType::class, array(
+                'label' => 'Activate Account',
+                'attr' => array('class' => 'btn btn-primary') //'onclick'=>'transresValidateHandsonTable();'
+            ));
+        }
     }
 
     /**
@@ -140,25 +153,29 @@ class UserSimpleType extends AbstractType
     public function userNamePreferredContactInfo($builder) {
 
         //echo "cycle=".$this->cycle."<br>";
-        $readOnly = true;
-        //if( $this->cycle == 'create' || $this->secAuthChecker->isGranted('ROLE_PLATFORM_ADMIN') ) {
-        if( $this->cycle == 'create' ) {
-            //echo "readOnly false<br>";
-            $readOnly = false;
+//        $readOnly = true;
+//        //if( $this->cycle == 'create' || $this->secAuthChecker->isGranted('ROLE_PLATFORM_ADMIN') ) {
+//        if( $this->cycle == 'create' ) {
+//            //echo "readOnly false<br>";
+//            $readOnly = false;
+//        }
+
+        $primaryPublicUserIdLabel = 'CWID:';
+        if( isset($this->params['primaryPublicUserIdLabel']) ) {
+            $primaryPublicUserIdLabel = $this->params['primaryPublicUserIdLabel'];
         }
 
         $primaryPublicUserIdAttr = array('class'=>'form-control form-control-modif');
-        if( $this->cycle != 'create' ) {
-            $primaryPublicUserIdAttr['readonly'] = true;
-        }
+//        if( $this->cycle != 'create' ) {
+//            $primaryPublicUserIdAttr['readonly'] = true;
+//        }
         $builder->add('primaryPublicUserId', null, array(
-            'label' => 'CWID:',
+            'label' => $primaryPublicUserIdLabel,
             'required' => false,
             //'disabled' => $readOnly,   //($this->cycle == 'create' ? false : true ), //it is not possible to edit keytype for existed user
             //'attr' => array('class'=>'form-control', 'readonly'=>$readOnly),
             'attr' => $primaryPublicUserIdAttr
         ));
-
 
         return $builder;
     }
@@ -181,9 +198,14 @@ class UserSimpleType extends AbstractType
 
     public function titlesSections($builder) {
         //Administrative Titles
-        $params = array('disabled'=>$this->readonly,'label'=>'Administrative','fullClassName'=>'Oleg\UserdirectoryBundle\Entity\AdministrativeTitle','formname'=>'administrativetitletype','cycle'=>$this->cycle);
+        $params = array(
+            'disabled'=>$this->readonly,
+            'label'=>'Administrative',
+            'fullClassName'=>'Oleg\UserdirectoryBundle\Entity\AdministrativeTitle',
+            'formname'=>'administrativetitletype',
+            'cycle'=>$this->cycle
+        );
         $params = array_merge($this->params, $params);
-        //BaseTitleType($params)
         $builder->add('administrativeTitles', CollectionType::class, array(
             'entry_type' => AdministrativeTitleType::class,
             'entry_options' => array(

@@ -14,85 +14,53 @@
     limitations under the License.
 #}
 
+{#{% extends "OlegUserdirectoryBundle::Default/base.html.twig" %}#}
 
-<!DOCTYPE html>
+{% if sitename == 'employees' %}
+    {% set extendStr = "OlegUserdirectoryBundle::Default/base.html.twig" %}
+{% elseif sitename == 'fellapp' %}
+    {% set extendStr = "OlegFellAppBundle::Default/base.html.twig" %}
+{% elseif sitename == 'deidentifier' %}
+    {% set extendStr = "OlegDeidentifierBundle::Default/base.html.twig" %}
+{% elseif sitename == 'scan' %}
+    {% set extendStr = "OlegOrderformBundle::Default/base.html.twig" %}
+{% elseif sitename == 'vacreq' %}
+    {% set extendStr = "OlegVacReqBundle::Default/base.html.twig" %}
+{% elseif sitename == 'calllog' %}
+    {% set extendStr = "OlegCallLogBundle::Default/base.html.twig" %}
+{% elseif sitename == 'translationalresearch' %}
+    {% set extendStr = "OlegTranslationalResearchBundle::Default/base.html.twig" %}
+{% endif %}
 
-<html>
-
-<head>
-
-    {% stylesheets
-    'bundles/oleguserdirectory/bootstrap/css/*' filter='cssrewrite'
-    'bundles/oleguserdirectory/select2/select2.css' filter='cssrewrite'
-    'bundles/oleguserdirectory/form/css/form.css' filter='cssrewrite'
-    %}
-    <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
-    {% endstylesheets %}
-
-    {% stylesheets
-    'bundles/oleguserdirectory/datepicker/css/bootstrap-datepicker3.css' filter='cssrewrite'
-    %}
-    <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
-    {% endstylesheets %}
-
+{% extends extendStr%}
 
 
-    {#http://www.telegraphicsinc.com/2013/10/using-bootstrap-3-with-internet-explorer-8-ie8/#}
-    {% javascripts
-    '@OlegUserdirectoryBundle/Resources/public/html5-bootstrap-fix/css3-mediaqueries.js'
-    %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-    {% javascripts
-    '@OlegUserdirectoryBundle/Resources/public/html5-bootstrap-fix/html5shiv.min.js'
-    '@OlegUserdirectoryBundle/Resources/public/html5-bootstrap-fix/respond.min.js'
-    %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-    <![endif]-->
+{% block title %}
+    Registration Activation for {{ sitenamefull }}
+{% endblock %}
 
 
-    <title>{{ title }}</title>
+{% block content %}
 
-    {#<meta name="viewport" content="width=device-width, initial-scale=1.0">#}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "OlegUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
 
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <h3 class="text-info">Registration Activation for {{ sitenamefull }}</h3>
 
+    <hr>
 
-    <link rel="icon" type="image/x-icon" href="{{ asset('glyphicons-157-show-thumbnails.png') }}" />
-
-</head>
-
-<body>
-
-
-{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-{% import "OlegUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
-
-<div class="container text-center">
-
-    <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
-    <input type="hidden" id="formcycle" value="accountreq" />
-    <input type="hidden" id="orderformtype" value="single" />
-
-    <h2 class="alert alert-info well-lg safary-fix" align="center">{{ title }}</h2>
-
-    <br>
-
-    {#<form id="accountrequestform" action="{{ path(sitename~'_accountrequest_create') }}" method="post">#}
     {{ form_start(form) }}
-    {{ form_errors(form) }}
 
-        {{ formmacros.field(form.userName) }}
-        {{ formmacros.field(form.email) }}
+        {{ formmacros.simplefield( "User Name:", user.primaryPublicUserId, "", "disabled" ) }}
+        {{ formmacros.simplefield( "Email:", user.getSingleEmail(), "", "disabled" ) }}
 
-        {{ formmacros.field(form.firstName) }}
-        {{ formmacros.field(form.lastName) }}
-        {{ formmacros.field(form.phone) }}
+        {% for info in form.infos %}
+            {{ formmacros.field(info.firstName) }}
+            {{ formmacros.field(info.lastName) }}
+            {#{{ usermacros.emailPhoneField(info.email,cycle,'email',"") }}#}
+            {{ usermacros.emailPhoneField(info.preferredPhone,cycle,'phone',"") }}
+        {% endfor %}
 
         <div class="user-administrativeTitles-holder">
             {% for administrativeTitle in form.administrativeTitles %}
@@ -104,8 +72,6 @@
                 {% if administrativeTitle.institution is defined %}
                     {{ treemacros.compositeTreeNode(administrativeTitle.institution,cycle,'noprototype') }}
                 {% endif %}
-
-
 
             {% endfor %}
         </div>
@@ -120,57 +86,6 @@
     {#{{ form_end(form) }}#}
     {{ form_end(form,{'render_rest': false}) }}
 
-    {% include 'OlegUserdirectoryBundle::Default/footer.html.twig' %}
 
-</div> <!-- /container -->
+{% endblock %}
 
-<!-- send width and height info to the server -->
-{% javascripts
-'@OlegUserdirectoryBundle/Resources/public/form/js/errorwatch.js'
-'@OlegUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'
-'@OlegUserdirectoryBundle/Resources/public/bootstrap/js/*'
-'@OlegUserdirectoryBundle/Resources/public/select2/select2.js'
-'@OlegUserdirectoryBundle/Resources/public/inputmask/jquery.inputmask.bundle.js'
-'@OlegUserdirectoryBundle/Resources/public/q-1/q.js'
-
-'@OlegUserdirectoryBundle/Resources/public/form/js/user-common.js'
-
-'@OlegUserdirectoryBundle/Resources/public/form/js/user-selectAjax.js'
-'@OlegUserdirectoryBundle/Resources/public/form/js/user-treeSelectAjax.js'
-
-'@OlegOrderformBundle/Resources/public/form/js/masking.js'
-'@OlegOrderformBundle/Resources/public/form/js/selectAjax.js'
-'@OlegOrderformBundle/Resources/public/form/js/form.js'
-'@OlegOrderformBundle/Resources/public/form/js/commonCheckForm.js'
-
-%}
-<script type="text/javascript" src="{{ asset_url }}"></script>
-{% endjavascripts %}
-
-{#FOSJsRoutingBundle#}
-<script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
-<script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
-
-
-<script language="Javascript">
-
-    $(document).ready(function() {
-
-        _ajaxTimeout = 60000;
-
-        regularCombobox();
-        customCombobox();
-        fieldInputMask();
-        expandTextarea();
-        initConvertEnterToTab();
-
-        getComboboxCompositetree();
-
-    });
-
-</script>
-
-
-</body>
-
-</html>

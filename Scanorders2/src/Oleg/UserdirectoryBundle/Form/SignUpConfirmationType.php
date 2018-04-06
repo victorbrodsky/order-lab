@@ -3,6 +3,7 @@
 namespace Oleg\UserdirectoryBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -11,13 +12,25 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class SignUpType extends AbstractType
+//NOT USED. TODEL
+class SignUpConfirmationType extends AbstractType
 {
+
+    protected $params;
+
+    public function formConstructor( $params=null, $entity = null )
+    {
+        $this->params = $params;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
+        $this->formConstructor($options['form_custom_value']);
+
         //$builder->add('createdate')->add('updatedate')->add('userName')->add('email')->add('firstName')->add('lastName')->add('phone')->add('salt')->add('hashPassword')->add('registrationLinkID')->add('registrationStatus')->add('ip')->add('useragent')->add('width')->add('height')->add('user')->add('site')->add('updatedby')->add('institution')->add('administrativeTitle');
 
         $builder->add( 'userName', TextType::class, array(
@@ -66,7 +79,8 @@ class SignUpType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\SignUp'
+            'data_class' => 'Oleg\UserdirectoryBundle\Entity\SignUp',
+            'form_custom_value' => null
         ));
     }
 
@@ -85,8 +99,9 @@ class SignUpType extends AbstractType
             'label'=>'Administrative',
             'fullClassName'=>'Oleg\UserdirectoryBundle\Entity\AdministrativeTitle',
             'formname'=>'administrativetitletype',
-            'cycle'=>'new'
+            'cycle'=>$this->params['cycle']
         );
+        $params = array_merge($this->params, $params);
         $builder->add('administrativeTitles', CollectionType::class, array(
             'entry_type' => AdministrativeTitleType::class,
             'entry_options' => array(

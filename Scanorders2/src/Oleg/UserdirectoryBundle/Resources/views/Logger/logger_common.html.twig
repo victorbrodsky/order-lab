@@ -260,7 +260,7 @@
                 {% endif %}
 
                 <td>{{ entity.eventType }}</td>
-                <td>{{ entity.event|raw }}</td>
+                <td class="rowlink-skip">{{ entity.event|raw }}</td>
 
                 {% if hideADServerResponse is not defined or hideADServerResponse == false %}
                     <td class="rowlink-skip">

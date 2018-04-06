@@ -187,7 +187,7 @@ function getElementTargetByHolder(holder,target) {
 //Generic ajax combobox
 function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,sitename,force,placeholder) {
 
-    //console.log('get Combobox Generic: name='+name);
+    console.log('get Combobox Generic: name='+name);
 
     var targetid = ".ajax-combobox-"+name;
     targetid = getElementTargetByHolder(holder,targetid);
@@ -223,7 +223,7 @@ function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,s
     }
 
     var url = getCommonBaseUrl("util/common/"+urlprefix+name+cycleStr+sitenameStr,sitename);
-    //console.log('get Combobox Generic: url='+url);
+    console.log('get Combobox Generic: url='+url);
 
     if( globalDataArray.length == 0 ) {
         $.ajax({
@@ -233,7 +233,7 @@ function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,s
         }).success(function(data) {
             $.each(data, function(key, val) {
                 globalDataArray.push(val);
-                //console.log(data);
+                console.log(data);
             });
             populateSelectCombobox( targetid, globalDataArray, placeholder, multipleFlag );
         });
