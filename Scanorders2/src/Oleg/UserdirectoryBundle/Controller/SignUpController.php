@@ -139,6 +139,8 @@ class SignUpController extends Controller
                     $form->get('userName')->addError(new FormError('This user name appears to be taken. Please choose another one.'));
                 }
             }
+
+            //TODO: check if still active request and email or username existed in SignUp DB
         }
 
         if( $form->isSubmitted() && $form->isValid() ) {
@@ -177,20 +179,15 @@ class SignUpController extends Controller
             $em->persist($signUp);
             $em->flush($signUp);
 
-            //Event Log
-            //$author = $this->get('security.token_storage')->getToken()->getUser();
-            $systemuser = $userSecUtil->findSystemUser();
-            $event = "New user registration has been created:<br>".$signUp;
-            $userSecUtil->createUserEditEvent($this->siteName,$event,$systemuser,$signUp,$request,'User SignUp Created');
-
             //Email
             $newline = "\r\n";
             $emailUtil = $this->container->get('user_mailer_utility');
-            $subject = "ORDER Registration";
+            $subject = $this->siteNameStr." Registration";
 
             //$orderUrl = ""; //[URL/order]
             $orderUrl = $this->container->get('router')->generate(
-                'main_common_home',
+                //'main_common_home',
+                $this->pathHome,
                 array(),
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
@@ -212,6 +209,14 @@ class SignUpController extends Controller
                 $newline."If you encounter any issues, please email our $systemEmail.";
             ;
 
+            //Event Log
+            //$author = $this->get('security.token_storage')->getToken()->getUser();
+            $systemuser = $userSecUtil->findSystemUser();
+            $event = "New user registration has been created:<br>".$signUp;
+            $event = $event . "<br>Email Subject: " . $subject;
+            $event = $event . "<br>Email Body:<br>" . $body;
+            $userSecUtil->createUserEditEvent($this->siteName,$event,$systemuser,$signUp,$request,'User SignUp Created');
+
             //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
             $emailUtil->sendEmail($signUp->getEmail(), $subject, $body);
 
@@ -220,6 +225,7 @@ class SignUpController extends Controller
             //$em->persist($signUp);
             $em->flush($signUp);
 
+            //Confirmation
             $confirmation = "Thank You for signing up!<br>
                 An email was sent to the email address you provided ".$signUp->getEmail()." with a registration link.<br>
                 Please click the link emailed to you to activate your account.";

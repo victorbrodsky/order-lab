@@ -85,16 +85,14 @@
     {% endfor %}
 
     {% if messageSuccess is defined %}
-        {#{{ messageSuccess }}#}
         <div class="alert alert-success">
-            {{ messageSuccess }}
+            {{ messageSuccess|raw }}
         </div>
     {% endif %}
 
     {% if messageDanger is defined %}
-        {#{{ messageDanger }}#}
         <div class="alert alert-danger">
-            {{ messageDanger }}
+            {{ messageDanger|raw }}
         </div>
     {% endif %}
 

@@ -458,8 +458,10 @@ class UserServiceUtil {
     public function isSelfSignUp( $sitename ) {
         //TODO: If "Self-Sign Up" is enabled for the site that the user is trying to log into
 
-        //return false;
-        return true;
+        if( $sitename == 'employees' ) {
+            return true;
+        }
+        return false;
     }
 
     public function getUniqueRegistrationLinkId( $sometxt, $count=0 ) {
