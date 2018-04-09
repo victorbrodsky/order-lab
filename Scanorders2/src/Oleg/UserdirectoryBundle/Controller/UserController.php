@@ -1762,6 +1762,9 @@ class UserController extends Controller
         if( !$user ) {
             $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByEmailCanonical($email);
         }
+        if( !$user ) {
+            $user = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByUserInfoEmail($email);
+        }
 
         if( $user ) {
             $thisUrl = $this->container->get('router')->generate(
@@ -1845,6 +1848,7 @@ class UserController extends Controller
 
         //set user info
         $user->setEmail($email);
+        $user->setEmailCanonical($email);
         $user->setFirstName($firstname);
         $user->setLastName($lastname);
         $user->setDisplayName($displayname);

@@ -87,13 +87,13 @@ class SignUpController extends Controller
 
         $userSecUtil = $this->get('user_security_utility');
         $userServiceUtil = $this->get('user_service_utility');
+        $systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
         $em = $this->getDoctrine()->getManager();
         $signUp = new Signup();
         $form = $this->createForm('Oleg\UserdirectoryBundle\Form\SignUpType', $signUp);
         $form->handleRequest($request);
 
         $password = $signUp->getHashPassword();
-        $plainPassword = $password; //testing TODO: remove
         //echo "password=$password<br>";
 
         if( $form->isSubmitted() ) {
@@ -148,10 +148,36 @@ class SignUpController extends Controller
                     $form->get('email')->addError(new FormError($emailError));
                 }
 
-//                $userDb = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByEmailCanonical($signUp->getEmail());
-//                if( !$userDb ) {
-//                    $form->get('email')->addError(new FormError('This user email appears to be taken. Please choose another one.'));
-//                }
+                //check if still active request and email or username existed in SignUp DB
+                $signUpDb = $em->getRepository('OlegUserdirectoryBundle:SignUp')->findByEmail($signUp->getEmail());
+                if( $signUpDb ) {
+                    $createdDate = $signUpDb->getCreatedate();
+                    //echo "createDate=".$createdDate->format("d-m-Y H:i:s")."<br>";
+                    $now = new \DateTime();
+                    //echo "now=".$now->format("d-m-Y H:i:s")."<br>";
+                    $interval = $now->diff($createdDate);
+                    $hours = $interval->h + ($interval->days*24);
+                    if( $hours <= 48 ) {
+                        $emailError = "The email address you have entered is already used and".
+                            " the active registration has been sent to this email address.".
+                            " Please search your email for the registration link.";
+                        $form->get('email')->addError(new FormError($emailError));
+                    }
+                }
+
+                //check if user with provided email existed in SignUp DB
+                $userDb = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByUserInfoEmail($signUp->getEmail());
+                if( $userDb ) {
+                    if( $userDb->getLocked() ) {
+                        $emailError = "The email address you have entered is already taken.".
+                            " Please enter a different email address above.";
+                    } else {
+                        $emailError = "Your account is currently locked and you will not be able to log in until".
+                            " you contact the system administrator at ".$systemEmail.".";
+                    }
+                    $form->get('email')->addError(new FormError($emailError));
+                }
+
             }
 
             if( $signUp->getUserName() && $usernameErrorCount == 0 ) {
@@ -164,8 +190,7 @@ class SignUpController extends Controller
                 }
             }
 
-            //TODO: check if still active request and email or username existed in SignUp DB
-        }
+        }//if submitted
 
         if( $form->isSubmitted() && $form->isValid() ) {
 
@@ -228,7 +253,6 @@ class SignUpController extends Controller
                 ),
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
-            $systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
 
             $body =
                 "Thank You for registering at ".$orderUrl."!".
@@ -243,11 +267,10 @@ class SignUpController extends Controller
             $event = "New user registration has been created:<br>".$signUp;
             $event = $event . "<br>Email Subject: " . $subject;
             $event = $event . "<br>Email Body:<br>" . $body;
-            $event = $event . "<br>Test Password:".$plainPassword; //testing TODO: remove
             $userSecUtil->createUserEditEvent($this->siteName,$event,$systemuser,$signUp,$request,'User SignUp Created');
 
             //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-            $emailUtil->sendEmail($signUp->getEmail(), $subject, $body); //testing
+            $emailUtil->sendEmail($signUp->getEmail(), $subject, $body);
 
             //change status
             $signUp->setRegistrationStatus("Activation Email Sent");
@@ -315,8 +338,7 @@ class SignUpController extends Controller
         $now = new \DateTime();
         //echo "now=".$now->format("d-m-Y H:i:s")."<br>";
         $interval = $now->diff($createdDate);
-        $hours = $interval->h;
-        $hours = $hours + ($interval->days*24);
+        $hours = $interval->h + ($interval->days*24);
         //echo "hours=$hours <br>";
         if( $hours > 48 ) {
             $signupUrl = $this->container->get('router')->generate(
@@ -413,12 +435,8 @@ class SignUpController extends Controller
             $userEmail = $signUp->getEmail();
             if ($userEmail) {
                 $user->setEmail($userEmail);
+                //$user->setEmailCanonical($userEmail);
             }
-            //$user->setEmail($email);
-            //$user->setFirstName($firstname);
-            //$user->setLastName($lastname);
-            //$user->setDisplayName($displayname);
-            //$user->setPreferredPhone($phone);
 
             //set administrativeTitles
             if (count($user->getAdministrativeTitles()) == 0) {
@@ -436,10 +454,7 @@ class SignUpController extends Controller
             //exit('flush');
             $em->persist($signUp);
             $em->persist($user);
-            //$em->flush($signUp); //testing
-            //$em->flush($user);
             $em->flush();
-            //$em->clear(); // Detaches all objects from Doctrine!
             ///////////// EOF create a new user ///////////////
 
             //$user = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId());
@@ -493,9 +508,6 @@ class SignUpController extends Controller
             //}
 
             //exit('flush');
-            //$em->persist($signUp);
-            //$em->flush($signUp);
-            //$em->flush($user);
             $em->flush();
 
             //Event Log
@@ -518,7 +530,7 @@ class SignUpController extends Controller
             $emails = array_merge($emails,$ccEmails);
             $emails = array_merge($emails,$adminEmails);
             $emails = array_unique($emails);
-            echo "user emails=".implode(";",$emails)."<br>";
+            //echo "user emails=".implode(";",$emails)."<br>";
             $subject = "New ".$signUp->getUser()." account activation for ".$this->siteNameStr;
 
             $userDetalsArr = $signUp->getUser()->getDetailsArr();
@@ -600,6 +612,212 @@ class SignUpController extends Controller
             'delete_form' => $deleteForm->createView(),
         ));
     }
+
+
+    /**
+     * http://localhost/order/directory/sign-up/forgot-password
+     *
+     * @Route("/forgot-password", name="employees_forgot_password")
+     * @Method({"GET", "POST"})
+     */
+    public function forgotPasswordAction(Request $request)
+    {
+        exit('Not Implemented Yet');
+        $userSecUtil = $this->get('user_security_utility');
+        $userServiceUtil = $this->get('user_service_utility');
+        $em = $this->getDoctrine()->getManager();
+        $signUp = new Signup();
+        $form = $this->createForm('Oleg\UserdirectoryBundle\Form\SignUpType', $signUp);
+        $form->handleRequest($request);
+
+        $password = $signUp->getHashPassword();
+        //echo "password=$password<br>";
+
+        if( $form->isSubmitted() ) {
+
+            $passwordErrorCount = 0;
+            if( !$password ) {
+                $passwordErrorCount++;
+            } else {
+                //length
+                if( strlen($password) < '8' || strlen($password) > '25' ) {
+                    $passwordErrorCount++;
+                }
+                if( preg_match('/[A-Za-z]/', $password) && preg_match('/[0-9]/', $password) ) {
+                    //echo 'Contains at least one letter and one number';
+                } else {
+                    //echo "No letter or number <br>";
+                    $passwordErrorCount++;
+                }
+            }
+            if( $passwordErrorCount > 0 ) {
+                //echo "email error: $passwordErrorCount<br>";
+                $passwordError = "Please make sure your password is between 8 and 25 characters and ".
+                    "contains at least one letter and at least one number.";
+                $form->get('hashPassword')->addError(new FormError($passwordError));
+            }
+
+            $usernameErrorCount = 0;
+            if( !$signUp->getUserName() ) {
+                $usernameErrorCount++;
+            } else {
+                if( strlen($signUp->getUserName()) < '8' || strlen($signUp->getUserName()) > '25' ) {
+                    $usernameErrorCount++;
+                }
+            }
+            if( $usernameErrorCount > 0 ) {
+                $usernameError = "Please make sure your user name contains at least 8 and at most 25 characters.";
+                $form->get('userName')->addError(new FormError($usernameError));
+            }
+
+            if( !$signUp->getEmail() ) {
+                //$form->get('email')->addError(new FormError('The email value should not be blank.'));
+            } else {
+                //If the entered email address ends in “@med.cornell.edu” or “@nyp.org”
+                if( strpos($signUp->getEmail(), "@med.cornell.edu") !== false || strpos($signUp->getEmail(), "@nyp.org") !== false ) {
+                    $cwid = "CWID";
+                    $emailArr = explode("@",$signUp->getEmail());
+                    if( count($emailArr)>0 ) {
+                        $cwid = $emailArr[0];
+                    }
+                    $emailError = "Since you entered an institutional e-mail address, you do not need to sign up for an account. ".
+                        "You can use your $cwid and the associated password to log in.";
+                    $form->get('email')->addError(new FormError($emailError));
+                }
+
+//                $userDb = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByEmailCanonical($signUp->getEmail());
+//                if( !$userDb ) {
+//                    $form->get('email')->addError(new FormError('This user email appears to be taken. Please choose another one.'));
+//                }
+            }
+
+            if( $signUp->getUserName() && $usernameErrorCount == 0 ) {
+                //When the user clicks “Sign Up”, search for matching existing user names
+                // in the user table; if the user name is taken, show a red well stating
+                // “This user name appears to be taken. Please choose another one.”
+                $userDb = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($signUp->getUserName());
+                if( $userDb ) {
+                    $form->get('userName')->addError(new FormError('This user name appears to be taken. Please choose another one.'));
+                }
+            }
+
+            //TODO: check if still active request and email or username existed in SignUp DB
+        }
+
+        if( $form->isSubmitted() && $form->isValid() ) {
+
+            //1)hash password
+            //$salt = uniqid(mt_rand(), true);
+            $salt = rtrim(str_replace('+', '.', base64_encode(random_bytes(32))), '=');
+            //echo "salt=$salt<br>";
+            $dummyUser = new User();
+            $dummyUser->setSalt($salt);
+
+            $encoder = $this->container->get('security.password_encoder');
+            //$encoderService = $this->container->get('security.encoder_factory');
+            //$encoder = $encoderService->getEncoder($dummyUser);
+
+            $encoded = $encoder->encodePassword($dummyUser,$password);
+            //echo "encoded=$encoded<br>";
+            $signUp->setSalt($salt);
+            $signUp->setHashPassword($encoded);
+            unset($dummyUser);
+
+            //2) Generate unique REGISTRATION-LINK-ID
+            $registrationLinkId = $userServiceUtil->getUniqueRegistrationLinkId($signUp->getEmail());
+            $signUp->setRegistrationLinkID($registrationLinkId);
+
+            //sitename
+            $siteObject = $em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation($this->siteName);
+            if( $siteObject ) {
+                $signUp->setSite($siteObject);
+            }
+
+            if( $request ) {
+                $signUp->setUseragent($_SERVER['HTTP_USER_AGENT']);
+                $signUp->setIp($request->getClientIp());
+                $signUp->setWidth($request->get('display_width'));
+                $signUp->setHeight($request->get('display_height'));
+            }
+
+            //exit('flush');
+            $em->persist($signUp);
+            $em->flush($signUp);
+
+            //Email
+            $newline = "\r\n";
+            $emailUtil = $this->container->get('user_mailer_utility');
+            $subject = $this->siteNameStr." Registration";
+
+            //$orderUrl = ""; //[URL/order]
+            $orderUrl = $this->container->get('router')->generate(
+            //'main_common_home',
+                $this->pathHome,
+                array(),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+
+            //$activationUrl = ""; //http://URL/order/activate-account/REGISTRATION-LINK-ID
+            $activationUrl = $this->container->get('router')->generate(
+                $this->siteName.'_activate_account',
+                array(
+                    'registrationLinkID'=>$registrationLinkId
+                ),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
+
+            $body =
+                "Thank You for registering at ".$orderUrl."!".
+                $newline."Please visit the following link to activate your account or copy/paste it into your browser’s address bar:".
+                $newline.$activationUrl.
+                $newline."If you encounter any issues, please email our system administrator at $systemEmail.";
+            ;
+
+            //Event Log
+            //$author = $this->get('security.token_storage')->getToken()->getUser();
+            $systemuser = $userSecUtil->findSystemUser();
+            $event = "New user registration has been created:<br>".$signUp;
+            $event = $event . "<br>Email Subject: " . $subject;
+            $event = $event . "<br>Email Body:<br>" . $body;
+            $userSecUtil->createUserEditEvent($this->siteName,$event,$systemuser,$signUp,$request,'User SignUp Created');
+
+            //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
+            $emailUtil->sendEmail($signUp->getEmail(), $subject, $body);
+
+            //change status
+            $signUp->setRegistrationStatus("Activation Email Sent");
+            //$em->persist($signUp);
+            $em->flush($signUp);
+
+            //Confirmation
+            $confirmation = "Thank You for signing up!<br>
+                An email was sent to the email address you provided ".$signUp->getEmail()." with a registration link.<br>
+                Please click the link emailed to you to activate your account.";
+//            $this->get('session')->getFlashBag()->add(
+//                'notice',
+//                $confirmation
+//            );
+
+            //return $this->redirectToRoute('employees_signup_show', array('id' => $signUp->getId()));
+            return $this->render('OlegUserdirectoryBundle:SignUp:confirmation.html.twig',
+                array(
+                    'title'=>"Registration Confirmation",
+                    'messageSuccess'=>$confirmation)
+            );
+        }
+        //exit('new');
+
+        return $this->render('OlegUserdirectoryBundle:SignUp:new.html.twig', array(
+            'signUp' => $signUp,
+            'form' => $form->createView(),
+            'title' => "Sign Up for ".$this->siteNameStr,
+            'sitenamefull' => $this->siteNameStr,
+            'sitename' => $this->siteName
+        ));
+    }
+
+
 
     /**
      * Deletes a signUp entity.

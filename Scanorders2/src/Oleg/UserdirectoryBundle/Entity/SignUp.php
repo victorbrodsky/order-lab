@@ -31,11 +31,6 @@ class SignUp {
      */
     private $user;
 
-//    /**
-//     * @ORM\Column(name="siteName", type="string")
-//     */
-//    private $siteName;
-
     /**
      * @ORM\ManyToOne(targetEntity="SiteList")
      * @ORM\JoinColumn(name="site_id", referencedColumnName="id", nullable=true)
@@ -80,32 +75,32 @@ class SignUp {
     ////////////// EOF sign up details //////////////
 
 
-    ////////////// more user details //////////////
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $firstName;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $lastName;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $phone;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Institution")
-     */
-    private $institution;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="AdminTitleList")
-     **/
-    private $administrativeTitle;
-    ////////////// EOF more user details //////////////
+//    ////////////// more user details //////////////
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $firstName;
+//
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $lastName;
+//
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $phone;
+//
+//    /**
+//     * @ORM\ManyToOne(targetEntity="Institution")
+//     */
+//    private $institution;
+//
+//    /**
+//     * @ORM\ManyToOne(targetEntity="AdminTitleList")
+//     **/
+//    private $administrativeTitle;
+//    ////////////// EOF more user details //////////////
 
 
     ////////////// registration parameters //////////////
@@ -292,85 +287,85 @@ class SignUp {
         $this->email = $email;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getFirstName()
-    {
-        return $this->firstName;
-    }
-
-    /**
-     * @param mixed $firstName
-     */
-    public function setFirstName($firstName)
-    {
-        $this->firstName = $firstName;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLastName()
-    {
-        return $this->lastName;
-    }
-
-    /**
-     * @param mixed $lastName
-     */
-    public function setLastName($lastName)
-    {
-        $this->lastName = $lastName;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPhone()
-    {
-        return $this->phone;
-    }
-
-    /**
-     * @param mixed $phone
-     */
-    public function setPhone($phone)
-    {
-        $this->phone = $phone;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getInstitution()
-    {
-        return $this->institution;
-    }
-
-    /**
-     * @param mixed $institution
-     */
-    public function setInstitution($institution)
-    {
-        $this->institution = $institution;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAdministrativeTitle()
-    {
-        return $this->administrativeTitle;
-    }
-
-    /**
-     * @param mixed $administrativeTitle
-     */
-    public function setAdministrativeTitle($administrativeTitle)
-    {
-        $this->administrativeTitle = $administrativeTitle;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getFirstName()
+//    {
+//        return $this->firstName;
+//    }
+//
+//    /**
+//     * @param mixed $firstName
+//     */
+//    public function setFirstName($firstName)
+//    {
+//        $this->firstName = $firstName;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getLastName()
+//    {
+//        return $this->lastName;
+//    }
+//
+//    /**
+//     * @param mixed $lastName
+//     */
+//    public function setLastName($lastName)
+//    {
+//        $this->lastName = $lastName;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getPhone()
+//    {
+//        return $this->phone;
+//    }
+//
+//    /**
+//     * @param mixed $phone
+//     */
+//    public function setPhone($phone)
+//    {
+//        $this->phone = $phone;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getInstitution()
+//    {
+//        return $this->institution;
+//    }
+//
+//    /**
+//     * @param mixed $institution
+//     */
+//    public function setInstitution($institution)
+//    {
+//        $this->institution = $institution;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getAdministrativeTitle()
+//    {
+//        return $this->administrativeTitle;
+//    }
+//
+//    /**
+//     * @param mixed $administrativeTitle
+//     */
+//    public function setAdministrativeTitle($administrativeTitle)
+//    {
+//        $this->administrativeTitle = $administrativeTitle;
+//    }
 
     /**
      * @return mixed
@@ -500,13 +495,8 @@ class SignUp {
         $this->height = $height;
     }
 
-
-    public function getInfoString() {
-        return "Sign Up Request: ID=".$this->getId().", username=".$this->getUserName();
-    }
-
     public function __toString() {
-        return "Sign Up Request: ID=".$this->getId().", username=".$this->getUserName();
+        return "Sign Up Request: ID=".$this->getId().", site=".$this->getSite().", username=".$this->getUserName().", email=".$this->getEmail();
     }
 
 }

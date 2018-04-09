@@ -12,8 +12,6 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Signup controller.
- *
  * @Route("sign-up")
  */
 class TransResSignUpController extends SignUpController
@@ -25,7 +23,7 @@ class TransResSignUpController extends SignUpController
         $this->siteNameShowuser = 'translationalresearch';
         $this->siteNameStr = 'Translational Research';
         $this->pathHome = 'translationalresearch_home';
-        $this->minimumRoles = array('ROLE_TRANSRES_REQUESTER');
+        $this->minimumRoles = array('ROLE_TRANSRES_REQUESTER','ROLE_TRANSRES_APCP');
         $this->roleAdmins = array('ROLE_TRANSRES_ADMIN');
     }
 
@@ -94,4 +92,12 @@ class TransResSignUpController extends SignUpController
         return parent::deleteAction($request,$signUp);
     }
 
+    /**
+     * @Route("/forgot-password", name="translationalresearch_forgot_password")
+     * @Method({"GET", "POST"})
+     */
+    public function forgotPasswordAction(Request $request)
+    {
+        return parent::forgotPasswordAction($request);
+    }
 }

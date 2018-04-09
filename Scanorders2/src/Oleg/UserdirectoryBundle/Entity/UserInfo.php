@@ -215,6 +215,10 @@ class UserInfo extends BaseUserAttributes {
     public function setEmail($email)
     {
         $this->email = $email;
+
+        if( $email ) {
+            $this->setEmailCanonical($email);
+        }
     }
 
     /**

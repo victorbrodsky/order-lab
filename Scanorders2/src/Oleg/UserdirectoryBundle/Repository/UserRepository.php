@@ -128,6 +128,18 @@ class UserRepository extends EntityRepository {
         return $user;
     }
 
+    public function findUserByUserInfoEmail( $email ) {
+
+        $query = $this->_em->createQueryBuilder()
+            ->from('OlegUserdirectoryBundle:User', 'user')
+            ->select("user")
+            ->leftJoin("user.infos","infos")
+            ->where("infos.email = :userInfoEmail OR infos.emailCanonical = :userInfoEmail")
+            ->orderBy("user.id","ASC")
+            ->setParameter('userInfoEmail', '"' . $email . '"');
+
+        return $query->getQuery()->getResult();
+    }
 
 
     public function findOneUserByRole($role) {

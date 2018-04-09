@@ -1326,7 +1326,6 @@ class User extends BaseUser {
             $infos->first()->setEmail($email);
         }
     }
-    //overwrite email
     public function getEmail()
     {
         $value = null;
@@ -1344,7 +1343,6 @@ class User extends BaseUser {
             $infos->first()->setEmailCanonical($emailCanonical);
         }
     }
-    //overwrite canonical email
     public function getEmailCanonical()
     {
         $value = null;

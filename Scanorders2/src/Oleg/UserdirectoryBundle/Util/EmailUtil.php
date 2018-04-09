@@ -169,10 +169,12 @@ class EmailUtil {
 
     public function hasConnection() {
 
+        $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
 
         $environment = $userSecUtil->getSiteSettingParameter('environment');
         if( $environment == 'dev'  ) {
+            $logger->notice("SendEmail is disabled for environment '".$environment."'");
             return false;
         }
 
@@ -182,7 +184,6 @@ class EmailUtil {
         $fp = fsockopen($smtp, 25, $errno, $errstr, 9) ;
 
         if (!$fp) {
-            $logger = $this->container->get('logger');
             $logger->error("SendEmail server=$smtp; ERROR:$errno - $errstr");
             $result = false;
         } else {
