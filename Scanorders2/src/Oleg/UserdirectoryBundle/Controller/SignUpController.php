@@ -307,7 +307,15 @@ class SignUpController extends Controller
 
         //If the activation link is visited more than 48 hours after the timestamp in the timestamp column,
         // show the following message on the page: “This activation link has expired. Please <sign up> again.”
-        if(0) { //TODO:
+        $createdDate = $signUp->getCreatedate();
+        //echo "createDate=".$createdDate->format("d-m-Y H:i:s")."<br>";
+        $now = new \DateTime();
+        //echo "now=".$now->format("d-m-Y H:i:s")."<br>";
+        $interval = $now->diff($createdDate);
+        $hours = $interval->h;
+        $hours = $hours + ($interval->days*24);
+        //echo "hours=$hours <br>";
+        if( $hours > 48 ) {
             $signupUrl = $this->container->get('router')->generate(
                 $this->siteName."_signup_new",
                 array(),
@@ -340,6 +348,7 @@ class SignUpController extends Controller
                 )
             );
         }
+        //exit('ok');
 
 //        $rolesArr = array();
 //        $params = array(
@@ -354,8 +363,7 @@ class SignUpController extends Controller
 //        ));
 
 
-        //TODO: only if not created yet
-        //1) serach by $signUp->getUserName() and if $signUp->getUser() is NULL
+        //1) only if not created yet: search by $signUp->getUserName() and if $signUp->getUser() is NULL
         $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($signUp->getUserName());
         if( !$user && !$signUp->getUser() ) {
             ///////////// create a new user ///////////////
@@ -442,7 +450,7 @@ class SignUpController extends Controller
             //$this->get('security.context')->setToken($token);
             $this->get('session')->set('_security_secured_area', serialize($token));
             ////////////////////// EOF auth /////////////////////////
-        }
+        }//if user is not created yet
 
 
         //$cycle = 'create';
@@ -475,6 +483,11 @@ class SignUpController extends Controller
 
             //Set the account as “unlocked” and log in the user + send them to the “Employee Directory” homepage.
             $user->setLocked(false);
+
+            //testing
+            //foreach($user->getAdministrativeTitles() as $adminTitle) {
+            //    echo "Title=".$adminTitle->getName()."; Inst=".$adminTitle->getInstitution()."<br>";
+            //}
 
             //exit('flush');
             //$em->persist($signUp);
@@ -544,7 +557,7 @@ class SignUpController extends Controller
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('signup_edit', array('id' => $signUp->getId()));
+            return $this->redirectToRoute($this->siteName.'_signup_edit', array('id' => $signUp->getId()));
         }
 
         return $this->render('OlegUserdirectoryBundle:SignUp:new.html.twig', array(
@@ -574,7 +587,7 @@ class SignUpController extends Controller
             $em->flush();
         }
 
-        return $this->redirectToRoute('signup_index');
+        return $this->redirectToRoute($this->siteName.'_signup_index');
     }
 
     /**
@@ -587,7 +600,7 @@ class SignUpController extends Controller
     private function createDeleteForm(SignUp $signUp)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('signup_delete', array('id' => $signUp->getId())))
+            ->setAction($this->generateUrl($this->siteName.'_signup_delete', array('id' => $signUp->getId())))
             ->setMethod('DELETE')
             ->getForm()
         ;

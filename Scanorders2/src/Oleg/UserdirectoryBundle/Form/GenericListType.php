@@ -613,6 +613,14 @@ class GenericListType extends AbstractType
             ));
         }
 
+        if( method_exists($this->params['entity'],'getSelfSignUp') ) {
+            $builder->add('selfSignUp',null,array(
+                'label' => "Self Sign Up:",
+                'required' => false,
+                'attr' => array('class'=>'form-control'),
+            ));
+        }
+
 
         ///////////////// Many To Many relationship /////////////////
 

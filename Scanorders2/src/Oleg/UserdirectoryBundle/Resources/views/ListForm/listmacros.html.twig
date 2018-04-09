@@ -106,6 +106,10 @@
                 <th>{{ knp_pagination_sortable(entities, 'Synonyms', 'synonyms.name') }}</th>
             {% endif %}
 
+            {% if entities|first.selfSignUp is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'Self Sign Up', 'ent.selfSignUp') }}</th>
+            {% endif %}
+
             {% if entities|first.url is defined %}
                 <th>{{ knp_pagination_sortable(entities, 'URL', 'ent.url') }}</th>
             {% endif %}
@@ -265,6 +269,17 @@
                         {% for synonym in entity.synonyms %}
                             <p>{{ synonym }}</p>
                         {% endfor %}
+                    </td>
+                {% endif %}
+
+                {% if entity.selfSignUp is defined %}
+                    <td>
+                        {% if entity.selfSignUp == 1 %}
+                            Yes
+                        {% else %}
+                            No
+                        {% endif %}
+                        {#{{ entity.selfSignUp }}#}
                     </td>
                 {% endif %}
 
@@ -804,6 +819,10 @@
     {% endif %}
     {% if form.feeUnit is defined %}
         {{ formmacros.field(form.feeUnit) }}
+    {% endif %}
+
+    {% if form.selfSignUp is defined %}
+        {{ formmacros.checkbox(form.selfSignUp) }}
     {% endif %}
 
 {% endmacro %}

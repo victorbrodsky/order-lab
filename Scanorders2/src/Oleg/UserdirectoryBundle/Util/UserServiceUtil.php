@@ -457,8 +457,8 @@ class UserServiceUtil {
 
     public function isSelfSignUp( $sitename ) {
         //TODO: If "Self-Sign Up" is enabled for the site that the user is trying to log into
-
-        if( $sitename == 'employees' ) {
+        $siteObject = $this->em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation($sitename);
+        if( $siteObject->getSelfSignUp() === true ) {
             return true;
         }
         return false;

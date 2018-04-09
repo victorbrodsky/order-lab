@@ -28,7 +28,7 @@
         <tbody>
         {% for signUp in signUps %}
             <tr>
-                <td><a href="{{ path('signup_show', { 'id': signUp.id }) }}">{{ signUp.id }}</a></td>
+                <td><a href="{{ path(sitename~'_signup_show', { 'id': signUp.id }) }}">{{ signUp.id }}</a></td>
                 <td>{% if signUp.createdate %}{{ signUp.createdate|date('Y-m-d H:i:s') }}{% endif %}</td>
                 <td>{% if signUp.updatedate %}{{ signUp.updatedate|date('Y-m-d H:i:s') }}{% endif %}</td>
                 <td>{{ signUp.userName }}</td>
@@ -47,10 +47,10 @@
                 <td>
                     <ul>
                         <li>
-                            <a href="{{ path('signup_show', { 'id': signUp.id }) }}">show</a>
+                            <a href="{{ path(sitename~'_signup_show', { 'id': signUp.id }) }}">show</a>
                         </li>
                         <li>
-                            <a href="{{ path('signup_edit', { 'id': signUp.id }) }}">edit</a>
+                            <a href="{{ path(sitename~'_signup_edit', { 'id': signUp.id }) }}">edit</a>
                         </li>
                     </ul>
                 </td>
@@ -61,7 +61,7 @@
 
     <ul>
         <li>
-            <a href="{{ path('signup_new') }}">Create a new signUp</a>
+            <a href="{{ path(sitename~'_signup_new') }}">Create a new signUp</a>
         </li>
     </ul>
 {% endblock %}

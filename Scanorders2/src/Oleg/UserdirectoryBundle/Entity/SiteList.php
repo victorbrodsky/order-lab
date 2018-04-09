@@ -38,6 +38,27 @@ class SiteList extends ListAbstract
      **/
     protected $original;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $selfSignUp;
+
+    /**
+     * @return mixed
+     */
+    public function getSelfSignUp()
+    {
+        return $this->selfSignUp;
+    }
+
+    /**
+     * @param mixed $selfSignUp
+     */
+    public function setSelfSignUp($selfSignUp)
+    {
+        $this->selfSignUp = $selfSignUp;
+    }
+
 
 //    /**
 //     * @ORM\ManyToMany(targetEntity="Roles", mappedBy="sites")
@@ -69,5 +90,7 @@ class SiteList extends ListAbstract
 //    {
 //        return $this->roles;
 //    }
+
+
 
 }
