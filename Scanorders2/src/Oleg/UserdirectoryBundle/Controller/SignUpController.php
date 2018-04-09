@@ -134,8 +134,9 @@ class SignUpController extends Controller
             }
 
             if( !$signUp->getEmail() ) {
-                //$form->get('email')->addError(new FormError('The email value should not be blank.'));
+                //$form->get('email')->addError(new FormError('The email value should not be blank.')); validation is done in DB level
             } else {
+                //echo "email=".$signUp->getEmail()."<br>";
                 //If the entered email address ends in “@med.cornell.edu” or “@nyp.org”
                 if( strpos($signUp->getEmail(), "@med.cornell.edu") !== false || strpos($signUp->getEmail(), "@nyp.org") !== false ) {
                     $cwid = "CWID";
@@ -149,15 +150,18 @@ class SignUpController extends Controller
                 }
 
                 //check if still active request and email or username existed in SignUp DB
-                $signUpDb = $em->getRepository('OlegUserdirectoryBundle:SignUp')->findByEmail($signUp->getEmail());
-                if( $signUpDb ) {
+                $signUpDbs = $em->getRepository('OlegUserdirectoryBundle:SignUp')->findByEmail($signUp->getEmail());
+                if( count($signUpDbs) > 0 ) {
+                    $signUpDb = $signUpDbs[0];
                     $createdDate = $signUpDb->getCreatedate();
                     //echo "createDate=".$createdDate->format("d-m-Y H:i:s")."<br>";
                     $now = new \DateTime();
                     //echo "now=".$now->format("d-m-Y H:i:s")."<br>";
                     $interval = $now->diff($createdDate);
                     $hours = $interval->h + ($interval->days*24);
+                    //echo "hours=".$hours."<br>";
                     if( $hours <= 48 ) {
+                        //exit('registration with this email is still active');
                         $emailError = "The email address you have entered is already used and".
                             " the active registration has been sent to this email address.".
                             " Please search your email for the registration link.";
@@ -166,8 +170,10 @@ class SignUpController extends Controller
                 }
 
                 //check if user with provided email existed in SignUp DB
-                $userDb = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByUserInfoEmail($signUp->getEmail());
-                if( $userDb ) {
+                $userDbs = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByUserInfoEmail($signUp->getEmail());
+                //echo "usersDb=".count($userDbs)."<br>";
+                if( count($userDbs) > 0 ) {
+                    $userDb = $userDbs[0];
                     if( $userDb->getLocked() ) {
                         $emailError = "The email address you have entered is already taken.".
                             " Please enter a different email address above.";
@@ -189,7 +195,7 @@ class SignUpController extends Controller
                     $form->get('userName')->addError(new FormError('This user name appears to be taken. Please choose another one.'));
                 }
             }
-
+            //exit('1');
         }//if submitted
 
         if( $form->isSubmitted() && $form->isValid() ) {
@@ -228,7 +234,7 @@ class SignUpController extends Controller
                 $signUp->setHeight($request->get('display_height'));
             }
 
-            //exit('flush');
+            exit('flush');
             $em->persist($signUp);
             $em->flush($signUp);
 

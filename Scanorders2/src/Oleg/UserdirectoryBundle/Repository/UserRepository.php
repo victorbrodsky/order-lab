@@ -136,7 +136,8 @@ class UserRepository extends EntityRepository {
             ->leftJoin("user.infos","infos")
             ->where("infos.email = :userInfoEmail OR infos.emailCanonical = :userInfoEmail")
             ->orderBy("user.id","ASC")
-            ->setParameter('userInfoEmail', '"' . $email . '"');
+            ->setParameter('userInfoEmail', $email)
+        ;
 
         return $query->getQuery()->getResult();
     }
