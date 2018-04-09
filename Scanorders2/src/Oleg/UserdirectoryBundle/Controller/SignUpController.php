@@ -44,6 +44,7 @@ class SignUpController extends Controller
     protected $siteNameStr;
     protected $pathHome;
     protected $minimumRoles;
+    protected $roleAdmins;
 
     public function __construct() {
         $this->siteName = 'employees'; //controller is not setup yet, so we can't use $this->container->getParameter('employees.sitename');
@@ -51,6 +52,7 @@ class SignUpController extends Controller
         $this->siteNameStr = 'Employee Directory';
         $this->pathHome = 'employees_home';
         $this->minimumRoles = array('ROLE_USERDIRECTORY_OBSERVER');
+        $this->roleAdmins = array('ROLE_USERDIRECTORY_ADMIN');
     }
 
     /**
@@ -245,7 +247,7 @@ class SignUpController extends Controller
             $userSecUtil->createUserEditEvent($this->siteName,$event,$systemuser,$signUp,$request,'User SignUp Created');
 
             //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-            //$emailUtil->sendEmail($signUp->getEmail(), $subject, $body); //testing
+            $emailUtil->sendEmail($signUp->getEmail(), $subject, $body); //testing
 
             //change status
             $signUp->setRegistrationStatus("Activation Email Sent");
@@ -286,6 +288,7 @@ class SignUpController extends Controller
     public function activateAccountAction(Request $request, $registrationLinkID)
     {
         //exit('1');
+        $emailUtil = $this->container->get('user_mailer_utility');
         $userServiceUtil = $this->get('user_service_utility');
         $userSecUtil = $this->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
@@ -506,6 +509,34 @@ class SignUpController extends Controller
                 'notice',
                 "Your account has been successfully activated."
             );
+
+            //////////////// send email to admin //////////////////////
+            $newline = "\r\n";
+            $emails = $userSecUtil->getUserEmailsByRole($this->siteName,"Administrator");
+            $ccEmails = $userSecUtil->getUserEmailsByRole($this->siteName,"Platform Administrator");
+            $adminEmails = $userSecUtil->getUserEmailsByRole($this->siteName,null,$this->roleAdmins);
+            $emails = array_merge($emails,$ccEmails);
+            $emails = array_merge($emails,$adminEmails);
+            $emails = array_unique($emails);
+            echo "user emails=".implode(";",$emails)."<br>";
+            $subject = "New ".$signUp->getUser()." account activation for ".$this->siteNameStr;
+
+            $userDetalsArr = $signUp->getUser()->getDetailsArr();
+            $titleArr = array();
+            $titleArr[] = $userDetalsArr["title"];
+            $titleArr[] = $userDetalsArr["institution"];
+
+            $body =
+                "New user has been activated for the ".$this->siteNameStr.":".
+                $newline.$signUp->getUser().", ".implode(", ",$titleArr);
+            ;
+            //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
+            $emailUtil->sendEmail($emails, $subject, $body); //testing
+//            $this->get('session')->getFlashBag()->add(
+//                'notice',
+//                "subject=".$subject . "; body=" . $body
+//            );
+            //////////////// EOF send email to admin //////////////////////
 
             //send them to the “Employee Directory” homepage.
             return $this->redirectToRoute($this->pathHome);

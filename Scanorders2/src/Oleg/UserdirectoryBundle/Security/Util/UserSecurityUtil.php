@@ -384,9 +384,12 @@ class UserSecurityUtil {
     }
 
     //array of emails for Admin users
-    public function getUserEmailsByRole($sitename,$userRole) {
+    public function getUserEmailsByRole($sitename,$userRole,$roles=null) {
 
-        if( $userRole == "Platform Administrator" ) {
+        if( $userRole === null ) {
+            //use roles array
+        }
+        else if( $userRole == "Platform Administrator" ) {
 
             $roles = array("ROLE_PLATFORM_ADMIN","ROLE_PLATFORM_DEPUTY_ADMIN");
 

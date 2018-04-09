@@ -169,9 +169,13 @@ class EmailUtil {
 
     public function hasConnection() {
 
-        $result = false;
-
         $userSecUtil = $this->container->get('user_security_utility');
+
+        $environment = $userSecUtil->getSiteSettingParameter('environment');
+        if( $environment == 'dev'  ) {
+            return false;
+        }
+
         $smtp = $userSecUtil->getSiteSettingParameter('smtpServerAddress');
         //echo "smtp=" . $smtp . "<br>";
 

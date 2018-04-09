@@ -501,6 +501,10 @@ class SignUp {
     }
 
 
+    public function getInfoString() {
+        return "Sign Up Request: ID=".$this->getId().", username=".$this->getUserName();
+    }
+
     public function __toString() {
         return "Sign Up Request: ID=".$this->getId().", username=".$this->getUserName();
     }

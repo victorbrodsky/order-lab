@@ -19,12 +19,6 @@ use Symfony\Component\HttpFoundation\Request;
 class TransResSignUpController extends SignUpController
 {
 
-    protected $router;
-    protected $siteName;
-    protected $siteNameShowuser;
-    protected $siteNameStr;
-    protected $pathHome;
-    protected $minimumRoles;
 
     public function __construct() {
         $this->siteName = 'translationalresearch'; //controller is not setup yet, so we can't use $this->container->getParameter('employees.sitename');
@@ -32,6 +26,7 @@ class TransResSignUpController extends SignUpController
         $this->siteNameStr = 'Translational Research';
         $this->pathHome = 'translationalresearch_home';
         $this->minimumRoles = array('ROLE_TRANSRES_REQUESTER');
+        $this->roleAdmins = array('ROLE_TRANSRES_ADMIN');
     }
 
     /**
