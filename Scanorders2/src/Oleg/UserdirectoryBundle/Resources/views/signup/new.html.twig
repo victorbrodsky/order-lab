@@ -86,11 +86,11 @@
     <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
     {% endstylesheets %}
 
-    {% stylesheets
-    'bundles/oleguserdirectory/datepicker/css/bootstrap-datepicker3.css' filter='cssrewrite'
-    %}
-    <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
-    {% endstylesheets %}
+    {#{% stylesheets#}
+    {#'bundles/oleguserdirectory/datepicker/css/bootstrap-datepicker3.css' filter='cssrewrite'#}
+    {#%}#}
+    {#<link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />#}
+    {#{% endstylesheets %}#}
 
 
 
@@ -178,12 +178,6 @@
 
 '@OlegUserdirectoryBundle/Resources/public/form/js/user-selectAjax.js'
 '@OlegUserdirectoryBundle/Resources/public/form/js/user-treeSelectAjax.js'
-
-'@OlegOrderformBundle/Resources/public/form/js/masking.js'
-'@OlegOrderformBundle/Resources/public/form/js/selectAjax.js'
-'@OlegOrderformBundle/Resources/public/form/js/form.js'
-'@OlegOrderformBundle/Resources/public/form/js/commonCheckForm.js'
-
 %}
 <script type="text/javascript" src="{{ asset_url }}"></script>
 {% endjavascripts %}

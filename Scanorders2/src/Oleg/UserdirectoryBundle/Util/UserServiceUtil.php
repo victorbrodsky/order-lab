@@ -464,7 +464,7 @@ class UserServiceUtil {
         return false;
     }
 
-    public function getUniqueRegistrationLinkId( $sometxt, $count=0 ) {
+    public function getUniqueRegistrationLinkId( $className, $sometxt, $count=0 ) {
         if( $count > 100 ) { //limit: trying limit
             $limitRegistrationLinkId = uniqid($sometxt,true);
             $limitRegistrationLinkId = md5($limitRegistrationLinkId);
@@ -475,11 +475,11 @@ class UserServiceUtil {
         //echo "registrationLinkId=$registrationLinkId<br>";
         $registrationLinkId = md5($registrationLinkId);
         //find if already exists
-        $existedSignup = $this->em->getRepository('OlegUserdirectoryBundle:Signup')->findByRegistrationLinkID($registrationLinkId);
+        $existedSignup = $this->em->getRepository('OlegUserdirectoryBundle:'.$className)->findByRegistrationLinkID($registrationLinkId);
         if( $existedSignup ) {
             $count++;
             //echo "try gen: existedLinkId=$registrationLinkId; count=$count<br>";
-            $registrationLinkId = $this->getUniqueRegistrationLinkId($sometxt,$count);
+            $registrationLinkId = $this->getUniqueRegistrationLinkId($className,$sometxt,$count);
         }
         //echo "return gen: existedLinkId=$registrationLinkId; count=$count<br>";
         return $registrationLinkId;

@@ -50,60 +50,10 @@ class UserSimpleType extends AbstractType
 
     public function formConstructor( $params )
     {
-
-
         $this->params = $params;
-
         $this->cycle = $params['cycle'];
-//        $this->subjectUser = $params['user'];
-//        $this->cloneUser = $params['cloneuser'];
-//        $this->em = $params['em'];
-
-        //$this->sc = $params['sc'];
-//        $this->container = $params['container'];
-//        if( $this->container ) {
-//            $this->secAuthChecker = $this->container->get('security.authorization_checker');
-//            $this->secTokenStorage = $this->container->get('security.token_storage');
-//        }
-
-//        if( !array_key_exists('showfellapp', $params) ) {
-//            $this->params['showfellapp'] = null;
-//        }
-
-//        if( array_key_exists('roles', $params) ) {
-//            $this->roles = $params['roles'];
-//        } else {
-//            $this->roles = null;
-//        }
-
-        //echo "cycle=".$this->cycle."<br>";
-//        $this->roleAdmin = false;
-//        if( $this->secAuthChecker->isGranted('ROLE_USERDIRECTORY_EDITOR') || $this->secAuthChecker->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-//            //echo "role ADMIN<br>";
-//            $this->roleAdmin = true;
-//        } else {
-//            //echo "role not ADMIN<br>";
-//            $this->roleAdmin = false;
-//        }
-        //echo "0 roleAdmin=".$this->roleAdmin."<br>";
-
         $this->readonly = false;
-        //$readonlyAttr = 'false';
-//        if( !$this->roleAdmin ) {
-//            $this->readonly = true;
-//            //$readonlyAttr = 'true';
-//        }
-
-//        $this->currentUser = false;
-//        $user = $this->secTokenStorage->getToken()->getUser();
-//        if( $user->getId() === $this->subjectUser->getId() ) {
-//            $this->currentUser = true;
-//        }
-
         $this->hasRoleSimpleView = false;
-//        if( array_key_exists('container', $this->params) ) {
-//            $this->hasRoleSimpleView = $this->params['container']->get('security.token_storage')->getToken()->getUser()->hasRole("ROLE_USERDIRECTORY_SIMPLEVIEW");
-//        }
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -152,23 +102,12 @@ class UserSimpleType extends AbstractType
 
     public function userNamePreferredContactInfo($builder) {
 
-        //echo "cycle=".$this->cycle."<br>";
-//        $readOnly = true;
-//        //if( $this->cycle == 'create' || $this->secAuthChecker->isGranted('ROLE_PLATFORM_ADMIN') ) {
-//        if( $this->cycle == 'create' ) {
-//            //echo "readOnly false<br>";
-//            $readOnly = false;
-//        }
-
         $primaryPublicUserIdLabel = 'CWID:';
         if( isset($this->params['primaryPublicUserIdLabel']) ) {
             $primaryPublicUserIdLabel = $this->params['primaryPublicUserIdLabel'];
         }
 
         $primaryPublicUserIdAttr = array('class'=>'form-control form-control-modif');
-//        if( $this->cycle != 'create' ) {
-//            $primaryPublicUserIdAttr['readonly'] = true;
-//        }
         $builder->add('primaryPublicUserId', null, array(
             'label' => $primaryPublicUserIdLabel,
             'required' => false,

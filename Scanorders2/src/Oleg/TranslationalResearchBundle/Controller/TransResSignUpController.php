@@ -11,9 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 
-/**
- * @Route("sign-up")
- */
+
 class TransResSignUpController extends SignUpController
 {
 
@@ -23,14 +21,14 @@ class TransResSignUpController extends SignUpController
         $this->siteNameShowuser = 'translationalresearch';
         $this->siteNameStr = 'Translational Research';
         $this->pathHome = 'translationalresearch_home';
-        $this->minimumRoles = array('ROLE_TRANSRES_REQUESTER','ROLE_TRANSRES_APCP');
+        $this->minimumRoles = array('ROLE_TRANSRES_REQUESTER','ROLE_TRANSRES_APCP', 'ROLE_TRANSRES_HEMATOPATHOLOGY');
         $this->roleAdmins = array('ROLE_TRANSRES_ADMIN');
     }
 
     /**
      * Lists all signUp entities.
      *
-     * @Route("/", name="translationalresearch_signup_index")
+     * @Route("/sign-up-list", name="translationalresearch_signup_index")
      * @Method("GET")
      */
     public function indexAction()
@@ -42,7 +40,7 @@ class TransResSignUpController extends SignUpController
      * http://localhost/order/directory/sign-up/new
      * Creates a new signUp entity.
      *
-     * @Route("/new", name="translationalresearch_signup_new")
+     * @Route("/sign-up", name="translationalresearch_signup_new")
      * @Method({"GET", "POST"})
      */
     public function newSignUpAction(Request $request)
@@ -62,7 +60,7 @@ class TransResSignUpController extends SignUpController
     /**
      * Finds and displays a signUp entity.
      *
-     * @Route("/{id}", name="translationalresearch_signup_show")
+     * @Route("/sign-up-show/{id}", name="translationalresearch_signup_show")
      * @Method("GET")
      */
     public function showAction(SignUp $signUp)
@@ -73,7 +71,7 @@ class TransResSignUpController extends SignUpController
     /**
      * Displays a form to edit an existing signUp entity.
      *
-     * @Route("/{id}/edit", name="translationalresearch_signup_edit")
+     * @Route("/sign-up-edit/{id}", name="translationalresearch_signup_edit")
      * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, SignUp $signUp)
@@ -84,7 +82,7 @@ class TransResSignUpController extends SignUpController
     /**
      * Deletes a signUp entity.
      *
-     * @Route("/{id}", name="translationalresearch_signup_delete")
+     * @Route("/sign-up-delete/{id}", name="translationalresearch_signup_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, SignUp $signUp)
@@ -99,5 +97,16 @@ class TransResSignUpController extends SignUpController
     public function forgotPasswordAction(Request $request)
     {
         return parent::forgotPasswordAction($request);
+    }
+
+    /**
+     * http://localhost/order/directory/reset-password
+     *
+     * @Route("/reset-password/{resetPasswordLinkID}", name="translationalresearch_reset_password")
+     * @Method({"GET", "POST"})
+     */
+    public function resetPasswordAction(Request $request, $resetPasswordLinkID)
+    {
+        return parent::resetPasswordAction($request,$resetPasswordLinkID);
     }
 }
