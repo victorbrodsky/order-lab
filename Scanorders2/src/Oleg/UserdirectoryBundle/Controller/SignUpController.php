@@ -507,11 +507,13 @@ class SignUpController extends Controller
 
             $user->setLocked(true);
 
-            //add roles
-            //$user->addRole('ROLE_USERDIRECTORY_OBSERVER');
             //add site minimum role
-            //$user->addRole('ROLE_TRANSRES_USER');
-            foreach ($this->minimumRoles as $role) {
+            $siteObject = $em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation($this->siteName);
+            $lowestRoles = $siteObject->getLowestRoles();
+            if( count($lowestRoles) == 0 ) {
+                $lowestRoles = $this->minimumRoles;
+            }
+            foreach($lowestRoles as $role) {
                 $user->addRole($role);
             }
 

@@ -619,6 +619,11 @@ class GenericListType extends AbstractType
                 'required' => false,
                 'attr' => array('class'=>'form-control'),
             ));
+            $builder->add('lowestRoles',null,array(
+                'label' => "Lowest Roles:",
+                'required' => false,
+                'attr' => array('class'=>'combobox'),
+            ));
         }
 
 
