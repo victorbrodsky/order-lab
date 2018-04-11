@@ -129,7 +129,7 @@ class UserRepository extends EntityRepository {
     }
 
     public function findUserByUserInfoEmail( $email ) {
-
+        //echo "email=".$email."<br>";
         $query = $this->_em->createQueryBuilder()
             ->from('OlegUserdirectoryBundle:User', 'user')
             ->select("user")

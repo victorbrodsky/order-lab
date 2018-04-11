@@ -53,13 +53,15 @@
     {{ form_start(form) }}
 
         {{ formmacros.simplefield( "User Name:", user.primaryPublicUserId, "", "disabled" ) }}
-        {{ formmacros.simplefield( "Email:", user.getSingleEmail(), "", "disabled" ) }}
 
         {% for info in form.infos %}
+            {{ formmacros.field(info.email,'Email:','readonly') }}
             {{ formmacros.field(info.firstName) }}
             {{ formmacros.field(info.lastName) }}
             {#{{ usermacros.emailPhoneField(info.email,cycle,'email',"") }}#}
             {{ usermacros.emailPhoneField(info.preferredPhone,cycle,'phone',"") }}
+
+            {% do info.setRendered %}
         {% endfor %}
 
         <div class="user-administrativeTitles-holder">
@@ -73,9 +75,9 @@
                     {{ treemacros.compositeTreeNode(administrativeTitle.institution,cycle,'noprototype') }}
                 {% endif %}
 
+                {% do administrativeTitle.setRendered %}
             {% endfor %}
         </div>
-
 
         {% if form.activate is defined %}
             <p>
@@ -83,8 +85,8 @@
             </p>
         {% endif %}
 
-    {#{{ form_end(form) }}#}
-    {{ form_end(form,{'render_rest': false}) }}
+    {{ form_end(form) }}
+    {#{{ form_end(form,{'render_rest': false}) }}#}
 
 
 {% endblock %}

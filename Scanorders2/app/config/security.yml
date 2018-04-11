@@ -312,7 +312,7 @@ security:
        - { path: ^/directory/sign-up, role: IS_AUTHENTICATED_ANONYMOUSLY }
        - { path: ^/directory/activate-account, role: IS_AUTHENTICATED_ANONYMOUSLY }
        - { path: ^/directory/forgot-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/directory/reset-password/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/directory/reset-password, role: IS_AUTHENTICATED_ANONYMOUSLY }
 
        - { path: ^/directory/event-log, role: ROLE_USERDIRECTORY_EDITOR }
        - { path: ^/directory/users/previous, role: ROLE_USERDIRECTORY_EDITOR }

@@ -21,6 +21,7 @@ use Oleg\UserdirectoryBundle\Entity\SignUp;
 use Oleg\UserdirectoryBundle\Entity\StateLicense;
 use Oleg\UserdirectoryBundle\Entity\Training;
 use Oleg\UserdirectoryBundle\Entity\User;
+use Oleg\UserdirectoryBundle\Entity\UserInfo;
 use Oleg\UserdirectoryBundle\Form\ResetPasswordType;
 use Oleg\UserdirectoryBundle\Form\UserSimpleType;
 use Oleg\UserdirectoryBundle\Util\UserUtil;
@@ -396,12 +397,21 @@ class SignUpController extends Controller
 
         //1) only if not created yet: search by $signUp->getUserName() and if $signUp->getUser() is NULL
         $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($signUp->getUserName());
-        if( !$user && !$signUp->getUser() ) {
+        //if( !$user ) { //&& !$signUp->getUser()
+        if( $user && $signUp->getUser() ) {
+            //user exists: don't create a new user
+        } else {
             ///////////// create a new user ///////////////
             $publicUserId = $signUp->getUserName();
             $username = $publicUserId . "_@_" . "local-user";
 
             $user = $userSecUtil->constractNewUser($username); //publicUserId_@_wcmc-cwid
+
+            //create user info
+            if( count($user->getInfos() ) == 0 ) {
+                $userInfo = new UserInfo();
+                $user->addInfo($userInfo);
+            }
 
             //add site specific creation string
             //$createdBy = "Manually by Translational Research WCM User";
@@ -429,12 +439,6 @@ class SignUpController extends Controller
             //set salt
             if ($signUp->getSalt()) {
                 $user->setSalt($signUp->getSalt());
-            }
-
-            //create user info
-            if (count($user->getInfos()) == 0) {
-                $userInfo = new UserInfo();
-                $user->addInfo($userInfo);
             }
 
             //set user info
@@ -466,6 +470,20 @@ class SignUpController extends Controller
             //$user = $em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId());
             //$signUp = $em->getRepository('OlegUserdirectoryBundle:SignUp')->findOneByRegistrationLinkID($registrationLinkID);
 
+//            ////////////////////// auth /////////////////////////
+//            // Authenticating user
+//            $token = new UsernamePasswordToken($user, null, 'ldap_employees_firewall', $user->getRoles());
+//            $this->get('security.token_storage')->setToken($token);
+//            //For Symfony <= 2.3
+//            //$this->get('security.context')->setToken($token);
+//            $this->get('session')->set('_security_secured_area', serialize($token));
+//            ////////////////////// EOF auth /////////////////////////
+        }//if user is not created yet
+
+        $userAuth = $this->get('security.token_storage')->getToken()->getUser();
+        if( $userAuth instanceof User) {
+            //echo "already auth <br>";
+        } else {
             ////////////////////// auth /////////////////////////
             // Authenticating user
             $token = new UsernamePasswordToken($user, null, 'ldap_employees_firewall', $user->getRoles());
@@ -474,8 +492,7 @@ class SignUpController extends Controller
             //$this->get('security.context')->setToken($token);
             $this->get('session')->set('_security_secured_area', serialize($token));
             ////////////////////// EOF auth /////////////////////////
-        }//if user is not created yet
-
+        }
 
         //$cycle = 'create';
         $cycle = 'edit';
@@ -509,9 +526,12 @@ class SignUpController extends Controller
             $user->setLocked(false);
 
             //testing
-            //foreach($user->getAdministrativeTitles() as $adminTitle) {
-            //    echo "Title=".$adminTitle->getName()."; Inst=".$adminTitle->getInstitution()."<br>";
-            //}
+//            foreach($user->getAdministrativeTitles() as $adminTitle) {
+//                echo "Title=" . $adminTitle->getName() . "; Inst=" . $adminTitle->getInstitution() . "<br>";
+//            }
+//            foreach($user->getInfos() as $info) {
+//                echo "email=" . $info->getEmail() . "; phone=" . $info->getPreferredPhone() . "<br>";
+//            }
 
             //exit('flush');
             $em->flush();
@@ -1093,7 +1113,7 @@ class SignUpController extends Controller
         $form->handleRequest($request);
 
         $password = $user->getPassword();
-        echo "password=".$password."<br>";
+        //echo "password=".$password."<br>";
 
         if( $form->isSubmitted() ) {
 
@@ -1113,17 +1133,11 @@ class SignUpController extends Controller
                 }
             }
             if( $passwordErrorCount > 0 ) {
-                echo "email error: $passwordErrorCount<br>";
+                //echo "email error: $passwordErrorCount<br>";
                 $passwordError = "Please make sure your password is between 8 and 25 characters and ".
                     "contains at least one letter and at least one number.";
                 //$form->get('password')->addError(new FormError($passwordError));
                 $form->get('password')->get('first')->addError(new FormError($passwordError));
-            }
-
-            if( $form->isValid() ) {
-                echo "form valid <br>";
-            } else {
-                echo "form is not valid <br>";
             }
             //exit('1');
         }//if submitted
@@ -1137,7 +1151,7 @@ class SignUpController extends Controller
             //get password hash
             $encoder = $this->container->get('security.password_encoder');
             $encodedPassword = $encoder->encodePassword($user,$password);
-            echo "encodedPassword=".$encodedPassword."<br>";
+            //echo "encodedPassword=".$encodedPassword."<br>";
             $user->setPassword($encodedPassword);
 
             //set user in SignUp
