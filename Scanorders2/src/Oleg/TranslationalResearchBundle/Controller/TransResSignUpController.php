@@ -28,7 +28,7 @@ class TransResSignUpController extends SignUpController
     /**
      * Lists all signUp entities.
      *
-     * @Route("/sign-up-list", name="translationalresearch_signup_index")
+     * @Route("/signup-list", name="translationalresearch_signup_index")
      * @Method("GET")
      */
     public function indexAction()
@@ -60,7 +60,7 @@ class TransResSignUpController extends SignUpController
     /**
      * Finds and displays a signUp entity.
      *
-     * @Route("/sign-up-show/{id}", name="translationalresearch_signup_show")
+     * @Route("/signup-show/{id}", name="translationalresearch_signup_show")
      * @Method("GET")
      */
     public function showAction(SignUp $signUp)
@@ -71,7 +71,7 @@ class TransResSignUpController extends SignUpController
     /**
      * Displays a form to edit an existing signUp entity.
      *
-     * @Route("/sign-up-edit/{id}", name="translationalresearch_signup_edit")
+     * @Route("/signup-edit/{id}", name="translationalresearch_signup_edit")
      * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, SignUp $signUp)
@@ -82,7 +82,7 @@ class TransResSignUpController extends SignUpController
     /**
      * Deletes a signUp entity.
      *
-     * @Route("/sign-up-delete/{id}", name="translationalresearch_signup_delete")
+     * @Route("/signup-delete/{id}", name="translationalresearch_signup_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, SignUp $signUp)

@@ -57,7 +57,7 @@ class SignUpController extends Controller
     /**
      * Lists all signUp entities.
      *
-     * @Route("/sign-up-list", name="employees_signup_index")
+     * @Route("/signup-list", name="employees_signup_index")
      * @Method("GET")
      */
     public function indexAction()
@@ -75,7 +75,7 @@ class SignUpController extends Controller
     }
 
     /**
-     * http://localhost/order/directory/sign-up/new
+     * http://localhost/order/directory/sign-up
      * Creates a new signUp entity.
      *
      * @Route("/sign-up", name="employees_signup_new")
@@ -152,7 +152,7 @@ class SignUpController extends Controller
                 $signUpDbs = $em->getRepository('OlegUserdirectoryBundle:SignUp')->findByEmail($signUp->getEmail());
                 if( count($signUpDbs) > 0 ) {
                     $signUpDb = $signUpDbs[0];
-                    if ($signUpDbs->getRegistrationStatus() == "Activation Email Sent") {
+                    if ($signUpDb->getRegistrationStatus() == "Activation Email Sent") {
                         $createdDate = $signUpDb->getCreatedate();
                         //echo "createDate=".$createdDate->format("d-m-Y H:i:s")."<br>";
                         $now = new \DateTime();
@@ -179,8 +179,25 @@ class SignUpController extends Controller
                         $emailError = "Your account is currently locked and you will not be able to log in until".
                             " you contact the system administrator at ".$systemEmail.".";
                     } else {
-                        $emailError = "The email address you have entered is already taken.".
-                            " Please enter a different email address above.";
+                        $orderUrl = $this->container->get('router')->generate(
+                            $this->pathHome,
+                            array(),
+                            UrlGeneratorInterface::ABSOLUTE_URL
+                        );
+                        $orderUrl = ' <a href="'.$orderUrl.'">log in</a> ';
+
+                        $resetUrl = $this->container->get('router')->generate(
+                            $this->siteName."_forgot_password",
+                            array(),
+                            UrlGeneratorInterface::ABSOLUTE_URL
+                        );
+                        $resetUrl = ' <a href="'.$resetUrl.'">visit this page to receive an email with the password reset link</a> ';
+
+                        $emailError = "The email you entered has alredy been associtated with an existing user account.".
+                            "Either enter a different email address to continue signing up for a new account,".
+                            " or ".$orderUrl." using the user name and password of the existing account.".
+                            " If you do not recall the user name and password associated with the existing account,".
+                            " ".$resetUrl." .";
                     }
                     $form->get('email')->addError(new FormError($emailError));
                 }
@@ -598,15 +615,24 @@ class SignUpController extends Controller
     /**
      * Finds and displays a signUp entity.
      *
-     * @Route("/sign-up-show/{id}", name="employees_signup_show")
+     * @Route("/signup-show/{id}", name="employees_signup_show")
      * @Method("GET")
      */
     public function showAction(SignUp $signUp)
     {
         $deleteForm = $this->createDeleteForm($signUp);
 
+        $form = $this->createForm('Oleg\UserdirectoryBundle\Form\SignUpType', $signUp, array(
+            'disabled' => true
+        ));
+        //$form->handleRequest($request);
+
         return $this->render('OlegUserdirectoryBundle:SignUp:new.html.twig', array(
             'signUp' => $signUp,
+            'title' => "Sign Up for ".$this->siteNameStr,
+            'sitenamefull' => $this->siteNameStr,
+            'sitename' => $this->siteName,
+            'form' => $form->createView(),
             'delete_form' => $deleteForm->createView(),
         ));
     }
@@ -614,16 +640,18 @@ class SignUpController extends Controller
     /**
      * Displays a form to edit an existing signUp entity.
      *
-     * @Route("/sign-up-edit/{id}", name="employees_signup_edit")
+     * @Route("/signup-edit/{id}", name="employees_signup_edit")
      * @Method({"GET", "POST"})
      */
     public function editAction(Request $request, SignUp $signUp)
     {
         $deleteForm = $this->createDeleteForm($signUp);
-        $editForm = $this->createForm('Oleg\UserdirectoryBundle\Form\SignUpType', $signUp);
-        $editForm->handleRequest($request);
+        $form = $this->createForm('Oleg\UserdirectoryBundle\Form\SignUpType', $signUp, array(
+            'disabled' => true
+        ));
+        $form->handleRequest($request);
 
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute($this->siteName.'_signup_edit', array('id' => $signUp->getId()));
@@ -634,7 +662,7 @@ class SignUpController extends Controller
             'title' => "Sign Up for ".$this->siteNameStr,
             'sitenamefull' => $this->siteNameStr,
             'sitename' => $this->siteName,
-            'edit_form' => $editForm->createView(),
+            'form' => $form->createView(),
             'delete_form' => $deleteForm->createView(),
         ));
     }
@@ -642,7 +670,7 @@ class SignUpController extends Controller
     /**
      * Deletes a signUp entity.
      *
-     * @Route("/sign-up-delete/{id}", name="employees_signup_delete")
+     * @Route("/signup-delete/{id}", name="employees_signup_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, SignUp $signUp)
