@@ -44,6 +44,23 @@ class SiteList extends ListAbstract
     private $selfSignUp;
 
     /**
+     * @ORM\ManyToMany(targetEntity="Roles", cascade={"persist"})
+     * @ORM\JoinTable(name="user_sites_lowestRoles",
+     *      joinColumns={@ORM\JoinColumn(name="site_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
+     *      )
+     **/
+    private $lowestRoles;
+
+
+    public function __construct( $creator = null ) {
+        parent::__construct($creator);
+
+        $this->lowestRoles = new ArrayCollection();
+    }
+    
+
+    /**
      * @return mixed
      */
     public function getSelfSignUp()
@@ -59,37 +76,20 @@ class SiteList extends ListAbstract
         $this->selfSignUp = $selfSignUp;
     }
 
-
-//    /**
-//     * @ORM\ManyToMany(targetEntity="Roles", mappedBy="sites")
-//     **/
-//    private $roles;
-
-
-
-
-//    public function __construct() {
-//        parent::__construct();
-//        $this->roles = new ArrayCollection();
-//    }
-
-
-
-
-//    public function addRole(Roles $role)
-//    {
-//        if( !$this->roles->contains($role) ) {
-//            $this->roles->add($role);
-//        }
-//    }
-//    public function removeRole(Roles $role)
-//    {
-//        $this->roles->removeElement($role);
-//    }
-//    public function getRoles()
-//    {
-//        return $this->roles;
-//    }
+    public function addLowestRole(Roles $role)
+    {
+        if( !$this->lowestRoles->contains($role) ) {
+            $this->lowestRoles->add($role);
+        }
+    }
+    public function removeLowestRole(Roles $role)
+    {
+        $this->lowestRoles->removeElement($role);
+    }
+    public function getLowestRoles()
+    {
+        return $this->lowestRoles;
+    }
 
 
 

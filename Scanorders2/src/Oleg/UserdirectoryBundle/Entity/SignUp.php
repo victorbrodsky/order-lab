@@ -127,6 +127,11 @@ class SignUp {
      * @ORM\Column(type="string", nullable=true)
      */
     private $registrationStatus;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $emailSentCounter;
     ////////////// EOF registration parameters //////////////
 
 
@@ -154,6 +159,7 @@ class SignUp {
 
 
     public function __construct() {
+        $this->setEmailSentCounter(0);
         $this->setRegistrationStatus("Requested");
         $this->setCreatedate( new \DateTime() );
     }
@@ -286,6 +292,8 @@ class SignUp {
     {
         $this->email = $email;
     }
+
+
 
 //    /**
 //     * @return mixed
@@ -493,6 +501,28 @@ class SignUp {
     public function setHeight($height)
     {
         $this->height = $height;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmailSentCounter()
+    {
+        return $this->emailSentCounter;
+    }
+
+    /**
+     * @param mixed $emailSentCounter
+     */
+    public function setEmailSentCounter($emailSentCounter)
+    {
+        $this->emailSentCounter = $emailSentCounter;
+    }
+
+    public function incrementEmailSentCounter() {
+        $counter = $this->getEmailSentCounter();
+        $counter = $counter + 1;
+        $this->setEmailSentCounter($counter);
     }
 
     public function __toString() {
