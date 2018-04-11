@@ -122,7 +122,7 @@ class SignUp {
     private $registrationLinkID;
 
     /**
-     * requested(Requested), emailSent(Activation Email Sent), activated(Activated)
+     * Requested, Activation Email Sent, Activated
      *
      * @ORM\Column(type="string", nullable=true)
      */
@@ -496,7 +496,11 @@ class SignUp {
     }
 
     public function __toString() {
-        return "Sign Up Request: ID=".$this->getId().", site=".$this->getSite().", username=".$this->getUserName().", email=".$this->getEmail();
+        $userStr = null;
+        if( $this->getUser() ) {
+            $userStr = "user=".$this->getUser().", ";
+        }
+        return "Sign Up Request: ".$userStr."ID=".$this->getId().", site=".$this->getSite().", username=".$this->getUserName().", email=".$this->getEmail();
     }
 
 }

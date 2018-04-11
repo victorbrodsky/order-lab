@@ -76,7 +76,7 @@ class ResetPassword {
     private $registrationLinkID;
 
     /**
-     * requested(Requested), emailSent(Activation Email Sent), activated(Activated)
+     * Requested, Password Reset Email Sent, Reset
      *
      * @ORM\Column(type="string", nullable=true)
      */
@@ -322,7 +322,11 @@ class ResetPassword {
     }
 
     public function __toString() {
-        return "Reset Password Request: ID=".$this->getId().", site=".$this->getSite().", email=".$this->getEmail();
+        $userStr = null;
+        if( $this->getUser() ) {
+            $userStr = "user=".$this->getUser().", ";
+        }
+        return "Reset Password Request: ".$userStr."ID=".$this->getId().", site=".$this->getSite().", email=".$this->getEmail();
     }
 
 }

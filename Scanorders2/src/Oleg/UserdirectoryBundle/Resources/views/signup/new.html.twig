@@ -80,7 +80,6 @@
 
     {% stylesheets
     'bundles/oleguserdirectory/bootstrap/css/*' filter='cssrewrite'
-    'bundles/oleguserdirectory/select2/select2.css' filter='cssrewrite'
     'bundles/oleguserdirectory/form/css/form.css' filter='cssrewrite'
     %}
     <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
@@ -91,7 +90,6 @@
     {#%}#}
     {#<link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />#}
     {#{% endstylesheets %}#}
-
 
 
     {#http://www.telegraphicsinc.com/2013/10/using-bootstrap-3-with-internet-explorer-8-ie8/#}
@@ -170,21 +168,11 @@
 '@OlegUserdirectoryBundle/Resources/public/form/js/errorwatch.js'
 '@OlegUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'
 '@OlegUserdirectoryBundle/Resources/public/bootstrap/js/*'
-'@OlegUserdirectoryBundle/Resources/public/select2/select2.js'
-'@OlegUserdirectoryBundle/Resources/public/inputmask/jquery.inputmask.bundle.js'
-'@OlegUserdirectoryBundle/Resources/public/q-1/q.js'
 
 '@OlegUserdirectoryBundle/Resources/public/form/js/user-common.js'
-
-'@OlegUserdirectoryBundle/Resources/public/form/js/user-selectAjax.js'
-'@OlegUserdirectoryBundle/Resources/public/form/js/user-treeSelectAjax.js'
 %}
 <script type="text/javascript" src="{{ asset_url }}"></script>
 {% endjavascripts %}
-
-{#FOSJsRoutingBundle#}
-<script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
-<script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
 
 
 <script language="Javascript">
@@ -193,13 +181,13 @@
 
         _ajaxTimeout = 60000;
 
-        regularCombobox();
-        customCombobox();
-        fieldInputMask();
-        expandTextarea();
+        //regularCombobox();
+        //customCombobox();
+        //fieldInputMask();
+        //expandTextarea();
         initConvertEnterToTab();
 
-        getComboboxCompositetree();
+        //getComboboxCompositetree();
 
     });
 

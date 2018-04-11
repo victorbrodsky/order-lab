@@ -151,19 +151,21 @@ class SignUpController extends Controller
                 $signUpDbs = $em->getRepository('OlegUserdirectoryBundle:SignUp')->findByEmail($signUp->getEmail());
                 if( count($signUpDbs) > 0 ) {
                     $signUpDb = $signUpDbs[0];
-                    $createdDate = $signUpDb->getCreatedate();
-                    //echo "createDate=".$createdDate->format("d-m-Y H:i:s")."<br>";
-                    $now = new \DateTime();
-                    //echo "now=".$now->format("d-m-Y H:i:s")."<br>";
-                    $interval = $now->diff($createdDate);
-                    $hours = $interval->h + ($interval->days*24);
-                    //echo "hours=".$hours."<br>";
-                    if( $hours <= 48 ) {
-                        //exit('registration with this email is still active');
-                        $emailError = "The email address you have entered is already used and".
-                            " the active registration has been sent to this email address.".
-                            " Please search your email for the registration link.";
-                        $form->get('email')->addError(new FormError($emailError));
+                    if ($signUpDbs->getRegistrationStatus() == "Activation Email Sent") {
+                        $createdDate = $signUpDb->getCreatedate();
+                        //echo "createDate=".$createdDate->format("d-m-Y H:i:s")."<br>";
+                        $now = new \DateTime();
+                        //echo "now=".$now->format("d-m-Y H:i:s")."<br>";
+                        $interval = $now->diff($createdDate);
+                        $hours = $interval->h + ($interval->days * 24);
+                        //echo "hours=".$hours."<br>";
+                        if ($hours <= 48) {
+                            //exit('registration with this email is still active');
+                            $emailError = "The email address you have entered is already used and" .
+                                " the active registration has been sent to this email address." .
+                                " Please search your email for the registration link.";
+                            $form->get('email')->addError(new FormError($emailError));
+                        }
                     }
                 }
 
@@ -813,8 +815,9 @@ class SignUpController extends Controller
         $systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
         $em = $this->getDoctrine()->getManager();
 
+        $userDb = null;
         $resetPassword = new ResetPassword();
-        $form = $this->createForm('Oleg\UserdirectoryBundle\Form\ResetPasswordType', $resetPassword);
+        $form = $this->createForm('Oleg\UserdirectoryBundle\Form\ForgotPasswordType', $resetPassword);
         $form->handleRequest($request);
 
         if( $form->isSubmitted() ) {
@@ -839,19 +842,21 @@ class SignUpController extends Controller
                 $resetPasswordDbs = $em->getRepository('OlegUserdirectoryBundle:ResetPassword')->findByEmail($resetPassword->getEmail());
                 if( count($resetPasswordDbs) > 0 ) {
                     $resetPasswordDb = $resetPasswordDbs[0];
-                    $createdDate = $resetPasswordDb->getCreatedate();
-                    //echo "createDate=".$createdDate->format("d-m-Y H:i:s")."<br>";
-                    $now = new \DateTime();
-                    //echo "now=".$now->format("d-m-Y H:i:s")."<br>";
-                    $interval = $now->diff($createdDate);
-                    $hours = $interval->h + ($interval->days*24);
-                    //echo "hours=".$hours."<br>";
-                    if( $hours <= 48 ) {
-                        //exit('registration with this email is still active');
-                        $emailError = "The email address you have entered is already used and".
-                            " the active password reset link has been sent to this email address.".
-                            " Please search your email for the password reset link.";
-                        $form->get('email')->addError(new FormError($emailError));
+                    if ($resetPasswordDb->getRegistrationStatus() == "Password Reset Email Sent") {
+                        $createdDate = $resetPasswordDb->getCreatedate();
+                        //echo "createDate=".$createdDate->format("d-m-Y H:i:s")."<br>";
+                        $now = new \DateTime();
+                        //echo "now=".$now->format("d-m-Y H:i:s")."<br>";
+                        $interval = $now->diff($createdDate);
+                        $hours = $interval->h + ($interval->days * 24);
+                        //echo "hours=".$hours."<br>";
+                        if ($hours <= 48) {
+                            //exit('registration with this email is still active');
+                            $emailError = "The email address you have entered is already used and" .
+                                " the active password reset link has been sent to this email address." .
+                                " Please search your email for the password reset link.";
+                            $form->get('email')->addError(new FormError($emailError));
+                        }
                     }
                 }
 
@@ -951,7 +956,7 @@ class SignUpController extends Controller
         }
         //exit('new');
 
-        return $this->render('OlegUserdirectoryBundle:SignUp:reset-password-request.html.twig', array(
+        return $this->render('OlegUserdirectoryBundle:SignUp:forgot-password.html.twig', array(
             'resetPassword' => $resetPassword,
             'form' => $form->createView(),
             'title' => "ORDER Password Reset",
@@ -978,7 +983,7 @@ class SignUpController extends Controller
         $resetPassword = $em->getRepository('OlegUserdirectoryBundle:ResetPassword')->findOneByRegistrationLinkID($resetPasswordLinkID);
         if( !$resetPassword ) {
             $confirmation = "This reset password link is invalid. Please make sure you have copied it from your email message correctly.";
-            exit($confirmation);
+            //exit($confirmation);
             return $this->render('OlegUserdirectoryBundle:SignUp:confirmation.html.twig',
                 array(
                     'title'=>"Invalid Reset Password Link",
@@ -1004,7 +1009,7 @@ class SignUpController extends Controller
             );
             $resetPasswordUrl = ' <a href="'.$resetPasswordUrl.'">reset password</a> ';
             $confirmation = "This reset password link has expired. Please ".$resetPasswordUrl." again.";
-            exit($confirmation);
+            //exit($confirmation);
             return $this->render('OlegUserdirectoryBundle:SignUp:confirmation.html.twig',
                 array(
                     'title'=>"Invalid Reset Password Link",
@@ -1024,7 +1029,7 @@ class SignUpController extends Controller
             $orderUrl = ' <a href="'.$orderUrl.'">log in</a> ';
             $confirmation = "This password reset link has already been used.".
                 " Please ".$orderUrl." using your new password.";
-            exit($confirmation);
+            //exit($confirmation);
             return $this->render('OlegUserdirectoryBundle:SignUp:confirmation.html.twig',
                 array(
                     'title'=>"Invalid Reset Password Link",
@@ -1038,7 +1043,7 @@ class SignUpController extends Controller
         $users = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByUserInfoEmail($resetPassword->getEmail());
         if( count($users) == 0 ) {
             $confirmation = "The email address you have entered is not associated with any active accounts.";
-            exit($confirmation);
+            //exit($confirmation);
             return $this->render('OlegUserdirectoryBundle:SignUp:confirmation.html.twig',
                 array(
                     'title'=>"Invalid Reset Password Link",
@@ -1052,7 +1057,7 @@ class SignUpController extends Controller
             $user = $users[0];
         } else {
             $confirmation = "Logical Error: User not found by email ".$resetPassword->getEmail();
-            exit($confirmation);
+            //exit($confirmation);
             return $this->render('OlegUserdirectoryBundle:SignUp:confirmation.html.twig',
                 array(
                     'title'=>"Invalid Reset Password Link",
@@ -1061,17 +1066,18 @@ class SignUpController extends Controller
             );
         }
 
-        $userAuth = $this->get('security.token_storage')->getToken()->getUser();
-        if( $userAuth instanceof User) {
-            //already authenticated
-        } else {
-            //exit('before auth');
-            ////////////////////// auth /////////////////////////
-            $token = new UsernamePasswordToken($user, null, 'ldap_employees_firewall', $user->getRoles());
-            $this->get('security.token_storage')->setToken($token);
-            $this->get('session')->set('_security_secured_area', serialize($token));
-            ////////////////////// EOF auth /////////////////////////
-        }
+//        $userAuth = $this->get('security.token_storage')->getToken()->getUser();
+//        if( $userAuth instanceof User) {
+//            //already authenticated
+//            //exit('already auth');
+//        } else {
+//            //exit('before auth');
+//            ////////////////////// auth /////////////////////////
+//            $token = new UsernamePasswordToken($user, null, 'ldap_employees_firewall', $user->getRoles());
+//            $this->get('security.token_storage')->setToken($token);
+//            $this->get('session')->set('_security_secured_area', serialize($token));
+//            ////////////////////// EOF auth /////////////////////////
+//        }
 
         //$cycle = 'create';
         $cycle = 'edit';
@@ -1107,13 +1113,18 @@ class SignUpController extends Controller
                 }
             }
             if( $passwordErrorCount > 0 ) {
-                //echo "email error: $passwordErrorCount<br>";
+                echo "email error: $passwordErrorCount<br>";
                 $passwordError = "Please make sure your password is between 8 and 25 characters and ".
                     "contains at least one letter and at least one number.";
                 //$form->get('password')->addError(new FormError($passwordError));
                 $form->get('password')->get('first')->addError(new FormError($passwordError));
             }
 
+            if( $form->isValid() ) {
+                echo "form valid <br>";
+            } else {
+                echo "form is not valid <br>";
+            }
             //exit('1');
         }//if submitted
 
@@ -1126,12 +1137,13 @@ class SignUpController extends Controller
             //get password hash
             $encoder = $this->container->get('security.password_encoder');
             $encodedPassword = $encoder->encodePassword($user,$password);
+            echo "encodedPassword=".$encodedPassword."<br>";
             $user->setPassword($encodedPassword);
 
             //set user in SignUp
             $resetPassword->setUser($user);
 
-            exit('reset flush');
+            //exit('reset flush');
             $em->flush($resetPassword);
             $em->flush($user);
 
@@ -1148,7 +1160,7 @@ class SignUpController extends Controller
             );
 
             //send them to the “Employee Directory” homepage.
-            return $this->redirectToRoute($this->siteName . '_logout');
+            return $this->redirectToRoute($this->siteName . '_login');
         }
         //exit('reset form');
 
