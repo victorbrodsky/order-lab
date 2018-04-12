@@ -962,7 +962,6 @@ class User extends BaseUser {
     {
         return $this->failedAttemptCounter;
     }
-
     /**
      * @param mixed $failedAttemptCounter
      */

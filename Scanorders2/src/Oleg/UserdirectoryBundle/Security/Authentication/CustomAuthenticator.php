@@ -60,6 +60,7 @@ class CustomAuthenticator implements SimpleFormAuthenticatorInterface {
         //////////////////////////////////////////////////////////////////////
         $user = $authUtil->LocalAuthentication($token, $userProvider);
         if( $user ) {
+            $this->resetFailedAttemptCounter($user);
             return $this->getUsernamePasswordToken($user,$providerKey);
         }
         ////////////////////EOF first aperio authentication //////////////////
@@ -71,6 +72,7 @@ class CustomAuthenticator implements SimpleFormAuthenticatorInterface {
         //////////////////////////////////////////////////////////////////////
         $user = $authUtil->AperioAuthentication($token, $userProvider);
         if( $user ) {
+            $this->resetFailedAttemptCounter($user);
             return $this->getUsernamePasswordToken($user,$providerKey);
         }
         ////////////////////EOF first aperio authentication //////////////////
@@ -82,6 +84,7 @@ class CustomAuthenticator implements SimpleFormAuthenticatorInterface {
         //////////////////////////////////////////////////////////////////////
         $user = $authUtil->LdapAuthentication($token, $userProvider);
         if( $user ) {
+            $this->resetFailedAttemptCounter($user);
             return $this->getUsernamePasswordToken($user,$providerKey);
         }
         ////////////////////EOF first ldap authentication ////////////////////
@@ -92,40 +95,10 @@ class CustomAuthenticator implements SimpleFormAuthenticatorInterface {
         //////////////////////////////////////////////////////////////////////
         $user = $authUtil->ExternalIdAuthentication($token, $userProvider);
         if( $user ) {
+            $this->resetFailedAttemptCounter($user);
             return $this->getUsernamePasswordToken($user,$providerKey);
         }
         ////////////////////EOF External IDs authentication //////////////////
-
-        //TODO:
-        //if the current attempt is not successful, AND the failed attempt count
-        // for this user is greater than or equal to the “Permitted failed log in attempts”
-        // in site settings (5), AND the timestamp of the last failed attempt is newer
-        // than the timestamp of the last successful attempt, then lock the account
-        $userSecUtil = $this->get('user_security_utility');
-        $permittedFailedLoginAttempt = $userSecUtil->getSiteSettingParameter('permittedFailedLoginAttempt');
-        if( $permittedFailedLoginAttempt ) {
-            $user->incrementFailedAttemptCounter();
-            if( $user->getFailedAttemptCounter() > $permittedFailedLoginAttempt ) {
-                //lock
-                $user->setEnabled(false);
-
-                $this->em->flush($user);
-
-                $systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
-                $msg = $permittedFailedLoginAttempt." attempts have been made to log into this account with incorrect credentials.".
-                    " This account has been locked to prevent unauthorized access.".
-                    " Please contact the ".$systemEmail." to request account re-activation.";
-                $this->get('session')->getFlashBag()->add(
-                    'warning',
-                    $msg
-                );
-
-                //EventLog
-                $systemuser = $userSecUtil->findSystemUser();
-                $userSecUtil->createUserEditEvent("employees",$msg,$systemuser,$user,null,'Permitted Failed Log in Attempts');
-
-            }
-        }
 
         //exit('all failed');
         throw new AuthenticationException('Invalid username or password');
@@ -154,5 +127,12 @@ class CustomAuthenticator implements SimpleFormAuthenticatorInterface {
             $user->getRoles()
         );
     }
+
+    public function resetFailedAttemptCounter($user) {
+        if( $user->getFailedAttemptCounter() ) {
+            $user->setFailedAttemptCounter(0);
+        }
+    }
+
 
 } 

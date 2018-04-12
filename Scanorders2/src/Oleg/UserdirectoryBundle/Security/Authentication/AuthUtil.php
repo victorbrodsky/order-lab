@@ -27,6 +27,7 @@ namespace Oleg\UserdirectoryBundle\Security\Authentication;
 
 use Oleg\OrderformBundle\Security\Util\AperioUtil;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 //use Symfony\Component\Security\Core\Util\StringUtils;
 
@@ -746,6 +747,9 @@ class AuthUtil {
     }
 
     public function canLogin($user) {
+
+        $this->validateFailedAttempts($user);
+
         if( $user->getLocked() ) {
             $this->logger->warning("User is locked");
             return false;
@@ -758,5 +762,49 @@ class AuthUtil {
         return true;
     }
 
+    //if the current attempt is not successful, AND the failed attempt count
+    // for this user is greater than or equal to the “Permitted failed log in attempts”
+    // in site settings (5), AND the timestamp of the last failed attempt is newer
+    // than the timestamp of the last successful attempt, then lock the account
+    public function validateFailedAttempts($user) {
+        //if the current attempt is not successful, AND the failed attempt count
+        // for this user is greater than or equal to the “Permitted failed log in attempts”
+        // in site settings (5), AND the timestamp of the last failed attempt is newer
+        // than the timestamp of the last successful attempt, then lock the account
+        $userSecUtil = $this->container->get('user_security_utility');
+        $permittedFailedLoginAttempt = $userSecUtil->getSiteSettingParameter('permittedFailedLoginAttempt');
+        if( $permittedFailedLoginAttempt ) {
+
+            $user->incrementFailedAttemptCounter();
+
+            $userFailedAttempts = $user->getFailedAttemptCounter();
+
+            //echo "userFailedAttempts=".$userFailedAttempts." > ".$permittedFailedLoginAttempt."<br>";
+            if( $userFailedAttempts > $permittedFailedLoginAttempt ) {
+                //exit("lock");
+                //lock
+                $user->setEnabled(false);
+                $this->em->flush($user);
+
+                $systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
+                $msg = $permittedFailedLoginAttempt." attempts have been made to log into this account with incorrect credentials.<br>".
+                    " This account has been locked to prevent unauthorized access.<br>".
+                    " Please contact the ".$systemEmail." to request account re-activation.";
+                $this->container->get('session')->getFlashBag()->add(
+                    'warning',
+                    $msg
+                );
+
+                //EventLog
+                $systemuser = $userSecUtil->findSystemUser();
+                $userSecUtil->createUserEditEvent("employees",$msg,$systemuser,$user,null,'Permitted Failed Log in Attempts');
+
+                throw new AuthenticationException($msg);
+            } else {
+                $this->em->flush($user);
+            }
+
+        }//if $permittedFailedLoginAttempt
+    }
 
 } 
