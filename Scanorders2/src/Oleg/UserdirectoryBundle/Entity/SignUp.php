@@ -530,7 +530,7 @@ class SignUp {
         if( $this->getUser() ) {
             $userStr = "user=".$this->getUser().", ";
         }
-        return "Sign Up Request: ".$userStr."ID=".$this->getId().", site=".$this->getSite().", username=".$this->getUserName().", email=".$this->getEmail();
+        return "Sign Up Request: ".$userStr."ID=".$this->getId().", site=".$this->getSite().", username=".$this->getUserName().", email=".$this->getEmail().", emailSentCounter=".$this->getEmailSentCounter();
     }
 
 }

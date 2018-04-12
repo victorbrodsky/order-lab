@@ -354,7 +354,7 @@ class ResetPassword {
         if( $this->getUser() ) {
             $userStr = "user=".$this->getUser().", ";
         }
-        return "Reset Password Request: ".$userStr."ID=".$this->getId().", site=".$this->getSite().", email=".$this->getEmail();
+        return "Reset Password Request: ".$userStr."ID=".$this->getId().", site=".$this->getSite().", email=".$this->getEmail().", emailSentCounter=".$this->getEmailSentCounter();
     }
 
 }

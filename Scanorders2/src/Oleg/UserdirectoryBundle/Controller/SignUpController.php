@@ -162,16 +162,15 @@ class SignUpController extends Controller
                         //echo "hours=".$hours."<br>";
                         if( $hours <= 24 ) {
                             //allow only 3 emails during 24 hours
-                            if( $signUpDbs->getEmailSentCounter() < 3 ) {
-                                $this->sendEmailWithActivationLink($signUpDbs);
-                                //Confirmation
+                            if( $signUpDb->getEmailSentCounter() < 3 ) {
+                                $this->sendEmailWithActivationLink($signUpDb,$request);
                                 $confirmation =
-                                    "An email was re-sent to the email address you provided ".$signUpDbs->getEmail().
+                                    "An email was re-sent to the email address you provided ".$signUpDb->getEmail().
                                     " with an activation link.<br>".
                                     "Please click the link emailed to you to activate your account.";
                                 return $this->render('OlegUserdirectoryBundle:SignUp:confirmation.html.twig',
                                     array(
-                                        'title'=>"Password Reset Confirmation",
+                                        'title'=>"Registration Confirmation",
                                         'messageSuccess'=>$confirmation)
                                 );
                             } else {
@@ -273,60 +272,12 @@ class SignUpController extends Controller
             $em->flush($signUp);
 
             //Email
-//            $newline = "\r\n";
-//            $emailUtil = $this->container->get('user_mailer_utility');
-//            $subject = $this->siteNameStr." Registration";
-//
-//            //$orderUrl = ""; //[URL/order]
-//            $orderUrl = $this->container->get('router')->generate(
-//                //'main_common_home',
-//                $this->pathHome,
-//                array(),
-//                UrlGeneratorInterface::ABSOLUTE_URL
-//            );
-//
-//            //$activationUrl = ""; //http://URL/order/activate-account/REGISTRATION-LINK-ID
-//            $activationUrl = $this->container->get('router')->generate(
-//                $this->siteName.'_activate_account',
-//                array(
-//                    'registrationLinkID'=>$registrationLinkId
-//                ),
-//                UrlGeneratorInterface::ABSOLUTE_URL
-//            );
-//
-//            $body =
-//                "Thank You for registering at ".$orderUrl."!".
-//                $newline."Please visit the following link to activate your account or copy/paste it into your browser’s address bar:".
-//                $newline.$activationUrl.
-//                $newline."If you encounter any issues, please email our system administrator at $systemEmail.";
-//            ;
-            //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-//            $emailUtil->sendEmail($signUp->getEmail(), $subject, $body);
-//
-//            //change status
-//            $signUp->setRegistrationStatus("Activation Email Sent");
-//            //$em->persist($signUp);
-//            $em->flush($signUp);
-            $resSent = $this->sendEmailWithActivationLink($signUp);
-            $subject = $resSent['subject'];
-            $body = $resSent['body'];
-
-            //Event Log
-            //$author = $this->get('security.token_storage')->getToken()->getUser();
-            $systemuser = $userSecUtil->findSystemUser();
-            $event = "New user registration has been created:<br>".$signUp;
-            $event = $event . "<br>Email Subject: " . $subject;
-            $event = $event . "<br>Email Body:<br>" . $body;
-            $userSecUtil->createUserEditEvent($this->siteName,$event,$systemuser,$signUp,$request,'User SignUp Created');
+            $this->sendEmailWithActivationLink($signUp,$request);
 
             //Confirmation
             $confirmation = "Thank You for signing up!<br>
                 An email was sent to the email address you provided ".$signUp->getEmail()." with a registration link.<br>
                 Please click the link emailed to you to activate your account.";
-//            $this->get('session')->getFlashBag()->add(
-//                'notice',
-//                $confirmation
-//            );
 
             //return $this->redirectToRoute('employees_signup_show', array('id' => $signUp->getId()));
             return $this->render('OlegUserdirectoryBundle:SignUp:confirmation.html.twig',
@@ -345,14 +296,13 @@ class SignUpController extends Controller
             'sitename' => $this->siteName
         ));
     }
-    public function sendEmailWithActivationLink($signUp) {
+    public function sendEmailWithActivationLink($signUp,$request) {
         $emailUtil = $this->container->get('user_mailer_utility');
         $em = $this->getDoctrine()->getManager();
         $userSecUtil = $this->get('user_security_utility');
 
         $systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
         $newline = "\r\n";
-        $emailUtil = $this->container->get('user_mailer_utility');
         $subject = $this->siteNameStr." Registration";
 
         //$orderUrl = ""; //[URL/order]
@@ -390,6 +340,13 @@ class SignUpController extends Controller
 
         //$em->persist($signUp);
         $em->flush($signUp);
+
+        //Event Log
+        $systemuser = $userSecUtil->findSystemUser();
+        $event = "New user registration has been created:<br>".$signUp;
+        $event = $event . "<br>Email Subject: " . $subject;
+        $event = $event . "<br>Email Body:<br>" . $body;
+        $userSecUtil->createUserEditEvent($this->siteName,$event,$systemuser,$signUp,$request,'Activation Email Sent');
 
         $res = array('subject'=>$subject,'body'=>$body);
         return $res;
@@ -970,8 +927,7 @@ class SignUpController extends Controller
                         if( $hours <= 24 ) {
                             //allow only 3 emails during 24 hours
                             if( $resetPasswordDb->getEmailSentCounter() < 3 ) {
-                                $this->sendEmailWithResetLink($resetPasswordDb);
-                                //Confirmation
+                                $this->sendEmailWithResetLink($resetPasswordDb,$request);
                                 $confirmation =
                                     "An email was re-sent to the email address you provided ".$resetPasswordDb->getEmail().
                                     " with a password reset link.<br>".
@@ -1042,17 +998,17 @@ class SignUpController extends Controller
             $em->flush($resetPassword);
 
             //Email
-            $resSent = $this->sendEmailWithResetLink($resetPassword);
-            $subject = $resSent['subject'];
-            $body = $resSent['body'];
-
-            //Event Log
-            //$author = $this->get('security.token_storage')->getToken()->getUser();
-            $systemuser = $userSecUtil->findSystemUser();
-            $event = "ORDER Password reset link has been used for ".$this->siteNameStr." for:<br>".$resetPassword;
-            $event = $event . "<br>Email Subject: " . $subject;
-            $event = $event . "<br>Email Body:<br>" . $body;
-            $userSecUtil->createUserEditEvent($this->siteName,$event,$systemuser,$resetPassword,$request,'Password Reset Created');
+            $this->sendEmailWithResetLink($resetPassword,$request);
+//            $subject = $resSent['subject'];
+//            $body = $resSent['body'];
+//
+//            //Event Log
+//            //$author = $this->get('security.token_storage')->getToken()->getUser();
+//            $systemuser = $userSecUtil->findSystemUser();
+//            $event = "ORDER Password reset link has been used for ".$this->siteNameStr." for:<br>".$resetPassword;
+//            $event = $event . "<br>Email Subject: " . $subject;
+//            $event = $event . "<br>Email Body:<br>" . $body;
+//            $userSecUtil->createUserEditEvent($this->siteName,$event,$systemuser,$resetPassword,$request,'Password Reset Created');
 
             //Confirmation
             $confirmation =
@@ -1074,7 +1030,7 @@ class SignUpController extends Controller
             'sitename' => $this->siteName
         ));
     }
-    public function sendEmailWithResetLink($resetPassword) {
+    public function sendEmailWithResetLink($resetPassword,$request) {
         $emailUtil = $this->container->get('user_mailer_utility');
         $em = $this->getDoctrine()->getManager();
         $userSecUtil = $this->get('user_security_utility');
@@ -1111,6 +1067,14 @@ class SignUpController extends Controller
 
         //$em->persist($signUp);
         $em->flush($resetPassword);
+
+        //Event Log
+        //$author = $this->get('security.token_storage')->getToken()->getUser();
+        $systemuser = $userSecUtil->findSystemUser();
+        $event = "ORDER Password reset link has been used for ".$this->siteNameStr." for:<br>".$resetPassword;
+        $event = $event . "<br>Email Subject: " . $subject;
+        $event = $event . "<br>Email Body:<br>" . $body;
+        $userSecUtil->createUserEditEvent($this->siteName,$event,$systemuser,$resetPassword,$request,'Password Reset Email Sent');
 
         $res = array('subject'=>$subject,'body'=>$body);
         return $res;
