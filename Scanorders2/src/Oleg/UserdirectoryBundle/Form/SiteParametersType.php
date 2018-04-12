@@ -547,6 +547,15 @@ class SiteParametersType extends AbstractType
                 'attr' => array('class'=>'form-control textarea')
             ));
 
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'permittedFailedLoginAttempt' ) {
+            $builder->add('permittedFailedLoginAttempt',null,array(
+                'label'=>'Permitted failed log in attempts:',
+                'attr' => array('class'=>'form-control')
+            ));
+        }
+        
+
     }
     
     /**

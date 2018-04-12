@@ -728,7 +728,14 @@ class SiteParameters {
      */
     private $networkDrivePath;
 
-    
+    /**
+     * Permitted failed log in attempts
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $permittedFailedLoginAttempt;
+
+
 
     function __construct( $addobjects=true )
     {
@@ -2680,4 +2687,21 @@ class SiteParameters {
         $this->networkDrivePath = $networkDrivePath;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getPermittedFailedLoginAttempt()
+    {
+        return $this->permittedFailedLoginAttempt;
+    }
+
+    /**
+     * @param mixed $permittedFailedLoginAttempt
+     */
+    public function setPermittedFailedLoginAttempt($permittedFailedLoginAttempt)
+    {
+        $this->permittedFailedLoginAttempt = $permittedFailedLoginAttempt;
+    }
+
+    
 }

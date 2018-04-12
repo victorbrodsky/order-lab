@@ -279,6 +279,11 @@ class User extends BaseUser {
      */
     private $createDate;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $failedAttemptCounter;
+
 
     function __construct( $addobjects=true )
     {
@@ -948,6 +953,30 @@ class User extends BaseUser {
     public function removePermission($item)
     {
         $this->permissions->removeElement($item);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFailedAttemptCounter()
+    {
+        return $this->failedAttemptCounter;
+    }
+
+    /**
+     * @param mixed $failedAttemptCounter
+     */
+    public function setFailedAttemptCounter($failedAttemptCounter)
+    {
+        $this->failedAttemptCounter = $failedAttemptCounter;
+    }
+    public function incrementFailedAttemptCounter() {
+        $counter = $this->getFailedAttemptCounter();
+        if( $counter === null ) {
+            $counter = 0;
+        }
+        $counter = $counter + 1;
+        $this->setFailedAttemptCounter($counter);
     }
 
 
