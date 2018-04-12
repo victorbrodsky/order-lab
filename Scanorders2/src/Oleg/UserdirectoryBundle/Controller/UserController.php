@@ -1893,7 +1893,7 @@ class UserController extends Controller
             $em->flush();
 
             //record create user to Event Log
-            $event = "User " . $user . " has been created by " . $creator . "<br>";
+            $event = "User " . $user . " has been created by " . $creator . " on the ".$sitename." site"."<br>";
             $userSecUtil = $this->get('user_security_utility');
             $userSecUtil->createUserEditEvent(
                 $sitename,
@@ -1903,6 +1903,15 @@ class UserController extends Controller
                 $request,
                 'New user record added'
             );
+
+            //Email to Admin
+            $emailUtil = $this->get('user_mailer_utility');
+            $adminEmails = $userSecUtil->getUserEmailsByRole($sitename,"Administrator");
+            $ccEmails = $userSecUtil->getUserEmailsByRole($sitename,"Platform Administrator");
+            $adminEmails = array_merge($adminEmails,$ccEmails);
+            $adminEmails = array_unique($adminEmails);
+            //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
+            $emailUtil->sendEmail($adminEmails, 'New user record added', $event);
         } else {
             //$resArr["flag"] = "NOTOK";
             //$resArr["error"] = "Testing Mode!";
