@@ -2161,6 +2161,8 @@ class TransResRequestUtil
         if( $invoicePDF ) {
             $attachmentPath = $invoicePDF->getAbsoluteUploadFullPath();
         }
+        $logger = $this->container->get('logger');
+        $logger->notice("attachmentPath=".$attachmentPath);
 
 
         $salesperson = $invoice->getSalesperson();
