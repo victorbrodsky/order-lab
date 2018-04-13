@@ -277,7 +277,7 @@ class RequestController extends Controller
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
-        if( $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') === false ) {
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') === false ) {
             if ($transresUtil->isProjectRequester($project)) {
                 if ($transresRequest->getProgressState() != 'draft') {
                     $stageLabel = $transresRequestUtil->getRequestStateLabelByName($transresRequest->getProgressState(), 'progress');
