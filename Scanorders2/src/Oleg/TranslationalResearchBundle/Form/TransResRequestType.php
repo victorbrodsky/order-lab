@@ -178,7 +178,7 @@ class TransResRequestType extends AbstractType
 
         //////////////// fields /////////////////////////
         $builder->add('fundedAccountNumber',null, array(
-            'label' => "Funding Number:",
+            'label' => $this->params['fundedNumberLabel'],
             'required' => false,
             'attr' => array('class' => 'form-control tarnsresrequest-fundedAccountNumber'),
         ));

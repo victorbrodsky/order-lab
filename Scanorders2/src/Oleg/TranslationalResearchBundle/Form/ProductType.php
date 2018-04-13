@@ -38,7 +38,7 @@ class ProductType extends AbstractType
         $builder->add('category', EntityType::class, array(
             'class' => 'OlegTranslationalResearchBundle:RequestCategoryTypeList',
             'choice_label' => 'getOptimalAbbreviationName',
-            'label'=>"Category Type ".$this->params['categoryListLink'].":",
+            'label'=>"Category Type".$this->params['categoryListLink'].":",
             'required'=> false,
             'multiple' => false,
             'attr' => array('class'=>'combobox combobox-width'),

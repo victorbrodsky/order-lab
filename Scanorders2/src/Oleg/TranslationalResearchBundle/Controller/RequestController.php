@@ -1538,19 +1538,33 @@ class RequestController extends Controller
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $transresUtil = $this->container->get('transres_util');
         $transresRequestUtil = $this->get('transres_request_util');
+        $transResFormNodeUtil = $this->get('transres_formnode_util');
         $routeName = $request->get('_route');
 
         $billingStateChoiceArr = $transresRequestUtil->getBillingStateArr();
         $progressStateChoiceArr = $transresRequestUtil->getProgressStateArr();
 
         //categoryListLink
-        $categoryListUrl = $this->container->get('router')->generate(
-            'transresrequestcategorytypes-list_translationalresearch',
-            array(),
-            UrlGeneratorInterface::ABSOLUTE_URL
-        );
-        $categoryListLink = " (<a target='_blank' href=" . $categoryListUrl . ">" . "Category Type List Management" . "</a>)";
-        
+        $categoryListLink = null;
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
+            $categoryListUrl = $this->container->get('router')->generate(
+                'transresrequestcategorytypes-list_translationalresearch',
+                array(),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            //$categoryListLink = " (<a target='_blank' href=" . $categoryListUrl . ">" . "Category Type List Management" . "</a>)";
+            //glyphicon glyphicon-wrench
+            $categoryListLink = " <a data-toggle='tooltip' title='Category Type List Management' href=".$categoryListUrl."><span class='glyphicon glyphicon-wrench'></span></a>";
+        }
+
+        //for non-funded projects, show "Funding Number (Optional):"
+        //transres_formnode_util.getProjectFormNodeFieldByName(project,"Funded")
+        $project = $transresRequest->getProject();
+        $fundedNumberLabel = "Funding Number:";
+        if( $project && !$transResFormNodeUtil->getProjectFormNodeFieldByName($project,"Funded") ) {
+            $fundedNumberLabel = "Funding Number (Optional):";
+        }
+
         $params = array(
             'cycle' => $cycle,
             'em' => $em,
@@ -1567,7 +1581,8 @@ class RequestController extends Controller
             'availableProjects' => null,
             'billingStateChoiceArr' => $billingStateChoiceArr,
             'progressStateChoiceArr' => $progressStateChoiceArr,
-            'categoryListLink' => $categoryListLink
+            'categoryListLink' => $categoryListLink,
+            'fundedNumberLabel' => $fundedNumberLabel
         );
 
         $params['admin'] = false;
