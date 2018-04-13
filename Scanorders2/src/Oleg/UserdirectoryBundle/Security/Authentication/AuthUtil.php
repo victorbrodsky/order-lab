@@ -28,6 +28,7 @@ namespace Oleg\UserdirectoryBundle\Security\Authentication;
 use Oleg\OrderformBundle\Security\Util\AperioUtil;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 //use Symfony\Component\Security\Core\Util\StringUtils;
 
@@ -103,6 +104,7 @@ class AuthUtil {
             if( $encoder->isPasswordValid($user->getPassword(), $token->getCredentials(), $user->getSalt()) ) {
                 return $user;
             } else {
+                $this->validateFailedAttempts($user);
                 $this->logger->notice("Local Authentication: password is invalid");
                 return NULL;
             }
@@ -218,6 +220,10 @@ class AuthUtil {
             //exit('ldap failed');
             //$this->logger->error("LdapAuthentication: can not bind user by usernameClean=[".$usernameClean."]; token=[".$token->getCredentials()."]");
             $this->logger->error("LdapAuthentication: can not bind user by usernameClean=[".$usernameClean."];");
+
+            $user = $this->findUserByUsername($token->getUsername());
+            $this->validateFailedAttempts($user);
+
             return NULL;
         }
         //exit('ldap success');
@@ -748,10 +754,18 @@ class AuthUtil {
 
     public function canLogin($user) {
 
-        $this->validateFailedAttempts($user);
-
         if( $user->getLocked() ) {
             $this->logger->warning("User is locked");
+
+            $userSecUtil = $this->container->get('user_security_utility');
+            $systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
+            $msg = " This account has been locked to prevent unauthorized access.<br>".
+                " Please contact the ".$systemEmail." to request account re-activation.";
+            $this->container->get('session')->getFlashBag()->add(
+                'warning',
+                $msg
+            );
+
             return false;
         }
         if( !$user->isEnabled() ) {
@@ -781,7 +795,6 @@ class AuthUtil {
 
             //echo "userFailedAttempts=".$userFailedAttempts." > ".$permittedFailedLoginAttempt."<br>";
             if( $userFailedAttempts > $permittedFailedLoginAttempt ) {
-                //exit("lock");
                 //lock
                 $user->setEnabled(false);
                 $this->em->flush($user);

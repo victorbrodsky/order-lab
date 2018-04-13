@@ -284,6 +284,12 @@ class User extends BaseUser {
      */
     private $failedAttemptCounter;
 
+//    /**
+//     * @var \DateTime
+//     * @ORM\Column(type="datetime", nullable=true)
+//     */
+//    private $lastFailedAttemptDate;
+
 
     function __construct( $addobjects=true )
     {
@@ -976,7 +982,30 @@ class User extends BaseUser {
         }
         $counter = $counter + 1;
         $this->setFailedAttemptCounter($counter);
+        //$this->setLastFailedAttemptDate(new \DateTime());
     }
+    public function resetFailedAttemptCounter() {
+        if( $this->getFailedAttemptCounter() ) {
+            $this->setFailedAttemptCounter(0);
+            //$this->setLastFailedAttemptDate(null);
+        }
+    }
+
+//    /**
+//     * @return \DateTime
+//     */
+//    public function getLastFailedAttemptDate()
+//    {
+//        return $this->lastFailedAttemptDate;
+//    }
+//    /**
+//     * @param \DateTime $lastFailedAttemptDate
+//     */
+//    public function setLastFailedAttemptDate($lastFailedAttemptDate)
+//    {
+//        $this->lastFailedAttemptDate = $lastFailedAttemptDate;
+//    }
+
 
 
     public function __toString() {
@@ -1109,6 +1138,16 @@ class User extends BaseUser {
 //        } else {
 //            return true;
 //        }
+    }
+    public function setEnabled($boolean)
+    {
+        $this->enabled = (bool) $boolean;
+
+        if( $boolean ) {
+            $this->resetFailedAttemptCounter();
+        }
+
+        return $this;
     }
 
     /////////////////////////// user's info mapper 7+2: //////////////////////////////////////

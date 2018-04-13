@@ -203,7 +203,7 @@
                 </td>
 
                 <td>
-                    <a href="{{ path( sitename~'_showuser', { 'id': entity.id }) }}"><strong>{{ entity.displayName }}</strong></a>
+                    <a href="{{ path( sitename~'_showuser', { 'id': entity.id }) }}"><strong>{{ entity.getUserNameStr() }}</strong></a>
                 </td>
 
                 {#administrativeTitles#}

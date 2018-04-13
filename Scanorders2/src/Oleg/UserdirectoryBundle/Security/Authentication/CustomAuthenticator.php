@@ -129,9 +129,7 @@ class CustomAuthenticator implements SimpleFormAuthenticatorInterface {
     }
 
     public function resetFailedAttemptCounter($user) {
-        if( $user->getFailedAttemptCounter() ) {
-            $user->setFailedAttemptCounter(0);
-        }
+        $user->resetFailedAttemptCounter(); //no need to flush. User will be updated by auth.
     }
 
 
