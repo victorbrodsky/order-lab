@@ -1151,10 +1151,15 @@ class Project {
     public function getProjectInfoNameChoice() {
         $info = $this->getProjectInfoName();
         $pis = $this->getPrincipalInvestigators();
-        $piStr = null;
         if( count($pis) > 0 ) {
             $pi = $pis[0];
             $piStr = "; PI $pi";
+
+            $limit = 30;
+            if( strlen($piStr) > $limit ) {
+                $piStr = substr($piStr, 0, $limit) . '...';
+            }
+
             $info = $info . $piStr;
         }
 
