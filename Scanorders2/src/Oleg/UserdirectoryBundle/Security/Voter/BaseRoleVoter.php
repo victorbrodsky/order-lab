@@ -172,6 +172,12 @@ abstract class BaseRoleVoter extends Voter {
 
         foreach( $user->getRoles() as $roleStr ) {
             //echo 'roleStr='.$roleStr."<br>";
+
+            if( $roleStr == "ROLE_TESTER" ) {
+                //ignore Tester Role, because this role is generic for all sites
+                continue;
+            }
+
             $role = $this->em->getRepository('OlegUserdirectoryBundle:Roles')->findOneByName($roleStr);
             if( $role ) {
                 foreach( $role->getSites() as $site ) {
