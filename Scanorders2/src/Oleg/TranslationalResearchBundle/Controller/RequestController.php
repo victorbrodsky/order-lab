@@ -83,7 +83,7 @@ class RequestController extends Controller
         $product = new Product($user);
         $transresRequest->addProduct($product);
 
-        $title = "Create a new Request";
+        $title = "New Work Request";
 
         if( $project ) {
 
@@ -96,7 +96,7 @@ class RequestController extends Controller
             }
 
             $transresRequest->setProject($project);
-            $title = "Create a new Request for project ID ".$project->getOid();
+            $title = "New Work Request for project ID ".$project->getOid();
 
             $projectFundedAccountNumber = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"If funded, please provide account number");
             if( $projectFundedAccountNumber ) {

@@ -23,7 +23,7 @@
         {% if transres_request_util.isRequestCanBeCreated(project) == 1 %}
             <a class="btn btn-primary"
                href="{{ path(translationalresearch_sitename~'_request_new', { 'id': project.id }) }}"
-               target="_blank">Create a New Request</a>
+               target="_blank">New Work Request</a>
         {% endif %}
 
         {#See associated requests if the number of associated requests is greater than zero#}
