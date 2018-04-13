@@ -298,13 +298,15 @@
                                 </li>
                             {% endif %}
 
-                            {% if eventObjectTypeId is defined and eventObjectTypeId %}
-                                <li>
-                                <a href="{{ path('translationalresearch_event-log-per-object_log', { 'filter[objectType][]': eventObjectTypeId, 'filter[objectId]': project.id}) }}"
-                                    >View Event Log</a>
-                                {#<a href="{{ path('translationalresearch_event-log-per-object_log', { 'objectType': eventObjectTypeId, 'objectId': project.id}) }}"#}
-                                {#>View Event Log</a>#}
-                                </li>
+                            {% if is_granted('ROLE_TRANSRES_ADMIN') %}
+                                {% if eventObjectTypeId is defined and eventObjectTypeId %}
+                                    <li>
+                                    <a href="{{ path('translationalresearch_event-log-per-object_log', { 'filter[objectType][]': eventObjectTypeId, 'filter[objectId]': project.id}) }}"
+                                        >View Event Log</a>
+                                    {#<a href="{{ path('translationalresearch_event-log-per-object_log', { 'objectType': eventObjectTypeId, 'objectId': project.id}) }}"#}
+                                    {#>View Event Log</a>#}
+                                    </li>
+                                {% endif %}
                             {% endif %}
 
                             <li>

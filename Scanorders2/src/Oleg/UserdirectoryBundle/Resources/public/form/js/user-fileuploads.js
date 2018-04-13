@@ -185,7 +185,7 @@ function initFileUpload( holder, data, addRemoveLinks ) {
 
                 //parent function
                 if( file.previewElement ) {
-                    alert("You must press the 'Update' button to save your uploaded file.");
+                    alert("You must press the submit button on the bottom of this page to save your uploaded file.");
                     return file.previewElement.classList.add("dz-success");
                 }
             },

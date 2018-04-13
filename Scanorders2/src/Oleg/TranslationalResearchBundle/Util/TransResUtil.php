@@ -3056,13 +3056,17 @@ class TransResUtil
         $ews->setCellValue('H1', 'IRB Expiration Date');
 
         $ews->setCellValue('I1', 'Request ID');
-        $ews->setCellValue('J1', 'Invoice(s) Issued');
-        $ews->setCellValue('K1', 'Latest Invoice Total($)');
-        $ews->setCellValue('L1', 'Latest Invoice Paid($)');
-        $ews->setCellValue('M1', 'Latest Invoice Due($)');
-        $ews->setCellValue('N1', 'Latest Invoice Comment');
 
-        $ews->getStyle('A1:N1')->applyFromArray($styleBoldArray);
+        $ews->setCellValue('J1', 'Funding Number');
+        $ews->setCellValue('K1', 'Completion Status');
+
+        $ews->setCellValue('L1', 'Invoice(s) Issued');
+        $ews->setCellValue('M1', 'Latest Invoice Total($)');
+        $ews->setCellValue('N1', 'Latest Invoice Paid($)');
+        $ews->setCellValue('O1', 'Latest Invoice Due($)');
+        $ews->setCellValue('P1', 'Latest Invoice Comment');
+
+        $ews->getStyle('A1:P1')->applyFromArray($styleBoldArray);
 
         $totalRequests = 0;
         $totalInvoices = 0;
@@ -3127,6 +3131,12 @@ class TransResUtil
                 //Request ID
                 $ews->setCellValue('I'.$row, $request->getOid());
 
+                //Funding Number
+                $ews->setCellValue('J'.$row, $request->getFundedAccountNumber());
+
+                //Completion Status
+                $ews->setCellValue('K'.$row, $transresRequestUtil->getProgressStateLabelByName($request->getProgressState()));
+
                 //Invoice(s) Issued (Latest)
                 $latestInvoice = $transresRequestUtil->getLatestInvoice($request);
                 //$latestInvoicesCount = count($request->getInvoices());
@@ -3136,7 +3146,7 @@ class TransResUtil
                     $totalInvoices++;
                     $projectTotalInvoices++;
                 }
-                $ews->setCellValue('J'.$row, $latestInvoicesCount);
+                $ews->setCellValue('L'.$row, $latestInvoicesCount);
 
                 if( $latestInvoice ) {
                     //# Total($)
@@ -3144,7 +3154,7 @@ class TransResUtil
                     $totalTotal = $totalTotal + $total;
                     $projectTotalTotal = $projectTotalTotal + $total;
                     if ($total) {
-                        $ews->setCellValue('K' . $row, $total);
+                        $ews->setCellValue('M' . $row, $total);
                     }
 
                     //# Paid($)
@@ -3152,7 +3162,7 @@ class TransResUtil
                     $paidTotal = $paidTotal + $paid;
                     $projectTotalPaid = $projectTotalPaid + $paid;
                     if ($paid) {
-                        $ews->setCellValue('L' . $row, $paid);
+                        $ews->setCellValue('N' . $row, $paid);
 
                     }
 
@@ -3161,14 +3171,14 @@ class TransResUtil
                     $dueTotal = $dueTotal + $due;
                     $projectTotalDue = $projectTotalDue + $due;
                     if ($due) {
-                        $ews->setCellValue('M' . $row, $due);
+                        $ews->setCellValue('O' . $row, $due);
                     }
 
                     //Comment
                     $comment = $latestInvoice->getComment();
                     if( $comment ) {
-                        $ews->setCellValue('N' . $row, $comment);
-                        $ews->getStyle('N' . $row)
+                        $ews->setCellValue('P' . $row, $comment);
+                        $ews->getStyle('P' . $row)
                             ->getAlignment()->setWrapText(true);
                     }
                 }
@@ -3187,23 +3197,23 @@ class TransResUtil
             $ews->getStyle('I'.$row)->applyFromArray($styleBoldArray);
 
             //This Project Total Invoices
-            $ews->setCellValue('J'.$row, $projectTotalInvoices);
-            $ews->getStyle('J'.$row)->applyFromArray($styleBoldArray);
-
-            //This Project Total Total
-            $ews->setCellValue('K'.$row, $projectTotalTotal);
-            $ews->getStyle('K'.$row)->applyFromArray($styleBoldArray);
-
-            //This Project Total Paid
-            $ews->setCellValue('L'.$row, $projectTotalPaid);
+            $ews->setCellValue('L'.$row, $projectTotalInvoices);
             $ews->getStyle('L'.$row)->applyFromArray($styleBoldArray);
 
-            //This Project Total Due
-            $ews->setCellValue('M'.$row, $projectTotalDue);
+            //This Project Total Total
+            $ews->setCellValue('M'.$row, $projectTotalTotal);
             $ews->getStyle('M'.$row)->applyFromArray($styleBoldArray);
 
+            //This Project Total Paid
+            $ews->setCellValue('N'.$row, $projectTotalPaid);
+            $ews->getStyle('N'.$row)->applyFromArray($styleBoldArray);
+
+            //This Project Total Due
+            $ews->setCellValue('O'.$row, $projectTotalDue);
+            $ews->getStyle('O'.$row)->applyFromArray($styleBoldArray);
+
             //set color light green to the last Total row
-            $ews->getStyle('A'.$row.':'.'N'.$row)->applyFromArray($styleLastRow);
+            $ews->getStyle('A'.$row.':'.'P'.$row)->applyFromArray($styleLastRow);
 
             $row = $row + 1;
         }//project
@@ -3216,32 +3226,32 @@ class TransResUtil
         $ews->setCellValue('I' . $row, $totalRequests);
         $ews->getStyle('I'.$row)->applyFromArray($styleBoldArray);
         //Invoices total
-        $ews->setCellValue('J'.$row, $totalInvoices);
-        $ews->getStyle('J'.$row)->applyFromArray($styleBoldArray);
+        $ews->setCellValue('L'.$row, $totalInvoices);
+        $ews->getStyle('L'.$row)->applyFromArray($styleBoldArray);
         //Total total
         if( $totalTotal > 0 ) {
-            $ews->setCellValue('K' . $row, $totalTotal);
-            $ews->getStyle('K'.$row)->applyFromArray($styleBoldArray);
+            $ews->setCellValue('M' . $row, $totalTotal);
+            $ews->getStyle('M'.$row)->applyFromArray($styleBoldArray);
         }
         //Paid total
         if( $paidTotal > 0 ) {
-            $ews->setCellValue('L' . $row, $paidTotal);
-            $ews->getStyle('L'.$row)->applyFromArray($styleBoldArray);
+            $ews->setCellValue('N' . $row, $paidTotal);
+            $ews->getStyle('N'.$row)->applyFromArray($styleBoldArray);
         }
         //Due total
         if( $dueTotal > 0 ) {
-            $ews->setCellValue('M' . $row, $dueTotal);
-            $ews->getStyle('M'.$row)->applyFromArray($styleBoldArray);
+            $ews->setCellValue('O' . $row, $dueTotal);
+            $ews->getStyle('O'.$row)->applyFromArray($styleBoldArray);
         }
 
         //format columns to currency format 2:$row
-        $ews->getStyle('K2:K'.$row)
-            ->getNumberFormat()
-            ->setFormatCode(\PHPExcel_Style_NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
-        $ews->getStyle('L2:L'.$row)
-            ->getNumberFormat()
-            ->setFormatCode(\PHPExcel_Style_NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
         $ews->getStyle('M2:M'.$row)
+            ->getNumberFormat()
+            ->setFormatCode(\PHPExcel_Style_NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+        $ews->getStyle('N2:N'.$row)
+            ->getNumberFormat()
+            ->setFormatCode(\PHPExcel_Style_NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+        $ews->getStyle('O2:O'.$row)
             ->getNumberFormat()
             ->setFormatCode(\PHPExcel_Style_NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
 
