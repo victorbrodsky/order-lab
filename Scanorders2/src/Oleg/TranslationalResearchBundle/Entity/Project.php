@@ -1149,18 +1149,25 @@ class Project {
 
     //used by select2. Limit by 15 chars
     public function getProjectInfoNameChoice() {
-        $info = $this->getProjectInfoName();
+        //$info = $this->getProjectInfoName();
+        $info = $this->getOid() . " Submitted on ".$this->getCreateDate()->format('m/d/Y'); //. " at ".$this->getCreateDate()->format('H:i:s')
+
         $pis = $this->getPrincipalInvestigators();
         if( count($pis) > 0 ) {
             $pi = $pis[0];
-            $piStr = "; PI $pi";
+            $piStr = " PI " . $pi;
 
-            $limit = 30;
-            if( strlen($piStr) > $limit ) {
-                $piStr = substr($piStr, 0, $limit) . '...';
-            }
+//            $limit = 30;
+//            if( strlen($piStr) > $limit ) {
+//                $piStr = substr($piStr, 0, $limit) . '...';
+//            }
 
             $info = $info . $piStr;
+        }
+
+        $limit = 50;
+        if( strlen($info) > $limit ) {
+            $info = substr($info, 0, $limit) . '...';
         }
 
         return $info;

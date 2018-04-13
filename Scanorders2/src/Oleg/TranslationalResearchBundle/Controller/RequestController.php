@@ -277,15 +277,17 @@ class RequestController extends Controller
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
-        if( $transresUtil->isProjectRequester($project) ) {
-            if( $transresRequest->getProgressState() != 'draft' ) {
-                $stageLabel = $transresRequestUtil->getRequestStateLabelByName($transresRequest->getProgressState(),'progress');
-                $this->get('session')->getFlashBag()->add(
-                    'warning',
-                    "You can not edit this Working Request, because it's not in the Draft stage. Current stage is ".$stageLabel
-                );
-                //return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
-                return $this->redirectToRoute('translationalresearch_request_show', array('id' => $transresRequest->getId()));
+        if( $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') === false ) {
+            if ($transresUtil->isProjectRequester($project)) {
+                if ($transresRequest->getProgressState() != 'draft') {
+                    $stageLabel = $transresRequestUtil->getRequestStateLabelByName($transresRequest->getProgressState(), 'progress');
+                    $this->get('session')->getFlashBag()->add(
+                        'warning',
+                        "You can not edit this Working Request, because it's not in the Draft stage. Current stage is " . $stageLabel
+                    );
+                    //return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+                    return $this->redirectToRoute('translationalresearch_request_show', array('id' => $transresRequest->getId()));
+                }
             }
         }
 
