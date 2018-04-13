@@ -1429,7 +1429,10 @@ class TransResRequestUtil
         $newline = "\r\n";
 
         $project = $transresRequest->getProject();
-        $projectTitle = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"Title");
+        $projectTitle = $project->getTitle();
+        if( !$projectTitle ) {
+            $projectTitle = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"Title");
+        }
         
         $emails = array();
 
@@ -1545,8 +1548,8 @@ class TransResRequestUtil
         $senderEmail = null; //Admin email
         $newline = "\r\n";
 
-        $project = $transresRequest->getProject();
-        $projectTitle = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"Title");
+        //$project = $transresRequest->getProject();
+        //$projectTitle = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"Title");
 
         $emails = array();
 

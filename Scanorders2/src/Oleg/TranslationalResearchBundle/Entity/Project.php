@@ -154,10 +154,10 @@ class Project {
      */
     private $billingContact;
 
-//    /**
-//     * @ORM\Column(type="text", nullable=true)
-//     */
-//    private $title;
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $title;
 
     //Name of PI Who Submitted the IRB
 //    /**
@@ -472,23 +472,21 @@ class Project {
         $this->state = $state;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
 
-
-//    /**
-//     * @return mixed
-//     */
-//    public function getTitle()
-//    {
-//        return $this->title;
-//    }
-//
-//    /**
-//     * @param mixed $title
-//     */
-//    public function setTitle($title)
-//    {
-//        $this->title = $title;
-//    }
+    /**
+     * @param mixed $title
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+    }
 
 //    /**
 //     * @return mixed
@@ -1150,12 +1148,23 @@ class Project {
     //used by select2. Limit by 15 chars
     public function getProjectInfoNameChoice() {
         //$info = $this->getProjectInfoName();
-        $info = $this->getOid() . " Submitted on ".$this->getCreateDate()->format('m/d/Y'); //. " at ".$this->getCreateDate()->format('H:i:s')
+        //$info = $this->getOid() . " submitted on ".$this->getCreateDate()->format('m/d/Y'); //. " at ".$this->getCreateDate()->format('H:i:s')
+        //$info = $this->getOid() . ", submitted on " . $this->getCreateDate()->format('m/d/Y');
+        $info = $this->getOid();
+
+        $title = $this->getTitle();
+        if( $title ) {
+            $limit = 20;
+            if( strlen($title) > $limit ) {
+                $title = substr($title, 0, $limit) . '...';
+            }
+            $info = $info . ", " . $title;
+        }
 
         $pis = $this->getPrincipalInvestigators();
         if( count($pis) > 0 ) {
             $pi = $pis[0];
-            $piStr = " PI " . $pi;
+            $piStr = ", PI " . $pi->getUsernameShortest();
 
 //            $limit = 30;
 //            if( strlen($piStr) > $limit ) {
@@ -1165,7 +1174,9 @@ class Project {
             $info = $info . $piStr;
         }
 
-        $limit = 50;
+        $info = $info . ", " . $this->getCreateDate()->format('m/d/Y');
+
+        $limit = 70;
         if( strlen($info) > $limit ) {
             $info = substr($info, 0, $limit) . '...';
         }

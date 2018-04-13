@@ -2881,6 +2881,10 @@ class TransResUtil
         $projectFundedAccountNumber = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"If funded, please provide account number");
         $project->setFundedAccountNumber($projectFundedAccountNumber);
 
+        //update project's title
+        $projectTitle = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"Title");
+        $project->setTitle($projectTitle);
+
         if( $flushDb ) {
             $this->em->flush($project);
         }
@@ -3295,7 +3299,11 @@ class TransResUtil
         $ews->setCellValue('C'.$row, implode("\n",$piArr));
         $ews->getStyle('C'.$row)->getAlignment()->setWrapText(true);
 
-        $ews->setCellValue('D'.$row, $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"Title"));
+        $projectTitle = $project->getTitle();
+        if( !$projectTitle ) {
+            $projectTitle = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"Title");
+        }
+        $ews->setCellValue('D'.$row, $projectTitle);
 
         //Funding
         if( $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"Funded") ) {
@@ -3560,7 +3568,13 @@ class TransResUtil
         $msg = null;
 
         $id = $project->getOid();
-        $title = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"Title");
+
+        //$title = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"Title");
+        $title = $project->getTitle();
+        if( !$title ) {
+            $title = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"Title");
+        }
+
         $fromLabel = $this->getStateSimpleLabelByName($fromStateStr);
         $toLabel = $this->getStateSimpleLabelByName($toStateStr);
 
