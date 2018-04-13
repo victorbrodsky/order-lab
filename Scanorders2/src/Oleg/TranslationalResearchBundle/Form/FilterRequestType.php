@@ -63,7 +63,7 @@ class FilterRequestType extends AbstractType
         if( $this->params['routeName'] == "translationalresearch_request_index" ) {
             $builder->add('project', EntityType::class, array(
                 'class' => 'OlegTranslationalResearchBundle:Project',
-                'choice_label' => "getProjectInfoName",
+                'choice_label' => "getProjectInfoNameChoice",
                 'required' => false,
                 'label' => false,
                 'data' => $this->params['project'],
@@ -79,7 +79,7 @@ class FilterRequestType extends AbstractType
 //            ));
             $builder->add('project', EntityType::class, array(
                 'class' => 'OlegTranslationalResearchBundle:Project',
-                'choice_label' => 'getProjectInfoName',
+                'choice_label' => 'getProjectInfoNameChoice',
                 'choices' => $this->params['availableProjects'],
                 //'disabled' => ($this->params['admin'] ? false : true),
                 //'disabled' => true,

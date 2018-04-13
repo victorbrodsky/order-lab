@@ -1147,6 +1147,20 @@ class Project {
         return "Project ID " . $this->getOid() . " - Submitted by ".$this->getSubmitter()->getUsernameOptimal() . " on ".$this->getCreateDate()->format('m/d/Y'); //. " at ".$this->getCreateDate()->format('H:i:s')
     }
 
+    //used by select2. Limit by 15 chars
+    public function getProjectInfoNameChoice() {
+        $info = $this->getProjectInfoName();
+        $pis = $this->getPrincipalInvestigators();
+        $piStr = null;
+        if( count($pis) > 0 ) {
+            $pi = $pis[0];
+            $piStr = "; PI $pi";
+            $info = $info . $piStr;
+        }
+
+        return $info;
+    }
+
     public function getEntityName() {
         return "Project";
     }
