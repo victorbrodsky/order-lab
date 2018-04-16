@@ -293,7 +293,7 @@ class FellAppUtil {
         //echo "res=".$res."<br>";
 
         //if user has the same fellapp type as this fellapp
-        if( $this->hasSameFellowshipTypeId($user, $fellapp->getFellowshipSubspecialty()->getId()) ) {
+        if( $fellapp->getFellowshipSubspecialty() && $this->hasSameFellowshipTypeId($user, $fellapp->getFellowshipSubspecialty()->getId()) ) {
             $res = true;
         }
 
