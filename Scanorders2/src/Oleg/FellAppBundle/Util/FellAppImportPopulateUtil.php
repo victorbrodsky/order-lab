@@ -917,6 +917,10 @@ class FellAppImportPopulateUtil {
                     $citizenship->setCountry($citizenshipCountryEntity);
                 }
 
+                //DOB: oleg_userdirectorybundle_user_credentials_dob
+                $dobDate = $this->transformDatestrToDate($this->getValueByHeaderName('dob',$rowData,$headers));
+                $fellowshipApplication->getUser()->getCredentials()->setDob($dobDate);
+
                 //undergraduate
                 $this->createFellAppTraining($em,$fellowshipApplication,$systemUser,"undergraduateSchool",$rowData,$headers,1);
 
