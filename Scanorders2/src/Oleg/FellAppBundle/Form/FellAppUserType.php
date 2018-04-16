@@ -48,47 +48,15 @@ class FellAppUserType extends UserType
         //Name and Preferred Contact Info
         $this->addUserInfos($builder);
 
-//        $this->userTrainings($builder);
-//
-//        $this->userLocations($builder);
-//
-//        $this->addCredentials($builder);
+        //DOB
+        $builder->add('credentials', FellAppCredentialsType::class, array(
+            'data_class' => 'Oleg\UserdirectoryBundle\Entity\Credentials',
+            'label' => false,
+            'required' => false,
+        ));
+
 
     }
 
-
-
-//    public function userLocations($builder) {
-//        $params = array('disabled'=>$this->readonly,'admin'=>$this->roleAdmin,'currentUser'=>$this->currentUser,'cycle'=>$this->cycle,'em'=>$this->em,'subjectUser'=>$this->subjectUser);
-//        $builder->add('locations', CollectionType::class, array(
-//            'type' => new FellAppLocationType($params),
-//            'label' => false,
-//            'required' => false,
-//            'allow_add' => true,
-//            'allow_delete' => true,
-//            'by_reference' => false,
-//            'prototype' => true,
-//            'prototype_name' => '__locations__',
-//        ));
-//
-//        return $builder;
-//    }
-
-
-//    public function userTrainings($builder) {
-//        $params = array('disabled'=>$this->readonly,'admin'=>$this->roleAdmin,'currentUser'=>$this->currentUser,'cycle'=>$this->cycle,'em'=>$this->em,'subjectUser'=>$this->subjectUser);
-//        $builder->add('trainings', CollectionType::class, array(
-//            'type' => new FellAppTrainingType($params),
-//            'label' => false,
-//            'required' => false,
-//            'allow_add' => true,
-//            'allow_delete' => true,
-//            'by_reference' => false,
-//            'prototype' => true,
-//            'prototype_name' => '__trainings__',
-//        ));
-//
-//        return $builder;
-//    }
 
 }

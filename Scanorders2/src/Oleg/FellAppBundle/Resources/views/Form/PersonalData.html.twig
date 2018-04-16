@@ -36,16 +36,44 @@
                     applicantemail
                 {% else %}
 
-                    {% for info in form.user.infos %}
-                        {% if cycle != "show" %}
-                            {{ form_errors(info.email, {'attr': {'class': 'alert alert-danger'}}) }}
-                            {{ form_row(info.email) }}
-                        {% else %}
-                            <div class="form-control form-control-modif" disabled>
-                                <a href="mailto:{{ info.email.vars.value }}" target="_top">{{ info.email.vars.value }}</a>
-                            </div>
-                        {% endif %}
-                    {% endfor %}
+                    {#{% for info in form.user.infos %}#}
+                        {#{% if cycle != "show" %}#}
+                            {#{{ form_errors(info.email, {'attr': {'class': 'alert alert-danger'}}) }}#}
+                            {#{{ form_row(info.email) }}#}
+                        {#{% else %}#}
+                            {#<div class="form-control form-control-modif" disabled>#}
+                                {#<a href="mailto:{{ info.email.vars.value }}" target="_top">{{ info.email.vars.value }}</a>#}
+                            {#</div>#}
+                        {#{% endif %}#}
+                    {#{% endfor %}#}
+
+                    <div class="row">
+                        <div class="col-xs-6">
+                            {% for info in form.user.infos %}
+                                {#{% if cycle != "show" %}#}
+                                    {#{{ form_errors(info.email, {'attr': {'class': 'alert alert-danger'}}) }}#}
+                                    {#{{ form_row(info.email) }}#}
+                                {#{% else %}#}
+                                    {#<div class="form-control form-control-modif" disabled>#}
+                                        {#<a href="mailto:{{ info.email.vars.value }}" target="_top">{{ info.email.vars.value }}</a>#}
+                                    {#</div>#}
+                                {#{% endif %}#}
+                                {#{{ form_row(info.email) }}#}
+
+                                <p>
+                                    {{ form_errors(info.email) }}
+                                    {{ form_label(info.email) }}
+                                </p>
+                                {{ form_widget(info.email) }}
+
+                            {% endfor %}
+                        </div>
+                        <div class="col-xs-6">
+                            {#{{ form_errors(form.user.credentials.dob, {'attr': {'class': 'alert alert-danger'}}) }}#}
+                            {#{{ form_row(form.user.credentials.dob) }}#}
+                            {{ formmacros.fieldDateLabel_vertical(form.user.credentials.dob,'allow-future-date') }}
+                        </div>
+                    </div>
 
                 {% endif %}
 

@@ -233,7 +233,7 @@ class CredentialsType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Oleg\UserdirectoryBundle\Entity\UserPreferences',
+            'data_class' => 'Oleg\UserdirectoryBundle\Entity\Credentials',
             'form_custom_value' => null
         ));
     }
@@ -243,7 +243,7 @@ class CredentialsType extends AbstractType
      */
     public function getBlockPrefix()
     {
-        return 'oleg_userdirectorybundle_userpreferences';
+        return 'oleg_userdirectorybundle_credentials';
     }
 
 }
