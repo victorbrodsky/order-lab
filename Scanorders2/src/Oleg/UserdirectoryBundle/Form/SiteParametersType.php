@@ -554,7 +554,43 @@ class SiteParametersType extends AbstractType
                 'attr' => array('class'=>'form-control')
             ));
         }
-        
+
+        ////////////////////////// LDAP notice messages /////////////////////////
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'noticeAttemptingPasswordResetLDAP' ) {
+            $builder->add('noticeAttemptingPasswordResetLDAP',null,array(
+                'label'=>'Notice for attempting to reset password for an LDAP-authenticated account:',
+                'attr' => array('class'=>'form-control textarea')
+            ));
+        }
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'noticeUseCwidLogin' ) {
+            $builder->add('noticeUseCwidLogin',null,array(
+                'label'=>'Notice to prompt user to use Active Directory account to log in:',
+                'attr' => array('class'=>'form-control textarea')
+            ));
+        }
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'noticeSignUpNoCwid' ) {
+            $builder->add('noticeSignUpNoCwid',null,array(
+                'label'=>'Notice to prompt user with no Active Directory account to sign up for a new account:',
+                'attr' => array('class'=>'form-control textarea')
+            ));
+        }
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'noticeHasLdapAccount' ) {
+            $builder->add('noticeHasLdapAccount',null,array(
+                'label'=>'Account request question asking whether applicant has an Active Directory account:',
+                'attr' => array('class'=>'form-control textarea')
+            ));
+        }
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'noticeLdapName' ) {
+            $builder->add('noticeLdapName',null,array(
+                'label'=>'Full local name for active directory account:',
+                'attr' => array('class'=>'form-control textarea')
+            ));
+        }
+        ////////////////////////// EOF LDAP notice messages /////////////////////////
 
     }
     

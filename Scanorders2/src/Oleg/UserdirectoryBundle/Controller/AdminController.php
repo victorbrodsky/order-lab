@@ -1880,6 +1880,15 @@ class AdminController extends Controller
             "listManagerTitle" => "List Manager",
             "eventLogTitle" => "Event Log",
             "siteSettingsTitle" => "Site Settings",
+
+            ////////////////////////// LDAP notice messages /////////////////////////
+            "noticeAttemptingPasswordResetLDAP" => "The password for your [[CWID]] can only be changed or reset by visiting the enterprise password management page or by calling the help desk at ‭1 (212) 746-4878‬.",
+            "noticeUseCwidLogin" => "Please use your CWID to log in",
+            "noticeSignUpNoCwid" => "Sign up for an account if you have no CWID",
+            "noticeHasLdapAccount" => "Do you (the person for whom the account is being requested) have a CWID username?",
+            "noticeLdapName" => "WCMC CWID",
+            ////////////////////////// EOF LDAP notice messages /////////////////////////
+
             "contentAboutPage" => '
                 <p>
                     This site is built on the platform titled "O R D E R" (as in the opposite of disorder).

@@ -736,6 +736,48 @@ class SiteParameters {
     private $permittedFailedLoginAttempt;
 
 
+    ////////////////////////// LDAP notice messages /////////////////////////
+    /**
+     * Notice for attempting to reset password for an LDAP-authenticated account.
+     * The password for your [[CWID]] can only be changed or reset by visiting the enterprise password management page or by calling the help desk at ‭1 (212) 746-4878:
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $noticeAttemptingPasswordResetLDAP;
+
+    /**
+     * Notice to prompt user to use Active Directory account to log in:
+     * Please use your CWID to log in.
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $noticeUseCwidLogin;
+
+    /**
+     * Notice to prompt user with no Active Directory account to sign up for a new account:
+     * Sign up for an account if you have no CWID.
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $noticeSignUpNoCwid;
+
+    /**
+     * Account request question asking whether applicant has an Active Directory account:
+     * Do you (the person for whom the account is being requested) have a [CWID] username?
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $noticeHasLdapAccount;
+
+    /**
+     * Full local name for active directory account:
+     * WCMC CWID
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $noticeLdapName;
+    ////////////////////////// EOF LDAP notice messages /////////////////////////
+
 
     function __construct( $addobjects=true )
     {
@@ -2702,6 +2744,87 @@ class SiteParameters {
     {
         $this->permittedFailedLoginAttempt = $permittedFailedLoginAttempt;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getNoticeAttemptingPasswordResetLDAP()
+    {
+        return $this->noticeAttemptingPasswordResetLDAP;
+    }
+
+    /**
+     * @param mixed $noticeAttemptingPasswordResetLDAP
+     */
+    public function setNoticeAttemptingPasswordResetLDAP($noticeAttemptingPasswordResetLDAP)
+    {
+        $this->noticeAttemptingPasswordResetLDAP = $noticeAttemptingPasswordResetLDAP;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNoticeUseCwidLogin()
+    {
+        return $this->noticeUseCwidLogin;
+    }
+
+    /**
+     * @param mixed $noticeUseCwidLogin
+     */
+    public function setNoticeUseCwidLogin($noticeUseCwidLogin)
+    {
+        $this->noticeUseCwidLogin = $noticeUseCwidLogin;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNoticeSignUpNoCwid()
+    {
+        return $this->noticeSignUpNoCwid;
+    }
+
+    /**
+     * @param mixed $noticeSignUpNoCwid
+     */
+    public function setNoticeSignUpNoCwid($noticeSignUpNoCwid)
+    {
+        $this->noticeSignUpNoCwid = $noticeSignUpNoCwid;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNoticeHasLdapAccount()
+    {
+        return $this->noticeHasLdapAccount;
+    }
+
+    /**
+     * @param mixed $noticeHasLdapAccount
+     */
+    public function setNoticeHasLdapAccount($noticeHasLdapAccount)
+    {
+        $this->noticeHasLdapAccount = $noticeHasLdapAccount;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNoticeLdapName()
+    {
+        return $this->noticeLdapName;
+    }
+
+    /**
+     * @param mixed $noticeLdapName
+     */
+    public function setNoticeLdapName($noticeLdapName)
+    {
+        $this->noticeLdapName = $noticeLdapName;
+    }
+
 
     
 }

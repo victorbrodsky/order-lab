@@ -906,9 +906,12 @@ class SignUpController extends Controller
                     if( count($emailArr)>0 ) {
                         $cwid = $emailArr[0];
                     }
-                    $enterpriseManagementUrl = ' <a href="https://its.weill.cornell.edu/services/accounts-and-access/password-management">enterprise password management</a> ';
-                    $emailError = "The password for your $cwid can only be changed or reset by visiting the 
-                        $enterpriseManagementUrl page or by calling the help desk at ‭1 (212) 746-4878‬.";
+//                    $enterpriseManagementUrl = ' <a href="https://its.weill.cornell.edu/services/accounts-and-access/password-management">enterprise password management</a> ';
+//                    $emailError = "The password for your $cwid can only be changed or reset by visiting the
+//                        $enterpriseManagementUrl page or by calling the help desk at ‭1 (212) 746-4878‬.";
+                    //SiteSettings: get from site settings "Notice for attempting to reset password for an LDAP-authenticated account."
+                    $emailError = $userSecUtil->getSiteSettingParameter('noticeAttemptingPasswordResetLDAP');
+                    $emailError = str_replace("[[CWID]]",$cwid,$emailError);
                     $form->get('email')->addError(new FormError($emailError));
                 }
 

@@ -299,6 +299,39 @@
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'ldapExeFilename'}) }}">Edit</a></td>
             </tr>
 
+
+            <tr>
+                <td class="rowlink-skip" colspan="3" align="center">
+                    <h3>Notices for LDAP and CWID:</h3>
+                </td>
+            </tr>
+            <tr class="rowlink-skip">
+                <td>Notice for attempting to reset password for an LDAP-authenticated account</td>
+                <td>{{ entity.noticeAttemptingPasswordResetLDAP }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'noticeAttemptingPasswordResetLDAP'}) }}">Edit</a></td>
+            </tr>
+            <tr class="rowlink-skip">
+                <td>Notice to prompt user to use Active Directory account to log in</td>
+                <td>{{ entity.noticeUseCwidLogin }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'noticeUseCwidLogin'}) }}">Edit</a></td>
+            </tr>
+            <tr class="rowlink-skip">
+                <td>Notice to prompt user with no Active Directory account to sign up for a new account</td>
+                <td>{{ entity.noticeSignUpNoCwid }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'noticeSignUpNoCwid'}) }}">Edit</a></td>
+            </tr>
+            <tr class="rowlink-skip">
+                <td>Account request question asking whether applicant has an Active Directory account</td>
+                <td>{{ entity.noticeHasLdapAccount }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'noticeHasLdapAccount'}) }}">Edit</a></td>
+            </tr>
+            <tr class="rowlink-skip">
+                <td>Full local name for active directory account</td>
+                <td>{{ entity.noticeLdapName }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'noticeLdapName'}) }}">Edit</a></td>
+            </tr>
+
+
             {#CoPath#}
             {#Production#}
             <tr>
