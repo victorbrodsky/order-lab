@@ -563,9 +563,9 @@ class SiteParametersType extends AbstractType
             ));
         }
 
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'noticeUseCwidLogin' ) {
-            $builder->add('noticeUseCwidLogin',null,array(
-                'label'=>'Notice to prompt user to use Active Directory account to log in:',
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'loginInstruction' ) {
+            $builder->add('loginInstruction',null,array(
+                'label'=>'Notice to prompt user to use Active Directory account to log in (Please use your CWID to log in):',
                 'attr' => array('class'=>'form-control textarea')
             ));
         }
@@ -752,12 +752,6 @@ class SiteParametersType extends AbstractType
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'liveSiteRootUrl' )
             $builder->add('liveSiteRootUrl',null,array(
                 'label'=>'Live Site Root URL (http://c.med.cornell.edu/order/):',
-                'attr' => array('class'=>'form-control')
-            ));
-
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'loginInstruction' )
-            $builder->add('loginInstruction',null,array(
-                'label'=>'Log in instruction (Please use your CWID to log in.):',
                 'attr' => array('class'=>'form-control')
             ));
 
