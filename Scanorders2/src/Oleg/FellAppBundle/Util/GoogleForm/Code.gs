@@ -1,7 +1,7 @@
-var _templateSSKey = '1ITacytsUV2yChbfOSVjuBoW4aObSr_xBfpt6m_vab48';
-var _backupSSKey = '19KlO1oCC88M436JzCa89xGO08MJ1txQNgLeJI0BpNGo';
+var _templateSSKey = 'key';
+var _backupSSKey = 'key';
 //Destination forlder: ID of the folder where a newly created copy of template spreadsheet will be placed (Spreadsheets).
-var _destinationFolder = '163MoMsFodHxPj98dM-C_cLTVU5bkGHz1'; //'0B2FwyaXvFk1ecEJVeWc3VW1wS2c';
+var _destinationFolder = 'key';
 //Unique folder name where uploaded files will be placed.
 var _dropbox = "FellowshipApplicantUploads"; 
 
@@ -10,9 +10,8 @@ var _uniqueId = null;
 
 var _formCreationTimeStamp = CacheService.getPrivateCache().get('_formCreationTimeStamp');
 
-var _adminemail = 'oli2002@med.cornell.edu';
-var _useremail = 'eah2006@med.cornell.edu';
-var _useremail = 'cinava@yahoo.com';
+var _adminemail = ''; //send confirmation email
+var _useremail = ''; //send confirmation email
 
 var _maintanance = false;
 var _fullValidation = true;
@@ -20,7 +19,7 @@ var _fullValidation = true;
 //Maintenance flag (uncomment for maintenance)
 //var _maintanance = true; 
 //var _fullValidation = false; //will validate only fellapp type, names, email, signature
-//var _useremail = 'cinava@yahoo.com';
+//var _useremail = '';
 //EOF Maintenance flag
 
 //var _fileUrl;
@@ -34,7 +33,7 @@ function doGet(request) {
   Logger.log('curUser='+curUser);
     
   if( _maintanance ) {
-    if( curUser == "olegivanov@pathologysystems.org" ) {
+    if( curUser == "aaa@aaa.org" ) {
         _maintanance = false;
     }  
   } 
