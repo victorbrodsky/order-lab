@@ -961,14 +961,15 @@ class SignUpController extends Controller
                     }
                 }
                 if( count($userDbs) == 0 ) {
-                    $signupUrl = $this->container->get('router')->generate(
-                        $this->siteName."_signup_new",
-                        array(),
-                        UrlGeneratorInterface::ABSOLUTE_URL
-                    );
-                    $signupUrl = ' <a href="'.$signupUrl.'">sign up for a new account</a> ';
-                    $emailError = "The email address you have entered is not associated with any active accounts.".
-                        " Please $signupUrl or enter a different email address above.";
+//                    $signupUrl = $this->container->get('router')->generate(
+//                        $this->siteName."_signup_new",
+//                        array(),
+//                        UrlGeneratorInterface::ABSOLUTE_URL
+//                    );
+//                    $signupUrl = ' <a href="'.$signupUrl.'">sign up for a new account</a> ';
+                    //$emailError = "The email address you have entered is not associated with any active accounts.".
+                    //    " Please $signupUrl or enter a different email address above.";
+                    $emailError = $this->confirmationForgotPassword();
                     $form->get('email')->addError(new FormError($emailError));
                 }
             }
@@ -1011,9 +1012,10 @@ class SignUpController extends Controller
 //            $userSecUtil->createUserEditEvent($this->siteName,$event,$systemuser,$resetPassword,$request,'Password Reset Created');
 
             //Confirmation
-            $confirmation =
-                "An email was sent to the email address you provided ".$resetPassword->getEmail()." with a password reset link.<br>
-                Please click the link emailed to you to reset your password.";
+            //$confirmation =
+            //    "An email was sent to the email address you provided ".$resetPassword->getEmail()." with a password reset link.<br>
+            //    Please click the link emailed to you to reset your password.";
+            $confirmation = $this->confirmationForgotPassword();
             return $this->render('OlegUserdirectoryBundle:SignUp:confirmation.html.twig',
                 array(
                     'title'=>"Password Reset Confirmation",
@@ -1078,6 +1080,20 @@ class SignUpController extends Controller
 
         $res = array('subject'=>$subject,'body'=>$body);
         return $res;
+    }
+    public function confirmationForgotPassword() {
+        $signupUrl = $this->container->get('router')->generate(
+            $this->siteName."_signup_new",
+            array(),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        $signupUrl = ' <a href="'.$signupUrl.'">sign up for a new account</a> ';
+        $confirmation = "If you have provided a valid email address associated with a user of this site,".
+            " you should receive an email message with a link to a page where you can reset the password.".
+            " Please note that it might take up to 15 minutes to receive this email.".
+            " If you have not received such an email, you can request another or ".$signupUrl.".";
+
+        return $confirmation;
     }
 
     /**
@@ -1157,7 +1173,7 @@ class SignUpController extends Controller
         //1) only if not created yet: search by $signUp->getUserName() and if $signUp->getUser() is NULL
         $users = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByUserInfoEmail($resetPassword->getEmail());
         if( count($users) == 0 ) {
-            $confirmation = "The email address you have entered is not associated with any active accounts.";
+            $confirmation = "The email address you have entered is not associated with any active accounts."; //keep this for reset password by linkID
             //exit($confirmation);
             return $this->render('OlegUserdirectoryBundle:SignUp:confirmation.html.twig',
                 array(

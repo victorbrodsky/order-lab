@@ -53,7 +53,7 @@ class ForgotPasswordType extends AbstractType
         ));
 
         $builder->add('submit', SubmitType::class, array(
-            'label' => 'Reset Password',
+            'label' => 'Send me an email with a link to reset my password',
             'attr' => array('class' => 'btn btn-primary')
         ));
     }

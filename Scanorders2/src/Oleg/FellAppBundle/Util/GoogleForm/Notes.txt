@@ -1,0 +1,15 @@
+
+https://stackoverflow.com/questions/15110264/google-apps-script-how-to-link-to-js-or-css-file-on-google-drive
+
+CSS:
+https://drive.google.com/file/d/0B2FwyaXvFk1eQ2hvSnQtcjNybUU/view?usp=sharing
+https://drive.google.com/uc?id=0B2FwyaXvFk1eQ2hvSnQtcjNybUU
+
+https://drive.google.com/drive/folders/0B2FwyaXvFk1efmpTR203YTJvWmhKR0JkYjdKamN3RVJTSVBqTkxtNXdfMVJFMExfb1dOOGM?usp=sharing
+https://cbe7c864b9c1ae8d5be60c7fed3e467334a04d2f.googledrive.com/host/0B2FwyaXvFk1efmpTR203YTJvWmhKR0JkYjdKamN3RVJTSVBqTkxtNXdfMVJFMExfb1dOOGM/cart.css
+
+JS:
+https://drive.google.com/file/d/0B2FwyaXvFk1ec2x3cjVMUE1BNEU/view?usp=sharing
+https://drive.google.com/uc?0B2FwyaXvFk1ec2x3cjVMUE1BNEU
+
+All above is not working anymore. Use external links: https://cdnjs.com/libraries/bootstrap-datepicker
