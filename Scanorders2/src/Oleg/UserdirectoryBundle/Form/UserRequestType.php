@@ -56,14 +56,14 @@ class UserRequestType extends AbstractType
         ));
 
         $builder->add( 'cwid', TextType::class, array(
-                'label'=>'WCMC CWID:',
+                'label' => false,   //'WCMC CWID:',
                 'required'=> false,
                 'attr' => array('class'=>'form-control form-control-modif cwid'),
         ));
 
         //hascwid
         $builder->add( 'hascwid', ChoiceType::class, array( //flipped
-            'label' => 'Do you (the person for whom the account is being requested) have a CWID username?',
+            'label' => false, //'Do you (the person for whom the account is being requested) have a CWID username?',
             'choices' => array("Yes"=>"Yes", "No"=>"No"),
             'choices_as_values' => true,
             'multiple' => false,

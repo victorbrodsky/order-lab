@@ -96,8 +96,9 @@
             <p>
                 <div class="row">
                     <div class="col-xs-6" align="right">
-                        {#<b>Do you (the requester) have a <a href="javascript:;" onclick="window.open('http://weill.cornell.edu/its/identity-security/identity/cwid/');return false;">CWID</a> username?</b>#}
-                        <b>Do you (the person for whom the account is being requested) have a <a href="http://weill.cornell.edu/its/identity-security/identity/cwid/">CWID</a> username?</b>
+                        <b>
+                            {{ user_security_utility.getSiteSettingParameter('noticeHasLdapAccount')|raw }}:
+                        </b>
                     </div>
                     <div class="col-xs-6" align="left">
                         {{ form_widget(form.hascwid) }}
@@ -128,7 +129,19 @@
                 </div>
             </div>
 
-            {{ myform.field(form.cwid) }}
+            {#{{ myform.field(form.cwid) }}#}
+            <p>
+            <div class="row">
+                <div class="col-xs-6" align="right">
+                    <b>
+                        {{ user_security_utility.getSiteSettingParameter('noticeLdapName')|raw }}:
+                    </b>
+                </div>
+                <div class="col-xs-6" align="left">
+                    {{ form_widget(form.cwid) }}
+                </div>
+            </div>
+            </p>
 
             <div id="password_field" class="collapse">
                 <div class="well" align='center'>

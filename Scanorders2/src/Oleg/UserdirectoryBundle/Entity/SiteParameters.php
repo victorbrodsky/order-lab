@@ -712,11 +712,6 @@ class SiteParameters {
     private $calllogResources;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $loginInstruction;
-
-    /**
      * Initial Configuration Completed
      *
      * @ORM\Column(type="boolean", nullable=true)
@@ -744,14 +739,14 @@ class SiteParameters {
      * @ORM\Column(type="text", nullable=true)
      */
     private $noticeAttemptingPasswordResetLDAP;
-
+    
     /**
      * Notice to prompt user to use Active Directory account to log in:
      * Please use your CWID to log in.
      *
      * @ORM\Column(type="text", nullable=true)
      */
-    private $noticeUseCwidLogin;
+    private $loginInstruction;
 
     /**
      * Notice to prompt user with no Active Directory account to sign up for a new account:
@@ -2759,22 +2754,6 @@ class SiteParameters {
     public function setNoticeAttemptingPasswordResetLDAP($noticeAttemptingPasswordResetLDAP)
     {
         $this->noticeAttemptingPasswordResetLDAP = $noticeAttemptingPasswordResetLDAP;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getNoticeUseCwidLogin()
-    {
-        return $this->noticeUseCwidLogin;
-    }
-
-    /**
-     * @param mixed $noticeUseCwidLogin
-     */
-    public function setNoticeUseCwidLogin($noticeUseCwidLogin)
-    {
-        $this->noticeUseCwidLogin = $noticeUseCwidLogin;
     }
 
     /**

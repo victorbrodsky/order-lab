@@ -114,12 +114,6 @@
             </tr>
 
             <tr>
-                <td>Log in instruction (Please use your CWID to log in.)</td>
-                <td>{{ entity.loginInstruction }}</td>
-                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'loginInstruction'}) }}">Edit</a></td>
-            </tr>
-
-            <tr>
                 <td>Initial Configuration Completed</td>
                 <td>
                     {% set initialConfigurationCompletedStr = 'No' %}
@@ -310,10 +304,10 @@
                 <td>{{ entity.noticeAttemptingPasswordResetLDAP }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'noticeAttemptingPasswordResetLDAP'}) }}">Edit</a></td>
             </tr>
-            <tr class="rowlink-skip">
-                <td>Notice to prompt user to use Active Directory account to log in</td>
-                <td>{{ entity.noticeUseCwidLogin }}</td>
-                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'noticeUseCwidLogin'}) }}">Edit</a></td>
+            <tr>
+                <td>Notice to prompt user to use Active Directory account to log in (Please use your CWID to log in.)</td>
+                <td>{{ entity.loginInstruction }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'loginInstruction'}) }}">Edit</a></td>
             </tr>
             <tr class="rowlink-skip">
                 <td>Notice to prompt user with no Active Directory account to sign up for a new account</td>
