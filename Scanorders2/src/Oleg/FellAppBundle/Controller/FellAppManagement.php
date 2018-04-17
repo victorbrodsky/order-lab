@@ -95,121 +95,6 @@ class FellAppManagement extends Controller {
 
     }
 
-
-
-    /**
-     * @Route("/fellowship-type/{id}", name="fellapp_fellowshiptype_setting_show")
-     * @Route("/fellowship-type/edit/{id}", name="fellapp_fellowshiptype_setting_edit")
-     * @Method("GET")
-     * @Template("OlegFellAppBundle:Management:new.html.twig")
-     */
-    public function showAction(Request $request, $id) {
-
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_DIRECTOR') ){
-            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
-        }
-
-        $fellappUtil = $this->container->get('fellapp_util');
-        $em = $this->getDoctrine()->getManager();
-
-        $felltype = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->find($id);
-
-        if( !$felltype ) {
-            throw $this->createNotFoundException('Unable to find Fellowship Subspecialty Type by id='.$id);
-        }
-
-        //when the role (i.e. coordinator) is added by editing the user's profile directly, this FellowshipSubspecialty object is not updated.
-        //Synchronise the FellowshipSubspecialty's $coordinators, $directors, $interviewers with the user profiles based on the specific roles
-        $fellappUtil->synchroniseFellowshipSubspecialtyAndProfileRoles( array($felltype) );
-
-        $routeName = $request->get('_route');
-
-        $args = $this->getShowParameters($routeName,$felltype);
-
-        return $this->render('OlegFellAppBundle:Management:new.html.twig', $args);
-    }
-
-
-
-    /**
-     * @Route("/fellowship-type/update/{id}", name="fellapp_fellowshiptype_setting_update")
-     * @Method("PUT")
-     * @Template("OlegFellAppBundle:Management:new.html.twig")
-     */
-    public function updateAction(Request $request, $id) {
-
-        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_DIRECTOR') ){
-            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
-        }
-
-        $fellappUtil = $this->container->get('fellapp_util');
-        $em = $this->getDoctrine()->getManager();
-
-        $felltype = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->find($id);
-
-        if( !$felltype ) {
-            throw $this->createNotFoundException('Unable to find Fellowship Subspecialty Type by id='.$id);
-        }
-
-        $origDirectors = new ArrayCollection();
-        foreach( $felltype->getDirectors() as $item ) {
-            $origDirectors->add($item);
-        }
-
-        $origCoordinators = new ArrayCollection();
-        foreach( $felltype->getCoordinators() as $item ) {
-            $origCoordinators->add($item);
-        }
-        //$fellappUtil->printUsers($origCoordinators,"origCoordinators");
-
-        $origInterviewers = new ArrayCollection();
-        foreach( $felltype->getInterviewers() as $item ) {
-            $origInterviewers->add($item);
-        }
-
-        $form = $this->createForm(FellowshipSubspecialtyType::class,$felltype);
-
-        $form->handleRequest($request);
-
-
-        if( !$form->isSubmitted() ) {
-            //echo "form is not submitted<br>";
-            $form->submit($request);
-        }
-
-        if( $form->isValid() ) {
-            //exit('form valid');
-
-            //1) Remove role if a user is removed from default list (Remove,Add Order is important!)
-            //compare original and final users => get removed users => for each removed user, remove the role
-            $fellappUtil->processRemovedUsersByFellowshipSetting($felltype,$felltype->getDirectors(),$origDirectors,"_DIRECTOR_");
-            $fellappUtil->processRemovedUsersByFellowshipSetting($felltype,$felltype->getCoordinators(),$origCoordinators,"_COORDINATOR_");
-            $fellappUtil->processRemovedUsersByFellowshipSetting($felltype,$felltype->getInterviewers(),$origInterviewers,"_INTERVIEWER_");
-            //exit('test');
-
-            //2 Add role (Remove,Add Order is important!)
-            $this->assignFellAppAccessRoles($felltype,$felltype->getDirectors(),"DIRECTOR");
-            $this->assignFellAppAccessRoles($felltype,$felltype->getCoordinators(),"COORDINATOR");
-            $this->assignFellAppAccessRoles($felltype,$felltype->getInterviewers(),"INTERVIEWER");
-
-            $em->persist($felltype);
-            $em->flush();
-
-
-            return $this->redirect($this->generateUrl('fellapp_fellowshiptype_setting_show',array('id' => $felltype->getId())));
-        }
-
-        //exit('form is not valid');
-
-        return array(
-            'form' => $form->createView(),
-            'entity' => $felltype,
-            'cycle' => 'edit',
-        );
-
-    }
-
-
     /**
      * @Route("/add-fellowship-application-type", name="fellapp_fellowship_application_type_add")
      * @Method({"GET", "POST"})
@@ -413,40 +298,159 @@ class FellAppManagement extends Controller {
     }
 
 
+    /**
+     * @Route("/fellowship-type/show/{id}", name="fellapp_fellowshiptype_setting_show")
+     * @Method("GET")
+     * @Template("OlegFellAppBundle:Management:new.html.twig")
+     */
+    public function showAction(Request $request, $id) {
 
-
-    public function getShowParameters($routeName, $felltype) {
-
-        if( $routeName == "fellapp_fellowshiptype_setting_show" ) {
-            $cycle = 'show';
-            $disabled = true;
-            $method = "GET";
-            $action = $this->generateUrl('fellapp_fellowshiptype_setting_edit', array('id' => $felltype->getId()));
+        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_DIRECTOR') ){
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
 
-        if( $routeName == "fellapp_fellowshiptype_setting_edit" ) {
-            $cycle = 'edit';
-            $disabled = false;
-            $method = "PUT";
-            $action = $this->generateUrl('fellapp_fellowshiptype_setting_update', array('id' => $felltype->getId()));
+        $fellappUtil = $this->container->get('fellapp_util');
+        $em = $this->getDoctrine()->getManager();
+        $cycle = "show";
+
+        $felltype = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->find($id);
+
+        if( !$felltype ) {
+            throw $this->createNotFoundException('Unable to find Fellowship Subspecialty Type by id='.$id);
         }
 
+        //when the role (i.e. coordinator) is added by editing the user's profile directly, this FellowshipSubspecialty object is not updated.
+        //Synchronise the FellowshipSubspecialty's $coordinators, $directors, $interviewers with the user profiles based on the specific roles
+        $fellappUtil->synchroniseFellowshipSubspecialtyAndProfileRoles( array($felltype) );
 
-        $form = $this->createForm(
-            FellowshipSubspecialtyType::class,
-            $felltype,
-            array(
-                'disabled' => $disabled,
-                'method' => $method,
-                'action' => $action
-            )
-        );
+        //$routeName = $request->get('_route');
+        //$args = $this->getFellappSpecialtyForm($routeName,$felltype);
+        //return $this->render('OlegFellAppBundle:Management:new.html.twig', $args);
+
+        $form = $this->getFellappSpecialtyForm($felltype,$cycle);
 
         return array(
             'cycle' => $cycle,
             'entity' => $felltype,
             'form' => $form->createView()
         );
+    }
+
+    /**
+     * @Route("/fellowship-type/edit/{id}", name="fellapp_fellowshiptype_setting_edit")
+     * @Method({"GET", "POST"})
+     * @Template("OlegFellAppBundle:Management:new.html.twig")
+     */
+    public function editAction(Request $request, $id) {
+
+        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_COORDINATOR') && false == $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_DIRECTOR') ){
+            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+        }
+
+        $fellappUtil = $this->container->get('fellapp_util');
+        $em = $this->getDoctrine()->getManager();
+        $cycle = "edit";
+
+        $felltype = $em->getRepository('OlegUserdirectoryBundle:FellowshipSubspecialty')->find($id);
+
+        if( !$felltype ) {
+            throw $this->createNotFoundException('Unable to find Fellowship Subspecialty Type by id='.$id);
+        }
+
+        $origDirectors = new ArrayCollection();
+        foreach( $felltype->getDirectors() as $item ) {
+            $origDirectors->add($item);
+        }
+
+        $origCoordinators = new ArrayCollection();
+        foreach( $felltype->getCoordinators() as $item ) {
+            $origCoordinators->add($item);
+        }
+        //$fellappUtil->printUsers($origCoordinators,"origCoordinators");
+
+        $origInterviewers = new ArrayCollection();
+        foreach( $felltype->getInterviewers() as $item ) {
+            $origInterviewers->add($item);
+        }
+
+        //$form = $this->createForm(FellowshipSubspecialtyType::class,$felltype);
+        $form = $this->getFellappSpecialtyForm($felltype,$cycle);
+
+        $form->handleRequest($request);
+
+
+        if( $form->isSubmitted() && $form->isValid() ) {
+            //exit('form valid');
+
+            //1) Remove role if a user is removed from default list (Remove,Add Order is important!)
+            //compare original and final users => get removed users => for each removed user, remove the role
+            $fellappUtil->processRemovedUsersByFellowshipSetting($felltype,$felltype->getDirectors(),$origDirectors,"_DIRECTOR_");
+            $fellappUtil->processRemovedUsersByFellowshipSetting($felltype,$felltype->getCoordinators(),$origCoordinators,"_COORDINATOR_");
+            $fellappUtil->processRemovedUsersByFellowshipSetting($felltype,$felltype->getInterviewers(),$origInterviewers,"_INTERVIEWER_");
+            //exit('test');
+
+            //2 Add role (Remove,Add Order is important!)
+            $this->assignFellAppAccessRoles($felltype,$felltype->getDirectors(),"DIRECTOR");
+            $this->assignFellAppAccessRoles($felltype,$felltype->getCoordinators(),"COORDINATOR");
+            $this->assignFellAppAccessRoles($felltype,$felltype->getInterviewers(),"INTERVIEWER");
+
+            $em->persist($felltype);
+            $em->flush();
+
+
+            return $this->redirect($this->generateUrl('fellapp_fellowshiptype_setting_show',array('id' => $felltype->getId())));
+        }
+
+        //exit('form is not valid');
+
+        return array(
+            'form' => $form->createView(),
+            'entity' => $felltype,
+            'cycle' => 'edit',
+        );
+
+    }
+
+    public function getFellappSpecialtyForm($felltype, $cycle) {
+
+//        if( $routeName == "fellapp_fellowshiptype_setting_show" ) {
+//            $cycle = 'show';
+//            $disabled = true;
+//            $method = "GET";
+//            $action = $this->generateUrl('fellapp_fellowshiptype_setting_edit', array('id' => $felltype->getId()));
+//        }
+//        if( $routeName == "fellapp_fellowshiptype_setting_edit" ) {
+//            $cycle = 'edit';
+//            $disabled = false;
+//            $method = "PUT";
+//            $action = $this->generateUrl('fellapp_fellowshiptype_setting_update', array('id' => $felltype->getId()));
+//        }
+
+        if( $cycle == "show" ) {
+            $disabled = true;
+        }
+
+        if( $cycle == "edit" ) {
+            $disabled = false;
+        }
+
+        $form = $this->createForm(
+            FellowshipSubspecialtyType::class,
+            $felltype,
+            array(
+                'disabled' => $disabled,
+                //'method' => $method,
+                //'action' => $action
+            )
+        );
+
+//        return array(
+//            'cycle' => $cycle,
+//            'entity' => $felltype,
+//            'form' => $form->createView()
+//        );
+
+        return $form;
     }
 
 
