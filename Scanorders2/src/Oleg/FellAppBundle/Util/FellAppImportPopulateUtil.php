@@ -918,7 +918,7 @@ class FellAppImportPopulateUtil {
                 }
 
                 //DOB: oleg_userdirectorybundle_user_credentials_dob
-                $dobDate = $this->transformDatestrToDate($this->getValueByHeaderName('dob',$rowData,$headers));
+                $dobDate = $this->transformDatestrToDate($this->getValueByHeaderName('dateOfBirth',$rowData,$headers));
                 $fellowshipApplication->getUser()->getCredentials()->setDob($dobDate);
 
                 //undergraduate
