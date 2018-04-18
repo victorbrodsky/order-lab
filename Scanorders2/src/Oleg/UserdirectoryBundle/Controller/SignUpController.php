@@ -135,6 +135,7 @@ class SignUpController extends Controller
             if( !$signUp->getEmail() ) {
                 //$form->get('email')->addError(new FormError('The email value should not be blank.')); validation is done in DB level
             } else {
+                $emailHasError = false;
                 //echo "email=".$signUp->getEmail()."<br>";
                 //If the entered email address ends in “@med.cornell.edu” or “@nyp.org”
                 if( strpos($signUp->getEmail(), "@med.cornell.edu") !== false || strpos($signUp->getEmail(), "@nyp.org") !== false ) {
@@ -144,77 +145,84 @@ class SignUpController extends Controller
                         $cwid = $emailArr[0];
                     }
                     $emailError = "Since you entered an institutional e-mail address, you do not need to sign up for an account. ".
-                                  "You can use your $cwid and the associated password to log in.";
+                                  "You can use your $cwid account and the associated password to log in.";
                     $form->get('email')->addError(new FormError($emailError));
+                    $emailHasError = true;
                 }
 
                 //check if still active request and email or username existed in SignUp DB
-                $signUpDbs = $em->getRepository('OlegUserdirectoryBundle:SignUp')->findByEmail($signUp->getEmail());
-                if( count($signUpDbs) > 0 ) {
-                    $signUpDb = $signUpDbs[0];
-                    if ($signUpDb->getRegistrationStatus() == "Activation Email Sent") {
-                        $createdDate = $signUpDb->getCreatedate();
-                        //echo "createDate=".$createdDate->format("d-m-Y H:i:s")."<br>";
-                        $now = new \DateTime();
-                        //echo "now=".$now->format("d-m-Y H:i:s")."<br>";
-                        $interval = $now->diff($createdDate);
-                        $hours = $interval->h + ($interval->days * 24);
-                        //echo "hours=".$hours."<br>";
-                        if( $hours <= 24 ) {
-                            //allow only 3 emails during 24 hours
-                            if( $signUpDb->getEmailSentCounter() < 3 ) {
-                                $this->sendEmailWithActivationLink($signUpDb,$request);
-                                $confirmation =
-                                    "An email was re-sent to the email address you provided ".$signUpDb->getEmail().
-                                    " with an activation link.<br>".
-                                    "Please click the link emailed to you to activate your account.";
-                                return $this->render('OlegUserdirectoryBundle:SignUp:confirmation.html.twig',
-                                    array(
-                                        'title'=>"Registration Confirmation",
-                                        'messageSuccess'=>$confirmation)
-                                );
-                            } else {
-                                //exit('registration with this email is still active');
-                                $emailError = "A new account for this email address has been requested more than once in the past 24 hours.".
-                                    " You should have received an email with an activation link to follow in order to complete your registration.".
-                                    " If you do not see such an email message, please try signing up tomorrow.";
-                                $form->get('email')->addError(new FormError($emailError));
-                            }
+                if( !$emailHasError ) {
+                    $signUpDbs = $em->getRepository('OlegUserdirectoryBundle:SignUp')->findByEmail($signUp->getEmail());
+                    if (count($signUpDbs) > 0) {
+                        $signUpDb = $signUpDbs[0];
+                        if ($signUpDb->getRegistrationStatus() == "Activation Email Sent") {
+                            $createdDate = $signUpDb->getCreatedate();
+                            //echo "createDate=".$createdDate->format("d-m-Y H:i:s")."<br>";
+                            $now = new \DateTime();
+                            //echo "now=".$now->format("d-m-Y H:i:s")."<br>";
+                            $interval = $now->diff($createdDate);
+                            $hours = $interval->h + ($interval->days * 24);
+                            //echo "hours=".$hours."<br>";
+                            if ($hours <= 24) {
+                                //allow only 3 emails during 24 hours
+                                if ($signUpDb->getEmailSentCounter() < 3) {
+                                    $this->sendEmailWithActivationLink($signUpDb, $request);
+                                    $confirmation =
+                                        "An email was re-sent to the email address you provided " . $signUpDb->getEmail() .
+                                        " with an activation link.<br>" .
+                                        "Please click the link emailed to you to activate your account.";
+                                    return $this->render('OlegUserdirectoryBundle:SignUp:confirmation.html.twig',
+                                        array(
+                                            'title' => "Registration Confirmation",
+                                            'messageSuccess' => $confirmation)
+                                    );
+                                } else {
+                                    //exit('registration with this email is still active');
+                                    $emailError = "A new account for this email address has been requested more than once in the past 24 hours." .
+                                        " You should have received an email with an activation link to follow in order to complete your registration." .
+                                        " If you do not see such an email message, please try signing up tomorrow.";
+                                    $form->get('email')->addError(new FormError($emailError));
+                                    $emailHasError = true;
+                                }
 
+                            }
                         }
                     }
                 }
 
                 //check if user with provided email existed in SignUp DB
-                $userDbs = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByUserInfoEmail($signUp->getEmail());
-                //echo "usersDb=".count($userDbs)."<br>";
-                if( count($userDbs) > 0 ) {
-                    $userDb = $userDbs[0];
-                    if( $userDb->getLocked() ) {
-                        $emailError = "Your account is currently locked and you will not be able to log in until".
-                            " you contact the system administrator at ".$systemEmail.".";
-                    } else {
-                        $orderUrl = $this->container->get('router')->generate(
-                            $this->pathHome,
-                            array(),
-                            UrlGeneratorInterface::ABSOLUTE_URL
-                        );
-                        $orderUrl = ' <a href="'.$orderUrl.'">log in</a> ';
+                if( !$emailHasError ) {
+                    $userDbs = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByUserInfoEmail($signUp->getEmail());
+                    //echo "usersDb=".count($userDbs)."<br>";
+                    if (count($userDbs) > 0) {
+                        $userDb = $userDbs[0];
+                        if ($userDb->getLocked()) {
+                            $emailError = "Your account is currently locked and you will not be able to log in until" .
+                                " you contact the system administrator at " . $systemEmail . ".";
+                        } else {
+                            $orderUrl = $this->container->get('router')->generate(
+                                $this->pathHome,
+                                array(),
+                                UrlGeneratorInterface::ABSOLUTE_URL
+                            );
+                            $orderUrl = ' <a href="' . $orderUrl . '">log in</a> ';
 
-                        $resetUrl = $this->container->get('router')->generate(
-                            $this->siteName."_forgot_password",
-                            array(),
-                            UrlGeneratorInterface::ABSOLUTE_URL
-                        );
-                        $resetUrl = ' <a href="'.$resetUrl.'">visit this page to receive an email with the password reset link</a> ';
+                            $resetUrl = $this->container->get('router')->generate(
+                                $this->siteName . "_forgot_password",
+                                array(),
+                                UrlGeneratorInterface::ABSOLUTE_URL
+                            );
+                            $resetUrl = '<a href="' . $resetUrl . '">visit this page to receive an email with the password reset link</a>';
 
-                        $emailError = "The email you entered has already been associated with an existing user account.".
-                            "Either enter a different email address to continue signing up for a new account,".
-                            " or ".$orderUrl." using the user name and password of the existing account.".
-                            " If you do not recall the user name and password associated with the existing account,".
-                            " ".$resetUrl." .";
+                            $emailError = "The email you entered has already been associated with an existing user account." .
+                                " Either enter a different email address to continue signing up for a new account," .
+                                " or " . $orderUrl . " using the user name and password of the existing account." .
+                                " If you do not recall the user name and password associated with the existing account," .
+                                " " . $resetUrl . ".";
+                        }
+                        $form->get('email')->addError(new FormError($emailError));
+                        $emailHasError = true;
                     }
-                    $form->get('email')->addError(new FormError($emailError));
                 }
 
             }
