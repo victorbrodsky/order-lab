@@ -75,15 +75,10 @@ class MaintenanceListener {
         //echo "controller=".$controller."<br>";
 
         //site check accessibility
-        if(0) {
-            //TODO: make it generic. Do it only on login page to improve performance.
-            $sitename = "employees";
+        $sitename = $this->getSiteName($controller);
+        if( $sitename ) {
             $siteObject = $this->em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation($sitename);
-            if ($siteObject->getAccessible() === false) {
-                //if (strpos($controller, 'Oleg\TranslationalResearchBundle') !== false) {
-                //$transresBlockAccess = $userSecUtil->getSiteSettingParameter('transresBlockAccess');
-                //if ($transresBlockAccess) {
-
+            if( $siteObject->getAccessibility() === false ) {
                 $systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
 
                 $session = $this->container->get('session');
@@ -92,11 +87,9 @@ class MaintenanceListener {
                     $siteObject->getAbbreviation() . " site is currently not accessible. If you have any questions, please contact the $systemEmail."
                 );
 
-                $blockAccessRoute = 'main_common_home';
-                $url = $this->container->get('router')->generate($blockAccessRoute);
+                $url = $this->container->get('router')->generate('main_common_home');
                 $response = new RedirectResponse($url);
                 $event->setResponse($response);
-                //}
             }
         }
 
@@ -206,6 +199,31 @@ class MaintenanceListener {
 
     }
 
+    public function getSiteName($controller) {
+        if( strpos($controller,'Oleg\UserdirectoryBundle') !== false ) {
+            return "employees";
+        }
+        if( strpos($controller,'Oleg\OrderformBundle') !== false ) {
+            return "scan";
+        }
+        if( strpos($controller,'Oleg\FellAppBundle') !== false ) {
+            return "fellapp";
+        }
+        if( strpos($controller,'Oleg\DeidentifierBundle') !== false ) {
+            return "deidentifier";
+        }
+        if( strpos($controller,'Oleg\VacReqBundle') !== false ) {
+            return "vacreq";
+        }
+        if( strpos($controller,'Oleg\CallLogBundle') !== false ) {
+            return "calllog";
+        }
+        if( strpos($controller,'Oleg\TranslationalResearchBundle') !== false ) {
+            return "translationalresearch";
+        }
+
+        return null;
+    }
 
 //    //perform heavy jobs
 //    public function onKernelTerminate(PostResponseEvent $event) {

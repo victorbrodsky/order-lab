@@ -97,12 +97,15 @@ class AccessRequestController extends Controller
         }
 
         //TODO: If self-sign up is enabled, and a site is "LIVE"
+        $testing = false;
+        $testing = true;
         //add minimum roles and redirect to the intended URL they were trying to access
         if( $userSecUtil->isSelfSignUp($this->siteName) ) {
             //echo "site is Self Sign Up<br>";
 
-            $environment = $userSecUtil->getSiteSettingParameter('environment');
-            if( $environment == "live" ) {
+            //$environment = $userSecUtil->getSiteSettingParameter('environment');
+            //if( $environment == "live" ) {
+            if( $userSecUtil->isSiteAccessible($this->siteName) ) {
                 //echo "site is Live<br>";
 
                 $siteObject = $em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation($this->siteName);
@@ -118,7 +121,9 @@ class AccessRequestController extends Controller
                 }
 
                 //flush changes for user roles
-                $em->flush($user);
+                if( !$testing ) {
+                    $em->flush($user);
+                }
 
                 //EventLog
                 $event = "Auto-Grant Access by assigning the lowest roles:".implode(",",$roleStrArr);
@@ -126,7 +131,7 @@ class AccessRequestController extends Controller
 
                 //////////////// 2) redirect to the intended URL they were trying to access //////////////
                 $lastRoute = $this->siteName.'_home';
-                if( 0 ) {
+                if( 1 ) {
                     //TODO: find a way to get intended URL
                     //$this->firewallName = 'ldap_employees_firewall'
                     //ldap_translationalresearch_firewall, ldap_employees_firewall ...
@@ -135,6 +140,10 @@ class AccessRequestController extends Controller
 //                $indexLastRoute = '_security.'.$firewallName.'.target_path';
 //                $lastRoute = $request->getSession()->get($indexLastRoute);
 //                echo "0 lastRoute=".$lastRoute."<br>";
+
+                    $lastPath = $request->headers->get('referer');
+                    echo "referer lastRoute=" . $lastPath . "<br>";
+
 
                     $request->headers->get('referer');
                     $referer = $request->headers->get('referer');
@@ -150,7 +159,9 @@ class AccessRequestController extends Controller
                 }
                 //////////////// EOF 2) redirect to the intended URL they were trying to access //////////////
 
-                //exit('redirect to the requested system');
+                if( !$testing ) {
+                    exit('redirect to the requested system');
+                }
                 return $this->redirect( $this->generateUrl($lastRoute) );
 
             } else {
@@ -160,7 +171,9 @@ class AccessRequestController extends Controller
                 );
             }
         }
-        //exit('continue with access request');
+        if( !$testing ) {
+            exit('continue with access request');
+        }
 
         //the user might be authenticated by another site. If the user does not have lowest role => assign unapproved role to trigger access request
         if( false === $userSecUtil->hasGlobalUserRole($this->roleUser,$user) ) {

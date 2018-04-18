@@ -265,13 +265,6 @@ class SiteParametersType extends AbstractType
                 'attr' => array('class'=>'form-control')
             ));
 
-//        //site BlockAccess
-//        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'transresBlockAccess' )
-//            $builder->add('transresBlockAccess',null,array(
-//                'label'=>'Translational Research Block Accessibility:',
-//                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
-//            ));
-
         //uploads
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'employeesuploadpath' )
             $builder->add('employeesuploadpath',null,array(
