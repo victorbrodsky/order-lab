@@ -74,23 +74,29 @@ class MaintenanceListener {
         $controller = $event->getRequest()->attributes->get('_controller');
         //echo "controller=".$controller."<br>";
 
-        //translationalresearch site check accessibility
-        if (strpos($controller, 'Oleg\TranslationalResearchBundle') !== false) {
-            $transresBlockAccess = $userSecUtil->getSiteSettingParameter('transresBlockAccess');
-            if ($transresBlockAccess) {
+        //site check accessibility
+        if(0) {
+            //TODO: make it generic. Do it only on login page to improve performance.
+            $sitename = "employees";
+            $siteObject = $this->em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation($sitename);
+            if ($siteObject->getAccessible() === false) {
+                //if (strpos($controller, 'Oleg\TranslationalResearchBundle') !== false) {
+                //$transresBlockAccess = $userSecUtil->getSiteSettingParameter('transresBlockAccess');
+                //if ($transresBlockAccess) {
 
                 $systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
 
                 $session = $this->container->get('session');
                 $session->getFlashBag()->add(
                     'warning',
-                    "Translational Research site is currently not accessible. If you have any questions, please contact the $systemEmail."
+                    $siteObject->getAbbreviation() . " site is currently not accessible. If you have any questions, please contact the $systemEmail."
                 );
 
                 $blockAccessRoute = 'main_common_home';
                 $url = $this->container->get('router')->generate($blockAccessRoute);
                 $response = new RedirectResponse($url);
                 $event->setResponse($response);
+                //}
             }
         }
 

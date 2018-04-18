@@ -208,11 +208,11 @@ class SiteParameters {
      */
     private $maintenanceloginmsg;
 
-    //Accessibility
-    /**
-     * @ORM\Column(type="boolean",nullable=true)
-     */
-    private $transresBlockAccess;
+//    //Accessibility
+//    /**
+//     * @ORM\Column(type="boolean",nullable=true)
+//     */
+//    private $transresBlockAccess;
 
     //uploads path
     /**
@@ -1462,21 +1462,21 @@ class SiteParameters {
         return $msg;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getTransresBlockAccess()
-    {
-        return $this->transresBlockAccess;
-    }
-
-    /**
-     * @param mixed $transresBlockAccess
-     */
-    public function setTransresBlockAccess($transresBlockAccess)
-    {
-        $this->transresBlockAccess = $transresBlockAccess;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getTransresBlockAccess()
+//    {
+//        return $this->transresBlockAccess;
+//    }
+//
+//    /**
+//     * @param mixed $transresBlockAccess
+//     */
+//    public function setTransresBlockAccess($transresBlockAccess)
+//    {
+//        $this->transresBlockAccess = $transresBlockAccess;
+//    }
 
     /**
      * @param mixed $employeesuploadpath

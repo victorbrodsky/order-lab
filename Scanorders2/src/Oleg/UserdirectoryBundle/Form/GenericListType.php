@@ -613,7 +613,7 @@ class GenericListType extends AbstractType
             ));
         }
 
-        if( method_exists($this->params['entity'],'getSelfSignUp') ) {
+        if( strtolower($this->mapper['className']) == strtolower("SiteList") ) {
             $builder->add('selfSignUp',null,array(
                 'label' => "Self Sign Up:",
                 'required' => false,
@@ -623,6 +623,11 @@ class GenericListType extends AbstractType
                 'label' => "Lowest Roles:",
                 'required' => false,
                 'attr' => array('class'=>'combobox'),
+            ));
+            $builder->add('accessibility',null,array(
+                'label' => "Accessibility:",
+                'required' => false,
+                'attr' => array('class'=>'form-control'),
             ));
         }
 

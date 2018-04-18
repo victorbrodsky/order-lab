@@ -454,15 +454,7 @@ class UserServiceUtil {
         }
         return $labelValueArr;
     }
-
-    public function isSelfSignUp( $sitename ) {
-        //TODO: If "Self-Sign Up" is enabled for the site that the user is trying to log into
-        $siteObject = $this->em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation($sitename);
-        if( $siteObject->getSelfSignUp() === true ) {
-            return true;
-        }
-        return false;
-    }
+    
 
     public function getUniqueRegistrationLinkId( $className, $sometxt, $count=0 ) {
         if( $count > 100 ) { //limit: trying limit

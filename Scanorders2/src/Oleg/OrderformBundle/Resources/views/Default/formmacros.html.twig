@@ -41,15 +41,23 @@
     </p>
 {% endmacro %}
 
-{% macro checkbox( value ) %}
+{% macro checkbox( field, attr ) %}
     <p>
     <div class="row">
-        {{ form_errors(value) }}
+        {{ form_errors(field) }}
         <div class="col-xs-6" align="right">
-            {{ form_label(value) }}
+            {{ form_label(field) }}
         </div>
         <div class="col-xs-6 text-center" align="left" style="width: 50px;">
-            {{ form_widget(value) }}
+            {% if attr == "disabled" %}
+                {{ form_widget(field,{ 'disabled':'disabled' }) }}
+            {% elseif attr == "readonly" %}
+                {{ form_widget(field, { 'attr': {'readonly': 'readonly'} }) }}
+            {% elseif attr == "required" %}
+                {{ form_widget(field, { 'attr': {'required': 'true'} }) }}
+            {% else %}
+                {{ form_widget(field) }}
+            {% endif %}
         </div>
     </div>
     </p>

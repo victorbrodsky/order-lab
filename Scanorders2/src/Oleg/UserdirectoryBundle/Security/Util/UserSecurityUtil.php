@@ -1961,5 +1961,32 @@ class UserSecurityUtil {
         return null;
     }
 
+    public function isSelfSignUp( $sitename ) {
+        $siteObject = $this->em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation($sitename);
+        if( $siteObject->getSelfSignUp() === true ) {
+            return true;
+        }
+        return false;
+    }
+
+    public function isSiteAccessible( $sitename ) {
+        if( $sitename == "employees" ) {
+            //always enabled for employees site
+            return true;
+        }
+        $siteObject = $this->em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation($sitename);
+        if( $siteObject->getAccessibility() === true ) {
+            return true;
+        }
+        return false;
+    }
+
+    public function allowSiteLogin($sitename) {
+        $environment = $this->getSiteSettingParameter('environment');
+        if( $environment == "live" && $this->isSiteAccessible($sitename) === false ) {
+            return false;
+        }
+        return true;
+    }
 
 }

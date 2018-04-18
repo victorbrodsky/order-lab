@@ -107,6 +107,7 @@
             {% endif %}
 
             {% if entities|first.selfSignUp is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'Accessibility', 'ent.accessibility') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Self Sign Up', 'ent.selfSignUp') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Lowest Roles', 'ent.lowestRoles') }}</th>
             {% endif %}
@@ -274,6 +275,17 @@
                 {% endif %}
 
                 {% if entity.selfSignUp is defined %}
+                    <td>
+                        {% if entity.abbreviation == "employees" %}
+                            Yes
+                        {% else %}
+                            {% if entity.accessibility == 1 %}
+                                Yes
+                            {% else %}
+                                No
+                            {% endif %}
+                        {% endif %}
+                    </td>
                     <td>
                         {% if entity.selfSignUp == 1 %}
                             Yes
@@ -826,6 +838,13 @@
         {{ formmacros.field(form.feeUnit) }}
     {% endif %}
 
+    {% if form.accessibility is defined %}
+        {% if entity.abbreviation == "employees" %}
+            {{ formmacros.checkbox(form.accessibility,"disabled") }}
+        {% else %}
+            {{ formmacros.checkbox(form.accessibility) }}
+        {% endif %}
+    {% endif %}
     {% if form.selfSignUp is defined %}
         {{ formmacros.checkbox(form.selfSignUp) }}
     {% endif %}

@@ -48,7 +48,7 @@ class ScanAccessRequestController extends AccessRequestController
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:AccessRequest:access_request.html.twig")
      */
-    public function accessRequestCreatePlainAction()
+    public function accessRequestCreatePlainAction(Request $request)
     {
 
         $userSecUtil = $this->get('user_security_utility');

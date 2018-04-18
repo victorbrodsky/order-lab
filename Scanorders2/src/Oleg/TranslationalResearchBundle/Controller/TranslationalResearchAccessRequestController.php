@@ -52,10 +52,10 @@ class TranslationalResearchAccessRequestController extends AccessRequestControll
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:AccessRequest:access_request.html.twig")
      */
-    public function accessRequestCreatePlainAction()
+    public function accessRequestCreatePlainAction(Request $request)
     {
         //exit('accessRequestCreatePlainAction');
-        return parent::accessRequestCreatePlain();
+        return parent::accessRequestCreatePlain($request);
     }
 
     /**

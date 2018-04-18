@@ -52,7 +52,13 @@ class SiteList extends ListAbstract
      **/
     private $lowestRoles;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $accessibility;
 
+
+    
     public function __construct( $creator = null ) {
         parent::__construct($creator);
 
@@ -90,6 +96,24 @@ class SiteList extends ListAbstract
     {
         return $this->lowestRoles;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getAccessibility()
+    {
+        return $this->accessibility;
+    }
+
+    /**
+     * @param mixed $accessibility
+     */
+    public function setAccessibility($accessibility)
+    {
+        $this->accessibility = $accessibility;
+    }
+
+    
 
 
 

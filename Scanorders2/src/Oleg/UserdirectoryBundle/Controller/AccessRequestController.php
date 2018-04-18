@@ -72,18 +72,95 @@ class AccessRequestController extends Controller
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:AccessRequest:access_request.html.twig")
      */
-    public function accessRequestCreatePlainAction()
+    public function accessRequestCreatePlainAction(Request $request)
     {
-        return $this->accessRequestCreatePlain();
+        return $this->accessRequestCreatePlain($request);
     }
-    public function accessRequestCreatePlain()
+    public function accessRequestCreatePlain($request)
     {
 
         //exit('access Request Create Plain');
 
         $userSecUtil = $this->get('user_security_utility');
-
+        //$userServiceUtil = $this->get('user_service_utility');
+        $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
+
+
+        if( $userSecUtil->isSiteAccessible($this->siteName) === false ) {
+            $systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                "This site is currently not accessible. Please try it later. If you have any questions, please contact the ".$systemEmail."."
+            );
+            return $this->redirect( $this->generateUrl($this->siteName.'_home') );
+        }
+
+        //TODO: If self-sign up is enabled, and a site is "LIVE"
+        //add minimum roles and redirect to the intended URL they were trying to access
+        if( $userSecUtil->isSelfSignUp($this->siteName) ) {
+            //echo "site is Self Sign Up<br>";
+
+            $environment = $userSecUtil->getSiteSettingParameter('environment');
+            if( $environment == "live" ) {
+                //echo "site is Live<br>";
+
+                $siteObject = $em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation($this->siteName);
+                $lowestRoles = $siteObject->getLowestRoles();
+                //1) Add Minimum Roles for this site
+                if( count($lowestRoles) == 0 ) {
+                    $lowestRoles = array($this->roleUser);
+                }
+                $roleStrArr = array();
+                foreach($lowestRoles as $role) {
+                    $user->addRole($role);
+                    $roleStrArr[] = $role."";
+                }
+
+                //flush changes for user roles
+                $em->flush($user);
+
+                //EventLog
+                $event = "Auto-Grant Access by assigning the lowest roles:".implode(",",$roleStrArr);
+                $userSecUtil->createUserEditEvent($this->siteName,$event,$user,$user,$request,'Auto-Grant Access');
+
+                //////////////// 2) redirect to the intended URL they were trying to access //////////////
+                $lastRoute = $this->siteName.'_home';
+                if( 0 ) {
+                    //TODO: find a way to get intended URL
+                    //$this->firewallName = 'ldap_employees_firewall'
+                    //ldap_translationalresearch_firewall, ldap_employees_firewall ...
+//                $firewallName = 'ldap_'.$this->siteName.'_firewall';
+//                $firewallName = 'ldap_translationalresearch_firewall';
+//                $indexLastRoute = '_security.'.$firewallName.'.target_path';
+//                $lastRoute = $request->getSession()->get($indexLastRoute);
+//                echo "0 lastRoute=".$lastRoute."<br>";
+
+                    $request->headers->get('referer');
+                    $referer = $request->headers->get('referer');
+                    $baseUrl = $request->getBaseUrl();
+                    $lastPath = substr($referer, strpos($referer, $baseUrl) + strlen($baseUrl));
+                    $lastRoutes = $this->get('router')->getMatcher()->match($lastPath);
+                    foreach ($lastRoutes as $lastRoute) {
+                        echo "1 lastRoute=" . $lastRoute . "<br>";
+                    }
+
+                    $lastRoute = $this->getRefererRoute($request);
+                    echo "2 lastRoute=" . $lastRoute . "<br>";
+                }
+                //////////////// EOF 2) redirect to the intended URL they were trying to access //////////////
+
+                //exit('redirect to the requested system');
+                return $this->redirect( $this->generateUrl($lastRoute) );
+
+            } else {
+                $this->get('session')->getFlashBag()->add(
+                    'notice',
+                    "This site has not gone live yet."
+                );
+            }
+        }
+        //exit('continue with access request');
 
         //the user might be authenticated by another site. If the user does not have lowest role => assign unapproved role to trigger access request
         if( false === $userSecUtil->hasGlobalUserRole($this->roleUser,$user) ) {
@@ -114,6 +191,21 @@ class AccessRequestController extends Controller
         );
 
         return $this->accessRequestCreateNew($user->getId(),$this->siteName,$roles);
+    }
+
+
+    public function getRefererRoute($request)
+    {
+        //look for the referer route
+        $referer = $request->headers->get('referer');
+        $lastPath = substr($referer, strpos($referer, $request->getBaseUrl()));
+        $lastPath = str_replace($request->getBaseUrl(), '', $lastPath);
+
+        $matcher = $this->get('router')->getMatcher();
+        $parameters = $matcher->match($lastPath);
+        $route = $parameters['_route'];
+
+        return $route;
     }
 
 

@@ -63,9 +63,8 @@
 <input type="hidden" name="display_height" id="display_height" value="" />
 <input type="hidden" name="display_width" id="display_width" value="" />
 
-
+{% if user_security_utility.allowSiteLogin(sitename) %}
 <form id="login-form" class="form-signin" action="{{ path(sitename~'_login_check') }}" method="post">
-{#{{ form_start(form, {'id':"login-form", 'class':"form-signin" 'action': path(sitename~'_login_check'), 'method': 'POST'}) }}#}
 
     <div class="row">
     <div class="col-xs-12">
@@ -100,7 +99,6 @@
     <button class="btn btn-lg btn-primary btn-block" type="submit" >Log In</button>
 
 </form>
-{#{{ form_end(form) }}#}
 
 <div class="text-center">
 
@@ -125,7 +123,7 @@
             {#<a href="{{ path('accountrequest_new') }}">Request an Aperio eSlide Manager account</a> if you can't log in.#}
         {#</p>#}
     {#{% endif %}#}
-    {% if user_service_utility.isSelfSignUp(sitename) %}
+    {% if user_security_utility.isSelfSignUp(sitename) %}
         <p>
             {% set noticeSignUpNoCwid = user_security_utility.getSiteSettingParameter("noticeSignUpNoCwid") %}
             <a href="{{ path(sitename~'_signup_new') }}">{{ noticeSignUpNoCwid|raw }}</a> | <a href="{{ path(sitename~'_forgot_password') }}">Forgot Password</a>
@@ -137,7 +135,11 @@
     {% endif %}
 
 </div>
-
+{% else %}
+    <p>
+        This site is being prepared for go-live. Please return once it launches.
+    </p>
+{% endif %}
 
 <script language="Javascript">
     <!--
