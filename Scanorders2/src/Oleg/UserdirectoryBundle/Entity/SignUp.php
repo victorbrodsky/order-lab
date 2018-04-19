@@ -132,6 +132,13 @@ class SignUp {
      * @ORM\Column(type="integer")
      */
     private $emailSentCounter;
+
+    /**
+     * Last Url, to use later when activate an account
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $lastUrl;
     ////////////// EOF registration parameters //////////////
 
 
@@ -502,6 +509,24 @@ class SignUp {
     {
         $this->height = $height;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getLastUrl()
+    {
+        return $this->lastUrl;
+    }
+
+    /**
+     * @param mixed $lastUrl
+     */
+    public function setLastUrl($lastUrl)
+    {
+        $this->lastUrl = $lastUrl;
+    }
+
+    
 
     /**
      * @return mixed

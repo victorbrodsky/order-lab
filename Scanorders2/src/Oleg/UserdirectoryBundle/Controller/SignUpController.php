@@ -275,6 +275,14 @@ class SignUpController extends Controller
                 $signUp->setHeight($request->get('display_height'));
             }
 
+            $firewallName = "ldap_".$this->siteName."_firewall";
+            $indexLastRoute = '_security.'.$firewallName.'.target_path';
+            $lastRoute = $request->getSession()->get($indexLastRoute);
+            //echo "lastRoute=".$lastRoute."<br>";
+            if( $lastRoute ) {
+                $signUp->setLastUrl($lastRoute);
+            }
+
             //exit('flush');
             $em->persist($signUp);
             $em->flush($signUp);
@@ -627,8 +635,14 @@ class SignUpController extends Controller
 //            );
             //////////////// EOF send email to admin //////////////////////
 
-            //send them to the “Employee Directory” homepage.
-            return $this->redirectToRoute($this->pathHome);
+            //redirect to intended Url
+            $redirectUrl = $signUp->getLastUrl();
+            if( $redirectUrl ) {
+                return $this->redirect($redirectUrl);
+            } else {
+                //send them to the homepage.
+                return $this->redirectToRoute($this->pathHome);
+            }
         }
         //exit('new');
 

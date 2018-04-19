@@ -63,6 +63,10 @@
 <input type="hidden" name="display_height" id="display_height" value="" />
 <input type="hidden" name="display_width" id="display_width" value="" />
 
+{#{% if app.request.get('_route') != app.request.headers.get('referer') %}#}
+    {#<input type="hidden" name="_target_path" value="{{ app.request.headers.get('referer') }}" />#}
+{#{% endif %}#}
+
 {% if user_security_utility.allowSiteLogin(sitename) %}
 <form id="login-form" class="form-signin" action="{{ path(sitename~'_login_check') }}" method="post">
 
