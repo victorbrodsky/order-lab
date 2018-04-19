@@ -314,7 +314,7 @@ class SignUpController extends Controller
         }
         //exit('new');
 
-        if( $userSecUtil->getSiteSettingParameter('captchaSecretKey') === true ) {
+        if( $userSecUtil->getSiteSettingParameter('captchaEnabled') === true ) {
             $captchaSecretKey = $userSecUtil->getSiteSettingParameter('captchaSecretKey');
         } else {
             $captchaSecretKey = null;
