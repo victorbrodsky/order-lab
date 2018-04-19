@@ -81,9 +81,6 @@
     <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
     <input type="hidden" id="formcycle" value="accountreq" />
     <input type="hidden" id="orderformtype" value="single" />
-    {#{% if app.request.get('_route') != app.request.headers.get('referer') %}#}
-        {#<input type="hidden" name="_target_path" value="{{ app.request.headers.get('referer') }}" />#}
-    {#{% endif %}#}
 
     <h2 class="alert alert-info well-lg safary-fix" align="center">{{ title }}</h2>
 

@@ -74,47 +74,6 @@ class MaintenanceListener {
         $controller = $event->getRequest()->attributes->get('_controller');
         //echo "controller=".$controller."<br>";
 
-        //record the uri
-//        $session = $this->container->get('session');
-//        $uri = $event->getRequest()->getRequestUri() ;
-//        $session->set('intendedUri',$uri);
-//        if(
-//            strpos($controller,'Oleg\UserdirectoryBundle') !== false ||
-//            strpos($controller,'Oleg\OrderformBundle') !== false ||
-//            strpos($controller,'Oleg\FellAppBundle') !== false ||
-//            strpos($controller,'Oleg\DeidentifierBundle') !== false ||
-//            strpos($controller,'Oleg\VacReqBundle') !== false ||
-//            strpos($controller,'Oleg\CallLogBundle') !== false ||
-//            strpos($controller,'Oleg\TranslationalResearchBundle') !== false
-//        ) {
-//            $uri = $event->getRequest()->getRequestUri();
-//            $loginpos = strpos($uri, '/login');
-//            $setlogin = strpos($uri,'setloginvisit');
-//            $nopermpos = strpos($uri, '/no-permission');
-//            $nocheck = strpos($uri, '/check/');
-//            $keepalive = strpos($uri, '/keepalive');
-//            $idlelogout = strpos($uri, '/idlelogout');
-//            $common = strpos($uri, '/common/');
-//            if(
-//                1 ||
-//                $setlogin === false && $loginpos === false && $nopermpos === false &&
-//                $nocheck === false && $keepalive === false &&
-//                $idlelogout === false && $common === false
-//            ) {
-//                $session = $this->container->get('session');
-//                $sessionUri = $session->get('intendedUri');
-//                $sessionUri[] = $uri;
-//                $session->set('intendedUri',$sessionUri);
-//            }
-//
-//        } else {
-//            //echo "other controller! <br>";
-//            //return;
-//        }
-        //$event->getRequest()->headers->get('referer');
-        //$referer = $event->getRequest()->headers->get('referer');
-        //echo "referer=" . $referer . "<br>";
-
 
         //site check accessibility
         $sitename = $this->getSiteName($controller);

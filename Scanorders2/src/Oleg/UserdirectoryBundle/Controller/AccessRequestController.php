@@ -144,37 +144,8 @@ class AccessRequestController extends Controller
                     $lastPath = $request->headers->get('referer');
                     echo "referer lastRoute=" . $lastPath . "<br>";
 
-
-                    $request->headers->get('referer');
-                    $referer = $request->headers->get('referer');
-                    $baseUrl = $request->getBaseUrl();
-                    $lastPath = substr($referer, strpos($referer, $baseUrl) + strlen($baseUrl));
-                    $lastRoutes = $this->get('router')->getMatcher()->match($lastPath);
-                    foreach ($lastRoutes as $lastRoute) {
-                        echo "1 lastRoute=" . $lastRoute . "<br>";
-                    }
-
                     $lastRoute = $this->getRefererRoute($request);
                     echo "2 lastRoute=" . $lastRoute . "<br>";
-
-                    $lastRoute = $request->getSession()->get('_security.'.$indexLastRoute.'.target_path');
-                    echo "3 lastRoute=" . $lastRoute . "<br>";
-
-                    //$lastRoute = Request::path();
-                    //echo "4 lastRoute=" . $lastRoute . "<br>";
-
-                    $lastRoute = $request->getUri();
-                    echo "5 lastRoute=" . $lastRoute . "<br>";
-
-//                    $session = $this->container->get('session');
-//                    $lastRoute = $session->get('intendedUri');
-//                    echo "6 session lastRoute=" . $lastRoute . "<br>";
-//                    echo "6 session lastRoute=" . implode("<br>",$lastRoute) . "<br>";
-
-                    //$targetPath = $this->getTargetPath($request->getSession(), 'ldap_employees_firewall');
-                    $targetPath = $request->getSession()->get('_security.'.'ldap_employees_firewall'.'.target_path');
-                    echo "7 lastRoute=" . $targetPath . "<br>";
-
                 }//if(0)
                 //////////////// EOF 2) redirect to the intended URL they were trying to access //////////////
 
@@ -226,6 +197,7 @@ class AccessRequestController extends Controller
     }
 
 
+    //NOT USED
     public function getRefererRoute($request)
     {
         //look for the referer route
