@@ -238,15 +238,12 @@ class SignUpController extends Controller
             }
 
             if( $userSecUtil->getSiteSettingParameter('captchaEnabled') === true ) {
-                if( !$this->captchaverify($request->get('g-recaptcha-response')) ) {
-                    $this->addFlash(
-                        'error',
-                        'Captcha is Required'
-                    );
+                $captchaRes = $request->request->get('g-recaptcha-response');
+                if( !$this->captchaValidate($captchaRes) ) {
+                    $form->get('recaptcha')->addError(new FormError('Captcha is required'));
                 }
             }
 
-            //exit('1');
         }//if submitted
 
         if( $form->isSubmitted() && $form->isValid() ) {
@@ -319,7 +316,7 @@ class SignUpController extends Controller
         } else {
             $captchaSiteKey = null;
         }
-        echo "captchaSiteKey=[".$captchaSiteKey."]<br>";
+        //echo "captchaSiteKey=[".$captchaSiteKey."]<br>";
 
         return $this->render('OlegUserdirectoryBundle:SignUp:new.html.twig', array(
             'signUp' => $signUp,
@@ -385,24 +382,33 @@ class SignUpController extends Controller
         $res = array('subject'=>$subject,'body'=>$body);
         return $res;
     }
-    # get success response from recaptcha and return it to controller
-    function captchaverify($recaptcha){
+
+    //get success response from recaptcha and return it to controller
+    //https://www.google.com/recaptcha/admin#site/341068506
+    function captchaValidate($recaptcha) {
+
+        //$dir = $this->container->getParameter('kernel.root_dir'); //app
+        //echo "dir=".$dir."<br>";
+        //current dir is "C:\bla\bla\ORDER\scanorder\Scanorders2\app"
+        require_once "../src/Oleg/UserdirectoryBundle/Util/RecaptchaLib.php";
+
         $userSecUtil = $this->container->get('user_security_utility');
         $captchaSecretKey = $userSecUtil->getSiteSettingParameter('captchaSecretKey');
 
-        $url = "https://www.google.com/recaptcha/api/siteverify";
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, array(
-            "secret"=>$captchaSecretKey,"response"=>$recaptcha));
-        $response = curl_exec($ch);
-        curl_close($ch);
-        $data = json_decode($response);
+        $response = null;
 
-        return $data->success;
+        // check secret key
+        $reCaptcha = new \ReCaptcha($captchaSecretKey);
+
+        $response = $reCaptcha->verifyResponse(
+            $_SERVER["REMOTE_ADDR"],
+            $recaptcha
+        );
+
+        if( $response != null && $response->success ) {
+            return true;
+        }
+        return false;
     }
 
     /**

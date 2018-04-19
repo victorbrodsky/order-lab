@@ -4,6 +4,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -33,22 +34,18 @@ class SignUpType extends AbstractType
             'attr' => array('class' => 'form-control')
         ));
 
-//        $builder->add('hashPassword', RepeatedType::class, array(
-//            //'mapped' => false,
-//            //'error_bubbling' => true,
-//            'invalid_message' => 'Please make sure the passwords match',
-//            'options' => array('attr' => array('class' => 'password-field form-control')),
-//            //'required' => true,
-//            'type' => PasswordType::class,
-//            'first_options'  => array('label' => 'Password:', 'error_bubbling' => true),
-//            'second_options' => array('label' => 'Repeat Password:'),
-//            'error_bubbling' => true
-//        ));
-
         $builder->add( 'email', EmailType::class, array(
             'label'=>'Email:',
             //'required'=> true, //does not work here
             'attr' => array('class'=>'form-control'), //form-control-modif email-mask
+        ));
+
+        //used to display recaptcha error
+        $builder->add( 'recaptcha', HiddenType::class, array(
+            'mapped' => false,
+            'error_bubbling' => false,
+            'label' => false,
+            'attr' => array('class'=>'form-control g-recaptcha1'),
         ));
 
         $builder->add('submit', SubmitType::class, array(

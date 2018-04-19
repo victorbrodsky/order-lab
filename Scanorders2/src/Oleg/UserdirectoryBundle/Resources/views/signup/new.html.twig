@@ -102,16 +102,15 @@
 
     {{ formmacros.field(form.email) }}
 
-    {#{% if user_security_utility.getSiteSettingParameter('captchaEnabled') %}#}
-        {#{% set captchaSecretKey = user_security_utility.getSiteSettingParameter('captchaSecretKey') %}#}
-        {% if captchaSiteKey %}
-            <div class="col-xs-12 text-center">
-            <p>
-                <div class="g-recaptcha" data-sitekey="{{ captchaSiteKey }}" style="display: inline-block;"></div>
-            </p>
-            </div>
-        {% endif %}
-    {#{% endif %}#}
+    {% if captchaSiteKey %}
+        {#{{ form_errors(form.recaptcha) }}#}
+        <div class="col-xs-12 text-center">
+        <p>
+            {{ formmacros.field(form.recaptcha) }}
+            <div class="g-recaptcha" data-sitekey="{{ captchaSiteKey }}" style="display: inline-block;"></div>
+        </p>
+        </div>
+    {% endif %}
 
     {% if form.submit is defined %}
         <p>
