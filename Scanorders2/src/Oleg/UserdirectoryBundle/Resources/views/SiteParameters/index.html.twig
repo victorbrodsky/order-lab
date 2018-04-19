@@ -181,6 +181,18 @@
                 </td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'permittedFailedLoginAttempt'}) }}">Edit</a></td>
             </tr>
+
+            <tr>
+                <td>Captcha Enabled</td>
+                <td>
+                    {% set captchaEnabledStr = 'No' %}
+                    {% if entity.captchaEnabled == true %}
+                        {% set captchaEnabledStr = 'Yes' %}
+                    {% endif %}
+                    {{ captchaEnabledStr }}
+                </td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'captchaEnabled'}) }}">Edit</a></td>
+            </tr>
             <tr>
                 <td>Captcha Site Key</td>
                 <td>

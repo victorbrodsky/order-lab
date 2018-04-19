@@ -237,11 +237,13 @@ class SignUpController extends Controller
                 }
             }
 
-            if( $form->isSubmitted() &&  $form->isValid() && !$this->captchaverify($request->get('g-recaptcha-response'))){
-                $this->addFlash(
-                    'error',
-                    'Captcha is Required'
-                );
+            if( $userSecUtil->getSiteSettingParameter('captchaSecretKey') === true ) {
+                if( !$this->captchaverify($request->get('g-recaptcha-response')) ) {
+                    $this->addFlash(
+                        'error',
+                        'Captcha is Required'
+                    );
+                }
             }
 
             //exit('1');
@@ -312,12 +314,19 @@ class SignUpController extends Controller
         }
         //exit('new');
 
+        if( $userSecUtil->getSiteSettingParameter('captchaSecretKey') === true ) {
+            $captchaSecretKey = $userSecUtil->getSiteSettingParameter('captchaSecretKey');
+        } else {
+            $captchaSecretKey = null;
+        }
+
         return $this->render('OlegUserdirectoryBundle:SignUp:new.html.twig', array(
             'signUp' => $signUp,
             'form' => $form->createView(),
             'title' => "Sign Up for ".$this->siteNameStr,
             'sitenamefull' => $this->siteNameStr,
-            'sitename' => $this->siteName
+            'sitename' => $this->siteName,
+            'captchaSecretKey' => $captchaSecretKey
         ));
     }
     public function sendEmailWithActivationLink($signUp,$request) {

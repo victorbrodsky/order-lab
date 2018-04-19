@@ -102,9 +102,16 @@
 
     {{ formmacros.field(form.email) }}
 
-    <p>
-        <div class="g-recaptcha" data-sitekey="{{ user_security_utility.getSiteSettingParameter('captchaSecretKey') }}"></div>
-    </p>
+    {#{% if user_security_utility.getSiteSettingParameter('captchaEnabled') %}#}
+        {#{% set captchaSecretKey = user_security_utility.getSiteSettingParameter('captchaSecretKey') %}#}
+        {% if captchaSecretKey %}
+            <div class="col-xs-12">
+            <p>
+                <div class="g-recaptcha" data-sitekey="{{ captchaSecretKey }}"></div>
+            </p>
+            </div>
+        {% endif %}
+    {#{% endif %}#}
 
     {% if form.submit is defined %}
         <p>

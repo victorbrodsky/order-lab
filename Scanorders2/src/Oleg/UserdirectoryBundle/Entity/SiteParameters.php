@@ -734,6 +734,13 @@ class SiteParameters {
      */
     private $captchaSecretKey;
 
+    /**
+     * Enable Captcha at Sign Up
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $captchaEnabled;
+
 
     ////////////////////////// LDAP notice messages /////////////////////////
     /**
@@ -2758,6 +2765,22 @@ class SiteParameters {
     public function setCaptchaSecretKey($captchaSecretKey)
     {
         $this->captchaSecretKey = $captchaSecretKey;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCaptchaEnabled()
+    {
+        return $this->captchaEnabled;
+    }
+
+    /**
+     * @param mixed $captchaEnabled
+     */
+    public function setCaptchaEnabled($captchaEnabled)
+    {
+        $this->captchaEnabled = $captchaEnabled;
     }
 
     /**
