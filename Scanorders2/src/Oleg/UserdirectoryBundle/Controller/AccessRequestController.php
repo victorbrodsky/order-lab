@@ -98,7 +98,7 @@ class AccessRequestController extends Controller
 
         //TODO: If self-sign up is enabled, and a site is "LIVE"
         $testing = false;
-        $testing = true;
+        //$testing = true;
         //add minimum roles and redirect to the intended URL they were trying to access
         if( $userSecUtil->isSelfSignUp($this->siteName) ) {
             //echo "site is Self Sign Up<br>";
@@ -131,15 +131,15 @@ class AccessRequestController extends Controller
 
                 //////////////// 2) redirect to the intended URL they were trying to access //////////////
                 $lastRoute = $this->siteName.'_home';
-                if( 1 ) {
+                if( 0 ) {
                     //TODO: find a way to get intended URL
-                    //$this->firewallName = 'ldap_employees_firewall'
                     //ldap_translationalresearch_firewall, ldap_employees_firewall ...
 //                $firewallName = 'ldap_'.$this->siteName.'_firewall';
-//                $firewallName = 'ldap_translationalresearch_firewall';
-//                $indexLastRoute = '_security.'.$firewallName.'.target_path';
-//                $lastRoute = $request->getSession()->get($indexLastRoute);
-//                echo "0 lastRoute=".$lastRoute."<br>";
+                    $firewallName = 'ldap_translationalresearch_firewall';
+                    //$firewallName = 'ldap_employees_firewall';
+                    $indexLastRoute = '_security.'.$firewallName.'.target_path';
+                    $lastRoute = $request->getSession()->get($indexLastRoute);
+                    echo "0 lastRoute=".$lastRoute."<br>";
 
                     $lastPath = $request->headers->get('referer');
                     echo "referer lastRoute=" . $lastPath . "<br>";
@@ -156,10 +156,29 @@ class AccessRequestController extends Controller
 
                     $lastRoute = $this->getRefererRoute($request);
                     echo "2 lastRoute=" . $lastRoute . "<br>";
-                }
+
+                    $lastRoute = $request->getSession()->get('_security.'.$indexLastRoute.'.target_path');
+                    echo "3 lastRoute=" . $lastRoute . "<br>";
+
+                    //$lastRoute = Request::path();
+                    //echo "4 lastRoute=" . $lastRoute . "<br>";
+
+                    $lastRoute = $request->getUri();
+                    echo "5 lastRoute=" . $lastRoute . "<br>";
+
+//                    $session = $this->container->get('session');
+//                    $lastRoute = $session->get('intendedUri');
+//                    echo "6 session lastRoute=" . $lastRoute . "<br>";
+//                    echo "6 session lastRoute=" . implode("<br>",$lastRoute) . "<br>";
+
+                    //$targetPath = $this->getTargetPath($request->getSession(), 'ldap_employees_firewall');
+                    $targetPath = $request->getSession()->get('_security.'.'ldap_employees_firewall'.'.target_path');
+                    echo "7 lastRoute=" . $targetPath . "<br>";
+
+                }//if(0)
                 //////////////// EOF 2) redirect to the intended URL they were trying to access //////////////
 
-                if( !$testing ) {
+                if( $testing ) {
                     exit('redirect to the requested system');
                 }
                 return $this->redirect( $this->generateUrl($lastRoute) );
@@ -171,7 +190,7 @@ class AccessRequestController extends Controller
                 );
             }
         }
-        if( !$testing ) {
+        if( $testing ) {
             exit('continue with access request');
         }
 
