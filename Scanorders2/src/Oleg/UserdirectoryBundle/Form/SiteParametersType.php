@@ -548,6 +548,19 @@ class SiteParametersType extends AbstractType
             ));
         }
 
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'captchaSiteKey' ) {
+            $builder->add('captchaSiteKey',null,array(
+                'label'=>'Captcha Site Key:',
+                'attr' => array('class'=>'form-control')
+            ));
+        }
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'captchaSecretKey' ) {
+            $builder->add('captchaSecretKey',null,array(
+                'label'=>'Captcha Secret Key:',
+                'attr' => array('class'=>'form-control')
+            ));
+        }
+
         ////////////////////////// LDAP notice messages /////////////////////////
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'noticeAttemptingPasswordResetLDAP' ) {
             $builder->add('noticeAttemptingPasswordResetLDAP',null,array(

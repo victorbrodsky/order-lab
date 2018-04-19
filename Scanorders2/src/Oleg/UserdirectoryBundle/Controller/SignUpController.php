@@ -236,6 +236,14 @@ class SignUpController extends Controller
                     $form->get('userName')->addError(new FormError('This user name appears to be taken. Please choose another one.'));
                 }
             }
+
+            if( $form->isSubmitted() &&  $form->isValid() && !$this->captchaverify($request->get('g-recaptcha-response'))){
+                $this->addFlash(
+                    'error',
+                    'Captcha is Required'
+                );
+            }
+
             //exit('1');
         }//if submitted
 
@@ -366,6 +374,25 @@ class SignUpController extends Controller
 
         $res = array('subject'=>$subject,'body'=>$body);
         return $res;
+    }
+    # get success response from recaptcha and return it to controller
+    function captchaverify($recaptcha){
+        $userSecUtil = $this->container->get('user_security_utility');
+        $captchaSecretKey = $userSecUtil->getSiteSettingParameter('captchaSecretKey');
+
+        $url = "https://www.google.com/recaptcha/api/siteverify";
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, array(
+            "secret"=>$captchaSecretKey,"response"=>$recaptcha));
+        $response = curl_exec($ch);
+        curl_close($ch);
+        $data = json_decode($response);
+
+        return $data->success;
     }
 
     /**

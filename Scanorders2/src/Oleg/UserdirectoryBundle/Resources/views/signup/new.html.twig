@@ -102,6 +102,10 @@
 
     {{ formmacros.field(form.email) }}
 
+    <p>
+        <div class="g-recaptcha" data-sitekey="{{ user_security_utility.getSiteSettingParameter('captchaSecretKey') }}"></div>
+    </p>
+
     {% if form.submit is defined %}
         <p>
             {{ form_widget(form.submit) }}
@@ -125,6 +129,8 @@
 <script type="text/javascript" src="{{ asset_url }}"></script>
 {% endjavascripts %}
 
+
+<script src='https://www.google.com/recaptcha/api.js'></script>
 
 <script language="Javascript">
 

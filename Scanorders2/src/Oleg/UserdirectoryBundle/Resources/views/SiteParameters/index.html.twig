@@ -181,6 +181,20 @@
                 </td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'permittedFailedLoginAttempt'}) }}">Edit</a></td>
             </tr>
+            <tr>
+                <td>Captcha Site Key</td>
+                <td>
+                    {{ entity.captchaSiteKey }}
+                </td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'captchaSiteKey'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>Captcha Secret Key</td>
+                <td>
+                    {{ entity.captchaSecretKey }}
+                </td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'captchaSecretKey'}) }}">Edit</a></td>
+            </tr>
 
 
             {#ScanOrder DB#}

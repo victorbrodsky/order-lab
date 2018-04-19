@@ -724,6 +724,16 @@ class SiteParameters {
      */
     private $permittedFailedLoginAttempt;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $captchaSiteKey;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $captchaSecretKey;
+
 
     ////////////////////////// LDAP notice messages /////////////////////////
     /**
@@ -2716,6 +2726,38 @@ class SiteParameters {
     public function setPermittedFailedLoginAttempt($permittedFailedLoginAttempt)
     {
         $this->permittedFailedLoginAttempt = $permittedFailedLoginAttempt;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCaptchaSiteKey()
+    {
+        return $this->captchaSiteKey;
+    }
+
+    /**
+     * @param mixed $captchaSiteKey
+     */
+    public function setCaptchaSiteKey($captchaSiteKey)
+    {
+        $this->captchaSiteKey = $captchaSiteKey;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCaptchaSecretKey()
+    {
+        return $this->captchaSecretKey;
+    }
+
+    /**
+     * @param mixed $captchaSecretKey
+     */
+    public function setCaptchaSecretKey($captchaSecretKey)
+    {
+        $this->captchaSecretKey = $captchaSecretKey;
     }
 
     /**
