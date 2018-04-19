@@ -69,8 +69,14 @@
 
 <body>
 
+{% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
 <div class="container text-center">
+
+    <div class="col-xs-12">
+        {{ usermacros.nonLiveSiteWarning() }}
+        {{ usermacros.browserCheck() }}
+    </div>
 
     <h3 class="text-info">{{ title }}</h3>
 
