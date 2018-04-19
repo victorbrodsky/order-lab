@@ -104,10 +104,10 @@
 
     {#{% if user_security_utility.getSiteSettingParameter('captchaEnabled') %}#}
         {#{% set captchaSecretKey = user_security_utility.getSiteSettingParameter('captchaSecretKey') %}#}
-        {% if captchaSecretKey %}
+        {% if captchaSiteKey %}
             <div class="col-xs-12 text-center">
             <p>
-                <div class="g-recaptcha" data-sitekey="{{ captchaSecretKey }}" style="display: inline-block;"></div>
+                <div class="g-recaptcha" data-sitekey="{{ captchaSiteKey }}" style="display: inline-block;"></div>
             </p>
             </div>
         {% endif %}
