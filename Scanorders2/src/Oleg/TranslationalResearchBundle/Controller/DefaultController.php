@@ -59,4 +59,29 @@ class DefaultController extends Controller
         exit;
     }
 
+
+    /**
+     * @Route("/import-old-data/", name="translationalresearch_import_old_data")
+     * @Method({"GET"})
+     */
+    public function importOldDataAction(Request $request) {
+
+        if( !$this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        }
+
+        $importUtil = $this->get('transres_import');
+        $res = $importUtil->importOldData();
+
+        //exit('Imported result: '.$res);
+
+        //Flash
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            'Imported result: '.$res
+        );
+        
+        return $this->redirectToRoute('translationalresearch_home');
+    }
+
 }
