@@ -135,7 +135,7 @@ class CallLogEditController extends CallEntryController
         $userSecUtil = $this->get('user_security_utility');
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        if( $message->getMessageStatus() != "Deleted" ) {
+        if( $message->getMessageStatus()->getName()."" != "Deleted" ) {
             $message->setMessageStatusPrior($message->getMessageStatus());
         }
 
@@ -184,6 +184,8 @@ class CallLogEditController extends CallEntryController
         if (false == $this->get('security.authorization_checker')->isGranted('ROLE_CALLLOG_USER')) {
             return $this->redirect($this->generateUrl('calllog-nopermission'));
         }
+
+        ini_set('memory_limit', '3072M');
 
         //$userSecUtil = $this->get('user_security_utility');
         $calllogUtil = $this->get('calllog_util');
@@ -685,6 +687,8 @@ class CallLogEditController extends CallEntryController
                 $formNodeUtil = $this->get('user_formnode_utility');
                 $formNodeUtil->processFormNodes($request,$message->getMessageCategory(),$message,$testing); //testing
                 //exit('after formnode');
+
+                $calllogUtil->deleteAllOtherMessagesByOid($message,$cycle,$testing);
 
 //                /////////////////////// Set edited message info /////////////////////
 //                //set OID from original message

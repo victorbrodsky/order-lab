@@ -1165,7 +1165,8 @@ class TransResRequestUtil
         //}
 
         if( count($receivingObjects) == 0 ) {
-            throw new \Exception("receivingObjects are not found for the project ID ".$project->getId()." and fieldName=".$fieldName." => "."failed to set value".$value);
+            return null;
+            //throw new \Exception("receivingObjects are not found for the project ID ".$project->getId()." and fieldName=".$fieldName." => "."failed to set value".$value);
         }
 
         $receivingObject = $receivingObjects[0];

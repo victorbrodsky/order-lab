@@ -2236,4 +2236,57 @@ class CallLogUtil
 
         return $initialMessage;
     }
+
+    //set all other messages status to deleted
+    public function deleteAllOtherMessagesByOid( $message, $cycle, $testing=false ) {
+        $userSecUtil = $this->container->get('user_security_utility');
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        $em = $this->em;
+
+        //message muts have an ID
+        if( !$message->getId() ) {
+            return false;
+        }
+
+        $messageStatusDeleted = $em->getRepository('OlegOrderformBundle:MessageStatusList')->findOneByName("Deleted");
+        if( !$messageStatusDeleted ) {
+            throw new \Exception( "Message Status is not found by name '"."Deleted"."'" );
+        }
+
+        $messages = $em->getRepository('OlegOrderformBundle:Message')->findByOid($message->getOid());
+
+        $deletedMessageInfos = array();
+
+        foreach($messages as $thisMessage) {
+            //set all other messages to deleted
+            if( $message->getId() != $thisMessage->getId() ) {
+                if( $thisMessage->getMessageStatus()->getName()."" != "Deleted" ) {
+                    $thisMessage->setMessageStatusPrior($thisMessage->getMessageStatus());
+                    $thisMessage->setMessageStatus($messageStatusDeleted);
+                    if( !$testing ) {
+                        $em->flush($thisMessage);
+
+                        //save message info
+                        $patientInfoStr = $thisMessage->getPatientNameMrnInfo();
+                        if( $patientInfoStr ) {
+                            $patientInfoStr = "for ".$patientInfoStr;
+                        }
+                        $deletedMessageInfos[] = $thisMessage->getMessageOidVersion()." ".$patientInfoStr;
+                    }
+                }
+            }
+        }
+
+        if( !$testing && count($deletedMessageInfos) > 0 ) {
+            $msg = "The following Call Entry(s) are deleted by ".$cycle." action ".$message->getMessageOidVersion().":<br>".implode("<br>",$deletedMessageInfos);
+
+            //Event Log
+            $eventType = "Call Log Book Entry Deleted";
+            $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $msg, $user, $messages, null, $eventType);
+
+            return true;
+        }
+
+        return false;
+    }
 }

@@ -375,6 +375,10 @@ class CallEntryController extends Controller
         $dql->orderBy("message.orderdate","DESC");
         $dql->addOrderBy("editorInfos.modifiedOn","DESC");
 
+        //testing
+        //$dql->leftJoin( 'OlegOrderformBundle:Message', 'message2', 'WITH', 'message.oid = message2.oid AND message.version > message2.version' );
+        //$dql->groupBy("message.oid");
+
         //filter
         $mergeMrn = null;
 
@@ -1409,6 +1413,7 @@ class CallEntryController extends Controller
                 $formNodeUtil->processFormNodes($request,$message->getMessageCategory(),$message,$testing); //testing
                 //exit('after formnode');
 
+                $calllogUtil->deleteAllOtherMessagesByOid($message,$cycle,$testing);
 
                 //log search action
                 if( $msg ) {

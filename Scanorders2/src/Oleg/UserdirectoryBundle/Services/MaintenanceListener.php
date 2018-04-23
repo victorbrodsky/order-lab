@@ -74,23 +74,36 @@ class MaintenanceListener {
         $controller = $event->getRequest()->attributes->get('_controller');
         //echo "controller=".$controller."<br>";
 
+        //get route name
+        $request = $event->getRequest();
+        //$routeName = $request->get('_route');
+        $uri = $request->getUri();
+        //echo "uri=".$uri."<br>";
+        //exit('1');
 
         //site check accessibility
-        $sitename = $this->getSiteName($controller);
-        if( $sitename ) {
-            $siteObject = $this->em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation($sitename);
-            if( $siteObject->getAccessibility() === false ) {
-                $systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
+        if(
+            strpos($uri, '/common') === false &&
+            strpos($uri, '/util') === false &&
+            strpos($uri, '/check/') === false &&
+            strpos($uri, '/admin/') === false
+        ) {
+            $sitename = $this->getSiteName($controller);
+            if( $sitename ) {
+                $siteObject = $this->em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation($sitename);
+                if ($siteObject->getAccessibility() === false) {
+                    $systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
 
-                $session = $this->container->get('session');
-                $session->getFlashBag()->add(
-                    'warning',
-                    $siteObject->getAbbreviation() . " site is currently not accessible. If you have any questions, please contact the $systemEmail."
-                );
+                    $session = $this->container->get('session');
+                    $session->getFlashBag()->add(
+                        'warning',
+                        $siteObject->getAbbreviation() . " site is currently not accessible. If you have any questions, please contact the $systemEmail."
+                    );
 
-                $url = $this->container->get('router')->generate('main_common_home');
-                $response = new RedirectResponse($url);
-                $event->setResponse($response);
+                    $url = $this->container->get('router')->generate('main_common_home');
+                    $response = new RedirectResponse($url);
+                    $event->setResponse($response);
+                }
             }
         }
 

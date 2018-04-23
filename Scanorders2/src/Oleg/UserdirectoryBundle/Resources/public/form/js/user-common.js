@@ -187,7 +187,7 @@ function getElementTargetByHolder(holder,target) {
 //Generic ajax combobox
 function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,sitename,force,placeholder) {
 
-    console.log('get Combobox Generic: name='+name);
+    //console.log('get Combobox Generic: name='+name);
 
     var targetid = ".ajax-combobox-"+name;
     targetid = getElementTargetByHolder(holder,targetid);
@@ -223,7 +223,7 @@ function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,s
     }
 
     var url = getCommonBaseUrl("util/common/"+urlprefix+name+cycleStr+sitenameStr,sitename);
-    console.log('get Combobox Generic: url='+url);
+    //console.log('get Combobox Generic: url='+url);
 
     if( globalDataArray.length == 0 ) {
         $.ajax({
@@ -232,8 +232,9 @@ function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,s
             async: asyncflag
         }).success(function(data) {
             $.each(data, function(key, val) {
+                //console.log("val="+val);
                 globalDataArray.push(val);
-                console.log(data);
+                //console.log(data);
             });
             populateSelectCombobox( targetid, globalDataArray, placeholder, multipleFlag );
         });
@@ -241,6 +242,7 @@ function getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,s
         populateSelectCombobox( targetid, globalDataArray, placeholder, multipleFlag );
     }
 
+    //console.log("EOF getComboboxGeneric");
 }
 
 //target - class or id of the target element
@@ -324,6 +326,8 @@ function populateSelectCombobox( target, data, placeholder, multipleFlag ) {
     if( $(target).hasClass('other-status') ) {
         listenerComboboxStatusField($(target));
     }
+
+    //console.log("EOF populateSelectCombobox");
 }
 
 var select2Matcher = function(term, text, opt) {
@@ -1364,12 +1368,12 @@ function constructAddNewUserModalByAjax(btnDom,sitename,otherUserParam1,selectEl
     var url = Routing.generate('employees_new_simple_user');
 
     var holder = $(btnDom).closest('.row');
-    console.log(holder);
+    //console.log(holder);
     var otherUserParam = holder.find('select.add-new-user-on-enter').data("otheruserparam");
     if( otherUserParam === undefined ) {
         otherUserParam = holder.find('select.add-new-user-on-enter').data("otheruserparam");
     }
-    console.log("otherUserParam="+otherUserParam);
+    //console.log("otherUserParam="+otherUserParam);
     
     var comboboxValue = null;
     if( selectElement !== undefined ) {
@@ -1404,7 +1408,7 @@ function constructAddNewUserModalByAjax(btnDom,sitename,otherUserParam1,selectEl
 }
 //employees_new_simple_user
 function constructAddNewUserModalByForm(btnDom,sitename,otherUserParam,newUserFormHtml) {
-    console.log("construct modal");
+    //console.log("construct modal");
 
     //get field id (assume select box)
     var comboboxEl = $(btnDom).closest('.row').find('select.combobox');

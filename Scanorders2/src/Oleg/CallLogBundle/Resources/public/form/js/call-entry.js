@@ -84,7 +84,7 @@ function addnewCalllogPatient(holderId) {
 
     var addBtn = holder.find("#addnew_patient_button").get(0);
     var lbtn = Ladda.create( addBtn );
-    lbtn.start();
+    calllogStartBtn(lbtn);
 
     var mrntype = holder.find(".mrntype-combobox").select2('val');
     mrntype = trimWithCheck(mrntype);
@@ -124,7 +124,7 @@ function addnewCalllogPatient(holderId) {
         //holder.find('#calllog-danger-box').html("Please enter at least an MRN or Last Name.");
         holder.find('#calllog-danger-box').show(_transTime);
 
-        lbtn.stop();
+        calllogStopBtn(lbtn);
         return false;
     }
 
@@ -162,7 +162,7 @@ function addnewCalllogPatient(holderId) {
         //TODO: unlock all fields
         disableAllFields(false, holderId);
 
-        lbtn.stop();
+        calllogStopBtn(lbtn);
         return false;
     }
 
@@ -222,7 +222,7 @@ function addnewCalllogPatient(holderId) {
         }
     }).done(function() {
         //console.log("add new CalllogPatient done");
-        lbtn.stop();
+        calllogStopBtn(lbtn);
     });
 
 
@@ -234,7 +234,7 @@ function addCalllogPatientToList(holderId) {
 
     var addBtn = holder.find("#add_patient_to_list_button").get(0);
     var lbtn = Ladda.create( addBtn );
-    lbtn.start();
+    calllogStartBtn(lbtn);
 
     var patientListId = $('#patientListId').val();
 
@@ -253,7 +253,7 @@ function addCalllogPatientToList(holderId) {
         } else {
             //x = "You pressed Cancel!";
             disableAllFields(false, holderId);
-            lbtn.stop();
+            calllogStopBtn(lbtn);
             return false;
         }
     }
@@ -286,7 +286,7 @@ function addCalllogPatientToList(holderId) {
         }
     }).done(function() {
         //console.log("add new CalllogPatient done");
-        lbtn.stop();
+        calllogStopBtn(lbtn);
 
     });
 
@@ -300,7 +300,7 @@ function submitPatientBtn(holderId) {
 
     var addBtn = $("#submit_patient_button").get(0);
     var lbtn = Ladda.create( addBtn );
-    lbtn.start();
+    calllogStartBtn(lbtn);
 
     //calllog-patient-id-patient-holder-1
     //console.log("id="+"#calllog-patient-id-"+holderId);
@@ -343,7 +343,7 @@ function submitPatientBtn(holderId) {
         //holder.find('#calllog-danger-box').html("Please enter at least an MRN or Last Name.");
         holder.find('#calllog-danger-box').show(_transTime);
 
-        lbtn.stop();
+        calllogStopBtn(lbtn);
         return false;
     }
 
@@ -370,7 +370,7 @@ function submitPatientBtn(holderId) {
         //x = "You pressed OK!";
     } else {
         //x = "You pressed Cancel!";
-        lbtn.stop();
+        calllogStopBtn(lbtn);
         return false;
     }
 
@@ -411,7 +411,7 @@ function submitPatientBtn(holderId) {
             holder.find('#calllog-danger-box').show(_transTime);
         }
     }).done(function() {
-        lbtn.stop();
+        calllogStopBtn(lbtn);
     });
 
 
@@ -474,7 +474,7 @@ function findCalllogPatient(holderId,formtype,mrntype,mrn) {
 
     var searchBtn = holder.find("#search_patient_button").get(0);
     var lbtn = Ladda.create( searchBtn );
-    lbtn.start();
+    calllogStartBtn(lbtn);
 
     //clear no matching box
     holder.find('#calllog-danger-box').hide(_transTime);
@@ -555,7 +555,7 @@ function findCalllogPatient(holderId,formtype,mrntype,mrn) {
         //holder.find('#calllog-danger-box').html("Please enter at least an MRN or Last Name and Date of Birth.");
         holder.find('#calllog-danger-box').html("Please enter at least an MRN or Last Name.");
         holder.find('#calllog-danger-box').show(_transTime);
-        lbtn.stop();
+        calllogStopBtn(lbtn);
         return false;
     }
 
@@ -605,7 +605,7 @@ function findCalllogPatient(holderId,formtype,mrntype,mrn) {
         }
     }).done(function() {
         //console.log("search done");
-        lbtn.stop();
+        calllogStopBtn(lbtn);
         //close datepicker box
         //var datepickerDropdown = $(".datepicker-dropdown");
         //printF(datepickerDropdown,"datepicker-dropdown:");
@@ -1630,7 +1630,7 @@ function calllogEnableMessageCategoryService(holderId) {
 function calllogSubmitForm(btn,messageStatus) {
 
     var lbtn = Ladda.create( btn );
-    lbtn.start();
+    calllogStartBtn(lbtn);
 
     $('#calllog-msg-danger-box').html("");
     $('#calllog-msg-danger-box').hide();
@@ -1653,7 +1653,7 @@ function calllogSubmitForm(btn,messageStatus) {
             //x = "You pressed OK!";
         } else {
             //x = "You pressed Cancel!";
-            lbtn.stop();
+            calllogStopBtn(lbtn);
             return false;
         }
     }
@@ -1700,13 +1700,13 @@ function calllogSubmitForm(btn,messageStatus) {
             if( messageCategoryError ) {
                 $('#calllog-msg-danger-box').html(messageCategoryError);
                 $('#calllog-msg-danger-box').show();
-                lbtn.stop();
+                calllogStopBtn(lbtn);
                 return false;
             }
         }
     }
     //console.log("exit");
-    //lbtn.stop();
+    //calllogStopBtn(lbtn);
     //return false;
     ///////////// EOF if issue is not selected => "Please select the appropriate issue to save your entry" ///////////////
 
@@ -1725,7 +1725,7 @@ function calllogSubmitForm(btn,messageStatus) {
             } else {
                 $('#calllog-msg-danger-box').html("Please provide the amendment reason.");
                 $('#calllog-msg-danger-box').show();
-                lbtn.stop();
+                calllogStopBtn(lbtn);
                 return false;
             }
         }
@@ -1746,7 +1746,7 @@ function calllogSubmitForm(btn,messageStatus) {
                     "Please click "+newEntryUrl+" to see the latest updated entry on a new page.";
                 $('#calllog-msg-danger-box').html(versionErrorMsg);
                 $('#calllog-msg-danger-box').show();
-                lbtn.stop();
+                calllogStopBtn(lbtn);
                 return false;
             }
         }
@@ -1783,7 +1783,7 @@ function calllogSubmitForm(btn,messageStatus) {
             }).fail(function () {
                 //alert(error);
             }).done(function () {
-                lbtn.stop();
+                calllogStopBtn(lbtn);
                 //console.log("token ok");
             });
         }
@@ -1794,7 +1794,7 @@ function calllogSubmitForm(btn,messageStatus) {
 
     ///////// if the other fields in that accordion remain empty and only "Lab Result Date" has a value, do not write it to the DB. /////////
     removeDefaultDateTimeIfEmptyOtherFieldsInSection($('#calllog-new-entry-form'));
-    //lbtn.stop();//testing
+    //calllogStopBtn(lbtn);//testing
     //return; //testing
     ///////// EOF if the other fields in that accordion remain empty and only "Lab Result Date" has a value, do not write it to the DB. /////////
 
@@ -1831,10 +1831,19 @@ function calllogSubmitForm(btn,messageStatus) {
             $('#calllog-msg-danger-box').html(error);
             $('#calllog-msg-danger-box').show();
         }).done(function() {
-            lbtn.stop();
+            calllogStopBtn(lbtn);
             //console.log("token ok");
         });
     }
+}
+
+function calllogStartBtn(lbtn) {
+    $('button').prop('disabled',true);
+    lbtn.start();
+}
+function calllogStopBtn(lbtn) {
+    lbtn.stop();
+    $('button').prop('disabled',false);
 }
 
 function removeDefaultDateTimeIfEmptyOtherFieldsInSection( formElement ) {
@@ -2159,7 +2168,7 @@ function calllogListPreviousEntriesForPatient( holderId, messageCategoryId ) {
 
     var btn = document.getElementById("calllog-list-previous-entries-btn");
     var lbtn = Ladda.create(btn);
-    lbtn.start();
+    calllogStartBtn(lbtn);
 
     var url = Routing.generate('calllog-list-previous-entries');
     url = url + "?patientid="+patientId+"&type="+messageCategoryId;
@@ -2187,7 +2196,7 @@ function calllogListPreviousEntriesForPatient( holderId, messageCategoryId ) {
         }
 
     }).done(function() {
-        lbtn.stop();
+        calllogStopBtn(lbtn);
     }).error(function(jqXHR, textStatus, errorThrown) {
         console.log('Error : ' + errorThrown);
     });

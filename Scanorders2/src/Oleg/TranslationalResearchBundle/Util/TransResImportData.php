@@ -66,6 +66,10 @@ class TransResImportData
         $systemUser = $userSecUtil->findSystemUser();
         ////////////// end of add system user /////////////////
 
+        $specialty = $this->em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation("ap-cp");
+        if( !$specialty ) {
+            exit("Project specialty not found by abbreviation=ap-cp");
+        }
 
         $notExistingUsers = array();
         $count = 0;
@@ -120,11 +124,35 @@ class TransResImportData
                 $project = new Project();
             }
 
+            $project->setVersion(1);
+
+            if( !$project->getInstitution() ) {
+                $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
+                $project->setInstitution($institution);
+            }
+
+            //set order category
+            if( !$project->getMessageCategory() ) {
+                $categoryStr = "HemePath Translational Research Project";  //"Pathology Call Log Entry";
+                //$categoryStr = "Nesting Test"; //testing
+                $messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
+
+                if (!$messageCategory) {
+                    throw new \Exception("Message category is not found by name '" . $categoryStr . "'");
+                }
+                $project->setMessageCategory($messageCategory);
+            }
+
+            $project->setExportId($exportId);
+
+            $project->setProjectSpecialty($specialty);
 
             //CREATED_DATE
             $CREATED_DATE_STR = $this->getValueByHeaderName('CREATED_DATE', $rowData, $headers); //24-OCT-12
-            $CREATED_DATE = $this->transformDatestrToDate($CREATED_DATE_STR);
-            $project->setCreateDate($CREATED_DATE);
+            if( $CREATED_DATE_STR ) {
+                $CREATED_DATE = $this->transformDatestrToDate($CREATED_DATE_STR);
+                $project->setCreateDate($CREATED_DATE);
+            }
 
             //SUBMITTED_BY
             $submitterCwid = $this->getValueByHeaderName('SUBMITTED_BY', $rowData, $headers);
@@ -180,52 +208,13 @@ class TransResImportData
                 }
             }
 
-            //PROJECT_TITLE
-            $title = $this->getValueByHeaderName('PROJECT_TITLE', $rowData, $headers);
-            $project->setTitle($title);
-            $transresRequestUtil->setValueToFormNodeProject($project, "Title", $title);
-            echo "title=".$title."<br>";
-
-            //IRB_NUMBER
-            $irbNumber = $this->getValueByHeaderName('IRB_NUMBER', $rowData, $headers);
-            $transresRequestUtil->setValueToFormNodeProject($project, "IRB Number", $irbNumber);
-            echo "irbNumber=".$irbNumber."<br>";
-
-            //IRB_EXPIRATION_DATE
-            $irbExpDateStr = $this->getValueByHeaderName('IRB_EXPIRATION_DATE', $rowData, $headers);
-            //echo "irbExpDateStr=".$irbExpDateStr."<br>";
-            if( $irbExpDateStr ) {
-                $irbExpDate = $this->transformDatestrToDate($irbExpDateStr);
-                $transresRequestUtil->setValueToFormNodeProject($project, "IRB Expiration Date", $irbExpDate);
-                $project->setIrbExpirationDate($irbExpDate);
-                echo "irbNumber=".$irbExpDate->format('d-m-Y')."<br>";
-            }
-
-            //PROJECT_FUNDED
-            $funded = $this->getValueByHeaderName('PROJECT_FUNDED', $rowData, $headers);
-            $transresRequestUtil->setValueToFormNodeProject($project, "Funded", $funded);
-
-            //ACCOUNT_NUMBER
-            $fundedAccountNumber = $this->getValueByHeaderName('ACCOUNT_NUMBER', $rowData, $headers);
-            $transresRequestUtil->setValueToFormNodeProject($project, "If funded, please provide account number", $fundedAccountNumber);
-            $project->setFundedAccountNumber($fundedAccountNumber);
-
-            //DESCRIPTION
-            $DESCRIPTION = $this->getValueByHeaderName('DESCRIPTION', $rowData, $headers);
-            $transresRequestUtil->setValueToFormNodeProject($project, "Brief Description", $DESCRIPTION);
-
-            //BUDGET_OUTLINE
-            $BUDGET_OUTLINE = $this->getValueByHeaderName('BUDGET_OUTLINE', $rowData, $headers);
-            $transresRequestUtil->setValueToFormNodeProject($project, "Provide a Detailed Budget Outline/Summary", $BUDGET_OUTLINE);
-
-            //ESTIMATED_COSTS
-            $ESTIMATED_COSTS = $this->getValueByHeaderName('ESTIMATED_COSTS', $rowData, $headers);
-            $transresRequestUtil->setValueToFormNodeProject($project, "Estimated Total Costs ($)", $ESTIMATED_COSTS);
-
             //DATE_APPROVAL
             $DATE_APPROVAL_STR = $this->getValueByHeaderName('DATE_APPROVAL', $rowData, $headers);
-            $DATE_APPROVAL = $this->transformDatestrToDate($DATE_APPROVAL_STR);
-            $project->setApprovalDate($DATE_APPROVAL);
+            echo "DATE_APPROVAL_STR=".$DATE_APPROVAL_STR."<br>";
+            if( $DATE_APPROVAL_STR ) {
+                $DATE_APPROVAL = $this->transformDatestrToDate($DATE_APPROVAL_STR);
+                $project->setApprovalDate($DATE_APPROVAL);
+            }
 
             //STATUS_ID
             $STATUS_ID = $this->getValueByHeaderName('STATUS_ID', $rowData, $headers);
@@ -234,6 +223,76 @@ class TransResImportData
             //PROJECT_TYPE_ID
             $PROJECT_TYPE_ID = $this->getValueByHeaderName('PROJECT_TYPE_ID', $rowData, $headers);
             //$this->typeMapper($PROJECT_TYPE_ID);
+
+
+            //save project to DB before form nodes
+            echo "before flush <br>";
+            $em->persist($project);
+            $em->flush();
+            echo "after flush <br>";
+
+
+            ////////// form nodes ///////////
+            //PROJECT_TITLE
+            $title = $this->getValueByHeaderName('PROJECT_TITLE', $rowData, $headers);
+            $project->setTitle($title);
+            if( $title ) {
+                $this->setValueToFormNodeNewProject($project, "Title", $title);
+            }
+            echo "title=".$title."<br>";
+
+            //IRB_NUMBER
+            $irbNumber = $this->getValueByHeaderName('IRB_NUMBER', $rowData, $headers);
+            if( $irbNumber ) {
+                $this->setValueToFormNodeNewProject($project, "IRB Number", $irbNumber);
+                echo "irbNumber=" . $irbNumber . "<br>";
+            }
+
+            //IRB_EXPIRATION_DATE
+            $irbExpDateStr = $this->getValueByHeaderName('IRB_EXPIRATION_DATE', $rowData, $headers);
+            //echo "irbExpDateStr=".$irbExpDateStr."<br>";
+            if( $irbExpDateStr ) {
+                $irbExpDate = $this->transformDatestrToDate($irbExpDateStr);
+                if( $irbExpDate ) {
+                    $project->setIrbExpirationDate($irbExpDate);
+                    $this->setValueToFormNodeNewProject($project, "IRB Expiration Date", $irbExpDate);
+                    echo "irbExpDate=" . $irbExpDate->format('d-m-Y') . "<br>";
+                }
+            }
+
+            //PROJECT_FUNDED
+            $funded = $this->getValueByHeaderName('PROJECT_FUNDED', $rowData, $headers);
+            if( $funded) {
+                $this->setValueToFormNodeNewProject($project, "Funded", $funded);
+            }
+
+            //ACCOUNT_NUMBER
+            $fundedAccountNumber = $this->getValueByHeaderName('ACCOUNT_NUMBER', $rowData, $headers);
+            if( $fundedAccountNumber ) {
+                $this->setValueToFormNodeNewProject($project, "If funded, please provide account number", $fundedAccountNumber);
+            }
+            $project->setFundedAccountNumber($fundedAccountNumber);
+
+            //DESCRIPTION
+            $DESCRIPTION = $this->getValueByHeaderName('DESCRIPTION', $rowData, $headers);
+            if( $DESCRIPTION ) {
+                $this->setValueToFormNodeNewProject($project, "Brief Description", $DESCRIPTION);
+            }
+
+            //BUDGET_OUTLINE
+            $BUDGET_OUTLINE = $this->getValueByHeaderName('BUDGET_OUTLINE', $rowData, $headers);
+            if( $BUDGET_OUTLINE ) {
+                $this->setValueToFormNodeNewProject($project, "Provide a Detailed Budget Outline/Summary", $BUDGET_OUTLINE);
+            }
+
+            //ESTIMATED_COSTS
+            $ESTIMATED_COSTS = $this->getValueByHeaderName('ESTIMATED_COSTS', $rowData, $headers);
+            if( $ESTIMATED_COSTS ) {
+                $this->setValueToFormNodeNewProject($project, "Estimated Total Costs ($)", $ESTIMATED_COSTS);
+            }
+            /////////////////////
+
+
 
             //ADMIN_COMMENT
             $ADMIN_COMMENT = $this->getValueByHeaderName('ADMIN_COMMENT', $rowData, $headers);
@@ -256,18 +315,16 @@ class TransResImportData
 
             //FUNDING_APPROVAL_COMMENT ???
 
+            $project->generateOid();
+            $em->flush();
 
-
-            //$em->persist($project);
-            //$em->flush();
-
-            //$project->generateOid();
-            //$em->flush();
+            //echo "after flush 2<br>";
 
             $count++;
 
             echo "<br>";
 
+            //exit('$project OID='.$project->getOid());
         }//for each request
 
         //echo "finished looping<br><br>";
@@ -281,7 +338,7 @@ class TransResImportData
 //            $logger->warning($warning);
 //        }
 
-        exit('1');
+        //exit('1');
 
         $result = "Imported requests = " . $count;
         return $result;
@@ -387,16 +444,43 @@ class TransResImportData
         return $res;
     }
 
+    public function setValueToFormNodeNewProject( $project, $fieldName, $value ) {
+        return null;
+
+        $transresRequestUtil = $this->container->get('transres_request_util');
+        $transResFormNodeUtil = $this->container->get('transres_formnode_util');
+        $formNodeUtil = $this->container->get('user_formnode_utility');
+        $receivingObject = $transresRequestUtil->setValueToFormNodeProject($project,$fieldName,$value);
+        if( !$receivingObject ) {
+            //$thisFormNode = $this->em->getRepository("OlegUserdirectoryBundle:FormNode")->find($formNodeId);
+            $thisFormNode = $transResFormNodeUtil->getFormNodeByFieldNameAndParents($fieldName);
+
+            echo "create formnode=".$thisFormNode."<br>";
+            //$testing = true;
+            $testing = false;
+            $formNodeUtil->processFormNodeByType($thisFormNode,$value,$project,$testing);
+        }
+        //re-try
+        $receivingObject = $transresRequestUtil->setValueToFormNodeProject($project,$fieldName,$value);
+    }
+
     public function transformDatestrToDate($datestr)
     {
-        $userSecUtil = $this->container->get('user_security_utility');
-        $date = $userSecUtil->transformDatestrToDateWithSiteEventLog($datestr, $this->container->getParameter('vacreq.sitename'));
+        //$userSecUtil = $this->container->get('user_security_utility');
+        //$date = $userSecUtil->transformDatestrToDateWithSiteEventLog($datestr, $this->container->getParameter('translationalresearch.sitename'));
 //        if( $date ) {
 //            $date->setTimezone(new \DateTimeZone("UTC"));
 //            //echo "ok<br>";
 //        } else {
 //            //exit("date object is null for datestr=".$datestr);
 //        }
+
+        //'j-M-Y', '15-Feb-2009'
+        //23-APR-07
+        echo "dateStr=".$datestr;
+        $date = \DateTime::createFromFormat('j-M-y',$datestr);
+        echo " =>".$date->format("d-m-Y")."<br>";
+
         return $date;
     }
 
