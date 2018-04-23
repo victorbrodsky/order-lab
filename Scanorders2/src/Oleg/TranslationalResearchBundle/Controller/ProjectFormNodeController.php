@@ -44,7 +44,7 @@ class ProjectFormNodeController extends ProjectController
     /**
      * Creates a new project entity with formnode.
      *
-     * @Route("/project/new", name="translationalresearch_project_new_selector")
+     * @Route("/project/formnode/new", name="translationalresearch_project_new_selector")
      * @Template("OlegTranslationalResearchBundle:Project:new-project-selector.html.twig")
      * @Method({"GET", "POST"})
      */
@@ -70,7 +70,7 @@ class ProjectFormNodeController extends ProjectController
     /**
      * Creates a new project entity with formnode.
      *
-     * @Route("/project/new/{specialtyStr}", name="translationalresearch_project_new")
+     * @Route("/project/formnode/new/{specialtyStr}", name="translationalresearch_project_formnode_new")
      * @Template("OlegTranslationalResearchBundle:Project:new.html.twig")
      * @Method({"GET", "POST"})
      */
@@ -268,7 +268,7 @@ class ProjectFormNodeController extends ProjectController
      * Get Project Edit page
      * Originally edit form generates a new entity Project with new id and same oid.
      *
-     * @Route("/project/edit/{id}", name="translationalresearch_project_edit")
+     * @Route("/project/formnode/edit/{id}", name="translationalresearch_project_formnode_edit")
      * @Template("OlegTranslationalResearchBundle:Project:edit.html.twig")
      * @Method({"GET", "POST"})
      */
@@ -490,34 +490,34 @@ class ProjectFormNodeController extends ProjectController
     }
 
 
-    public function createProjectEntity($user,$project=null) {
-
-        $em = $this->getDoctrine()->getManager();
-
-        if( !$project ) {
-            $project = new Project($user);
-            $project->setVersion(1);
-        }
-
-        if( !$project->getInstitution() ) {
-            $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
-            $project->setInstitution($institution);
-        }
-
-        //set order category
-        if( !$project->getMessageCategory() ) {
-            $categoryStr = "HemePath Translational Research Project";  //"Pathology Call Log Entry";
-            //$categoryStr = "Nesting Test"; //testing
-            $messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
-
-            if (!$messageCategory) {
-                throw new \Exception("Message category is not found by name '" . $categoryStr . "'");
-            }
-            $project->setMessageCategory($messageCategory);
-        }
-
-        return $project;
-    }
+//    public function createProjectEntity($user,$project=null) {
+//
+//        $em = $this->getDoctrine()->getManager();
+//
+//        if( !$project ) {
+//            $project = new Project($user);
+//            $project->setVersion(1);
+//        }
+//
+//        if( !$project->getInstitution() ) {
+//            $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
+//            $project->setInstitution($institution);
+//        }
+//
+//        //set order category
+//        if( !$project->getMessageCategory() ) {
+//            $categoryStr = "HemePath Translational Research Project";  //"Pathology Call Log Entry";
+//            //$categoryStr = "Nesting Test"; //testing
+//            $messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
+//
+//            if (!$messageCategory) {
+//                throw new \Exception("Message category is not found by name '" . $categoryStr . "'");
+//            }
+//            $project->setMessageCategory($messageCategory);
+//        }
+//
+//        return $project;
+//    }
 
 
 

@@ -3301,12 +3301,14 @@ class TransResUtil
 
         $projectTitle = $project->getTitle();
         if( !$projectTitle ) {
-            $projectTitle = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"Title");
+            //$projectTitle = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"Title");
+            $projectTitle = $project->getTitle();
         }
         $ews->setCellValue('D'.$row, $projectTitle);
 
         //Funding
-        if( $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"Funded") ) {
+        //if( $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"Funded") ) {
+        if( $project->getFunded() ) {
             $funded = "Funded";
         } else {
             $funded = "Not Funded";
@@ -3320,7 +3322,12 @@ class TransResUtil
         $ews->setCellValue('G'.$row, $this->convertDateToStr($project->getApprovalDate()) );
 
         //IRB Expiration Date
-        $ews->setCellValue('H'.$row, $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"IRB Expiration Date"));
+        //$ews->setCellValue('H'.$row, $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"IRB Expiration Date"));
+        $expDateStr = null;
+        if( $project->getIrbExpirationDate() ) {
+            $expDateStr = $project->getIrbExpirationDate()->format('m/d/Y');
+        }
+        $ews->setCellValue('H'.$row, $expDateStr);
 
         return $ews;
     }
@@ -3571,9 +3578,9 @@ class TransResUtil
 
         //$title = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"Title");
         $title = $project->getTitle();
-        if( !$title ) {
-            $title = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"Title");
-        }
+        //if( !$title ) {
+        //    $title = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"Title");
+        //}
 
         $fromLabel = $this->getStateSimpleLabelByName($fromStateStr);
         $toLabel = $this->getStateSimpleLabelByName($toStateStr);

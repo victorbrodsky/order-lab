@@ -137,6 +137,51 @@
 
 {% endmacro %}
 
+{% macro projectEditFormFields( form, project, cycle ) %}
+
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="projectContentHeading">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#projectContent" aria-expanded="true">
+                        Project
+                    </a>
+                </h4>
+            </div>
+            <div id="projectContent" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="projectContentHeading">
+                <div class="panel-body">
+
+                    {{ formmacros.field(form.title) }}
+
+                    {{ formmacros.field(form.irbNumber) }}
+
+                    {{ formmacros.fieldDateLabel(form.irbExpirationDate,'allow-future-date') }}
+
+                    {{ formmacros.field(form.projectType) }}
+
+                    {{ formmacros.checkbox(form.funded) }}
+
+                    {{ formmacros.field(form.fundedAccountNumber) }}
+
+                    {{ formmacros.field(form.description) }}
+
+                    {{ formmacros.field(form.budgetSummary) }}
+
+                    {{ formmacros.field(form.totalCost) }}
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{ transres.projectDocument(form,project,cycle) }}
+
+{% endmacro %}
+
 
 {% macro projectFormShow( form, project, cycle ) %}
 

@@ -128,7 +128,8 @@ class DashboardController extends Controller
             $fundedCount = 0;
             $unfundedCount = 0;
             foreach ($projects as $project) {
-                $fundingNumber = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"If funded, please provide account number");
+                //$fundingNumber = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"If funded, please provide account number");
+                $fundingNumber = $project->getFundedAccountNumber();
                 if( $fundingNumber ) {
                     $fundedCount++;
                 } else {

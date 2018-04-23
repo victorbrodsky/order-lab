@@ -774,7 +774,7 @@ class TransResRequestUtil
 
     public function isRequestCanBeCreated( $project ) {
         $transresUtil = $this->container->get('transres_util');
-        $transResFormNodeUtil = $this->container->get('transres_formnode_util');
+        //$transResFormNodeUtil = $this->container->get('transres_formnode_util');
 
         //1) is_granted('ROLE_TRANSRES_REQUESTER')
         if(
@@ -791,17 +791,18 @@ class TransResRequestUtil
         }
 
         //3) Request can not be submitted for the expired project
+        $expDate = null;
         if( $project->getIrbExpirationDate() ) {
             //use simple project's field
             $expDate = $project->getIrbExpirationDate();
         } else {
             //use formnode project's field if the simple field is null
-            $expirationDate = $transResFormNodeUtil->getProjectFormNodeFieldByName($project, "IRB Expiration Date");
+            //$expirationDate = $transResFormNodeUtil->getProjectFormNodeFieldByName($project, "IRB Expiration Date");
             //echo "expirationDate=$expirationDate<br>";
-            $expDate = date_create_from_format('m/d/Y', $expirationDate);
+            //$expDate = date_create_from_format('m/d/Y', $expirationDate);
             //echo "exp_date=".$expDate->format("d-m-Y H:i:s")."<br>";
         }
-        if( new \DateTime() > $expDate ) {
+        if( $expDate && new \DateTime() > $expDate ) {
             //echo "expired<br>";
             return -3;
         }
@@ -1432,7 +1433,8 @@ class TransResRequestUtil
         $project = $transresRequest->getProject();
         $projectTitle = $project->getTitle();
         if( !$projectTitle ) {
-            $projectTitle = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"Title");
+            //$projectTitle = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"Title");
+            $projectTitle = $project->getTitle();
         }
         
         $emails = array();

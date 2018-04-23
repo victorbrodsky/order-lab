@@ -77,7 +77,8 @@ class RequestFormNodeController extends Controller
             $transresRequest->setProject($project);
             $title = "New Work Request for project ID ".$project->getOid();
 
-            $projectFundedAccountNumber = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"If funded, please provide account number");
+            //$projectFundedAccountNumber = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"If funded, please provide account number");
+            $projectFundedAccountNumber = $project->getFundedAccountNumber();
             if( $projectFundedAccountNumber ) {
                 $transresRequest->setFundedAccountNumber($projectFundedAccountNumber);
             }
@@ -206,7 +207,8 @@ class RequestFormNodeController extends Controller
 
         $project = $transresRequest->getProject();
 
-        $projectFundedAccountNumber = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"If funded, please provide account number");
+        //$projectFundedAccountNumber = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"If funded, please provide account number");
+        $projectFundedAccountNumber = $project->getFundedAccountNumber();
         //echo "projectFundedAccountNumber=$projectFundedAccountNumber<br>";
         if( $projectFundedAccountNumber ) {
             $transresRequest->setFundedAccountNumber($projectFundedAccountNumber);

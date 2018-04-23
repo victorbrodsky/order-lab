@@ -147,17 +147,62 @@ class ProjectType extends AbstractType
 //            ));
 //        }
 
-//        $builder->add('title',null,array(
-//            'required' => false,
-//            'label'=>"Project Title:",
-//            'attr' => array('class'=>'textarea form-control')
-//        ));
-//
-//        $builder->add('irbNumber',null, array(
-//            'label' => 'IRB Number:',
-//            'required' => false,
-//            'attr' => array('class' => 'form-control'),
-//        ));
+        //////////// Project fields ////////////
+        $builder->add('title',null,array(
+            'required' => false,
+            'label'=>"Title:",
+            'attr' => array('class'=>'textarea form-control')
+        ));
+
+        $builder->add('irbNumber',null, array(
+            'label' => 'IRB Number:',
+            'required' => false,
+            'attr' => array('class' => 'form-control'),
+        ));
+
+        $builder->add('funded',CheckboxType::class,array(
+            'required' => false,
+            'label'=>"Funded:",
+            'attr' => array('class'=>'form-control')
+        ));
+
+        $builder->add('fundedAccountNumber',null, array(
+            'label' => 'If funded, please provide account number:',
+            'required' => false,
+            'attr' => array('class' => 'form-control'),
+        ));
+
+        $builder->add('irbExpirationDate',DateType::class,array(
+            'widget' => 'single_text',
+            'label' => "IRB Expiration Date:",
+            'format' => 'MM/dd/yyyy',
+            'attr' => array('class' => 'datepicker form-control'),
+            'required' => false,
+        ));
+
+        $builder->add('budgetSummary',null,array(
+            'label' => "Provide a Detailed Budget Outline/Summary:",
+            'attr' => array('class'=>'textarea form-control')
+        ));
+
+        $builder->add('description',null,array(
+            'label' => "Brief Description:",
+            'attr' => array('class'=>'textarea form-control')
+        ));
+
+        $builder->add('totalCost',null, array(
+            'label' => 'Estimated Total Costs ($):',
+            'required' => false,
+            //'attr' => array('class' => 'form-control', 'data-inputmask' => "'alias': 'currency'", 'style'=>'text-align: left !important;' )
+            'attr' => array('class' => 'form-control currency-mask mask-text-align-left'),
+        ));
+
+        $builder->add('projectType',null, array(
+            'label' => 'Project Type:',
+            'required' => false,
+            'attr' => array('class' => 'combobox'),
+        ));
+        //////////// EOF Project fields ////////////
 
 //        $builder->add('startDate','date',array(
 //            'widget' => 'single_text',
@@ -167,25 +212,9 @@ class ProjectType extends AbstractType
 //            'required' => false,
 //        ));
 //
-//        $builder->add('expirationDate','date',array(
-//            'widget' => 'single_text',
-//            'label' => "Project Expiration Date:",
-//            'format' => 'MM/dd/yyyy',
-//            'attr' => array('class' => 'datepicker form-control'),
-//            'required' => false,
-//        ));
 
-//        $builder->add('funded',CheckboxType::class,array(
-//            'required' => false,
-//            'label'=>"Is this Research Project Funded:",
-//            'attr' => array('class'=>'form-control')
-//        ));
-//
-//        $builder->add('fundedAccountNumber',null, array(
-//            'label' => 'If funded, please provide account number:',
-//            'required' => false,
-//            'attr' => array('class' => 'form-control'),
-//        ));
+
+
 
 //        $descriptionLabel =
 //            "Please provide a brief description of the project to include background information,

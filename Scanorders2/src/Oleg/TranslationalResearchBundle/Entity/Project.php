@@ -161,10 +161,6 @@ class Project {
      */
     private $billingContact;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $title;
 
     //Name of PI Who Submitted the IRB
 //    /**
@@ -295,7 +291,6 @@ class Project {
 
     /**
      * IRB Approval Letter
-     * TODO: test
      *
      * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
      * @ORM\JoinTable(name="transres_project_irbApprovalLetter",
@@ -324,6 +319,19 @@ class Project {
     private $requests;
 
     /**
+     * Will this project involve human tissue?
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $involveHumanTissue;
+
+    /////////// Project fields /////////////
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $title;
+
+    /**
      * IRB Expiration Date: copied from the project's formnode field on create and update
      * @ORM\Column(type="date", nullable=true)
      */
@@ -335,13 +343,41 @@ class Project {
      */
     private $fundedAccountNumber;
 
+    //added later
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $irbNumber;
 
     /**
-     * Will this project involve human tissue?
+     * @ORM\ManyToOne(targetEntity="ProjectTypeList")
+     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
+     */
+    private $projectType;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $funded;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $description;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $budgetSummary;
+
+    /**
+     * integer only
      *
      * @ORM\Column(type="string", nullable=true)
      */
-    private $involveHumanTissue;
+    private $totalCost;
+
+    /////////// EOF Project fields /////////////
 
 
     public function __construct($user=null) {
@@ -511,229 +547,101 @@ class Project {
         $this->title = $title;
     }
 
-//    /**
-//     * @return mixed
-//     */
-//    public function getIrbSubmitter()
-//    {
-//        return $this->irbSubmitter;
-//    }
-//
-//    /**
-//     * @param mixed $irbSubmitter
-//     */
-//    public function setIrbSubmitter($irbSubmitter)
-//    {
-//        $this->irbSubmitter = $irbSubmitter;
-//    }
+    /**
+     * @return mixed
+     */
+    public function getIrbNumber()
+    {
+        return $this->irbNumber;
+    }
 
-//    /**
-//     * @return mixed
-//     */
-//    public function getIrbNumber()
-//    {
-//        return $this->irbNumber;
-//    }
-//
-//    /**
-//     * @param mixed $irbNumber
-//     */
-//    public function setIrbNumber($irbNumber)
-//    {
-//        $this->irbNumber = $irbNumber;
-//    }
+    /**
+     * @param mixed $irbNumber
+     */
+    public function setIrbNumber($irbNumber)
+    {
+        $this->irbNumber = $irbNumber;
+    }
 
-//    /**
-//     * @return mixed
-//     */
-//    public function getStartDate()
-//    {
-//        return $this->startDate;
-//    }
-//
-//    /**
-//     * @param mixed $startDate
-//     */
-//    public function setStartDate($startDate)
-//    {
-//        $this->startDate = $startDate;
-//    }
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function getExpirationDate()
-//    {
-//        return $this->expirationDate;
-//    }
-//
-//    /**
-//     * @param mixed $expirationDate
-//     */
-//    public function setExpirationDate($expirationDate)
-//    {
-//        $this->expirationDate = $expirationDate;
-//    }
+    /**
+     * @return mixed
+     */
+    public function getProjectType()
+    {
+        return $this->projectType;
+    }
 
-//    /**
-//     * @return mixed
-//     */
-//    public function getContact()
-//    {
-//        return $this->contact;
-//    }
-//
-//    /**
-//     * @param mixed $contact
-//     */
-//    public function setContact($contact)
-//    {
-//        $this->contact = $contact;
-//    }
+    /**
+     * @param mixed $projectType
+     */
+    public function setProjectType($projectType)
+    {
+        $this->projectType = $projectType;
+    }
 
-//    /**
-//     * @return mixed
-//     */
-//    public function getFunded()
-//    {
-//        return $this->funded;
-//    }
-//
-//    /**
-//     * @param mixed $funded
-//     */
-//    public function setFunded($funded)
-//    {
-//        $this->funded = $funded;
-//    }
-//    /**
-//     * @return mixed
-//     */
-//    public function getDescription()
-//    {
-//        return $this->description;
-//    }
-//
-//    /**
-//     * @param mixed $description
-//     */
-//    public function setDescription($description)
-//    {
-//        $this->description = $description;
-//    }
+    /**
+     * @return mixed
+     */
+    public function getFunded()
+    {
+        return $this->funded;
+    }
 
-//    /**
-//     * @return mixed
-//     */
-//    public function getBudgetSummary()
-//    {
-//        return $this->budgetSummary;
-//    }
-//
-//    /**
-//     * @param mixed $budgetSummary
-//     */
-//    public function setBudgetSummary($budgetSummary)
-//    {
-//        $this->budgetSummary = $budgetSummary;
-//    }
+    /**
+     * @param mixed $funded
+     */
+    public function setFunded($funded)
+    {
+        $this->funded = $funded;
+    }
 
-//    /**
-//     * @return mixed
-//     */
-//    public function getTotalCost()
-//    {
-//        return $this->totalCost;
-//    }
-//
-//    /**
-//     * @param mixed $totalCost
-//     */
-//    public function setTotalCost($totalCost)
-//    {
-//        $this->totalCost = $totalCost;
-//    }
+    /**
+     * @return mixed
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
 
-//    /**
-//     * @return mixed
-//     */
-//    public function getProjectType()
-//    {
-//        return $this->projectType;
-//    }
-//
-//    /**
-//     * @param mixed $projectType
-//     */
-//    public function setProjectType($projectType)
-//    {
-//        $this->projectType = $projectType;
-//    }
+    /**
+     * @param mixed $description
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
 
-//    /**
-//     * @return mixed
-//     */
-//    public function getBiostatisticalComment()
-//    {
-//        return $this->biostatisticalComment;
-//    }
-//
-//    /**
-//     * @param mixed $biostatisticalComment
-//     */
-//    public function setBiostatisticalComment($biostatisticalComment)
-//    {
-//        $this->biostatisticalComment = $biostatisticalComment;
-//    }
+    /**
+     * @return mixed
+     */
+    public function getBudgetSummary()
+    {
+        return $this->budgetSummary;
+    }
 
-//    /**
-//     * @return mixed
-//     */
-//    public function getAdministratorComment()
-//    {
-//        return $this->administratorComment;
-//    }
-//
-//    /**
-//     * @param mixed $administratorComment
-//     */
-//    public function setAdministratorComment($administratorComment)
-//    {
-//        $this->administratorComment = $administratorComment;
-//    }
+    /**
+     * @param mixed $budgetSummary
+     */
+    public function setBudgetSummary($budgetSummary)
+    {
+        $this->budgetSummary = $budgetSummary;
+    }
 
-//    /**
-//     * @return mixed
-//     */
-//    public function getPrimaryReviewerComment()
-//    {
-//        return $this->primaryReviewerComment;
-//    }
-//
-//    /**
-//     * @param mixed $primaryReviewerComment
-//     */
-//    public function setPrimaryReviewerComment($primaryReviewerComment)
-//    {
-//        $this->primaryReviewerComment = $primaryReviewerComment;
-//    }
+    /**
+     * @return mixed
+     */
+    public function getTotalCost()
+    {
+        return $this->totalCost;
+    }
 
-//    /**
-//     * @return mixed
-//     */
-//    public function getReadyForReview()
-//    {
-//        return $this->readyForReview;
-//    }
-//
-//    /**
-//     * @param mixed $readyForReview
-//     */
-//    public function setReadyForReview($readyForReview)
-//    {
-//        $this->readyForReview = $readyForReview;
-//    }
-
+    /**
+     * @param mixed $totalCost
+     */
+    public function setTotalCost($totalCost)
+    {
+        $this->totalCost = $totalCost;
+    }
 
 
     public function getPrincipalInvestigators()
