@@ -27,13 +27,13 @@
 
     {#{{ form_start(form,{'attr':{'id':'transresProjectForm', 'onsubmit':'return transresValidateProjectForm();'}}) }}#}
     {#{{ form_start(form) }}#}
-    {{ form_start(form,{'attr':{'onsubmit':'return transresValidateProjectForm();'}}) }}
+    {{ form_start(form,{'attr':{'onsubmit':'return transresValidateProjectForm();', novalidate: 'novalidate'}}) }}
 
         {{ transres.getProjectReviewPrototypeFormData(form,cycle,sitename) }}
 
         {{ transres.projectRequesters(form,project,cycle) }}
 
-        {{ transres.projectEditFormFields(form,project,cycle) }}
+        {{ transres.projectBodyFormFields(form,project,cycle) }}
 
         {#show it only to: System Administrator, TRP Technician, Platform Administrator, Deputy Platform Administrator roles#}
         {% if

@@ -76,12 +76,12 @@
                         {{ formmacros.simplefield("Project Specialty:", project.projectSpecialty, "input", "disabled") }}
                     {% endif %}
                     {% if project.approvalDate is defined %}
-                        {{ formmacros.simplefield("Project Specialty:", project.approvalDate|date('m/d/Y H:i:s'), "input", "disabled") }}
+                        {{ formmacros.simplefield("Approval Date:", project.approvalDate|date('m/d/Y H:i:s',false), "input", "disabled") }}
                     {% endif %}
 
                     {% if project.createDate is defined or project.submitter is defined %}
                         {% if project.createDate is defined %}
-                            {{ formmacros.simplefield("Submission Date:", project.createDate|date('m/d/Y H:i:s'), "input", "disabled") }}
+                            {{ formmacros.simplefield("Submission Date:", project.createDate|date('m/d/Y H:i:s',false), "input", "disabled") }}
                         {% endif %}
                         {% if project.submitter is defined %}
                             {{ formmacros.simplefield("Submitted By:", project.submitter, "input", "disabled") }}
@@ -89,7 +89,7 @@
                     {% endif %}
 
                     {% if project.updateDate or project.updateUser %}
-                        {{ formmacros.simplefield("Update Date:", project.updateDate|date("m/d/Y"), "input", "disabled") }}
+                        {{ formmacros.simplefield("Update Date:", project.updateDate|date("m/d/Y",false), "input", "disabled") }}
                         {{ formmacros.simplefield("Updated By:", project.updateUser, "input", "disabled") }}
                     {% endif %}
 
@@ -137,7 +137,7 @@
 
 {% endmacro %}
 
-{% macro projectEditFormFields( form, project, cycle ) %}
+{% macro projectBodyFormFields( form, project, cycle ) %}
 
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
@@ -386,7 +386,7 @@
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% if form.vars.value.updateDate or form.vars.value.updateUser %}
         {#<div class="well well-sm">#}
-        {{ formmacros.simplefield("Update Date:", form.vars.value.updateDate|date("m/d/Y"), "input", "disabled") }}
+        {{ formmacros.simplefield("Update Date:", form.vars.value.updateDate|date("m/d/Y",false), "input", "disabled") }}
         {{ formmacros.simplefield("Updated By:", form.vars.value.updateUser, "input", "disabled") }}
         {#</div>#}
     {% endif %}
@@ -564,7 +564,8 @@
         <div class="well transres-review-holder text-center col-xs-12">
             {#Add field "Update expiration date" (irbExpirationDate) in the IRB Review page#}
             {% if project.state == "irb_review" %}
-                {% set irbExpDate = transres_formnode_util.getProjectFormNodeFieldByName(project,"IRB Expiration Date") %}
+                {#{% set irbExpDate = transres_formnode_util.getProjectFormNodeFieldByName(project,"IRB Expiration Date") %}#}
+                {% set irbExpDate = project.getIrbExpirationDate()|date("m/d/Y",false) %}
                 {{ transres.fieldDateLabel(irbExpDate,"Provided IRB Expiration Date (enter a new date to update it):",1) }}
             {% endif %}
 
@@ -931,7 +932,7 @@
             {% endif %}
             <p>
                 {#Reviewed by {{ transres.userHtml(formreview.vars.value.reviewedBy) }} on {{ updatedate|date("m/d/Y H:i") }}#}
-                Reviewed{{ reviewedBy|raw }} on {{ formreview.vars.value.updatedate|date("m/d/Y") }} at {{ formreview.vars.value.updatedate|date("H:i") }}
+                Reviewed{{ reviewedBy|raw }} on {{ formreview.vars.value.updatedate|date("m/d/Y",false) }} at {{ formreview.vars.value.updatedate|date("H:i",false) }}
             </p>
         {% endif %}
 

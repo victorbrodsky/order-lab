@@ -1528,6 +1528,11 @@ class UtilController extends Controller {
                 $filterType = null;
                 break;
 
+            case "transresprojecttypes":
+                $className = "ProjectTypeList";
+                $bundleName = "TranslationalResearchBundle";
+                break;
+
 //            case "patientLists":
 //                $bundleName = "OrderformBundle";
 //                $className = "PatientListHierarchy";

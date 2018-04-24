@@ -1783,7 +1783,7 @@ function calllogSubmitForm(btn,messageStatus) {
             }).fail(function () {
                 //alert(error);
             }).done(function () {
-                calllogStopBtn(lbtn);
+                //calllogStopBtn(lbtn);
                 //console.log("token ok");
             });
         }
@@ -1825,13 +1825,14 @@ function calllogSubmitForm(btn,messageStatus) {
             } else {
                 $('#calllog-msg-danger-box').html(error);
                 $('#calllog-msg-danger-box').show();
+                calllogStopBtn(lbtn);
             }
         }).fail(function() {
             //alert(error);
             $('#calllog-msg-danger-box').html(error);
             $('#calllog-msg-danger-box').show();
         }).done(function() {
-            calllogStopBtn(lbtn);
+            //calllogStopBtn(lbtn);
             //console.log("token ok");
         });
     }

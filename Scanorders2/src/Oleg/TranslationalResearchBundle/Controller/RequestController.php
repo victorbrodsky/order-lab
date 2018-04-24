@@ -152,7 +152,8 @@ class RequestController extends Controller
             if( $fundedAccountNumber && $fundedAccountNumber != $originalFundedAccountNumber ) {
                 $project->setFundedAccountNumber($fundedAccountNumber);
                 //set formnode field
-                $transresRequestUtil->setValueToFormNodeProject($project, "If funded, please provide account number", $fundedAccountNumber);
+//                $transresRequestUtil->setValueToFormNodeProject($project, "If funded, please provide account number", $fundedAccountNumber);
+                $project->setFundedAccountNumber($fundedAccountNumber);
                 //$changedProjectFundNumber = true;
                 $changedMsg = $changedMsg . "<br>Project's Account Fund Number has been updated: ";
                 $changedMsg = $changedMsg . "<br>Original account number " . $originalFundedAccountNumber;
@@ -356,7 +357,8 @@ class RequestController extends Controller
             if( $fundedAccountNumber && $fundedAccountNumber != $originalFundedAccountNumber ) {
                 $project->setFundedAccountNumber($fundedAccountNumber);
                 //set formnode field
-                $transresRequestUtil->setValueToFormNodeProject($project, "If funded, please provide account number", $fundedAccountNumber);
+//                $transresRequestUtil->setValueToFormNodeProject($project, "If funded, please provide account number", $fundedAccountNumber);
+                $project->setFundedAccountNumber($fundedAccountNumber);
                 //$changedProjectFundNumber = true;
                 $changedMsg = $changedMsg . "<br>Project's Account Fund Number has been updated: ";
                 $changedMsg = $changedMsg . "<br>Original account number " . $originalFundedAccountNumber;
@@ -1765,8 +1767,9 @@ class RequestController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
-        $transresRequestUtil = $this->get('transres_request_util');
+        //$transresRequestUtil = $this->get('transres_request_util');
         $transresUtil = $this->container->get('transres_util');
+        //$userServiceUtil = $this->container->get('user_service_utility');
         $res = "NotOK";
 
         $projectId = trim( $request->get('projectId') );
@@ -1796,12 +1799,16 @@ class RequestController extends Controller
             }
 
             $value = trim($request->get('value'));
-
+            //echo "value=".$value."<br>";
             $irbExpDate = \DateTime::createFromFormat('m/d/Y', $value);
-
+            //$irbExpDate = $userServiceUtil->convertFromUtcToUserTimezone($irbExpDate,$user);
+            //echo "value=".$irbExpDate->format("m/d/Y H:i:s")."<br>";
             $project->setIrbExpirationDate($irbExpDate);
 
-            $receivingObject = $transresRequestUtil->setValueToFormNodeProject($project, "IRB Expiration Date", $value);
+            //$receivingObject = $transresRequestUtil->setValueToFormNodeProject($project, "IRB Expiration Date", $value);
+            //echo "value=".$value."<br>";
+            //$valueDateTime = \DateTime::createFromFormat('m/d/Y',$value);
+            //$project->setIrbExpirationDate($valueDateTime);
 
             //$em->flush($receivingObject);
             //$em->flush($project);

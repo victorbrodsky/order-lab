@@ -15,12 +15,16 @@
  *  limitations under the License.
  */
 
+_transresprojecttypes = [];
+
 $(document).ready(function() {
 
-    console.log('transres form ready');
+    //console.log('transres form ready');
     transresIrbApprovalLetterListener();
 
     transresNewUserListener();
+
+    getComboboxGeneric(null,'transresprojecttypes',_transresprojecttypes,false);
 
     // $('form[name="oleg_translationalresearchbundle_project"]').submit(function(ev) {
     //     //return; //testing
@@ -55,7 +59,7 @@ function transresShowHideHumanTissueUploadSection(involveHumanTissue) {
 //Therefore use button 'onclick'=>'transresValidateProjectForm();' in php form type
 function transresValidateProjectForm() {
 
-    console.log("Validate project");
+    //console.log("Validate project");
 
     //e.preventDefault();
     //e.stopImmediatePropagation();
@@ -83,7 +87,7 @@ function transresValidateProjectForm() {
             value = inputField.val();
             //console.log("label="+label+"; value="+value);
             if( !value ) {
-                console.log("Error Input form-control. label="+label);
+                //console.log("Error Input form-control. label="+label);
                 validated = false;
                 //transresShowBtn();
                 return false;
@@ -94,7 +98,7 @@ function transresValidateProjectForm() {
         var selectField = holder.find("select.combobox");
         if( selectField.length > 0 ) {
             value = selectField.val();
-            //console.log("label="+label+"; value="+value);
+            //console.log("select combobox: label="+label+"; value="+value);
             if( !value ) {
                 console.log("Error Select select combobox. label="+label);
                 validated = false;
@@ -107,7 +111,7 @@ function transresValidateProjectForm() {
         var inputSelectField = holder.find("input.combobox");
         if( inputSelectField.length > 0 ) {
             value = inputSelectField.val();
-            //console.log("label="+label+"; value="+value);
+            //console.log("input combobox: label="+label+"; value="+value);
             if( !value ) {
                 console.log("Error Select input combobox. label="+label);
                 validated = false;

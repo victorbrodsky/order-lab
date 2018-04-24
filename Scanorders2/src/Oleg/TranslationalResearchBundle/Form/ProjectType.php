@@ -38,26 +38,10 @@ class ProjectType extends AbstractType
     {
         $this->formConstructor($options['form_custom_value']);
 
-        //$builder->add('createDate')->add('updateDate')->add('state')->add('title')->add('irbNumber')->add('startDate')->add('expirationDate')
-        //->add('funded')->add('fundedAccountNumber')->add('description')->add('budgetSummary')->add('totalCost')->add('projectType')
-        //->add('biostatisticalComment')->add('administratorComment')->add('primaryReviewerComment')->add('submitter')->add('updateUser')
-        //->add('principalInvestigators')->add('coInvestigators')->add('pathologists')->add('irbSubmitter')->add('contact');
-
-        //TODO: disable all fields if routeName == "translationalresearch_project_review"
+        //$user_tz = $this->params['user']->getPreferences()->getTimezone();
 
         if( $this->params['cycle'] != 'new' ) {
 
-//            $builder->add('primaryReviewerComment',null,array(
-//                'label' => "Primary Reviewer Comment:",
-//                'attr' => array('class'=>'textarea form-control')
-//            ));
-
-//            $builder->add('state',null, array(
-//                'label' => 'State:',
-//                'disabled' => $this->params['disabledState'],
-//                'required' => false,
-//                'attr' => array('class' => 'form-control'),
-//            ));
             $builder->add('state',ChoiceType::class, array(
                 'label' => 'Status:',
                 'required' => false,
@@ -124,28 +108,6 @@ class ProjectType extends AbstractType
             ));
         }
 
-//        $builder->add('oid', null, array(
-//            'label' => "Project ID:",
-//            'disabled' => ($this->params['admin'] ? false : true),
-//            'attr' => array('class'=>'form-control')
-//        ));
-
-//        if( $this->project->getUpdateDate() ) {
-//            $builder->add('updateDatCreate Date:e', 'date', array(
-//                'widget' => 'single_text',
-//                'label' => "Update Date:",
-//                'disabled' => true,
-//                'format' => 'MM/dd/yyyy',
-//                'attr' => array('class' => 'datepicker form-control'),
-//                'required' => false,
-//            ));
-//        }
-//        if( $this->project->getUpdateUser() ) {
-//            $builder->add('updateUser', null, array(
-//                'label' => "Updated By:",
-//                'disabled' => true,
-//            ));
-//        }
 
         //////////// Project fields ////////////
         $builder->add('title',null,array(
@@ -176,7 +138,9 @@ class ProjectType extends AbstractType
             'widget' => 'single_text',
             'label' => "IRB Expiration Date:",
             'format' => 'MM/dd/yyyy',
-            'attr' => array('class' => 'datepicker form-control'),
+            //'view_timezone' => $user_tz,
+            //'model_timezone' => $user_tz,
+            'attr' => array('class' => 'datepicker form-control transres-project-irbExpirationDate'),
             'required' => false,
         ));
 
@@ -197,69 +161,23 @@ class ProjectType extends AbstractType
             'attr' => array('class' => 'form-control currency-mask mask-text-align-left'),
         ));
 
-        $builder->add('projectType',null, array(
+        $builder->add('projectType', CustomSelectorType::class, array(
             'label' => 'Project Type:',
             'required' => false,
-            'attr' => array('class' => 'combobox'),
+            'attr' => array('class' => 'ajax-combobox-transresprojecttypes', 'type' => 'hidden'),
+            'classtype' => 'transresprojecttypes'
+//            'query_builder' => function (EntityRepository $er) {
+//                return $er->createQueryBuilder('list')
+//                    ->where("list.type = :typedef OR list.type = :typeadd")
+//                    ->orderBy("list.orderinlist", "ASC")
+//                    ->setParameters(array(
+//                        'typedef' => 'default',
+//                        'typeadd' => 'user-added',
+//                    ));
+//            },
         ));
         //////////// EOF Project fields ////////////
 
-//        $builder->add('startDate','date',array(
-//            'widget' => 'single_text',
-//            'label' => "Project Start Date:",
-//            'format' => 'MM/dd/yyyy',
-//            'attr' => array('class' => 'datepicker form-control'),
-//            'required' => false,
-//        ));
-//
-
-
-
-
-//        $descriptionLabel =
-//            "Please provide a brief description of the project to include background information,
-//            purpose and objective, and a methodology section stating a justification for
-//            the size and scope of the project. The breadth of information
-//            should be adequate for a scientific committee to understand and assess the value of the research.";
-//        $descriptionLabel = "Brief Description";
-//        $builder->add('description',null,array(
-//            'label' => $descriptionLabel,
-//            'attr' => array('class'=>'textarea form-control') //,'style'=>'height:300px'
-//        ));
-
-//        $builder->add('budgetSummary',null,array(
-//            'label' => "Provide a Detailed Budget Outline/Summary:",
-//            'attr' => array('class'=>'textarea form-control')
-//        ));
-
-//        $builder->add('totalCost',null, array(
-//            'label' => 'Estimated Total Costs ($):',
-//            'required' => false,
-//            //'attr' => array('class' => 'form-control', 'data-inputmask' => "'alias': 'currency'", 'style'=>'text-align: left !important;' )
-//            'attr' => array('class' => 'form-control currency-mask mask-text-align-left'),
-//        ));
-
-//        $builder->add('projectType',null, array(
-//            'label' => 'Project Type:',
-//            'required' => false,
-//            'attr' => array('class' => 'form-control'),
-//        ));
-
-//        $builder->add('biostatisticalComment',null,array(
-//            'label' => "Biostatistical Comment:",
-//            'attr' => array('class'=>'textarea form-control')
-//        ));
-//
-//        $builder->add('administratorComment',null,array(
-//            'label' => "Administrator Comment:",
-//            'attr' => array('class'=>'textarea form-control')
-//        ));
-
-//        $builder->add('readyForReview', CheckboxType::class, array(
-//            'required' => false,
-//            'label' => "Please check the box if this project is ready for committee to review:",
-//            'attr' => array('class' => 'form-control')
-//        ));
 
         $addUserOnFly = "";
         if( $this->params['cycle'] == "new" || $this->params['cycle'] == "edit" ) {
@@ -285,22 +203,6 @@ class ProjectType extends AbstractType
             'attr' => array('class'=>'combobox combobox-width add-new-user-on-enter', 'data-otheruserparam'=>$this->params['otherUserParam']),
             'query_builder' => $this->params['transresUtil']->userQueryBuilder()
         ));
-
-//        $builder->add( 'irbSubmitter', EntityType::class, array(
-//            'class' => 'OlegUserdirectoryBundle:User',
-//            'label'=> "Name of PI Who Submitted the IRB:",
-//            'required'=> false,
-//            'multiple' => false,
-//            'attr' => array('class'=>'combobox combobox-width'),
-//            'query_builder' => function(EntityRepository $er) {
-//                return $er->createQueryBuilder('list')
-//                    ->leftJoin("list.employmentStatus", "employmentStatus")
-//                    ->leftJoin("employmentStatus.employmentType", "employmentType")
-//                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
-//                    ->leftJoin("list.infos", "infos")
-//                    ->orderBy("infos.displayName","ASC");
-//            },
-//        ));
 
         $builder->add( 'pathologists', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
@@ -422,7 +324,7 @@ class ProjectType extends AbstractType
         }
 
 
-        if( $this->params['cycle'] != 'show' && $this->params['cycle'] != 'review' ) { //
+        if( 0 && $this->params['cycle'] != 'show' && $this->params['cycle'] != 'review' ) { //
             /////////////////////////////////////// messageCategory ///////////////////////////////////////
             $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
                 $message = $event->getData();

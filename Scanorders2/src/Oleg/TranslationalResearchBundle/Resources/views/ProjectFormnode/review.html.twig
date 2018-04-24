@@ -13,7 +13,7 @@
 
     <input type="hidden" id="formcycle" value="{{ cycle }}" />
     <input type="hidden" id="projectid" value="{{ project.id }}" />
-    <input type="hidden" id="project-irbExpirationDate" value="{{ project.irbExpirationDate|date("m/d/Y",false) }}" />
+    <input type="hidden" id="project-irbExpirationDate" value="{{ project.irbExpirationDate|date("m/d/Y") }}" />
 
     <h4 class="text-info" align="center">
         {{ title }}

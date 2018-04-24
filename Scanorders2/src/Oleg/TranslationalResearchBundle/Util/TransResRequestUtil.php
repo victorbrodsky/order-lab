@@ -118,7 +118,7 @@ class TransResRequestUtil
         return $subTotal;
     }
 
-    //TODO: modify for multiple sections
+    //NOT USED
     public function getTransResRequestFormnodeFeeHtml( $request ) {
 
         $transResFormNodeUtil = $this->container->get('transres_formnode_util');
@@ -1230,6 +1230,8 @@ class TransResRequestUtil
 
         return $invoiceItemsArr;
     }
+
+    //NOT USED
     public function getRequestItemsFormNode($request) {
         $user = $this->secTokenStorage->getToken()->getUser();
         //$user = null; //testing

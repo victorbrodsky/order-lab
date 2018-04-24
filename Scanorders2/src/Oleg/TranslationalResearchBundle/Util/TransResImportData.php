@@ -237,14 +237,16 @@ class TransResImportData
             $title = $this->getValueByHeaderName('PROJECT_TITLE', $rowData, $headers);
             $project->setTitle($title);
             if( $title ) {
-                $this->setValueToFormNodeNewProject($project, "Title", $title);
+                //$this->setValueToFormNodeNewProject($project, "Title", $title);
+                $project->setTitle($title);
             }
             echo "title=".$title."<br>";
 
             //IRB_NUMBER
             $irbNumber = $this->getValueByHeaderName('IRB_NUMBER', $rowData, $headers);
             if( $irbNumber ) {
-                $this->setValueToFormNodeNewProject($project, "IRB Number", $irbNumber);
+                //$this->setValueToFormNodeNewProject($project, "IRB Number", $irbNumber);
+                $project->setIrbNumber($irbNumber);
                 echo "irbNumber=" . $irbNumber . "<br>";
             }
 
@@ -255,7 +257,7 @@ class TransResImportData
                 $irbExpDate = $this->transformDatestrToDate($irbExpDateStr);
                 if( $irbExpDate ) {
                     $project->setIrbExpirationDate($irbExpDate);
-                    $this->setValueToFormNodeNewProject($project, "IRB Expiration Date", $irbExpDate);
+                    //$this->setValueToFormNodeNewProject($project, "IRB Expiration Date", $irbExpDate);
                     echo "irbExpDate=" . $irbExpDate->format('d-m-Y') . "<br>";
                 }
             }
@@ -263,32 +265,36 @@ class TransResImportData
             //PROJECT_FUNDED
             $funded = $this->getValueByHeaderName('PROJECT_FUNDED', $rowData, $headers);
             if( $funded) {
-                $this->setValueToFormNodeNewProject($project, "Funded", $funded);
+                //$this->setValueToFormNodeNewProject($project, "Funded", $funded);
+                $project->setFunded($funded);
             }
 
             //ACCOUNT_NUMBER
             $fundedAccountNumber = $this->getValueByHeaderName('ACCOUNT_NUMBER', $rowData, $headers);
             if( $fundedAccountNumber ) {
-                $this->setValueToFormNodeNewProject($project, "If funded, please provide account number", $fundedAccountNumber);
+                //$this->setValueToFormNodeNewProject($project, "If funded, please provide account number", $fundedAccountNumber);
+                $project->setFundedAccountNumber($fundedAccountNumber);
             }
-            $project->setFundedAccountNumber($fundedAccountNumber);
 
             //DESCRIPTION
             $DESCRIPTION = $this->getValueByHeaderName('DESCRIPTION', $rowData, $headers);
             if( $DESCRIPTION ) {
-                $this->setValueToFormNodeNewProject($project, "Brief Description", $DESCRIPTION);
+                //$this->setValueToFormNodeNewProject($project, "Brief Description", $DESCRIPTION);
+                $project->setDescription($DESCRIPTION);
             }
 
             //BUDGET_OUTLINE
-            $BUDGET_OUTLINE = $this->getValueByHeaderName('BUDGET_OUTLINE', $rowData, $headers);
-            if( $BUDGET_OUTLINE ) {
-                $this->setValueToFormNodeNewProject($project, "Provide a Detailed Budget Outline/Summary", $BUDGET_OUTLINE);
+            $budgetSummary = $this->getValueByHeaderName('BUDGET_OUTLINE', $rowData, $headers);
+            if( $budgetSummary ) {
+                //$this->setValueToFormNodeNewProject($project, "Provide a Detailed Budget Outline/Summary", $budgetSummary);
+                $project->setBudgetSummary($budgetSummary);
             }
 
             //ESTIMATED_COSTS
-            $ESTIMATED_COSTS = $this->getValueByHeaderName('ESTIMATED_COSTS', $rowData, $headers);
-            if( $ESTIMATED_COSTS ) {
-                $this->setValueToFormNodeNewProject($project, "Estimated Total Costs ($)", $ESTIMATED_COSTS);
+            $estimatedCost = $this->getValueByHeaderName('ESTIMATED_COSTS', $rowData, $headers);
+            if( $estimatedCost ) {
+                //$this->setValueToFormNodeNewProject($project, "Estimated Total Costs ($)", $estimatedCost);
+                $project->setTotalCost($estimatedCost);
             }
             /////////////////////
 
@@ -455,7 +461,7 @@ class TransResImportData
             //$thisFormNode = $this->em->getRepository("OlegUserdirectoryBundle:FormNode")->find($formNodeId);
             $thisFormNode = $transResFormNodeUtil->getFormNodeByFieldNameAndParents($fieldName);
 
-            echo "create formnode=".$thisFormNode."<br>";
+            //echo "create formnode=".$thisFormNode."<br>";
             //$testing = true;
             $testing = false;
             $formNodeUtil->processFormNodeByType($thisFormNode,$value,$project,$testing);

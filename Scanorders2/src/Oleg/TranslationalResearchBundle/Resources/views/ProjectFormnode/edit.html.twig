@@ -38,7 +38,7 @@
 
     {#{{ form_start(edit_form) }}#}
     {#{{ form_start(edit_form,{'attr':{'id':'transresProjectForm', 'onsubmit':'transresValidateProjectForm();'}}) }}#}
-    {{ form_start(edit_form,{'attr':{'onsubmit':'return transresValidateProjectForm();'}}) }}
+    {{ form_start(edit_form,{'attr':{'onsubmit':'return transresValidateProjectForm();',novalidate: 'novalidate'}}) }}
 
         {{ transres.getProjectReviewPrototypeFormData(edit_form,cycle,sitename) }}
 

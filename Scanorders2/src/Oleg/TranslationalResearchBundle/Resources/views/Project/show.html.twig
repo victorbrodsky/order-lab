@@ -60,7 +60,7 @@
 
         {{ transres.projectRequesters(form,project,cycle) }}
 
-        {{ transres.projectFormShow(form,project,cycle) }}
+        {{ transres.projectBodyFormFields(form,project,cycle) }}
 
         {{ transres.projectInfo(form,project,cycle) }}
 
@@ -92,92 +92,12 @@
     </div>
 
 
-    {#<table>#}
-        {#<tbody>#}
-            {#<tr>#}
-                {#<th>Id</th>#}
-                {#<td>{{ project.id }}</td>#}
-            {#</tr>#}
-            {#<tr>#}
-                {#<th>Createdate</th>#}
-                {#<td>{% if project.createDate %}{{ project.createDate|date('Y-m-d H:i:s') }}{% endif %}</td>#}
-            {#</tr>#}
-            {#<tr>#}
-                {#<th>Updatedate</th>#}
-                {#<td>{% if project.updateDate %}{{ project.updateDate|date('Y-m-d H:i:s') }}{% endif %}</td>#}
-            {#</tr>#}
-            {#<tr>#}
-                {#<th>State</th>#}
-                {#<td>{{ project.state }}</td>#}
-            {#</tr>#}
-            {#<tr>#}
-                {#<th>Title</th>#}
-                {#<td>{{ project.title }}</td>#}
-            {#</tr>#}
-            {#<tr>#}
-                {#<th>Irbnumber</th>#}
-                {#<td>{{ project.irbNumber }}</td>#}
-            {#</tr>#}
-            {#<tr>#}
-                {#<th>Startdate</th>#}
-                {#<td>{% if project.startDate %}{{ project.startDate|date('Y-m-d') }}{% endif %}</td>#}
-            {#</tr>#}
-            {#<tr>#}
-                {#<th>Expirationdate</th>#}
-                {#<td>{% if project.expirationDate %}{{ project.expirationDate|date('Y-m-d') }}{% endif %}</td>#}
-            {#</tr>#}
-            {#<tr>#}
-                {#<th>Funded</th>#}
-                {#<td>{% if project.funded %}Yes{% else %}No{% endif %}</td>#}
-            {#</tr>#}
-            {#<tr>#}
-                {#<th>Fundedaccountnumber</th>#}
-                {#<td>{{ project.fundedAccountNumber }}</td>#}
-            {#</tr>#}
-            {#<tr>#}
-                {#<th>Description</th>#}
-                {#<td>{{ project.description }}</td>#}
-            {#</tr>#}
-            {#<tr>#}
-                {#<th>Budgetsummary</th>#}
-                {#<td>{{ project.budgetSummary }}</td>#}
-            {#</tr>#}
-            {#<tr>#}
-                {#<th>Totalcost</th>#}
-                {#<td>{{ project.totalCost }}</td>#}
-            {#</tr>#}
-            {#<tr>#}
-                {#<th>Projecttype</th>#}
-                {#<td>{{ project.projectType }}</td>#}
-            {#</tr>#}
-            {#<tr>#}
-                {#<th>Biostatisticalcomment</th>#}
-                {#<td>{{ project.biostatisticalComment }}</td>#}
-            {#</tr>#}
-            {#<tr>#}
-                {#<th>Administratorcomment</th>#}
-                {#<td>{{ project.administratorComment }}</td>#}
-            {#</tr>#}
-            {#<tr>#}
-                {#<th>Primaryreviewercomment</th>#}
-                {#<td>{{ project.primaryReviewerComment }}</td>#}
-            {#</tr>#}
-        {#</tbody>#}
-    {#</table>#}
-
-    {#<ul>#}
-        {#<li>#}
-            {#<a href="{{ path(translationalresearch_sitename~'_project_index') }}">Back to the list</a>#}
-        {#</li>#}
-        {#<li>#}
-            {#<a href="{{ path(translationalresearch_sitename~'_project_edit', { 'id': project.id }) }}">Edit</a>#}
-        {#</li>#}
-        {#<li>#}
-            {#{{ form_start(delete_form) }}#}
-                {#<input type="submit" value="Delete">#}
-            {#{{ form_end(delete_form) }}#}
-        {#</li>#}
-    {#</ul>#}
-
 {% endblock %}
 
+{% block additionaljs %}
+    {% javascripts
+    '@OlegTranslationalResearchBundle/Resources/public/form/js/transres.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}

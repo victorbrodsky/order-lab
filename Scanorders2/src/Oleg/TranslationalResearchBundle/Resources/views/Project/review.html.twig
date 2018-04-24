@@ -47,7 +47,8 @@
 
     {{ transres.projectInfo(form,project,cycle) }}
 
-    {{ transres.projectFormShow(form,project,cycle) }}
+    {#{{ transres.projectFormShow(form,project,cycle) }}#}
+    {{ transres.projectBodyFormFields(form,project,cycle) }}
 
     {{ transres.projectRequesters(form,project,cycle) }}
 
@@ -117,6 +118,12 @@
     {#%}#}
     {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
     {#{% endjavascripts %}#}
+
+    {% javascripts
+    '@OlegTranslationalResearchBundle/Resources/public/form/js/transres.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 
 <script type="text/javascript">
 
@@ -216,6 +223,7 @@
             if( response != "NotOK" ) { //if( response == "NotOK" ) ???
                 $(".transres-alert").find(".alert").html(response);
                 $(".transres-alert").show();
+                $(".transres-project-irbExpirationDate").val(irbExpDate);
             }
         }).done(function() {
             //lbtn.stop();
@@ -264,12 +272,5 @@
 </script>
 
 {% endblock %}
-
-
-{#{% block additionalcss %}#}
-    {#{% stylesheets '@FOSCommentBundle/Resources/public/css/comments.css' %}#}
-    {#<link rel="stylesheet" href="{{ asset_url }}" type="text/css" />#}
-    {#{% endstylesheets %}#}
-{#{% endblock %}#}
 
 
