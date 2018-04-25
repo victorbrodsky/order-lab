@@ -128,6 +128,50 @@ class UserRepository extends EntityRepository {
         return $user;
     }
 
+    //$nameStr is "Castro Martinez" or "Martinez Castro"
+    public function findOneByAnyNameStr( $nameStr ) {
+
+        $user = null;
+
+        $nameStrArr = explode(" ",$nameStr);
+
+        $firstName = trim($nameStrArr[0]);
+        $lastName = trim($nameStrArr[1]);
+
+        $user = $this->findOneByFirstOrLastNameStr($lastName);
+
+        if( !$user ) {
+            $user = $this->findOneByFirstOrLastNameStr($firstName);
+        }
+
+        if( !$user ) {
+            $user = $this->findOneByFirstOrLastNameStr($nameStr);
+        }
+
+        return $user;
+    }
+    public function findOneByFirstOrLastNameStr( $nameStr, $orAnd="OR" ) {
+
+        $user = null;
+
+        $query = $this->_em->createQueryBuilder()
+            ->from('OlegUserdirectoryBundle:User', 'user')
+            ->select("user");
+
+        $query->leftJoin("user.infos", "infos");
+
+        $query->where("infos.firstName = :firstName ".$orAnd." infos.lastName = :lastName");
+        $query->setParameters( array("firstName"=>$nameStr, "lastName"=>$nameStr) );
+
+        $users = $query->getQuery()->getResult();
+
+        if( count($users) > 0 ) {
+            $user = $users[0];
+        }
+
+        return $user;
+    }
+
     public function findUserByUserInfoEmail( $email ) {
         //echo "email=".$email."<br>";
         $query = $this->_em->createQueryBuilder()

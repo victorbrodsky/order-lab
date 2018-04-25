@@ -198,21 +198,25 @@ class TransResImportData
                 $logger->warning($msg);
                 //try to get by PRI_INVESTIGATOR
                 $priInvestigators = $this->getValueByHeaderName('PRI_INVESTIGATOR', $rowData, $headers);
-                //$priInvestigators = str_replace(",MD","",$priInvestigators);
-                $priInvestigators = str_replace(", MD","",$priInvestigators);
-                $priInvestigators = str_replace(", M.D.","",$priInvestigators);
-                $priInvestigators = str_replace(",M.D.","",$priInvestigators);
+                $priInvestigators = $this->cleanUsername($priInvestigators);
                 $priInvestigatorsArr = explode(",",$priInvestigators);
                 foreach($priInvestigatorsArr as $pi) {
                     echo "pi=".$pi."<br>";
-                    $piArr = explode(" ",$pi);
-                    if( count($piArr) == 2 ) {
+                    //$piArr = explode(" ",$pi);
+                    //if( count($piArr) == 2 ) {
                         //assume "amy chadburn": second if family name
-                        $thisUser = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername($piArr[1]);
-                    }
+                        $thisUser = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByAnyNameStr($pi);
+                        if( $thisUser ) {
+                            $project->addPrincipalInvestigator($thisUser);
+                        } else {
+                            $msg = "PI user not found by PRI_INVESTIGATOR=".$pi;
+                            $notExistingUsers[] = $exportId.": ".$msg;
+                            $logger->warning($msg);
+                            //exit($msg);
+                        }
+                    //}
 
                 }
-                exit($msg);
             }
 
             //Pathologists Involved
@@ -224,23 +228,30 @@ class TransResImportData
                 }
             } else {
                 $msg = "Pathology user not found by PATH_EMAIL=".$pathEmail;
-                exit($msg);
+                //exit($msg);
                 echo $msg."<br>";
+                $notExistingUsers[] = $exportId.": ".$msg;
                 $logger->warning($msg);
             }
 
             //CO_INVESTIGATOR
-            $coInvEmail = $this->getValueByHeaderName('CO_INVESTIGATOR', $rowData, $headers);
-            $coInvEmails = $this->getUserByEmail($coInvEmail,$exportId,'CO_INVESTIGATOR');
-            if( count($coInvEmails) > 0 ) {
-                foreach($coInvEmails as $user) {
-                    $project->addCoInvestigator($user);
+            $coInvestigators = $this->getValueByHeaderName('CO_INVESTIGATOR', $rowData, $headers);
+            $coInvestigators = $this->cleanUsername($coInvestigators);
+            $coInvestigatorsArr = explode(",",$coInvestigators);
+            foreach($coInvestigatorsArr as $coInvestigator) {
+                echo "coInvestigator=".$coInvestigator."<br>";
+                //assume "amy chadburn": second if family name
+                $thisUser = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByAnyNameStr($coInvestigator);
+                if( $thisUser ) {
+                    $project->addCoInvestigator($thisUser);
+                } else {
+                    $msg = "Co-Investigator user not found by CO_INVESTIGATOR=".$coInvestigator;
+                    $logger->warning($msg);
+                    $notExistingUsers[] = $exportId.": ".$msg;
+                    //exit($msg);
                 }
-            } else {
-                $msg = "User not found by CO_INVESTIGATOR=".$contactEmail;
-                exit($msg);
-                echo $msg."<br>";
-                $logger->warning($msg);
+                //}
+
             }
 
             //DATE_APPROVAL
@@ -382,10 +393,24 @@ class TransResImportData
 //            $logger->warning($warning);
 //        }
 
+        foreach($notExistingUsers as $notExistingUser) {
+            echo $notExistingUser."<br>";
+        }
+
         $result = "Imported requests = " . $count;
         exit($result);
 
         return $result;
+    }
+
+    public function cleanUsername( $username ) {
+        $username = str_replace(", MD","",$username);
+        $username = str_replace(", M.D.","",$username);
+        $username = str_replace(",M.D.","",$username);
+        $username = str_replace(", PhD","",$username);
+        $username = str_replace(", PH.D","",$username);
+        $username = str_replace(", Ph.D","",$username);
+        return $username;
     }
 
     public function getUserByEmail($emailStr,$exportId,$emailType) {
