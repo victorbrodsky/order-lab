@@ -198,7 +198,7 @@ class ProjectType extends AbstractType
         $builder->add( 'coInvestigators', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
             'label'=> "Co-Investigator(s)$addUserOnFly:",
-            'required'=> true,
+            'required'=> false,
             'multiple' => true,
             'attr' => array('class'=>'combobox combobox-width add-new-user-on-enter', 'data-otheruserparam'=>$this->params['otherUserParam']),
             'query_builder' => $this->params['transresUtil']->userQueryBuilder()

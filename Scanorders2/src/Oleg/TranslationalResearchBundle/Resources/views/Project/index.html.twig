@@ -371,6 +371,13 @@
                                 {% endif %}
                             {#{% endif %}#}
 
+                            {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_project_delete_get', { 'id': project.id }) }}"
+                                       target="_blank">Delete Project (Visible to Platform Admin only)</a>
+                                </li>
+                            {% endif %}
+
                         </ul>
 
                     </div>

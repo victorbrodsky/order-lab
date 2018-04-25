@@ -85,9 +85,12 @@
         <p>
             <a href="{{ path(translationalresearch_sitename~'_project_index') }}">Back to the list</a>
         </p>
-        {#{{ form_start(delete_form) }}#}
-        {#<input class="btn btn-danger" type="submit" value="Delete">#}
-        {#{{ form_end(delete_form) }}#}
+
+        {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+        {{ form_start(delete_form) }}
+            <input class="btn btn-danger" type="submit" value="Delete Project (Visible to Platform Admin only)">
+        {{ form_end(delete_form) }}
+        {% endif %}
 
     </div>
 

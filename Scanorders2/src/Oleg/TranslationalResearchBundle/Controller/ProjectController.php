@@ -1287,7 +1287,7 @@ class ProjectController extends Controller
     /**
      * Deletes a project entity.
      *
-     * @Route("/project/{id}", name="translationalresearch_project_delete")
+     * @Route("/project-delete/{id}", name="translationalresearch_project_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, Project $project)
@@ -1296,34 +1296,78 @@ class ProjectController extends Controller
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
-        $transresUtil = $this->container->get('transres_util');
-
-        if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
-            $this->get('session')->getFlashBag()->add(
-                'warning',
-                "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
-            );
-            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
-        }
-
-        if(
-            $transresUtil->isAdminOrPrimaryReviewer()
-        ) {
-            //ok
-        } else {
-            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
-        }
-
         $form = $this->createDeleteForm($project);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($project);
-            $em->flush();
+        if( $form->isSubmitted() && $form->isValid() ) {
+            //exit('deleting...');
+            $this->deleteProject($project);
         }
 
         return $this->redirectToRoute('translationalresearch_project_index');
+    }
+    /**
+     * Deletes a project entity.
+     *
+     * @Route("/project-delete-get/{id}", name="translationalresearch_project_delete_get")
+     * @Method("GET")
+     */
+    public function deleteProjectAction(Request $request, Project $project)
+    {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+        }
+
+        $this->deleteProject($project);
+
+        return $this->redirectToRoute('translationalresearch_project_index');
+    }
+    /**
+     * Deletes a project entity.
+     *
+     * @Route("/delete-multiple-projects/", name="translationalresearch_projects_multiple_delete")
+     * @Method("GET")
+     */
+    public function deleteMultipleProjectsAction(Request $request)
+    {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $repository = $em->getRepository('OlegTranslationalResearchBundle:Project');
+        $dql =  $repository->createQueryBuilder("project");
+        $dql->select('project');
+
+        $dql->leftJoin('project.principalInvestigators','principalInvestigators');
+
+        //$dql->andWhere("project.exportId IS NOT NULL");
+        //$dql->andWhere("project.oid IS NULL");
+        $dql->andWhere("principalInvestigators.id IS NULL");
+
+        $query = $dql->getQuery();
+
+        $projects = $query->getResult();
+        echo "projects count=".count($projects)."<br>";
+
+        foreach($projects as $project) {
+            $this->deleteProject($project);
+        }
+
+        exit("EOF deleteMultipleProjectsAction");
+        return $this->redirectToRoute('translationalresearch_project_index');
+    }
+    public function deleteProject( $project ) {
+        echo $project->getID().": Delete project OID=".$project->getOid()."<br>";
+        $em = $this->getDoctrine()->getManager();
+
+        //principalInvestigators
+        
+        //delete documents
+
+        $em->remove($project);
+        $em->flush();
     }
 
     public function createProjectEntity($user,$project=null) {

@@ -68,6 +68,12 @@ class Project {
      * @var \DateTime
      * @ORM\Column(type="datetime", nullable=true)
      */
+    private $importDate;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(type="datetime", nullable=true)
+     */
     private $updateDate;
 
     /**
@@ -161,97 +167,10 @@ class Project {
      */
     private $billingContact;
 
-
-    //Name of PI Who Submitted the IRB
-//    /**
-//     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
-//     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
-//     */
-//    private $irbSubmitter;
-
-    //Institutional Review Board (IRB)
-//    /**
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $irbNumber;
-
-//    /**
-//     * @ORM\Column(type="date", nullable=true)
-//     */
-//    private $startDate;
-//
-    //Is this Research Project Funded by a WCMC Account?
-//    /**
-//     * @ORM\Column(type="boolean", nullable=true)
-//     */
-//    private $funded;
-
-    //If funded please provide account number:
-//    /**
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $fundedAccountNumber;
-
-    //Please provide a brief description of the project to include background information,
-    // purpose and objective, and a methodology section stating a justification for
-    // the size and scope of the project (<250 words). The breadth of information
-    // should be adequate for a scientific committee to understand and assess the value of the research.
-//    /**
-//     * @ORM\Column(type="text", nullable=true)
-//     */
-//    private $description;
-
-    //Provide a Detailed Budget Outline/Summary
-//    /**
-//     * @ORM\Column(type="text", nullable=true)
-//     */
-//    private $budgetSummary;
-
-    //Estimated Total Costs
-//    /**
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $totalCost;
-
-    //Project Type
-//    /**
-//     * @ORM\Column(type="string", nullable=true)
-//     */
-//    private $projectType;
-
-    //Biostatistical Comment
-//    /**
-//     * @ORM\Column(type="text", nullable=true)
-//     */
-//    private $biostatisticalComment;
-
-    //Administrator Comment
-//    /**
-//     * @ORM\Column(type="text", nullable=true)
-//     */
-//    private $administratorComment;
-
-    //Primary Reviewer Comment
-//    /**
-//     * @ORM\Column(type="text", nullable=true)
-//     */
-//    private $primaryReviewerComment;
-
-    //Please check the box if this project is ready for committee to review
-//    /**
-//     * @ORM\Column(type="boolean", nullable=true)
-//     */
-//    private $readyForReview;
-
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $approvalDate;
-
-    //TODO (?):
-    //Click on the "View Biostatistical Request" button to view the biostatistical request form
-    //Click on the "View Master Request" button to view the master request form
-
 
     //IrbReviews (one-to-many, but only one review is valid)
     /**
@@ -488,6 +407,22 @@ class Project {
     public function setCreateDate($createDate)
     {
         $this->createDate = $createDate;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getImportDate()
+    {
+        return $this->importDate;
+    }
+
+    /**
+     * @param \DateTime $importDate
+     */
+    public function setImportDate($importDate)
+    {
+        $this->importDate = $importDate;
     }
 
     /**

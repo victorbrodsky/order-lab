@@ -118,13 +118,14 @@ class TransResImportData
 
             $project = $this->em->getRepository('OlegTranslationalResearchBundle:Project')->findOneByExportId($exportId);
             if( $project ) {
-                continue; //ignore existing request to prevent overwrite
+                //continue; //ignore existing request to prevent overwrite
             } else {
                 //new Project
                 $project = new Project();
             }
 
             $project->setVersion(1);
+            $project->setImportDate(new \DateTime());
 
             if( !$project->getInstitution() ) {
                 $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
@@ -132,16 +133,16 @@ class TransResImportData
             }
 
             //set order category
-            if( !$project->getMessageCategory() ) {
-                $categoryStr = "HemePath Translational Research Project";  //"Pathology Call Log Entry";
-                //$categoryStr = "Nesting Test"; //testing
-                $messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
-
-                if (!$messageCategory) {
-                    throw new \Exception("Message category is not found by name '" . $categoryStr . "'");
-                }
-                $project->setMessageCategory($messageCategory);
-            }
+//            if( !$project->getMessageCategory() ) {
+//                $categoryStr = "HemePath Translational Research Project";  //"Pathology Call Log Entry";
+//                //$categoryStr = "Nesting Test"; //testing
+//                $messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
+//
+//                if (!$messageCategory) {
+//                    throw new \Exception("Message category is not found by name '" . $categoryStr . "'");
+//                }
+//                $project->setMessageCategory($messageCategory);
+//            }
 
             $project->setExportId($exportId);
 
@@ -160,7 +161,7 @@ class TransResImportData
             if( $submitterUser ) {
                 $project->setSubmitter($submitterUser);
             } else {
-                $msg = "Submitter not found by PrimaryPublicUserId=".$submitterUser;
+                $msg = "Submitter not found by SUBMITTED_BY=".$submitterUser;
                 //exit($msg);
                 echo $msg."<br>";
                 $logger->warning($msg);
@@ -168,6 +169,7 @@ class TransResImportData
 
             //Contact
             $contactEmail = $this->getValueByHeaderName('EMAIL', $rowData, $headers);
+            $contactEmail = strtolower($contactEmail);
             $contactUsers = $this->getUserByEmail($contactEmail,$exportId,'EMAIL');
             if( count($contactUsers) > 0 ) {
                 if( !$project->getSubmitter() ) {
@@ -176,6 +178,11 @@ class TransResImportData
                 foreach($contactUsers as $contactUser) {
                     $project->addContact($contactUser);
                 }
+            } else {
+                $msg = "Contact user not found by EMAIL=".$contactEmail;
+                exit($msg);
+                echo $msg."<br>";
+                $logger->warning($msg);
             }
 
             //PI
@@ -186,8 +193,26 @@ class TransResImportData
                     $project->addPrincipalInvestigator($user);
                 }
             } else {
+                $msg = "PI user not found by PI_EMAIL=".$piEmail;
+                echo $msg."<br>";
+                $logger->warning($msg);
                 //try to get by PRI_INVESTIGATOR
                 $priInvestigators = $this->getValueByHeaderName('PRI_INVESTIGATOR', $rowData, $headers);
+                //$priInvestigators = str_replace(",MD","",$priInvestigators);
+                $priInvestigators = str_replace(", MD","",$priInvestigators);
+                $priInvestigators = str_replace(", M.D.","",$priInvestigators);
+                $priInvestigators = str_replace(",M.D.","",$priInvestigators);
+                $priInvestigatorsArr = explode(",",$priInvestigators);
+                foreach($priInvestigatorsArr as $pi) {
+                    echo "pi=".$pi."<br>";
+                    $piArr = explode(" ",$pi);
+                    if( count($piArr) == 2 ) {
+                        //assume "amy chadburn": second if family name
+                        $thisUser = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername($piArr[1]);
+                    }
+
+                }
+                exit($msg);
             }
 
             //Pathologists Involved
@@ -197,6 +222,11 @@ class TransResImportData
                 foreach($pathUsers as $user) {
                     $project->addPathologist($user);
                 }
+            } else {
+                $msg = "Pathology user not found by PATH_EMAIL=".$pathEmail;
+                exit($msg);
+                echo $msg."<br>";
+                $logger->warning($msg);
             }
 
             //CO_INVESTIGATOR
@@ -206,6 +236,11 @@ class TransResImportData
                 foreach($coInvEmails as $user) {
                     $project->addCoInvestigator($user);
                 }
+            } else {
+                $msg = "User not found by CO_INVESTIGATOR=".$contactEmail;
+                exit($msg);
+                echo $msg."<br>";
+                $logger->warning($msg);
             }
 
             //DATE_APPROVAL
@@ -222,17 +257,11 @@ class TransResImportData
 
             //PROJECT_TYPE_ID
             $PROJECT_TYPE_ID = $this->getValueByHeaderName('PROJECT_TYPE_ID', $rowData, $headers);
-            //$this->typeMapper($PROJECT_TYPE_ID);
+            $projectType = $this->projectTypeMapper($PROJECT_TYPE_ID);
+            if( $projectType ) {
+                $project->setProjectType($projectType);
+            }
 
-
-            //save project to DB before form nodes
-            echo "before flush <br>";
-            $em->persist($project);
-            $em->flush();
-            echo "after flush <br>";
-
-
-            ////////// form nodes ///////////
             //PROJECT_TITLE
             $title = $this->getValueByHeaderName('PROJECT_TITLE', $rowData, $headers);
             $project->setTitle($title);
@@ -299,7 +328,6 @@ class TransResImportData
             /////////////////////
 
 
-
             //ADMIN_COMMENT
             $ADMIN_COMMENT = $this->getValueByHeaderName('ADMIN_COMMENT', $rowData, $headers);
 
@@ -321,10 +349,20 @@ class TransResImportData
 
             //FUNDING_APPROVAL_COMMENT ???
 
-            $project->generateOid();
-            $em->flush();
 
-            //echo "after flush 2<br>";
+            //save project to DB before form nodes
+            $saveFlag = true;
+            $saveFlag = false;
+            if( $saveFlag ) {
+                $em->persist($project);
+                $em->flush();
+                //echo "after flush <br>";
+
+                $project->generateOid();
+                $em->flush();
+
+                //echo "after flush 2<br>";
+            }
 
             $count++;
 
@@ -344,15 +382,16 @@ class TransResImportData
 //            $logger->warning($warning);
 //        }
 
-        //exit('1');
-
         $result = "Imported requests = " . $count;
+        exit($result);
+
         return $result;
     }
 
     public function getUserByEmail($emailStr,$exportId,$emailType) {
         $logger = $this->container->get('logger');
 
+        $emailStr = strtolower($emailStr);
         $emailStr = str_replace(";",",",$emailStr);
         if( strpos($emailStr,",") !== false ) {
             $emails = explode(",",$emailStr);
@@ -379,12 +418,13 @@ class TransResImportData
             $cwid = $emailParts[0];
 
             $username = $cwid."_@_". $this->usernamePrefix;
-            $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername($username);
+            $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($username);
             if( !$user ) {
                 $users[] = $user;
             } else {
                 $msg = "Project Export ID=".$exportId.": No user found by email [".$email."]; type=".$emailType;
                 echo $msg."<br>";
+                //exit($msg);
                 $logger->warning($msg);
             }
 
@@ -573,27 +613,36 @@ class TransResImportData
         return $status;
     }
 
-    public function typeMapper( $id ) {
+    public function projectTypeMapper( $id ) {
 
         //1	Case Study	0
         //2	Descriptive Study	0
         //3	Association Study - Request Statistical Support	1
 
         $status = null;
+        $statusNewSystem = null;
 
         switch( $id ){
             case "1":
                 $status = "Case Study";
+                $statusNewSystem = "Clinical Research (Case Study)";
                 break;
             case "2":
                 $status = "Descriptive Study";
+                $statusNewSystem = "Experimental Research (Descriptive Study)";
                 break;
             case "3":
                 $status = "Association Study - Request Statistical Support";
+                $statusNewSystem = "Education/Teaching (Pathology Faculty)";
                 break;
         }
 
-        return $status;
+        if( $statusNewSystem ) {
+            $listEntity = $this->em->getRepository('OlegTranslationalResearchBundle:ProjectTypeList')->findOneByName($statusNewSystem);
+            return $listEntity;
+        }
+
+        return null;
     }
 
 
