@@ -393,8 +393,10 @@ class TransResImportData
 //            $logger->warning($warning);
 //        }
 
+        $errorCount=1;
         foreach($notExistingUsers as $notExistingUser) {
-            echo $notExistingUser."<br>";
+            echo $errorCount.": ".$notExistingUser."<br>";
+            $errorCount++;
         }
 
         $result = "Imported requests = " . $count;
