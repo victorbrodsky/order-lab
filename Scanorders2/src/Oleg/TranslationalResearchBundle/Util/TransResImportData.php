@@ -823,8 +823,8 @@ class TransResImportData
         //exit('ldap ok');
 
         //////////////////// save user to DB ////////////////////
-        $userManager = $this->container->get('fos_user.user_manager');
-        $userManager->updateUser($user);
+        //$userManager = $this->container->get('fos_user.user_manager');
+        //$userManager->updateUser($user);
 
         return $user;
     }
