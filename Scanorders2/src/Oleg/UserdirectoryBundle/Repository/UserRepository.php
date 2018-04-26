@@ -171,6 +171,7 @@ class UserRepository extends EntityRepository {
         if( count($users) > 0 ) {
             $user = $users[0];
         }
+        echo "User=".$user."<br>";
 
         return $user;
     }
