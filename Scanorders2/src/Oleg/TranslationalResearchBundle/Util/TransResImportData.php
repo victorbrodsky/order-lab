@@ -474,6 +474,7 @@ class TransResImportData
         $username = str_replace(", PhD","",$username);
         $username = str_replace(", PH.D","",$username);
         $username = str_replace(", Ph.D","",$username);
+        $username = str_replace("Dr.","",$username);
         return $username;
     }
 
