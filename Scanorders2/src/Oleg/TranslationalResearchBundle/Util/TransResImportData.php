@@ -27,6 +27,7 @@ namespace Oleg\TranslationalResearchBundle\Util;
 
 use Oleg\TranslationalResearchBundle\Entity\Project;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 class TransResImportData
 {
@@ -156,6 +157,7 @@ class TransResImportData
             }
 
             //IRB_EXPIRATION_DATE
+            $irbExpDate = null;
             $irbExpDateStr = $this->getValueByHeaderName('IRB_EXPIRATION_DATE', $rowData, $headers);
             //echo "irbExpDateStr=".$irbExpDateStr."<br>";
             if( $irbExpDateStr ) {
@@ -282,6 +284,7 @@ class TransResImportData
 
             }
 
+            $criticalErrorArr = array();
             if( !$project->getSubmitter() ) {
                 if( count($requestersArr) > 0 ) {
                     $project->setSubmitter($requestersArr[0]);
@@ -292,7 +295,7 @@ class TransResImportData
                     }
                     echo "<br>";
                 } else {
-                    $notExistingUsers[] = $exportId . "(".$irbExpDateStr.")" . ": " . "Submitter is NULL: ".implode("; ",$requestersStrArr);
+                    $criticalErrorArr[] = "Submitter";
                 }
             }
 
@@ -307,8 +310,17 @@ class TransResImportData
                     }
                     echo "<br>";
                 } else {
-                    $notExistingUsers[] = $exportId . "(".$irbExpDateStr.")" . ": " . "PI is NULL: ".implode("; ",$requestersStrArr);
+                    $criticalErrorArr[] = "PI";
                 }
+            }
+
+            if( count($criticalErrorArr) > 0 ) {
+                $notexpired = null;
+                if( $irbExpDate && $irbExpDate > new \DateTime("now") ) {
+                    $notexpired = "***not expired***";
+                }
+                $criticalErrorStr = $exportId . " ($notexpired Created:".$CREATED_DATE_STR."; IRB EXP:".$irbExpDateStr.")";
+                $notExistingUsers[] = $criticalErrorStr. implode(",",$criticalErrorArr) . "=NULL" . ": " . implode("; ",$requestersStrArr);
             }
 
             //DATE_APPROVAL
