@@ -155,10 +155,24 @@ class TransResImportData
                 $project->setCreateDate($CREATED_DATE);
             }
 
+            //IRB_EXPIRATION_DATE
+            $irbExpDateStr = $this->getValueByHeaderName('IRB_EXPIRATION_DATE', $rowData, $headers);
+            //echo "irbExpDateStr=".$irbExpDateStr."<br>";
+            if( $irbExpDateStr ) {
+                $irbExpDate = $this->transformDatestrToDate($irbExpDateStr);
+                if( $irbExpDate ) {
+                    $project->setIrbExpirationDate($irbExpDate);
+                    //$this->setValueToFormNodeNewProject($project, "IRB Expiration Date", $irbExpDate);
+                    //echo "irbExpDate=" . $irbExpDate->format('d-m-Y') . "<br>";
+                }
+            }
+
             $requestersArr = array();
+            $requestersStrArr = array();
 
             //SUBMITTED_BY
             $submitterCwid = $this->getValueByHeaderName('SUBMITTED_BY', $rowData, $headers);
+            $requestersStrArr[] = $submitterCwid;
             $submitterUser = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($submitterCwid);
             if( $submitterUser ) {
                 $project->setSubmitter($submitterUser);
@@ -171,6 +185,7 @@ class TransResImportData
 
             //Contact
             $contactEmails = $this->getValueByHeaderName('EMAIL', $rowData, $headers);
+            $requestersStrArr[] = $contactEmails;
             $contactEmails = strtolower($contactEmails);
             $contactUsers = $this->getUserByEmail($contactEmails,$exportId,'EMAIL');
             if( count($contactUsers) > 0 ) {
@@ -191,6 +206,7 @@ class TransResImportData
 
             //PI
             $piEmail = $this->getValueByHeaderName('PI_EMAIL', $rowData, $headers);
+            $requestersStrArr[] = $piEmail;
             $piUsers = $this->getUserByEmail($piEmail,$exportId,'PI_EMAIL');
             if( count($piUsers) > 0 ) {
                 foreach($piUsers as $user) {
@@ -205,6 +221,7 @@ class TransResImportData
                 }
                 //try to get by PRI_INVESTIGATOR
                 $priInvestigators = $this->getValueByHeaderName('PRI_INVESTIGATOR', $rowData, $headers);
+                $requestersStrArr[] = $priInvestigators;
                 $priInvestigators = $this->cleanUsername($priInvestigators);
                 $priInvestigatorsArr = explode(",",$priInvestigators);
                 foreach($priInvestigatorsArr as $pi) {
@@ -224,6 +241,7 @@ class TransResImportData
 
             //Pathologists Involved
             $pathEmail = $this->getValueByHeaderName('PATH_EMAIL', $rowData, $headers);
+            $requestersStrArr[] = $pathEmail;
             $pathUsers = $this->getUserByEmail($pathEmail,$exportId,'PATH_EMAIL');
             if( count($pathUsers) > 0 ) {
                 foreach($pathUsers as $user) {
@@ -242,6 +260,7 @@ class TransResImportData
 
             //CO_INVESTIGATOR
             $coInvestigators = $this->getValueByHeaderName('CO_INVESTIGATOR', $rowData, $headers);
+            $requestersStrArr[] = $coInvestigators;
             $coInvestigators = $this->cleanUsername($coInvestigators);
             $coInvestigatorsArr = explode(",",$coInvestigators);
             foreach($coInvestigatorsArr as $coInvestigator) {
@@ -273,7 +292,7 @@ class TransResImportData
                     }
                     echo "<br>";
                 } else {
-                    $notExistingUsers[] = $exportId . ": [###Critical###] " . "Submitter is NULL";
+                    $notExistingUsers[] = $exportId . "(".$irbExpDateStr.")" . ": " . "Submitter is NULL: ".implode("; ",$requestersStrArr);
                 }
             }
 
@@ -288,7 +307,7 @@ class TransResImportData
                     }
                     echo "<br>";
                 } else {
-                    $notExistingUsers[] = $exportId . ": [###Critical###] " . "PI is NULL";
+                    $notExistingUsers[] = $exportId . "(".$irbExpDateStr.")" . ": " . "PI is NULL: ".implode("; ",$requestersStrArr);
                 }
             }
 
@@ -326,18 +345,6 @@ class TransResImportData
                 //$this->setValueToFormNodeNewProject($project, "IRB Number", $irbNumber);
                 $project->setIrbNumber($irbNumber);
                 //echo "irbNumber=" . $irbNumber . "<br>";
-            }
-
-            //IRB_EXPIRATION_DATE
-            $irbExpDateStr = $this->getValueByHeaderName('IRB_EXPIRATION_DATE', $rowData, $headers);
-            //echo "irbExpDateStr=".$irbExpDateStr."<br>";
-            if( $irbExpDateStr ) {
-                $irbExpDate = $this->transformDatestrToDate($irbExpDateStr);
-                if( $irbExpDate ) {
-                    $project->setIrbExpirationDate($irbExpDate);
-                    //$this->setValueToFormNodeNewProject($project, "IRB Expiration Date", $irbExpDate);
-                    //echo "irbExpDate=" . $irbExpDate->format('d-m-Y') . "<br>";
-                }
             }
 
             //PROJECT_FUNDED
