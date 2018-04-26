@@ -155,6 +155,8 @@ class TransResImportData
                 $project->setCreateDate($CREATED_DATE);
             }
 
+            $requestersArr = array();
+
             //SUBMITTED_BY
             $submitterCwid = $this->getValueByHeaderName('SUBMITTED_BY', $rowData, $headers);
             $submitterUser = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($submitterCwid);
@@ -177,19 +179,14 @@ class TransResImportData
                 }
                 foreach($contactUsers as $contactUser) {
                     $project->addContact($contactUser);
+                    $requestersArr[] = $contactUser;
                 }
             } else {
                 $msg = "Contact user not found by EMAIL=".$contactEmails;
                 //exit($msg);
-                echo $msg."<br>";
+                //echo $msg."<br>";
                 $logger->warning($msg);
-                $notExistingUsers[] = $exportId." [###Critical###]: ".$msg;
-            }
-
-            if( !$project->getSubmitter() ) {
-                if( $submitterCwid || $contactEmails ) {
-                    $notExistingUsers[] = $exportId . ": " . "Submitter is not set by SUBMITTED_BY=$submitterCwid or by EMAIL=$contactEmails";
-                }
+                //$notExistingUsers[] = $exportId." [###Critical###]: ".$msg;
             }
 
             //PI
@@ -198,6 +195,7 @@ class TransResImportData
             if( count($piUsers) > 0 ) {
                 foreach($piUsers as $user) {
                     $project->addPrincipalInvestigator($user);
+                    $requestersArr[] = $user;
                 }
             } else {
                 if( $piEmail ) {
@@ -214,9 +212,10 @@ class TransResImportData
                     $thisUser = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByAnyNameStr($pi);
                     if( $thisUser ) {
                         $project->addPrincipalInvestigator($thisUser);
+                        $requestersArr[] = $thisUser;
                     } else {
                         $msg = "PI user not found by PRI_INVESTIGATOR=".$pi;
-                        $notExistingUsers[] = $exportId.": ".$msg;
+                        //$notExistingUsers[] = $exportId.": ".$msg;
                         $logger->warning($msg);
                         //exit($msg);
                     }
@@ -229,15 +228,16 @@ class TransResImportData
             if( count($pathUsers) > 0 ) {
                 foreach($pathUsers as $user) {
                     $project->addPathologist($user);
+                    $requestersArr[] = $user;
                 }
             } else {
                 $msg = "Pathology user not found by PATH_EMAIL=".$pathEmail;
                 //exit($msg);
                 //echo $msg."<br>";
                 if( $pathEmail ) {
-                    $notExistingUsers[] = $exportId . ": " . $msg;
+                    $logger->warning($msg);
+                    //$notExistingUsers[] = $exportId . ": " . $msg;
                 }
-                $logger->warning($msg);
             }
 
             //CO_INVESTIGATOR
@@ -250,16 +250,46 @@ class TransResImportData
                 $thisUser = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByAnyNameStr($coInvestigator);
                 if( $thisUser ) {
                     $project->addCoInvestigator($thisUser);
+                    $requestersArr[] = $thisUser;
                 } else {
                     $msg = "Co-Investigator user not found by CO_INVESTIGATOR=".$coInvestigator;
-                    $logger->warning($msg);
                     if( $coInvestigator ) {
-                        $notExistingUsers[] = $exportId . ": " . $msg;
+                        $logger->warning($msg);
+                        //$notExistingUsers[] = $exportId . ": " . $msg;
                     }
                     //exit($msg);
                 }
                 //}
 
+            }
+
+            if( !$project->getSubmitter() ) {
+                if( count($requestersArr) > 0 ) {
+                    $project->setSubmitter($requestersArr[0]);
+                    echo "Submitter is populated by first requester:";
+                    //print_r($requestersArr);
+                    foreach($requestersArr as $requester) {
+                        echo $requester."<br>";
+                    }
+                    echo "<br>";
+                } else {
+                    $notExistingUsers[] = $exportId . ": [###Critical###] " . "Submitter is NULL";
+                }
+            }
+
+            $pis = $project->getPrincipalInvestigators();
+            if( count($pis) == 0 ) {
+                if( count($requestersArr) > 0 ) {
+                    $project->addPrincipalInvestigator($requestersArr[0]);
+                    echo "PI is populated by first requester:";
+                    //print_r($requestersArr);
+                    foreach($requestersArr as $requester) {
+                        echo $requester."<br>";
+                    }
+                    echo "<br>";
+                } else {
+                    $notExistingUsers[] = $exportId . ": [###Critical###] " . "PI is NULL";
+                }
             }
 
             //DATE_APPROVAL
