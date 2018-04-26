@@ -168,9 +168,9 @@ class TransResImportData
             }
 
             //Contact
-            $contactEmail = $this->getValueByHeaderName('EMAIL', $rowData, $headers);
-            $contactEmail = strtolower($contactEmail);
-            $contactUsers = $this->getUserByEmail($contactEmail,$exportId,'EMAIL');
+            $contactEmails = $this->getValueByHeaderName('EMAIL', $rowData, $headers);
+            $contactEmails = strtolower($contactEmails);
+            $contactUsers = $this->getUserByEmail($contactEmails,$exportId,'EMAIL');
             if( count($contactUsers) > 0 ) {
                 if( !$project->getSubmitter() ) {
                     $project->setSubmitter($contactUsers[0]);
@@ -179,15 +179,15 @@ class TransResImportData
                     $project->addContact($contactUser);
                 }
             } else {
-                $msg = "Contact user not found by EMAIL=".$contactEmail;
+                $msg = "Contact user not found by EMAIL=".$contactEmails;
                 exit($msg);
                 echo $msg."<br>";
                 $logger->warning($msg);
             }
 
             if( !$project->getSubmitter() ) {
-                if( $submitterCwid || $contactEmail ) {
-                    $notExistingUsers[] = $exportId . ": " . "Submitter is not set by SUBMITTED_BY=$submitterCwid or by EMAIL=$contactEmail";
+                if( $submitterCwid || $contactEmails ) {
+                    $notExistingUsers[] = $exportId . ": " . "Submitter is not set by SUBMITTED_BY=$submitterCwid or by EMAIL=$contactEmails";
                 }
             }
 
@@ -430,6 +430,7 @@ class TransResImportData
 
         $users = array();
         foreach($emails as $email) {
+            $email = trim($email);
             $emailParts = explode("@", $email);
 
             if( count($emailParts) == 0 || count($emailParts) == 1 ) {
