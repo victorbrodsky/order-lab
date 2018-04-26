@@ -542,7 +542,9 @@ class TransResImportData
 
             //try to find and create by LDAP
             $user = $this->createNewUserByLdap($cwid);
-            $users[] = $user;
+            if( $user ) {
+                $users[] = $user;
+            }
 
             if( !$user ) {
                 $msg = "Project Export ID=".$exportId.": No user found by email [".$email."]; type=".$emailType;
@@ -792,7 +794,7 @@ class TransResImportData
 
         //////////////////// constract a new user ////////////////////
 
-        $this->logger->notice("LdapAuthentication: create a new user found by token->getUsername()=".$username);
+        $this->logger->notice("LdapAuthentication: create a new user found by username=".$username);
         $user = $userSecUtil->constractNewUser($username);
         //echo "user=".$user->getUsername()."<br>";
 
