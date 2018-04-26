@@ -199,9 +199,11 @@ class TransResImportData
                     $project->addPrincipalInvestigator($user);
                 }
             } else {
-                $msg = "PI user not found by PI_EMAIL=".$piEmail;
-                echo $msg."<br>";
-                $logger->warning($msg);
+                if( $piEmail ) {
+                    $msg = "PI user not found by PI_EMAIL=" . $piEmail;
+                    echo $msg . "<br>";
+                    $logger->warning($msg);
+                }
                 //try to get by PRI_INVESTIGATOR
                 $priInvestigators = $this->getValueByHeaderName('PRI_INVESTIGATOR', $rowData, $headers);
                 $priInvestigators = $this->cleanUsername($priInvestigators);
@@ -422,11 +424,11 @@ class TransResImportData
 
         $emailStr = strtolower($emailStr);
         $emailStr = str_replace(";",",",$emailStr);
-        if( strpos($emailStr,",") !== false ) {
+        //if( strpos($emailStr,",") !== false ) {
             $emails = explode(",",$emailStr);
-        } else {
-            $emails = array($emailStr);
-        }
+        //} else {
+        //    $emails = array($emailStr);
+        //}
 
         $users = array();
         foreach($emails as $email) {
@@ -441,19 +443,34 @@ class TransResImportData
                 //ok
             } else {
                 $msg = "email [".$emailStr."] is not CWID user";
-                echo $msg."<br>";
+                //echo $msg."<br>";
                 $logger->warning($msg);
             }
 
             $cwid = $emailParts[0];
-
-            $username = $cwid."_@_". $this->usernamePrefix;
-            $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($username);
-            if( !$user ) {
+            //$username = $cwid."_@_". $this->usernamePrefix;
+            $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($cwid);
+            if( $user ) {
                 $users[] = $user;
-            } else {
+            }
+
+            if( !$user ) {
+                $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByEmail($email);
+                if( $user ) {
+                    $users[] = $user;
+                }
+            }
+
+            if( !$user ) {
+                $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByUserInfoEmail($email);
+                if( $user ) {
+                    $users[] = $user;
+                }
+            }
+
+            if( !$user ) {
                 $msg = "Project Export ID=".$exportId.": No user found by email [".$email."]; type=".$emailType;
-                echo $msg."<br>";
+                //echo $msg."<br>";
                 //exit($msg);
                 $logger->warning($msg);
             }
