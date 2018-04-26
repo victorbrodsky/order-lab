@@ -178,7 +178,7 @@ class TransResImportData
 
             //SUBMITTED_BY
             $submitterCwid = $this->getValueByHeaderName('SUBMITTED_BY', $rowData, $headers);
-            $requestersStrArr[] = $submitterCwid;
+            $requestersStrArr[] = "SUBMITTED_BY: ".$submitterCwid;
             $submitterUser = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($submitterCwid);
             if( $submitterUser ) {
                 $project->setSubmitter($submitterUser);
@@ -191,7 +191,7 @@ class TransResImportData
 
             //Contact
             $contactEmails = $this->getValueByHeaderName('EMAIL', $rowData, $headers);
-            $requestersStrArr[] = $contactEmails;
+            $requestersStrArr[] = "EMAIL: ".$contactEmails;
             $contactEmails = strtolower($contactEmails);
             $contactUsers = $this->getUserByEmail($contactEmails,$exportId,'EMAIL');
             if( count($contactUsers) > 0 ) {
@@ -212,7 +212,7 @@ class TransResImportData
 
             //PI
             $piEmail = $this->getValueByHeaderName('PI_EMAIL', $rowData, $headers);
-            $requestersStrArr[] = $piEmail;
+            $requestersStrArr[] = "PI_EMAIL: ".$piEmail;
             $piUsers = $this->getUserByEmail($piEmail,$exportId,'PI_EMAIL');
             if( count($piUsers) > 0 ) {
                 foreach($piUsers as $user) {
@@ -228,7 +228,7 @@ class TransResImportData
                 //try to get by PRI_INVESTIGATOR
                 $priInvestigators = $this->getValueByHeaderName('PRI_INVESTIGATOR', $rowData, $headers);
                 $priInvestigators = $this->cleanString($priInvestigators);
-                $requestersStrArr[] = $priInvestigators;
+                $requestersStrArr[] = "PRI_INVESTIGATOR: ".$priInvestigators;
                 $priInvestigators = $this->cleanUsername($priInvestigators);
                 $priInvestigatorsArr = explode(",",$priInvestigators);
                 foreach($priInvestigatorsArr as $pi) {
@@ -248,7 +248,7 @@ class TransResImportData
 
             //Pathologists Involved
             $pathEmail = $this->getValueByHeaderName('PATH_EMAIL', $rowData, $headers);
-            $requestersStrArr[] = $pathEmail;
+            $requestersStrArr[] = "PATH_EMAIL: ".$pathEmail;
             $pathUsers = $this->getUserByEmail($pathEmail,$exportId,'PATH_EMAIL');
             if( count($pathUsers) > 0 ) {
                 foreach($pathUsers as $user) {
@@ -268,7 +268,7 @@ class TransResImportData
             //CO_INVESTIGATOR
             $coInvestigators = $this->getValueByHeaderName('CO_INVESTIGATOR', $rowData, $headers);
             $coInvestigators = $this->cleanString($coInvestigators);
-            $requestersStrArr[] = $coInvestigators;
+            $requestersStrArr[] = "CO_INVESTIGATOR: ".$coInvestigators;
             $coInvestigators = $this->cleanUsername($coInvestigators);
             $coInvestigatorsArr = explode(",",$coInvestigators);
             foreach($coInvestigatorsArr as $coInvestigator) {
@@ -333,7 +333,7 @@ class TransResImportData
 
                 if( $notexpired && $notclosed ) {
                     $criticalErrorStr = $exportId . " (Status:" . $statusStr . "; Created:" . $CREATED_DATE_STR . "; IRB EXP:" . $irbExpDateStr . ")";
-                    $notExistingUsers[] = $criticalErrorStr ." ". implode(",", $criticalErrorArr) . "=NULL" . ". Requesters: " . implode("; ", $requestersStrArr);
+                    $notExistingUsers[] = $criticalErrorStr ." ". implode(",", $criticalErrorArr) . "=NULL" . ". Requesters: " . implode("<br>", $requestersStrArr);
                 }
             }
 
