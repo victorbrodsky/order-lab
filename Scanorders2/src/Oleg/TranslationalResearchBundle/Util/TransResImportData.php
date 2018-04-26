@@ -820,6 +820,13 @@ class TransResImportData
             $user->setPreferredPhone($searchRes['telephoneNumber']);
         }
 
+        //assign minimum roles
+        $siteObject = $this->em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation("translationalresearch");
+        $lowestRoles = $siteObject->getLowestRoles();
+        foreach($lowestRoles as $role) {
+            $user->addRole($role);
+        }
+
         //exit('ldap ok');
 
         //////////////////// save user to DB ////////////////////
