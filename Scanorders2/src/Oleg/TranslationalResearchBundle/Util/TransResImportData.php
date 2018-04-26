@@ -169,6 +169,10 @@ class TransResImportData
                 }
             }
 
+            //STATUS_ID
+            $STATUS_ID = $this->getValueByHeaderName('STATUS_ID', $rowData, $headers);
+            $statusStr = $this->statusMapper($STATUS_ID);
+
             $requestersArr = array();
             $requestersStrArr = array();
 
@@ -315,12 +319,20 @@ class TransResImportData
             }
 
             if( count($criticalErrorArr) > 0 ) {
-                $notexpired = null;
+                $notexpired = false;
                 if( $irbExpDate && $irbExpDate > new \DateTime("now") ) {
-                    $notexpired = "***not expired***";
+                    //$notexpired = "***not expired/closed***";
+                    $notexpired = true;
                 }
-                $criticalErrorStr = $exportId . " ($notexpired Created:".$CREATED_DATE_STR."; IRB EXP:".$irbExpDateStr.")";
-                $notExistingUsers[] = $criticalErrorStr. implode(",",$criticalErrorArr) . "=NULL" . ": " . implode("; ",$requestersStrArr);
+                $notclosed = false;
+                if( $statusStr != "closed" ) {
+                    $notclosed = true;
+                }
+
+                if( $notexpired && $notclosed ) {
+                    $criticalErrorStr = $exportId . "( Status:" . $statusStr . "; Created:" . $CREATED_DATE_STR . "; IRB EXP:" . $irbExpDateStr . ")";
+                    $notExistingUsers[] = $criticalErrorStr . implode(",", $criticalErrorArr) . "=NULL" . ": " . implode("; ", $requestersStrArr);
+                }
             }
 
             //DATE_APPROVAL
@@ -330,10 +342,6 @@ class TransResImportData
                 $DATE_APPROVAL = $this->transformDatestrToDate($DATE_APPROVAL_STR);
                 $project->setApprovalDate($DATE_APPROVAL);
             }
-
-            //STATUS_ID
-            $STATUS_ID = $this->getValueByHeaderName('STATUS_ID', $rowData, $headers);
-            //$this->statusMapper($STATUS_ID);
 
             //PROJECT_TYPE_ID
             $PROJECT_TYPE_ID = $this->getValueByHeaderName('PROJECT_TYPE_ID', $rowData, $headers);
