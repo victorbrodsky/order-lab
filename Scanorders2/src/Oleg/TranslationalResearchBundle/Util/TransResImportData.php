@@ -201,7 +201,7 @@ class TransResImportData
                 $priInvestigators = $this->cleanUsername($priInvestigators);
                 $priInvestigatorsArr = explode(",",$priInvestigators);
                 foreach($priInvestigatorsArr as $pi) {
-                    echo "pi=".$pi."<br>";
+                    //echo "pi=".$pi."<br>";
                     //$piArr = explode(" ",$pi);
                     //if( count($piArr) == 2 ) {
                         //assume "amy chadburn": second if family name
@@ -239,7 +239,7 @@ class TransResImportData
             $coInvestigators = $this->cleanUsername($coInvestigators);
             $coInvestigatorsArr = explode(",",$coInvestigators);
             foreach($coInvestigatorsArr as $coInvestigator) {
-                echo "coInvestigator=".$coInvestigator."<br>";
+                //echo "coInvestigator=".$coInvestigator."<br>";
                 //assume "amy chadburn": second if family name
                 $thisUser = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByAnyNameStr($coInvestigator);
                 if( $thisUser ) {
@@ -256,7 +256,7 @@ class TransResImportData
 
             //DATE_APPROVAL
             $DATE_APPROVAL_STR = $this->getValueByHeaderName('DATE_APPROVAL', $rowData, $headers);
-            echo "DATE_APPROVAL_STR=".$DATE_APPROVAL_STR."<br>";
+            //echo "DATE_APPROVAL_STR=".$DATE_APPROVAL_STR."<br>";
             if( $DATE_APPROVAL_STR ) {
                 $DATE_APPROVAL = $this->transformDatestrToDate($DATE_APPROVAL_STR);
                 $project->setApprovalDate($DATE_APPROVAL);
@@ -280,14 +280,14 @@ class TransResImportData
                 //$this->setValueToFormNodeNewProject($project, "Title", $title);
                 $project->setTitle($title);
             }
-            echo "title=".$title."<br>";
+            //echo "title=".$title."<br>";
 
             //IRB_NUMBER
             $irbNumber = $this->getValueByHeaderName('IRB_NUMBER', $rowData, $headers);
             if( $irbNumber ) {
                 //$this->setValueToFormNodeNewProject($project, "IRB Number", $irbNumber);
                 $project->setIrbNumber($irbNumber);
-                echo "irbNumber=" . $irbNumber . "<br>";
+                //echo "irbNumber=" . $irbNumber . "<br>";
             }
 
             //IRB_EXPIRATION_DATE
@@ -298,7 +298,7 @@ class TransResImportData
                 if( $irbExpDate ) {
                     $project->setIrbExpirationDate($irbExpDate);
                     //$this->setValueToFormNodeNewProject($project, "IRB Expiration Date", $irbExpDate);
-                    echo "irbExpDate=" . $irbExpDate->format('d-m-Y') . "<br>";
+                    //echo "irbExpDate=" . $irbExpDate->format('d-m-Y') . "<br>";
                 }
             }
 
@@ -367,12 +367,9 @@ class TransResImportData
             if( $saveFlag ) {
                 $em->persist($project);
                 $em->flush();
-                //echo "after flush <br>";
 
                 $project->generateOid();
-                $em->flush();
-
-                //echo "after flush 2<br>";
+                $em->flush($project);
             }
 
             $count++;
@@ -548,9 +545,9 @@ class TransResImportData
 
         //'j-M-Y', '15-Feb-2009'
         //23-APR-07
-        echo "dateStr=".$datestr;
+        //echo "dateStr=".$datestr;
         $date = \DateTime::createFromFormat('j-M-y',$datestr);
-        echo " =>".$date->format("d-m-Y")."<br>";
+        //echo " =>".$date->format("d-m-Y")."<br>";
 
         return $date;
     }
