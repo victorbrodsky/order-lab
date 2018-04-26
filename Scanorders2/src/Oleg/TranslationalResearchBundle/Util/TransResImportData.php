@@ -76,6 +76,7 @@ class TransResImportData
             exit("Project specialty not found by abbreviation=ap-cp");
         }
 
+        $notExistingStatuses = array();
         $notExistingUsers = array();
         $count = 0;
 
@@ -180,6 +181,7 @@ class TransResImportData
                 $project->setState($statusStr);
             } else {
                 echo "Status not define=".$statusID.":".$this->statusMapper($statusID,true) . "<br>";
+                $notExistingStatuses[] = $this->statusMapper($statusID,true);
             }
 
             $requestersArr = array();
@@ -468,6 +470,11 @@ class TransResImportData
 //            //echo $warning."<br>";
 //            $logger->warning($warning);
 //        }
+
+        $notExistingStatuses = array_unique($notExistingStatuses);
+        foreach($notExistingStatuses as $notExistingStatus) {
+            echo "$notExistingStatus <br>";
+        }
 
         $errorCount=1;
         foreach($notExistingUsers as $notExistingUser) {
@@ -798,10 +805,10 @@ class TransResImportData
         $userSecUtil = $this->container->get('user_security_utility');
         $logger = $this->container->get('logger');
 
-        //$environment = $userSecUtil->getSiteSettingParameter('environment');
-        //if( $environment == "dev" ) {
-            //return NULL;
-        //}
+        $environment = $userSecUtil->getSiteSettingParameter('environment');
+        if( $environment == "dev" ) {
+            return NULL;
+        }
 
         if( !$cwid ) {
             return NULL;
