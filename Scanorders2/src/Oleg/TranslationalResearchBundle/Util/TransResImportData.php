@@ -783,7 +783,7 @@ class TransResImportData
         $authUtil = new AuthUtil($this->container,$this->em);
         $searchRes = $authUtil->searchLdap($cwid);
         if( $searchRes == NULL || count($searchRes) == 0 ) {
-            $this->logger->error("LdapAuthentication: can not find user by usernameClean=".$cwid);
+            $logger->error("LdapAuthentication: can not find user by usernameClean=".$cwid);
             return NULL;
         }
 
