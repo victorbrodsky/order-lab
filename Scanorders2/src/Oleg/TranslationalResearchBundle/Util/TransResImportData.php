@@ -183,7 +183,7 @@ class TransResImportData
                 //exit($msg);
                 echo $msg."<br>";
                 $logger->warning($msg);
-                $notExistingUsers[] = $exportId." [Critical]: ".$msg;
+                $notExistingUsers[] = $exportId." [###Critical###]: ".$msg;
             }
 
             if( !$project->getSubmitter() ) {
@@ -222,7 +222,6 @@ class TransResImportData
                     }
                 }
             }
-            exit('test');
 
             //Pathologists Involved
             $pathEmail = $this->getValueByHeaderName('PATH_EMAIL', $rowData, $headers);

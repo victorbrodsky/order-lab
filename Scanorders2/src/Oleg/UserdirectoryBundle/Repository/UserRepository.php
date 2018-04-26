@@ -153,7 +153,7 @@ class UserRepository extends EntityRepository {
     }
     public function findOneByFirstOrLastNameStr( $nameStr, $orAnd="OR" ) {
 
-        echo "findOneByFirstOrLastNameStr: nameStr=[".$nameStr."]<br>";
+        //echo "findOneByFirstOrLastNameStr: nameStr=[".$nameStr."]<br>";
 
         $user = null;
 
@@ -171,7 +171,7 @@ class UserRepository extends EntityRepository {
         if( count($users) > 0 ) {
             $user = $users[0];
         }
-        echo "User=".$user."<br>";
+        //echo "User=".$user."<br>";
 
         return $user;
     }
