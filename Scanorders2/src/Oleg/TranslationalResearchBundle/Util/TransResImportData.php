@@ -227,6 +227,7 @@ class TransResImportData
                 }
                 //try to get by PRI_INVESTIGATOR
                 $priInvestigators = $this->getValueByHeaderName('PRI_INVESTIGATOR', $rowData, $headers);
+                $priInvestigators = $this->cleanString($priInvestigators);
                 $requestersStrArr[] = $priInvestigators;
                 $priInvestigators = $this->cleanUsername($priInvestigators);
                 $priInvestigatorsArr = explode(",",$priInvestigators);
@@ -266,6 +267,7 @@ class TransResImportData
 
             //CO_INVESTIGATOR
             $coInvestigators = $this->getValueByHeaderName('CO_INVESTIGATOR', $rowData, $headers);
+            $coInvestigators = $this->cleanString($coInvestigators);
             $requestersStrArr[] = $coInvestigators;
             $coInvestigators = $this->cleanUsername($coInvestigators);
             $coInvestigatorsArr = explode(",",$coInvestigators);
@@ -476,10 +478,14 @@ class TransResImportData
         $username = str_replace(", Ph.D","",$username);
         $username = str_replace("Dr.","",$username);
         $username = str_replace(" MD;","",$username);
-        $username = str_replace(" MD ","",$username);
-        $username = str_replace(" PhD ","",$username);
 
         return $username;
+    }
+
+    public function cleanString( $string ) {
+        $string = str_replace(" MD ","",$string);
+        $string = str_replace(" PhD ","",$string);
+        return $string;
     }
 
     public function getUserByEmail($emailStr,$exportId,$emailType) {
