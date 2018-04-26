@@ -777,6 +777,7 @@ class TransResImportData
         }
 
         $userSecUtil = $this->container->get('user_security_utility');
+        $logger = $this->container->get('logger');
 
         //first search this user if exists in ldap directory
         $authUtil = new AuthUtil($this->container,$this->em);
@@ -793,7 +794,7 @@ class TransResImportData
 
         //////////////////// constract a new user ////////////////////
 
-        $this->logger->notice("LdapAuthentication: create a new user found by username=".$username);
+        $logger->notice("LdapAuthentication: create a new user found by username=".$username);
         $user = $userSecUtil->constractNewUser($username);
         //echo "user=".$user->getUsername()."<br>";
 
