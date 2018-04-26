@@ -179,7 +179,7 @@ class TransResImportData
             if( $statusStr ) {
                 $project->setState($statusStr);
             } else {
-                echo "Status not define=".$statusID.":".$this->statusMapper($statusID) . "<br>";
+                echo "Status not define=".$statusID.":".$this->statusMapper($statusID,true) . "<br>";
             }
 
             $requestersArr = array();
