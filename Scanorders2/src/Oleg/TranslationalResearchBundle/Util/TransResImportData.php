@@ -163,7 +163,7 @@ class TransResImportData
             } else {
                 $msg = "Submitter not found by SUBMITTED_BY=".$submitterUser;
                 //exit($msg);
-                echo $msg."<br>";
+                //echo $msg."<br>";
                 $logger->warning($msg);
             }
 
@@ -185,6 +185,10 @@ class TransResImportData
                 $logger->warning($msg);
             }
 
+            if( !$project->getSubmitter() && ($submitterCwid || $contactEmail) ) {
+                $notExistingUsers[] = $exportId.": "."Submitter is not set by SUBMITTED_BY=$submitterCwid or by EMAIL=$contactEmail";
+            }
+
             //PI
             $piEmail = $this->getValueByHeaderName('PI_EMAIL', $rowData, $headers);
             $piUsers = $this->getUserByEmail($piEmail,$exportId,'PI_EMAIL');
@@ -201,21 +205,16 @@ class TransResImportData
                 $priInvestigators = $this->cleanUsername($priInvestigators);
                 $priInvestigatorsArr = explode(",",$priInvestigators);
                 foreach($priInvestigatorsArr as $pi) {
-                    //echo "pi=".$pi."<br>";
-                    //$piArr = explode(" ",$pi);
-                    //if( count($piArr) == 2 ) {
-                        //assume "amy chadburn": second if family name
-                        $thisUser = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByAnyNameStr($pi);
-                        if( $thisUser ) {
-                            $project->addPrincipalInvestigator($thisUser);
-                        } else {
-                            $msg = "PI user not found by PRI_INVESTIGATOR=".$pi;
-                            $notExistingUsers[] = $exportId.": ".$msg;
-                            $logger->warning($msg);
-                            //exit($msg);
-                        }
-                    //}
-
+                    //assume "amy chadburn": second if family name
+                    $thisUser = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByAnyNameStr($pi);
+                    if( $thisUser ) {
+                        $project->addPrincipalInvestigator($thisUser);
+                    } else {
+                        $msg = "PI user not found by PRI_INVESTIGATOR=".$pi;
+                        $notExistingUsers[] = $exportId.": ".$msg;
+                        $logger->warning($msg);
+                        //exit($msg);
+                    }
                 }
             }
 
@@ -230,7 +229,9 @@ class TransResImportData
                 $msg = "Pathology user not found by PATH_EMAIL=".$pathEmail;
                 //exit($msg);
                 echo $msg."<br>";
-                $notExistingUsers[] = $exportId.": ".$msg;
+                if( $pathEmail ) {
+                    $notExistingUsers[] = $exportId . ": " . $msg;
+                }
                 $logger->warning($msg);
             }
 
@@ -247,7 +248,9 @@ class TransResImportData
                 } else {
                     $msg = "Co-Investigator user not found by CO_INVESTIGATOR=".$coInvestigator;
                     $logger->warning($msg);
-                    $notExistingUsers[] = $exportId.": ".$msg;
+                    if( $coInvestigator ) {
+                        $notExistingUsers[] = $exportId . ": " . $msg;
+                    }
                     //exit($msg);
                 }
                 //}
