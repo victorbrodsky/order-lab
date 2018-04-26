@@ -180,9 +180,10 @@ class TransResImportData
                 }
             } else {
                 $msg = "Contact user not found by EMAIL=".$contactEmails;
-                exit($msg);
+                //exit($msg);
                 echo $msg."<br>";
                 $logger->warning($msg);
+                $notExistingUsers[] = $exportId." [Critical]: ".$msg;
             }
 
             if( !$project->getSubmitter() ) {
@@ -201,7 +202,7 @@ class TransResImportData
             } else {
                 if( $piEmail ) {
                     $msg = "PI user not found by PI_EMAIL=" . $piEmail;
-                    echo $msg . "<br>";
+                    //echo $msg . "<br>";
                     $logger->warning($msg);
                 }
                 //try to get by PRI_INVESTIGATOR
@@ -232,7 +233,7 @@ class TransResImportData
             } else {
                 $msg = "Pathology user not found by PATH_EMAIL=".$pathEmail;
                 //exit($msg);
-                echo $msg."<br>";
+                //echo $msg."<br>";
                 if( $pathEmail ) {
                     $notExistingUsers[] = $exportId . ": " . $msg;
                 }
