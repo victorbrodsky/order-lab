@@ -185,8 +185,10 @@ class TransResImportData
                 $logger->warning($msg);
             }
 
-            if( !$project->getSubmitter() && ($submitterCwid || $contactEmail) ) {
-                $notExistingUsers[] = $exportId.": "."Submitter is not set by SUBMITTED_BY=$submitterCwid or by EMAIL=$contactEmail";
+            if( !$project->getSubmitter() ) {
+                if( $submitterCwid || $contactEmail ) {
+                    $notExistingUsers[] = $exportId . ": " . "Submitter is not set by SUBMITTED_BY=$submitterCwid or by EMAIL=$contactEmail";
+                }
             }
 
             //PI
