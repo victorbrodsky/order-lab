@@ -152,6 +152,8 @@ class UserRepository extends EntityRepository {
     }
     public function findOneByFirstOrLastNameStr( $nameStr, $orAnd="OR" ) {
 
+        echo "findOneByFirstOrLastNameStr: nameStr=[".$nameStr."]<br>";
+
         $user = null;
 
         $query = $this->_em->createQueryBuilder()
