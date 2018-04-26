@@ -795,12 +795,17 @@ class TransResImportData
 
     public function createNewUserByLdap($cwid) {
 
+        $userSecUtil = $this->container->get('user_security_utility');
+        $logger = $this->container->get('logger');
+
+        //$environment = $userSecUtil->getSiteSettingParameter('environment');
+        //if( $environment == "dev" ) {
+            //return NULL;
+        //}
+
         if( !$cwid ) {
             return NULL;
         }
-
-        $userSecUtil = $this->container->get('user_security_utility');
-        $logger = $this->container->get('logger');
 
         //first search this user if exists in ldap directory
         $authUtil = new AuthUtil($this->container,$this->em);
