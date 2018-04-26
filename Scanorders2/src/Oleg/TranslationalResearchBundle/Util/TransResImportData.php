@@ -26,6 +26,8 @@ namespace Oleg\TranslationalResearchBundle\Util;
 
 
 use Oleg\TranslationalResearchBundle\Entity\Project;
+use Oleg\UserdirectoryBundle\Security\Authentication\AuthUtil;
+use Oleg\UserdirectoryBundle\Security\Util\UserSecurityUtil;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 use Symfony\Component\Validator\Constraints\DateTime;
 
@@ -333,7 +335,7 @@ class TransResImportData
 
                 if( $notexpired && $notclosed ) {
                     $criticalErrorStr = $exportId . " (Status:" . $statusStr . "; Created:" . $CREATED_DATE_STR . "; IRB EXP:" . $irbExpDateStr . ")";
-                    $notExistingUsers[] = $criticalErrorStr ." ". implode(",", $criticalErrorArr) . "=NULL" . ". Requesters: " . implode("<br>", $requestersStrArr);
+                    $notExistingUsers[] = $criticalErrorStr ." ". implode(",", $criticalErrorArr) . " Undefined" . ". Requesters: " . implode("; ", $requestersStrArr);
                 }
             }
 
@@ -535,6 +537,20 @@ class TransResImportData
                 if( $user ) {
                     $users[] = $user;
                 }
+            }
+
+            $authUtil = new AuthUtil($this->container,$this->em);
+            $searchRes = $authUtil->searchLdap($cwid);
+            if( $searchRes == NULL || count($searchRes) == 0 ) {
+                //create local user: oli2002c_@_local-user
+                //$username = $publicUserId . "_@_" . "local-user";
+            } else {
+                //create WCMC LDAP user: oli2002c_@_wcmc-cwid
+                //$username = $publicUserId . "_@_" . "wcmc-cwid";
+
+                //$userSecUtil = new UserSecurityUtil($this->em, null, null, null);
+                //$systemUser = $userSecUtil->findSystemUser();
+                echo "LDAP exists ".$cwid."<br>";
             }
 
             if( !$user ) {
