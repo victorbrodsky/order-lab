@@ -28,6 +28,7 @@ namespace Oleg\TranslationalResearchBundle\Util;
 use Oleg\TranslationalResearchBundle\Entity\Project;
 use Oleg\UserdirectoryBundle\Security\Authentication\AuthUtil;
 use Oleg\UserdirectoryBundle\Security\Util\UserSecurityUtil;
+use Oleg\UserdirectoryBundle\Util\UserUtil;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 use Symfony\Component\Validator\Constraints\DateTime;
 
@@ -539,19 +540,9 @@ class TransResImportData
                 }
             }
 
-            $authUtil = new AuthUtil($this->container,$this->em);
-            $searchRes = $authUtil->searchLdap($cwid);
-            if( $searchRes == NULL || count($searchRes) == 0 ) {
-                //create local user: oli2002c_@_local-user
-                //$username = $publicUserId . "_@_" . "local-user";
-            } else {
-                //create WCMC LDAP user: oli2002c_@_wcmc-cwid
-                //$username = $publicUserId . "_@_" . "wcmc-cwid";
-
-                //$userSecUtil = new UserSecurityUtil($this->em, null, null, null);
-                //$systemUser = $userSecUtil->findSystemUser();
-                echo "LDAP exists ".$cwid."<br>";
-            }
+            //try to find and create by LDAP
+            $user = $this->createNewUserByLdap($cwid);
+            $users[] = $user;
 
             if( !$user ) {
                 $msg = "Project Export ID=".$exportId.": No user found by email [".$email."]; type=".$emailType;
@@ -777,7 +768,64 @@ class TransResImportData
         return null;
     }
 
+    public function createNewUserByLdap($cwid) {
 
+        if( !$cwid ) {
+            return NULL;
+        }
+
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        //first search this user if exists in ldap directory
+        $authUtil = new AuthUtil($this->container,$this->em);
+
+        $searchRes = $this->searchLdap($cwid);
+        if( $searchRes == NULL || count($searchRes) == 0 ) {
+            $this->logger->error("LdapAuthentication: can not find user by usernameClean=".$cwid);
+            return NULL;
+        }
+
+        $username = $cwid . "_@_" . "wcmc-cwid";
+
+        $usernameClean = $userSecUtil->createCleanUsername($username);
+        $usernamePrefix = $userSecUtil->getUsernamePrefix($username);
+
+        //////////////////// constract a new user ////////////////////
+
+        $this->logger->notice("LdapAuthentication: create a new user found by token->getUsername()=".$username);
+        $user = $userSecUtil->constractNewUser($username);
+        //echo "user=".$user->getUsername()."<br>";
+
+        $user->setCreatedby('ldap-transerimport');
+
+        //modify user: set keytype and primary public user id
+        $userkeytype = $userSecUtil->getUsernameType($usernamePrefix);
+
+        if( !$userkeytype ) {
+            exit("keytype does not exists ".$usernamePrefix);
+        }
+
+        $user->setKeytype($userkeytype);
+        $user->setPrimaryPublicUserId($usernameClean);
+
+        $user->setLocked(true);
+
+        if( $searchRes ) {
+            $user->setEmail($searchRes['mail']);
+            $user->setFirstName($searchRes['givenName']);
+            $user->setLastName($searchRes['lastName']);
+            $user->setDisplayName($searchRes['displayName']);
+            $user->setPreferredPhone($searchRes['telephoneNumber']);
+        }
+
+        //exit('ldap ok');
+
+        //////////////////// save user to DB ////////////////////
+        $userManager = $this->container->get('fos_user.user_manager');
+        $userManager->updateUser($user);
+
+        return $user;
+    }
 
 
 
