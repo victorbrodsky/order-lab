@@ -330,8 +330,8 @@ class TransResImportData
                 }
 
                 if( $notexpired && $notclosed ) {
-                    $criticalErrorStr = $exportId . "( Status:" . $statusStr . "; Created:" . $CREATED_DATE_STR . "; IRB EXP:" . $irbExpDateStr . ")";
-                    $notExistingUsers[] = $criticalErrorStr . implode(",", $criticalErrorArr) . "=NULL" . ": " . implode("; ", $requestersStrArr);
+                    $criticalErrorStr = $exportId . " (Status:" . $statusStr . "; Created:" . $CREATED_DATE_STR . "; IRB EXP:" . $irbExpDateStr . ")";
+                    $notExistingUsers[] = $criticalErrorStr ." ". implode(",", $criticalErrorArr) . "=NULL" . ". Requesters: " . implode("; ", $requestersStrArr);
                 }
             }
 
