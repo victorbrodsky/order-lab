@@ -133,6 +133,7 @@ class UserRepository extends EntityRepository {
 
         $user = null;
 
+        $nameStr = trim($nameStr);
         $nameStrArr = explode(" ",$nameStr);
 
         $firstName = trim($nameStrArr[0]);
