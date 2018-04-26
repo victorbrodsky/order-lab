@@ -179,7 +179,7 @@ class TransResImportData
             if( $statusStr ) {
                 $project->setState($statusStr);
             } else {
-                exit("Status not define=".$statusID);
+                echo "Status not define=".$statusID.":".$this->statusMapper($statusID) . "<br>";
             }
 
             $requestersArr = array();
@@ -676,7 +676,7 @@ class TransResImportData
         return $approver;
     }
 
-    public function statusMapper( $statusId ) {
+    public function statusMapper( $statusId, $asOriginalStr=false ) {
 
 //        1	pending
 //        2	admin-review
@@ -752,6 +752,10 @@ class TransResImportData
             case "14":
                 $status = "pending bio-statistical request";
                 break;
+        }
+
+        if( $asOriginalStr ) {
+            return $status;
         }
 
         return $statusNew;
