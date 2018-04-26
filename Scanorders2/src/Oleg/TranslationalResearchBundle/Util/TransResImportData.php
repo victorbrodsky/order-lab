@@ -58,6 +58,7 @@ class TransResImportData
         $em = $this->em;
         $userSecUtil = $this->container->get('user_security_utility');
         $transresRequestUtil = $this->container->get('transres_request_util');
+        $transresUtil = $this->container->get('transres_util');
 
         //$email = "oli2002@med.cornell.edu";
         $requests = array();
@@ -173,8 +174,13 @@ class TransResImportData
             }
 
             //STATUS_ID
-            $STATUS_ID = $this->getValueByHeaderName('STATUS_ID', $rowData, $headers);
-            $statusStr = $this->statusMapper($STATUS_ID);
+            $statusID = $this->getValueByHeaderName('STATUS_ID', $rowData, $headers);
+            $statusStr = $this->statusMapper($statusID);
+            if( $statusStr ) {
+                $project->setState($statusStr);
+            } else {
+                exit("Status not define=".$statusID);
+            }
 
             $requestersArr = array();
             $requestersStrArr = array();
@@ -431,6 +437,9 @@ class TransResImportData
             //FUNDING_APPROVAL_COMMENT ???
 
 
+            //new: add all default reviewers
+            //$transresUtil->addDefaultStateReviewers($project);
+
             //save project to DB before form nodes
             $saveFlag = true;
             $saveFlag = false;
@@ -686,31 +695,40 @@ class TransResImportData
 //        12	closed
 
         $status = null;
+        $statusNew = null;
 
         switch( $statusId ){
             case "0":
                 $status = "draft";
+                $statusNew = "draft";
                 break;
             case "1":
                 $status = "pending";
+                //$statusNew = "pending";
                 break;
             case "2":
                 $status = "admin-review";
+                $statusNew = "admin_review";
                 break;
             case "3":
                 $status = "committee-review";
+                $statusNew = "committee_review";
                 break;
             case "4":
                 $status = "committee-approval";
+                $statusNew = "final_review";
                 break;
             case "5":
                 $status = "active";
+                $statusNew = "final_approved";
                 break;
             case "6":
                 $status = "irb-review";
+                $statusNew = "irb_review";
                 break;
             case "7":
                 $status = "admin-approval";
+                $statusNew = "committee_review";
                 break;
             case "8":
                 $status = "bio-statistical consultation";
@@ -726,6 +744,7 @@ class TransResImportData
                 break;
             case "12":
                 $status = "closed";
+                $statusNew = "closed";
                 break;
             case "13":
                 $status = "pending funding approval";
@@ -735,7 +754,7 @@ class TransResImportData
                 break;
         }
 
-        return $status;
+        return $statusNew;
     }
 
     public function projectTypeMapper( $id ) {
