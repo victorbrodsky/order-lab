@@ -123,7 +123,7 @@ class TransResImportData
             //if( $exportId != 1840 ) {continue;} //testing
 
             //Process Project
-            $res = $this->importProject($rowData,$headers,$exportId,$specialty,$notExistingStatuses,$notExistingUsers);
+            $res = $this->importProject($rowData,$headers,$exportId,$specialty,$systemUser,$notExistingStatuses,$notExistingUsers);
             $notExistingStatuses = $res['notExistingStatuses'];
             $notExistingUsers = $res['notExistingUsers'];
             $project = $res['project'];
@@ -151,14 +151,20 @@ class TransResImportData
         return $result;
     }
 
-    public function importProject( $rowData, $headers, $exportId, $specialty, $notExistingStatuses, $notExistingUsers ) {
+    public function importProject( $rowData, $headers, $exportId, $specialty, $systemUser, $notExistingStatuses, $notExistingUsers ) {
         $transresUtil = $this->container->get('transres_util');
         $logger = $this->container->get('logger');
         $em = $this->em;
 
         $project = $this->em->getRepository('OlegTranslationalResearchBundle:Project')->findOneByExportId($exportId);
         if( $project ) {
-            //continue; //ignore existing request to prevent overwrite
+            //ignore existing request to prevent overwrite
+            $res = array(
+                'notExistingStatuses' => $notExistingStatuses,
+                'notExistingUsers' => $notExistingUsers,
+                'project' => $project
+            );
+            return $res;
         } else {
             //new Project
             $project = new Project();
@@ -241,7 +247,9 @@ class TransResImportData
         $contactUsers = $this->getUserByEmail($contactEmails,$exportId,'EMAIL');
         if( count($contactUsers) > 0 ) {
             if( !$project->getSubmitter() ) {
-                $project->setSubmitter($contactUsers[0]);
+                $submitter = $contactUsers[0];
+                //echo "1 submitter=".$submitter."<br>";
+                $project->setSubmitter($submitter);
             }
             foreach($contactUsers as $contactUser) {
                 $project->addContact($contactUser);
@@ -338,7 +346,9 @@ class TransResImportData
         $criticalErrorArr = array();
         if( !$project->getSubmitter() ) {
             if( count($requestersArr) > 0 ) {
-                $project->setSubmitter($requestersArr[0]);
+                $submitter = $requestersArr[0];
+                //echo "2 submitter=".$submitter."<br>";
+                $project->setSubmitter($submitter);
                 echo "Submitter is populated by first requester:";
                 //print_r($requestersArr);
                 foreach($requestersArr as $requester) {
@@ -349,11 +359,17 @@ class TransResImportData
                 $criticalErrorArr[] = "Submitter";
             }
         }
+        //add system user if not set
+        if( !$project->getSubmitter() ) {
+            //echo "3 submitter=".$submitter."<br>";
+            $project->setSubmitter($systemUser);
+        }
 
         $pis = $project->getPrincipalInvestigators();
         if( count($pis) == 0 ) {
             if( count($requestersArr) > 0 ) {
-                $project->addPrincipalInvestigator($requestersArr[0]);
+                $pi = $requestersArr[0];
+                $project->addPrincipalInvestigator($pi);
                 echo "PI is populated by first requester:";
                 //print_r($requestersArr);
                 foreach($requestersArr as $requester) {
@@ -363,6 +379,11 @@ class TransResImportData
             } else {
                 $criticalErrorArr[] = "PI";
             }
+        }
+        //add system user if not set
+        $pis = $project->getPrincipalInvestigators();
+        if( count($pis) == 0 ) {
+            $project->addPrincipalInvestigator($systemUser);
         }
 
         if( count($criticalErrorArr) > 0 ) {
@@ -577,9 +598,12 @@ class TransResImportData
             }
 
             if( !$user ) {
-                $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByUserInfoEmail($email);
-                if( $user ) {
-                    $users[] = $user;
+                $userArr = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByUserInfoEmail($email);
+                if( count($userArr) == 1 ) {
+                    $users[] = $userArr[0];
+                }
+                if( count($userArr) > 1 ) {
+                    exit("multiple users found by email ".$email);
                 }
             }
 
