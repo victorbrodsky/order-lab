@@ -753,7 +753,7 @@ class AuthUtil {
     }
 
     public function canLogin($user) {
-        //return true;
+        return true;
         if( $user->getLocked() ) {
             $this->logger->warning("User is locked");
 
@@ -766,12 +766,12 @@ class AuthUtil {
                 $msg
             );
 
-            exit($msg);
+            //exit($msg);
             return false;
         }
         if( !$user->isEnabled() ) {
             $this->logger->warning("User is not enabled");
-            exit("User is not enabled");
+            //exit("User is not enabled");
             return false;
         }
 
