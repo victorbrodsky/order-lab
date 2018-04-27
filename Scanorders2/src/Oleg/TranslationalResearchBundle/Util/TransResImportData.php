@@ -123,10 +123,18 @@ class TransResImportData
             //if( $exportId != 1840 ) {continue;} //testing
 
             //Process Project
-            $res = $this->importProject($rowData,$headers,$exportId,$specialty,$systemUser,$notExistingStatuses,$notExistingUsers);
-            $notExistingStatuses = $res['notExistingStatuses'];
-            $notExistingUsers = $res['notExistingUsers'];
-            $project = $res['project'];
+            if(0) {
+                $res = $this->importProject($rowData, $headers, $exportId, $specialty, $systemUser, $notExistingStatuses, $notExistingUsers);
+                $notExistingStatuses = $res['notExistingStatuses'];
+                $notExistingUsers = $res['notExistingUsers'];
+                $project = $res['project'];
+            }
+
+            if(0) {
+                $exportId = 13443;
+                $this->importAdminComments($rowData, $headers, $exportId);
+                exit('end of comment');
+            }
 
             $count++;
 
@@ -520,6 +528,31 @@ class TransResImportData
         return $res;
     }
 
+    public function importAdminComments($rowData, $headers, $exportId) {
+        $project = $this->em->getRepository('OlegTranslationalResearchBundle:Project')->findOneByExportId($exportId);
+        if( !$project ) {
+            exit("Project wit external ID '$exportId' does not exist.");
+        }
+
+        //ADMIN_COMMENT
+        $adminComment = $this->getValueByHeaderName('ADMIN_COMMENT', $rowData, $headers);
+        if( $adminComment ) {
+            $threadId = "";
+            $thread = $this->container->get('fos_comment.manager.thread')->findThreadById($threadId);
+            if (null === $thread) {
+                $thread = $this->container->get('fos_comment.manager.thread')->createThread();
+                $thread->setId($threadId);
+
+                //http://localhost/order/translational-research/project/review/25
+                //$thread->setPermalink();
+
+                // Add the thread
+                $this->container->get('fos_comment.manager.thread')->saveThread($thread);
+            }
+        }
+
+    }
+
     public function processCommentsReviewers( $rowData, $headers, $exportId, $specialty, $notExistingStatuses, $notExistingUsers ) {
         $project = $this->em->getRepository('OlegTranslationalResearchBundle:Project')->findOneByExportId($exportId);
         if( !$project ) {
@@ -676,7 +709,7 @@ class TransResImportData
         $user->setKeytype($userkeytype);
         $user->setPrimaryPublicUserId($usernameClean);
 
-        $user->setLocked(true);
+        $user->setLocked(false);
 
         if( $searchRes ) {
             $user->setEmail($searchRes['mail']);

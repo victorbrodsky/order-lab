@@ -75,6 +75,8 @@ class DefaultController extends Controller
 
         //exit('Imported result: '.$res);
 
+        $res = $importUtil->importOldData();
+
         //Flash
         $this->get('session')->getFlashBag()->add(
             'notice',
