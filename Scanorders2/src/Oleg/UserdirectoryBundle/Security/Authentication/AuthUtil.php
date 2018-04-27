@@ -81,7 +81,7 @@ class AuthUtil {
             $this->logger->notice("Local Authentication: local user found by usernameClean=".$usernameClean);
             //echo "DB user found=".$user->getUsername()."<br>";
             //exit();
-            //return $user; //testing
+            return $user; //testing
 
             if( !$this->canLogin($user) ) {
                 //exit("User can not login");
