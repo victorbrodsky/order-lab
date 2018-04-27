@@ -130,9 +130,8 @@ class TransResImportData
 
             $count++;
 
-            echo "<br>";
-
-            exit('$project OID='.$project->getOid());
+            //echo "<br>";
+            //exit('$project OID='.$project->getOid());
         }//for each request
 
         $notExistingStatuses = array_unique($notExistingStatuses);
