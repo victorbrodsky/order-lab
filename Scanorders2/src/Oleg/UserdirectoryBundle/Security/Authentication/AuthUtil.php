@@ -84,9 +84,11 @@ class AuthUtil {
             //return $user; //testing
 
             if( !$this->canLogin($user) ) {
-                //exit("User can not login");
+                exit("User can not login");
                 return NULL;
             }
+
+            return $user; //testing
 
             //check password
 //            $encoder = $this->container->get('security.password_encoder');
@@ -753,7 +755,7 @@ class AuthUtil {
     }
 
     public function canLogin($user) {
-        return true;
+        //return true;
         if( $user->getLocked() ) {
             $this->logger->warning("User is locked");
 
