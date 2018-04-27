@@ -440,7 +440,7 @@ class TransResImportData
 
 
             //new: add all default reviewers
-            //$transresUtil->addDefaultStateReviewers($project);
+            $transresUtil->addDefaultStateReviewers($project);
 
             //save project to DB before form nodes
             $saveFlag = true;
@@ -572,6 +572,83 @@ class TransResImportData
         }
 
         return $users;
+    }
+
+    public function createNewUserByLdap($cwid) {
+
+        $userSecUtil = $this->container->get('user_security_utility');
+        $logger = $this->container->get('logger');
+
+        $environment = $userSecUtil->getSiteSettingParameter('environment');
+        if( $environment == "dev" ) {
+            return NULL;
+        }
+
+        if( !$cwid ) {
+            return NULL;
+        }
+
+        //first search this user if exists in ldap directory
+        $authUtil = new AuthUtil($this->container,$this->em);
+        $searchRes = $authUtil->searchLdap($cwid);
+        if( $searchRes == NULL || count($searchRes) == 0 ) {
+            $logger->error("LdapAuthentication: can not find user by usernameClean=".$cwid);
+            return NULL;
+        }
+
+        //check if the user already exists in DB $cwid
+        $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($cwid);
+        if( $user ) {
+            return $user;
+        }
+
+        $username = $cwid . "_@_" . "wcmc-cwid";
+
+        $usernameClean = $userSecUtil->createCleanUsername($username);
+        $usernamePrefix = $userSecUtil->getUsernamePrefix($username);
+
+        //////////////////// constract a new user ////////////////////
+
+        $logger->notice("LdapAuthentication: create a new user found by username=".$username);
+        $user = $userSecUtil->constractNewUser($username);
+        //echo "user=".$user->getUsername()."<br>";
+
+        $user->setCreatedby('ldap-transerimport');
+
+        //modify user: set keytype and primary public user id
+        $userkeytype = $userSecUtil->getUsernameType($usernamePrefix);
+
+        if( !$userkeytype ) {
+            exit("keytype does not exists ".$usernamePrefix);
+        }
+
+        $user->setKeytype($userkeytype);
+        $user->setPrimaryPublicUserId($usernameClean);
+
+        $user->setLocked(true);
+
+        if( $searchRes ) {
+            $user->setEmail($searchRes['mail']);
+            $user->setFirstName($searchRes['givenName']);
+            $user->setLastName($searchRes['lastName']);
+            $user->setDisplayName($searchRes['displayName']);
+            $user->setPreferredPhone($searchRes['telephoneNumber']);
+        }
+
+        //assign minimum roles
+        $siteObject = $this->em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation("translationalresearch");
+        $lowestRoles = $siteObject->getLowestRoles();
+        foreach($lowestRoles as $role) {
+            $user->addRole($role);
+        }
+
+        //exit('ldap ok');
+
+        //////////////////// save user to DB ////////////////////
+        //$userManager = $this->container->get('fos_user.user_manager');
+        //$userManager->updateUser($user);
+
+        return $user;
     }
 
     public function getNewestDate($date1,$date2) {
@@ -711,7 +788,7 @@ class TransResImportData
                 break;
             case "1":
                 $status = "pending";
-                //$statusNew = "pending";
+                $statusNew = "draft";
                 break;
             case "2":
                 $status = "admin-review";
@@ -739,15 +816,19 @@ class TransResImportData
                 break;
             case "8":
                 $status = "bio-statistical consultation";
+                $statusNew = "closed";
                 break;
             case "9":
                 $status = "pending resubmission";
+                $statusNew = "draft";
                 break;
             case "10":
                 $status = "pending revision";
+                $statusNew = "draft";
                 break;
             case "11":
                 $status = "pending bio-statistical revision";
+                $statusNew = "draft";
                 break;
             case "12":
                 $status = "closed";
@@ -755,9 +836,11 @@ class TransResImportData
                 break;
             case "13":
                 $status = "pending funding approval";
+                $statusNew = "draft";
                 break;
             case "14":
                 $status = "pending bio-statistical request";
+                $statusNew = "draft";
                 break;
         }
 
@@ -800,76 +883,19 @@ class TransResImportData
         return null;
     }
 
-    public function createNewUserByLdap($cwid) {
-
-        $userSecUtil = $this->container->get('user_security_utility');
-        $logger = $this->container->get('logger');
-
-        $environment = $userSecUtil->getSiteSettingParameter('environment');
-        if( $environment == "dev" ) {
-            return NULL;
-        }
-
-        if( !$cwid ) {
-            return NULL;
-        }
-
-        //first search this user if exists in ldap directory
-        $authUtil = new AuthUtil($this->container,$this->em);
-        $searchRes = $authUtil->searchLdap($cwid);
-        if( $searchRes == NULL || count($searchRes) == 0 ) {
-            $logger->error("LdapAuthentication: can not find user by usernameClean=".$cwid);
-            return NULL;
-        }
-
-        $username = $cwid . "_@_" . "wcmc-cwid";
-
-        $usernameClean = $userSecUtil->createCleanUsername($username);
-        $usernamePrefix = $userSecUtil->getUsernamePrefix($username);
-
-        //////////////////// constract a new user ////////////////////
-
-        $logger->notice("LdapAuthentication: create a new user found by username=".$username);
-        $user = $userSecUtil->constractNewUser($username);
-        //echo "user=".$user->getUsername()."<br>";
-
-        $user->setCreatedby('ldap-transerimport');
-
-        //modify user: set keytype and primary public user id
-        $userkeytype = $userSecUtil->getUsernameType($usernamePrefix);
-
-        if( !$userkeytype ) {
-            exit("keytype does not exists ".$usernamePrefix);
-        }
-
-        $user->setKeytype($userkeytype);
-        $user->setPrimaryPublicUserId($usernameClean);
-
-        $user->setLocked(true);
-
-        if( $searchRes ) {
-            $user->setEmail($searchRes['mail']);
-            $user->setFirstName($searchRes['givenName']);
-            $user->setLastName($searchRes['lastName']);
-            $user->setDisplayName($searchRes['displayName']);
-            $user->setPreferredPhone($searchRes['telephoneNumber']);
-        }
-
-        //assign minimum roles
-        $siteObject = $this->em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation("translationalresearch");
-        $lowestRoles = $siteObject->getLowestRoles();
-        foreach($lowestRoles as $role) {
-            $user->addRole($role);
-        }
-
-        //exit('ldap ok');
-
-        //////////////////// save user to DB ////////////////////
-        //$userManager = $this->container->get('fos_user.user_manager');
-        //$userManager->updateUser($user);
-
-        return $user;
+    public function userRoleMapper() {
+//        1	Request
+//        2	Admin Review
+//        3	Committee Review
+//        4	Final Approval
+//        5	Admin Review/Final Approval
+//        6	Admin View Only
+//        9	Biostatistical Review
+//        7	IRB Review
+//        8	IRB Review/Committee Review
     }
+
+
 
 
 
