@@ -126,12 +126,13 @@ class TransResImportData
             $res = $this->importProject($rowData,$headers,$exportId,$specialty,$notExistingStatuses,$notExistingUsers);
             $notExistingStatuses = $res['notExistingStatuses'];
             $notExistingUsers = $res['notExistingUsers'];
+            $project = $res['project'];
 
             $count++;
 
             echo "<br>";
 
-            //exit('$project OID='.$project->getOid());
+            exit('$project OID='.$project->getOid());
         }//for each request
 
         $notExistingStatuses = array_unique($notExistingStatuses);
@@ -479,7 +480,7 @@ class TransResImportData
 
         //save project to DB before form nodes
         $saveFlag = true;
-        $saveFlag = false;
+        //$saveFlag = false;
         if( $saveFlag ) {
             $em->persist($project);
             $em->flush();
@@ -490,7 +491,8 @@ class TransResImportData
 
         $res = array(
             'notExistingStatuses' => $notExistingStatuses,
-            'notExistingUsers' => $notExistingUsers
+            'notExistingUsers' => $notExistingUsers,
+            'project' => $project
         );
 
         return $res;
@@ -653,8 +655,8 @@ class TransResImportData
         //exit('ldap ok');
 
         //////////////////// save user to DB ////////////////////
-        //$userManager = $this->container->get('fos_user.user_manager');
-        //$userManager->updateUser($user);
+        $userManager = $this->container->get('fos_user.user_manager');
+        $userManager->updateUser($user);
 
         return $user;
     }
