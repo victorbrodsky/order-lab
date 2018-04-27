@@ -188,7 +188,7 @@ class FilterType extends AbstractType
         $builder->add('exportId', TextType::class, array(
             'required'=>false,
             'label' => false,
-            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'Export ID'),
+            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'External ID'),
         ));
 
 //        $builder->add('preroute', HiddenType::class, array( //TextType HiddenType

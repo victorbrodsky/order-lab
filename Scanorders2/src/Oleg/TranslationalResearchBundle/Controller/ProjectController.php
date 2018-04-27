@@ -278,6 +278,7 @@ class ProjectController extends Controller
         if( $exportId ) {
             $dql->andWhere("project.exportId = :exportId");
             $dqlParameters["exportId"] = $exportId;
+            $advancedFilter++;
         }
 
         //////////////// get Projects IDs with the form node filter ////////////////

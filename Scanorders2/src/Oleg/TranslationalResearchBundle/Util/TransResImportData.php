@@ -480,9 +480,6 @@ class TransResImportData
         //FUNDING_APPROVAL_COMMENT ???
 
 
-        //new: add all default reviewers
-        $transresUtil->addDefaultStateReviewers($project);
-
         //save project to DB before form nodes
         $saveFlag = true;
         //$saveFlag = false;
@@ -501,6 +498,22 @@ class TransResImportData
         );
 
         return $res;
+    }
+
+    public function processCommentsReviewers( $rowData, $headers, $exportId, $specialty, $notExistingStatuses, $notExistingUsers ) {
+        $project = $this->em->getRepository('OlegTranslationalResearchBundle:Project')->findOneByExportId($exportId);
+        if( !$project ) {
+            exit("Project wit external ID '$exportId' does not exist.");
+        }
+
+        //ADMIN_COMMENT
+        $adminComment = $this->getValueByHeaderName('ADMIN_COMMENT', $rowData, $headers);
+        if( $adminComment ) {
+
+        }
+
+        //new: add all default reviewers. Do it when processing Committee comments
+        //$transresUtil->addDefaultStateReviewers($project);
     }
 
     public function cleanUsername( $username ) {

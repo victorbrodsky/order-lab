@@ -14,6 +14,10 @@
             <div id="projectInfo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="projectInfoHeading">
                 <div class="panel-body">
 
+                    {% if project.exportId %}
+                        {{ formmacros.simplefield("External ID:", project.exportId, "input", "disabled") }}
+                    {% endif %}
+
                     {% if form.state is defined %}
                         {{ formmacros.field(form.state) }}
                     {% endif %}
