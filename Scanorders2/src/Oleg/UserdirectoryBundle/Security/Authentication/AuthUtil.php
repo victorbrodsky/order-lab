@@ -84,11 +84,11 @@ class AuthUtil {
             //return $user; //testing
 
             if( !$this->canLogin($user) ) {
-                exit("User can not login");
+                //exit("User can not login");
                 return NULL;
             }
 
-            return $user; //testing
+            //return $user; //testing
 
             //check password
 //            $encoder = $this->container->get('security.password_encoder');
@@ -104,6 +104,7 @@ class AuthUtil {
             $encoderService = $this->container->get('security.encoder_factory');
             $encoder = $encoderService->getEncoder($user);
             if( $encoder->isPasswordValid($user->getPassword(), $token->getCredentials(), $user->getSalt()) ) {
+                exit('password invalid ['.$token->getCredentials().']');
                 return $user;
             } else {
                 $this->validateFailedAttempts($user);
@@ -755,7 +756,7 @@ class AuthUtil {
     }
 
     public function canLogin($user) {
-        //return true;
+        return true;
         if( $user->getLocked() ) {
             $this->logger->warning("User is locked");
 
