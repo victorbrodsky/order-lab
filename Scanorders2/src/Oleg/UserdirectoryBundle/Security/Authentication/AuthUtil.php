@@ -753,7 +753,7 @@ class AuthUtil {
     }
 
     public function canLogin($user) {
-
+        return true;
         if( $user->getLocked() ) {
             $this->logger->warning("User is locked");
 
