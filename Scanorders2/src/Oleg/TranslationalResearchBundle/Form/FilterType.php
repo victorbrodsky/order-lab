@@ -143,7 +143,7 @@ class FilterType extends AbstractType
         $builder->add('searchTitle', TextType::class, array(
             'required'=>false,
             'label' => false,
-            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'Project Request ID'),
+            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'Title'),
         ));
         $builder->add('searchIrbNumber', TextType::class, array(
             'required'=>false,
@@ -183,6 +183,12 @@ class FilterType extends AbstractType
                         'typeadd' => 'user-added',
                     ));
             },
+        ));
+
+        $builder->add('exportId', TextType::class, array(
+            'required'=>false,
+            'label' => false,
+            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'Export ID'),
         ));
 
 //        $builder->add('preroute', HiddenType::class, array( //TextType HiddenType

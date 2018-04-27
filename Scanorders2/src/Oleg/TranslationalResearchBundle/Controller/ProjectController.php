@@ -139,8 +139,10 @@ class ProjectController extends Controller
         $dql->leftJoin('project.billingContact','billingContact');
         $dql->leftJoin('project.contacts','contacts');
 
-        $advancedFilter = 0;
+        $dql->leftJoin('project.projectType','projectType');
 
+        $advancedFilter = 0;
+        $formnode = false;
         $dqlParameters = array();
 
         //get allowed and denied projectSpecialties
@@ -192,6 +194,7 @@ class ProjectController extends Controller
         $fundingNumber = $filterform['fundingNumber']->getData();
         $fundingType = $filterform['fundingType']->getData();
         $searchProjectType = $filterform['searchProjectType']->getData();
+        $exportId = $filterform['exportId']->getData();
 //        $archived = $filterform['completed']->getData();
 //        $complete = $filterform['review']->getData();
 //        $interviewee = $filterform['missinginfo']->getData();
@@ -272,49 +275,87 @@ class ProjectController extends Controller
             $dqlParameters["oid"] = "%".$searchId."%";
         }
 
+        if( $exportId ) {
+            $dql->andWhere("project.exportId = :exportId");
+            $dqlParameters["exportId"] = $exportId;
+        }
+
         //////////////// get Projects IDs with the form node filter ////////////////
+        if($formnode) {
+            if ($searchProjectType) {
+                $projectTypeIds = $transresUtil->getProjectIdsFormNodeByFieldName($searchProjectType->getId(), "Project Type");
+                $dql->andWhere("project.id IN (:projectTypeIds)");
+                $dqlParameters["projectTypeIds"] = $projectTypeIds;
+                $advancedFilter++;
+            }
+            if ($searchTitle) {
+                $titleIds = $transresUtil->getProjectIdsFormNodeByFieldName($searchTitle, "Title");
+                //$dql->andWhere("project.id IN (".implode(",",$titleIds).")");
+                $dql->andWhere("project.id IN (:titleIds)");
+                $dqlParameters["titleIds"] = $titleIds;
+                $advancedFilter++;
+            }
+            if ($searchIrbNumber) {
+                $irbnumberIds = $transresUtil->getProjectIdsFormNodeByFieldName($searchIrbNumber, "IRB Number");
+                //$dql->andWhere("project.id IN (".implode(",",$irbnumberIds).")");
+                $dql->andWhere("project.id IN (:irbnumberIds)");
+                $dqlParameters["irbnumberIds"] = $irbnumberIds;
+                $advancedFilter++;
+            }
+            if ($fundingNumber) {
+                $fundingNumberIds = $transresUtil->getProjectIdsFormNodeByFieldName($fundingNumber, "If funded, please provide account number");
+                //$dql->andWhere("project.id IN (".implode(",",$fundingNumberIds).")");
+                $dql->andWhere("project.id IN (:fundingNumberIds)");
+                $dqlParameters["fundingNumberIds"] = $fundingNumberIds;
+                $advancedFilter++;
+            }
+            if ($fundingType) {
+                //echo "fundingType=" . $fundingType . "<br>";
+                $compareType = NULL;
+                if ($fundingType == "Funded") {
+                    $compareType = 1;
+                }
+                if ($fundingType == "Non-Funded") {
+                    $compareType = 0;
+                }
+                if (isset($compareType)) {
+                    //$transResFormNodeUtil->getProjectFormNodeFieldByName(project,"Funded");
+                    $fundedIds = $transresUtil->getProjectIdsFormNodeByFieldName($compareType, "Funded");
+                    //echo "fundingNumberIds:" . implode(",", $fundingNumberIds) . "<br>";
+                    $dql->andWhere("project.id IN (:fundedIds)");
+                    $dqlParameters["fundedIds"] = $fundedIds;
+                }
+                $advancedFilter++;
+            }
+        }
+
         if( $searchProjectType ) {
-            $projectTypeIds = $transresUtil->getProjectIdsFormNodeByFieldName($searchProjectType->getId(),"Project Type");
-            $dql->andWhere("project.id IN (:projectTypeIds)");
-            $dqlParameters["projectTypeIds"] = $projectTypeIds;
+            $dql->andWhere("projectType.id = :projectTypeId");
+            $dqlParameters["projectTypeId"] = $searchProjectType->getId();
             $advancedFilter++;
         }
         if( $searchTitle ) {
-            $titleIds = $transresUtil->getProjectIdsFormNodeByFieldName($searchTitle,"Title");
-            //$dql->andWhere("project.id IN (".implode(",",$titleIds).")");
-            $dql->andWhere("project.id IN (:titleIds)");
-            $dqlParameters["titleIds"] = $titleIds;
+            $dql->andWhere("project.title LIKE :title");
+            $dqlParameters["title"] = "%".$searchTitle."%";
             $advancedFilter++;
         }
         if( $searchIrbNumber ) {
-            $irbnumberIds = $transresUtil->getProjectIdsFormNodeByFieldName($searchIrbNumber,"IRB Number");
-            //$dql->andWhere("project.id IN (".implode(",",$irbnumberIds).")");
-            $dql->andWhere("project.id IN (:irbnumberIds)");
-            $dqlParameters["irbnumberIds"] = $irbnumberIds;
+            $dql->andWhere("project.irbNumber LIKE :irbNumber");
+            $dqlParameters["irbNumber"] = "%".$searchIrbNumber."%";
             $advancedFilter++;
         }
         if( $fundingNumber ) {
-            $fundingNumberIds = $transresUtil->getProjectIdsFormNodeByFieldName($fundingNumber,"If funded, please provide account number");
-            //$dql->andWhere("project.id IN (".implode(",",$fundingNumberIds).")");
-            $dql->andWhere("project.id IN (:fundingNumberIds)");
-            $dqlParameters["fundingNumberIds"] = $fundingNumberIds;
+            $dql->andWhere("project.fundedAccountNumber LIKE :fundedAccountNumber");
+            $dqlParameters["fundedAccountNumber"] = "%".$fundingNumber."%";
             $advancedFilter++;
         }
         if( $fundingType ) {
             //echo "fundingType=" . $fundingType . "<br>";
-            $compareType = NULL;
-            if( $fundingType == "Funded" ) {
-                $compareType = 1;
+            if ($fundingType == "Funded") {
+                $dql->andWhere("project.funded = true");
             }
-            if( $fundingType == "Non-Funded" ) {
-                $compareType = 0;
-            }
-            if( isset($compareType) ) {
-                //$transResFormNodeUtil->getProjectFormNodeFieldByName(project,"Funded");
-                $fundedIds = $transresUtil->getProjectIdsFormNodeByFieldName($compareType, "Funded");
-                //echo "fundingNumberIds:" . implode(",", $fundingNumberIds) . "<br>";
-                $dql->andWhere("project.id IN (:fundedIds)");
-                $dqlParameters["fundedIds"] = $fundedIds;
+            if ($fundingType == "Non-Funded") {
+                $dql->andWhere("project.funded = false OR project.funded IS NULL");
             }
             $advancedFilter++;
         }

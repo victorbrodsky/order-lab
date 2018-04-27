@@ -122,336 +122,8 @@ class TransResImportData
 
             //if( $exportId != 1840 ) {continue;} //testing
 
-            $project = $this->em->getRepository('OlegTranslationalResearchBundle:Project')->findOneByExportId($exportId);
-            if( $project ) {
-                //continue; //ignore existing request to prevent overwrite
-            } else {
-                //new Project
-                $project = new Project();
-            }
-
-            $project->setVersion(1);
-            $project->setImportDate(new \DateTime());
-
-            if( !$project->getInstitution() ) {
-                $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
-                $project->setInstitution($institution);
-            }
-
-            //set order category
-//            if( !$project->getMessageCategory() ) {
-//                $categoryStr = "HemePath Translational Research Project";  //"Pathology Call Log Entry";
-//                //$categoryStr = "Nesting Test"; //testing
-//                $messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
-//
-//                if (!$messageCategory) {
-//                    throw new \Exception("Message category is not found by name '" . $categoryStr . "'");
-//                }
-//                $project->setMessageCategory($messageCategory);
-//            }
-
-            $project->setExportId($exportId);
-
-            $project->setProjectSpecialty($specialty);
-
-            //CREATED_DATE
-            $CREATED_DATE_STR = $this->getValueByHeaderName('CREATED_DATE', $rowData, $headers); //24-OCT-12
-            if( $CREATED_DATE_STR ) {
-                $CREATED_DATE = $this->transformDatestrToDate($CREATED_DATE_STR);
-                $project->setCreateDate($CREATED_DATE);
-            }
-
-            //IRB_EXPIRATION_DATE
-            $irbExpDate = null;
-            $irbExpDateStr = $this->getValueByHeaderName('IRB_EXPIRATION_DATE', $rowData, $headers);
-            //echo "irbExpDateStr=".$irbExpDateStr."<br>";
-            if( $irbExpDateStr ) {
-                $irbExpDate = $this->transformDatestrToDate($irbExpDateStr);
-                if( $irbExpDate ) {
-                    $project->setIrbExpirationDate($irbExpDate);
-                    //$this->setValueToFormNodeNewProject($project, "IRB Expiration Date", $irbExpDate);
-                    //echo "irbExpDate=" . $irbExpDate->format('d-m-Y') . "<br>";
-                }
-            }
-
-            //STATUS_ID
-            $statusID = $this->getValueByHeaderName('STATUS_ID', $rowData, $headers);
-            $statusStr = $this->statusMapper($statusID);
-            if( $statusStr ) {
-                $project->setState($statusStr);
-            } else {
-                echo "Status not define=".$statusID.":".$this->statusMapper($statusID,true) . "<br>";
-                $notExistingStatuses[] = $this->statusMapper($statusID,true);
-            }
-
-            $requestersArr = array();
-            $requestersStrArr = array();
-
-            //SUBMITTED_BY
-            $submitterCwid = $this->getValueByHeaderName('SUBMITTED_BY', $rowData, $headers);
-            $requestersStrArr[] = "SUBMITTED_BY: ".$submitterCwid;
-            $submitterUser = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($submitterCwid);
-            if( $submitterUser ) {
-                $project->setSubmitter($submitterUser);
-            } else {
-                $msg = "Submitter not found by SUBMITTED_BY=".$submitterUser;
-                //exit($msg);
-                //echo $msg."<br>";
-                $logger->warning($msg);
-            }
-
-            //Contact
-            $contactEmails = $this->getValueByHeaderName('EMAIL', $rowData, $headers);
-            $requestersStrArr[] = "EMAIL: ".$contactEmails;
-            $contactEmails = strtolower($contactEmails);
-            $contactUsers = $this->getUserByEmail($contactEmails,$exportId,'EMAIL');
-            if( count($contactUsers) > 0 ) {
-                if( !$project->getSubmitter() ) {
-                    $project->setSubmitter($contactUsers[0]);
-                }
-                foreach($contactUsers as $contactUser) {
-                    $project->addContact($contactUser);
-                    $requestersArr[] = $contactUser;
-                }
-            } else {
-                $msg = "Contact user not found by EMAIL=".$contactEmails;
-                //exit($msg);
-                //echo $msg."<br>";
-                $logger->warning($msg);
-                //$notExistingUsers[] = $exportId." [###Critical###]: ".$msg;
-            }
-
-            //PI
-            $piEmail = $this->getValueByHeaderName('PI_EMAIL', $rowData, $headers);
-            $requestersStrArr[] = "PI_EMAIL: ".$piEmail;
-            $piUsers = $this->getUserByEmail($piEmail,$exportId,'PI_EMAIL');
-            if( count($piUsers) > 0 ) {
-                foreach($piUsers as $user) {
-                    $project->addPrincipalInvestigator($user);
-                    $requestersArr[] = $user;
-                }
-            } else {
-                if( $piEmail ) {
-                    $msg = "PI user not found by PI_EMAIL=" . $piEmail;
-                    //echo $msg . "<br>";
-                    $logger->warning($msg);
-                }
-                //try to get by PRI_INVESTIGATOR
-                $priInvestigators = $this->getValueByHeaderName('PRI_INVESTIGATOR', $rowData, $headers);
-                $priInvestigators = $this->cleanString($priInvestigators);
-                $requestersStrArr[] = "PRI_INVESTIGATOR: ".$priInvestigators;
-                $priInvestigators = $this->cleanUsername($priInvestigators);
-                $priInvestigatorsArr = explode(",",$priInvestigators);
-                foreach($priInvestigatorsArr as $pi) {
-                    //assume "amy chadburn": second if family name
-                    $thisUser = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByAnyNameStr($pi);
-                    if( $thisUser ) {
-                        $project->addPrincipalInvestigator($thisUser);
-                        $requestersArr[] = $thisUser;
-                    } else {
-                        $msg = "PI user not found by PRI_INVESTIGATOR=".$pi;
-                        //$notExistingUsers[] = $exportId.": ".$msg;
-                        $logger->warning($msg);
-                        //exit($msg);
-                    }
-                }
-            }
-
-            //Pathologists Involved
-            $pathEmail = $this->getValueByHeaderName('PATH_EMAIL', $rowData, $headers);
-            $requestersStrArr[] = "PATH_EMAIL: ".$pathEmail;
-            $pathUsers = $this->getUserByEmail($pathEmail,$exportId,'PATH_EMAIL');
-            if( count($pathUsers) > 0 ) {
-                foreach($pathUsers as $user) {
-                    $project->addPathologist($user);
-                    $requestersArr[] = $user;
-                }
-            } else {
-                $msg = "Pathology user not found by PATH_EMAIL=".$pathEmail;
-                //exit($msg);
-                //echo $msg."<br>";
-                if( $pathEmail ) {
-                    $logger->warning($msg);
-                    //$notExistingUsers[] = $exportId . ": " . $msg;
-                }
-            }
-
-            //CO_INVESTIGATOR
-            $coInvestigators = $this->getValueByHeaderName('CO_INVESTIGATOR', $rowData, $headers);
-            $coInvestigators = $this->cleanString($coInvestigators);
-            $requestersStrArr[] = "CO_INVESTIGATOR: ".$coInvestigators;
-            $coInvestigators = $this->cleanUsername($coInvestigators);
-            $coInvestigatorsArr = explode(",",$coInvestigators);
-            foreach($coInvestigatorsArr as $coInvestigator) {
-                //echo "coInvestigator=".$coInvestigator."<br>";
-                //assume "amy chadburn": second if family name
-                $thisUser = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByAnyNameStr($coInvestigator);
-                if( $thisUser ) {
-                    $project->addCoInvestigator($thisUser);
-                    $requestersArr[] = $thisUser;
-                } else {
-                    $msg = "Co-Investigator user not found by CO_INVESTIGATOR=".$coInvestigator;
-                    if( $coInvestigator ) {
-                        $logger->warning($msg);
-                        //$notExistingUsers[] = $exportId . ": " . $msg;
-                    }
-                    //exit($msg);
-                }
-                //}
-
-            }
-
-            $criticalErrorArr = array();
-            if( !$project->getSubmitter() ) {
-                if( count($requestersArr) > 0 ) {
-                    $project->setSubmitter($requestersArr[0]);
-                    echo "Submitter is populated by first requester:";
-                    //print_r($requestersArr);
-                    foreach($requestersArr as $requester) {
-                        echo $requester."<br>";
-                    }
-                    echo "<br>";
-                } else {
-                    $criticalErrorArr[] = "Submitter";
-                }
-            }
-
-            $pis = $project->getPrincipalInvestigators();
-            if( count($pis) == 0 ) {
-                if( count($requestersArr) > 0 ) {
-                    $project->addPrincipalInvestigator($requestersArr[0]);
-                    echo "PI is populated by first requester:";
-                    //print_r($requestersArr);
-                    foreach($requestersArr as $requester) {
-                        echo $requester."<br>";
-                    }
-                    echo "<br>";
-                } else {
-                    $criticalErrorArr[] = "PI";
-                }
-            }
-
-            if( count($criticalErrorArr) > 0 ) {
-                $notexpired = false;
-                if( $irbExpDate && $irbExpDate > new \DateTime("now") ) {
-                    //$notexpired = "***not expired/closed***";
-                    $notexpired = true;
-                }
-                $notclosed = false;
-                if( $statusStr != "closed" ) {
-                    $notclosed = true;
-                }
-
-                if( $notexpired && $notclosed ) {
-                    $criticalErrorStr = $exportId . " (Status:" . $statusStr . "; Created:" . $CREATED_DATE_STR . "; IRB EXP:" . $irbExpDateStr . ")";
-                    $notExistingUsers[] = $criticalErrorStr ." ". implode(",", $criticalErrorArr) . " Undefined" . ". Requesters: " . implode("; ", $requestersStrArr);
-                }
-            }
-
-            //DATE_APPROVAL
-            $DATE_APPROVAL_STR = $this->getValueByHeaderName('DATE_APPROVAL', $rowData, $headers);
-            //echo "DATE_APPROVAL_STR=".$DATE_APPROVAL_STR."<br>";
-            if( $DATE_APPROVAL_STR ) {
-                $DATE_APPROVAL = $this->transformDatestrToDate($DATE_APPROVAL_STR);
-                $project->setApprovalDate($DATE_APPROVAL);
-            }
-
-            //PROJECT_TYPE_ID
-            $PROJECT_TYPE_ID = $this->getValueByHeaderName('PROJECT_TYPE_ID', $rowData, $headers);
-            $projectType = $this->projectTypeMapper($PROJECT_TYPE_ID);
-            if( $projectType ) {
-                $project->setProjectType($projectType);
-            }
-
-            //PROJECT_TITLE
-            $title = $this->getValueByHeaderName('PROJECT_TITLE', $rowData, $headers);
-            $project->setTitle($title);
-            if( $title ) {
-                //$this->setValueToFormNodeNewProject($project, "Title", $title);
-                $project->setTitle($title);
-            }
-            //echo "title=".$title."<br>";
-
-            //IRB_NUMBER
-            $irbNumber = $this->getValueByHeaderName('IRB_NUMBER', $rowData, $headers);
-            if( $irbNumber ) {
-                //$this->setValueToFormNodeNewProject($project, "IRB Number", $irbNumber);
-                $project->setIrbNumber($irbNumber);
-                //echo "irbNumber=" . $irbNumber . "<br>";
-            }
-
-            //PROJECT_FUNDED
-            $funded = $this->getValueByHeaderName('PROJECT_FUNDED', $rowData, $headers);
-            if( $funded) {
-                //$this->setValueToFormNodeNewProject($project, "Funded", $funded);
-                $project->setFunded($funded);
-            }
-
-            //ACCOUNT_NUMBER
-            $fundedAccountNumber = $this->getValueByHeaderName('ACCOUNT_NUMBER', $rowData, $headers);
-            if( $fundedAccountNumber ) {
-                //$this->setValueToFormNodeNewProject($project, "If funded, please provide account number", $fundedAccountNumber);
-                $project->setFundedAccountNumber($fundedAccountNumber);
-            }
-
-            //DESCRIPTION
-            $DESCRIPTION = $this->getValueByHeaderName('DESCRIPTION', $rowData, $headers);
-            if( $DESCRIPTION ) {
-                //$this->setValueToFormNodeNewProject($project, "Brief Description", $DESCRIPTION);
-                $project->setDescription($DESCRIPTION);
-            }
-
-            //BUDGET_OUTLINE
-            $budgetSummary = $this->getValueByHeaderName('BUDGET_OUTLINE', $rowData, $headers);
-            if( $budgetSummary ) {
-                //$this->setValueToFormNodeNewProject($project, "Provide a Detailed Budget Outline/Summary", $budgetSummary);
-                $project->setBudgetSummary($budgetSummary);
-            }
-
-            //ESTIMATED_COSTS
-            $estimatedCost = $this->getValueByHeaderName('ESTIMATED_COSTS', $rowData, $headers);
-            if( $estimatedCost ) {
-                //$this->setValueToFormNodeNewProject($project, "Estimated Total Costs ($)", $estimatedCost);
-                $project->setTotalCost($estimatedCost);
-            }
-            /////////////////////
-
-
-            //ADMIN_COMMENT
-            $ADMIN_COMMENT = $this->getValueByHeaderName('ADMIN_COMMENT', $rowData, $headers);
-
-            //BIO_STAT_COMMENT ???
-
-            //PI_SUBMITTED_IRB ???
-
-            //REQ_BIO_STAT ???
-
-            //BIO_STAT_HAS_REVIEW ???
-
-            //PREVIOUS_STATUS_ID ???
-
-            //REVISED ???
-
-            //HAS_FUNDING_APPROVAL ???
-
-            //FUNDING_APPROVAL_DATE ???
-
-            //FUNDING_APPROVAL_COMMENT ???
-
-
-            //new: add all default reviewers
-            $transresUtil->addDefaultStateReviewers($project);
-
-            //save project to DB before form nodes
-            $saveFlag = true;
-            $saveFlag = false;
-            if( $saveFlag ) {
-                $em->persist($project);
-                $em->flush();
-
-                $project->generateOid();
-                $em->flush($project);
-            }
+            //Process Project
+            $this->importProject($rowData,$headers,$exportId,$specialty,$notExistingStatuses,$notExistingUsers);
 
             $count++;
 
@@ -459,17 +131,6 @@ class TransResImportData
 
             //exit('$project OID='.$project->getOid());
         }//for each request
-
-        //echo "finished looping<br><br>";
-
-        //process not existing users
-        //print_r($notExistingUsers);
-        //echo "not existing users = ".count($notExistingUsers)."<br>";
-//        foreach( $notExistingUsers as $email=>$newestDate ) {
-//            $warning = "not existing user email=".$email."; newestDate=".$this->convertDateTimeToStr($newestDate);
-//            //echo $warning."<br>";
-//            $logger->warning($warning);
-//        }
 
         $notExistingStatuses = array_unique($notExistingStatuses);
         foreach($notExistingStatuses as $notExistingStatus) {
@@ -486,6 +147,346 @@ class TransResImportData
         exit($result);
 
         return $result;
+    }
+
+    public function importProject( $rowData, $headers, $exportId, $specialty, $notExistingStatuses, $notExistingUsers ) {
+        $transresUtil = $this->container->get('transres_util');
+        $logger = $this->container->get('logger');
+        $em = $this->em;
+
+        $project = $this->em->getRepository('OlegTranslationalResearchBundle:Project')->findOneByExportId($exportId);
+        if( $project ) {
+            //continue; //ignore existing request to prevent overwrite
+        } else {
+            //new Project
+            $project = new Project();
+        }
+
+        $project->setVersion(1);
+        $project->setImportDate(new \DateTime());
+
+        if( !$project->getInstitution() ) {
+            $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
+            $project->setInstitution($institution);
+        }
+
+        //set order category
+//            if( !$project->getMessageCategory() ) {
+//                $categoryStr = "HemePath Translational Research Project";  //"Pathology Call Log Entry";
+//                //$categoryStr = "Nesting Test"; //testing
+//                $messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
+//
+//                if (!$messageCategory) {
+//                    throw new \Exception("Message category is not found by name '" . $categoryStr . "'");
+//                }
+//                $project->setMessageCategory($messageCategory);
+//            }
+
+        $project->setExportId($exportId);
+
+        $project->setProjectSpecialty($specialty);
+
+        //CREATED_DATE
+        $CREATED_DATE_STR = $this->getValueByHeaderName('CREATED_DATE', $rowData, $headers); //24-OCT-12
+        if( $CREATED_DATE_STR ) {
+            $CREATED_DATE = $this->transformDatestrToDate($CREATED_DATE_STR);
+            $project->setCreateDate($CREATED_DATE);
+        }
+
+        //IRB_EXPIRATION_DATE
+        $irbExpDate = null;
+        $irbExpDateStr = $this->getValueByHeaderName('IRB_EXPIRATION_DATE', $rowData, $headers);
+        //echo "irbExpDateStr=".$irbExpDateStr."<br>";
+        if( $irbExpDateStr ) {
+            $irbExpDate = $this->transformDatestrToDate($irbExpDateStr);
+            if( $irbExpDate ) {
+                $project->setIrbExpirationDate($irbExpDate);
+                //$this->setValueToFormNodeNewProject($project, "IRB Expiration Date", $irbExpDate);
+                //echo "irbExpDate=" . $irbExpDate->format('d-m-Y') . "<br>";
+            }
+        }
+
+        //STATUS_ID
+        $statusID = $this->getValueByHeaderName('STATUS_ID', $rowData, $headers);
+        $statusStr = $this->statusMapper($statusID);
+        if( $statusStr ) {
+            $project->setState($statusStr);
+        } else {
+            echo "Status not define=".$statusID.":".$this->statusMapper($statusID,true) . "<br>";
+            $notExistingStatuses[] = $this->statusMapper($statusID,true);
+        }
+
+        $requestersArr = array();
+        $requestersStrArr = array();
+
+        //SUBMITTED_BY
+        $submitterCwid = $this->getValueByHeaderName('SUBMITTED_BY', $rowData, $headers);
+        $requestersStrArr[] = "SUBMITTED_BY: ".$submitterCwid;
+        $submitterUser = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($submitterCwid);
+        if( $submitterUser ) {
+            $project->setSubmitter($submitterUser);
+        } else {
+            $msg = "Submitter not found by SUBMITTED_BY=".$submitterUser;
+            //exit($msg);
+            //echo $msg."<br>";
+            $logger->warning($msg);
+        }
+
+        //Contact
+        $contactEmails = $this->getValueByHeaderName('EMAIL', $rowData, $headers);
+        $requestersStrArr[] = "EMAIL: ".$contactEmails;
+        $contactEmails = strtolower($contactEmails);
+        $contactUsers = $this->getUserByEmail($contactEmails,$exportId,'EMAIL');
+        if( count($contactUsers) > 0 ) {
+            if( !$project->getSubmitter() ) {
+                $project->setSubmitter($contactUsers[0]);
+            }
+            foreach($contactUsers as $contactUser) {
+                $project->addContact($contactUser);
+                $requestersArr[] = $contactUser;
+            }
+        } else {
+            $msg = "Contact user not found by EMAIL=".$contactEmails;
+            //exit($msg);
+            //echo $msg."<br>";
+            $logger->warning($msg);
+            //$notExistingUsers[] = $exportId." [###Critical###]: ".$msg;
+        }
+
+        //PI
+        $piEmail = $this->getValueByHeaderName('PI_EMAIL', $rowData, $headers);
+        $requestersStrArr[] = "PI_EMAIL: ".$piEmail;
+        $piUsers = $this->getUserByEmail($piEmail,$exportId,'PI_EMAIL');
+        if( count($piUsers) > 0 ) {
+            foreach($piUsers as $user) {
+                $project->addPrincipalInvestigator($user);
+                $requestersArr[] = $user;
+            }
+        } else {
+            if( $piEmail ) {
+                $msg = "PI user not found by PI_EMAIL=" . $piEmail;
+                //echo $msg . "<br>";
+                $logger->warning($msg);
+            }
+            //try to get by PRI_INVESTIGATOR
+            $priInvestigators = $this->getValueByHeaderName('PRI_INVESTIGATOR', $rowData, $headers);
+            $priInvestigators = $this->cleanString($priInvestigators);
+            $requestersStrArr[] = "PRI_INVESTIGATOR: ".$priInvestigators;
+            $priInvestigators = $this->cleanUsername($priInvestigators);
+            $priInvestigatorsArr = explode(",",$priInvestigators);
+            foreach($priInvestigatorsArr as $pi) {
+                //assume "amy chadburn": second if family name
+                $thisUser = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByAnyNameStr($pi);
+                if( $thisUser ) {
+                    $project->addPrincipalInvestigator($thisUser);
+                    $requestersArr[] = $thisUser;
+                } else {
+                    $msg = "PI user not found by PRI_INVESTIGATOR=".$pi;
+                    //$notExistingUsers[] = $exportId.": ".$msg;
+                    $logger->warning($msg);
+                    //exit($msg);
+                }
+            }
+        }
+
+        //Pathologists Involved
+        $pathEmail = $this->getValueByHeaderName('PATH_EMAIL', $rowData, $headers);
+        $requestersStrArr[] = "PATH_EMAIL: ".$pathEmail;
+        $pathUsers = $this->getUserByEmail($pathEmail,$exportId,'PATH_EMAIL');
+        if( count($pathUsers) > 0 ) {
+            foreach($pathUsers as $user) {
+                $project->addPathologist($user);
+                $requestersArr[] = $user;
+            }
+        } else {
+            $msg = "Pathology user not found by PATH_EMAIL=".$pathEmail;
+            //exit($msg);
+            //echo $msg."<br>";
+            if( $pathEmail ) {
+                $logger->warning($msg);
+                //$notExistingUsers[] = $exportId . ": " . $msg;
+            }
+        }
+
+        //CO_INVESTIGATOR
+        $coInvestigators = $this->getValueByHeaderName('CO_INVESTIGATOR', $rowData, $headers);
+        $coInvestigators = $this->cleanString($coInvestigators);
+        $requestersStrArr[] = "CO_INVESTIGATOR: ".$coInvestigators;
+        $coInvestigators = $this->cleanUsername($coInvestigators);
+        $coInvestigatorsArr = explode(",",$coInvestigators);
+        foreach($coInvestigatorsArr as $coInvestigator) {
+            //echo "coInvestigator=".$coInvestigator."<br>";
+            //assume "amy chadburn": second if family name
+            $thisUser = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByAnyNameStr($coInvestigator);
+            if( $thisUser ) {
+                $project->addCoInvestigator($thisUser);
+                $requestersArr[] = $thisUser;
+            } else {
+                $msg = "Co-Investigator user not found by CO_INVESTIGATOR=".$coInvestigator;
+                if( $coInvestigator ) {
+                    $logger->warning($msg);
+                    //$notExistingUsers[] = $exportId . ": " . $msg;
+                }
+                //exit($msg);
+            }
+            //}
+
+        }
+
+        $criticalErrorArr = array();
+        if( !$project->getSubmitter() ) {
+            if( count($requestersArr) > 0 ) {
+                $project->setSubmitter($requestersArr[0]);
+                echo "Submitter is populated by first requester:";
+                //print_r($requestersArr);
+                foreach($requestersArr as $requester) {
+                    echo $requester."<br>";
+                }
+                echo "<br>";
+            } else {
+                $criticalErrorArr[] = "Submitter";
+            }
+        }
+
+        $pis = $project->getPrincipalInvestigators();
+        if( count($pis) == 0 ) {
+            if( count($requestersArr) > 0 ) {
+                $project->addPrincipalInvestigator($requestersArr[0]);
+                echo "PI is populated by first requester:";
+                //print_r($requestersArr);
+                foreach($requestersArr as $requester) {
+                    echo $requester."<br>";
+                }
+                echo "<br>";
+            } else {
+                $criticalErrorArr[] = "PI";
+            }
+        }
+
+        if( count($criticalErrorArr) > 0 ) {
+            $notexpired = false;
+            if( $irbExpDate && $irbExpDate > new \DateTime("now") ) {
+                //$notexpired = "***not expired/closed***";
+                $notexpired = true;
+            }
+            $notclosed = false;
+            if( $statusStr != "closed" ) {
+                $notclosed = true;
+            }
+
+            if( $notexpired && $notclosed ) {
+                $criticalErrorStr = $exportId . " (Status:" . $statusStr . "; Created:" . $CREATED_DATE_STR . "; IRB EXP:" . $irbExpDateStr . ")";
+                $notExistingUsers[] = $criticalErrorStr ." ". implode(",", $criticalErrorArr) . " Undefined" . ". Requesters: " . implode("; ", $requestersStrArr);
+            }
+        }
+
+        //DATE_APPROVAL
+        $DATE_APPROVAL_STR = $this->getValueByHeaderName('DATE_APPROVAL', $rowData, $headers);
+        //echo "DATE_APPROVAL_STR=".$DATE_APPROVAL_STR."<br>";
+        if( $DATE_APPROVAL_STR ) {
+            $DATE_APPROVAL = $this->transformDatestrToDate($DATE_APPROVAL_STR);
+            $project->setApprovalDate($DATE_APPROVAL);
+        }
+
+        //PROJECT_TYPE_ID
+        $PROJECT_TYPE_ID = $this->getValueByHeaderName('PROJECT_TYPE_ID', $rowData, $headers);
+        $projectType = $this->projectTypeMapper($PROJECT_TYPE_ID);
+        if( $projectType ) {
+            $project->setProjectType($projectType);
+        }
+
+        //PROJECT_TITLE
+        $title = $this->getValueByHeaderName('PROJECT_TITLE', $rowData, $headers);
+        $project->setTitle($title);
+        if( $title ) {
+            //$this->setValueToFormNodeNewProject($project, "Title", $title);
+            $project->setTitle($title);
+        }
+        //echo "title=".$title."<br>";
+
+        //IRB_NUMBER
+        $irbNumber = $this->getValueByHeaderName('IRB_NUMBER', $rowData, $headers);
+        if( $irbNumber ) {
+            //$this->setValueToFormNodeNewProject($project, "IRB Number", $irbNumber);
+            $project->setIrbNumber($irbNumber);
+            //echo "irbNumber=" . $irbNumber . "<br>";
+        }
+
+        //PROJECT_FUNDED
+        $funded = $this->getValueByHeaderName('PROJECT_FUNDED', $rowData, $headers);
+        if( $funded) {
+            //$this->setValueToFormNodeNewProject($project, "Funded", $funded);
+            $project->setFunded($funded);
+        }
+
+        //ACCOUNT_NUMBER
+        $fundedAccountNumber = $this->getValueByHeaderName('ACCOUNT_NUMBER', $rowData, $headers);
+        if( $fundedAccountNumber ) {
+            //$this->setValueToFormNodeNewProject($project, "If funded, please provide account number", $fundedAccountNumber);
+            $project->setFundedAccountNumber($fundedAccountNumber);
+        }
+
+        //DESCRIPTION
+        $DESCRIPTION = $this->getValueByHeaderName('DESCRIPTION', $rowData, $headers);
+        if( $DESCRIPTION ) {
+            //$this->setValueToFormNodeNewProject($project, "Brief Description", $DESCRIPTION);
+            $project->setDescription($DESCRIPTION);
+        }
+
+        //BUDGET_OUTLINE
+        $budgetSummary = $this->getValueByHeaderName('BUDGET_OUTLINE', $rowData, $headers);
+        if( $budgetSummary ) {
+            //$this->setValueToFormNodeNewProject($project, "Provide a Detailed Budget Outline/Summary", $budgetSummary);
+            $project->setBudgetSummary($budgetSummary);
+        }
+
+        //ESTIMATED_COSTS
+        $estimatedCost = $this->getValueByHeaderName('ESTIMATED_COSTS', $rowData, $headers);
+        if( $estimatedCost ) {
+            //$this->setValueToFormNodeNewProject($project, "Estimated Total Costs ($)", $estimatedCost);
+            $project->setTotalCost($estimatedCost);
+        }
+        /////////////////////
+
+
+        //ADMIN_COMMENT
+        $ADMIN_COMMENT = $this->getValueByHeaderName('ADMIN_COMMENT', $rowData, $headers);
+        //TODO:???
+
+        //BIO_STAT_COMMENT ???
+
+        //PI_SUBMITTED_IRB ???
+
+        //REQ_BIO_STAT ???
+
+        //BIO_STAT_HAS_REVIEW ???
+
+        //PREVIOUS_STATUS_ID ???
+
+        //REVISED ???
+
+        //HAS_FUNDING_APPROVAL ???
+
+        //FUNDING_APPROVAL_DATE ???
+
+        //FUNDING_APPROVAL_COMMENT ???
+
+
+        //new: add all default reviewers
+        $transresUtil->addDefaultStateReviewers($project);
+
+        //save project to DB before form nodes
+        $saveFlag = true;
+        $saveFlag = false;
+        if( $saveFlag ) {
+            $em->persist($project);
+            $em->flush();
+
+            $project->generateOid();
+            $em->flush($project);
+        }
+
+        return true;
     }
 
     public function cleanUsername( $username ) {
