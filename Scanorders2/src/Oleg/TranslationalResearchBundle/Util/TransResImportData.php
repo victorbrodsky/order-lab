@@ -417,14 +417,14 @@ class TransResImportData
 
         //PROJECT_FUNDED
         $funded = $this->getValueByHeaderName('PROJECT_FUNDED', $rowData, $headers);
-        if( $funded) {
+        if( isset($funded) ) {
             //$this->setValueToFormNodeNewProject($project, "Funded", $funded);
             $project->setFunded($funded);
         }
 
         //ACCOUNT_NUMBER
         $fundedAccountNumber = $this->getValueByHeaderName('ACCOUNT_NUMBER', $rowData, $headers);
-        if( $fundedAccountNumber ) {
+        if( isset($fundedAccountNumber) ) {
             //$this->setValueToFormNodeNewProject($project, "If funded, please provide account number", $fundedAccountNumber);
             $project->setFundedAccountNumber($fundedAccountNumber);
         }
@@ -445,7 +445,7 @@ class TransResImportData
 
         //ESTIMATED_COSTS
         $estimatedCost = $this->getValueByHeaderName('ESTIMATED_COSTS', $rowData, $headers);
-        if( $estimatedCost ) {
+        if( isset($estimatedCost) ) {
             //$this->setValueToFormNodeNewProject($project, "Estimated Total Costs ($)", $estimatedCost);
             $project->setTotalCost($estimatedCost);
         }
