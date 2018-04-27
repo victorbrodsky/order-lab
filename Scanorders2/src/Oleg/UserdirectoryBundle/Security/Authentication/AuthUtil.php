@@ -84,7 +84,7 @@ class AuthUtil {
             //return $user; //testing
 
             if( !$this->canLogin($user) ) {
-                //exit("User can not login");
+                exit("User can not login");
                 return NULL;
             }
 
