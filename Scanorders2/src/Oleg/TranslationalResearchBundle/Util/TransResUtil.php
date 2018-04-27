@@ -715,7 +715,6 @@ class TransResUtil
         }
     }
 
-    //TODO: create default reviewers object: set reviewer and delegate reviewer for each review state.
     //add reviewers according to their roles and state
     //for example, state=irb_review => roles=ROLE_TRANSRES_IRB_REVIEWER, ROLE_TRANSRES_IRB_REVIEWER_DELEGATE
     public function addDefaultStateReviewers( $project, $addForAllStates=true ) {

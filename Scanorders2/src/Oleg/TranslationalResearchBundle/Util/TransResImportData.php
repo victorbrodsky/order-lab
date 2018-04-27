@@ -383,6 +383,11 @@ class TransResImportData
             }
         }
 
+        //Billing Contact
+        if( $project->getSubmitter() ) {
+            $project->setBillingContact($project->getSubmitter());
+        }
+
         //DATE_APPROVAL
         $DATE_APPROVAL_STR = $this->getValueByHeaderName('DATE_APPROVAL', $rowData, $headers);
         //echo "DATE_APPROVAL_STR=".$DATE_APPROVAL_STR."<br>";
