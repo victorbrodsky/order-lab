@@ -152,7 +152,7 @@ abstract class ListAbstract
     protected $entityName;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $version;
 
