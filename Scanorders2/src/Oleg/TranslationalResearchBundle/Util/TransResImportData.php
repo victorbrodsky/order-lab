@@ -123,7 +123,9 @@ class TransResImportData
             //if( $exportId != 1840 ) {continue;} //testing
 
             //Process Project
-            $this->importProject($rowData,$headers,$exportId,$specialty,$notExistingStatuses,$notExistingUsers);
+            $res = $this->importProject($rowData,$headers,$exportId,$specialty,$notExistingStatuses,$notExistingUsers);
+            $notExistingStatuses = $res['notExistingStatuses'];
+            $notExistingUsers = $res['notExistingUsers'];
 
             $count++;
 
@@ -486,7 +488,12 @@ class TransResImportData
             $em->flush($project);
         }
 
-        return true;
+        $res = array(
+            'notExistingStatuses' => $notExistingStatuses,
+            'notExistingUsers' => $notExistingUsers
+        );
+
+        return $res;
     }
 
     public function cleanUsername( $username ) {
