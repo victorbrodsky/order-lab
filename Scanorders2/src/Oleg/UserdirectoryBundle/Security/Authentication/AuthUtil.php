@@ -84,7 +84,7 @@ class AuthUtil {
             //return $user; //testing
 
             if( !$this->canLogin($user) ) {
-                exit("User can not login");
+                //exit("User can not login");
                 return NULL;
             }
 
@@ -766,10 +766,12 @@ class AuthUtil {
                 $msg
             );
 
+            exit($msg);
             return false;
         }
         if( !$user->isEnabled() ) {
             $this->logger->warning("User is not enabled");
+            exit("User is not enabled");
             return false;
         }
 
