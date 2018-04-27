@@ -781,6 +781,10 @@ class AuthUtil {
     // in site settings (5), AND the timestamp of the last failed attempt is newer
     // than the timestamp of the last successful attempt, then lock the account
     public function validateFailedAttempts($user) {
+        if( $user->hasRole("ROLE_PLATFORM_ADMIN") || $user->hasRole("ROLE_PLATFORM_DEPUTY_ADMIN") ) {
+            return true;
+        }
+
         //if the current attempt is not successful, AND the failed attempt count
         // for this user is greater than or equal to the “Permitted failed log in attempts”
         // in site settings (5), AND the timestamp of the last failed attempt is newer
