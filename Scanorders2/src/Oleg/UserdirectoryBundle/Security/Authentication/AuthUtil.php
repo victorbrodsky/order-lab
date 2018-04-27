@@ -88,7 +88,7 @@ class AuthUtil {
                 return NULL;
             }
 
-            return $user; //testing
+            //return $user; //testing
 
             //check password
 //            $encoder = $this->container->get('security.password_encoder');
@@ -756,7 +756,7 @@ class AuthUtil {
     }
 
     public function canLogin($user) {
-        return true;
+        //return true;
         if( $user->getLocked() ) {
             $this->logger->warning("User is locked");
 
@@ -786,9 +786,9 @@ class AuthUtil {
     // in site settings (5), AND the timestamp of the last failed attempt is newer
     // than the timestamp of the last successful attempt, then lock the account
     public function validateFailedAttempts($user) {
-        if( $user->hasRole("ROLE_PLATFORM_ADMIN") || $user->hasRole("ROLE_PLATFORM_DEPUTY_ADMIN") ) {
-            return true;
-        }
+        //if( $user->hasRole("ROLE_PLATFORM_ADMIN") || $user->hasRole("ROLE_PLATFORM_DEPUTY_ADMIN") ) {
+        //    return true;
+        //}
 
         //if the current attempt is not successful, AND the failed attempt count
         // for this user is greater than or equal to the “Permitted failed log in attempts”
