@@ -47,6 +47,7 @@ use Oleg\UserdirectoryBundle\Entity\User;
 use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use Oleg\UserdirectoryBundle\Util\EmailUtil;
 use Oleg\UserdirectoryBundle\Util\UserUtil;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -765,7 +766,7 @@ class FellAppUtil {
         $author = $this->container->get('security.token_storage')->getToken()->getUser();
         $transformer = new DateTimeToStringTransformer(null,null,'d/m/Y');
         
-        $ea = new \PHPExcel(); // ea is short for Excel Application
+        $ea = new Spreadsheet(); // ea is short for Excel Application
                
         $ea->getProperties()
             ->setCreator($author."")
@@ -783,10 +784,10 @@ class FellAppUtil {
         //align all cells to left
         $style = array(
             'alignment' => array(
-                'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT,
             )
         );
-        $ews->getDefaultStyle()->applyFromArray($style);
+        $ews->getParent()->getDefaultStyle()->applyFromArray($style);
         
         $ews->setCellValue('A1', 'ID'); // Sets cell 'a1' to value 'ID 
         $ews->setCellValue('B1', 'First Name');
@@ -913,7 +914,7 @@ class FellAppUtil {
         
         
         // Auto size columns for each worksheet
-        \PHPExcel_Shared_Font::setAutoSizeMethod(\PHPExcel_Shared_Font::AUTOSIZE_METHOD_EXACT);
+        //\PHPExcel_Shared_Font::setAutoSizeMethod(\PHPExcel_Shared_Font::AUTOSIZE_METHOD_EXACT);
         foreach ($ea->getWorksheetIterator() as $worksheet) {
 
             $ea->setActiveSheetIndex($ea->getIndex($worksheet));

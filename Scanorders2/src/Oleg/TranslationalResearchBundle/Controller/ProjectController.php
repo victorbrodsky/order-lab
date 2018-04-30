@@ -1792,7 +1792,8 @@ class ProjectController extends Controller
 
         $excelBlob = $transresUtil->createProjectListExcel($projectIdsArr);
 
-        $writer = \PHPExcel_IOFactory::createWriter($excelBlob, 'Excel2007');
+        //$writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($excelBlob, 'Excel2007');
+        $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($excelBlob, 'Xlsx');
         //ob_end_clean();
         //$writer->setIncludeCharts(true);
 

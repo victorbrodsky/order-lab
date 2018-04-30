@@ -76,8 +76,8 @@ class UserGenerator {
         }
 
         try {
-            $inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
-            $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
+            $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
+            $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
             $objPHPExcel = $objReader->load($inputFileName);
         } catch( Exception $e ) {
             die('Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage());
@@ -264,9 +264,10 @@ class UserGenerator {
 
             //user_employmentStatus_0_hireDate
             $dateHire = $this->getValueBySectionHeaderName("Date of Hire (MM/DD/YYYY)",$rowData,$headers,$sectionEmploymentRange);
-            //$dateHire = date("m/d/Y", \PHPExcel_Shared_Date::ExcelToPHP($dateHire));
+            //$dateHire = date("m/d/Y", \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($dateHire));
             //echo "dateHire=".$dateHire."<br>";
-            $dateHire = \PHPExcel_Shared_Date::ExcelToPHP($dateHire);
+            //$dateHire = \PHPExcel_Shared_Date::ExcelToPHP($dateHire);
+            $dateHire = \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($dateHire);
             //$dateHire = new \DateTime(@$dateHire);
             //echo "dateHire=".$dateHire."<br>";
             $dateHire = new \DateTime("@$dateHire");
@@ -293,7 +294,7 @@ class UserGenerator {
 
             //End of Employment Date (MM/DD/YYYY)
             $endHire = $this->getValueBySectionHeaderName("End of Employment Date (MM/DD/YYYY)",$rowData,$headers,$sectionEmploymentRange);
-            $endHire = \PHPExcel_Shared_Date::ExcelToPHP($endHire);
+            $endHire = \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($endHire);
             $endHire = new \DateTime("@$endHire");
             //echo "endHire=".$endHire->format('m/d/Y')."<br>";
 
@@ -335,12 +336,12 @@ class UserGenerator {
             echo "administrativeTitleObject=".$administrativeTitleObject."<br>";
 
             $administrativeStart = $this->getValueBySectionHeaderName("Start Date (MM/DD/YYYY)",$rowData,$headers,$sectionAdministrativeTitleRange);
-            $administrativeStart = \PHPExcel_Shared_Date::ExcelToPHP($administrativeStart);
+            $administrativeStart = \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($administrativeStart);
             $administrativeStart = new \DateTime("@$administrativeStart");
             //echo "administrativeStart=".$administrativeStart->format('m/d/Y')."<br>";
 
             $administrativeEnd = $this->getValueBySectionHeaderName("End Date (MM/DD/YYYY)",$rowData,$headers,$sectionAdministrativeTitleRange);
-            $administrativeEnd = \PHPExcel_Shared_Date::ExcelToPHP($administrativeEnd);
+            $administrativeEnd = \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($administrativeEnd);
             $administrativeEnd = new \DateTime("@$administrativeEnd");
             //echo "administrativeEnd=".$administrativeEnd->format('m/d/Y')."<br>";
 
@@ -399,12 +400,12 @@ class UserGenerator {
             $academicPositionsObjects = $this->processMultipleListObjects($academicPositions,$systemuser,"PositionTrackTypeList");
 
             $academicStart = $this->getValueBySectionHeaderName("Start Date (MM/DD/YYYY)",$rowData,$headers,$sectionAcademicTitleRange);
-            $academicStart = \PHPExcel_Shared_Date::ExcelToPHP($academicStart);
+            $academicStart = \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($academicStart);
             $academicStart = new \DateTime("@$academicStart");
             //echo "academicStart=".$academicStart->format('m/d/Y')."<br>";
 
             $academicEnd = $this->getValueBySectionHeaderName("End Date (MM/DD/YYYY)",$rowData,$headers,$sectionAcademicTitleRange);
-            $academicEnd = \PHPExcel_Shared_Date::ExcelToPHP($academicEnd);
+            $academicEnd = \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($academicEnd);
             $academicEnd = new \DateTime("@$academicEnd");
             //echo "academicEnd=".$academicEnd->format('m/d/Y')."<br>";
 
@@ -458,12 +459,12 @@ class UserGenerator {
             $medicalSpecialtyObjects = $this->processMultipleListObjects($medicalSpecialties,$systemuser,"MedicalSpecialties");
 
             $medicalStart = $this->getValueBySectionHeaderName("Start Date (MM/DD/YYYY)",$rowData,$headers,$sectionMedicalTitleRange);
-            $medicalStart = \PHPExcel_Shared_Date::ExcelToPHP($medicalStart);
+            $medicalStart = \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($medicalStart);
             $medicalStart = new \DateTime("@$medicalStart");
             //echo "medicalStart=".$medicalStart->format('m/d/Y')."<br>";
 
             $medicalEnd = $this->getValueBySectionHeaderName("End Date (MM/DD/YYYY)",$rowData,$headers,$sectionMedicalTitleRange);
-            $medicalEnd = \PHPExcel_Shared_Date::ExcelToPHP($medicalEnd);
+            $medicalEnd = \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($medicalEnd);
             $medicalEnd = new \DateTime("@$medicalEnd");
             //echo "medicalEnd=".$medicalEnd->format('m/d/Y')."<br>";
 
@@ -544,13 +545,13 @@ class UserGenerator {
 
             //Start Date (MM/DD/YYYY)
             $educationStartEnd = $this->getValueBySectionHeaderName("Start Date (MM/DD/YYYY)",$rowData,$headers,$sectionEducationRange);
-            $educationStartEnd = \PHPExcel_Shared_Date::ExcelToPHP($educationStartEnd);
+            $educationStartEnd = \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($educationStartEnd);
             $educationStartEnd = new \DateTime("@$educationStartEnd");
             echo "educationStartEnd=".$educationStartEnd->format('m/d/Y')."<br>";
 
             //Completion Date (MM/DD/YYYY)
             $educationCompletionEnd = $this->getValueBySectionHeaderName("Completion Date (MM/DD/YYYY)",$rowData,$headers,$sectionEducationRange);
-            $educationCompletionEnd = \PHPExcel_Shared_Date::ExcelToPHP($educationCompletionEnd);
+            $educationCompletionEnd = \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($educationCompletionEnd);
             $educationCompletionEnd = new \DateTime("@$educationCompletionEnd");
             echo "educationCompletionEnd=".$educationCompletionEnd->format('m/d/Y')."<br>";
 
@@ -602,13 +603,13 @@ class UserGenerator {
 
             //Founded on (MM/DD/YYYY)
             $researchLabFounded = $this->getValueBySectionHeaderName("Founded on (MM/DD/YYYY)",$rowData,$headers,$sectionResearchRange);
-            $researchLabFounded = \PHPExcel_Shared_Date::ExcelToPHP($researchLabFounded);
+            $researchLabFounded = \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($researchLabFounded);
             $researchLabFounded = new \DateTime("@$researchLabFounded");
             echo "researchLabFounded=".$researchLabFounded->format('m/d/Y')."<br>";
 
             //Dissolved on (MM/DD/YYYY)
             $researchLabDissolved = $this->getValueBySectionHeaderName("Dissolved on (MM/DD/YYYY)",$rowData,$headers,$sectionResearchRange);
-            $researchLabDissolved = \PHPExcel_Shared_Date::ExcelToPHP($researchLabDissolved);
+            $researchLabDissolved = \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($researchLabDissolved);
             $researchLabDissolved = new \DateTime("@$researchLabDissolved");
             echo "researchLabDissolved=".$researchLabDissolved->format('m/d/Y')."<br>";
 
@@ -678,7 +679,7 @@ class UserGenerator {
 
             //Date of Birth (MM/DD/YYYY)
             $dateOfBirth = $this->getValueBySectionHeaderName("Date of Birth (MM/DD/YYYY)",$rowData,$headers,$sectionPersonalInformationRange);
-            $dateOfBirth = \PHPExcel_Shared_Date::ExcelToPHP($dateOfBirth);
+            $dateOfBirth = \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($dateOfBirth);
             $dateOfBirth = new \DateTime("@$dateOfBirth");
             echo "dateOfBirth=".$dateOfBirth->format('m/d/Y')."<br>";
 
@@ -711,7 +712,7 @@ class UserGenerator {
 
             //COQ Expiration Date (MM/DD/YYYY)
             $coqExpirationDate = $this->getValueBySectionHeaderName("COQ Expiration Date (MM/DD/YYYY)",$rowData,$headers,$sectionCertificateRange);
-            $coqExpirationDate = \PHPExcel_Shared_Date::ExcelToPHP($coqExpirationDate);
+            $coqExpirationDate = \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($coqExpirationDate);
             $coqExpirationDate = new \DateTime("@$coqExpirationDate");
             echo "coqExpirationDate=".$coqExpirationDate->format('m/d/Y')."<br>";
 
@@ -733,7 +734,7 @@ class UserGenerator {
 
             //CLIA Expiration Date (MM/DD/YYYY)
             $cliaExpDate = $this->getValueBySectionHeaderName("CLIA Expiration Date (MM/DD/YYYY)",$rowData,$headers,$sectionCliaRange);
-            $cliaExpDate = \PHPExcel_Shared_Date::ExcelToPHP($cliaExpDate);
+            $cliaExpDate = \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($cliaExpDate);
             $cliaExpDate = new \DateTime("@$cliaExpDate");
             echo "cliaExpDate=".$cliaExpDate->format('m/d/Y')."<br>";
 
@@ -759,13 +760,13 @@ class UserGenerator {
 
             //NYPH Code Start Date (MM/DD/YYYY)
             $nyphCodeStartDate = $this->getValueBySectionHeaderName("NYPH Code Start Date (MM/DD/YYYY)",$rowData,$headers,$sectionNYPHCodeRange);
-            $nyphCodeStartDate = \PHPExcel_Shared_Date::ExcelToPHP($nyphCodeStartDate);
+            $nyphCodeStartDate = \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($nyphCodeStartDate);
             $nyphCodeStartDate = new \DateTime("@$nyphCodeStartDate");
             echo "nyphCodeStartDate=".$nyphCodeStartDate->format('m/d/Y')."<br>";
 
             //NYPH Code End Date (MM/DD/YYYY)
             $nyphCodeEndDate = $this->getValueBySectionHeaderName("NYPH Code End Date (MM/DD/YYYY)",$rowData,$headers,$sectionNYPHCodeRange);
-            $nyphCodeEndDate = \PHPExcel_Shared_Date::ExcelToPHP($nyphCodeEndDate);
+            $nyphCodeEndDate = \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($nyphCodeEndDate);
             $nyphCodeEndDate = new \DateTime("@$nyphCodeEndDate");
             echo "nyphCodeEndDate=".$nyphCodeEndDate->format('m/d/Y')."<br>";
 
@@ -810,13 +811,13 @@ class UserGenerator {
 
             //License Issued Date (MM/DD/YYYY)
             $licenseIssuedDate = $this->getValueBySectionHeaderName("License Issued Date (MM/DD/YYYY)",$rowData,$headers,$sectionMedicalLicenseRange);
-            $licenseIssuedDate = \PHPExcel_Shared_Date::ExcelToPHP($licenseIssuedDate);
+            $licenseIssuedDate = \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($licenseIssuedDate);
             $licenseIssuedDate = new \DateTime("@$licenseIssuedDate");
             echo "licenseIssuedDate=".$licenseIssuedDate->format('m/d/Y')."<br>";
 
             //License Expiration Date (MM/DD/YYYY)
             $licenseExpirationDate = $this->getValueBySectionHeaderName("License Expiration Date (MM/DD/YYYY)",$rowData,$headers,$sectionMedicalLicenseRange);
-            $licenseExpirationDate = \PHPExcel_Shared_Date::ExcelToPHP($licenseExpirationDate);
+            $licenseExpirationDate = \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($licenseExpirationDate);
             $licenseExpirationDate = new \DateTime("@$licenseExpirationDate");
             echo "licenseExpirationDate=".$licenseExpirationDate->format('m/d/Y')."<br>";
 
@@ -868,19 +869,19 @@ class UserGenerator {
 
             //Date Issued (MM/DD/YYYY)
             $boardCertDateIssued = $this->getValueBySectionHeaderName("Date Issued (MM/DD/YYYY)",$rowData,$headers,$sectionBoardCertRange);
-            $boardCertDateIssued = \PHPExcel_Shared_Date::ExcelToPHP($boardCertDateIssued);
+            $boardCertDateIssued = \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($boardCertDateIssued);
             $boardCertDateIssued = new \DateTime("@$boardCertDateIssued");
             echo "boardCertDateIssued=".$boardCertDateIssued->format('m/d/Y')."<br>";
 
             //Expiration Date (MM/DD/YYYY)
             $boardCertDateExpiration = $this->getValueBySectionHeaderName("Expiration Date (MM/DD/YYYY)",$rowData,$headers,$sectionBoardCertRange);
-            $boardCertDateExpiration = \PHPExcel_Shared_Date::ExcelToPHP($boardCertDateExpiration);
+            $boardCertDateExpiration = \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($boardCertDateExpiration);
             $boardCertDateExpiration = new \DateTime("@$boardCertDateExpiration");
             echo "boardCertDateExpiration=".$boardCertDateExpiration->format('m/d/Y')."<br>";
 
             //Recertification Date (MM/DD/YYYY)
             $boardCertDateRecertification = $this->getValueBySectionHeaderName("Recertification Date (MM/DD/YYYY)",$rowData,$headers,$sectionBoardCertRange);
-            $boardCertDateRecertification = \PHPExcel_Shared_Date::ExcelToPHP($boardCertDateRecertification);
+            $boardCertDateRecertification = \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($boardCertDateRecertification);
             $boardCertDateRecertification = new \DateTime("@$boardCertDateRecertification");
             echo "boardCertDateRecertification=".$boardCertDateRecertification->format('m/d/Y')."<br>";
 
@@ -1083,7 +1084,7 @@ class UserGenerator {
 
         //CLIA Expiration Date (MM/DD/YYYY)
         $cliaExpDate = $this->getValueBySectionHeaderName("CLIA Expiration Date (MM/DD/YYYY)",$rowData,$headers,$sectionRange);
-        $cliaExpDate = \PHPExcel_Shared_Date::ExcelToPHP($cliaExpDate);
+        $cliaExpDate = \PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($cliaExpDate);
         $cliaExpDate = new \DateTime("@$cliaExpDate");
         echo "cliaExpDate=".$cliaExpDate->format('m/d/Y')."<br>";
 
@@ -1169,8 +1170,8 @@ class UserGenerator {
         }
 
         try {
-            $inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
-            $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
+            $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
+            $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
             $objPHPExcel = $objReader->load($inputFileName);
         } catch( Exception $e ) {
             die('Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage());

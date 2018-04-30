@@ -4449,23 +4449,8 @@ class UserController extends Controller
         $excelBlob = $userDownloadUtil->createUserListExcel($departmentSections,$sheetParams);
         ///////////////////// EOF Department List /////////////////////
 
-        if(0) {
-            header('Content-Type: application/vnd.ms-excel');
-            header('Content-Disposition: attachment;filename="' . $fileName . '"');;
-            header('Cache-Control: max-age=0');
-            header('Cache-Control: max-age=1');
-            //header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-            header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
-            header('Cache-Control: cache, must-revalidate');
-            header('Pragma: public');
-            $writer = \PHPExcel_IOFactory::createWriter($excelBlob, 'Excel5');
-            $writer->save('php://output');
-            exit();
-        }
-
-
         if(1) {
-            $writer = \PHPExcel_IOFactory::createWriter($excelBlob, 'Excel2007');
+            $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($excelBlob, 'Xlsx');
             //ob_end_clean();
             //$writer->setIncludeCharts(true);
             header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');

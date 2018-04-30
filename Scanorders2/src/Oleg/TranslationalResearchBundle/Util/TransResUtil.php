@@ -25,6 +25,7 @@ use Oleg\TranslationalResearchBundle\Entity\CommitteeReview;
 use Oleg\TranslationalResearchBundle\Entity\FinalReview;
 use Oleg\TranslationalResearchBundle\Entity\IrbReview;
 use Oleg\TranslationalResearchBundle\Entity\SpecialtyList;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
@@ -2996,6 +2997,7 @@ class TransResUtil
         return $invoicesInfos;
     }
 
+    //use https://phpspreadsheet.readthedocs.io/en/develop/topics/recipes/
     public function createProjectListExcel($projectIdsArr) {
 
         $transresRequestUtil = $this->container->get('transres_request_util');
@@ -3004,7 +3006,7 @@ class TransResUtil
         $author = $this->container->get('security.token_storage')->getToken()->getUser();
         //$transformer = new DateTimeToStringTransformer(null,null,'d/m/Y');
 
-        $ea = new \PHPExcel(); // ea is short for Excel Application
+        $ea = new Spreadsheet(); // ea is short for Excel Application
 
         $ea->getProperties()
             ->setCreator($author."")
@@ -3022,7 +3024,7 @@ class TransResUtil
         //align all cells to left
         $style = array(
             'alignment' => array(
-                'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT,
             )
         );
         //$ews->getDefaultStyle()->applyFromArray($style);
@@ -3034,20 +3036,43 @@ class TransResUtil
             )
         );
 
-        $styleLastRow = array(
-            'fill' => array(
-                'type' => \PHPExcel_Style_Fill::FILL_SOLID,
-                'color' => array('rgb' => 'ebf1de')
-            ),
-            'borders' => array(
-//                'bottom' => array(
-//                    'style' => \PHPExcel_Style_Border::BORDER_THIN
-//                ),
-                'allborders' => array(
-                    'style' => \PHPExcel_Style_Border::BORDER_THIN
-                )
-            )
-        );
+//        $styleLastRow = array(
+//            'fill' => array(
+//                'type' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+//                'color' => array('rgb' => 'ebf1de')
+//            ),
+//            'borders' => array(
+////                'bottom' => array(
+////                    'style' => \PHPExcel_Style_Border::BORDER_THIN
+////                ),
+//                'allborders' => array(
+//                    'style' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN
+//                )
+//            )
+//        );
+        $styleLastRow = [
+//            'font' => [
+//                'bold' => true,
+//            ],
+//            'alignment' => [
+//                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT,
+//            ],
+            'borders' => [
+                'bottom' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                ],
+            ],
+            'fill' => [
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_GRADIENT_LINEAR,
+                'rotation' => 90,
+                'startColor' => [
+                    'argb' => 'ebf1de',
+                ],
+                'endColor' => [
+                    'argb' => 'ebf1de',
+                ],
+            ],
+        ];
 
         $ews->setCellValue('A1', 'Project ID'); // Sets cell 'a1' to value 'ID
         $ews->setCellValue('B1', 'Submission Date');
@@ -3250,19 +3275,19 @@ class TransResUtil
         //format columns to currency format 2:$row
         $ews->getStyle('M2:M'.$row)
             ->getNumberFormat()
-            ->setFormatCode(\PHPExcel_Style_NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+            ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
         $ews->getStyle('N2:N'.$row)
             ->getNumberFormat()
-            ->setFormatCode(\PHPExcel_Style_NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+            ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
         $ews->getStyle('O2:O'.$row)
             ->getNumberFormat()
-            ->setFormatCode(\PHPExcel_Style_NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+            ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
 
         //exit("ids=".$fellappids);
 
 
         // Auto size columns for each worksheet
-        \PHPExcel_Shared_Font::setAutoSizeMethod(\PHPExcel_Shared_Font::AUTOSIZE_METHOD_EXACT);
+        //\PHPExcel_Shared_Font::setAutoSizeMethod(\PHPExcel_Shared_Font::AUTOSIZE_METHOD_EXACT);
         foreach ($ea->getWorksheetIterator() as $worksheet) {
 
             $ea->setActiveSheetIndex($ea->getIndex($worksheet));

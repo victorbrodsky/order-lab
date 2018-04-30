@@ -2272,7 +2272,7 @@ class FellAppController extends Controller {
         $fellappUtil = $this->container->get('fellapp_util');
         $excelBlob = $fellappUtil->createApplicantListExcel($fellappIds);
         
-        $writer = \PHPExcel_IOFactory::createWriter($excelBlob, 'Excel2007');
+        $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($excelBlob, 'Xlsx');
         //ob_end_clean();
         //$writer->setIncludeCharts(true);
         

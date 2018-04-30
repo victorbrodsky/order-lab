@@ -34,7 +34,7 @@
 
         "knplabs/knp-components": "~1.3",
         "knplabs/knp-paginator-bundle": "~2.5",
-        "phpexcel/phpexcel": "dev-master",
+        "phpoffice/phpspreadsheet": "1.2.1",
         "oneup/uploader-bundle": "~1.3",
 
         "google/apiclient": "1.0.*@beta",

@@ -45,6 +45,7 @@ use Oleg\OrderformBundle\Entity\PatientSuffix;
 use Oleg\OrderformBundle\Helper\ErrorHelper;
 use Oleg\UserdirectoryBundle\Entity\ModifierInfo;
 use Oleg\UserdirectoryBundle\Entity\Spot;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -2971,7 +2972,7 @@ class CallEntryController extends Controller
 
         $excelBlob = $this->createCalllogListExcel($entries,$user);
 
-        $writer = \PHPExcel_IOFactory::createWriter($excelBlob, 'Excel2007');
+        $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($excelBlob, 'Xlsx');
         //ob_end_clean();
         //$writer->setIncludeCharts(true);
 
@@ -2988,7 +2989,7 @@ class CallEntryController extends Controller
 
         $formNodeUtil = $this->get('user_formnode_utility');
 
-        $ea = new \PHPExcel(); // ea is short for Excel Application
+        $ea = new Spreadsheet(); // ea is short for Excel Application
 
         $ea->getProperties()
             ->setCreator($author."")
@@ -3007,13 +3008,13 @@ class CallEntryController extends Controller
         //align all cells to left
 //        $style = array(
 //            'alignment' => array(
-//                'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+//                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT,
 //            )
 //        );
         $style = array(
             'alignment' => array(
-                'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
-                'vertical' => \PHPExcel_Style_Alignment::VERTICAL_TOP,
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT,
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_TOP,
                 'wrap' => true
             ),
             'font'  => array(
@@ -3156,7 +3157,8 @@ class CallEntryController extends Controller
             foreach( $snapshotArrChunks as $snapshotArrChunk ) {
 
                 //$snapshot = implode("\n",$snapshotArrChunk);
-                $objRichText = new \PHPExcel_RichText();
+                //$objRichText = new \PHPExcel_RichText();
+                $objRichText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
                 foreach( $snapshotArrChunk as $snapshotRow ) {
 //                    $snapshotRow = "snapshotRow=$snapshotRow<br>";
                     if( strpos($snapshotRow, "[###excel_section_flag###]") === false ) {
@@ -3206,7 +3208,7 @@ class CallEntryController extends Controller
 
 
         // Auto size columns for each worksheet
-        \PHPExcel_Shared_Font::setAutoSizeMethod(\PHPExcel_Shared_Font::AUTOSIZE_METHOD_EXACT);
+        //\PHPExcel_Shared_Font::setAutoSizeMethod(\PHPExcel_Shared_Font::AUTOSIZE_METHOD_EXACT);
         foreach ($ea->getWorksheetIterator() as $worksheet) {
 
             $ea->setActiveSheetIndex($ea->getIndex($worksheet));

@@ -1157,8 +1157,8 @@ class UserUtil {
 //        $inputFileName = __DIR__ . '/../Util/users.xlsx';
 //
 //        try {
-//            $inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
-//            $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
+//            $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
+//            $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
 //            $objPHPExcel = $objReader->load($inputFileName);
 //        } catch(Exception $e) {
 //            die('Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage());

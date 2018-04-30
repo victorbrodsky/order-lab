@@ -27,6 +27,7 @@ namespace Oleg\UserdirectoryBundle\Util;
 
 
 use Oleg\UserdirectoryBundle\Entity\User;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 
@@ -193,7 +194,7 @@ class UserDownloadUtil {
         //$headerSize = $this->headerSize;
 
         if( !$ea ) {
-            $ea = new \PHPExcel(); // ea is short for Excel Application
+            $ea = new Spreadsheet(); // ea is short for Excel Application
 
             $ea->getProperties()
                 ->setCreator($author . "")
@@ -217,8 +218,8 @@ class UserDownloadUtil {
         //align all cells to left
         $styleArray = array(
             'alignment' => array(
-                'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
-                'vertical' => \PHPExcel_Style_Alignment::VERTICAL_TOP,
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT,
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_TOP,
             ),
             'font'  => array(
                 //'bold'  => true,
@@ -335,7 +336,7 @@ class UserDownloadUtil {
             //$ews->mergeCells('A' . $row . ':' . 'E' . $row);
             $style = array(
                 'alignment' => array(
-                    'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER, //HORIZONTAL_JUSTIFY   //HORIZONTAL_CENTER,
+                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER, //HORIZONTAL_JUSTIFY   //HORIZONTAL_CENTER,
                 ),
                 'font'  => array(
                     //'bold'  => true,
@@ -481,7 +482,8 @@ class UserDownloadUtil {
         }
 
         if( $order == "firstname" ) {
-            $userName = new \PHPExcel_RichText();
+            //$userName = new \PHPExcel_RichText();
+            $userName = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
             $userName->createTextRun($userFirstname);
             $userName = $this->getBoldText(" " . $userFamilyname, $this->cellSize, $userName);
 
@@ -509,10 +511,10 @@ class UserDownloadUtil {
 
     public function getBoldText( $text, $size=null, $richText=null ) {
         if( !$text ) {
-            return new \PHPExcel_RichText();
+            return new \PhpOffice\PhpSpreadsheet\RichText\RichText();
         }
         if( !$richText ) {
-            $richText = new \PHPExcel_RichText();
+            $richText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
         }
         $objBold = $richText->createTextRun($text);
         $objBold->getFont()->setBold(true);
@@ -523,7 +525,7 @@ class UserDownloadUtil {
     }
 
     public function getBoldItalicText( $text, $size=null, $underline=false ) {
-        $richText = new \PHPExcel_RichText();
+        $richText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
         $objBold = $richText->createTextRun($text);
         $objBold->getFont()->setBold(true);
         $objBold->getFont()->setItalic(true);
