@@ -1165,7 +1165,7 @@ class SignUpController extends Controller
     }
 
     /**
-     * http://localhost/order/directory/reset-password
+     * http://localhost/order/directory/reset-password/d902aea8d5bdc7141
      *
      * @Route("/reset-password/{resetPasswordLinkID}", name="employees_reset_password")
      * @Method({"GET", "POST"})

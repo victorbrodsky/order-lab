@@ -187,12 +187,9 @@
                     {{ project.getIrbNumber() }}
                 </td>
 
-                <td>
-                    {#{{ project.title }}#}
-                    {% set projectTitle = project.getTitle() %}
-                    {#{% if not projectTitle %}#}
-                        {#{% set projectTitle = transres_formnode_util.getProjectFormNodeFieldByName(project,"Title") %}#}
-                    {#{% endif %}#}
+                {% set projectTitle = project.getTitle() %}
+                <td data-toggle="tooltip" title="{{ projectTitle }}">
+                    {#{% set projectTitle = transres_formnode_util.getProjectFormNodeFieldByName(project,"Title") %}#}
                     {{ projectTitle|length > 30 ? projectTitle|slice(0, 30) ~ '...' : projectTitle  }}
                 </td>
 

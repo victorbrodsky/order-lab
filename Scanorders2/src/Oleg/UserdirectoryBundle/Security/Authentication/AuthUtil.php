@@ -88,7 +88,7 @@ class AuthUtil {
                 return NULL;
             }
 
-            return $user; //testing
+            //return $user; //testing
 
             //check password
 //            $encoder = $this->container->get('security.password_encoder');

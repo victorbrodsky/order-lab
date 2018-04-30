@@ -217,7 +217,9 @@ class AdminController extends Controller
             $adminRes = $adminRes . " <br> " .$updateres;
 
         } else {
-            $adminRes = 'Admin user already exists';
+            //$adminRes = 'Admin user already exists';
+            //$adminRes = "System has been initialized successfully.";
+            $adminRes = 'Admin user has been successfully created.';
             //exit('users already exists');
         }
 

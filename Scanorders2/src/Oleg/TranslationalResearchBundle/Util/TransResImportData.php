@@ -904,15 +904,18 @@ class TransResImportData
                 break;
             case "9":
                 $status = "pending resubmission";
-                $statusNew = "draft";
+                //$statusNew = "draft";
+                $statusNew = "closed";
                 break;
             case "10":
                 $status = "pending revision";
-                $statusNew = "draft";
+                //$statusNew = "draft";
+                $statusNew = "closed";
                 break;
             case "11":
                 $status = "pending bio-statistical revision";
-                $statusNew = "draft";
+                //$statusNew = "draft";
+                $statusNew = "closed";
                 break;
             case "12":
                 $status = "closed";
@@ -920,11 +923,13 @@ class TransResImportData
                 break;
             case "13":
                 $status = "pending funding approval";
-                $statusNew = "draft";
+                //$statusNew = "draft";
+                $statusNew = "closed";
                 break;
             case "14":
                 $status = "pending bio-statistical request";
-                $statusNew = "draft";
+                //$statusNew = "draft";
+                $statusNew = "closed";
                 break;
         }
 
