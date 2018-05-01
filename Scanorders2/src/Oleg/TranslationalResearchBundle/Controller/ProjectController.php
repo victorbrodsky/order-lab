@@ -1414,6 +1414,7 @@ class ProjectController extends Controller
 
     public function createProjectEntity($user,$project=null) {
 
+        $formnode = false;
         $em = $this->getDoctrine()->getManager();
 
         if( !$project ) {
@@ -1427,7 +1428,7 @@ class ProjectController extends Controller
         }
 
         //set order category
-        if( !$project->getMessageCategory() ) {
+        if( $formnode && !$project->getMessageCategory() ) {
             $categoryStr = "HemePath Translational Research Project";  //"Pathology Call Log Entry";
             //$categoryStr = "Nesting Test"; //testing
             $messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
