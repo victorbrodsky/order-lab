@@ -1964,7 +1964,7 @@ class UserSecurityUtil {
 
     public function isSelfSignUp( $sitename ) {
         $siteObject = $this->em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation($sitename);
-        if( $siteObject->getSelfSignUp() === true ) {
+        if( $siteObject && $siteObject->getSelfSignUp() === true ) {
             return true;
         }
         return false;
