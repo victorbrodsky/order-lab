@@ -196,8 +196,8 @@ class UserGenerator {
             $user->setUsernameCanonical($usernameUnique);
 
             $user->setEnabled(true);
-            $user->setLocked(false);
-            $user->setExpired(false);
+            //$user->setLocked(false);
+            //$user->setExpired(false);
 
             ////////////// Section: Name and Preferred Contact Info ////////////////
             $email = $this->getValueBySectionHeaderName("Preferred Email",$rowData,$headers,$sectionNameContactInfoRange);
@@ -1820,8 +1820,8 @@ class UserGenerator {
             //************** end of  Aperio group roles **************//
 
             $user->setEnabled(true);
-            $user->setLocked(false);
-            $user->setExpired(false);
+            //$user->setLocked(false);
+            //$user->setExpired(false);
 
 //            $found_user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername( $user->getUsername() );
 //            if( $found_user ) {

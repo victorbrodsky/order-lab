@@ -4625,8 +4625,8 @@ class AdminController extends Controller
             }
 
             $user->setEnabled(true);
-            $user->setLocked(false);
-            $user->setExpired(false);
+            //$user->setLocked(false);
+            //$user->setExpired(false);
 
             //record user log create
             $event = "User ".$user." has been created by ".$systemuser."<br>";
@@ -7117,8 +7117,8 @@ class AdminController extends Controller
             $administrator->setCreatedby('system');
             $administrator->addRole('ROLE_PLATFORM_ADMIN');
             $administrator->setEnabled(true);
-            $administrator->setLocked(true);
-            $administrator->setExpired(false);
+            //$administrator->setLocked(true);
+            //$administrator->setExpired(false);
 
             $encodedPassword = $encoder->encodePassword($administrator, "1234567890");
             $administrator->setPassword($encodedPassword);

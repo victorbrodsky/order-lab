@@ -40,6 +40,10 @@ If you downloaded an archive "without vendors", you also need to install all
 the necessary dependencies. Download composer (see above) and run the
 following command:
 
+    On dev server:
+    php composer.phar update
+
+    On live server:
     php composer.phar install
 
 2) Checking your System Configuration

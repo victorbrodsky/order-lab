@@ -334,9 +334,9 @@ class UserUtil {
             $systemuser->setCreatedby('system');
             $systemuser->addRole('ROLE_PLATFORM_DEPUTY_ADMIN');
             $systemuser->getPreferences()->setTimezone($default_time_zone);
-            $systemuser->setEnabled(true);
-            $systemuser->setLocked(true); //system is locked, so no one can logged in with this account
-            $systemuser->setExpired(false);
+            $systemuser->setEnabled(false);
+            //$systemuser->setLocked(true); //system is locked, so no one can logged in with this account
+            //$systemuser->setExpired(false);
             $em->persist($systemuser);
             $em->flush();
 
