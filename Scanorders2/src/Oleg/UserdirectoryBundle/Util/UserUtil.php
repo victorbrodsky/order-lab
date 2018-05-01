@@ -66,7 +66,7 @@ class UserUtil {
         //find site object by sitename
         $site = $em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation($options['sitename']);
         if( !$site ) {
-            throw new NotFoundHttpException('Unable to find SiteList entity by abbreviation='.$options['sitename']);
+            //throw new NotFoundHttpException('Unable to find SiteList entity by abbreviation='.$options['sitename']);
         }
 
         $logger = new Logger($site);
