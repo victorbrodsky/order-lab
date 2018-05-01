@@ -346,6 +346,7 @@ class CallLogEditController extends CallEntryController
         $classNamespace = $class->getNamespaceName(); //Oleg\UserdirectoryBundle\Entity
 
         //top message category id
+        //TODO: get buy default values in site settings
         $formnodeTopHolderId = null;
         $categoryStr = "Pathology Call Log Entry";
         $messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
