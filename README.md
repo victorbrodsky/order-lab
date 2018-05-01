@@ -332,9 +332,16 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 
 	 deploy_prod.sh
 
-### To run composer update or self-update
+### To install dependencies via composer
 
-	 composer.phar update
+	Update composer:
+	composer.phar self-update
+
+	On dev server:
+	composer.phar update
+	 
+	On live server:
+    composer.phar install
 
 ### Doctrine:
 
