@@ -69,7 +69,7 @@ class GenericTreeTransformer implements DataTransformerInterface
         }
 
         if( !$this->className ) {
-            throw $this->createNotFoundException('className is null');
+            throw new \Exception('className is null');
         }
     }
 

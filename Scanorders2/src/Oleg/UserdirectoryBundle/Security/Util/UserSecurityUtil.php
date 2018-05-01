@@ -1183,7 +1183,8 @@ class UserSecurityUtil {
         //echo "params count=".count($params)."<br>";
 
         if( count($params) == 0 ) {
-            return -1;
+            //return -1;
+            return "[Site Settings is not initialized]";
         }
 
         if( count($params) > 1 ) {

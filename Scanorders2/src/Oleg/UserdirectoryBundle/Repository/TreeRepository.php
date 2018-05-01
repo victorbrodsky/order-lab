@@ -649,7 +649,7 @@ class TreeRepository extends NestedTreeRepository {
         if( !$foundChild ) {
 
             //echo "Case 1: Not found in DB => create new <br>";
-            $treeTransf = new GenericTreeTransformer($em,$author);
+            $treeTransf = new GenericTreeTransformer($em,$author,$className);
             $newChild = $treeTransf->createNewEntity($name,$className,$author);
             $em->persist($newChild);
             $parent->$addMethod($newChild);

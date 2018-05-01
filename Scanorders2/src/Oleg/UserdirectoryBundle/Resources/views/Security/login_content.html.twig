@@ -105,7 +105,7 @@
     <br><br>
     <p>
         {% set loginInstruction = user_security_utility.getSiteSettingParameter('loginInstruction') %}
-        {% if loginInstruction %}
+        {% if loginInstruction and loginInstruction != -1 %}
             {{ loginInstruction|raw }}
         {% else %}
             Please use your

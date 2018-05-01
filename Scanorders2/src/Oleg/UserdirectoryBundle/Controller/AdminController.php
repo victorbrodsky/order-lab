@@ -1779,7 +1779,7 @@ class AdminController extends Controller
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
 
-        if( $entities ) {
+        if( count($entities) > 0 ) {
             return -1;
         }
 

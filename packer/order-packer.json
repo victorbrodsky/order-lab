@@ -50,8 +50,8 @@
         "type": "shell",
         "inline": [                               
            "sudo -u postgres createdb scanorder",
-	   "sudo -u postgres psql postgres postgres -c \"CREATE USER bash_dbuser WITH PASSWORD 'bash_dbuser'\"",  
-	   "sudo -u postgres psql postgres postgres -c \"ALTER USER bash_dbuser WITH SUPERUSER\"",
+		   "sudo -u postgres psql postgres postgres -c \"CREATE USER bash_dbuser WITH PASSWORD 'bash_dbuser'\"",  
+	       "sudo -u postgres psql postgres postgres -c \"ALTER USER bash_dbuser WITH SUPERUSER\"",
            "sudo -u postgres psql postgres postgres -c \"GRANT ALL PRIVILEGES ON DATABASE scanorder to bash_dbuser\""          
          ]    
       },
@@ -84,9 +84,9 @@
         "inline": [             
            "cd /usr/local/bin/order-lab/Scanorders2",
            "composer install",
-	   "sudo chmod +x /usr/local/bin/order-lab/Scanorders2/deploy_prod.sh",
-	   "bash /usr/local/bin/order-lab/Scanorders2/deploy_prod.sh",
-	   "sudo chown -R www-data:www-data /usr/local/bin/order-lab"	                          
+	       "sudo chmod +x /usr/local/bin/order-lab/Scanorders2/deploy_prod.sh",
+	       "bash /usr/local/bin/order-lab/Scanorders2/deploy_prod.sh",
+	       "sudo chown -R www-data:www-data /usr/local/bin/order-lab"	                          
          ]    
       }      
       

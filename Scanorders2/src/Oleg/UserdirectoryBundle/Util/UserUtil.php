@@ -895,7 +895,7 @@ class UserUtil {
         if( !$nameObject ) {
 
             //generate admin Title Name
-            $treeTransf = new GenericTreeTransformer($em,$creator);
+            $treeTransf = new GenericTreeTransformer($em,$creator,$className);
             $nameObject = $treeTransf->createNewEntity($name,$className,$creator);
 
             $em->persist($nameObject);
