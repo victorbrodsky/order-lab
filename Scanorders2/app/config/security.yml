@@ -306,7 +306,8 @@ security:
 
        ############################## EMPLOYEES SITE SETTINGS ##############################
        - { path: ^/directory/access-requests/new/, role: IS_AUTHENTICATED_ANONYMOUSLY }
-       - { path: ^/directory/login, role: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
+       - { path: ^/directory/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
+#       - { path: ^/directory/login, role: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
        - { path: ^/directory/setloginvisit, role: IS_AUTHENTICATED_ANONYMOUSLY }
        - { path: ^/directory/account-requests/, role: IS_AUTHENTICATED_ANONYMOUSLY }
        - { path: ^/directory/sign-up, role: IS_AUTHENTICATED_ANONYMOUSLY }
