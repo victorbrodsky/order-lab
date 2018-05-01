@@ -91,7 +91,7 @@ class MaintenanceListener {
             $sitename = $this->getSiteName($controller);
             if( $sitename ) {
                 $siteObject = $this->em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation($sitename);
-                if( $siteObject && $siteObject->getAccessibility() === false ) {
+                if( $siteObject$siteObject->getAccessibility() === false ) {
                     $systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
 
                     $session = $this->container->get('session');
@@ -121,6 +121,10 @@ class MaintenanceListener {
             //echo "Sites controller! <br>";
         } else {
             //echo "other controller! <br>";
+            return;
+        }
+
+        if( $event->getRequest()->get('_route') == "first-time-login-generation-init" ) {
             return;
         }
 
