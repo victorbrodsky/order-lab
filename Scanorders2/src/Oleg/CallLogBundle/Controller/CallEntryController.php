@@ -242,6 +242,10 @@ class CallEntryController extends Controller
         //$messageCategories = array($node1,$node2);
 
         $defaultMrnType = $em->getRepository('OlegOrderformBundle:MrnType')->findOneByName("New York Hospital MRN");
+        $defaultMrnTypeId = null;
+        if( $defaultMrnType ) {
+            $defaultMrnTypeId = $defaultMrnType->getid();
+        }
 
         $referringProviders = $calllogUtil->getReferringProvidersWithUserWrappers();
 
@@ -287,7 +291,7 @@ class CallEntryController extends Controller
             'messageStatuses' => $messageStatusesChoice,
             'messageCategories' => $messageCategories, //for home to list all entries page
             //'messageCategoryDefault' => $messageCategoriePathCall->getId(),
-            'mrntype' => $defaultMrnType->getId(),
+            'mrntype' => $defaultMrnTypeId,
             'referringProviders' => $referringProviders,
             'search' => $searchFilter,
             'entryBodySearch' => $entryBodySearchFilter,
