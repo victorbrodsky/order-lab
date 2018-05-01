@@ -1976,7 +1976,7 @@ class UserSecurityUtil {
             return true;
         }
         $siteObject = $this->em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation($sitename);
-        if( $siteObject->getAccessibility() === true ) {
+        if( $siteObject && $siteObject->getAccessibility() === true ) {
             return true;
         }
         return false;

@@ -91,7 +91,7 @@ class MaintenanceListener {
             $sitename = $this->getSiteName($controller);
             if( $sitename ) {
                 $siteObject = $this->em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation($sitename);
-                if ($siteObject->getAccessibility() === false) {
+                if( $siteObject && $siteObject->getAccessibility() === false ) {
                     $systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
 
                     $session = $this->container->get('session');
