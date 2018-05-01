@@ -157,7 +157,6 @@ class AdminController extends Controller
      */
     public function firstTimeLoginGenerationAction()
     {
-        //exit("firstTimeLoginGenerationAction");
         $em = $this->getDoctrine()->getManager();
         $users = $roles = $em->getRepository('OlegUserdirectoryBundle:User')->findAll();
         if (count($users) == 0) {
