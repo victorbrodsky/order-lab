@@ -18,6 +18,9 @@
 namespace Oleg\CallLogBundle\Controller;
 
 
+use Oleg\CallLogBundle\Entity\CalllogSiteParameter;
+use Oleg\CallLogBundle\Form\CalllogSiteParameterType;
+use Oleg\UserdirectoryBundle\Entity\SiteParameters;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -48,6 +51,22 @@ class CallLogSiteParametersController extends SiteParametersController
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+        if( count($entities) != 1 ) {
+            throw new \Exception( 'Must have only one parameter object. Found '.count($entities).'object(s)' );
+        }
+        $siteParameters = $entities[0];
+
+        //create one CalllogSiteParameter
+        if( !$siteParameters->getCallogSiteParameter() ) {
+            //echo "CalllogSiteParameter null <br>";
+            $calllogSiteParameter = new CalllogSiteParameter();
+            $siteParameters->setCallogSiteParameter($calllogSiteParameter);
+            $em->flush();
+        }
+
         return $this->indexParameters($request);
     }
 
@@ -81,7 +100,7 @@ class CallLogSiteParametersController extends SiteParametersController
      *
      * @Route("/edit-resources/", name="calllog_siteparameters_resources_edit")
      * @Method("GET")
-     * @Template("OlegUserdirectoryBundle:SiteParameters:edit.html.twig")
+     * @Template("OlegCallLogBundle:SiteParameters:edit.html.twig")
      */
     public function editResourcesAction( Request $request )
     {
@@ -103,4 +122,108 @@ class CallLogSiteParametersController extends SiteParametersController
         return $this->redirect($this->generateUrl('calllog_siteparameters_edit', array('id'=>$entity->getId(),'param'=>'calllogResources')));
     }
 
+
+    /**
+     * CalllogSiteParameter
+     *
+     * @Route("/specific-site-parameters/edit/", name="calllog_siteparameters_edit_specific_site_parameters")
+     * @Method({"GET", "POST"})
+     * @Template("OlegCallLogBundle:SiteParameter:edit.html.twig")
+     */
+    public function calllogSiteParameterEditAction( Request $request ) {
+
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_CALLLOG_PATHOLOGY_ATTENDING') ) {
+            return $this->redirect( $this->generateUrl('calllog-nopermission') );
+        }
+
+        $cycle = "edit";
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+        if( count($entities) != 1 ) {
+            throw new \Exception( 'Must have only one parameter object. Found '.count($entities).'object(s)' );
+        }
+        $siteParameters = $entities[0];
+        $callogSiteParameter = $siteParameters->getCallogSiteParameter();
+        //echo "callogSiteParameter=".$callogSiteParameter->getId()."<br>";
+
+        $form = $this->createCalllogSiteParameterForm($callogSiteParameter,$cycle);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+
+            //exit('submit');
+            $em->persist($callogSiteParameter);
+            $em->flush();
+
+            return $this->redirect($this->generateUrl('calllog_siteparameters'));
+        }
+
+        return array(
+            'entity' => $callogSiteParameter,
+            'form'   => $form->createView(),
+            'cycle' => $cycle,
+            'title' => "Update Call Log Specific Site Parameters"
+        );
+    }
+
+    /**
+     * CalllogSiteParameter Show
+     *
+     * @Route("/specific-site-parameters/show/", name="calllog_siteparameters_show_specific_site_parameters")
+     * @Method("GET")
+     * @Template("OlegCallLogBundle:SiteParameter:edit-content.html.twig")
+     */
+    public function calllogSiteParameterShowAction( Request $request ) {
+
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_CALLLOG_PATHOLOGY_ATTENDING') ) {
+            return $this->redirect( $this->generateUrl('calllog-nopermission') );
+        }
+
+        $cycle = "show";
+
+        $em = $this->getDoctrine()->getManager();
+
+        $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+        if( count($entities) != 1 ) {
+            throw new \Exception( 'Must have only one parameter object. Found '.count($entities).'object(s)' );
+        }
+        $siteParameters = $entities[0];
+        $callogSiteParameter = $siteParameters->getCallogSiteParameter();
+
+        $form = $this->createCalllogSiteParameterForm($callogSiteParameter,$cycle);
+
+        return array(
+            'entity' => $callogSiteParameter,
+            'form'   => $form->createView(),
+            'cycle' => $cycle,
+            'title' => "Call Log Specific Site Parameters"
+        );
+    }
+
+    public function createCalllogSiteParameterForm($entity, $cycle) {
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $disabled = false;
+        if( $cycle == "show" ) {
+            $disabled = true;
+        }
+
+        $params = array(
+            'cycle' => $cycle,
+            'user' => $user,
+            'em' => $em,
+            'container' => $this->container,
+        );
+
+        $form = $this->createForm(CalllogSiteParameterType::class, $entity, array(
+            'form_custom_value' => $params,
+            'disabled' => $disabled
+        ));
+
+        return $form;
+    }
+    
 }

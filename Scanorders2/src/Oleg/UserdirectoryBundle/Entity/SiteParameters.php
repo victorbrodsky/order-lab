@@ -685,12 +685,6 @@ class SiteParameters {
     private $liveSiteRootUrl;
 
     /**
-     * Defaults for an Organizational Group
-     * @ORM\OneToMany(targetEntity="OrganizationalGroupDefault", mappedBy="siteParameter", cascade={"persist","remove"})
-     */
-    private $organizationalGroupDefaults;
-
-    /**
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $enableMetaphone;
@@ -699,11 +693,6 @@ class SiteParameters {
      * @ORM\Column(type="text", nullable=true)
      */
     private $pathMetaphone;
-
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $calllogResources;
 
     /**
      * Initial Configuration Completed
@@ -785,11 +774,30 @@ class SiteParameters {
     ////////////////////////// EOF LDAP notice messages /////////////////////////
 
 
+    /////////////// Specific Site Parameters //////////////////////
+    /**
+     * New User pre-populated. Defaults for an Organizational Group
+     * @ORM\OneToMany(targetEntity="OrganizationalGroupDefault", mappedBy="siteParameter", cascade={"persist","remove"})
+     */
+    private $organizationalGroupDefaults;
+
+    /**
+     * Defaults for an Organizational Group
+     * @ORM\OneToOne(targetEntity="Oleg\CallLogBundle\Entity\CalllogSiteParameter", cascade={"persist","remove"})
+     */
+    private $callogSiteParameter;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $calllogResources;
+
+
+
     function __construct( $addobjects=true )
     {
         $this->organizationalGroupDefaults = new ArrayCollection();
     }
-
 
 
 
@@ -2846,6 +2854,24 @@ class SiteParameters {
     {
         $this->noticeLdapName = $noticeLdapName;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCallogSiteParameter()
+    {
+        return $this->callogSiteParameter;
+    }
+
+    /**
+     * @param mixed $callogSiteParameter
+     */
+    public function setCallogSiteParameter($callogSiteParameter)
+    {
+        $this->callogSiteParameter = $callogSiteParameter;
+        //$callogSiteParameter->setSiteParameter($this);
+    }
+
 
 
     
