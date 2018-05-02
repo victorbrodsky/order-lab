@@ -81,6 +81,9 @@ class CustomSelectorType extends AbstractType {
             case "messageCategory":
                 $transformer = new GenericTreeTransformer($this->om, $username, 'MessageCategory', 'OrderformBundle');
                 break;
+            case "patientList":
+                $transformer = new GenericTreeTransformer($this->om, $username, 'PatientListHierarchy', 'OrderformBundle');
+                break;
             case "patientLists":
                 $transformer = new GenericManyToManyTransformer($this->om, $username, 'PatientListHierarchy', 'OrderformBundle');
                 break;

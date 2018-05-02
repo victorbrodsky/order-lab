@@ -96,11 +96,11 @@ class CalllogSiteParameterType extends AbstractType
                     'label' => $label,
                     'required' => false,
                     //'read_only' => true, //this depracted and replaced by readonly in attr
-                    //'disabled' => true, //this disabled all children
+                    //'disabled' => false, //this disabled all children
                     'attr' => array(
-                        'readonly' => true,
+                        //'readonly' => true,
                         //'class' => 'ajax-combobox-compositetree combobox-without-add combobox-compositetree-postfix-level combobox-compositetree-read-only-exclusion ajax-combobox-messageCategory', //combobox-compositetree-readonly-parent
-                        'class' => 'ajax-combobox-compositetree', //combobox-compositetree-readonly-parent
+                        'class' => 'ajax-combobox-compositetree combobox-without-add', //combobox-compositetree-readonly-parent
                         'type' => 'hidden',
                         'data-compositetree-bundlename' => 'OrderformBundle',
                         'data-compositetree-classname' => 'MessageCategory',
@@ -237,21 +237,63 @@ class CalllogSiteParameterType extends AbstractType
             'attr' => array('class'=>'form-control geo-field-zip')
         ));
 
-        $builder->add('patientList', null, array(
-            'label' => "Patient List:",
-            'choice_label' => 'getTreeName',//'getTreeName',
-            'required' => false,
-            'attr' => array('class' => 'combobox'),
-            'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where("list.type = :typedef OR list.type = :typeadd")
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
-            },
-        ));
+//        $builder->add('patientList', null, array(
+//            'label' => "Patient List:",
+//            'choice_label' => 'getTreeName',//'getTreeName',
+//            'required' => false,
+//            'attr' => array('class' => 'combobox'),
+//            'query_builder' => function(EntityRepository $er) {
+//                return $er->createQueryBuilder('list')
+//                    ->where("list.type = :typedef OR list.type = :typeadd")
+//                    ->orderBy("list.orderinlist","ASC")
+//                    ->setParameters( array(
+//                        'typedef' => 'default',
+//                        'typeadd' => 'user-added',
+//                    ));
+//            },
+//        ));
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $message = $event->getData();
+            $form = $event->getForm();
+            $messageCategory = null;
+
+            $label = null;
+            $mapper = array(
+                'prefix' => "Oleg",
+                'className' => "PatientListHierarchy",
+                'bundleName' => "OrderformBundle",
+                'organizationalGroupType' => "MessageTypeClassifiers"
+            );
+            if ($message) {
+                $messageCategory = $message->getMessageCategory();
+                if ($messageCategory) {
+                    $label = $this->params['em']->getRepository('OlegOrderformBundle:PatientListHierarchy')->getLevelLabels($messageCategory, $mapper);
+                }
+            }
+            if (!$label) {
+                $label = $this->params['em']->getRepository('OlegOrderformBundle:PatientListHierarchy')->getLevelLabels(null, $mapper);
+            }
+
+            if ($label) {
+                $label = $label . ":";
+            }
+
+            //echo "show defaultInstitution label=".$label."<br>";
+
+            $form->add('patientList', CustomSelectorType::class, array(
+                'label' => $label,
+                'required' => false,
+                'attr' => array(
+                    //'class' => 'ajax-combobox-compositetree combobox-without-add combobox-compositetree-postfix-level combobox-compositetree-read-only-exclusion ajax-combobox-messageCategory', //combobox-compositetree-readonly-parent
+                    'class' => 'ajax-combobox-compositetree combobox-without-add', //combobox-compositetree-readonly-parent
+                    'type' => 'hidden',
+                    'data-compositetree-bundlename' => 'OrderformBundle',
+                    'data-compositetree-classname' => 'PatientListHierarchy',
+                ),
+                'classtype' => 'patientList'
+            ));
+
+        });
 
         if( $this->params['cycle'] != 'show' ) {
             $builder->add('save', SubmitType::class, array(
