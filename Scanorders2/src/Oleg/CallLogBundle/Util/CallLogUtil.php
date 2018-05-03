@@ -36,6 +36,10 @@ use Oleg\OrderformBundle\Entity\PatientMrn;
 use Oleg\OrderformBundle\Entity\PatientSex;
 use Oleg\OrderformBundle\Entity\PatientSuffix;
 use Oleg\OrderformBundle\Entity\Procedure;
+use Oleg\UserdirectoryBundle\Entity\GeoLocation;
+use Oleg\UserdirectoryBundle\Entity\Location;
+use Oleg\UserdirectoryBundle\Entity\Spot;
+use Oleg\UserdirectoryBundle\Entity\Tracker;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -1502,13 +1506,23 @@ class CallLogUtil
         return null;
     }
 
-    public function getDefaultPatientList( $patientListName = "Pathology Call Complex Patients" ) {
-        //$patientList = $this->em->getRepository('OlegOrderformBundle:PatientListHierarchy')->findOneByName($patientListName);
-        $patientList = null;
+    public function getDefaultPatientList() {
 
-        $patientLists = $this->em->getRepository('OlegOrderformBundle:PatientListHierarchy')->findBy(array('name'=>$patientListName,'type'=>array('default','user-added')));
-        if( count($patientLists) > 0 ) {
-            $patientList = $patientLists[0];
+        $userSecUtil = $this->container->get('user_security_utility');
+        $sitename = $this->container->getParameter('calllog.sitename');
+        $patientList = $userSecUtil->getSiteSettingParameter('patientList',$sitename);
+        //echo "patientList=".$patientList."<br>";
+
+        if( !$patientList ) {
+            $patientListName = "Pathology Call Complex Patients";
+
+            //$patientList = $this->em->getRepository('OlegOrderformBundle:PatientListHierarchy')->findOneByName($patientListName);
+            $patientList = null;
+
+            $patientLists = $this->em->getRepository('OlegOrderformBundle:PatientListHierarchy')->findBy(array('name'=>$patientListName,'type'=>array('default','user-added')));
+            if( count($patientLists) > 0 ) {
+                $patientList = $patientLists[0];
+            }
         }
 
         if( !$patientList ) {
@@ -2289,4 +2303,112 @@ class CallLogUtil
 
         return false;
     }
+
+    public function getDefaultMessageCategory() {
+        $sitename = $this->container->getParameter('calllog.sitename');
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        $messageCategory = $userSecUtil->getSiteSettingParameter('messageCategory',$sitename);
+        if( !$messageCategory ) {
+            $messageCategory = $this->em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName("Pathology Call Log Entry");
+        }
+
+        return $messageCategory;
+    }
+
+    public function getDefaultMrnType() {
+        $sitename = $this->container->getParameter('calllog.sitename');
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        $keytypemrn = $userSecUtil->getSiteSettingParameter('keytypemrn',$sitename);
+        if( !$keytypemrn ) {
+            $keytypemrn = $this->em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName("New York Hospital MRN");
+        }
+
+        return $keytypemrn;
+    }
+
+    public function addDefaultLocation($encounter,$user,$system) {
+
+        $sitename = $this->container->getParameter('calllog.sitename');
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        $withdummyfields = true;
+        //$locationTypePrimary = null;
+        $locationType = $this->em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Encounter Location");
+        if (!$locationType) {
+            throw new \Exception('Location type is not found by name Encounter Location');
+        }
+        $locationName = null;   //""; //"Encounter's Location";
+        $spotEntity = null;
+        $removable = 0;
+
+        $location = new Location($user);
+
+        if( $locationType ) {
+            $location->addLocationType($locationType);
+        }
+
+        $location->setName($locationName);
+        $location->setStatus(1);
+        $location->setRemovable($removable);
+
+        $geoLocation = new GeoLocation();
+        $location->setGeoLocation($geoLocation);
+
+        if( $withdummyfields ) {
+
+            //zip
+            //$geoLocation->setZip("10065");
+            $zip = $userSecUtil->getSiteSettingParameter('zip',$sitename);
+            $geoLocation->setZip($zip);
+
+            //city
+            $city = $userSecUtil->getSiteSettingParameter('city',$sitename);
+            if( !$city ) {
+                $city = $this->em->getRepository('OlegUserdirectoryBundle:CityList')->findOneByName('New York');
+            }
+            $geoLocation->setCity($city);
+
+            //state
+            $state = $userSecUtil->getSiteSettingParameter('state',$sitename);
+            if( !$state ) {
+                $state = $this->em->getRepository('OlegUserdirectoryBundle:States')->findOneByName('New York');
+            }
+            $geoLocation->setState($state);
+
+            //county
+            $county = $userSecUtil->getSiteSettingParameter('county',$sitename);
+            if( !$county ) {
+                $county = "New York County";
+            }
+            $geoLocation->setCounty($county);
+
+            //country
+            $country = $userSecUtil->getSiteSettingParameter('country',$sitename);
+            if( !$country ) {
+                $country = $this->em->getRepository('OlegUserdirectoryBundle:Countries')->findOneByName('New York');
+            }
+            $geoLocation->setCountry($country);
+
+        }
+
+        $tracker = $encounter->getTracker();
+        if( !$tracker) {
+            $tracker = new Tracker();
+            $encounter->setTracker($tracker);
+        }
+
+        if( !$spotEntity ) {
+            $spotEntity = new Spot($user,$system);
+        }
+        $spotEntity->setCurrentLocation($location);
+        $spotEntity->setCreation(new \DateTime());
+        $spotEntity->setSpottedOn(new \DateTime());
+
+        $tracker->addSpot($spotEntity);
+
+        return $encounter;
+    }
+
 }

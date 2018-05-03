@@ -173,6 +173,8 @@ class CallEntryController extends Controller
         $em = $this->getDoctrine()->getManager();
         $calllogUtil = $this->get('calllog_util');
         $userServiceUtil = $this->get('user_service_utility');
+        //$userSecUtil = $this->get('user_security_utility');
+        //$sitename = $this->container->getParameter('calllog.sitename');
 
         //$route = $request->get('_route');
         //$title = "Call Case List";
@@ -209,7 +211,7 @@ class CallEntryController extends Controller
 
         //child nodes of "Pathology Call Log Entry"
         //$messageCategoryParent = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName("Encounter Note");
-        $messageCategoriePathCall = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName("Pathology Call Log Entry");
+        $messageCategoriePathCall = $calllogUtil->getDefaultMessageCategory();
 
         $messageCategories = array();
         if( $messageCategoriePathCall ) {
@@ -241,11 +243,26 @@ class CallEntryController extends Controller
         //$node2 = array('id'=>2,'text'=>'node2');
         //$messageCategories = array($node1,$node2);
 
-        $defaultMrnType = $em->getRepository('OlegOrderformBundle:MrnType')->findOneByName("New York Hospital MRN");
+        //use site setting
+//        $defaultMrnType = $userSecUtil->getSiteSettingParameter('keytypemrn',$sitename);
+//        //echo "defaultMrnType=".$defaultMrnType."; ID=".$defaultMrnType->getId()."<br>";
+//        if( !$defaultMrnType ) {
+//            $defaultMrnType = $em->getRepository('OlegOrderformBundle:MrnType')->findOneByName("New York Hospital MRN");
+//        }
+        $defaultMrnType = $calllogUtil->getDefaultMrnType();
+
         $defaultMrnTypeId = null;
         if( $defaultMrnType ) {
             $defaultMrnTypeId = $defaultMrnType->getid();
         }
+        //echo "defaultMrnTypeId=".$defaultMrnTypeId."<br>";
+
+        //get mrntypes ($mrntypeChoices)
+//        $mrntypeChoices = array();
+//        $mrntypeChoicesArr = $em->getRepository('OlegOrderformBundle:MrnType')->findBy(array('type'=>array('default','user-added')));
+//        foreach( $mrntypeChoicesArr as $thisMrnType ) {
+//            $mrntypeChoices[$thisMrnType->getName()] = $thisMrnType->getId();
+//        }
 
         $referringProviders = $calllogUtil->getReferringProvidersWithUserWrappers();
 
@@ -292,6 +309,8 @@ class CallEntryController extends Controller
             'messageCategories' => $messageCategories, //for home to list all entries page
             //'messageCategoryDefault' => $messageCategoriePathCall->getId(),
             'mrntype' => $defaultMrnTypeId,
+            //'mrntypeChoices' => $mrntypeChoices,
+            //'mrntypeDefault' => $defaultMrnTypeId,
             'referringProviders' => $referringProviders,
             'search' => $searchFilter,
             'entryBodySearch' => $entryBodySearchFilter,
@@ -446,7 +465,7 @@ class CallEntryController extends Controller
 
         if( $searchFilter ) {
 
-            //echo "searchFilter=$searchFilter; mrntypeFilter=".$mrntypeFilter->getId()."<br>";
+            echo "searchFilter=$searchFilter; mrntypeFilter=".$mrntypeFilter."<br>";
             if ( strval($searchFilter) != strval(intval($searchFilter)) ) {
                 //echo "lastname.field string: $searchFilter<br>";
                 ////$dql->andWhere("mrn.field LIKE :search OR lastname.field LIKE :search OR message.messageTitle LIKE :search OR authorInfos.displayName LIKE :search OR messageCategory.name LIKE :search");
@@ -848,6 +867,7 @@ class CallEntryController extends Controller
         $userSecUtil = $this->get('user_security_utility');
         $orderUtil = $this->get('scanorder_utility');
         $em = $this->getDoctrine()->getManager();
+        //$sitename = $this->container->getParameter('calllog.sitename');
 
         $mrn = trim($request->get('mrn'));
         $mrntype = trim($request->get('mrntype'));
@@ -989,16 +1009,17 @@ class CallEntryController extends Controller
             //exit('1');
 
             //create a new spot and add it to the encounter's tracker
-            $withdummyfields = true;
-            //$locationTypePrimary = null;
-            $encounterLocationType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Encounter Location");
-            if (!$encounterLocationType) {
-                throw new \Exception('Location type is not found by name Encounter Location');
-            }
-            $locationName = null;   //""; //"Encounter's Location";
-            $spotEntity = null;
-            $removable = 0;
-            $encounter2->addContactinfoByTypeAndName($user, $system, $encounterLocationType, $locationName, $spotEntity, $withdummyfields, $em, $removable);
+//            $withdummyfields = true;
+//            //$locationTypePrimary = null;
+//            $encounterLocationType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Encounter Location");
+//            if (!$encounterLocationType) {
+//                throw new \Exception('Location type is not found by name Encounter Location');
+//            }
+//            $locationName = null;   //""; //"Encounter's Location";
+//            $spotEntity = null;
+//            $removable = 0;
+            //$encounter2->addContactinfoByTypeAndName($user, $system, $encounterLocationType, $locationName, $spotEntity, $withdummyfields, $em, $removable);
+            $encounter2 = $calllogUtil->addDefaultLocation($encounter2,$user,$system);
         }//!$encounter2
 
         //add new encounter to patient
@@ -1008,7 +1029,7 @@ class CallEntryController extends Controller
 
         //set patient list
         $patientList = $calllogUtil->getDefaultPatientList();
-        //echo "patientList ID=".$patientList->getId()."<br>";
+        //echo "patientList ID=".$patientList->getId().": ".$patientList."<br>";
         $message->getCalllogEntryMessage()->addPatientList($patientList);
 
         //add patient
@@ -1028,8 +1049,9 @@ class CallEntryController extends Controller
 
         //top message category id
         $formnodeTopHolderId = null;
-        $categoryStr = "Pathology Call Log Entry";
-        $messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
+        $messageCategory = $calllogUtil->getDefaultMessageCategory();
+        //$categoryStr = "Pathology Call Log Entry";
+        //$messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
         if( $messageCategory ) {
             $formnodeTopHolderId = $messageCategory->getId();
         }
@@ -1485,6 +1507,9 @@ class CallEntryController extends Controller
     public function createCalllogEntryForm($message, $mrntype=null, $mrn=null, $cycle, $readonlyEncounter=false) {
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
+        $calllogUtil = $this->get('calllog_util');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $sitename = $this->container->getParameter('calllog.sitename');
 
         //$patient = $message->getPatient()->first();
 
@@ -1504,7 +1529,14 @@ class CallEntryController extends Controller
         ///////////////////////
 
         if( !$mrntype ) {
-            $mrntype = 1;
+            //$mrntype = 1;
+//            $defaultMrnType = $userSecUtil->getSiteSettingParameter('keytypemrn',$sitename);
+//            //echo "defaultMrnType=".$defaultMrnType.$defaultMrnType."<br>";
+//            if( !$defaultMrnType ) {
+//                $defaultMrnType = $em->getRepository('OlegOrderformBundle:MrnType')->findOneByName("New York Hospital MRN");
+//            }
+            $defaultMrnType = $calllogUtil->getDefaultMrnType();
+            $mrntype = $defaultMrnType->getId();
         }
 
         if( $cycle == 'show' ) {
@@ -1514,7 +1546,8 @@ class CallEntryController extends Controller
         }
 
         //$timezones
-        $userTimeZone = $user->getPreferences()->getTimezone();
+        //$userTimeZone = $user->getPreferences()->getTimezone();
+        $userTimeZone = $userSecUtil->getSiteSettingParameter('timezone',$sitename);
 
         $params = array(
             'cycle' => $cycle,  //'new',
@@ -1550,6 +1583,7 @@ class CallEntryController extends Controller
     public function createCalllogEntryMessage($user,$permittedInstitutions,$system,$messageCategoryId=null) {
         $em = $this->getDoctrine()->getManager();
         $orderUtil = $this->get('scanorder_utility');
+        $calllogUtil = $this->get('calllog_util');
 
         $message = new Message();
         $message->setPurpose("For Internal Use by WCMC Department of Pathology for Call Log Book");
@@ -1565,12 +1599,13 @@ class CallEntryController extends Controller
         if( $messageCategoryId ) {
             $messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->find($messageCategoryId);
         } else {
-            $categoryStr = "Pathology Call Log Entry";
+            //$categoryStr = "Pathology Call Log Entry";
             //$categoryStr = "Nesting Test"; //testing
-            $messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
+            //$messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
+            $messageCategory = $calllogUtil->getDefaultMessageCategory();
         }
         if( !$messageCategory ) {
-            throw new \Exception( "Message category is not found by name '".$categoryStr."'" );
+            throw new \Exception( "Default Message category is not found." );
         }
         $message->setMessageCategory($messageCategory);
 
@@ -2834,8 +2869,9 @@ class CallEntryController extends Controller
 
         //top message category id
         $formnodeTopHolderId = null;
-        $categoryStr = "Pathology Call Log Entry";
-        $messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
+        //$categoryStr = "Pathology Call Log Entry";
+        //$messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
+        $messageCategory = $calllogUtil->getDefaultMessageCategory();
         if( $messageCategory ) {
             $formnodeTopHolderId = $messageCategory->getId();
         }

@@ -254,6 +254,15 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
         }
         return implode($separator,$strArr);
     }
+    public function getTreeNameReverse($separator=" <= ") {
+        $breadCrumbs = $this->getEntityBreadcrumbs();
+        $strArr = array();
+        foreach( $breadCrumbs as $breadCrumb ) {
+            $strArr[] = $breadCrumb->getName()."";
+        }
+        $strArr = array_reverse($strArr);
+        return implode($separator,$strArr);
+    }
 
 
     public function printTree() {

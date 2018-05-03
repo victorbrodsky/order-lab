@@ -785,7 +785,7 @@ class SiteParameters {
      * Defaults for an Organizational Group
      * @ORM\OneToOne(targetEntity="Oleg\CallLogBundle\Entity\CalllogSiteParameter", cascade={"persist","remove"})
      */
-    private $callogSiteParameter;
+    private $calllogSiteParameter;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -2858,18 +2858,17 @@ class SiteParameters {
     /**
      * @return mixed
      */
-    public function getCallogSiteParameter()
+    public function getCalllogSiteParameter()
     {
-        return $this->callogSiteParameter;
+        return $this->calllogSiteParameter;
     }
 
     /**
-     * @param mixed $callogSiteParameter
+     * @param mixed $calllogSiteParameter
      */
-    public function setCallogSiteParameter($callogSiteParameter)
+    public function setCalllogSiteParameter($calllogSiteParameter)
     {
-        $this->callogSiteParameter = $callogSiteParameter;
-        //$callogSiteParameter->setSiteParameter($this);
+        $this->calllogSiteParameter = $calllogSiteParameter;
     }
 
 

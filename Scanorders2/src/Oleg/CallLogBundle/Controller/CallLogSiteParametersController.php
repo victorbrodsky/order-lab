@@ -60,10 +60,10 @@ class CallLogSiteParametersController extends SiteParametersController
         $siteParameters = $entities[0];
 
         //create one CalllogSiteParameter
-        if( !$siteParameters->getCallogSiteParameter() ) {
+        if( !$siteParameters->getCalllogSiteParameter() ) {
             //echo "CalllogSiteParameter null <br>";
             $calllogSiteParameter = new CalllogSiteParameter();
-            $siteParameters->setCallogSiteParameter($calllogSiteParameter);
+            $siteParameters->setCalllogSiteParameter($calllogSiteParameter);
             $em->flush();
         }
 
@@ -144,24 +144,24 @@ class CallLogSiteParametersController extends SiteParametersController
             throw new \Exception( 'Must have only one parameter object. Found '.count($entities).'object(s)' );
         }
         $siteParameters = $entities[0];
-        $callogSiteParameter = $siteParameters->getCallogSiteParameter();
-        //echo "callogSiteParameter=".$callogSiteParameter->getId()."<br>";
+        $calllogSiteParameter = $siteParameters->getCalllogSiteParameter();
+        //echo "calllogSiteParameter=".$calllogSiteParameter->getId()."<br>";
 
-        $form = $this->createCalllogSiteParameterForm($callogSiteParameter,$cycle);
+        $form = $this->createCalllogSiteParameterForm($calllogSiteParameter,$cycle);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
 
             //exit('submit');
-            $em->persist($callogSiteParameter);
+            $em->persist($calllogSiteParameter);
             $em->flush();
 
             return $this->redirect($this->generateUrl('calllog_siteparameters'));
         }
 
         return array(
-            'entity' => $callogSiteParameter,
+            'entity' => $calllogSiteParameter,
             'form'   => $form->createView(),
             'cycle' => $cycle,
             'title' => "Update Call Log Specific Site Parameters"
@@ -190,12 +190,12 @@ class CallLogSiteParametersController extends SiteParametersController
             throw new \Exception( 'Must have only one parameter object. Found '.count($entities).'object(s)' );
         }
         $siteParameters = $entities[0];
-        $callogSiteParameter = $siteParameters->getCallogSiteParameter();
+        $calllogSiteParameter = $siteParameters->getCalllogSiteParameter();
 
-        $form = $this->createCalllogSiteParameterForm($callogSiteParameter,$cycle);
+        $form = $this->createCalllogSiteParameterForm($calllogSiteParameter,$cycle);
 
         return array(
-            'entity' => $callogSiteParameter,
+            'entity' => $calllogSiteParameter,
             'form'   => $form->createView(),
             'cycle' => $cycle,
             'title' => "Call Log Specific Site Parameters"

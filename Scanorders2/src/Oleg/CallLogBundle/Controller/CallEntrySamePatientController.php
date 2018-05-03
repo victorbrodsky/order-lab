@@ -223,16 +223,17 @@ class CallEntrySamePatientController extends CallEntryController
             //exit('1');
 
             //create a new spot and add it to the encounter's tracker
-            $withdummyfields = true;
-            //$locationTypePrimary = null;
-            $encounterLocationType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Encounter Location");
-            if (!$encounterLocationType) {
-                throw new \Exception('Location type is not found by name Encounter Location');
-            }
-            $locationName = null;   //""; //"Encounter's Location";
-            $spotEntity = null;
-            $removable = 0;
-            $encounter2->addContactinfoByTypeAndName($user, $system, $encounterLocationType, $locationName, $spotEntity, $withdummyfields, $em, $removable);
+//            $withdummyfields = true;
+//            //$locationTypePrimary = null;
+//            $encounterLocationType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Encounter Location");
+//            if (!$encounterLocationType) {
+//                throw new \Exception('Location type is not found by name Encounter Location');
+//            }
+//            $locationName = null;   //""; //"Encounter's Location";
+//            $spotEntity = null;
+//            $removable = 0;
+//            $encounter2->addContactinfoByTypeAndName($user, $system, $encounterLocationType, $locationName, $spotEntity, $withdummyfields, $em, $removable);
+            $encounter2 = $calllogUtil->addDefaultLocation($encounter2,$user,$system);
         }//!$encounter2
 
         $message = $this->createCalllogEntryMessage($user,$permittedInstitutions,$system,$messageTypeId);
@@ -259,8 +260,9 @@ class CallEntrySamePatientController extends CallEntryController
 
         //top message category id
         $formnodeTopHolderId = null;
-        $categoryStr = "Pathology Call Log Entry";
-        $messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
+        //$categoryStr = "Pathology Call Log Entry";
+        //$messageCategory = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName($categoryStr);
+        $messageCategory = $calllogUtil->getDefaultMessageCategory();
         if( $messageCategory ) {
             $formnodeTopHolderId = $messageCategory->getId();
         }

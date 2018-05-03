@@ -586,7 +586,8 @@ class CallLogPatientController extends PatientController {
         //$template = $this->render('OlegUserdirectoryBundle:Profile:edit_user_only.html.twig',$showUserArr)->getContent();
 
         //child nodes of "Pathology Call Log Entry"
-        $messageCategoriePathCall = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName("Pathology Call Log Entry");
+        //$messageCategoriePathCall = $em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName("Pathology Call Log Entry");
+        $messageCategoriePathCall = $calllogUtil->getDefaultMessageCategory();
         $messageCategories = array();
         if( $messageCategoriePathCall ) {
             //$messageCategories = $messageCategoriePathCall->printTreeSelectList();

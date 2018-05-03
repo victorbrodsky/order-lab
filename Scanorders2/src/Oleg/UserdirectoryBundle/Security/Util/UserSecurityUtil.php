@@ -1172,7 +1172,7 @@ class UserSecurityUtil {
 
 
     //return parameter specified by $parameter. If the first time login when site parameter does not exist yet, return -1.
-    public function getSiteSettingParameter( $parameter ) {
+    public function getSiteSettingParameter( $parameter, $sitename=null ) {
 
         $params = $this->em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
 
@@ -1198,7 +1198,16 @@ class UserSecurityUtil {
         }
 
         $getSettingMethod = "get".$parameter;
-        $res = $param->$getSettingMethod();
+
+        //Get specific site setting parameter
+        if( $sitename ) {
+            //Convention name: CalllogSiteParameter
+            $getterSiteParameter = "get".$sitename."SiteParameter"; //getCallogSiteParameter
+            $specificSiteSettingParameter = $param->$getterSiteParameter();
+            $res = $specificSiteSettingParameter->$getSettingMethod();
+        } else {
+            $res = $param->$getSettingMethod();
+        }
 
         return $res;
     }

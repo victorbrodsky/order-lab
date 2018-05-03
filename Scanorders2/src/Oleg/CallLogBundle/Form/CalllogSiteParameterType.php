@@ -19,8 +19,10 @@ namespace Oleg\CallLogBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
 use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
+use Oleg\UserdirectoryBundle\Util\TimeZoneUtil;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -61,80 +63,6 @@ class CalllogSiteParameterType extends AbstractType
                     ));
             },
         ));
-
-        /////////////////////////////////////// messageCategory ///////////////////////////////////////
-        if(1) {
-            $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-                $message = $event->getData();
-                $form = $event->getForm();
-                $messageCategory = null;
-
-                $label = null;
-                $mapper = array(
-                    'prefix' => "Oleg",
-                    'className' => "MessageCategory",
-                    'bundleName' => "OrderformBundle",
-                    'organizationalGroupType' => "MessageTypeClassifiers"
-                );
-                if ($message) {
-                    $messageCategory = $message->getMessageCategory();
-                    if ($messageCategory) {
-                        $label = $this->params['em']->getRepository('OlegOrderformBundle:MessageCategory')->getLevelLabels($messageCategory, $mapper);
-                    }
-                }
-                if (!$label) {
-                    $label = $this->params['em']->getRepository('OlegOrderformBundle:MessageCategory')->getLevelLabels(null, $mapper);
-                }
-
-                if ($label) {
-                    $label = $label . ":";
-                }
-
-                //echo "show defaultInstitution label=".$label."<br>";
-
-                $form->add('messageCategory', CustomSelectorType::class, array(
-                    'label' => $label,
-                    'required' => false,
-                    //'read_only' => true, //this depracted and replaced by readonly in attr
-                    //'disabled' => false, //this disabled all children
-                    'attr' => array(
-                        //'readonly' => true,
-                        //'class' => 'ajax-combobox-compositetree combobox-without-add combobox-compositetree-postfix-level combobox-compositetree-read-only-exclusion ajax-combobox-messageCategory', //combobox-compositetree-readonly-parent
-                        'class' => 'ajax-combobox-compositetree combobox-without-add', //combobox-compositetree-readonly-parent
-                        'type' => 'hidden',
-                        'data-compositetree-bundlename' => 'OrderformBundle',
-                        'data-compositetree-classname' => 'MessageCategory',
-                        //'data-label-prefix' => 'Default ',
-                        //'data-readonly-parent-level' => '2', //readonly all children from level 2 up (including this level)
-                        //'data-read-only-exclusion-after-level' => '2', //readonly will be disable for all levels after indicated level
-                        //'data-label-postfix-value-level' => '<span style="color:red">*</span>', //postfix after level
-                        //'data-label-postfix-level' => '4', //postfix after level "Issue"
-                    ),
-                    'classtype' => 'messageCategory'
-                ));
-
-
-                //add form node fields
-                //$form = $this->addFormNodes($form,$messageCategory,$this->params);
-
-            });
-        }
-        /////////////////////////////////////// EOF messageCategory ///////////////////////////////////////
-//        $builder->add('messageCategory', null, array(
-//            'label' => 'Message Group:',
-//            'required' => false,
-//            'choice_label' => 'getTreeName',
-//            'attr' => array('class' => 'combobox'),
-//            'query_builder' => function(EntityRepository $er) {
-//                return $er->createQueryBuilder('list')
-//                    ->where("list.type = :typedef OR list.type = :typeadd")
-//                    ->orderBy("list.orderinlist","ASC")
-//                    ->setParameters( array(
-//                        'typedef' => 'default',
-//                        'typeadd' => 'user-added',
-//                    ));
-//            },
-//        ));
 
         $builder->add('city', null, array(
             'label' => 'City:',
@@ -237,63 +165,152 @@ class CalllogSiteParameterType extends AbstractType
             'attr' => array('class'=>'form-control geo-field-zip')
         ));
 
-//        $builder->add('patientList', null, array(
-//            'label' => "Patient List:",
-//            'choice_label' => 'getTreeName',//'getTreeName',
-//            'required' => false,
-//            'attr' => array('class' => 'combobox'),
-//            'query_builder' => function(EntityRepository $er) {
-//                return $er->createQueryBuilder('list')
-//                    ->where("list.type = :typedef OR list.type = :typeadd")
-//                    ->orderBy("list.orderinlist","ASC")
-//                    ->setParameters( array(
-//                        'typedef' => 'default',
-//                        'typeadd' => 'user-added',
-//                    ));
-//            },
-//        ));
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            $message = $event->getData();
-            $form = $event->getForm();
-            $messageCategory = null;
+        $tzUtil = new TimeZoneUtil();
+        $builder->add('timezone', ChoiceType::class, array(
+            'label' => false,
+            'choices' => $tzUtil->tz_list(),
+            'choices_as_values' => true,
+            'required' => true,
+            //'data' => $this->params['timezoneDefault'],
+            'preferred_choices' => array('America/New_York'),
+            'attr' => array('class' => 'combobox combobox-width')
+        ));
 
-            $label = null;
-            $mapper = array(
-                'prefix' => "Oleg",
-                'className' => "PatientListHierarchy",
-                'bundleName' => "OrderformBundle",
-                'organizationalGroupType' => "MessageTypeClassifiers"
-            );
-            if ($message) {
-                $messageCategory = $message->getMessageCategory();
-                if ($messageCategory) {
-                    $label = $this->params['em']->getRepository('OlegOrderformBundle:PatientListHierarchy')->getLevelLabels($messageCategory, $mapper);
+        /////////////////////////////////////// messageCategory ///////////////////////////////////////
+        if(0) {
+            $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+                $message = $event->getData();
+                $form = $event->getForm();
+                $messageCategory = null;
+
+                $label = null;
+                $mapper = array(
+                    'prefix' => "Oleg",
+                    'className' => "MessageCategory",
+                    'bundleName' => "OrderformBundle",
+                    'organizationalGroupType' => "MessageTypeClassifiers"
+                );
+                if ($message) {
+                    $messageCategory = $message->getMessageCategory();
+                    if ($messageCategory) {
+                        $label = $this->params['em']->getRepository('OlegOrderformBundle:MessageCategory')->getLevelLabels($messageCategory, $mapper);
+                    }
                 }
-            }
-            if (!$label) {
-                $label = $this->params['em']->getRepository('OlegOrderformBundle:PatientListHierarchy')->getLevelLabels(null, $mapper);
-            }
+                if (!$label) {
+                    $label = $this->params['em']->getRepository('OlegOrderformBundle:MessageCategory')->getLevelLabels(null, $mapper);
+                }
 
-            if ($label) {
-                $label = $label . ":";
-            }
+                if ($label) {
+                    $label = $label . ":";
+                }
 
-            //echo "show defaultInstitution label=".$label."<br>";
+                //echo "show defaultInstitution label=".$label."<br>";
 
-            $form->add('patientList', CustomSelectorType::class, array(
-                'label' => $label,
+                $form->add('messageCategory', CustomSelectorType::class, array(
+                    'label' => $label,
+                    'required' => false,
+                    //'read_only' => true, //this depracted and replaced by readonly in attr
+                    //'disabled' => false, //this disabled all children
+                    'attr' => array(
+                        //'readonly' => true,
+                        //'class' => 'ajax-combobox-compositetree combobox-without-add combobox-compositetree-postfix-level combobox-compositetree-read-only-exclusion ajax-combobox-messageCategory', //combobox-compositetree-readonly-parent
+                        'class' => 'ajax-combobox-compositetree combobox-without-add', //combobox-compositetree-readonly-parent
+                        'type' => 'hidden',
+                        'data-compositetree-bundlename' => 'OrderformBundle',
+                        'data-compositetree-classname' => 'MessageCategory',
+                        //'data-label-prefix' => 'Default ',
+                        //'data-readonly-parent-level' => '2', //readonly all children from level 2 up (including this level)
+                        //'data-read-only-exclusion-after-level' => '2', //readonly will be disable for all levels after indicated level
+                        //'data-label-postfix-value-level' => '<span style="color:red">*</span>', //postfix after level
+                        //'data-label-postfix-level' => '4', //postfix after level "Issue"
+                    ),
+                    'classtype' => 'messageCategory'
+                ));
+
+
+                //add form node fields
+                //$form = $this->addFormNodes($form,$messageCategory,$this->params);
+
+            });
+            /////////////////////////////////////// EOF messageCategory ///////////////////////////////////////
+        } else {
+            $builder->add('messageCategory', null, array(
+                'label' => 'Message Group:',
                 'required' => false,
-                'attr' => array(
-                    //'class' => 'ajax-combobox-compositetree combobox-without-add combobox-compositetree-postfix-level combobox-compositetree-read-only-exclusion ajax-combobox-messageCategory', //combobox-compositetree-readonly-parent
-                    'class' => 'ajax-combobox-compositetree combobox-without-add', //combobox-compositetree-readonly-parent
-                    'type' => 'hidden',
-                    'data-compositetree-bundlename' => 'OrderformBundle',
-                    'data-compositetree-classname' => 'PatientListHierarchy',
-                ),
-                'classtype' => 'patientList'
+                'choice_label' => 'getTreeNameReverse',
+                'attr' => array('class' => 'combobox'),
+                'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist","ASC")
+                        ->setParameters( array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
             ));
+        }
 
-        });
+        if(0) {
+            $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+                $message = $event->getData();
+                $form = $event->getForm();
+                $messageCategory = null;
+
+                $label = null;
+                $mapper = array(
+                    'prefix' => "Oleg",
+                    'className' => "PatientListHierarchy",
+                    'bundleName' => "OrderformBundle",
+                    'organizationalGroupType' => "MessageTypeClassifiers"
+                );
+                if ($message) {
+                    $messageCategory = $message->getMessageCategory();
+                    if ($messageCategory) {
+                        $label = $this->params['em']->getRepository('OlegOrderformBundle:PatientListHierarchy')->getLevelLabels($messageCategory, $mapper);
+                    }
+                }
+                if (!$label) {
+                    $label = $this->params['em']->getRepository('OlegOrderformBundle:PatientListHierarchy')->getLevelLabels(null, $mapper);
+                }
+
+                if ($label) {
+                    $label = $label . ":";
+                }
+
+                //echo "show defaultInstitution label=".$label."<br>";
+
+                $form->add('patientList', CustomSelectorType::class, array(
+                    'label' => $label,
+                    'required' => false,
+                    'attr' => array(
+                        //'class' => 'ajax-combobox-compositetree combobox-without-add combobox-compositetree-postfix-level combobox-compositetree-read-only-exclusion ajax-combobox-messageCategory', //combobox-compositetree-readonly-parent
+                        'class' => 'ajax-combobox-compositetree combobox-without-add', //combobox-compositetree-readonly-parent
+                        'type' => 'hidden',
+                        'data-compositetree-bundlename' => 'OrderformBundle',
+                        'data-compositetree-classname' => 'PatientListHierarchy',
+                    ),
+                    'classtype' => 'patientList'
+                ));
+
+            });
+        } else {
+            $builder->add('patientList', null, array(
+                'label' => "Patient List:",
+                'choice_label' => 'getTreeNameReverse',//'getTreeName',
+                'required' => false,
+                'attr' => array('class' => 'combobox'),
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist", "ASC")
+                        ->setParameters(array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+            ));
+        }
 
         if( $this->params['cycle'] != 'show' ) {
             $builder->add('save', SubmitType::class, array(
