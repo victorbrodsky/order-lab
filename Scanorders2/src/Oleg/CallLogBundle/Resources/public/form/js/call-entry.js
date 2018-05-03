@@ -1524,6 +1524,7 @@ function calllogPresetMrnMrntype(holderId) {
     var holder = getHolder(holderId);
     var mrn = $('.patientmrn-mask').val();
     var mrntype = $('.mrntype-combobox').select2('val');
+    //console.log("1 preset mrntype="+mrntype);
 
     //var mrn = $('#url-mrn').val();
     //var mrntype = $('#url-mrntype').val();
@@ -1549,6 +1550,7 @@ function calllogPresetMrnMrntype(holderId) {
 
         var formtype = $('#formtype').val();
         var mrntype = $('#mrntype').val();
+        //console.log("2 preset mrntype="+mrntype);
         findCalllogPatient(holderId, formtype, mrntype);
     }
 

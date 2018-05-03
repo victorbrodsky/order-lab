@@ -465,7 +465,7 @@ class CallEntryController extends Controller
 
         if( $searchFilter ) {
 
-            echo "searchFilter=$searchFilter; mrntypeFilter=".$mrntypeFilter."<br>";
+            //echo "searchFilter=$searchFilter; mrntypeFilter=".$mrntypeFilter."<br>";
             if ( strval($searchFilter) != strval(intval($searchFilter)) ) {
                 //echo "lastname.field string: $searchFilter<br>";
                 ////$dql->andWhere("mrn.field LIKE :search OR lastname.field LIKE :search OR message.messageTitle LIKE :search OR authorInfos.displayName LIKE :search OR messageCategory.name LIKE :search");
