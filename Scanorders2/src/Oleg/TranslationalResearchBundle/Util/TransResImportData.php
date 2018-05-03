@@ -50,6 +50,7 @@ class TransResImportData
 
 
     // url: /import-old-data/
+    //import projects from: TRF_DRAFT_PROJECT and RF_PROJECT_INFO
     public function importOldData() {
 
         ini_set('max_execution_time', 3600); //3600 seconds = 60 minutes

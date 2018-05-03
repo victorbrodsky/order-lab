@@ -63,9 +63,13 @@
         <br>
 
         <div class="row">
-            <div class="col-xs-12">
+            <div class="col-xs-2" align="left">
+            </div>
+            <div class="col-xs-8">
                 {{ form_widget(filterform.mrntype) }}
                 {{ form_widget(filterform.search) }}
+            </div>
+            <div class="col-xs-2" align="left">
             </div>
         </div>
 
@@ -84,19 +88,19 @@
             <div class="panel-body">
 
                 <div class="row">
-                    <div class="col-xs-2" align="left">
+                    <div class="col-xs-3" align="left">
                         {{ form_widget(filterform.author) }}
                     </div>
 
-                    <div class="col-xs-2" align="left">
+                    <div class="col-xs-3" align="left">
                         {{ form_widget(filterform.referringProvider) }}
                     </div>
 
-                    <div class="col-xs-2" align="left">
+                    <div class="col-xs-3" align="left">
                         {{ form_widget(filterform.referringProviderSpecialty) }}
                     </div>
 
-                    <div class="col-xs-4" align="left">
+                    <div class="col-xs-3" align="left">
                         {{ form_widget(filterform.encounterLocation) }}
                     </div>
                 </div>
@@ -112,7 +116,7 @@
                     <div class="col-xs-2" align="left">
                         {{ form_widget(filterform.attending) }}
                     </div>
-                    <div class="col-xs-4" align="left">
+                    <div class="col-xs-6" align="left">
                         {{ form_widget(filterform.entryBodySearch) }}
                     </div>
                 </div>

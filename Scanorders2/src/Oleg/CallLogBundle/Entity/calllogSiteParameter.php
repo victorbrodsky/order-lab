@@ -97,6 +97,16 @@ class CalllogSiteParameter
      **/
     private $patientList;
 
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $bodySearch1;
+//
+//    /**
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $bodySearch2;
+
 
 
     public function __construct() {
