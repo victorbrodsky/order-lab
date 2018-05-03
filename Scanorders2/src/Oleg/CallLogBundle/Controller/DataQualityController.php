@@ -674,6 +674,7 @@ class DataQualityController extends CallEntryController
     public function createPatientForm($patient, $mrntype=null, $mrn=null) {
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
+        $calllogUtil = $this->get('calllog_util');
 
         ////////////////////////
 //        $query = $em->createQueryBuilder()
@@ -691,7 +692,9 @@ class DataQualityController extends CallEntryController
         ///////////////////////
 
         if( !$mrntype ) {
-            $mrntype = 1;
+            //$mrntype = 1;
+            $defaultMrnType = $calllogUtil->getDefaultMrnType();
+            $mrntype = $defaultMrnType->getId();
         }
 
         $params = array(
