@@ -180,6 +180,9 @@ class TransResImportData
             $exportId = trim($exportId);
 
             $comment = $this->getValueByHeaderName('COMMITTEE_COMMENT', $rowData, $headers);
+            //DATE_SEND
+            $dateSend = $this->getValueByHeaderName('DATE_SEND', $rowData, $headers);
+
             $userId = $this->getValueByHeaderName('USER_ID', $rowData, $headers);
 
             $reviewerUser = $userMapper[$userId];
@@ -208,10 +211,88 @@ class TransResImportData
                 $res = $this->addComment($request, $reviewerUser, $project, $comment, "[auto imported comment]: ");
             }
 
-            //new: add all default reviewers. Do it when processing Committee comments
-            $transresUtil->addDefaultStateReviewers($project,"irb_review");
-            $transresUtil->addDefaultStateReviewers($project,"admin_review");
-            $transresUtil->addDefaultStateReviewers($project,"final_review");
+        }
+
+    }
+
+    //TRF_COMMENTS_RESP
+    public function importCommitteeComments2( $request, $filename ) {
+
+        $transresUtil = $this->container->get('transres_util');
+        $logger = $this->container->get('logger');
+
+        $userMapper = $this->getUserMapper('TRF_EMAIL_INFO.xlsx');
+
+        $inputFileName = __DIR__ . "/" . $filename; //'/TRF_PROJECT_INFO.xlsx';
+
+        try {
+            $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
+            $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+            $objPHPExcel = $objReader->load($inputFileName);
+        } catch( Exception $e ) {
+            $error = 'Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage();
+            $logger->error($error);
+            die($error);
+        }
+
+        $sheet = $objPHPExcel->getSheet(0);
+        $highestRow = $sheet->getHighestRow();
+        $highestColumn = $sheet->getHighestColumn();
+
+        $headers = $rowData = $sheet->rangeToArray('A' . 1 . ':' . $highestColumn . 1,
+            NULL,
+            TRUE,
+            FALSE);
+
+
+        //for each request in excel (start at row 2)
+        for( $row = 2; $row <= $highestRow; $row++ ) {
+
+            //Read a row of data into an array
+            $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
+                NULL,
+                TRUE,
+                FALSE);
+
+
+            $exportId = $this->getValueByHeaderName('PROJECT_ID', $rowData, $headers);
+            $exportId = trim($exportId);
+
+            //TODO: add reviewer and PI comments as the committee comments. Set created date.
+            exit('TODO: add reviewer and PI comments as the committee comments');
+            $reviewerComment = $this->getValueByHeaderName('REVIEWER', $rowData, $headers);
+            $piComment = $this->getValueByHeaderName('PI_RESPONSE', $rowData, $headers);
+            //DATE_SEND
+            $createSend = $this->getValueByHeaderName('CREATED_DATE', $rowData, $headers);
+
+            $userId = $this->getValueByHeaderName('USER_NAME', $rowData, $headers);
+
+            $reviewerUser = $userMapper[$userId];
+
+            if( $reviewerUser ) {
+
+                $project = $this->em->getRepository('OlegTranslationalResearchBundle:Project')->findOneByExportId($exportId);
+                if( !$project ) {
+                    exit("Project wit external ID '$exportId' does not exist.");
+                }
+
+                //add this user as non-primary committee reviewer
+                if( false === $this->isReviewsReviewer($reviewerUser, $project->getCommitteeReviews()) ) {
+                    $reviewEntity = new CommitteeReview($reviewerUser);
+
+                    $reviewEntity->setReviewer($reviewerUser);
+
+                    //add as non-primary primaryReview boolean
+                    $reviewEntity->setPrimaryReview(false);
+
+                    $project->addCommitteeReview($reviewEntity);
+                }
+            }
+
+            if( $comment ) {
+                $res = $this->addComment($request, $reviewerUser, $project, $comment, "[auto imported comment]: ");
+            }
+
 
         }
 
@@ -348,7 +429,7 @@ class TransResImportData
     }
 
     public function importProject( $request, $adminReviewer, $rowData, $headers, $exportId, $specialty, $systemUser, $notExistingStatuses, $notExistingUsers ) {
-        //$transresUtil = $this->container->get('transres_util');
+        $transresUtil = $this->container->get('transres_util');
         $logger = $this->container->get('logger');
         $em = $this->em;
 
@@ -712,6 +793,10 @@ class TransResImportData
 
         //FUNDING_APPROVAL_COMMENT ???
 
+        //Add all default reviewers except Committee
+        $transresUtil->addDefaultStateReviewers($project,"irb_review");
+        $transresUtil->addDefaultStateReviewers($project,"admin_review");
+        $transresUtil->addDefaultStateReviewers($project,"final_review");
 
         //save project to DB before form nodes
         $saveFlag = true;
@@ -821,7 +906,7 @@ class TransResImportData
     }
 
 
-    public function addComment($request,$author,$project,$comment,$prefix="[auto imported comment]: ") {
+    public function addComment($request,$author,$project,$commentStr,$prefix="[auto imported comment]: ",$createDateStr=null) {
         $commentManager = $this->container->get('fos_comment.manager.comment');
         $threadManager = $this->container->get('fos_comment.manager.thread');
 
@@ -834,7 +919,7 @@ class TransResImportData
         //exit('111');
 
         //echo "adminComment=".$adminComment."<br>";
-        if( $comment ) {
+        if( $commentStr ) {
 
             //transres-Project-3-irb_review, transres-Project-18-admin_review
             $threadId = "transres-Project-" . $project->getId() . "-" . "admin_review";
@@ -865,12 +950,17 @@ class TransResImportData
             $comment = $commentManager->createComment($thread);
             $comment->setAuthor($author);
 
+            if( $createDateStr ) {
+                $createDate = $this->transformDatestrToDate($createDateStr);
+                $comment->setCreatedAt($createDate);
+            }
+
             //set Depth
             //$comment->setDepth(0);
 
             //set comment body
-            $adminComment = $prefix . "" . $author;
-            $comment->setBody($adminComment);
+            $commentStr = $prefix . "" . $commentStr;
+            $comment->setBody($commentStr);
 
             $comment->setAuthorType("Administrator");
             $comment->setAuthorTypeDescription("Administrator");
@@ -882,7 +972,7 @@ class TransResImportData
                 //View::createRouteRedirect('fos_comment_get_thread_comment', array('id' => $id, 'commentId' => $form->getData()->getId()), 201);
             }
 
-            $res = "Comment created '$adminComment'' with threadID=" . $thread->getId() . "; commentID" . $comment->getId() . "<br>";
+            $res = "Comment created '$commentStr' with threadID=" . $thread->getId() . "; commentID" . $comment->getId() . "<br>";
         }
 
         return $res;
