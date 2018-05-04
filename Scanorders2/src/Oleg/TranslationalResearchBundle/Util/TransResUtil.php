@@ -724,7 +724,7 @@ class TransResUtil
         //echo "project state=".$currentState."<br>";
 
         $irbReviewState = "irb_review";
-        if( $currentState == $irbReviewState || $addForAllStates ) {
+        if( $currentState == $irbReviewState || $addForAllStates === true || $addForAllStates === $irbReviewState ) {
             $defaultReviewers = $this->em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findBy(
                 array(
                     "state" => $irbReviewState,
@@ -751,7 +751,7 @@ class TransResUtil
         }
 
         $adminReviewState = "admin_review";
-        if( $currentState == $adminReviewState || $addForAllStates ) {
+        if( $currentState == $adminReviewState || $addForAllStates === true || $addForAllStates === $irbReviewState ) {
             //$defaultReviewers = $this->em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findByState($adminReviewState);
             $defaultReviewers = $this->em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findBy(
                 array(
@@ -777,7 +777,7 @@ class TransResUtil
         }
 
         $committeeReviewState = "committee_review";
-        if( $currentState == $committeeReviewState || $addForAllStates ) {
+        if( $currentState == $committeeReviewState || $addForAllStates === true || $addForAllStates === $irbReviewState ) {
 
             //$defaultReviewers = $this->em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findByState($committeeReviewState,array("primaryReview"=>"DESC"));
             $defaultReviewers = $this->em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findBy(
@@ -809,7 +809,7 @@ class TransResUtil
         }
 
         $finalReviewState = "final_review";
-        if( $currentState == $finalReviewState || $addForAllStates ) {
+        if( $currentState == $finalReviewState || $addForAllStates === true || $addForAllStates === $irbReviewState ) {
 
             //$defaultReviewers = $this->em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findByState($finalReviewState);
             $defaultReviewers = $this->em->getRepository('OlegTranslationalResearchBundle:DefaultReviewer')->findBy(

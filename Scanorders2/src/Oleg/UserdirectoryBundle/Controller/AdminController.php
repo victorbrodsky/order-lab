@@ -301,21 +301,21 @@ class AdminController extends Controller
 
         //$linux
         if( $linux ) {
-            $this->runProcess("php app" . $dirSep . "console assets:install");
-            $this->runProcess("php app" . $dirSep . "console cache:clear --env=prod --no-debug");
-            $this->runProcess("php app" . $dirSep . "console assetic:dump --env=prod --no-debug");
+            $this->runProcess("php var" . $dirSep . "console assets:install");
+            $this->runProcess("php var" . $dirSep . "console cache:clear --env=prod --no-debug");
+            $this->runProcess("php var" . $dirSep . "console assetic:dump --env=prod --no-debug");
         }
 
         //$windows
         if( $windows ) {
-            echo "assets:install=" . exec("php app".$dirSep."console assets:install") . "<br>";
-            echo "cache:clear=" . exec("php app".$dirSep."console cache:clear --env=prod --no-debug") . "<br>";
-            echo "assetic:dump=" . exec("php app".$dirSep."console assetic:dump --env=prod --no-debug") . "<br>";
+            echo "assets:install=" . exec("php var".$dirSep."console assets:install") . "<br>";
+            echo "cache:clear=" . exec("php var".$dirSep."console cache:clear --env=prod --no-debug") . "<br>";
+            echo "assetic:dump=" . exec("php var".$dirSep."console assetic:dump --env=prod --no-debug") . "<br>";
 
-            //remove app/cache/prod
-            $cachePathOld = "app".$dirSep."cache".$dirSep."prod";
-            $cachePathNew = "app".$dirSep."cache".$dirSep."pro_";
-            //echo "rm =" . exec("php app/console assets:install") . "<br>";
+            //remove var/cache/prod
+            $cachePathOld = "var".$dirSep."cache".$dirSep."prod";
+            $cachePathNew = "var".$dirSep."cache".$dirSep."pro_";
+            //echo "rm =" . exec("php var/console assets:install") . "<br>";
 
             if( is_dir($cachePathOld) ) {
                 echo "cachePathOld exists! <br>";

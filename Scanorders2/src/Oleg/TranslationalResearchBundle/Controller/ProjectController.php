@@ -1384,9 +1384,9 @@ class ProjectController extends Controller
 
         $dql->leftJoin('project.principalInvestigators','principalInvestigators');
 
-        //$dql->andWhere("project.exportId IS NOT NULL");
+        $dql->andWhere("project.exportId IS NOT NULL");
         //$dql->andWhere("project.oid IS NULL");
-        $dql->andWhere("principalInvestigators.id IS NULL");
+        //$dql->andWhere("principalInvestigators.id IS NULL");
 
         $query = $dql->getQuery();
 

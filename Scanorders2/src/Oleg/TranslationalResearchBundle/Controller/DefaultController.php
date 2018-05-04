@@ -78,27 +78,45 @@ class DefaultController extends Controller
 
         $importUtil = $this->get('transres_import');
 
+        if(0) {
+            //import projects
+            $res1 = $importUtil->importOldData($request, 'TRF_PROJECT_INFO.xlsx', 'project_adminComments');
+        }
         if(1) {
             //import projects
-            $resProject = $importUtil->importOldData($request, 'TRF_PROJECT_INFO.xlsx', true, false);
+            $resProject = $importUtil->importOldData($request, 'TRF_PROJECT_INFO.xlsx', 'project');
             //import admin comments
-            $resAdminComments = $importUtil->importOldData($request, 'TRF_PROJECT_INFO.xlsx', false, true);
+            //$resAdminComments = $importUtil->importOldData($request, 'TRF_PROJECT_INFO.xlsx', 'adminComments');
 
             $res1 = $resProject . "<br>========= EOF TRF_PROJECT_INFO ===========<br>" . $resAdminComments;
         }
 
-        //exit('Imported result: '.$res);
 
-        if(1) {
+        if(0) {
             //import projects
-            $resProject = $importUtil->importOldData($request, 'TRF_DRAFT_PROJECT.xlsx', true, false);
+            $res1 = $importUtil->importOldData($request, 'TRF_DRAFT_PROJECT.xlsx', 'project_adminComments');
+        }
+        if(0) {
+            //import projects
+            $resProject = $importUtil->importOldData($request, 'TRF_DRAFT_PROJECT.xlsx', 'project');
             //import admin comments
-            $resAdminComments = $importUtil->importOldData($request, 'TRF_DRAFT_PROJECT.xlsx', false, true);
+            $resAdminComments = $importUtil->importOldData($request, 'TRF_DRAFT_PROJECT.xlsx', 'adminComments');
 
             $res2 = $resProject . "<br>========= EOF TRF_DRAFT_PROJECT ===========<br>" . $resAdminComments;
         }
 
+        //Committee comments
+        if(0) {
+            $resProject = $importUtil->importCommitteeComments($request, 'TRF_COMMITTEE_REV.xlsx');
+        }
+
+        if(0) {
+            $resProject = $importUtil->importCommitteeComments($request, 'TRF_COMMENTS_RESP.xlsx');
+        }
+
         $res = $res1 . "<br><br>" . $res2;
+
+        exit('Imported result: '.$res);
 
         //Flash
         $this->get('session')->getFlashBag()->add(
