@@ -613,11 +613,6 @@ class TransResImportData
                 $errorMsg = $criticalErrorStr ." ". implode(",", $criticalErrorArr) . " Undefined" . ". Requesters: " . implode("; ", $requestersStrArr);
                 $notExistingUsers[] = $errorMsg;
                 $thisNotExistingUsers[] = $errorMsg;
-
-                //record this to admin comment;
-                //$request, $adminReviewer, $project, $adminComment, "(auto imported comment)"
-                $thisNotExistingUsersStr = implode("; ",$thisNotExistingUsers);
-                $this->addComment($request, $adminReviewer, $project, $thisNotExistingUsersStr, "[not existing users importing warning]: ");
             }
         }
 
@@ -729,6 +724,11 @@ class TransResImportData
             $em->flush($project);
         }
 
+        //record this to admin comment;
+        //$request, $adminReviewer, $project, $adminComment, "(auto imported comment)"
+        $thisNotExistingUsersStr = implode("; ",$thisNotExistingUsers);
+        $this->addComment($request, $adminReviewer, $project, $thisNotExistingUsersStr, "[not existing users importing warning]: ");
+
         $res = array(
             'notExistingStatuses' => $notExistingStatuses,
             'notExistingUsers' => $notExistingUsers,
@@ -830,7 +830,7 @@ class TransResImportData
         //http://localhost/order/translational-research/import-old-data/
         $uri = $request->getUri();
         $uri = str_replace("/import-old-data/","",$uri); //http://localhost/order/translational-research
-        //echo "uri=".$uri."<br>";
+        echo "uri=".$uri."<br>";
         //exit('111');
 
         //echo "adminComment=".$adminComment."<br>";
