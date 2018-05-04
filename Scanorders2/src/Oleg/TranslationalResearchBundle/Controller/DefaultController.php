@@ -70,12 +70,35 @@ class DefaultController extends Controller
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
+        $resProject = null;
+        $resAdminComments = null;
+
+        $res1 = null;
+        $res2 = null;
+
         $importUtil = $this->get('transres_import');
-        $res = $importUtil->importOldData();
+
+        if(1) {
+            //import projects
+            $resProject = $importUtil->importOldData($request, 'TRF_PROJECT_INFO.xlsx', true, false);
+            //import admin comments
+            $resAdminComments = $importUtil->importOldData($request, 'TRF_PROJECT_INFO.xlsx', false, true);
+
+            $res1 = $resProject . "<br>========= EOF TRF_PROJECT_INFO ===========<br>" . $resAdminComments;
+        }
 
         //exit('Imported result: '.$res);
 
-        $res = $importUtil->importOldData();
+        if(1) {
+            //import projects
+            $resProject = $importUtil->importOldData($request, 'TRF_DRAFT_PROJECT.xlsx', true, false);
+            //import admin comments
+            $resAdminComments = $importUtil->importOldData($request, 'TRF_DRAFT_PROJECT.xlsx', false, true);
+
+            $res2 = $resProject . "<br>========= EOF TRF_DRAFT_PROJECT ===========<br>" . $resAdminComments;
+        }
+
+        $res = $res1 . "<br><br>" . $res2;
 
         //Flash
         $this->get('session')->getFlashBag()->add(

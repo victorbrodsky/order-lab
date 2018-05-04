@@ -32,6 +32,8 @@ use Oleg\UserdirectoryBundle\Util\UserUtil;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 use Symfony\Component\Validator\Constraints\DateTime;
 
+use FOS\RestBundle\View\View;
+
 class TransResImportData
 {
 
@@ -51,7 +53,7 @@ class TransResImportData
 
     // url: /import-old-data/
     //import projects from: TRF_DRAFT_PROJECT and RF_PROJECT_INFO
-    public function importOldData() {
+    public function importOldData($request,$filename,$importProject,$importAdminComments) {
 
         ini_set('max_execution_time', 3600); //3600 seconds = 60 minutes
 
@@ -77,11 +79,15 @@ class TransResImportData
             exit("Project specialty not found by abbreviation=ap-cp");
         }
 
+        //Admin user
+        $reviewers = $transresUtil->getDefaultReviewerInfo("admin_review",$specialty,true);
+        $adminReviewer = $reviewers[0];
+
         $notExistingStatuses = array();
         $notExistingUsers = array();
         $count = 0;
 
-        $inputFileName = __DIR__ . '/TRF_PROJECT_INFO.xlsx';
+        $inputFileName = __DIR__ . "/" . $filename; //'/TRF_PROJECT_INFO.xlsx';
 
         try {
             $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
@@ -119,25 +125,31 @@ class TransResImportData
 
             $exportId = $this->getValueByHeaderName('PROJECT_ID', $rowData, $headers);
             $exportId = trim($exportId);
-            echo "exportId=".$exportId."<br>";
+            echo "<br>########## exportId=".$exportId."#############<br>";
 
             //if( $exportId != 1840 ) {continue;} //testing
 
             //Process Project
-            if(0) {
-                $res = $this->importProject($rowData, $headers, $exportId, $specialty, $systemUser, $notExistingStatuses, $notExistingUsers);
+            if($importProject) {
+                $res = $this->importProject($request, $rowData, $headers, $exportId, $specialty, $systemUser, $notExistingStatuses, $notExistingUsers);
                 $notExistingStatuses = $res['notExistingStatuses'];
                 $notExistingUsers = $res['notExistingUsers'];
                 $project = $res['project'];
             }
 
-            if(0) {
-                $exportId = 13443;
-                $this->importAdminComments($rowData, $headers, $exportId);
-                exit('end of comment');
+            if($importAdminComments) {
+                //print_r($headers);echo "<br>";
+                //$exportId = 13443;
+                //$rowData = 3;
+                $commentRes = $this->importAdminComments($request,$adminReviewer,$rowData,$headers,$exportId);
+                echo 'end of comment: '.$commentRes."<br>";
             }
 
             $count++;
+
+            //if( $count > 6 ) {
+            //    exit('count test');
+            //}
 
             //echo "<br>";
             //exit('$project OID='.$project->getOid());
@@ -155,12 +167,12 @@ class TransResImportData
         }
 
         $result = "Imported requests = " . $count;
-        exit($result);
+        //exit($result);
 
         return $result;
     }
 
-    public function importProject( $rowData, $headers, $exportId, $specialty, $systemUser, $notExistingStatuses, $notExistingUsers ) {
+    public function importProject( $request, $rowData, $headers, $exportId, $specialty, $systemUser, $notExistingStatuses, $notExistingUsers ) {
         $transresUtil = $this->container->get('transres_util');
         $logger = $this->container->get('logger');
         $em = $this->em;
@@ -487,7 +499,7 @@ class TransResImportData
 
 
         //ADMIN_COMMENT
-        $ADMIN_COMMENT = $this->getValueByHeaderName('ADMIN_COMMENT', $rowData, $headers);
+        //$ADMIN_COMMENT = $this->getValueByHeaderName('ADMIN_COMMENT', $rowData, $headers);
         //TODO:???
 
         //BIO_STAT_COMMENT ???
@@ -529,29 +541,79 @@ class TransResImportData
         return $res;
     }
 
-    public function importAdminComments($rowData, $headers, $exportId) {
+    public function importAdminComments($request, $adminReviewer, $rowData, $headers, $exportId) {
         $project = $this->em->getRepository('OlegTranslationalResearchBundle:Project')->findOneByExportId($exportId);
         if( !$project ) {
             exit("Project wit external ID '$exportId' does not exist.");
         }
+        //echo "Project ID=".$project->getId()."<br>";
+
+        $commentManager = $this->container->get('fos_comment.manager.comment');
+        $threadManager = $this->container->get('fos_comment.manager.thread');
+
+        //http://localhost/order/translational-research/import-old-data/
+        $uri = $request->getUri();
+        $uri = str_replace("/import-old-data/","",$uri); //http://localhost/order/translational-research
+        //echo "uri=".$uri."<br>";
+        //exit('111');
 
         //ADMIN_COMMENT
         $adminComment = $this->getValueByHeaderName('ADMIN_COMMENT', $rowData, $headers);
+        //echo "adminComment=".$adminComment."<br>";
         if( $adminComment ) {
-            $threadId = "";
-            $thread = $this->container->get('fos_comment.manager.thread')->findThreadById($threadId);
-            if (null === $thread) {
-                $thread = $this->container->get('fos_comment.manager.thread')->createThread();
+
+            //transres-Project-3-irb_review, transres-Project-18-admin_review
+            $threadId = "transres-Project-".$project->getId()."-"."admin_review";
+            //echo "threadId=".$threadId."<br>";
+            $thread = $threadManager->findThreadById($threadId);
+
+            if( $thread ) {
+                //don't re-created the thread for this project
+                //don't re-created the same comment for this project
+                echo "Thread already exists<br>";
+                return null;
+            }
+
+            if( null === $thread ) {
+                $thread = $threadManager->createThread();
                 $thread->setId($threadId);
 
                 //http://localhost/order/translational-research/project/review/25
-                //$thread->setPermalink();
+                //http://localhost/order/translational-research/project/review/18
+                $permalink = $uri . "/project/review/" . $project->getId();
+                $thread->setPermalink($permalink);
 
                 // Add the thread
-                $this->container->get('fos_comment.manager.thread')->saveThread($thread);
+                $threadManager->saveThread($thread);
             }
+
+            //set Author
+            $comment = $commentManager->createComment($thread);
+            $comment->setAuthor($adminReviewer);
+
+            //set Depth
+            //$comment->setDepth(0);
+
+            //set comment body
+            $adminComment = $adminComment . " (auto imported)";
+            $comment->setBody($adminComment);
+
+            $comment->setAuthorType("Administrator");
+            $comment->setAuthorTypeDescription("Administrator");
+
+            //$commentManager->saveComment($comment);
+            if( $commentManager->saveComment($comment) !== false ) {
+                //exit("Comment saved successful!!!");
+                //return $this->getViewHandler()->handle($this->onCreateCommentSuccess($form, $threadId, null));
+                //View::createRouteRedirect('fos_comment_get_thread_comment', array('id' => $id, 'commentId' => $form->getData()->getId()), 201);
+            }
+
+            $res = "Comment created '$adminComment'' with threadID=".$thread->getId()."; commentID".$comment->getId()."<br>";
+            //exit($res);
+            return $res;
         }
 
+        return null;
     }
 
     public function processCommentsReviewers( $rowData, $headers, $exportId, $specialty, $notExistingStatuses, $notExistingUsers ) {
@@ -771,7 +833,8 @@ class TransResImportData
             return $res;
         }
 
-        //echo "header=".$header."<br>";
+        //echo "header=".$header."; row=".$row[0]."<br>";
+        //print_r($headers[0]);echo "<br>";
         //print_r($headers);
         //print_r($row[0]);
 

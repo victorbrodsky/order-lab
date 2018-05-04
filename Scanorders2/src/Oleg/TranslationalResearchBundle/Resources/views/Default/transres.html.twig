@@ -728,11 +728,10 @@
                             {% endfor %}
 
                             {% if showComments == 1 %}
-                                {% if project.irbReviews|length > 0 %}
-                                    {% set threadId = "transres-" ~ project.vars.value.getEntityName() ~ "-" ~ project.vars.value.id ~ "-" ~ project.vars.value.irbReviews|first.getStateStr() %}
-                                    {#irb threadId={{ threadId }}<br>#}
-                                    {{ render(controller('OlegTranslationalResearchBundle:Project:threadCommentsShow', { 'id': threadId })) }}
-                                {% endif %}
+                                {% set thisState = "irb_review" %}
+                                {#{% set thisState = project.vars.value.irbReviews|first.getStateStr() %}#}
+                                {% set threadId = "transres-" ~ project.vars.value.getEntityName() ~ "-" ~ project.vars.value.id ~ "-" ~ thisState %}
+                                {{ render(controller('OlegTranslationalResearchBundle:Project:threadCommentsShow', { 'id': threadId })) }}
                             {% endif %}
 
                             {% if cycle != "show" and cycle != "review" %}
@@ -767,10 +766,10 @@
                             {% endfor %}
 
                             {% if showComments == 1 %}
-                                {% if project.adminReviews|length > 0 %}
-                                    {% set threadId = "transres-" ~ project.vars.value.getEntityName() ~ "-" ~ project.vars.value.id ~ "-" ~ project.vars.value.adminReviews|first.getStateStr() %}
-                                    {{ render(controller('OlegTranslationalResearchBundle:Project:threadCommentsShow', { 'id': threadId })) }}
-                                {% endif %}
+                                {% set thisState = "admin_review" %}
+                                {#{% set thisState = project.vars.value.adminReviews|first.getStateStr() %}#}
+                                {% set threadId = "transres-" ~ project.vars.value.getEntityName() ~ "-" ~ project.vars.value.id ~ "-" ~ thisState %}
+                                {{ render(controller('OlegTranslationalResearchBundle:Project:threadCommentsShow', { 'id': threadId })) }}
                             {% endif %}
 
                             {% if cycle != "show" and cycle != "review" %}
@@ -805,10 +804,9 @@
                             {% endfor %}
 
                             {% if showComments == 1 %}
-                                {% if project.committeeReviews|length > 0 %}
-                                    {% set threadId = "transres-" ~ project.vars.value.getEntityName() ~ "-" ~ project.vars.value.id ~ "-" ~ project.vars.value.committeeReviews|first.getStateStr() %}
-                                    {{ render(controller('OlegTranslationalResearchBundle:Project:threadCommentsShow', { 'id': threadId })) }}
-                                {% endif %}
+                                {% set thisState = "committee_review" %}
+                                {% set threadId = "transres-" ~ project.vars.value.getEntityName() ~ "-" ~ project.vars.value.id ~ "-" ~ thisState %}
+                                {{ render(controller('OlegTranslationalResearchBundle:Project:threadCommentsShow', { 'id': threadId })) }}
                             {% endif %}
 
                             {% if cycle != "show" and cycle != "review" %}
@@ -843,10 +841,9 @@
                             {% endfor %}
 
                             {% if showComments == 1 %}
-                                {% if project.finalReviews|length > 0 %}
-                                    {% set threadId = "transres-" ~ project.vars.value.getEntityName() ~ "-" ~ project.vars.value.id ~ "-" ~ project.vars.value.finalReviews|first.getStateStr() %}
-                                    {{ render(controller('OlegTranslationalResearchBundle:Project:threadCommentsShow', { 'id': threadId })) }}
-                                {% endif %}
+                                {% set thisState = "final_review" %}
+                                {% set threadId = "transres-" ~ project.vars.value.getEntityName() ~ "-" ~ project.vars.value.id ~ "-" ~ thisState %}
+                                {{ render(controller('OlegTranslationalResearchBundle:Project:threadCommentsShow', { 'id': threadId })) }}
                             {% endif %}
 
                             {% if cycle != "show" and cycle != "review" %}
