@@ -58,6 +58,7 @@ class TransResImportData
         $mapper = array();
 
         $inputFileName = __DIR__ . "/" . $filename; //'/TRF_PROJECT_INFO.xlsx';
+        echo "==================== Processing $filename =====================<br>";
 
         try {
             $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
@@ -124,27 +125,13 @@ class TransResImportData
 
     //TRF_COMMITTEE_REV
     public function importCommitteeComments( $request, $filename ) {
-//        $project = $this->em->getRepository('OlegTranslationalResearchBundle:Project')->findOneByExportId($exportId);
-//        if( !$project ) {
-//            exit("Project wit external ID '$exportId' does not exist.");
-//        }
-//
-//        //ADMIN_COMMENT
-//        $adminComment = $this->getValueByHeaderName('ADMIN_COMMENT', $rowData, $headers);
-//        if( $adminComment ) {
-//
-//        }
-
-        //new: add all default reviewers. Do it when processing Committee comments
-        //$transresUtil->addDefaultStateReviewers($project);
-
-
         $transresUtil = $this->container->get('transres_util');
         $logger = $this->container->get('logger');
 
         $userMapper = $this->getUserMapper('TRF_EMAIL_INFO.xlsx');
 
-        $inputFileName = __DIR__ . "/" . $filename; //'/TRF_PROJECT_INFO.xlsx';
+        $inputFileName = __DIR__ . "/" . $filename;
+        echo "==================== Processing $filename =====================<br>";
 
         try {
             $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
@@ -166,6 +153,8 @@ class TransResImportData
             FALSE);
 
 
+        $count = 0;
+
         //for each request in excel (start at row 2)
         for( $row = 2; $row <= $highestRow; $row++ ) {
 
@@ -178,41 +167,60 @@ class TransResImportData
 
             $exportId = $this->getValueByHeaderName('PROJECT_ID', $rowData, $headers);
             $exportId = trim($exportId);
+            echo $exportId.", ";
 
             $comment = $this->getValueByHeaderName('COMMITTEE_COMMENT', $rowData, $headers);
+
             //DATE_SEND
-            $dateSend = $this->getValueByHeaderName('DATE_SEND', $rowData, $headers);
+            $dateSendStr = $this->getValueByHeaderName('DATE_SEND', $rowData, $headers);
 
             $userId = $this->getValueByHeaderName('USER_ID', $rowData, $headers);
 
-            $reviewerUser = $userMapper[$userId];
-
-            if( $reviewerUser ) {
-
-                $project = $this->em->getRepository('OlegTranslationalResearchBundle:Project')->findOneByExportId($exportId);
-                if( !$project ) {
-                    exit("Project wit external ID '$exportId' does not exist.");
-                }
-
-                //add this user as non-primary committee reviewer
-                if( false === $this->isReviewsReviewer($reviewerUser, $project->getCommitteeReviews()) ) {
-                    $reviewEntity = new CommitteeReview($reviewerUser);
-
-                    $reviewEntity->setReviewer($reviewerUser);
-
-                    //add as non-primary primaryReview boolean
-                    $reviewEntity->setPrimaryReview(false);
-
-                    $project->addCommitteeReview($reviewEntity);
-                }
-            }
-
             if( $comment ) {
-                $res = $this->addComment($request, $reviewerUser, $project, $comment, "[auto imported comment]: ");
+
+                $prefix = "[imported comment]";
+
+                $reviewerUser = $userMapper[$userId];
+                if( !$reviewerUser ) {
+                    //////// get default committee reviewer ///////////
+                    $specialty = $this->em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation("ap-cp");
+                    if( !$specialty ) {
+                        exit("Project specialty not found by abbreviation=ap-cp");
+                    }
+                    $reviewers = $transresUtil->getDefaultReviewerInfo("committee_review",$specialty,true);
+                    $committeeReviewer = $reviewers[0];
+                    //////// EOF get default committee reviewer /////////
+                    $reviewerUser = $committeeReviewer;
+                    $prefix = "[imported comment submitted by $userId]";
+                }
+
+                if( $reviewerUser ) {
+                    $project = $this->em->getRepository('OlegTranslationalResearchBundle:Project')->findOneByExportId($exportId);
+                    if( !$project ) {
+                        exit("Project wit external ID '$exportId' does not exist.");
+                    }
+
+                    //add this user as non-primary committee reviewer
+                    if( false === $transresUtil->isReviewsReviewer($reviewerUser, $project->getCommitteeReviews()) ) {
+                        $reviewEntity = new CommitteeReview($reviewerUser);
+
+                        $reviewEntity->setReviewer($reviewerUser);
+
+                        //add as non-primary primaryReview boolean
+                        $reviewEntity->setPrimaryReview(false);
+
+                        $project->addCommitteeReview($reviewEntity);
+                    }
+                }
+
+                $this->addComment($request,$reviewerUser,$project,$comment,"committee_review",$prefix,$dateSendStr);
             }
 
+            //exit('111');
+            $count++;
         }
 
+        return "Added $count Committee comments";
     }
 
     //TRF_COMMENTS_RESP
@@ -224,6 +232,7 @@ class TransResImportData
         $userMapper = $this->getUserMapper('TRF_EMAIL_INFO.xlsx');
 
         $inputFileName = __DIR__ . "/" . $filename; //'/TRF_PROJECT_INFO.xlsx';
+        echo "==================== Processing $filename =====================<br>";
 
         try {
             $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
@@ -244,6 +253,7 @@ class TransResImportData
             TRUE,
             FALSE);
 
+        $count = 0;
 
         //for each request in excel (start at row 2)
         for( $row = 2; $row <= $highestRow; $row++ ) {
@@ -255,47 +265,83 @@ class TransResImportData
                 FALSE);
 
 
+            //REVIEWER_REQUEST_ID	USER_NAME	PROJECT_ID	REVIEWER	PI_RESPONSE	CREATED_DATE
+
             $exportId = $this->getValueByHeaderName('PROJECT_ID', $rowData, $headers);
             $exportId = trim($exportId);
 
+            $project = $this->em->getRepository('OlegTranslationalResearchBundle:Project')->findOneByExportId($exportId);
+            if( !$project ) {
+                exit("Project wit external ID '$exportId' does not exist.");
+            }
+            echo "Project External ID=".$exportId."<br>";
+
             //TODO: add reviewer and PI comments as the committee comments. Set created date.
-            exit('TODO: add reviewer and PI comments as the committee comments');
+            //exit('TODO: add reviewer and PI comments as the committee comments');
             $reviewerComment = $this->getValueByHeaderName('REVIEWER', $rowData, $headers);
             $piComment = $this->getValueByHeaderName('PI_RESPONSE', $rowData, $headers);
-            //DATE_SEND
-            $createSend = $this->getValueByHeaderName('CREATED_DATE', $rowData, $headers);
+
+            //CREATED_DATE
+            $createDateStr = $this->getValueByHeaderName('CREATED_DATE', $rowData, $headers);
 
             $userId = $this->getValueByHeaderName('USER_NAME', $rowData, $headers);
 
-            $reviewerUser = $userMapper[$userId];
+            if( $reviewerComment ) {
 
-            if( $reviewerUser ) {
+                $reviewerUser = $userMapper[$userId];
+                if( $reviewerUser ) {
+                    //add this user as non-primary committee reviewer
+                    if( false === $transresUtil->isReviewsReviewer($reviewerUser, $project->getCommitteeReviews()) ) {
+                        $reviewEntity = new CommitteeReview($reviewerUser);
 
-                $project = $this->em->getRepository('OlegTranslationalResearchBundle:Project')->findOneByExportId($exportId);
-                if( !$project ) {
-                    exit("Project wit external ID '$exportId' does not exist.");
+                        $reviewEntity->setReviewer($reviewerUser);
+
+                        //add as non-primary primaryReview boolean
+                        $reviewEntity->setPrimaryReview(false);
+
+                        $project->addCommitteeReview($reviewEntity);
+                    }
                 }
 
-                //add this user as non-primary committee reviewer
-                if( false === $this->isReviewsReviewer($reviewerUser, $project->getCommitteeReviews()) ) {
-                    $reviewEntity = new CommitteeReview($reviewerUser);
+                $prefix = "[imported reviewer comment]";
 
-                    $reviewEntity->setReviewer($reviewerUser);
-
-                    //add as non-primary primaryReview boolean
-                    $reviewEntity->setPrimaryReview(false);
-
-                    $project->addCommitteeReview($reviewEntity);
+                if( !$reviewerUser ) {
+                    //////// Admin user ///////////
+                    $specialty = $this->em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation("ap-cp");
+                    if( !$specialty ) {
+                        exit("Project specialty not found by abbreviation=ap-cp");
+                    }
+                    $reviewers = $transresUtil->getDefaultReviewerInfo("admin_review",$specialty,true);
+                    $adminReviewer = $reviewers[0];
+                    //////// EOF Admin user /////////
+                    $reviewerUser = $adminReviewer;
+                    $prefix = "[imported reviewer comment submitted by $userId]";
                 }
+                if(!$reviewerUser) {
+                    exit("No reviewer is found for project export ID ".$exportId);
+                }
+
+                $reviewerCommentEntity = $this->addComment($request,$reviewerUser,$project,$reviewerComment,"committee_review",$prefix,$createDateStr);
+                $count++;
             }
 
-            if( $comment ) {
-                $res = $this->addComment($request, $reviewerUser, $project, $comment, "[auto imported comment]: ");
+            if( $piComment ) {
+                $commentUser = null;
+                $pis = $project->getPrincipalInvestigators();
+                if( count($pis) > 0 ) {
+                    $commentUser = $pis[0];
+                } else {
+                    $commentUser = $project->getSubmitter();
+                }
+                if( !$commentUser ) {
+                    exit("PI or Submitter not found in the project with export ID ".$exportId);
+                }
+                $this->addComment($request,$commentUser,$project,$piComment,"committee_review","[imported PI comment]",$createDateStr,$reviewerCommentEntity);
             }
-
 
         }
 
+        return "Added $count Committee comments";
     }
 
 
@@ -339,6 +385,7 @@ class TransResImportData
         $count = 0;
 
         $inputFileName = __DIR__ . "/" . $filename; //'/TRF_PROJECT_INFO.xlsx';
+        echo "==================== Processing $filename =====================<br>";
 
         try {
             $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
@@ -397,7 +444,7 @@ class TransResImportData
             }
 
 //            if( $importFlag == 'committeeComments' ) {
-//                $commentRes = $this->importCommitteeComments($request,$rowData,$headers,$exportId,$userMapper);
+//                $commentRes = $this->import Committee Comments($request,$rowData,$headers,$exportId,$userMapper);
 //                echo 'end of committee Comments: '.$commentRes."<br>";
 //            }
 
@@ -810,9 +857,9 @@ class TransResImportData
         }
 
         //record this to admin comment;
-        //$request, $adminReviewer, $project, $adminComment, "(auto imported comment)"
+        //$request, $adminReviewer, $project, $adminComment, "(imported comment)"
         $thisNotExistingUsersStr = implode("; ",$thisNotExistingUsers);
-        $this->addComment($request, $adminReviewer, $project, $thisNotExistingUsersStr, "[not existing users importing warning]: ");
+        $this->addComment($request, $adminReviewer, $project, $thisNotExistingUsersStr, "admin_review", "[import warning - not existing users]");
 
         $res = array(
             'notExistingStatuses' => $notExistingStatuses,
@@ -824,105 +871,54 @@ class TransResImportData
     }
 
     public function importAdminComments($request, $adminReviewer, $rowData, $headers, $exportId) {
-        $project = $this->em->getRepository('OlegTranslationalResearchBundle:Project')->findOneByExportId($exportId);
-        if( !$project ) {
-            exit("Project wit external ID '$exportId' does not exist.");
-        }
-        //echo "Project ID=".$project->getId()."<br>";
-
-        //$commentManager = $this->container->get('fos_comment.manager.comment');
-        //$threadManager = $this->container->get('fos_comment.manager.thread');
-
-        //http://localhost/order/translational-research/import-old-data/
-        //$uri = $request->getUri();
-        //$uri = str_replace("/import-old-data/","",$uri); //http://localhost/order/translational-research
-        //echo "uri=".$uri."<br>";
-        //exit('111');
-
-        //ADMIN_COMMENT
-//        $adminComment = $this->getValueByHeaderName('ADMIN_COMMENT', $rowData, $headers);
-//        //echo "adminComment=".$adminComment."<br>";
-//        if( $adminComment ) {
-//
-//            //transres-Project-3-irb_review, transres-Project-18-admin_review
-//            $threadId = "transres-Project-".$project->getId()."-"."admin_review";
-//            //echo "threadId=".$threadId."<br>";
-//            $thread = $threadManager->findThreadById($threadId);
-//
-//            if( $thread ) {
-//                //don't re-created the thread for this project
-//                //don't re-created the same comment for this project
-//                echo "Thread already exists<br>";
-//                return null;
-//            }
-//
-//            if( null === $thread ) {
-//                $thread = $threadManager->createThread();
-//                $thread->setId($threadId);
-//
-//                //http://localhost/order/translational-research/project/review/25
-//                //http://localhost/order/translational-research/project/review/18
-//                $permalink = $uri . "/project/review/" . $project->getId();
-//                $thread->setPermalink($permalink);
-//
-//                // Add the thread
-//                $threadManager->saveThread($thread);
-//            }
-//
-//            //set Author
-//            $comment = $commentManager->createComment($thread);
-//            $comment->setAuthor($adminReviewer);
-//
-//            //set Depth
-//            //$comment->setDepth(0);
-//
-//            //set comment body
-//            $adminComment = $adminComment . " (auto imported)";
-//            $comment->setBody($adminComment);
-//
-//            $comment->setAuthorType("Administrator");
-//            $comment->setAuthorTypeDescription("Administrator");
-//
-//            //$commentManager->saveComment($comment);
-//            if( $commentManager->saveComment($comment) !== false ) {
-//                //exit("Comment saved successful!!!");
-//                //return $this->getViewHandler()->handle($this->onCreateCommentSuccess($form, $threadId, null));
-//                //View::createRouteRedirect('fos_comment_get_thread_comment', array('id' => $id, 'commentId' => $form->getData()->getId()), 201);
-//            }
-//
-//            $res = "Comment created '$adminComment'' with threadID=".$thread->getId()."; commentID".$comment->getId()."<br>";
-//
-//            //exit($res);
-//            return $res;
-//        }
-
         $adminComment = $this->getValueByHeaderName('ADMIN_COMMENT', $rowData, $headers);
         if( $adminComment ) {
-            $res = $this->addComment($request, $adminReviewer, $project, $adminComment, "[auto imported comment]: ");
-            return $res;
+
+            $project = $this->em->getRepository('OlegTranslationalResearchBundle:Project')->findOneByExportId($exportId);
+            if( !$project ) {
+                exit("Project wit external ID '$exportId' does not exist.");
+            }
+            //echo "Project ID=".$project->getId()."<br>";
+
+            $commentEntity = $this->addComment($request, $adminReviewer, $project, $adminComment, "admin_review", "[imported comment]");
+            return $commentEntity;
         }
 
         return null;
     }
 
 
-    public function addComment($request,$author,$project,$commentStr,$prefix="[auto imported comment]: ",$createDateStr=null) {
+    public function addComment($request,$author,$project,$commentStr,$commentType,$prefix="[imported comment]",$createDateStr=null, $parentComment=null) {
+        $userServiceUtil = $this->container->get('user_service_utility');
         $commentManager = $this->container->get('fos_comment.manager.comment');
         $threadManager = $this->container->get('fos_comment.manager.thread');
+
+        if( !$project ) {
+            exit("Project is null for comment=".$commentStr);
+        }
+        if( !$author ) {
+            exit("Author is null. Project export ID# ".$project->getExportId());
+        }
+        if( !$commentStr ) {
+            exit("Comment is null. Project export ID# ".$project->getExportId());
+        }
+        if( !$commentType ) {
+            exit("Comment Type is null. Project export ID# ".$project->getExportId());
+        }
 
         $res = null;
 
         //http://localhost/order/translational-research/import-old-data/
         $uri = $request->getUri();
         $uri = str_replace("/import-old-data/","",$uri); //http://localhost/order/translational-research
-        echo "uri=".$uri."<br>";
+        //echo "uri=".$uri."<br>";
         //exit('111');
 
         //echo "adminComment=".$adminComment."<br>";
         if( $commentStr ) {
 
             //transres-Project-3-irb_review, transres-Project-18-admin_review
-            $threadId = "transres-Project-" . $project->getId() . "-" . "admin_review";
+            $threadId = "transres-Project-" . $project->getId() . "-" . $commentType;   //"admin_review";
             //echo "threadId=".$threadId."<br>";
             $thread = $threadManager->findThreadById($threadId);
 
@@ -931,9 +927,15 @@ class TransResImportData
                 //don't re-created the same comment for this project
                 //echo "Thread already exists<br>";
                 //return null;
+
+                $comment = $userServiceUtil->findOneCommentByThreadBodyAuthor($thread,$commentStr,$author);
+                if( $comment ) {
+                    //echo $comment->getId().": Comment already exists <br>";
+                    return $comment;
+                }
             }
 
-            if (null === $thread) {
+            if( null === $thread ) {
                 $thread = $threadManager->createThread();
                 $thread->setId($threadId);
 
@@ -947,7 +949,7 @@ class TransResImportData
             }
 
             //set Author
-            $comment = $commentManager->createComment($thread);
+            $comment = $commentManager->createComment($thread,$parentComment);
             $comment->setAuthor($author);
 
             if( $createDateStr ) {
@@ -958,24 +960,28 @@ class TransResImportData
             //set Depth
             //$comment->setDepth(0);
 
+            //set Prefix
+            $comment->setPrefix($prefix);
+
             //set comment body
-            $commentStr = $prefix . "" . $commentStr;
+            //$commentStr = $prefix . "" . $commentStr;
             $comment->setBody($commentStr);
 
             $comment->setAuthorType("Administrator");
             $comment->setAuthorTypeDescription("Administrator");
 
             //$commentManager->saveComment($comment);
+            //if( 0 )
             if ($commentManager->saveComment($comment) !== false) {
                 //exit("Comment saved successful!!!");
                 //return $this->getViewHandler()->handle($this->onCreateCommentSuccess($form, $threadId, null));
                 //View::createRouteRedirect('fos_comment_get_thread_comment', array('id' => $id, 'commentId' => $form->getData()->getId()), 201);
             }
 
-            $res = "Comment created '$commentStr' with threadID=" . $thread->getId() . "; commentID" . $comment->getId() . "<br>";
+            //$res = "Comment created '$commentStr' with threadID=" . $thread->getId() . "; commentID" . $comment->getId() . "<br>";
         }
 
-        return $res;
+        return $comment;
     }
 
     public function cleanUsername( $username ) {
@@ -1197,6 +1203,9 @@ class TransResImportData
         if( array_key_exists($key, $row[0]) ) {
             $res = $row[0][$key];
         }
+
+        $res = str_replace("_x000D_","\r\n",$res);
+        $res = str_replace("x000D","\r\n",$res);
 
         //echo "res=".$res."<br>";
         return $res;

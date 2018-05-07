@@ -75,6 +75,14 @@ class FosComment extends FosBaseComment implements SignedCommentInterface
     protected $authorTypeDescription;
 
     /**
+     * @var string
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $prefix;
+
+
+
+    /**
      * @return string
      */
     public function getAuthorType()
@@ -150,5 +158,37 @@ class FosComment extends FosBaseComment implements SignedCommentInterface
 //            $body = $this->getBody() ." ". $body;
 //        }
         $this->body = $body;
+    }
+    /**
+     * @return string
+     */
+    public function getBody()
+    {
+//        if( $this->getPrefix() ) {
+//            return $this->getPrefix() . $this->body;
+//        }
+        return $this->body;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPrefix()
+    {
+        return $this->prefix;
+    }
+
+    /**
+     * @param string $prefix
+     */
+    public function setPrefix($prefix)
+    {
+        $this->prefix = $prefix;
+    }
+
+
+
+    public function __toString() {
+        return "Comment '".$this->getBody()."' with threadID=" . $this->getThread()->getId() . "; commentID" . $this->getId() . "<br>";
     }
 }

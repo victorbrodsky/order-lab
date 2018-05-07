@@ -73,15 +73,14 @@ class DefaultController extends Controller
         $resProject = null;
         $resAdminComments = null;
 
-        $res1 = null;
-        $res2 = null;
+        $resArr = array();
 
         $importUtil = $this->get('transres_import');
 
         //Step 1: import projects and admin Comments from TRF_PROJECT_INFO
-        if(1) {
+        if(0) {
             //import projects
-            $res1 = $importUtil->importOldData($request, 'TRF_PROJECT_INFO.xlsx', 'project_adminComments');
+            $resArr[] = $importUtil->importOldData($request, 'TRF_PROJECT_INFO.xlsx', 'project_adminComments');
         }
         if(0) {
             //import projects
@@ -89,13 +88,13 @@ class DefaultController extends Controller
             //import admin comments
             $resAdminComments = $importUtil->importOldData($request, 'TRF_PROJECT_INFO.xlsx', 'adminComments');
 
-            $res1 = $resProject . "<br>========= EOF TRF_PROJECT_INFO ===========<br>" . $resAdminComments;
+            $resArr[] = $resProject . "<br>========= EOF TRF_PROJECT_INFO ===========<br>" . $resAdminComments;
         }
 
         //Step 2: import projects and admin Comments from TRF_DRAFT_PROJECT
         if(0) {
             //import projects
-            $res1 = $importUtil->importOldData($request, 'TRF_DRAFT_PROJECT.xlsx', 'project_adminComments');
+            $resArr[] = $importUtil->importOldData($request, 'TRF_DRAFT_PROJECT.xlsx', 'project_adminComments');
         }
         if(0) {
             //import projects
@@ -103,21 +102,21 @@ class DefaultController extends Controller
             //import admin comments
             $resAdminComments = $importUtil->importOldData($request, 'TRF_DRAFT_PROJECT.xlsx', 'adminComments');
 
-            $res2 = $resProject . "<br>========= EOF TRF_DRAFT_PROJECT ===========<br>" . $resAdminComments;
+            $resArr[] = $resProject . "<br>========= EOF TRF_DRAFT_PROJECT ===========<br>" . $resAdminComments;
         }
 
         //Step 3: import Committee Comments from TRF_COMMITTEE_REV
         //Committee comments
         if(0) {
-            $resProject = $importUtil->importCommitteeComments($request, 'TRF_COMMITTEE_REV.xlsx');
+            $resArr[] = $importUtil->importCommitteeComments($request, 'TRF_COMMITTEE_REV.xlsx');
         }
 
         //Step 4: import Committee Comments from TRF_COMMENTS_RESP
-        if(0) {
-            $resProject = $importUtil->importCommitteeComments2($request, 'TRF_COMMENTS_RESP.xlsx');
+        if(1) {
+            $resArr[] = $importUtil->importCommitteeComments2($request, 'TRF_COMMENTS_RESP.xlsx');
         }
 
-        $res = $res1 . "<br><br>" . $res2;
+        $res = implode("<br><br>",$resArr);
 
         exit('Imported result: '.$res);
 

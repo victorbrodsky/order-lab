@@ -2543,20 +2543,20 @@ class TransResUtil
         }
 
         if( !$comment->getAuthor() ) {
-            return "Anonymous" . $authorType;
+            return "Anonymous" . $authorType . $comment->getPrefix();
         }
 
         $user = $this->secTokenStorage->getToken()->getUser();
 
         if( $this->isAdminOrPrimaryReviewer() ) {
-            return $comment->getAuthorName() . $authorType;
+            return $comment->getAuthorName() . $authorType . $comment->getPrefix();
         }
 
         if( $user->getId() == $comment->getAuthor()->getId() ) {
-            return $comment->getAuthorName() . $authorType;
+            return $comment->getAuthorName() . $authorType . $comment->getPrefix();
         }
 
-        return "Anonymous" . $authorType;
+        return "Anonymous" . $authorType . $comment->getPrefix();
     }
 
     public function getProjectShowUrl($project) {
@@ -3654,4 +3654,5 @@ class TransResUtil
 
         return $msg;
     }
+    
 }

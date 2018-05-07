@@ -477,6 +477,38 @@ class UserServiceUtil {
         return $registrationLinkId;
     }
 
+    public function findOneCommentByThreadBodyAuthor($thread, $bodyText, $author)
+    {
+        $repository = $this->em->getRepository('OlegUserdirectoryBundle:FosComment');
+        $dql =  $repository->createQueryBuilder("comment");
+        $dql->select('comment');
+
+        $dql->leftJoin("comment.thread", "thread");
+        $dql->leftJoin("comment.author", "author");
+
+        $dql->where("thread.id = :threadId AND author.id = :authorId AND comment.body = :body");
+
+        $parameters = array(
+            "threadId" => $thread->getId(),
+            "authorId" => $author->getId(),
+            "body" => $bodyText
+        );
+
+        $query = $dql->getQuery();
+
+        $query->setParameters($parameters);
+
+        $comments = $query->getResult();
+
+        if( count($comments) > 0 ) {
+            $comment = $comments[0];
+            //echo "Comment found ID=".$comment->getId()."<br>";
+            return $comment;
+        }
+
+        //echo "Comment Not found by threadID=".$thread->getId()."; bodyText=".$bodyText."<br>";
+        return null;
+    }
 
     /////////////// NOT USED ///////////////////
     //NOT USED
