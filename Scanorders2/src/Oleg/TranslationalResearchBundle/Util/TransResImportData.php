@@ -51,6 +51,104 @@ class TransResImportData
         $this->secTokenStorage = $container->get('security.token_storage'); //$user = $this->secTokenStorage->getToken()->getUser();
     }
 
+
+    //TRF_COMMITTEE_REV
+    public function importWorkRequests( $request, $filename ) {
+        $transresUtil = $this->container->get('transres_util');
+        $logger = $this->container->get('logger');
+
+        $userMapper = $this->getUserMapper('TRF_EMAIL_INFO.xlsx');
+
+        $inputFileName = __DIR__ . "/" . $filename;
+        echo "==================== Processing $filename =====================<br>";
+
+        try {
+            $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
+            $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+            $objPHPExcel = $objReader->load($inputFileName);
+        } catch( Exception $e ) {
+            $error = 'Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage();
+            $logger->error($error);
+            die($error);
+        }
+
+        $sheet = $objPHPExcel->getSheet(0);
+        $highestRow = $sheet->getHighestRow();
+        $highestColumn = $sheet->getHighestColumn();
+
+        $headers = $rowData = $sheet->rangeToArray('A' . 1 . ':' . $highestColumn . 1,
+            NULL,
+            TRUE,
+            FALSE);
+
+
+        $count = 0;
+
+        //for each request in excel (start at row 2)
+        for( $row = 2; $row <= $highestRow; $row++ ) {
+
+            //Read a row of data into an array
+            $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
+                NULL,
+                TRUE,
+                FALSE);
+
+
+            //SERVICE_ID
+            //PROJECT_ID
+            //SURGICAL_PATHOLOGY
+            //IMMUNOPATHOLOGY
+            //CYTOGENETICS
+            //MOLECULAR_PATHOLOGY
+            //MOLECULAR_HEMATOPATHOLOGY
+            //MOLECULAR_DIAGNOSTICS
+            //TOTAL_CASES
+            //PARAFFIN_BLOCK
+            //FRESH_FROZEN_TISSUE
+            //FROZEN_STORAGE
+            //TOTAL_BLOCKS
+            //STAINED
+            //STAINED_NUM_BLOCK
+            //UNSTAINED
+            //UNSTAINED_NUM_BLOCK
+            //UNSTAINED_IHC	UNSTAINED_IHC_NUM_BLOCK
+            //SPEC_STAINED
+            //SPEC_STAINED_NUM_BLOCK
+            //PARA_RNA_DNA
+            //PARA_RNA_DNA_NUM_BLOCK
+            //TMA_CORES	TMA_CORES_NUM_BLOCK	FLOW_CYTOMETRY
+            //IMMUNOHISTOCHEMISTRY
+            //FISH
+            //TMA
+            //LASER_CAPTURE	PERFORMED_BY
+            //CYTOGENETICS_ANTIBODY	FISH_ANTIBODY
+            //NUM_PROBES
+            //INTERPRETATION
+            //TECHNICAL_SUPPORT_FROM
+            //TECHNICAL_SUPPORT_TO
+            //SUBMITTED_BY
+            //STATUS_ID	APPROVAL_DATE
+            //REQUESTED_COMMENT	ADMIN_COMMENT
+            //CREATED_DATE
+            //ASPIRATE_SMEARS
+            //CONTACT_NAME
+            //CONTACT_EMAIL
+
+
+            $exportId = $this->getValueByHeaderName('PROJECT_ID', $rowData, $headers);
+            $exportId = trim($exportId);
+            echo $exportId.", ";
+
+
+            //exit('111');
+            $count++;
+        }
+
+        return "Added $count Work Requests";
+    }
+
+
+
     public function getUserMapper($filename) {
 
         $logger = $this->container->get('logger');

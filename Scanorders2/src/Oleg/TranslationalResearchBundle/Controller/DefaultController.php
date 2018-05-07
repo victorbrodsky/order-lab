@@ -112,8 +112,12 @@ class DefaultController extends Controller
         }
 
         //Step 4: import Committee Comments from TRF_COMMENTS_RESP
-        if(1) {
+        if(0) {
             $resArr[] = $importUtil->importCommitteeComments2($request, 'TRF_COMMENTS_RESP.xlsx');
+        }
+
+        if(1) {
+            $resArr[] = $importUtil->importWorkRequests($request, 'TRF_COMMENTS_RESP.xlsx');
         }
 
         $res = implode("<br><br>",$resArr);
@@ -128,5 +132,6 @@ class DefaultController extends Controller
         
         return $this->redirectToRoute('translationalresearch_home');
     }
+
 
 }
