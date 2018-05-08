@@ -112,6 +112,13 @@
                 <th>{{ knp_pagination_sortable(entities, 'Lowest Roles', 'ent.lowestRoles') }}</th>
             {% endif %}
 
+            {% if entities|first.section is defined and entities|first.productId is defined and entities|first.feeUnit is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'Section', 'ent.section') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Product ID', 'ent.productId') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Fee', 'ent.fee') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Fee Unit', 'ent.feeUnit') }}</th>
+            {% endif %}
+
             {% if entities|first.url is defined %}
                 <th>{{ knp_pagination_sortable(entities, 'URL', 'ent.url') }}</th>
             {% endif %}
@@ -298,6 +305,13 @@
                             "{{ lowestRole.getAlias() }}"<br>
                         {% endfor %}
                     </td>
+                {% endif %}
+
+                {% if entity.section is defined and entity.productId is defined and entity.feeUnit is defined and entity.fee is defined %}
+                    <td>{{ entity.section }}</td>
+                    <td>{{ entity.productId }}</td>
+                    <td>{{ entity.fee }}</td>
+                    <td>{{ entity.feeUnit }}</td>
                 {% endif %}
 
                 {% if entity.url is defined %}

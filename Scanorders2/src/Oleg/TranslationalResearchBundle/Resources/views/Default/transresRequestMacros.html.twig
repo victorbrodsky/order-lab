@@ -203,6 +203,13 @@
 
 {% endmacro %}
 
+{% macro getShowRequestReviewCommentsSection(transresRequest, cycle, statMachineType, showComments) %}
+    {% set threadId = "transres-" ~ transresRequest.getEntityName() ~ "-" ~ transresRequest.id ~ "-" ~ statMachineType %}
+    {% if showComments == 1 %}
+        {{ render(controller('OlegTranslationalResearchBundle:Project:threadCommentsShow', { 'id': threadId })) }}
+    {% endif %}
+{% endmacro %}
+
 {% macro invoiceItemSections(form, cycle, sitename) %}
 
     {% import "OlegFellAppBundle::Default/fellappmacros.html.twig" as fellappmacros %}
@@ -803,6 +810,7 @@
 {% macro transresRequestComment( form, transresRequest, cycle ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "OlegTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}
 
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel panel-info">
@@ -828,6 +836,28 @@
                     </p>
 
                     {{ formmacros.field(form.comment) }}
+
+                    {#<div class="alert alert-info" role="alert">Work Request Billing Progress Comments</div>#}
+                    {#{{ transresRequestMacros.getShowRequestReviewCommentsSection(transresRequest, cycle, 'billing', 1) }}#}
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Work Request Billing Progress Comments</div>
+                        <div class="panel-body">
+                            <p>
+                                {{ transresRequestMacros.getShowRequestReviewCommentsSection(transresRequest, cycle, 'billing', 1) }}
+                            </p>
+                        </div>
+                    </div>
+
+                    {#<div class="alert alert-info" role="alert">Work Request Completion Progress Comments</div>#}
+                    {#{{ transresRequestMacros.getShowRequestReviewCommentsSection(transresRequest, cycle, 'progress', 1) }}#}
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Work Request Completion Progress Comments</div>
+                        <div class="panel-body">
+                            <p>
+                                {{ transresRequestMacros.getShowRequestReviewCommentsSection(transresRequest, cycle, 'progress', 1) }}
+                            </p>
+                        </div>
+                    </div>
 
                 </div>
             </div>

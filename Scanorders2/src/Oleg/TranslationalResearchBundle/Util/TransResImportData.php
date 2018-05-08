@@ -139,6 +139,16 @@ class TransResImportData
             $exportId = trim($exportId);
             echo $exportId.", ";
 
+            $requestID = $this->getValueByHeaderName('SERVICE_ID', $rowData, $headers);
+            $requestID = trim($requestID);
+
+            //Lab
+            $labs = array();
+            $SURGICAL_PATHOLOGY = $this->getValueByHeaderName('SURGICAL_PATHOLOGY', $rowData, $headers);
+            if($SURGICAL_PATHOLOGY){
+                $labs[] = "Surgical Pathology";
+            }
+
 
             //exit('111');
             $count++;
