@@ -1518,6 +1518,8 @@ class FormNodeUtil
                         //html table
                         if( $nameValueArr['showLabel'] ) {
                             $formNodeName = $space . $space . $space . $nameValueArr['name'];
+                        } else {
+                            $formNodeName = null;
                         }
                         $result = $result .
                             //'<tr class="' . $trclassname . '">' .
@@ -1558,6 +1560,7 @@ class FormNodeUtil
 
         $table = true;
         $testing = false;
+        $testing = true;
 
         $formNodes = $formNodeHolderEntity->getEntityBreadcrumbs(); //message category hierarchy
 
@@ -1620,7 +1623,11 @@ class FormNodeUtil
             foreach( $nameValueArrs as $nameValueMultipleArr ) {
 
                 foreach( $nameValueMultipleArr as $nameValueArr ) {
-                    $formNodeName = $space . $space . $space . $nameValueArr['name'];
+                    if( $nameValueArr['showLabel'] ) {
+                        $formNodeName = $space . $space . $space . $nameValueArr['name'];
+                    } else {
+                        $formNodeName = null;
+                    }
                     $result = $result .
                         '<tr style="border:none;">' .
                         '<td style="width:20%; border:none;">' . $formNodeName . '</td>' .

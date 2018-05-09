@@ -330,6 +330,41 @@ class TransResImportData
 
             //5) Table
 
+            //6) Footer
+            //CYTOGENETICS_ANTIBODY
+            //FISH_ANTIBODY
+            //NUM_PROBES
+            $footers = array();
+            $CYTOGENETICS_ANTIBODY = $this->getValueByHeaderName('CYTOGENETICS_ANTIBODY', $rowData, $headers);
+            if( $CYTOGENETICS_ANTIBODY ) {
+                $footers[] = "Conventional Cytogenetics";
+            }
+            $FISH_ANTIBODY = $this->getValueByHeaderName('FISH_ANTIBODY', $rowData, $headers);
+            if( $FISH_ANTIBODY ) {
+                $footers[] = "FISH";
+            }
+            $NUM_PROBES = $this->getValueByHeaderName('NUM_PROBES', $rowData, $headers);
+            if( $NUM_PROBES ) {
+                $footers[] = "# Probes: ".$NUM_PROBES;
+            }
+            if( count($footers) > 0 ) {
+                $footersStr = implode("<br>",$footers);
+                $formDataArr[] = $footersStr;
+            }
+            //INTERPRETATION
+            $INTERPRETATION = $this->getValueByHeaderName('INTERPRETATION', $rowData, $headers);
+            echo "INTERPRETATION=[$INTERPRETATION]<br>";
+            //$INTERPRETATION = intval($INTERPRETATION);
+            if( $INTERPRETATION !== '' && $INTERPRETATION !== NULL ) {
+                $INTERPRETATION = intval($INTERPRETATION);
+                if( $INTERPRETATION === 1 ) {
+                    $formDataArr[] = "Interpretation by Pathologist: Yes";
+                }
+                if( $INTERPRETATION === 0 ) {
+                    $formDataArr[] = "Interpretation by Pathologist: No";
+                }
+            }
+
 
             if( count($formDataArr) > 0 ) {
                 $formDataStr = implode("<br>",$formDataArr);
