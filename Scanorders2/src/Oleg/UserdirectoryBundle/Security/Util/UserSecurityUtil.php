@@ -1207,7 +1207,8 @@ class UserSecurityUtil {
             if( $specificSiteSettingParameter ) {
                 $res = $specificSiteSettingParameter->$getSettingMethod();
             } else {
-                return "[$sitename Site Settings is not initialized]";
+                return null;
+                //return "[$sitename Site Settings is not initialized]";
             }
 
         } else {
