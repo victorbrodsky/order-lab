@@ -57,7 +57,7 @@ class TransResImportData
         $transresUtil = $this->container->get('transres_util');
         $logger = $this->container->get('logger');
 
-        $userMapper = $this->getUserMapper('TRF_EMAIL_INFO.xlsx');
+        //$userMapper = $this->getUserMapper('TRF_EMAIL_INFO.xlsx');
 
         $inputFileName = __DIR__ . "/" . $filename;
         echo "==================== Processing $filename =====================<br>";
@@ -82,7 +82,7 @@ class TransResImportData
             FALSE);
 
 
-        $count = 0;
+        $count = 1;
 
         //for each request in excel (start at row 2)
         for( $row = 2; $row <= $highestRow; $row++ ) {
@@ -96,16 +96,19 @@ class TransResImportData
 
             //SERVICE_ID
             //PROJECT_ID
+
             //SURGICAL_PATHOLOGY
             //IMMUNOPATHOLOGY
             //CYTOGENETICS
             //MOLECULAR_PATHOLOGY
             //MOLECULAR_HEMATOPATHOLOGY
             //MOLECULAR_DIAGNOSTICS
+
             //TOTAL_CASES
             //PARAFFIN_BLOCK
             //FRESH_FROZEN_TISSUE
             //FROZEN_STORAGE
+
             //TOTAL_BLOCKS
             //STAINED
             //STAINED_NUM_BLOCK
@@ -116,40 +119,228 @@ class TransResImportData
             //SPEC_STAINED_NUM_BLOCK
             //PARA_RNA_DNA
             //PARA_RNA_DNA_NUM_BLOCK
-            //TMA_CORES	TMA_CORES_NUM_BLOCK	FLOW_CYTOMETRY
+            //TMA_CORES	TMA_CORES_NUM_BLOCK
+
+            //FLOW_CYTOMETRY
             //IMMUNOHISTOCHEMISTRY
             //FISH
             //TMA
-            //LASER_CAPTURE	PERFORMED_BY
-            //CYTOGENETICS_ANTIBODY	FISH_ANTIBODY
+            //LASER_CAPTURE
+
+            //PERFORMED_BY
+
+            //CYTOGENETICS_ANTIBODY
+            //FISH_ANTIBODY
             //NUM_PROBES
             //INTERPRETATION
             //TECHNICAL_SUPPORT_FROM
             //TECHNICAL_SUPPORT_TO
             //SUBMITTED_BY
-            //STATUS_ID	APPROVAL_DATE
-            //REQUESTED_COMMENT	ADMIN_COMMENT
+            //STATUS_ID
+            //APPROVAL_DATE
+            //REQUESTED_COMMENT
+            //ADMIN_COMMENT
             //CREATED_DATE
             //ASPIRATE_SMEARS
             //CONTACT_NAME
             //CONTACT_EMAIL
-
+            //exit("exit");
 
             $exportId = $this->getValueByHeaderName('PROJECT_ID', $rowData, $headers);
             $exportId = trim($exportId);
-            echo $exportId.", ";
+            //echo $exportId."<br>";
+            //echo $count." [".$exportId."]: ";
+            //exit("exit");
 
             $requestID = $this->getValueByHeaderName('SERVICE_ID', $rowData, $headers);
             $requestID = trim($requestID);
+            echo "<br>".$count.": Project ID ".$exportId.", RS ID ".$requestID."<br>";
 
-            //Lab
+            $formDataArr = array();
+
+            //1) Lab
             $labs = array();
             $SURGICAL_PATHOLOGY = $this->getValueByHeaderName('SURGICAL_PATHOLOGY', $rowData, $headers);
             if($SURGICAL_PATHOLOGY){
                 $labs[] = "Surgical Pathology";
             }
+            $IMMUNOPATHOLOGY = $this->getValueByHeaderName('IMMUNOPATHOLOGY', $rowData, $headers);
+            if($IMMUNOPATHOLOGY){
+                $labs[] = "Imuunopathology";
+            }
+            $CYTOGENETICS = $this->getValueByHeaderName('CYTOGENETICS', $rowData, $headers);
+            if($CYTOGENETICS){
+                $labs[] = "Cytogenetics";
+            }
+            $MOLECULAR_PATHOLOGY = $this->getValueByHeaderName('MOLECULAR_PATHOLOGY', $rowData, $headers);
+            if($MOLECULAR_PATHOLOGY){
+                $labs[] = "Molecular Pathology";
+            }
+            $MOLECULAR_HEMATOPATHOLOGY = $this->getValueByHeaderName('MOLECULAR_HEMATOPATHOLOGY', $rowData, $headers);
+            if($MOLECULAR_HEMATOPATHOLOGY){
+                $labs[] = "Molecular HematoPathology";
+            }
+            $MOLECULAR_DIAGNOSTICS = $this->getValueByHeaderName('MOLECULAR_DIAGNOSTICS', $rowData, $headers);
+            if($MOLECULAR_DIAGNOSTICS){
+                $labs[] = "Molecular Diagnostics";
+            }
+            if( count($labs) > 0 ) {
+                $labsStr = "Lab: ".implode(", ",$labs);
+                $formDataArr[] = $labsStr;
+                //echo $labsStr."<br>";
+            }
+
+            //2) Tissue Procurement/Processing
+            //TOTAL_CASES
+            //PARAFFIN_BLOCK
+            //FRESH_FROZEN_TISSUE
+            //FROZEN_STORAGE
+            $processings = array();
+            $TOTAL_CASES = $this->getValueByHeaderName('TOTAL_CASES', $rowData, $headers);
+            if($TOTAL_CASES){
+                $processings[] = "Total # of patients/cases: " . $TOTAL_CASES;
+            }
+            $PARAFFIN_BLOCK = $this->getValueByHeaderName('PARAFFIN_BLOCK', $rowData, $headers);
+            if($PARAFFIN_BLOCK){
+                $processings[] = "Paraffin Blocks Processing";
+            }
+            $FRESH_FROZEN_TISSUE = $this->getValueByHeaderName('FRESH_FROZEN_TISSUE', $rowData, $headers);
+            if($FRESH_FROZEN_TISSUE){
+                $processings[] = "Fresh/Frozen Tissue Procurement";
+            }
+            $FROZEN_STORAGE = $this->getValueByHeaderName('FROZEN_STORAGE', $rowData, $headers);
+            if($FROZEN_STORAGE){
+                $processings[] = "Frozen Tissue Storage";
+            }
+            if( count($processings) > 0 ) {
+                $processingsStr = "Tissue Procurement/Processing:<br>".implode("<br>",$labs);
+                $formDataArr[] = $processingsStr;
+                //echo $processingsStr."<br>";
+            }
+
+            //3) Archival Specimens
+            //TOTAL_BLOCKS
+            //STAINED
+            //STAINED_NUM_BLOCK
+            //UNSTAINED
+            //UNSTAINED_NUM_BLOCK
+            //UNSTAINED_IHC	UNSTAINED_IHC_NUM_BLOCK
+            //SPEC_STAINED
+            //SPEC_STAINED_NUM_BLOCK
+            //PARA_RNA_DNA
+            //PARA_RNA_DNA_NUM_BLOCK
+            //TMA_CORES	TMA_CORES_NUM_BLOCK
+            $specimens = array();
+            $TOTAL_BLOCKS = $this->getValueByHeaderName('TOTAL_BLOCKS', $rowData, $headers);
+            if($TOTAL_BLOCKS){
+                $specimens[] = "Total # of blocks: " . $TOTAL_BLOCKS;
+            }
+            $STAINED = $this->getValueByHeaderName('STAINED', $rowData, $headers);
+            if($STAINED){
+                $STAINED_NUM_BLOCK = $this->getValueByHeaderName('STAINED_NUM_BLOCK', $rowData, $headers);
+                if($STAINED_NUM_BLOCK){
+                    $specimens[] = "Slides - stained #" . $STAINED_NUM_BLOCK;
+                }
+            }
+            $UNSTAINED = $this->getValueByHeaderName('UNSTAINED', $rowData, $headers);
+            if($UNSTAINED){
+                $UNSTAINED_NUM_BLOCK = $this->getValueByHeaderName('UNSTAINED_NUM_BLOCK', $rowData, $headers);
+                if($UNSTAINED_NUM_BLOCK){
+                    $specimens[] = "Slides - unstained #" . $UNSTAINED_NUM_BLOCK;
+                }
+            }
+            $UNSTAINED_IHC = $this->getValueByHeaderName('UNSTAINED_IHC', $rowData, $headers);
+            if($UNSTAINED_IHC){
+                $UNSTAINED_IHC_NUM_BLOCK = $this->getValueByHeaderName('UNSTAINED_IHC_NUM_BLOCK', $rowData, $headers);
+                if($UNSTAINED_IHC_NUM_BLOCK){
+                    $specimens[] = "Slides - unstained for IHC #" . $UNSTAINED_IHC_NUM_BLOCK;
+                }
+            }
+            $SPEC_STAINED = $this->getValueByHeaderName('SPEC_STAINED', $rowData, $headers);
+            if($SPEC_STAINED){
+                $SPEC_STAINED_NUM_BLOCK = $this->getValueByHeaderName('SPEC_STAINED_NUM_BLOCK', $rowData, $headers);
+                if($SPEC_STAINED_NUM_BLOCK){
+                    $specimens[] = "Special Stains #" . $SPEC_STAINED_NUM_BLOCK;
+                }
+            }
+            $PARA_RNA_DNA = $this->getValueByHeaderName('PARA_RNA_DNA', $rowData, $headers);
+            if($PARA_RNA_DNA){
+                $PARA_RNA_DNA_NUM_BLOCK = $this->getValueByHeaderName('PARA_RNA_DNA_NUM_BLOCK', $rowData, $headers);
+                if($PARA_RNA_DNA_NUM_BLOCK){
+                    $specimens[] = "Paraffin Sections for RNA/DNA (TUBE) #" . $PARA_RNA_DNA_NUM_BLOCK;
+                }
+            }
+            $TMA_CORES = $this->getValueByHeaderName('TMA_CORES', $rowData, $headers);
+            if($TMA_CORES){
+                $TMA_CORES_NUM_BLOCK = $this->getValueByHeaderName('TMA_CORES_NUM_BLOCK', $rowData, $headers);
+                if($TMA_CORES_NUM_BLOCK){
+                    $specimens[] = "TMA cores for RNA/DNA analysis (TUBE) #" . $TMA_CORES_NUM_BLOCK;
+                }
+            }
+            if( count($specimens) > 0 ) {
+                $processingsStr = "Archival Specimens:<br>".implode("<br>",$specimens);
+                $formDataArr[] = $processingsStr;
+                //echo $processingsStr."<br>";
+            }
+
+            //4) processingTypes
+            //FLOW_CYTOMETRY
+            //IMMUNOHISTOCHEMISTRY
+            //FISH
+            //TMA
+            //LASER_CAPTURE
+            $processingTypes = array();
+            $FLOW_CYTOMETRY = $this->getValueByHeaderName('FLOW_CYTOMETRY', $rowData, $headers);
+            if($FLOW_CYTOMETRY){
+                $processingTypes[] = "Flow Cytometry";
+            }
+            $IMMUNOHISTOCHEMISTRY = $this->getValueByHeaderName('IMMUNOHISTOCHEMISTRY', $rowData, $headers);
+            if($IMMUNOHISTOCHEMISTRY){
+                $processingTypes[] = "Immunohistochemistry";
+            }
+            $FISH = $this->getValueByHeaderName('FISH', $rowData, $headers);
+            if($FISH){
+                $processingTypes[] = "FISH";
+            }
+            $TMA = $this->getValueByHeaderName('TMA', $rowData, $headers);
+            if($TMA){
+                $processingTypes[] = "Tissue Microarray";
+            }
+            $LASER_CAPTURE = $this->getValueByHeaderName('LASER_CAPTURE', $rowData, $headers);
+            if($LASER_CAPTURE){
+                $processingTypes[] = "Laser Capture Microdissection";
+            }
+            if( count($processingTypes) > 0 ) {
+                $processingTypesStr = implode("<br>",$processingTypes);
+                $formDataArr[] = $processingTypesStr;
+                //echo $processingsStr."<br>";
+            }
+
+            //4 PERFORMED_BY
+            $PERFORMED_BY = $this->getValueByHeaderName('PERFORMED_BY', $rowData, $headers);
+            if($PERFORMED_BY){
+                if( $PERFORMED_BY == 1 ) {
+                    $formDataArr[] = "In-House (Starr-7)";
+                }
+                if( $PERFORMED_BY == 2 ) {
+                    $formDataArr[] = "Performed by Researcher";
+                }
+            }
 
 
+            //5) Table
+
+
+            if( count($formDataArr) > 0 ) {
+                $formDataStr = implode("<br>",$formDataArr);
+                echo $formDataStr."<br>";
+            }
+
+
+
+            //if( $count > 100 ) {
+                //exit("count limit $count");
+            //}
             //exit('111');
             $count++;
         }

@@ -70,6 +70,8 @@ class DefaultController extends Controller
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
+        ini_set('memory_limit', '2048M');
+
         $resProject = null;
         $resAdminComments = null;
 
@@ -117,7 +119,7 @@ class DefaultController extends Controller
         }
 
         if(1) {
-            $resArr[] = $importUtil->importWorkRequests($request, 'TRF_COMMENTS_RESP.xlsx');
+            $resArr[] = $importUtil->importWorkRequests($request, 'TRF_REQUESTED_SER.xlsx');
         }
 
         $res = implode("<br><br>",$resArr);

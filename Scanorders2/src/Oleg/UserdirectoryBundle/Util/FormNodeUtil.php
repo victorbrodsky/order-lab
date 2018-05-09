@@ -1177,10 +1177,10 @@ class FormNodeUtil
 
         foreach( $formNodes as $formNode ) {
             $thisResult = $this->getSingleFormNodeHolderShortInfo($holderEntity,$formNode,$table,$withValue);
-            //print "<pre>";
-            //print_r($thisResult);
-            //print "</pre><br>";
             $resultsArr[] = $thisResult;
+//            print "<pre>";
+//            print_r($thisResult);
+//            print "</pre><br>";
         }
 
         $result = $this->mergeResults( $resultsArr, $table, $trclassname, $colspan, $testing );
@@ -1407,7 +1407,7 @@ class FormNodeUtil
                     } else {
                         $parentFormNodeName = "";
                     }
-                    $result[$parentFormNodeName][] = array('name'=>$elementName,'value'=>$elementValue);
+                    $result[$parentFormNodeName][] = array('name'=>$elementName,'value'=>$elementValue,'showLabel'=>$formNode->getShowLabel());
                     //$result[$parentFormNodeName] = array('name'=>$elementName,'value'=>$elementValue);
                     //echo $parentFormNodeName.": name=".$elementName."; value=".$elementValue."<br>";
                 }//if array or single value
@@ -1420,48 +1420,6 @@ class FormNodeUtil
 //        echo "<<<<br><br><pre>";
 //        print_r($result);
 //        echo "</pre>>>><br><br>";
-
-//        if(0) {
-//            foreach ($formSectionNodeArr as $sectionName => $nameValueArrs) {
-//                //echo "sectionName=$sectionName<br>";
-//                if ($table) {
-//                    if ($sectionName) {
-//                        $result = $result .
-//                            '<tr class="' . $trclassname . '">' .
-//                            '<td colspan=9 class="rowlink-skip">' . $sectionName . '</td>' .
-//                            '</tr>';
-//                    }
-//                    foreach ($nameValueArrs as $nameValueArr) {
-//                        $formNodeName = $space . $space . $space . $nameValueArr['name'];
-//                        $result = $result .
-//                            '<tr class="' . $trclassname . '">' .
-//                            '<td colspan=3 class="rowlink-skip" style="width:20%">' . $formNodeName . '</td>' .
-//                            '<td colspan=6 class="rowlink-skip" style="width:80%">' . $nameValueArr['value'] . '</td>' .
-//                            '</tr>';
-//                    }
-//                } else {
-//                    //row height can not exceed 409
-//                    //$info = "";
-//                    if ($sectionName) {
-//                        //$info = $sectionName . "\n";
-//                        $result[] = $sectionName;// . "\n";
-//                    }
-//                    //$numItems = count($nameValueArrs);
-//                    //$i = 0;
-//                    $spacePrefix = "   ";
-//                    //$spacePrefix = "";
-//                    foreach ($nameValueArrs as $nameValueArr) {
-//                        $thisInfo = $spacePrefix . $nameValueArr['name'] . ": " . $nameValueArr['value'];
-//                        //$info = $info . $thisInfo;
-//                        //if( ++$i < $numItems ) {
-//                        //    $info = $info . "\n";
-//                        //}
-//                        $result[] = $thisInfo;// . "\n";
-//                    }
-//                    //$result[] = $info;
-//                }
-//            }//foreach
-//        }//if(0)
 
         //return $result;
         return $result;
@@ -1558,7 +1516,9 @@ class FormNodeUtil
 
                     if( $table ) {
                         //html table
-                        $formNodeName = $space . $space . $space . $nameValueArr['name'];
+                        if( $nameValueArr['showLabel'] ) {
+                            $formNodeName = $space . $space . $space . $nameValueArr['name'];
+                        }
                         $result = $result .
                             //'<tr class="' . $trclassname . '">' .
                             $tr .
