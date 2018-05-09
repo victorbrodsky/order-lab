@@ -1560,7 +1560,7 @@ class FormNodeUtil
 
         $table = true;
         $testing = false;
-        $testing = true;
+        //$testing = true;
 
         $formNodes = $formNodeHolderEntity->getEntityBreadcrumbs(); //message category hierarchy
 
