@@ -52,6 +52,7 @@ class CallLogSiteParametersController extends SiteParametersController
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
+        ////////// Create a new CalllogSiteParameter //////////
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
         if( count($entities) != 1 ) {
@@ -66,6 +67,7 @@ class CallLogSiteParametersController extends SiteParametersController
             $siteParameters->setCalllogSiteParameter($calllogSiteParameter);
             $em->flush();
         }
+        ////////// EOF Create a new CalllogSiteParameter //////////
 
         return $this->indexParameters($request);
     }
