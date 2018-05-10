@@ -42,12 +42,12 @@
         <div class="row">
             <div class="col-xs-1" align="left" data-toggle="tooltip" title="Start Date">
                 {#{{ calllogmacros.singleDateField('','Start Date') }}#}
-                {{ formmacros.fielddate(filterform.startDate,'regular-datepicker') }}
+                {{ formmacros.fielddate(filterform.startDate,'allow-future-date') }}
                 {#{{ form_row(filterform.startDate, {'attr': {'placeholder': 'Start Date'}}) }}#}
             </div>
             <div class="col-xs-1" align="left" data-toggle="tooltip" title="End Date">
                 {#{{ calllogmacros.singleDateField('','End Date') }}#}
-                {{ formmacros.fielddate(filterform.endDate,'regular-datepicker') }}
+                {{ formmacros.fielddate(filterform.endDate,'allow-future-date') }}
                 {#{{ form_row(filterform.endDate, {'attr': {'placeholder': 'End Date'}}) }}#}
             </div>
             {#<div class="col-xs-2" align="left">#}
