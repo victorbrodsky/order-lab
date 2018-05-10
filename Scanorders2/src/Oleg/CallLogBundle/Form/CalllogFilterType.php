@@ -86,25 +86,30 @@ class CalllogFilterType extends AbstractType
 //            'classtype' => 'mrntype'
 //        ));
         //echo "form mrntype=".$this->params['mrntype']."<br>";
-        $builder->add('mrntype', EntityType::class, array(
-            'class' => 'OlegOrderformBundle:MrnType',
-            'label' => false,
-            'required' => true,
-            //'mapped' => false,
-            'data' => $this->params['mrntype'],
-            //'data' => 'ssss',
-            //'empty_data' => $this->params['mrntype'],
-            'attr' => array('class' => 'combobox combobox-no-width', 'placeholder' => "MRN Type", 'style'=>'width:50%;'),
-        ));
-//        $builder->add('mrntype', ChoiceType::class, array(
+//        $builder->add('mrntype', EntityType::class, array(
+//            'class' => 'OlegOrderformBundle:MrnType',
 //            'label' => false,
+//            //'required' => true,
 //            'required' => false,
-//            'choices' => $this->params['mrntypeChoices'],
-//            'choices_as_values' => true,
-//            //'data' => $this->params['mrntypeDefault'],
-//            'empty_data' => $this->params['mrntypeDefault'],
+//            //'mapped' => false,
+//            'data' => $this->params['mrntype'],
+//            //'data' => 'ssss',
+//            //'empty_data' => $this->params['mrntype'],
 //            'attr' => array('class' => 'combobox combobox-no-width', 'placeholder' => "MRN Type", 'style'=>'width:50%;'),
 //        ));
+//        echo "form mrntype=".$this->params['mrntypeDefault']."<br>";
+        $builder->add('mrntype', ChoiceType::class, array(
+            'label' => false,
+            //'required' => true,
+            'required' => false,
+            'choices' => $this->params['mrntypeChoices'],
+            'choices_as_values' => true,
+            'data' => $this->params['mrntypeDefault'],
+            //'data' => 'Epic Ambulatory Enterprise ID Number',
+            //'empty_data' => $this->params['mrntypeDefault'],
+            //'empty_data' => 'Epic Ambulatory Enterprise ID Number',
+            'attr' => array('class' => 'combobox combobox-no-width', 'placeholder' => "MRN Type", 'style'=>'width:50%;'),
+        ));
 
         //echo "formtype: search=".$this->params['search']."<br>";
         $builder->add('search', TextType::class, array(

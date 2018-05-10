@@ -207,6 +207,7 @@ class CallEntryController extends Controller
         $messageCategoryTypeId = null;
         $messageCategoryEntity = null;
         $messageCategorieDefaultIdStr = null;
+        $defaultMrnTypeId = null;
         $metaphone = false;
 
         //child nodes of "Pathology Call Log Entry"
@@ -235,6 +236,7 @@ class CallEntryController extends Controller
             }
             /////////// EOF sort alphabetically //////////////
         }
+
         //testing
         //print_r($messageCategories);
 
@@ -250,19 +252,18 @@ class CallEntryController extends Controller
 //            $defaultMrnType = $em->getRepository('OlegOrderformBundle:MrnType')->findOneByName("New York Hospital MRN");
 //        }
         $defaultMrnType = $calllogUtil->getDefaultMrnType();
-
-        $defaultMrnTypeId = null;
+        //$defaultMrnTypeId = null;
         if( $defaultMrnType ) {
             $defaultMrnTypeId = $defaultMrnType->getid();
         }
         //echo "defaultMrnTypeId=".$defaultMrnTypeId."<br>";
 
         //get mrntypes ($mrntypeChoices)
-//        $mrntypeChoices = array();
-//        $mrntypeChoicesArr = $em->getRepository('OlegOrderformBundle:MrnType')->findBy(array('type'=>array('default','user-added')));
-//        foreach( $mrntypeChoicesArr as $thisMrnType ) {
-//            $mrntypeChoices[$thisMrnType->getName()] = $thisMrnType->getId();
-//        }
+        $mrntypeChoices = array();
+        $mrntypeChoicesArr = $em->getRepository('OlegOrderformBundle:MrnType')->findBy(array('type'=>array('default','user-added')));
+        foreach( $mrntypeChoicesArr as $thisMrnType ) {
+            $mrntypeChoices[$thisMrnType->getName()] = $thisMrnType->getId();
+        }
 
         $referringProviders = $calllogUtil->getReferringProvidersWithUserWrappers();
 
@@ -282,6 +283,7 @@ class CallEntryController extends Controller
         //echo "navbar: calllogsearchtype=".$calllogsearchtype."; calllogsearch=".$calllogsearch."<br>";
         if( $calllogsearchtype == 'MRN or Last Name' ) {
             $searchFilter = $calllogsearch;
+            //$mrntypeFilter = $defaultMrnTypeId;
         }
         if( $calllogsearchtype == 'NYH MRN' ) {
             $searchFilter = $calllogsearch;
@@ -308,9 +310,9 @@ class CallEntryController extends Controller
             'messageStatuses' => $messageStatusesChoice,
             'messageCategories' => $messageCategories, //for home to list all entries page
             //'messageCategoryDefault' => $messageCategoriePathCall->getId(),
-            'mrntype' => $defaultMrnTypeId,
-            //'mrntypeChoices' => $mrntypeChoices,
-            //'mrntypeDefault' => $defaultMrnTypeId,
+            //'mrntype' => $defaultMrnTypeId,
+            'mrntypeChoices' => $mrntypeChoices,
+            'mrntypeDefault' => $defaultMrnTypeId,
             'referringProviders' => $referringProviders,
             'search' => $searchFilter,
             'entryBodySearch' => $entryBodySearchFilter,
@@ -364,6 +366,7 @@ class CallEntryController extends Controller
                     array(
                         'filter[messageStatus]' => "All except deleted",
                         'filter[messageCategory]' => $messageCategorieDefaultIdStr,    //$messageCategoriePathCall->getName()."_".$messageCategoriePathCall->getId()
+                        'filter[mrntype]' => $defaultMrnTypeId,
                         //'filter[metaphone]'=>false
                     )
                 ));
