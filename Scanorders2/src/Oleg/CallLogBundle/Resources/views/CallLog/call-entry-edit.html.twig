@@ -139,7 +139,8 @@
                                     {{ formmacros.simplefield("Encounter Date:", encounterDateStr, "", "disabled") }}
                                 {% endfor %}
                             {% else %}
-                                {{ formmacros.inputArrayField(encounterPatientInfo.date,cycle,"encounterdate","date","","","",status) }}
+                                {#{{ formmacros.inputArrayField(encounterPatientInfo.date,cycle,"encounterdate","date","","","",status) }}#}
+                                {{ calllogmacros.encounterDateTimeWithTimezone(encounterPatientInfo.date,cycle) }}
                             {% endif %}
 
                             {{ formmacros.field(encounterPatientInfo.encounterStatus) }}

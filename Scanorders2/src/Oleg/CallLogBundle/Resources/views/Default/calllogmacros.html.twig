@@ -1184,3 +1184,29 @@
         <a href="{{ path('calllog_home', { 'filter[encounterLocation]': encounterLocationId, 'filter[messageStatus]': "All except deleted" }) }}" target="_blank">{{ locationInfo|raw }}</a>
     {% endif %}
 {% endmacro %}
+
+{% macro encounterDateTimeWithTimezone( dates, cycle ) %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% for date in dates|reverse %}
+        <p>
+        <div class="row">
+            {{ form_errors(date.field) }}
+            {{ form_errors(date.field) }}
+            <div class="col-xs-6" align="right">
+                {{ form_label(date.field) }}
+            </div>
+            <div class="col-xs-6" align="left">
+                <div class="input-group input-group-reg date allow-future-date">
+                    {{ form_widget(date.field) }}
+                    <span class="input-group-addon calendar-icon-button"><i class="glyphicon glyphicon-calendar"></i></span>
+                </div>
+                {% if date.time is defined %}
+                    {{ form_widget(date.time) }}
+                {% endif %}
+            </div>
+        </div>
+        </p>
+        {{ formmacros.field(date.timezone) }}
+    {% endfor %}
+{% endmacro %}
+

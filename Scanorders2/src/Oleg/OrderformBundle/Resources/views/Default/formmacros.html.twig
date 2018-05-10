@@ -1607,6 +1607,9 @@
                     {% endif %}
                 {% elseif fieldtype == "date" %}
                     {{ formmacros.fielddate(fieldThis,'regular-datepicker') }}
+                    {#{% if fieldThis.timezone %}#}
+                        {#{{ formmacros.field(fieldThis.timezone) }}#}
+                    {#{% endif %}#}
                 {% elseif fieldtype == "lockdate" %}
                     {{ formmacros.fieldlockdate(fieldThis.field,'regular-datepicker') }}
                 {% elseif fieldtype == "paper" %}

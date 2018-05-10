@@ -35,7 +35,7 @@
 
 
     {#Search Form#}
-    <p class="well form-search">
+    <div class="well form-search">
     {#<form action="{{ path(route_path) }}" method="get" class="well form-search">#}
     {#{{ form_start(filterform, {'action': route_path, 'method': 'GET', 'attr': {'class': 'well form-search'}}) }}#}
     {{ form_start(filterform) }}
@@ -139,15 +139,14 @@
             </div> <!-- panel-body -->
         </div> <!-- panel-collapse -->
 
-        <p>
-            <button id="Search_button" type="submit" class="btn btn-default">Filter</button>
-        </p>
+
+        <button id="Search_button" type="submit" class="btn btn-default">Filter</button>
 
         {#{{ form_rest(filterform) }}#}
     {#</form>#}
     {{ form_end(filterform) }}
     </div>
-
+    {#</p>#}
 
     {#Call Case List#}
     <br><br>

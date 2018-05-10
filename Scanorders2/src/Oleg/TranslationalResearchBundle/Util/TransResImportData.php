@@ -355,6 +355,7 @@ class TransResImportData
             $INTERPRETATION = $this->getValueByHeaderName('INTERPRETATION', $rowData, $headers);
             echo "INTERPRETATION=[$INTERPRETATION]<br>";
             //$INTERPRETATION = intval($INTERPRETATION);
+            //TODO: only if 1 or 0 but not null or ''
             if( $INTERPRETATION !== '' && $INTERPRETATION !== NULL ) {
                 $INTERPRETATION = intval($INTERPRETATION);
                 if( $INTERPRETATION === 1 ) {
