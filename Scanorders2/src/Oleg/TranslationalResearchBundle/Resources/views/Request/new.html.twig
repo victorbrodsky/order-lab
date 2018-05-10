@@ -62,7 +62,7 @@
 
         {{ transresRequestMacros.transresRequestDetails(form,transresRequest,cycle,sitename) }}
 
-        {{ transresRequestMacros.transresRequestComment(form,transresRequest,cycle) }}
+        {{ transresRequestMacros.transresRequestComment(form,transresRequest,cycle,'showFosComment') }}
 
         {% if cycle != "new" and is_granted('ROLE_TRANSRES_ADMIN') %}
             {{ transresRequestMacros.transresRequestInfo(form,transresRequest,cycle) }}

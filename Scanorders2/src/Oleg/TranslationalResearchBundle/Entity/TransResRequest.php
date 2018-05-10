@@ -43,6 +43,13 @@ class TransResRequest {
     private $id;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $exportId;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
      * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
      */
@@ -229,6 +236,22 @@ class TransResRequest {
     public function setId($id)
     {
         $this->id = $id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getExportId()
+    {
+        return $this->exportId;
+    }
+
+    /**
+     * @param mixed $exportId
+     */
+    public function setExportId($exportId)
+    {
+        $this->exportId = $exportId;
     }
 
     /**
@@ -620,6 +643,7 @@ class TransResRequest {
     {
         $this->comment = $comment;
     }
+
     //////////////// EOF fields /////////////////////////
 
 

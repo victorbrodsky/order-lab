@@ -91,6 +91,15 @@ class TransResImportData
 
         $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
 
+        //////// Admin user ///////////
+        $specialty = $this->em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation("ap-cp");
+        if( !$specialty ) {
+            exit("Project specialty not found by abbreviation=ap-cp");
+        }
+        $reviewers = $transresUtil->getDefaultReviewerInfo("admin_review",$specialty,true);
+        $adminReviewer = $reviewers[0];
+        //////// EOF Admin user /////////
+
         $count = 1;
 
         //for each request in excel (start at row 2)
@@ -123,7 +132,8 @@ class TransResImportData
             //STAINED_NUM_BLOCK
             //UNSTAINED
             //UNSTAINED_NUM_BLOCK
-            //UNSTAINED_IHC	UNSTAINED_IHC_NUM_BLOCK
+            //UNSTAINED_IHC
+            //UNSTAINED_IHC_NUM_BLOCK
             //SPEC_STAINED
             //SPEC_STAINED_NUM_BLOCK
             //PARA_RNA_DNA
@@ -172,6 +182,7 @@ class TransResImportData
             $transresRequest = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest')->findOneByExportId($requestID);
             if( !$transresRequest ) {
                 $transresRequest = new TransResRequest();
+                $transresRequest->setExportId($requestID);
                 $transresRequest->setInstitution($institution);
                 $transresRequest->setVersion(1);
 
@@ -182,6 +193,9 @@ class TransResImportData
 
                 //$project->addRequest($transresRequest);
                 $transresRequest->setProject($project);
+            } else {
+                echo "Request already exists with ID ".$requestID."<br>";
+                continue;
             }
 
             $formDataArr = array();
@@ -395,14 +409,14 @@ class TransResImportData
             //TECHNICAL_SUPPORT_FROM
             $TECHNICAL_SUPPORT_FROM = $this->getValueByHeaderName('TECHNICAL_SUPPORT_FROM', $rowData, $headers);
             if( $TECHNICAL_SUPPORT_FROM ) {
-                $TECHNICAL_SUPPORT_FROM_DATE = $this->transformDatestrToDate($TECHNICAL_SUPPORT_FROM);
+                $TECHNICAL_SUPPORT_FROM_DATE = $this->transformDatestrToDate($TECHNICAL_SUPPORT_FROM,"m/Y");
                 $transresRequest->setSupportStartDate($TECHNICAL_SUPPORT_FROM_DATE);
             }
 
             //TECHNICAL_SUPPORT_TO
             $TECHNICAL_SUPPORT_TO = $this->getValueByHeaderName('TECHNICAL_SUPPORT_TO', $rowData, $headers);
             if( $TECHNICAL_SUPPORT_TO ) {
-                $TECHNICAL_SUPPORT_TO_DATE = $this->transformDatestrToDate($TECHNICAL_SUPPORT_TO);
+                $TECHNICAL_SUPPORT_TO_DATE = $this->transformDatestrToDate($TECHNICAL_SUPPORT_TO,"m/Y");
                 $transresRequest->setSupportEndDate($TECHNICAL_SUPPORT_TO_DATE);
             }
 
@@ -417,15 +431,89 @@ class TransResImportData
             //STATUS_ID
             $STATUS_ID = $this->getValueByHeaderName('STATUS_ID', $rowData, $headers);
             if( $STATUS_ID ) {
-
+                $requestState = $this->statusRequestMapper($STATUS_ID);
+                if( $requestState ) {
+                    $transresRequest->setProgressState($requestState);
+                    $transresRequest->setBillingState("active");
+                } else {
+                    exit("Request progress state is not defined by STATUS_ID=[".$STATUS_ID."]");
+                }
             }
 
+            //APPROVAL_DATE
+            $APPROVAL_DATE_STR = $this->getValueByHeaderName('APPROVAL_DATE', $rowData, $headers);
+            if( $APPROVAL_DATE_STR ) {
+                $APPROVAL_DATE = $this->transformDatestrToDate($APPROVAL_DATE_STR);
+                $transresRequest->setProgressApprovalDate($APPROVAL_DATE);
+            }
+
+            //REQUESTED_COMMENT
+            $REQUESTED_COMMENT = $this->getValueByHeaderName('REQUESTED_COMMENT', $rowData, $headers);
+            if( $REQUESTED_COMMENT ) {
+                $transresRequest->setComment($REQUESTED_COMMENT);
+            }
+
+            //ADMIN_COMMENT
+            $ADMIN_COMMENT = $this->getValueByHeaderName('ADMIN_COMMENT', $rowData, $headers);
+            if( $ADMIN_COMMENT ) {
+                //add it later when ID is generated.
+                //$this->addComment($request, $adminReviewer, $transresRequest, $ADMIN_COMMENT, "progress", "[imported comment]");
+            }
+
+            //CREATED_DATE
+            $CREATED_DATE_STR = $this->getValueByHeaderName('CREATED_DATE', $rowData, $headers);
+            if( $CREATED_DATE_STR ) {
+                $CREATED_DATE = $this->transformDatestrToDate($CREATED_DATE_STR);
+                $transresRequest->setCreateDate($CREATED_DATE);
+            }
+
+            //CONTACT_EMAIL
+            $CONTACT_EMAIL = $this->getValueByHeaderName('CONTACT_EMAIL', $rowData, $headers);
+            if( $CONTACT_EMAIL ) {
+                $contactUsers = $this->getUserByEmail($CONTACT_EMAIL,$requestID,'CONTACT_EMAIL');
+                if( count($contactUsers) > 0 ) {
+                    $contactUser = $contactUsers[0];
+                    $transresRequest->setContact($contactUser);
+                } else {
+                    $msg = "Contact user not found by CONTACT_EMAIL=".$CONTACT_EMAIL;
+                    exit($msg);
+                    //echo $msg."<br>";
+                    $logger->warning($msg);
+                    //$formDataArr[] = $msg;
+                }
+                $transresRequest->setContact($contactUser);
+            }
+
+            //ASPIRATE_SMEARS
+            $ASPIRATE_SMEARS = $this->getValueByHeaderName('ASPIRATE_SMEARS', $rowData, $headers);
+            if( $ASPIRATE_SMEARS ) {
+                $formDataArr[] = "Aspirate Smears: ".$ASPIRATE_SMEARS;
+            }
+            //CONTACT_NAME
+            $CONTACT_NAME = $this->getValueByHeaderName('CONTACT_NAME', $rowData, $headers);
+            if( $CONTACT_NAME ) {
+                $formDataArr[] = "Contact Name: ".$CONTACT_NAME;
+            }
+            //CONTACT_EMAIL
+            if( $CONTACT_EMAIL ) {
+                $formDataArr[] = "Contact Email: ".$CONTACT_EMAIL;
+            }
 
             if( count($formDataArr) > 0 ) {
                 $formDataStr = implode("<br>",$formDataArr);
                 echo $formDataStr."<br>";
-            }
 
+                $requestComment = $transresRequest->getComment();
+                //Append to the Comment
+                $formDataStr = "Original Exported Service Request Form:\r\n".$formDataStr;
+
+                $requestComment = $requestComment . "\r\n \r\n" .
+                    "##################################".
+                    $formDataStr.
+                    "##################################";
+
+                $transresRequest->setComment($requestComment);
+            }
 
 
             /////////////// Set default users from project ///////////////////
@@ -452,8 +540,20 @@ class TransResImportData
             }
             /////////////// EOF Set default users from project ///////////////////
 
+            //save project to DB before form nodes
+            $saveFlag = true;
+            //$saveFlag = false;
+            if( $saveFlag ) {
+                $em->persist($transresRequest);
+                $em->flush();
 
-            if( $count > 15 ) {
+                $transresRequest->generateOid();
+                $em->flush($transresRequest);
+
+                $this->addComment($request, $adminReviewer, $transresRequest, $ADMIN_COMMENT, "progress", "[imported comment]",$CREATED_DATE_STR);
+            }
+
+            if( $count == 1 ) {
                 exit("count limit $count");
             }
             //exit('111');
@@ -667,6 +767,15 @@ class TransResImportData
             TRUE,
             FALSE);
 
+        //////// Admin user ///////////
+        $specialty = $this->em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation("ap-cp");
+        if( !$specialty ) {
+            exit("Project specialty not found by abbreviation=ap-cp");
+        }
+        $reviewers = $transresUtil->getDefaultReviewerInfo("admin_review",$specialty,true);
+        $adminReviewer = $reviewers[0];
+        //////// EOF Admin user /////////
+
         $count = 0;
 
         //for each request in excel (start at row 2)
@@ -720,14 +829,6 @@ class TransResImportData
                 $prefix = "[imported reviewer comment]";
 
                 if( !$reviewerUser ) {
-                    //////// Admin user ///////////
-                    $specialty = $this->em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation("ap-cp");
-                    if( !$specialty ) {
-                        exit("Project specialty not found by abbreviation=ap-cp");
-                    }
-                    $reviewers = $transresUtil->getDefaultReviewerInfo("admin_review",$specialty,true);
-                    $adminReviewer = $reviewers[0];
-                    //////// EOF Admin user /////////
                     $reviewerUser = $adminReviewer;
                     $prefix = "[imported reviewer comment submitted by $userId]";
                 }
@@ -1310,22 +1411,26 @@ class TransResImportData
     }
 
 
-    public function addComment($request,$author,$project,$commentStr,$commentType,$prefix="[imported comment]",$createDateStr=null, $parentComment=null) {
+    public function addComment( $request, $author, $entity, $commentStr, $commentType, $prefix="[imported comment]", $createDateStr=null, $parentComment=null) {
         $userServiceUtil = $this->container->get('user_service_utility');
         $commentManager = $this->container->get('fos_comment.manager.comment');
         $threadManager = $this->container->get('fos_comment.manager.thread');
 
-        if( !$project ) {
-            exit("Project is null for comment=".$commentStr);
+        $class = new \ReflectionClass($entity);
+        $className = $class->getShortName();
+        echo "className=".$className."<br>";
+
+        if( !$entity ) {
+            exit("$className is null for comment=".$commentStr);
         }
         if( !$author ) {
-            exit("Author is null. Project export ID# ".$project->getExportId());
+            exit("Author is null. $className export ID# ".$entity->getExportId());
         }
         if( !$commentStr ) {
-            exit("Comment is null. Project export ID# ".$project->getExportId());
+            exit("Comment is null. $className export ID# ".$entity->getExportId());
         }
         if( !$commentType ) {
-            exit("Comment Type is null. Project export ID# ".$project->getExportId());
+            exit("Comment Type is null. $className export ID# ".$entity->getExportId());
         }
 
         $res = null;
@@ -1339,9 +1444,30 @@ class TransResImportData
         //echo "adminComment=".$adminComment."<br>";
         if( $commentStr ) {
 
-            //transres-Project-3-irb_review, transres-Project-18-admin_review
-            $threadId = "transres-Project-" . $project->getId() . "-" . $commentType;   //"admin_review";
-            //echo "threadId=".$threadId."<br>";
+            $threadId = null;
+            $permalink = null;
+
+            if( $className == "Project" ) {
+                //transres-Project-3-irb_review, transres-Project-18-admin_review
+                $threadId = "transres-Project-" . $entity->getId() . "-" . $commentType;   //"admin_review";
+                //http://localhost/order/translational-research/project/review/25
+                //http://localhost/order/translational-research/project/review/18
+                $permalink = $uri . "/project/review/" . $entity->getId();
+            }
+            if( $className == "TransResRequest" ) {
+                //transres-Request-33-progress
+                //transres-Request-33-billing
+                $threadId = "transres-Request-". $entity->getId() . "-" . $commentType;   //"progress";
+                //http://localhost/order/translational-research/request/progress/review/33
+                $permalink = $uri . "/request/progress/review/" . $entity->getId();
+            }
+            if( !$threadId || !$permalink ) {
+                exit("ThreadId or Permalink not defined.");
+            }
+
+            echo "threadId=".$threadId."<br>";
+            echo "permalink=".$permalink."<br>";
+
             $thread = $threadManager->findThreadById($threadId);
 
             if ($thread) {
@@ -1361,9 +1487,7 @@ class TransResImportData
                 $thread = $threadManager->createThread();
                 $thread->setId($threadId);
 
-                //http://localhost/order/translational-research/project/review/25
-                //http://localhost/order/translational-research/project/review/18
-                $permalink = $uri . "/project/review/" . $project->getId();
+                //$permalink = $uri . "/project/review/" . $entity->getId();
                 $thread->setPermalink($permalink);
 
                 // Add the thread
@@ -1653,7 +1777,7 @@ class TransResImportData
         $receivingObject = $transresRequestUtil->setValueToFormNodeProject($project,$fieldName,$value);
     }
 
-    public function transformDatestrToDate($datestr)
+    public function transformDatestrToDate($datestr, $formatType="j-M-y")
     {
         //$userSecUtil = $this->container->get('user_security_utility');
         //$date = $userSecUtil->transformDatestrToDateWithSiteEventLog($datestr, $this->container->getParameter('translationalresearch.sitename'));
@@ -1667,7 +1791,8 @@ class TransResImportData
         //'j-M-Y', '15-Feb-2009'
         //23-APR-07
         //echo "dateStr=".$datestr;
-        $date = \DateTime::createFromFormat('j-M-y',$datestr);
+        //M/y
+        $date = \DateTime::createFromFormat($formatType,$datestr);
         //echo " =>".$date->format("d-m-Y")."<br>";
 
         return $date;
@@ -1692,12 +1817,12 @@ class TransResImportData
         switch( $statusId ){
             case "2":
                 $status = "pending";
-                $statusNew = "pending";
+                $statusNew = "active";
                 break;
             case "5":
                 //TODO:???
-                $status = "pending";
-                $statusNew = "pending";
+                $status = "active";
+                $statusNew = "completed";
                 break;
         }
 

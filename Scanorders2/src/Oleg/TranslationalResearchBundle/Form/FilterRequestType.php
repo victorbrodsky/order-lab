@@ -233,6 +233,12 @@ class FilterRequestType extends AbstractType
             'attr' => array('class' => 'combobox', 'placeholder'=>'Funded vs Non-Funded'),
         ));
 
+        $builder->add('externalId', TextType::class, array(
+            'required'=>false,
+            'label' => false,
+            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'External ID'),
+        ));
+
     }
 
     public function configureOptions(OptionsResolver $resolver)

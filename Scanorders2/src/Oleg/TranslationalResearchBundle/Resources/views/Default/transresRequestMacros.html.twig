@@ -14,6 +14,13 @@
             <div id="transresRequestInfo" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="transresRequestInfoHeading">
                 <div class="panel-body">
 
+                    {% if transresRequest.exportId %}
+                        {{ formmacros.simplefield("Request External ID:", transresRequest.exportId, "input", "disabled") }}
+                        {% if transresRequest.project.exportId %}
+                            {{ formmacros.simplefield("Project External ID:", project.exportId, "input", "disabled") }}
+                        {% endif %}
+                    {% endif %}
+
                     {% if form.state is defined %}
                         {{ formmacros.field(form.state) }}
                     {% endif %}
@@ -499,6 +506,7 @@
                             {{ form_widget(filterform.comment,{'attr': {'placeholder': 'Comment Search'}}) }}
                         </div>
                         <div class="col-xs-4">
+                            {{ form_widget(filterform.externalId) }}
                         </div>
                         <div class="col-xs-4">
                         </div>
@@ -807,7 +815,7 @@
 
 {% endmacro %}
 
-{% macro transresRequestComment( form, transresRequest, cycle ) %}
+{% macro transresRequestComment( form, transresRequest, cycle, showFosComment ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
     {% import "OlegTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}
@@ -837,27 +845,25 @@
 
                     {{ formmacros.field(form.comment) }}
 
-                    {#<div class="alert alert-info" role="alert">Work Request Billing Progress Comments</div>#}
-                    {#{{ transresRequestMacros.getShowRequestReviewCommentsSection(transresRequest, cycle, 'billing', 1) }}#}
-                    <div class="panel panel-default">
-                        <div class="panel-heading">Work Request Billing Progress Comments</div>
-                        <div class="panel-body">
-                            <p>
-                                {{ transresRequestMacros.getShowRequestReviewCommentsSection(transresRequest, cycle, 'billing', 1) }}
-                            </p>
+                    {% if showFosComment is defined and showFosComment == "showFosComment" %}
+                        <div class="panel panel-default">
+                            <div class="panel-heading">Work Request Billing Progress Comments</div>
+                            <div class="panel-body">
+                                <p>
+                                    {{ transresRequestMacros.getShowRequestReviewCommentsSection(transresRequest, cycle, 'billing', 1) }}
+                                </p>
+                            </div>
                         </div>
-                    </div>
 
-                    {#<div class="alert alert-info" role="alert">Work Request Completion Progress Comments</div>#}
-                    {#{{ transresRequestMacros.getShowRequestReviewCommentsSection(transresRequest, cycle, 'progress', 1) }}#}
-                    <div class="panel panel-default">
-                        <div class="panel-heading">Work Request Completion Progress Comments</div>
-                        <div class="panel-body">
-                            <p>
-                                {{ transresRequestMacros.getShowRequestReviewCommentsSection(transresRequest, cycle, 'progress', 1) }}
-                            </p>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">Work Request Completion Progress Comments</div>
+                            <div class="panel-body">
+                                <p>
+                                    {{ transresRequestMacros.getShowRequestReviewCommentsSection(transresRequest, cycle, 'progress', 1) }}
+                                </p>
+                            </div>
                         </div>
-                    </div>
+                    {% endif %}
 
                 </div>
             </div>
