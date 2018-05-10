@@ -231,7 +231,7 @@ class LocationType extends AbstractType
             ));
 
             $builder->add('associatedCode',null,array(
-                'label'=>'Associated NYPH Code:',
+                'label'=>'Associated Institutional Code for this Location:',
                 'attr' => array('class'=>'form-control')
             ));
 
@@ -251,7 +251,7 @@ class LocationType extends AbstractType
                 ));
 
                 $builder->add('associatedPfi',null,array(
-                    'label'=>'Associated NY Permanent Facility Identifier (PFI) Number:',
+                    'label'=>'Associated Governmental Permanent Facility Identifier (PFI) Number for this Location:',
                     'attr' => array('class'=>'form-control')
                 ));
             }

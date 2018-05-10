@@ -4284,7 +4284,7 @@ class UserController extends Controller
 
 
     /**
-     * @Route("/download/wcm-pathology-directory", name="employees_userlist_download_excel")
+     * @Route("/download/printable-lab-directory", name="employees_userlist_download_excel")
      */
     public function downloadAction( Request $request )
     {

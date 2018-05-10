@@ -822,7 +822,7 @@ function createPatientsTableCalllog( patients, holderId ) {
     matchingPatientsHtml = matchingPatientsHtml +
         '<p data-toggle="tooltip" title="Please select the patient"><button type="button"'+
         //' id="matchingPatientBtn-'+holderId+'"'+
-        ' class="btn btn-lg span4 matchingPatientBtn" align="center"'+
+        ' class="btn btn-success btn-lg span4 matchingPatientBtn" align="center"'+
         ' disabled'+
         ' onclick="matchingPatientBtnClick(\''+holderId+'\')"'+
         '>Select Patient</button></p>';
