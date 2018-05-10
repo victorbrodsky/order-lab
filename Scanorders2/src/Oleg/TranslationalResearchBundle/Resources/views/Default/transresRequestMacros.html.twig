@@ -17,7 +17,7 @@
                     {% if transresRequest.exportId %}
                         {{ formmacros.simplefield("Request External ID:", transresRequest.exportId, "input", "disabled") }}
                         {% if transresRequest.project.exportId %}
-                            {{ formmacros.simplefield("Project External ID:", project.exportId, "input", "disabled") }}
+                            {{ formmacros.simplefield("Project External ID:", transresRequest.project.exportId, "input", "disabled") }}
                         {% endif %}
                     {% endif %}
 

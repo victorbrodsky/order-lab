@@ -100,10 +100,12 @@ class TransResImportData
         $adminReviewer = $reviewers[0];
         //////// EOF Admin user /////////
 
-        $count = 1;
+        $count = 0;
 
         //for each request in excel (start at row 2)
         for( $row = 2; $row <= $highestRow; $row++ ) {
+
+            $count++;
 
             //Read a row of data into an array
             $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
@@ -500,17 +502,17 @@ class TransResImportData
             }
 
             if( count($formDataArr) > 0 ) {
-                $formDataStr = implode("<br>",$formDataArr);
+                $formDataStr = implode("\r\n",$formDataArr);
                 echo $formDataStr."<br>";
 
                 $requestComment = $transresRequest->getComment();
                 //Append to the Comment
-                $formDataStr = "Original Exported Service Request Form:\r\n".$formDataStr;
-
+                //$formDataStr = "\r\n".$formDataStr;
+                $formDataStr = str_replace("<br>","\r\n",$formDataStr);
                 $requestComment = $requestComment . "\r\n \r\n" .
-                    "##################################".
-                    $formDataStr.
-                    "##################################";
+                    "### Original Exported Service Request Form ###\r\n".
+                    $formDataStr."\r\n".
+                    "########################################";
 
                 $transresRequest->setComment($requestComment);
             }
@@ -538,6 +540,16 @@ class TransResImportData
             foreach( $transreqPis as $transreqPi ) {
                 $transresRequest->addPrincipalInvestigator($transreqPi);
             }
+
+            $submitterUser = $transresRequest->getSubmitter();
+            if( !$submitterUser ) {
+                $contactUser = $transresRequest->getContact();
+                if( $contactUser ) {
+                    $transresRequest->setSubmitter($submitterUser);
+                } else {
+                    exit("No Submitter or Contact user defined for ".$requestID);
+                }
+            }
             /////////////// EOF Set default users from project ///////////////////
 
             //save project to DB before form nodes
@@ -553,11 +565,10 @@ class TransResImportData
                 $this->addComment($request, $adminReviewer, $transresRequest, $ADMIN_COMMENT, "progress", "[imported comment]",$CREATED_DATE_STR);
             }
 
-            if( $count == 1 ) {
+            if( $count == 5 ) {
                 exit("count limit $count");
             }
             //exit('111');
-            $count++;
         }
 
         return "Added $count Work Requests";
