@@ -62,7 +62,7 @@ class CalllogFilterType extends AbstractType
             'label' => false,
             'required' => false,
             'multiple' => true,
-            'attr' => array('class' => 'combobox', 'placeholder' => "Entry Tag"),
+            'attr' => array('class' => 'combobox', 'placeholder' => "Entry Tag(s)"),
         ));
 
         //echo "def=".$this->params['messageCategoryDefault']."<br>";
@@ -226,7 +226,7 @@ class CalllogFilterType extends AbstractType
             'required'=>false,
             'label' => false,
             'empty_data' => $this->params['entryBodySearch'],
-            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder' => "Entry Body"),
+            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder' => "Entry Text"),
         ));
 
         //Attending

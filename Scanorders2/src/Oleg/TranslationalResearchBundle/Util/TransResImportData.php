@@ -27,6 +27,7 @@ namespace Oleg\TranslationalResearchBundle\Util;
 
 use Oleg\TranslationalResearchBundle\Entity\CommitteeReview;
 use Oleg\TranslationalResearchBundle\Entity\Project;
+use Oleg\TranslationalResearchBundle\Entity\TransResRequest;
 use Oleg\UserdirectoryBundle\Security\Authentication\AuthUtil;
 use Oleg\UserdirectoryBundle\Security\Util\UserSecurityUtil;
 use Oleg\UserdirectoryBundle\Util\UserUtil;
@@ -55,9 +56,12 @@ class TransResImportData
     //TRF_COMMITTEE_REV
     public function importWorkRequests( $request, $filename ) {
         $transresUtil = $this->container->get('transres_util');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $transresRequestUtil = $this->container->get('transres_request_util');
         $logger = $this->container->get('logger');
+        $em = $this->em;
 
-        //$userMapper = $this->getUserMapper('TRF_EMAIL_INFO.xlsx');
+        $userMapper = $this->getUserMapper('TRF_EMAIL_INFO.xlsx');
 
         $inputFileName = __DIR__ . "/" . $filename;
         echo "==================== Processing $filename =====================<br>";
@@ -81,6 +85,11 @@ class TransResImportData
             TRUE,
             FALSE);
 
+        ////////////// add system user /////////////////
+        $systemUser = $userSecUtil->findSystemUser();
+        ////////////// end of add system user /////////////////
+
+        $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
 
         $count = 1;
 
@@ -132,9 +141,12 @@ class TransResImportData
             //CYTOGENETICS_ANTIBODY
             //FISH_ANTIBODY
             //NUM_PROBES
+
             //INTERPRETATION
+
             //TECHNICAL_SUPPORT_FROM
             //TECHNICAL_SUPPORT_TO
+
             //SUBMITTED_BY
             //STATUS_ID
             //APPROVAL_DATE
@@ -155,6 +167,22 @@ class TransResImportData
             $requestID = $this->getValueByHeaderName('SERVICE_ID', $rowData, $headers);
             $requestID = trim($requestID);
             echo "<br>".$count.": Project ID ".$exportId.", RS ID ".$requestID."<br>";
+
+
+            $transresRequest = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest')->findOneByExportId($requestID);
+            if( !$transresRequest ) {
+                $transresRequest = new TransResRequest();
+                $transresRequest->setInstitution($institution);
+                $transresRequest->setVersion(1);
+
+                $project = $this->em->getRepository('OlegTranslationalResearchBundle:Project')->findOneByExportId($exportId);
+                if( !$project ) {
+                    exit("Project wit external ID '$exportId' does not exist.");
+                }
+
+                //$project->addRequest($transresRequest);
+                $transresRequest->setProject($project);
+            }
 
             $formDataArr = array();
 
@@ -353,10 +381,8 @@ class TransResImportData
             }
             //INTERPRETATION
             $INTERPRETATION = $this->getValueByHeaderName('INTERPRETATION', $rowData, $headers);
-            echo "INTERPRETATION=[$INTERPRETATION]<br>";
-            //$INTERPRETATION = intval($INTERPRETATION);
-            //TODO: only if 1 or 0 but not null or ''
-            if( $INTERPRETATION !== '' && $INTERPRETATION !== NULL ) {
+            //echo "INTERPRETATION=[$INTERPRETATION]<br>";
+            if( $INTERPRETATION != '' && $INTERPRETATION != NULL ) {
                 $INTERPRETATION = intval($INTERPRETATION);
                 if( $INTERPRETATION === 1 ) {
                     $formDataArr[] = "Interpretation by Pathologist: Yes";
@@ -364,6 +390,34 @@ class TransResImportData
                 if( $INTERPRETATION === 0 ) {
                     $formDataArr[] = "Interpretation by Pathologist: No";
                 }
+            }
+
+            //TECHNICAL_SUPPORT_FROM
+            $TECHNICAL_SUPPORT_FROM = $this->getValueByHeaderName('TECHNICAL_SUPPORT_FROM', $rowData, $headers);
+            if( $TECHNICAL_SUPPORT_FROM ) {
+                $TECHNICAL_SUPPORT_FROM_DATE = $this->transformDatestrToDate($TECHNICAL_SUPPORT_FROM);
+                $transresRequest->setSupportStartDate($TECHNICAL_SUPPORT_FROM_DATE);
+            }
+
+            //TECHNICAL_SUPPORT_TO
+            $TECHNICAL_SUPPORT_TO = $this->getValueByHeaderName('TECHNICAL_SUPPORT_TO', $rowData, $headers);
+            if( $TECHNICAL_SUPPORT_TO ) {
+                $TECHNICAL_SUPPORT_TO_DATE = $this->transformDatestrToDate($TECHNICAL_SUPPORT_TO);
+                $transresRequest->setSupportEndDate($TECHNICAL_SUPPORT_TO_DATE);
+            }
+
+            //SUBMITTED_BY
+            $SUBMITTED_BY = $this->getValueByHeaderName('SUBMITTED_BY', $rowData, $headers);
+            if( $SUBMITTED_BY ) {
+                $submitterUser = $userMapper[$SUBMITTED_BY];
+                $transresRequest->setSubmitter($submitterUser);
+                $transresRequest->setContact($submitterUser);
+            }
+
+            //STATUS_ID
+            $STATUS_ID = $this->getValueByHeaderName('STATUS_ID', $rowData, $headers);
+            if( $STATUS_ID ) {
+
             }
 
 
@@ -374,9 +428,34 @@ class TransResImportData
 
 
 
-            //if( $count > 100 ) {
-                //exit("count limit $count");
-            //}
+            /////////////// Set default users from project ///////////////////
+            //$projectFundedAccountNumber = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"If funded, please provide account number");
+            $projectFundedAccountNumber = $project->getFundedAccountNumber();
+            if( $projectFundedAccountNumber ) {
+                $transresRequest->setFundedAccountNumber($projectFundedAccountNumber);
+            }
+
+            //pre-populate Request's Billing Contact by Project's Billing Contact
+            if( $project->getBillingContact() ) {
+                $transresRequest->setContact($project->getBillingContact());
+            }
+
+            //pre-populate Request's Support End Date by Project's IRB Expiration Date
+            if( $project->getIrbExpirationDate() ) {
+                $transresRequest->setSupportEndDate($project->getIrbExpirationDate());
+            }
+
+            //pre-populate PIs
+            $transreqPis = $project->getPrincipalInvestigators();
+            foreach( $transreqPis as $transreqPi ) {
+                $transresRequest->addPrincipalInvestigator($transreqPi);
+            }
+            /////////////// EOF Set default users from project ///////////////////
+
+
+            if( $count > 15 ) {
+                exit("count limit $count");
+            }
             //exit('111');
             $count++;
         }
@@ -1191,10 +1270,18 @@ class TransResImportData
             $em->flush($project);
         }
 
-        //record this to admin comment;
-        //$request, $adminReviewer, $project, $adminComment, "(imported comment)"
-        $thisNotExistingUsersStr = implode("; ",$thisNotExistingUsers);
-        $this->addComment($request, $adminReviewer, $project, $thisNotExistingUsersStr, "admin_review", "[import warning - not existing users]");
+        if( count($thisNotExistingUsers) > 0 ) {
+            //record this to admin comment;
+            //$request, $adminReviewer, $project, $adminComment, "(imported comment)"
+            $thisNotExistingUsersStr = implode("; ", $thisNotExistingUsers);
+            $this->addComment($request, $adminReviewer, $project, $thisNotExistingUsersStr, "admin_review", "[import warning - not existing users]");
+        }
+
+        if( count($notExistingStatuses) > 0 ) {
+            //record this to admin comment;
+            $notExistingStatusesStr = implode("; ", $notExistingStatuses);
+            $this->addComment($request, $adminReviewer, $project, $notExistingStatusesStr, "admin_review", "[import warning - not existing statuses]");
+        }
 
         $res = array(
             'notExistingStatuses' => $notExistingStatuses,
@@ -1598,6 +1685,29 @@ class TransResImportData
         return $approver;
     }
 
+    public function statusRequestMapper( $statusId, $asOriginalStr=false ) {
+        $status = null;
+        $statusNew = null;
+
+        switch( $statusId ){
+            case "2":
+                $status = "pending";
+                $statusNew = "pending";
+                break;
+            case "5":
+                //TODO:???
+                $status = "pending";
+                $statusNew = "pending";
+                break;
+        }
+
+        if( $asOriginalStr ) {
+            return $status;
+        }
+
+        return $statusNew;
+    }
+
     public function statusMapper( $statusId, $asOriginalStr=false ) {
 
 //        1	pending
@@ -1685,6 +1795,9 @@ class TransResImportData
                 //$statusNew = "draft";
                 $statusNew = "closed";
                 break;
+            default:
+                $status = "pending";
+                $statusNew = "draft";
         }
 
         if( $asOriginalStr ) {

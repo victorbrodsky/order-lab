@@ -444,19 +444,7 @@ class CallEntryController extends Controller
             $queryParameters['endDate'] = $endDate->format('Y-m-d H:i:s');
         }
 
-        if( $entryTags ) {
-            $entryTagsArr = array();
-            foreach( $entryTags as $entryTag ) {
-                //echo "entryTag=".$entryTag->getId()."<br>";
-                $entryTagsArr[] = $entryTag->getId();
-            }
-            //echo "entryTagsArr=".count($entryTagsArr)."<br>";
-            if( count($entryTagsArr) > 0 ) {
-                $dql->leftJoin("calllogEntryMessage.entryTags", "entryTags");
-                $dql->andWhere("entryTags.id IN (:entryTags)");
-                $queryParameters['entryTags'] = $entryTagsArr;  //implode(",", $entryTagsArr);
-            }
-        }
+
 
         if( $messageCategoryEntity ) {
             //echo "search messageCategory=".$messageCategory."<br>";
@@ -551,6 +539,21 @@ class CallEntryController extends Controller
             $dql->andWhere($authorStr);
             $queryParameters['author'] = $authorFilter;
             $advancedFilter++;
+        }
+
+        if( $entryTags ) {
+            $entryTagsArr = array();
+            foreach( $entryTags as $entryTag ) {
+                //echo "entryTag=".$entryTag->getId()."<br>";
+                $entryTagsArr[] = $entryTag->getId();
+            }
+            //echo "entryTagsArr=".count($entryTagsArr)."<br>";
+            if( count($entryTagsArr) > 0 ) {
+                $dql->leftJoin("calllogEntryMessage.entryTags", "entryTags");
+                $dql->andWhere("entryTags.id IN (:entryTags)");
+                $queryParameters['entryTags'] = $entryTagsArr;  //implode(",", $entryTagsArr);
+                $advancedFilter++;
+            }
         }
 
         if( $attendingFilter ) {
