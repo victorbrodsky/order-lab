@@ -140,14 +140,31 @@ class InvoiceController extends Controller
 //                    )
 //                );
 //            }
+            if( $filterType == "My Invoices" ) {
+                //all Invoices for all Work Requests issued for Projects where I am listed in any way (submitter, PI, etc).
+                return $this->redirectToRoute(
+                    'translationalresearch_invoice_index_filter',
+                    array(
+                        'filter[submitter]' => $user->getId(),
+                        'filter[salesperson]' => $user->getId(),
+                        'filter[principalInvestigator]' => $user->getId(),
+
+                        'filter[status][0]' => "Unpaid/Issued",
+                        'filter[status][1]' => "Paid in Full",
+                        'filter[status][2]' => "Paid Partially",
+
+                        'title' => $filterType,
+                    )
+                );
+            }
             if( $filterType == "Invoices I Issued (I am a Submitter)" ) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
                         'filter[submitter]' => $user->getId(),
                         'filter[status][0]' => "Unpaid/Issued",
-                        'filter[status][0]' => "Paid in Full",
-                        'filter[status][1]' => "Paid Partially",
+                        'filter[status][1]' => "Paid in Full",
+                        'filter[status][2]' => "Paid Partially",
                         'title' => $filterType,
                     )
                 );
@@ -328,9 +345,9 @@ class InvoiceController extends Controller
 
         } else {
             $submitter = $filterform['submitter']->getData();
-            $status = $filterform['status']->getData();
             $principalInvestigator = $filterform['principalInvestigator']->getData();
             $salesperson = $filterform['salesperson']->getData();
+            $status = $filterform['status']->getData();
             $idSearch = $filterform['idSearch']->getData();
             $totalMin = $filterform['totalMin']->getData();
             $totalMax = $filterform['totalMax']->getData();
@@ -358,8 +375,17 @@ class InvoiceController extends Controller
 //            $title = "List of All Pending Invoices";
 //            $status = "Pending";
 //        }
-        
-        
+
+        if( $filterTitle == "My Invoices" ) {
+            //all Invoices for all Work Requests issued for Projects where I am listed in any way (submitter, PI, etc).
+            //Use OR
+            $dql->andWhere("submitter.id = :userId OR principalInvestigator.id = :userId OR salesperson.id = :userId");
+            $dqlParameters["userId"] = $user->getId();
+            //set all user filter to NULL to prevent AND query conditions
+            $submitter = null;
+            $principalInvestigator = null;
+            $salesperson = null;
+        }
 
         if( $submitter ) {
             //echo "Submitter=$submitter<br>";
@@ -481,6 +507,7 @@ class InvoiceController extends Controller
         //$latestVersion = $transresRequestUtil->getLatestInvoiceVersion($transresRequest);
 
         //echo "filterType=".$filterType."<br>";
+        //echo "title=".$title."<br>";
         if( $filterTitle ) {
             $title = $filterTitle;
         }
