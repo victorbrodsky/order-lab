@@ -182,25 +182,25 @@ class TransResImportData
 
             $requestID = $this->getValueByHeaderName('SERVICE_ID', $rowData, $headers);
             $requestID = trim($requestID);
-            echo "<br>".$count.": Project ID ".$exportId.", RS ID ".$requestID."<br>";
+            echo "<br>" . $count . ": Project ID " . $exportId . ", RS ID " . $requestID . "<br>";
 
 
             $transresRequest = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest')->findOneByExportId($requestID);
-            if( !$transresRequest ) {
+            if (!$transresRequest) {
                 $transresRequest = new TransResRequest();
                 $transresRequest->setExportId($requestID);
                 $transresRequest->setInstitution($institution);
                 $transresRequest->setVersion(1);
 
                 $project = $this->em->getRepository('OlegTranslationalResearchBundle:Project')->findOneByExportId($exportId);
-                if( !$project ) {
+                if (!$project) {
                     exit("Project wit external ID '$exportId' does not exist.");
                 }
 
                 //$project->addRequest($transresRequest);
                 $transresRequest->setProject($project);
             } else {
-                echo "Request already exists with ID ".$requestID."<br>";
+                echo "Request already exists with ID " . $requestID . "<br>";
                 continue;
             }
 
@@ -209,31 +209,31 @@ class TransResImportData
             //1) Lab
             $labs = array();
             $SURGICAL_PATHOLOGY = $this->getValueByHeaderName('SURGICAL_PATHOLOGY', $rowData, $headers);
-            if($SURGICAL_PATHOLOGY){
+            if ($SURGICAL_PATHOLOGY) {
                 $labs[] = "Surgical Pathology";
             }
             $IMMUNOPATHOLOGY = $this->getValueByHeaderName('IMMUNOPATHOLOGY', $rowData, $headers);
-            if($IMMUNOPATHOLOGY){
+            if ($IMMUNOPATHOLOGY) {
                 $labs[] = "Imuunopathology";
             }
             $CYTOGENETICS = $this->getValueByHeaderName('CYTOGENETICS', $rowData, $headers);
-            if($CYTOGENETICS){
+            if ($CYTOGENETICS) {
                 $labs[] = "Cytogenetics";
             }
             $MOLECULAR_PATHOLOGY = $this->getValueByHeaderName('MOLECULAR_PATHOLOGY', $rowData, $headers);
-            if($MOLECULAR_PATHOLOGY){
+            if ($MOLECULAR_PATHOLOGY) {
                 $labs[] = "Molecular Pathology";
             }
             $MOLECULAR_HEMATOPATHOLOGY = $this->getValueByHeaderName('MOLECULAR_HEMATOPATHOLOGY', $rowData, $headers);
-            if($MOLECULAR_HEMATOPATHOLOGY){
+            if ($MOLECULAR_HEMATOPATHOLOGY) {
                 $labs[] = "Molecular HematoPathology";
             }
             $MOLECULAR_DIAGNOSTICS = $this->getValueByHeaderName('MOLECULAR_DIAGNOSTICS', $rowData, $headers);
-            if($MOLECULAR_DIAGNOSTICS){
+            if ($MOLECULAR_DIAGNOSTICS) {
                 $labs[] = "Molecular Diagnostics";
             }
-            if( count($labs) > 0 ) {
-                $labsStr = "Lab: ".implode(", ",$labs);
+            if (count($labs) > 0) {
+                $labsStr = "Lab: " . implode(", ", $labs);
                 $formDataArr[] = $labsStr;
                 //echo $labsStr."<br>";
             }
@@ -245,23 +245,23 @@ class TransResImportData
             //FROZEN_STORAGE
             $processings = array();
             $TOTAL_CASES = $this->getValueByHeaderName('TOTAL_CASES', $rowData, $headers);
-            if($TOTAL_CASES){
+            if ($TOTAL_CASES) {
                 $processings[] = "Total # of patients/cases: " . $TOTAL_CASES;
             }
             $PARAFFIN_BLOCK = $this->getValueByHeaderName('PARAFFIN_BLOCK', $rowData, $headers);
-            if($PARAFFIN_BLOCK){
+            if ($PARAFFIN_BLOCK) {
                 $processings[] = "Paraffin Blocks Processing";
             }
             $FRESH_FROZEN_TISSUE = $this->getValueByHeaderName('FRESH_FROZEN_TISSUE', $rowData, $headers);
-            if($FRESH_FROZEN_TISSUE){
+            if ($FRESH_FROZEN_TISSUE) {
                 $processings[] = "Fresh/Frozen Tissue Procurement";
             }
             $FROZEN_STORAGE = $this->getValueByHeaderName('FROZEN_STORAGE', $rowData, $headers);
-            if($FROZEN_STORAGE){
+            if ($FROZEN_STORAGE) {
                 $processings[] = "Frozen Tissue Storage";
             }
-            if( count($processings) > 0 ) {
-                $processingsStr = "Tissue Procurement/Processing:<br>".implode("<br>",$labs);
+            if (count($processings) > 0) {
+                $processingsStr = "Tissue Procurement/Processing:<br>" . implode("<br>", $labs);
                 $formDataArr[] = $processingsStr;
                 //echo $processingsStr."<br>";
             }
@@ -280,53 +280,53 @@ class TransResImportData
             //TMA_CORES	TMA_CORES_NUM_BLOCK
             $specimens = array();
             $TOTAL_BLOCKS = $this->getValueByHeaderName('TOTAL_BLOCKS', $rowData, $headers);
-            if($TOTAL_BLOCKS){
+            if ($TOTAL_BLOCKS) {
                 $specimens[] = "Total # of blocks: " . $TOTAL_BLOCKS;
             }
             $STAINED = $this->getValueByHeaderName('STAINED', $rowData, $headers);
-            if($STAINED){
+            if ($STAINED) {
                 $STAINED_NUM_BLOCK = $this->getValueByHeaderName('STAINED_NUM_BLOCK', $rowData, $headers);
-                if($STAINED_NUM_BLOCK){
+                if ($STAINED_NUM_BLOCK) {
                     $specimens[] = "Slides - stained #" . $STAINED_NUM_BLOCK;
                 }
             }
             $UNSTAINED = $this->getValueByHeaderName('UNSTAINED', $rowData, $headers);
-            if($UNSTAINED){
+            if ($UNSTAINED) {
                 $UNSTAINED_NUM_BLOCK = $this->getValueByHeaderName('UNSTAINED_NUM_BLOCK', $rowData, $headers);
-                if($UNSTAINED_NUM_BLOCK){
+                if ($UNSTAINED_NUM_BLOCK) {
                     $specimens[] = "Slides - unstained #" . $UNSTAINED_NUM_BLOCK;
                 }
             }
             $UNSTAINED_IHC = $this->getValueByHeaderName('UNSTAINED_IHC', $rowData, $headers);
-            if($UNSTAINED_IHC){
+            if ($UNSTAINED_IHC) {
                 $UNSTAINED_IHC_NUM_BLOCK = $this->getValueByHeaderName('UNSTAINED_IHC_NUM_BLOCK', $rowData, $headers);
-                if($UNSTAINED_IHC_NUM_BLOCK){
+                if ($UNSTAINED_IHC_NUM_BLOCK) {
                     $specimens[] = "Slides - unstained for IHC #" . $UNSTAINED_IHC_NUM_BLOCK;
                 }
             }
             $SPEC_STAINED = $this->getValueByHeaderName('SPEC_STAINED', $rowData, $headers);
-            if($SPEC_STAINED){
+            if ($SPEC_STAINED) {
                 $SPEC_STAINED_NUM_BLOCK = $this->getValueByHeaderName('SPEC_STAINED_NUM_BLOCK', $rowData, $headers);
-                if($SPEC_STAINED_NUM_BLOCK){
+                if ($SPEC_STAINED_NUM_BLOCK) {
                     $specimens[] = "Special Stains #" . $SPEC_STAINED_NUM_BLOCK;
                 }
             }
             $PARA_RNA_DNA = $this->getValueByHeaderName('PARA_RNA_DNA', $rowData, $headers);
-            if($PARA_RNA_DNA){
+            if ($PARA_RNA_DNA) {
                 $PARA_RNA_DNA_NUM_BLOCK = $this->getValueByHeaderName('PARA_RNA_DNA_NUM_BLOCK', $rowData, $headers);
-                if($PARA_RNA_DNA_NUM_BLOCK){
+                if ($PARA_RNA_DNA_NUM_BLOCK) {
                     $specimens[] = "Paraffin Sections for RNA/DNA (TUBE) #" . $PARA_RNA_DNA_NUM_BLOCK;
                 }
             }
             $TMA_CORES = $this->getValueByHeaderName('TMA_CORES', $rowData, $headers);
-            if($TMA_CORES){
+            if ($TMA_CORES) {
                 $TMA_CORES_NUM_BLOCK = $this->getValueByHeaderName('TMA_CORES_NUM_BLOCK', $rowData, $headers);
-                if($TMA_CORES_NUM_BLOCK){
+                if ($TMA_CORES_NUM_BLOCK) {
                     $specimens[] = "TMA cores for RNA/DNA analysis (TUBE) #" . $TMA_CORES_NUM_BLOCK;
                 }
             }
-            if( count($specimens) > 0 ) {
-                $processingsStr = "Archival Specimens:<br>".implode("<br>",$specimens);
+            if (count($specimens) > 0) {
+                $processingsStr = "Archival Specimens:<br>" . implode("<br>", $specimens);
                 $formDataArr[] = $processingsStr;
                 //echo $processingsStr."<br>";
             }
@@ -339,38 +339,38 @@ class TransResImportData
             //LASER_CAPTURE
             $processingTypes = array();
             $FLOW_CYTOMETRY = $this->getValueByHeaderName('FLOW_CYTOMETRY', $rowData, $headers);
-            if($FLOW_CYTOMETRY){
+            if ($FLOW_CYTOMETRY) {
                 $processingTypes[] = "Flow Cytometry";
             }
             $IMMUNOHISTOCHEMISTRY = $this->getValueByHeaderName('IMMUNOHISTOCHEMISTRY', $rowData, $headers);
-            if($IMMUNOHISTOCHEMISTRY){
+            if ($IMMUNOHISTOCHEMISTRY) {
                 $processingTypes[] = "Immunohistochemistry";
             }
             $FISH = $this->getValueByHeaderName('FISH', $rowData, $headers);
-            if($FISH){
+            if ($FISH) {
                 $processingTypes[] = "FISH";
             }
             $TMA = $this->getValueByHeaderName('TMA', $rowData, $headers);
-            if($TMA){
+            if ($TMA) {
                 $processingTypes[] = "Tissue Microarray";
             }
             $LASER_CAPTURE = $this->getValueByHeaderName('LASER_CAPTURE', $rowData, $headers);
-            if($LASER_CAPTURE){
+            if ($LASER_CAPTURE) {
                 $processingTypes[] = "Laser Capture Microdissection";
             }
-            if( count($processingTypes) > 0 ) {
-                $processingTypesStr = implode("<br>",$processingTypes);
+            if (count($processingTypes) > 0) {
+                $processingTypesStr = implode("<br>", $processingTypes);
                 $formDataArr[] = $processingTypesStr;
                 //echo $processingsStr."<br>";
             }
 
             //4 PERFORMED_BY
             $PERFORMED_BY = $this->getValueByHeaderName('PERFORMED_BY', $rowData, $headers);
-            if($PERFORMED_BY){
-                if( $PERFORMED_BY == 1 ) {
+            if ($PERFORMED_BY) {
+                if ($PERFORMED_BY == 1) {
                     $formDataArr[] = "In-House (Starr-7)";
                 }
-                if( $PERFORMED_BY == 2 ) {
+                if ($PERFORMED_BY == 2) {
                     $formDataArr[] = "Performed by Researcher";
                 }
             }
@@ -384,80 +384,84 @@ class TransResImportData
             //NUM_PROBES
             $footers = array();
             $CYTOGENETICS_ANTIBODY = $this->getValueByHeaderName('CYTOGENETICS_ANTIBODY', $rowData, $headers);
-            if( $CYTOGENETICS_ANTIBODY ) {
+            if ($CYTOGENETICS_ANTIBODY) {
                 $footers[] = "Conventional Cytogenetics";
             }
             $FISH_ANTIBODY = $this->getValueByHeaderName('FISH_ANTIBODY', $rowData, $headers);
-            if( $FISH_ANTIBODY ) {
+            if ($FISH_ANTIBODY) {
                 $footers[] = "FISH";
             }
             $NUM_PROBES = $this->getValueByHeaderName('NUM_PROBES', $rowData, $headers);
-            if( $NUM_PROBES ) {
-                $footers[] = "# Probes: ".$NUM_PROBES;
+            if ($NUM_PROBES) {
+                $footers[] = "# Probes: " . $NUM_PROBES;
             }
-            if( count($footers) > 0 ) {
-                $footersStr = implode("<br>",$footers);
+            if (count($footers) > 0) {
+                $footersStr = implode("<br>", $footers);
                 $formDataArr[] = $footersStr;
             }
             //INTERPRETATION
             $INTERPRETATION = $this->getValueByHeaderName('INTERPRETATION', $rowData, $headers);
             //echo "INTERPRETATION=[$INTERPRETATION]<br>";
-            if( $INTERPRETATION != '' && $INTERPRETATION != NULL ) {
+            if ($INTERPRETATION != '' && $INTERPRETATION != NULL) {
                 $INTERPRETATION = intval($INTERPRETATION);
-                if( $INTERPRETATION === 1 ) {
+                if ($INTERPRETATION === 1) {
                     $formDataArr[] = "Interpretation by Pathologist: Yes";
                 }
-                if( $INTERPRETATION === 0 ) {
+                if ($INTERPRETATION === 0) {
                     $formDataArr[] = "Interpretation by Pathologist: No";
                 }
             }
 
             //TECHNICAL_SUPPORT_FROM
             $TECHNICAL_SUPPORT_FROM = $this->getValueByHeaderName('TECHNICAL_SUPPORT_FROM', $rowData, $headers);
-            if( $TECHNICAL_SUPPORT_FROM ) {
-                $TECHNICAL_SUPPORT_FROM_DATE = $this->transformDatestrToDate($TECHNICAL_SUPPORT_FROM,"m/Y");
+            if ($TECHNICAL_SUPPORT_FROM) {
+                $TECHNICAL_SUPPORT_FROM_DATE = $this->transformDatestrToDate($TECHNICAL_SUPPORT_FROM, "m/Y");
                 $transresRequest->setSupportStartDate($TECHNICAL_SUPPORT_FROM_DATE);
             }
 
             //TECHNICAL_SUPPORT_TO
             $TECHNICAL_SUPPORT_TO = $this->getValueByHeaderName('TECHNICAL_SUPPORT_TO', $rowData, $headers);
-            if( $TECHNICAL_SUPPORT_TO ) {
-                $TECHNICAL_SUPPORT_TO_DATE = $this->transformDatestrToDate($TECHNICAL_SUPPORT_TO,"m/Y");
+            if ($TECHNICAL_SUPPORT_TO) {
+                $TECHNICAL_SUPPORT_TO_DATE = $this->transformDatestrToDate($TECHNICAL_SUPPORT_TO, "m/Y");
                 $transresRequest->setSupportEndDate($TECHNICAL_SUPPORT_TO_DATE);
             }
 
             //SUBMITTED_BY
             $SUBMITTED_BY = $this->getValueByHeaderName('SUBMITTED_BY', $rowData, $headers);
-            if( $SUBMITTED_BY ) {
+            if ($SUBMITTED_BY) {
                 $submitterUser = $userMapper[$SUBMITTED_BY];
-                $transresRequest->setSubmitter($submitterUser);
-                $transresRequest->setContact($submitterUser);
+                if( $submitterUser ) {
+                    $transresRequest->setSubmitter($submitterUser);
+                    $transresRequest->setContact($submitterUser);
+                } else {
+                    echo "User not found by SUBMITTED_BY=".$SUBMITTED_BY."<br>";
+                }
             }
 
             //STATUS_ID
             $STATUS_ID = $this->getValueByHeaderName('STATUS_ID', $rowData, $headers);
-            if( $STATUS_ID ) {
+            if ($STATUS_ID) {
                 $requestStateArr = $this->statusRequestMapper($STATUS_ID);
                 $statusProgress = $requestStateArr['progress'];
                 $statusBilling = $requestStateArr['billing'];
-                if( $statusProgress && $statusBilling ) {
+                if ($statusProgress && $statusBilling) {
                     $transresRequest->setProgressState($statusProgress);
                     $transresRequest->setBillingState($statusBilling);
                 } else {
-                    exit("Request progress state is not defined by STATUS_ID=[".$STATUS_ID."]");
+                    exit("Request progress state is not defined by STATUS_ID=[" . $STATUS_ID . "]");
                 }
             }
 
             //APPROVAL_DATE
             $APPROVAL_DATE_STR = $this->getValueByHeaderName('APPROVAL_DATE', $rowData, $headers);
-            if( $APPROVAL_DATE_STR ) {
+            if ($APPROVAL_DATE_STR) {
                 $APPROVAL_DATE = $this->transformDatestrToDate($APPROVAL_DATE_STR);
                 $transresRequest->setProgressApprovalDate($APPROVAL_DATE);
             }
 
             //REQUESTED_COMMENT
             $REQUESTED_COMMENT = $this->getValueByHeaderName('REQUESTED_COMMENT', $rowData, $headers);
-            if( $REQUESTED_COMMENT ) {
+            if ($REQUESTED_COMMENT) {
                 $transresRequest->setComment($REQUESTED_COMMENT);
             }
 
@@ -470,27 +474,29 @@ class TransResImportData
 
             //CREATED_DATE
             $CREATED_DATE_STR = $this->getValueByHeaderName('CREATED_DATE', $rowData, $headers);
-            if( $CREATED_DATE_STR ) {
+            if ($CREATED_DATE_STR) {
                 $CREATED_DATE = $this->transformDatestrToDate($CREATED_DATE_STR);
                 $transresRequest->setCreateDate($CREATED_DATE);
             }
 
             //CONTACT_EMAIL
             $CONTACT_EMAIL = $this->getValueByHeaderName('CONTACT_EMAIL', $rowData, $headers);
-            if( $CONTACT_EMAIL ) {
-                $contactUsers = $this->getUserByEmail($CONTACT_EMAIL,$requestID,'CONTACT_EMAIL');
-                if( count($contactUsers) > 0 ) {
+            if ($CONTACT_EMAIL) {
+                $contactUsers = $this->getUserByEmail($CONTACT_EMAIL, $requestID, 'CONTACT_EMAIL');
+                if (count($contactUsers) > 0) {
                     $contactUser = $contactUsers[0];
                     $transresRequest->setContact($contactUser);
-                } else {
-                    $msg = "Contact user not found by CONTACT_EMAIL=".$CONTACT_EMAIL;
-                    exit($msg);
-                    //echo $msg."<br>";
-                    $logger->warning($msg);
-                    //$formDataArr[] = $msg;
                 }
-                $transresRequest->setContact($contactUser);
             }
+
+//            $currentContactUser = $transresRequest->getContact();
+//            $currentSubmitterUser = $transresRequest->getSubmitter();
+//            if( $currentContactUser &&  $currentSubmitterUser ) {
+//                //ok
+//            } else {
+//                $msg = "Contact and Submitter users are not found.";
+//                exit($msg);
+//            }
 
             //ASPIRATE_SMEARS
             $ASPIRATE_SMEARS = $this->getValueByHeaderName('ASPIRATE_SMEARS', $rowData, $headers);
