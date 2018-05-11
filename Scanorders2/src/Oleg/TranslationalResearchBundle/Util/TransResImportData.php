@@ -103,6 +103,7 @@ class TransResImportData
 
         $count = 0;
 
+        echo "start Iteration to ".$highestRow."<br>";
         $logger->notice("start Iteration to ".$highestRow);
 
         //for each request in excel (start at row 2)
