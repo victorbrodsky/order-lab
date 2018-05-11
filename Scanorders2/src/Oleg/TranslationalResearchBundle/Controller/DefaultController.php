@@ -61,6 +61,8 @@ class DefaultController extends Controller
 
 
     /**
+     * Disable comments first in the FosCommentListener - $disable = true
+     * 
      * @Route("/import-old-data/", name="translationalresearch_import_old_data")
      * @Method({"GET"})
      */

@@ -34,6 +34,8 @@ class FosCommentListener implements EventSubscriberInterface {
     private $container;
     private $em;
     protected $secTokenStorage;
+    //protected $disable = false;
+    protected $disable = true;
 
     protected $secAuth;
 
@@ -59,6 +61,10 @@ class FosCommentListener implements EventSubscriberInterface {
 
     public function onCommentPrePersist(CommentEvent $event)
     {
+        if( $this->disable ) {
+            return;
+        }
+
         $comment = $event->getComment();
         $entity = $this->getEntityFromComment($comment);
 
@@ -76,6 +82,10 @@ class FosCommentListener implements EventSubscriberInterface {
 
     public function onCommentPostPersist(CommentEvent $event)
     {
+        if( $this->disable ) {
+            return;
+        }
+        
         $comment = $event->getComment();
         $entity = $this->getEntityFromComment($comment);
 
