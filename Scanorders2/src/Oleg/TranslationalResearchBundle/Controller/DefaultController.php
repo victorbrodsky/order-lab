@@ -70,6 +70,7 @@ class DefaultController extends Controller
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
+        set_time_limit(0);
         ini_set('memory_limit', '2048M');
 
         $resProject = null;

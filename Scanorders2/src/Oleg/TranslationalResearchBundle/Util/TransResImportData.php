@@ -107,6 +107,10 @@ class TransResImportData
 
             $count++;
 
+            //if( $count == 15 ) {
+            //    exit("count limit $count");
+            //}
+
             //Read a row of data into an array
             $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
                 NULL,
@@ -433,10 +437,12 @@ class TransResImportData
             //STATUS_ID
             $STATUS_ID = $this->getValueByHeaderName('STATUS_ID', $rowData, $headers);
             if( $STATUS_ID ) {
-                $requestState = $this->statusRequestMapper($STATUS_ID);
-                if( $requestState ) {
-                    $transresRequest->setProgressState($requestState);
-                    $transresRequest->setBillingState("active");
+                $requestStateArr = $this->statusRequestMapper($STATUS_ID);
+                $statusProgress = $requestStateArr['progress'];
+                $statusBilling = $requestStateArr['billing'];
+                if( $statusProgress && $statusBilling ) {
+                    $transresRequest->setProgressState($statusProgress);
+                    $transresRequest->setBillingState($statusBilling);
                 } else {
                     exit("Request progress state is not defined by STATUS_ID=[".$STATUS_ID."]");
                 }
@@ -455,12 +461,12 @@ class TransResImportData
                 $transresRequest->setComment($REQUESTED_COMMENT);
             }
 
-            //ADMIN_COMMENT
-            $ADMIN_COMMENT = $this->getValueByHeaderName('ADMIN_COMMENT', $rowData, $headers);
-            if( $ADMIN_COMMENT ) {
-                //add it later when ID is generated.
-                //$this->addComment($request, $adminReviewer, $transresRequest, $ADMIN_COMMENT, "progress", "[imported comment]");
-            }
+//            //ADMIN_COMMENT
+//            $ADMIN_COMMENT = $this->getValueByHeaderName('ADMIN_COMMENT', $rowData, $headers);
+//            if( $ADMIN_COMMENT ) {
+//                //add it later when ID is generated.
+//                //$this->addComment($request, $adminReviewer, $transresRequest, $ADMIN_COMMENT, "progress", "[imported comment]");
+//            }
 
             //CREATED_DATE
             $CREATED_DATE_STR = $this->getValueByHeaderName('CREATED_DATE', $rowData, $headers);
@@ -562,12 +568,13 @@ class TransResImportData
                 $transresRequest->generateOid();
                 $em->flush($transresRequest);
 
-                $this->addComment($request, $adminReviewer, $transresRequest, $ADMIN_COMMENT, "progress", "[imported comment]",$CREATED_DATE_STR);
+                //ADMIN_COMMENT. Save it when the Request's ID is generated.
+                $ADMIN_COMMENT = $this->getValueByHeaderName('ADMIN_COMMENT', $rowData, $headers);
+                if( $ADMIN_COMMENT ) {
+                    $this->addComment($request, $adminReviewer, $transresRequest, $ADMIN_COMMENT, "progress", "[imported comment]",$CREATED_DATE_STR);
+                }
             }
 
-            if( $count == 5 ) {
-                exit("count limit $count");
-            }
             //exit('111');
         }
 
@@ -1429,19 +1436,19 @@ class TransResImportData
 
         $class = new \ReflectionClass($entity);
         $className = $class->getShortName();
-        echo "className=".$className."<br>";
+        //echo "className=".$className."<br>";
 
         if( !$entity ) {
-            exit("$className is null for comment=".$commentStr);
+            exit("Exit: $className is null for comment=".$commentStr);
         }
         if( !$author ) {
-            exit("Author is null. $className export ID# ".$entity->getExportId());
+            exit("Exit: Author is null. $className export ID# ".$entity->getExportId());
         }
         if( !$commentStr ) {
-            exit("Comment is null. $className export ID# ".$entity->getExportId());
+            exit("Exit: Comment is null. $className export ID# ".$entity->getExportId());
         }
         if( !$commentType ) {
-            exit("Comment Type is null. $className export ID# ".$entity->getExportId());
+            exit("Exit: Comment Type is null. $className export ID# ".$entity->getExportId());
         }
 
         $res = null;
@@ -1473,11 +1480,11 @@ class TransResImportData
                 $permalink = $uri . "/request/progress/review/" . $entity->getId();
             }
             if( !$threadId || !$permalink ) {
-                exit("ThreadId or Permalink not defined.");
+                exit("Exit: ThreadId or Permalink not defined.");
             }
 
-            echo "threadId=".$threadId."<br>";
-            echo "permalink=".$permalink."<br>";
+            //echo "threadId=".$threadId."<br>";
+            //echo "permalink=".$permalink."<br>";
 
             $thread = $threadManager->findThreadById($threadId);
 
@@ -1821,25 +1828,56 @@ class TransResImportData
         return $approver;
     }
 
-    public function statusRequestMapper( $statusId, $asOriginalStr=false ) {
+    public function statusRequestMapper( $statusId ) {
         $status = null;
-        $statusNew = null;
+        $statusProgress = null;
+        $statusBilling = null;
+
+//        progressState
+//        #5 places
+//        - draft
+//        - active
+//        - canceled
+//        - completed
+//        - completedNotified
+//        #7 pending places
+//        - pendingInvestigatorInput
+//        - pendingHistology
+//        - pendingImmunohistochemistry
+//        - pendingMolecular
+//        - pendingCaseRetrieval
+//        - pendingTissueMicroArray
+//        - pendingSlideScanning
+
+        //billingState
+//        - draft
+//        - active
+//        - approvedInvoicing
+//        - canceled
+//        - missinginfo
+//        - invoiced
+//        - paid
+//        - refunded
+//        - partiallyRefunded
 
         switch( $statusId ){
             case "2":
                 $status = "pending";
-                $statusNew = "active";
+                $statusProgress = "active";
+                $statusBilling = "active";
                 break;
             case "5":
                 //TODO:???
-                $status = "active";
-                $statusNew = "completed";
+                $status = "completed";
+                $statusProgress = "completed";
+                $statusBilling = "paid";
                 break;
         }
 
-        if( $asOriginalStr ) {
-            return $status;
-        }
+        $statusNew = array(
+            'progress' => $statusProgress,
+            'billing' => $statusBilling
+        );
 
         return $statusNew;
     }
