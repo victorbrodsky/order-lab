@@ -75,7 +75,7 @@ class DefaultController extends Controller
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
-        set_time_limit(10800); //10800 seconds => 3 hours
+        set_time_limit(10800); //18000 seconds => 5 hours
         ini_set('memory_limit', '4096M');
 
         $resProject = null;
@@ -124,7 +124,7 @@ class DefaultController extends Controller
             $resArr[] = $importUtil->importCommitteeComments2($request, 'TRF_COMMENTS_RESP.xlsx');
         }
 
-        //Step 5: import working requests (~14k ~3-5 hours)
+        //Step 5: import working requests (~14k ~10 hours)
         if(1) {
             $resArr[] = $importUtil->importWorkRequests($request, 'TRF_REQUESTED_SER.xlsx');
         }

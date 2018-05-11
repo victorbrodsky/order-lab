@@ -57,7 +57,7 @@ class TransResImportData
     public function importWorkRequests( $request, $filename ) {
         $transresUtil = $this->container->get('transres_util');
         $userSecUtil = $this->container->get('user_security_utility');
-        $transresRequestUtil = $this->container->get('transres_request_util');
+        //$transresRequestUtil = $this->container->get('transres_request_util');
         $logger = $this->container->get('logger');
         $em = $this->em;
 
@@ -65,6 +65,7 @@ class TransResImportData
 
         $inputFileName = __DIR__ . "/" . $filename;
         echo "==================== Processing $filename =====================<br>";
+        $logger->notice("==================== Processing $filename =====================<br>");
 
         try {
             $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
