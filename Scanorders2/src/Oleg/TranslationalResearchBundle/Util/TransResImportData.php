@@ -55,6 +55,9 @@ class TransResImportData
 
     //TRF_COMMITTEE_REV
     public function importWorkRequests( $request, $filename ) {
+        set_time_limit(10800); //18000 seconds => 5 hours
+        ini_set('memory_limit', '5120M');
+        
         $transresUtil = $this->container->get('transres_util');
         $userSecUtil = $this->container->get('user_security_utility');
         //$transresRequestUtil = $this->container->get('transres_request_util');
