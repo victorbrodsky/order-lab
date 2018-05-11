@@ -76,7 +76,7 @@ class DefaultController extends Controller
         }
 
         set_time_limit(10800); //18000 seconds => 5 hours
-        ini_set('memory_limit', '4096M');
+        ini_set('memory_limit', '5120M');
 
         $resProject = null;
         $resAdminComments = null;
