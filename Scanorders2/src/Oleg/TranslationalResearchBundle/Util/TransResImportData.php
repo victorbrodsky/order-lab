@@ -65,7 +65,7 @@ class TransResImportData
 
         $inputFileName = __DIR__ . "/" . $filename;
         echo "==================== Processing $filename =====================<br>";
-        $logger->notice("==================== Processing $filename =====================<br>");
+        $logger->notice("==================== Processing $filename =====================");
 
         try {
             $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
@@ -102,6 +102,8 @@ class TransResImportData
         //////// EOF Admin user /////////
 
         $count = 0;
+
+        $logger->notice("start Iteration to ".$highestRow);
 
         //for each request in excel (start at row 2)
         for( $row = 2; $row <= $highestRow; $row++ ) {
