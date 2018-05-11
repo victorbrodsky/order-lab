@@ -80,6 +80,7 @@ class TransResImportData
         $sheet = $objPHPExcel->getSheet(0);
         $highestRow = $sheet->getHighestRow();
         $highestColumn = $sheet->getHighestColumn();
+        echo "highestRow=".$highestRow."; highestColum=".$highestColumn."<br>";
 
         $headers = $rowData = $sheet->rangeToArray('A' . 1 . ':' . $highestColumn . 1,
             NULL,
@@ -87,7 +88,7 @@ class TransResImportData
             FALSE);
 
         ////////////// add system user /////////////////
-        $systemUser = $userSecUtil->findSystemUser();
+        //$systemUser = $userSecUtil->findSystemUser();
         ////////////// end of add system user /////////////////
 
         $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
