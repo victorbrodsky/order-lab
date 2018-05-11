@@ -61,7 +61,10 @@ class DefaultController extends Controller
 
 
     /**
-     * Disable comments first in the FosCommentListener - $disable = true
+     * 1) Disable comments first in the FosCommentListener - $disable = true
+     * 2) Make sure the Admin and default AP-CP reviewers are set correctly
+     * 3) Run Steps 1, 2, 3 and 4
+     * 4) Run Step 5
      * 
      * @Route("/import-old-data/", name="translationalresearch_import_old_data")
      * @Method({"GET"})
@@ -72,8 +75,8 @@ class DefaultController extends Controller
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
-        set_time_limit(0);
-        ini_set('memory_limit', '2048M');
+        set_time_limit(10800); //10800 seconds => 3 hours
+        ini_set('memory_limit', '4096M');
 
         $resProject = null;
         $resAdminComments = null;
@@ -121,6 +124,7 @@ class DefaultController extends Controller
             $resArr[] = $importUtil->importCommitteeComments2($request, 'TRF_COMMENTS_RESP.xlsx');
         }
 
+        //Step 5: import working requests (~14k ~3-5 hours)
         if(1) {
             $resArr[] = $importUtil->importWorkRequests($request, 'TRF_REQUESTED_SER.xlsx');
         }
