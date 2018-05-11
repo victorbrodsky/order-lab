@@ -960,6 +960,11 @@ class TransResImportData
 
             //if( $exportId != 1840 ) {continue;} //testing
 
+            $project = $this->em->getRepository('OlegTranslationalResearchBundle:Project')->findOneByExportId($exportId);
+            if( $project ) {
+                continue;
+            }
+
             //Process Project
             if( $importFlag == 'project' || $importFlag == 'project_adminComments' ) {
                 $res = $this->importProject($request, $adminReviewer, $rowData, $headers, $exportId, $specialty, $systemUser, $notExistingStatuses, $notExistingUsers);
