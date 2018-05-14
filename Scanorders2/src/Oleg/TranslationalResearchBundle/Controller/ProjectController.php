@@ -1405,6 +1405,9 @@ class ProjectController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         //principalInvestigators
+        foreach( $project->getPrincipalInvestigators() as $pi) {
+            $project->removePrincipalInvestigator($pi);
+        }
         
         //delete documents
 
