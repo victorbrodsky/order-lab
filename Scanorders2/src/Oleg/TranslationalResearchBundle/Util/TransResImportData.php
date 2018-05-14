@@ -115,9 +115,9 @@ class TransResImportData
 
             $count++;
 
-            if( $count == 15 ) {
-                exit("count limit $count");
-            }
+            //if( $count == 15 ) {
+            //    exit("count limit $count");
+            //}
 
             $commentArr = array();
 
