@@ -492,9 +492,11 @@ class TransResImportData
             //TODO: test it
             $CREATED_DATE_STR = $this->getValueByHeaderName('CREATED_DATE', $rowData, $headers);
             if ($CREATED_DATE_STR) {
+                echo "CREATED_DATE_STR=".$CREATED_DATE_STR."<br>";
                 $CREATED_DATE = $this->transformDatestrToDate($CREATED_DATE_STR);
                 $transresRequest->setCreateDate($CREATED_DATE);
             }
+            exit('test');
 
             //CONTACT_EMAIL
             $CONTACT_EMAIL = $this->getValueByHeaderName('CONTACT_EMAIL', $rowData, $headers);
@@ -1894,10 +1896,10 @@ class TransResImportData
 
         //'j-M-Y', '15-Feb-2009'
         //23-APR-07
-        //echo "dateStr=".$datestr;
+        echo "dateStr=".$datestr;
         //M/y
         $date = \DateTime::createFromFormat($formatType,$datestr);
-        //echo " =>".$date->format("d-m-Y")."<br>";
+        echo " =>".$date->format("d-m-Y")."<br>";
 
         return $date;
     }
