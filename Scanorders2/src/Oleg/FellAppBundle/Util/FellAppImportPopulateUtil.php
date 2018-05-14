@@ -172,11 +172,12 @@ class FellAppImportPopulateUtil {
     //2b)   if populateSingleFellApp($sheet) return true => set sheet DataFile status to "completed"
     public function populateApplicationsFromDataFile() {
 
+        $logger = $this->container->get('logger');
+
         if( !$this->checkIfFellappAllowed("Populate not completed applications") ) {
+            $logger->warning("Not Allowed to populate not completed applications.");
             return null;
         }
-
-        $logger = $this->container->get('logger');
 
         //get not completed DataFile
         $repository = $this->em->getRepository('OlegFellAppBundle:DataFile');
@@ -432,7 +433,7 @@ class FellAppImportPopulateUtil {
                 $event = $documentType . " file has been successful downloaded to the server with id=" . $fileDb->getId() . ", title=" . $fileDb->getUniquename();
                 $logger->notice($event);
             } else {
-                $logger->warning($documentType." dataFile is NULL for fileId=$fileId; fileDb Id=".$fileDb->getId(). ", title=" . $fileDb->getUniquename());
+                $logger->warning($documentType." dataFile has not been added (already exists) for fileId=$fileId; fileDb Id=".$fileDb->getId(). ", title=" . $fileDb->getUniquename());
             }
         } else {
             $event = $documentType . " download failed!";
@@ -451,12 +452,12 @@ class FellAppImportPopulateUtil {
     //return newly created DataFile object
     public function addFileToDataFileDB( $document ) {
 
-        //$logger = $this->container->get('logger');
+        $logger = $this->container->get('logger');
 
         $dataFile = $this->em->getRepository('OlegFellAppBundle:DataFile')->findOneByDocument($document->getId());
         if( $dataFile ) {
-            //$event = "DataFile already exists with document ID=".$document->getId();
-            //$logger->notice($event);
+            $event = "DataFile already exists with document ID=".$document->getId();
+            $logger->notice($event);
             return null;
         }
 
@@ -499,6 +500,7 @@ class FellAppImportPopulateUtil {
         //$userSecUtil = $this->container->get('user_security_utility');
 
         if( !$this->checkIfFellappAllowed("Populate Single Application") ) {
+            $logger->warning("populate Single FellApp: Not Allowed to populate Single Application");
             return null;
         }
 
@@ -656,7 +658,7 @@ class FellAppImportPopulateUtil {
             //$googleFormId = $rowData[0][0];
             $googleFormId = $this->getValueByHeaderName('ID',$rowData,$headers);
             if( !$googleFormId ) {
-                //$logger->error('Skip this fell application, because googleFormId does not exists. googleFormId='.$googleFormId);
+                $logger->warning('Skip this fell application, because googleFormId does not exists. googleFormId='.$googleFormId);
                 continue; //skip this fell application, because it already exists in DB
             }
 
@@ -690,11 +692,12 @@ class FellAppImportPopulateUtil {
                     continue; //skip this fell application, because it already exists in DB
                 }
 
-
                 $email = $this->getValueByHeaderName('email', $rowData, $headers);
                 $lastName = $this->getValueByHeaderName('lastName', $rowData, $headers);
                 $firstName = $this->getValueByHeaderName('firstName', $rowData, $headers);
                 $middleName = $this->getValueByHeaderName('middleName', $rowData, $headers);
+
+                $logger->notice('Start populating fell application with email='.$email.', lastname='.$lastName.', googleFormId='.$googleFormId);
 
                 $lastNameCap = $this->capitalizeIfNotAllCapital($lastName);
                 $firstNameCap = $this->capitalizeIfNotAllCapital($firstName);
