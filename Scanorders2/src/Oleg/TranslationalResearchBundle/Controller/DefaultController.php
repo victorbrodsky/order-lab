@@ -115,12 +115,12 @@ class DefaultController extends Controller
 
         //Step 3: import Committee Comments from TRF_COMMITTEE_REV
         //Committee comments
-        if(1) {
+        if(0) {
             $resArr[] = $importUtil->importCommitteeComments($request, 'TRF_COMMITTEE_REV.xlsx');
         }
 
         //Step 4: import Committee Comments from TRF_COMMENTS_RESP
-        if(0) {
+        if(1) {
             $resArr[] = $importUtil->importCommitteeComments2($request, 'TRF_COMMENTS_RESP.xlsx');
         }
 
