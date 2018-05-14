@@ -1307,7 +1307,7 @@ class TransResImportData
                 //foreach($requestersArr as $requester) {
                 //    echo $requester."<br>";
                 //}
-                echo "<br>";
+                //echo "<br>";
             } else {
                 $criticalErrorArr[] = "PI";
             }
@@ -1317,6 +1317,24 @@ class TransResImportData
         if( count($pis) == 0 ) {
             $thisNotExistingUsers[] = "PI user is not found during the import.";
             $project->addPrincipalInvestigator($systemUser);
+        }
+
+        //Contacts
+        $projectContacts = $project->getContacts();
+        if( count($projectContacts) == 0 ) {
+            if( count($requestersArr) > 0 ) {
+                $projectContact = $requestersArr[0];
+                $project->addContact($projectContact);
+                $thisNotExistingUsers[] = "Contact user is pre-set by the first requester $projectContact";
+            } else {
+                $criticalErrorArr[] = "Contact";
+            }
+        }
+        //add system user if not set
+        $projectContacts = $project->getContacts();
+        if( count($projectContacts) == 0 ) {
+            $thisNotExistingUsers[] = "Contact user is not found during the import.";
+            $project->addContact($systemUser);
         }
 
         if( count($criticalErrorArr) > 0 ) {
