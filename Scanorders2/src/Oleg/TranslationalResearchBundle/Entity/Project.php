@@ -122,7 +122,7 @@ class Project {
 
     // Project fields
     /**
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\User", cascade={"persist","remove"})
      * @ORM\JoinTable(name="transres_project_principalinvestigator",
      *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="principalinvestigator_id", referencedColumnName="id")}
@@ -131,7 +131,7 @@ class Project {
     private $principalInvestigators;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\User", cascade={"persist","remove"})
      * @ORM\JoinTable(name="transres_project_coinvestigator",
      *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="coinvestigator_id", referencedColumnName="id")}
@@ -140,7 +140,7 @@ class Project {
     private $coInvestigators;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\User", cascade={"persist","remove"})
      * @ORM\JoinTable(name="transres_project_pathologist",
      *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="pathologist_id", referencedColumnName="id")}
@@ -151,7 +151,7 @@ class Project {
     /**
      * Project's "Contact" filed is pre-populated with the current user (Submitter)
      *
-     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\User", cascade={"persist","remove"})
      * @ORM\JoinTable(name="transres_project_contact",
      *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="contact_id", referencedColumnName="id")}
