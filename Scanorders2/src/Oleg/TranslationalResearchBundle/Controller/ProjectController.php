@@ -1412,7 +1412,7 @@ class ProjectController extends Controller
         foreach( $project->getRequests() as $transresRequest) {
             $project->removeRequest($transresRequest);
             $transresRequest->setProject(null);
-            //$this->removeRequestFromDB($transresRequest);
+            $this->removeRequestFromDB($transresRequest);
         }
         
         //delete documents
