@@ -431,6 +431,8 @@ class FellAppImportPopulateUtil {
             if( $dataFile ) {
                 $event = $documentType . " file has been successful downloaded to the server with id=" . $fileDb->getId() . ", title=" . $fileDb->getUniquename();
                 $logger->notice($event);
+            } else {
+                $logger->warning($documentType," dataFile is NULL for ".$fileDb->getId(). ", title=" . $fileDb->getUniquename());
             }
         } else {
             $event = $documentType . " download failed!";
