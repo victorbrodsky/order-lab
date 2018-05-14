@@ -572,8 +572,13 @@ class FellAppImportPopulateUtil {
         //$logger->notice("Getting source sheet with filename=".$inputFileName);
 
         try {
-            $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
-            $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+            //$inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
+            //$objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+
+            //Use depreciated PHPExcel, because PhpOffice does not read correctly rows of the google spreadsheets
+            $inputFileType = \PHPExcel_IOFactory::identify($inputFileName);
+            $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
+
             $objPHPExcel = $objReader->load($inputFileName);
         } catch(Exception $e) {
             $event = 'Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage();
@@ -635,7 +640,8 @@ class FellAppImportPopulateUtil {
         $sheet = $objPHPExcel->getSheet(0);
         $highestRow = $sheet->getHighestRow();
         $highestColumn = $sheet->getHighestColumn();
-        $logger->notice("rows=$highestRow columns=$highestColumn");
+        //echo "rows=$highestRow columns=$highestColumn <br>";
+        //$logger->notice("rows=$highestRow columns=$highestColumn");
 
         $headers = $rowData = $sheet->rangeToArray('A' . 1 . ':' . $highestColumn . 1,
             NULL,
@@ -655,13 +661,25 @@ class FellAppImportPopulateUtil {
                 FALSE);
 
             //$logger->notice(print_r($rowData[0]));
+            //print_r($rowData[0]);
+            //echo "<pre>";
+            //print_r($headers[0]);
+            //echo "</pre>";
+
+            //echo "<pre>";
+            //print_r($rowData[0]);
+            //echo "</pre>";
+            //exit('exit');
 
             //$googleFormId = $rowData[0][0];
-            $googleFormId = $this->getValueByHeaderName('ID',$rowData[0],$headers);
+            $googleFormId = $this->getValueByHeaderName('ID',$rowData,$headers);
             if( !$googleFormId ) {
-                $logger->warning($row.': Skip this fell application, because googleFormId does not exists. rowData='.$rowData.'; headers='.implode(";",$headers[0]));
+                //echo $row.": skip ID is null <br>";
+                //$logger->warning($row.': Skip this fell application, because googleFormId does not exists. rowData='.$rowData.'; headers='.implode(";",$headers[0]));
                 continue; //skip this fell application, because googleFormId does not exists
             }
+
+            //exit('exit');
 
             try {
 
@@ -689,7 +707,7 @@ class FellAppImportPopulateUtil {
 
                 $googleForm = $em->getRepository('OlegFellAppBundle:FellowshipApplication')->findOneByGoogleFormId($googleFormId);
                 if( $googleForm ) {
-                    $logger->notice('Skip this fell application, because it already exists in DB. googleFormId='.$googleFormId);
+                    //$logger->notice('Skip this fell application, because it already exists in DB. googleFormId='.$googleFormId);
                     continue; //skip this fell application, because it already exists in DB
                 }
 
@@ -714,6 +732,11 @@ class FellAppImportPopulateUtil {
                 if ($middleName) {
                     $displayName = $firstName . " " . $middleName . " " . $lastName;
                 }
+
+                //testing !!! TODO: remove it!!!
+                //echo "email=$email, googleFormId=$googleFormId <br>";
+                //exit('111');
+                //continue;
 
                 //create logger which must be deleted on successefull creation of application
                 $eventAttempt = "Attempt of creating Fellowship Applicant " . $displayName . " with unique Google Applicant ID=" . $googleFormId;

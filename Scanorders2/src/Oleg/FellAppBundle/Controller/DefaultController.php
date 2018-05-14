@@ -70,9 +70,10 @@ class DefaultController extends Controller
 
         $fellappImportPopulateUtil = $this->container->get('fellapp_importpopulate_util');
 
-        $inputFileName = "Uploaded/fellapp/Spreadsheets/test-fellapp";
+        $inputFileName = "Uploaded/fellapp/Spreadsheets/test-fellapp3";
 
         $applications = $fellappImportPopulateUtil->populateSpreadsheet($inputFileName);
 
+        exit("end of fellapp test");
     }
 }
