@@ -86,11 +86,11 @@ class DefaultController extends Controller
         $importUtil = $this->get('transres_import');
 
         //Step 1: import projects and admin Comments from TRF_PROJECT_INFO
-        if(1) {
+        if(0) {
             //import projects
             $resArr[] = $importUtil->importOldData($request, 'TRF_PROJECT_INFO.xlsx', 'project_adminComments');
         }
-        if(0) {
+        if(1) {
             //import projects
             $resProject = $importUtil->importOldData($request, 'TRF_PROJECT_INFO.xlsx', 'project');
             //import admin comments
@@ -100,7 +100,7 @@ class DefaultController extends Controller
         }
 
         //Step 2: import projects and admin Comments from TRF_DRAFT_PROJECT
-        if(2) {
+        if(0) {
             //import projects
             $resArr[] = $importUtil->importOldData($request, 'TRF_DRAFT_PROJECT.xlsx', 'project_adminComments');
         }
