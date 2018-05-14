@@ -1405,13 +1405,24 @@ class ProjectController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         //principalInvestigators
-        //foreach( $project->getPrincipalInvestigators() as $pi) {
-        //    $project->removePrincipalInvestigator($pi);
-        //}
+        foreach( $project->getPrincipalInvestigators() as $pi) {
+            $project->removePrincipalInvestigator($pi);
+        }
+
+        foreach( $project->getRequests() as $req) {
+            $project->removeRequest($req);
+            $req->setProject($this);
+            $this->removeRequestFromDB($req);
+        }
         
         //delete documents
 
         $em->remove($project);
+        $em->flush();
+    }
+    public function removeRequestFromDB( $transresRequest ) {
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($transresRequest);
         $em->flush();
     }
 
