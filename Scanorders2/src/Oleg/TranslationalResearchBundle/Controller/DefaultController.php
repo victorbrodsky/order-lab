@@ -100,7 +100,7 @@ class DefaultController extends Controller
         }
 
         //Step 2: import projects and admin Comments from TRF_DRAFT_PROJECT
-        if(1) {
+        if(0) {
             //import projects
             $resArr[] = $importUtil->importOldData($request, 'TRF_DRAFT_PROJECT.xlsx', 'project_adminComments');
         }
@@ -115,7 +115,7 @@ class DefaultController extends Controller
 
         //Step 3: import Committee Comments from TRF_COMMITTEE_REV
         //Committee comments
-        if(0) {
+        if(1) {
             $resArr[] = $importUtil->importCommitteeComments($request, 'TRF_COMMITTEE_REV.xlsx');
         }
 
