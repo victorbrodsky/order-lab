@@ -43,6 +43,7 @@ class TransResImportData
     private $container;
 
     private $usernamePrefix = 'wcmc-cwid';
+    private $headerMapArr = null;
 
     public function __construct( $em, $container ) {
         $this->container = $container;
@@ -51,7 +52,6 @@ class TransResImportData
         $this->secAuth = $container->get('security.authorization_checker'); //$this->secAuth->isGranted("ROLE_USER")
         $this->secTokenStorage = $container->get('security.token_storage'); //$user = $this->secTokenStorage->getToken()->getUser();
     }
-
 
     //TRF_COMMITTEE_REV
     public function importWorkRequests( $request, $filename ) {
@@ -90,6 +90,8 @@ class TransResImportData
             TRUE,
             FALSE);
 
+        $this->headerMapArr = $this->getHeaderMap($headers);
+
         ////////////// add system user /////////////////
         //$systemUser = $userSecUtil->findSystemUser();
         ////////////// end of add system user /////////////////
@@ -115,9 +117,10 @@ class TransResImportData
 
             $count++;
 
-            if( $count == 15 ) {
-                exit("count limit $count");
-            }
+            //if( $count == 1500 ) {
+            //    //faster?
+            //    exit("count limit $count");
+            //}
 
             $commentArr = array();
 
@@ -186,14 +189,15 @@ class TransResImportData
 
             $exportId = $this->getValueByHeaderName('PROJECT_ID', $rowData, $headers);
             $exportId = trim($exportId);
-            //echo $exportId."<br>";
-            //echo $count." [".$exportId."]: ";
-            //exit("exit");
+            echo $exportId."<br>";
+
 
             $requestID = $this->getValueByHeaderName('SERVICE_ID', $rowData, $headers);
             $requestID = trim($requestID);
             echo "<br>" . $count . ": Project ID " . $exportId . ", RS ID " . $requestID . "<br>";
 
+            //echo $count." [".$exportId."]: ";
+            //exit("exit");
 
             $transresRequest = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest')->findOneByExportId($requestID);
             if (!$transresRequest) {
@@ -489,18 +493,19 @@ class TransResImportData
 //            }
 
             //CREATED_DATE
-            //TODO: test it
             $CREATED_DATE_STR = $this->getValueByHeaderName('CREATED_DATE', $rowData, $headers);
-            if ($CREATED_DATE_STR) {
-                echo "CREATED_DATE_STR=".$CREATED_DATE_STR."<br>";
+            if( $CREATED_DATE_STR ) {
+                //echo "CREATED_DATE_STR=".$CREATED_DATE_STR."<br>";
                 $CREATED_DATE = $this->transformDatestrToDate($CREATED_DATE_STR);
                 $transresRequest->setCreateDate($CREATED_DATE);
+            } else {
+                $transresRequest->setCreateDate(null);
             }
-            exit('test');
+            //exit('test');
 
             //CONTACT_EMAIL
             $CONTACT_EMAIL = $this->getValueByHeaderName('CONTACT_EMAIL', $rowData, $headers);
-            if ($CONTACT_EMAIL) {
+            if( $CONTACT_EMAIL ) {
                 $contactUsers = $this->getUserByEmail($CONTACT_EMAIL, $requestID, 'CONTACT_EMAIL');
                 if (count($contactUsers) > 0) {
                     $contactUser = $contactUsers[0];
@@ -610,7 +615,7 @@ class TransResImportData
 
             //save project to DB before form nodes
             $saveFlag = true;
-            //$saveFlag = false;
+            $saveFlag = false;
             if( $saveFlag ) {
                 $em->persist($transresRequest);
                 $em->flush();
@@ -1829,7 +1834,42 @@ class TransResImportData
         return $dateStr;
     }
 
+    public function getHeaderMap($headers) {
+        $headerMapArr = array();
+        //print_r($headers[0]);
+        $col = 0; //$rowData starts with 0
+        foreach($headers[0] as $header) {
+            //headerStr => column
+            $headerMapArr[$header] = $col;
+            $col++;
+        }
+        //echo "<pre>";
+        //print_r($headerMapArr);
+        //echo "</pre>";
+        //exit('111');
+        return $headerMapArr;
+    }
+    public function getFastValueByHeaderName($headerStr, $rowData, $headers, $headerMapArr) {
+        //echo "<pre>";
+        //print_r($rowData[0]);
+        //echo "</pre>";
+        //use excel get by row and column
+        $column = $headerMapArr[$headerStr];
+        $value = $rowData[0][$column];
+        //$cellValue = $spreadsheet->getActiveSheet()->getCellByColumnAndRow($column,$row)->getValue();
+        //exit($headerStr.'='.$value);
+
+        $value = str_replace("_x000D_","\r\n",$value);
+        $value = str_replace("x000D","\r\n",$value);
+
+        return $value;
+    }
     public function getValueByHeaderName($header, $row, $headers) {
+
+        if( $this->headerMapArr ) {
+            //faster?
+            return $this->getFastValueByHeaderName($header, $row, $headers, $this->headerMapArr);
+        }
 
         $res = null;
 
@@ -1896,10 +1936,10 @@ class TransResImportData
 
         //'j-M-Y', '15-Feb-2009'
         //23-APR-07
-        echo "dateStr=".$datestr;
+        //echo "dateStr=".$datestr;
         //M/y
         $date = \DateTime::createFromFormat($formatType,$datestr);
-        echo " =>".$date->format("d-m-Y")."<br>";
+        //echo " =>".$date->format("d-m-Y")."<br>";
 
         return $date;
     }
