@@ -208,13 +208,12 @@ class AuthUtil {
         }
 
         //first search this user if exists in ldap directory
-        if(0) {
-            $searchRes = $this->searchLdap($usernameClean);
-            if ($searchRes == NULL || count($searchRes) == 0) {
-                $this->logger->error("LdapAuthentication: can not find user by usernameClean=" . $usernameClean);
-                return NULL;
-            }
+        $searchRes = $this->searchLdap($usernameClean);
+        if ($searchRes == NULL || count($searchRes) == 0) {
+            $this->logger->error("LdapAuthentication: can not find user by usernameClean=" . $usernameClean);
+            return NULL;
         }
+
 
         //echo "user exists in ldap directory<br>";
         //$this->logger->notice("LdapAuthentication: user found in LDAP by usernameClean=".$usernameClean);
@@ -649,19 +648,22 @@ class AuthUtil {
 
         $cnx = $this->connectToLdap($LDAPHost);
 
-        //TODO: use local function with SASL ($this->ldapBind)
-        $res = @ldap_bind($cnx,$LDAPUserAdmin,$LDAPUserPasswordAdmin);
-        //$res = $this->ldapBind($LDAPUserAdmin,$LDAPUserPasswordAdmin);
-        if( !$res ) {
-            $this->logger->error("searchLdap: ldap_bind failed with admin authentication username=".$LDAPUserAdmin);
-        	//echo "Could not bind to LDAP: user=".$LDAPUserAdmin."<br>";
-            ldap_error($cnx);
-            ldap_unbind($cnx);
-            //exit("error");
-            return NULL;
-            //return -1;  //"Could not bind to LDAP server";
-        } else {
-        	//echo "OK simple LDAP: user=".$LDAPUserAdmin."<br>";
+        $useSearchByAdmin = false;
+        if($useSearchByAdmin) {
+            //TODO: use local function with SASL ($this->ldapBind)
+            $res = @ldap_bind($cnx, $LDAPUserAdmin, $LDAPUserPasswordAdmin);
+            //$res = $this->ldapBind($LDAPUserAdmin,$LDAPUserPasswordAdmin);
+            if (!$res) {
+                $this->logger->error("searchLdap: ldap_bind failed with admin authentication username=" . $LDAPUserAdmin);
+                //echo "Could not bind to LDAP: user=".$LDAPUserAdmin."<br>";
+                ldap_error($cnx);
+                ldap_unbind($cnx);
+                //exit("error");
+                return NULL;
+                //return -1;  //"Could not bind to LDAP server";
+            } else {
+                //echo "OK simple LDAP: user=".$LDAPUserAdmin."<br>";
+            }
         }
 
         $LDAPFieldsToFind = array("mail", "title", "sn", "givenName", "displayName", "telephoneNumber", "company"); //sn - lastName

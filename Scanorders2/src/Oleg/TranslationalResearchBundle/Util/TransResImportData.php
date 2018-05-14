@@ -196,6 +196,18 @@ class TransResImportData
             $requestID = trim($requestID);
             echo "<br>" . $count . ": Project ID " . $exportId . ", RS ID " . $requestID . "<br>";
 
+//            //test
+//            //CREATED_DATE
+//            $CREATED_DATE_STR = $this->getValueByHeaderName('CREATED_DATE', $rowData, $headers);
+//            if( $CREATED_DATE_STR ) {
+//                //echo "CREATED_DATE_STR=".$CREATED_DATE_STR."<br>";
+//                $CREATED_DATE = $this->transformDatestrToDate($CREATED_DATE_STR);
+//            } else {
+//                exit("Created date does not exists.");
+//                $transresRequest->setCreateDate(null);
+//            }
+//            continue;
+
             //echo $count." [".$exportId."]: ";
             //exit("exit");
 
