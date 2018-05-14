@@ -1868,7 +1868,7 @@ class RequestController extends Controller
 
         foreach($requests as $transresRequest) {
             $this->deleteRequest($transresRequest);
-            exit('111');
+            //exit('111');
         }
 
         exit("EOF deleteMultipleRequestsAction");
@@ -1884,6 +1884,10 @@ class RequestController extends Controller
         //}
 
         //delete documents
+
+        $project = $transresRequest->getProject();
+        $project->removeRequest($transresRequest);
+        $transresRequest->setProject(null);
 
         $em->remove($transresRequest);
         $em->flush();
