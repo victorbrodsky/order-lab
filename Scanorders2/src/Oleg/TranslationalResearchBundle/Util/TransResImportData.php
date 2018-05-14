@@ -940,6 +940,9 @@ class TransResImportData
         $transresRequestUtil = $this->container->get('transres_request_util');
         $transresUtil = $this->container->get('transres_util');
 
+        $testing = false;
+        $testing = true;
+
         //$email = "oli2002@med.cornell.edu";
         $requests = array();
 
@@ -1009,12 +1012,14 @@ class TransResImportData
 
             $project = $this->em->getRepository('OlegTranslationalResearchBundle:Project')->findOneByExportId($exportId);
             if( $project ) {
-                //continue; //testing
+                if( !$testing ) {
+                    continue; //testing
+                }
             }
 
             //Process Project
             if( $importFlag == 'project' || $importFlag == 'project_adminComments' ) {
-                $res = $this->importProject($request, $adminReviewer, $rowData, $headers, $exportId, $specialty, $systemUser, $notExistingStatuses, $notExistingUsers);
+                $res = $this->importProject($request, $adminReviewer, $rowData, $headers, $exportId, $specialty, $systemUser, $notExistingStatuses, $notExistingUsers, $testing);
                 $notExistingStatuses = $res['notExistingStatuses'];
                 $notExistingUsers = $res['notExistingUsers'];
                 $project = $res['project'];
@@ -1060,15 +1065,12 @@ class TransResImportData
         return $result;
     }
 
-    public function importProject( $request, $adminReviewer, $rowData, $headers, $exportId, $specialty, $systemUser, $notExistingStatuses, $notExistingUsers ) {
+    public function importProject( $request, $adminReviewer, $rowData, $headers, $exportId, $specialty, $systemUser, $notExistingStatuses, $notExistingUsers, $testing=false ) {
         $transresUtil = $this->container->get('transres_util');
         $logger = $this->container->get('logger');
         $em = $this->em;
 
         $thisNotExistingUsers = array(); //only for required users
-
-        $testing = false;
-        $testing = true;
 
         $project = $this->em->getRepository('OlegTranslationalResearchBundle:Project')->findOneByExportId($exportId);
         if( $project ) {
