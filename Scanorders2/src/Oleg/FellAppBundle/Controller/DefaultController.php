@@ -58,4 +58,21 @@ class DefaultController extends Controller
         return array('sitename'=>$this->container->getParameter('fellapp.sitename'));
     }
 
+
+
+    /**
+     * @Route("/test_google_file", name="fellapp_test_google_file")
+     */
+    public function testGoogleFileAction( Request $request ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('fellapp.sitename').'-nopermission') );
+        }
+
+        $fellappImportPopulateUtil = $this->container->get('fellapp_importpopulate_util');
+
+        $inputFileName = "Uploaded/fellapp/Spreadsheets/test-fellapp";
+
+        $applications = $fellappImportPopulateUtil->populateSpreadsheet($inputFileName);
+
+    }
 }
