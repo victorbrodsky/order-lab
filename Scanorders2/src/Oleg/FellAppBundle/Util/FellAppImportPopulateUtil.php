@@ -654,7 +654,7 @@ class FellAppImportPopulateUtil {
                 TRUE,
                 FALSE);
 
-            print_r($rowData);
+            $logger->notice(print_r($rowData[0]));
 
             //$googleFormId = $rowData[0][0];
             $googleFormId = $this->getValueByHeaderName('ID',$rowData[0],$headers);
