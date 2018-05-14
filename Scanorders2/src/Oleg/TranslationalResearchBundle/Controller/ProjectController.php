@@ -1409,10 +1409,10 @@ class ProjectController extends Controller
             $project->removePrincipalInvestigator($pi);
         }
 
-        foreach( $project->getRequests() as $req) {
-            $project->removeRequest($req);
-            $req->setProject($this);
-            $this->removeRequestFromDB($req);
+        foreach( $project->getRequests() as $transresRequest) {
+            $project->removeRequest($transresRequest);
+            $transresRequest->setProject(null);
+            $this->removeRequestFromDB($transresRequest);
         }
         
         //delete documents
