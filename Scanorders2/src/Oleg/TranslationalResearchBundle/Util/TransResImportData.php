@@ -1268,7 +1268,7 @@ class TransResImportData
             //}
 
         }
-        if( !$coinvFound ) {
+        if( !$coinvFound && $coInvestigatorsOriginal ) {
             $thisNotExistingUsers[] = "Co-Investigator user not found by CO_INVESTIGATOR=".$coInvestigatorsOriginal;
         }
 
