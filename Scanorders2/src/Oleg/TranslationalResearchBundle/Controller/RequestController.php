@@ -1832,6 +1832,61 @@ class RequestController extends Controller
         $response = new Response($res);
         return $response;
     }
-    
+
+
+    /**
+     * Deletes a request entity.
+     *
+     * @Route("/delete-multiple-requests/", name="translationalresearch_requests_multiple_delete")
+     * @Method("GET")
+     */
+    public function deleteMultipleProjectsAction(Request $request)
+    {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+        }
+
+        set_time_limit(1800); //1800 seconds => 30 min
+        ini_set('memory_limit', '2048M');
+
+        $em = $this->getDoctrine()->getManager();
+
+        $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
+        $dql =  $repository->createQueryBuilder("request");
+        $dql->select('request');
+
+        $dql->leftJoin('request.principalInvestigators','principalInvestigators');
+
+        $dql->andWhere("request.exportId IS NOT NULL");
+        //$dql->andWhere("project.oid IS NULL");
+        //$dql->andWhere("principalInvestigators.id IS NULL");
+
+        $query = $dql->getQuery();
+
+        $requests = $query->getResult();
+        echo "requests count=".count($requests)."<br>";
+
+        foreach($requests as $transresRequest) {
+            $this->deleteRequest($transresRequest);
+            exit('111');
+        }
+
+        exit("EOF deleteMultipleRequestsAction");
+        return $this->redirectToRoute('translationalresearch_project_index');
+    }
+    public function deleteRequest( $transresRequest ) {
+        echo $transresRequest->getId().": Delete request OID=".$transresRequest->getOid()."<br>";
+        $em = $this->getDoctrine()->getManager();
+
+        //principalInvestigators
+        //foreach( $transresRequest->getPrincipalInvestigators() as $pi) {
+        //    $transresRequest->removePrincipalInvestigator($pi);
+        //}
+
+        //delete documents
+
+        $em->remove($transresRequest);
+        $em->flush();
+    }
 
 }
