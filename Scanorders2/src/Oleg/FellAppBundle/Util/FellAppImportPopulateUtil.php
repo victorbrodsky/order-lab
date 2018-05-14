@@ -635,6 +635,7 @@ class FellAppImportPopulateUtil {
         $sheet = $objPHPExcel->getSheet(0);
         $highestRow = $sheet->getHighestRow();
         $highestColumn = $sheet->getHighestColumn();
+        $logger->notice("rows=$highestRow columns=$highestColumn");
 
         $headers = $rowData = $sheet->rangeToArray('A' . 1 . ':' . $highestColumn . 1,
             NULL,
@@ -653,7 +654,7 @@ class FellAppImportPopulateUtil {
                 TRUE,
                 FALSE);
 
-            //print_r($rowData);
+            print_r($rowData);
 
             //$googleFormId = $rowData[0][0];
             $googleFormId = $this->getValueByHeaderName('ID',$rowData[0],$headers);
