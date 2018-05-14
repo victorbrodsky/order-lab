@@ -90,11 +90,11 @@ class DefaultController extends Controller
             //import projects
             $resArr[] = $importUtil->importOldData($request, 'TRF_PROJECT_INFO.xlsx', 'project_adminComments');
         }
-        if(0) {
+        if(1) {
             //import projects
-            //$resProject = $importUtil->importOldData($request, 'TRF_PROJECT_INFO.xlsx', 'project');
+            $resProject = $importUtil->importOldData($request, 'TRF_PROJECT_INFO.xlsx', 'project');
             //import admin comments
-            $resAdminComments = $importUtil->importOldData($request, 'TRF_PROJECT_INFO.xlsx', 'adminComments');
+            //$resAdminComments = $importUtil->importOldData($request, 'TRF_PROJECT_INFO.xlsx', 'adminComments');
 
             $resArr[] = $resProject . "<br>========= EOF TRF_PROJECT_INFO ===========<br>" . $resAdminComments;
         }
@@ -125,8 +125,8 @@ class DefaultController extends Controller
         }
 
         //Step 5: import working requests (~14k ~10 hours)
-        if(1) {
-            $resArr[] = $importUtil->importWorkRequests($request, 'TRF_REQUESTED_SER.xlsx');
+        if(0) {
+            $resArr[] = $importUtil->importWorkRequests($request, 'TRF_REQUESTED_1.xlsx');
         }
 
         $res = implode("<br><br>",$resArr);

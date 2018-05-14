@@ -383,9 +383,10 @@ class TransResRequest {
         //return $this->oid;
 
         if( $this->oid ) {
-            return $this->oid;
+            //return $this->oid;
+            return $this->generateOid() . "(RS".$this->getExportId().")";
         } else {
-            return $this->generateOid();
+            return $this->getId();
         }
     }
 

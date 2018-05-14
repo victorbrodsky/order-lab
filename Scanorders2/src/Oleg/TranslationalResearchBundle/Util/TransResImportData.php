@@ -115,9 +115,11 @@ class TransResImportData
 
             $count++;
 
-            //if( $count == 15 ) {
-            //    exit("count limit $count");
-            //}
+            if( $count == 15 ) {
+                exit("count limit $count");
+            }
+
+            $commentArr = array();
 
             //Read a row of data into an array
             $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
@@ -222,7 +224,7 @@ class TransResImportData
             }
             $IMMUNOPATHOLOGY = $this->getValueByHeaderName('IMMUNOPATHOLOGY', $rowData, $headers);
             if ($IMMUNOPATHOLOGY) {
-                $labs[] = "Imuunopathology";
+                $labs[] = "Immunopathology";
             }
             $CYTOGENETICS = $this->getValueByHeaderName('CYTOGENETICS', $rowData, $headers);
             if ($CYTOGENETICS) {
@@ -448,7 +450,7 @@ class TransResImportData
 
             //STATUS_ID
             $STATUS_ID = $this->getValueByHeaderName('STATUS_ID', $rowData, $headers);
-            if ($STATUS_ID) {
+            if( $STATUS_ID ) {
                 $requestStateArr = $this->statusRequestMapper($STATUS_ID);
                 $statusProgress = $requestStateArr['progress'];
                 $statusBilling = $requestStateArr['billing'];
@@ -458,6 +460,12 @@ class TransResImportData
                 } else {
                     exit("Request progress state is not defined by STATUS_ID=[" . $STATUS_ID . "]");
                 }
+            } else {
+                $statusProgress = "completed";
+                $statusBilling = "paid";
+                $commentArr[] = "Request status is pre-set by default values: progress to $statusProgress and billing status to $statusBilling";
+                $transresRequest->setProgressState($statusProgress);
+                $transresRequest->setBillingState($statusBilling);
             }
 
             //APPROVAL_DATE
@@ -497,15 +505,6 @@ class TransResImportData
                 }
             }
 
-//            $currentContactUser = $transresRequest->getContact();
-//            $currentSubmitterUser = $transresRequest->getSubmitter();
-//            if( $currentContactUser &&  $currentSubmitterUser ) {
-//                //ok
-//            } else {
-//                $msg = "Contact and Submitter users are not found.";
-//                exit($msg);
-//            }
-
             //ASPIRATE_SMEARS
             $ASPIRATE_SMEARS = $this->getValueByHeaderName('ASPIRATE_SMEARS', $rowData, $headers);
             if( $ASPIRATE_SMEARS ) {
@@ -519,22 +518,6 @@ class TransResImportData
             //CONTACT_EMAIL
             if( $CONTACT_EMAIL ) {
                 $formDataArr[] = "Contact Email: ".$CONTACT_EMAIL;
-            }
-
-            if( count($formDataArr) > 0 ) {
-                $formDataStr = implode("\r\n",$formDataArr);
-                echo $formDataStr."<br>";
-
-                $requestComment = $transresRequest->getComment();
-                //Append to the Comment
-                //$formDataStr = "\r\n".$formDataStr;
-                $formDataStr = str_replace("<br>","\r\n",$formDataStr);
-                $requestComment = $requestComment . "\r\n \r\n" .
-                    "### Original Exported Service Request Form ###\r\n".
-                    $formDataStr."\r\n".
-                    "########################################";
-
-                $transresRequest->setComment($requestComment);
             }
 
 
@@ -571,6 +554,56 @@ class TransResImportData
                 }
             }
             /////////////// EOF Set default users from project ///////////////////
+
+            //Final check submitter and contact
+            $defaultUser = null;
+            $transreqPis = $project->getPrincipalInvestigators();
+            if( count($transreqPis) > 0 ) {
+                $defaultUser = $transreqPis[0];
+            } else {
+                exit("No PI is defined for ".$requestID);
+            }
+            //Contact User
+            $currentContactUser = $transresRequest->getContact();
+            if( !$currentContactUser ) {
+                $transresRequest->setContact($defaultUser);
+                $commentArr[] = "Default Contact user is pre-set using PI $defaultUser";
+            }
+            $currentSubmitterUser = $transresRequest->getSubmitter();
+            if( !$currentSubmitterUser ) {
+                $transresRequest->setSubmitter($defaultUser);
+                $commentArr[] = "Default Submitter user is pre-set using PI $defaultUser";
+            }
+
+            $formDataStr = null;
+            if( count($formDataArr) > 0 ) {
+                $formDataStr = implode("\r\n",$formDataArr);
+                //echo $formDataStr."\r\n";
+                $formDataStr = str_replace("<br>","\r\n",$formDataStr);
+                $formDataStr =
+                    "### Original Exported Service Request Form ###\r\n".
+                    $formDataStr."\r\n".
+                    "########################################";
+            }
+
+            $commentStr = null;
+            if( count($commentArr) > 0 ) {
+                $commentStr = implode("\r\n",$commentArr);
+                //echo $commentStr."\r\n";
+                if( $formDataStr ) {
+                    $commentStr = "\r\n \r\n" . "Note:" . "\r\n" . $commentStr;
+                } else {
+                    $commentStr = "Note:" . "\r\n" . $commentStr;
+                }
+
+            }
+
+            if( $formDataStr || $commentStr ) {
+                $requestComment = $transresRequest->getComment();
+                //Append to the Comment
+                $requestComment = $requestComment . "\r\n \r\n" . $formDataStr . $commentStr;
+                $transresRequest->setComment($requestComment);
+            }
 
             //save project to DB before form nodes
             $saveFlag = true;
@@ -976,7 +1009,7 @@ class TransResImportData
 
             $project = $this->em->getRepository('OlegTranslationalResearchBundle:Project')->findOneByExportId($exportId);
             if( $project ) {
-                continue;
+                //continue; //testing
             }
 
             //Process Project
@@ -1032,17 +1065,22 @@ class TransResImportData
         $logger = $this->container->get('logger');
         $em = $this->em;
 
-        $thisNotExistingUsers = array();
+        $thisNotExistingUsers = array(); //only for required users
+
+        $testing = false;
+        $testing = true;
 
         $project = $this->em->getRepository('OlegTranslationalResearchBundle:Project')->findOneByExportId($exportId);
         if( $project ) {
-            //ignore existing request to prevent overwrite
-            $res = array(
-                'notExistingStatuses' => $notExistingStatuses,
-                'notExistingUsers' => $notExistingUsers,
-                'project' => $project
-            );
-            return $res;
+            if( !$testing ) {
+                //ignore existing request to prevent overwrite
+                $res = array(
+                    'notExistingStatuses' => $notExistingStatuses,
+                    'notExistingUsers' => $notExistingUsers,
+                    'project' => $project
+                );
+                return $res;
+            }
         } else {
             //new Project
             $project = new Project();
@@ -1152,12 +1190,11 @@ class TransResImportData
                 $requestersArr[] = $user;
             }
         } else {
-            if( $piEmail ) {
-                $msg = "PI user not found by PI_EMAIL=" . $piEmail;
-                //echo $msg . "<br>";
-                $thisNotExistingUsers[] = $msg;
-                $logger->warning($msg);
-            }
+            $msg = "PI user not found by PI_EMAIL=" . $piEmail;
+            //echo $msg . "<br>";
+            $thisNotExistingUsers[] = $msg;
+            $logger->warning($msg);
+
             //try to get by PRI_INVESTIGATOR
             $priInvestigatorsOriginal = $this->getValueByHeaderName('PRI_INVESTIGATOR', $rowData, $headers);
             $priInvestigators = $this->cleanString($priInvestigatorsOriginal);
@@ -1199,7 +1236,6 @@ class TransResImportData
             //echo $msg."<br>";
             if( $pathEmail ) {
                 $logger->warning($msg);
-                //$notExistingUsers[] = $exportId . ": " . $msg;
                 $thisNotExistingUsers[] = $msg;
             }
         }
@@ -1240,12 +1276,13 @@ class TransResImportData
                 $submitter = $requestersArr[0];
                 //echo "2 submitter=".$submitter."<br>";
                 $project->setSubmitter($submitter);
-                echo "Submitter is populated by first requester:";
+                $thisNotExistingUsers[] = "Submitter user is pre-set by the first requester $submitter";
+                //echo "Submitter is populated by first requester:";
                 //print_r($requestersArr);
-                foreach($requestersArr as $requester) {
-                    echo $requester."<br>";
-                }
-                echo "<br>";
+                //foreach($requestersArr as $requester) {
+                //    echo $requester."<br>";
+                //}
+                //echo "<br>";
             } else {
                 $criticalErrorArr[] = "Submitter";
             }
@@ -1253,6 +1290,7 @@ class TransResImportData
         //add system user if not set
         if( !$project->getSubmitter() ) {
             //echo "3 submitter=".$submitter."<br>";
+            $thisNotExistingUsers[] = "Submitter user is not found during the import.";
             $project->setSubmitter($systemUser);
         }
 
@@ -1261,11 +1299,12 @@ class TransResImportData
             if( count($requestersArr) > 0 ) {
                 $pi = $requestersArr[0];
                 $project->addPrincipalInvestigator($pi);
-                echo "PI is populated by first requester:";
+                $thisNotExistingUsers[] = "PI user is pre-set by the first requester $pi";
+                //echo "PI is populated by first requester:";
                 //print_r($requestersArr);
-                foreach($requestersArr as $requester) {
-                    echo $requester."<br>";
-                }
+                //foreach($requestersArr as $requester) {
+                //    echo $requester."<br>";
+                //}
                 echo "<br>";
             } else {
                 $criticalErrorArr[] = "PI";
@@ -1274,6 +1313,7 @@ class TransResImportData
         //add system user if not set
         $pis = $project->getPrincipalInvestigators();
         if( count($pis) == 0 ) {
+            $thisNotExistingUsers[] = "PI user is not found during the import.";
             $project->addPrincipalInvestigator($systemUser);
         }
 
@@ -1398,9 +1438,7 @@ class TransResImportData
         $transresUtil->addDefaultStateReviewers($project,"final_review");
 
         //save project to DB before form nodes
-        $saveFlag = true;
-        //$saveFlag = false;
-        if( $saveFlag ) {
+        if( !$testing ) {
             $em->persist($project);
             $em->flush();
 
@@ -1408,17 +1446,25 @@ class TransResImportData
             $em->flush($project);
         }
 
-        if( count($thisNotExistingUsers) > 0 ) {
+        echo "thisNotExistingUsers=".count($thisNotExistingUsers)."; notExistingStatuses=".count($notExistingStatuses)."<br>";
+        //exit('111');
+        if (count($thisNotExistingUsers) > 0) {
             //record this to admin comment;
             //$request, $adminReviewer, $project, $adminComment, "(imported comment)"
             $thisNotExistingUsersStr = implode("; ", $thisNotExistingUsers);
-            $this->addComment($request, $adminReviewer, $project, $thisNotExistingUsersStr, "admin_review", "[import warning - not existing users]");
+            echo "thisNotExistingUsersStr=".$thisNotExistingUsersStr."<br>";
+            if( !$testing ) {
+                $this->addComment($request, $adminReviewer, $project, $thisNotExistingUsersStr, "admin_review", "[import warning - not existing users]");
+            }
         }
 
-        if( count($notExistingStatuses) > 0 ) {
+        if (count($notExistingStatuses) > 0) {
             //record this to admin comment;
             $notExistingStatusesStr = implode("; ", $notExistingStatuses);
-            $this->addComment($request, $adminReviewer, $project, $notExistingStatusesStr, "admin_review", "[import warning - not existing statuses]");
+            echo "notExistingStatusesStr=".$notExistingStatusesStr."<br>";
+            if (!$testing) {
+                $this->addComment($request, $adminReviewer, $project, $notExistingStatusesStr, "admin_review", "[import warning - not existing statuses]");
+            }
         }
 
         $res = array(
