@@ -499,6 +499,7 @@ class TransResImportData
                 $CREATED_DATE = $this->transformDatestrToDate($CREATED_DATE_STR);
                 $transresRequest->setCreateDate($CREATED_DATE);
             } else {
+                exit("Created date does not exists.");
                 $transresRequest->setCreateDate(null);
             }
             //exit('test');
@@ -615,7 +616,7 @@ class TransResImportData
 
             //save project to DB before form nodes
             $saveFlag = true;
-            $saveFlag = false;
+            //$saveFlag = false;
             if( $saveFlag ) {
                 $em->persist($transresRequest);
                 $em->flush();
