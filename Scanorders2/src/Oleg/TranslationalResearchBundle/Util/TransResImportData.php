@@ -941,7 +941,7 @@ class TransResImportData
         $transresUtil = $this->container->get('transres_util');
 
         $testing = false;
-        $testing = true;
+        //$testing = true;
 
         //$email = "oli2002@med.cornell.edu";
         $requests = array();
@@ -1448,7 +1448,7 @@ class TransResImportData
             $em->flush($project);
         }
 
-        echo "thisNotExistingUsers=".count($thisNotExistingUsers)."; notExistingStatuses=".count($notExistingStatuses)."<br>";
+        //echo "thisNotExistingUsers=".count($thisNotExistingUsers)."; notExistingStatuses=".count($notExistingStatuses)."<br>";
         //exit('111');
         if (count($thisNotExistingUsers) > 0) {
             //record this to admin comment;
