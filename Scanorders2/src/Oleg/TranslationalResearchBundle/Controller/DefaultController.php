@@ -150,8 +150,8 @@ class DefaultController extends Controller
 
             $filename = 'TRF_REQUESTED_2.xlsx';
             //$this->importRequests($request,$filename,3000);
-            $this->importRequests($request,$filename,3500);
-            $this->importRequests($request,$filename,4000);
+            $this->importRequests($request,$filename,4000, 2000);
+            //$this->importRequests($request,$filename,5000);
         }
 
         $res = implode("<br><br>",$resArr);
@@ -167,14 +167,14 @@ class DefaultController extends Controller
         return $this->redirectToRoute('translationalresearch_home');
     }
 
-    public function importRequests( $request, $filename, $startRow ) {
+    public function importRequests( $request, $filename, $startRow, $increment=1000 ) {
         set_time_limit(10800); //18000 seconds => 5 hours
         ini_set('memory_limit', '10240M');
 
         $importUtil = $this->get('transres_import');
         //use only 500 per time
         //$startRow = 2;
-        $endRow = $startRow + 500;
+        $endRow = $startRow + $increment;
         echo "Start: $startRow, end: $endRow <br>";
         $time_start = microtime(true);
         $resCount = $importUtil->importWorkRequests($request, $filename, $startRow, $endRow);

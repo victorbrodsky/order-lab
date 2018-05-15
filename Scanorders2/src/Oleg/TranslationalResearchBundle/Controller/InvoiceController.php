@@ -178,7 +178,7 @@ class InvoiceController extends Controller
                     )
                 );
             }
-            if( $filterType == "Invoices where I am a PI" ) {
+            if( $filterType == "Invoices where I am the PI" ) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
@@ -188,7 +188,7 @@ class InvoiceController extends Controller
                 );
             }
             //"Unpaid Invoices where I am a PI", "Unpaid Invoices sent to Me"
-            if( $filterType == "Unpaid Invoices where I am a PI" ) {
+            if( $filterType == "Unpaid Invoices where I am the PI" ) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(

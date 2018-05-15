@@ -80,16 +80,11 @@
             {% endif %}
             {% set count = count + 1 %}
 
-            transresRequest.progressState={{ transresRequest.progressState }}<br>
             {% if transresRequest.progressState == 'draft' %}
-
-                {#action-cancel-status#}
-                {#order-reject-status#}
-                {% set trclassname = "action-cancel-status" %}
+                {% set trclassname = "order-complete-status" %}
             {% endif %}
-        trclassname={{ trclassname }}<br>
 
-            <tbody data-link="row" class="rowlink table-tbody-hover" {{ trclassname }}>
+            <tbody data-link="row" class="rowlink table-tbody-hover {{ trclassname }}">
             <tr style="border-bottom: 1px solid #C6C6C6;">
                 <td>
                     <a href="{{ path(translationalresearch_sitename~'_request_show', { 'id': transresRequest.id }) }}" target="_blank">{{ transresRequest.oid }}</a>
