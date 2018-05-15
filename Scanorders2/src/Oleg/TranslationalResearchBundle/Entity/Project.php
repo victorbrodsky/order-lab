@@ -942,7 +942,7 @@ class Project {
     public function getOid()
     {
         if( $this->getExportId() ) {
-            return $this->oid . " (".$this->getExportId().")";
+            return $this->oid . "(".$this->getExportId().")";
         }
         return $this->oid;
     }

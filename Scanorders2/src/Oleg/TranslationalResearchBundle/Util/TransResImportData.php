@@ -737,7 +737,7 @@ class TransResImportData
 
         // Detaches all objects from Doctrine!
         $em->clear();
-        gc_collect_cycles();
+        //gc_collect_cycles();
 
         return "Added $count Work Requests";
     }

@@ -157,7 +157,7 @@ class InvoiceController extends Controller
                     )
                 );
             }
-            if( $filterType == "Invoices I Issued (I am a Submitter)" ) {
+            if( $filterType == "Issued invoices I generated" ) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
@@ -169,7 +169,7 @@ class InvoiceController extends Controller
                     )
                 );
             }
-            if( $filterType == "Invoices where I am a Salesperson" ) {
+            if( $filterType == "Invoices where I am the salesperson" ) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(

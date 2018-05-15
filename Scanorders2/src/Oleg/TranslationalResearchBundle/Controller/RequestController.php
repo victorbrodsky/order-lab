@@ -832,7 +832,7 @@ class RequestController extends Controller
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $routeName = $request->get('_route');
-        $title = "Requests";
+        $title = "Work Requests";
         $formnode = false;
 
         $advancedFilter = 0;
@@ -1040,7 +1040,7 @@ class RequestController extends Controller
             $filterTypeDone = false;
 
             if( $filterType == "All Requests" ) {
-                $title = "All Requests";
+                $title = "All Work Requests";
                 $filterTypeDone = true;
             }
 
@@ -1495,7 +1495,7 @@ class RequestController extends Controller
             );
             $projectLink = "<a href=" . $projectUrl . ">" . "Project ID " . $project->getOid() . "</a>";
             //$title = "Requests for the project ID ".$project->getOid();
-            $title = "Requests for " . $projectLink;
+            $title = "Work Requests for " . $projectLink;
 
             $requestTotalFeeHtml = $transresRequestUtil->getTransResRequestTotalFeeHtml($project);
             if ($requestTotalFeeHtml) {
@@ -1504,16 +1504,18 @@ class RequestController extends Controller
         }
 
         $allTransresRequests = $query2->getResult();
-        if( count($allTransresRequests) > 0 ) {
-            $pageNumber = $transresRequests->getCurrentPageNumber();
-            $items = $transresRequests->getItems();
-            $startPageItems = (intval($pageNumber) - 1) * intval($limit) + 1;
-            $endPageItems = intval($startPageItems) + count($items) - 1;
-            //echo "pageNumber=$pageNumber; items=".count($items)."; startPageItems=".$startPageItems."; endPageItems=".$endPageItems."<br>";
-            $title = $title . " (" . $startPageItems . " of " . $endPageItems . ", Total " . count($allTransresRequests) . ")";
-        } else {
-            $title = $title . " (Total " . count($allTransresRequests) . ")";
-        }
+        $allGlobalRequests = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest')->findAll();
+        $title = $title . " (Matching " . count($allTransresRequests) . ", Total " . count($allGlobalRequests) . ")";
+//        if( count($allTransresRequests) > 0 ) {
+//            $pageNumber = $transresRequests->getCurrentPageNumber();
+//            $items = $transresRequests->getItems();
+//            $startPageItems = (intval($pageNumber) - 1) * intval($limit) + 1;
+//            $endPageItems = intval($startPageItems) + count($items) - 1;
+//            //echo "pageNumber=$pageNumber; items=".count($items)."; startPageItems=".$startPageItems."; endPageItems=".$endPageItems."<br>";
+//            $title = $title . " (" . $startPageItems . " of " . $endPageItems . ", Total " . count($allTransresRequests) . ")";
+//        } else {
+//            $title = $title . " (Total " . count($allTransresRequests) . ")";
+//        }
 
         return array(
             'transresRequests' => $transresRequests,

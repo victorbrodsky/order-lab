@@ -65,7 +65,7 @@
             </tr>
         </thead>
 
-        {% set count = 0 %}
+        {#{% set count = 0 %}#}
         {% for transresRequest in transresRequests %}
 
             {% set latestInvoice = transres_request_util.getLatestInvoice(transresRequest) %}
@@ -73,14 +73,15 @@
                 {{ transresRequestMacros.unpaidModal(latestInvoice) }}
             {% endif %}
 
-            {% if count is odd %}
-                {% set trclassname = "table-row-separator-gray" %}
-            {% else %}
-                {% set trclassname = "table-row-separator-white" %}
-            {% endif %}
-            {% set count = count + 1 %}
+            {#{% if count is odd %}#}
+                {#{% set trclassname = "table-row-separator-gray" %}#}
+            {#{% else %}#}
+                {#{% set trclassname = "table-row-separator-white" %}#}
+            {#{% endif %}#}
+            {#{% set count = count + 1 %}#}
 
             {% if transresRequest.progressState == 'draft' %}
+                {#table-row-separator-gray#}
                 {% set trclassname = "order-complete-status" %}
             {% endif %}
 
