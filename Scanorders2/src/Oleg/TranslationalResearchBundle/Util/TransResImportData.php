@@ -112,6 +112,7 @@ class TransResImportData
 
         $i = 0;
         $batchSize = 20;
+        $classical = false;
 
         $limitRow = $highestRow;
         if( $endRaw && $endRaw >= $highestRow ) {
@@ -127,10 +128,10 @@ class TransResImportData
             $count++;
 
             //testing
-            if( $count == 2 ) {
+            //if( $count == 2 ) {
                 //faster?
-                exit("count limit $count");
-            }
+            //    exit("count limit $count");
+            //}
 
             $commentArr = array();
 
@@ -640,7 +641,7 @@ class TransResImportData
             $saveFlag = true;
             //$saveFlag = false;
             if( $saveFlag ) {
-                if(0) {
+                if($classical) {
                     $em->persist($transresRequest);
                     $em->flush();
 
@@ -653,7 +654,7 @@ class TransResImportData
                         $this->addComment($request, $adminReviewer, $transresRequest, $ADMIN_COMMENT, "progress", "[imported comment]",$CREATED_DATE_STR);
                     }
                 } else {
-                    $em->persist($transresRequest); //it looks like we don't have any other new objects created, which require persist
+                    //$em->persist($transresRequest); //it looks like we don't have any other new objects created, which require persist
                     $i++;
                     if( ($i % $batchSize) === 0 ) {
                         $em->flush();
@@ -673,8 +674,10 @@ class TransResImportData
         }//forloop
 
         //Persist objects that did not make up an entire batch
-        $em->flush();
-        $em->clear();
+        if( !$classical ) {
+            $em->flush();
+            $em->clear();
+        }
 
         //TODO: try to make batch flush and then addComment using $commentRequestArr($transresRequest=>array($ADMIN_COMMENT,$CREATED_DATE_STR))
 

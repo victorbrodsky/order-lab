@@ -134,7 +134,7 @@ class DefaultController extends Controller
 
         //Step 5: import working requests (~14k ~10 hours)
         if(1) {
-            $resArr[] = $importUtil->importWorkRequests($request, 'TRF_REQUESTED_1.xlsx', 3098, 3099);
+            $resArr[] = $importUtil->importWorkRequests($request, 'TRF_REQUESTED_1.xlsx', 3096, 3100);
         }
 
         $res = implode("<br><br>",$resArr);
