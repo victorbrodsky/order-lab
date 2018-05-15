@@ -688,6 +688,10 @@ class TransResImportData
 
         //TODO: try to make batch flush and then addComment using $commentRequestArr($transresRequest=>array($ADMIN_COMMENT,$CREATED_DATE_STR))
 
+        echo "<pre>";
+        print_r($commentRequestArr);
+        echo "</pre>";
+
         //1) generate Oid
         echo "Process OID <br>";
         $i = 0;
