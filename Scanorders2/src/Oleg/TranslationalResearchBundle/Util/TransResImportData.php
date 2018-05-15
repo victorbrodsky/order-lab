@@ -54,7 +54,7 @@ class TransResImportData
     }
 
     //TRF_COMMITTEE_REV
-    public function importWorkRequests( $request, $filename ) {
+    public function importWorkRequests( $request, $filename, $startRaw=2, $endRaw=null ) {
         //set_time_limit(10800); //18000 seconds => 5 hours
         //ini_set('memory_limit', '10240M');
 
@@ -113,11 +113,16 @@ class TransResImportData
         $i = 0;
         $batchSize = 20;
 
-        echo "start Iteration to ".$highestRow."<br>";
-        $logger->notice("start Iteration to ".$highestRow);
+        $limitRow = $highestRow;
+        if( $endRaw && $endRaw >= $highestRow ) {
+            $limitRow = $endRaw;
+        }
+
+        echo "start Iteration from $startRaw to ".$limitRow."<br>";
+        $logger->notice("start Iteration from $startRaw to ".$limitRow);
 
         //for each request in excel (start at row 2)
-        for( $row = 2; $row <= $highestRow; $row++ ) {
+        for( $row = $startRaw; $row <= $limitRow; $row++ ) {
 
             $count++;
 
@@ -666,6 +671,10 @@ class TransResImportData
 
             //exit('111');
         }//forloop
+
+        //Persist objects that did not make up an entire batch
+        $em->flush();
+        $em->clear();
 
         //TODO: try to make batch flush and then addComment using $commentRequestArr($transresRequest=>array($ADMIN_COMMENT,$CREATED_DATE_STR))
 
