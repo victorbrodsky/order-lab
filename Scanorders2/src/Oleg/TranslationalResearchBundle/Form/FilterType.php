@@ -191,6 +191,22 @@ class FilterType extends AbstractType
             'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'External ID'),
         ));
 
+        $builder->add('reviewers', EntityType::class, array(
+            'class' => 'OlegUserdirectoryBundle:User',
+            'label'=> false,    //"Principal Investigator(s):",
+            'required'=> false,
+            'multiple' => true,
+            'attr' => array('class'=>'combobox combobox-width', 'placeholder'=>'Reviewer(s)'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->leftJoin("list.employmentStatus", "employmentStatus")
+                    ->leftJoin("employmentStatus.employmentType", "employmentType")
+                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+                    ->leftJoin("list.infos", "infos")
+                    ->orderBy("infos.displayName","ASC");
+            },
+        ));
+
 //        $builder->add('preroute', HiddenType::class, array( //TextType HiddenType
 //            'required'=>false,
 //            'label' => false,

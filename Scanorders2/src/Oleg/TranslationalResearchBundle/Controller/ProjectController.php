@@ -195,6 +195,7 @@ class ProjectController extends Controller
         $fundingType = $filterform['fundingType']->getData();
         $searchProjectType = $filterform['searchProjectType']->getData();
         $exportId = $filterform['exportId']->getData();
+        $reviewers = $filterform['reviewers']->getData();
 //        $archived = $filterform['completed']->getData();
 //        $complete = $filterform['review']->getData();
 //        $interviewee = $filterform['missinginfo']->getData();
@@ -369,6 +370,7 @@ class ProjectController extends Controller
                 $principalInvestigatorsIdsArr[] = $principalInvestigator->getId();
             }
             $dqlParameters["principalInvestigators"] = $principalInvestigatorsIdsArr; //implode(",",$principalInvestigatorsIdsArr);
+            $advancedFilter++;
         }
 
         if( $submitter ) {
@@ -376,6 +378,31 @@ class ProjectController extends Controller
             $dql->andWhere("submitter.id = :submitterId");
             $dqlParameters["submitterId"] = $submitter->getId();
             $advancedFilter++;
+        }
+
+        if( $reviewers && count($reviewers)>0 ) {
+            //"principalInvestigators.id IN (:principalInvestigators)"
+            $reviewersCriterion =
+                "irbReviewer.id IN (:reviewerIds) OR ".
+                "irbReviewerDelegate.id IN (:reviewerIds) OR ".
+
+                "adminReviewer.id IN (:reviewerIds) OR ".
+                "adminReviewerDelegate.id IN (:reviewerIds) OR ".
+
+                "committeeReviewer.id IN (:reviewerIds) OR ".
+                "committeeReviewerDelegate.id IN (:reviewerIds) OR ".
+
+                "finalReviewer.id IN (:reviewerIds) OR ".
+                "finalReviewerDelegate.id IN (:reviewerIds)"
+            ;
+            $dql->andWhere($reviewersCriterion);
+
+            $reviewersIdsArr = array();
+            foreach($reviewers as $reviewer) {
+                $reviewersIdsArr[] = $reviewer->getId();
+            }
+
+            $dqlParameters["reviewerIds"] = $reviewersIdsArr; //implode(",",$principalInvestigatorsIdsArr);
         }
 
         if( $startDate ) {

@@ -735,6 +735,9 @@ class TransResImportData
             }
         }//classical
 
+        // Detaches all objects from Doctrine!
+        $em->clear();
+
         return "Added $count Work Requests";
     }
 
