@@ -113,7 +113,7 @@ class TransResImportData
         $i = 0;
         $batchSize = 20;
         $classical = false;
-        $classical = true;
+        //$classical = true;
 
         $limitRow = $highestRow;
         if( $endRaw && $endRaw >= $highestRow ) {
@@ -655,9 +655,10 @@ class TransResImportData
                         $this->addComment($request, $adminReviewer, $transresRequest, $ADMIN_COMMENT, "progress", "[imported comment]",$CREATED_DATE_STR);
                     }
                 } else {
-                    //$em->persist($transresRequest); //it looks like we don't have any other new objects created, which require persist
+                    $em->persist($transresRequest); //it looks like we don't have any other new objects created, which require persist
                     $i++;
                     if( ($i % $batchSize) === 0 ) {
+                        echo "****************** Request batch flush ************<br>";
                         $em->flush();
                         $em->clear(); // Detaches all objects from Doctrine!
                     }
@@ -676,6 +677,7 @@ class TransResImportData
 
         //Persist objects that did not make up an entire batch
         if( !$classical ) {
+            echo "****************** Request flush remaining ************<br>";
             $em->flush();
             $em->clear();
         }
@@ -687,17 +689,19 @@ class TransResImportData
         $batchSize = 20;
         foreach($commentRequestArr as $transresRequest=>$commentDateArr) {
             $transresRequest->generateOid();
+            echo "generated OID=".$transresRequest->getOid()."<br>";
 
             $em->persist($transresRequest);
-            //$em->flush($transresRequest);
 
             $i++;
             if( ($i % $batchSize) === 0 ) {
+                echo "****************** generated OID batch flush ************<br>";
                 $em->flush();
                 $em->clear(); // Detaches all objects from Doctrine!
             }
         }
         if( !$classical ) {
+            echo "****************** generated OID flush remaining ************<br>";
             $em->flush();
             $em->clear();
         }
