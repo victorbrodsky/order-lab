@@ -98,7 +98,7 @@ class DefaultController extends Controller
 
             $resArr[] = $resProject . "<br>========= EOF TRF_PROJECT_INFO ===========<br>" . $resAdminComments;
         }
-        if(0) {
+        if(1) {
             //edit project
             $resArr[] = $importUtil->importOldData($request, 'TRF_PROJECT_INFO.xlsx', 'project_edit');
         }
@@ -116,7 +116,7 @@ class DefaultController extends Controller
 
             $resArr[] = $resProject . "<br>========= EOF TRF_DRAFT_PROJECT ===========<br>" . $resAdminComments;
         }
-        if(1) {
+        if(0) {
             //edit project
             $resArr[] = $importUtil->importOldData($request, 'TRF_DRAFT_PROJECT.xlsx', 'project_edit');
         }
