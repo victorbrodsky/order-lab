@@ -113,7 +113,7 @@ class TransResImportData
         $i = 0;
         $batchSize = 20;
         $classical = false;
-        //$classical = true;
+        $classical = true;
 
         $limitRow = $highestRow;
         if( $endRaw && $endRaw <= $highestRow ) {
@@ -699,41 +699,41 @@ class TransResImportData
 //        print_r($commentRequestArr);
 //        echo "</pre>";
 
-        //1) generate Oid
-        echo "<br>Process OID <br>";
-        $i = 0;
-        $batchSize = 20;
-        foreach($commentRequestArr as $commentDateArr) {
-            $transresRequest = $commentDateArr['request'];
-            $transresRequest->generateOid();
-            echo "generated OID=".$transresRequest->getExportId()."<br>";
-
-            $em->persist($transresRequest);
-
-            $i++;
-            if( ($i % $batchSize) === 0 ) {
-                echo "****************** generated OID batch flush ************<br>";
-                $em->flush();
-                $em->clear(); // Detaches all objects from Doctrine!
-            }
-        }
         if( !$classical ) {
+            //1) generate Oid
+            echo "<br>Process OID <br>";
+            $i = 0;
+            $batchSize = 20;
+            foreach ($commentRequestArr as $commentDateArr) {
+                $transresRequest = $commentDateArr['request'];
+                $transresRequest->generateOid();
+                echo "generated OID=" . $transresRequest->getExportId() . "<br>";
+
+                $em->persist($transresRequest);
+
+                $i++;
+                if (($i % $batchSize) === 0) {
+                    echo "****************** generated OID batch flush ************<br>";
+                    $em->flush();
+                    $em->clear(); // Detaches all objects from Doctrine!
+                }
+            }
             echo "****************** generated OID flush remaining ************<br>";
             $em->flush();
             $em->clear();
-        }
 
-        //2) add comments
-        echo "Process Comments <br>";
-        foreach($commentRequestArr as $commentDateArr) {
-            $transresRequest = $commentDateArr['request'];
-            echo "Comment for Request ExportID=".$transresRequest->getExportId()."<br>";
-            $commentStr = $commentDateArr['comment'];
-            echo "comment=$commentStr <br>";
-            $dateStr = $commentDateArr['date'];
-            echo "date=".$dateStr."<br>";
-            $this->addComment($request, $adminReviewer, $transresRequest, $commentStr, "progress", "[imported comment]",$dateStr);
-        }
+            //2) add comments
+            echo "Process Comments <br>";
+            foreach ($commentRequestArr as $commentDateArr) {
+                $transresRequest = $commentDateArr['request'];
+                echo "Comment for Request ExportID=" . $transresRequest->getExportId() . "<br>";
+                $commentStr = $commentDateArr['comment'];
+                echo "comment=$commentStr <br>";
+                $dateStr = $commentDateArr['date'];
+                echo "date=" . $dateStr . "<br>";
+                $this->addComment($request, $adminReviewer, $transresRequest, $commentStr, "progress", "[imported comment]", $dateStr);
+            }
+        }//classical
 
         return "Added $count Work Requests";
     }
