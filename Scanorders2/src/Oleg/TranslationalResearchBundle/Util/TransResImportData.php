@@ -644,7 +644,7 @@ class TransResImportData
             $saveFlag = true;
             //$saveFlag = false;
             if( $saveFlag ) {
-                if($classical) {
+                if( $classical ) {
                     $em->persist($transresRequest);
                     $em->flush();
 
