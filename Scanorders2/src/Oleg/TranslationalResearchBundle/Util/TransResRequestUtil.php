@@ -1946,12 +1946,6 @@ class TransResRequestUtil
         ) {
             //Show all invoices filter
             $filterTypes = array(
-                'All Invoices',
-                'All Issued Invoices',
-                'All Pending Invoices',
-
-                '[[hr]]',
-
                 //'My Invoices (I am Submitter, Salesperson or PI)',
                 //"Invoices Sent to Me", -  the same as "Invoices where I am a PI"
                 "My Invoices",
@@ -1970,6 +1964,12 @@ class TransResRequestUtil
                 "Latest Versions of Partially Paid Invoices",
                 "Latest Versions of Paid and Partially Paid Invoices",
                 "Latest Versions of Canceled Invoices",
+
+                '[[hr]]',
+
+                'All Invoices',
+                'All Issued Invoices',
+                'All Pending Invoices',
 
                 '[[hr]]',
 
@@ -2017,7 +2017,7 @@ class TransResRequestUtil
             $allowAPCP = true;
         }
 
-        $filterTypes = array('My Submitted Requests','Requests for My Projects');
+        $filterTypes = array('My Submitted Requests',"My Draft Requests",'Requests for My Projects','[[hr]]');
 
         if( $transresUtil->isAdminOrPrimaryReviewerOrExecutive() === false && $this->secAuth->isGranted('ROLE_TRANSRES_TECHNICIAN') === false ) {
             return $filterTypes;

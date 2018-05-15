@@ -1077,6 +1077,17 @@ class RequestController extends Controller
 //                    )
 //                );
             }
+            if( $filterType == "My Draft Requests" ) {
+                //exit('start filtering '.$filterType);
+                return $this->redirectToRoute(
+                    'translationalresearch_request_index_filter',
+                    array(
+                        'filter[submitter]' => $user->getId(),
+                        'filter[progressState][0]' => "draft",
+                        'title' => $filterType,
+                    )
+                );
+            }
 
             if( $filterType == "All AP/CP Requests" ) {
                 $projectSpecialtyObject = $transresUtil->getSpecialtyObject("ap-cp");

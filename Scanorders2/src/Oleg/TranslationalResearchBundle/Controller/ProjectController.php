@@ -370,7 +370,6 @@ class ProjectController extends Controller
                 $principalInvestigatorsIdsArr[] = $principalInvestigator->getId();
             }
             $dqlParameters["principalInvestigators"] = $principalInvestigatorsIdsArr; //implode(",",$principalInvestigatorsIdsArr);
-            $advancedFilter++;
         }
 
         if( $submitter ) {
@@ -403,6 +402,7 @@ class ProjectController extends Controller
             }
 
             $dqlParameters["reviewerIds"] = $reviewersIdsArr; //implode(",",$principalInvestigatorsIdsArr);
+            $advancedFilter++;
         }
 
         if( $startDate ) {
