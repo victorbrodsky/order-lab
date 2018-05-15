@@ -116,7 +116,7 @@ class TransResImportData
         //$classical = true;
 
         $limitRow = $highestRow;
-        if( $endRaw && $endRaw >= $highestRow ) {
+        if( $endRaw && $endRaw <= $highestRow ) {
             $limitRow = $endRaw;
         }
 
