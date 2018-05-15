@@ -168,6 +168,9 @@ class DefaultController extends Controller
     }
 
     public function importRequests( $request, $filename, $startRow ) {
+        set_time_limit(10800); //18000 seconds => 5 hours
+        ini_set('memory_limit', '5120M');
+
         $importUtil = $this->get('transres_import');
         //use only 500 per time
         //$startRow = 2;
