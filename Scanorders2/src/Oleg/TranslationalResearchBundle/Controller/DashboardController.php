@@ -98,7 +98,6 @@ class DashboardController extends Controller
 
                     //#Requests per PI
                     //$requestsCount = count($project->getRequests());
-                    //TODO: select top 25, BUT make sure the other PIs are still shown as "Other"
                     $requestsCount = $transresUtil->getNumberOfFundedRequests($project);
                     if (isset($piRequestsArr[$userName])) {
                         $total = $piRequestsArr[$userName] + $requestsCount;
@@ -109,35 +108,20 @@ class DashboardController extends Controller
                 }
             }
 
-            //top $piProjectCountArr
-            arsort($piProjectCountArr);
-            $limit = 25;
-            $count = 0;
-            $piProjectCountTopArr = array();
-            foreach($piProjectCountArr as $username=>$value) {
-                echo $username.": ".$count."<br>";
-                if( $count < $limit ) {
-                    $piProjectCountTopArr[$username] = $value;
-                } else {
-                    if (isset($piProjectCountTopArr['Other'])) {
-                        $value = $piProjectCountTopArr['Other'] + $value;
-                    } else {
-                        //$value = 1;
-                    }
-                    $piProjectCountTopArr['Other'] = $value;
-                }
-                $count++;
-            }
-
+            ///////////// top $piProjectCountArr //////////////
+            $piProjectCountTopArr = $this->getTopArray($piProjectCountArr);
             //Projects per PI
             $chartsArray = $this->addChart( $chartsArray, $piProjectCountTopArr, "Number of Projects per PI");
+            ///////////// EOF top $piProjectCountArr //////////////
 
             //Total per PI
-            $chartsArray = $this->addChart( $chartsArray, $piTotalArr, "Total($) of Projects per PI");
+            $piTotalTopArr = $this->getTopArray($piTotalArr);
+            $chartsArray = $this->addChart( $chartsArray, $piTotalTopArr, "Total($) of Projects per PI");
 
             //We likes to see which funded PI”s are using the TRP lab,
             // so we can try to capture a (Top Ten PI’s) and the percent of services they requested from TRP lab.
-            $chartsArray = $this->addChart( $chartsArray, $piRequestsArr, "Number of Funded Requests per 10 top PI");
+            $piRequestsTopArr = $this->getTopArray($piRequestsArr);
+            $chartsArray = $this->addChart( $chartsArray, $piRequestsTopArr, "Number of Funded Requests per PI");
 
         }
 
@@ -219,6 +203,30 @@ class DashboardController extends Controller
             //'layoutArray' => $layoutArray
             'chartsArray' => $chartsArray
         );
+    }
+
+    //select top 25, BUT make sure the other PIs are still shown as "Other"
+    public function getTopArray($piProjectCountArr) {
+        arsort($piProjectCountArr);
+        $limit = 25;
+        $count = 0;
+        $piProjectCountTopArr = array();
+        foreach($piProjectCountArr as $username=>$value) {
+            //echo $username.": ".$count."<br>";
+            if( $count < $limit ) {
+                $piProjectCountTopArr[$username] = $value;
+            } else {
+                if (isset($piProjectCountTopArr['Other'])) {
+                    $value = $piProjectCountTopArr['Other'] + $value;
+                } else {
+                    //$value = 1;
+                }
+                $piProjectCountTopArr['Other'] = $value;
+            }
+            $count++;
+        }
+
+        return $piProjectCountTopArr;
     }
 
     public function addChart( $chartsArray, $dataArr, $title, $type='pie' ) {

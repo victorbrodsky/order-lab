@@ -135,18 +135,23 @@ class DefaultController extends Controller
         //Step 5: import working requests (~14k ~10 hours)
         if(1) {
             //use only 1000 per time
-            $startRow = 2;
-            $endRow = $startRow + 1000;
-            echo "Start: $startRow, end: $endRow <br>";
-            $time_start = microtime(true);
-            $resArr[] = $importUtil->importWorkRequests($request, 'TRF_REQUESTED_2.xlsx', $startRow, $endRow);
-            $time_end = microtime(true);
+//            $startRow = 2;
+//            $endRow = $startRow + 1000;
+//            echo "Start: $startRow, end: $endRow <br>";
+//            $time_start = microtime(true);
+//            $resCount = $importUtil->importWorkRequests($request, 'TRF_REQUESTED_2.xlsx', $startRow, $endRow);
+//            $time_end = microtime(true);
+//
+//            //dividing with 60 will give the execution time in minutes otherwise seconds
+//            $execution_time = ($time_end - $time_start)/60;
+//            //execution time of the script
+//            //echo '<b>Total Execution Time:</b> '.$execution_time.' Mins <br>';
+//            echo '<b>Total Execution Time:</b> '.number_format((float) $execution_time, 2).' Mins <br>';
 
-            //dividing with 60 will give the execution time in minutes otherwise seconds
-            $execution_time = ($time_end - $time_start)/60;
-            //execution time of the script
-            //echo '<b>Total Execution Time:</b> '.$execution_time.' Mins <br>';
-            echo '<b>Total Execution Time:</b> '.number_format((float) $execution_time, 2).' Mins <br>';
+            $filename = 'TRF_REQUESTED_2.xlsx';
+            $this->importRequests($request,$filename,1000);
+            $this->importRequests($request,$filename,1500);
+            $this->importRequests($request,$filename,2000);
         }
 
         $res = implode("<br><br>",$resArr);
@@ -160,6 +165,23 @@ class DefaultController extends Controller
         );
         
         return $this->redirectToRoute('translationalresearch_home');
+    }
+
+    public function importRequests( $request, $filename, $startRow ) {
+        $importUtil = $this->get('transres_import');
+        //use only 500 per time
+        //$startRow = 2;
+        $endRow = $startRow + 500;
+        echo "Start: $startRow, end: $endRow <br>";
+        $time_start = microtime(true);
+        $resCount = $importUtil->importWorkRequests($request, $filename, $startRow, $endRow);
+        $time_end = microtime(true);
+
+        //dividing with 60 will give the execution time in minutes otherwise seconds
+        $execution_time = ($time_end - $time_start)/60;
+        //execution time of the script
+        //echo '<b>Total Execution Time:</b> '.$execution_time.' Mins <br>';
+        echo '<b>Imported '.$resCount.' requests; Total Execution Time:</b> '.number_format((float) $execution_time, 2).' Mins <br>';
     }
 
 
