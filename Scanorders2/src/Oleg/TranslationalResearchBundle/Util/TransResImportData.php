@@ -665,14 +665,14 @@ class TransResImportData
                     $i++;
                     if( ($i % $batchSize) === 0 ) {
                         echo "****************** Request batch flush ************<br>";
-                        ////$em->flush();
+                        $em->flush();
                         $em->clear(); // Detaches all objects from Doctrine!
                     }
 
                     //ADMIN_COMMENT. Save it when the Request's ID is generated.
                     $ADMIN_COMMENT = $this->getValueByHeaderName('ADMIN_COMMENT', $rowData, $headers);
                     if( $ADMIN_COMMENT ) {
-                        echo "added to commentRequestArr: [$CREATED_DATE_STR] [$ADMIN_COMMENT]<br>";
+                        //echo "added to commentRequestArr: [$CREATED_DATE_STR] [$ADMIN_COMMENT]<br>";
                         $commentElement = array('request'=>$transresRequest,'comment'=>$ADMIN_COMMENT,'date'=>$CREATED_DATE_STR);
                         $commentRequestArr[] = $commentElement;
 //                        echo "<pre>";
@@ -689,7 +689,7 @@ class TransResImportData
         //Persist objects that did not make up an entire batch
         if( !$classical ) {
             echo "<br>****************** Request flush remaining ************<br>";
-            ////$em->flush();
+            $em->flush();
             $em->clear();
         }
 
@@ -713,13 +713,13 @@ class TransResImportData
             $i++;
             if( ($i % $batchSize) === 0 ) {
                 echo "****************** generated OID batch flush ************<br>";
-                ////$em->flush();
+                $em->flush();
                 $em->clear(); // Detaches all objects from Doctrine!
             }
         }
         if( !$classical ) {
             echo "****************** generated OID flush remaining ************<br>";
-            ////$em->flush();
+            $em->flush();
             $em->clear();
         }
 
@@ -727,12 +727,12 @@ class TransResImportData
         echo "Process Comments <br>";
         foreach($commentRequestArr as $commentDateArr) {
             $transresRequest = $commentDateArr['request'];
-            echo "Request ExportID=".$transresRequest->getExportId()."<br>";
+            echo "Comment for Request ExportID=".$transresRequest->getExportId()."<br>";
             $commentStr = $commentDateArr['comment'];
             echo "comment=$commentStr <br>";
             $dateStr = $commentDateArr['date'];
             echo "date=".$dateStr."<br>";
-            ////$this->addComment($request, $adminReviewer, $transresRequest, $commentStr, "progress", "[imported comment]",$dateStr);
+            $this->addComment($request, $adminReviewer, $transresRequest, $commentStr, "progress", "[imported comment]",$dateStr);
         }
 
         return "Added $count Work Requests";
