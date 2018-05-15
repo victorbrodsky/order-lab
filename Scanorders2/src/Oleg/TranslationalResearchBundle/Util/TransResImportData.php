@@ -206,6 +206,7 @@ class TransResImportData
 
             $requestID = $this->getValueByHeaderName('SERVICE_ID', $rowData, $headers);
             $requestID = trim($requestID);
+            //$requestID = $requestID."0000000"; //test
             echo "<br>" . $count . ": Project ID " . $exportId . ", RS ID " . $requestID . "<br>";
 
 //            //test
@@ -224,6 +225,7 @@ class TransResImportData
             //exit("exit");
 
             $transresRequest = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest')->findOneByExportId($requestID);
+            //echo "transresRequest=".$transresRequest->getExportId()."<br>";
             if (!$transresRequest) {
                 $transresRequest = new TransResRequest();
                 $transresRequest->setExportId($requestID);
@@ -671,7 +673,11 @@ class TransResImportData
                     $ADMIN_COMMENT = $this->getValueByHeaderName('ADMIN_COMMENT', $rowData, $headers);
                     if( $ADMIN_COMMENT ) {
                         echo "added to commentRequestArr: [$CREATED_DATE_STR] [$ADMIN_COMMENT]<br>";
-                        $commentRequestArr[$transresRequest] = array('comment'=>$ADMIN_COMMENT,'date'=>$CREATED_DATE_STR);
+                        $commentElement = array('request'=>$transresRequest,'comment'=>$ADMIN_COMMENT,'date'=>$CREATED_DATE_STR);
+                        $commentRequestArr[] = $commentElement;
+//                        echo "<pre>";
+//                        print_r($commentRequestArr);
+//                        echo "</pre>";
                     }
                 }
 
@@ -682,22 +688,23 @@ class TransResImportData
 
         //Persist objects that did not make up an entire batch
         if( !$classical ) {
-            echo "****************** Request flush remaining ************<br>";
+            echo "<br>****************** Request flush remaining ************<br>";
             ////$em->flush();
             $em->clear();
         }
 
         //TODO: try to make batch flush and then addComment using $commentRequestArr($transresRequest=>array($ADMIN_COMMENT,$CREATED_DATE_STR))
 
-        echo "<pre>";
-        print_r($commentRequestArr);
-        echo "</pre>";
+//        echo "<pre>";
+//        print_r($commentRequestArr);
+//        echo "</pre>";
 
         //1) generate Oid
-        echo "Process OID <br>";
+        echo "<br>Process OID <br>";
         $i = 0;
         $batchSize = 20;
-        foreach($commentRequestArr as $transresRequest=>$commentDateArr) {
+        foreach($commentRequestArr as $commentDateArr) {
+            $transresRequest = $commentDateArr['request'];
             $transresRequest->generateOid();
             echo "generated OID=".$transresRequest->getExportId()."<br>";
 
@@ -718,13 +725,14 @@ class TransResImportData
 
         //2) add comments
         echo "Process Comments <br>";
-        foreach($commentRequestArr as $transresRequest=>$commentDateArr) {
-            echo "Comment=".$transresRequest->getExportId()."<br>";
+        foreach($commentRequestArr as $commentDateArr) {
+            $transresRequest = $commentDateArr['request'];
+            echo "Request ExportID=".$transresRequest->getExportId()."<br>";
             $commentStr = $commentDateArr['comment'];
             echo "comment=$commentStr <br>";
-            $date = $commentDateArr['date'];
-            echo "date=".$date->format('d-m-Y')."<br>";
-            ////$this->addComment($request, $adminReviewer, $transresRequest, $commentStr, "progress", "[imported comment]",$date);
+            $dateStr = $commentDateArr['date'];
+            echo "date=".$dateStr."<br>";
+            ////$this->addComment($request, $adminReviewer, $transresRequest, $commentStr, "progress", "[imported comment]",$dateStr);
         }
 
         return "Added $count Work Requests";
