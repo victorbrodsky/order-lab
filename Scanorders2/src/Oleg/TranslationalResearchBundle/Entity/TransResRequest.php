@@ -50,13 +50,13 @@ class TransResRequest {
     private $exportId;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User", cascade={"persist"})
      * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
      */
     private $submitter;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User", cascade={"persist"})
      * @ORM\JoinColumn(name="updateUser", referencedColumnName="id", nullable=true)
      */
     private $updateUser;
@@ -76,7 +76,7 @@ class TransResRequest {
     /**
      * Institutional PHI Scope: users with the same Institutional PHI Scope can view the data of this order
      *
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution", cascade={"persist"})
      */
     private $institution;
 
@@ -172,7 +172,7 @@ class TransResRequest {
     /**
      * Billing contact is populated from Project's $billingContact
      *
-     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User", cascade={"persist"})
      * @ORM\JoinColumn(name="contact", referencedColumnName="id", nullable=true)
      */
     private $contact;

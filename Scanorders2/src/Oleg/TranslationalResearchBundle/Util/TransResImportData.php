@@ -659,8 +659,8 @@ class TransResImportData
                 } else {
                     $em->persist($transresRequest); //it looks like we don't have any other new objects created, which require persist
 
-                    $inst = $transresRequest->getInstitution();
-                    $em->persist($inst);
+                    //$inst = $transresRequest->getInstitution();
+                    //$em->persist($inst);
 
                     $i++;
                     if( ($i % $batchSize) === 0 ) {
