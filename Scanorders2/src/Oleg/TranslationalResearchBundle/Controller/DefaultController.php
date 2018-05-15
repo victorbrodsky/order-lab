@@ -76,7 +76,7 @@ class DefaultController extends Controller
         }
 
         set_time_limit(10800); //18000 seconds => 5 hours
-        ini_set('memory_limit', '5120M');
+        ini_set('memory_limit', '10240M');
 
         $resProject = null;
         $resAdminComments = null;
@@ -149,9 +149,9 @@ class DefaultController extends Controller
 //            echo '<b>Total Execution Time:</b> '.number_format((float) $execution_time, 2).' Mins <br>';
 
             $filename = 'TRF_REQUESTED_2.xlsx';
-            $this->importRequests($request,$filename,1999);
-            $this->importRequests($request,$filename,2500);
             $this->importRequests($request,$filename,3000);
+            $this->importRequests($request,$filename,3500);
+            $this->importRequests($request,$filename,4000);
         }
 
         $res = implode("<br><br>",$resArr);
@@ -169,7 +169,7 @@ class DefaultController extends Controller
 
     public function importRequests( $request, $filename, $startRow ) {
         set_time_limit(10800); //18000 seconds => 5 hours
-        ini_set('memory_limit', '5120M');
+        ini_set('memory_limit', '10240M');
 
         $importUtil = $this->get('transres_import');
         //use only 500 per time

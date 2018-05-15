@@ -80,10 +80,9 @@
             {% endif %}
             {% set count = count + 1 %}
 
-            {#add if state has "_rejected"?#}
-            {#{% if project.state == 'not_approved' or project.state == 'closed' %}#}
-                {#{% set trclassname = "order-reject-status" %}#}
-            {#{% endif %}#}
+            {% if transresRequest.progressState == 'draft' %}
+                {% set trclassname = "order-reject-status" %}
+            {% endif %}
 
             <tbody data-link="row" class="rowlink table-tbody-hover" {{ trclassname }}>
             <tr style="border-bottom: 1px solid #C6C6C6;">

@@ -204,7 +204,7 @@ class RequestController extends Controller
                 $formNodeUtil->processFormNodes($request, $transresRequest->getMessageCategory(), $transresRequest, $testing);
             }
 
-            $msg = "New Request has been successfully submitted for the project ID ".$project->getOid();
+            $msg = "New work request has been successfully submitted for the project ID ".$project->getOid();
             $msg = $msg . $changedMsg;
 
             if( $testing ) {
@@ -217,11 +217,11 @@ class RequestController extends Controller
             );
 
             $eventType = "Request Created";
-            $msg = "New Request with ID ".$transresRequest->getOid()." has been successfully submitted for the project ID ".$project->getOid();
+            $msg = "New work request with ID ".$transresRequest->getOid()." has been successfully submitted for the project ID ".$project->getOid();
             $msg = $msg . $changedMsg;
             $transresUtil->setEventLog($transresRequest,$eventType,$msg);
 
-            $subject = "New Request has been successfully submitted for the project ID ".$project->getOid();
+            $subject = "New work request has been successfully submitted for the project ID ".$project->getOid();
             $msg = str_replace("<br>","\r\n",$msg);
             $transresRequestUtil->sendRequestNotificationEmails($transresRequest,$subject,$msg,$testing);
 
