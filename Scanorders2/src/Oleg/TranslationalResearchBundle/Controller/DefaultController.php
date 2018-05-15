@@ -66,10 +66,10 @@ class DefaultController extends Controller
      * 3) Run Steps 1, 2, 3 and 4
      * 4) Run Step 5
      * 
-     * @Route("/import-old-data/", name="translationalresearch_import_old_data")
+     * @Route("/import-old-data/{startRow}", name="translationalresearch_import_old_data")
      * @Method({"GET"})
      */
-    public function importOldDataAction(Request $request) {
+    public function importOldDataAction(Request $request, $startRow=null) {
 
         if( !$this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
@@ -79,6 +79,7 @@ class DefaultController extends Controller
         ini_set('memory_limit', '7168M');
 
         $em = $this->getDoctrine()->getManager();
+        echo "startRow=".$startRow."<br>";
 
         $resProject = null;
         $resAdminComments = null;
@@ -150,10 +151,17 @@ class DefaultController extends Controller
 //            //echo '<b>Total Execution Time:</b> '.$execution_time.' Mins <br>';
 //            echo '<b>Total Execution Time:</b> '.number_format((float) $execution_time, 2).' Mins <br>';
 
+            if( !$startRow ) {
+                $startRow = 2;
+            }
+
             $filename = 'TRF_REQUESTED_3.xlsx';
+            $this->importRequests($request,$filename,$startRow,1000);
+
             //$this->importRequests($request,$filename,3000);
-            $this->importRequests($request,$filename,2,1000);
+            //$this->importRequests($request,$filename,2,1000);
             //$this->importRequests($request,$filename,5000);
+
         }
 
         //edit requests without oid
