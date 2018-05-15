@@ -98,6 +98,10 @@ class DefaultController extends Controller
 
             $resArr[] = $resProject . "<br>========= EOF TRF_PROJECT_INFO ===========<br>" . $resAdminComments;
         }
+        if(0) {
+            //edit project
+            $resArr[] = $importUtil->importOldData($request, 'TRF_PROJECT_INFO.xlsx', 'project_edit');
+        }
 
         //Step 2: import projects and admin Comments from TRF_DRAFT_PROJECT
         if(0) {
@@ -112,6 +116,10 @@ class DefaultController extends Controller
 
             $resArr[] = $resProject . "<br>========= EOF TRF_DRAFT_PROJECT ===========<br>" . $resAdminComments;
         }
+        if(1) {
+            //edit project
+            $resArr[] = $importUtil->importOldData($request, 'TRF_DRAFT_PROJECT.xlsx', 'project_edit');
+        }
 
         //Step 3: import Committee Comments from TRF_COMMITTEE_REV
         //Committee comments
@@ -125,7 +133,7 @@ class DefaultController extends Controller
         }
 
         //Step 5: import working requests (~14k ~10 hours)
-        if(1) {
+        if(0) {
             $resArr[] = $importUtil->importWorkRequests($request, 'TRF_REQUESTED_1.xlsx');
         }
 

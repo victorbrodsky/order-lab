@@ -167,7 +167,9 @@
                 </td>
 
                 <td>
-                    {{ project.createDate|date('m/d/Y',false) }}
+                    {% if project.createDate %}
+                        {{ project.createDate|date('m/d/Y',false) }}
+                    {% endif %}
                 </td>
 
                 <td class="rowlink-skip">
@@ -217,7 +219,9 @@
                 <td>
                     {#{{ project.title }}#}
                     {#{{ transres_formnode_util.getProjectFormNodeFieldByName(project,"IRB Expiration Date") }}#}
-                    {{ project.irbExpirationDate|date("m/d/Y",false) }}
+                    {% if project.irbExpirationDate %}
+                        {{ project.irbExpirationDate|date("m/d/Y",false) }}
+                    {% endif %}
                 </td>
 
                 {#Requests#}

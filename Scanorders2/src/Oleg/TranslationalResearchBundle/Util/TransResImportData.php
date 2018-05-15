@@ -55,8 +55,8 @@ class TransResImportData
 
     //TRF_COMMITTEE_REV
     public function importWorkRequests( $request, $filename ) {
-        set_time_limit(10800); //18000 seconds => 5 hours
-        ini_set('memory_limit', '10240M');
+        //set_time_limit(10800); //18000 seconds => 5 hours
+        //ini_set('memory_limit', '10240M');
 
         $transresUtil = $this->container->get('transres_util');
         $userSecUtil = $this->container->get('user_security_utility');
@@ -108,6 +108,10 @@ class TransResImportData
         //////// EOF Admin user /////////
 
         $count = 0;
+        $commentRequestArr = array();
+
+        $i = 0;
+        $batchSize = 20;
 
         echo "start Iteration to ".$highestRow."<br>";
         $logger->notice("start Iteration to ".$highestRow);
@@ -117,10 +121,11 @@ class TransResImportData
 
             $count++;
 
-            //if( $count == 1500 ) {
-            //    //faster?
-            //    exit("count limit $count");
-            //}
+            //testing
+            if( $count == 2 ) {
+                //faster?
+                exit("count limit $count");
+            }
 
             $commentArr = array();
 
@@ -630,20 +635,61 @@ class TransResImportData
             $saveFlag = true;
             //$saveFlag = false;
             if( $saveFlag ) {
-                $em->persist($transresRequest);
-                $em->flush();
+                if(0) {
+                    $em->persist($transresRequest);
+                    $em->flush();
 
-                $transresRequest->generateOid();
-                $em->flush($transresRequest);
+                    $transresRequest->generateOid();
+                    $em->flush($transresRequest);
 
-                //ADMIN_COMMENT. Save it when the Request's ID is generated.
-                $ADMIN_COMMENT = $this->getValueByHeaderName('ADMIN_COMMENT', $rowData, $headers);
-                if( $ADMIN_COMMENT ) {
-                    $this->addComment($request, $adminReviewer, $transresRequest, $ADMIN_COMMENT, "progress", "[imported comment]",$CREATED_DATE_STR);
+                    //ADMIN_COMMENT. Save it when the Request's ID is generated.
+                    $ADMIN_COMMENT = $this->getValueByHeaderName('ADMIN_COMMENT', $rowData, $headers);
+                    if( $ADMIN_COMMENT ) {
+                        $this->addComment($request, $adminReviewer, $transresRequest, $ADMIN_COMMENT, "progress", "[imported comment]",$CREATED_DATE_STR);
+                    }
+                } else {
+                    $em->persist($transresRequest); //it looks like we don't have any other new objects created, which require persist
+                    $i++;
+                    if( ($i % $batchSize) === 0 ) {
+                        $em->flush();
+                        $em->clear(); // Detaches all objects from Doctrine!
+                    }
+
+                    //ADMIN_COMMENT. Save it when the Request's ID is generated.
+                    $ADMIN_COMMENT = $this->getValueByHeaderName('ADMIN_COMMENT', $rowData, $headers);
+                    if( $ADMIN_COMMENT ) {
+                        $commentRequestArr[$transresRequest] = array('comment'=>$ADMIN_COMMENT,'date'=>$CREATED_DATE_STR);
+                    }
                 }
+
             }
 
             //exit('111');
+        }//forloop
+
+        //TODO: try to make batch flush and then addComment using $commentRequestArr($transresRequest=>array($ADMIN_COMMENT,$CREATED_DATE_STR))
+
+        //1) generate Oid
+        $i = 0;
+        $batchSize = 20;
+        foreach($commentRequestArr as $transresRequest=>$commentDateArr) {
+            $transresRequest->generateOid();
+
+            $em->persist($transresRequest);
+            //$em->flush($transresRequest);
+
+            $i++;
+            if( ($i % $batchSize) === 0 ) {
+                $em->flush($transresRequest);
+                $em->clear(); // Detaches all objects from Doctrine!
+            }
+        }
+
+        //2) add comments
+        foreach($commentRequestArr as $transresRequest=>$commentDateArr) {
+            $commentStr = $commentDateArr['comment'];
+            $date = $commentDateArr['date'];
+            $this->addComment($request, $adminReviewer, $transresRequest, $commentStr, "progress", "[imported comment]",$date);
         }
 
         return "Added $count Work Requests";
@@ -987,6 +1033,7 @@ class TransResImportData
         $notExistingStatuses = array();
         $notExistingUsers = array();
         $count = 0;
+        $batchSize = 20;
 
         $inputFileName = __DIR__ . "/" . $filename; //'/TRF_PROJECT_INFO.xlsx';
         echo "==================== Processing $filename =====================<br>";
@@ -1031,12 +1078,12 @@ class TransResImportData
 
             //if( $exportId != 1840 ) {continue;} //testing
 
-            $project = $this->em->getRepository('OlegTranslationalResearchBundle:Project')->findOneByExportId($exportId);
-            if( $project ) {
-                if( !$testing ) {
-                    continue; //testing
-                }
-            }
+//            $project = $this->em->getRepository('OlegTranslationalResearchBundle:Project')->findOneByExportId($exportId);
+//            if( $project ) {
+//                if( !$testing ) {
+//                    continue; //testing
+//                }
+//            }
 
             //Process Project
             if( $importFlag == 'project' || $importFlag == 'project_adminComments' ) {
@@ -1044,6 +1091,23 @@ class TransResImportData
                 $notExistingStatuses = $res['notExistingStatuses'];
                 $notExistingUsers = $res['notExistingUsers'];
                 $project = $res['project'];
+            }
+
+            if( $importFlag == 'project_edit' ) {
+                $project = $this->editProject($request, $adminReviewer, $rowData, $headers, $exportId, $specialty, $systemUser, $notExistingStatuses, $notExistingUsers, $count, $testing);
+                //save project to DB
+                if( !$testing ) {
+                    if(0) {
+                        $em->persist($project);
+                        $em->flush($project);
+                    } else {
+                        if( ($count % $batchSize) === 0 ) {
+                            echo "************* flush projects ************** <br>";
+                            $em->flush();
+                            $em->clear(); // Detaches all objects from Doctrine!
+                        }
+                    }
+                }
             }
 
             if( $importFlag == 'adminComments' || $importFlag == 'project_adminComments' ) {
@@ -1068,6 +1132,11 @@ class TransResImportData
             //echo "<br>";
             //exit('$project OID='.$project->getOid());
         }//for each request
+
+        if( $importFlag == 'project_edit' ) {
+            $em->flush(); //Persist objects that did not make up an entire batch
+            $em->clear();
+        }
 
         $notExistingStatuses = array_unique($notExistingStatuses);
         foreach($notExistingStatuses as $notExistingStatus) {
@@ -1133,7 +1202,7 @@ class TransResImportData
 
         $project->setProjectSpecialty($specialty);
 
-        //CREATED_DATE
+        //CREATED_DATE TODO: test this date
         $CREATED_DATE_STR = $this->getValueByHeaderName('CREATED_DATE', $rowData, $headers); //24-OCT-12
         if( $CREATED_DATE_STR ) {
             $CREATED_DATE = $this->transformDatestrToDate($CREATED_DATE_STR);
@@ -1516,6 +1585,101 @@ class TransResImportData
 
         return $res;
     }
+
+
+    public function editProject( $request, $adminReviewer, $rowData, $headers, $exportId, $specialty, $systemUser, $notExistingStatuses, $notExistingUsers, $count, $testing=false ) {
+        $transresUtil = $this->container->get('transres_util');
+        $logger = $this->container->get('logger');
+        $em = $this->em;
+
+        //$testing = true;
+
+        $project = $this->em->getRepository('OlegTranslationalResearchBundle:Project')->findOneByExportId($exportId);
+        if( $project ) {
+            //ok
+        } else {
+            //new Project
+            exit("Project with external ID $exportId does not exists.");
+        }
+
+
+        //CREATED_DATE TODO: test this date
+        $CREATED_DATE_STR = $this->getValueByHeaderName('CREATED_DATE', $rowData, $headers); //24-OCT-12
+        echo "CREATED_DATE_STR=".$CREATED_DATE_STR."<br>";
+        if( $CREATED_DATE_STR ) {
+            $CREATED_DATE = $this->transformDatestrToDate($CREATED_DATE_STR);
+            //echo "setCreateDate=".$CREATED_DATE->format('m-d-Y')."<br>";
+            $project->setCreateDate($CREATED_DATE);
+            echo "after set CreateDate=".$project->getCreateDate()->format('m-d-Y')."<br>";
+            //exit('1');
+        } else {
+            echo "setCreateDate null <br>";
+            $project->setCreateDate(NULL);
+        }
+
+        //IRB_EXPIRATION_DATE
+        $irbExpDate = null;
+        $irbExpDateStr = $this->getValueByHeaderName('IRB_EXPIRATION_DATE', $rowData, $headers);
+        echo "irbExpDateStr=".$irbExpDateStr."<br>";
+        if( $irbExpDateStr ) {
+            $irbExpDate = $this->transformDatestrToDate($irbExpDateStr);
+            if( $irbExpDate ) {
+                $project->setIrbExpirationDate($irbExpDate);
+                //$this->setValueToFormNodeNewProject($project, "IRB Expiration Date", $irbExpDate);
+                //echo "irbExpDate=" . $irbExpDate->format('d-m-Y') . "<br>";
+            }
+        } else {
+            echo "setIrbExpirationDate null <br>";
+            $project->setIrbExpirationDate(NULL);
+        }
+
+        //DATE_APPROVAL
+        $DATE_APPROVAL_STR = $this->getValueByHeaderName('DATE_APPROVAL', $rowData, $headers);
+        echo "DATE_APPROVAL_STR=".$DATE_APPROVAL_STR."<br>";
+        if( $DATE_APPROVAL_STR ) {
+            $DATE_APPROVAL = $this->transformDatestrToDate($DATE_APPROVAL_STR);
+            $project->setApprovalDate($DATE_APPROVAL);
+        } else {
+            echo "setApprovalDate null <br>";
+            $project->setApprovalDate(NULL);
+        }
+
+        //STATUS_ID
+        $statusID = $this->getValueByHeaderName('STATUS_ID', $rowData, $headers);
+        $statusStr = $this->statusMapper($statusID);
+        echo "Status ==".$statusStr."<br>";
+        if( $statusStr ) {
+            $project->setState($statusStr);
+        } else {
+            echo "Status not define=".$statusID.":".$this->statusMapper($statusID,true) . "<br>";
+            $project->setState($statusStr);
+        }
+        //exit('111');
+        /////////////////////
+
+        //$em->persist($project);
+        //$em->flush($project);
+        //echo "get CreateDate=".$project->getCreateDate()->format('m-d-Y')."<br>";
+        //exit('eof project '.$exportId);
+
+//        //save project to DB
+//        if( !$testing ) {
+//            if(0) {
+//                $em->persist($project);
+//                $em->flush();
+//            } else {
+//                $batchSize = 20;
+//                $em->persist($project);
+//                if (($count % $batchSize) === 0) {
+//                    echo "************* flush projects ************** <br>";
+//                    $em->flush($project);
+//                    $em->clear(); // Detaches all objects from Doctrine!
+//                }
+//            }
+//        }
+
+        return $project;
+    }//editProject
 
     public function importAdminComments($request, $adminReviewer, $rowData, $headers, $exportId) {
         $adminComment = $this->getValueByHeaderName('ADMIN_COMMENT', $rowData, $headers);
@@ -1949,10 +2113,10 @@ class TransResImportData
 
         //'j-M-Y', '15-Feb-2009'
         //23-APR-07
-        //echo "dateStr=".$datestr;
+        echo "dateStr=".$datestr;
         //M/y
         $date = \DateTime::createFromFormat($formatType,$datestr);
-        //echo " =>".$date->format("d-m-Y")."<br>";
+        echo " =>".$date->format("d-m-Y")."<br>";
 
         return $date;
     }
