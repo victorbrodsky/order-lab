@@ -56,7 +56,7 @@
 
                 <th>Products/Services</th>
                 <th title="Total Calculated Request's Fee">Total Fees</th>
-                <th title="Number of All Invoices">#Invoices</th>
+                <th title="Number of All Invoices">Invoices</th>
                 <th title="Status of the Latest Invoice">Invoice Status</th>
                 <th title="Total Amount of the Latest Issued Invoices">Invoice Total</th>
                 <th title="Paid Amount of the Latest Issued Invoices">Invoice Paid</th>
@@ -80,9 +80,14 @@
             {% endif %}
             {% set count = count + 1 %}
 
+            transresRequest.progressState={{ transresRequest.progressState }}<br>
             {% if transresRequest.progressState == 'draft' %}
-                {% set trclassname = "order-reject-status" %}
+
+                {#action-cancel-status#}
+                {#order-reject-status#}
+                {% set trclassname = "action-cancel-status" %}
             {% endif %}
+        trclassname={{ trclassname }}<br>
 
             <tbody data-link="row" class="rowlink table-tbody-hover" {{ trclassname }}>
             <tr style="border-bottom: 1px solid #C6C6C6;">
