@@ -113,6 +113,7 @@ class TransResImportData
         $i = 0;
         $batchSize = 20;
         $classical = false;
+        $classical = true;
 
         $limitRow = $highestRow;
         if( $endRaw && $endRaw >= $highestRow ) {
@@ -692,9 +693,13 @@ class TransResImportData
 
             $i++;
             if( ($i % $batchSize) === 0 ) {
-                $em->flush($transresRequest);
+                $em->flush();
                 $em->clear(); // Detaches all objects from Doctrine!
             }
+        }
+        if( !$classical ) {
+            $em->flush();
+            $em->clear();
         }
 
         //2) add comments
