@@ -939,10 +939,10 @@ class Project {
     /**
      * @return string
      */
-    public function getOid()
+    public function getOid($withExportId=true)
     {
-        if( $this->getExportId() ) {
-            return $this->oid . "(".$this->getExportId().")";
+        if( $this->getExportId() && $withExportId ) {
+            return $this->oid . " (".$this->getExportId().")";
         }
         return $this->oid;
     }

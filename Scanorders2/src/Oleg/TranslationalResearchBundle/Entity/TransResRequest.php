@@ -383,8 +383,12 @@ class TransResRequest {
         //return $this->oid;
 
         if( $this->oid ) {
-            //return $this->oid;
-            return $this->generateOid() . "(RS".$this->getExportId().")";
+            if( $this->getExportId() ) {
+                //return $this->oid;
+                return $this->getProject()->getOid(false) . "-REQ" . $this->getId() . " (".$this->getProject()->getExportId()."-RS".$this->getExportId().")";
+            } else {
+                return $this->generateOid();
+            }
         } else {
             return $this->getId();
         }
@@ -656,7 +660,7 @@ class TransResRequest {
      */
     public function generateOid()
     {
-        $oid = $this->getProject()->getOid() . "-REQ" . $this->getId();
+        $oid = $this->getProject()->getOid(false) . "-REQ" . $this->getId();
         //echo "oid=$oid <br>";
         $this->setOid($oid);
         return $oid;

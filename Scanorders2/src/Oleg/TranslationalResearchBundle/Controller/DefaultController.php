@@ -164,7 +164,7 @@ class DefaultController extends Controller
 
             $dql->leftJoin('request.principalInvestigators','principalInvestigators');
 
-            $dql->andWhere("request.exportId IS NOT NULL");
+            $dql->andWhere("request.oid IS NULL");
             //$dql->andWhere("project.oid IS NULL");
             //$dql->andWhere("principalInvestigators.id IS NULL");
 
@@ -174,8 +174,8 @@ class DefaultController extends Controller
             echo "requests count=".count($requests)."<br>";
 
             foreach($requests as $transresRequest) {
-                $this->deleteRequest($transresRequest);
-                //exit('111');
+                $transresRequest->generateOid();
+                $em->flush($transresRequest);
             }
         }
 
