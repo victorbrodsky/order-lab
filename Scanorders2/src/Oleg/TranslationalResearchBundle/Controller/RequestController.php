@@ -1586,10 +1586,10 @@ class RequestController extends Controller
         //for non-funded projects, show "Funding Number (Optional):"
         //transres_formnode_util.getProjectFormNodeFieldByName(project,"Funded")
         $project = $transresRequest->getProject();
-        $fundedNumberLabel = "Funding Number:";
+        $fundedNumberLabel = "Fund Number:";
         //if( $project && !$transResFormNodeUtil->getProjectFormNodeFieldByName($project,"Funded") ) {
         if( $project && !$project->getFunded() ) {
-            $fundedNumberLabel = "Funding Number (Optional):";
+            $fundedNumberLabel = "Fund Number (Optional):";
         }
 
         $params = array(

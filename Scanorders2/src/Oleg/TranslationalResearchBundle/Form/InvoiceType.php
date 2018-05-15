@@ -146,7 +146,7 @@ class InvoiceType extends AbstractType
         //}
 
         $builder->add('fundedAccountNumber', null, array(
-            'label' => "Funding Number:",
+            'label' => "Fund Number:",
             'required' => false,
             'attr' => array('class' => 'form-control')
         ));

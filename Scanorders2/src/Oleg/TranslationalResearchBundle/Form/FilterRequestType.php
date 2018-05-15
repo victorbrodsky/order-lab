@@ -219,7 +219,7 @@ class FilterRequestType extends AbstractType
         $builder->add('fundingNumber', TextType::class, array(
             'required'=>false,
             'label' => false,
-            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'Search by Funding Number'),
+            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'Search by Fund Number'),
         ));
 
         $builder->add('fundingType',ChoiceType::class, array(
@@ -227,8 +227,8 @@ class FilterRequestType extends AbstractType
             'required' => false,
             'multiple' => false,
             'choices' => array(
-                'Funded (With Funding Number)' => 'Funded',
-                'Non-Funded (No Funding Number)' => 'Non-Funded'
+                'Funded (With Fund Number)' => 'Funded',
+                'Non-Funded (No Fund Number)' => 'Non-Funded'
             ),
             'attr' => array('class' => 'combobox', 'placeholder'=>'Funded vs Non-Funded'),
         ));

@@ -465,8 +465,13 @@ class TransResRequestUtil
                 break;
 
             default:
-                $state = "<$stateName>";
-                $buttonLabel = "<$stateName>";
+                if( $stateName ) {
+                    $state = "<$stateName>";
+                    $buttonLabel = "<$stateName>";
+                } else {
+                    $state = null;
+                    $buttonLabel = "Undefined State";
+                }
         }
 
         if( !$buttonLabel ) {
@@ -518,8 +523,11 @@ class TransResRequestUtil
                 break;
 
             default:
-                $state = "<$stateName>";
-
+                if( $stateName ) {
+                    $state = "<$stateName>";
+                } else {
+                    $state = null;
+                }
         }
 
         if( !$buttonLabel ) {

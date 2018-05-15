@@ -3097,7 +3097,7 @@ class TransResUtil
 
         $ews->setCellValue('I1', 'Request ID');
 
-        $ews->setCellValue('J1', 'Funding Number');
+        $ews->setCellValue('J1', 'Fund Number');
         $ews->setCellValue('K1', 'Completion Status');
 
         $ews->setCellValue('L1', 'Invoice(s) Issued');
