@@ -76,7 +76,9 @@ class DefaultController extends Controller
         }
 
         set_time_limit(10800); //18000 seconds => 5 hours
-        ini_set('memory_limit', '10240M');
+        ini_set('memory_limit', '7168M');
+
+        $em = $this->getDoctrine()->getManager();
 
         $resProject = null;
         $resAdminComments = null;
@@ -154,6 +156,29 @@ class DefaultController extends Controller
             //$this->importRequests($request,$filename,5000);
         }
 
+        //edit requests without oid
+        if(0) {
+            $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
+            $dql =  $repository->createQueryBuilder("request");
+            $dql->select('request');
+
+            $dql->leftJoin('request.principalInvestigators','principalInvestigators');
+
+            $dql->andWhere("request.exportId IS NOT NULL");
+            //$dql->andWhere("project.oid IS NULL");
+            //$dql->andWhere("principalInvestigators.id IS NULL");
+
+            $query = $dql->getQuery();
+
+            $requests = $query->getResult();
+            echo "requests count=".count($requests)."<br>";
+
+            foreach($requests as $transresRequest) {
+                $this->deleteRequest($transresRequest);
+                //exit('111');
+            }
+        }
+
         $res = implode("<br><br>",$resArr);
 
         exit('Imported result: '.$res);
@@ -169,7 +194,7 @@ class DefaultController extends Controller
 
     public function importRequests( $request, $filename, $startRow, $increment=1000 ) {
         set_time_limit(10800); //18000 seconds => 5 hours
-        ini_set('memory_limit', '10240M');
+        ini_set('memory_limit', '7168M');
 
         $importUtil = $this->get('transres_import');
         //use only 500 per time
