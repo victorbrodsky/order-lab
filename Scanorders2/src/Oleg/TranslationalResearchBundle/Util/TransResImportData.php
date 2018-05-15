@@ -120,6 +120,10 @@ class TransResImportData
             $limitRow = $endRaw;
         }
 
+        if( $startRaw < 2 ) {
+            $startRaw = 2; //minimum raw
+        }
+
         echo "start Iteration from $startRaw to ".$limitRow."<br>";
         $logger->notice("start Iteration from $startRaw to ".$limitRow);
 

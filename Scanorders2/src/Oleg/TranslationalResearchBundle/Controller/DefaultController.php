@@ -148,9 +148,9 @@ class DefaultController extends Controller
 //            //echo '<b>Total Execution Time:</b> '.$execution_time.' Mins <br>';
 //            echo '<b>Total Execution Time:</b> '.number_format((float) $execution_time, 2).' Mins <br>';
 
-            $filename = 'TRF_REQUESTED_2.xlsx';
+            $filename = 'TRF_REQUESTED_3.xlsx';
             //$this->importRequests($request,$filename,3000);
-            $this->importRequests($request,$filename,4000, 2000);
+            $this->importRequests($request,$filename,2,1000);
             //$this->importRequests($request,$filename,5000);
         }
 
