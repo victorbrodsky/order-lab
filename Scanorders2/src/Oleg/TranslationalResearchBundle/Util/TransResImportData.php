@@ -670,6 +670,7 @@ class TransResImportData
                     //ADMIN_COMMENT. Save it when the Request's ID is generated.
                     $ADMIN_COMMENT = $this->getValueByHeaderName('ADMIN_COMMENT', $rowData, $headers);
                     if( $ADMIN_COMMENT ) {
+                        echo "added to commentRequestArr: $ADMIN_COMMENT $CREATED_DATE_STR <br>";
                         $commentRequestArr[$transresRequest] = array('comment'=>$ADMIN_COMMENT,'date'=>$CREATED_DATE_STR);
                     }
                 }
