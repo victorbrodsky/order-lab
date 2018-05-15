@@ -656,6 +656,10 @@ class TransResImportData
                     }
                 } else {
                     $em->persist($transresRequest); //it looks like we don't have any other new objects created, which require persist
+
+                    $inst = $transresRequest->getInstitution();
+                    $em->persist($inst);
+
                     $i++;
                     if( ($i % $batchSize) === 0 ) {
                         echo "****************** Request batch flush ************<br>";
@@ -685,6 +689,7 @@ class TransResImportData
         //TODO: try to make batch flush and then addComment using $commentRequestArr($transresRequest=>array($ADMIN_COMMENT,$CREATED_DATE_STR))
 
         //1) generate Oid
+        echo "Process OID <br>";
         $i = 0;
         $batchSize = 20;
         foreach($commentRequestArr as $transresRequest=>$commentDateArr) {
@@ -707,6 +712,7 @@ class TransResImportData
         }
 
         //2) add comments
+        echo "Process Comments <br>";
         foreach($commentRequestArr as $transresRequest=>$commentDateArr) {
             $commentStr = $commentDateArr['comment'];
             $date = $commentDateArr['date'];
