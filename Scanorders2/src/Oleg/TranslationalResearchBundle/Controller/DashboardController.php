@@ -109,12 +109,28 @@ class DashboardController extends Controller
                 }
             }
 
-            foreach($piProjectCountArr as $username=>$count) {
+            //top $piProjectCountArr
+            arsort($piProjectCountArr);
+            $limit = 25;
+            $count = 0;
+            $piProjectCountTopArr = array();
+            foreach($piProjectCountArr as $username=>$value) {
                 echo $username.": ".$count."<br>";
+                if( $count < $limit ) {
+                    $piProjectCountTopArr[$username] = $value;
+                } else {
+                    if (isset($piProjectCountTopArr['Other'])) {
+                        $value = $piProjectCountTopArr['Other'] + $value;
+                    } else {
+                        //$value = 1;
+                    }
+                    $piProjectCountTopArr['Other'] = $value;
+                }
+                $count++;
             }
 
             //Projects per PI
-            $chartsArray = $this->addChart( $chartsArray, $piProjectCountArr, "Number of Projects per PI");
+            $chartsArray = $this->addChart( $chartsArray, $piProjectCountTopArr, "Number of Projects per PI");
 
             //Total per PI
             $chartsArray = $this->addChart( $chartsArray, $piTotalArr, "Total($) of Projects per PI");

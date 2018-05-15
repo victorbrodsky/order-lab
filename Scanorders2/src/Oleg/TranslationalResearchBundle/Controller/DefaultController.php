@@ -134,16 +134,19 @@ class DefaultController extends Controller
 
         //Step 5: import working requests (~14k ~10 hours)
         if(1) {
-            //use only 500 per time
+            //use only 1000 per time
+            $startRow = 5400;
+            $endRow = $startRow + 1000;
+            echo "Start: $startRow, end: $endRow <br>";
             $time_start = microtime(true);
-            $resArr[] = $importUtil->importWorkRequests($request, 'TRF_REQUESTED_1.xlsx', 4400, 5400);
+            $resArr[] = $importUtil->importWorkRequests($request, 'TRF_REQUESTED_1.xlsx', $startRow, $endRow);
             $time_end = microtime(true);
 
             //dividing with 60 will give the execution time in minutes otherwise seconds
             $execution_time = ($time_end - $time_start)/60;
             //execution time of the script
-            echo '<b>Total Execution Time:</b> '.$execution_time.' Mins <br>';
-            echo '<b>Total Execution Time:</b> '.number_format((float) $execution_time, 10).' Mins <br>';
+            //echo '<b>Total Execution Time:</b> '.$execution_time.' Mins <br>';
+            echo '<b>Total Execution Time:</b> '.number_format((float) $execution_time, 2).' Mins <br>';
         }
 
         $res = implode("<br><br>",$resArr);
