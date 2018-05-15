@@ -1047,7 +1047,9 @@ class Project {
             $info = $info . $piStr;
         }
 
-        $info = $info . ", " . $this->getCreateDate()->format('m/d/Y');
+        if( $this->getCreateDate() ) {
+            $info = $info . ", " . $this->getCreateDate()->format('m/d/Y');
+        }
 
         $limit = 70;
         if( strlen($info) > $limit ) {
