@@ -31,7 +31,7 @@ class DashboardController extends Controller
         }
 
         $transresUtil = $this->container->get('transres_util');
-        $transResFormNodeUtil = $this->container->get('transres_formnode_util');
+        //$transResFormNodeUtil = $this->container->get('transres_formnode_util');
         $routeName = $request->get('_route');
         $infos = array();
 
@@ -73,7 +73,7 @@ class DashboardController extends Controller
             $piTotalArr = array();
             $piRequestsArr = array();
 
-            foreach ($projects as $project) {
+            foreach($projects as $project) {
                 $invoicesInfos = $transresUtil->getInvoicesInfosByProject($project);
                 $pis = $project->getPrincipalInvestigators();
                 foreach ($pis as $pi) {
@@ -98,7 +98,7 @@ class DashboardController extends Controller
 
                     //#Requests per PI
                     //$requestsCount = count($project->getRequests());
-                    //TODO: select top 10
+                    //TODO: select top 25, BUT make sure the other PIs are still shown as "Other"
                     $requestsCount = $transresUtil->getNumberOfFundedRequests($project);
                     if (isset($piRequestsArr[$userName])) {
                         $total = $piRequestsArr[$userName] + $requestsCount;
@@ -107,6 +107,10 @@ class DashboardController extends Controller
                     }
                     $piRequestsArr[$userName] = $total;
                 }
+            }
+
+            foreach($piProjectCountArr as $username=>$count) {
+                echo $username.": ".$count."<br>";
             }
 
             //Projects per PI

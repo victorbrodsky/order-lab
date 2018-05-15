@@ -136,7 +136,7 @@ class DefaultController extends Controller
         if(1) {
             //use only 500 per time
             $time_start = microtime(true);
-            $resArr[] = $importUtil->importWorkRequests($request, 'TRF_REQUESTED_1.xlsx', 3909, 4400);
+            $resArr[] = $importUtil->importWorkRequests($request, 'TRF_REQUESTED_1.xlsx', 4400, 5400);
             $time_end = microtime(true);
 
             //dividing with 60 will give the execution time in minutes otherwise seconds
