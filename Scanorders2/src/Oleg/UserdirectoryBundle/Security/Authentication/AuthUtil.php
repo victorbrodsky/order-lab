@@ -209,11 +209,11 @@ class AuthUtil {
 
         $searchRes = null;
         $withNewUserPrePopulation = true;
-        $withNewUserPrePopulation = false; //testing
+        //$withNewUserPrePopulation = false; //testing
         if( $withNewUserPrePopulation ) {
             //first search this user if exists in ldap directory
             $searchRes = $this->searchLdap($usernameClean);
-            if ($searchRes == NULL || count($searchRes) == 0) {
+            if( $searchRes == NULL || count($searchRes) == 0 ) {
                 $this->logger->error("LdapAuthentication: can not find user by usernameClean=" . $usernameClean);
                 return NULL;
             }
@@ -528,6 +528,9 @@ class AuthUtil {
     //return 1 if bind successful
     //return NULL if failed
     public function ldapBind( $username, $password ) {
+
+        return $this->simpleLdap($username,$password); //testing
+
         if( substr(php_uname(), 0, 7) == "Windows" ){
             return $this->ldapBindWindows($username,$password);
         }
@@ -624,6 +627,48 @@ class AuthUtil {
         return NULL;
     }
 
+    public function simpleLdap($username, $password) {
+        $userSecUtil = $this->container->get('user_security_utility');
+        $this->logger->warning("Simple Ldap");
+        //$LDAPHost = $this->container->getParameter('ldaphost');
+        $LDAPHost = $userSecUtil->getSiteSettingParameter('aDLDAPServerAddress');
+        $cnx = $this->connectToLdap($LDAPHost);
+
+        $dn = "uid=".$username;
+        $ldapDc = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'); //scientists,dc=example,dc=com
+        $dcArr = explode(".",$ldapDc);
+        foreach( $dcArr as $dc ) {
+            $dn = $dn . ",DC=".$dc;
+        }
+        echo "dn=[".$dn."]<br>";
+
+        $mech = "GSSAPI";
+        $password = "password";
+        $binddn = $dn;
+        //$binddn = "cn=admin,dc=yourdomain,dc=com";
+        //$binddn = "cn=read-only-admin,dc=example,dc=com";
+        //$binddn = "uid=tesla,dc=example,dc=com";
+
+        //$res = @ldap_bind($cnx,NULL,$password,$mech,NULL,$username,NULL);
+        $res = @ldap_bind($cnx,$binddn,$password);
+        echo "ldap res=".$res."<br>";
+        echo "ldap ldap_error=".ldap_error($cnx)."<br>";
+        exit();
+
+        if( !$res ) {
+            //echo $mech." - could not sasl bind to LDAP by SASL<br>";
+            $this->logger->notice("ldapBindUnix: res=".$res);
+            $this->logger->notice("ldapBindUnix: ldap_error=".ldap_error($cnx));
+            ldap_error($cnx);
+            ldap_unbind($cnx);
+            return NULL;
+        } else {
+            ldap_unbind($cnx);
+            return 1;
+        }
+        return NULL;
+    }
+
     public function searchLdap($username) {
 
         //echo "username=".$username."<br>";
@@ -634,19 +679,33 @@ class AuthUtil {
         //echo "LDAPHost=".$LDAPHost."<br>";
 
         //$dn = "CN=Users,DC=a,DC=wcmc-ad,DC=net";
-        $dn = "CN=Users";
+        //$dn = "CN=Users";
         //$ldapDc = $this->container->getParameter('ldapou');
         $ldapDc = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu');
-        $dcArr = explode(".",$ldapDc);
-        foreach( $dcArr as $dc ) {
-            $dn = $dn . ",DC=".$dc;
-        }
+//        $dcArr = explode(".",$ldapDc);
+//        foreach( $dcArr as $dc ) {
+//            $dn = $dn . ",DC=".$dc;
+//        }
+
+        $dn = $ldapDc;
+        //for wcmc must be: cn=Users,dc=a,dc=wcmc-ad,dc=net
+        echo "dn=[".$dn."]<br>";
+
+        //$dn = "cn=read-only-admin,dc=example,dc=com";
+        //$dn = "uid=tesla,dc=example,dc=com";
         //echo "dn=".$dn."<br>";
 
         //$LDAPUserAdmin = $this->container->getParameter('ldapusername');
-        $LDAPUserAdmin = $userSecUtil->getSiteSettingParameter('aDLDAPServerAccountUserName');
+        $LDAPUserAdmin = $userSecUtil->getSiteSettingParameter('aDLDAPServerAccountUserName'); //cn=read-only-admin,dc=example,dc=com
         //$LDAPUserPasswordAdmin = $this->container->getParameter('ldappassword');
         $LDAPUserPasswordAdmin = $userSecUtil->getSiteSettingParameter('aDLDAPServerAccountPassword');
+
+        if( $LDAPUserAdmin && $LDAPUserPasswordAdmin ) {
+            //ok
+        } else {
+            //no search
+            return array('givenName'=>$username,'lastName'=>$username,'displayName'=>$username);
+        }
 
         //$filter="(ObjectClass=Person)";
         $filter="(cn=".$username.")";
@@ -664,11 +723,12 @@ class AuthUtil {
                 //echo "Could not bind to LDAP: user=".$LDAPUserAdmin."<br>";
                 ldap_error($cnx);
                 ldap_unbind($cnx);
-                //exit("error");
+                //exit("error ldap_bind");
                 return NULL;
                 //return -1;  //"Could not bind to LDAP server";
             } else {
                 //echo "OK simple LDAP: user=".$LDAPUserAdmin."<br>";
+                //exit("OK simple LDAP: user=".$LDAPUserAdmin."<br>");
             }
         }
 
@@ -676,20 +736,31 @@ class AuthUtil {
         //$LDAPFieldsToFind = array("sn");   //, "givenName", "displayName", "telephoneNumber");
         //$LDAPFieldsToFind = array("cn", "samaccountname");
 
+        //print_r($filter);
+
         $sr = ldap_search($cnx, $dn, $filter, $LDAPFieldsToFind);
 
         if( !$sr ) {
             //echo 'Search failed <br>';
+            //exit('Search failed');
             ldap_error($cnx);
             ldap_unbind($cnx);
             return NULL;
         }
 
         $info = ldap_get_entries($cnx, $sr);
+        //print_r($info);
 
         $searchRes = array();
 
         for ($x=0; $x<$info["count"]; $x++) {
+
+            if( array_key_exists('ou', $info[$x]) ) {
+                $searchRes['ou'] = $info[$x]['ou'][0];
+            }
+            if( array_key_exists('uid', $info[$x]) ) {
+                $searchRes['uid'] = $info[$x]['uid'][0];
+            }
 
             if( array_key_exists('mail', $info[$x]) ) {
                 $searchRes['mail'] = $info[$x]['mail'][0];
@@ -733,6 +804,8 @@ class AuthUtil {
 //        if( count($searchRes) == 0 ) {
 //            //echo "no search results <br>";
 //        }
+        //print_r($searchRes);
+        //exit('Search OK');
 
         return $searchRes;
     }
