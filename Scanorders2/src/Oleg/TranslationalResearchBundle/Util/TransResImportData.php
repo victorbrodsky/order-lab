@@ -1945,7 +1945,7 @@ class TransResImportData
                     return $threadId;
                 }
             }
-            //return "test"; //test
+            return "will be created: ".$commentStr; //test
 
 
             if( null === $thread ) {
