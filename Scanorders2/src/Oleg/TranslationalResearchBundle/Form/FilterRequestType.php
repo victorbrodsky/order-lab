@@ -239,6 +239,17 @@ class FilterRequestType extends AbstractType
             'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'External ID'),
         ));
 
+        $builder->add('showMatchingAndTotal', ChoiceType::class, array(
+            'label' => false,
+            'required' => true,
+            'multiple' => false,
+            'choices' => array(
+                "Without Total" => "Without Total",
+                'With Total' => 'With Total'
+            ),
+            'attr' => array('class' => 'combobox'),
+        ));
+
     }
 
     public function configureOptions(OptionsResolver $resolver)

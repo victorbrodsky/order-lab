@@ -896,6 +896,8 @@ class RequestController extends Controller
         $fundingType = $filterform['fundingType']->getData();
         $filterType = trim( $request->get('type') );
         $filterTitle = trim( $request->get('title') );
+
+        $showMatchingAndTotal = $filterform['showMatchingAndTotal']->getData();
         //echo "filterType=$filterType<br>";
         //exit();
 
@@ -1458,7 +1460,13 @@ class RequestController extends Controller
         }
         ///////// EOF filters //////////
 
-        $withMatching = true; //slower 7.5 sec
+        //echo "showMatchingAndTotal=".$showMatchingAndTotal."<br>";
+        if( $showMatchingAndTotal == "With Total" ) {
+            $withMatching = true; //slower 7.5 sec
+        } else {
+            $withMatching = false; //twice faster 3.5 sec
+        }
+        //$withMatching = true; //slower 7.5 sec
         //$withMatching = false; //twice faster 3.5 sec
 
         $limit = 10;
