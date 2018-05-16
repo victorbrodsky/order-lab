@@ -746,6 +746,123 @@ class TransResImportData
         return "Added $count Work Requests";
     }
 
+    public function editWorkRequests($request, $filename, $startRaw=2, $endRaw=null) {
+        set_time_limit(18000); //18000 seconds => 5 hours 3600sec=>1 hour
+        ini_set('memory_limit', '7168M');
+
+        $transresUtil = $this->container->get('transres_util');
+        $userSecUtil = $this->container->get('user_security_utility');
+        //$transresRequestUtil = $this->container->get('transres_request_util');
+        $logger = $this->container->get('logger');
+        $em = $this->em;
+
+        $userMapper = $this->getUserMapper('TRF_EMAIL_INFO.xlsx');
+
+        $inputFileName = __DIR__ . "/" . $filename;
+        echo "==================== Processing $filename =====================<br>";
+        $logger->notice("==================== Processing $filename =====================");
+
+        try {
+            $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
+            $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+            $objPHPExcel = $objReader->load($inputFileName);
+        } catch( Exception $e ) {
+            $error = 'Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage();
+            $logger->error($error);
+            die($error);
+        }
+
+        $sheet = $objPHPExcel->getSheet(0);
+        $highestRow = $sheet->getHighestRow();
+        $highestColumn = $sheet->getHighestColumn();
+        echo "highestRow=".$highestRow."; highestColum=".$highestColumn."<br>";
+
+        $headers = $rowData = $sheet->rangeToArray('A' . 1 . ':' . $highestColumn . 1,
+            NULL,
+            TRUE,
+            FALSE);
+
+        $this->headerMapArr = $this->getHeaderMap($headers);
+
+        ////////////// add system user /////////////////
+        //$systemUser = $userSecUtil->findSystemUser();
+        ////////////// end of add system user /////////////////
+
+        $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
+
+        //////// Admin user ///////////
+        $specialty = $this->em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation("ap-cp");
+        if( !$specialty ) {
+            exit("Project specialty not found by abbreviation=ap-cp");
+        }
+        $reviewers = $transresUtil->getDefaultReviewerInfo("admin_review",$specialty,true);
+        $adminReviewer = $reviewers[0];
+        //////// EOF Admin user /////////
+
+        $count = 0;
+        $commentRequestArr = array();
+
+        $i = 0;
+        $batchSize = 20;
+        $classical = false;
+        $classical = true;
+
+        $limitRow = $highestRow;
+        if( $endRaw && $endRaw <= $highestRow ) {
+            $limitRow = $endRaw;
+        }
+
+        if( $startRaw < 2 ) {
+            $startRaw = 2; //minimum raw
+        }
+
+        echo "start Iteration from $startRaw to ".$limitRow."<br>";
+        $logger->notice("start Iteration from $startRaw to ".$limitRow);
+
+        //for each request in excel (start at row 2)
+        for( $row = $startRaw; $row <= $limitRow; $row++ ) {
+
+            $count++;
+
+            //testing
+            //if( $count == 2 ) {
+            //faster?
+            //    exit("count limit $count");
+            //}
+
+            $commentArr = array();
+
+            //Read a row of data into an array
+            $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
+                NULL,
+                TRUE,
+                FALSE);
+
+            $requestID = $this->getValueByHeaderName('SERVICE_ID', $rowData, $headers);
+            $requestID = trim($requestID);
+            //$requestID = $requestID."0000000"; //test
+            echo "<br>" . $count . ": RS ID " . $requestID . "<br>";
+
+            $transresRequest = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest')->findOneByExportId($requestID);
+            if( !$transresRequest ) {
+                exit("Request not found by External ID ".$requestID);
+            }
+
+
+            //CREATED_DATE
+            $CREATED_DATE_STR = $this->getValueByHeaderName('CREATED_DATE', $rowData, $headers);
+
+            //ADMIN_COMMENT. Save it when the Request's ID is generated.
+            $ADMIN_COMMENT = $this->getValueByHeaderName('ADMIN_COMMENT', $rowData, $headers);
+            if( $ADMIN_COMMENT ) {
+                //$request, $author, $entity, $commentStr, $commentType, $prefix="[imported comment]", $createDateStr=null, $parentComment=null, $newThread=true
+                $res = $this->addComment($request,$adminReviewer,$transresRequest,$ADMIN_COMMENT,"progress","[imported comment]",$CREATED_DATE_STR,null,false);
+                echo "res=$res<br>";
+            }
+
+
+        }//for
+    }
 
 
     public function getUserMapper($filename) {
@@ -1750,7 +1867,7 @@ class TransResImportData
     }
 
 
-    public function addComment( $request, $author, $entity, $commentStr, $commentType, $prefix="[imported comment]", $createDateStr=null, $parentComment=null) {
+    public function addComment( $request, $author, $entity, $commentStr, $commentType, $prefix="[imported comment]", $createDateStr=null, $parentComment=null, $newThread=true) {
         $userServiceUtil = $this->container->get('user_service_utility');
         $commentManager = $this->container->get('fos_comment.manager.comment');
         $threadManager = $this->container->get('fos_comment.manager.thread');
@@ -1820,7 +1937,16 @@ class TransResImportData
                     //echo $comment->getId().": Comment already exists <br>";
                     return $comment;
                 }
+
+                //echo "1 thread exists $threadId<br>";
+                if( !$newThread ) {
+                    //don't create new thread and comment
+                    echo "2 thread exists $threadId<br>";
+                    return $threadId;
+                }
             }
+            return "test"; //test
+
 
             if( null === $thread ) {
                 $thread = $threadManager->createThread();

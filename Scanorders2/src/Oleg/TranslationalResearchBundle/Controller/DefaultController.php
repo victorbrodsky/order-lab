@@ -136,7 +136,7 @@ class DefaultController extends Controller
         }
 
         //Step 5: import working requests (~14k ~10 hours)
-        if(1) {
+        if(0) {
             //use only 1000 per time
 //            $startRow = 2;
 //            $endRow = $startRow + 1000;
@@ -189,6 +189,14 @@ class DefaultController extends Controller
                 $transresRequest->generateOid();
                 $em->flush($transresRequest);
             }
+        }
+
+        //edit request's comment
+        if(1) {
+            $filename = 'TRF_REQUESTED_1.xlsx';
+            $startRow = 3908;
+            $endRow = 3927;
+            $resCount = $importUtil->editWorkRequests($request, $filename, $startRow, $endRow);
         }
 
         $res = implode("<br><br>",$resArr);
