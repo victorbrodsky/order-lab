@@ -681,7 +681,7 @@ class AuthUtil {
         //$dn = "CN=Users,DC=a,DC=wcmc-ad,DC=net";
         //$dn = "CN=Users";
         //$ldapDc = $this->container->getParameter('ldapou');
-        $ldapDc = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu');
+        $ldapDc = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'); //old: a.wcmc-ad.net, new: cn=Users,dc=a,dc=wcmc-ad,dc=net
 //        $dcArr = explode(".",$ldapDc);
 //        foreach( $dcArr as $dc ) {
 //            $dn = $dn . ",DC=".$dc;

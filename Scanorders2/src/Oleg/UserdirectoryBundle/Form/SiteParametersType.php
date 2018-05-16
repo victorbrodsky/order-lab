@@ -125,19 +125,19 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'aDLDAPServerOu' )
         $builder->add('aDLDAPServerOu',null,array(
-            'label'=>'AD/LDAP Server OU (DCs):',
+            'label'=>'AD/LDAP Server OU (DCs i.e. cn=read-only-admin,dc=example,dc=com):',
             'attr' => array('class'=>'form-control')
         ));
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'aDLDAPServerAccountUserName' )
         $builder->add('aDLDAPServerAccountUserName',null,array(
-            'label'=>'AD/LDAP Server Account User Name:',
+            'label'=>'AD/LDAP Server Account User Name (for ldap search):',
             'attr' => array('class'=>'form-control')
         ));
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'aDLDAPServerAccountPassword' )
         $builder->add('aDLDAPServerAccountPassword',null,array(
-            'label'=>'AD/LDAP Server Account Password:',
+            'label'=>'AD/LDAP Server Account Password (for ldap search):',
             //'always_empty' => $always_empty,
             'attr' => array('class'=>'form-control')
         ));
