@@ -136,7 +136,7 @@ class DefaultController extends Controller
         }
 
         //Step 5: import working requests (~14k ~10 hours)
-        if(0) {
+        if(1) {
             //use only 1000 per time
 //            $startRow = 2;
 //            $endRow = $startRow + 1000;
@@ -165,7 +165,7 @@ class DefaultController extends Controller
         }
 
         //edit requests without oid
-        if(1) {
+        if(0) {
             $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
             $dql =  $repository->createQueryBuilder("request");
             $dql->select('request');
