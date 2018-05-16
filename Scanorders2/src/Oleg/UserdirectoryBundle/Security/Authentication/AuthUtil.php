@@ -633,6 +633,14 @@ class AuthUtil {
         return NULL;
     }
 
+    //tested by public ldap server: https://www.forumsys.com/tutorials/integration-how-to/ldap/online-ldap-test-server/
+    // AD/LDAP Server Address: ldap.forumsys.com
+    // AD/LDAP Server Port (Default: 389): 389
+    // AD/LDAP Server OU: ou=scientists,dc=example,dc=com
+    // AD/LDAP Server Account User Name: null (must be null for no ldap search)
+    // AD/LDAP Server Account Password: null (must be null for no ldap search)
+    // LDAP/AD Authenticator Relative Path (Default: "../src/Oleg/UserdirectoryBundle/Util/" ): null (doesn't matter for simpleLdap)
+    // LDAP/AD Authenticator File Name (Default: "LdapSaslCustom.exe" ): null (doesn't matter for simpleLdap)
     public function simpleLdap($username, $password) {
         $userSecUtil = $this->container->get('user_security_utility');
         $this->logger->warning("Simple Ldap");

@@ -1791,9 +1791,9 @@ class AdminController extends Controller
 
             "smtpServerAddress" => "null",
 
-            "aDLDAPServerAddress" => "null",
-            "aDLDAPServerPort" => "null",
-            "aDLDAPServerOu" => "null",    //used for DC
+            "aDLDAPServerAddress" => "ldap.forumsys.com",
+            "aDLDAPServerPort" => "389",
+            "aDLDAPServerOu" => "ou=scientists,dc=example,dc=com",    //used for DC
             "aDLDAPServerAccountUserName" => "null",
             "aDLDAPServerAccountPassword" => "null",
             "ldapExePath" => "../src/Oleg/UserdirectoryBundle/Util/",
