@@ -529,7 +529,9 @@ class AuthUtil {
     //return NULL if failed
     public function ldapBind( $username, $password ) {
 
-        //return $this->simpleLdap($username,$password); //testing
+        if( $this->simpleLdap($username,$password) ) {
+            return 1;
+        }
 
         if( substr(php_uname(), 0, 7) == "Windows" ){
             return $this->ldapBindWindows($username,$password);
@@ -634,26 +636,30 @@ class AuthUtil {
         $LDAPHost = $userSecUtil->getSiteSettingParameter('aDLDAPServerAddress');
         $cnx = $this->connectToLdap($LDAPHost);
 
-        $dn = "uid=".$username;
         $ldapDc = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'); //scientists,dc=example,dc=com
-        $dcArr = explode(".",$ldapDc);
-        foreach( $dcArr as $dc ) {
-            $dn = $dn . ",DC=".$dc;
-        }
-        echo "dn=[".$dn."]<br>";
 
-        $mech = "GSSAPI";
-        $password = "password";
-        $binddn = $dn;
-        //$binddn = "cn=admin,dc=yourdomain,dc=com";
-        //$binddn = "cn=read-only-admin,dc=example,dc=com";
-        //$binddn = "uid=tesla,dc=example,dc=com";
+        //cn=read-only-admin,dc=example,dc=com => "uid=tesla,dc=example,dc=com"
+        $ldapDcArr = explode(",",$ldapDc);
+        $ldapBindArr = array();
+        foreach( $ldapDcArr as $ldapPart) {
+            if( strpos( strtolower($ldapPart), 'dc=') !== false ) {
+                $ldapBindArr[] = $ldapPart;
+            }
+        }
+
+        $binddn = implode(",",$ldapBindArr);
+        $binddn = "uid=".$username.",".$binddn;
+        //echo "binddn=[".$binddn."]<br>";
+
+        //$password = "password";
+        //$binddn = "uid=tesla,dc=example,dc=com"; //workings
 
         //$res = @ldap_bind($cnx,NULL,$password,$mech,NULL,$username,NULL);
         $res = @ldap_bind($cnx,$binddn,$password);
-        echo "ldap res=".$res."<br>";
-        echo "ldap ldap_error=".ldap_error($cnx)."<br>";
-        exit();
+
+        //echo "ldap res=".$res."<br>";
+        //echo "ldap ldap_error=".ldap_error($cnx)."<br>";
+        //exit();
 
         if( !$res ) {
             //echo $mech." - could not sasl bind to LDAP by SASL<br>";
