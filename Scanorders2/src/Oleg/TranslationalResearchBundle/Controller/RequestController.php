@@ -827,6 +827,9 @@ class RequestController extends Controller
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
+        set_time_limit(1800); //1800 seconds => 30 min
+        ini_set('memory_limit', '3072M');
+
         $transresUtil = $this->container->get('transres_util');
         $transresRequestUtil = $this->container->get('transres_request_util');
         $em = $this->getDoctrine()->getManager();
@@ -1019,6 +1022,7 @@ class RequestController extends Controller
         //////////////// get Requests IDs with the form node filter ////////////////
         $ids = array();
         if( $formnode ) {
+            //echo "use formnode<br>";
             if ($category) {
                 $categoryIds = $transresRequestUtil->getRequestIdsFormNodeByCategory($category);
                 $ids = array_merge($ids, $categoryIds);
@@ -1446,6 +1450,7 @@ class RequestController extends Controller
         }
 
         if( count($ids) > 0 ) {
+            //echo "using ids <br>";
             //$dql->andWhere("transresRequest.id IN (:ids)");
             //$dqlParameters["ids"] = implode(",",$ids);
             $dql->andWhere("transresRequest.id IN (:ids)");
@@ -1453,13 +1458,21 @@ class RequestController extends Controller
         }
         ///////// EOF filters //////////
 
+        $withMatching = true; //slower 7.5 sec
+        //$withMatching = false; //twice faster 3.5 sec
+
         $limit = 10;
         $query = $em->createQuery($dql);
-        $query2 = $em->createQuery($dql);
+
+        if($withMatching) {
+            $query2 = $em->createQuery($dql);
+        }
 
         if( count($dqlParameters) > 0 ) {
             $query->setParameters($dqlParameters);
-            $query2->setParameters($dqlParameters);
+            if($withMatching) {
+                $query2->setParameters($dqlParameters);
+            }
         }
 
         //echo "query=".$query->getSql()."<br>";
@@ -1503,9 +1516,14 @@ class RequestController extends Controller
             }
         }
 
-        $allTransresRequests = $query2->getResult();
-        $allGlobalRequests = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest')->findAll();
-        $title = $title . " (Matching " . count($allTransresRequests) . ", Total " . count($allGlobalRequests) . ")";
+        if($withMatching) {
+            $allTransresRequests = $query2->getResult();
+            $allGlobalRequests = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest')->findAll();
+            $title = $title . " (Matching " . count($allTransresRequests) . ", Total " . count($allGlobalRequests) . ")";
+        }
+        //$allGlobalRequests = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest')->findAll();
+        //$title = $title . " (Matching " . count($allTransresRequests) . ", Total " . count($allGlobalRequests) . ")";
+
 //        if( count($allTransresRequests) > 0 ) {
 //            $pageNumber = $transresRequests->getCurrentPageNumber();
 //            $items = $transresRequests->getItems();
