@@ -643,7 +643,7 @@ class AuthUtil {
     // LDAP/AD Authenticator File Name (Default: "LdapSaslCustom.exe" ): null (doesn't matter for simpleLdap)
     public function simpleLdap($username, $password) {
         $userSecUtil = $this->container->get('user_security_utility');
-        $this->logger->warning("Simple Ldap");
+        $this->logger->notice("Simple Ldap");
         //$LDAPHost = $this->container->getParameter('ldaphost');
         $LDAPHost = $userSecUtil->getSiteSettingParameter('aDLDAPServerAddress');
         $cnx = $this->connectToLdap($LDAPHost);
@@ -666,8 +666,12 @@ class AuthUtil {
         //$password = "password";
         //$binddn = "uid=tesla,dc=example,dc=com"; //workings
 
+        $this->logger->notice("Simple ldap: before ldap_bind");
+
         //$res = @ldap_bind($cnx,NULL,$password,$mech,NULL,$username,NULL);
         $res = @ldap_bind($cnx,$binddn,$password);
+
+        $this->logger->notice("Simple ldap: after ldap_bind");
 
         //echo "ldap res=".$res."<br>";
         //echo "ldap ldap_error=".ldap_error($cnx)."<br>";
@@ -686,6 +690,7 @@ class AuthUtil {
             return 1;
         }
 
+        $this->logger->notice("Simple ldap failed for unknown reason");
         return NULL;
     }
 
