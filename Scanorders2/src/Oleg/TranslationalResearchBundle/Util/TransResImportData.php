@@ -1941,11 +1941,11 @@ class TransResImportData
                 //echo "1 thread exists $threadId<br>";
                 if( !$newThread ) {
                     //don't create new thread and comment
-                    echo "2 thread exists $threadId<br>";
+                    //echo "2 thread exists $threadId<br>";
                     return $threadId;
                 }
             }
-            return "test"; //test
+            //return "test"; //test
 
 
             if( null === $thread ) {
