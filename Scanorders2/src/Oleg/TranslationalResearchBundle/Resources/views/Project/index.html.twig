@@ -23,6 +23,7 @@
     </p>
     {% endif %}
 
+    {% if filterDisable is not defined %}
     <div class="well form-search">
         {{ form_start(filterform) }}
 
@@ -118,7 +119,10 @@
         {{ form_end(filterform) }}
     </div>
     <br>
+    {% endif %}
 
+    {#check performance   scan_perSiteSettings?     #}
+    {% if projectsTableDisable is not defined %}
     {#<table class="table table-hover table-condensed text-left table-bordered">#}
     <table class="records_list table table-condensed text-left my-table-class">
         <thead>
@@ -410,6 +414,7 @@
                 {#{{ user_formnode_utility.getFormNodeHolderShortInfo(project,project.messageCategory,1,trclassname,true,14)|raw }}#}
             {#</tr>#}
 
+
         {% endfor %}
         </tbody>
     </table>
@@ -418,6 +423,7 @@
     <div class="navigation">
         {{ knp_pagination_render(projects) }}
     </div>
+    {% endif %}
 
     {#{{ render(controller('OlegTranslationalResearchBundle:Project:threadComments', { 'id': "3-9-committee_review" })) }}#}
     {#{% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': "3-9-committee_review"} %}#}

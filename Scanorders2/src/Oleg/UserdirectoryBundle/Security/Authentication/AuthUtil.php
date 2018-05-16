@@ -207,11 +207,16 @@ class AuthUtil {
             return NULL;
         }
 
-        //first search this user if exists in ldap directory
-        $searchRes = $this->searchLdap($usernameClean);
-        if ($searchRes == NULL || count($searchRes) == 0) {
-            $this->logger->error("LdapAuthentication: can not find user by usernameClean=" . $usernameClean);
-            return NULL;
+        $searchRes = null;
+        $withNewUserPrePopulation = true;
+        //$withNewUserPrePopulation = false; //testing
+        if( $withNewUserPrePopulation ) {
+            //first search this user if exists in ldap directory
+            $searchRes = $this->searchLdap($usernameClean);
+            if ($searchRes == NULL || count($searchRes) == 0) {
+                $this->logger->error("LdapAuthentication: can not find user by usernameClean=" . $usernameClean);
+                return NULL;
+            }
         }
 
 
@@ -655,7 +660,7 @@ class AuthUtil {
             $res = @ldap_bind($cnx, $LDAPUserAdmin, $LDAPUserPasswordAdmin);
             //$res = $this->ldapBind($LDAPUserAdmin,$LDAPUserPasswordAdmin);
             if (!$res) {
-                $this->logger->error("searchLdap: ldap_bind failed with admin authentication username=" . $LDAPUserAdmin);
+                $this->logger->error("search Ldap: ldap_bind failed with admin authentication username=" . $LDAPUserAdmin);
                 //echo "Could not bind to LDAP: user=".$LDAPUserAdmin."<br>";
                 ldap_error($cnx);
                 ldap_unbind($cnx);
@@ -793,6 +798,11 @@ class AuthUtil {
     // in site settings (5), AND the timestamp of the last failed attempt is newer
     // than the timestamp of the last successful attempt, then lock the account
     public function validateFailedAttempts($user) {
+
+        if( !$user ) {
+            return;
+        }
+
         //if( $user->hasRole("ROLE_PLATFORM_ADMIN") || $user->hasRole("ROLE_PLATFORM_DEPUTY_ADMIN") ) {
         //    return true;
         //}

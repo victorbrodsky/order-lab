@@ -76,9 +76,16 @@ class ProjectController extends Controller
     public function indexAction(Request $request)
     {
 
+        //TODO: check performance   scan_perSiteSettings?
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
+
+        //test: only 12 queries vs ~800 queries in regular run
+//        return array(
+//            'filterError' => true,
+//            'title' => "Test Performance",
+//        );
 
         $transresUtil = $this->container->get('transres_util');
         //$transResFormNodeUtil = $this->container->get('transres_formnode_util');
@@ -596,6 +603,8 @@ class ProjectController extends Controller
 //            $title = $title . " (Total " . count($allProjects) . ")";
 //        }
 
+        //return array('filterError' => true,'title' => "Test Performance",); //test 18(295ms) queries vs 800(431ms)
+
         $eventObjectType = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->findOneByName("Project");
         if( $eventObjectType ) {
             $eventObjectTypeId = $eventObjectType->getId();
@@ -603,7 +612,16 @@ class ProjectController extends Controller
             $eventObjectTypeId = null;
         }
 
+//        return array(
+//            'filterError' => true,
+//            'title' => "Test Performance",
+//            'filterform' => $filterform->createView()
+//        ); //test 18 queries vs 800
+
         return array(
+            //'projectsTableDisable' => true, //testing
+            //'filterDisable' => true, //testing
+            //'filterError' => true, //testing
             'projects' => $projects,
             'allProjects' => $allProjects,
             'title' => $title,

@@ -126,11 +126,13 @@ class DashboardController extends Controller
         }
 
         if( $routeName == "translationalresearch_dashboard_projectlevel" ) {
+            $piTotalArr = array();
             $title = "Dashboard: Project Level";
             $layoutArray['title'] = "Number of Funded vs Un-Funded Projects";
             $nameValueArr = array();
             $fundedCount = 0;
             $unfundedCount = 0;
+
             foreach ($projects as $project) {
                 //$fundingNumber = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"If funded, please provide account number");
                 $fundingNumber = $project->getFundedAccountNumber();
@@ -140,14 +142,14 @@ class DashboardController extends Controller
                     $unfundedCount++;
                 }
 
-                //Number of partially paid to Total Invoices
-                $invoicesInfos = $transresUtil->getInvoicesInfosByProject($project);
-                if (isset($piTotalArr[$userName])) {
-                    $total = $piTotalArr[$userName] + $invoicesInfos['total'];
-                } else {
-                    $total = $invoicesInfos['total'];
-                }
-                $piTotalArr[$userName] = $total;
+//                //Number of partially paid to Total Invoices
+//                $invoicesInfos = $transresUtil->getInvoicesInfosByProject($project);
+//                if (isset($piTotalArr[$userName])) {
+//                    $total = $piTotalArr[$userName] + $invoicesInfos['total'];
+//                } else {
+//                    $total = $invoicesInfos['total'];
+//                }
+//                $piTotalArr[$userName] = $total;
             }
             //echo "fundedCount=".$fundedCount."<br>";
             //echo "unfundedCount=".$unfundedCount."<br>";
