@@ -529,7 +529,7 @@ class AuthUtil {
     //return NULL if failed
     public function ldapBind( $username, $password ) {
 
-        return $this->simpleLdap($username,$password); //testing
+        //return $this->simpleLdap($username,$password); //testing
 
         if( substr(php_uname(), 0, 7) == "Windows" ){
             return $this->ldapBindWindows($username,$password);
