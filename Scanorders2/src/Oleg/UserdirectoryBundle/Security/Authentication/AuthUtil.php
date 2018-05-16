@@ -216,6 +216,8 @@ class AuthUtil {
             if( $searchRes == NULL || count($searchRes) == 0 ) {
                 $this->logger->error("LdapAuthentication: can not find user by usernameClean=" . $usernameClean);
                 return NULL;
+            } else {
+                $this->logger->error("LdapAuthentication: user found by  usernameClean=" . $usernameClean);
             }
         }
 
@@ -529,10 +531,12 @@ class AuthUtil {
     //return NULL if failed
     public function ldapBind( $username, $password ) {
 
+        //step 1
         if( $this->simpleLdap($username,$password) ) {
             return 1;
         }
 
+        //step 2
         if( substr(php_uname(), 0, 7) == "Windows" ){
             return $this->ldapBindWindows($username,$password);
         }
@@ -669,9 +673,11 @@ class AuthUtil {
             ldap_unbind($cnx);
             return NULL;
         } else {
+            $this->logger->notice("Successfully authenticated by simple ldap ldap_bind");
             ldap_unbind($cnx);
             return 1;
         }
+
         return NULL;
     }
 
@@ -695,7 +701,7 @@ class AuthUtil {
 
         $dn = $ldapDc;
         //for wcmc must be: cn=Users,dc=a,dc=wcmc-ad,dc=net
-        echo "dn=[".$dn."]<br>";
+        //echo "dn=[".$dn."]<br>";
 
         //$dn = "cn=read-only-admin,dc=example,dc=com";
         //$dn = "uid=tesla,dc=example,dc=com";
@@ -721,10 +727,9 @@ class AuthUtil {
         $useSearchByAdmin = false;
         $useSearchByAdmin = true;
         if($useSearchByAdmin) {
-            //TODO: use local function with SASL ($this->ldapBind)
             $res = @ldap_bind($cnx, $LDAPUserAdmin, $LDAPUserPasswordAdmin);
             //$res = $this->ldapBind($LDAPUserAdmin,$LDAPUserPasswordAdmin);
-            if (!$res) {
+            if( !$res ) {
                 $this->logger->error("search Ldap: ldap_bind failed with admin authentication username=" . $LDAPUserAdmin);
                 //echo "Could not bind to LDAP: user=".$LDAPUserAdmin."<br>";
                 ldap_error($cnx);
@@ -733,6 +738,7 @@ class AuthUtil {
                 return NULL;
                 //return -1;  //"Could not bind to LDAP server";
             } else {
+                $this->logger->error("search Ldap: ldap_bind OK with admin authentication username=" . $LDAPUserAdmin);
                 //echo "OK simple LDAP: user=".$LDAPUserAdmin."<br>";
                 //exit("OK simple LDAP: user=".$LDAPUserAdmin."<br>");
             }
@@ -741,8 +747,6 @@ class AuthUtil {
         $LDAPFieldsToFind = array("mail", "title", "sn", "givenName", "displayName", "telephoneNumber", "company"); //sn - lastName
         //$LDAPFieldsToFind = array("sn");   //, "givenName", "displayName", "telephoneNumber");
         //$LDAPFieldsToFind = array("cn", "samaccountname");
-
-        //print_r($filter);
 
         $sr = ldap_search($cnx, $dn, $filter, $LDAPFieldsToFind);
 
