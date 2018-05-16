@@ -1018,7 +1018,7 @@ class RequestController extends Controller
 
         //////////////// get Requests IDs with the form node filter ////////////////
         $ids = array();
-        if( !$formnode ) {
+        if( $formnode ) {
             if ($category) {
                 $categoryIds = $transresRequestUtil->getRequestIdsFormNodeByCategory($category);
                 $ids = array_merge($ids, $categoryIds);
