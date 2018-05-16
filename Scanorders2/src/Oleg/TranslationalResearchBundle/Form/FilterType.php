@@ -207,6 +207,17 @@ class FilterType extends AbstractType
             },
         ));
 
+        $builder->add('showMatchingAndTotal', ChoiceType::class, array(
+            'label' => false,
+            'required' => true,
+            'multiple' => false,
+            'choices' => array(
+                "Without Matching and Total (Faster)" => "WithoutTotal",
+                'With Matching and Total (Slower)' => 'WithTotal'
+            ),
+            'attr' => array('class' => 'combobox'),
+        ));
+
 //        $builder->add('preroute', HiddenType::class, array( //TextType HiddenType
 //            'required'=>false,
 //            'label' => false,

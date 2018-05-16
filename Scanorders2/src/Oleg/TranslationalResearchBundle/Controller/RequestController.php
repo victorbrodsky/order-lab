@@ -1463,6 +1463,7 @@ class RequestController extends Controller
         //echo "showMatchingAndTotal=".$showMatchingAndTotal."<br>";
         if( $showMatchingAndTotal == "WithTotal" ) {
             $withMatching = true; //slower 7.5 sec
+            $advancedFilter++;
         } else {
             $withMatching = false; //twice faster 3.5 sec
         }

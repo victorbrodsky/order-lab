@@ -196,6 +196,7 @@ class ProjectController extends Controller
         $searchProjectType = $filterform['searchProjectType']->getData();
         $exportId = $filterform['exportId']->getData();
         $reviewers = $filterform['reviewers']->getData();
+        $showMatchingAndTotal = $filterform['showMatchingAndTotal']->getData();
 //        $archived = $filterform['completed']->getData();
 //        $complete = $filterform['review']->getData();
 //        $interviewee = $filterform['missinginfo']->getData();
@@ -538,14 +539,27 @@ class ProjectController extends Controller
 
         $dql->orderBy('project.id', 'DESC');
 
+        //echo "showMatchingAndTotal=".$showMatchingAndTotal."<br>";
+        if( $showMatchingAndTotal == "WithTotal" ) {
+            $withMatching = true; //slower 7.5 sec
+            $advancedFilter++;
+        } else {
+            $withMatching = false; //twice faster 3.5 sec
+        }
+
         $limit = 10;
         $query = $em->createQuery($dql);
-        $query2 = $em->createQuery($dql);
 
+        if( $withMatching ) {
+            $query2 = $em->createQuery($dql);
+        }
 
         if( count($dqlParameters) > 0 ) {
             $query->setParameters($dqlParameters);
-            $query2->setParameters($dqlParameters);
+
+            if( $withMatching ) {
+                $query2->setParameters($dqlParameters);
+            }
         }
 
         //echo "query=".$query->getSql()."<br>";
@@ -564,10 +578,11 @@ class ProjectController extends Controller
             $paginationParams
         );
 
-        //$allProjects = array();
-        $allProjects = $query2->getResult();
-        $allGlobalProjects = $em->getRepository('OlegTranslationalResearchBundle:Project')->findAll();
-        $title = $title . " (Matching " . count($allProjects) . ", Total " . count($allGlobalProjects) . ")";
+        if( $withMatching ) {
+            $allProjects = $query2->getResult();
+            $allGlobalProjects = $em->getRepository('OlegTranslationalResearchBundle:Project')->findAll();
+            $title = $title . " (Matching " . count($allProjects) . ", Total " . count($allGlobalProjects) . ")";
+        }
 //        if( count($allProjects) > 0 ) {
 //            //$allProjects = $projects->getTotalItemCount();
 //            $pageNumber = $projects->getCurrentPageNumber();
