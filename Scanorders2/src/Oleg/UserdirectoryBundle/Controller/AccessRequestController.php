@@ -483,7 +483,7 @@ class AccessRequestController extends Controller
             //exit('new access request valid !!!');
             //echo "email=".$accReq->getEmail()."<br>";
         } else {
-            exit('Access Request form is not valid.');
+            //exit('Access Request form is not valid.');
         }
 
         //exit('new access request flush');
