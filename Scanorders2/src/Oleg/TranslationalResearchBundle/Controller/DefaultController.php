@@ -156,7 +156,11 @@ class DefaultController extends Controller
             }
 
             $filename = 'TRF_REQUESTED_2.xlsx';
-            $this->importRequests($request,$filename,$startRow,5001);
+
+            //check
+            $this->importRequests($request,$filename,$startRow,null);
+
+            //$this->importRequests($request,$filename,$startRow,1000);
 
             //$this->importRequests($request,$filename,3000);
             //$this->importRequests($request,$filename,2,1000);
@@ -207,7 +211,11 @@ class DefaultController extends Controller
         $importUtil = $this->get('transres_import');
         //use only 500 per time
         //$startRow = 2;
-        $endRow = $startRow + $increment;
+        if( $increment ) {
+            $endRow = $startRow + $increment;
+        } else {
+            $endRow = null;
+        }
         echo "Start: $startRow, end: $endRow <br>";
         $time_start = microtime(true);
         $resCount = $importUtil->importWorkRequests($request, $filename, $startRow, $endRow);
