@@ -244,8 +244,8 @@ class FilterRequestType extends AbstractType
             'required' => true,
             'multiple' => false,
             'choices' => array(
-                "Without Total" => "Without Total",
-                'With Total' => 'With Total'
+                "Without Matching and Total (Faster)" => "WithoutTotal",
+                'With Matching and Total (Slower)' => 'WithTotal'
             ),
             'attr' => array('class' => 'combobox'),
         ));

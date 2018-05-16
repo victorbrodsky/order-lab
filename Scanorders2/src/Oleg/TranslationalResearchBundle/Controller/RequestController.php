@@ -1461,7 +1461,7 @@ class RequestController extends Controller
         ///////// EOF filters //////////
 
         //echo "showMatchingAndTotal=".$showMatchingAndTotal."<br>";
-        if( $showMatchingAndTotal == "With Total" ) {
+        if( $showMatchingAndTotal == "WithTotal" ) {
             $withMatching = true; //slower 7.5 sec
         } else {
             $withMatching = false; //twice faster 3.5 sec
