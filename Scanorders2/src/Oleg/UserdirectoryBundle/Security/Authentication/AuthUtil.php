@@ -209,7 +209,7 @@ class AuthUtil {
 
         $searchRes = null;
         $withNewUserPrePopulation = true;
-        //$withNewUserPrePopulation = false; //testing
+        $withNewUserPrePopulation = false; //testing
         if( $withNewUserPrePopulation ) {
             //first search this user if exists in ldap directory
             $searchRes = $this->searchLdap($usernameClean);
