@@ -34,8 +34,9 @@ class FosCommentListener implements EventSubscriberInterface {
     private $container;
     private $em;
     protected $secTokenStorage;
-    //protected $disable = false;
-    protected $disable = true;
+
+    protected $disable = false;
+    //protected $disable = true;
 
     protected $secAuth;
 

@@ -578,6 +578,7 @@ class ProjectController extends Controller
             $paginationParams
         );
 
+        $allProjects = null;
         if( $withMatching ) {
             $allProjects = $query2->getResult();
             $allGlobalProjects = $em->getRepository('OlegTranslationalResearchBundle:Project')->findAll();

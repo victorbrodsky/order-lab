@@ -75,6 +75,7 @@ class DefaultController extends Controller
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
+        exit('not allowed');
         set_time_limit(10800); //18000 seconds => 5 hours
         ini_set('memory_limit', '7168M');
 
@@ -155,12 +156,12 @@ class DefaultController extends Controller
                 $startRow = 2;
             }
 
-            $filename = 'TRF_REQUESTED_2.xlsx';
+            $filename = 'TRF_REQUESTED_3.xlsx';
 
             //check
-            $this->importRequests($request,$filename,$startRow,null);
+            //$this->importRequests($request,$filename,$startRow,null);
 
-            //$this->importRequests($request,$filename,$startRow,1000);
+            $this->importRequests($request,$filename,$startRow,1000);
 
             //$this->importRequests($request,$filename,3000);
             //$this->importRequests($request,$filename,2,1000);
@@ -191,9 +192,9 @@ class DefaultController extends Controller
             }
         }
 
-        //edit request's comment
-        if(1) {
-            $filename = 'TRF_REQUESTED_2.xlsx';
+        //add missing request's comment
+        if(0) {
+            $filename = 'TRF_REQUESTED_1.xlsx';
             $startRow = 2;//3908;
             $endRow = null;//3927;
             $resCount = $importUtil->editWorkRequests($request, $filename, $startRow, $endRow);
