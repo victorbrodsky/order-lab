@@ -114,8 +114,9 @@ function validateUser(btnEl,origuserid) {
             $('#userinfo').collapse('show');
             $('#oleg_userdirectorybundle_user_primaryPublicUserId').parent().addClass("has-error");        
 
-            var alert = 'An employee with the provided User ID Type "'+userTypeText+'" and User ID "'+primaryPublicUserId+'" does not exists in WCMC LDAP directory.' +          
-                "Please correct the new employee's User ID Type and User ID.";
+            var alert = 'An employee with the provided User ID Type "'+userTypeText+
+                '" and User ID "'+primaryPublicUserId+'" does not exists in LDAP directory.' +
+                " Please correct the new employee's User ID Type and/or User ID.";
             addErrorAlert(alert);
             lbtn.stop();
             return false;

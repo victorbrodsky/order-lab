@@ -25,7 +25,14 @@ use Symfony\Component\HttpFoundation\Request;
 $loader = require __DIR__.'/../vendor/autoload.php';
 if (PHP_VERSION_ID < 70000) {
     include_once __DIR__.'/../app/bootstrap.php.cache';
+    //$loader = require_once __DIR__.'/../app/bootstrap.php.cache';
 }
+
+// Change 'sf' by something unique to this app to prevent
+// conflicts with other applications running in the same server
+//$loader = new ApcClassLoader('sf', $loader);
+//$loader->register(true);
+
 
 // If your web server provides APC support for PHP applications, uncomment these
 // lines to use APC for class autoloading. This can improve application performance
