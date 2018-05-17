@@ -512,7 +512,9 @@
                             {{ form_widget(filterform.externalId) }}
                         </div>
                         <div class="col-xs-4">
-                            {{ form_widget(filterform.showMatchingAndTotal) }}
+                            {% if filterform.showMatchingAndTotal is defined %}
+                                {{ form_widget(filterform.showMatchingAndTotal) }}
+                            {% endif %}
                         </div>
                     </div>
 

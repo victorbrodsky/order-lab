@@ -47,16 +47,17 @@ class FilterRequestType extends AbstractType
                 'label' => "Reviewer Delegate:",
                 'required' => false,
                 'multiple' => false,
+                'choices' => $this->params['transresUsers'],
                 'attr' => array('class' => 'combobox combobox-width'),
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->leftJoin("list.employmentStatus", "employmentStatus")
-                        ->leftJoin("employmentStatus.employmentType", "employmentType")
-                        ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
-                        //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
-                        ->leftJoin("list.infos", "infos")
-                        ->orderBy("infos.displayName", "ASC");
-                },
+//                'query_builder' => function (EntityRepository $er) {
+//                    return $er->createQueryBuilder('list')
+//                        ->leftJoin("list.employmentStatus", "employmentStatus")
+//                        ->leftJoin("employmentStatus.employmentType", "employmentType")
+//                        ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+//                        //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
+//                        ->leftJoin("list.infos", "infos")
+//                        ->orderBy("infos.displayName", "ASC");
+//                },
             ));
         //}
         
@@ -156,16 +157,17 @@ class FilterRequestType extends AbstractType
             'label' => false,
             'required' => false,
             'multiple' => false,
+            'choices' => $this->params['transresUsers'],
             'attr' => array('class' => 'combobox combobox-width'),
-            'query_builder' => function (EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->leftJoin("list.employmentStatus", "employmentStatus")
-                    ->leftJoin("employmentStatus.employmentType", "employmentType")
-                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
-                    //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
-                    ->leftJoin("list.infos", "infos")
-                    ->orderBy("infos.displayName", "ASC");
-            },
+//            'query_builder' => function (EntityRepository $er) {
+//                return $er->createQueryBuilder('list')
+//                    ->leftJoin("list.employmentStatus", "employmentStatus")
+//                    ->leftJoin("employmentStatus.employmentType", "employmentType")
+//                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+//                    //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
+//                    ->leftJoin("list.infos", "infos")
+//                    ->orderBy("infos.displayName", "ASC");
+//            },
         ));
 
         $builder->add('principalInvestigators', EntityType::class, array(
@@ -173,16 +175,17 @@ class FilterRequestType extends AbstractType
             'label' => false,
             'required' => false,
             'multiple' => true,
+            'choices' => $this->params['transresUsers'],
             'attr' => array('class' => 'combobox combobox-width'),
-            'query_builder' => function (EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->leftJoin("list.employmentStatus", "employmentStatus")
-                    ->leftJoin("employmentStatus.employmentType", "employmentType")
-                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
-                    //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
-                    ->leftJoin("list.infos", "infos")
-                    ->orderBy("infos.displayName", "ASC");
-            },
+//            'query_builder' => function (EntityRepository $er) {
+//                return $er->createQueryBuilder('list')
+//                    ->leftJoin("list.employmentStatus", "employmentStatus")
+//                    ->leftJoin("employmentStatus.employmentType", "employmentType")
+//                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+//                    //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
+//                    ->leftJoin("list.infos", "infos")
+//                    ->orderBy("infos.displayName", "ASC");
+//            },
         ));
 
         $projectSpecialtyAllowedArr = array();
@@ -239,16 +242,16 @@ class FilterRequestType extends AbstractType
             'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'External ID'),
         ));
 
-        $builder->add('showMatchingAndTotal', ChoiceType::class, array(
-            'label' => false,
-            'required' => true,
-            'multiple' => false,
-            'choices' => array(
-                "Without Matching and Total (Faster)" => "WithoutTotal",
-                'With Matching and Total (Slower)' => 'WithTotal'
-            ),
-            'attr' => array('class' => 'combobox'),
-        ));
+//        $builder->add('showMatchingAndTotal', ChoiceType::class, array(
+//            'label' => false,
+//            'required' => true,
+//            'multiple' => false,
+//            'choices' => array(
+//                "Without Matching and Total (Faster)" => "WithoutTotal",
+//                'With Matching and Total (Slower)' => 'WithTotal'
+//            ),
+//            'attr' => array('class' => 'combobox'),
+//        ));
 
     }
 

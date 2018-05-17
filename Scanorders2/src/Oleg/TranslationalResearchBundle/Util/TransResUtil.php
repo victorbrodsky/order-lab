@@ -3654,5 +3654,88 @@ class TransResUtil
 
         return $msg;
     }
-    
+
+    public function getTotalProjectCount() {
+        $repository = $this->em->getRepository('OlegTranslationalResearchBundle:Project');
+        $dql = $repository->createQueryBuilder("project");
+        $dql->select('COUNT(project)');
+
+        $query = $dql->getQuery();
+
+        //$count = -1;
+        $count = $query->getSingleScalarResult();
+        //$resArr = $query->getOneOrNullResult();
+        //print_r($resArr);
+        //echo "count=".$count."<br>";
+
+        return $count;
+    }
+    public function getProjectIdsArrByDqlParameters($dql,$dqlParameters) {
+        $dql->select('project.id');
+
+        $query = $dql->getQuery();
+
+        if( count($dqlParameters) > 0 ) {
+            $query->setParameters($dqlParameters);
+        }
+
+        $result = $query->getScalarResult();
+        $ids = array_map('current', $result);
+        $ids = array_unique($ids);
+
+        //print_r($ids);
+        //echo "count=".$count."<br>";
+
+        return $ids;
+    }
+
+    public function getTotalRequestCount() {
+        $repository = $this->em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
+        $dql = $repository->createQueryBuilder("transresRequest");
+        $dql->select('COUNT(transresRequest)');
+
+        $query = $dql->getQuery();
+
+        //$count = -1;
+        $count = $query->getSingleScalarResult();
+        //$resArr = $query->getOneOrNullResult();
+        //print_r($resArr);
+        //echo "count=".$count."<br>";
+
+        return $count;
+    }
+    public function getTotalRequestCountByDqlParameters($dql,$dqlParameters) {
+        $dql->select('COUNT(transresRequest)');
+
+        $query = $dql->getQuery();
+
+        if( count($dqlParameters) > 0 ) {
+            $query->setParameters($dqlParameters);
+        }
+
+        $count = $query->getSingleScalarResult();
+        //echo "count=".$count."<br>";
+
+        return $count;
+    }
+
+    public function getAppropriatedUsers() {
+        $repository = $this->em->getRepository('OlegUserdirectoryBundle:User');
+        $dql = $repository->createQueryBuilder("list");
+        $dql->select('list');
+
+        $dql->leftJoin("list.employmentStatus", "employmentStatus");
+        $dql->leftJoin("employmentStatus.employmentType", "employmentType");
+        $dql->leftJoin("list.infos", "infos");
+
+        $dql->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL");
+
+        $dql->orderBy("infos.displayName","ASC");
+
+        $query = $dql->getQuery();
+
+        $users = $query->getResult();
+
+        return $users;
+    }
 }

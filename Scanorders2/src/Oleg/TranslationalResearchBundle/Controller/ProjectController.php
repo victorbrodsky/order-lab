@@ -159,9 +159,11 @@ class ProjectController extends Controller
 
         //////// create filter //////////
         //$filterError = true;
+        $transresUsers = $transresUtil->getAppropriatedUsers();
         $stateChoiceArr = $transresUtil->getStateChoisesArr();
         //$defaultStatesArr = $transresUtil->getDefaultStatesArr();
         $params = array(
+            'transresUsers' => $transresUsers,
             'stateChoiceArr' => $stateChoiceArr,
             //'defaultStatesArr' => $defaultStatesArr,
             'projectSpecialtyAllowedArr' => $projectSpecialtyAllowedArr
@@ -203,7 +205,7 @@ class ProjectController extends Controller
         $searchProjectType = $filterform['searchProjectType']->getData();
         $exportId = $filterform['exportId']->getData();
         $reviewers = $filterform['reviewers']->getData();
-        $showMatchingAndTotal = $filterform['showMatchingAndTotal']->getData();
+        //$showMatchingAndTotal = $filterform['showMatchingAndTotal']->getData();
 //        $archived = $filterform['completed']->getData();
 //        $complete = $filterform['review']->getData();
 //        $interviewee = $filterform['missinginfo']->getData();
@@ -547,26 +549,26 @@ class ProjectController extends Controller
         $dql->orderBy('project.id', 'DESC');
 
         //echo "showMatchingAndTotal=".$showMatchingAndTotal."<br>";
-        if( $showMatchingAndTotal == "WithTotal" ) {
-            $withMatching = true; //slower 7.5 sec
-            $advancedFilter++;
-        } else {
-            $withMatching = false; //twice faster 3.5 sec
-        }
+//        if( $showMatchingAndTotal == "WithTotal" ) {
+//            $withMatching = true; //slower 7.5 sec
+//            $advancedFilter++;
+//        } else {
+//            $withMatching = false; //twice faster 3.5 sec
+//        }
 
         $limit = 10;
         $query = $em->createQuery($dql);
 
-        if( $withMatching ) {
-            $query2 = $em->createQuery($dql);
-        }
+//        if( $withMatching ) {
+//            $query2 = $em->createQuery($dql);
+//        }
 
         if( count($dqlParameters) > 0 ) {
             $query->setParameters($dqlParameters);
 
-            if( $withMatching ) {
-                $query2->setParameters($dqlParameters);
-            }
+//            if( $withMatching ) {
+//                $query2->setParameters($dqlParameters);
+//            }
         }
 
         //echo "query=".$query->getSql()."<br>";
@@ -585,12 +587,15 @@ class ProjectController extends Controller
             $paginationParams
         );
 
-        $allProjects = null;
-        if( $withMatching ) {
-            $allProjects = $query2->getResult();
-            $allGlobalProjects = $em->getRepository('OlegTranslationalResearchBundle:Project')->findAll();
-            $title = $title . " (Matching " . count($allProjects) . ", Total " . count($allGlobalProjects) . ")";
-        }
+        $allProjectIdsArr = array();
+        //if( $withMatching ) {
+            //$allProjects = $query2->getResult();
+            //$allGlobalProjects = $em->getRepository('OlegTranslationalResearchBundle:Project')->findAll();
+            //$title = $title . " (Matching " . count($allProjects) . ", Total " . count($allGlobalProjects) . ")";
+            $allProjectIdsArr = $transresUtil->getProjectIdsArrByDqlParameters($dql,$dqlParameters);
+            $allGlobalProjects = $transresUtil->getTotalProjectCount();
+            $title = $title . " (Matching " . count($allProjectIdsArr) . ", Total " . $allGlobalProjects . ")";
+        //}
 //        if( count($allProjects) > 0 ) {
 //            //$allProjects = $projects->getTotalItemCount();
 //            $pageNumber = $projects->getCurrentPageNumber();
@@ -618,12 +623,13 @@ class ProjectController extends Controller
 //            'filterform' => $filterform->createView()
 //        ); //test 18 queries vs 800
 
+        //echo "before ... <br>";
         return array(
             //'projectsTableDisable' => true, //testing
             //'filterDisable' => true, //testing
             //'filterError' => true, //testing
             'projects' => $projects,
-            'allProjects' => $allProjects,
+            'allProjectIdsArr' => $allProjectIdsArr,
             'title' => $title,
             'filterform' => $filterform->createView(),
             'eventObjectTypeId' => $eventObjectTypeId,

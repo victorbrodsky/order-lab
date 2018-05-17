@@ -862,7 +862,9 @@ class RequestController extends Controller
         $availableProjects = $transresUtil->getAvailableRequesterOrReviewerProjects();
         $progressStateArr = $transresRequestUtil->getProgressStateArr();
         $billingStateArr = $transresRequestUtil->getBillingStateArr();
+        $transresUsers = $transresUtil->getAppropriatedUsers();
         $params = array(
+            'transresUsers' => $transresUsers,
             'progressStateArr'=>$progressStateArr,
             'billingStateArr'=>$billingStateArr,
             'routeName'=>$routeName,
@@ -897,7 +899,7 @@ class RequestController extends Controller
         $filterType = trim( $request->get('type') );
         $filterTitle = trim( $request->get('title') );
 
-        $showMatchingAndTotal = $filterform['showMatchingAndTotal']->getData();
+        //$showMatchingAndTotal = $filterform['showMatchingAndTotal']->getData();
         //echo "filterType=$filterType<br>";
         //exit();
 
@@ -1461,27 +1463,27 @@ class RequestController extends Controller
         ///////// EOF filters //////////
 
         //echo "showMatchingAndTotal=".$showMatchingAndTotal."<br>";
-        if( $showMatchingAndTotal == "WithTotal" ) {
-            $withMatching = true; //slower 7.5 sec
-            $advancedFilter++;
-        } else {
-            $withMatching = false; //twice faster 3.5 sec
-        }
+//        if( $showMatchingAndTotal == "WithTotal" ) {
+//            $withMatching = true; //slower 7.5 sec
+//            $advancedFilter++;
+//        } else {
+//            $withMatching = false; //twice faster 3.5 sec
+//        }
         //$withMatching = true; //slower 7.5 sec
         //$withMatching = false; //twice faster 3.5 sec
 
         $limit = 10;
         $query = $em->createQuery($dql);
 
-        if($withMatching) {
-            $query2 = $em->createQuery($dql);
-        }
+        //if($withMatching) {
+            //$query2 = $em->createQuery($dql);
+        //}
 
         if( count($dqlParameters) > 0 ) {
             $query->setParameters($dqlParameters);
-            if($withMatching) {
-                $query2->setParameters($dqlParameters);
-            }
+            //if($withMatching) {
+                //$query2->setParameters($dqlParameters);
+            //}
         }
 
         //echo "query=".$query->getSql()."<br>";
@@ -1507,6 +1509,7 @@ class RequestController extends Controller
         }
 
         //Title
+        $requestTotalFeeHtml = null;
         if( $project ) {
             $projectUrl = $this->container->get('router')->generate(
                 'translationalresearch_project_show',
@@ -1525,11 +1528,14 @@ class RequestController extends Controller
             }
         }
 
-        if($withMatching) {
-            $allTransresRequests = $query2->getResult();
-            $allGlobalRequests = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest')->findAll();
-            $title = $title . " (Matching " . count($allTransresRequests) . ", Total " . count($allGlobalRequests) . ")";
-        }
+        //if($withMatching) {
+            //$allTransresRequests = $query2->getResult();
+            //$allGlobalRequests = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest')->findAll();
+            //$title = $title . " (Matching " . count($allTransresRequests) . ", Total " . count($allGlobalRequests) . ")";
+            $allTransresRequests = $transresUtil->getTotalRequestCountByDqlParameters($dql,$dqlParameters);
+            $allGlobalRequests = $transresUtil->getTotalRequestCount();
+            $title = $title . " (Matching " . $allTransresRequests . ", Total " . $allGlobalRequests . ")";
+        //}
         //$allGlobalRequests = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest')->findAll();
         //$title = $title . " (Matching " . count($allTransresRequests) . ", Total " . count($allGlobalRequests) . ")";
 
@@ -1545,9 +1551,10 @@ class RequestController extends Controller
 //        }
 
         return array(
+            //'filterDisable' => true, //testing
             'transresRequests' => $transresRequests,
-            'allTransresRequests' => $allTransresRequests,
-            'project' => null,
+            //'allTransresRequests' => $allTransresRequests,
+            //'project' => null,
             'filterform' => $filterform->createView(),
             'title' => $title.$requestTotalFeeHtml,
             'requestTotalFeeHtml' => null, //$requestTotalFeeHtml

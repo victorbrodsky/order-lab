@@ -35,7 +35,9 @@
         {% endif %}
     {% endif %}
 
-    {{ transresRequestMacros.transresRequestsFilter(filterform,advancedFilter) }}
+    {% if filterDisable is not defined %}
+        {{ transresRequestMacros.transresRequestsFilter(filterform,advancedFilter) }}
+    {% endif %}
 
     <br>
 
@@ -80,6 +82,7 @@
             {#{% endif %}#}
             {#{% set count = count + 1 %}#}
 
+            {% set trclassname = null %}
             {% if transresRequest.progressState == 'draft' %}
                 {#table-row-separator-gray#}
                 {% set trclassname = "order-complete-status" %}

@@ -92,15 +92,16 @@ class FilterType extends AbstractType
             'label'=> false,    //"Principal Investigator(s):",
             'required'=> false,
             'multiple' => true,
+            'choices' => $this->params['transresUsers'],
             'attr' => array('class'=>'combobox combobox-width'),
-            'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->leftJoin("list.employmentStatus", "employmentStatus")
-                    ->leftJoin("employmentStatus.employmentType", "employmentType")
-                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
-                    ->leftJoin("list.infos", "infos")
-                    ->orderBy("infos.displayName","ASC");
-            },
+//            'query_builder' => function(EntityRepository $er) {
+//                return $er->createQueryBuilder('list')
+//                    ->leftJoin("list.employmentStatus", "employmentStatus")
+//                    ->leftJoin("employmentStatus.employmentType", "employmentType")
+//                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+//                    ->leftJoin("list.infos", "infos")
+//                    ->orderBy("infos.displayName","ASC");
+//            },
         ));
 
         $builder->add('submitter', EntityType::class, array(
@@ -108,15 +109,16 @@ class FilterType extends AbstractType
             'label'=> false,
             'required'=> false,
             'multiple' => false,
+            'choices' => $this->params['transresUsers'],
             'attr' => array('class'=>'combobox combobox-width'),
-            'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->leftJoin("list.employmentStatus", "employmentStatus")
-                    ->leftJoin("employmentStatus.employmentType", "employmentType")
-                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
-                    ->leftJoin("list.infos", "infos")
-                    ->orderBy("infos.displayName","ASC");
-            },
+//            'query_builder' => function(EntityRepository $er) {
+//                return $er->createQueryBuilder('list')
+//                    ->leftJoin("list.employmentStatus", "employmentStatus")
+//                    ->leftJoin("employmentStatus.employmentType", "employmentType")
+//                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+//                    ->leftJoin("list.infos", "infos")
+//                    ->orderBy("infos.displayName","ASC");
+//            },
         ));
 
         $builder->add('startDate', DateTimeType::class, array(
@@ -196,27 +198,28 @@ class FilterType extends AbstractType
             'label'=> false,    //"Principal Investigator(s):",
             'required'=> false,
             'multiple' => true,
+            'choices' => $this->params['transresUsers'],
             'attr' => array('class'=>'combobox combobox-width', 'placeholder'=>'Reviewer(s)'),
-            'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->leftJoin("list.employmentStatus", "employmentStatus")
-                    ->leftJoin("employmentStatus.employmentType", "employmentType")
-                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
-                    ->leftJoin("list.infos", "infos")
-                    ->orderBy("infos.displayName","ASC");
-            },
+//            'query_builder' => function(EntityRepository $er) {
+//                return $er->createQueryBuilder('list')
+//                    ->leftJoin("list.employmentStatus", "employmentStatus")
+//                    ->leftJoin("employmentStatus.employmentType", "employmentType")
+//                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+//                    ->leftJoin("list.infos", "infos")
+//                    ->orderBy("infos.displayName","ASC");
+//            },
         ));
 
-        $builder->add('showMatchingAndTotal', ChoiceType::class, array(
-            'label' => false,
-            'required' => true,
-            'multiple' => false,
-            'choices' => array(
-                "Without Matching and Total (Faster)" => "WithoutTotal",
-                'With Matching and Total (Slower)' => 'WithTotal'
-            ),
-            'attr' => array('class' => 'combobox'),
-        ));
+//        $builder->add('showMatchingAndTotal', ChoiceType::class, array(
+//            'label' => false,
+//            'required' => true,
+//            'multiple' => false,
+//            'choices' => array(
+//                "Without Matching and Total (Faster)" => "WithoutTotal",
+//                'With Matching and Total (Slower)' => 'WithTotal'
+//            ),
+//            'attr' => array('class' => 'combobox'),
+//        ));
 
 //        $builder->add('preroute', HiddenType::class, array( //TextType HiddenType
 //            'required'=>false,
@@ -250,6 +253,7 @@ class FilterType extends AbstractType
 //        ));
         
     }
+
 
     public function configureOptions(OptionsResolver $resolver)
     {
