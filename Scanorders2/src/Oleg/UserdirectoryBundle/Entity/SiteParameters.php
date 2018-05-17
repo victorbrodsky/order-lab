@@ -93,16 +93,22 @@ class SiteParameters {
     private $aDLDAPServerPort;
 
     /**
+     * LDAP bind used for ldap_search or for simple authentication ldap_bind
+     *
      * @ORM\Column(type="string", nullable=true)
      */
     private $aDLDAPServerOu;
 
     /**
+     * Used for ldap_search, if null, the ldap_search is not used
+     *
      * @ORM\Column(type="string", nullable=true)
      */
     private $aDLDAPServerAccountUserName;
 
     /**
+     * Used for ldap_search, if null, the ldap_search is not used
+     *
      * @ORM\Column(type="string", nullable=true)
      */
     private $aDLDAPServerAccountPassword;

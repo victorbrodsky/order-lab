@@ -1793,7 +1793,7 @@ class AdminController extends Controller
 
             "aDLDAPServerAddress" => "ldap.forumsys.com",
             "aDLDAPServerPort" => "389",
-            "aDLDAPServerOu" => "ou=scientists,dc=example,dc=com",    //used for DC
+            "aDLDAPServerOu" => "dc=example,dc=com",    //used for DC
             "aDLDAPServerAccountUserName" => "null",
             "aDLDAPServerAccountPassword" => "null",
             "ldapExePath" => "../src/Oleg/UserdirectoryBundle/Util/",

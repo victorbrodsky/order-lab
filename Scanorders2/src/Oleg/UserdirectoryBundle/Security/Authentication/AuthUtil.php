@@ -633,14 +633,20 @@ class AuthUtil {
         return NULL;
     }
 
-    //tested by public ldap server: https://www.forumsys.com/tutorials/integration-how-to/ldap/online-ldap-test-server/
+    // tested by public ldap server: https://www.forumsys.com/tutorials/integration-how-to/ldap/online-ldap-test-server/
     // AD/LDAP Server Address: ldap.forumsys.com
     // AD/LDAP Server Port (Default: 389): 389
-    // AD/LDAP Server OU: ou=scientists,dc=example,dc=com
+    // AD/LDAP Server OU: dc=example,dc=com
     // AD/LDAP Server Account User Name: null (must be null for no ldap search)
     // AD/LDAP Server Account Password: null (must be null for no ldap search)
     // LDAP/AD Authenticator Relative Path (Default: "../src/Oleg/UserdirectoryBundle/Util/" ): null (doesn't matter for simpleLdap)
     // LDAP/AD Authenticator File Name (Default: "LdapSaslCustom.exe" ): null (doesn't matter for simpleLdap)
+    //
+    // tested by public ldap server: https://www.zflexldapadministrator.com/index.php/blog/82-free-online-ldap
+    // Server: www.zflexldap.com
+    // Port: 389
+    // AD/LDAP Server OU: ou=users,ou=guests,dc=zflexsoftware,dc=com
+    // Username: guest1 Password: guest1password
     public function simpleLdap($username, $password) {
         $userSecUtil = $this->container->get('user_security_utility');
         //$this->logger->notice("Simple Ldap");
@@ -648,28 +654,32 @@ class AuthUtil {
         $LDAPHost = $userSecUtil->getSiteSettingParameter('aDLDAPServerAddress');
         $cnx = $this->connectToLdap($LDAPHost);
 
-        $ldapDc = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'); //scientists,dc=example,dc=com
+        $ldapBindDN = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'); //scientists,dc=example,dc=com
 
         //cn=read-only-admin,dc=example,dc=com => "uid=tesla,dc=example,dc=com"
-        $ldapDcArr = explode(",",$ldapDc);
-        $ldapBindArr = array();
-        foreach( $ldapDcArr as $ldapPart) {
-            if( strpos( strtolower($ldapPart), 'dc=') !== false ) {
-                $ldapBindArr[] = $ldapPart;
-            }
-        }
-
-        $binddn = implode(",",$ldapBindArr);
-        $binddn = "uid=".$username.",".$binddn;
+//        $ldapDcArr = explode(",",$ldapDc);
+//        $ldapBindArr = array();
+//        foreach( $ldapDcArr as $ldapPart) {
+//            if( strpos( strtolower($ldapPart), 'dc=') !== false ) {
+//                $ldapBindArr[] = $ldapPart;
+//            }
+//        }
+        //$binddn = implode(",",$ldapBindArr);
+        $ldapBindDN = "uid=".$username.",".$ldapBindDN;
         //echo "binddn=[".$binddn."]<br>";
 
+        //test: https://www.forumsys.com/tutorials/integration-how-to/ldap/online-ldap-test-server/
         //$password = "password";
-        //$binddn = "uid=tesla,dc=example,dc=com"; //workings
+        //$ldapBindDN = "uid=tesla,dc=example,dc=com"; //workings
+
+        //test: https://www.zflexldapadministrator.com/index.php/blog/82-free-online-ldap
+        //$ldapBindDN = "uid=guest1,ou=users,ou=guests,dc=zflexsoftware,dc=com";
+        //$password = "guest1password";
 
         //$this->logger->notice("Simple ldap: before ldap_bind");
 
         //$res = @ldap_bind($cnx,NULL,$password,$mech,NULL,$username,NULL);
-        $res = @ldap_bind($cnx,$binddn,$password);
+        $res = @ldap_bind($cnx,$ldapBindDN,$password);
 
         //$this->logger->notice("Simple ldap: after ldap_bind");
 
@@ -699,20 +709,18 @@ class AuthUtil {
         //echo "username=".$username."<br>";
         $userSecUtil = $this->container->get('user_security_utility');
 
-        //$LDAPHost = $this->container->getParameter('ldaphost');
-        $LDAPHost = $userSecUtil->getSiteSettingParameter('aDLDAPServerAddress');
-        //echo "LDAPHost=".$LDAPHost."<br>";
-
         //$dn = "CN=Users,DC=a,DC=wcmc-ad,DC=net";
         //$dn = "CN=Users";
         //$ldapDc = $this->container->getParameter('ldapou');
-        $ldapDc = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'); //old: a.wcmc-ad.net, new: cn=Users,dc=a,dc=wcmc-ad,dc=net
+
+        $ldapBindDN = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'); //old: a.wcmc-ad.net, new: cn=Users,dc=a,dc=wcmc-ad,dc=net
+
 //        $dcArr = explode(".",$ldapDc);
 //        foreach( $dcArr as $dc ) {
 //            $dn = $dn . ",DC=".$dc;
 //        }
 
-        $dn = $ldapDc;
+        //$dn = $ldapDc;
         //for wcmc must be: cn=Users,dc=a,dc=wcmc-ad,dc=net
         //echo "dn=[".$dn."]<br>";
 
@@ -732,36 +740,40 @@ class AuthUtil {
             return array('givenName'=>$username,'lastName'=>$username,'displayName'=>$username);
         }
 
+        //$LDAPHost = $this->container->getParameter('ldaphost');
+        $LDAPHost = $userSecUtil->getSiteSettingParameter('aDLDAPServerAddress');
+        //echo "LDAPHost=".$LDAPHost."<br>";
+        $cnx = $this->connectToLdap($LDAPHost);
+
         //$filter="(ObjectClass=Person)";
         $filter="(cn=".$username.")";
 
-        $cnx = $this->connectToLdap($LDAPHost);
+        //test
+        //$LDAPUserAdmin = "cn=ro_admin,ou=sysadmins,dc=zflexsoftware,dc=com";
+        //$LDAPUserPasswordAdmin = "zflexpass";
+        //$ldapBindDN = "ou=users,ou=guests,dc=zflexsoftware,dc=com";
 
-        $useSearchByAdmin = false;
-        $useSearchByAdmin = true;
-        if($useSearchByAdmin) {
-            $res = @ldap_bind($cnx, $LDAPUserAdmin, $LDAPUserPasswordAdmin);
-            //$res = $this->ldapBind($LDAPUserAdmin,$LDAPUserPasswordAdmin);
-            if( !$res ) {
-                $this->logger->error("search Ldap: ldap_bind failed with admin authentication username=" . $LDAPUserAdmin);
-                //echo "Could not bind to LDAP: user=".$LDAPUserAdmin."<br>";
-                ldap_error($cnx);
-                ldap_unbind($cnx);
-                //exit("error ldap_bind");
-                return NULL;
-                //return -1;  //"Could not bind to LDAP server";
-            } else {
-                $this->logger->error("search Ldap: ldap_bind OK with admin authentication username=" . $LDAPUserAdmin);
-                //echo "OK simple LDAP: user=".$LDAPUserAdmin."<br>";
-                //exit("OK simple LDAP: user=".$LDAPUserAdmin."<br>");
-            }
+        $res = @ldap_bind($cnx, $LDAPUserAdmin, $LDAPUserPasswordAdmin);
+        //$res = $this->ldapBind($LDAPUserAdmin,$LDAPUserPasswordAdmin);
+        if( !$res ) {
+            $this->logger->error("search Ldap: ldap_bind failed with admin authentication username=" . $LDAPUserAdmin);
+            //echo "Could not bind to LDAP: user=".$LDAPUserAdmin."<br>";
+            ldap_error($cnx);
+            ldap_unbind($cnx);
+            //exit("error ldap_bind");
+            return NULL;
+            //return -1;  //"Could not bind to LDAP server";
+        } else {
+            $this->logger->error("search Ldap: ldap_bind OK with admin authentication username=" . $LDAPUserAdmin);
+            //echo "OK simple LDAP: user=".$LDAPUserAdmin."<br>";
+            //exit("OK simple LDAP: user=".$LDAPUserAdmin."<br>");
         }
 
         $LDAPFieldsToFind = array("mail", "title", "sn", "givenName", "displayName", "telephoneNumber", "company"); //sn - lastName
         //$LDAPFieldsToFind = array("sn");   //, "givenName", "displayName", "telephoneNumber");
         //$LDAPFieldsToFind = array("cn", "samaccountname");
 
-        $sr = ldap_search($cnx, $dn, $filter, $LDAPFieldsToFind);
+        $sr = ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
 
         if( !$sr ) {
             //echo 'Search failed <br>';
