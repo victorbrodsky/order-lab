@@ -1647,7 +1647,9 @@ class RequestController extends Controller
         $toEmail = "cinava@yahoo.com,cinava10@gmail.com";
         $ccs = "oleg_iv@yahoo.com";//,cinava10@gmail.com,oli2002@med.cornell.edu";
 
-        $emailUtil->sendEmail($toEmail, "Test Email Subject", "Test Email Message", $ccs);
+        $emailRes = $emailUtil->sendEmail($toEmail, "Test Email Subject", "Test Email Message", $ccs);
+
+        exit("email res=".$emailRes);
 
         //Flash
         $this->get('session')->getFlashBag()->add(

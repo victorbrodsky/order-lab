@@ -167,16 +167,19 @@ class EmailUtil {
     }
 
 
+    //TODO: need for swiftmailer?
     public function hasConnection() {
+
+        //return true;
 
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
 
-        $environment = $userSecUtil->getSiteSettingParameter('environment');
-        if( $environment == 'dev'  ) {
-            $logger->notice("SendEmail is disabled for environment '".$environment."'");
-            //return false;
-        }
+//        $environment = $userSecUtil->getSiteSettingParameter('environment');
+//        if( $environment == 'dev'  ) {
+//            $logger->notice("SendEmail is disabled for environment '".$environment."'");
+//            return false;
+//        }
 
         $smtp = $userSecUtil->getSiteSettingParameter('smtpServerAddress');
         //echo "smtp=" . $smtp . "<br>";

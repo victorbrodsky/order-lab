@@ -76,24 +76,68 @@ class SiteParameters {
      */
     private $dbDatabaseName;
 
-    ///////////// email /////////////////
+    //////// email (default gmail free SMTP Server Example) //////////
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * mailerHost: smtp.gmail.com
+     *
+     * @ORM\Column(type="text", nullable=true)
      */
     private $smtpServerAddress;
+
+    /**
+     * smtp or gmail (google gmail requires only gmail username and password)
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $mailerTransport;
+
+    /**
+     * oauth
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $mailerAuthMode;
+
+    /**
+     * tls or ssl
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $mailerUseSecureConnection;
+
+    /**
+     * GMail account (email@gmail.com)
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $mailerUser;
+
+    /**
+     * GMail password
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $mailerPassword;
+
+    /**
+     * 465 or 587
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $mailerPort;
 
     //mailer_transport: smtp
     //mailer_user: null
     //mailer_password: null
 
-//transport: smtp
-//host:      smtp.gmail.com
-//username:     #email@gmail.com
-//password:            #gmail_password
-//    #auth_mode: oauth
-//port:      587
-//encryption: tls
-    ///////////// EOF email /////////////////
+    //transport: smtp
+    //host:      smtp.gmail.com
+    //username:     #email@gmail.com
+    //password:            #gmail_password
+    //    #auth_mode: oauth
+    //port:      587
+    //encryption: tls
+    //////// EOF email (default gmail free SMTP Server Example) //////////
 
     /**
      * @ORM\Column(type="string", nullable=true)
