@@ -273,31 +273,32 @@ class AdminController extends Controller
         $dirSep = DIRECTORY_SEPARATOR;
 
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            echo 'This is a server using Windows!';
+            //echo 'This is a server using Windows!';
             $windows = true;
             $linux = false;
         } else {
-            echo 'This is a server not using Windows! Assume Linux';
+            //echo 'This is a server not using Windows! Assume Linux';
             $windows = false;
             $linux = true;
         }
 
         $old_path = getcwd();
-        echo "webPath=$old_path<br>";
+        //echo "webPath=$old_path<br>";
 
         $deploy_path = str_replace("web","",$old_path);
-        echo "deploy_path=$deploy_path<br>";
+        //echo "deploy_path=$deploy_path<br>";
 
         if( is_dir($deploy_path) ) {
-            echo "deploy path exists! <br>";
+            //echo "deploy path exists! <br>";
         } else {
-            echo "not deploy path exists: $deploy_path <br>";
-            exit('error');
+            //echo "not deploy path exists: $deploy_path <br>";
+            exit('No deploy path exists in the filesystem; deploy_path=: '.$deploy_path);
         }
 
         //switch to deploy folder
         echo chdir($deploy_path);
-        echo "pwd=[".exec("pwd")."]<br>";
+        //echo "pwd=[".exec("pwd")."]<br>";
+        //exec("pwd");
 
         //$linux
         if( $linux ) {

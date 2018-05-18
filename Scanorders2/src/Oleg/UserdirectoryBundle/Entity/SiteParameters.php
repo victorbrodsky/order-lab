@@ -803,6 +803,7 @@ class SiteParameters {
     function __construct( $addobjects=true )
     {
         $this->organizationalGroupDefaults = new ArrayCollection();
+        $this->setMaintenance(false);
     }
 
 
