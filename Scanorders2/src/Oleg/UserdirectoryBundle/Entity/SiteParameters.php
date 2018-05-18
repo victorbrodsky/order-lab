@@ -76,11 +76,24 @@ class SiteParameters {
      */
     private $dbDatabaseName;
 
+    ///////////// email /////////////////
     /**
      * @ORM\Column(type="string", nullable=true)
      */
     private $smtpServerAddress;
 
+    //mailer_transport: smtp
+    //mailer_user: null
+    //mailer_password: null
+
+//transport: smtp
+//host:      smtp.gmail.com
+//username:     #email@gmail.com
+//password:            #gmail_password
+//    #auth_mode: oauth
+//port:      587
+//encryption: tls
+    ///////////// EOF email /////////////////
 
     /**
      * @ORM\Column(type="string", nullable=true)

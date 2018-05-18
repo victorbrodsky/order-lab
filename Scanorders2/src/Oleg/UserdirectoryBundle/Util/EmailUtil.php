@@ -175,11 +175,12 @@ class EmailUtil {
         $environment = $userSecUtil->getSiteSettingParameter('environment');
         if( $environment == 'dev'  ) {
             $logger->notice("SendEmail is disabled for environment '".$environment."'");
-            return false;
+            //return false;
         }
 
         $smtp = $userSecUtil->getSiteSettingParameter('smtpServerAddress');
         //echo "smtp=" . $smtp . "<br>";
+        //exit();
 
         $fp = fsockopen($smtp, 25, $errno, $errstr, 9) ;
 
