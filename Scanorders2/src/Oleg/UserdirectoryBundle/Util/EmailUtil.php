@@ -175,6 +175,7 @@ class EmailUtil {
 
 
     //https://ourcodeworld.com/articles/read/14/swiftmailer-send-mails-from-php-easily-and-effortlessly
+    //TODO: Swift_TransportException: "Unable to connect with TLS encryption"
     public function getSwiftMailer() {
         $host = "smtp.gmail.com";
         $port = 587;
