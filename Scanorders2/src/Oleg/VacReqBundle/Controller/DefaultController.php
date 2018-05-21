@@ -59,5 +59,34 @@ class DefaultController extends Controller
 //    }
 
 
+    /**
+     * @Route("/download-excel/{ids}", name="vacreq_download_excel")
+     */
+    public function downloadExcelAction( Request $request, $ids ) {
+        if( false == $this->get('security.authorization_checker')->isGranted('ROLE_VACREQ_USER') ) {
+            return $this->redirect( $this->generateUrl('vacreq-nopermission') );
+        }
 
+        $vacreqUtil = $this->get('vacreq_util');
+
+        //echo "ids=".$ids."<br>";
+
+        $excelBlob = $vacreqUtil->createtListExcel($ids);
+
+        $fileName = "Stats".".xlsx";
+
+        $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($excelBlob, 'Xlsx');
+        //ob_end_clean();
+        //$writer->setIncludeCharts(true);
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+
+        header('Content-Disposition: attachment;filename="'.$fileName.'"');
+        //header('Content-Disposition: attachment;filename="fileres.xlsx"');
+
+        // Write file to the browser
+        $writer->save('php://output');
+
+        exit();
+    }
 }

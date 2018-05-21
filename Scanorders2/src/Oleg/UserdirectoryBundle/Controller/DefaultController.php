@@ -42,6 +42,39 @@ class DefaultController extends Controller
         );
     }
 
+    /**
+     * @Route("/emailtest/", name="employees_emailtest")
+     * @Method({"GET"})
+     */
+    public function emailTestAction(Request $request)
+    {
+
+        if (!$this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+            return $this->redirect($this->generateUrl('vacreq-nopermission'));
+        }
+
+        $emailUtil = $this->container->get('user_mailer_utility');
+
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
+        //$toEmail = $user->getSingleEmail();
+
+        $toEmail = "cinava@yahoo.com,cinava10@gmail.com";
+        $ccs = "oleg_iv@yahoo.com";//,cinava10@gmail.com,oli2002@med.cornell.edu";
+
+        $emailRes = $emailUtil->sendEmail($toEmail, "Test Email Subject", "Test Email Message", $ccs);
+
+        exit("email res=".$emailRes);
+
+        //Flash
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            'Test email sent to: '.$toEmail.' and ccs to:'.$ccs
+        );
+
+        return $this->redirectToRoute('vacreq_incomingrequests');
+    }
+
+
 //    /**
 //     * @Route("/", name="employees_home")
 //     * @Template("OlegUserdirectoryBundle:Default:home.html.twig")

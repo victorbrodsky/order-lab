@@ -23,6 +23,7 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\PersistentCollection;
 use Oleg\VacReqBundle\Entity\VacReqCarryOver;
 use Oleg\VacReqBundle\Entity\VacReqUserCarryOver;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\Constraints\Date;
@@ -3953,5 +3954,209 @@ class VacReqUtil
         }
 
         return $organizationalInstitutions;
+    }
+
+    public function getVacReqIdsArrByDqlParameters($dql,$dqlParameters) {
+        $dql->select('request.id');
+
+        $query = $dql->getQuery();
+
+        if( count($dqlParameters) > 0 ) {
+            $query->setParameters($dqlParameters);
+        }
+
+        $result = $query->getScalarResult();
+        $ids = array_map('current', $result);
+        $ids = array_unique($ids);
+
+        return $ids;
+    }
+
+    public function createtListExcel( $ids ) {
+
+        $author = $this->container->get('security.token_storage')->getToken()->getUser();
+        //$transformer = new DateTimeToStringTransformer(null,null,'d/m/Y');
+
+        $ea = new Spreadsheet(); // ea is short for Excel Application
+
+        $ea->getProperties()
+            ->setCreator($author."")
+            ->setTitle('Business/Vacation Requests')
+            ->setLastModifiedBy($author."")
+            ->setDescription('Business/Vacation Requests list in Excel format')
+            ->setSubject('PHP Excel manipulation')
+            ->setKeywords('excel php office phpexcel lakers')
+            ->setCategory('programming')
+        ;
+
+        $ews = $ea->getSheet(0);
+        $ews->setTitle('Business and Vacation Requests');
+
+        //align all cells to left
+        $style = array(
+            'alignment' => array(
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT,
+            )
+        );
+        $ews->getParent()->getDefaultStyle()->applyFromArray($style);
+
+        $ews->setCellValue('A1', 'ID'); // Sets cell 'a1' to value 'ID
+        $ews->setCellValue('B1', 'Academic Year');
+        $ews->setCellValue('C1', 'Person');
+        $ews->setCellValue('D1', 'Group');
+
+        $ews->setCellValue('E1', 'Business Days');
+        $ews->setCellValue('F1', 'Start Date');
+        $ews->setCellValue('G1', 'End Date');
+        $ews->setCellValue('H1', 'Status');
+
+        $ews->setCellValue('I1', 'Vacation Days');
+        $ews->setCellValue('J1', 'Start Date');
+        $ews->setCellValue('K1', 'End Date');
+        $ews->setCellValue('L1', 'Status');
+
+
+        $totalNumberBusinessDays = 0;
+        $totalNumberVacationDays = 0;
+
+        $row = 2;
+        foreach( explode("-",$ids) as $vacreqId ) {
+
+            $vacreq = $this->em->getRepository('OlegVacReqBundle:VacReqRequest')->find($vacreqId);
+            if( !$vacreq ) {
+                continue;
+            }
+
+            //check if author can have access to view this request
+            if( false == $this->container->get('security.authorization_checker')->isGranted("read", $vacreq) ) {
+                continue; //skip this applicant because the current user does not permission to view this applicant
+            }
+
+            $ews->setCellValue('A'.$row, $vacreq->getId());
+
+            $academicYearArr = $this->getRequestAcademicYears($vacreq);
+            if( count($academicYearArr) > 0 ) {
+                $academicYear = $academicYearArr[0];
+            } else {
+                $academicYear = null;
+            }
+
+            $ews->setCellValue('B'.$row, $vacreq->getUser());
+            $ews->setCellValue('C'.$row, $academicYear);
+
+            //Group
+            $ews->setCellValue('D'.$row, $vacreq->getInstitution()."");
+
+            $businessRequest = $vacreq->getRequestBusiness();
+            if( $businessRequest ) {
+                $numberBusinessDays = $this->specificRequestExcelInfo($ews,$row,$vacreq,$businessRequest,array('E','F','G','H'));
+                if( $numberBusinessDays ) {
+                    $totalNumberBusinessDays = $totalNumberBusinessDays + intval($numberBusinessDays);
+                }
+            }
+
+            $vacationRequest = $vacreq->getRequestVacation();
+            if( $vacationRequest ) {
+                $numberVacationDays = $this->specificRequestExcelInfo($ews,$row,$vacreq,$vacationRequest,array('I','J','K','L'));
+                if( $numberVacationDays ) {
+                    $totalNumberVacationDays = $totalNumberVacationDays + intval($numberVacationDays);
+                }
+            }
+
+            $row = $row + 1;
+        }//foreach
+
+        $ews->setCellValue('B'.$row, "Total");
+        $ews->setCellValue('E'.$row, $totalNumberBusinessDays);
+        $ews->setCellValue('I'.$row, $totalNumberVacationDays);
+
+        $styleLastRow = [
+            'font' => [
+                'bold' => true,
+            ],
+//            'alignment' => [
+//                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT,
+//            ],
+//            'borders' => [
+//                'bottom' => [
+//                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+//                ],
+//            ],
+            'fill' => [
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_GRADIENT_LINEAR,
+                'rotation' => 90,
+                'startColor' => [
+                    'argb' => 'ebf1de',
+                ],
+                'endColor' => [
+                    'argb' => 'ebf1de',
+                ],
+            ],
+        ];
+
+        //set color light green to the last Total row
+        $ews->getStyle('A'.$row.':'.'L'.$row)->applyFromArray($styleLastRow);
+
+        //exit("ids=".$fellappids);
+
+
+        // Auto size columns for each worksheet
+        //\PHPExcel_Shared_Font::setAutoSizeMethod(\PHPExcel_Shared_Font::AUTOSIZE_METHOD_EXACT);
+        foreach ($ea->getWorksheetIterator() as $worksheet) {
+
+            $ea->setActiveSheetIndex($ea->getIndex($worksheet));
+
+            $sheet = $ea->getActiveSheet();
+            $cellIterator = $sheet->getRowIterator()->current()->getCellIterator();
+            $cellIterator->setIterateOnlyExistingCells(true);
+            /** @var PHPExcel_Cell $cell */
+            foreach ($cellIterator as $cell) {
+                $sheet->getColumnDimension($cell->getColumn())->setAutoSize(true);
+            }
+        }
+
+
+        return $ea;
+    }
+    public function specificRequestExcelInfo( $ews, $row, $vacreq, $request, $columnArr ) {
+        if( $request ) {
+            $numberDays = $request->getNumberOfDays();
+            //Business Days
+            $ews->setCellValue($columnArr[0].$row, $numberDays."");
+
+            //Start Date
+            $startDate = $request->getStartDate();
+            if( $startDate ) {
+                $startDate->setTimezone(new \DateTimeZone("UTC"));
+                $ews->setCellValue($columnArr[1].$row, $startDate->format('m/d/Y'));
+            }
+
+            //End Date
+            $endDate = $request->getEndDate();
+            if( $endDate ) {
+                $endDate->setTimezone(new \DateTimeZone("UTC"));
+                $ews->setCellValue($columnArr[2].$row, $endDate->format('m/d/Y'));
+            }
+
+            //Status
+            $status = null;
+            if( $request && $request->getStatus() ) {
+                if( $vacreq->getExtraStatus() ) {
+                    $extraStatus = $vacreq->getExtraStatus();
+                    $extraStatus = str_replace('(Approved)','',$extraStatus);
+                    $extraStatus = str_replace('(Canceled)','',$extraStatus);
+                    $status = $request->getStatus()." (".$extraStatus.")";
+                } else {
+                    $status = $request->getStatus();
+                }
+            }
+            if( $status ) {
+                $ews->setCellValue($columnArr[3].$row, ucfirst($status));
+            }
+
+            return $numberDays;
+        }
+
+        return 0;
     }
 }

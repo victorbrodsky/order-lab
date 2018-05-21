@@ -103,6 +103,7 @@ class RequestIndexController extends Controller
 
     public function listRequests( $params, $request ) {
 
+        $vacreqUtil = $this->get('vacreq_util');
         $em = $this->getDoctrine()->getManager();
 
         $sitename = ( array_key_exists('sitename', $params) ? $params['sitename'] : null);
@@ -232,8 +233,34 @@ class RequestIndexController extends Controller
         $totalItemCount = $pagination->getTotalItemCount();
         if( $totalItemCount > 0 ) {
             $paginationData = $pagination->getPaginationData();
-            $indexTitle = $indexTitle." (".$paginationData['firstItemNumber']."-".$paginationData['lastItemNumber']." of ".$totalItemCount.")";
+            $indexTitle = $indexTitle." (".$paginationData['firstItemNumber']."-".
+                $paginationData['lastItemNumber']." of ".$totalItemCount." matching)";
         }
+
+        //$matchingIdsArr = null;
+        $matchingIds = $vacreqUtil->getVacReqIdsArrByDqlParameters($dql,$dqlParameters);
+        //echo "matchingIdsArr count=".count($matchingIdsArr)."<br>";
+        //print_r($matchingIdsArr);
+        if( $matchingIds ) {
+            $downloadUrl = $this->container->get('router')->generate(
+                'vacreq_download_excel',
+                array(
+                    'ids' => implode("-",$matchingIds),
+                ),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $downloadLink = '<a href="' . $downloadUrl . '" target="_blank"><i class="fa fa-file-excel-o"></i>download in Excel</a>';
+            $pageTitle = $indexTitle . ", " . $downloadLink;
+        } else {
+            $pageTitle = $indexTitle;
+        }
+
+//        $items = $pagination->getItems();
+//        echo "item count=".count($items)."<br>";
+//        foreach($items as $item) {
+//            echo "item=".$item[0]."<br>";
+//            //print_r($item);
+//        }
 
         return array(
             'filterform' => $filterform,
@@ -243,6 +270,7 @@ class RequestIndexController extends Controller
             'filtered' => $filtered,
             'routename' => $routeName,
             'title' => $indexTitle,
+            'pageTitle' => $pageTitle,
             'requestTypeAbbreviation' => $requestTypeAbbreviation,
             //'totalApprovedDaysString' => $params['totalApprovedDaysString']
         );
