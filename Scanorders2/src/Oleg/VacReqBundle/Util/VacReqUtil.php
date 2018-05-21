@@ -3993,6 +3993,7 @@ class VacReqUtil
         $ews->setTitle('Business and Vacation Requests');
 
         //align all cells to left
+        $ews->getPageSetup()->setHorizontalCentered(true);
         $style = array(
             'alignment' => array(
                 'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT,
