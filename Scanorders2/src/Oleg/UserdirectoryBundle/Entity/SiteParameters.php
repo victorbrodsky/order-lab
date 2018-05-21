@@ -1310,6 +1310,102 @@ class SiteParameters {
     }
 
     /**
+     * @return mixed
+     */
+    public function getMailerTransport()
+    {
+        return $this->mailerTransport;
+    }
+
+    /**
+     * @param mixed $mailerTransport
+     */
+    public function setMailerTransport($mailerTransport)
+    {
+        $this->mailerTransport = $mailerTransport;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMailerAuthMode()
+    {
+        return $this->mailerAuthMode;
+    }
+
+    /**
+     * @param mixed $mailerAuthMode
+     */
+    public function setMailerAuthMode($mailerAuthMode)
+    {
+        $this->mailerAuthMode = $mailerAuthMode;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMailerUseSecureConnection()
+    {
+        return $this->mailerUseSecureConnection;
+    }
+
+    /**
+     * @param mixed $mailerUseSecureConnection
+     */
+    public function setMailerUseSecureConnection($mailerUseSecureConnection)
+    {
+        $this->mailerUseSecureConnection = $mailerUseSecureConnection;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMailerUser()
+    {
+        return $this->mailerUser;
+    }
+
+    /**
+     * @param mixed $mailerUser
+     */
+    public function setMailerUser($mailerUser)
+    {
+        $this->mailerUser = $mailerUser;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMailerPassword()
+    {
+        return $this->mailerPassword;
+    }
+
+    /**
+     * @param mixed $mailerPassword
+     */
+    public function setMailerPassword($mailerPassword)
+    {
+        $this->mailerPassword = $mailerPassword;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMailerPort()
+    {
+        return $this->mailerPort;
+    }
+
+    /**
+     * @param mixed $mailerPort
+     */
+    public function setMailerPort($mailerPort)
+    {
+        $this->mailerPort = $mailerPort;
+    }
+
+    /**
      * @param mixed $autoAssignInstitution
      */
     public function setAutoAssignInstitution($autoAssignInstitution)

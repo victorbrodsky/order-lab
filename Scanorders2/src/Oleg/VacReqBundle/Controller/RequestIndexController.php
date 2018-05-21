@@ -237,22 +237,23 @@ class RequestIndexController extends Controller
                 $paginationData['lastItemNumber']." of ".$totalItemCount." matching)";
         }
 
-        //$matchingIdsArr = null;
-        $matchingIds = $vacreqUtil->getVacReqIdsArrByDqlParameters($dql,$dqlParameters);
-        //echo "matchingIdsArr count=".count($matchingIdsArr)."<br>";
-        //print_r($matchingIdsArr);
-        if( $matchingIds ) {
-            $downloadUrl = $this->container->get('router')->generate(
-                'vacreq_download_excel',
-                array(
-                    'ids' => implode("-",$matchingIds),
-                ),
-                UrlGeneratorInterface::ABSOLUTE_URL
-            );
-            $downloadLink = '<a href="' . $downloadUrl . '" target="_blank"><i class="fa fa-file-excel-o"></i>download in Excel</a>';
-            $pageTitle = $indexTitle . ", " . $downloadLink;
-        } else {
-            $pageTitle = $indexTitle;
+        $pageTitle = $indexTitle;
+
+        if( $requestTypeAbbreviation != "carryover" ) {
+            $matchingIds = $vacreqUtil->getVacReqIdsArrByDqlParameters($dql, $dqlParameters);
+            //echo "matchingIdsArr count=".count($matchingIdsArr)."<br>";
+            //print_r($matchingIdsArr);
+            if ($matchingIds) {
+                $downloadUrl = $this->container->get('router')->generate(
+                    'vacreq_download_excel',
+                    array(
+                        'ids' => implode("-", $matchingIds),
+                    ),
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                $downloadLink = '<a href="' . $downloadUrl . '" target="_blank"><i class="fa fa-file-excel-o"></i>download in Excel</a>';
+                $pageTitle = $indexTitle . ", " . $downloadLink;
+            }
         }
 
 //        $items = $pagination->getItems();
