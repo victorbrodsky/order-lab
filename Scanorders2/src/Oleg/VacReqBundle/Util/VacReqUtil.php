@@ -4000,9 +4000,9 @@ class VacReqUtil
         );
         $ews->getParent()->getDefaultStyle()->applyFromArray($style);
 
-        $ews->setCellValue('A1', 'ID'); // Sets cell 'a1' to value 'ID
-        $ews->setCellValue('B1', 'Academic Year');
-        $ews->setCellValue('C1', 'Person');
+        $ews->setCellValue('A1', 'ID');
+        $ews->setCellValue('B1', 'Person');
+        $ews->setCellValue('C1', 'Academic Year');
         $ews->setCellValue('D1', 'Group');
 
         $ews->setCellValue('E1', 'Business Days');
