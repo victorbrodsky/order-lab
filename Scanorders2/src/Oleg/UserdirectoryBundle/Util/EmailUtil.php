@@ -171,7 +171,7 @@ class EmailUtil {
     //php bin/console swiftmailer:spool:send --env=prod: Unable to connect with TLS encryption
     public function hasConnection() {
 
-        //return true;
+        return true;
 
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
