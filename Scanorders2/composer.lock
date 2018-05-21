@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cac9a14a91e436d8998f7377680131fc",
+    "content-hash": "6c0eef48fd9ffba5dae25818847dd894",
     "packages": [
         {
             "name": "adesigns/calendar-bundle",
@@ -2330,16 +2330,16 @@
         },
         {
             "name": "knplabs/knp-paginator-bundle",
-            "version": "v2.7.2",
+            "version": "v2.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/KnpLabs/KnpPaginatorBundle.git",
-                "reference": "b94a409cf6507589a9697472909c0adaa0b76d06"
+                "reference": "f4ece5b347121b9fe13166264f197f90252d4bd2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/KnpLabs/KnpPaginatorBundle/zipball/b94a409cf6507589a9697472909c0adaa0b76d06",
-                "reference": "b94a409cf6507589a9697472909c0adaa0b76d06",
+                "url": "https://api.github.com/repos/KnpLabs/KnpPaginatorBundle/zipball/f4ece5b347121b9fe13166264f197f90252d4bd2",
+                "reference": "f4ece5b347121b9fe13166264f197f90252d4bd2",
                 "shasum": ""
             },
             "require": {
@@ -2388,7 +2388,7 @@
                 "paginator",
                 "symfony"
             ],
-            "time": "2018-01-30T08:43:41+00:00"
+            "time": "2018-05-16T12:15:58+00:00"
         },
         {
             "name": "knplabs/knp-snappy",
@@ -3723,6 +3723,7 @@
                 "compression",
                 "minification"
             ],
+            "abandoned": "symfony/webpack-encore-pack",
             "time": "2017-07-14T07:26:46+00:00"
         },
         {
@@ -4127,16 +4128,16 @@
         },
         {
             "name": "symfony/swiftmailer-bundle",
-            "version": "v2.6.3",
+            "version": "v2.6.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/swiftmailer-bundle.git",
-                "reference": "11555c338f3c367b0a1bd2f024a53aa813f4ce00"
+                "reference": "c4808f5169efc05567be983909d00f00521c53ec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/swiftmailer-bundle/zipball/11555c338f3c367b0a1bd2f024a53aa813f4ce00",
-                "reference": "11555c338f3c367b0a1bd2f024a53aa813f4ce00",
+                "url": "https://api.github.com/repos/symfony/swiftmailer-bundle/zipball/c4808f5169efc05567be983909d00f00521c53ec",
+                "reference": "c4808f5169efc05567be983909d00f00521c53ec",
                 "shasum": ""
             },
             "require": {
@@ -4182,7 +4183,7 @@
             ],
             "description": "Symfony SwiftmailerBundle",
             "homepage": "http://symfony.com",
-            "time": "2017-07-22T07:18:13+00:00"
+            "time": "2017-10-19T01:06:41+00:00"
         },
         {
             "name": "symfony/symfony",
@@ -4674,16 +4675,16 @@
         },
         {
             "name": "symfony/phpunit-bridge",
-            "version": "v3.4.9",
+            "version": "v3.4.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/phpunit-bridge.git",
-                "reference": "7470518370113785f67a7fd8e6e1667661e88805"
+                "reference": "63cdae00a75862fa543b765ba63d55f6b6397d0c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/7470518370113785f67a7fd8e6e1667661e88805",
-                "reference": "7470518370113785f67a7fd8e6e1667661e88805",
+                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/63cdae00a75862fa543b765ba63d55f6b6397d0c",
+                "reference": "63cdae00a75862fa543b765ba63d55f6b6397d0c",
                 "shasum": ""
             },
             "require": {
@@ -4736,7 +4737,7 @@
             ],
             "description": "Symfony PHPUnit Bridge",
             "homepage": "https://symfony.com",
-            "time": "2018-04-30T15:36:51+00:00"
+            "time": "2018-05-16T12:49:49+00:00"
         }
     ],
     "aliases": [],

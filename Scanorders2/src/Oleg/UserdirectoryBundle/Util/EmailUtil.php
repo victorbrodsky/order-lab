@@ -38,9 +38,10 @@ class EmailUtil {
     //$smtp_host_ip = gethostbyname('smtp.gmail.com');
     //$transport = Swift_SmtpTransport::newInstance($smtp_host_ip,465,'ssl')
 
+    //php bin/console swiftmailer:spool:send --env=prod
     //$emails: single or array of emails
     //$ccs: single or array of emails
-    public function sendEmail( $emails, $subject, $message, $ccs=null, $fromEmail=null, $attachmentPath=null ) {
+    public function sendEmail( $emails, $subject, $body, $ccs=null, $fromEmail=null, $attachmentPath=null ) {
 
         //testing
         //$emails = "oli2002@med.cornell.edu, cinava@yahoo.com";
@@ -54,11 +55,11 @@ class EmailUtil {
         //echo "emails=".$emails."<br>";
         //echo "ccs=".$ccs."<br>";
 
-        if( $this->hasConnection() == false ) {
-            $logger->error("sendEmail: connection error");
-            //exit('no connection');
-            return false;
-        }
+//        if( $this->hasConnection() == false ) {
+//            $logger->error("sendEmail: connection error");
+//            //exit('no connection');
+//            return false;
+//        }
         //exit('yes connection');
 
         if( !$emails || $emails == "" ) {
@@ -66,8 +67,8 @@ class EmailUtil {
             return false;
         }
 
-        if( !$message || $message == "" ) {
-            $logger->error("sendEmail: message empty=".$message);
+        if( !$body || $body == "" ) {
+            $logger->error("sendEmail: message body empty=".$body);
             return false;
         }
 
@@ -78,33 +79,38 @@ class EmailUtil {
         $emails = $this->checkEmails($emails);
         $ccs = $this->checkEmails($ccs);
 
-        if( $this->em ) {
-            $smtpServerAddress = $userSecUtil->getSiteSettingParameter('smtpServerAddress');
-            $smtp_host_ip = gethostbyname($smtpServerAddress);
-            //$logger->notice("smtpServerAddress=".$smtpServerAddress." => smtp_host_ip=".$smtp_host_ip);
-            $transport = \Swift_Message::newInstance($smtp_host_ip);
-        } else {
-            $logger->error("this->em is null in sendEmail: use default Swift_Message::newInstance(). subject=".$subject);
-            $transport = \Swift_Message::newInstance();
-        }
+//        if( $this->em ) {
+//            $smtpServerAddress = $userSecUtil->getSiteSettingParameter('smtpServerAddress');
+//            $smtp_host_ip = gethostbyname($smtpServerAddress);
+//            //$logger->notice("smtpServerAddress=".$smtpServerAddress." => smtp_host_ip=".$smtp_host_ip);
+//            //$message = \Swift_Message::newInstance($smtp_host_ip);
+//            $mailer = $this->getSwiftMailer();
+//        } else {
+//            $logger->error("this->em is null in sendEmail: use default Swift_Message::newInstance(). subject=".$subject);
+//            $message = \Swift_Message::newInstance();
+//        }
 
-        $transport->setSubject($subject);
-        $transport->setFrom($fromEmail);
-        $transport->setTo($emails);
-        $transport->setBody(
-            $message,
+        $mailer = $this->getSwiftMailer();
+
+        $message = \Swift_Message::newInstance();
+
+        $message->setSubject($subject);
+        $message->setFrom($fromEmail);
+        $message->setTo($emails);
+        $message->setBody(
+            $body,
             'text/plain'
         );
 
         if( $ccs ) {
-            $transport->setCc($ccs);
+            $message->setCc($ccs);
         }
 
         //send copy email to siteEmail via setBcc
         $userSecUtil = $this->container->get('user_security_utility');
         $siteEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
         if( $siteEmail ) {
-            $transport->setBcc($siteEmail);
+            $message->setBcc($siteEmail);
         }
 
             /*
@@ -120,7 +126,7 @@ class EmailUtil {
 
         // Optionally add any attachments
         if( $attachmentPath ) {
-            $transport->attach(\Swift_Attachment::fromPath($attachmentPath));
+            $message->attach(\Swift_Attachment::fromPath($attachmentPath));
         }
 
         //When using send() the message will be sent just like it would be sent if you used your mail client.
@@ -128,7 +134,8 @@ class EmailUtil {
         // If none of the recipients could be sent to then zero will be returned, which equates to a boolean false.
         // If you set two To: recipients and three Bcc: recipients in the message and all of the recipients
         // are delivered to successfully then the value 5 will be returned.
-        $emailRes = $this->container->get('mailer')->send($transport); //
+        //$emailRes = $this->container->get('mailer')->send($message); //
+        $emailRes = $mailer->send($message);
 
         $ccStr = "";
         if( $ccs && count($ccs)>0 ) {
@@ -166,6 +173,44 @@ class EmailUtil {
         return $emails;
     }
 
+
+    //https://ourcodeworld.com/articles/read/14/swiftmailer-send-mails-from-php-easily-and-effortlessly
+    public function getSwiftMailer() {
+        $host = "smtp.gmail.com";
+        $port = 587;
+        $encrypt = "tls";
+        $username = "cinava10@gmail.com";
+        $password = "Cinava&Safe";
+        $authMode = "login";
+        $trans = "smtp";
+
+        //$port = 465;
+        //$encrypt = "ssl";
+
+        $transport = \Swift_SmtpTransport::newInstance()
+            ->setHost($host)
+            ->setPort($port)
+            ->setEncryption($encrypt)
+            ->setUsername($username)
+            ->setPassword($password);
+
+        //$transport->setStreamOptions(array('ssl' => array('allow_self_signed' => true, 'verify_peer' => false)));
+
+//        $transport = \Swift_SmtpTransport::newInstance('smtp.gmail.com', 587, 'tls')
+//            ->setUsername($username)
+//            ->setPassword($password);
+
+//        $transport = \Swift_SmtpTransport::newInstance()
+//            ->setUsername('mymail@outlook.com')->setPassword('mypassword')
+//            ->setHost('smtp-mail.outlook.com')
+//            ->setPort(587)->setEncryption('tls');
+
+        //$transport->setStreamOptions(array('ssl' => array('allow_self_signed' => true, 'verify_peer' => false)));
+
+        $mailer = \Swift_Mailer::newInstance($transport);
+
+        return $mailer;
+    }
 
     //TODO: need for swiftmailer? All required info is given at config.yml and parameters.yml
     //php bin/console swiftmailer:spool:send --env=prod: Unable to connect with TLS encryption
