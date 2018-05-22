@@ -48,21 +48,21 @@ class InitialConfigurationType extends AbstractType
 
         //Name of Parent Organization (if applicable): [ ]
         $builder->add('institutionurl',null,array(
-            'label'=>'Institution URL:',
+            'label'=>'Institution URL (Copyright in Footer):',
             'attr' => array('class'=>'form-control')
         ));
         $builder->add('institutionname',null,array(
-            'label'=>'Institution Name:',
+            'label'=>'Institution Name (Copyright in Footer):',
             'attr' => array('class'=>'form-control')
         ));
 
         //Name of Institution: [ ]
         $builder->add('subinstitutionurl',null,array(
-            'label'=>'Sub Institution URL:',
+            'label'=>'Sub Institution URL (Copyright in Footer):',
             'attr' => array('class'=>'form-control')
         ));
         $builder->add('subinstitutionname',null,array(
-            'label'=>'Sub Institution Name:',
+            'label'=>'Sub Institution Name (Copyright in Footer):',
             'attr' => array('class'=>'form-control')
         ));
 
@@ -73,6 +73,11 @@ class InitialConfigurationType extends AbstractType
         ));
         $builder->add('departmentname',null,array(
             'label'=>'Department or Group Name:',
+            'attr' => array('class'=>'form-control')
+        ));
+
+        $builder->add('showCopyrightOnFooter',null,array(
+            'label'=>'Show copyright line on every footer:',
             'attr' => array('class'=>'form-control')
         ));
 
@@ -99,7 +104,70 @@ class InitialConfigurationType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
 
+        //email
+        $builder->add('smtpServerAddress', null, array(
+            'label' => 'SMTP Server Address:',
+            'attr' => array('class' => 'form-control')
+        ));
+        $builder->add('mailerPort', null, array(
+            'label' => 'Mailer Port (i.e. 25, 465, 587):',
+            'attr' => array('class' => 'form-control')
+        ));
+        $builder->add('mailerAuthMode', null, array(
+            'label' => 'Mailer Authentication Mode (i.e. oauth or login):',
+            'attr' => array('class' => 'form-control')
+        ));
+        $builder->add('mailerUseSecureConnection', null, array(
+            'label' => 'Mailer Use Security Connection (i.e. tls or ssl):',
+            'attr' => array('class' => 'form-control')
+        ));
+        $builder->add('mailerUser', null, array(
+            'label' => 'Mailer Username:',
+            'attr' => array('class' => 'form-control')
+        ));
+        $builder->add('mailerPassword', null, array(
+            'label' => 'Mailer Password:',
+            'attr' => array('class' => 'form-control')
+        ));
+        $builder->add('mailerSpool', null, array(
+            'label' => 'Mailer Use Spool:',
+            'attr' => array('class' => 'form-control')
+        ));
+        $builder->add('mailerDeliveryAddresses', null, array(
+            'label' => 'Mailer Delivery Addresses (emails will be delivered to these specified addresses email1,email2,email3):',
+            'attr' => array('class' => 'form-control')
+        ));
 
+        //ldap
+        $builder->add('aDLDAPServerAddress',null,array(
+            'label'=>'AD/LDAP Server Address:',
+            'attr' => array('class'=>'form-control')
+        ));
+        $builder->add('aDLDAPServerPort',null,array(
+            'label'=>'AD/LDAP Server Port:',
+            'attr' => array('class'=>'form-control')
+        ));
+        $builder->add('aDLDAPServerOu',null,array(
+            'label'=>'AD/LDAP Bind DN for ldap search or simple authentication (cn=read-only-admin,dc=example,dc=com):',
+            'attr' => array('class'=>'form-control')
+        ));
+        $builder->add('aDLDAPServerAccountUserName',null,array(
+            'label'=>'AD/LDAP Server Account User Name (for ldap search):',
+            'attr' => array('class'=>'form-control')
+        ));
+        $builder->add('aDLDAPServerAccountPassword',null,array(
+            'label'=>'AD/LDAP Server Account Password (for ldap search):',
+            //'always_empty' => $always_empty,
+            'attr' => array('class'=>'form-control')
+        ));
+        $builder->add('ldapExePath',null,array(
+            'label'=>'LDAP/AD Authenticator Path (Default: "../src/Oleg/UserdirectoryBundle/Util/" ):',
+            'attr' => array('class'=>'form-control')
+        ));
+        $builder->add('ldapExeFilename',null,array(
+            'label'=>'LDAP/AD Authenticator File Name (Default: "LdapSaslCustom.exe" ):',
+            'attr' => array('class'=>'form-control')
+        ));
 
 
 

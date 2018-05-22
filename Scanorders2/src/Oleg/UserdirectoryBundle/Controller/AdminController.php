@@ -594,7 +594,9 @@ class AdminController extends Controller
 
         //ini_set('max_execution_time', $max_exec_time); //set back to the original value
 
-        return $this->redirect($this->generateUrl('user_admin_index'));
+        return $this->redirect($this->generateUrl('generate_all'));
+
+        //return $this->redirect($this->generateUrl('user_admin_index'));
     }
 
     public function generateAll() {
@@ -602,6 +604,7 @@ class AdminController extends Controller
         $userutil = new UserUtil();
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
+        ini_set('memory_limit', '3072M');
         //$max_exec_time = ini_get('max_execution_time');
         ini_set('max_execution_time', 1800); //1800 seconds = 30 minutes; it will set back to original value after execution of this script
 
@@ -629,7 +632,7 @@ class AdminController extends Controller
         $count_roles = $this->generateRoles();
         $count_employmentTypes = $this->generateEmploymentTypes();
         $count_states = $this->generateStates();
-        //$count_countryList = $this->generateCountryList();
+        $count_countryList = $this->generateCountryList();
         $count_languages = $this->generateLanguages();
         $count_locales = $this->generateLocales();
         $count_locationTypeList = $this->generateLocationTypeList();
@@ -1826,6 +1829,7 @@ class AdminController extends Controller
             "subinstitutionname" => "Weill Cornell Medicine",
             "departmenturl" => "http://www.cornellpathology.com",
             "departmentname" => "Pathology and Laboratory Medicine Department",
+            "showCopyrightOnFooter" => true,
 
             ///////////////////// FELLAPP /////////////////////
             "codeGoogleFormFellApp" => "",

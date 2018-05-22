@@ -263,6 +263,12 @@ class SiteParameters {
      */
     private $subinstitutionname;
 
+    /**
+     * Show copyright line on every footer
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $showCopyrightOnFooter;
 
     //Maintanence mode
     /**
@@ -875,6 +881,7 @@ class SiteParameters {
     {
         $this->organizationalGroupDefaults = new ArrayCollection();
         $this->setMaintenance(false);
+        $this->setShowCopyrightOnFooter(true);
     }
 
 
@@ -1577,6 +1584,22 @@ class SiteParameters {
     public function setSubinstitutionname($subinstitutionname)
     {
         $this->subinstitutionname = $subinstitutionname;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getShowCopyrightOnFooter()
+    {
+        return $this->showCopyrightOnFooter;
+    }
+
+    /**
+     * @param mixed $showCopyrightOnFooter
+     */
+    public function setShowCopyrightOnFooter($showCopyrightOnFooter)
+    {
+        $this->showCopyrightOnFooter = $showCopyrightOnFooter;
     }
 
     /**

@@ -38,6 +38,8 @@
         {{ formmacros.field(form.departmentname) }}
         {{ formmacros.field(form.departmenturl) }}
 
+        {{ formmacros.field(form.showCopyrightOnFooter) }}
+
         <div id="user-password-box" class="well well-sm">
             {{ formmacros.field(form.password.first) }}
             {{ formmacros.field(form.password.second) }}
@@ -46,6 +48,33 @@
         {{ formmacros.field(form.siteEmail) }}
 
         {{ formmacros.field(form.liveSiteRootUrl) }}
+
+        <div class="panel panel-default">
+            <div class="panel-heading">E-Mail Server (to enable notifications by email)</div>
+            <div class="panel-body">
+                {{ formmacros.field(form.smtpServerAddress) }}
+                {{ formmacros.field(form.mailerPort) }}
+                {{ formmacros.field(form.mailerAuthMode) }}
+                {{ formmacros.field(form.mailerUseSecureConnection) }}
+                {{ formmacros.field(form.mailerUser) }}
+                {{ formmacros.field(form.mailerPassword) }}
+                {{ formmacros.field(form.mailerSpool) }}
+                {{ formmacros.field(form.mailerDeliveryAddresses) }}
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">AD/LDAP Server (to enable logging in with existing accounts)</div>
+            <div class="panel-body">
+                {{ formmacros.field(form.aDLDAPServerAddress) }}
+                {{ formmacros.field(form.aDLDAPServerPort) }}
+                {{ formmacros.field(form.aDLDAPServerOu) }}
+                {{ formmacros.field(form.aDLDAPServerAccountUserName) }}
+                {{ formmacros.field(form.aDLDAPServerAccountPassword) }}
+                {{ formmacros.field(form.ldapExePath) }}
+                {{ formmacros.field(form.ldapExeFilename) }}
+            </div>
+        </div>
 
 
         <br>

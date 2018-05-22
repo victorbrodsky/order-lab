@@ -12,6 +12,7 @@ parameters:
   subinstitution_name: your_value
   department_url: your_value
   department_name: your_value
+  showcopyrightonfooter: your_value
 
   #ldap
 #  ldaphost: your_value

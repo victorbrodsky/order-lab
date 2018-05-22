@@ -287,6 +287,12 @@ class SiteParametersType extends AbstractType
                 'attr' => array('class'=>'form-control')
             ));
 
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'showCopyrightOnFooter' )
+            $builder->add('showCopyrightOnFooter',null,array(
+                'label'=>'Show copyright line on every footer:',
+                'attr' => array('class'=>'form-control')
+            ));
+
         //maintenance
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'maintenance' )
             $builder->add('maintenance',null,array(

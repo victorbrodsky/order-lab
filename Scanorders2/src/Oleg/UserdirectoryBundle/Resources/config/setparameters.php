@@ -100,6 +100,7 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
         $subinstitution_name = null;
         $department_url = null;
         $department_name = null;
+        $showcopyrightonfooter = false;
 
         //titles
         $mainhome_title = null;
@@ -170,6 +171,8 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
                 $department_url = $row['departmenturl'];
             if( array_key_exists('departmentname', $row) )
                 $department_name = $row['departmentname'];
+            if( array_key_exists('showCopyrightOnFooter', $row) )
+                $showcopyrightonfooter = $row['showCopyrightOnFooter'];
 
             //employees
             $employeesuploadpath = $row['employeesuploadpath'];
@@ -245,6 +248,7 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
         $container->setParameter('subinstitution_name',$subinstitution_name);
         $container->setParameter('department_url',$department_url);
         $container->setParameter('department_name',$department_name);
+        $container->setParameter('showcopyrightonfooter',$showcopyrightonfooter);
 
         //uploads
         $container->setParameter('employees.avataruploadpath',$employeesavataruploadpath);

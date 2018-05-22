@@ -149,6 +149,26 @@ class ScanAdminController extends AdminController
             return $this->redirect( $this->generateUrl($this->container->getParameter('scan.sitename').'-order-nopermission') );
         }
 
+        //$max_exec_time = ini_get('max_execution_time');
+        //ini_set('max_execution_time', 900); //900 seconds = 15 minutes
+
+        //$default_time_zone = $this->container->getParameter('default_time_zone');
+
+        $msg = $this->generateScanorderAll();
+
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            $msg
+        );
+
+        //ini_set('max_execution_time', $max_exec_time); //set back to the original value
+
+        return $this->redirect($this->generateUrl('user_admin_index'));
+
+        //return $this->redirect($this->generateUrl('admin_index'));
+    }
+
+    public function generateScanorderAll() {
         $max_exec_time = ini_get('max_execution_time');
         ini_set('max_execution_time', 900); //900 seconds = 15 minutes
 
@@ -190,8 +210,7 @@ class ScanAdminController extends AdminController
         $count_generateMessageStatus = $this->generateMessageStatus();
         $count_generateCalllogEntryTagsList = $this->generateCalllogEntryTagsList();
 
-        $this->get('session')->getFlashBag()->add(
-            'notice',
+        $msg =
             'Generated Tables: '.
             //'Roles='.$count_roles.', '.
             'Patient Types='.$count_pattype.', '.
@@ -229,13 +248,9 @@ class ScanAdminController extends AdminController
             'MessageStatus='.$count_generateMessageStatus.', '.
             'CalllogEntryTagsList='.$count_generateCalllogEntryTagsList.', '.
 
-            ' (Note: -1 means that this table is already exists)'
-        );
+            ' (Note: -1 means that this table is already exists)';
 
-
-        ini_set('max_execution_time', $max_exec_time); //set back to the original value
-
-        return $this->redirect($this->generateUrl('admin_index'));
+        return $msg;
     }
 
 

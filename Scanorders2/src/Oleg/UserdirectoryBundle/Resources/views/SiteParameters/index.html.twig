@@ -586,6 +586,11 @@
                 <td>{{ entity.departmenturl }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'departmenturl'}) }}">Edit</a></td>
             </tr>
+            <tr>
+                <td>Show copyright line on every footer</td>
+                <td>{{ entity.showCopyrightOnFooter }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'showCopyrightOnFooter'}) }}">Edit</a></td>
+            </tr>
 
 
             {#Uploads#}
