@@ -195,7 +195,7 @@ class EmailUtil {
             ->setUsername($username)
             ->setPassword($password);
 
-        //$transport->setStreamOptions(array('ssl' => array('allow_self_signed' => true, 'verify_peer' => false)));
+        //$transport->setStreamOptions(array('ssl' => array('allow_self_signed' => true, 'verify_peer' => false, 'verify_peer_name' => false)));
 
 //        $transport = \Swift_SmtpTransport::newInstance('smtp.gmail.com', 587, 'tls')
 //            ->setUsername($username)
