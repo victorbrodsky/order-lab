@@ -43,6 +43,30 @@ class DefaultController extends Controller
     }
 
     /**
+     * @Route("/send-spooled-emails/", name="employees_send_spooled_emails")
+     * @Method({"GET"})
+     */
+    public function sendSpooledEmailsAction(Request $request)
+    {
+
+        if (!$this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+            return $this->redirect($this->generateUrl('vacreq-nopermission'));
+        }
+
+        $emailUtil = $this->container->get('user_mailer_utility');
+
+        $emailRes = $emailUtil->sendSpooledEmails();
+
+        //Flash
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            'Spooled emails are send.'
+        );
+
+        return $this->redirectToRoute('employees_home');
+    }
+    
+    /**
      * @Route("/emailtest/", name="employees_emailtest")
      * @Method({"GET"})
      */
@@ -71,7 +95,7 @@ class DefaultController extends Controller
             'Test email sent to: '.$toEmail.' and ccs to:'.$ccs
         );
 
-        return $this->redirectToRoute('vacreq_incomingrequests');
+        return $this->redirectToRoute('employees_home');
     }
 
 

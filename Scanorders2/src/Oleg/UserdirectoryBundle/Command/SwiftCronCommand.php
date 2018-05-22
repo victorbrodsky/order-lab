@@ -43,8 +43,13 @@ class SwiftCronCommand extends ContainerAwareCommand {
     }
 
 
-    //php app/console cron:swift --env=prod
+    //php bin/console cron:swift --env=prod
     protected function execute(InputInterface $input, OutputInterface $output) {
+
+        //use custom sendSpooledEmails (mainly because of the google auth)
+        $emailUtil = $this->getContainer()->get('user_mailer_utility');
+        $emailUtil->sendSpooledEmails();
+        return true;
 
         //$logger = $this->getContainer()->get('logger');
 

@@ -274,6 +274,7 @@
                                             general-data-confirm="Are you sure you would like to cleare cahce and update assets? This action will logout all authenticated users."
                                             href="{{ path('user_update_system_cache_assets') }}">Update System's Cache and Assets</a>
                                     </li>
+                                    <li><a href="{{ path(employees_sitename~'_send_spooled_emails') }}">Force to send spooled emails</a></li>
                                 {% endif %}
 
                                 {% if is_granted('ROLE_PLATFORM_ADMIN') %}

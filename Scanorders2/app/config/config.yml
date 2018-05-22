@@ -187,7 +187,7 @@ monolog:
 
 
 # Swiftmailer Configuration
-# gmail: https://github.com/symfony/swiftmailer-bundle/issues/106
+# Not Used. Swiftmailer's send and spool flush overwritten by getSwiftMailer and sendSpooledEmails
 swiftmailer:
     transport: '%mailer_transport%'
     host:      '%mailer_host%'
