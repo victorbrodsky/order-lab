@@ -271,6 +271,14 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 		mailer_password: null
 		locale: en   
 		delivery_strategy: realtime
+		
+	Note for Google Email Server: 
+		Use Google API password as follow:
+		a) Enable 2-step verification
+		b) Generate Google App specific password
+		c) Disable 2-step verification
+		
+	
 	
 5. Deployment
 	
