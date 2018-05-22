@@ -84,12 +84,12 @@ class SiteParametersType extends AbstractType
                 'attr' => array('class' => 'form-control')
             ));
         }
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'mailerTransport' ) {
-            $builder->add('mailerTransport', null, array(
-                'label' => 'Mailer Transport (i.e. smtp or gmail):',
-                'attr' => array('class' => 'form-control')
-            ));
-        }
+//        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'mailerTransport' ) {
+//            $builder->add('mailerTransport', null, array(
+//                'label' => 'Mailer Transport (i.e. smtp or gmail):',
+//                'attr' => array('class' => 'form-control')
+//            ));
+//        }
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'mailerAuthMode' ) {
             $builder->add('mailerAuthMode', null, array(
                 'label' => 'Mailer Authentication Mode (i.e. oauth or login):',

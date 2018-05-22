@@ -141,11 +141,11 @@
                 <td>{{ entity.mailerPort }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'mailerPort'}) }}">Edit</a></td>
             </tr>
-            <tr>
-                <td>Mailer Transport (i.e. smtp or gmail)</td>
-                <td>{{ entity.mailerTransport }}</td>
-                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'mailerTransport'}) }}">Edit</a></td>
-            </tr>
+            {#<tr>#}
+                {#<td>Mailer Transport (i.e. smtp or gmail)</td>#}
+                {#<td>{{ entity.mailerTransport }}</td>#}
+                {#<td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'mailerTransport'}) }}">Edit</a></td>#}
+            {#</tr>#}
             <tr>
                 <td>Mailer Authentication Mode (i.e. oauth or login)</td>
                 <td>{{ entity.mailerAuthMode }}</td>
