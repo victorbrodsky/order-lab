@@ -1797,6 +1797,8 @@ class AdminController extends Controller
             "mailerUseSecureConnection" => "tls",
             "mailerUser" => null,
             "mailerPassword" => null,
+            "mailerSpool" => false,
+            "mailerDeliveryAddresses" => null,
 
             "aDLDAPServerAddress" => "ldap.forumsys.com",
             "aDLDAPServerPort" => "389",

@@ -134,7 +134,19 @@ class EmailUtil {
             $message->attach(\Swift_Attachment::fromPath($attachmentPath));
         }
 
+        $ccStr = "";
+        if( $ccs && count($ccs)>0 ) {
+            $ccStr = implode("; ",$ccs);
+        }
+        $emailsStr = "";
+        if( $emails && count($emails)>0 ) {
+            $emailsStr = implode("; ",$emails);
+        }
+
         $mailer = $this->getSwiftMailer();
+        if( !$mailer ) {
+            $logger->notice("sendEmail: Email has not been sent: From:".$fromEmail."; To:".$emailsStr."; CC:".$ccStr."; subject=".$subject."; body=".$message);
+        }
 
         //When using send() the message will be sent just like it would be sent if you used your mail client.
         // An integer is returned which includes the number of successful recipients.
@@ -144,15 +156,7 @@ class EmailUtil {
         //$emailRes = $this->container->get('mailer')->send($message); //
         $emailRes = $mailer->send($message);
 
-        $ccStr = "";
-        if( $ccs && count($ccs)>0 ) {
-            $ccStr = implode("; ",$ccs);
-        }
-        $emailsStr = "";
-        if( $emails && count($emails)>0 ) {
-            $emailsStr = implode("; ",$emails);
-        }
-        $logger->notice("sendEmail res=".$emailRes."; From:".$fromEmail."; To:".$emailsStr."; CC:".$ccStr."; subject=".$subject."; body=".$message);
+        $logger->notice("sendEmail: Email sent: res=".$emailRes."; From:".$fromEmail."; To:".$emailsStr."; CC:".$ccStr."; subject=".$subject."; body=".$message);
 
         return $emailRes;
     }
@@ -195,6 +199,9 @@ class EmailUtil {
             $transport = \Swift_SpoolTransport::newInstance($spool);
         } else {
             $transport = $this->getSmtpTransport();
+            if( !$transport ) {
+                return null;
+            }
         }
 
         $mailer = \Swift_Mailer::newInstance($transport);
@@ -206,6 +213,10 @@ class EmailUtil {
         $userSecUtil = $this->container->get('user_security_utility');
 
         $host = $userSecUtil->getSiteSettingParameter('smtpServerAddress');
+        if( !$host ) {
+            return null;
+        }
+
         $port = $userSecUtil->getSiteSettingParameter('mailerPort');
         $encrypt = $userSecUtil->getSiteSettingParameter('mailerUseSecureConnection');
         $username = $userSecUtil->getSiteSettingParameter('mailerUser');
@@ -249,6 +260,9 @@ class EmailUtil {
         $userSecUtil = $this->container->get('user_security_utility');
 
         $transport = $this->getSmtpTransport();
+        if( !$transport ) {
+            return null;
+        }
 
         $useSpool = $userSecUtil->getSiteSettingParameter('mailerSpool');
         if( $useSpool ) {
