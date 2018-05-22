@@ -292,13 +292,23 @@ class EmailUtil {
         $transport = \Swift_SmtpTransport::newInstance();
 
         $transport->setHost($host);
-        $transport->setPort($port);
-        $transport->setUsername($username);
-        $transport->setPassword($password);
+
+        if( $port ) {
+            $transport->setPort($port);
+        }
+
+        if( $username ) {
+            $transport->setUsername($username);
+        }
+
+        if( $password ) {
+            $transport->setPassword($password);
+        }
 
         if( $authMode ) {
             $transport->setAuthMode($authMode);
         }
+        
         if( $encrypt ) {
             $transport->setEncryption($encrypt);
         }
@@ -328,7 +338,7 @@ class EmailUtil {
         return $res;
     }
 
-    //TODO: need for swiftmailer? All required info is given at config.yml and parameters.yml
+    //NOT USED
     //php bin/console swiftmailer:spool:send --env=prod: Unable to connect with TLS encryption
     public function hasConnection() {
 
@@ -360,50 +370,6 @@ class EmailUtil {
         return $result;
     }
 
-
-    ///////////////// NOT USED: using original php mail  /////////////////
-    public function sendEmail_orig( $email, $subject, $message, $em, $ccs=null, $fromEmail=null ) {
-
-        if( !$email || $email == "" ) {
-            return false;
-        }
-
-        if( !$message || $message == "" ) {
-            return false;
-        }
-
-        $this->initEmail($em,$fromEmail);
-
-        $headers = null;
-        if( $ccs ) {
-            $headers = 'Cc: ' . $ccs . "\r\n";
-        }
-
-        //echo "email=".$email."<br>";
-        //echo "headers=".$headers."<br>";
-        //exit('1');
-
-        // Send
-        mail($email, $subject, $message, $headers);
-
-        return true;
-    }
-
-    public function initEmail($em,$fromEmail=null) {
-        $userSecUtil = $this->container->get('user_security_utility');
-        $smtp = $userSecUtil->getSiteSettingParameter('smtpServerAddress');
-
-        if( !$fromEmail ) {
-            $fromEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
-        }
-
-        //exit("smtp=".$smtp);
-
-        ini_set( 'sendmail_from', $fromEmail );
-        ini_set( "SMTP", $smtp );
-    }
-    ///////////////// EOF NOT USED: using original php mail  /////////////////
-    
 }
 
 
