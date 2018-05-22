@@ -1,0 +1,12 @@
+/web/bundles/
+/app/bootstrap.php.cache
+/app/cache/*
+/app/config/parameters.yml
+/app/logs/*
+/build/
+/vendor/*
+!/vendor/aperio
+/bin/
+/composer.phar
+/src/Oleg/OrderformBundle/Entity/*.php~
+/.idea/

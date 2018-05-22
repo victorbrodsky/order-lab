@@ -1,0 +1,108 @@
+{#   navigation menu   #}
+
+{% block navbar %}
+
+    {% set comments = render(controller("OlegOrderformBundle:History:notViewedComments")) %}
+
+
+<nav class="navbar navbar-default" role="navigation">
+
+    <div class="container-fluid">
+
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            {#<a class="navbar-brand visible-xs" href="{{ path('scanorder_new') }}">One Slide</a>#}
+            <a class="navbar-brand visible-xs" href="{{ path('single_new') }}">One Slide</a>
+        </div>
+
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+
+
+            {% if is_granted('ROLE_SUBMITTER') or is_granted('ROLE_EXTERNAL_SUBMITTER') %}
+
+                <ul class="nav navbar-nav">
+
+                    <li id="nav-bar-single" class="hidden-xs divider-vertical new"><a href="{{ path('single_new') }}">One Slide</a></li>
+                    <li id="nav-bar-clinical" class="divider-vertical orderinfo"><a href="{{ path('clinical_new') }}">Clinical Multi-Slide</a></li>
+                    <li id="nav-bar-edu" class="divider-vertical accession"><a href="{{ path('edu_new') }}">Educational Multi-Slide</a></li>
+                    <li id="nav-bar-res" class="divider-vertical order"><a href="{{ path('res_new') }}">Research Multi-Slide</a></li>
+                    <li id="nav-bar-table" class="divider-vertical order"><a href="{{ path('table_create') }}">Multi-Slide Table</a></li>
+
+    {% if 1 == 1 %}
+                    <li id="nav-bar-index" class="divider-vertical index">
+                        {% if comments is defined and comments > 0 %}
+                            <a id="incoming-orders-menu-title" href="{{ path('index') }}">My Orders</a><!--
+                            --><a id="incoming-orders-menu-badge" class="element-with-tooltip" title="New Comments" data-toggle="tooltip" data-placement="bottom" href="{{ path('index',{'filter_search_box[filter]': 'With Comments'}) }}"><span class="badge">{{ comments }}</span></a>
+                        {% else %}
+                            <a href="{{ path('index') }}" >My Orders</a>
+                        {% endif %}
+                    </li>
+    {% endif %}
+    {% if 1 == 0 %}
+                    <li id="nav-bar-index" class="divider-vertical index" style="display: inline-block !important; !important; padding-right: 2px; margin-right: 0px !important;">
+                        {#style="padding-right: 2px !important; margin-right: 0px !important;"#}
+                        <a href="{{ path('index') }}" >My Orders</a>
+                    </li>
+                    <li id="nav-bar-index-badge" class="divider-vertical index" style="display: inline-block !important; padding-left: 0px !important; margin-left: 0px !important;">
+                        {% if comments is defined and comments > 0 %}
+                            <a href="{{ path('index',{'filter_search_box[filter]': 'With Comments'}) }}" title="New Comments" data-toggle="tooltip" data-placement="bottom" style="padding-left: 0px !important; margin-left: 0px !important;"><span class="badge">{{ comments }}</span></a>
+                        {% endif %}
+                    </li>
+    {% endif %}
+
+                </ul>
+
+            {% endif %}
+
+
+            <ul class="nav navbar-nav navbar-right">
+
+                {% if is_granted('ROLE_PROCESSOR') %}
+
+                    <li id="nav-bar-admin" class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ path('adminindex') }}">Incoming Orders</a></li>
+                            <li><a href="{{ path('accessrequest_list') }}">Access Requests</a></li>
+                            <li><a href="{{ path('accountrequest') }}">Account Requests</a></li>
+                            <li><a href="{{ path('listusers') }}">Users</a></li>
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <li><a href="{{ path('admin_index') }}">DB Manager</a></li>
+                                <li><a href="{{ path('logger') }}">Event Log</a></li>
+                                <li><a href="{{ path('siteparameters') }}">Site Parameters</a></li>
+                            {% endif %}
+
+                        </ul>
+                    </li>
+
+                {% endif %}
+
+                {% if is_granted('ROLE_SUBMITTER') or is_granted('ROLE_EXTERNAL_SUBMITTER') %}
+
+                    <li id="nav-bar-user" class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span><b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li>Logged in as {{ app.security.getToken().getUser().getUsername() }}</li>
+                            <li><a href="{{ path('showuser', {id:app.security.getToken().getUser().getId()}) }}">My Profile</a></li>
+                            <li><a href="{{ path('logout') }}">Log Out</a></li>
+                        </ul>
+                    </li>
+
+                {% endif %}
+
+            </ul>
+
+
+        </div><!-- /.navbar-collapse -->
+
+    </div><!-- /.container-fluid -->
+
+</nav>
+    
+{% endblock %}
+

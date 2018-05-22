@@ -1,0 +1,31 @@
+{% extends "OlegOrderformBundle::Default/base.html.twig" %}
+
+{% block content %}
+
+    <h3 class="text-info">Site Parameters</h3>
+
+    <table class="records_list table table-hover table-condensed text-left">
+        <thead>
+            <tr>
+                <th>Parameter</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Max Idle Time (minutes)</td>
+                <td>{{ entity.maxIdleTime }}</td>
+            </tr>
+            <tr>
+                <td>Environment</td>
+                <td>{{ entity.environment }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <br>
+    <p>
+        <a href="{{ path('siteparameters_edit', { 'id': entity.id }) }}">Edit</a>
+    </p>
+
+{% endblock %}

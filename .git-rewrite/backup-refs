@@ -1,0 +1,6 @@
+87526ae1170a9af88a9063403f1ad43dc2addc40 commit	refs/heads/master
+3400c02d15cf74885d0cb2f9ef375c00369d120c commit	refs/remotes/bitbucket/master
+87526ae1170a9af88a9063403f1ad43dc2addc40 commit	refs/remotes/origin/master
+3400c02d15cf74885d0cb2f9ef375c00369d120c commit	refs/remotes/originme/master
+839b9b1c00adf2467e7bf72aee979800a9d7dec8 commit	refs/stash
+095a254ccb779026d34e0ab8e718291d0aeb58f3 tag	refs/tags/v1.0

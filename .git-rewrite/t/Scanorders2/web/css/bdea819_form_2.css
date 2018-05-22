@@ -1,0 +1,177 @@
+/* 
+    Created on : Jul 17, 2013, 1:12:10 PM
+    Author     : oli2002
+*/
+/*//input, label {*/
+    /*//display: inline;*/
+    /*//display: inline-block;*/
+    /*//width: 50px;*/
+/*//}*/
+
+.horizontal_type {
+    padding-bottom: 5%;
+}
+.horizontal_type LABEL, .horizontal_type INPUT {
+    display: inline;
+    //padding-right: 5%;
+}
+
+.flash-notice {
+  color: #0081c2;
+  font-size: 200%;
+  margin-top: 3%;
+}
+
+.page-content {
+    padding-left: 5%;
+    padding-right: 5%;
+    padding-top: 0%;
+    padding-bottom: 5%;
+    float: left;
+    width: 90%;
+    text-align: center;
+}
+
+.page-content-top {
+   padding-top: 10%; 
+}
+
+.header {
+    float: left;
+    width: 100%;
+}
+
+.order-content {
+    margin-top: 5%;
+    /*float: left;*/
+    /*width: 100%;*/
+}
+
+.footer {
+    margin-top: 5%;
+    float: left;
+    width: 100%;
+}
+
+.form_label_input {
+    float: left;
+    width: 100%;
+    margin-top: 2%;
+}
+
+.btn_margin {
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+
+#form_menu {
+    float: left;
+    width: 100%;
+}
+
+/*.action-button {
+    float: left;
+}*/
+
+#next_button {
+    margin-top: 2%; 
+}
+
+.buttons-full-bar {
+    margin-bottom: 2%;
+    margin-top: 2%;
+    float: left;
+    width: 100%;
+}
+
+.form_edit {
+    float: left;
+    width: 100%;
+}
+
+.activetr {
+    background-color: rgb(217, 237, 247);
+}
+
+.canceltr {
+    background-color: rgb(242, 222, 222);
+}
+
+.completedtr {
+    background-color: rgb(223, 240, 216);
+}
+
+.uncompletedtr {
+    /*background-color: rgb(252, 248, 227);*/
+    background-color: white;
+}
+
+/*align tabs to center*/
+.nav-tabs > li, .nav-pills > li {
+    float:none;
+    display:inline-block;
+    *display:inline; /* ie7 fix */
+     zoom:1; /* hasLayout ie7 trigger */
+}
+.nav-tabs, .nav-pills {
+    text-align:center;
+}
+
+.panel {
+    /*border-top: 7px solid #428bca;*/
+    border-left: 7px solid;
+}
+
+.panel-patient {
+    border-color: #90BEE4;
+}
+.panel-patient .panel-heading {
+    color: #ffffff;
+    background-color: #90BEE4;
+    border-color: #90BEE4;
+}
+
+.panel-procedure {
+    border-color: #71B0E4;
+}
+.panel-procedure .panel-heading {
+    color: #ffffff;
+    background-color: #71B0E4;
+    border-color: #71B0E4;
+}
+
+.panel-accession {
+    border-color: #3F98C8;
+}
+.panel-accession .panel-heading {
+    color: #ffffff;
+    background-color: #3F98C8;
+    border-color: #3F98C8;
+}
+
+.panel-part {
+     border-color: #428CCA;
+ }
+.panel-part .panel-heading {
+    color: #ffffff;
+    background-color: #428CCA;
+    border-color: #428CCA;
+}
+
+.panel-block {
+    border-color: #1268B3;
+}
+.panel-block .panel-heading {
+    color: #ffffff;
+    background-color: #1268B3;
+    border-color: #1268B3;
+}
+
+.panel-slide {
+    border-color: #155183; //35478C
+}
+.panel-slide .panel-heading {
+    color: #ffffff;
+    background-color: #155183;
+    border-color: #155183;
+}

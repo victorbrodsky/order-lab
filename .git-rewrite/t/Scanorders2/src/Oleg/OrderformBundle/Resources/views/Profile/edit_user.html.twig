@@ -1,0 +1,70 @@
+{% extends "OlegOrderformBundle::Default/base.html.twig" %}
+{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+{% block content %}
+
+{#<form action="{{ path('user_update',{'id':entity.id}) }}" method="PUT" {{ form_enctype(form) }}>#}
+{{ form_start(form) }}
+
+    <input type="hidden" id="user_name" value="{{ form.vars.value.username }}" />
+    <input type="hidden" id="formcicle" value="edit_user" />
+    <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
+
+    {#{{ form_widget(form) }}#}
+    {{ form_errors(form) }}
+
+    {{ formmacros.field(form.username) }}
+    {{ formmacros.field(form.email) }}
+    {{ formmacros.field(form.pathologyServices) }}
+    {#{{ formmacros.field(form.defaultPathService) }}#}
+
+    {% if is_granted('ROLE_ADMIN') %}
+        {{ formmacros.field(form.roles) }}
+    {% endif %}
+
+    {{ formmacros.field(form.displayName) }}
+    {{ formmacros.field(form.firstName) }}
+    {{ formmacros.field(form.lastName) }}
+    {{ formmacros.field(form.title) }}
+    {{ formmacros.field(form.phone) }}
+    {{ formmacros.field(form.fax) }}
+    {{ formmacros.field(form.office) }}
+
+    {% if is_granted('ROLE_ADMIN') %}
+        {% if app.security.getToken().getUser().getId() != entity.id %}
+            {{ formmacros.field(form.locked) }}
+        {% else %}
+            {% do form.locked.setRendered %}
+        {% endif %}
+    {% endif %}
+
+    <br>
+    {{ form_rest(form) }}
+    {#{{ form_widget(form._token) }}#}
+
+    {#{{ form(form) }}#}
+
+    {% if cicle != "show" %}
+        <p>
+            <div>
+                <button class="btn btn-warning" name="btnSubmit" type="submit">Update</button>
+                <button class="btn btn-info" href="{{ path('showuser',{id:entity.id}) }}">Cancel</button>
+            </div>
+        </p>
+    {% endif %}
+
+{{ form_end(form) }}
+{#</form>#}
+
+    {% if cicle == "show" %}
+        <p><a class="btn btn-success" href="{{ path('user_edit',{'id':entity.id}) }}">Edit</a></p>
+    {% endif %}
+
+    {% if is_granted('ROLE_ADMIN') %}
+        <br>
+        <p>
+            <a href="{{ path('listusers') }}">All Users</a>
+        </p>
+    {% endif %}
+
+{% endblock %}

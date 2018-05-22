@@ -1,0 +1,66 @@
+{#{% extends '::base.html.twig' %}#}
+
+{#{% extends "OlegOrderformBundle::Default/base.html.twig" %} #}
+
+{#{% block content %} #}
+{#{% block body -%}#}
+
+
+    {#<table class="table table-hover table-condensed">#}
+        {#<thead>#}
+            {#<tr>#}
+                {#<th>Order#</th>#}
+                {#<th>Patients</th>#}
+                {#<th>Order Date</th>#}
+                {#<th>Status</th>              #}
+                {#<th>Priority</th>               #}
+                {#<th>Return Slide</th>             #}
+                {#<th>Provider</th>#}
+                {#<th>Actions</th>#}
+            {#</tr>#}
+        {#</thead>#}
+        {#<tbody>#}
+        {#{% for entity in entities %}#}
+            {##}
+            {#{% if entity.status == 'active' %}#}
+                {#<tr class="activetr" >#}
+            {#{% elseif entity.status == 'cancel' %}#}
+                {#<tr class="canceltr" >#}
+            {#{% elseif entity.status == 'completed' %}#}
+                {#<tr class="completedtr" >#}
+            {#{% elseif entity.status == 'uncompleted' %}#}
+                {#<tr class="uncompletedtr" >#}
+            {#{% else %}#}
+                {#<tr>#}
+            {#{% endif %}#}
+
+                {#<td><a href="{{ path('scanorder_show', { 'id': entity.oid }) }}">{{ entity.oid }}</a></td>#}
+                {#<td>#}
+                    {#&#123;&#35;{{ entity.patient.count }}:&#35;&#125;#}
+{#&#123;&#35;                    {% for patient in entity.patient %}&#35;&#125;#}
+{#&#123;&#35;                        {{ patient.specimen }}&#35;&#125;#}
+{#&#123;&#35;                        {% for specimen in patient.specimen %}&#35;&#125;#}
+{#&#123;&#35;                            {{ specimen.proceduretype }}&#35;&#125;#}
+{#&#123;&#35;                        {%endfor%}&#35;&#125;#}
+{#&#123;&#35;                    {% endfor %}&#35;&#125;#}
+                    {#{% for patient in entity.patient %}#}
+                        {#<a href="{{ path('patient_show', { 'id': patient.id }) }}">#}
+                            {#Patient: (ID={{ patient.id }}, MRN={{ patient.mrn }})<br>#}
+                        {#</a>#}
+                    {#{% endfor %}#}
+                {#</td>#}
+                {#<td>{% if entity.orderdate %}{{ entity.orderdate|date('Y-m-d H') }}h{% endif %}</td>#}
+                {#<td>{{ entity.status }}</td>#}
+                {#<td>{{ entity.priority }}</td>            #}
+                {#<td>{{ entity.returnSlide }}</td>#}
+                {#<td>{{ entity.provider }}</td>#}
+                {#<td>                    #}
+                    {#{{ include('OlegOrderformBundle::Default/action.html.twig') }}                  #}
+                {#</td>#}
+            {#</tr>#}
+        {#{% endfor %}#}
+        {#</tbody>#}
+    {#</table>#}
+      {##}
+{#{% endblock %}#}
+{#{% endblock %}#}

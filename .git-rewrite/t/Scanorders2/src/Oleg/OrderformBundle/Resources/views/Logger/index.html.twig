@@ -1,0 +1,80 @@
+{% extends "OlegOrderformBundle::Default/base.html.twig" %}
+
+{% block content %}
+
+    <h3 class="text-info">Event Log</h3>
+
+    <table class="records_list table table-hover table-condensed text-left">
+        <thead>
+            <tr>
+                <th>{{ knp_pagination_sortable(pagination, 'Event ID', 'logger.id') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'Timestamp', 'logger.creationdate') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'IP', 'logger.ip') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'User Agent', 'logger.useragent') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'Width', 'logger.width') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'Height', 'logger.height') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'Account', 'logger.username') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'Roles', 'logger.roles') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'Event', 'logger.event') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'Server Response', 'logger.serverresponse') }}</th>
+                {#<th>Actions</th>#}
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in pagination %}
+
+            {% if 'Successful Login' in entity.event %}
+                <tr class="canceltr" >
+            {% else %}
+                <tr class="activetr" >
+            {% endif %}
+
+                <td>{{ entity.id }}</td>
+                <td>{% if entity.creationdate %}{{ entity.creationdate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{{ entity.ip }}</td>
+                <td>
+                    <div class="textarea_widget">
+                        <textarea class="textarea form-control">{{ entity.useragent }}</textarea>
+                    </div>
+                </td>
+                <td>{{ entity.width }}</td>
+                <td>{{ entity.height }}</td>
+                <td>
+                    {% if entity.username == 'anon.' %}
+                        {% set username = 'unknown' %}
+                    {% else %}
+                        {% set username = entity.username %}
+                    {% endif %}
+                    {{ username }}
+                </td>
+                <td>
+                    {% for role in entity.roles %}
+                        {% if role != "ROLE_USER" %}
+                            "{{ attribute(roles, role) }}"<br>
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                <td>{{ entity.event }}</td>
+                <td>
+                    <div class="textarea_widget">
+                        <textarea class="textarea form-control">{{ entity.serverresponse }}</textarea>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="navigation">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+
+        {#<ul>#}
+        {#<li>#}
+            {#<a href="{{ path('logger_new') }}">#}
+                {#Create a new entry#}
+            {#</a>#}
+        {#</li>#}
+        {#</ul>#}
+
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "OlegOrderformBundle::Default/base.html.twig" %} 
+
+{% block content %} 
+{% block body -%}
+
+    {% if cicle == 'new' %}
+        {% set cicleStr = 'Submitted' %}
+    {% elseif cicle == 'edit' %}
+        {% set cicleStr = 'Saved' %}
+    {% else %}
+        {% set cicleStr = 'Amended' %}
+    {% endif %}
+
+    <div class="alert alert-info well-lg">
+{#        <h1>Scan Order Confirmation</h1>#}
+        <p><h1>Thank You For Your Order !</h1></p>
+        <p><h3>
+            <a href="{{ path('multy_show', { 'id': oid }) }}">Order {{ oid }}</a>
+            Successfully {{ cicleStr }}.
+        </h3></p>
+
+        <p><h3>Confirmation Email was sent to {{ app.security.getToken().getUser.getEmail }}</h3></p>
+        <p><a class="btn btn-info btn-large btn_margin_top" href="{{ path('single_new') }}">
+                Submit Another Scan Order
+            </a>
+        </p>
+    </div>
+
+    {% for conflict in conflicts %}
+        <div class="alert alert-danger">
+            {{ conflict }}
+        </div>
+    {% endfor %}
+      
+{% endblock %}
+{% endblock %}

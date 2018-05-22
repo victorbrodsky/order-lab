@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    {#timeout after 1800 seconds#}
+    {#<meta http-equiv="refresh" content = "1800; url={{ path('logout') }}">#}
+
+    {% if security is not defined %}
+        {% set security = 'true' %}
+    {% endif %}
+
+    {#{% if not is_granted('ROLE_USER') and security == 'true' %}#}
+        {#<meta http-equiv="refresh" content="0; URL={{ path('login') }}">#}
+    {#{% endif %}#}
+
+    <!-- Latest compiled and minified CSS -->
+    {#<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">#}
+    <!-- Optional theme -->
+    {#<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">#}
+    {#<!-- Latest compiled and minified JavaScript -->#}
+    {#<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>#}
+
+    {#{% stylesheets#}
+        {#'%kernel.root_dir%/../src/Oleg/OrderformBundle/Resources/public/form/css/form.css' filter='cssrewrite'#}
+    {#%}#}
+        {#<link rel="stylesheet" href="{{ asset_url }}" />#}
+    {#{% endstylesheets %}#}
+
+    {#'bundles/olegorderform/jasny/css/jasny-bootstrap.min.css' filter='cssrewrite'#}
+    {#'bundles/olegorderform/form/css/form.css'#}
+    {#make sure to run if use 'bundles/...' path: "php app/console assets:install ../.."#}
+
+    {#'bundles/olegorderform/form/css/spinner.css' filter='cssrewrite'#}
+    {#'bundles/olegorderform/font-awesome/css/font-awesome.css' filter='cssrewrite'#}
+
+    {#jasny is used for clickable rows#}
+    {% stylesheets
+        'bundles/olegorderform/bootstrap/css/*' filter='cssrewrite'
+        'bundles/olegorderform/select2/select2.css' filter='cssrewrite'
+        'bundles/olegorderform/handsontable/jquery.handsontable.full.css' filter='cssrewrite'
+        'bundles/olegorderform/jasny/css/jasny-bootstrap.min.css' filter='cssrewrite'
+        'bundles/olegorderform/ladda/ladda-themeless.css' filter='cssrewrite'
+        'bundles/olegorderform/form/css/form.css' filter='cssrewrite'
+    %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
+    {% stylesheets
+        'bundles/olegorderform/datepicker/css/datepicker3.css' filter='cssrewrite'
+    %}
+        <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
+    <title>
+        {% block title %}
+            Scan Order
+        {% endblock %}
+    </title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <!-- we want to force people to click a button, so hide the close link in the toolbar -->
+    {#<style type="text/css">a.ui-dialog-titlebar-close { display:none }</style>#}
+
+</head> 
+             
+<body>
+
+    <div class="container text-center col-xs-12">
+
+        <div class="header">
+
+            {% block header %}
+                {% if security == 'true' %}
+                    {# <img src="{{ asset('/../../images/slide1.jpg') }}" alt="Slide">#}
+                    {% include 'OlegOrderformBundle:Default:navbar.html.twig' %}
+                {% endif %}
+            {% endblock %}
+
+        </div>
+
+        {% include 'OlegOrderformBundle::Security/idle_timeout.html.twig' %}
+
+
+        <div class="order-content">
+
+            {% for flashMessage in app.session.flashbag.get('notice') %}
+                <div class="flash-notice">
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+
+            {% for flashMessage in app.session.flashbag.get('status-changed') %}
+                <div style="height: 1%;">&nbsp;</div>
+                <p class="alert alert-success center-block" align="middle" style="width: 70%;">{{ flashMessage }}</p>
+            {% endfor %}
+
+            <input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />
+
+            {% block content %}{% endblock %}
+
+        </div>
+
+        {#<div style="height: 100px;">&nbsp;</div>#}
+
+        <div class="footer">
+            {% block footer %}
+                &copy; Copyright {{ "now"|date('Y') }} by
+                <a href="http://www.cornellpathology.com">Pathology and Laboratory Medicine Department</a>
+                at
+                <a href="http://weill.cornell.edu">Weill Cornell Medical College</a>.
+            {% endblock %}
+        </div>
+
+        {% javascripts
+            '@OlegOrderformBundle/Resources/public/jquery/jquery-1.11.0.min.js'
+            '@OlegOrderformBundle/Resources/public/bootstrap/js/*'
+            '@OlegOrderformBundle/Resources/public/ladda/spin.min.js'
+            '@OlegOrderformBundle/Resources/public/ladda/ladda.min.js'
+            '@OlegOrderformBundle/Resources/public/datepicker/js/*'
+            '@OlegOrderformBundle/Resources/public/select2/select2.js'
+            '@OlegOrderformBundle/Resources/public/inputmask/jquery.inputmask.bundle.js'
+            '@OlegOrderformBundle/Resources/public/form/js/checkSingleForm.js'
+            '@OlegOrderformBundle/Resources/public/form/js/slideColl.js'
+            '@OlegOrderformBundle/Resources/public/form/js/partRadios.js'
+            '@OlegOrderformBundle/Resources/public/form/js/selectAjax.js'
+            '@OlegOrderformBundle/Resources/public/form/js/commonCheckForm.js'
+            '@OlegOrderformBundle/Resources/public/form/js/checkForm.js'
+            '@OlegOrderformBundle/Resources/public/form/js/masking.js'
+            '@OlegOrderformBundle/Resources/public/form/js/form.js'
+            '@OlegOrderformBundle/Resources/public/form/js/formReady.js'
+            '@OlegOrderformBundle/Resources/public/form/js/modal.js'
+            '@OlegOrderformBundle/Resources/public/idletimeout/jquery.idletimeout.js'
+            '@OlegOrderformBundle/Resources/public/idletimeout/jquery.idletimer.js'
+            '@OlegOrderformBundle/Resources/public/form/js/idleTimeout.js'
+            '@OlegOrderformBundle/Resources/public/jasny/js/rowlink.js'
+            '@OlegOrderformBundle/Resources/public/handsontable/jquery.handsontable.full.js'
+            '@OlegOrderformBundle/Resources/public/form/js/handsontable.js'
+            '@OlegOrderformBundle/Resources/public/q-1/q.js'
+        %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+
+    </div>
+
+</body>
+         
+</html>

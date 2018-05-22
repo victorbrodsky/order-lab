@@ -181,7 +181,7 @@ class EmailUtil {
         $port = 587;
         $encrypt = "tls";
         $username = "cinava10@gmail.com";
-        $password = "Cinava&Safe";
+        $password = "newpassword";
         $authMode = "login";
         $trans = "smtp";
 

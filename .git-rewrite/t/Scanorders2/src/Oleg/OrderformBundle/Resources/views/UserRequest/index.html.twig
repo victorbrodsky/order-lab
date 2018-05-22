@@ -1,0 +1,120 @@
+{% extends "OlegOrderformBundle::Default/base.html.twig" %} 
+
+{% block title %}
+    Account Requests
+{% endblock %}
+
+{% block content %} 
+
+    <h3 class="text-info">Account Requests</h3>
+
+    <table class="table table-hover table-condensed text-left">
+        <thead>
+            <tr>
+                <th>{{ knp_pagination_sortable(entities, 'Account Request ID', 'accreq.id') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Date', 'accreq.creationdate') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Status', 'accreq.status') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'CWID', 'accreq.cwid') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Name', 'accreq.name') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Email', 'accreq.email') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Phone Number', 'accreq.phone') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Job', 'accreq.job') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Organization', 'accreq.organization') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Department', 'accreq.department') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Service / Division', 'pathologyServices.name') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Reason for Account Request', 'accreq.request') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Reference Name', 'accreq.referencename') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Reference Email', 'accreq.referenceemail') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Reference Phone Number', 'accreq.referencephone') }}</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            
+            {% if entity.status == 'active' %}
+                <tr class="activetr" >
+            {% elseif entity.status == 'declined' %}
+                <tr class="canceltr" >
+            {% elseif entity.status == 'accepted' %}
+                <tr class="completedtr" >
+            {% elseif entity.status == 'uncompleted' %}
+                <tr class="uncompletedtr" >
+            {% else %}
+                <tr>
+            {% endif %}
+                {#<td><a href="{{ path('accountrequest_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>#}
+                <td>{{ entity.id }}</td>
+                <td>{{ entity.creationdate|date('m/d/Y H:i') }}</td>
+                <td>{{ entity.status }}</td>
+                <td>{{ entity.cwid }}</td>
+                <td>{{ entity.name }}</td>
+                <td>{{ entity.email }}</td>
+                <td>{{ entity.phone }}</td>
+                <td>{{ entity.job }}</td>
+                <td>{{ entity.organization }}</td>
+                <td>{{ entity.department }}</td>
+                <td>
+                    {#{{ entity.pathologyServices }}#}
+                    {% for pathologyServices in entity.pathologyServices %}
+                        "{{ pathologyServices }}"
+                    {% endfor %}
+                </td>
+                <td>
+                    <textarea readonly class="textarea form-control">
+                        {{- entity.request }}
+                    </textarea>
+                </td>
+                <td>{{ entity.referencename }}</td>
+                <td>{{ entity.referenceemail }}</td>
+                <td>{{ entity.referencephone }}</td>
+                <td>
+                    
+{#                <a class="btn" href="{{ path('accountrequest_show', { 'id': entity.id }) }}">Show</a>#}
+                   
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                          Action <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right">
+
+                            {#<li><a href="{{ path('accountrequest_show', { 'id': entity.id }) }}">View Details</a></li>#}
+
+                            {#<li class="divider"></li>#}
+
+                            {% if entity.status != 'declined' %}
+                                <li><a onclick="return confirm('Are you sure?');"
+                                       href="{{ path('accountrequest_status', { 'id': entity.id, 'status': 'declined' }) }}">Decline</a>
+                                </li>                  
+                            {% endif %}                                                                
+
+                            {% if entity.status != 'active' %}
+                                <li><a onclick="return confirm('Are you sure?');" 
+                                       href="{{ path('accountrequest_status', { 'id': entity.id, 'status': 'active' }) }}">Revert Status to Active</a>
+                                </li>                  
+                            {% endif %}
+
+                            {% if entity.status != 'completed' %}
+                                <li><a onclick="return confirm('Are you sure?');" 
+                                       href="{{ path('accountrequest_status', { 'id': entity.id, 'status': 'accepted' }) }}">Accept</a>
+                                </li>                  
+                            {% endif %}
+                         
+
+                        </ul>
+                   </div>
+                    
+                    
+                    
+                    
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="navigation">
+        {{ knp_pagination_render(entities) }}
+    </div>
+        
+    {% endblock %}

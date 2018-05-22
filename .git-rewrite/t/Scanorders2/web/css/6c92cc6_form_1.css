@@ -1,0 +1,141 @@
+/* 
+    Created on : Jul 17, 2013, 1:12:10 PM
+    Author     : oli2002
+*/
+//input, label {
+    //display: inline;
+    //display: inline-block;
+    //width: 50px;
+//}
+
+.horizontal_type {
+    padding-bottom: 4%;
+}
+.horizontal_type LABEL, .horizontal_type INPUT {
+    display: inline;
+    padding-right: 5%;
+}
+
+.flash-notice {
+  color: #0081c2;
+  font-size: 200%;
+  margin-top: 3%;
+}
+
+.page-content {
+    padding-left: 5%;
+    padding-right: 5%;
+    padding-top: 0%;
+    padding-bottom: 5%;
+    float: left;
+    width: 90%;
+    text-align: center;
+}
+
+.page-content-top {
+   padding-top: 10%; 
+}
+
+.header {
+    float: left;
+    width: 100%;
+}
+
+.order-content {
+    margin-top: 10%;
+    /*float: left;*/
+    /*width: 100%;*/
+}
+
+.footer {
+    margin-top: 5%;
+    float: left;
+    width: 100%;
+}
+
+.form_label_input {
+    float: left;
+    width: 100%;
+    margin-top: 2%;
+}
+
+.btn_margin {
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+
+.slide_new {
+    float:left; 
+    width: 30%;
+}
+
+#form_menu {
+    float: left;
+    width: 100%;
+}
+
+/*.action-button {
+    float: left;
+}*/
+
+#next_button {
+    margin-top: 2%; 
+}
+
+.buttons-full-bar {
+    margin-bottom: 2%;
+    margin-top: 2%;
+    float: left;
+    width: 100%;
+}
+
+.form_edit {
+    float: left;
+    width: 100%;
+}
+
+.activetr {
+    background-color: rgb(217, 237, 247);
+}
+
+.canceltr {
+    background-color: rgb(242, 222, 222);
+}
+
+.completedtr {
+    background-color: rgb(223, 240, 216);
+}
+
+.uncompletedtr {
+    /*background-color: rgb(252, 248, 227);*/
+    background-color: white;
+}
+
+
+//.oleg_padding_top_bottom {
+    //marging-top: 2%;
+    //margin-bottom: 2%;
+    //border:2px solid #a1a1a1;
+    //padding:10px 40px; 
+    //background:#dddddd;
+    //width:700px;
+    //border-radius:25px;
+//}
+
+#acc_part_block {
+    //float: left;
+    //width: 150px;
+}
+
+.olspan1 {
+    //margin: 0 auto; // !important;
+    //padding: 0; // !important;
+    //width: auto;
+}
+.olspanmin {
+    //float: left;
+    //margin: 0 auto; // !important;
+    //padding: 0; // !important;
+    //width: auto;
+}
+

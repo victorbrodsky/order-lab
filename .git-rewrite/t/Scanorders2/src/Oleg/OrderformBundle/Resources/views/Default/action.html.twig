@@ -1,0 +1,129 @@
+
+{% set Filled = "Filled" in entity.status %}
+{% set Amended = "Amended" in entity.status %}
+{% set Canceled = "Canceled" in entity.status %}
+{% set OnHold = "On Hold" in entity.status %}
+
+{% block action %}
+
+    {% include 'OlegOrderformBundle::History/add_comment.html.twig' with {'orderid': entity.oid,'comments': comments}  %}
+
+    <div class="btn-group">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+          Action <span class="caret"></span>
+        </button>
+
+        {#style="left: -230%;"#}
+        <ul class="dropdown-menu dropdown-menu-right">
+            
+            <li><a href="{{ path('multy_show', { 'id': entity.oid }) }}">View Details</a></li>
+            <li><a href="{{ path('history_orderinfo_show', { 'id': entity.oid }) }}">View Progress & Comments</a></li>
+
+            {#<li><a href="{{ path('history_orderinfo_show', { 'id': entity.oid }) }}">Add Comment</a></li>#}
+            <li>
+                <a href="#" data-toggle="modal" data-target="#addComment_{{ entity.oid }}">Add Comment</a>
+            </li>
+
+            <li class="divider"></li>
+
+            {###############  USER ACTIONS #################}
+            {% if entity.status.action != 'Cancel' and entity.status != 'Superseded' and not Filled %}
+                <li><a onclick="return confirm('Are you sure?');" class="btn-danger"
+                       href="{{ path('scanorder_status', { 'id': entity.oid, 'status': 'Cancel' }) }}">Cancel</a>
+                </li>                  
+            {% endif %}
+
+            {#or is_granted('ROLE_ADMIN')#}
+            {% if entity.status.action != 'Cancel' and entity.status != 'Superseded' and entity.status != 'Submitted' and entity.status != 'Amended' and
+                ( not Filled and not OnHold ) %}
+                <li><a onclick="return confirm('Are you sure?');"
+                       href="{{ path('scanorder_status', { 'id': entity.oid, 'status': 'Submit' }) }}">Submit</a>
+                </li>
+            {% endif %}
+
+            {% if entity.status != 'Not Submitted' and entity.status != 'Superseded' and entity.status.action != 'Cancel' and not Filled %}
+                <li><a onclick="return confirm('Are you sure?');" class="btn-warning"
+                       href="{{ path('order_amend', { 'id': entity.oid }) }}">Amend</a>
+                </li>
+            {% endif %}
+
+
+            {% if entity.status.action == 'Cancel' %}
+                <li><a onclick="return confirm('Are you sure?');"
+                       href="{{ path('scanorder_status', { 'id': entity.oid, 'status': 'Un-Cancel' }) }}">Un-Cancel</a>
+                </li>
+            {% endif %}
+
+            {###############  ADMIN ACTIONS #################}
+            {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROCESSOR') and entity.status != 'Superseded' %}
+
+                <li class="divider"></li>
+                
+                {% if entity.status != 'Filled: Scanned' %}
+                    <li><a onclick="return confirm('Are you sure?');" 
+                           href="{{ path('scanorder_status', { 'id': entity.oid, 'status': 'Filled: Scanned' }) }}">Filled: Scanned</a>
+                    </li>                  
+                {% endif %}
+                
+                {% if entity.status != 'Filled: Not Scanned' %}
+                    <li><a onclick="return confirm('Are you sure?');" 
+                           href="{{ path('scanorder_status', { 'id': entity.oid, 'status': 'Filled: Not Scanned' }) }}">Filled: Not Scanned</a>
+                    </li>                  
+                {% endif %}
+                
+                {% if entity.status != 'Filled: Some Scanned' %}
+                    <li><a onclick="return confirm('Are you sure?');" 
+                           href="{{ path('scanorder_status', { 'id': entity.oid, 'status': 'Filled: Some Scanned' }) }}">Filled: Some Scanned</a>
+                    </li>                  
+                {% endif %}
+
+                {% if entity.status != 'Filled: Scanned & Returned' %}
+                    <li><a onclick="return confirm('Are you sure?');"
+                           href="{{ path('scanorder_status', { 'id': entity.oid, 'status': 'Filled: Scanned & Returned' }) }}">Filled: Scanned & Returned</a>
+                    </li>
+                {% endif %}
+
+                {% if entity.status != 'Filled: Not Scanned & Returned' %}
+                    <li><a onclick="return confirm('Are you sure?');"
+                           href="{{ path('scanorder_status', { 'id': entity.oid, 'status': 'Filled: Not Scanned & Returned' }) }}">Filled: Not Scanned & Returned</a>
+                    </li>
+                {% endif %}
+
+                {% if entity.status != 'Filled: Some Scanned & Returned' %}
+                    <li><a onclick="return confirm('Are you sure?');"
+                           href="{{ path('scanorder_status', { 'id': entity.oid, 'status': 'Filled: Some Scanned & Returned' }) }}">Filled: Some Scanned & Returned</a>
+                    </li>
+                {% endif %}
+
+                <li class="divider"></li>
+
+                {% if entity.status != 'On Hold: Slides Received' %}
+                    <li><a onclick="return confirm('Are you sure?');"
+                           href="{{ path('scanorder_status', { 'id': entity.oid, 'status': 'On Hold: Slides Received' }) }}">On Hold: Slides Received</a>
+                    </li>
+                {% endif %}
+
+                {% if entity.status != 'On Hold: Awaiting Slides' %}
+                    <li><a onclick="return confirm('Are you sure?');"
+                           href="{{ path('scanorder_status', { 'id': entity.oid, 'status': 'On Hold: Awaiting Slides' }) }}">On Hold: Awaiting Slides</a>
+                    </li>
+                {% endif %}
+
+                {#                    
+                {% if entity.status != 'amend' %}
+                    <li><a onclick="return confirm('Are you sure?');" class="btn-danger" 
+                           href="{{ path('scanorder_status', { 'id': entity.oid, 'status': 'amend' }) }}">Amend</a>
+                    </li>                  
+                {% endif %}     
+                #}
+
+           {% endif %} {#admin#}
+
+        </ul>
+
+      </div>
+
+
+
+{% endblock %}
+

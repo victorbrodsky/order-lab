@@ -1,0 +1,62 @@
+{#{% extends '::base.html.twig' %}#}
+
+{#{% extends "OlegOrderformBundle::Default/base.html.twig" %} #}
+
+{% form_theme form 'OlegOrderformBundle:Default:fields.html.twig' %}
+                
+            {% stylesheets 
+                '@OlegOrderformBundle/Resources/public/bootstrap/css/*' filter='cssrewrite' 
+                '@OlegOrderformBundle/Resources/public/form/css/form.css'
+            %}
+                <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
+            {% endstylesheets %}                                
+                
+            {% javascripts 
+                '@OlegOrderformBundle/Resources/public/jquery/jquery-1.9.1.js'
+                '@OlegOrderformBundle/Resources/public/bootstrap/js/*'  
+                '@OlegOrderformBundle/Resources/public/form/js/*'    
+            %}
+                <script type="text/javascript" src="{{ asset_url }}"></script>
+            {% endjavascripts %}                                                                   
+                
+            {# Bootstrap Combobox: https://github.com/danielfarrell/bootstrap-combobox  #}
+            {# TODO: use 'bundles/acme_foo/css/*' #}
+            {% stylesheets 
+                '@OlegOrderformBundle/Resources/public/bootstrap-combobox/css/*' filter='cssrewrite'
+            %}
+                <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
+            {% endstylesheets %}
+
+            {% javascripts                   
+                '@OlegOrderformBundle/Resources/public/bootstrap-combobox/js/*'
+            %}
+                <script type="text/javascript" src="{{ asset_url }}"></script>
+            {% endjavascripts %}                    
+            {# Bootstrap Combobox #}                                           
+                
+    <title>{% block title %}{% endblock %} - Scan Order</title>                   
+            
+        
+
+
+{% block content %}
+{% block body -%}
+    <h1>Part creation</h1>
+
+    <form action="{{ path('part_create') }}" method="post" {{ form_enctype(form) }}>
+        {{ form_widget(form) }}
+        {{ form_widget(form_scan) }}
+        <p>
+            <button class="btn" type="submit">Create</button>
+        </p>
+    </form>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('part') }}">
+            Back to the list
+        </a>
+    </li>
+</ul>
+{% endblock %}
+{% endblock %}
