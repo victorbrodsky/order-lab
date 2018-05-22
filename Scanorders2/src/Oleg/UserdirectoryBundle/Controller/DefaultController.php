@@ -57,10 +57,16 @@ class DefaultController extends Controller
 
         $emailRes = $emailUtil->sendSpooledEmails();
 
+        if( $emailRes ) {
+            $msg = 'Spooled emails have been sent.';
+        } else {
+            $msg = 'Spooled emails have not been sent. Please verify your Mailer setting.';
+        }
+
         //Flash
         $this->get('session')->getFlashBag()->add(
             'notice',
-            'Spooled emails are send.'
+            $msg
         );
 
         return $this->redirectToRoute('employees_home');
