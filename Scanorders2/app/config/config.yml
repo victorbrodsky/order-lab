@@ -196,15 +196,6 @@ swiftmailer:
     auth_mode: '%mailer_auth_mode%'
     port:      '%mailer_port%'
     encryption: '%mailer_encryption%'
-    #gmail
-    #transport: smtp
-    #host:      smtp.gmail.com
-    #username:  email@gmail.com
-    #password:  gmail_password
-    #auth_mode: oauth
-    #port:      587
-    #encryption: tls
-    #
     #swift spool settings
     delivery_addresses: '%swift_delivery_addresses%' #disable it for production
     #disable_delivery: %swift_disable_delivery%

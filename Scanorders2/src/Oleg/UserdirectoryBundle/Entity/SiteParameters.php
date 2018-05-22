@@ -101,7 +101,7 @@ class SiteParameters {
     /**
      * tls or ssl
      *
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $mailerUseSecureConnection;
 
@@ -125,6 +125,20 @@ class SiteParameters {
      * @ORM\Column(type="text", nullable=true)
      */
     private $mailerPort;
+
+    /**
+     * use spooled email
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $mailerSpool;
+
+    /**
+     * emails will deliver only to these emails
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $mailerDeliveryAddresses;
 
     //mailer_transport: smtp
     //mailer_user: null
@@ -1403,6 +1417,38 @@ class SiteParameters {
     public function setMailerPort($mailerPort)
     {
         $this->mailerPort = $mailerPort;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMailerSpool()
+    {
+        return $this->mailerSpool;
+    }
+
+    /**
+     * @param mixed $mailerSpool
+     */
+    public function setMailerSpool($mailerSpool)
+    {
+        $this->mailerSpool = $mailerSpool;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMailerDeliveryAddresses()
+    {
+        return $this->mailerDeliveryAddresses;
+    }
+
+    /**
+     * @param mixed $mailerDeliveryAddresses
+     */
+    public function setMailerDeliveryAddresses($mailerDeliveryAddresses)
+    {
+        $this->mailerDeliveryAddresses = $mailerDeliveryAddresses;
     }
 
     /**

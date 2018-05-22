@@ -72,11 +72,60 @@ class SiteParametersType extends AbstractType
         ));
 
         //smtp
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'smtpServerAddress' )
-        $builder->add('smtpServerAddress',null,array(
-            'label'=>'SMTP Server Address:',
-            'attr' => array('class'=>'form-control')
-        ));
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'smtpServerAddress' ) {
+            $builder->add('smtpServerAddress', null, array(
+                'label' => 'SMTP Server Address:',
+                'attr' => array('class' => 'form-control')
+            ));
+        }
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'mailerPort' ) {
+            $builder->add('mailerPort', null, array(
+                'label' => 'Mailer Port (i.e. 25, 465, 587):',
+                'attr' => array('class' => 'form-control')
+            ));
+        }
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'mailerTransport' ) {
+            $builder->add('mailerTransport', null, array(
+                'label' => 'Mailer Transport (i.e. smtp or gmail):',
+                'attr' => array('class' => 'form-control')
+            ));
+        }
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'mailerAuthMode' ) {
+            $builder->add('mailerAuthMode', null, array(
+                'label' => 'Mailer Authentication Mode (i.e. oauth or login):',
+                'attr' => array('class' => 'form-control')
+            ));
+        }
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'mailerUseSecureConnection' ) {
+            $builder->add('mailerUseSecureConnection', null, array(
+                'label' => 'Mailer Use Security Connection (i.e. tls or ssl):',
+                'attr' => array('class' => 'form-control')
+            ));
+        }
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'mailerUser' ) {
+            $builder->add('mailerUser', null, array(
+                'label' => 'Mailer Username:',
+                'attr' => array('class' => 'form-control')
+            ));
+        }
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'mailerPassword' ) {
+            $builder->add('mailerPassword', null, array(
+                'label' => 'Mailer Password:',
+                'attr' => array('class' => 'form-control')
+            ));
+        }
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'mailerSpool' ) {
+            $builder->add('mailerSpool', null, array(
+                'label' => 'Mailer Use Spool:',
+                'attr' => array('class' => 'form-control')
+            ));
+        }
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'mailerDeliveryAddresses' ) {
+            $builder->add('mailerDeliveryAddresses', null, array(
+                'label' => 'Mailer Delivery Addresses (emails will be delivered to these specified addresses email1,email2,email3):',
+                'attr' => array('class' => 'form-control')
+            ));
+        }
 
         //scan order DB
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'dbServerAddress' )

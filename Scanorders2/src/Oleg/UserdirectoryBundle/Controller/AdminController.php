@@ -1790,7 +1790,13 @@ class AdminController extends Controller
             "siteEmail" => "email@email.com",
             "loginInstruction" => 'Please use your <a href="http://weill.cornell.edu/its/identity-security/identity/cwid/">CWID</a> to log in.',
 
-            "smtpServerAddress" => "null",
+            "smtpServerAddress" => "smtp.gmail.com",
+            "mailerPort" => "587",
+            "mailerTransport" => "smtp",
+            "mailerAuthMode" => "login",
+            "mailerUseSecureConnection" => "tls",
+            "mailerUser" => null,
+            "mailerPassword" => null,
 
             "aDLDAPServerAddress" => "ldap.forumsys.com",
             "aDLDAPServerPort" => "389",

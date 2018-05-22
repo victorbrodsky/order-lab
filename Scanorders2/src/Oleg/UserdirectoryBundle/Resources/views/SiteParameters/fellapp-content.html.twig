@@ -48,7 +48,7 @@
                             Periodically import fellowship applications submitted via the Google form
                             <a style="color:#428bca" href="{{ path('fellapp_instructions') }}" target="_blank">View instructions to change the interval</a>
                         </td>
-                        <td>
+                        <td class="rowlink-skip">
                             {% set allowPopulateFellAppStr = 'No' %}
                             {% if entity.allowPopulateFellApp == true %}
                                 {% set allowPopulateFellAppStr = 'Yes' %}

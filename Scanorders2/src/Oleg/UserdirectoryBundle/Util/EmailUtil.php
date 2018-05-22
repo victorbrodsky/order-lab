@@ -90,20 +90,35 @@ class EmailUtil {
 //            $message = \Swift_Message::newInstance();
 //        }
 
-        $mailer = $this->getSwiftMailer();
-
-        $message = \Swift_Message::newInstance();
+        $spool = null;
+        $useSpool = $userSecUtil->getSiteSettingParameter('mailerSpool');
+        if( $useSpool ) {
+            $spoolPath = $this->container->get('kernel')->getProjectDir().DIRECTORY_SEPARATOR."app".DIRECTORY_SEPARATOR."spool";
+            //exit("spoolPath=".$spoolPath);
+            $spool = new \Swift_FileSpool($spoolPath);
+            $message = \Swift_Message::newInstance($spool);
+        } else {
+            //exit("no spool");
+            $message = \Swift_Message::newInstance();
+        }
 
         $message->setSubject($subject);
         $message->setFrom($fromEmail);
-        $message->setTo($emails);
+
         $message->setBody(
             $body,
             'text/plain'
         );
 
-        if( $ccs ) {
-            $message->setCc($ccs);
+        $mailerDeliveryAddresses = trim($userSecUtil->getSiteSettingParameter('mailerDeliveryAddresses'));
+        if( $mailerDeliveryAddresses ) {
+            $mailerDeliveryAddresses = str_replace(" ","",$mailerDeliveryAddresses);
+            $message->setTo($mailerDeliveryAddresses);
+        } else {
+            $message->setTo($emails);
+            if( $ccs ) {
+                $message->setCc($ccs);
+            }
         }
 
         //send copy email to siteEmail via setBcc
@@ -129,6 +144,10 @@ class EmailUtil {
             $message->attach(\Swift_Attachment::fromPath($attachmentPath));
         }
 
+        $mailer = $this->getSwiftMailer($spool);
+        //$mailer = $res['mailer'];
+        //$transport = $res['transport'];
+
         //When using send() the message will be sent just like it would be sent if you used your mail client.
         // An integer is returned which includes the number of successful recipients.
         // If none of the recipients could be sent to then zero will be returned, which equates to a boolean false.
@@ -136,6 +155,13 @@ class EmailUtil {
         // are delivered to successfully then the value 5 will be returned.
         //$emailRes = $this->container->get('mailer')->send($message); //
         $emailRes = $mailer->send($message);
+
+//        if( $useSpool ) {
+//            $spool->recover();
+//            $emailRes = $spool->flushQueue($transport);
+//        } else {
+//            $emailRes = $mailer->send($message);
+//        }
 
         $ccStr = "";
         if( $ccs && count($ccs)>0 ) {
@@ -175,27 +201,49 @@ class EmailUtil {
 
 
     //https://ourcodeworld.com/articles/read/14/swiftmailer-send-mails-from-php-easily-and-effortlessly
-    //TODO: Swift_TransportException: "Unable to connect with TLS encryption"
-    public function getSwiftMailer() {
-        $host = "smtp.gmail.com";
-        $port = 587;
-        $encrypt = "tls";
-        $username = "cinava10@gmail.com";
-        $password = "newpassword";
-        $authMode = "login";
-        $trans = "smtp";
+    public function getSwiftMailer($spool) {
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        $host = $userSecUtil->getSiteSettingParameter('smtpServerAddress');
+        $port = $userSecUtil->getSiteSettingParameter('mailerPort');
+        $encrypt = $userSecUtil->getSiteSettingParameter('mailerUseSecureConnection');
+        $username = $userSecUtil->getSiteSettingParameter('mailerUser');
+        //Note for Google email server: use Google App specific password
+        //Enable 2-step verification
+        //Generate Google App specific password
+        $password = $userSecUtil->getSiteSettingParameter('mailerPassword');
+        $authMode = $userSecUtil->getSiteSettingParameter('mailerAuthMode');
+        $trans = $userSecUtil->getSiteSettingParameter('mailerTransport');
+
+        //$host = "smtp.gmail.com";
+        //$port = 587;
+        //$encrypt = "tls";
+        //$username = "cinava10@gmail.com";
+        //$password = "newpassword";
+        //$authMode = "login"; //not used
+        //$trans = "smtp"; //not used
 
         //$port = 465;
         //$encrypt = "ssl";
 
-        $transport = \Swift_SmtpTransport::newInstance()
-            ->setHost($host)
-            ->setPort($port)
-            ->setEncryption($encrypt)
-            ->setUsername($username)
-            ->setPassword($password);
+        if( $spool ) {
+            $transport = \Swift_SpoolTransport::newInstance($spool);
+        } else {
+            $transport = \Swift_SmtpTransport::newInstance();
+        }
 
-        //$transport->setStreamOptions(array('ssl' => array('allow_self_signed' => true, 'verify_peer' => false, 'verify_peer_name' => false)));
+        $transport->setHost($host);
+        $transport->setPort($port);
+        $transport->setEncryption($encrypt);
+        $transport->setUsername($username);
+        $transport->setPassword($password);
+
+        $transport->setStreamOptions(array('ssl' => array('allow_self_signed' => true, 'verify_peer' => false, 'verify_peer_name' => false)));
+
+
+        $spool->recover();
+        $spool->flushQueue($transport);
+
 
 //        $transport = \Swift_SmtpTransport::newInstance('smtp.gmail.com', 587, 'tls')
 //            ->setUsername($username)
@@ -209,6 +257,12 @@ class EmailUtil {
         //$transport->setStreamOptions(array('ssl' => array('allow_self_signed' => true, 'verify_peer' => false)));
 
         $mailer = \Swift_Mailer::newInstance($transport);
+
+//        $res = array(
+//            'mailer' => $mailer,
+//            'transport' => $transport
+//        );
+//        return $res;
 
         return $mailer;
     }

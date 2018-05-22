@@ -101,11 +101,6 @@
                 <td>{{ entity.siteEmail }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'siteEmail'}) }}">Edit</a></td>
             </tr>
-            <tr>
-                <td>SMTP Server Address</td>
-                <td>{{ entity.smtpServerAddress }}</td>
-                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'smtpServerAddress'}) }}">Edit</a></td>
-            </tr>
 
             <tr>
                 <td>Live Site Root URL (http://c.med.cornell.edu/order/)</td>
@@ -129,6 +124,63 @@
                 <td>Network drive absolute path to store DB backup files (my/backup/path/)</td>
                 <td>{{ entity.networkDrivePath }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'networkDrivePath'}) }}">Edit</a></td>
+            </tr>
+
+            <tr>
+                <td class="rowlink-skip" colspan="3" align="center">
+                    <h3>Mailer:</h3>
+                </td>
+            </tr>
+            <tr>
+                <td>SMTP Server Address</td>
+                <td>{{ entity.smtpServerAddress }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'smtpServerAddress'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>Mailer Port (i.e. 25, 465, 587)</td>
+                <td>{{ entity.mailerPort }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'mailerPort'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>Mailer Transport (i.e. smtp or gmail)</td>
+                <td>{{ entity.mailerTransport }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'mailerTransport'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>Mailer Authentication Mode (i.e. oauth or login)</td>
+                <td>{{ entity.mailerAuthMode }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'mailerAuthMode'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>Mailer Use Security Connection (i.e. tls or ssl)</td>
+                <td>{{ entity.mailerUseSecureConnection }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'mailerUseSecureConnection'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>Mailer Username</td>
+                <td>{{ entity.mailerUser }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'mailerUser'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>Mailer Password</td>
+                <td>{{ entity.mailerPassword }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'mailerPassword'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>Mailer Use Spool</td>
+                <td>
+                    {% set mailerSpool = 'No' %}
+                    {% if entity.mailerSpool == true %}
+                        {% set mailerSpool = 'Yes' %}
+                    {% endif %}
+                    {{ mailerSpool }}
+                </td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'mailerSpool'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>Mailer Delivery Addresses (emails will be delivered to these specified addresses email1,email2,email3)</td>
+                <td>{{ entity.mailerDeliveryAddresses }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'mailerDeliveryAddresses'}) }}">Edit</a></td>
             </tr>
 
             {#Maintenance#}
