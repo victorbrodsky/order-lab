@@ -411,7 +411,6 @@ class OrganizationalGroupDefaultType extends AbstractType
         });
         ///////////////////////// EOF tree node /////////////////////////
 
-
     }
 
     public function configureOptions(OptionsResolver $resolver)

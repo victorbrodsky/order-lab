@@ -875,6 +875,19 @@ class SiteParameters {
      */
     private $calllogResources;
 
+    /**
+     * Navbar Employee List Filter Institution #1: [Dropdown with WCM selected]
+     *
+     * @ORM\ManyToOne(targetEntity="Institution")
+     */
+    private $navbarFilterInstitution1;
+
+    /**
+     * Navbar Employee List Filter Institution #1: [Dropdown with NYP selected]
+     *
+     * @ORM\ManyToOne(targetEntity="Institution")
+     */
+    private $navbarFilterInstitution2;
 
 
     function __construct( $addobjects=true )

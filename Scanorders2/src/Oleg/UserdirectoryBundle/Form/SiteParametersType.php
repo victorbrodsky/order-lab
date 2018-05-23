@@ -659,6 +659,52 @@ class SiteParametersType extends AbstractType
         }
         ////////////////////////// EOF LDAP notice messages /////////////////////////
 
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'navbarFilterInstitution1' ) {
+            $builder->add('navbarFilterInstitution1', EntityType::class, array(
+                'class' => 'OlegUserdirectoryBundle:Institution',
+                //'choice_label' => 'name',
+                'choice_label' => 'getTreeName',
+                'label' => 'Navbar Employee List Filter Institution #1:',
+                'required' => false,
+                'multiple' => false,
+                //'empty_value' => false,
+                'attr' => array('class' => 'combobox combobox-width'),
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("(list.type = :typedef OR list.type = :typeadd) AND list.level = :level")
+                        ->orderBy("list.orderinlist", "ASC")
+                        ->setParameters(array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                            'level' => 0
+                        ));
+                },
+            ));
+        }
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'navbarFilterInstitution2' ) {
+            $builder->add('navbarFilterInstitution2', EntityType::class, array(
+                'class' => 'OlegUserdirectoryBundle:Institution',
+                //'choice_label' => 'name',
+                'choice_label' => 'getTreeName',
+                'label' => 'Navbar Employee List Filter Institution #2:',
+                'required' => false,
+                'multiple' => false,
+                //'empty_value' => false,
+                'attr' => array('class' => 'combobox combobox-width'),
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("(list.type = :typedef OR list.type = :typeadd) AND list.level = :level")
+                        ->orderBy("list.orderinlist", "ASC")
+                        ->setParameters(array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                            'level' => 0
+                        ));
+                },
+            ));
+        }
+
     }
     
     /**

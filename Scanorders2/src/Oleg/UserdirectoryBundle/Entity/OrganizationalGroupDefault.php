@@ -196,7 +196,7 @@ class OrganizationalGroupDefault
      * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
      **/
     private $medicalLicenseState;
-
+    
 
 
     public function __construct() {
@@ -637,5 +637,6 @@ class OrganizationalGroupDefault
         return in_array(strtoupper($role), $this->roles, true);
     }
 
+    
 
 }
