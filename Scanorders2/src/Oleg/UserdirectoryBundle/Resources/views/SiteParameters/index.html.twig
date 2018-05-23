@@ -128,6 +128,22 @@
 
             <tr>
                 <td class="rowlink-skip" colspan="3" align="center">
+                    <h3>Default Values:</h3>
+                </td>
+            </tr>
+            <tr>
+                <td>Navbar Employee List Filter Institution #1</td>
+                <td>{{ entity.navbarFilterInstitution1 }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'navbarFilterInstitution1'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>Navbar Employee List Filter Institution #2</td>
+                <td>{{ entity.navbarFilterInstitution2 }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'navbarFilterInstitution2'}) }}">Edit</a></td>
+            </tr>
+
+            <tr>
+                <td class="rowlink-skip" colspan="3" align="center">
                     <h3>Mailer:</h3>
                 </td>
             </tr>

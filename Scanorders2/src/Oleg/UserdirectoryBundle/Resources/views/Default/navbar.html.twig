@@ -17,8 +17,29 @@
 {#   navigation menu   #}
 
 {% macro listUsers( pathlink, pathlink_loc, hasRoleSimpleView ) %}
+    {% set filters = user_service_utility.getListUserFilter(pathlink,pathlink_loc,hasRoleSimpleView) %}
+    {% if filters and filters|length > 0 %}
+        <ul class="dropdown-menu">
+            {% for filter in filters %}
+                {{ filter|raw }}
+                {#{% if  %}#}
+                {#{% endif %}#}
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endmacro %}
+{% macro listUsersORIG( pathlink, pathlink_loc, hasRoleSimpleView ) %}
 
-    {% set navbarFilterInstitution1 =  %}
+    {#{% set inst1 = null %}#}
+    {#{% set navbarFilterInstitution1 = user_security_utility.getSiteSettingParameter("navbarFilterInstitution1") %}#}
+    {#{% if navbarFilterInstitution1 %}#}
+        {#{% set inst1 = navbarFilterInstitution1.getAbbreviation() %}#}
+    {#{% endif %}#}
+    {#{% set inst2 = null %}#}
+    {#{% set navbarFilterInstitution2 = user_security_utility.getSiteSettingParameter("navbarFilterInstitution2") %}#}
+    {#{% if navbarFilterInstitution2 %}#}
+        {#{% set inst2 = navbarFilterInstitution2.getAbbreviation() %}#}
+    {#{% endif %}#}
 
     <ul class="dropdown-menu">
 
@@ -140,6 +161,11 @@
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">List Current<b class="caret"></b></a>
                             {% endif %}
                             {{ usernavbar.listUsers(employees_sitename~'_listusers',employees_sitename~'_list_common_locations',hasRoleSimpleView) }}
+                        </li>
+                        {#test#}
+                        <li id="nav-bar-userlist-test" class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">List Current TEST<b class="caret"></b></a>
+                            {{ usernavbar.listUsersORIG(employees_sitename~'_listusers',employees_sitename~'_list_common_locations',hasRoleSimpleView) }}
                         </li>
 
                         {% if is_granted('ROLE_USERDIRECTORY_EDITOR') and not hasRoleSimpleView %}

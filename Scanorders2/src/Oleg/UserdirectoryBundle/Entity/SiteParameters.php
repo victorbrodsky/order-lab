@@ -3113,6 +3113,38 @@ class SiteParameters {
         $this->calllogSiteParameter = $calllogSiteParameter;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getNavbarFilterInstitution1()
+    {
+        return $this->navbarFilterInstitution1;
+    }
+
+    /**
+     * @param mixed $navbarFilterInstitution1
+     */
+    public function setNavbarFilterInstitution1($navbarFilterInstitution1)
+    {
+        $this->navbarFilterInstitution1 = $navbarFilterInstitution1;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNavbarFilterInstitution2()
+    {
+        return $this->navbarFilterInstitution2;
+    }
+
+    /**
+     * @param mixed $navbarFilterInstitution2
+     */
+    public function setNavbarFilterInstitution2($navbarFilterInstitution2)
+    {
+        $this->navbarFilterInstitution2 = $navbarFilterInstitution2;
+    }
+
 
 
     

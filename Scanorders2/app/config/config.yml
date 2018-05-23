@@ -57,6 +57,7 @@ twig:
         subinstitution_name: '%subinstitution_name%'
         department_url: '%department_url%'
         department_name: '%department_name%'
+        showcopyrightonfooter: '%showcopyrightonfooter%'
         employees_sitename: '%employees.sitename%'
         default_system_email: '%default_system_email%'
 

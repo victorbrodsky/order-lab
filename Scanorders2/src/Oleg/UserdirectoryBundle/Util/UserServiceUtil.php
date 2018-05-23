@@ -510,6 +510,140 @@ class UserServiceUtil {
         return null;
     }
 
+    public function getListUserFilter($pathlink, $pathlink_loc, $hasRoleSimpleView) {
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        $res = array();
+        $inst1 = null;
+        $inst2 = null;
+
+        $institution1 = $userSecUtil->getSiteSettingParameter("navbarFilterInstitution1");
+        if( $institution1 ) {
+            $inst1 = $institution1->getAbbreviation();
+        }
+        $institution2 = $userSecUtil->getSiteSettingParameter("navbarFilterInstitution2");
+        if( $institution2 ) {
+            $inst2 = $institution2->getAbbreviation();
+        }
+
+        $instTypes = array(
+            'hr' => 'all',
+
+            '[inst] Pathology Employees' => 'all',//array('all','inst1'),
+            '[inst] Pathology Faculty' => 'all',//array('all','inst1'),
+            '[inst] Pathology Clinical Faculty' => 'all',
+            '[inst] Pathology Physicians' => 'notSimpleView',
+
+            'hr' => 'all',
+
+            '[inst] Pathology Research Faculty' => 'all',
+            '- [inst] Pathology Principal Investigators of Research Labs' => 'all',
+            '- [inst] Pathology Faculty in Research Labs' => 'all',
+
+            'hr' => 'all',
+
+            '[inst] Pathology Staff' => 'notSimpleView',
+            '- [inst] Pathology Staff in Research Labs' => 'all',
+
+            'hr' => 'all',
+
+
+            '[inst] Anatomic Pathology Faculty' => 'all',
+            '[inst] Laboratory Medicine Faculty' => 'all',
+
+            'hr' => 'all',
+
+            '[inst] Pathology Residents' => 'all',
+            '- [inst] AP/CP Residents' => 'notSimpleView',
+            '- [inst] AP Residents' => 'notSimpleView',
+            '- [inst] AP Only Residents' => 'notSimpleView',
+            '- [inst] CP Residents' => 'notSimpleView',
+            '- [inst] CP Only Residents' => 'notSimpleView',
+
+            'hr' => 'all',
+
+            '[inst] Pathology Fellows' => 'all',
+            '[inst] Non-academic Faculty' => 'all',
+        );
+
+        $locTypes = array(
+            'Common Locations' => 'all',
+            '[inst] Pathology Common Locations' => 'all',
+        );
+
+        //first common element
+        $linkUrl = $this->container->get('router')->generate(
+            $pathlink,
+            array(
+                //no filter
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        $href = '<li><a href="'.$linkUrl.'">'.'Employees'.'</a></li>';
+        $res[] = $href;
+
+        if( $inst1 ) {
+//            foreach($instTypes as $name=>$flag) {
+//                if( $name == 'hr' ) {
+//                    $res[] = '<hr style="margin-bottom:0; margin-top:0;">';
+//                }
+//                if( !$hasRoleSimpleView && $flag == 'notSimpleView' ) {
+//                    $name = str_replace('[inst]',$inst1,$name);
+//                    $res[] = $name;
+//                }
+//            }
+            $res = $this->replaeInstInFilterArr($pathlink,$res,$instTypes,$inst1,$hasRoleSimpleView);
+        }
+
+        if( $inst2 ) {
+            $res = $this->replaeInstInFilterArr($pathlink,$res,$instTypes,$inst2,$hasRoleSimpleView);
+        }
+
+        if( $inst1 && $inst2 ) {
+            $instName = $inst1 . " or " . $inst2;
+            $res = $this->replaeInstInFilterArr($pathlink,$res,$instTypes,$instName,$hasRoleSimpleView);
+        }
+        
+        //<li><a href="{{ path(pathlink) }}">Employees</a></li>
+
+        return $res;
+    }
+    public function replaeInstInFilterArr($pathlink,$res,$instTypes,$inst,$hasRoleSimpleView) {
+        foreach($instTypes as $name=>$flag) {
+            if( $name == 'hr' ) {
+                $res[] = '<hr style="margin-bottom:0; margin-top:0;">';
+                continue;
+            }
+            if( !$hasRoleSimpleView || !($hasRoleSimpleView && $flag == 'notSimpleView') ) {
+                $nameInst = str_replace('[inst]',$inst,$name);
+                $nameFilter = str_replace('- ','',$nameInst);
+
+                if( strpos($name, '[inst]') !== false ) {
+                    $linkUrl = $this->container->get('router')->generate(
+                        $pathlink,
+                        array(
+                            'filter'=>$nameFilter,
+                        ),
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    );
+                } else {
+                    $linkUrl = $this->container->get('router')->generate(
+                        $pathlink,
+                        array(
+                            //no filter
+                        ),
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    );
+                }
+
+                $href = '<li><a href="'.$linkUrl.'">'.$nameInst.'</a></li>';
+
+                $res[] = $href;
+            }
+        }
+        return $res;
+    }
+
     /////////////// NOT USED ///////////////////
     //NOT USED
     //MSSQL error: [Microsoft][ODBC Driver 11 for SQL Server][SQL Server]'LEVENSHTEIN' is not a recognized built-in function name
