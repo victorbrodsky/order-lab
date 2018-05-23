@@ -587,26 +587,17 @@ class UserServiceUtil {
 
         //TODO: rewrite: replace inst1 and inst2 logic
         if( $inst1 ) {
-//            foreach($instTypes as $name=>$flag) {
-//                if( $name == 'hr' ) {
-//                    $res[] = '<hr style="margin-bottom:0; margin-top:0;">';
-//                }
-//                if( !$hasRoleSimpleView && $flag == 'notSimpleView' ) {
-//                    $name = str_replace('[inst]',$inst1,$name);
-//                    $res[] = $name;
-//                }
-//            }
             $res = $this->replaeInstInFilterArr($pathlink,$res,$instTypes,$inst1,$hasRoleSimpleView);
         }
 
-        if( $inst2 ) {
-            $res = $this->replaeInstInFilterArr($pathlink,$res,$instTypes,$inst2,$hasRoleSimpleView);
-        }
-
-        if( $inst1 && $inst2 ) {
-            $instName = $inst1 . " or " . $inst2;
-            $res = $this->replaeInstInFilterArr($pathlink,$res,$instTypes,$instName,$hasRoleSimpleView);
-        }
+//        if( $inst2 ) {
+//            $res = $this->replaeInstInFilterArr($pathlink,$res,$instTypes,$inst2,$hasRoleSimpleView);
+//        }
+//
+//        if( $inst1 && $inst2 ) {
+//            $instName = $inst1 . " or " . $inst2;
+//            $res = $this->replaeInstInFilterArr($pathlink,$res,$instTypes,$instName,$hasRoleSimpleView);
+//        }
         
         //<li><a href="{{ path(pathlink) }}">Employees</a></li>
 
