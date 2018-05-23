@@ -510,7 +510,7 @@ class UserServiceUtil {
         return null;
     }
 
-    public function getListUserFilter($pathlink, $pathlink_loc, $hasRoleSimpleView) {
+    public function getListUserFilter($pathlink, $pathlinkLoc, $hasRoleSimpleView) {
         $userSecUtil = $this->container->get('user_security_utility');
 
         $res = array();
@@ -529,46 +529,39 @@ class UserServiceUtil {
         $instTypes = array(
             'hr' => 'all',
 
-            '[inst] Pathology Employees' => 'all',//array('all','inst1'),
-            '[inst] Pathology Faculty' => 'all',//array('all','inst1'),
-            '[inst] Pathology Clinical Faculty' => 'all',
-            '[inst] Pathology Physicians' => 'notSimpleView',
+            '[inst1] Pathology Employees' => 'all',
+            '[inst1] Pathology Faculty' => 'all',
+            '[inst1] Pathology Clinical Faculty' => 'all',
+            '[inst1] Pathology Physicians' => 'notSimpleView',
 
             'hr' => 'all',
 
-            '[inst] Pathology Research Faculty' => 'all',
-            '- [inst] Pathology Principal Investigators of Research Labs' => 'all',
-            '- [inst] Pathology Faculty in Research Labs' => 'all',
+            '[inst1] Pathology Research Faculty' => 'all',
+            '- [inst1] Pathology Principal Investigators of Research Labs' => 'all',
+            '- [inst1] Pathology Faculty in Research Labs' => 'all',
 
             'hr' => 'all',
 
-            '[inst] Pathology Staff' => 'notSimpleView',
-            '- [inst] Pathology Staff in Research Labs' => 'all',
+            '[inst1] Pathology Staff' => 'notSimpleView',
+            '[inst2] Pathology Staff' => 'notSimpleView',
+            '- [inst1] or [inst2] Pathology Staff in Research Labs' => 'all',
 
             'hr' => 'all',
 
-
-            '[inst] Anatomic Pathology Faculty' => 'all',
-            '[inst] Laboratory Medicine Faculty' => 'all',
-
-            'hr' => 'all',
-
-            '[inst] Pathology Residents' => 'all',
-            '- [inst] AP/CP Residents' => 'notSimpleView',
-            '- [inst] AP Residents' => 'notSimpleView',
-            '- [inst] AP Only Residents' => 'notSimpleView',
-            '- [inst] CP Residents' => 'notSimpleView',
-            '- [inst] CP Only Residents' => 'notSimpleView',
+            '[inst1] Anatomic Pathology Faculty' => 'all',
+            '[inst2] Laboratory Medicine Faculty' => 'all',
 
             'hr' => 'all',
 
-            '[inst] Pathology Fellows' => 'all',
-            '[inst] Non-academic Faculty' => 'all',
-        );
+            '[inst1] or [inst2] Pathology Residents' => 'all',
+            '- [inst1] or [inst2] AP/CP Residents' => 'notSimpleView',
+            '- [inst1] or [inst2] AP Residents' => 'notSimpleView',
+            '- [inst1] or [inst2] AP Only Residents' => 'notSimpleView',
+            '- [inst1] or [inst2] CP Residents' => 'notSimpleView',
+            '- [inst1] or [inst2] CP Only Residents' => 'notSimpleView',
 
-        $locTypes = array(
-            'Common Locations' => 'all',
-            '[inst] Pathology Common Locations' => 'all',
+            '[inst1] or [inst2] Pathology Fellows' => 'all',
+            '[inst1] Non-academic Faculty' => 'all',
         );
 
         //first common element
@@ -582,6 +575,17 @@ class UserServiceUtil {
         $href = '<li><a href="'.$linkUrl.'">'.'Employees'.'</a></li>';
         $res[] = $href;
 
+
+        if( $pathlinkLoc ) {
+            $locTypes = array(
+                'Common Locations' => 'all',
+                '[inst1] or [inst2] Pathology Common Locations' => 'all',
+                '[inst1] Pathology Common Locations' => 'all',
+                '[inst2] Pathology Common Locations' => 'all',
+            );
+        }
+
+        //TODO: rewrite: replace inst1 and inst2 logic
         if( $inst1 ) {
 //            foreach($instTypes as $name=>$flag) {
 //                if( $name == 'hr' ) {
