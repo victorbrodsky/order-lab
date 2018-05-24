@@ -1,0 +1,35 @@
+{% extends "OlegTranslationalResearchBundle::Default/base.html.twig" %}
+
+{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block content %}
+
+    <form action="{{ path('employees_emailtest') }}" method="post">
+
+        <div class="row">
+            <div class="col-sm" align="right">
+                <strong>Email(s) (email1, email2, email3 ...):</strong>
+            </div>
+            <div class="col-sm" align="left">
+                <input type="text" class="form-control" name="email">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm" align="right">
+                <strong>CC (email1, email2, email3 ...):</strong>
+            </div>
+            <div class="col-sm" align="left">
+                <input type="text" class="form-control" name="emailcc">
+            </div>
+        </div>
+
+        <input type="submit">
+    </form>
+
+{% endblock %}

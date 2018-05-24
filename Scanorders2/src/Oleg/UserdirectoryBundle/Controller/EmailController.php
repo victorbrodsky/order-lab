@@ -62,6 +62,7 @@ class EmailController extends Controller
     
     /**
      * @Route("/emailtest/", name="employees_emailtest")
+     * @Template("OlegUserdirectoryBundle:Email:email-test.html.twig")
      * @Method({"GET","POST"})
      */
     public function emailTestAction(Request $request)
@@ -77,24 +78,34 @@ class EmailController extends Controller
         //$user = $this->get('security.token_storage')->getToken()->getUser();
         //$toEmail = $user->getSingleEmail();
 
-        $toEmail = "cinava@yahoo.com,cinava10@gmail.com";
-        $ccs = "oleg_iv@yahoo.com";//,cinava10@gmail.com,oli2002@med.cornell.edu";
+        $emails = $_POST['email'];
+        $ccs = $_POST['emailcc'];
 
-        //ORDER Platform Test Message 01/01/18 12:34:57
-        $today = new \DateTime();
-        $msg = "ORDER Platform Test Message " . $today->format('m/d/Y H:i:s');
-        
-        $emailRes = $emailUtil->sendEmail($toEmail, $msg, $msg, $ccs);
+        if( isset($emails) ) {
+            //$toEmail = "cinava@yahoo.com,cinava10@gmail.com";
+            //$ccs = "oleg_iv@yahoo.com";//,cinava10@gmail.com,oli2002@med.cornell.edu";
 
-        exit("email res=".$emailRes);
+            //exit("emails=".$emails."; cc=".$ccs);
 
-        //Flash
-        $this->get('session')->getFlashBag()->add(
-            'notice',
-            'Test email sent to: '.$toEmail.' and ccs to:'.$ccs
-        );
+            //ORDER Platform Test Message 01/01/18 12:34:57
+            $today = new \DateTime();
+            $msg = "ORDER Platform Test Message " . $today->format('m/d/Y H:i:s');
 
-        return $this->redirectToRoute('employees_home');
+            $emailRes = $emailUtil->sendEmail($toEmail, $msg, $msg, $ccs);
+            //exit("email res=".$emailRes);
+
+            //Flash
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                'Test email sent to: '.$toEmail.' and ccs to:'.$ccs
+            );
+
+            return $this->redirectToRoute('employees_home');
+        }
+
+        //exit("email res=".$emailRes);
+
+        return array();
     }
 
 
