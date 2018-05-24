@@ -282,7 +282,7 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 	
 5. Deployment
 	
-	a) Run the deployment script: Open a Windows File Explorer window and navigate to "C:\ORDER_LOCATION\order-lab-master\Scanorders2\". Right click on an empty space in the window, and select "Git Bash here". In the Git Bash window that opens, enter the command "./deploy_prod.sh". The script will take several minutes to run. "Deploy complete." will appear when it is finished.
+	a) Run the deployment script: Open a Windows File Explorer window and navigate to "C:\ORDER_LOCATION\order-lab-master\Scanorders2\". Right click on an empty space in the window, and select "Git Bash here". In the Git Bash window that opens, enter the command "bash ./deploy_prod.sh". The script will take several minutes to run. "Deploy complete." will appear when it is finished.
 		
 	b) Create the Administrator account with password 1234567890 by opening the following URL in your browser (specify the server's IP or domain name instead of "localhost"):
 
@@ -298,7 +298,7 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 	
 	g) Run the deployment script again by following step 5a above:
 
-	 	deploy_prod.sh
+	 	bash deploy_prod.sh
 
 	h) Change the default password for the Administrator account by visiting the account's profile page and clicking 'Edit'.
 
