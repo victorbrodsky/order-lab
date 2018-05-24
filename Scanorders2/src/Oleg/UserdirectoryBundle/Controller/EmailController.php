@@ -46,10 +46,10 @@ class EmailController extends Controller
         $emailRes = $emailUtil->sendSpooledEmails();
 
         if( $emailRes ) {
-            $msg = 'Spooled emails have been sent. Result:'.$emailRes;
+            $msg = 'Spooled emails have been sent. Result: '.$emailRes;
         } else {
-            //Please verify your Mailer setting. 
-            $msg = 'Spooled emails have not been sent. Result:'.$emailRes;
+            //Please verify your Mailer setting.
+            $msg = 'Spooled emails have not been sent. Result: '.$emailRes;
         }
 
         //Flash
