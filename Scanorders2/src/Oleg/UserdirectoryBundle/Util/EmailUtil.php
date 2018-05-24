@@ -291,7 +291,8 @@ class EmailUtil {
 
         $userSecUtil = $this->container->get('user_security_utility');
 
-        $cronJobName = "php bin/console cron:swift --env=prod";
+        $projectDir = $this->container->get('kernel')->getProjectDir();
+        $cronJobName = "php ".$projectDir.DIRECTORY_SEPARATOR."bin/console cron:swift --env=prod";
 
         $useSpool = $userSecUtil->getSiteSettingParameter('mailerSpool');
         $mailerFlushQueueFrequency = $userSecUtil->getSiteSettingParameter('mailerFlushQueueFrequency');
