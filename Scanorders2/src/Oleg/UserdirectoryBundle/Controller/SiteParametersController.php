@@ -269,14 +269,9 @@ class SiteParametersController extends Controller
                 $redirectPathPostfix = '_resources';
             }
 
-            if( $param == 'mailerSpool' ) {
+            if( $param == 'mailerSpool' || $param == 'mailerFlushQueueFrequency' ) {
                 $emailUtil = $this->get('user_mailer_utility');
-                $emailUtil->createEmailCronJob($entity->getMailerSpool());
-//                if( $entity->getMailerSpool() ) {
-//                    $emailUtil->createEmailCronJob(true);
-//                } else {
-//                    $emailUtil->createEmailCronJob(false);
-//                }
+                $emailUtil->createEmailCronJob();
             }
 
             //add a new eventlog record for an updated parameter
@@ -583,7 +578,7 @@ class SiteParametersController extends Controller
             $em->flush($entity);
 
             $emailUtil = $this->get('user_mailer_utility');
-            $emailUtil->createEmailCronJob($entity->getMailerSpool());
+            $emailUtil->createEmailCronJob();
 
             //exit("form is valid");
 

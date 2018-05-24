@@ -283,7 +283,7 @@ class EmailUtil {
 
 
     //run: php bin/console cron:swift --env=prod
-    public function createEmailCronJob( $create ) {
+    public function createEmailCronJob() {
 
         if( $this->isWindows() ){
             return null;
@@ -293,8 +293,11 @@ class EmailUtil {
 
         $cronJobName = "php bin/console cron:swift --env=prod";
 
+        $useSpool = $userSecUtil->getSiteSettingParameter('mailerSpool');
+        $mailerFlushQueueFrequency = $userSecUtil->getSiteSettingParameter('mailerFlushQueueFrequency');
+        
         //create cron job
-        if( $create ) {
+        if( $useSpool && $mailerFlushQueueFrequency ) {
             $mailerFlushQueueFrequency = $userSecUtil->getSiteSettingParameter('mailerFlushQueueFrequency'); //in minutes
             if( !$mailerFlushQueueFrequency ) {
                 return null;

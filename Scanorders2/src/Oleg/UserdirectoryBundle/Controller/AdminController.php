@@ -2151,7 +2151,7 @@ class AdminController extends Controller
         $em->flush();
 
         $emailUtil = $this->get('user_mailer_utility');
-        $emailUtil->createEmailCronJob($params->getMailerSpool());
+        $emailUtil->createEmailCronJob();
 
         return round($count/10);
     }
