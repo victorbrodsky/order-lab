@@ -124,7 +124,13 @@ class SiteParametersType extends AbstractType
         }
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'mailerDeliveryAddresses' ) {
             $builder->add('mailerDeliveryAddresses', null, array(
-                'label' => 'Mailer Delivery Addresses (emails will be delivered to these specified addresses email1,email2,email3):',
+                'label' => 'Mailer Delivery Addresses (emails will be delivered to these specified addresses email1,email2,email3... Live ):',
+                'attr' => array('class' => 'form-control')
+            ));
+        }
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'mailerFlushQueueFrequency' ) {
+            $builder->add('mailerFlushQueueFrequency', null, array(
+                'label' => 'Frequency of sending emails in the queue (in minutes between eruptions):',
                 'attr' => array('class' => 'form-control')
             ));
         }

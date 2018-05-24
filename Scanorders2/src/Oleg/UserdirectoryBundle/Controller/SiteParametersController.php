@@ -116,6 +116,15 @@ class SiteParametersController extends Controller
         if( $entity->getDbServerAccountPassword() != '' )
             $entity->setDbServerAccountPassword($passw);
 
+        if( $entity->getMailerPassword() != '' )
+            $entity->setMailerPassword($passw);
+
+        if( $entity->getCaptchaSiteKey() != '' )
+            $entity->setCaptchaSiteKey($passw);
+
+        if( $entity->getCaptchaSecretKey() != '' )
+            $entity->setCaptchaSecretKey($passw);
+
         //testing
         //$organizationalGroupDefault = new OrganizationalGroupDefault();
         //$entity->addOrganizationalGroupDefault($organizationalGroupDefault);
@@ -258,6 +267,16 @@ class SiteParametersController extends Controller
             //redirect to another page, in this case 'calllog_resources' instead of the _siteparameters page which is accessible only by admin.
             if( $param == 'calllogResources' ) {
                 $redirectPathPostfix = '_resources';
+            }
+
+            if( $param == 'mailerSpool' ) {
+                $emailUtil = $this->get('user_mailer_utility');
+                $emailUtil->createEmailCronJob($entity->getMailerSpool());
+//                if( $entity->getMailerSpool() ) {
+//                    $emailUtil->createEmailCronJob(true);
+//                } else {
+//                    $emailUtil->createEmailCronJob(false);
+//                }
             }
 
             //add a new eventlog record for an updated parameter
@@ -562,6 +581,9 @@ class SiteParametersController extends Controller
 
             $em->persist($entity);
             $em->flush($entity);
+
+            $emailUtil = $this->get('user_mailer_utility');
+            $emailUtil->createEmailCronJob($entity->getMailerSpool());
 
             //exit("form is valid");
 

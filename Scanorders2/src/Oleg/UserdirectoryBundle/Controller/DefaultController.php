@@ -41,68 +41,7 @@ class DefaultController extends Controller
             'sitename' => $sitename
         );
     }
-
-    /**
-     * @Route("/send-spooled-emails/", name="employees_send_spooled_emails")
-     * @Method({"GET"})
-     */
-    public function sendSpooledEmailsAction(Request $request)
-    {
-
-        if (!$this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
-            return $this->redirect($this->generateUrl('vacreq-nopermission'));
-        }
-
-        $emailUtil = $this->container->get('user_mailer_utility');
-
-        $emailRes = $emailUtil->sendSpooledEmails();
-
-        if( $emailRes ) {
-            $msg = 'Spooled emails have been sent.';
-        } else {
-            $msg = 'Spooled emails have not been sent. Please verify your Mailer setting.';
-        }
-
-        //Flash
-        $this->get('session')->getFlashBag()->add(
-            'notice',
-            $msg
-        );
-
-        return $this->redirectToRoute('employees_home');
-    }
     
-    /**
-     * @Route("/emailtest/", name="employees_emailtest")
-     * @Method({"GET"})
-     */
-    public function emailTestAction(Request $request)
-    {
-
-        if (!$this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
-            return $this->redirect($this->generateUrl('vacreq-nopermission'));
-        }
-
-        $emailUtil = $this->container->get('user_mailer_utility');
-
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
-        //$toEmail = $user->getSingleEmail();
-
-        $toEmail = "cinava@yahoo.com,cinava10@gmail.com";
-        $ccs = "oleg_iv@yahoo.com";//,cinava10@gmail.com,oli2002@med.cornell.edu";
-
-        $emailRes = $emailUtil->sendEmail($toEmail, "Test Email Subject", "Test Email Message", $ccs);
-
-        exit("email res=".$emailRes);
-
-        //Flash
-        $this->get('session')->getFlashBag()->add(
-            'notice',
-            'Test email sent to: '.$toEmail.' and ccs to:'.$ccs
-        );
-
-        return $this->redirectToRoute('employees_home');
-    }
 
 
 //    /**

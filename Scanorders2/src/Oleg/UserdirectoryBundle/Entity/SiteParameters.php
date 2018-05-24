@@ -134,6 +134,11 @@ class SiteParameters {
     private $mailerSpool;
 
     /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $mailerFlushQueueFrequency;
+
+    /**
      * emails will deliver only to these emails
      *
      * @ORM\Column(type="text", nullable=true)
@@ -1453,6 +1458,22 @@ class SiteParameters {
     public function setMailerSpool($mailerSpool)
     {
         $this->mailerSpool = $mailerSpool;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMailerFlushQueueFrequency()
+    {
+        return $this->mailerFlushQueueFrequency;
+    }
+
+    /**
+     * @param mixed $mailerFlushQueueFrequency
+     */
+    public function setMailerFlushQueueFrequency($mailerFlushQueueFrequency)
+    {
+        $this->mailerFlushQueueFrequency = $mailerFlushQueueFrequency;
     }
 
     /**

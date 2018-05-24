@@ -1801,6 +1801,7 @@ class AdminController extends Controller
             "mailerUser" => null,
             "mailerPassword" => null,
             "mailerSpool" => false,
+            "mailerFlushQueueFrequency" => 15, //minuts
             "mailerDeliveryAddresses" => null,
 
             "aDLDAPServerAddress" => "ldap.forumsys.com",
@@ -2148,6 +2149,9 @@ class AdminController extends Controller
 
         $em->persist($params);
         $em->flush();
+
+        $emailUtil = $this->get('user_mailer_utility');
+        $emailUtil->createEmailCronJob($params->getMailerSpool());
 
         return round($count/10);
     }

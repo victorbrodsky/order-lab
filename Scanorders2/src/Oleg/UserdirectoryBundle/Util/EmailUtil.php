@@ -16,6 +16,8 @@
  */
 
 namespace Oleg\UserdirectoryBundle\Util;
+use Crontab\Crontab;
+use Crontab\Job;
 
 
 /**
@@ -280,6 +282,57 @@ class EmailUtil {
     }
 
 
+    //run: php bin/console cron:swift --env=prod
+    public function createEmailCronJob( $create ) {
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        $cronJobName = "php bin/console cron:swift --env=prod";
+
+        //create cron job
+        if( $create ) {
+            $mailerFlushQueueFrequency = $userSecUtil->getSiteSettingParameter('mailerFlushQueueFrequency'); //in minutes
+            if( !$mailerFlushQueueFrequency ) {
+                return null;
+            }
+
+            $job = new Job();
+            $job
+                ->setMinute('*/' . $mailerFlushQueueFrequency)//every $mailerFlushQueueFrequency minutes
+                ->setHour('*')
+                ->setDayOfMonth('*')
+                ->setMonth('*')
+                ->setDayOfWeek('*')
+                ->setCommand($cronJobName);
+
+            $crontab = new Crontab();
+            $crontab->addJob($job);
+            //$crontab->write();
+            $crontab->getCrontabFileHandler()->write($crontab);
+
+            $res = $crontab->render();
+            echo "crontab res=".$res."<br>";
+            //exit('111');
+
+            return $res;
+        } else {
+            //$crontab = new Crontab();
+            //$crontab->removeJob($theJobYouWantToDelete);
+        }
+
+        return null;
+    }
+
+    public function getCronStatus() {
+        $res = '<font color="red">Cron job status: not found.</font>';
+        $crontab = new Crontab();
+        $crontabRender = $crontab->render();
+        if( $crontabRender ) {
+            //$res = "Cron job status: " . $crontab->render();
+            $res = '<font color="green">Cron job status: '.$crontab->render().'.</font>';
+        }
+        //exit($res);
+        return $res;
+    }
 
 
 

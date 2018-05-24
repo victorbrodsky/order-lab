@@ -137,6 +137,10 @@ class InitialConfigurationType extends AbstractType
             'label' => 'Mailer Delivery Addresses (emails will be delivered to these specified addresses email1,email2,email3):',
             'attr' => array('class' => 'form-control')
         ));
+        $builder->add('mailerFlushQueueFrequency', null, array(
+            'label' => 'Frequency of sending emails in the queue (in minutes between eruptions):',
+            'attr' => array('class' => 'form-control')
+        ));
 
         //ldap
         $builder->add('aDLDAPServerAddress',null,array(

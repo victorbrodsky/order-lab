@@ -47,6 +47,7 @@
         "clegginabox/pdf-merger": "dev-master",
         "bmatzner/fontawesome-bundle": "~4.4",
         "adesigns/calendar-bundle": "^1.1",
+        "yzalis/crontab": "1.0.x-dev",
 
         "sinergi/browser-detector": "6.1.2"
     },

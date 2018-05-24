@@ -85,6 +85,7 @@ twig:
         transres_util: "@transres_util"
         transres_request_util: "@transres_request_util"
         transres_formnode_util: "@transres_formnode_util"
+        user_mailer_utility: "@user_mailer_utility"
 
 #    form:
 #      resources: ['form_table_layout.html.twig']
