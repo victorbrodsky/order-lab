@@ -124,7 +124,7 @@ class SiteParametersType extends AbstractType
         }
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'mailerDeliveryAddresses' ) {
             $builder->add('mailerDeliveryAddresses', null, array(
-                'label' => 'Mailer Delivery Addresses (emails will be delivered to these specified addresses email1,email2,email3... Live ):',
+                'label' => 'Testing Mailer Delivery Addresses (emails will be delivered to these specified addresses email1,email2,email3... Leave empty for default):',
                 'attr' => array('class' => 'form-control')
             ));
         }

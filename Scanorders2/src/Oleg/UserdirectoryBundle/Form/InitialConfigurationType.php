@@ -134,7 +134,7 @@ class InitialConfigurationType extends AbstractType
             'attr' => array('class' => 'form-control')
         ));
         $builder->add('mailerDeliveryAddresses', null, array(
-            'label' => 'Mailer Delivery Addresses (emails will be delivered to these specified addresses email1,email2,email3):',
+            'label' => 'Testing Mailer Delivery Addresses (emails will be delivered to these specified addresses email1,email2,email3... Leave empty for default):',
             'attr' => array('class' => 'form-control')
         ));
         $builder->add('mailerFlushQueueFrequency', null, array(

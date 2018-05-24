@@ -308,9 +308,11 @@ class EmailUtil {
                 ->setCommand($cronJobName);
 
             $crontab = new Crontab();
-            $crontab->addJob($job);
-            //$crontab->write();
-            $crontab->getCrontabFileHandler()->write($crontab);
+            if( !$this->isCronJobExists($crontab,$cronJobName) ) {
+                $crontab->addJob($job);
+                //$crontab->write();
+                $crontab->getCrontabFileHandler()->write($crontab);
+            }
 
             $res = $crontab->render();
             echo "crontab res=".$res."<br>";
@@ -318,19 +320,43 @@ class EmailUtil {
 
             return $res;
         } else {
+            //remove cron job
             $crontab = new Crontab();
-            $res = $crontab->render();
-            echo "crontab res=".$res."<br>";
+            //$res = $crontab->render();
+            //echo "crontab res=".$res."<br>";
+            $res  = $this->removeCronJob($crontab,$cronJobName);
 
             $session = $this->container->get('session');
             $session->getFlashBag()->add(
                 'notice',
-                "crontab res=".$res
+                "Removed Cron Job:".$res
             );
-            //$crontab->removeJob($theJobYouWantToDelete);
         }
 
         return null;
+    }
+
+    public function isCronJobExists($crontab,$commandName) {
+        foreach($crontab->getJobs() as $job) {
+            echo "job=".$job.", command=".$job->getCommand()."<br>";
+            if( $commandName == $job->getCommand() ) {
+                echo "remove job ". $job."<br>";
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function removeCronJob($crontab,$commandName) {
+        $resArr = array();
+        foreach($crontab->getJobs() as $job) {
+            echo "job=".$job.", command=".$job->getCommand()."<br>";
+            if( $commandName == $job->getCommand() ) {
+                $resArr[] = $job."";
+                $crontab->removeJob($job);
+            }
+        }
+        return implode("; ",$resArr);
     }
 
     public function getCronStatus() {
