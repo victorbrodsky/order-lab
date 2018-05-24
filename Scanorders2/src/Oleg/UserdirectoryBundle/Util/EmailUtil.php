@@ -282,6 +282,7 @@ class EmailUtil {
     }
 
 
+    //https://github.com/yzalis/Crontab
     //run: php bin/console cron:swift --env=prod
     public function createEmailCronJob() {
 
@@ -385,6 +386,16 @@ class EmailUtil {
     }
 
 
+
+
+
+
+
+
+
+
+
+    
 
     //NOT USED
     //php bin/console swiftmailer:spool:send --env=prod: Unable to connect with TLS encryption

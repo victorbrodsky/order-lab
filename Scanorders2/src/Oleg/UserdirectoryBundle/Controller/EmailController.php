@@ -91,13 +91,13 @@ class EmailController extends Controller
             $today = new \DateTime();
             $msg = "ORDER Platform Test Message " . $today->format('m/d/Y H:i:s');
 
-            $emailRes = $emailUtil->sendEmail($toEmail, $msg, $msg, $ccs);
+            $emailRes = $emailUtil->sendEmail($emails, $msg, $msg, $ccs);
             //exit("email res=".$emailRes);
 
             //Flash
             $this->get('session')->getFlashBag()->add(
                 'notice',
-                'Test email sent to: '.$toEmail.' and ccs to:'.$ccs
+                'Test email sent to: '.$emails.' and ccs to:'.$ccs
             );
 
             return $this->redirectToRoute('employees_home');
