@@ -527,7 +527,7 @@ class UserServiceUtil {
         }
 
         $instTypes = array(
-            'hr' => 'all',
+            //'hr' => 'all',
 
             '[inst1] Pathology Employees' => 'all',
             '[inst1] Pathology Faculty' => 'all',
@@ -576,33 +576,133 @@ class UserServiceUtil {
         $res[] = $href;
 
 
+        foreach($instTypes as $name=>$flag) {
+            if( $name == 'hr' ) {
+                $res[] = '<hr style="margin-bottom:0; margin-top:0;">';
+                continue;
+            }
+            if( !$hasRoleSimpleView || !($hasRoleSimpleView && $flag == 'notSimpleView') ) {
+
+//                $nameInst = null;
+//
+//                if( $inst1 && $inst2 ) {
+//                    $nameInst = str_replace('[inst1]',$inst1,$name);
+//                    $nameInst = str_replace('[inst2]',$inst2,$nameInst);
+//                }
+//
+//                if( $inst1 && !$inst2 ) {
+//                    if( strpos($name, '[inst1]') !== false ) {
+//                        if( strpos($name, '[inst1]') !== false && strpos($name, '[inst2]') === false ) {
+//                            $nameInst = str_replace('[inst1]',$inst1,$name);
+//                        }
+//                    }
+//                }
+//
+//                if( $inst2 && !$inst1 ) {
+//                    if( strpos($name, '[inst2]') !== false ) {
+//                        if( strpos($name, '[inst2]') !== false && strpos($name, '[inst1]') === false ) {
+//                            $nameInst = str_replace('[inst2]',$inst2,$name);
+//                        }
+//                    }
+//                }
+//
+//                if( $nameInst ) {
+//                    $linkUrl = $this->container->get('router')->generate(
+//                        $pathlink,
+//                        array(
+//                            'filter'=>str_replace('- ','',$nameInst),
+//                        ),
+//                        UrlGeneratorInterface::ABSOLUTE_URL
+//                    );
+//                }
+//                $href = '<li><a href="'.$linkUrl.'">'.$nameInst.'</a></li>';
+//                $res[] = $href;
+
+                $href = $this->replaceInstFilter($name,$pathlink,$inst1,$inst2);
+                if( $href ) {
+                    $res[] = $href;
+                }
+
+            }
+        }
+
         if( $pathlinkLoc ) {
             $locTypes = array(
-                'Common Locations' => 'all',
                 '[inst1] or [inst2] Pathology Common Locations' => 'all',
                 '[inst1] Pathology Common Locations' => 'all',
                 '[inst2] Pathology Common Locations' => 'all',
             );
-        }
 
-        //TODO: rewrite: replace inst1 and inst2 logic
-        if( $inst1 ) {
-            $res = $this->replaeInstInFilterArr($pathlink,$res,$instTypes,$inst1,$hasRoleSimpleView);
-        }
+            //first common element
+            $res[] = '<hr style="margin-bottom:0; margin-top:0;">';
 
-//        if( $inst2 ) {
-//            $res = $this->replaeInstInFilterArr($pathlink,$res,$instTypes,$inst2,$hasRoleSimpleView);
-//        }
-//
-//        if( $inst1 && $inst2 ) {
-//            $instName = $inst1 . " or " . $inst2;
-//            $res = $this->replaeInstInFilterArr($pathlink,$res,$instTypes,$instName,$hasRoleSimpleView);
-//        }
-        
-        //<li><a href="{{ path(pathlink) }}">Employees</a></li>
+            $linkUrl = $this->container->get('router')->generate(
+                $pathlink,
+                array(
+                    //no filter
+                ),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $href = '<li><a href="'.$linkUrl.'">'.'Common Locations'.'</a></li>';
+            $res[] = $href;
+
+            foreach($locTypes as $name=>$flag) {
+                if( $name == 'hr' ) {
+                    $res[] = '<hr style="margin-bottom:0; margin-top:0;">';
+                    continue;
+                }
+
+                $href = $this->replaceInstFilter($name,$pathlinkLoc,$inst1,$inst2);
+                if( $href ) {
+                    $res[] = $href;
+                }
+            }
+        }
 
         return $res;
     }
+    public function replaceInstFilter($name,$pathlink,$inst1,$inst2) {
+        $href = null;
+        $nameInst = null;
+
+        if( $inst1 && $inst2 ) {
+            $nameInst = str_replace('[inst1]',$inst1,$name);
+            $nameInst = str_replace('[inst2]',$inst2,$nameInst);
+        }
+
+        if( $inst1 && !$inst2 ) {
+            if( strpos($name, '[inst1]') !== false ) {
+                if( strpos($name, '[inst1]') !== false && strpos($name, '[inst2]') === false ) {
+                    $nameInst = str_replace('[inst1]',$inst1,$name);
+                }
+            }
+        }
+
+        if( $inst2 && !$inst1 ) {
+            if( strpos($name, '[inst2]') !== false ) {
+                if( strpos($name, '[inst2]') !== false && strpos($name, '[inst1]') === false ) {
+                    $nameInst = str_replace('[inst2]',$inst2,$name);
+                }
+            }
+        }
+
+        if( $nameInst ) {
+            $linkUrl = $this->container->get('router')->generate(
+                $pathlink,
+                array(
+                    'filter'=>str_replace('- ','',$nameInst),
+                ),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $href = '<li><a href="'.$linkUrl.'">'.$nameInst.'</a></li>';
+        }
+        //$href = '<li><a href="'.$linkUrl.'">'.$nameInst.'</a></li>';
+        //$res[] = $href;
+
+        return $href;
+    }
+
+
     public function replaeInstInFilterArr($pathlink,$res,$instTypes,$inst,$hasRoleSimpleView) {
         foreach($instTypes as $name=>$flag) {
             if( $name == 'hr' ) {
