@@ -130,7 +130,7 @@ class SiteParametersType extends AbstractType
         }
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'mailerFlushQueueFrequency' ) {
             $builder->add('mailerFlushQueueFrequency', null, array(
-                'label' => 'Frequency of sending emails in the queue (in minutes between eruptions):',
+                'label' => 'Frequency of sending emails in the queue (in minutes between eruptions) on Unix:',
                 'attr' => array('class' => 'form-control')
             ));
         }

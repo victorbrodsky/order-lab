@@ -284,6 +284,11 @@ class EmailUtil {
 
     //run: php bin/console cron:swift --env=prod
     public function createEmailCronJob( $create ) {
+
+        if( $this->isWindows() ){
+            return null;
+        }
+
         $userSecUtil = $this->container->get('user_security_utility');
 
         $cronJobName = "php bin/console cron:swift --env=prod";
@@ -323,6 +328,10 @@ class EmailUtil {
     }
 
     public function getCronStatus() {
+        if( $this->isWindows() ){
+            return null;
+        }
+
         $res = '<font color="red">Cron job status: not found.</font>';
         $crontab = new Crontab();
         $crontabRender = $crontab->render();
@@ -332,6 +341,13 @@ class EmailUtil {
         }
         //exit($res);
         return $res;
+    }
+
+    public function isWindows() {
+        if( substr(php_uname(), 0, 7) == "Windows" ){
+            return true;
+        }
+        return false;
     }
 
 
