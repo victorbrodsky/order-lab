@@ -298,11 +298,6 @@ class EmailUtil {
         
         //create cron job
         if( $useSpool && $mailerFlushQueueFrequency ) {
-            $mailerFlushQueueFrequency = $userSecUtil->getSiteSettingParameter('mailerFlushQueueFrequency'); //in minutes
-            if( !$mailerFlushQueueFrequency ) {
-                return null;
-            }
-
             $job = new Job();
             $job
                 ->setMinute('*/' . $mailerFlushQueueFrequency)//every $mailerFlushQueueFrequency minutes
@@ -323,7 +318,15 @@ class EmailUtil {
 
             return $res;
         } else {
-            //$crontab = new Crontab();
+            $crontab = new Crontab();
+            $res = $crontab->render();
+            echo "crontab res=".$res."<br>";
+
+            $session = $this->container->get('session');
+            $session->getFlashBag()->add(
+                'notice',
+                "crontab res=".$res
+            );
             //$crontab->removeJob($theJobYouWantToDelete);
         }
 
