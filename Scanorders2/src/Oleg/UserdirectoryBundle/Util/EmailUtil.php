@@ -354,6 +354,7 @@ class EmailUtil {
             if( $commandName == $job->getCommand() ) {
                 $resArr[] = $job."";
                 $crontab->removeJob($job);
+                $crontab->getCrontabFileHandler()->write($crontab);
             }
         }
         return implode("; ",$resArr);
