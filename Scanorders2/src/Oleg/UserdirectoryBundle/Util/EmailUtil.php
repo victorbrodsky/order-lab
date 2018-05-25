@@ -291,6 +291,7 @@ class EmailUtil {
 
     }
 
+    //https://stackoverflow.com/questions/19641619/windows-7-scheduled-task-command-line
     public function createEmailCronJobWindows() {
         $userSecUtil = $this->container->get('user_security_utility');
 
@@ -302,13 +303,10 @@ class EmailUtil {
         $mailerFlushQueueFrequency = $userSecUtil->getSiteSettingParameter('mailerFlushQueueFrequency');
 
         if( $useSpool && $mailerFlushQueueFrequency ) {
-            //if( $this->isWindowsTaskJobExists($cronJobName) ) {
-            //    return null;
-            //}
             //create cron job
             //SchTasks /Create /SC DAILY /TN “My Task” /TR “C:RunMe.bat” /ST 09:00
             //$command = 'SchTasks /Create /SC DAILY /TN "'.$cronJobName.'" /TR "'.$cronJobCommand.'" /ST 09:00';
-            $command = 'SchTasks /Create /SC MINUTE /MO '.$mailerFlushQueueFrequency.' /TN "'.$cronJobName.'" /TR "'.$cronJobCommand.'"';
+            $command = 'SchTasks /Create /SC MINUTE /MO '.$mailerFlushQueueFrequency.' /TN "'.$cronJobName.'" /TR "'.$cronJobCommand.'" /IT';
             //echo "SchTasks add: ".$command."<br>";
             $res = exec($command);
             return $res;
@@ -323,16 +321,6 @@ class EmailUtil {
             return $res;
         }
     }
-//    public function isWindowsTaskJobExists($cronJobName) {
-//        $command = 'SchTasks | FINDSTR "'.$cronJobName.'"';
-//        $res = exec($command);
-//        if( $res ) {
-//            return true;
-//        }
-//        return false;
-//    }
-
-
 
     //https://github.com/yzalis/Crontab
     //run: php bin/console cron:swift --env=prod
