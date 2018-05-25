@@ -308,7 +308,7 @@ class EmailUtil {
 
         $console = $projectDir.DIRECTORY_SEPARATOR."bin".DIRECTORY_SEPARATOR."console";
         $console = '"'.$console.'"';
-        $cronJobCommand = 'php '.$console." cron:swift --env=prod";
+        $cronJobCommand = 'php '.$console.' cron:swift --env=prod';
 
         $useSpool = $userSecUtil->getSiteSettingParameter('mailerSpool');
         $mailerFlushQueueFrequency = $userSecUtil->getSiteSettingParameter('mailerFlushQueueFrequency');
