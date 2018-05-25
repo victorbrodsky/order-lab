@@ -583,41 +583,6 @@ class UserServiceUtil {
             }
             if( !$hasRoleSimpleView || !($hasRoleSimpleView && $flag == 'notSimpleView') ) {
 
-//                $nameInst = null;
-//
-//                if( $inst1 && $inst2 ) {
-//                    $nameInst = str_replace('[inst1]',$inst1,$name);
-//                    $nameInst = str_replace('[inst2]',$inst2,$nameInst);
-//                }
-//
-//                if( $inst1 && !$inst2 ) {
-//                    if( strpos($name, '[inst1]') !== false ) {
-//                        if( strpos($name, '[inst1]') !== false && strpos($name, '[inst2]') === false ) {
-//                            $nameInst = str_replace('[inst1]',$inst1,$name);
-//                        }
-//                    }
-//                }
-//
-//                if( $inst2 && !$inst1 ) {
-//                    if( strpos($name, '[inst2]') !== false ) {
-//                        if( strpos($name, '[inst2]') !== false && strpos($name, '[inst1]') === false ) {
-//                            $nameInst = str_replace('[inst2]',$inst2,$name);
-//                        }
-//                    }
-//                }
-//
-//                if( $nameInst ) {
-//                    $linkUrl = $this->container->get('router')->generate(
-//                        $pathlink,
-//                        array(
-//                            'filter'=>str_replace('- ','',$nameInst),
-//                        ),
-//                        UrlGeneratorInterface::ABSOLUTE_URL
-//                    );
-//                }
-//                $href = '<li><a href="'.$linkUrl.'">'.$nameInst.'</a></li>';
-//                $res[] = $href;
-
                 $href = $this->replaceInstFilter($name,$pathlink,$inst1,$inst2);
                 if( $href ) {
                     $res[] = $href;
@@ -703,41 +668,6 @@ class UserServiceUtil {
     }
 
 
-    public function replaeInstInFilterArr($pathlink,$res,$instTypes,$inst,$hasRoleSimpleView) {
-        foreach($instTypes as $name=>$flag) {
-            if( $name == 'hr' ) {
-                $res[] = '<hr style="margin-bottom:0; margin-top:0;">';
-                continue;
-            }
-            if( !$hasRoleSimpleView || !($hasRoleSimpleView && $flag == 'notSimpleView') ) {
-                $nameInst = str_replace('[inst]',$inst,$name);
-                $nameFilter = str_replace('- ','',$nameInst);
-
-                if( strpos($name, '[inst]') !== false ) {
-                    $linkUrl = $this->container->get('router')->generate(
-                        $pathlink,
-                        array(
-                            'filter'=>$nameFilter,
-                        ),
-                        UrlGeneratorInterface::ABSOLUTE_URL
-                    );
-                } else {
-                    $linkUrl = $this->container->get('router')->generate(
-                        $pathlink,
-                        array(
-                            //no filter
-                        ),
-                        UrlGeneratorInterface::ABSOLUTE_URL
-                    );
-                }
-
-                $href = '<li><a href="'.$linkUrl.'">'.$nameInst.'</a></li>';
-
-                $res[] = $href;
-            }
-        }
-        return $res;
-    }
 
     /////////////// NOT USED ///////////////////
     //NOT USED
