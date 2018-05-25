@@ -107,7 +107,7 @@ class SecurityController extends Controller
         $usernametypes = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findBy(
             array(
                 'type' => array('default', 'user-added'),
-                'abbreviation' => array('wcmc-cwid','local-user')
+                //'abbreviation' => array('wcmc-cwid','local-user')
             ),
             array('orderinlist' => 'ASC')
         );
@@ -127,6 +127,10 @@ class SecurityController extends Controller
         if( $cookieKeytype ) {
             $formArr['user_type'] = $cookieKeytype;
             //echo "cookieKeytype=".$cookieKeytype."<br>";
+        } else {
+            //set default
+            $defaultPrimaryPublicUserIdType = $userSecUtil->getSiteSettingParameter('defaultPrimaryPublicUserIdType');
+            $formArr['user_type'] = $defaultPrimaryPublicUserIdType->getName();
         }
 
         $cookieUsername = $request->cookies->get('userOrderSuccessCookiesUsername');

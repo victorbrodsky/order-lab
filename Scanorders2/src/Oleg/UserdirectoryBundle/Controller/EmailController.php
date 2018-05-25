@@ -45,6 +45,10 @@ class EmailController extends Controller
 
         $emailRes = $emailUtil->sendSpooledEmails();
 
+        //test
+        $emailUtil->createEmailCronJob();
+        exit('111');
+
         if( $emailRes ) {
             $msg = 'Spooled emails have been sent. Result: '.$emailRes;
         } else {

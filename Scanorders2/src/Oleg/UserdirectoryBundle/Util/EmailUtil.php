@@ -282,13 +282,39 @@ class EmailUtil {
     }
 
 
+    public function createEmailCronJob() {
+        if( $this->isWindows() ){
+            return $this->createEmailCronJobWindows();
+        } else {
+            return $this->createEmailCronJobLinux();
+        }
+
+    }
+
+    public function createEmailCronJobWindows() {
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        $projectDir = $this->container->get('kernel')->getProjectDir();
+        $cronJobName = "Swiftmailer Order";
+        $cronJobCommand = "php ".$projectDir.DIRECTORY_SEPARATOR."bin/console cron:swift --env=prod";
+
+        $useSpool = $userSecUtil->getSiteSettingParameter('mailerSpool');
+        $mailerFlushQueueFrequency = $userSecUtil->getSiteSettingParameter('mailerFlushQueueFrequency');
+
+        if( $useSpool && $mailerFlushQueueFrequency ) {
+            //create cron job
+            //SchTasks /Create /SC DAILY /TN “My Task” /TR “C:RunMe.bat” /ST 09:00
+            $command = "SchTasks /Create /SC DAILY /TN $cronJobName /TR $cronJobCommand /ST 09:00";
+            echo exec($command);
+
+        } else {
+            //remove cron job
+        }
+    }
+
     //https://github.com/yzalis/Crontab
     //run: php bin/console cron:swift --env=prod
-    public function createEmailCronJob() {
-
-        if( $this->isWindows() ){
-            return null;
-        }
+    public function createEmailCronJobLinux() {
 
         $userSecUtil = $this->container->get('user_security_utility');
 
@@ -317,7 +343,7 @@ class EmailUtil {
             }
 
             $res = $crontab->render();
-            echo "crontab res=".$res."<br>";
+            //echo "crontab res=".$res."<br>";
             //exit('111');
 
             return $res;
@@ -340,9 +366,9 @@ class EmailUtil {
 
     public function isCronJobExists($crontab,$commandName) {
         foreach($crontab->getJobs() as $job) {
-            echo "job=".$job.", command=".$job->getCommand()."<br>";
+            //echo "job=".$job.", command=".$job->getCommand()."<br>";
             if( $commandName == $job->getCommand() ) {
-                echo "remove job ". $job."<br>";
+                //echo "remove job ". $job."<br>";
                 return true;
             }
         }
@@ -352,7 +378,7 @@ class EmailUtil {
     public function removeCronJob($crontab,$commandName) {
         $resArr = array();
         foreach($crontab->getJobs() as $job) {
-            echo "job=".$job.", command=".$job->getCommand()."<br>";
+            //echo "job=".$job.", command=".$job->getCommand()."<br>";
             if( $commandName == $job->getCommand() ) {
                 $resArr[] = $job."";
                 $crontab->removeJob($job);
