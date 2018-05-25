@@ -293,7 +293,7 @@ class UserType extends AbstractType
 
 
 
-    public function addKeytype($builder,$label='Primary Public User ID Type:',$class='combobox combobox-width user-keytype-field') {
+    public function addKeytype($builder,$label='Primary Public User ID Type:',$class='combobox combobox-width user-keytype-field',$defaultPrimaryPublicUserIdType=null) {
         $attr = array('class'=>$class);
         if( $this->readonly ) {
             $attr['readonly'] = true;
@@ -303,7 +303,8 @@ class UserType extends AbstractType
         }
         //echo $this->cycle.": attr="."<br>";
         //print_r($attr);
-        $builder->add('keytype', EntityType::class, array(
+
+        $paramArr = array(
             'class' => 'OlegUserdirectoryBundle:UsernameType',
             //'disabled' => ($this->cycle == 'create' ? false : true ), //it is not possible to edit keytype for existed user
             'choice_label' => 'name',
@@ -312,15 +313,22 @@ class UserType extends AbstractType
             'multiple' => false,
             'attr' => $attr,    //array('class'=>'combobox combobox-width user-keytype-field','readonly'=>$readonlyAttr ),
             'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->where("list.type = :typedef OR list.type = :typeadd")
-                        ->orderBy("list.orderinlist","ASC")
-                        ->setParameters( array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
-                },
-        ));
+                return $er->createQueryBuilder('list')
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->orderBy("list.orderinlist","ASC")
+                    ->setParameters( array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
+            },
+        );
+
+        if( $defaultPrimaryPublicUserIdType ) {
+            $paramArr['data'] = $defaultPrimaryPublicUserIdType;
+        }
+        //echo "data=".$paramArr['data']."<br>";
+
+        $builder->add('keytype', EntityType::class, $paramArr);
         return $builder;
     }
 

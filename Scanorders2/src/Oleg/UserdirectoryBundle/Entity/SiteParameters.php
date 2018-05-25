@@ -199,6 +199,12 @@ class SiteParameters {
      */
     private $ldapExeFilename;
 
+    /**
+     * Default Primary Public User ID Type
+     *
+     * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\UsernameType")
+     */
+    private $defaultPrimaryPublicUserIdType;
 
     /**
      * Enable auto-assignment of Institutional Scope
@@ -1934,6 +1940,22 @@ class SiteParameters {
     public function getLdapExeFilename()
     {
         return $this->ldapExeFilename;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDefaultPrimaryPublicUserIdType()
+    {
+        return $this->defaultPrimaryPublicUserIdType;
+    }
+
+    /**
+     * @param mixed $defaultPrimaryPublicUserIdType
+     */
+    public function setDefaultPrimaryPublicUserIdType($defaultPrimaryPublicUserIdType)
+    {
+        $this->defaultPrimaryPublicUserIdType = $defaultPrimaryPublicUserIdType;
     }
 
     /**

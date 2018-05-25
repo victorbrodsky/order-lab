@@ -25,7 +25,10 @@
 namespace Oleg\UserdirectoryBundle\Form;
 
 
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -46,8 +49,44 @@ class SimpleUserType extends UserType {
     {
         $this->formConstructor($options['form_custom_value']);
 
+        $defaultPrimaryPublicUserIdType = null;
+        if( isset($this->params['defaultPrimaryPublicUserIdType']) ) {
+            $defaultPrimaryPublicUserIdType = $this->params['defaultPrimaryPublicUserIdType'];
+        }
+        //echo "defaultPrimaryPublicUserIdType=$defaultPrimaryPublicUserIdType<br>";
+
         //keytype
-        $this->addKeytype($builder,'Primary Public User ID Type:','combobox combobox-width');
+        //$this->addKeytype($builder,'Primary Public User ID Type:','combobox combobox-width',$defaultPrimaryPublicUserIdType);
+
+//        $builder->add('keytype', EntityType::class, array(
+//            'class' => 'OlegUserdirectoryBundle:UsernameType',
+//            //'disabled' => ($this->cycle == 'create' ? false : true ), //it is not possible to edit keytype for existed user
+//            'choice_label' => 'name',
+//            'label' => "Primary Public User ID Type:",
+//            'required' => true,
+//            'multiple' => false,
+//            'data' => $defaultPrimaryPublicUserIdType,
+//            'attr' => array('class'=>'combobox combobox-width user-keytype-field'),
+//            'query_builder' => function(EntityRepository $er) {
+//                return $er->createQueryBuilder('list')
+//                    ->where("list.type = :typedef OR list.type = :typeadd")
+//                    ->orderBy("list.orderinlist","ASC")
+//                    ->setParameters( array(
+//                        'typedef' => 'default',
+//                        'typeadd' => 'user-added',
+//                    ));
+//            },
+//        ));
+
+        $builder->add('keytype', ChoiceType::class, array(
+            'label' => "Primary Public User ID Type:",
+            //'required' => true,
+            'multiple' => false,
+            'choices' => $this->params['keytypeChoices'],
+            'choices_as_values' => true,
+            'data' => $defaultPrimaryPublicUserIdType,
+            'attr' => array('class' => 'combobox combobox-width'),
+        ));
 
 
 //        $readOnly = true;

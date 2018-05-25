@@ -254,7 +254,7 @@ class CallEntryController extends Controller
         $defaultMrnType = $calllogUtil->getDefaultMrnType();
         //$defaultMrnTypeId = null;
         if( $defaultMrnType ) {
-            $defaultMrnTypeId = $defaultMrnType->getid();
+            $defaultMrnTypeId = $defaultMrnType->getId();
         }
         //echo "defaultMrnTypeId=".$defaultMrnTypeId."<br>";
 

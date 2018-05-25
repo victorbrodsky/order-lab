@@ -211,6 +211,13 @@ class SiteParametersType extends AbstractType
                 'attr' => array('class'=>'form-control')
             ));
 
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'defaultPrimaryPublicUserIdType' )
+            $builder->add('defaultPrimaryPublicUserIdType',null,array(
+                'label'=>'Default Primary Public User ID Type:',
+                'attr' => array('class'=>'form-control')
+            ));
+
+
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'autoAssignInstitution' )
             $builder->add('autoAssignInstitution',null,array(

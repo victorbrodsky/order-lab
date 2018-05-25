@@ -381,7 +381,11 @@
                 <td>{{ entity.ldapExeFilename }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'ldapExeFilename'}) }}">Edit</a></td>
             </tr>
-
+            <tr>
+                <td>Default Primary Public User ID Type:</td>
+                <td>{{ entity.defaultPrimaryPublicUserIdType }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'defaultPrimaryPublicUserIdType'}) }}">Edit</a></td>
+            </tr>
 
             <tr>
                 <td class="rowlink-skip" colspan="3" align="center">

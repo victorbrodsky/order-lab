@@ -1269,6 +1269,7 @@ class AccessRequestController extends Controller
             return $this->redirect( $this->generateUrl($this->siteName."-nopermission") );
         }
 
+        $userSecUtil = $this->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
         //echo "sitename=".$this->siteName."<br>";
 
@@ -1288,15 +1289,27 @@ class AccessRequestController extends Controller
         //echo "roles=".implode(", ",$roles)."<br>";
         /////////// EOF Filter ////////////
 
+        //set default from defaultPrimaryPublicUserIdType
+        $defaultPrimaryPublicUserIdType = $userSecUtil->getSiteSettingParameter('defaultPrimaryPublicUserIdType');
+        $keytypeChoicesArr = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findBy(
+            array('type' => array('default','user-added')),
+            array('orderinlist' => 'ASC')
+        );
+        $keytypeChoices = array();
+        foreach( $keytypeChoicesArr as $thisKeytype ) {
+            $keytypeChoices[$thisKeytype->getName()] = $thisKeytype->getId();
+        }
+
         //new simple user form: user type, user id
         $params = array(
             'cycle' => 'create',
             'readonly' => false,
+            'keytypeChoices' => $keytypeChoices,
+            'defaultPrimaryPublicUserIdType' => $defaultPrimaryPublicUserIdType->getId()
             //'sc' => $this->get('security.context')
         );
         $form = $this->createForm(SimpleUserType::class,null,array('form_custom_value'=>$params));
 
-        $userSecUtil = $this->get('user_security_utility');
         //$query = $userSecUtil->getQueryUserBySite( $this->siteName );
 
         $dql = $userSecUtil->getDqlUserBySite($this->siteName);
