@@ -303,6 +303,8 @@ class EmailUtil {
         $mailerFlushQueueFrequency = $userSecUtil->getSiteSettingParameter('mailerFlushQueueFrequency');
 
         if( $useSpool && $mailerFlushQueueFrequency ) {
+            //first delete cron job
+            $this->removeEmailCronJobWindows($cronJobName);
             //create cron job
             //SchTasks /Create /SC DAILY /TN “My Task” /TR “C:RunMe.bat” /ST 09:00
             //$command = 'SchTasks /Create /SC DAILY /TN "'.$cronJobName.'" /TR "'.$cronJobCommand.'" /ST 09:00';
@@ -313,13 +315,21 @@ class EmailUtil {
         } else {
             //remove cron job
             //SchTasks /Delete /TN “My Task”
-            $command = 'SchTasks /Delete /TN "'.$cronJobName.'" /F';
+            //$command = 'SchTasks /Delete /TN "'.$cronJobName.'" /F';
             //$command = 'SchTasks /Delete /TN '.$cronJobName;
             //echo "SchTasks remove: ".$command."<br>";
-            $res = exec($command);
+            //$res = exec($command);
             //exit("res=".$res);
-            return $res;
+            return $this->removeEmailCronJobWindows($cronJobName);
         }
+    }
+    public function removeEmailCronJobWindows($cronJobName) {
+        $command = 'SchTasks /Delete /TN "'.$cronJobName.'" /F';
+        //$command = 'SchTasks /Delete /TN '.$cronJobName;
+        //echo "SchTasks remove: ".$command."<br>";
+        $res = exec($command);
+        //exit("res=".$res);
+        return $res;
     }
 
     //https://github.com/yzalis/Crontab
@@ -346,6 +356,10 @@ class EmailUtil {
                 ->setCommand($cronJobName);
 
             $crontab = new Crontab();
+
+            //first delete existing cron job
+            $this->removeCronJob($crontab,$cronJobName);
+
             if( !$this->isCronJobExists($crontab,$cronJobName) ) {
                 $crontab->addJob($job);
                 //$crontab->write();
