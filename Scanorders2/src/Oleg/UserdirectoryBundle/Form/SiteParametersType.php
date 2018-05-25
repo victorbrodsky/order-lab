@@ -704,12 +704,14 @@ class SiteParametersType extends AbstractType
                 'attr' => array('class' => 'combobox combobox-width'),
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('list')
-                        ->where("(list.type = :typedef OR list.type = :typeadd) AND list.level = :level")
+                        ->leftJoin("list.organizationalGroupType","organizationalGroupType")
+                        ->where("(list.type = :typedef OR list.type = :typeadd) AND list.level = :level AND organizationalGroupType.name = :inst")
                         ->orderBy("list.orderinlist", "ASC")
                         ->setParameters(array(
                             'typedef' => 'default',
                             'typeadd' => 'user-added',
-                            'level' => 0
+                            'level' => 0,
+                            'inst' => 'Institution'
                         ));
                 },
             ));
