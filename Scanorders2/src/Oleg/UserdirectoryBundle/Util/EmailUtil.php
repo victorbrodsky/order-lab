@@ -307,8 +307,9 @@ class EmailUtil {
         //arguments(working): "E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\bin\console" cron:swift --env=prod
 
         $console = $projectDir.DIRECTORY_SEPARATOR."bin".DIRECTORY_SEPARATOR."console";
-        $console = '"'.$console.'"';
+        //$console = '"'.$console.'"';
         $cronJobCommand = 'php '.$console.' cron:swift --env=prod';
+        $cronJobCommand = '"'.$cronJobCommand.'"';
 
         $useSpool = $userSecUtil->getSiteSettingParameter('mailerSpool');
         $mailerFlushQueueFrequency = $userSecUtil->getSiteSettingParameter('mailerFlushQueueFrequency');
