@@ -306,7 +306,7 @@ class EmailUtil {
             //create cron job
             //SchTasks /Create /SC DAILY /TN “My Task” /TR “C:RunMe.bat” /ST 09:00
             //$command = 'SchTasks /Create /SC DAILY /TN "'.$cronJobName.'" /TR "'.$cronJobCommand.'" /ST 09:00';
-            $command = 'SchTasks /Create /SC MINUTE /MO '.$mailerFlushQueueFrequency.' /TN "'.$cronJobName.'" /TR "'.$cronJobCommand.'" /IT';
+            $command = 'SchTasks /Create /SC MINUTE /MO '.$mailerFlushQueueFrequency.' /TN "'.$cronJobName.'" /TR "'.$cronJobCommand.'" /IT /RU system';
             //echo "SchTasks add: ".$command."<br>";
             $res = exec($command);
             return $res;
