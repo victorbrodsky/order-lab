@@ -92,9 +92,12 @@ class EmailController extends Controller
 
             //exit("emails=".$emails."; cc=".$ccs);
 
+            //{{ app.request.schemeAndHttpHost }}
+            $schemeAndHttpHost = $request->getSchemeAndHttpHost();
+
             //ORDER Platform Test Message 01/01/18 12:34:57
             $today = new \DateTime();
-            $msg = "ORDER Platform Test Message " . $today->format('m/d/Y H:i:s');
+            $msg = "ORDER Platform Test Message from " . $schemeAndHttpHost . " on " . $today->format('m/d/Y H:i:s');
 
             $emailRes = $emailUtil->sendEmail($emails, $msg, $msg, $ccs);
             //exit("email res=".$emailRes);

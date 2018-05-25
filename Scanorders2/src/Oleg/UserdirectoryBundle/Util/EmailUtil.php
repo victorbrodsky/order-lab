@@ -297,6 +297,15 @@ class EmailUtil {
 
         $projectDir = $this->container->get('kernel')->getProjectDir();
         $cronJobName = "Swiftmailer_Order";
+
+        //command:   "E:\Program Files (x86)\Aperio\WebServer\PHP\php.exe"
+        //arguments: app/console cron:swift --env=prod
+        //Start In:  E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2
+
+        //command:    php
+        //argumants: E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\bin/console cron:swift --env=prod
+        //arguments(working): "E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\bin\console" cron:swift --env=prod
+
         $cronJobCommand = "php ".$projectDir.DIRECTORY_SEPARATOR."bin/console cron:swift --env=prod";
 
         $useSpool = $userSecUtil->getSiteSettingParameter('mailerSpool');
