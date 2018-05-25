@@ -123,6 +123,7 @@ class SecurityController extends Controller
         $formArr['usernametypes'] = $usernametypes;
 
         ///////////// read cookies /////////////
+        $formArr['user_type'] = null;
         $cookieKeytype = $request->cookies->get('userOrderSuccessCookiesKeytype');
         if( $cookieKeytype ) {
             $formArr['user_type'] = $cookieKeytype;
@@ -130,7 +131,9 @@ class SecurityController extends Controller
         } else {
             //set default
             $defaultPrimaryPublicUserIdType = $userSecUtil->getSiteSettingParameter('defaultPrimaryPublicUserIdType');
-            $formArr['user_type'] = $defaultPrimaryPublicUserIdType->getName();
+            if( $defaultPrimaryPublicUserIdType ) {
+                $formArr['user_type'] = $defaultPrimaryPublicUserIdType->getName();
+            }
         }
 
         $cookieUsername = $request->cookies->get('userOrderSuccessCookiesUsername');

@@ -305,6 +305,8 @@ class EmailUtil {
         //command:    php
         //argumants: E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\bin/console cron:swift --env=prod
         //arguments(working): "E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\bin\console" cron:swift --env=prod
+        //incorrect function when argument:
+        //"E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\bin\console" cron:swift --env=prod
 
         $console = $projectDir.DIRECTORY_SEPARATOR."bin".DIRECTORY_SEPARATOR."console";
         //$console = '"'.$console.'"';
