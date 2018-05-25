@@ -195,7 +195,7 @@
             </tr>
             <tr>
                 {% set cronStatus = user_mailer_utility.getCronStatus() %}
-                <td>Frequency of sending emails in the queue (in minutes between eruptions) on Unix. {{ cronStatus|raw }}</td>
+                <td>Frequency of sending emails in the queue (in minutes between eruptions). {{ cronStatus|raw }}</td>
                 <td>{{ entity.mailerFlushQueueFrequency }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'mailerFlushQueueFrequency'}) }}">Edit</a></td>
             </tr>

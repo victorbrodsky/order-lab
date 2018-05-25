@@ -295,22 +295,44 @@ class EmailUtil {
         $userSecUtil = $this->container->get('user_security_utility');
 
         $projectDir = $this->container->get('kernel')->getProjectDir();
-        $cronJobName = "Swiftmailer Order";
+        $cronJobName = "Swiftmailer_Order";
         $cronJobCommand = "php ".$projectDir.DIRECTORY_SEPARATOR."bin/console cron:swift --env=prod";
 
         $useSpool = $userSecUtil->getSiteSettingParameter('mailerSpool');
         $mailerFlushQueueFrequency = $userSecUtil->getSiteSettingParameter('mailerFlushQueueFrequency');
 
         if( $useSpool && $mailerFlushQueueFrequency ) {
+            //if( $this->isWindowsTaskJobExists($cronJobName) ) {
+            //    return null;
+            //}
             //create cron job
             //SchTasks /Create /SC DAILY /TN “My Task” /TR “C:RunMe.bat” /ST 09:00
-            $command = "SchTasks /Create /SC DAILY /TN $cronJobName /TR $cronJobCommand /ST 09:00";
-            echo exec($command);
-
+            //$command = 'SchTasks /Create /SC DAILY /TN "'.$cronJobName.'" /TR "'.$cronJobCommand.'" /ST 09:00';
+            $command = 'SchTasks /Create /SC MINUTE /MO '.$mailerFlushQueueFrequency.' /TN "'.$cronJobName.'" /TR "'.$cronJobCommand.'"';
+            //echo "SchTasks add: ".$command."<br>";
+            $res = exec($command);
+            return $res;
         } else {
             //remove cron job
+            //SchTasks /Delete /TN “My Task”
+            $command = 'SchTasks /Delete /TN "'.$cronJobName.'" /F';
+            //$command = 'SchTasks /Delete /TN '.$cronJobName;
+            //echo "SchTasks remove: ".$command."<br>";
+            $res = exec($command);
+            //exit("res=".$res);
+            return $res;
         }
     }
+//    public function isWindowsTaskJobExists($cronJobName) {
+//        $command = 'SchTasks | FINDSTR "'.$cronJobName.'"';
+//        $res = exec($command);
+//        if( $res ) {
+//            return true;
+//        }
+//        return false;
+//    }
+
+
 
     //https://github.com/yzalis/Crontab
     //run: php bin/console cron:swift --env=prod
@@ -390,8 +412,28 @@ class EmailUtil {
 
     public function getCronStatus() {
         if( $this->isWindows() ){
-            return null;
+            return $this->getCronStatusWindows();
+        } else {
+            return $this->getCronStatusLinux();
         }
+    }
+
+    public function getCronStatusWindows() {
+        $cronJobName = "Swiftmailer_Order";
+        $command = 'SchTasks | FINDSTR "'.$cronJobName.'"';
+        $res = exec($command);
+
+        if( $res ) {
+            //$res = "Cron job status: " . $crontab->render();
+            $res = '<font color="green">Cron job status: '.$res.'.</font>';
+        } else {
+            $res = '<font color="red">Cron job status: not found.</font>';
+        }
+        //exit($res);
+        return $res;
+    }
+
+    public function getCronStatusLinux() {
 
         $res = '<font color="red">Cron job status: not found.</font>';
         $crontab = new Crontab();

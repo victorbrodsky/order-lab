@@ -138,7 +138,7 @@ class InitialConfigurationType extends AbstractType
             'attr' => array('class' => 'form-control')
         ));
         $builder->add('mailerFlushQueueFrequency', null, array(
-            'label' => 'Frequency of sending emails in the queue (in minutes between eruptions) on Unix:',
+            'label' => 'Frequency of sending emails in the queue (in minutes between eruptions):',
             'attr' => array('class' => 'form-control')
         ));
 

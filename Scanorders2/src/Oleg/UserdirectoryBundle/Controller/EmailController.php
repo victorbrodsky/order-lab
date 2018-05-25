@@ -43,11 +43,11 @@ class EmailController extends Controller
 
         $emailUtil = $this->container->get('user_mailer_utility');
 
-        $emailRes = $emailUtil->sendSpooledEmails();
-
         //test
-        $emailUtil->createEmailCronJob();
-        exit('111');
+        //$res = $emailUtil->createEmailCronJob();
+        //exit('create Windows cron: '.$res);
+
+        $emailRes = $emailUtil->sendSpooledEmails();
 
         if( $emailRes ) {
             $msg = 'Spooled emails have been sent. Result: '.$emailRes;
