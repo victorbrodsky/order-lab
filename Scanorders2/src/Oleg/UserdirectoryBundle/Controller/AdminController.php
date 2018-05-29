@@ -594,9 +594,9 @@ class AdminController extends Controller
 
         //ini_set('max_execution_time', $max_exec_time); //set back to the original value
 
-        return $this->redirect($this->generateUrl('generate_all'));
+        //return $this->redirect($this->generateUrl('generate_all'));
 
-        //return $this->redirect($this->generateUrl('user_admin_index'));
+        return $this->redirect($this->generateUrl('user_admin_index'));
     }
 
     public function generateAll() {
