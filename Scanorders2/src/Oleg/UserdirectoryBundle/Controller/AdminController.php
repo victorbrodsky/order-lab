@@ -617,6 +617,8 @@ class AdminController extends Controller
         //$this->generateLabResultNames();
         //$this->generateLocationsFromExcel();
 
+        $count_countryList = $this->generateCountryList();
+
         $count_sitenameList = $this->generateSitenameList($user);
 
         $count_institutiontypes = $this->generateInstitutionTypes();                                //must be first
@@ -737,7 +739,6 @@ class AdminController extends Controller
 
         $count_generatePlatformListManagerList = $this->generatePlatformListManagerList();
 
-        $count_countryList = $this->generateCountryList();
 
         $msg =
             'Generated Tables: '.
