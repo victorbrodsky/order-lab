@@ -668,6 +668,10 @@ class AuthUtil {
         $ldapBindDN = "uid=".$username.",".$ldapBindDN;
         //echo "binddn=[".$binddn."]<br>";
 
+        //testing - Not working for 'tesla'. It works when 'ou' is removed.
+        //$ldapBindDN = "ou=scientists,dc=example,dc=com";
+        //$ldapBindDN = "uid=".$username.",".$ldapBindDN;
+
         //test: https://www.forumsys.com/tutorials/integration-how-to/ldap/online-ldap-test-server/
         //$password = "password";
         //$ldapBindDN = "uid=tesla,dc=example,dc=com"; //workings
