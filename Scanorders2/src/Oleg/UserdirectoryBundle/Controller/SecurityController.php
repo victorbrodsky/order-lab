@@ -131,7 +131,7 @@ class SecurityController extends Controller
         } else {
             //set default
             $defaultPrimaryPublicUserIdType = $userSecUtil->getSiteSettingParameter('defaultPrimaryPublicUserIdType');
-            if( $defaultPrimaryPublicUserIdType ) {
+            if( $defaultPrimaryPublicUserIdType && is_object($defaultPrimaryPublicUserIdType) ) {
                 $formArr['user_type'] = $defaultPrimaryPublicUserIdType->getName();
             }
         }
