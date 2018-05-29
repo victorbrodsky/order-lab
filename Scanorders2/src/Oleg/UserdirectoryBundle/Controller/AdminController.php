@@ -617,7 +617,7 @@ class AdminController extends Controller
         //$this->generateLabResultNames();
         //$this->generateLocationsFromExcel();
 
-        $count_countryList = $this->generateCountryList();
+        //$count_countryList = $this->generateCountryList();
 
         $count_sitenameList = $this->generateSitenameList($user);
 
@@ -769,7 +769,7 @@ class AdminController extends Controller
             'Location Types='.$count_locationTypeList.', '.
             'Location Privacy='.$count_locprivacy.', '.
             'States='.$count_states.', '.
-            'Countries='.$count_countryList.', '.
+            //'Countries='.$count_countryList.', '.
             'Languages='.$count_languages.', '.
             'Locales='.$count_locales.', '.
             'Locations='.$count_locations.', '.
