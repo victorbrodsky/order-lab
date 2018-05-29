@@ -314,7 +314,7 @@ class EmailUtil {
         //$cronJobCommand = 'php "'.$console.'" cron:swift --env=prod';
         //$cronJobCommand = "php '".$console."' cron:swift --env=prod";
         //$cronJobCommand = "php ".$console." cron:swift --env=prod";
-        $cronJobCommand = '\"php '.$console.'\" \"cron:swift --env=prod\"';
+        $cronJobCommand = 'php \"'.$console.'\" \"cron:swift --env=prod\"';
         //$cronJobCommand = '"'.$cronJobCommand.'"';
 
         $useSpool = $userSecUtil->getSiteSettingParameter('mailerSpool');
