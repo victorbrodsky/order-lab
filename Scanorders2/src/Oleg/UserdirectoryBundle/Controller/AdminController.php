@@ -4416,7 +4416,7 @@ class AdminController extends Controller
             $em->persist($listEntity);
             $em->flush();
 
-            exit('RoomList='.$roomObj);
+            //exit('RoomList='.$roomObj);
             $count = $count + 10;
         }
 
