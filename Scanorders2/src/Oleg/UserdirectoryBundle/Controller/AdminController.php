@@ -3011,7 +3011,7 @@ class AdminController extends Controller
     }
 
 
-    public function generateCountryList_Old() {
+    public function generate_Old_CountryList_Old() {
 
         $em = $this->getDoctrine()->getManager();
 
@@ -4343,6 +4343,7 @@ class AdminController extends Controller
 
     public function generateLocations() {
 
+        $userSecUtil = $this->get('user_security_utility');
         $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
@@ -4406,8 +4407,10 @@ class AdminController extends Controller
             $listEntity->setBuilding($building);
 
             //set room object
-            $userUtil = new UserUtil();
-            $roomObj = $userUtil->getObjectByNameTransformer($room,$username,'RoomList',$em);
+            //$userUtil = new UserUtil();
+            //$roomObj = $userUtil->getObjectByNameTransformer($room,$username,'RoomList',$em);
+            //getObjectByNameTransformer($user,"Message",'UserdirectoryBundle','EventObjectTypeList');
+            $roomObj = $userSecUtil->getObjectByNameTransformer($username,$room,'UserdirectoryBundle','RoomList');
             $listEntity->setRoom($roomObj);
 
             $em->persist($listEntity);
