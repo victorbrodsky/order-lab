@@ -294,6 +294,7 @@ class EmailUtil {
     //https://stackoverflow.com/questions/19641619/windows-7-scheduled-task-command-line
     public function createEmailCronJobWindows() {
         $userSecUtil = $this->container->get('user_security_utility');
+        $logger = $this->container->get('logger');
 
         $projectDir = $this->container->get('kernel')->getProjectDir();
         $cronJobName = "Swiftmailer_Order";
@@ -310,7 +311,8 @@ class EmailUtil {
 
         $console = $projectDir.DIRECTORY_SEPARATOR."bin".DIRECTORY_SEPARATOR."console";
         //$console = '"'.$console.'"';
-        $cronJobCommand = 'php "'.$console.'" cron:swift --env=prod';
+        //$cronJobCommand = 'php "'.$console.'" cron:swift --env=prod';
+        $cronJobCommand = "php '".$console."' cron:swift --env=prod";
         //$cronJobCommand = '"'.$cronJobCommand.'"';
 
         $useSpool = $userSecUtil->getSiteSettingParameter('mailerSpool');
@@ -324,6 +326,7 @@ class EmailUtil {
             //$command = 'SchTasks /Create /SC DAILY /TN "'.$cronJobName.'" /TR "'.$cronJobCommand.'" /ST 09:00';
             $command = 'SchTasks /Create /SC MINUTE /MO '.$mailerFlushQueueFrequency.' /TN '.$cronJobName.' /TR '.$cronJobCommand.' /IT /RU system';
             //echo "SchTasks add: ".$command."<br>";
+            $logger->notice("SchTasks:".$command);
             $res = exec($command);
             return $res;
         } else {
