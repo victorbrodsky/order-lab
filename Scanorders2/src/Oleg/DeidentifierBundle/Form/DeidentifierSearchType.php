@@ -45,12 +45,14 @@ class DeidentifierSearchType extends AbstractType
 //            'attr' => array('class' => 'combobox')
 //        ));
 
+        //echo "acctype=".$this->params['defaultAccessionType']."<br>";
         $builder->add('accessionType', EntityType::class, array(
             'class' => 'OlegOrderformBundle:AccessionType',
             'label'=> "Accession Type:",
             'mapped' => false,
             'required'=> true,
             'multiple' => false,
+            'data' => $this->params['defaultAccessionType'],
             'choice_label' => 'name',
             'attr' => array('class'=>'combobox combobox-width accessiontype-combobox skip-server-populate'),
             'query_builder' => function(EntityRepository $er) {

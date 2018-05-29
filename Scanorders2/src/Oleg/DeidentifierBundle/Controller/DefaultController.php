@@ -121,10 +121,11 @@ class DefaultController extends Controller
     }
 
     public function createGenerateForm() {
-        //permittedInstitutions for generation
-        $user = $this->get('security.token_storage')->getToken()->getUser();
-        //echo "user=".$user."<br>";
         $securityUtil = $this->get('order_security_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        //permittedInstitutions for generation
+        //echo "user=".$user."<br>";
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
         if( $userSiteSettings ) {
             $permittedInstitutions = $userSiteSettings->getPermittedInstitutionalPHIScope();
@@ -145,9 +146,12 @@ class DefaultController extends Controller
             $defaultInstitution = null;
         }
 
+        $defaultAccessionType = $userSecUtil->getSiteSettingParameter('defaultDeidentifierAccessionType');
+
         $params = array(
             'permittedInstitutions' => $permittedInstitutions,
-            'defaultInstitution' => $defaultInstitution
+            'defaultInstitution' => $defaultInstitution,
+            'defaultAccessionType' => $defaultAccessionType
         );
 
         //search box
@@ -502,6 +506,7 @@ class DefaultController extends Controller
             //exit("accession is not found; accessionType=" . $accessionTypeId . ", accessionNumber=" . $accessionNumber . ", institution=" . $institution);
         }
         //echo "accession count=".count($accessions)."<br>";
+        //echo "accessionTypeId=".$accessionTypeId."<br>";
 
         $repository = $em->getRepository('OlegOrderformBundle:AccessionAccession');
         $dql =  $repository->createQueryBuilder("accessionAccession");
@@ -519,6 +524,7 @@ class DefaultController extends Controller
 
         $accessionIdArr = array();
         foreach( $accessions as $accession ) {
+            //echo "acc=".$accession."<br>";
             $accessionIdArr[] = "accession = " . $accession->getId();
         }
         $accessionIdStr = implode(" OR ", $accessionIdArr);

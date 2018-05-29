@@ -1090,7 +1090,7 @@ if( 1 ) {
 
     public function addFormExternalIds( $field, $form, $params ) {
         $form->add($field, CollectionType::class, array(
-            'type' => ExternalIdType::class,
+            'entry_type' => ExternalIdType::class,
             'label' => false,
             'required' => false,
             'allow_add' => true,

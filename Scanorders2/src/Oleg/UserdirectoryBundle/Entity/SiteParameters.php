@@ -900,6 +900,13 @@ class SiteParameters {
      */
     private $navbarFilterInstitution2;
 
+    /**
+     * Default Accession Type for Deidentifier Defaults
+     *
+     * @ORM\ManyToOne(targetEntity="Oleg\OrderformBundle\Entity\AccessionType")
+     */
+    private $defaultDeidentifierAccessionType;
+
 
     function __construct( $addobjects=true )
     {
@@ -3186,6 +3193,22 @@ class SiteParameters {
     public function setNavbarFilterInstitution2($navbarFilterInstitution2)
     {
         $this->navbarFilterInstitution2 = $navbarFilterInstitution2;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDefaultDeidentifierAccessionType()
+    {
+        return $this->defaultDeidentifierAccessionType;
+    }
+
+    /**
+     * @param mixed $defaultDeidentifierAccessionType
+     */
+    public function setDefaultDeidentifierAccessionType($defaultDeidentifierAccessionType)
+    {
+        $this->defaultDeidentifierAccessionType = $defaultDeidentifierAccessionType;
     }
 
 

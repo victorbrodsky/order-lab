@@ -610,6 +610,27 @@ class SiteParametersType extends AbstractType
                 'attr' => array('class'=>'form-control textarea')
             ));
 
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'defaultDeidentifierAccessionType' ) {
+            $builder->add('defaultDeidentifierAccessionType', EntityType::class, array(
+                'class' => 'OlegOrderformBundle:AccessionType',
+                //'choice_label' => 'name',
+                //'choice_label' => 'getTreeName',
+                'label' => 'Default Deidentifier Accession Type:',
+                'required' => true,
+                'multiple' => false,
+                //'empty_value' => false,
+                'attr' => array('class' => 'combobox combobox-width'),
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist", "ASC")
+                        ->setParameters(array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+            ));
+        }
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'permittedFailedLoginAttempt' ) {
             $builder->add('permittedFailedLoginAttempt',null,array(
