@@ -78,6 +78,10 @@ class EmailUtil {
             $fromEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
         }
 
+        if( !$fromEmail ) {
+            return false;
+        }
+
         $emails = $this->checkEmails($emails);
         $ccs = $this->checkEmails($ccs);
 
