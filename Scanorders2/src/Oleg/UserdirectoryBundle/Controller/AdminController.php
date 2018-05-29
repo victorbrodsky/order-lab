@@ -632,7 +632,7 @@ class AdminController extends Controller
         $count_roles = $this->generateRoles();
         $count_employmentTypes = $this->generateEmploymentTypes();
         $count_states = $this->generateStates();
-        $count_countryList = $this->generateCountryList();
+
         $count_languages = $this->generateLanguages();
         $count_locales = $this->generateLocales();
         $count_locationTypeList = $this->generateLocationTypeList();
@@ -737,6 +737,8 @@ class AdminController extends Controller
 
         $count_generatePlatformListManagerList = $this->generatePlatformListManagerList();
 
+        $count_countryList = $this->generateCountryList();
+
         $msg =
             'Generated Tables: '.
             'Sitenames='.$count_sitenameList.', '.
@@ -766,7 +768,7 @@ class AdminController extends Controller
             'Location Types='.$count_locationTypeList.', '.
             'Location Privacy='.$count_locprivacy.', '.
             'States='.$count_states.', '.
-            //'Countries='.$count_countryList.', '.
+            'Countries='.$count_countryList.', '.
             'Languages='.$count_languages.', '.
             'Locales='.$count_locales.', '.
             'Locations='.$count_locations.', '.
