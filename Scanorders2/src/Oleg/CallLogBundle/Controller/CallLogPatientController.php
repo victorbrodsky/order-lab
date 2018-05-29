@@ -61,6 +61,8 @@ class CallLogPatientController extends PatientController {
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
+        ini_set('memory_limit', '5120M');
+
         $showtreedepth = 2;
 
         $params = array(
@@ -87,6 +89,8 @@ class CallLogPatientController extends PatientController {
         if( false == $this->get('security.authorization_checker')->isGranted('ROLE_CALLLOG_USER') ){
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
+
+        ini_set('memory_limit', '5120M');
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $userSecUtil = $this->get('user_security_utility');
