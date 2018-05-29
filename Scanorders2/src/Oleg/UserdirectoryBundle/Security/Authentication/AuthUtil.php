@@ -532,7 +532,11 @@ class AuthUtil {
     public function ldapBind( $username, $password ) {
 
         //step 1
-        if( $this->simpleLdap($username,$password) ) {
+        if( $this->simpleLdap($username,$password,"uid") ) {
+            return 1;
+        }
+
+        if( $this->simpleLdap($username,$password,"cn") ) {
             return 1;
         }
 
@@ -647,7 +651,7 @@ class AuthUtil {
     // Port: 389
     // AD/LDAP Server OU: ou=users,ou=guests,dc=zflexsoftware,dc=com
     // Username: guest1 Password: guest1password
-    public function simpleLdap($username, $password) {
+    public function simpleLdap($username, $password, $userPrefix="uid") {
         $userSecUtil = $this->container->get('user_security_utility');
         //$this->logger->notice("Simple Ldap");
         //$LDAPHost = $this->container->getParameter('ldaphost');
@@ -665,7 +669,8 @@ class AuthUtil {
 //            }
 //        }
         //$binddn = implode(",",$ldapBindArr);
-        $ldapBindDN = "uid=".$username.",".$ldapBindDN;
+        //$ldapBindDN = "uid=".$username.",".$ldapBindDN;
+        $ldapBindDN = $userPrefix."=".$username.",".$ldapBindDN;
         //echo "binddn=[".$binddn."]<br>";
 
         //testing - Not working for 'tesla'. It works when 'ou' is removed.
@@ -681,6 +686,8 @@ class AuthUtil {
         //$password = "guest1password";
 
         //$this->logger->notice("Simple ldap: before ldap_bind");
+
+        //$ldapBindDN = "uid=".$username;
 
         //$res = @ldap_bind($cnx,NULL,$password,$mech,NULL,$username,NULL);
         $res = @ldap_bind($cnx,$ldapBindDN,$password);

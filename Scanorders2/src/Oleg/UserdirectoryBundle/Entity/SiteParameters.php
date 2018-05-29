@@ -907,6 +907,20 @@ class SiteParameters {
      */
     private $defaultDeidentifierAccessionType;
 
+    /**
+     * Default Accession Type for ScanOrder Type
+     *
+     * @ORM\ManyToOne(targetEntity="Oleg\OrderformBundle\Entity\AccessionType")
+     */
+    private $defaultScanAccessionType;
+
+    /**
+     * Default Mrn Type for ScanOrder Type
+     *
+     * @ORM\ManyToOne(targetEntity="Oleg\OrderformBundle\Entity\MrnType")
+     */
+    private $defaultScanMrnType;
+
 
     function __construct( $addobjects=true )
     {
@@ -3209,6 +3223,38 @@ class SiteParameters {
     public function setDefaultDeidentifierAccessionType($defaultDeidentifierAccessionType)
     {
         $this->defaultDeidentifierAccessionType = $defaultDeidentifierAccessionType;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDefaultScanAccessionType()
+    {
+        return $this->defaultScanAccessionType;
+    }
+
+    /**
+     * @param mixed $defaultScanAccessionType
+     */
+    public function setDefaultScanAccessionType($defaultScanAccessionType)
+    {
+        $this->defaultScanAccessionType = $defaultScanAccessionType;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDefaultScanMrnType()
+    {
+        return $this->defaultScanMrnType;
+    }
+
+    /**
+     * @param mixed $defaultScanMrnType
+     */
+    public function setDefaultScanMrnType($defaultScanMrnType)
+    {
+        $this->defaultScanMrnType = $defaultScanMrnType;
     }
 
 

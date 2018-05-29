@@ -763,6 +763,10 @@
         {% include 'OlegUserdirectoryBundle:SiteParameters:deidentifier-content.html.twig' %}
     {% endif %}
 
+    {% if (sitename == "employees" or sitename == "scan") and is_granted('ROLE_TRANSRES_ADMIN') %}
+        {% include 'OlegUserdirectoryBundle:SiteParameters:scan-content.html.twig' %}
+    {% endif %}
+
     {#<br>#}
     {#<p>#}
         {#<a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id }) }}">Edit</a>#}

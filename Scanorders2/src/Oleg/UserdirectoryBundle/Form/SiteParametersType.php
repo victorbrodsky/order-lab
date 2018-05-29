@@ -632,6 +632,50 @@ class SiteParametersType extends AbstractType
             ));
         }
 
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'defaultScanAccessionType' ) {
+            $builder->add('defaultScanAccessionType', EntityType::class, array(
+                'class' => 'OlegOrderformBundle:AccessionType',
+                //'choice_label' => 'name',
+                //'choice_label' => 'getTreeName',
+                'label' => 'Default Scan Order Accession Type:',
+                'required' => true,
+                'multiple' => false,
+                //'empty_value' => false,
+                'attr' => array('class' => 'combobox combobox-width'),
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist", "ASC")
+                        ->setParameters(array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+            ));
+        }
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'defaultScanMrnType' ) {
+            $builder->add('defaultScanMrnType', EntityType::class, array(
+                'class' => 'OlegOrderformBundle:MrnType',
+                //'choice_label' => 'name',
+                //'choice_label' => 'getTreeName',
+                'label' => 'Default Scan Order Mrn Type:',
+                'required' => true,
+                'multiple' => false,
+                //'empty_value' => false,
+                'attr' => array('class' => 'combobox combobox-width'),
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist", "ASC")
+                        ->setParameters(array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+            ));
+        }
+
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'permittedFailedLoginAttempt' ) {
             $builder->add('permittedFailedLoginAttempt',null,array(
                 'label'=>'Permitted failed log in attempts:',
