@@ -463,12 +463,12 @@
     <hr>
     <h4 class="text-info">Populate Lists</h4>
 
-    {#<p>#}
-        {#<a general-data-confirm="Are you sure?"#}
-            {#href="{{ path('generate_country_city') }}">#}
-            {#1) Populate Country and City Lists#}
-        {#</a>#}
-    {#</p>#}
+    <p>
+        <a general-data-confirm="Are you sure?"
+            href="{{ path('generate_country_city') }}">
+            1) Populate Country and City Lists
+        </a>
+    </p>
 
 
     {% if environment is not defined %}
@@ -488,6 +488,13 @@
                href="{{ path('user_sync_db') }}">2) Synchronise DB with the source code changes (optional)
             </a>
         </p>
+
+        {#<p>#}
+            {#<a general-data-confirm="Are you sure?"#}
+               {#href="{{ path('generate_country_city') }}">#}
+                {#1) Populate Country and City Lists (optional)#}
+            {#</a>#}
+        {#</p>#}
 
         <hr>
 
