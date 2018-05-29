@@ -304,18 +304,10 @@ class EmailUtil {
         //Start In:  E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2
 
         //command:    php
-        //argumants: E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\bin/console cron:swift --env=prod
         //arguments(working): "E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\bin\console" cron:swift --env=prod
-        //incorrect function when argument:
-        //"E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\bin\console" cron:swift --env=prod
-
         $console = $projectDir.DIRECTORY_SEPARATOR."bin".DIRECTORY_SEPARATOR."console";
-        //$console = '"'.$console.'"';
-        //$cronJobCommand = 'php "'.$console.'" cron:swift --env=prod';
-        //$cronJobCommand = "php '".$console."' cron:swift --env=prod";
-        //$cronJobCommand = "php ".$console." cron:swift --env=prod";
         $cronJobCommand = 'php \"'.$console.'\" cron:swift --env=prod';
-        //$cronJobCommand = '"'.$cronJobCommand.'"';
+        $cronJobCommand = '"'.$cronJobCommand.'"';
 
         $useSpool = $userSecUtil->getSiteSettingParameter('mailerSpool');
         $mailerFlushQueueFrequency = $userSecUtil->getSiteSettingParameter('mailerFlushQueueFrequency');
@@ -327,9 +319,10 @@ class EmailUtil {
             //SchTasks /Create /SC DAILY /TN “My Task” /TR “C:RunMe.bat” /ST 09:00
             //$command = 'SchTasks /Create /SC DAILY /TN "'.$cronJobName.'" /TR "'.$cronJobCommand.'" /ST 09:00';
             $command = 'SchTasks /Create /SC MINUTE /MO '.$mailerFlushQueueFrequency.
-                ' /IT /RU system'.
+                ' /IT '.
+                //' /RU system'.
                 ' /TN '.$cronJobName.
-                ' /TR "'.$cronJobCommand.'"'
+                ' /TR '.$cronJobCommand.''
                 ;
             //echo "SchTasks add: ".$command."<br>";
             $logger->notice("SchTasks:".$command);
