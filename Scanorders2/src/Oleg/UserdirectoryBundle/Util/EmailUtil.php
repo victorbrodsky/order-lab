@@ -314,7 +314,7 @@ class EmailUtil {
         //$cronJobCommand = 'php "'.$console.'" cron:swift --env=prod';
         //$cronJobCommand = "php '".$console."' cron:swift --env=prod";
         //$cronJobCommand = "php ".$console." cron:swift --env=prod";
-        $cronJobCommand = '"php '.$console.'" "cron:swift --env=prod"';
+        $cronJobCommand = '\"php '.$console.'\" \"cron:swift --env=prod\"';
         //$cronJobCommand = '"'.$cronJobCommand.'"';
 
         $useSpool = $userSecUtil->getSiteSettingParameter('mailerSpool');
@@ -327,9 +327,10 @@ class EmailUtil {
             //SchTasks /Create /SC DAILY /TN “My Task” /TR “C:RunMe.bat” /ST 09:00
             //$command = 'SchTasks /Create /SC DAILY /TN "'.$cronJobName.'" /TR "'.$cronJobCommand.'" /ST 09:00';
             $command = 'SchTasks /Create /SC MINUTE /MO '.$mailerFlushQueueFrequency.
+                ' /IT /RU system'.
                 ' /TN '.$cronJobName.
-                ' /TR '.$cronJobCommand.
-                ' /IT /RU system';
+                ' /TR "'.$cronJobCommand.'"'
+                ;
             //echo "SchTasks add: ".$command."<br>";
             $logger->notice("SchTasks:".$command);
             $res = exec($command);
