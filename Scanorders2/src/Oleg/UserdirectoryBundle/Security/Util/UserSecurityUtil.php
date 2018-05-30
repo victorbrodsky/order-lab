@@ -1216,6 +1216,7 @@ class UserSecurityUtil {
             $res = $param->$getSettingMethod();
         }
 
+        echo "res=".$res."<br>";
         return $res;
     }
 
