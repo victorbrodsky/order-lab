@@ -1819,6 +1819,11 @@ class AdminController extends Controller
     }
 
     public function generateSiteParameters() {
+        $userServiceUtil = $this->get('user_service_utility');
+        return $userServiceUtil->generateSiteParameters();
+    }
+
+    public function generateSiteParameters_ORIG() {
 
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
@@ -1877,7 +1882,7 @@ class AdminController extends Controller
             "confirmationEmailFellApp" => "",
             "confirmationSubjectFellApp" => "Your WCMC/NYP fellowship application has been succesfully received",
             "confirmationBodyFellApp" => "Thank You for submitting the fellowship application to Weill Cornell Medical College/NewYork Presbyterian Hospital. ".
-                                         "Once we receive the associated recommendation letters, your application will be reviewed and considered. ". 
+                                         "Once we receive the associated recommendation letters, your application will be reviewed and considered. ".
                                          "If You have any questions, please do not hesitate to contact me by phone or via email. ".
                                          "Sincerely, Jessica Misner Fellowship Program Coordinator Weill Cornell Medicine Pathology and Laboratory Medicine 1300 York Avenue, Room C-302 T 212.746.6464 F 212.746.8192",
             "clientEmailFellApp" => '',

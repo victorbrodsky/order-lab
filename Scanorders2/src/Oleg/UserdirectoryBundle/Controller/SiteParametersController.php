@@ -527,6 +527,12 @@ class SiteParametersController extends Controller
         $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
 
         if( count($entities) != 1 ) {
+            $userServiceUtil = $this->get('user_service_utility');
+            $userServiceUtil->generateSiteParameters();
+            $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+        }
+
+        if( count($entities) != 1 ) {
             throw new \Exception( 'Must have only one parameter object. Found '.count($entities).'object(s)' );
         }
 
