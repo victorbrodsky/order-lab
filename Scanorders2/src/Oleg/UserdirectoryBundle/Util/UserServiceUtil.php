@@ -518,6 +518,7 @@ class UserServiceUtil {
         $inst2 = null;
 
         $institution1 = $userSecUtil->getSiteSettingParameter("navbarFilterInstitution1");
+        echo "institution1=".$institution1."<br>";
         if( $institution1 ) {
             $inst1 = $institution1->getAbbreviation();
         }
