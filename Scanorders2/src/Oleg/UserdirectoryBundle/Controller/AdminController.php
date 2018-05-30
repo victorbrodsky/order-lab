@@ -587,19 +587,19 @@ class AdminController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         //1)
-        $msg = $this->generateAll();
-        $em->clear();
-
-        //2)
         $count = $this->generateCountryList();
         $countryCount = $count['country'];
         $cityCount = $count['city'];
-        $msg = $msg."<br><br>".'Added '.$countryCount.' countries and '.$cityCount.' cities';
+        $msg1 = 'Added '.$countryCount.' countries and '.$cityCount.' cities';
+        $em->clear();
+
+        //2)
+        $msg2 = $this->generateAll();
         $em->clear();
 
         $this->get('session')->getFlashBag()->add(
             'notice',
-            $msg
+            $msg1 . "<br><br><br>" . $msg2
         );
 
         //ini_set('max_execution_time', $max_exec_time); //set back to the original value
