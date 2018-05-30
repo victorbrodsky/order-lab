@@ -575,6 +575,40 @@ class AdminController extends Controller
         return $filterStr;
     }
 
+    /**
+     * Populate DB
+     *
+     * @Route("/populate-all-site-lists-with-default-values", name="user_generate_all_site")
+     * @Method("GET")
+     * @Template("OlegUserdirectoryBundle:Admin:index.html.twig")
+     */
+    public function generateAllSiteAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        //1)
+        $msg = $this->generateAll();
+        $em->clear();
+
+        //2)
+        $count = $this->generateCountryList();
+        $countryCount = $count['country'];
+        $cityCount = $count['city'];
+        $msg = $msg."<br><br>".'Added '.$countryCount.' countries and '.$cityCount.' cities';
+        $em->clear();
+
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            $msg
+        );
+
+        //ini_set('max_execution_time', $max_exec_time); //set back to the original value
+
+        //3)
+        return $this->redirect($this->generateUrl('generate_all'));
+
+        //return $this->redirect($this->generateUrl('user_admin_index'));
+    }
 
     /**
      * Populate DB
@@ -590,13 +624,6 @@ class AdminController extends Controller
         $msg = $this->generateAll();
         $em->clear();
 
-        //2
-        $count = $this->generateCountryList();
-        $countryCount = $count['country'];
-        $cityCount = $count['city'];
-        $msg = $msg."<br><br>".'Added '.$countryCount.' countries and '.$cityCount.' cities';
-        $em->clear();
-
         $this->get('session')->getFlashBag()->add(
             'notice',
             $msg
@@ -604,9 +631,9 @@ class AdminController extends Controller
 
         //ini_set('max_execution_time', $max_exec_time); //set back to the original value
 
-        return $this->redirect($this->generateUrl('generate_all'));
+        //return $this->redirect($this->generateUrl('generate_all'));
 
-        //return $this->redirect($this->generateUrl('user_admin_index'));
+        return $this->redirect($this->generateUrl('user_admin_index'));
     }
 
     public function generateAll() {

@@ -463,12 +463,12 @@
     <hr>
     <h4 class="text-info">Populate Lists</h4>
 
-    <p>
-        <a general-data-confirm="Are you sure?"
-            href="{{ path('generate_country_city') }}">
-            Populate Country and City Lists
-        </a>
-    </p>
+    {#<p>#}
+        {#<a general-data-confirm="Are you sure?"#}
+            {#href="{{ path('generate_country_city') }}">#}
+            {#Populate Country and City Lists#}
+        {#</a>#}
+    {#</p>#}
 
 
     {% if environment is not defined %}
@@ -478,9 +478,27 @@
     <!--show this only for dev. Don't show for live-->
     {#and environment == 'dev'#}
     {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
+
+        <p>
+            <a  general-data-confirm="Are you sure? This action will overwrite all values on all lists for all sites with defaults."
+                href="{{ path('user_generate_all_site') }}">Populate all lists for all sites with default values in one step</a>
+        </p>
+
+        <p>
+            <a general-data-confirm="Are you sure?"
+               href="{{ path('generate_country_city') }}">
+                1) Populate Country and City Lists (optional)
+            </a>
+        </p>
+
         <p>
             <a  general-data-confirm="Are you sure? This action will overwrite all values on all lists with defaults."
-               href="{{ path('user_generate_all') }}">Populate All Lists With Default Values</a>
+                href="{{ path('user_generate_all') }}">2) Populate All Lists With Default Values</a>
+        </p>
+
+        <p>
+            <a  general-data-confirm="Are you sure? This action will overwrite all values on all Scan Orders lists with defaults."
+                href="{{ path('generate_all') }}">2) Populate All Scan Orders Lists With Default Values</a>
         </p>
 
         {#<p>#}
