@@ -1189,7 +1189,8 @@ class UserSecurityUtil {
         }
 
         if( count($params) > 1 ) {
-            throw new \Exception( 'Must have only one parameter object. Found '.count($params).' object(s)' );
+            exit('Must have only one parameter object. Found '.count($params).' object(s). Please follow the initialization instructions.');
+            //throw new \Exception( 'Must have only one parameter object. Found '.count($params).' object(s)' );
         }
 
         $param = $params[0];
@@ -1215,7 +1216,7 @@ class UserSecurityUtil {
         } else {
             $res = $param->$getSettingMethod();
         }
-        
+
         return $res;
     }
 
