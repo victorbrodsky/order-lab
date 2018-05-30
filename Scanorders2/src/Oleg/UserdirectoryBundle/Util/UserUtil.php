@@ -241,7 +241,8 @@ class UserUtil {
         //echo "params count=".count($params)."<br>";
 
         if( count($params) == 0 ) {
-            return -1;
+            return null;
+            //return -1;
         }
 
         if( count($params) > 1 ) {
@@ -319,7 +320,7 @@ class UserUtil {
             //echo "userkeytype=".$userkeytype."; ID=".$userkeytype->getId()."<br>";
 
             $adminemail = $this->getSiteSetting($em,'siteEmail');
-            if( $adminemail == -1 ) {
+            if( !$adminemail ) {
                 $adminemail = "email@example.com";
             }
 
