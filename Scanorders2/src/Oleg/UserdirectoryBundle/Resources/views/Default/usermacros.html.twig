@@ -1038,8 +1038,9 @@
                         {{ usermacros.phoneHref(value) }}
                     {% endif %}
                     {% if type == "link" %}
-                        {% if "http" not in value %}
-                            {% set weburl = "http://"~value %}
+                        {% set scheme = app.request.scheme %}
+                        {% if scheme not in value %}
+                            {% set weburl = scheme~"://"~value %}
                         {% else %}
                             {% set weburl = value %}
                         {% endif %}
@@ -1552,10 +1553,11 @@
 
 {% macro htmlLink(linkvalue,label) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
-    {% if "http" in linkvalue %}
+    {% set scheme = app.request.scheme %}
+    {% if scheme in linkvalue %}
         {% set href = linkvalue %}
     {% else %}
-        {% set href = "http://"~linkvalue %}
+        {% set href = scheme~"://"~linkvalue %}
     {% endif %}
     {% set hreflink = '<a href="'~href|raw~'">'~linkvalue~'</a>' %}
     {{ formmacros.simplefield( label, hreflink, "", "disabled" ) }}

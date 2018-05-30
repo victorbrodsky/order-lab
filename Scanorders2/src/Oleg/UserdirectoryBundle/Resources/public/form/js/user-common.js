@@ -466,10 +466,18 @@ function getCommonBaseUrl(link,sitename) {
 
     //console.log('sitename='+sitename);
 
+    var scheme = "http:";
+    var url = window.location.href;
+    var urlArr = url.split("/");
+    if( urlArr.length > 0 ) {
+        scheme = urlArr[0];
+    }
+    //console.log('scheme='+scheme);
+
     var prefix = sitename;  //"scan";
     var urlBase = $("#baseurl").val();
     if( typeof urlBase !== 'undefined' && urlBase != "" ) {
-        urlBase = "http://" + urlBase + "/" + prefix + "/" + link;
+        urlBase = scheme+"//" + urlBase + "/" + prefix + "/" + link;
     }
     //console.log("urlBase="+urlBase);
     return urlBase;

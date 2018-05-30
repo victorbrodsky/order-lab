@@ -2201,7 +2201,7 @@ class UserController extends Controller
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:Profile:show_user.html.twig")
      */
-    public function showUserOptimizedCustomhAction($id)
+    public function showUserOptimizedCustomhAction(Request $request, $id)
     {
         //$secUtil = $this->get('user_security_utility');
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USER') ) { //!$secUtil->isCurrentUser($id) &&
@@ -2251,7 +2251,8 @@ class UserController extends Controller
         
         $uploadDirectory = $entity['uploadDirectory39'];
         if( $getUniquename && $uploadDirectory ) {
-            $getAbsoluteUploadFullPath = "http://" . $_SERVER['SERVER_NAME'] . "/order/" . $uploadDirectory.'/'.$getUniquename;
+            $scheme = $request->getScheme();
+            $getAbsoluteUploadFullPath = $scheme."://" . $_SERVER['SERVER_NAME'] . "/order/" . $uploadDirectory.'/'.$getUniquename;
         }
 
         $getUsernameOptimal = $entity['displayName23'];

@@ -442,10 +442,11 @@
 
                 {% if (isEntity or formfield.link is defined) and (formfieldValue and formfieldValue.link != '') %}
 
-                    {% if "http" in formfieldValue.link %}
+                    {% set scheme = app.request.scheme %}
+                    {% if scheme in formfieldValue.link %}
                         {% set href = formfieldValue.link %}
                     {% else %}
-                        {% set href = "http://"~formfieldValue.link %}
+                        {% set href = scheme~"://"~formfieldValue.link %}
                     {% endif %}
 
                     {% if isEntity %}
