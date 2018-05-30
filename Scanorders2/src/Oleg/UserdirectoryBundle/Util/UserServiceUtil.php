@@ -517,6 +517,7 @@ class UserServiceUtil {
         $inst1 = null;
         $inst2 = null;
 
+        exit('000');
         $institution1 = $userSecUtil->getSiteSettingParameter("navbarFilterInstitution1");
         echo "institution1=".$institution1."<br>";
         exit('111');
