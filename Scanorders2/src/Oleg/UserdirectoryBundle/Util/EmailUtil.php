@@ -398,11 +398,13 @@ class EmailUtil {
             //echo "crontab res=".$res."<br>";
             $res  = $this->removeCronJob($crontab,$cronJobName);
 
-            $session = $this->container->get('session');
-            $session->getFlashBag()->add(
-                'notice',
-                "Removed Cron Job:".$res
-            );
+            if( $res ) {
+                $session = $this->container->get('session');
+                $session->getFlashBag()->add(
+                    'notice',
+                    "Removed Cron Job:" . $res
+                );
+            }
         }
 
         return null;
