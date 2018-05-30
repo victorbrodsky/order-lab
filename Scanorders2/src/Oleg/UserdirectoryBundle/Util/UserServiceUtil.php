@@ -1031,9 +1031,10 @@ class UserServiceUtil {
         $institutionName = 'Weill Cornell Medical College';
         $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName($institutionName);
         if( !$institution ) {
-            throw new \Exception( 'Institution was not found for name='.$institutionName );
+            //throw new \Exception( 'Institution was not found for name='.$institutionName );
+        } else {
+            $params->setAutoAssignInstitution($institution);
         }
-        $params->setAutoAssignInstitution($institution);
 
         //set AllowPopulateFellApp to false
         $params->setAllowPopulateFellApp(false);
