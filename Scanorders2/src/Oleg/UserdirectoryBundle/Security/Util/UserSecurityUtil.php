@@ -1189,7 +1189,10 @@ class UserSecurityUtil {
         }
 
         if( count($params) > 1 ) {
-            exit('Must have only one parameter object. Found '.count($params).' object(s). Please follow the initialization instructions.');
+            $logger = $this->container->get('logger');
+            $msg = 'Must have only one parameter object. Found '.count($params).' object(s). Please follow the initialization instructions.';
+            $logger->error($msg);
+            exit($msg);
             //throw new \Exception( 'Must have only one parameter object. Found '.count($params).' object(s)' );
         }
 
