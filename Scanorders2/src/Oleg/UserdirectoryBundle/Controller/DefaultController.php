@@ -41,7 +41,40 @@ class DefaultController extends Controller
             'sitename' => $sitename
         );
     }
-    
+
+
+    /**
+     * @Route("/show-system-log", name="employees_show_system_log")
+     * @Template("OlegUserdirectoryBundle:Default:show-system-log.html.twig")
+     * @Method("GET")
+     */
+    public function showSystemLogAction(Request $request) {
+
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+
+        $logDir = $this->container->get('kernel')->getProjectDir() . DIRECTORY_SEPARATOR . "var" . DIRECTORY_SEPARATOR . "logs";
+
+        $systemLogFile = $logDir . DIRECTORY_SEPARATOR . "prod.log";
+
+        //echo file_get_contents( $systemLogFile );
+
+        //$orig = file_get_contents($systemLogFile);
+        //$a = htmlentities($orig);
+
+        echo '<code>';
+        echo '<pre>';
+
+        //echo $a;
+        echo file_get_contents( $systemLogFile );
+
+        echo '</pre>';
+        echo '</code>';
+
+        exit();
+        return array();
+    }
 
 
 //    /**
