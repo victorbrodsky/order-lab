@@ -479,10 +479,10 @@
     {#and environment == 'dev'#}
     {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
 
-        <p>
-            <a  general-data-confirm="Are you sure? This action will overwrite all values on all lists for all sites with defaults."
-                href="{{ path('user_generate_all_site') }}">Populate all lists in one step for all sites with default values:</a>
-        </p>
+        {#<p>#}
+            {#<a  general-data-confirm="Are you sure? This action will overwrite all values on all lists for all sites with defaults."#}
+                {#href="{{ path('user_generate_all_site') }}">Populate all lists in one step for all sites with default values:</a>#}
+        {#</p>#}
 
         <p>
             <a general-data-confirm="Are you sure?"
