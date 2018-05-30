@@ -585,7 +585,17 @@ class AdminController extends Controller
      */
     public function generateAllAction()
     {
+        $em = $this->getDoctrine()->getManager();
+
         $msg = $this->generateAll();
+        $em->clear();
+
+        //2
+        $count = $this->generateCountryList();
+        $countryCount = $count['country'];
+        $cityCount = $count['city'];
+        $msg = $msg."<br><br>".'Added '.$countryCount.' countries and '.$cityCount.' cities';
+        $em->clear();
 
         $this->get('session')->getFlashBag()->add(
             'notice',
@@ -594,9 +604,9 @@ class AdminController extends Controller
 
         //ini_set('max_execution_time', $max_exec_time); //set back to the original value
 
-        //return $this->redirect($this->generateUrl('generate_all'));
+        return $this->redirect($this->generateUrl('generate_all'));
 
-        return $this->redirect($this->generateUrl('user_admin_index'));
+        //return $this->redirect($this->generateUrl('user_admin_index'));
     }
 
     public function generateAll() {
