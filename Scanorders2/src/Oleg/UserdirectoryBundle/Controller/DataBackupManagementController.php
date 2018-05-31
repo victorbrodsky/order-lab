@@ -65,7 +65,7 @@ class DataBackupManagementController extends Controller
                 'pnotify-error',
                 "Cannot continue with Backup: No Network Drive Path is defined in the Site Settings"
             );
-            return $this->redirect($this->generateUrl('employees_data_backup_management'));
+            return $this->redirect($this->generateUrl('employees_home'));
         }
 
         $sitename = "employees";
