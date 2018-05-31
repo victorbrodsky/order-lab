@@ -233,7 +233,9 @@ class EmailUtil {
         $authMode = $userSecUtil->getSiteSettingParameter('mailerAuthMode');
         //$trans = $userSecUtil->getSiteSettingParameter('mailerTransport');
 
+        echo "before transport newInstance <br>";
         $transport = \Swift_SmtpTransport::newInstance();
+        echo "after transport newInstance <br>";
         if( !$transport ) {
             return null;
         }
