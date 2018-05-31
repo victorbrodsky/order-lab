@@ -153,9 +153,8 @@ class EmailUtil {
         if( !$mailer ) {
             $logger->notice("sendEmail: Email has not been sent: From:".$fromEmail."; To:".$emailsStr."; CC:".$ccStr."; subject=".$subject."; body=".$message);
         }
-        echo "after transport newInstance <br>";
-        $logger->notice("sendEmail: Trying to sent email: From:".$fromEmail."; To:".$emailsStr."; CC:".$ccStr."; subject=".$subject."; body=".$message);
-
+        //echo "after transport newInstance <br>";
+        //$logger->notice("sendEmail: Trying to sent email: From:".$fromEmail."; To:".$emailsStr."; CC:".$ccStr."; subject=".$subject."; body=".$message);
 
         //When using send() the message will be sent just like it would be sent if you used your mail client.
         // An integer is returned which includes the number of successful recipients.
@@ -164,9 +163,7 @@ class EmailUtil {
         // are delivered to successfully then the value 5 will be returned.
         //$emailRes = $mailer->send($message);
         try{
-            echo "before email send <br>";
             $emailRes = $mailer->send($message);
-            echo "after email send <br>";
         }catch(\Swift_TransportException $e){
             $emailRes = $e->getMessage() ;
         }
