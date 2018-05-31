@@ -301,7 +301,7 @@ class AdminController extends Controller
         //exec("pwd");
 
         // Everything for owner and for others
-        chmod($old_path, 0777);
+        //chmod($old_path, 0777);
 
         //$linux
         if( $linux ) {
@@ -342,7 +342,7 @@ class AdminController extends Controller
         }
 
         // Everything for owner, read and execute for others
-        chmod($old_path, 0755);
+        //chmod($old_path, 0755);
 
         //switch back to web folder
         $output = chdir($old_path);
