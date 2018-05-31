@@ -153,6 +153,9 @@ class EmailUtil {
         if( !$mailer ) {
             $logger->notice("sendEmail: Email has not been sent: From:".$fromEmail."; To:".$emailsStr."; CC:".$ccStr."; subject=".$subject."; body=".$message);
         }
+        echo "after transport newInstance <br>";
+        $logger->notice("sendEmail: Trying to sent email: From:".$fromEmail."; To:".$emailsStr."; CC:".$ccStr."; subject=".$subject."; body=".$message);
+
 
         //When using send() the message will be sent just like it would be sent if you used your mail client.
         // An integer is returned which includes the number of successful recipients.
@@ -233,9 +236,9 @@ class EmailUtil {
         $authMode = $userSecUtil->getSiteSettingParameter('mailerAuthMode');
         //$trans = $userSecUtil->getSiteSettingParameter('mailerTransport');
 
-        echo "before transport newInstance <br>";
+        //echo "before transport newInstance <br>";
         $transport = \Swift_SmtpTransport::newInstance();
-        echo "after transport newInstance <br>";
+        //echo "after transport newInstance <br>";
         if( !$transport ) {
             return null;
         }
