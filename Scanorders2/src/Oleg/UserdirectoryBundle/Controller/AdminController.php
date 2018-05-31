@@ -302,9 +302,11 @@ class AdminController extends Controller
 
         // Everything for owner and for others
         //chmod($old_path, 0777);
+        //chown -R www-data:www-data $old_path
 
         //$linux
         if( $linux ) {
+            $this->runProcess("chown -R www-data:www-data ".$old_path);
             $this->runProcess("php bin" . $dirSep . "console assets:install");
             $this->runProcess("php bin" . $dirSep . "console cache:clear --env=prod --no-debug");
             $this->runProcess("php bin" . $dirSep . "console assetic:dump --env=prod --no-debug");
