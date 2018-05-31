@@ -300,6 +300,9 @@ class AdminController extends Controller
         echo "pwd=[".exec("pwd")."]<br>";
         //exec("pwd");
 
+        // Everything for owner and for others
+        chmod($old_path, 0777);
+
         //$linux
         if( $linux ) {
             $this->runProcess("php bin" . $dirSep . "console assets:install");
@@ -337,6 +340,9 @@ class AdminController extends Controller
                 echo exec("rmdir ".$cachePathNew." /S /Q")."<br>";
             }
         }
+
+        // Everything for owner, read and execute for others
+        chmod($old_path, 0755);
 
         //switch back to web folder
         $output = chdir($old_path);
