@@ -2322,7 +2322,14 @@ class CallLogUtil
 
         $keytypemrn = $userSecUtil->getSiteSettingParameter('keytypemrn',$sitename);
         if( !$keytypemrn ) {
-            $keytypemrn = $this->em->getRepository('OlegOrderformBundle:MessageCategory')->findOneByName("New York Hospital MRN");
+            $keytypemrn = $this->em->getRepository('OlegOrderformBundle:MrnType')->findOneByName("New York Hospital MRN");
+        }
+
+        if( !$keytypemrn ) {
+            $keytypemrns = $this->em->getRepository('OlegOrderformBundle:MrnType')->findAll();
+            if( count($keytypemrns) > 0 ) {
+                $keytypemrn = $keytypemrns[0];
+            }
         }
 
         return $keytypemrn;
