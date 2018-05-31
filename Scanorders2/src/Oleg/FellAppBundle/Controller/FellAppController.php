@@ -105,15 +105,23 @@ class FellAppController extends Controller {
         //echo "fellowshipTypes count=".count($fellowshipTypes)."<br>";
 
         if( count($fellowshipTypes) == 0 ) {
+//            $linkUrl = $this->generateUrl(
+//                "fellowshipsubspecialtys-list",
+//                array(),
+//                UrlGeneratorInterface::ABSOLUTE_URL
+//            );
+            //$warningMsg = "No fellowship types (subspecialties) are found for WCMC Pathology and Laboratory Medicine department.";
+            //$warningMsg = $warningMsg." ".'<a href="'.$linkUrl.'" target="_blank">Please associate the department with the appropriate fellowship subspecialties.</a>';
+            //$warningMsg = $warningMsg."<br>"."For example, choose an appropriate subspecialty and set the institution to 'Weill Cornell Medical College => Pathology and Laboratory Medicine'";
+
             $linkUrl = $this->generateUrl(
-                "fellowshipsubspecialtys-list",
+                "fellapp_fellowshiptype_settings",
                 array(),
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
-
             $warningMsg = "No fellowship types (subspecialties) are found for WCMC Pathology and Laboratory Medicine department.";
-            $warningMsg = $warningMsg." ".'<a href="'.$linkUrl.'" target="_blank">Please associate the department with the appropriate fellowship subspecialties.</a>';
-            $warningMsg = $warningMsg."<br>"."For example, choose an appropriate subspecialty and set the institution to 'Weill Cornell Medical College => Pathology and Laboratory Medicine'";
+            $warningMsg = $warningMsg."<br>".'<a href="'.$linkUrl.'" target="_blank">Please add a new fellowship application type.</a>';
+
             $this->get('session')->getFlashBag()->add(
                 'warning',
                 //'No Fellowship Types (Subspecialties) are found for WCMC Pathology and Laboratory Medicine department.
