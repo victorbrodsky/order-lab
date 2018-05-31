@@ -105,7 +105,7 @@ class EmailController extends Controller
             //Flash
             $this->get('session')->getFlashBag()->add(
                 'notice',
-                'Test email sent to: '.$emails.' and ccs to:'.$ccs
+                'Test email sent to: '.$emails.' and ccs to:'.$ccs. "<br> Status: ".$emailRes
             );
 
             return $this->redirectToRoute('employees_home');

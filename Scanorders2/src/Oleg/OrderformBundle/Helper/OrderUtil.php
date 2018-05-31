@@ -832,7 +832,7 @@ class OrderUtil {
             }
 
             foreach( $userServices as $userService ) {
-                //echo "inst=".$institution->getName().'<br>';
+                //echo "service=".$userService->getName().'<br>';
                 //$choicesInst[$userService->getId()] = "All ".$userService->getName()." Orders";
                 $choicesInst["All ".$userService->getName()." Orders"] = $userService->getId(); //flipped
             }

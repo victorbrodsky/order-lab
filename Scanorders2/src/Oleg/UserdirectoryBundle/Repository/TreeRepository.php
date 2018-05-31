@@ -302,7 +302,7 @@ class TreeRepository extends NestedTreeRepository {
             //add this collaboration institution itself too (?)
             if( !in_array($collaboration->getId(), $addedNodes) ) {
                 $collaborationCriterionArr[] = $this->selectNodesUnderParentNode($collaboration, $field, $collDefault);
-                $addedNodes[] = $collaboration;
+                $addedNodes[] = $collaboration->getId();
             }
 
             //2) for each of these nodes get collaborations and include each of these collaborations to the criterion string (not institution itself)
@@ -311,7 +311,7 @@ class TreeRepository extends NestedTreeRepository {
                 if( !in_array($collaborationNode->getId(), $addedNodes) ) {
                     //echo "collaborationNode=".$collaborationNode."<br>";
                     $collaborationCriterionArr[] = $this->selectNodesUnderParentNode( $collaborationNode, $field, $collDefault );
-                    $addedNodes[] = $collaborationNode;
+                    $addedNodes[] = $collaborationNode->getId();
                 }
             }
         }

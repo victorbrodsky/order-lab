@@ -299,7 +299,7 @@ class MessageType extends AbstractType
             'label' => 'Purpose:',
             'required' => true,
             'choices' => array(
-                "For Internal Use by WCMC Department of Pathology"=>"For Internal Use by WCMC Department of Pathology",
+                "For Internal Use by the Department of Pathology"=>"For Internal Use by the Department of Pathology",
                 "For External Use (Invoice Fund Number)"=>"For External Use (Invoice Fund Number)"
             ),
             'choices_as_values' => true,

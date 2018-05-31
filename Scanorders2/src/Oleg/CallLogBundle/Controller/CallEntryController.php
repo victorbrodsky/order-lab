@@ -1592,7 +1592,7 @@ class CallEntryController extends Controller
         $calllogUtil = $this->get('calllog_util');
 
         $message = new Message();
-        $message->setPurpose("For Internal Use by WCMC Department of Pathology for Call Log Book");
+        $message->setPurpose("For Internal Use by the Department of Pathology for Call Log Book");
         $message->setProvider($user);
         $message->setVersion(1);
 

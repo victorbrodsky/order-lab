@@ -378,7 +378,7 @@ class MultiScanOrderController extends Controller {
         $system = $securityUtil->getDefaultSourceSystem(); //'scanorder';
         $status = 'valid';
 
-        $entity->setPurpose("For Internal Use by WCMC Department of Pathology");
+        $entity->setPurpose("For Internal Use by the Department of Pathology");
 
         $entity->setProvider($user);
         $orderUtil->setLastOrderWithProxyuser($user,$entity);
