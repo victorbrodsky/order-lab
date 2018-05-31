@@ -1290,7 +1290,11 @@ class AccessRequestController extends Controller
         /////////// EOF Filter ////////////
 
         //set default from defaultPrimaryPublicUserIdType
+        $defaultPrimaryPublicUserIdTypeId = null;
         $defaultPrimaryPublicUserIdType = $userSecUtil->getSiteSettingParameter('defaultPrimaryPublicUserIdType');
+        if( $defaultPrimaryPublicUserIdType ) {
+            $defaultPrimaryPublicUserIdTypeId = $defaultPrimaryPublicUserIdType->getId();
+        }
         $keytypeChoicesArr = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findBy(
             array('type' => array('default','user-added')),
             array('orderinlist' => 'ASC')
@@ -1305,7 +1309,7 @@ class AccessRequestController extends Controller
             'cycle' => 'create',
             'readonly' => false,
             'keytypeChoices' => $keytypeChoices,
-            'defaultPrimaryPublicUserIdType' => $defaultPrimaryPublicUserIdType->getId()
+            'defaultPrimaryPublicUserIdType' => $defaultPrimaryPublicUserIdTypeId
             //'sc' => $this->get('security.context')
         );
         $form = $this->createForm(SimpleUserType::class,null,array('form_custom_value'=>$params));
