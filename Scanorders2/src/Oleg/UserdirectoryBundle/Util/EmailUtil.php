@@ -163,7 +163,9 @@ class EmailUtil {
         // If you set two To: recipients and three Bcc: recipients in the message and all of the recipients
         // are delivered to successfully then the value 5 will be returned.
         //$emailRes = $this->container->get('mailer')->send($message); //
+        echo "before email send <br>";
         $emailRes = $mailer->send($message);
+        echo "after email send <br>";
 
         $logger->notice("sendEmail: Email sent: res=".$emailRes."; From:".$fromEmail."; To:".$emailsStr."; CC:".$ccStr."; subject=".$subject."; body=".$message);
 
