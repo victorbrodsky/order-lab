@@ -234,6 +234,9 @@ class EmailUtil {
         //$trans = $userSecUtil->getSiteSettingParameter('mailerTransport');
 
         $transport = \Swift_SmtpTransport::newInstance();
+        if( !$transport ) {
+            return null;
+        }
 
         $transport->setHost($host);
 

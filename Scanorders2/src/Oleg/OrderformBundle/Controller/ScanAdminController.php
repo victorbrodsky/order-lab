@@ -182,7 +182,7 @@ class ScanAdminController extends AdminController
         $count_proceduretype = $this->generateProcedureType();
         $count_MessageTypeClassifiers = $this->generateMessageTypeClassifiers();
         $count_generateMessageCategory = $this->generateMessageCategory();
-        //$count_stain = $this->generateStains();
+        $count_stain = $this->generateStains();
         $count_organ = $this->generateOrgans();
         $count_procedure = $this->generateProcedures();
         $count_status = $this->generateStatuses();
@@ -219,7 +219,7 @@ class ScanAdminController extends AdminController
             'Procedure Types='.$count_enctype.', '.
             'MessageTypeClassifiers='.$count_MessageTypeClassifiers.', '.
             'Message Category='.$count_generateMessageCategory.', '.
-            //'Stains='.$count_stain.', '.
+            'Stains='.$count_stain.', '.
             'Organs='.$count_organ.', '.
             'Procedures='.$count_procedure.', '.
             'DiseaseTypes='.$count_DiseaseTypeList.', '.
