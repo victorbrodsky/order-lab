@@ -516,11 +516,11 @@ class ScanListController extends ListController
             $displayName = "Educational Course Group Types";
             break;
         case "mrntype":
-            $className = "mrntype";
+            $className = "MrnType";
             $displayName = "MRN Types";
             break;
         case "accessiontype":
-            $className = "accessiontype";
+            $className = "AccessionType";
             $displayName = "Accession Types";
             break;
         case "encountertype":
@@ -532,11 +532,11 @@ class ScanListController extends ListController
             $displayName = "Procedure Number Types";
             break;
         case "stain":
-            $className = "stainlist";
+            $className = "StainList";
             $displayName = "Stains";
             break;
         case "organ":
-            $className = "organlist";
+            $className = "OrganList";
             $displayName = "Organs";
             break;
         case "encounter":
@@ -548,7 +548,7 @@ class ScanListController extends ListController
             $displayName = "Procedure Types";
             break;
         case "slidetype":
-            $className = "slidetype";
+            $className = "SlideType";
             $displayName = "Slide Types";
             break;
         case "messagecategorys":
@@ -564,11 +564,11 @@ class ScanListController extends ListController
             $displayName = "Scan Order Delivery Options";
             break;
         case "regiontoscan":
-            $className = "regiontoscan";
+            $className = "RegionToScan";
             $displayName = '"Region To Scan" Options';
             break;
         case "processorcomment":
-            $className = "processorcomments";
+            $className = "ProcessorComments";
             $displayName = "Scan Order Processor Comments";
             break;
         case "accounts":
