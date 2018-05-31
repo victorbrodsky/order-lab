@@ -694,7 +694,10 @@ class DataQualityController extends CallEntryController
         if( !$mrntype ) {
             //$mrntype = 1;
             $defaultMrnType = $calllogUtil->getDefaultMrnType();
-            $mrntype = $defaultMrnType->getId();
+            if( $defaultMrnType ) {
+                $mrntype = $defaultMrnType->getId();
+                $mrntype = intval($mrntype);
+            }
         }
 
         $params = array(
@@ -704,7 +707,7 @@ class DataQualityController extends CallEntryController
             'container' => $this->container,
             //'alias' => true
             'type' => null,
-            'mrntype' => intval($mrntype),
+            'mrntype' => $mrntype,
             'mrn' => $mrn,
             'formtype' => 'call-entry',
             'complexLocation' => false,
