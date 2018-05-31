@@ -276,7 +276,7 @@ class ScanAdminController extends AdminController
                 'Generated '.$count. ' stain records.'
             );
 
-            return $this->redirect($this->generateUrl('stain-list'));
+            return $this->redirect($this->generateUrl('admin_index'));
 
         } else {
 
