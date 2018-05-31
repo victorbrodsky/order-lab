@@ -710,7 +710,7 @@ class OrderUtil {
         if( $this->secAuthChecker->isGranted('ROLE_SCANORDER_PROCESSOR') || $this->secAuthChecker->isGranted('ROLE_SCANORDER_ADMIN') ) {
 
             $webUserUrl = "<a href=".$userUrl.">profile</a>";
-            $msg =  "Please add at least one institution to your ".$webUserUrl." (field 'Order data visible to members of (Institutional PHI Scope)') in order to be able to place orders.";
+            $msg =  "Please add at least one institution to your user ".$webUserUrl." (in the form field titled 'Order data visible to members of (Institutional PHI Scope)') in order to be able to submit data.";
 
         } else {
 
