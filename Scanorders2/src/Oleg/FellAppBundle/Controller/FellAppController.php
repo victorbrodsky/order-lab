@@ -119,7 +119,7 @@ class FellAppController extends Controller {
                 array(),
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
-            $warningMsg = "No fellowship types (subspecialties) are found for WCMC Pathology and Laboratory Medicine department.";
+            $warningMsg = "No fellowship types (subspecialties) are found.";
             $warningMsg = $warningMsg."<br>".'<a href="'.$linkUrl.'" target="_blank">Please add a new fellowship application type.</a>';
 
             $this->get('session')->getFlashBag()->add(
