@@ -837,6 +837,10 @@ class OrderUtil {
                 $choicesInst["All ".$userService->getName()." Orders"] = $userService->getId(); //flipped
             }
 
+//            echo "<pre>";
+//            print_r($choicesInst);
+//            echo "</pre>";
+
             //add all collaboration institutions
             $securityUtil = $this->container->get('order_security_utility');
             $permittedInstitutions = $securityUtil->getUserPermittedInstitutions($user);
@@ -848,6 +852,7 @@ class OrderUtil {
                 foreach( $collaborations as $collaborationInstitution ) {
                     $key = "collaborationkey-".$collaborationInstitution->getId();
                     if( !array_key_exists($key,$choicesInst) ) {
+                        //echo "1 Adding Collaborating Inst=".$collaborationInstitution."<br>";
                         //$choicesInst[$key] = "All ".$collaborationInstitution." Orders";
                         $choicesInst["All ".$collaborationInstitution." Orders"] = $key; //flipped
                     }
@@ -856,12 +861,17 @@ class OrderUtil {
                 //add all PHI scope institutions, i.e. "All NYP Orders"
                 $key = "collaborationkey-".$permittedInstitution->getId();
                 if( !array_key_exists($key,$choicesInst) ) {
+                    //echo "2 Adding Collaborating Inst=".$collaborationInstitution."<br>";
                     //$choicesInst[$key] = "All ".$permittedInstitution." Orders";
                     $choicesInst["All ".$permittedInstitution." Orders"] = $key; //flipped
                 }
             }//foreach
 
         }
+
+//        echo "<pre>";
+//        print_r($choicesInst);
+//        echo "</pre>";
 
         return $choicesInst;
     }

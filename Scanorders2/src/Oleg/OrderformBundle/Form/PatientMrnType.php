@@ -75,7 +75,13 @@ class PatientMrnType extends AbstractType
         );
 
         if($this->params['cycle'] == "" || $this->params['cycle'] == 'new' || $this->params['cycle'] == 'create') {
-            $options['data'] = 1; //new
+            $userSecUtil = $this->params['serviceContainer']->get('user_security_utility');
+            $defaultScanMrnType = $userSecUtil->getSiteSettingParameter('defaultScanMrnType');
+            if( $defaultScanMrnType ) {
+                $options['data'] = $defaultScanMrnType->getId();
+            } else {
+                $options['data'] = 1; //new
+            }
         }
 
         $builder->add('keytype', ScanCustomSelectorType::class, $options);

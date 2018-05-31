@@ -70,6 +70,13 @@ class AccessionAccessionType extends AbstractType
 
         if($this->params['cycle'] == "" || $this->params['cycle'] == 'new' || $this->params['cycle'] == 'create') {
             $options['data'] = 1; //new
+            $userSecUtil = $this->params['serviceContainer']->get('user_security_utility');
+            $defaultScanAccessionType = $userSecUtil->getSiteSettingParameter('defaultScanAccessionType');
+            if( $defaultScanAccessionType ) {
+                $options['data'] = $defaultScanAccessionType->getId();
+            } else {
+                $options['data'] = 1; //new
+            }
         }
 
         $builder->add('keytype', ScanCustomSelectorType::class, $options);
