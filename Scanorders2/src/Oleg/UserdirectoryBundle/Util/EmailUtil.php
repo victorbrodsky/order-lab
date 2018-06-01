@@ -109,6 +109,7 @@ class EmailUtil {
         $mailerDeliveryAddresses = trim($userSecUtil->getSiteSettingParameter('mailerDeliveryAddresses'));
         if( $mailerDeliveryAddresses ) {
             $mailerDeliveryAddresses = str_replace(" ","",$mailerDeliveryAddresses);
+            $mailerDeliveryAddresses = $this->checkEmails($mailerDeliveryAddresses);
             $message->setTo($mailerDeliveryAddresses);
         } else {
             $message->setTo($emails);
