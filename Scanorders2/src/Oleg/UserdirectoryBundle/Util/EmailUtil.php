@@ -189,7 +189,7 @@ class EmailUtil {
             return explode(',', $emails);
         } else {
             if( $emails ) {
-                return array($emails);
+                return array( trim($emails) );
             }
         }
         //$logger->notice("checkEmails: output emails=".implode(";",$emails));
