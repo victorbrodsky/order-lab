@@ -186,10 +186,11 @@ class EmailUtil {
         //$logger = $this->container->get('logger');
         //$logger->notice("checkEmails: input emails=".print_r($emails));
         if( strpos($emails, ',') !== false ) {
+            $emails = str_replace(" ","",$emails);
             return explode(',', $emails);
         } else {
             if( $emails ) {
-                return array( trim($emails) );
+                return array( $emails );
             }
         }
         //$logger->notice("checkEmails: output emails=".implode(";",$emails));
