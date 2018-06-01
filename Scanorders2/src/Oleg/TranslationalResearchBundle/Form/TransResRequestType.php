@@ -232,7 +232,7 @@ class TransResRequestType extends AbstractType
         }
         $builder->add('principalInvestigators', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
-            'label' => "Principal Investigator(s):",
+            'label' => "Principal Investigator(s) for the project:",
             'required' => false,
             'disabled' => $disabledPi,
             'multiple' => true,

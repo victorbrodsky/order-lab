@@ -151,6 +151,7 @@ class ListController extends Controller
      * @Route("/list/translational-research-project-specialties/", name="transresprojectspecialties-list")
      * @Route("/list/translational-research-project-types/", name="transresprojecttypes-list")
      * @Route("/list/translational-research-request-category-types/", name="transresrequestcategorytypes-list")
+     * @Route("/list/translational-irb-approval-types/", name="transresirbapprovaltypes-list")
      *
      *
      * @Method("GET")
@@ -473,6 +474,7 @@ class ListController extends Controller
      * @Route("/list/translational-research-project-specialties/", name="transresprojectspecialties_create")
      * @Route("/list/translational-research-project-types/", name="transresprojecttypes_create")
      * @Route("/list/translational-research-request-category-types/", name="transresrequestcategorytypes_create")
+     * @Route("/list/translational-irb-approval-types/", name="transresirbapprovaltypes_create")
      *
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -664,6 +666,7 @@ class ListController extends Controller
      * @Route("/list/translational-research-project-specialties/new", name="transresprojectspecialties_new")
      * @Route("/list/translational-research-project-types/new", name="transresprojecttypes_new")
      * @Route("/list/translational-research-request-category-types/new", name="transresrequestcategorytypes_new")
+     * @Route("/list/translational-irb-approval-types/new", name="transresirbapprovaltypes_new")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -825,6 +828,7 @@ class ListController extends Controller
      * @Route("/list/translational-research-project-specialties/{id}", name="transresprojectspecialties_show")
      * @Route("/list/translational-research-project-types/{id}", name="transresprojecttypes_show")
      * @Route("/list/translational-research-request-category-types/{id}", name="transresrequestcategorytypes_show")
+     * @Route("/list/translational-irb-approval-types/{id}", name="transresirbapprovaltypes_show")
      *
      *
      * @Method("GET")
@@ -977,6 +981,7 @@ class ListController extends Controller
      * @Route("/list/translational-research-project-specialties/{id}/edit", name="transresprojectspecialties_edit")
      * @Route("/list/translational-research-project-types/{id}/edit", name="transresprojecttypes_edit")
      * @Route("/list/translational-research-request-category-types/{id}/edit", name="transresrequestcategorytypes_edit")
+     * @Route("/list/translational-irb-approval-types/{id}/edit", name="transresirbapprovaltypes_edit")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -1172,6 +1177,7 @@ class ListController extends Controller
      * @Route("/list/translational-research-project-specialties/{id}", name="transresprojectspecialties_update")
      * @Route("/list/translational-research-project-types/{id}", name="transresprojecttypes_update")
      * @Route("/list/translational-research-request-category-types/{id}", name="transresrequestcategorytypes_update")
+     * @Route("/list/translational-irb-approval-types/{id}", name="transresirbapprovaltypes_update")
      *
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -1921,6 +1927,11 @@ class ListController extends Controller
                 $displayName = "Translational Research Request Category Type List";
                 $bundleName = "TranslationalResearchBundle";
                 break;
+            case "transresirbapprovaltypes":
+                $className = "IrbApprovalTypeList";
+                $displayName = "Translational Research Irb Approval Type List";
+                $bundleName = "TranslationalResearchBundle";
+                break;
 
 //            case "employees_locations":
 //                $className = "Location";
@@ -2099,6 +2110,7 @@ class ListController extends Controller
      * @Route("/list/translational-research-project-specialties/{id}", name="transresprojectspecialties_delete")
      * @Route("/list/translational-research-project-types/{id}", name="transresprojecttypes_delete")
      * @Route("/list/translational-research-request-category-types/{id}", name="transresrequestcategorytypes_delete")
+     * @Route("/list/translational-irb-approval-types/{id}", name="transresirbapprovaltypes_delete")
      *
      *
      *

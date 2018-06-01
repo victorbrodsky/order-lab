@@ -21,6 +21,7 @@ namespace Oleg\UserdirectoryBundle\Controller;
 use Oleg\FellAppBundle\Entity\FellAppRank;
 use Oleg\FellAppBundle\Entity\FellAppStatus;
 use Oleg\FellAppBundle\Entity\LanguageProficiency;
+use Oleg\TranslationalResearchBundle\Entity\IrbApprovalTypeList;
 use Oleg\TranslationalResearchBundle\Entity\ProjectTypeList;
 use Oleg\TranslationalResearchBundle\Entity\RequestCategoryTypeList;
 use Oleg\TranslationalResearchBundle\Entity\SpecialtyList;
@@ -780,6 +781,7 @@ class AdminController extends Controller
         $count_generateTransResProjectSpecialty = $this->generateTransResProjectSpecialty();
         $count_generateTransResProjectTypeList = $this->generateTransResProjectTypeList();
         $count_generateTransResRequestCategoryType = $this->generateTransResRequestCategoryType();
+        $count_generateIrbApprovalTypeList = $this->generateIrbApprovalTypeList();
 
         $count_generatePlatformListManagerList = $this->generatePlatformListManagerList();
 
@@ -876,6 +878,7 @@ class AdminController extends Controller
             'ProjectTypeList='.$count_generateTransResProjectTypeList.', '.
             'TransResRequestCategoryType='.$count_generateTransResRequestCategoryType.', '.
             'PlatformListManagerList='.$count_generatePlatformListManagerList.', '.
+            'IrbApprovalTypeList='.$count_generateIrbApprovalTypeList.', '.
 
             ' (Note: -1 means that this table is already exists)';
 
@@ -8074,6 +8077,36 @@ class AdminController extends Controller
             }
 
             $listEntity = new ProjectTypeList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            //exit('exit generateObjectTypeActions');
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+    public function generateIrbApprovalTypeList() {
+        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "Not Exempt",
+            "Exempt",
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository('OlegTranslationalResearchBundle:IrbApprovalTypeList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new IrbApprovalTypeList();
             $this->setDefaultList($listEntity,$count,$username,$name);
 
             //exit('exit generateObjectTypeActions');

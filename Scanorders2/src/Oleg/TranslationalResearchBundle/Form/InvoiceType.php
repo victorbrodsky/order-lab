@@ -71,7 +71,7 @@ class InvoiceType extends AbstractType
 //        ));
         $builder->add('principalInvestigator', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
-            'label'=> "Principal Investigator:",
+            'label'=> "Principal Investigator for the project:",
             'required'=> true,
             'multiple' => false,
             'attr' => array('class'=>'combobox transres-invoice-principalInvestigator'),

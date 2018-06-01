@@ -176,6 +176,55 @@ class ProjectType extends AbstractType
 //                    ));
 //            },
         ));
+
+        $builder->add('exemptIrbApproval', EntityType::class, array(
+            'class' => 'OlegTranslationalResearchBundle:IrbApprovalTypeList',
+            'label' => 'Is this project exempt from IRB approval?:',
+            'required' => true,
+            'attr' => array('class' => 'combobox transres-project-exemptIrbApproval'),
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->orderBy("list.orderinlist", "ASC")
+                    ->setParameters(array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
+            },
+        ));
+
+
+        $builder->add('exemptIACUCApproval', EntityType::class, array(
+            'class' => 'OlegTranslationalResearchBundle:IrbApprovalTypeList',
+            'label' => 'Is this project exempt from IACUC approval?:',
+            'required' => true,
+            'attr' => array('class' => 'combobox transres-project-exemptIACUCApproval'),
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->orderBy("list.orderinlist", "ASC")
+                    ->setParameters(array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
+            },
+        ));
+
+        $builder->add('iacucNumber',null, array(
+            'label' => 'IACUC Number:',
+            'required' => false,
+            'attr' => array('class' => 'form-control'),
+        ));
+
+        $builder->add('iacucExpirationDate',DateType::class,array(
+            'widget' => 'single_text',
+            'label' => "IACUC Expiration Date:",
+            'format' => 'MM/dd/yyyy',
+            //'view_timezone' => $user_tz,
+            //'model_timezone' => $user_tz,
+            'attr' => array('class' => 'datepicker form-control transres-project-iacucExpirationDate'),
+            'required' => false,
+        ));
         //////////// EOF Project fields ////////////
 
 
@@ -188,9 +237,18 @@ class ProjectType extends AbstractType
 
         $builder->add( 'principalInvestigators', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
-            'label'=> "Principal Investigator(s)$addUserOnFly:",
+            'label'=> "Principal Investigator(s) for the project$addUserOnFly:",
             'required'=> true,
             'multiple' => true,
+            'attr' => array('class'=>'combobox combobox-width add-new-user-on-enter', 'data-otheruserparam'=>$this->params['otherUserParam']),
+            'query_builder' => $this->params['transresUtil']->userQueryBuilder()
+        ));
+
+        $builder->add( 'principalIrbInvestigator', EntityType::class, array(
+            'class' => 'OlegUserdirectoryBundle:User',
+            'label'=> "Principal Investigator listed on the IRB application$addUserOnFly:",
+            'required'=> false,
+            'multiple' => false,
             'attr' => array('class'=>'combobox combobox-width add-new-user-on-enter', 'data-otheruserparam'=>$this->params['otherUserParam']),
             'query_builder' => $this->params['transresUtil']->userQueryBuilder()
         ));

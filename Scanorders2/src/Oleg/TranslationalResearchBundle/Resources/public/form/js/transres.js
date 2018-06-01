@@ -33,7 +33,35 @@ $(document).ready(function() {
     //     transresValidateProjectForm(this);
     // });
 
+    var exempt = $(".transres-project-exemptIrbApproval").select2('data').text;
+    console.log("change: exempt id="+exempt);
+    transresIrbExemptChange(exempt.text,"transres-project-exemptIrbApproval");
+
+    var exempt = $(".transres-project-exemptIACUCApproval").select2('data').text;
+    console.log("change: exempt id="+exempt.id+"; text="+exempt.text);
+    transresIrbExemptChange(exempt.text,"transres-project-exemptIACUCApproval");
+
+    transresIrbExemptListener('transres-project-exemptIrbApproval');
+    transresIrbExemptListener('transres-project-exemptIACUCApproval');
+    
 });
+
+function transresIrbExemptListener( classname ) {
+    $("."+classname).on("change", function(e) {
+        var exemptData = $(this).select2('data').text;
+        console.log("change: exempt text="+exemptData.text);
+        transresIrbExemptChange(exemptData.text,classname);
+    });
+}
+function transresIrbExemptChange( exempt, classname ) {
+    console.log("change: exempt="+exempt);
+    if( exempt == "Exempt" ) {
+        $("."+classname+"-panel").hide();
+    }
+    if( exempt == "Not Exempt" ) {
+        $("."+classname+"-panel").show();
+    }
+}
 
 //Will this project involve human tissue?
 function transresIrbApprovalLetterListener() {

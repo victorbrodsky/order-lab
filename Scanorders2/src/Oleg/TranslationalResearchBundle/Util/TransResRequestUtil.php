@@ -1603,7 +1603,7 @@ class TransResRequestUtil
         return "Notification Email has been sent to ".implode(", ",$emails);
     }
 
-    //send a second email to both Requestrs and PIs
+    //send a second email to both Requesters and PIs
     public function sendRequestCompletedNotifiedEmails($transresRequest,$statMachineType,$label,$testing=false) {
         $transresUtil = $this->container->get('transres_util');
         $emailUtil = $this->container->get('user_mailer_utility');

@@ -130,6 +130,22 @@ class Project {
      **/
     private $principalInvestigators;
 
+//    /**
+//     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+//     * @ORM\JoinTable(name="transres_project_principalirbinvestigator",
+//     *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id")},
+//     *      inverseJoinColumns={@ORM\JoinColumn(name="principalirbinvestigator_id", referencedColumnName="id")}
+//     * )
+//     **/
+//    private $principalIrbInvestigators;
+    /**
+     * Principal Investigator listed on the IRB application
+     *
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
+     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
+     */
+    private $principalIrbInvestigator;
+
     /**
      * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\User")
      * @ORM\JoinTable(name="transres_project_coinvestigator",
@@ -298,10 +314,39 @@ class Project {
 
     /////////// EOF Project fields /////////////
 
+    /**
+     * Is this project exempt from IRB approval?
+     *
+     * @ORM\ManyToOne(targetEntity="IrbApprovalTypeList")
+     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
+     */
+    private $exemptIrbApproval;
+
+    /**
+     * Is this project exempt from IACUC approval?
+     *
+     * @ORM\ManyToOne(targetEntity="IrbApprovalTypeList")
+     * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
+     */
+    private $exemptIACUCApproval;
+
+    /**
+     * IACUC Expiration Date
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $iacucExpirationDate;
+
+    //added later
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $iacucNumber;
+
 
     public function __construct($user=null) {
 
         $this->principalInvestigators = new ArrayCollection();
+        //$this->principalIrbInvestigators = new ArrayCollection();
         $this->coInvestigators = new ArrayCollection();
         $this->pathologists = new ArrayCollection();
         $this->contacts = new ArrayCollection();
@@ -595,6 +640,43 @@ class Project {
         $this->principalInvestigators->removeElement($item);
     }
 
+    /**
+     * @return mixed
+     */
+    public function getPrincipalIrbInvestigator()
+    {
+        return $this->principalIrbInvestigator;
+    }
+
+    /**
+     * @param mixed $principalIrbInvestigator
+     */
+    public function setPrincipalIrbInvestigator($principalIrbInvestigator)
+    {
+        $this->principalIrbInvestigator = $principalIrbInvestigator;
+    }
+    public function getPrincipalIrbInvestigators()
+    {
+        $principalIrbInvestigators = new ArrayCollection();
+        $principalIrbInvestigators->add($this->principalIrbInvestigator);
+        return $principalIrbInvestigators;
+    }
+
+//    public function getPrincipalIrbInvestigators()
+//    {
+//        return $this->principalIrbInvestigators;
+//    }
+//    public function addPrincipalIrbInvestigator($item)
+//    {
+//        if( $item && !$this->principalIrbInvestigators->contains($item) ) {
+//            $this->principalIrbInvestigators->add($item);
+//        }
+//        return $this;
+//    }
+//    public function removePrincipalIrbInvestigator($item)
+//    {
+//        $this->principalIrbInvestigators->removeElement($item);
+//    }
 
 
     public function getCoInvestigators()
@@ -971,6 +1053,70 @@ class Project {
         $this->projectSpecialty = $projectSpecialty;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getExemptIrbApproval()
+    {
+        return $this->exemptIrbApproval;
+    }
+
+    /**
+     * @param mixed $exemptIrbApproval
+     */
+    public function setExemptIrbApproval($exemptIrbApproval)
+    {
+        $this->exemptIrbApproval = $exemptIrbApproval;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getExemptIACUCApproval()
+    {
+        return $this->exemptIACUCApproval;
+    }
+
+    /**
+     * @param mixed $exemptIACUCApproval
+     */
+    public function setExemptIACUCApproval($exemptIACUCApproval)
+    {
+        $this->exemptIACUCApproval = $exemptIACUCApproval;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIacucExpirationDate()
+    {
+        return $this->iacucExpirationDate;
+    }
+
+    /**
+     * @param mixed $iacucExpirationDate
+     */
+    public function setIacucExpirationDate($iacucExpirationDate)
+    {
+        $this->iacucExpirationDate = $iacucExpirationDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIacucNumber()
+    {
+        return $this->iacucNumber;
+    }
+
+    /**
+     * @param mixed $iacucNumber
+     */
+    public function setIacucNumber($iacucNumber)
+    {
+        $this->iacucNumber = $iacucNumber;
+    }
+
 
     //show the name of the form (from the form hierarchy) that was used to generate this submitted message.
     // Make sure to save this form ID of the form linked from the Message Type at the time of message submission
@@ -987,6 +1133,7 @@ class Project {
     public function isEditable() {
         return true;
     }
+
 
     /**
      * "HPID" or "APCPID"

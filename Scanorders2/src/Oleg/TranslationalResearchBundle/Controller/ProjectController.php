@@ -122,8 +122,11 @@ class ProjectController extends Controller
         $dql->select('project');
 
         $dql->leftJoin('project.submitter','submitter');
+
         $dql->leftJoin('project.principalInvestigators','principalInvestigators');
         $dql->leftJoin('principalInvestigators.infos','principalInvestigatorsInfos');
+
+        $dql->leftJoin('project.principalIrbInvestigator','principalIrbInvestigator');
 
         $dql->leftJoin('project.irbReviews','irbReviews');
         $dql->leftJoin('irbReviews.reviewer','irbReviewer');
@@ -374,7 +377,7 @@ class ProjectController extends Controller
         //////////////// EOF get Projects IDs with the form node filter ////////////////
 
         if( $principalInvestigators && count($principalInvestigators)>0 ) {
-            $dql->andWhere("principalInvestigators.id IN (:principalInvestigators)");
+            $dql->andWhere("principalInvestigators.id IN (:principalInvestigators) OR principalIrbInvestigator.id IN (:principalInvestigators)");
             $principalInvestigatorsIdsArr = array();
             foreach($principalInvestigators as $principalInvestigator) {
                 $principalInvestigatorsIdsArr[] = $principalInvestigator->getId();
@@ -486,7 +489,7 @@ class ProjectController extends Controller
             $dql->andWhere($myRequestProjectsCriterion);
 
             $dqlParameters["userId"] = $user->getId();
-            $title = "My Project Requests, Where I am a Requester";
+            $title = "Projects I Personally Requested, where I am a Requester"; //"My Project Requests, Where I am a Requester";
         }
 
         if( $routeName == "translationalresearch_my_review_project_index" ) {
@@ -640,6 +643,7 @@ class ProjectController extends Controller
     public function getProjectWhereIamRequester() {
         $showOnlyMyProjectsCriterion =
             "principalInvestigators.id = :userId OR ".
+            "principalIrbInvestigator.id = :userId OR ".
             "coInvestigators.id = :userId OR ".
             "pathologists.id = :userId OR ".
             "contacts.id = :userId OR ".
@@ -734,6 +738,12 @@ class ProjectController extends Controller
         $project = $this->createProjectEntity($user,null);
 
         $project->setProjectSpecialty($specialty);
+
+        //set default exempt
+        $exemptIrbApproval = $em->getRepository('OlegTranslationalResearchBundle:IrbApprovalTypeList')->findOneByName("Not Exempt");
+        $project->setExemptIrbApproval($exemptIrbApproval);
+        $exemptIACUCApproval = $em->getRepository('OlegTranslationalResearchBundle:IrbApprovalTypeList')->findOneByName("Exempt");
+        $project->setExemptIACUCApproval($exemptIACUCApproval);
 
         //new: add all default reviewers
         $transresUtil->addDefaultStateReviewers($project);

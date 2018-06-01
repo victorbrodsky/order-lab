@@ -1309,6 +1309,7 @@ class RequestController extends Controller
 
             $dql->leftJoin('transresRequest.contact','contact');
             $dql->leftJoin('project.principalInvestigators','projectPrincipalInvestigators');
+            $dql->leftJoin('project.principalIrbInvestigator','projectPrincipalIrbInvestigator');
             $dql->leftJoin('project.coInvestigators','projectCoInvestigators');
             $dql->leftJoin('project.pathologists','projectPathologists');
             $dql->leftJoin('project.billingContact','projectBillingContact');
@@ -1322,6 +1323,7 @@ class RequestController extends Controller
                 "submitter.id = :userId OR ".
                 //project's requesters
                 "projectPrincipalInvestigators.id = :userId OR ".
+                "projectPrincipalIrbInvestigator.id = :userId OR ".
                 "projectCoInvestigators.id = :userId OR ".
                 "projectPathologists.id = :userId OR ".
                 "projectContacts.id = :userId OR ".

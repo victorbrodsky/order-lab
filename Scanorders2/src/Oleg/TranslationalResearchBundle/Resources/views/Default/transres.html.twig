@@ -146,6 +146,10 @@
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
 
+    {{ transres.projectIrbInfo(form,project,cycle) }}
+
+    {{ transres.projectIACUCInfo(form,project,cycle) }}
+
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel panel-default">
             <div class="panel-heading" role="tab" id="projectContentHeading">
@@ -160,9 +164,9 @@
 
                     {{ formmacros.field(form.title) }}
 
-                    {{ formmacros.field(form.irbNumber) }}
+                    {#{{ formmacros.field(form.irbNumber) }}#}
 
-                    {{ formmacros.fieldDateLabel(form.irbExpirationDate,'allow-future-date') }}
+                    {#{{ formmacros.fieldDateLabel(form.irbExpirationDate,'allow-future-date') }}#}
 
                     {{ formmacros.field(form.projectType) }}
 
@@ -186,6 +190,65 @@
 
 {% endmacro %}
 
+{% macro projectIrbInfo( form, project, cycle ) %}
+
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+
+    {{ formmacros.field(form.exemptIrbApproval) }}
+
+    <div class="panel-group transres-project-exemptIrbApproval-panel" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="projectIrbInfoContentHeading">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#projectIrbInfoContent" aria-expanded="true">
+                        IRB Info
+                    </a>
+                </h4>
+            </div>
+            <div id="projectIrbInfoContent" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="projectIrbInfoContentHeading">
+                <div class="panel-body">
+
+                    {{ formmacros.field(form.irbNumber) }}
+
+                    {{ formmacros.fieldDateLabel(form.irbExpirationDate,'allow-future-date') }}
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endmacro %}
+
+{% macro projectIACUCInfo( form, project, cycle ) %}
+
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+
+    {{ formmacros.field(form.exemptIACUCApproval) }}
+
+    <div class="panel-group transres-project-exemptIACUCApproval-panel" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="projectIACUCInfoContentHeading">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#projectIACUCInfoContent" aria-expanded="true">
+                        IACUC Info
+                    </a>
+                </h4>
+            </div>
+            <div id="projectIACUCInfoContent" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="projectIACUCInfoContentHeading">
+                <div class="panel-body">
+
+                    {{ formmacros.field(form.iacucNumber) }}
+
+                    {{ formmacros.fieldDateLabel(form.iacucExpirationDate,'allow-future-date') }}
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endmacro %}
 
 {% macro projectFormShow( form, project, cycle ) %}
 
@@ -321,6 +384,13 @@
                         {% set principalInvestigators = null %}
                     {% endif %}
                     {{ transres.usersInfo(form.principalInvestigators,principalInvestigators,cycle) }}
+
+                    {% if cycle == "show" %}
+                        {% set principalIrbInvestigators = [project.principalIrbInvestigator] %}
+                    {% else %}
+                        {% set principalIrbInvestigators = null %}
+                    {% endif %}
+                    {{ transres.usersInfo(form.principalIrbInvestigator,principalIrbInvestigators,cycle) }}
 
                     {% if cycle == "show" %}
                         {% set pathologists = project.pathologists %}

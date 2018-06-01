@@ -453,6 +453,9 @@ class TransResUtil
         if( $project->getPrincipalInvestigators()->contains($user) ) {
             return true;
         }
+        if( $project->getPrincipalIrbInvestigators()->contains($user) ) {
+            return true;
+        }
         if( $project->getCoInvestigators()->contains($user) ) {
             return true;
         }
@@ -2411,6 +2414,18 @@ class TransResUtil
             }
         }
 
+        //2a principalIrbInvestigator
+        $principalIrbInvestigators = $project->getPrincipalIrbInvestigators();
+        foreach( $principalIrbInvestigators as $principalIrbInvestigator ) {
+            if( $principalIrbInvestigator ) {
+                if( $asEmail ) {
+                    $resArr[] = $principalIrbInvestigator->getSingleEmail();
+                } else {
+                    $resArr[] = $principalIrbInvestigator;
+                }
+            }
+        }
+
         //3 coInvestigators
         $cois = $project->getCoInvestigators();
         foreach( $cois as $coi ) {
@@ -2610,8 +2625,11 @@ class TransResUtil
         $dql->select('project');
 
         $dql->leftJoin('project.submitter','submitter');
+
         $dql->leftJoin('project.principalInvestigators','principalInvestigators');
         $dql->leftJoin('principalInvestigators.infos','principalInvestigatorsInfos');
+
+        $dql->leftJoin('project.principalIrbInvestigator','principalIrbInvestigator');
 
         $dql->leftJoin('project.irbReviews','irbReviews');
         $dql->leftJoin('irbReviews.reviewer','irbReviewer');
@@ -2654,6 +2672,7 @@ class TransResUtil
             if (!$this->secAuth->isGranted("ROLE_TRANSRES_ADMIN")) {
                 $myRequestProjectsCriterion =
                     "principalInvestigators.id = :userId OR " .
+                    "principalIrbInvestigator.id = :userId OR " .
                     "coInvestigators.id = :userId OR " .
                     "pathologists.id = :userId OR " .
                     "contacts.id = :userId OR " .
@@ -2759,8 +2778,11 @@ class TransResUtil
         $dql->select('project');
 
         $dql->leftJoin('project.submitter','submitter');
+
         $dql->leftJoin('project.principalInvestigators','principalInvestigators');
         $dql->leftJoin('principalInvestigators.infos','principalInvestigatorsInfos');
+
+        $dql->leftJoin('project.principalIrbInvestigator','principalIrbInvestigator');
 
         $dql->leftJoin('project.irbReviews','irbReviews');
         $dql->leftJoin('irbReviews.reviewer','irbReviewer');
@@ -2799,6 +2821,7 @@ class TransResUtil
         ) {
             $myRequestProjectsCriterion =
                 "principalInvestigators.id = :userId OR " .
+                "principalIrbInvestigator.id = :userId OR " .
                 "coInvestigators.id = :userId OR " .
                 "pathologists.id = :userId OR " .
                 "contacts.id = :userId OR " .
