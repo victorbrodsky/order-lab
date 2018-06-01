@@ -208,6 +208,10 @@ class ProjectController extends Controller
         $searchProjectType = $filterform['searchProjectType']->getData();
         $exportId = $filterform['exportId']->getData();
         $reviewers = $filterform['reviewers']->getData();
+
+        $humanTissue = $filterform['humanTissue']->getData();
+        $exemptIrbApproval = $filterform['exemptIrbApproval']->getData();
+
         //$showMatchingAndTotal = $filterform['showMatchingAndTotal']->getData();
 //        $archived = $filterform['completed']->getData();
 //        $complete = $filterform['review']->getData();
@@ -343,6 +347,7 @@ class ProjectController extends Controller
                 $advancedFilter++;
             }
         }
+        //////////////// EOF get Projects IDs with the form node filter ////////////////
 
         if( $searchProjectType ) {
             $dql->andWhere("projectType.id = :projectTypeId");
@@ -374,7 +379,28 @@ class ProjectController extends Controller
             }
             $advancedFilter++;
         }
-        //////////////// EOF get Projects IDs with the form node filter ////////////////
+
+        if( $humanTissue ) {
+            //echo "fundingType=" . $humanTissue . "<br>";
+            if ($humanTissue == "Involves Human Tissue") {
+                $dql->andWhere("project.involveHumanTissue = 'Yes'");
+            }
+            if ($humanTissue == "Does Not Involve Human Tissue") {
+                $dql->andWhere("project.involveHumanTissue = 'No' OR project.involveHumanTissue IS NULL");
+            }
+            $advancedFilter++;
+        }
+        if( $exemptIrbApproval ) {
+            //echo "fundingType=" . $exemptIrbApproval . "<br>";
+            if ($exemptIrbApproval == "Exempt from IRB Approval") {
+                $dql->andWhere("project.exemptIrbApproval = true OR project.exemptIrbApproval IS NULL");
+            }
+            if ($exemptIrbApproval == "Not Exempt from IRB Approval") {
+                $dql->andWhere("project.exemptIrbApproval = false");
+            }
+            $advancedFilter++;
+        }
+
 
         if( $principalInvestigators && count($principalInvestigators)>0 ) {
             $dql->andWhere("principalInvestigators.id IN (:principalInvestigators) OR principalIrbInvestigator.id IN (:principalInvestigators)");

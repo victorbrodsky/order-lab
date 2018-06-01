@@ -190,7 +190,7 @@ class FilterType extends AbstractType
         $builder->add('exportId', TextType::class, array(
             'required'=>false,
             'label' => false,
-            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'External ID'),
+            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'External Legacy ID'),
         ));
 
         $builder->add('reviewers', EntityType::class, array(
@@ -209,6 +209,30 @@ class FilterType extends AbstractType
 //                    ->orderBy("infos.displayName","ASC");
 //            },
         ));
+
+
+        $builder->add('humanTissue',ChoiceType::class, array(
+            'label' => false,
+            'required' => false,
+            'multiple' => false,
+            'choices' => array(
+                'Involves Human Tissue' => 'Involves Human Tissue',
+                'Does Not Involve Human Tissue' => 'Does Not Involve Human Tissue'
+            ),
+            'attr' => array('class' => 'combobox', 'placeholder'=>'Human Tissue'),
+        ));
+
+        $builder->add('exemptIrbApproval',ChoiceType::class, array(
+            'label' => false,
+            'required' => false,
+            'multiple' => false,
+            'choices' => array(
+                'Exempt from IRB Approval' => 'Exempt from IRB Approval',
+                'Not Exempt from IRB Approval' => 'Not Exempt from IRB Approval'
+            ),
+            'attr' => array('class' => 'combobox', 'placeholder'=>'Exempt from IRB Approval'),
+        ));
+
 
 //        $builder->add('showMatchingAndTotal', ChoiceType::class, array(
 //            'label' => false,

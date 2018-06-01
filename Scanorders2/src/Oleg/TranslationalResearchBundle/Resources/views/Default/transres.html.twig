@@ -195,9 +195,7 @@
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
 
-    {{ formmacros.field(form.exemptIrbApproval) }}
-
-    <div class="panel-group transres-project-exemptIrbApproval-panel" id="accordion" role="tablist" aria-multiselectable="true">
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel panel-default">
             <div class="panel-heading" role="tab" id="projectIrbInfoContentHeading">
                 <h4 class="panel-title">
@@ -209,9 +207,17 @@
             <div id="projectIrbInfoContent" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="projectIrbInfoContentHeading">
                 <div class="panel-body">
 
-                    {{ formmacros.field(form.irbNumber) }}
+                    {% set hideshow = "" %}
+                    {% if project.exemptIrbApproval.getName() == "Exempt" %}
+                        {% set hideshow = "display: none;" %}
+                    {% endif %}
 
-                    {{ formmacros.fieldDateLabel(form.irbExpirationDate,'allow-future-date') }}
+                    {{ formmacros.field(form.exemptIrbApproval) }}
+
+                    <div class="well transres-project-exemptIrbApproval-panel" style="{{ hideshow }}">
+                        {{ formmacros.field(form.irbNumber) }}
+                        {{ formmacros.fieldDateLabel(form.irbExpirationDate,'allow-future-date') }}
+                    </div>
 
                 </div>
             </div>
@@ -225,9 +231,7 @@
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
 
-    {{ formmacros.field(form.exemptIACUCApproval) }}
-
-    <div class="panel-group transres-project-exemptIACUCApproval-panel" id="accordion" role="tablist" aria-multiselectable="true">
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel panel-default">
             <div class="panel-heading" role="tab" id="projectIACUCInfoContentHeading">
                 <h4 class="panel-title">
@@ -239,9 +243,17 @@
             <div id="projectIACUCInfoContent" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="projectIACUCInfoContentHeading">
                 <div class="panel-body">
 
-                    {{ formmacros.field(form.iacucNumber) }}
+                    {% set hideshow = "" %}
+                    {% if project.exemptIACUCApproval.getName() == "Exempt" %}
+                        {% set hideshow = "display: none;" %}
+                    {% endif %}
 
-                    {{ formmacros.fieldDateLabel(form.iacucExpirationDate,'allow-future-date') }}
+                    {{ formmacros.field(form.exemptIACUCApproval) }}
+
+                    <div class="well transres-project-exemptIACUCApproval-panel" style="{{ hideshow }}">
+                        {{ formmacros.field(form.iacucNumber) }}
+                        {{ formmacros.fieldDateLabel(form.iacucExpirationDate,'allow-future-date') }}
+                    </div>
 
                 </div>
             </div>
