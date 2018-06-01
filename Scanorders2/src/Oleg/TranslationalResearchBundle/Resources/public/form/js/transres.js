@@ -33,14 +33,6 @@ $(document).ready(function() {
     //     transresValidateProjectForm(this);
     // });
 
-    // var exempt = $(".transres-project-exemptIrbApproval").val();
-    // console.log("change: exempt id="+exempt);
-    // transresIrbExemptChange(exempt,"transres-project-exemptIrbApproval");
-    //
-    // var exempt = $(".transres-project-exemptIACUCApproval").val();
-    // console.log("change: exempt id="+exempt.id+"; text="+exempt);
-    // transresIrbExemptChange(exempt,"transres-project-exemptIACUCApproval");
-
     transresIrbExemptListener('transres-project-exemptIrbApproval');
     transresIrbExemptListener('transres-project-exemptIACUCApproval');
     
@@ -48,29 +40,18 @@ $(document).ready(function() {
 
 function transresIrbExemptListener( classname ) {
     $("."+classname).on("change", function(e) {
-        var exemptText = $(this).select2('text');
-        console.log("change: exemptText="+exemptText);
-
-        var exemptVal = $(this).select2('val');
-        console.log("change: exemptVal="+exemptVal);
-
-        var exemptDataText = $(this).select2('data');
-        console.log("change: exemptDataText.text="+exemptDataText.text);
-
-        var exemptData = $(this).val();
-        console.log("change: exempt text="+exemptData);
-        transresIrbExemptChange(exemptData,classname);
+        transresIrbExemptChange($(this),classname);
     });
 }
-function transresIrbExemptChange( exempt, classname ) {
-    console.log("change: exempt="+exempt);
-    //if( exempt == "Exempt" ) {
-    if( exempt == "2" ) {
+function transresIrbExemptChange( exemptEl, classname ) {
+    var exemptData = exemptEl.select2('data');
+    var exemptText = exemptData.text;
+    //console.log("change: exemptText="+exemptText);
+    if( exemptText == "Exempt" ) {
         $("."+classname+"-panel").hide('slow');
         //$("."+classname+"-panel").fadeOut(2000);
     }
-    //if( exempt == "Not Exempt" ) {
-    if( exempt == "1" ) {
+    if( exemptText == "Not Exempt" ) {
         $("."+classname+"-panel").show('slow');
         //$("."+classname+"-panel").fadeIn(2000);
     }
