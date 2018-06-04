@@ -47,6 +47,30 @@
                     <td><a href="{{ path(sitename~'_siteparameters_edit', {'id': entity.id, 'param': 'defaultScanMrnType'}) }}">Edit</a></td>
                 </tr>
 
+                <tr>
+                    <td>Default Slide Delivery</td>
+                    <td>{{ entity.defaultScanDelivery }}</td>
+                    <td><a href="{{ path(sitename~'_siteparameters_edit', {'id': entity.id, 'param': 'defaultScanDelivery'}) }}">Edit</a></td>
+                </tr>
+
+                {#<tr>#}
+                    {#<td>Default Institutional PHI Scope</td>#}
+                    {#<td>{{ entity.defaultInstitutionalPHIScope }}</td>#}
+                    {#<td><a href="{{ path(sitename~'_siteparameters_edit', {'id': entity.id, 'param': 'defaultInstitutionalPHIScope'}) }}">Edit</a></td>#}
+                {#</tr>#}
+
+                <tr>
+                    <td>Default Organization Recipient</td>
+                    <td>{{ entity.defaultOrganizationRecipient }}</td>
+                    <td><a href="{{ path(sitename~'_siteparameters_edit', {'id': entity.id, 'param': 'defaultOrganizationRecipient'}) }}">Edit</a></td>
+                </tr>
+
+                <tr>
+                    <td>Default Scanner</td>
+                    <td>{{ entity.defaultScanner }}</td>
+                    <td><a href="{{ path(sitename~'_siteparameters_edit', {'id': entity.id, 'param': 'defaultScanner'}) }}">Edit</a></td>
+                </tr>
+
                 </tbody>
             </table>
 
@@ -54,4 +78,13 @@
     </div>
 </div>
 
-
+{#
+{% block additionaljs %}
+    {% javascripts
+    '@OlegUserdirectoryBundle/Resources/public/form/js/user-selectAjax.js'
+    '@OlegUserdirectoryBundle/Resources/public/form/js/user-treeSelectAjax.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}
+#}

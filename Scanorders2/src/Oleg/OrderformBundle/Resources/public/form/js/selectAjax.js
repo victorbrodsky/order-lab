@@ -658,15 +658,15 @@ function getComboboxDelivery(holder) {
         }).success(function(data) {
                 _delivery = data;
             populateSelectCombobox( ".ajax-combobox-delivery", _delivery, null );
-            if( cycle == "new"  ) {
-                setElementToId( targetid, _delivery );
-            }
+            // if( cycle == "new"  ) {
+            //     setElementToId( targetid, _delivery );
+            // }
         });
     } else {
         populateSelectCombobox( ".ajax-combobox-delivery", _delivery, null );
-        if( cycle == "new"  ) {
-            setElementToId( targetid, _delivery );
-        }
+        // if( cycle == "new"  ) {
+        //     setElementToId( targetid, _delivery );
+        // }
     }
 
 }

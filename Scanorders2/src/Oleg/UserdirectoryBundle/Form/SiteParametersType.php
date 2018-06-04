@@ -18,12 +18,15 @@
 namespace Oleg\UserdirectoryBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
+use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SiteParametersType extends AbstractType
@@ -675,6 +678,100 @@ class SiteParametersType extends AbstractType
                 },
             ));
         }
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'defaultScanDelivery' ) {
+            $builder->add('defaultScanDelivery', EntityType::class, array(
+                'class' => 'OlegOrderformBundle:OrderDelivery',
+                'label' => 'Default Slide Delivery:',
+                'required' => true,
+                'multiple' => false,
+                'attr' => array('class' => 'combobox combobox-width'),
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist", "ASC")
+                        ->setParameters(array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+            ));
+        }
+//        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'defaultInstitutionalPHIScope' ) {
+//            $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+//                $institution = $event->getData()->getDefaultInstitutionalPHIScope();
+//                $form = $event->getForm();
+//
+//                $label = null;
+//                if ($institution) {
+//                    $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
+//                }
+//                if (!$label) {
+//                    $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
+//                }
+//
+//                $form->add('defaultInstitutionalPHIScope', CustomSelectorType::class, array(
+//                    'label' => "Default Institutional PHI Scope - ".$label,
+//                    'required' => false,
+//                    'attr' => array(
+//                        'class' => 'ajax-combobox-compositetree',
+//                        'type' => 'hidden',
+//                        'data-compositetree-bundlename' => 'UserdirectoryBundle',
+//                        'data-compositetree-classname' => 'Institution',
+//                        'data-label-prefix' => 'Default Institutional PHI Scope -',  //'Originating Organizational Group',
+//                        'data-label-postfix' => ''
+//                    ),
+//                    'classtype' => 'institution'
+//                ));
+//            });
+//        }
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'defaultOrganizationRecipient' ) {
+            $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+                $institution = $event->getData()->getDefaultOrganizationRecipient();
+                $form = $event->getForm();
+
+                $label = null;
+                if( $institution ) {
+                    $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
+                }
+                if( !$label ) {
+                    $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
+                }
+
+                $form->add('defaultOrganizationRecipient', CustomSelectorType::class, array(
+                    'label' => "Default Organization Recipient - ".$label,
+                    'required' => false,
+                    'attr' => array(
+                        'class' => 'ajax-combobox-compositetree',
+                        'type' => 'hidden',
+                        'data-compositetree-bundlename' => 'UserdirectoryBundle',
+                        'data-compositetree-classname' => 'Institution',
+                        'data-label-prefix' => 'Default Organization Recipient -',  //'Originating Organizational Group',
+                        'data-label-postfix' => ''
+                    ),
+                    'classtype' => 'institution'
+                ));
+            });
+        }
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'defaultScanner' ) {
+            $builder->add('defaultScanner', EntityType::class, array(
+                'class' => 'Oleg\UserdirectoryBundle\Entity\Equipment',
+                'label' => 'Default Scanner:',
+                'required' => true,
+                'multiple' => false,
+                'attr' => array('class' => 'combobox combobox-width'),
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist", "ASC")
+                        ->setParameters(array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+            ));
+        }
+
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'permittedFailedLoginAttempt' ) {
             $builder->add('permittedFailedLoginAttempt',null,array(

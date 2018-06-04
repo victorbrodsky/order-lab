@@ -1047,9 +1047,7 @@ class UserServiceUtil {
 
         return round($count/10);
     }
-
-
-
+    
 
 
 

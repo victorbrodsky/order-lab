@@ -66,6 +66,7 @@
 
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import "OlegUserdirectoryBundle::Default/userformmacros.html.twig" as userform %}
+    {% import "OlegUserdirectoryBundle::Tree/treemacros.html.twig" as treemacros %}
 
     <h3 class="text-info">Update {{ sitesettings_title }}: {{ param }}</h3>
 
@@ -119,6 +120,13 @@
                 {#{{ form_widget(edit_form.academicYearEnd, {'value' : currentYear}) }}#}
             {#</div>#}
             {#{% do edit_form.academicYearEnd.year.setRendered %}#}
+        {% endif %}
+
+        {#{% if edit_form.defaultInstitutionalPHIScope is defined %}#}
+            {#{{ treemacros.compositeTreeNode(edit_form.defaultInstitutionalPHIScope,cycle,"noprototype") }}#}
+        {#{% endif %}#}
+        {% if edit_form.defaultOrganizationRecipient is defined %}
+            {{ treemacros.compositeTreeNode(edit_form.defaultOrganizationRecipient,cycle,"noprototype") }}
         {% endif %}
 
         <p>

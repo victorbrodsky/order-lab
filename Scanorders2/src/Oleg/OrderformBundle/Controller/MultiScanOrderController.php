@@ -352,6 +352,7 @@ class MultiScanOrderController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         $orderUtil = $this->get('scanorder_utility');
+        $userSecUtil = $this->get('user_security_utility');
 
         //check if user has at least one institution
         $securityUtil = $this->get('order_security_utility');
@@ -471,6 +472,14 @@ class MultiScanOrderController extends Controller {
         //set Performing organization:
         //"Weill Cornell Medical College > Department of Pathology and Laboratory Medicine > Pathology Informatics > Scanning Service"
         $orderUtil->setDefaultPerformingOrganization($entity);
+
+        //set "Slide Delivery"
+        $defaultDelivery = $userSecUtil->getNotEmptyDefaultSiteParameter('defaultScanDelivery','OlegOrderformBundle:OrderDelivery');
+        $scanOrder->setDelivery($defaultDelivery);
+
+        //set "Scanner"
+        $defaultDelivery = $userSecUtil->getNotEmptyDefaultSiteParameter('defaultScanner','Oleg\UserdirectoryBundle\Entity\Equipment');
+        $entity->setEquipment($defaultDelivery);
 
         //set default department and division
         //TODO: implement it

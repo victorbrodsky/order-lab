@@ -288,11 +288,14 @@ class MessageType extends AbstractType
             'multiple' => false,
             'attr' => array('class'=>'combobox combobox-width'),
             'query_builder' => function(EntityRepository $er) {
-                    return $er->createQueryBuilder('i')
-                        ->leftJoin('i.keytype','keytype')
-                        ->where("keytype.name = :keytype AND i.type != :type")
-                        ->setParameters( array('keytype' => 'Whole Slide Scanner', 'type' => 'disabled') );
-                },
+                return $er->createQueryBuilder('list')
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->orderBy("list.orderinlist", "ASC")
+                    ->setParameters(array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                ));
+            },
         ));
 
         $builder->add( 'purpose', ChoiceType::class, array( //flipped

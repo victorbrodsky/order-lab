@@ -921,6 +921,34 @@ class SiteParameters {
      */
     private $defaultScanMrnType;
 
+    /**
+     * Default Slide Delivery
+     *
+     * @ORM\ManyToOne(targetEntity="Oleg\OrderformBundle\Entity\OrderDelivery")
+     */
+    private $defaultScanDelivery;
+
+//    /**
+//     * Default Institutional PHI Scope
+//     *
+//     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
+//     */
+//    private $defaultInstitutionalPHIScope;
+
+    /**
+     * Default Organization Recipient
+     *
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Institution")
+     */
+    private $defaultOrganizationRecipient;
+
+    /**
+     * Default Scanner
+     *
+     * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\Equipment")
+     */
+    private $defaultScanner;
+
 
     function __construct( $addobjects=true )
     {
@@ -3257,7 +3285,69 @@ class SiteParameters {
         $this->defaultScanMrnType = $defaultScanMrnType;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getDefaultScanDelivery()
+    {
+        return $this->defaultScanDelivery;
+    }
 
+    /**
+     * @param mixed $defaultScanDelivery
+     */
+    public function setDefaultScanDelivery($defaultScanDelivery)
+    {
+        $this->defaultScanDelivery = $defaultScanDelivery;
+    }
+
+//    /**
+//     * @return mixed
+//     */
+//    public function getDefaultInstitutionalPHIScope()
+//    {
+//        return $this->defaultInstitutionalPHIScope;
+//    }
+//
+//    /**
+//     * @param mixed $defaultInstitutionalPHIScope
+//     */
+//    public function setDefaultInstitutionalPHIScope($defaultInstitutionalPHIScope)
+//    {
+//        $this->defaultInstitutionalPHIScope = $defaultInstitutionalPHIScope;
+//    }
+
+    /**
+     * @return mixed
+     */
+    public function getDefaultOrganizationRecipient()
+    {
+        return $this->defaultOrganizationRecipient;
+    }
+
+    /**
+     * @param mixed $defaultOrganizationRecipient
+     */
+    public function setDefaultOrganizationRecipient($defaultOrganizationRecipient)
+    {
+        $this->defaultOrganizationRecipient = $defaultOrganizationRecipient;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDefaultScanner()
+    {
+        return $this->defaultScanner;
+    }
+
+    /**
+     * @param mixed $defaultScanner
+     */
+    public function setDefaultScanner($defaultScanner)
+    {
+        $this->defaultScanner = $defaultScanner;
+    }
 
     
 }
