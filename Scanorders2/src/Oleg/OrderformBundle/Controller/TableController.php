@@ -581,6 +581,20 @@ class TableController extends Controller {
         $defaultDelivery = $userSecUtil->getNotEmptyDefaultSiteParameter('defaultScanner','Oleg\UserdirectoryBundle\Entity\Equipment');
         $entity->setEquipment($defaultDelivery);
 
+        //set $defaultAccessionType
+        $defaultAccessionType = null;
+        $defaultAccessionTypeEntity = $userSecUtil->getNotEmptyDefaultSiteParameter('defaultScanAccessionType',null);
+        if( $defaultAccessionTypeEntity ) {
+            $defaultAccessionType = $defaultAccessionTypeEntity->getName();
+        }
+
+        //$defaultMrnType
+        $defaultMrnType = null;
+        $defaultMrnTypeEntity = $userSecUtil->getNotEmptyDefaultSiteParameter('defaultScanMrnType',null);
+        if( $defaultMrnTypeEntity ) {
+            $defaultMrnType = $defaultMrnTypeEntity->getName();
+        }
+
         $params = array(
             'type'=>$type,
             'cycle'=>'new',
@@ -603,6 +617,8 @@ class TableController extends Controller {
             'formtype' => $type,
             'type' => 'new',
             'orderdata' => null,
+            'defaultAccessionType' => $defaultAccessionType,
+            'defaultMrnType' => $defaultMrnType
         ));
     }
 

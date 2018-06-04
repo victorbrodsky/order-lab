@@ -51,6 +51,8 @@ var _institution = null;
 
 var _btnClickedName = null;
 
+var _columnData_scanorder = [];
+
 //var ip_validator_regexp = /^(?:\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b|null)$/;
 
 //accession validator
@@ -223,77 +225,193 @@ var redWithBorderRenderer = function (instance, td, row, col, prop, value, cellP
     }
 };
 
-//total 33
-var _columnData_scanorder = [
 
-    //header: 1
-    //{ header:'ID', columns:{} },
+function scanorderMakeColumnData() {
 
-    //accession: 2
-    { header:'Accession Type', default:0, columns:{type:'autocomplete', source:_accessiontypes_simple, strict:false, filter:false, renderer:redRendererAutocomplete} },
-    { header:'Accession Number', columns:{validator: accession_validator_fn, allowInvalid: true, renderer:redRenderer} },
+    var defaultAccessionTypeIndex = 0;
+    var defaultAccessionType = $('#default-accession-type').val();
+    if( defaultAccessionType ) {
+        for(var i = 0; i < _accessiontypes_simple.length; i++) {
+            //console.log(_accessiontypes_simple[i]+"=?"+defaultAccessionType);
+            if( _accessiontypes_simple[i] == defaultAccessionType ) {
+                defaultAccessionTypeIndex = i;
+            }
+        }
+    }
+    var defaultMrnTypeIndex = 0;
+    var defaultMrnType = $('#default-mrn-type').val();
+    if( defaultMrnType ) {
+        for(var i = 0; i < _mrntypes_simple.length; i++) {
+            if( _mrntypes_simple[i] == defaultMrnType ) {
+                defaultMrnTypeIndex = i;
+            }
+        }
+    }
 
-    //part: 1
-    { header:'Part ID', default:0, columns:{type:'autocomplete', source:_partname_simple, strict:true, filter:false, renderer:redRendererAutocomplete} },
+    //total 33
+    _columnData_scanorder = [
 
-    //block: 1
-    { header:'Block ID', default:0, columns:{type:'autocomplete', source:_blockname_simple, strict:true, filter:false, renderer:redRendererAutocomplete} },
+        //header: 1
+        //{ header:'ID', columns:{} },
 
-    //slide: 4
-    { header:'Stain', default:0, columns:{type:'autocomplete', source:_stains_simple, strict:false, filter:false, colWidths:'120px'} },
-    { header:'Scan Magnificaiton', default:0, columns:{type:'dropdown', source:['20X','40X'], strict:false} },
-    { header:'Diagnosis', columns:{} },
-    { header:'Reason for Scan/Note', columns:{} },
+        //accession: 2
+        {
+            header: 'Accession Type',
+            default: defaultAccessionTypeIndex,
+            columns: {
+                type: 'autocomplete',
+                source: _accessiontypes_simple,
+                strict: false,
+                filter: false,
+                renderer: redRendererAutocomplete
+            }
+        },
+        {
+            header: 'Accession Number',
+            columns: {validator: accession_validator_fn, allowInvalid: true, renderer: redRenderer}
+        },
 
-    //part 2
-    { header:'Source Organ', columns:{type:'autocomplete', source:_organs_simple, strict:false, filter:false, colWidths:'100px'} },
-    { header:'Part Title', columns:{type:'autocomplete', source:_parttitle_simple, strict:false} },
+        //part: 1
+        {
+            header: 'Part ID',
+            default: 0,
+            columns: {
+                type: 'autocomplete',
+                source: _partname_simple,
+                strict: true,
+                filter: false,
+                renderer: redRendererAutocomplete
+            }
+        },
 
-    //patient: 4
-    { header:'MRN Type', default:0, columns:{type:'autocomplete', source:_mrntypes_simple, strict:false, filter:false, renderer:redRendererAutocomplete} },
-    { header:'MRN', columns:{colWidths:'100px', renderer:redRenderer, validator: general_validator_fn, allowInvalid: true} },
+        //block: 1
+        {
+            header: 'Block ID',
+            default: 0,
+            columns: {
+                type: 'autocomplete',
+                source: _blockname_simple,
+                strict: true,
+                filter: false,
+                renderer: redRendererAutocomplete
+            }
+        },
+
+        //slide: 4
+        {
+            header: 'Stain',
+            default: 0,
+            columns: {type: 'autocomplete', source: _stains_simple, strict: false, filter: false, colWidths: '120px'}
+        },
+        {header: 'Scan Magnificaiton', default: 0, columns: {type: 'dropdown', source: ['20X', '40X'], strict: false}},
+        {header: 'Diagnosis', columns: {}},
+        {header: 'Reason for Scan/Note', columns: {}},
+
+        //part 2
+        {
+            header: 'Source Organ',
+            columns: {type: 'autocomplete', source: _organs_simple, strict: false, filter: false, colWidths: '100px'}
+        },
+        {header: 'Part Title', columns: {type: 'autocomplete', source: _parttitle_simple, strict: false}},
+
+        //patient: 4
+        {
+            header: 'MRN Type',
+            default: defaultMrnTypeIndex,
+            columns: {
+                type: 'autocomplete',
+                source: _mrntypes_simple,
+                strict: false,
+                filter: false,
+                renderer: redRendererAutocomplete
+            }
+        },
+        {
+            header: 'MRN',
+            columns: {colWidths: '100px', renderer: redRenderer, validator: general_validator_fn, allowInvalid: true}
+        },
 //    { header:'Patient Name', columns:{} },
 //    { header:'Patient Sex', default:0, columns:{type:'dropdown', source:['', 'Female','Male','Unspecified'], strict:true} },
-    { header:'Patient DOB', columns:{type:'date', dateFormat: 'mm/dd/yy', validator: date_validator_fn, allowInvalid: true } },
+        {
+            header: 'Patient DOB',
+            columns: {type: 'date', dateFormat: 'mm/dd/yy', validator: date_validator_fn, allowInvalid: true}
+        },
 //    { header:'Patient Age', columns:{} },
-    { header:'Clinical Summary', columns:{} },
+        {header: 'Clinical Summary', columns: {}},
 
-    //accession: 1
-    { header:'Accession Date', columns:{type:'date', dateFormat: 'mm/dd/yy', validator: date_validator_fn, allowInvalid: true } },
+        //accession: 1
+        {
+            header: 'Accession Date',
+            columns: {type: 'date', dateFormat: 'mm/dd/yy', validator: date_validator_fn, allowInvalid: true}
+        },
 
-    //procedure: 1
-    { header:'Procedure Type', default:0, columns:{type:'dropdown', source:_procedures_simple, strict:true} },
+        //procedure: 1
+        {header: 'Procedure Type', default: 0, columns: {type: 'dropdown', source: _procedures_simple, strict: true}},
 
-    //encounter 8
-    { header:'Encounter Date', columns:{type:'date', dateFormat: 'mm/dd/yy', validator: date_validator_fn, allowInvalid: true } },
-    { header:"Patient's First Name", columns:{} },
-    { header:"Patient's Middle Name", columns:{} },
-    { header:"Patient's Last Name", columns:{} },
-    { header:"Patient's Suffix", columns:{} },
-    { header:'Patient Sex', default:0, columns:{type:'dropdown', source:['', 'Female','Male','Unspecified'], strict:true} },
-    { header:'Patient Age', columns:{validator: age_validator_fn, allowInvalid: true} },
-    { header:'Clinical History', columns:{} },
+        //encounter 8
+        {
+            header: 'Encounter Date',
+            columns: {type: 'date', dateFormat: 'mm/dd/yy', validator: date_validator_fn, allowInvalid: true}
+        },
+        {header: "Patient's First Name", columns: {}},
+        {header: "Patient's Middle Name", columns: {}},
+        {header: "Patient's Last Name", columns: {}},
+        {header: "Patient's Suffix", columns: {}},
+        {
+            header: 'Patient Sex',
+            default: 0,
+            columns: {type: 'dropdown', source: ['', 'Female', 'Male', 'Unspecified'], strict: true}
+        },
+        {header: 'Patient Age', columns: {validator: age_validator_fn, allowInvalid: true}},
+        {header: 'Clinical History', columns: {}},
 
-    //part: 5
-    { header:'Gross Description', columns:{} },
-    { header:'Differential Diagnoses', columns:{} },
-    { header:'Type of Disease', default:0, columns:{type:'dropdown', source:['','Neoplastic','Non-Neoplastic','None','Unspecified'], strict:true} },
-    { header:'Origin of Disease', default:0, columns:{type:'dropdown', source:['','Primary','Metastatic','Unspecified'], strict:true} },
-    { header:'Primary Site of Disease Origin', columns:{type:'autocomplete', source:_organs_simple, strict:false, filter:false} },
+        //part: 5
+        {header: 'Gross Description', columns: {}},
+        {header: 'Differential Diagnoses', columns: {}},
+        {
+            header: 'Type of Disease',
+            default: 0,
+            columns: {
+                type: 'dropdown',
+                source: ['', 'Neoplastic', 'Non-Neoplastic', 'None', 'Unspecified'],
+                strict: true
+            }
+        },
+        {
+            header: 'Origin of Disease',
+            default: 0,
+            columns: {type: 'dropdown', source: ['', 'Primary', 'Metastatic', 'Unspecified'], strict: true}
+        },
+        {
+            header: 'Primary Site of Disease Origin',
+            columns: {type: 'autocomplete', source: _organs_simple, strict: false, filter: false}
+        },
 
-    //block: 3
-    { header:'Block Section Source', columns:{} },
-    { header:'Associated Special Stain Name', columns:{type:'autocomplete', source:_stains_simple, strict:false, filter:false} },
-    { header:'Associated Special Stain Result', columns:{} },
+        //block: 3
+        {header: 'Block Section Source', columns: {}},
+        {
+            header: 'Associated Special Stain Name',
+            columns: {type: 'autocomplete', source: _stains_simple, strict: false, filter: false}
+        },
+        {header: 'Associated Special Stain Result', columns: {}},
 
-    //slide: 5
-    { header:'Slide Title', columns:{} },
-    { header:'Slide Type', default:0, columns:{type:'autocomplete', source:_slidetypes_simple, strict:false, filter:false} },
-    { header:'Microscopic Description', columns:{} },
-    { header:'Link(s) to related image(s)', columns:{} },
-    { header:'Region to Scan', default:0, columns:{type:'autocomplete', source:_scanregions_simple, strict:false, filter:false} }
+        //slide: 5
+        {header: 'Slide Title', columns: {}},
+        {
+            header: 'Slide Type',
+            default: 0,
+            columns: {type: 'autocomplete', source: _slidetypes_simple, strict: false, filter: false}
+        },
+        {header: 'Microscopic Description', columns: {}},
+        {header: 'Link(s) to related image(s)', columns: {}},
+        {
+            header: 'Region to Scan',
+            default: 0,
+            columns: {type: 'autocomplete', source: _scanregions_simple, strict: false, filter: false}
+        }
 
-];
+    ];
+}
 
 $(document).ready(function() {
 
@@ -335,6 +453,9 @@ $(document).ready(function() {
     //console.log('before waiting for handsonTable Init');
     var _TIMEOUT = 100; // 300 waitfor test rate [msec]
     waitfor( ajaxFinishedCondition, true, _TIMEOUT, 0, 'play->busy false', function() {
+
+        scanorderMakeColumnData();
+
         //console.log('The show can resume => handsonTable Init');
         handsonTableInit();
     });
@@ -441,6 +562,10 @@ function handsonTableInit() {
     _institution = $('.combobox-institution').select2('val');
     //console.log('_institution='+_institution);
 
+    // var defaultAccessionType = $('#default-accession-type').val();
+    // console.log('defaultAccessionType='+defaultAccessionType);
+    // var defaultMrnType = $('#default-mrn-type').val();
+
     var data = new Array();
     var columnsType = new Array();
     //var colHeader = new Array();
@@ -449,6 +574,7 @@ function handsonTableInit() {
     if( typeof _orderDataArr != 'undefined' && _orderDataArr.length != 0 ) {
         rows = _orderDataArr.length+1;
     }
+    //console.log('rows='+rows);
 
     // make init data, i=0 to skip the first row
     for( var i=1; i<rows; i++ ) {   //foreach row
@@ -456,6 +582,21 @@ function handsonTableInit() {
         var rowElement = new Array();
         //rowElement[0] = i;
         for( var ii=0; ii<_columnData_scanorder.length; ii++ ) {  //foreach column
+
+            //var headerTitle = _columnData_scanorder[ii]['header'];
+            //console.log('headerTitle='+headerTitle);
+
+            // //set default asseccion type
+            // if( headerTitle == "Accession Type" && defaultAccessionType ) {
+            //     console.log('defaultAccessionType='+defaultAccessionType);
+            //     //setDataCell(i,ii,defaultAccessionType);
+            //     _columnData_scanorder[ii]['default'] = defaultAccessionType;
+            // }
+            // if( headerTitle == "MRN Type" && defaultMrnType ) {
+            //     console.log('defaultMrnType='+defaultMrnType);
+            //     //setDataCell(i,ii,defaultMrnType);
+            //     _columnData_scanorder[ii]['default'] = defaultMrnType;
+            // }
 
             if( 'default' in _columnData_scanorder[ii] ) {
                 var index = _columnData_scanorder[ii]['default'];

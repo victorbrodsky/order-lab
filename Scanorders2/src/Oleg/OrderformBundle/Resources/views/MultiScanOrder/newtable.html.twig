@@ -140,6 +140,9 @@
     <input type="hidden" id="orderformtype" value="multi" />
     <input type="hidden" id="formcycle" value="{{ type }}" />
 
+    <input type="hidden" id="default-accession-type" value="{{ defaultAccessionType }}" />
+    <input type="hidden" id="default-mrn-type" value="{{ defaultMrnType }}" />
+
     {% if entity is defined and entity.dataqualitymrnacc|length > 0 %}
         <div class="alert alert-danger">
             <p>This order contained an MRN-Accession Number association that conflicted with an already existing MRN-Accession Number association.</p>
