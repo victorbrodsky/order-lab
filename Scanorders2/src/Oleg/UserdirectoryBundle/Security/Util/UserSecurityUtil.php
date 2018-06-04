@@ -2010,7 +2010,7 @@ class UserSecurityUtil {
         return true;
     }
 
-    public function getNotEmptyDefaultSiteParameter($parameterName, $classBundleName) {
+    public function getNotEmptyDefaultSiteParameter($parameterName, $classBundleName=null) {
         $defaultParameter = $this->getSiteSettingParameter($parameterName);
         if( !$defaultParameter && $classBundleName ) {
             $listEls = $this->em->getRepository($classBundleName)->findAll();
