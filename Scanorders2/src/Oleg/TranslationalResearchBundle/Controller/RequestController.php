@@ -50,8 +50,8 @@ class RequestController extends Controller
     /**
      * Creates a new request entity with formnode.
      *
-     * @Route("/project/{id}/request/new/", name="translationalresearch_request_new")
-     * @Route("/request/new/", name="translationalresearch_new_standalone_request")
+     * @Route("/project/{id}/work-request/new/", name="translationalresearch_request_new")
+     * @Route("/work-request/new/", name="translationalresearch_new_standalone_request")
      * @Template("OlegTranslationalResearchBundle:Request:new.html.twig")
      * @Method({"GET", "POST"})
      */
@@ -811,7 +811,7 @@ class RequestController extends Controller
     /**
      * Finds and displays the filtered requests lists
      *
-     * @Route("/requests/list/", name="translationalresearch_request_index_filter")
+     * @Route("/work-requests/list/", name="translationalresearch_request_index_filter")
      * @Template("OlegTranslationalResearchBundle:Request:index.html.twig")
      * @Method("GET")
      */
@@ -898,6 +898,9 @@ class RequestController extends Controller
         $fundingType = $filterform['fundingType']->getData();
         $filterType = trim( $request->get('type') );
         $filterTitle = trim( $request->get('title') );
+
+        //replace - with space
+        $filterType = str_replace("-"," ",$filterType);
 
         //$showMatchingAndTotal = $filterform['showMatchingAndTotal']->getData();
         //echo "filterType=$filterType<br>";

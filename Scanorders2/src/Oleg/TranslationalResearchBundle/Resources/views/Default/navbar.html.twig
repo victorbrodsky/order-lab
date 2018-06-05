@@ -19,8 +19,9 @@
         {% if filterType == "[[hr]]" %}
             <hr style="margin-top: 10px; margin-bottom: 10px;">
         {% else %}
+            {% set filterTypeUrl = filterType|replace({" ","-"}) %}
             <li>
-                <a href="{{ path(translationalresearch_sitename~'_request_index_filter',{'type':filterType}) }}">{{ filterType }}</a>
+                <a href="{{ path(translationalresearch_sitename~'_request_index_filter',{'type':filterTypeUrl}) }}">{{ filterType }}</a>
             </li>
         {% endif %}
     {% endfor %}

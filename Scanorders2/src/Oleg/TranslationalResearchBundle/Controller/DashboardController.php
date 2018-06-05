@@ -19,12 +19,12 @@ class DashboardController extends Controller
 {
 
     /**
-     * @Route("/pi-level/", name="translationalresearch_dashboard_pilevel")
-     * @Route("/project-level/", name="translationalresearch_dashboard_projectlevel")
-     * @Route("/invoice-level/", name="translationalresearch_dashboard_invoicelevel")
+     * @Route("/pi-statistics/", name="translationalresearch_dashboard_pilevel")
+     * @Route("/project-statistics/", name="translationalresearch_dashboard_projectlevel")
+     * @Route("/invoice-statistics/", name="translationalresearch_dashboard_invoicelevel")
      * @Template("OlegTranslationalResearchBundle:Dashboard:dashboard.html.twig")
      */
-    public function piLevelAction( Request $request ) {
+    public function piStatisticsAction( Request $request ) {
 
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
@@ -68,7 +68,7 @@ class DashboardController extends Controller
         //Projects per PIs
         if( $routeName == "translationalresearch_dashboard_pilevel" ) {
 
-            $title = "Dashboard: PI Level";
+            $title = "Dashboard: PI Statistics";
             $piProjectCountArr = array();
             $piTotalArr = array();
             $piRequestsArr = array();
@@ -127,7 +127,7 @@ class DashboardController extends Controller
 
         if( $routeName == "translationalresearch_dashboard_projectlevel" ) {
             $piTotalArr = array();
-            $title = "Dashboard: Project Level";
+            $title = "Dashboard: Project Statistics";
             $layoutArray['title'] = "Number of Funded vs Un-Funded Projects";
             $nameValueArr = array();
             $fundedCount = 0;
