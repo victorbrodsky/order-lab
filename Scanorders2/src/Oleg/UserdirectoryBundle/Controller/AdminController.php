@@ -243,7 +243,29 @@ class AdminController extends Controller
 
         set_time_limit(0);
         ini_set('memory_limit', '512M');
-        $this->runDeployScript(true,true,false);
+        $this->runDeployScript(true,false,false);
+
+        $updateres = "Source code and composer has been successfully updated";
+
+        $this->get('session')->getFlashBag()->add(
+            'pnotify',
+            $updateres
+        );
+
+        return $this->redirect($this->generateUrl('employees_home'));
+    }
+
+    /**
+     * @Route("/update-system-source-composer/", name="user_update_system_source_composer")
+     */
+    public function updateComposerAction() {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+
+        set_time_limit(0);
+        ini_set('memory_limit', '512M');
+        $this->runDeployScript(false,true,false);
 
         $updateres = "Source code and composer has been successfully updated";
 
