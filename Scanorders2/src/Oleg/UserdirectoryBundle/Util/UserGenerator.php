@@ -162,7 +162,7 @@ class UserGenerator {
             if( $userType == "Local User" ) {
                 $usernamePrefix = "local-user";
             }
-            if( $userType == "PACS" ) {
+            if( $userType == "External Authentication" ) {
                 $usernamePrefix = "aperio";
             }
 

@@ -598,7 +598,7 @@ class SiteParametersController extends Controller
             $this->get('session')->getFlashBag()->add(
                 'notice',
                 "Thank You for completing the initial configuration!<br>".
-                'Please update <a href="' . $urlUpdateCacheAssets . '">Systems Cache and Assets</a> to update the footer.<br>'.
+                'Please update <a href="' . $urlUpdateCacheAssets . '">System\'s Cache and Assets</a> to update the footer.<br>'.
                 "You can set other options to ensure proper operation on this 'Site Settings' page!"
             );
 

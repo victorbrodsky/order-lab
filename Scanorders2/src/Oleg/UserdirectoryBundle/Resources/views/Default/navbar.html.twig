@@ -229,7 +229,7 @@
 
                                 <li class="divider"></li>
                                 <li><a href="{{ path(employees_sitename~'_emailtest') }}">Send a test email</a></li>
-                                <li><a href="{{ path(employees_sitename~'_send_spooled_emails') }}">Force to send spooled emails</a></li>
+                                <li><a href="{{ path(employees_sitename~'_send_spooled_emails') }}">Send queued emails</a></li>
 
                                 {% if is_granted('ROLE_PLATFORM_ADMIN') %}
                                     <li class="divider"></li>

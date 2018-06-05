@@ -210,7 +210,7 @@ class UserRequestType extends AbstractType
             'query_builder' => function(EntityRepository $er) {
                 return $er->createQueryBuilder('list')
                     ->where("list.type = :typedef OR list.type = :typeadd")
-                    ->andWhere("list.name LIKE '%ORDER%' OR list.name LIKE '%PACS%'")
+                    ->andWhere("list.name LIKE '%ORDER%' OR list.name LIKE '%External Authentication%'")
                     ->orderBy("list.orderinlist","ASC")
                     ->setParameters( array(
                         'typedef' => 'default',
