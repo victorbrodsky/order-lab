@@ -95,6 +95,8 @@ class InvoiceController extends Controller
         $filterType = trim( $request->get('type') );
         $filterTitle = trim( $request->get('title') );
 
+        $filterType = str_replace("-"," ",$filterType);
+
         if( $filterType ) {
             if( $filterType == "All Invoices" ) {
                 //filter nothing
