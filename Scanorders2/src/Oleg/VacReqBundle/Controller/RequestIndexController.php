@@ -243,16 +243,21 @@ class RequestIndexController extends Controller
             $matchingIds = $vacreqUtil->getVacReqIdsArrByDqlParameters($dql, $dqlParameters);
             //echo "matchingIdsArr count=".count($matchingIdsArr)."<br>";
             //print_r($matchingIdsArr);
-            if ($matchingIds) {
-                $downloadUrl = $this->container->get('router')->generate(
-                    'vacreq_download_excel',
-                    array(
-                        'ids' => implode("-", $matchingIds),
-                    ),
-                    UrlGeneratorInterface::ABSOLUTE_URL
-                );
-                $downloadLink = '<a href="' . $downloadUrl . '" target="_blank"><i class="fa fa-file-excel-o"></i>download in Excel</a>';
-                $pageTitle = $indexTitle . ", " . $downloadLink;
+            $limitMatching = 200;
+            if( count($matchingIds) > $limitMatching ) {
+                $pageTitle = $indexTitle . " (download in Excel is not available: too many records found. Please limit the matching result by $limitMatching records)";
+            } else {
+                if ($matchingIds) {
+                    $downloadUrl = $this->container->get('router')->generate(
+                        'vacreq_download_excel',
+                        array(
+                            'ids' => implode("-", $matchingIds),
+                        ),
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    );
+                    $downloadLink = '<a href="' . $downloadUrl . '" target="_blank"><i class="fa fa-file-excel-o"></i>download in Excel</a>';
+                    $pageTitle = $indexTitle . " (" . $downloadLink . ")";
+                }
             }
         }
 
