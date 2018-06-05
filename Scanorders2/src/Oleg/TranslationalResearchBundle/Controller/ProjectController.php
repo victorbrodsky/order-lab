@@ -164,6 +164,7 @@ class ProjectController extends Controller
         //$filterError = true;
         $transresUsers = $transresUtil->getAppropriatedUsers();
         $stateChoiceArr = $transresUtil->getStateChoisesArr();
+        $stateChoiceArr["All except Drafts"] = "All-except-Drafts";
         //$defaultStatesArr = $transresUtil->getDefaultStatesArr();
         $params = array(
             'transresUsers' => $transresUsers,
@@ -280,10 +281,17 @@ class ProjectController extends Controller
 
         //echo "count states=".count($states)."<br>";
         if( $states && count($states) > 0 ) {
-            $dql->andWhere("project.state IN (:states)");
+            //All except Drafts
+            $allExceptDraft = "";
+            if( in_array("All-except-Drafts", $states )) {
+                $allExceptDraft = " OR project.state != 'draft'";
+            }
+
+            $dql->andWhere("project.state IN (:states)".$allExceptDraft);
             $dqlParameters["states"] = $states; //implode(",",$states);
             //$statesStr = "'".implode("','",$states)."'";
             //$dql->andWhere("project.state IN (".$statesStr.")");
+
             $advancedFilter++;
         }
 
