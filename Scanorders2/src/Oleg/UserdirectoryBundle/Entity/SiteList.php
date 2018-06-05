@@ -57,12 +57,29 @@ class SiteList extends ListAbstract
      */
     private $accessibility;
 
+    /**
+     * Show Link on Homepage
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $showLinkHomePage;
 
-    
+    /**
+     * Show Link in Navbar
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $showLinkNavbar;
+
+
+
     public function __construct( $creator = null ) {
         parent::__construct($creator);
 
         $this->lowestRoles = new ArrayCollection();
+
+        $this->setShowLinkHomePage(true);
+        $this->setShowLinkNavbar(true);
     }
     
 
@@ -111,6 +128,38 @@ class SiteList extends ListAbstract
     public function setAccessibility($accessibility)
     {
         $this->accessibility = $accessibility;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getShowLinkHomePage()
+    {
+        return $this->showLinkHomePage;
+    }
+
+    /**
+     * @param mixed $showLinkHomePage
+     */
+    public function setShowLinkHomePage($showLinkHomePage)
+    {
+        $this->showLinkHomePage = $showLinkHomePage;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getShowLinkNavbar()
+    {
+        return $this->showLinkNavbar;
+    }
+
+    /**
+     * @param mixed $showLinkNavbar
+     */
+    public function setShowLinkNavbar($showLinkNavbar)
+    {
+        $this->showLinkNavbar = $showLinkNavbar;
     }
 
     

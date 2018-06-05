@@ -629,6 +629,16 @@ class GenericListType extends AbstractType
                 'required' => false,
                 'attr' => array('class'=>'form-control'),
             ));
+            $builder->add('showLinkHomePage',null,array(
+                'label' => "Show Link On Home Page:",
+                'required' => false,
+                'attr' => array('class'=>'form-control'),
+            ));
+            $builder->add('showLinkNavbar',null,array(
+                'label' => "Show Link in Navbar:",
+                'required' => false,
+                'attr' => array('class'=>'form-control'),
+            ));
         }
 
 

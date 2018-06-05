@@ -2002,6 +2002,30 @@ class UserSecurityUtil {
         return false;
     }
 
+    public function isSiteShowLinkHomePage( $sitename ) {
+        if( $sitename == "employees" ) {
+            //always show for employees site
+            return true;
+        }
+        $siteObject = $this->em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation($sitename);
+        if( $siteObject && ($siteObject->getShowLinkHomePage() === true || $siteObject->getShowLinkHomePage() === null) ) {
+            return true;
+        }
+        return false;
+    }
+
+    public function isSiteShowLinkNavbar( $sitename ) {
+        if( $sitename == "employees" ) {
+            //always show for employees site
+            return true;
+        }
+        $siteObject = $this->em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation($sitename);
+        if( $siteObject && ($siteObject->getShowLinkNavbar() === true || $siteObject->getShowLinkNavbar() === null) ) {
+            return true;
+        }
+        return false;
+    }
+
     public function allowSiteLogin($sitename) {
         $environment = $this->getSiteSettingParameter('environment');
         if( $environment == "live" && $this->isSiteAccessible($sitename) === false ) {

@@ -107,6 +107,8 @@
             {% endif %}
 
             {% if entities|first.selfSignUp is defined %}
+                <th>{{ knp_pagination_sortable(entities, 'Show Link On Home Page', 'ent.showLinkHomePage') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'Show Link On Navbar', 'ent.showLinkNavbar') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Accessibility', 'ent.accessibility') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Self Sign Up', 'ent.selfSignUp') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Lowest Roles', 'ent.lowestRoles') }}</th>
@@ -282,6 +284,21 @@
                 {% endif %}
 
                 {% if entity.selfSignUp is defined %}
+                    <td>
+                        {% if entity.showLinkHomePage == 1 %}
+                            Yes
+                        {% else %}
+                            No
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if entity.showLinkNavbar == 1 %}
+                            Yes
+                        {% else %}
+                            No
+                        {% endif %}
+                    </td>
+
                     <td>
                         {% if entity.abbreviation == "employees" %}
                             Yes
@@ -852,6 +869,12 @@
         {{ formmacros.field(form.feeUnit) }}
     {% endif %}
 
+    {% if form.showLinkHomePage is defined %}
+        {{ formmacros.checkbox(form.showLinkHomePage) }}
+    {% endif %}
+    {% if form.showLinkNavbar is defined %}
+        {{ formmacros.checkbox(form.showLinkNavbar) }}
+    {% endif %}
     {% if form.accessibility is defined %}
         {% if entity.abbreviation == "employees" %}
             {{ formmacros.checkbox(form.accessibility,"disabled") }}

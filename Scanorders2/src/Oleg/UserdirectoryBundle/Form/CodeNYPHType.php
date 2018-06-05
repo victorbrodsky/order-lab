@@ -31,12 +31,12 @@ class CodeNYPHType extends AbstractType
 
 
         $builder->add('field', null, array(
-            'label' => 'NYPH Code:',
+            'label' => 'Institutional Code:',
             'attr' => array('class'=>'form-control')
         ));
 
         $builder->add('startDate', DateType::class, array(
-            'label' => "NYPH Code Start Date:",
+            'label' => "Institutional Code Start Date:",
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
@@ -44,7 +44,7 @@ class CodeNYPHType extends AbstractType
         ));
 
         $builder->add('endDate', DateType::class, array(
-            'label' => "NYPH Code End Date:",
+            'label' => "Institutional Code End Date:",
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',

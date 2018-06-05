@@ -100,7 +100,7 @@ class CredentialsType extends AbstractType
         ));
 
         $builder->add('numberPFI', null, array(
-            'label' => 'NY Permanent Facility Identifier (PFI) Number:',
+            'label' => 'State Permanent Facility Identifier (PFI) Number:',
             'attr' => array('class'=>'form-control form-control-modif')
         ));
 

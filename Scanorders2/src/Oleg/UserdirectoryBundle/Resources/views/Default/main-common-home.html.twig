@@ -70,25 +70,31 @@
 
         <br><br>
 
-        <p><a href="{{ path('scan_home') }}">Glass Slide Scan Orders</a></p>
-
+        {% if user_security_utility.isSiteShowLinkNavbar(scan_sitename) %}
+            <p><a href="{{ path('scan_home') }}">Glass Slide Scan Orders</a></p>
+        {% endif %}
 
         <p><a href="{{ path('employees_home') }}">Employee Directory</a></p>
 
+        {% if user_security_utility.isSiteShowLinkNavbar(fellapp_sitename) %}
+            <p><a href="{{ path('fellapp_home') }}">Fellowship Applications</a></p>
+        {% endif %}
 
-        <p><a href="{{ path('fellapp_home') }}">Fellowship Applications</a></p>
+        {% if user_security_utility.isSiteShowLinkNavbar(deidentifier_sitename) %}
+            <p><a href="{{ path('deidentifier_home') }}">Deidentifier</a></p>
+        {% endif %}
 
+        {% if user_security_utility.isSiteShowLinkNavbar(vacreq_sitename) %}
+            <p><a href="{{ path('vacreq_home') }}">Vacation Request</a></p>
+        {% endif %}
 
-        <p><a href="{{ path('deidentifier_home') }}">Deidentifier</a></p>
+        {% if user_security_utility.isSiteShowLinkNavbar(calllog_sitename) %}
+            <p><a href="{{ path('calllog_home') }}">Call Log Book</a></p>
+        {% endif %}
 
-
-        <p><a href="{{ path('vacreq_home') }}">Vacation Request</a></p>
-
-
-        <p><a href="{{ path('calllog_home') }}">Call Log Book</a></p>
-
-
-        <p><a href="{{ path('translationalresearch_home') }}">Translational Research</a></p>
+        {% if user_security_utility.isSiteShowLinkNavbar(translationalresearch_sitename) %}
+            <p><a href="{{ path('translationalresearch_home') }}">Translational Research</a></p>
+        {% endif %}
 
 
         {% include 'OlegUserdirectoryBundle::Default/footer.html.twig' %}

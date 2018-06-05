@@ -90,66 +90,6 @@
             <b class="caret"></b>
         </a>
         <ul class="dropdown-menu">
-            {#<li>#}
-                {#<a href="{{ path('scan_home') }}">#}
-                    {#<div class="row">#}
-                    {#<div class="col-xs-6" align="left">#}
-                        {#<img src="{{ asset('bundles/oleguserdirectory/form/img/favicon.ico') }}" alt="Glass Slide Scan Orders" height="18" width="18">#}
-                    {#</div>#}
-                    {#<div class="col-xs-6" align="right">#}
-                        {#Glass Slide Scan Orders#}
-                    {#</div>#}
-                    {#</div>#}
-                {#</a>#}
-            {#</li>#}
-            {#<li>#}
-                {#<a href="{{ path('employees_home') }}">#}
-                    {#<div class="row">#}
-                        {#<div class="col-xs-6" align="left">#}
-                            {#<img src="{{ asset('bundles/oleguserdirectory/form/img/users-1-64x64.png') }}" alt="Employee Directory" height="18" width="18">#}
-                        {#</div>#}
-                        {#<div class="col-xs-6" align="right">#}
-                            {#Employee Directory#}
-                        {#</div>#}
-                    {#</div>#}
-                {#</a>#}
-            {#</li>#}
-            {#<li>#}
-                {#<a href="{{ path(fellapp_sitename~'_home') }}">#}
-                    {#<div class="row">#}
-                        {#<div class="col-xs-6" align="left">#}
-                            {#<span class="glyphicon glyphicon-file"></span>#}
-                        {#</div>#}
-                        {#<div class="col-xs-6" align="right">#}
-                            {#Fellowship Applications#}
-                        {#</div>#}
-                    {#</div>#}
-                {#</a>#}
-            {#</li>#}
-            {#<li>#}
-                {#<a href="{{ path(deidentifier_sitename~'_home') }}">#}
-                    {#<div class="row">#}
-                        {#<div class="col-xs-6" align="left">#}
-                            {#<span class="glyphicon glyphicon-retweet"></span>#}
-                        {#</div>#}
-                        {#<div class="col-xs-6" align="right">#}
-                            {#Deidentifier#}
-                        {#</div>#}
-                    {#</div>#}
-                {#</a>#}
-            {#</li>#}
-            {#<li>#}
-                {#<a href="{{ path(vacreq_sitename~'_home') }}">#}
-                    {#<div class="row">#}
-                        {#<div class="col-xs-6" align="left">#}
-                            {#<span class="glyphicon glyphicon-plane"></span>#}
-                        {#</div>#}
-                        {#<div class="col-xs-6" align="right">#}
-                            {#Vacation Request#}
-                        {#</div>#}
-                    {#</div>#}
-                {#</a>#}
-            {#</li>#}
 
             {% set iconScan = '<img src="'~asset('bundles/oleguserdirectory/form/img/favicon.ico')~'" alt="Glass Slide Scan Orders" height="18" width="18">' %}
             {{ usermacros.siteSingleSwitchElement(scan_sitename,iconScan,'Glass Slide Scan Orders') }}
@@ -167,18 +107,20 @@
     </li>
 {% endmacro %}
 {% macro siteSingleSwitchElement(sitename,icon,name) %}
-    <li>
-        <a href="{{ path(sitename~'_home') }}">
-            <div class="row" style="margin-right: 0px; margin-left: 0px;">
-                <div class="col-xs-1" align='left' style="margin-right: 0px; margin-left: -15px;">
-                    {{ icon|raw }}
+    {% if user_security_utility.isSiteShowLinkNavbar(sitename) %}
+        <li>
+            <a href="{{ path(sitename~'_home') }}">
+                <div class="row" style="margin-right: 0px; margin-left: 0px;">
+                    <div class="col-xs-1" align='left' style="margin-right: 0px; margin-left: -15px;">
+                        {{ icon|raw }}
+                    </div>
+                    <div class="col-xs-10" align='left'>
+                        <span>{{ name }}</span>
+                    </div>
                 </div>
-                <div class="col-xs-10" align='left'>
-                    <span>{{ name }}</span>
-                </div>
-            </div>
-        </a>
-    </li>
+            </a>
+        </li>
+    {% endif %}
 {% endmacro %}
 
 {#constract full input element with label and dropzone; Currently, used only by comments macros#}
