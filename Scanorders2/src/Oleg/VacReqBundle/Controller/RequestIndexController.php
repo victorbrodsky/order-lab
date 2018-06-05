@@ -243,7 +243,7 @@ class RequestIndexController extends Controller
             $matchingIds = $vacreqUtil->getVacReqIdsArrByDqlParameters($dql, $dqlParameters);
             //echo "matchingIdsArr count=".count($matchingIdsArr)."<br>";
             //print_r($matchingIdsArr);
-            $limitMatching = 800;
+            $limitMatching = 850;
             if( count($matchingIds) > $limitMatching ) {
                 $pageTitle = $indexTitle . "<br>Download in Excel is not available: too many records found. Please limit the matching result by $limitMatching records.";
             } else {
