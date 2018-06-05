@@ -310,7 +310,7 @@ class AdminController extends Controller
 
         $deploy_path = str_replace("web","",$old_path);
         echo "deploy_path=$deploy_path<br>";
-        exit('111');
+        //exit('111');
 
         if( is_dir($deploy_path) ) {
             //echo "deploy path exists! <br>";
