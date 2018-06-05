@@ -221,8 +221,12 @@
                                     <li><a href="{{ path(employees_sitename~'_import_users_excel') }}">Import Users</a></li>
                                     <li><a href="{{ path(employees_sitename~'_siteparameters') }}">Site Settings</a></li>
                                     <li><a
-                                            general-data-confirm="Are you sure you would like to cleare cahce and update assets? This action will logout all authenticated users."
-                                            href="{{ path('user_update_system_cache_assets') }}">Update System's Cache and Assets</a>
+                                        general-data-confirm="Are you sure you would like to update the source code?"
+                                        href="{{ path('user_update_system_source_code') }}">Update System's Source Code</a>
+                                    </li>
+                                    <li><a
+                                        general-data-confirm="Are you sure you would like to cleare cahce and update assets? This action will logout all authenticated users."
+                                        href="{{ path('user_update_system_cache_assets') }}">Update System's Cache and Assets</a>
                                     </li>
                                     <li><a href="{{ path(employees_sitename~'_show_system_log') }}" target="_blank">View System Log</a></li>
                                 {% endif %}

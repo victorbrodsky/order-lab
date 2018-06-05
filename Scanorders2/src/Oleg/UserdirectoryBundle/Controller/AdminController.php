@@ -234,6 +234,28 @@ class AdminController extends Controller
     }
 
     /**
+     * @Route("/update-system-source-code/", name="user_update_system_source_code")
+     */
+    public function updateSourceCodeAction() {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+
+        set_time_limit(0);
+        ini_set('memory_limit', '512M');
+        $this->runDeployScript(true,true,false);
+
+        $updateres = "Source code and composer has been successfully updated";
+
+        $this->get('session')->getFlashBag()->add(
+            'pnotify',
+            $updateres
+        );
+
+        return $this->redirect($this->generateUrl('employees_home'));
+    }
+
+    /**
      * @Route("/update-system-cache-assets/", name="user_update_system_cache_assets")
      */
     public function updateSystemAction() {
@@ -259,7 +281,7 @@ class AdminController extends Controller
         set_time_limit(0);
         ini_set('memory_limit', '512M');
         if( 1 ) {
-            $this->runDeployScript();
+            $this->runDeployScript(false,false,true);
         } else {
             $this->clearCache();
             $this->installAssets();
@@ -270,7 +292,7 @@ class AdminController extends Controller
 
         return $updateres;
     }
-    public function runDeployScript() {
+    public function runDeployScript($update, $composer, $cache) {
         $dirSep = DIRECTORY_SEPARATOR;
 
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
@@ -287,7 +309,8 @@ class AdminController extends Controller
         //echo "webPath=$old_path<br>";
 
         $deploy_path = str_replace("web","",$old_path);
-        //echo "deploy_path=$deploy_path<br>";
+        echo "deploy_path=$deploy_path<br>";
+        //exit('111');
 
         if( is_dir($deploy_path) ) {
             //echo "deploy path exists! <br>";
@@ -306,40 +329,62 @@ class AdminController extends Controller
 
         //$linux
         if( $linux ) {
-            //$this->runProcess("sudo chown -R www-data:www-data ".$old_path);
-            $this->runProcess("php bin" . $dirSep . "console assets:install");
-            $this->runProcess("php bin" . $dirSep . "console cache:clear --env=prod --no-debug");
-            $this->runProcess("php bin" . $dirSep . "console assetic:dump --env=prod --no-debug");
+            if( $cache ) {
+                //$this->runProcess("sudo chown -R www-data:www-data ".$old_path);
+                $this->runProcess("php bin" . $dirSep . "console assets:install");
+                $this->runProcess("php bin" . $dirSep . "console cache:clear --env=prod --no-debug");
+                $this->runProcess("php bin" . $dirSep . "console assetic:dump --env=prod --no-debug");
+            }
+            
+            if( $update ) {
+                $this->runProcess("git pull");
+            }
+
+            if( $composer ) {
+                $this->runProcess("composer.phar self-update");
+                $this->runProcess("composer.phar install");
+            }
         }
 
         //$windows
         if( $windows ) {
-            echo "assets:install=" . exec("php bin".$dirSep."console assets:install") . "<br>";
-            echo "cache:clear=" . exec("php bin".$dirSep."console cache:clear --env=prod --no-debug") . "<br>";
-            echo "assetic:dump=" . exec("php bin".$dirSep."console assetic:dump --env=prod --no-debug") . "<br>";
+            if( $cache ) {
+                echo "assets:install=" . exec("php bin" . $dirSep . "console assets:install") . "<br>";
+                echo "cache:clear=" . exec("php bin" . $dirSep . "console cache:clear --env=prod --no-debug") . "<br>";
+                echo "assetic:dump=" . exec("php bin" . $dirSep . "console assetic:dump --env=prod --no-debug") . "<br>";
 
-            //remove var/cache/prod
-            $cachePathOld = "var".$dirSep."cache".$dirSep."prod";
-            $cachePathNew = "var".$dirSep."cache".$dirSep."pro_";
-            //echo "rm =" . exec("php var/console assets:install") . "<br>";
+                //remove var/cache/prod
+                $cachePathOld = "var" . $dirSep . "cache" . $dirSep . "prod";
+                $cachePathNew = "var" . $dirSep . "cache" . $dirSep . "pro_";
+                //echo "rm =" . exec("php var/console assets:install") . "<br>";
 
-            if( is_dir($cachePathOld) ) {
-                echo "cachePathOld exists! <br>";
-            } else {
-                echo "cachePathOld not exists: $cachePathOld <br>";
-                exit('error');
+                if (is_dir($cachePathOld)) {
+                    echo "cachePathOld exists! <br>";
+                } else {
+                    echo "cachePathOld not exists: $cachePathOld <br>";
+                    exit('error');
+                }
+                if (is_dir($cachePathNew)) {
+                    echo "cachePathNew exists! <br>";
+                } else {
+                    echo "cachePathNew not exists: $cachePathNew <br>";
+                    exit('error');
+                }
+
+                echo exec("rmdir " . $cachePathOld . " /S /Q") . "<br>";
+                echo exec("rename " . $cachePathNew . " " . $cachePathOld) . "<br>";
+                if (is_dir($cachePathNew)) {
+                    echo exec("rmdir " . $cachePathNew . " /S /Q") . "<br>";
+                }
             }
-            if( is_dir($cachePathNew) ) {
-                echo "cachePathNew exists! <br>";
-            } else {
-                echo "cachePathNew not exists: $cachePathNew <br>";
-                exit('error');
+
+            if( $update ) {
+                echo "git pull=" . exec("git pull") . "<br>";
             }
 
-            echo exec("rmdir ".$cachePathOld." /S /Q")."<br>";
-            echo exec("rename ".$cachePathNew." ".$cachePathOld)."<br>";
-            if( is_dir($cachePathNew) ) {
-                echo exec("rmdir ".$cachePathNew." /S /Q")."<br>";
+            if( $composer ) {
+                echo "composer.phar self-update=" . exec("composer.phar self-update") . "<br>";
+                echo "composer.phar install=" . exec("composer.phar install") . "<br>";
             }
         }
 
