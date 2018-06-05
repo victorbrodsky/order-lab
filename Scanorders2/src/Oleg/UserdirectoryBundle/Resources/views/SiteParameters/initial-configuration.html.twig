@@ -77,6 +77,19 @@
             </div>
         </div>
 
+        <div class="panel panel-default">
+            <div class="panel-heading">Notices for LDAP and CWID</div>
+            <div class="panel-body">
+                {{ formmacros.field(form.noticeAttemptingPasswordResetLDAP) }}
+                {{ formmacros.field(form.loginInstruction) }}
+                {{ formmacros.field(form.noticeSignUpNoCwid) }}
+                {{ formmacros.field(form.noticeHasLdapAccount) }}
+                {{ formmacros.field(form.noticeLdapName) }}
+            </div>
+        </div>
+
+        {{ formmacros.field(form.holidaysUrl) }}
+
 
         <br>
         <p>

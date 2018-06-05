@@ -3407,7 +3407,7 @@ class AdminController extends Controller
             'WCMC Epic Ambulatory EMR',
             'NYH Paper Requisition',
             'Written or oral referral',
-            'Aperio eSlide Manager on C.MED.CORNELL.EDU',
+            'PACS on C.MED.CORNELL.EDU',
             'Indica HALO'
         );
 

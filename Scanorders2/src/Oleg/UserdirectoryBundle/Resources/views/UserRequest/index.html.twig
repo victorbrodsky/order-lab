@@ -91,7 +91,7 @@
             /////////////////// validate if username and institutions are not empty ///////////////////
             var errorMsg = "";
             if( username == "" ) {
-                errorMsg = "Aperio User Name is empty";
+                errorMsg = "PACS User Name is empty";
             }
 //            if( selections.length == 0 ) {
 //                var separator = "";
@@ -154,7 +154,7 @@
                 <th>{{ knp_pagination_sortable(entities, 'Reference Email', 'accreq.referenceemail') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Reference Phone Number', 'accreq.referencephone') }}</th>
                 {% if sitename == scan_sitename %}
-                    <th>{{ knp_pagination_sortable(entities, 'Aperio User Name', 'accreq.username') }}</th>
+                    <th>{{ knp_pagination_sortable(entities, 'PACS User Name', 'accreq.username') }}</th>
                 {% endif %}
                 <th>{{ knp_pagination_sortable(entities, 'Roles', 'accreq.roles') }}</th>
                 <th>Actions</th>

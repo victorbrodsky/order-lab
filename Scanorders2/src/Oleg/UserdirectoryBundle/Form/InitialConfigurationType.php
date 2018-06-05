@@ -39,6 +39,11 @@ class InitialConfigurationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
+        $builder->add('save', SubmitType::class, array(
+            'label' => 'Save',
+            'attr' => array('class'=>'btn btn-primary')
+        ));
+
         $builder->add('environment',ChoiceType::class,array( //flipped
             'label'=>'Environment:',
             'choices' => array("live"=>"live", "test"=>"test", "dev"=>"dev"),
@@ -48,21 +53,21 @@ class InitialConfigurationType extends AbstractType
 
         //Name of Parent Organization (if applicable): [ ]
         $builder->add('institutionurl',null,array(
-            'label'=>'Institution URL (Copyright in Footer):',
+            'label'=>'Institution URL (Copyright Link in Footer):',
             'attr' => array('class'=>'form-control')
         ));
         $builder->add('institutionname',null,array(
-            'label'=>'Institution Name (Copyright in Footer):',
+            'label'=>'Institution Name (Copyright Link in Footer):',
             'attr' => array('class'=>'form-control')
         ));
 
         //Name of Institution: [ ]
         $builder->add('subinstitutionurl',null,array(
-            'label'=>'Sub Institution URL (Copyright in Footer):',
+            'label'=>'Institution URL (Instance Owner Link in Footer):',
             'attr' => array('class'=>'form-control')
         ));
         $builder->add('subinstitutionname',null,array(
-            'label'=>'Sub Institution Name (Copyright in Footer):',
+            'label'=>'Institution Name (Instance Owner in Footer):',
             'attr' => array('class'=>'form-control')
         ));
 
@@ -130,11 +135,11 @@ class InitialConfigurationType extends AbstractType
             'attr' => array('class' => 'form-control')
         ));
         $builder->add('mailerSpool', null, array(
-            'label' => 'Mailer Use Spool:',
+            'label' => 'Use email spooling (Instead of sending every email directly to the SMTP server individually, add outgoing emails to a queue and then periodically send the queued emails. This makes form submission appear faster.):',
             'attr' => array('class' => 'form-control')
         ));
         $builder->add('mailerDeliveryAddresses', null, array(
-            'label' => 'Testing Mailer Delivery Addresses (emails will be delivered to these specified addresses email1,email2,email3... Leave empty for default):',
+            'label' => 'Reroute all outgoing emails only to the following email address(es) listed in the "email1@example.com,email2@example.com,email3@example.com" format separated by commas. (This is useful for a non-live server environment to avoid sending emails to users. Leaving this field empty will result in emails being sent normally.):',
             'attr' => array('class' => 'form-control')
         ));
         $builder->add('mailerFlushQueueFrequency', null, array(
@@ -165,20 +170,58 @@ class InitialConfigurationType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
         $builder->add('ldapExePath',null,array(
-            'label'=>'LDAP/AD Authenticator Path (Default: "../src/Oleg/UserdirectoryBundle/Util/" ):',
+            'label'=>'LDAP/AD Authenticator Path - relevant for Windows-based servers only (Default: "../src/Oleg/UserdirectoryBundle/Util/" ):',
             'attr' => array('class'=>'form-control')
         ));
         $builder->add('ldapExeFilename',null,array(
-            'label'=>'LDAP/AD Authenticator File Name (Default: "LdapSaslCustom.exe" ):',
+            'label'=>'LDAP/AD Authenticator File Name - relevant for Windows-based servers only (Default: "LdapSaslCustom.exe"):',
+            'attr' => array('class'=>'form-control')
+        ));
+
+        //////////////// Notices for LDAP and CWID ///////////////////
+        $builder->add('noticeAttemptingPasswordResetLDAP',null,array(
+            'label'=>'Notice for attempting to reset password for an LDAP-authenticated account:',
+            'attr' => array('class'=>'form-control textarea')
+        ));
+
+        $builder->add('loginInstruction',null,array(
+            'label'=>'Notice to prompt user to use Active Directory account to log in (Please use your CWID to log in):',
+            'attr' => array('class'=>'form-control textarea')
+        ));
+
+        $builder->add('noticeSignUpNoCwid',null,array(
+            'label'=>'Notice to prompt user with no Active Directory account to sign up for a new account:',
+            'attr' => array('class'=>'form-control textarea')
+        ));
+
+        $builder->add('noticeHasLdapAccount',null,array(
+            'label'=>'Account request question asking whether applicant has an Active Directory account:',
+            'attr' => array('class'=>'form-control textarea')
+        ));
+
+        $builder->add('noticeLdapName',null,array(
+            'label'=>'Full local name for active directory account:',
+            'attr' => array('class'=>'form-control textarea')
+        ));
+        //////////////// EOF Notices for LDAP and CWID ///////////////////
+
+        $builder->add('holidaysUrl',null,array(
+            'label'=>'Link to list of holidays (http://intranet.med.cornell.edu/hr/):',
             'attr' => array('class'=>'form-control')
         ));
 
 
 
-        $builder->add('save', SubmitType::class, array(
-            'label' => 'Save',
-            'attr' => array('class'=>'btn btn-primary')
-        ));
+
+
+
+
+
+
+
+
+
+
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -183,7 +183,7 @@
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'mailerPassword'}) }}">Edit</a></td>
             </tr>
             <tr>
-                <td>Mailer Use Spool</td>
+                <td>Use email spooling (Instead of sending every email directly to the SMTP server individually, add outgoing emails to a queue and then periodically send the queued emails. This makes form submission appear faster.)</td>
                 <td>
                     {% set mailerSpool = 'No' %}
                     {% if entity.mailerSpool == true %}
@@ -200,7 +200,7 @@
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'mailerFlushQueueFrequency'}) }}">Edit</a></td>
             </tr>
             <tr>
-                <td>Testing Mailer Delivery Addresses (emails will be delivered to these specified addresses email1,email2,email3... Leave empty for default)</td>
+                <td>Reroute all outgoing emails only to the following email address(es) listed in the "email1@example.com,email2@example.com,email3@example.com" format separated by commas. (This is useful for a non-live server environment to avoid sending emails to users. Leaving this field empty will result in emails being sent normally.)</td>
                 <td>{{ entity.mailerDeliveryAddresses }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'mailerDeliveryAddresses'}) }}">Edit</a></td>
             </tr>
@@ -377,7 +377,7 @@
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'ldapExePath'}) }}">Edit</a></td>
             </tr>
             <tr>
-                <td>LDAP/AD Authenticator File Name (Default: "LdapSaslCustom.exe" ):</td>
+                <td>LDAP/AD Authenticator File Name - relevant for Windows-based servers only (Default: "LdapSaslCustom.exe"):</td>
                 <td>{{ entity.ldapExeFilename }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'ldapExeFilename'}) }}">Edit</a></td>
             </tr>
@@ -547,31 +547,31 @@
             {#Aperio, Picture Archiving and Communication System (PACS)#}
             <tr>
                 <td class="rowlink-skip" colspan="3" align="center">
-                    <h3>PACS eSlide Manager DB:</h3>
+                    <h3>PACS DB:</h3>
                 </td>
             </tr>
             <tr>
-                <td>PACS eSlide Manager DB Server Address</td>
+                <td>PACS DB Server Address</td>
                 <td>{{ entity.aperioeSlideManagerDBServerAddress }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'aperioeSlideManagerDBServerAddress'}) }}">Edit</a></td>
             </tr>
             <tr>
-                <td>PACS eSlide Manager DB Server Port</td>
+                <td>PACS DB Server Port</td>
                 <td>{{ entity.aperioeSlideManagerDBServerPort }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'aperioeSlideManagerDBServerPort'}) }}">Edit</a></td>
             </tr>
             <tr>
-                <td>PACS eSlide Manager DB Server User Name</td>
+                <td>PACS DB Server User Name</td>
                 <td>{{ entity.aperioeSlideManagerDBUserName }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'aperioeSlideManagerDBUserName'}) }}">Edit</a></td>
             </tr>
             <tr>
-                <td>PACS eSlide Manager DB Server Password</td>
+                <td>PACS DB Server Password</td>
                 <td>{{ entity.aperioeSlideManagerDBPassword }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'aperioeSlideManagerDBPassword'}) }}">Edit</a></td>
             </tr>
             <tr>
-                <td>PACS eSlide Manager Database Name</td>
+                <td>PACS Database Name</td>
                 <td>{{ entity.aperioeSlideManagerDBName }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'aperioeSlideManagerDBName'}) }}">Edit</a></td>
             </tr>

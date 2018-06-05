@@ -162,7 +162,7 @@ class UserGenerator {
             if( $userType == "Local User" ) {
                 $usernamePrefix = "local-user";
             }
-            if( $userType == "Aperio eSlide Manager" ) {
+            if( $userType == "PACS" ) {
                 $usernamePrefix = "aperio";
             }
 

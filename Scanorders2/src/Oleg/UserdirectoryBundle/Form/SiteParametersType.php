@@ -121,13 +121,13 @@ class SiteParametersType extends AbstractType
         }
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'mailerSpool' ) {
             $builder->add('mailerSpool', null, array(
-                'label' => 'Mailer Use Spool:',
+                'label' => 'Use email spooling (Instead of sending every email directly to the SMTP server individually, add outgoing emails to a queue and then periodically send the queued emails. This makes form submission appear faster.):',
                 'attr' => array('class' => 'form-control')
             ));
         }
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'mailerDeliveryAddresses' ) {
             $builder->add('mailerDeliveryAddresses', null, array(
-                'label' => 'Testing Mailer Delivery Addresses (emails will be delivered to these specified addresses email1,email2,email3... Leave empty for default):',
+                'label' => 'Reroute all outgoing emails only to the following email address(es) listed in the "email1@example.com,email2@example.com,email3@example.com" format separated by commas. (This is useful for a non-live server environment to avoid sending emails to users. Leaving this field empty will result in emails being sent normally.):',
                 'attr' => array('class' => 'form-control')
             ));
         }
@@ -204,13 +204,13 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'ldapExePath' )
             $builder->add('ldapExePath',null,array(
-                'label'=>'LDAP/AD Authenticator Path (Default: "../src/Oleg/UserdirectoryBundle/Util/" ):',
+                'label'=>'LDAP/AD Authenticator Path - relevant for Windows-based servers only (Default: "../src/Oleg/UserdirectoryBundle/Util/" ):',
                 'attr' => array('class'=>'form-control')
             ));
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'ldapExeFilename' )
             $builder->add('ldapExeFilename',null,array(
-                'label'=>'LDAP/AD Authenticator File Name (Default: "LdapSaslCustom.exe" ):',
+                'label'=>'LDAP/AD Authenticator File Name - relevant for Windows-based servers only (Default: "LdapSaslCustom.exe"):',
                 'attr' => array('class'=>'form-control')
             ));
 
@@ -240,31 +240,31 @@ class SiteParametersType extends AbstractType
         //Aperio DB
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'aperioeSlideManagerDBServerAddress' )
         $builder->add('aperioeSlideManagerDBServerAddress',null,array(
-            'label'=>'PACS eSlide Manager DB Server Address:',
+            'label'=>'PACS DB Server Address:',
             'attr' => array('class'=>'form-control')
         ));
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'aperioeSlideManagerDBServerPort' )
         $builder->add('aperioeSlideManagerDBServerPort',null,array(
-            'label'=>'PACS eSlide Manager DB Server Port:',
+            'label'=>'PACS DB Server Port:',
             'attr' => array('class'=>'form-control')
         ));
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'aperioeSlideManagerDBUserName' )
         $builder->add('aperioeSlideManagerDBUserName',null,array(
-            'label'=>'PACS eSlide Manager DB Server User Name:',
+            'label'=>'PACS DB Server User Name:',
             'attr' => array('class'=>'form-control')
         ));
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'aperioeSlideManagerDBPassword' )
         $builder->add('aperioeSlideManagerDBPassword',null,array(
-            'label'=>'PACS eSlide Manager DB Server Password:',
+            'label'=>'PACS DB Server Password:',
             'attr' => array('class'=>'form-control')
         ));
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'aperioeSlideManagerDBName' )
         $builder->add('aperioeSlideManagerDBName',null,array(
-            'label'=>'PACS eSlide Manager Database Name:',
+            'label'=>'PACS Database Name:',
             'attr' => array('class'=>'form-control')
         ));
 
@@ -283,13 +283,13 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'subinstitutionurl' )
             $builder->add('subinstitutionurl',null,array(
-                'label'=>'Sub Institution URL:',
+                'label'=>'Institution URL (Instance Owner Link in Footer):',
                 'attr' => array('class'=>'form-control')
             ));
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'subinstitutionname' )
             $builder->add('subinstitutionname',null,array(
-                'label'=>'Sub Institution Name:',
+                'label'=>'Institution Name (Instance Owner in Footer):',
                 'attr' => array('class'=>'form-control')
             ));
 

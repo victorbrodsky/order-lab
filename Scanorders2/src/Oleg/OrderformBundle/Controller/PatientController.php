@@ -1070,7 +1070,7 @@ class PatientController extends Controller
         $organList = $em->getRepository('OlegOrderformBundle:OrganList')->findOneByName('Breast');
         $slidetype = $em->getRepository('OlegOrderformBundle:SlideType')->findOneByName('Frozen Section');
 
-        $sourceSystemName = 'Aperio eSlide Manager on C.MED.CORNELL.EDU';
+        $sourceSystemName = 'PACS on C.MED.CORNELL.EDU';
         $sourceSystemAperio = $em->getRepository('OlegUserdirectoryBundle:SourceSystemList')->findOneByName($sourceSystemName);
 
         $maginification = $em->getRepository('OlegOrderformBundle:Magnification')->findOneByName('20X');
@@ -1811,7 +1811,7 @@ class PatientController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $sourceSystemName = 'Aperio eSlide Manager on C.MED.CORNELL.EDU';
+        $sourceSystemName = 'PACS on C.MED.CORNELL.EDU';
         $sourceSystemAperio = $em->getRepository('OlegUserdirectoryBundle:SourceSystemList')->findOneByName($sourceSystemName);
         $sourceSystemAperioClean = $sourceSystemAperio->getName();
 
