@@ -245,7 +245,7 @@ class RequestIndexController extends Controller
             //print_r($matchingIdsArr);
             $limitMatching = 600;
             if( count($matchingIds) > $limitMatching ) {
-                $pageTitle = $indexTitle . " (download in Excel is not available: too many records found. Please limit the matching result by $limitMatching records)";
+                $pageTitle = $indexTitle . "<br>Download in Excel is not available: too many records found. Please limit the matching result by $limitMatching records.";
             } else {
                 if ($matchingIds) {
                     $downloadUrl = $this->container->get('router')->generate(
