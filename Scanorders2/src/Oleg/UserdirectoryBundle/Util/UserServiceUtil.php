@@ -1054,11 +1054,13 @@ class UserServiceUtil {
     {
         $commitHash = $this->runProcess('git log --pretty="%h" -n1 HEAD');
         $commitDate = $this->runProcess('git log -n1 --pretty=%ci HEAD');
-        $commitDate = new \DateTime(trim(exec('git log -n1 --pretty=%ci HEAD')));
-        $commitDate->setTimezone(new \DateTimeZone('UTC'));
-        $ver = $commitHash . " (" . $commitDate->format('Y-m-d H:m:s') . ")";
-        echo "ver=".$ver."<br>";
-        print_r($ver);
+        $commitDateStr = null;
+        if( $commitDate ) {
+            $commitDateStr = $commitDate->format('Y-m-d H:m:s');
+        }
+        $ver = $commitHash . " (" . $commitDateStr . ")";
+        //echo "ver=".$ver."<br>";
+        //print_r($ver);
         return $ver;
 
         $MAJOR = 1;
@@ -1074,17 +1076,17 @@ class UserServiceUtil {
         return $commitHash . " (" . $commitDate->format('Y-m-d H:m:s') . ")";
         //return sprintf('v%s.%s.%s-dev.%s (%s)', $MAJOR, $MINOR, $PATCH, $commitHash, $commitDate->format('Y-m-d H:m:s'));
     }
-    public function gitVersion() {
-        //exec('git describe --always',$version_mini_hash);
-        $version_mini_hash = $this->runProcess('git describe --always');
-        echo "version_mini_hash=".$version_mini_hash."<br>";
-        print_r($version_mini_hash);
-        exec('git rev-list HEAD | wc -l',$version_number);
-        exec('git log -1',$line);
-        $version['short'] = "v1.".trim($version_number[0]).".".$version_mini_hash[0];
-        $version['full'] = "v1.".trim($version_number[0]).".$version_mini_hash[0] (".str_replace('commit ','',$line[0]).")";
-        return $version;
-    }
+//    public function gitVersion() {
+//        //exec('git describe --always',$version_mini_hash);
+//        $version_mini_hash = $this->runProcess('git describe --always');
+//        echo "version_mini_hash=".$version_mini_hash."<br>";
+//        print_r($version_mini_hash);
+//        exec('git rev-list HEAD | wc -l',$version_number);
+//        exec('git log -1',$line);
+//        $version['short'] = "v1.".trim($version_number[0]).".".$version_mini_hash[0];
+//        $version['full'] = "v1.".trim($version_number[0]).".$version_mini_hash[0] (".str_replace('commit ','',$line[0]).")";
+//        return $version;
+//    }
     public function runProcess($command) {
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             //echo 'This is a server using Windows!';
@@ -1126,7 +1128,7 @@ class UserServiceUtil {
 
         if( $windows ) {
             $res = exec($command);
-
+            //echo "res=".$res."<br>";
         }
 
         chdir($old_path);

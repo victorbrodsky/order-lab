@@ -83,10 +83,10 @@ class UserController extends Controller
      */
     public function aboutAction( Request $request ) {
 
-        $userServiceUtil = $this->get('user_service_utility');
-        $ver = $userServiceUtil->getGitVersionDate();
-        echo "ver=".$ver."<br>";
-        print_r($ver);
+        //$userServiceUtil = $this->get('user_service_utility');
+        //$ver = $userServiceUtil->getGitVersionDate();
+        //echo "ver=".$ver."<br>";
+        //print_r($ver);
 
         return array('sitename'=>$this->container->getParameter('employees.sitename'));
     }
