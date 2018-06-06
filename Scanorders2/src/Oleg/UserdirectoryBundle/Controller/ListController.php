@@ -196,7 +196,7 @@ class ListController extends Controller
         $dql->leftJoin("ent.original", "original");
         $dql->addGroupBy('original.name');
 
-        $dql->leftJoin("ent.objectType", "objectType");
+        //$dql->leftJoin("ent.objectType", "objectType");
 
 //        if( method_exists($entityClass,'getResearchlab') ) {
 //            $dql->leftJoin("ent.researchlab", "researchlab");
