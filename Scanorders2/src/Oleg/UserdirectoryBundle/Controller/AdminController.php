@@ -352,13 +352,14 @@ class AdminController extends Controller
         //$linux
         if( $linux ) {
             if( $cache ) {
-                $this->runProcess("sudo chown -R www-data:www-data ".$old_path);
+                //$this->runProcess("sudo chown -R www-data:www-data ".$old_path);
                 $this->runProcess("php bin" . $dirSep . "console assets:install");
                 $this->runProcess("php bin" . $dirSep . "console cache:clear --env=prod --no-debug");
                 $this->runProcess("php bin" . $dirSep . "console assetic:dump --env=prod --no-debug");
             }
             
             if( $update ) {
+                $this->runProcess("sudo chown -R www-data:www-data ".$old_path);
                 $this->runProcess("git pull");
             }
 
