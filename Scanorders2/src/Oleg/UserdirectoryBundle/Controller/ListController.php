@@ -309,7 +309,7 @@ class ListController extends Controller
 //                $searchStr = $searchStr . " OR room.name LIKE :search";
 //            }
 
-            if(0) {
+            if(1) {
                 if (method_exists($entityClass, 'getSection')) {
                     $searchStr = $searchStr . " OR ent.section LIKE :search";
                 }
