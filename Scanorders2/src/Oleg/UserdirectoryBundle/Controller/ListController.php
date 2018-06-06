@@ -287,18 +287,12 @@ class ListController extends Controller
 
         if( $search ) {
             $searchStr = "
-                ent.id = :search 
-                OR ent.name LIKE :search 
+                //ent.id = :search OR 
+                ent.name LIKE :search 
                 OR ent.abbreviation LIKE :search 
                 OR ent.shortname LIKE :search 
                 OR ent.description LIKE :search
                 ";
-
-            $searchStr = "
-                ent.name LIKE :search 
-                OR ent.abbreviation LIKE :search 
-                OR ent.shortname LIKE :search 
-                OR ent.description LIKE :search";
 
 //            //search location: phone, building, room
 //            if( method_exists($entityClass,'getPhone') ) {
@@ -313,22 +307,20 @@ class ListController extends Controller
 //                $searchStr = $searchStr . " OR room.name LIKE :search";
 //            }
 
-            if(1) {
-                if (method_exists($entityClass, 'getSection')) {
-                    $searchStr = $searchStr . " OR ent.section LIKE :search";
-                }
+            if (method_exists($entityClass, 'getSection')) {
+                $searchStr = $searchStr . " OR ent.section LIKE :search";
+            }
 
-                if (method_exists($entityClass, 'getProductId')) {
-                    $searchStr = $searchStr . " OR ent.productId LIKE :search";
-                }
+            if (method_exists($entityClass, 'getProductId')) {
+                $searchStr = $searchStr . " OR ent.productId LIKE :search";
+            }
 
-                if (method_exists($entityClass, 'getFeeUnit')) {
-                    $searchStr = $searchStr . " OR ent.feeUnit LIKE :search";
-                }
+            if (method_exists($entityClass, 'getFeeUnit')) {
+                $searchStr = $searchStr . " OR ent.feeUnit LIKE :search";
+            }
 
-                if (method_exists($entityClass, 'getFee')) {
-                    $searchStr = $searchStr . " OR ent.fee LIKE :search";
-                }
+            if (method_exists($entityClass, 'getFee')) {
+                $searchStr = $searchStr . " OR ent.fee LIKE :search";
             }
 
             $dql->andWhere($searchStr);
