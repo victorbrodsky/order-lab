@@ -294,7 +294,11 @@ class ListController extends Controller
                 OR ent.description LIKE :search
                 ";
 
-            $searchStr = "ent.name LIKE :search OR ent.abbreviation LIKE :search";
+            $searchStr = "
+                ent.name LIKE :search 
+                OR ent.abbreviation LIKE :search 
+                OR ent.shortname LIKE :search 
+                OR ent.description LIKE :search";
 
 //            //search location: phone, building, room
 //            if( method_exists($entityClass,'getPhone') ) {
