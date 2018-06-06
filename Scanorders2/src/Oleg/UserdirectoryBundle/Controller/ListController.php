@@ -286,8 +286,16 @@ class ListController extends Controller
         //echo "2search=".$search."<br>";
 
         if( $search ) {
-            //ent.id = :search OR
-            $searchStr = "
+            $searchStr = "";
+
+            if( is_numeric($search) ) {
+                //echo "int <br>";
+                $searchInt = intval($search);
+                $searchStr = "ent.id = :searchInt OR";
+                $dqlParameters['searchInt'] = $searchInt;
+            }
+
+            $searchStr = $searchStr."
                 ent.name LIKE :search 
                 OR ent.abbreviation LIKE :search 
                 OR ent.shortname LIKE :search 
