@@ -286,7 +286,13 @@ class ListController extends Controller
         //echo "2search=".$search."<br>";
 
         if( $search ) {
-            $searchStr = "ent.id LIKE :search OR ent.name LIKE :search OR ent.abbreviation LIKE :search OR ent.shortname LIKE :search OR ent.description LIKE :search";
+            $searchStr = "
+                ent.id LIKE :search 
+                OR ent.name LIKE :search 
+                OR ent.abbreviation LIKE :search 
+                OR ent.shortname LIKE :search 
+                OR ent.description LIKE :search
+                ";
 
 //            //search location: phone, building, room
 //            if( method_exists($entityClass,'getPhone') ) {
@@ -341,8 +347,8 @@ class ListController extends Controller
             //,array('distinct'=>true)
             ,array('defaultSortFieldName' => 'ent.orderinlist', 'defaultSortDirection' => 'asc', 'wrap-queries'=>true)
         );
-        //echo "list count=".count($entities)."<br>";
-        //exit();
+        echo "list count=".count($entities)."<br>";
+        exit();
 
         ///////////// check if show "create a new entity" link //////////////
         $createNew = true;
