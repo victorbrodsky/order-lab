@@ -137,6 +137,16 @@ class FellAppManagement extends Controller {
             //$site = $em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation('fellapp');
 
             $subspecialtyType = $form["fellowshipsubspecialtytype"]->getData();
+            if( !$subspecialtyType ) {
+                //Flash
+                $this->get('session')->getFlashBag()->add(
+                    'warning',
+                    "Please select Fellowship Subspecialty"
+                );
+                return array(
+                    'form' => $form->createView(),
+                );
+            }
 
             //exit('subspecialtyType='.$subspecialtyType);
             $count = 0;
