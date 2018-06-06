@@ -284,14 +284,10 @@ class ProjectController extends Controller
             //All except Drafts
             $allExceptDraft = "";
             if( in_array("All-except-Drafts", $states )) {
-                $allExceptDraft = " OR project.state != 'draft'";
+                $allExceptDraft = " OR project.state != 'draft' OR project.state IS NULL";
             }
-
-            $dql->andWhere("project.state IN (:states)".$allExceptDraft);
-            $dqlParameters["states"] = $states; //implode(",",$states);
-            //$statesStr = "'".implode("','",$states)."'";
-            //$dql->andWhere("project.state IN (".$statesStr.")");
-
+            $dql->andWhere("project.state IN (:states)" . $allExceptDraft);
+            $dqlParameters["states"] = $states;
             $advancedFilter++;
         }
 

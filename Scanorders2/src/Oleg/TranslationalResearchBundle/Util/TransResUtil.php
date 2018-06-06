@@ -3736,10 +3736,14 @@ class TransResUtil
             $query->setParameters($dqlParameters);
         }
 
-        $count = $query->getSingleScalarResult();
-        //echo "count=".$count."<br>";
+        $res = $query->getScalarResult();
+        //echo "res count=".count($res)."<br>";
+        //print_r($res);
+        return count($res);
 
-        return $count;
+        //$count = $query->getSingleScalarResult();
+        //echo "count=".$count."<br>";
+        //return $count;
     }
 
     public function getAppropriatedUsers() {

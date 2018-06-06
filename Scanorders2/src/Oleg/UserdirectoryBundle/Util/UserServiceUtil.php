@@ -38,6 +38,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Oleg\UserdirectoryBundle\Entity\User;
 use Oleg\UserdirectoryBundle\Util\UserUtil;
 use Oleg\UserdirectoryBundle\Entity\Logger;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class UserServiceUtil {
@@ -1047,7 +1049,91 @@ class UserServiceUtil {
 
         return round($count/10);
     }
-    
+
+    public function getGitVersionDate()
+    {
+        $commitHash = $this->runProcess('git log --pretty="%h" -n1 HEAD');
+        $commitDate = $this->runProcess('git log -n1 --pretty=%ci HEAD');
+        $commitDate = new \DateTime(trim(exec('git log -n1 --pretty=%ci HEAD')));
+        $commitDate->setTimezone(new \DateTimeZone('UTC'));
+        $ver = $commitHash . " (" . $commitDate->format('Y-m-d H:m:s') . ")";
+        echo "ver=".$ver."<br>";
+        print_r($ver);
+        return $ver;
+
+        $MAJOR = 1;
+        $MINOR = 2;
+        $PATCH = 3;
+
+        $commitHash = trim(exec('git log --pretty="%h" -n1 HEAD'));
+        echo "hash=".$commitHash."<br>";
+
+        $commitDate = new \DateTime(trim(exec('git log -n1 --pretty=%ci HEAD')));
+        $commitDate->setTimezone(new \DateTimeZone('UTC'));
+
+        return $commitHash . " (" . $commitDate->format('Y-m-d H:m:s') . ")";
+        //return sprintf('v%s.%s.%s-dev.%s (%s)', $MAJOR, $MINOR, $PATCH, $commitHash, $commitDate->format('Y-m-d H:m:s'));
+    }
+    public function gitVersion() {
+        //exec('git describe --always',$version_mini_hash);
+        $version_mini_hash = $this->runProcess('git describe --always');
+        echo "version_mini_hash=".$version_mini_hash."<br>";
+        print_r($version_mini_hash);
+        exec('git rev-list HEAD | wc -l',$version_number);
+        exec('git log -1',$line);
+        $version['short'] = "v1.".trim($version_number[0]).".".$version_mini_hash[0];
+        $version['full'] = "v1.".trim($version_number[0]).".$version_mini_hash[0] (".str_replace('commit ','',$line[0]).")";
+        return $version;
+    }
+    public function runProcess($command) {
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            //echo 'This is a server using Windows!';
+            $windows = true;
+            $linux = false;
+        } else {
+            //echo 'This is a server not using Windows! Assume Linux';
+            $windows = false;
+            $linux = true;
+        }
+
+        $old_path = getcwd();
+        //echo "webPath=$old_path<br>";
+
+        $deploy_path = str_replace("web","",$old_path);
+        //echo "deploy_path=$deploy_path<br>";
+        //exit('111');
+
+        if( is_dir($deploy_path) ) {
+            //echo "deploy path exists! <br>";
+        } else {
+            //echo "not deploy path exists: $deploy_path <br>";
+            exit('No deploy path exists in the filesystem; deploy_path=: '.$deploy_path);
+        }
+
+        //switch to deploy folder
+        chdir($deploy_path);
+        //echo "pwd=[".exec("pwd")."]<br>";
+
+        if( $linux ) {
+            $process = new Process($command);
+            $process->setTimeout(1800); //sec; 1800 sec => 30 min
+            $process->run();
+            if (!$process->isSuccessful()) {
+                throw new ProcessFailedException($process);
+            }
+            $res = $process->getOutput();
+        }
+
+        if( $windows ) {
+            $res = exec($command);
+
+        }
+
+        chdir($old_path);
+
+        return $res;
+    }
+
 
 
 

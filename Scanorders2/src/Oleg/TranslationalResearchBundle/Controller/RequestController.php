@@ -863,6 +863,10 @@ class RequestController extends Controller
         $progressStateArr = $transresRequestUtil->getProgressStateArr();
         $billingStateArr = $transresRequestUtil->getBillingStateArr();
         $transresUsers = $transresUtil->getAppropriatedUsers();
+
+        //add "All except Drafts"
+        $progressStateArr["All except Drafts"] = "All-except-Drafts";
+
         $params = array(
             'transresUsers' => $transresUsers,
             'progressStateArr'=>$progressStateArr,
@@ -1370,9 +1374,11 @@ class RequestController extends Controller
         }
 
         if( $progressStates && count($progressStates)>0 ) {
-            //$dql->andWhere("transresRequest.progressState IN (:progressStates)");
-            //$dqlParameters["progressStates"] = implode(",",$progressStates);
-            $dql->andWhere("transresRequest.progressState IN (:progressStates)");
+            $allExceptDraft = "";
+            if( in_array("All-except-Drafts", $progressStates )) {
+                $allExceptDraft = " OR transresRequest.progressState != 'draft' OR transresRequest.progressState IS NULL";
+            }
+            $dql->andWhere("transresRequest.progressState IN (:progressStates)".$allExceptDraft);
             $dqlParameters["progressStates"] = $progressStates;
         }
 
@@ -1477,6 +1483,8 @@ class RequestController extends Controller
         //$withMatching = true; //slower 7.5 sec
         //$withMatching = false; //twice faster 3.5 sec
 
+        $dql->groupBy("transresRequest.id");
+
         $limit = 10;
         $query = $em->createQuery($dql);
 
@@ -1534,7 +1542,8 @@ class RequestController extends Controller
         }
 
         //if($withMatching) {
-            //$allTransresRequests = $query2->getResult();
+            //$allFilteredTransresRequests = $query2->getResult();
+            //echo "allFilteredTransresRequests=".count($allFilteredTransresRequests)."<br>";
             //$allGlobalRequests = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest')->findAll();
             //$title = $title . " (Matching " . count($allTransresRequests) . ", Total " . count($allGlobalRequests) . ")";
             $allTransresRequests = $transresUtil->getTotalRequestCountByDqlParameters($dql,$dqlParameters);
