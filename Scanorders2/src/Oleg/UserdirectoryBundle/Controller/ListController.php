@@ -286,7 +286,7 @@ class ListController extends Controller
         //echo "2search=".$search."<br>";
 
         if( $search ) {
-            //ent.id = :search OR 
+            //ent.id = :search OR
             $searchStr = "
                 ent.name LIKE :search 
                 OR ent.abbreviation LIKE :search 
@@ -327,7 +327,7 @@ class ListController extends Controller
             $dqlParameters['search'] = '%'.$search.'%';
         }
 
-        echo "dql=".$dql."<br>";
+        //echo "dql=".$dql."<br>";
 
         $em = $this->getDoctrine()->getManager();
         $limit = 50;
@@ -347,8 +347,8 @@ class ListController extends Controller
             //,array('distinct'=>true)
             ,array('defaultSortFieldName' => 'ent.orderinlist', 'defaultSortDirection' => 'asc', 'wrap-queries'=>true)
         );
-        echo "list count=".count($entities)."<br>";
-        exit();
+        //echo "list count=".count($entities)."<br>";
+        //exit();
 
         ///////////// check if show "create a new entity" link //////////////
         $createNew = true;
