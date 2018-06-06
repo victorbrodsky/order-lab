@@ -287,7 +287,7 @@ class ListController extends Controller
 
         if( $search ) {
             $searchStr = "
-                ent.id LIKE :search 
+                ent.id = :search 
                 OR ent.name LIKE :search 
                 OR ent.abbreviation LIKE :search 
                 OR ent.shortname LIKE :search 
