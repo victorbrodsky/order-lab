@@ -359,9 +359,9 @@ class AdminController extends Controller
             }
             
             if( $update ) {
-                $this->runProcess("sudo chown -R www-data:www-data ".$old_path);
-                $this->runProcess("cd /usr/local/bin/order-lab/");
-                $this->runProcess("chmod 777");
+                //$this->runProcess("sudo chown -R www-data:www-data ".$old_path);
+                //$this->runProcess("cd /usr/local/bin/order-lab/");
+                //$this->runProcess("chmod 777");
                 $this->runProcess("git pull");
             }
 
