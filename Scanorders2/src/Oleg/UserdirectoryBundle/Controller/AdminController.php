@@ -7294,7 +7294,13 @@ class AdminController extends Controller
         $formNodeUtil = $this->get('user_formnode_utility');
         $count = $formNodeUtil->generateFormNode();
 
-        exit("Form Node Tree generated: ".$count);
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            'Form Node Fields generated='.$count
+        );
+
+        return $this->redirect($this->generateUrl('user_admin_index'));
+        //exit("Form Node Tree generated: ".$count);
     }
 
     /**
