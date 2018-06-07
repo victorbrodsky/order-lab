@@ -34,9 +34,6 @@ use Oleg\UserdirectoryBundle\Entity\PerSiteSettings;
 
 use Oleg\UserdirectoryBundle\Entity\User;
 
-//include_once '..\conf\Spectrum.ini';
-//include_once '\Skeleton.php';
-//include_once '\DatabaseRoutines.php';
 include_once '..\DatabaseRoutines.php';
 
 class AperioUtil {
@@ -123,13 +120,6 @@ class AperioUtil {
                 if( $this->test ) {
                     $user->addRole('ROLE_SCANORDER_UNAPPROVED');
                     $user->removeRole('ROLE_SCANORDER_SUBMITTER');
-                }
-
-                //for testing without ldap
-                if( !$this->ldap ) {
-                    echo "Aperio Auth Tesing: Remove it !!!";
-                    $user->setPrimaryPublicUserId("testuser4");
-                    $user->addRole('ROLE_SCANORDER_ADMIN');
                 }
 
                 $user->setPassword("");

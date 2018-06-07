@@ -408,7 +408,7 @@ class SiteParameters {
 
     /**
      * Path to p12 key file: i.e. /../Util/FellowshipApplication-f1d9f98353e5.p12
-     * E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\src\Oleg\FellAppBundle\Util\FellowshipApplication-f1d9f98353e5.p12
+     * E:\Program Files (x86)\Aperio\pacsname\htdocs\order\scanorder\Scanorders2\src\Oleg\FellAppBundle\Util\FellowshipApplication-f1d9f98353e5.p12
      *
      * @ORM\Column(type="text", nullable=true)
      */
@@ -557,7 +557,7 @@ class SiteParameters {
     private $libreOfficeConvertToPDFArgumentsdFellAppLinux;
 
     /**
-     * C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder
+     * C:\Program Files (x86)\Aperio\pacsname\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder
      *
      * @ORM\Column(type="text", nullable=true)
      */
@@ -597,7 +597,7 @@ class SiteParameters {
 
     /**
      * Ghostscript
-     * C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin
+     * C:\Program Files (x86)\Aperio\pacsname\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin
      *
      * @ORM\Column(type="text", nullable=true)
      */

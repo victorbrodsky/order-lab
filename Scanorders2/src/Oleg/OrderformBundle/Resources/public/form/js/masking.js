@@ -407,11 +407,6 @@ function noMaskError( element ) {
 
     var keytypeText = getKeyGroupParent(element).find('.accessiontype-combobox').select2('data').text;
 
-//    if( ( keytypeText == "NYH CoPath Anatomic Pathology Accession Number" && element.hasClass('accession-mask') ) ||
-//        element.hasClass('patientage-mask') ||
-//        element.hasClass('datepicker') )
-//    {   //regular mask
-
     //console.log( "no mask error: keytypeText="+ keytypeText );
 
      if( keytypeText == "NYH CoPath Anatomic Pathology Accession Number" && element.hasClass('accession-mask') ||

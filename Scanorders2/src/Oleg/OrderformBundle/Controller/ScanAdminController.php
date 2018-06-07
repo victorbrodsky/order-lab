@@ -542,7 +542,7 @@ class ScanAdminController extends AdminController
             $stainDescription = trim($rowData[0][4]);
             //Original 5
             $synonym = trim($rowData[0][6]);
-            //CoPath Name 7
+            //CcPppp Name 7
             $type = trim($rowData[0][8]);
             $order = trim($rowData[0][9]);
 
@@ -767,8 +767,8 @@ class ScanAdminController extends AdminController
             $stainName = trim($rowData[0][1]);
             $stainShortName = trim($rowData[0][2]);
             $stainAbbr = trim($rowData[0][3]);
-            //$stainCopathName = $rowData[0][4];
-            //$stainCopathAbbr = $rowData[0][5];
+            //$stainCcPpppName = $rowData[0][4];
+            //$stainCcPpppAbbr = $rowData[0][5];
             $synonyms = trim($rowData[0][6]);
 
 

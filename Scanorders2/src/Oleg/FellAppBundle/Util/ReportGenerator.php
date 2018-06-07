@@ -675,7 +675,7 @@ class ReportGenerator {
 
         if( $userServiceUtil->isWinOs() ) {
             //$logger->notice('libreOffice Windows');
-            //C:\Program Files (x86)\pacsvendor\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\LibreOfficePortable\App\libreoffice\program\soffice.exe
+            //C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\vendor\olegutil\LibreOfficePortable\App\libreoffice\program\soffice.exe
             //$cmd = '"C:\Program Files (x86)\LibreOffice 5\program\soffice" --headless -convert-to pdf -outdir "'.$outdir.'"';
             //"C:\Program Files (x86)\LibreOffice 5\program\soffice" --headless -convert-to pdf -outdir
             $libreOfficeConvertToPDFPathFellApp = $userSecUtil->getSiteSettingParameter('libreOfficeConvertToPDFPathFellApp');
@@ -838,8 +838,8 @@ class ReportGenerator {
 
         if( $userServiceUtil->isWinOs() ) {
             //$logger->notice('pdftk Windows');
-            //C:\Program Files (x86)\pacsvendor\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk.exe
-            //$pdftkLocation = '"C:\Program Files (x86)\pacsvendor\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk" ';
+            //C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk.exe
+            //$pdftkLocation = '"C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk" ';
             $userUtil = new UserUtil();
             $pdftkPathFellApp = $userUtil->getSiteSetting($this->em, 'pdftkPathFellApp');
             if (!$pdftkPathFellApp) {
@@ -909,17 +909,16 @@ class ReportGenerator {
 
             //from command cause Error:
             //ERROR: 'Complete Application PDF' will not be generated! pdftk failed:
-            // "E:\Program Files (x86)\pacsvendor\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk"
-            // "E:\Program Files (x86)\pacsvendor\Spectrum\htdocs\order\scanorder\Scanorders2\\web\Uploaded\fellapp\Reports\temp_192\application_ID192.pdf"
-            // "E:\Program Files (x86)\pacsvendor\Spectrum\htdocs\order\scanorder\Scanorders2\\web\Uploaded\fellapp\Reports\temp_192\1460046558ID0B2FwyaXvFk1edVYta1FTLThEalk.pdf"
-            // "E:\Program Files (x86)\pacsvendor\Spectrum\htdocs\order\scanorder\Scanorders2\\web\Uploaded\fellapp\Reports\temp_192\1460046558ID0B2FwyaXvFk1eendWbUdzV0ZNelU.pdf"
-            // "E:\Program Files (x86)\pacsvendor\Spectrum\htdocs\order\scanorder\Scanorders2\\web\Uploaded\fellapp\Reports\temp_192\1460046559ID0B2FwyaXvFk1eMWdxSjhGdDBWQW8.pdf"
+            // "E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\\web\Uploaded\fellapp\Reports\temp_192\application_ID192.pdf"
+            // "E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\\web\Uploaded\fellapp\Reports\temp_192\1460046558ID0B2FwyaXvFk1edVYta1FTLThEalk.pdf"
+            // "E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\\web\Uploaded\fellapp\Reports\temp_192\1460046558ID0B2FwyaXvFk1eendWbUdzV0ZNelU.pdf"
+            // "E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\\web\Uploaded\fellapp\Reports\temp_192\1460046559ID0B2FwyaXvFk1eMWdxSjhGdDBWQW8.pdf"
             // cat output
-            // "E:\Program Files (x86)\pacsvendor\Spectrum\htdocs\order\scanorder\Scanorders2\\web\Uploaded\fellapp\Reports\Breast-Pathology-Fellowship-Application-2018-ID192-Doe7-Linda-generated-on-04-07-2016-at-05-12-14-pm_UTC.pdf"
+            // "E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\\web\Uploaded\fellapp\Reports\Breast-Pathology-Fellowship-Application-2018-ID192-Doe7-Linda-generated-on-04-07-2016-at-05-12-14-pm_UTC.pdf"
             // dont_ask [] []
             // reason: 1460046558ID0B2FwyaXvFk1edVYta1FTLThEalk files don't exists
-            //correct: E:\Program Files (x86)\pacsvendor\Spectrum\htdocs\order\scanorder\Scanorders2\web\Uploaded\fellapp\Reports
-            //actual : E:\Program Files (x86)\pacsvendor\Spectrum\htdocs\order\scanorder\Scanorders2\web\Uploaded\fellapp\Reports
+            //correct: E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\web\Uploaded\fellapp\Reports
+            //actual : E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\web\Uploaded\fellapp\Reports
 
             //event log
             $event = "Probably there is an encrypted pdf: try to process by gs; pdftk failed cmd=" . $cmd;
@@ -1017,7 +1016,7 @@ class ReportGenerator {
 
         if( $userServiceUtil->isWinOs() ) {
             //$logger->notice('gs Windows');
-            //$gsLocation = '"C:\Program Files (x86)\pacsvendor\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin\gswin64c.exe" ';
+            //$gsLocation = '"C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin\gswin64c.exe" ';
             $userUtil = new UserUtil();
             $gsPathFellApp = $userUtil->getSiteSetting($this->em, 'gsPathFellApp');
             if (!$gsPathFellApp) {

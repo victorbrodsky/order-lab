@@ -80,7 +80,7 @@ function validateHandsonTable() {
     //console.log('errCells='+errCells);
     if( errCells > 0 ) {
         var errmsg =    "Please review the cell(s) marked bright red in the highlighted row(s), and correct the entered values to match the expected format. " +
-                        "For CoPath Accession Numbers the acceptable examples are S14-1 or SC14-100001 " +
+                        "For Accession Numbers the acceptable examples are S14-1 or SC14-100001 " +
                         "(must have a dash with no leading zeros after the dash such as S14-01; must start " +
                         "with either one or two letters followed by two digits; maximum number of characters is 11; " +
                         "must contain only letters or digits and one dash). All other Accession and MRN Types must have the " +

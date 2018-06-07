@@ -49,7 +49,7 @@ class LoginTest extends WebTestCase {
 
 
     //TODO: login failed for pacsvendor users:
-    //comment out spl_autoload_register(array('LoggerAutoloader', 'autoload')); in E:\Program Files (x86)\pacsvendor\Spectrum\htdocs\log4php\LoggerAutoloader.php
+    //comment out spl_autoload_register(array('LoggerAutoloader', 'autoload')); in E:\Program Files (x86)\pacsvendor\pacsname\htdocs\log4php\LoggerAutoloader.php
     //[2014-07-30 19:14:11] ldap_driver.DEBUG: ldap_bind(testprocessor, ****) [] []
     //[2014-07-30 19:14:32] ldap_driver.DEBUG: 0x31 (Invalid credentials; 80090308: LdapErr: DSID-0C0903A9, comment: AcceptSecurityContext error, data 52e, v1db1): testprocessor@a.wcmc-ad.net [] []
     public function testLoginProcess()

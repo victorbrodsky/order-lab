@@ -39,7 +39,7 @@ class AuthUtil {
     private $logger;
     protected $requestStack;
 
-    private $supportedUsertypesAperio = array('aperio');
+    private $supportedUsertypesPacsvendor = array('aperio');
     private $supportedUsertypesLdap = array('wcmc-cwid');
     private $supportedUsertypesLocal = array('local-user');
 
@@ -166,8 +166,8 @@ class AuthUtil {
         $userSecUtil = $this->container->get('user_security_utility');
 
         $usernamePrefix = $userSecUtil->getUsernamePrefix($token->getUsername());
-        if( in_array($usernamePrefix, $this->supportedUsertypesAperio) == false ) {
-            $this->logger->notice('Aperio Authentication: the usertype '.$usernamePrefix.' can not be authenticated by ' . implode(', ',$this->supportedUsertypesAperio));
+        if( in_array($usernamePrefix, $this->supportedUsertypesPacsvendor) == false ) {
+            $this->logger->notice('Aperio Authentication: the usertype '.$usernamePrefix.' can not be authenticated by ' . implode(', ',$this->supportedUsertypesPacsvendor));
             return NULL;
         }
 
@@ -176,7 +176,7 @@ class AuthUtil {
         $user = $aperioUtil->aperioAuthenticateToken( $token, $this->container, $this->em );
 
         if( $user ) {
-            //echo "Aperio user found=".$user->getUsername()."<br>";
+            //echo "pacsvendor user found=".$user->getUsername()."<br>";
 
             if( $this->canLogin($user) === false ) {
                 return NULL;

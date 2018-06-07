@@ -237,7 +237,7 @@ class SiteParametersType extends AbstractType
 
 
 
-        //Aperio DB
+        //pacsvendor DB
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'aperioeSlideManagerDBServerAddress' )
         $builder->add('aperioeSlideManagerDBServerAddress',null,array(
             'label'=>'PACS DB Server Address:',
@@ -447,7 +447,7 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'p12KeyPathFellApp' )
             $builder->add('p12KeyPathFellApp',null,array(
-                'label'=>'Full Path to p12 key file for accessing the Google Drive API (E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\src\Oleg\FellAppBundle\Util\FellowshipApplication-f1d9f98353e5.p12):',
+                'label'=>'Full Path to p12 key file for accessing the Google Drive API (E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\src\Oleg\FellAppBundle\Util\FellowshipApplication-f1d9f98353e5.p12):',
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
 
@@ -1105,7 +1105,7 @@ class SiteParametersType extends AbstractType
         //3 pdftk
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'pdftkPathFellApp' )
             $builder->add('pdftkPathFellApp',null,array(
-                'label'=>'Path to pdftk for PDF concatenation (E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder):',
+                'label'=>'Path to pdftk for PDF concatenation (E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder):',
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'pdftkPathFellAppLinux' )
@@ -1139,7 +1139,7 @@ class SiteParametersType extends AbstractType
         //3 gs
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'gsPathFellApp' )
             $builder->add('gsPathFellApp',null,array(
-                'label'=>'Path to Ghostscript for stripping PDF password protection (E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin):',
+                'label'=>'Path to Ghostscript for stripping PDF password protection (E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin):',
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'gsPathFellAppLinux' )

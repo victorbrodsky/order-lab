@@ -734,7 +734,7 @@ class UserServiceUtil {
                 "If You have any questions, please do not hesitate to contact me by phone or via email. ".
                 "Sincerely, Jessica Misner Fellowship Program Coordinator Weill Cornell Medicine Pathology and Laboratory Medicine 1300 York Avenue, Room C-302 T 212.746.6464 F 212.746.8192",
             "clientEmailFellApp" => '',
-            "p12KeyPathFellApp" => 'E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\src\Oleg\FellAppBundle\Util',
+            "p12KeyPathFellApp" => 'E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\src\Oleg\FellAppBundle\Util',
             "googleDriveApiUrlFellApp" => "https://www.googleapis.com/auth/drive https://spreadsheets.google.com/feeds",
             "userImpersonateEmailFellApp" => "olegivanov@pathologysystems.org",
             "templateIdFellApp" => "",
@@ -751,10 +751,10 @@ class UserServiceUtil {
             "libreOfficeConvertToPDFPathFellApp" => 'C:\Program Files (x86)\LibreOffice 5\program',
             "libreOfficeConvertToPDFFilenameFellApp" => "soffice",
             "libreOfficeConvertToPDFArgumentsdFellApp" => "--headless -convert-to pdf -outdir",
-            "pdftkPathFellApp" => 'C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder',
+            "pdftkPathFellApp" => 'C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder',
             "pdftkFilenameFellApp" => "pdftk",
             "pdftkArgumentsFellApp" => "###inputFiles### cat output ###outputFile### dont_ask",
-            "gsPathFellApp" => "C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin",
+            "gsPathFellApp" => 'C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin',
             "gsFilenameFellApp"=>"gswin64c.exe",
             "gsArgumentsFellApp"=>"-q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile= ###outputFile###  -c .setpdfwrite -f ###inputFiles###",
             ///////////////////// EOF FELLAPP /////////////////////

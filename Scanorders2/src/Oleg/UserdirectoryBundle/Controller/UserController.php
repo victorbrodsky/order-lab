@@ -4117,7 +4117,7 @@ class UserController extends Controller
 
         if( !$crop->getMsg() && $crop->getResult() ) {
 
-            //(x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\src\Oleg\UserdirectoryBundle\Util/../../../../web/Uploaded/directory/Avatars/avatar/20150106205815.jpeg
+            //(x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\src\Oleg\UserdirectoryBundle\Util/../../../../web/Uploaded/directory/Avatars/avatar/20150106205815.jpeg
             $fullnameArr = explode("/", $crop->getResult());
             $uniquefilename = $fullnameArr[count($fullnameArr)-1];
             //echo "uniquefilename=".$uniquefilename." ";

@@ -313,10 +313,10 @@ class EmailUtil {
 
         //command:   "E:\Program Files (x86)\pacsvendor\WebServer\PHP\php.exe"
         //arguments: app/console cron:swift --env=prod
-        //Start In:  E:\Program Files (x86)\pacsvendor\Spectrum\htdocs\order\scanorder\Scanorders2
+        //Start In:  E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2
 
         //command:    php
-        //arguments(working): "E:\Program Files (x86)\pacsvendor\Spectrum\htdocs\order\scanorder\Scanorders2\bin\console" cron:swift --env=prod
+        //arguments(working): "E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\bin\console" cron:swift --env=prod
         $console = $projectDir.DIRECTORY_SEPARATOR."bin".DIRECTORY_SEPARATOR."console";
         $cronJobCommand = 'php \"'.$console.'\" cron:swift --env=prod';
         $cronJobCommand = '"'.$cronJobCommand.'"';
