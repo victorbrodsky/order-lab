@@ -35,11 +35,6 @@ class EmailUtil {
         $this->container = $container;
     }
 
-    //[2016-06-24 14:20:39] request.CRITICAL: Uncaught PHP Exception Swift_TransportException: "Connection to smtp.med.cornell.edu:25 Timed Out" at E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\swiftmailer\swiftmailer\lib\classes\Swift\Transport\AbstractSmtpTransport.php line 404 {"exception":"[object] (Swift_TransportException(code: 0): Connection to smtp.med.cornell.edu:25 Timed Out at E:\\Program Files (x86)\\Aperio\\Spectrum\\htdocs\\order\\scanorder\\Scanorders2\\vendor\\swiftmailer\\swiftmailer\\lib\\classes\\Swift\\Transport\\AbstractSmtpTransport.php:404)"} []
-    //one possible solution: http://stackoverflow.com/questions/25449496/swiftmailer-gmail-connection-timed-out-110
-    //$smtp_host_ip = gethostbyname('smtp.gmail.com');
-    //$transport = Swift_SmtpTransport::newInstance($smtp_host_ip,465,'ssl')
-
     //php bin/console swiftmailer:spool:send --env=prod
     //$emails: single or array of emails
     //$ccs: single or array of emails
@@ -316,12 +311,12 @@ class EmailUtil {
         $projectDir = $this->container->get('kernel')->getProjectDir();
         $cronJobName = "Swiftmailer_Order";
 
-        //command:   "E:\Program Files (x86)\Aperio\WebServer\PHP\php.exe"
+        //command:   "E:\Program Files (x86)\pacsvendor\WebServer\PHP\php.exe"
         //arguments: app/console cron:swift --env=prod
-        //Start In:  E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2
+        //Start In:  E:\Program Files (x86)\pacsvendor\Spectrum\htdocs\order\scanorder\Scanorders2
 
         //command:    php
-        //arguments(working): "E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\bin\console" cron:swift --env=prod
+        //arguments(working): "E:\Program Files (x86)\pacsvendor\Spectrum\htdocs\order\scanorder\Scanorders2\bin\console" cron:swift --env=prod
         $console = $projectDir.DIRECTORY_SEPARATOR."bin".DIRECTORY_SEPARATOR."console";
         $cronJobCommand = 'php \"'.$console.'\" cron:swift --env=prod';
         $cronJobCommand = '"'.$cronJobCommand.'"';

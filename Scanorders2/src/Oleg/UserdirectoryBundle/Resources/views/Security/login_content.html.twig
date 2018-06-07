@@ -118,11 +118,6 @@
         {% endif %}
     </p>
 
-    {#{% if title == "Scan Orders" %}#}
-        {#<p>#}
-            {#<a href="{{ path('accountrequest_new') }}">Request an Aperio eSlide Manager account</a> if you can't log in.#}
-        {#</p>#}
-    {#{% endif %}#}
     {% if user_security_utility.isSelfSignUp(sitename) %}
         <p>
             {% set noticeSignUpNoCwid = user_security_utility.getSiteSettingParameter("noticeSignUpNoCwid") %}

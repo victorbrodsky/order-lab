@@ -24,16 +24,6 @@ services:
         class: Oleg\OrderformBundle\Security\Authentication\ScanLoginSuccessHandler
         arguments:  ["@service_container", "@doctrine.orm.entity_manager"]
 
-#    #aperio authentication
-#    aperio.security.authentication.provider:
-#        class: Oleg\OrderformBundle\Security\Authentication\AperioProvider
-#        arguments: ["", @service_container,@doctrine.orm.entity_manager,"aperio_ldap_firewall",%default_time_zone%]
-#
-#    #aperio listener
-#    aperio.security.authentication.listener:
-#        class: Oleg\OrderformBundle\Security\Firewall\AperioListener
-#        arguments: ["@security.context", "@security.authentication.manager", "aperio_ldap_firewall"]
-
     #security utility
     order_security_utility:
         class: Oleg\OrderformBundle\Security\Util\SecurityUtil

@@ -446,7 +446,7 @@ class Document {
     //get server path to delete file: /var/www/test/folder/images/image_name.jpeg
     public function getServerPath()
     {
-        //echo "getcwd=".getcwd()."<br>"; //getcwd()=C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2
+        //echo "getcwd=".getcwd()."<br>"; //getcwd()=C:\Program Files (x86)\pacsvendor\Spectrum\htdocs\order\scanorder\Scanorders2
         return $this->getUploadDirectory().'/'.$this->getUniquename();
     }
 
@@ -454,7 +454,7 @@ class Document {
     //example: C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2/web/Uploaded/fellapp/documents/56fbf9e8867c3.jpg
     public function getFullServerPath()
     {
-        //echo "getcwd=".getcwd()."<br>"; //getcwd()=C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2
+        //echo "getcwd=".getcwd()."<br>"; //getcwd()=C:\Program Files (x86)\pacsvendor\Spectrum\htdocs\order\scanorder\Scanorders2
         $fullPath = getcwd() . "/web/" . $this->getUploadDirectory().'/'.$this->getUniquename();
         //$fullPath = realpath($fullPath);
         return $fullPath;

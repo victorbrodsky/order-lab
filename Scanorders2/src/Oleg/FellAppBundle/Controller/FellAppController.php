@@ -1968,7 +1968,7 @@ class FellAppController extends Controller {
 
 
     /**
-     * Import spreadsheet to C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\web\Uploaded\fellapp\Spreadsheets
+     * Import spreadsheet to C:\Program Files (x86)\pacsvendor\Spectrum\htdocs\order\scanorder\Scanorders2\web\Uploaded\fellapp\Spreadsheets
      *
      * @Route("/import", name="fellapp_import")
      */

@@ -133,7 +133,7 @@ class PatientController extends Controller
         $thisparams = array(
             'objectNumber' => 2,
             'dropzoneImageNumber' => 1,
-            'aperioImageNumber' => 1,
+            'pacsvendorImageNumber' => 1,
             'withorders' => true,
             'testpatient' => true,
             'accession.attachmentContainer' => 1,
@@ -723,7 +723,7 @@ class PatientController extends Controller
         $thisparams = array(
             'objectNumber' => 2,                //2 - generate 2 encounters (Note: it takes 40 sec (17 sec to make form on server) to render patient with 2 objects; it takes 15 sec for 1 object)
             'dropzoneImageNumber' => 1,
-            'aperioImageNumber' => 1,
+            'pacsvendorImageNumber' => 1,
             'withorders' => true,               //add orders to correspondent entities
             'persist' => true,                 //persist each patient hierarchy object (not used)
             'flush' => true,                    //flush after each object creation
@@ -968,10 +968,10 @@ class PatientController extends Controller
             $dropzoneImageNumber = 0;
         }
 
-        if( array_key_exists('aperioImageNumber', $params) ) {
-            $aperioImageNumber = $params['aperioImageNumber'];
+        if( array_key_exists('pacsvendorImageNumber', $params) ) {
+            $pacsvendorImageNumber = $params['pacsvendorImageNumber'];
         } else {
-            $aperioImageNumber = 0;
+            $pacsvendorImageNumber = 0;
         }
 
         if( array_key_exists('withorders', $params) ) {
@@ -1071,7 +1071,7 @@ class PatientController extends Controller
         $slidetype = $em->getRepository('OlegOrderformBundle:SlideType')->findOneByName('Frozen Section');
 
         $sourceSystemName = 'PACS on C.MED.CORNELL.EDU';
-        $sourceSystemAperio = $em->getRepository('OlegUserdirectoryBundle:SourceSystemList')->findOneByName($sourceSystemName);
+        $sourceSystemPacsvendor = $em->getRepository('OlegUserdirectoryBundle:SourceSystemList')->findOneByName($sourceSystemName);
 
         $maginification = $em->getRepository('OlegOrderformBundle:Magnification')->findOneByName('20X');
 
@@ -1221,7 +1221,7 @@ class PatientController extends Controller
             //$slideArr[] = $slide;
 
             //add scan (Imaging) to a slide
-            if( $dropzoneImageNumber > 0 || $aperioImageNumber > 0 ) {
+            if( $dropzoneImageNumber > 0 || $pacsvendorImageNumber > 0 ) {
                 $slide->clearScan();
             }
 
@@ -1254,24 +1254,24 @@ class PatientController extends Controller
                 }
             }
 
-            //attach one existing aperio image http://c.med.cornell.edu/EditRecord.php?TableName=Slide&Ids[]=42814,
+            //attach one existing pacsvendor image http://c.med.cornell.edu/EditRecord.php?TableName=Slide&Ids[]=42814,
             //image ID:73660
-            //image/aperio/73660
-            for( $countImage = 0; $countImage < $aperioImageNumber; $countImage++ ) {
-                $aperioImage = new Imaging('valid',$user,$sourceSystemAperio);
+            //image/pacsvendor/73660
+            for( $countImage = 0; $countImage < $pacsvendorImageNumber; $countImage++ ) {
+                $pacsvendorImage = new Imaging('valid',$user,$sourceSystemPacsvendor);
 
                 if( $testpatient ) {
-                    $aperioImage->setMagnification($maginification);
+                    $pacsvendorImage->setMagnification($maginification);
 
                     //Input: Slide Id from c.med: 42814
                     //$slideId = 42814;
-                    $aperioImage->setImageId($slideId);
+                    $pacsvendorImage->setImageId($slideId);
 
                     //get document container
-                    $docContainer = $aperioImage->getDocumentContainer();
+                    $docContainer = $pacsvendorImage->getDocumentContainer();
                     if( !$docContainer ) {
                         $docContainer = new DocumentContainer($user);
-                        $aperioImage->setDocumentContainer($docContainer);
+                        $pacsvendorImage->setDocumentContainer($docContainer);
                     }
 
                     $this->setDocumentContainerWithLinks($docContainer,$slideId,$user);
@@ -1279,10 +1279,10 @@ class PatientController extends Controller
                 } //if testpatient
 
                 //add Image to Slide
-                $slide->addScan($aperioImage);
+                $slide->addScan($pacsvendorImage);
 
                 if( $persist ) {
-                    $em->persist($aperioImage);
+                    $em->persist($pacsvendorImage);
                 }
             }
 
@@ -1812,8 +1812,8 @@ class PatientController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $sourceSystemName = 'PACS on C.MED.CORNELL.EDU';
-        $sourceSystemAperio = $em->getRepository('OlegUserdirectoryBundle:SourceSystemList')->findOneByName($sourceSystemName);
-        $sourceSystemAperioClean = $sourceSystemAperio->getName();
+        $sourceSystemPacsvendor = $em->getRepository('OlegUserdirectoryBundle:SourceSystemList')->findOneByName($sourceSystemName);
+        $sourceSystemPacsvendorClean = $sourceSystemPacsvendor->getName();
 
         $linkTypeWebScope = $em->getRepository('OlegUserdirectoryBundle:LinkTypeList')->findOneByName("Via WebScope");
         $linkTypeWebScopeClean = $linkTypeWebScope->getName();
@@ -1830,43 +1830,43 @@ class PatientController extends Controller
         $linkTypeDownload = $em->getRepository('OlegUserdirectoryBundle:LinkTypeList')->findOneByName("Download");
         $linkTypeDownloadClean = $linkTypeDownload->getName();
 
-        //$docContainer->setTitle('Image from ' . $sourceSystemAperio);
+        //$docContainer->setTitle('Image from ' . $sourceSystemPacsvendor);
         $docContainer->setTitle('Sample Test Whole Slide Image');
 
         $router = $this->container->get('router');
 
         //add link Via WebScope
         //use http://c.med.cornell.edu/imageserver/@@D5a3Yrn7dI2BGAKr0BEOxigCkxFErp2QJNfGJrBmWo68tr-locAr0Q==/@73660/view.apml
-        $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystemAperioClean,'type'=>$linkTypeWebScopeClean,'tablename'=>'Slide','imageid'=>$slideId),UrlGeneratorInterface::ABSOLUTE_URL);
+        $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystemPacsvendorClean,'type'=>$linkTypeWebScopeClean,'tablename'=>'Slide','imageid'=>$slideId),UrlGeneratorInterface::ABSOLUTE_URL);
         $link = new Link($user);
         $link->setLinktype($linkTypeWebScope);
         $link->setLink($linklink);
         $docContainer->addLink($link);
 
         //add link Via ImageScope
-        //use sis file containing url to image from Aperio DB \\win-vtbcq31qg86\images\1376592217_1368_3005ER.svs
-        $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystemAperioClean,'type'=>$linkTypeImageScopeClean,'tablename'=>'Slide','imageid'=>$slideId),UrlGeneratorInterface::ABSOLUTE_URL);
+        //use sis file containing url to image from pacsvendor DB \\win-vtbcq31qg86\images\1376592217_1368_3005ER.svs
+        $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystemPacsvendorClean,'type'=>$linkTypeImageScopeClean,'tablename'=>'Slide','imageid'=>$slideId),UrlGeneratorInterface::ABSOLUTE_URL);
         $link = new Link($user);
         $link->setLinktype($linkTypeImageScope);
         $link->setLink($linklink);
         $docContainer->addLink($link);
 
         //add Thumbnail
-        $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystemAperioClean,'type'=>$linkTypeThumbnailClean,'tablename'=>'Slide','imageid'=>$slideId),UrlGeneratorInterface::ABSOLUTE_URL);
+        $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystemPacsvendorClean,'type'=>$linkTypeThumbnailClean,'tablename'=>'Slide','imageid'=>$slideId),UrlGeneratorInterface::ABSOLUTE_URL);
         $link = new Link($user);
         $link->setLinktype($linkTypeThumbnail);
         $link->setLink($linklink);
         $docContainer->addLink($link);
 
         //add Label
-        $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystemAperioClean,'type'=>$linkTypeLabelClean,'tablename'=>'Slide','imageid'=>$slideId),UrlGeneratorInterface::ABSOLUTE_URL);
+        $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystemPacsvendorClean,'type'=>$linkTypeLabelClean,'tablename'=>'Slide','imageid'=>$slideId),UrlGeneratorInterface::ABSOLUTE_URL);
         $link = new Link($user);
         $link->setLinktype($linkTypeLabel);
         $link->setLink($linklink);
         $docContainer->addLink($link);
 
         //add download
-        $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystemAperioClean,'type'=>$linkTypeDownloadClean,'tablename'=>'Slide','imageid'=>$slideId),UrlGeneratorInterface::ABSOLUTE_URL);
+        $linklink = $router->generate('scan_image_viewer',array('system'=>$sourceSystemPacsvendorClean,'type'=>$linkTypeDownloadClean,'tablename'=>'Slide','imageid'=>$slideId),UrlGeneratorInterface::ABSOLUTE_URL);
         $link = new Link($user);
         $link->setLinktype($linkTypeDownload);
         $link->setLink($linklink);

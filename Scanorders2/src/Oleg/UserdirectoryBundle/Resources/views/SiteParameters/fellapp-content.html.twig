@@ -205,60 +205,6 @@
                         <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'reportsUploadPathFellApp'}) }}">Edit</a></td>
                     </tr>
 
-                    {#<tr>#}
-                        {#<td>Command to convert a file to pdf using LibreOffice (C:\Program Files (x86)\LibreOffice 5\program)</td>#}
-                        {#<td>{{ entity.libreOfficeConvertToPDFPathFellApp }}</td>#}
-                        {#<td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'libreOfficeConvertToPDFPathFellApp'}) }}">Edit</a></td>#}
-                    {#</tr>#}
-
-                    {#<tr>#}
-                        {#<td>LibreOffice executable file (soffice)</td>#}
-                        {#<td>{{ entity.libreOfficeConvertToPDFFilenameFellApp }}</td>#}
-                        {#<td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'libreOfficeConvertToPDFFilenameFellApp'}) }}">Edit</a></td>#}
-                    {#</tr>#}
-
-                    {#<tr>#}
-                        {#<td>LibreOffice arguments (--headless -convert-to pdf -outdir)</td>#}
-                        {#<td>{{ entity.libreOfficeConvertToPDFArgumentsdFellApp }}</td>#}
-                        {#<td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'libreOfficeConvertToPDFArgumentsdFellApp'}) }}">Edit</a></td>#}
-                    {#</tr>#}
-
-                    {#<tr>#}
-                        {#<td>Path to pdftk for PDF concatenation (E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder)</td>#}
-                        {#<td>{{ entity.pdftkPathFellApp }}</td>#}
-                        {#<td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'pdftkPathFellApp'}) }}">Edit</a></td>#}
-                    {#</tr>#}
-
-                    {#<tr>#}
-                        {#<td>pdftk executable file (pdftk)</td>#}
-                        {#<td>{{ entity.pdftkFilenameFellApp }}</td>#}
-                        {#<td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'pdftkFilenameFellApp'}) }}">Edit</a></td>#}
-                    {#</tr>#}
-
-                    {#<tr>#}
-                        {#<td>pdftk arguments (###inputFiles### cat output ###outputFile### dont_ask) (pdftk)</td>#}
-                        {#<td>{{ entity.pdftkArgumentsFellApp }}</td>#}
-                        {#<td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'pdftkArgumentsFellApp'}) }}">Edit</a></td>#}
-                    {#</tr>#}
-
-                    {#<tr>#}
-                        {#<td>Path to Ghostscript for stripping PDF password protection (E:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin)</td>#}
-                        {#<td>{{ entity.gsPathFellApp }}</td>#}
-                        {#<td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'gsPathFellApp'}) }}">Edit</a></td>#}
-                    {#</tr>#}
-
-                    {#<tr>#}
-                        {#<td>Ghostscript executable file (gswin64c.exe)</td>#}
-                        {#<td>{{ entity.gsFilenameFellApp }}</td>#}
-                        {#<td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'gsFilenameFellApp'}) }}">Edit</a></td>#}
-                    {#</tr>#}
-
-                    {#<tr>#}
-                        {#<td>Ghostscript arguments (-q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile= ###outputFile###  -c .setpdfwrite -f ###inputFiles###)</td>#}
-                        {#<td>{{ entity.gsArgumentsFellApp }}</td>#}
-                        {#<td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'gsArgumentsFellApp'}) }}">Edit</a></td>#}
-                    {#</tr>#}
-
 
                 </tbody>
             </table>
