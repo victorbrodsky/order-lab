@@ -36,7 +36,7 @@ use Oleg\UserdirectoryBundle\Entity\User;
 
 include_once '..\DatabaseRoutines.php';
 
-class AperioUtil {
+class PacsvendorUtil {
 
     private $ldap = true;
     private $test = false;
@@ -45,7 +45,7 @@ class AperioUtil {
         //
     }
 
-    public function aperioAuthenticateToken( TokenInterface $token, $serviceContainer, $em ) {
+    public function pacsvendorAuthenticateToken( TokenInterface $token, $serviceContainer, $em ) {
         $userSecUtil = $serviceContainer->get('user_security_utility');
 
         //don't authenticate users without WCMC CWID keytype
@@ -54,8 +54,8 @@ class AperioUtil {
 
         $usernameClean = $userSecUtil->createCleanUsername($token->getUsername());
 
-        //check if user exists in Aperio DB
-        $AuthResult = $this->AperioAuth( $usernameClean, $token->getCredentials() );
+        //check if user exists in pacsvendor DB
+        $AuthResult = $this->PacsvendorAuth( $usernameClean, $token->getCredentials() );
 
         //print_r($AuthResult);
         //exit();
@@ -98,7 +98,7 @@ class AperioUtil {
                 $userRequest = $em->getRepository('OlegUserdirectoryBundle:UserRequest')->findOneByEmail($AuthResult['E_Mail']);
                 if( $userRequest ) {
                     if( $userRequest->getStatus() != 'approved' ) {
-                        throw new AuthenticationException('The Aperio authentication failed. User Account Request was not approved, status='.$userRequest->getStatus());
+                        throw new AuthenticationException('The pacsvendor authentication failed. User Account Request was not approved, status='.$userRequest->getStatus());
                     } else {
                         //add institutions to per site settings
                         if( $perSiteSettings ) {
@@ -137,7 +137,7 @@ class AperioUtil {
 
             $pacsvendorRoles = $this->getUserGroupMembership($userid);
 
-            $stats = $this->setUserPathologyRolesByAperioRoles( $user, $pacsvendorRoles );
+            $stats = $this->setUserPathologyRolesByPacsvendorRoles( $user, $pacsvendorRoles );
 
             return $user;
 
@@ -151,7 +151,7 @@ class AperioUtil {
     }
 
 
-    public function AperioAuth( $loginName, $password ) {
+    public function PacsvendorAuth( $loginName, $password ) {
 
         //exit();
         //echo " skip login=".$loginName.", pass=". $password." <br>";
@@ -216,8 +216,8 @@ class AperioUtil {
         return null;
     }
 
-    //set user roles based on the user roles from pacsvendor (aperio):
-    public function setUserPathologyRolesByAperioRoles( $user, $pacsvendorRoles ) {
+    //set user roles based on the user roles from pacsvendor:
+    public function setUserPathologyRolesByPacsvendorRoles( $user, $pacsvendorRoles ) {
 
         $addedRoles = array();
 

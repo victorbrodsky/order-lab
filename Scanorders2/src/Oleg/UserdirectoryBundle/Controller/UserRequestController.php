@@ -297,7 +297,7 @@ class UserRequestController extends Controller
         $form->handleRequest($request);
 
         if( $entity->getSiteName() == "scan" ) {
-            //Case 1: scan order with Aperio user
+            //Case 1: scan order with pacsvendor user
             if ($entity->getId() &&
                 $entity->getId() != "" &&
                 $entity->getUsername() &&

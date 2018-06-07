@@ -70,7 +70,7 @@ class CustomAuthenticator implements SimpleFormAuthenticatorInterface {
         //////////////////////////////////////////////////////////////////////
         //                       2) pacsvendor authentication                   //
         //////////////////////////////////////////////////////////////////////
-        $user = $authUtil->AperioAuthentication($token, $userProvider);
+        $user = $authUtil->PacsvendorAuthentication($token, $userProvider);
         if( $user ) {
             $this->resetFailedAttemptCounter($user);
             return $this->getUsernamePasswordToken($user,$providerKey);

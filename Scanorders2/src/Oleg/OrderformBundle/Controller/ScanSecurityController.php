@@ -28,7 +28,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\PhpBridgeSessionStorage;
 
-use Oleg\OrderformBundle\Security\Util\AperioUtil;
+use Oleg\OrderformBundle\Security\Util\PacsvendorUtil;
 
 use Oleg\UserdirectoryBundle\Controller\SecurityController;
 
@@ -128,11 +128,11 @@ class ScanSecurityController extends SecurityController
 
 
     /**
-     * @Route("/admin/load-roles-from-aperio", name="load-roles-from-aperio")
+     * @Route("/admin/load-roles-from-pacsvendor", name="load-roles-from-pacsvendor")
      * @Method("GET")
-     * @Template("OlegOrderformBundle:Security:load-roles-from-aperio.html.twig")
+     * @Template("OlegOrderformBundle:Security:load-roles-from-pacsvendor.html.twig")
      */
-    public function loadRolesFromAperioAction()
+    public function loadRolesFromPacsvendorAction()
     {
 
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_ADMIN') ) {
@@ -154,13 +154,13 @@ class ScanSecurityController extends SecurityController
         foreach( $users as $user ) {
 
             //************** get pacsvendor group roles and ROLE_SCANORDER_ORDERING_PROVIDER for this user **************//
-            $aperioUtil = new AperioUtil();
+            $pacsvendorUtil = new PacsvendorUtil();
 
             $username = $user->getCleanUsername()."";
 
             //echo "username=".$username. " => ";
 
-            $userid = $aperioUtil->getUserIdByUserName($username);
+            $userid = $pacsvendorUtil->getUserIdByUserName($username);
 
             //echo "userid=".$userid." => ";
 
@@ -173,9 +173,9 @@ class ScanSecurityController extends SecurityController
 
             } else {
 
-                $pacsvendorRoles = $aperioUtil->getUserGroupMembership($userid);
+                $pacsvendorRoles = $pacsvendorUtil->getUserGroupMembership($userid);
 
-                $addedRoles = $aperioUtil->setUserPathologyRolesByAperioRoles( $user, $pacsvendorRoles );
+                $addedRoles = $pacsvendorUtil->setUserPathologyRolesByPacsvendorRoles( $user, $pacsvendorRoles );
 
                 if( count($addedRoles) == 0 ) {
 

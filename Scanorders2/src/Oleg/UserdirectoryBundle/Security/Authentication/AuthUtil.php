@@ -25,7 +25,7 @@
 namespace Oleg\UserdirectoryBundle\Security\Authentication;
 
 
-use Oleg\OrderformBundle\Security\Util\AperioUtil;
+use Oleg\OrderformBundle\Security\Util\PacsvendorUtil;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Validator\Constraints\DateTime;
@@ -158,22 +158,22 @@ class AuthUtil {
     }
 
 
-    public function AperioAuthentication($token, $userProvider) {
+    public function PacsvendorAuthentication($token, $userProvider) {
 
-        //echo "AperioAuthentication<br>";
+        //echo "PacsvendorAuthentication<br>";
         //exit();
 
         $userSecUtil = $this->container->get('user_security_utility');
 
         $usernamePrefix = $userSecUtil->getUsernamePrefix($token->getUsername());
         if( in_array($usernamePrefix, $this->supportedUsertypesPacsvendor) == false ) {
-            $this->logger->notice('Aperio Authentication: the usertype '.$usernamePrefix.' can not be authenticated by ' . implode(', ',$this->supportedUsertypesPacsvendor));
+            $this->logger->notice('Pacsvendor Authentication: the usertype '.$usernamePrefix.' can not be authenticated by ' . implode(', ',$this->supportedUsertypesPacsvendor));
             return NULL;
         }
 
-        $aperioUtil = new AperioUtil();
+        $pacsvendorUtil = new PacsvendorUtil();
 
-        $user = $aperioUtil->aperioAuthenticateToken( $token, $this->container, $this->em );
+        $user = $pacsvendorUtil->pacsvendorAuthenticateToken( $token, $this->container, $this->em );
 
         if( $user ) {
             //echo "pacsvendor user found=".$user->getUsername()."<br>";

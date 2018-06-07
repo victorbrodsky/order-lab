@@ -63,9 +63,9 @@ class ScanUploadController extends UploadController {
     }
 
 
-    //Aperio API for authenticated user: http://c.med.cornell.edu/imageserver/@73956?GETPATH => \\collage\images\2015-05-14\73956.svs
+    //pacsvendor API for authenticated user: http://c.med.cornell.edu/imageserver/@73956?GETPATH => \\collage\images\2015-05-14\73956.svs
 
-    //Aperio communicate to DB by using "soap call" http://www.aperio.com/webservices/
+    //pacsvendor communicate to DB by using "soap call" http://www.pacsvendor.com/webservices/
     //$res = $client->__soapCall(	'GetRecordImages',		//SOAP Method Name
     //                              $ParamsArray); 			//Parameters
 
@@ -73,9 +73,9 @@ class ScanUploadController extends UploadController {
     //cTable.php GetImages function Show the list of record images
 
     //There are two ways to show slide image:
-    //1) using 'Aperio Image Scope' with generated 'sis' file
+    //1) using 'pacsvendor Image Scope' with generated 'sis' file
     //2) using 'Web Scope': http://192.168.37.128/imageserver/@@Y4XGX_n725b-quq6RExmLlOJHFwi8MvoiWTyPOMAcSE6lO1I16q5fg==/@23/view.apml
-    //Note: for the (2) way, Aperio authentication is required providing token Y4XGX_n725b-quq6RExmLlOJHFwi8MvoiWTyPOMAcSE6lO1I16q5fg==
+    //Note: for the (2) way, pacsvendor authentication is required providing token Y4XGX_n725b-quq6RExmLlOJHFwi8MvoiWTyPOMAcSE6lO1I16q5fg==
 
 
     /**
@@ -86,12 +86,12 @@ class ScanUploadController extends UploadController {
 
         //1) get image url info by imageid
 
-        ////////////////// aperio DB ////////////////////////////
-        $aperioEm = $this->getDoctrine()->getManager('aperio');
+        ////////////////// pacsvendor DB ////////////////////////////
+        $pacsvendorEm = $this->getDoctrine()->getManager('aperio');
 
-        $aperioConnection = $aperioEm->getConnection();
+        $pacsvendorConnection = $pacsvendorEm->getConnection();
 
-        $statement = $aperioConnection->prepare(
+        $statement = $pacsvendorConnection->prepare(
             'SELECT * FROM [Aperio].[dbo].[Image] a WHERE a.ImageId = :imageId'
         );
         $statement->submitValue('imageId', intval($imageid));
@@ -124,7 +124,7 @@ class ScanUploadController extends UploadController {
         //exit('1');
         //////////////// EOF order memory usage ////////////////
 
-        //2) show image in Aperio's image viewer http://c.med.cornell.edu/imageserver/@@_DGjlRH2SJIRkb9ZOOr1sJEuLZRwLUhWzDSDb-sG0U61NzwQ4a8Byw==/@73660/view.apml
+        //2) show image in pacsvendor's image viewer http://c.med.cornell.edu/imageserver/@@_DGjlRH2SJIRkb9ZOOr1sJEuLZRwLUhWzDSDb-sG0U61NzwQ4a8Byw==/@73660/view.apml
 
         $response = new Response();
 

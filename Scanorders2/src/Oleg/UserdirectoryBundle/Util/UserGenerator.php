@@ -29,7 +29,7 @@ use Oleg\OrderformBundle\Entity\Educational;
 use Oleg\UserdirectoryBundle\Entity\GeoLocation;
 use Oleg\UserdirectoryBundle\Entity\Institution;
 use Oleg\UserdirectoryBundle\Entity\PerSiteSettings;
-use Oleg\OrderformBundle\Security\Util\AperioUtil;
+use Oleg\OrderformBundle\Security\Util\PacsvendorUtil;
 use Oleg\UserdirectoryBundle\Entity\AdminComment;
 use Oleg\UserdirectoryBundle\Entity\AdministrativeTitle;
 use Oleg\UserdirectoryBundle\Entity\AppointmentTitle;
@@ -1809,13 +1809,13 @@ class UserGenerator {
             //************** get pacsvendor group roles and ROLE_SCANORDER_ORDERING_PROVIDER for this user **************//
             //TODO: this should be located on scanorder site
             //TODO: rewrite using pacsvendor's DB not SOAP functions
-            $aperioUtil = new AperioUtil();
+            $aperioUtil = new PacsvendorUtil();
             echo "username=".$username."<br>";
             $userid = $aperioUtil->getUserIdByUserName($username);
             if( $userid ) {
                 echo "userid=".$userid."<br>";
                 $pacsvendorRoles = $aperioUtil->getUserGroupMembership($userid);
-                $stats = $aperioUtil->setUserPathologyRolesByAperioRoles( $user, $pacsvendorRoles );
+                $stats = $aperioUtil->setUserPathologyRolesByPacsvendorRoles( $user, $pacsvendorRoles );
             }
             //************** end of  pacsvendor group roles **************//
 
