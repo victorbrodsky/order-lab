@@ -1974,38 +1974,6 @@ class ScanAdminController extends AdminController
 
     }
 
-//    public function generateSystemAccountRequestType() {
-//
-//        $em = $this->getDoctrine()->getManager();
-//        $entities = $em->getRepository('OlegOrderformBundle:SystemAccountRequestType')->findAll();
-//
-//        if( $entities ) {
-//            return -1;
-//        }
-//
-//        $elements = array(
-//            'Aperio eSlide Manager on C.MED.CORNELL.EDU',
-//        );
-//
-//        $username = $this->get('security.token_storage')->getToken()->getUser();
-//
-//        $count = 10;
-//        foreach( $elements as $name ) {
-//
-//            $entity = new SystemAccountRequestType();
-//            $this->setDefaultList($entity,$count,$username,$name);
-//
-//            $em->persist($entity);
-//            $em->flush();
-//
-//            $count = $count + 10;
-//
-//        } //foreach
-//
-//        return round($count/10);
-//
-//    }
-
     public function generateAmendmentReason() {
 
         $em = $this->getDoctrine()->getManager();

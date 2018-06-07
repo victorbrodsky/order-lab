@@ -44,27 +44,16 @@ class AperioUtil {
     private $ldap = true;
     private $test = false;
 
-    //private $supportedUsertypes = array('aperio');  //array('aperio','wcmc-cwid');
-
     public function __construct() {
         //
     }
 
     public function aperioAuthenticateToken( TokenInterface $token, $serviceContainer, $em ) {
-
-        //echo "Aperio Authenticator: user name=".$token->getUsername().", Credentials=".$token->getCredentials()."<br>";
-        //exit("using Aperio Authenticator: authenticate Token");
-
         $userSecUtil = $serviceContainer->get('user_security_utility');
 
         //don't authenticate users without WCMC CWID keytype
         //$usernamePrefix = $userSecUtil->getUsernamePrefix($token->getUsername());
         //echo "usernamePrefix=".$usernamePrefix."<br>";
-
-        //if( in_array($usernamePrefix, $this->supportedUsertypes) == false ) {
-        //    return NULL;
-        //    //throw new BadCredentialsException('Aperio Authentication: the usertype '.$usernamePrefix.' can not be authenticated by ' . implode(', ',$this->supportedUsertypes));
-        //}
 
         $usernameClean = $userSecUtil->createCleanUsername($token->getUsername());
 
@@ -75,7 +64,6 @@ class AperioUtil {
         //exit();
 
         if( $AuthResult && isset($AuthResult['UserId']) && $AuthResult['ReturnCode'] == 0 ) {
-            //echo "<br>Aperio got UserId!<br>";
 
             $userManager = $serviceContainer->get('fos_user.user_manager');
 
@@ -109,7 +97,7 @@ class AperioUtil {
                 }
                 ////////// EOF assign Institution //////////
 
-                ////////// check if aperio username was set in UserRequest for this user (identification by email). //////////
+                ////////// check if pacsvendor username was set in UserRequest for this user (identification by email). //////////
                 $userRequest = $em->getRepository('OlegUserdirectoryBundle:UserRequest')->findOneByEmail($AuthResult['E_Mail']);
                 if( $userRequest ) {
                     if( $userRequest->getStatus() != 'approved' ) {
@@ -123,9 +111,9 @@ class AperioUtil {
                         }
                     }
                 }
-                ////////// EOF check if aperio username was set in UserRequest //////////
+                ////////// EOF check if pacsvendor username was set in UserRequest //////////
 
-                //set Roles: aperio users can submit order by default.
+                //set Roles: pacsvendor users can submit order by default.
                 $user->addRole('ROLE_SCANORDER_SUBMITTER');
 
                 //cwid is admin cwid
@@ -155,33 +143,26 @@ class AperioUtil {
             $_SESSION['AuthToken'] = $AuthResult['Token'];
             $userid = $AuthResult['UserId'];
 
-            //echo "aperio userid=".$userid."<br>";
+            //echo "pacsvendor userid=".$userid."<br>";
 
-            $aperioRoles = $this->getUserGroupMembership($userid);
+            $pacsvendorRoles = $this->getUserGroupMembership($userid);
 
-            //print_r($aperioRoles);
-            //exit('aperio util');
-
-            $stats = $this->setUserPathologyRolesByAperioRoles( $user, $aperioRoles );
-
-            //exit('AperioAuth');
+            $stats = $this->setUserPathologyRolesByAperioRoles( $user, $pacsvendorRoles );
 
             return $user;
 
         } else {
-            //exit('Aperio Auth failed');
-            //throw new AuthenticationException('The Aperio authentication failed. Authentication Result:'.implode(";",$AuthResult));
+            //throw new AuthenticationException('The pacsvendor authentication failed. Authentication Result:'.implode(";",$AuthResult));
             return NULL;
         }
 
-        //throw new AuthenticationException('Aperio: Invalid username or password');
+        //throw new AuthenticationException('pacsvendor: Invalid username or password');
         return NULL;
     }
 
 
     public function AperioAuth( $loginName, $password ) {
 
-        //echo "Aperio Auth Changeit back !!!";
         //exit();
         //echo " skip login=".$loginName.", pass=". $password." <br>";
 
@@ -206,12 +187,10 @@ class AperioUtil {
 
             } catch (MongoCursorException $e) {
 
-                //throw new \Exception( 'Can not connect to Aperio Data Server. Please try again later' );
+                //throw new \Exception( 'Can not connect to pacsvendor Data Server. Please try again later' );
 
             }
 
-            //$DataServerURL = GetDataServerURL();
-            //$client = new \Aperio_Aperio($DataServerURL);//,"","","","");
             $AuthResult = $client->Authenticate($loginName,$password);
 
             //check if auth is ok: define ('LOGON_FAILED', '-7004');           // UserName is incorrect
@@ -222,7 +201,7 @@ class AperioUtil {
             }
 
         } else {
-            //echo "Aperio Auth Changeit back !!!";
+            //echo "pacsvendor Auth Changeit back !!!";
             $AuthResult = array(
                 'UserId' => 11,
                 'ReturnCode' => 0,
@@ -233,7 +212,7 @@ class AperioUtil {
 
         //echo "<br>AuthResult:<br>";
         //print_r($AuthResult);
-        //exit('AperioAuth');
+        //exit('pacsvendorAuth');
 
         return $AuthResult;
     }
@@ -247,12 +226,12 @@ class AperioUtil {
         return null;
     }
 
-    //set user roles based on the user roles from aperio:
-    public function setUserPathologyRolesByAperioRoles( $user, $aperioRoles ) {
+    //set user roles based on the user roles from pacsvendor (aperio):
+    public function setUserPathologyRolesByAperioRoles( $user, $pacsvendorRoles ) {
 
         $addedRoles = array();
 
-        if( !$aperioRoles && count($aperioRoles) == 0 ) {
+        if( !$pacsvendorRoles && count($pacsvendorRoles) == 0 ) {
             return $addedRoles;
         }
 
@@ -266,7 +245,7 @@ class AperioUtil {
         $addedDirector = false;
         $addedPrincipal = false;
 
-        foreach( $aperioRoles as $role ) {
+        foreach( $pacsvendorRoles as $role ) {
 
             //echo "Role: Id = ".$role['Id'].", Description=".$role['Description'].", Name=".$role['Name']."<br>";
             if( $role['Name'] == "Faculty" ) {

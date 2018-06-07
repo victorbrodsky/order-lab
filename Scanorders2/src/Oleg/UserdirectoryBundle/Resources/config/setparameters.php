@@ -117,17 +117,17 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
 //        $maintenanceloginmsg = null;
 //        $maintenancelogoutmsg = null;
 
-        //Aperio DB
-        $database_host_aperio = null;
-        $database_port_aperio = null;
-        $database_name_aperio = null;
-        $database_user_aperio = null;
-        $database_password_aperio = null;
+        //pacsvendor DB
+        $database_host_pacsvendor = null;
+        $database_port_pacsvendor = null;
+        $database_name_pacsvendor = null;
+        $database_user_pacsvendor = null;
+        $database_password_pacsvendor = null;
 
         //set path to binary for knp_snappy
         //$knp_snappy_path = $_SERVER['DOCUMENT_ROOT']."/order/scanorder/Scanorders2/src/Oleg/UserdirectoryBundle/Util/wkhtmltopdf/bin/";
         //$knp_snappy_path = str_replace("/","\\\\",$knp_snappy_path);
-        //"\"C:\\Program Files (x86)\\Aperio\\Spectrum\\htdocs\\order\\scanorder\\Scanorders2\\src\\Oleg\\UserdirectoryBundle\\Util\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
+        //"\"C:\\Program Files (x86)\\pacsvendor\\Spectrum\\htdocs\\order\\scanorder\\Scanorders2\\src\\Oleg\\UserdirectoryBundle\\Util\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
         //$knp_snappy_path_pdf = '"\"'.$knp_snappy_path.'wkhtmltopdf.exe'.'\""';
         //$knp_snappy_path_image = '"\"'.$knp_snappy_path.'wkhtmltoimage.exe'.'\""';
         //$container->setParameter('knp_snappy.pdf.binary',$knp_snappy_path_pdf);
@@ -225,17 +225,17 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
             if( array_key_exists('dbServerAccountPassword', $row) )
                 $database_password = $row['dbServerAccountPassword'];
 
-            //Aperio DB
+            //pacsvendor DB
             if( array_key_exists('aperioeSlideManagerDBServerAddress', $row) )
-                $database_host_aperio = $row['aperioeSlideManagerDBServerAddress'];
+                $database_host_pacsvendor = $row['aperioeSlideManagerDBServerAddress'];
             if( array_key_exists('aperioeSlideManagerDBServerPort', $row) )
-                $database_port_aperio = $row['aperioeSlideManagerDBServerPort'];
+                $database_port_pacsvendor = $row['aperioeSlideManagerDBServerPort'];
             if( array_key_exists('aperioeSlideManagerDBName', $row) )
-                $database_name_aperio = $row['aperioeSlideManagerDBName'];
+                $database_name_pacsvendor = $row['aperioeSlideManagerDBName'];
             if( array_key_exists('aperioeSlideManagerDBUserName', $row) )
-                $database_user_aperio = $row['aperioeSlideManagerDBUserName'];
+                $database_user_pacsvendor = $row['aperioeSlideManagerDBUserName'];
             if( array_key_exists('aperioeSlideManagerDBPassword', $row) )
-                $database_password_aperio = $row['aperioeSlideManagerDBPassword'];
+                $database_password_pacsvendor = $row['aperioeSlideManagerDBPassword'];
         }
 
         $container->setParameter('mailer_host',$smtpServerAddress);
@@ -318,24 +318,6 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
 //            $container->setParameter('database_user',trim($database_user));
 //        if( $database_password )
 //            $container->setParameter('database_password',$database_password);
-
-        //Aperio DB
-//        echo "database_host_aperio=[".$database_host_aperio."]<br>";
-//        echo "database_port_aperio=[".$database_port_aperio."]<br>";
-//        echo "database_name_aperio=[".$database_name_aperio."]<br>";
-//        echo "database_user_aperio=[".$database_user_aperio."]<br>";
-//        echo "database_password_aperio=[".$database_password_aperio."]<br>";
-
-//        if( $database_host_aperio )
-//            $container->setParameter('database_host_aperio',trim($database_host_aperio));
-//        if( $database_port_aperio )
-//            $container->setParameter('database_port_aperio',trim($database_port_aperio));
-//        if( $database_name_aperio )
-//            $container->setParameter('database_name_aperio',trim($database_name_aperio));
-//        if( $database_user_aperio )
-//            $container->setParameter('database_user_aperio',trim($database_user_aperio));
-//        if( $database_password_aperio )
-//            $container->setParameter('database_password_aperio',trim($database_password_aperio));
 
     }//if param
 

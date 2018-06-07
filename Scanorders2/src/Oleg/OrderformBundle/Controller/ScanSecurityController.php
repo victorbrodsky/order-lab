@@ -41,33 +41,7 @@ class ScanSecurityController extends SecurityController
      * @Template()
      */
     public function loginAction( Request $request ) {
-
         return parent::loginAction($request);
-
-//        $sitename = $this->container->getParameter('scan.sitename');
-//
-//        $formArr = $this->loginPage($sitename);
-//
-//        if( $formArr == null ) {
-//            return $this->redirect( $this->generateUrl('main_common_home') );
-//        }
-//
-//        $em = $this->getDoctrine()->getManager();
-//        //$usernametypes = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findBy( array('type' => array('default', 'user-added')), array('orderinlist' => 'ASC') );
-//        $usernametypes = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findBy(
-//            array(
-//                'type' => array('default', 'user-added'),
-//                'abbreviation' => array('wcmc-cwid', 'aperio', 'local-user')
-//            ),
-//            array('orderinlist' => 'ASC')
-//        );
-//
-//        $formArr['usernametypes'] = $usernametypes;
-//
-//        return $this->render(
-//            'OlegUserdirectoryBundle:Security:login.html.twig',
-//            $formArr
-//        );
     }
 
 
@@ -179,7 +153,7 @@ class ScanSecurityController extends SecurityController
 
         foreach( $users as $user ) {
 
-            //************** get Aperio group roles and ROLE_SCANORDER_ORDERING_PROVIDER for this user **************//
+            //************** get pacsvendor group roles and ROLE_SCANORDER_ORDERING_PROVIDER for this user **************//
             $aperioUtil = new AperioUtil();
 
             $username = $user->getCleanUsername()."";
@@ -199,9 +173,9 @@ class ScanSecurityController extends SecurityController
 
             } else {
 
-                $aperioRoles = $aperioUtil->getUserGroupMembership($userid);
+                $pacsvendorRoles = $aperioUtil->getUserGroupMembership($userid);
 
-                $addedRoles = $aperioUtil->setUserPathologyRolesByAperioRoles( $user, $aperioRoles );
+                $addedRoles = $aperioUtil->setUserPathologyRolesByAperioRoles( $user, $pacsvendorRoles );
 
                 if( count($addedRoles) == 0 ) {
 
@@ -232,7 +206,7 @@ class ScanSecurityController extends SecurityController
                 $results[] = $userArr;
 
             }
-            //************** end of  Aperio group roles **************//
+            //************** end of pacsvendor group roles **************//
 
         }
 

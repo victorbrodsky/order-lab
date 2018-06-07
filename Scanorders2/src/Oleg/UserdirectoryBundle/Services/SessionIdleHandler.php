@@ -186,8 +186,6 @@ class SessionIdleHandler
 //        echo "<br> kernel routeName=".$routeName."<br>";
 //        $referer = $request->headers->get('referer');
 //        echo "referer=".$referer."<br>";
-//        $referer_url = $session->get('_security.aperio_ldap_firewall.target_path');
-//        echo "referer_url=".$referer_url."<br>";
 //        print_r($session);
 //        exit();
         

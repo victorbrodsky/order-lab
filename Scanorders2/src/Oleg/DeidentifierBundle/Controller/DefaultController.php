@@ -611,7 +611,7 @@ class DefaultController extends Controller
         //use something like: SELECT MAX(CAST(SUBSTRING(invoice_number, 4, length(invoice_number)-3) AS UNSIGNED))
         //$dql->select('MAX(CAST(accessionAccession.original AS UNSIGNED)) as maxDeidentifier'); //working correct with cast and original field
         //DID-10 => start at index 5
-        //UNSIGNED is not defined in SQL server version used in Aperio => use INTEGER
+        //UNSIGNED is not defined in SQL server version used in pacsvendor => use INTEGER
         $castAs = "INTEGER";
         if( $this->getParameter('database_driver') == 'pdo_mysql' ) {
             $castAs = "UNSIGNED";

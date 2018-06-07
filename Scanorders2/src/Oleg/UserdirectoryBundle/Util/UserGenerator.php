@@ -1806,18 +1806,18 @@ class UserGenerator {
                 $user->addRole('ROLE_FELLAPP_DIRECTOR_WCMC_BREASTPATHOLOGY');
             }
 
-            //************** get Aperio group roles and ROLE_SCANORDER_ORDERING_PROVIDER for this user **************//
+            //************** get pacsvendor group roles and ROLE_SCANORDER_ORDERING_PROVIDER for this user **************//
             //TODO: this should be located on scanorder site
-            //TODO: rewrite using Aperio's DB not SOAP functions
+            //TODO: rewrite using pacsvendor's DB not SOAP functions
             $aperioUtil = new AperioUtil();
             echo "username=".$username."<br>";
             $userid = $aperioUtil->getUserIdByUserName($username);
             if( $userid ) {
                 echo "userid=".$userid."<br>";
-                $aperioRoles = $aperioUtil->getUserGroupMembership($userid);
-                $stats = $aperioUtil->setUserPathologyRolesByAperioRoles( $user, $aperioRoles );
+                $pacsvendorRoles = $aperioUtil->getUserGroupMembership($userid);
+                $stats = $aperioUtil->setUserPathologyRolesByAperioRoles( $user, $pacsvendorRoles );
             }
-            //************** end of  Aperio group roles **************//
+            //************** end of  pacsvendor group roles **************//
 
             $user->setEnabled(true);
             //$user->setLocked(false);

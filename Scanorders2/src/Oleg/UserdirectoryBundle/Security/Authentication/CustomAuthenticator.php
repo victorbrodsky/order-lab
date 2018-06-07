@@ -63,19 +63,19 @@ class CustomAuthenticator implements SimpleFormAuthenticatorInterface {
             $this->resetFailedAttemptCounter($user);
             return $this->getUsernamePasswordToken($user,$providerKey);
         }
-        ////////////////////EOF first aperio authentication //////////////////
+        ////////////////////EOF first local authentication //////////////////
 
 
 
         //////////////////////////////////////////////////////////////////////
-        //                       2) aperio authentication                   //
+        //                       2) pacsvendor authentication                   //
         //////////////////////////////////////////////////////////////////////
         $user = $authUtil->AperioAuthentication($token, $userProvider);
         if( $user ) {
             $this->resetFailedAttemptCounter($user);
             return $this->getUsernamePasswordToken($user,$providerKey);
         }
-        ////////////////////EOF first aperio authentication //////////////////
+        ////////////////////EOF pacsvendor authentication //////////////////
 
 
 
@@ -87,7 +87,7 @@ class CustomAuthenticator implements SimpleFormAuthenticatorInterface {
             $this->resetFailedAttemptCounter($user);
             return $this->getUsernamePasswordToken($user,$providerKey);
         }
-        ////////////////////EOF first ldap authentication ////////////////////
+        ////////////////////EOF ldap authentication ////////////////////
 
 
         //////////////////////////////////////////////////////////////////////
