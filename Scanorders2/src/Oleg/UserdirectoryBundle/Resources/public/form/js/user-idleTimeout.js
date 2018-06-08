@@ -116,7 +116,7 @@ idleTimeoutClass.prototype.checkIdleTimeout = function () {
         onIdle: function(){
             //fired on no activity on the page
             console.log("on idle");
-            $('#idle-timeout').modal('show');     
+            $('#idle-timeout').modal('show');
             
             idleTimeoutClass.prototype.isServerActive();
         },
@@ -147,12 +147,22 @@ idleTimeoutClass.prototype.isServerActive = function () {
         timeout: _ajaxTimeout,
         success: function (data) {
             //console.debug("isServerActive data="+data);
-            if( data == "OK" ) {
-                console.debug("OK data="+data+" => force to close timeout dialog modal");
+            // if( data == "OK" ) {
+            //     //console.debug("OK data="+data);
+            //     console.debug("OK data="+data+" => force to close timeout dialog modal");
+            //     $("#idle-timeout-keepworking").trigger('click');
+            //     //keepWorking();
+            //     //active = true;
+            //     //_serverActive = true;
+            // } else {
+            //     console.debug("show timeout dialog modal");
+            //     //$('#idle-timeout').modal('show');
+            // }
+            if( data.indexOf("show_idletimeout_modal") !== -1 ) {
+                console.log("show timeout dialog modal: data="+data);
+            } else {
+                console.log("OK data="+data+" => force to close timeout dialog modal");
                 $("#idle-timeout-keepworking").trigger('click');
-                //keepWorking();
-                //active = true;
-                //_serverActive = true;
             }
         },
         //success: this.maxIdleTimeMethod,

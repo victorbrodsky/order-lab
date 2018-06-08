@@ -83,7 +83,7 @@ class FilterType extends AbstractType
             'required' => false,
             'multiple' => true,
             'choices' => $this->params['stateChoiceArr'],
-            //'data' => $this->params['defaultStatesArr'],
+            'data' => $this->params['defaultStatesArr'],
             'attr' => array('class' => 'combobox'),
         ));
 

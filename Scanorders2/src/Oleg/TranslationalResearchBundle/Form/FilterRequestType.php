@@ -119,6 +119,7 @@ class FilterRequestType extends AbstractType
             'required' => false,
             'multiple' => true,
             'choices' => $this->params['progressStateArr'],
+            //'data' => $this->params['progressStateDefault'],
             'attr' => array('class' => 'combobox'),
         ));
 

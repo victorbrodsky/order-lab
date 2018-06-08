@@ -68,6 +68,7 @@ class ProjectController extends Controller
      * @Route("/projects/", name="translationalresearch_project_index")
      * @Route("/my-projects/", name="translationalresearch_my_project_index")
      * @Route("/projects-where-i-am-requester/", name="translationalresearch_my_request_project_index")
+     * @Route("/draft-projects-where-i-am-requester/", name="translationalresearch_my_request_project_draft_index")
      * @Route("/projects-assigned-to-me-for-review/", name="translationalresearch_my_review_project_index")
      * @Route("/projects-pending-my-review/", name="translationalresearch_my_pending_review_project_index")
      * @Template("OlegTranslationalResearchBundle:Project:index.html.twig")
@@ -172,6 +173,11 @@ class ProjectController extends Controller
             //'defaultStatesArr' => $defaultStatesArr,
             'projectSpecialtyAllowedArr' => $projectSpecialtyAllowedArr
         );
+
+        if( $routeName == "translationalresearch_my_request_project_draft_index" ) {
+            $params['defaultStatesArr'] = array('draft');
+        }
+
         $filterform = $this->createForm(FilterType::class, null,array(
             'method' => 'GET',
             'form_custom_value'=>$params
@@ -517,6 +523,14 @@ class ProjectController extends Controller
         if( $routeName == "translationalresearch_my_request_project_index" ) {
             $myRequestProjectsCriterion = $this->getProjectWhereIamRequester();
             $dql->andWhere($myRequestProjectsCriterion);
+
+            $dqlParameters["userId"] = $user->getId();
+            $title = "Projects I Personally Requested, where I am a Requester"; //"My Project Requests, Where I am a Requester";
+        }
+
+        if( $routeName == "translationalresearch_my_request_project_draft_index" ) {
+            $myRequestProjectsCriterion = $this->getProjectWhereIamRequester();
+            $dql->andWhere($myRequestProjectsCriterion." AND project.state != 'draft'");
 
             $dqlParameters["userId"] = $user->getId();
             $title = "Projects I Personally Requested, where I am a Requester"; //"My Project Requests, Where I am a Requester";

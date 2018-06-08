@@ -2025,7 +2025,7 @@ class TransResRequestUtil
             $allowAPCP = true;
         }
 
-        $filterTypes = array('My Submitted Requests',"My Draft Requests",'Requests for My Projects','[[hr]]');
+        $filterTypes = array('My Submitted Requests',"My Draft Requests",'Submitted Requests for My Projects','[[hr]]');
 
         if( $transresUtil->isAdminOrPrimaryReviewerOrExecutive() === false && $this->secAuth->isGranted('ROLE_TRANSRES_TECHNICIAN') === false ) {
             return $filterTypes;
@@ -2038,6 +2038,7 @@ class TransResRequestUtil
         if( $allowAPCP ) {
             $filterTypes[] = 'All AP/CP Requests';
         }
+        $filterTypes[] = 'All Requests (including Drafts)';
         $filterTypes[] = '[[hr]]';
 
         $filterTypes[] = 'All Pending Requests';
