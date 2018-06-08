@@ -54,7 +54,7 @@ abstract class ArrayFieldAbstract {
      */
     protected $status;
 
-    //default: 'scanorder'. Other values (old): "import_from_Epic", "import_from_CoPath"
+    //default: 'scanorder'. Other values (old): "import_from_Epic", "import_from_LIS"
     /**
      * @ORM\ManyToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\SourceSystemList")
      * @ORM\JoinColumn(name="source_id", referencedColumnName="id", nullable=true)

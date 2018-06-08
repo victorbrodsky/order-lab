@@ -163,7 +163,7 @@ class UserGenerator {
                 $usernamePrefix = "local-user";
             }
             if( $userType == "External Authentication" ) {
-                $usernamePrefix = "aperio";
+                $usernamePrefix = "external";
             }
 
             if( !$usernamePrefix ) {
@@ -1809,13 +1809,13 @@ class UserGenerator {
             //************** get pacsvendor group roles and ROLE_SCANORDER_ORDERING_PROVIDER for this user **************//
             //TODO: this should be located on scanorder site
             //TODO: rewrite using pacsvendor's DB not SOAP functions
-            $aperioUtil = new PacsvendorUtil();
+            $pacsvendorUtil = new PacsvendorUtil();
             echo "username=".$username."<br>";
-            $userid = $aperioUtil->getUserIdByUserName($username);
+            $userid = $pacsvendorUtil->getUserIdByUserName($username);
             if( $userid ) {
                 echo "userid=".$userid."<br>";
-                $pacsvendorRoles = $aperioUtil->getUserGroupMembership($userid);
-                $stats = $aperioUtil->setUserPathologyRolesByPacsvendorRoles( $user, $pacsvendorRoles );
+                $pacsvendorRoles = $pacsvendorUtil->getUserGroupMembership($userid);
+                $stats = $pacsvendorUtil->setUserPathologyRolesByPacsvendorRoles( $user, $pacsvendorRoles );
             }
             //************** end of  pacsvendor group roles **************//
 

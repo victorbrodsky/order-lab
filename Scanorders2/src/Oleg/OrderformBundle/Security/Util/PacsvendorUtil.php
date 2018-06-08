@@ -70,7 +70,7 @@ class PacsvendorUtil {
 
                 $user = $userSecUtil->constractNewUser($token->getUsername());
                 $user->setEmail($AuthResult['E_Mail']);
-                $user->setCreatedby('aperio');
+                $user->setCreatedby('external');
 
                 ////////// assign Institution //////////
                 $perSiteSettings = null;

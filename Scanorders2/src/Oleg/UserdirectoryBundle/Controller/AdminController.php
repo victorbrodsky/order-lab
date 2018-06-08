@@ -1943,11 +1943,11 @@ class AdminController extends Controller
             "dbServerAccountPassword" => "null",
             "dbDatabaseName" => "null",
 
-            "aperioeSlideManagerDBServerAddress" => "127.0.0.1",
-            "aperioeSlideManagerDBServerPort" => "null",
-            "aperioeSlideManagerDBUserName" => "null",
-            "aperioeSlideManagerDBPassword" => "null",
-            "aperioeSlideManagerDBName" => "null",
+            "pacsvendorSlideManagerDBServerAddress" => "127.0.0.1",
+            "pacsvendorSlideManagerDBServerPort" => "null",
+            "pacsvendorSlideManagerDBUserName" => "null",
+            "pacsvendorSlideManagerDBPassword" => "null",
+            "pacsvendorSlideManagerDBName" => "null",
 
             "institutionurl" => "http://www.cornell.edu/",
             "institutionname" => "Cornell University",
@@ -4724,7 +4724,7 @@ class AdminController extends Controller
         foreach( $testusers as $testusername => $roles ) {
 
             $user = new User();
-            $userkeytype = $userSecUtil->getUsernameType("aperio");
+            $userkeytype = $userSecUtil->getUsernameType("external");
             $user->setKeytype($userkeytype);
             $user->setPrimaryPublicUserId($testusername);
 

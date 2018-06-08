@@ -47,7 +47,7 @@ class ScanLoginSuccessHandler extends LoginSuccessHandler {
         $this->roleBanned = 'ROLE_SCANORDER_BANNED';
         $this->roleUser = 'ROLE_SCANORDER_SUBMITTER';
         $this->roleUnapproved = 'ROLE_SCANORDER_UNAPPROVED';
-        $this->firewallName = 'aperio_ldap_firewall';
+        $this->firewallName = 'external_ldap_firewall';
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token) {

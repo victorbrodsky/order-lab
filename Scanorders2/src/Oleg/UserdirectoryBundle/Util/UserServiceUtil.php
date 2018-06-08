@@ -711,11 +711,11 @@ class UserServiceUtil {
             "dbServerAccountPassword" => "null",
             "dbDatabaseName" => "null",
 
-            "aperioeSlideManagerDBServerAddress" => "127.0.0.1",
-            "aperioeSlideManagerDBServerPort" => "null",
-            "aperioeSlideManagerDBUserName" => "null",
-            "aperioeSlideManagerDBPassword" => "null",
-            "aperioeSlideManagerDBName" => "null",
+            "pacsvendorSlideManagerDBServerAddress" => "127.0.0.1",
+            "pacsvendorSlideManagerDBServerPort" => "null",
+            "pacsvendorSlideManagerDBUserName" => "null",
+            "pacsvendorSlideManagerDBPassword" => "null",
+            "pacsvendorSlideManagerDBName" => "null",
 
             "institutionurl" => "http://www.cornell.edu/",
             "institutionname" => "Cornell University",

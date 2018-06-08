@@ -104,8 +104,8 @@ class SiteParametersController extends Controller
         $disabled = true;
 
         $passw = "*******";
-        if( $entity->getAperioeSlideManagerDBPassword() != '' )
-            $entity->setAperioeSlideManagerDBPassword($passw);
+        if( $entity->getPacsvendorSlideManagerDBPassword() != '' )
+            $entity->setPacsvendorSlideManagerDBPassword($passw);
 
         if( $entity->getCoPathDBAccountPassword() != '' )
             $entity->setCoPathDBAccountPassword($passw);

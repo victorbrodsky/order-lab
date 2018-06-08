@@ -39,7 +39,7 @@ class AuthUtil {
     private $logger;
     protected $requestStack;
 
-    private $supportedUsertypesPacsvendor = array('aperio');
+    private $supportedUsertypesExternal = array('external');
     private $supportedUsertypesLdap = array('wcmc-cwid');
     private $supportedUsertypesLocal = array('local-user');
 
@@ -166,8 +166,8 @@ class AuthUtil {
         $userSecUtil = $this->container->get('user_security_utility');
 
         $usernamePrefix = $userSecUtil->getUsernamePrefix($token->getUsername());
-        if( in_array($usernamePrefix, $this->supportedUsertypesPacsvendor) == false ) {
-            $this->logger->notice('Pacsvendor Authentication: the usertype '.$usernamePrefix.' can not be authenticated by ' . implode(', ',$this->supportedUsertypesPacsvendor));
+        if( in_array($usernamePrefix, $this->supportedUsertypesExternal) == false ) {
+            $this->logger->notice('Pacsvendor Authentication: the usertype '.$usernamePrefix.' can not be authenticated by ' . implode(', ',$this->supportedUsertypesExternal));
             return NULL;
         }
 

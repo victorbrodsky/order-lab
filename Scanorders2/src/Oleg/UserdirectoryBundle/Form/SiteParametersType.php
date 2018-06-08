@@ -238,32 +238,32 @@ class SiteParametersType extends AbstractType
 
 
         //pacsvendor DB
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'aperioeSlideManagerDBServerAddress' )
-        $builder->add('aperioeSlideManagerDBServerAddress',null,array(
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'pacsvendorSlideManagerDBServerAddress' )
+        $builder->add('pacsvendorSlideManagerDBServerAddress',null,array(
             'label'=>'PACS DB Server Address:',
             'attr' => array('class'=>'form-control')
         ));
 
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'aperioeSlideManagerDBServerPort' )
-        $builder->add('aperioeSlideManagerDBServerPort',null,array(
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'pacsvendorSlideManagerDBServerPort' )
+        $builder->add('pacsvendorSlideManagerDBServerPort',null,array(
             'label'=>'PACS DB Server Port:',
             'attr' => array('class'=>'form-control')
         ));
 
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'aperioeSlideManagerDBUserName' )
-        $builder->add('aperioeSlideManagerDBUserName',null,array(
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'pacsvendorSlideManagerDBUserName' )
+        $builder->add('pacsvendorSlideManagerDBUserName',null,array(
             'label'=>'PACS DB Server User Name:',
             'attr' => array('class'=>'form-control')
         ));
 
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'aperioeSlideManagerDBPassword' )
-        $builder->add('aperioeSlideManagerDBPassword',null,array(
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'pacsvendorSlideManagerDBPassword' )
+        $builder->add('pacsvendorSlideManagerDBPassword',null,array(
             'label'=>'PACS DB Server Password:',
             'attr' => array('class'=>'form-control')
         ));
 
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'aperioeSlideManagerDBName' )
-        $builder->add('aperioeSlideManagerDBName',null,array(
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'pacsvendorSlideManagerDBName' )
+        $builder->add('pacsvendorSlideManagerDBName',null,array(
             'label'=>'PACS Database Name:',
             'attr' => array('class'=>'form-control')
         ));

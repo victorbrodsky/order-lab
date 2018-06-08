@@ -108,9 +108,9 @@ security:
     firewalls:
 
         #this firewall name must be the same as in the bundle's service.yml.
-        aperio_ldap_firewall:
+        external_ldap_firewall:
             pattern: ^/scan
-            #aperio: true
+            #external: true
             #fr3d_ldap:  ~
             context: scan_auth
             switch_user: true

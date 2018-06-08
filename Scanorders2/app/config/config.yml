@@ -126,13 +126,13 @@ doctrine:
                 # if using pdo_sqlite as your database driver, add the path in parameters.yml
                 # e.g. database_path: %kernel.root_dir%/data/data.db3
                 # path:     %database_path%
-            aperio:
-                driver:   '%database_driver_aperio%'
-                host:     '%database_host_aperio%'
-                port:     '%database_port_aperio%'
-                dbname:   '%database_name_aperio%'
-                user:     '%database_user_aperio%'
-                password: '%database_password_aperio%'
+            external:
+                driver:   '%database_driver_external%'
+                host:     '%database_host_external%'
+                port:     '%database_port_external%'
+                dbname:   '%database_name_external%'
+                user:     '%database_user_external%'
+                password: '%database_password_external%'
                 charset:  UTF8
 
     orm:
@@ -163,8 +163,8 @@ doctrine:
                 dql:
                      string_functions:
                         CAST: Oleg\UserdirectoryBundle\Query\CastFunction
-            aperio:
-                connection: aperio
+            external:
+                connection: external
 #                mappings:
 #                    OlegOrderformBundle: ~
 #                    OlegUserdirectoryBundle: ~
@@ -252,14 +252,11 @@ stof_doctrine_extensions:
         default:
             tree: true
 
-#C:\Program Files (x86)\Aperio\Spectrum\htdocs\order\scanorder\Scanorders2\vendor\olegutil\wkhtmltopdf\bin\wkhtmltopdf.exe
 #Available options as in configure(): https://github.com/KnpLabs/snappy/blob/master/src/Knp/Snappy/Pdf.php
 knp_snappy:
     pdf:
         enabled:    true
         binary:     "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
-#        binary:     "\"C:\\Program Files (x86)\\Aperio\\Spectrum\\htdocs\\order\\scanorder\\Scanorders2\\src\\Oleg\\UserdirectoryBundle\\Util\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
-#        binary:     "\"%kernel.root_dir%\\..\\vendor\\olegutil\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
         options:
 #            enable-forms: true       #Turn HTML form fields into pdf form fields
             javascript-delay: 7000    #Wait some milliseconds for javascript finish (default 200)
@@ -267,7 +264,6 @@ knp_snappy:
 #    image:
 #        enabled:    true
 #        binary:     "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltoimage.exe\""
-##        binary:     "\"C:\\Program Files (x86)\\Aperio\\Spectrum\\htdocs\\order\\scanorder\\Scanorders2\\src\\Oleg\\UserdirectoryBundle\\Util\\wkhtmltopdf\\bin\\wkhtmltoimage.exe\""
 ##        binary:      "\"%kernel.root_dir%\\..\\vendor\\olegutil\\wkhtmltopdf\\bin\\wkhtmltoimage.exe\""
 #        options:    []
 

@@ -220,27 +220,27 @@ class SiteParameters {
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    private $aperioeSlideManagerDBServerAddress;
+    private $pacsvendorSlideManagerDBServerAddress;
 
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    private $aperioeSlideManagerDBServerPort;
+    private $pacsvendorSlideManagerDBServerPort;
 
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    private $aperioeSlideManagerDBUserName;
+    private $pacsvendorSlideManagerDBUserName;
 
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    private $aperioeSlideManagerDBPassword;
+    private $pacsvendorSlideManagerDBPassword;
 
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    private $aperioeSlideManagerDBName;
+    private $pacsvendorSlideManagerDBName;
 
 
     //Footer
@@ -1098,83 +1098,83 @@ class SiteParameters {
     }
 
     /**
-     * @param mixed $aperioeSlideManagerDBName
+     * @param mixed $pacsvendorSlideManagerDBName
      */
-    public function setAperioeSlideManagerDBName($aperioeSlideManagerDBName)
+    public function setPacsvendorSlideManagerDBName($pacsvendorSlideManagerDBName)
     {
-        $this->aperioeSlideManagerDBName = $aperioeSlideManagerDBName;
+        $this->pacsvendorSlideManagerDBName = $pacsvendorSlideManagerDBName;
     }
 
     /**
      * @return mixed
      */
-    public function getAperioeSlideManagerDBName()
+    public function getPacsvendorSlideManagerDBName()
     {
-        return $this->aperioeSlideManagerDBName;
+        return $this->pacsvendorSlideManagerDBName;
     }
 
     /**
-     * @param mixed $aperioeSlideManagerDBPassword
+     * @param mixed $pacsvendorSlideManagerDBPassword
      */
-    public function setAperioeSlideManagerDBPassword($aperioeSlideManagerDBPassword)
+    public function setPacsvendorSlideManagerDBPassword($pacsvendorSlideManagerDBPassword)
     {
-        $this->aperioeSlideManagerDBPassword = $aperioeSlideManagerDBPassword;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAperioeSlideManagerDBPassword()
-    {
-        return $this->aperioeSlideManagerDBPassword;
-    }
-
-    /**
-     * @param mixed $aperioeSlideManagerDBServerAddress
-     */
-    public function setAperioeSlideManagerDBServerAddress($aperioeSlideManagerDBServerAddress)
-    {
-        $this->aperioeSlideManagerDBServerAddress = $aperioeSlideManagerDBServerAddress;
+        $this->pacsvendorSlideManagerDBPassword = $pacsvendorSlideManagerDBPassword;
     }
 
     /**
      * @return mixed
      */
-    public function getAperioeSlideManagerDBServerAddress()
+    public function getPacsvendorSlideManagerDBPassword()
     {
-        return $this->aperioeSlideManagerDBServerAddress;
+        return $this->pacsvendorSlideManagerDBPassword;
     }
 
     /**
-     * @param mixed $aperioeSlideManagerDBServerPort
+     * @param mixed $pacsvendorSlideManagerDBServerAddress
      */
-    public function setAperioeSlideManagerDBServerPort($aperioeSlideManagerDBServerPort)
+    public function setPacsvendorSlideManagerDBServerAddress($pacsvendorSlideManagerDBServerAddress)
     {
-        $this->aperioeSlideManagerDBServerPort = $aperioeSlideManagerDBServerPort;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAperioeSlideManagerDBServerPort()
-    {
-        return $this->aperioeSlideManagerDBServerPort;
-    }
-
-    /**
-     * @param mixed $aperioeSlideManagerDBUserName
-     */
-    public function setAperioeSlideManagerDBUserName($aperioeSlideManagerDBUserName)
-    {
-        $this->aperioeSlideManagerDBUserName = $aperioeSlideManagerDBUserName;
+        $this->pacsvendorSlideManagerDBServerAddress = $pacsvendorSlideManagerDBServerAddress;
     }
 
     /**
      * @return mixed
      */
-    public function getAperioeSlideManagerDBUserName()
+    public function getPacsvendorSlideManagerDBServerAddress()
     {
-        return $this->aperioeSlideManagerDBUserName;
+        return $this->pacsvendorSlideManagerDBServerAddress;
+    }
+
+    /**
+     * @param mixed $pacsvendorSlideManagerDBServerPort
+     */
+    public function setPacsvendorSlideManagerDBServerPort($pacsvendorSlideManagerDBServerPort)
+    {
+        $this->pacsvendorSlideManagerDBServerPort = $pacsvendorSlideManagerDBServerPort;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPacsvendorSlideManagerDBServerPort()
+    {
+        return $this->pacsvendorSlideManagerDBServerPort;
+    }
+
+    /**
+     * @param mixed $pacsvendorSlideManagerDBUserName
+     */
+    public function setPacsvendorSlideManagerDBUserName($pacsvendorSlideManagerDBUserName)
+    {
+        $this->pacsvendorSlideManagerDBUserName = $pacsvendorSlideManagerDBUserName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPacsvendorSlideManagerDBUserName()
+    {
+        return $this->pacsvendorSlideManagerDBUserName;
     }
 
     /**

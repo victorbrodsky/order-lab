@@ -694,7 +694,7 @@ class UserSecurityUtil {
     }
 
 
-    //username - full username including user type ie aperio_username_@_wcmc-cwid
+    //username - full username including user type ie external_username_@_wcmc-cwid
     public function constractNewUser($username) {
 
         $serviceContainer = $this->container;

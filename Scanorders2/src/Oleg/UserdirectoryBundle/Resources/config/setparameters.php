@@ -226,16 +226,16 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
                 $database_password = $row['dbServerAccountPassword'];
 
             //pacsvendor DB
-            if( array_key_exists('aperioeSlideManagerDBServerAddress', $row) )
-                $database_host_pacsvendor = $row['aperioeSlideManagerDBServerAddress'];
-            if( array_key_exists('aperioeSlideManagerDBServerPort', $row) )
-                $database_port_pacsvendor = $row['aperioeSlideManagerDBServerPort'];
-            if( array_key_exists('aperioeSlideManagerDBName', $row) )
-                $database_name_pacsvendor = $row['aperioeSlideManagerDBName'];
-            if( array_key_exists('aperioeSlideManagerDBUserName', $row) )
-                $database_user_pacsvendor = $row['aperioeSlideManagerDBUserName'];
-            if( array_key_exists('aperioeSlideManagerDBPassword', $row) )
-                $database_password_pacsvendor = $row['aperioeSlideManagerDBPassword'];
+            if( array_key_exists('pacsvendorSlideManagerDBServerAddress', $row) )
+                $database_host_pacsvendor = $row['pacsvendorSlideManagerDBServerAddress'];
+            if( array_key_exists('pacsvendorSlideManagerDBServerPort', $row) )
+                $database_port_pacsvendor = $row['pacsvendorSlideManagerDBServerPort'];
+            if( array_key_exists('pacsvendorSlideManagerDBName', $row) )
+                $database_name_pacsvendor = $row['pacsvendorSlideManagerDBName'];
+            if( array_key_exists('pacsvendorSlideManagerDBUserName', $row) )
+                $database_user_pacsvendor = $row['pacsvendorSlideManagerDBUserName'];
+            if( array_key_exists('pacsvendorSlideManagerDBPassword', $row) )
+                $database_password_pacsvendor = $row['pacsvendorSlideManagerDBPassword'];
         }
 
         $container->setParameter('mailer_host',$smtpServerAddress);

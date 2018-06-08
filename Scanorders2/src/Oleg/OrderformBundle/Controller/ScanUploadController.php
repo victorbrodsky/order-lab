@@ -87,7 +87,7 @@ class ScanUploadController extends UploadController {
         //1) get image url info by imageid
 
         ////////////////// pacsvendor DB ////////////////////////////
-        $pacsvendorEm = $this->getDoctrine()->getManager('aperio');
+        $pacsvendorEm = $this->getDoctrine()->getManager('external');
 
         $pacsvendorConnection = $pacsvendorEm->getConnection();
 

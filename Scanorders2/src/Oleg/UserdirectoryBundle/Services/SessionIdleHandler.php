@@ -172,7 +172,7 @@ class SessionIdleHandler
                 $routeNameArr = array();
                 $session->set('last_route_arr',$routeNameArr);
             }
-            $target_path = $session->get('_security.aperio_ldap_firewall.target_path');
+            $target_path = $session->get('_security.external_ldap_firewall.target_path');
             $routeNameArr[] =  $routeName;
             $session->set('last_route', $routeName);
             $session->set('this_route', $routeData);

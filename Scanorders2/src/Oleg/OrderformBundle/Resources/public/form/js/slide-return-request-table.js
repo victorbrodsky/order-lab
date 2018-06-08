@@ -252,7 +252,7 @@ function handsonTableInit() {
                 var oldvalue = changes[i][2];
                 var value = changes[i][3];
 
-                //capitalize first two chars for Accession Number, when accession type 'NYH CcPppp Anatomic Pathology Accession Number' is set
+                //capitalize first two chars for Accession Number, when accession type 'NYH LIS Anatomic Pathology Accession Number' is set
                 var columnHeader = _columnData_scanorder[col].header;
                 if( columnHeader == 'Accession Number' && changes[i][3] && changes[i][3] != '' && changes[i][3].charAt(0) ) {
                     //changes[i][3] = changes[i][3].slice(0,1).toUpperCase() + changes[i][3].slice(2);

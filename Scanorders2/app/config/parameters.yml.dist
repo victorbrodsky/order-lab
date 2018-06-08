@@ -19,12 +19,12 @@ parameters:
     secret: 563fd817cf2c4f1f692d90650b6fba50f782ccc9
     delivery_strategy: realtime
 
-    #Aperio DB connection
-    database_driver_aperio: pdo_sqlsrv
-    database_host_aperio: c.med.cornell.edu
-    database_port_aperio: null
-    database_name_aperio: Aperio
-    database_user_aperio: symfony2_aperio
-    database_password_aperio: ~
+    #external DB connection
+    database_driver_external: pdo_sqlsrv
+    database_host_external: c.med.cornell.edu
+    database_port_external: null
+    database_name_external: external
+    database_user_external: symfony2_external
+    database_password_external: ~
 
     swift_delivery_addresses: [oli2002@med.cornell.edu]
