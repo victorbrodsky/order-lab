@@ -107,8 +107,8 @@ class SiteParametersController extends Controller
         if( $entity->getPacsvendorSlideManagerDBPassword() != '' )
             $entity->setPacsvendorSlideManagerDBPassword($passw);
 
-        if( $entity->getCoPathDBAccountPassword() != '' )
-            $entity->setCoPathDBAccountPassword($passw);
+        if( $entity->getLisDBAccountPassword() != '' )
+            $entity->setLisDBAccountPassword($passw);
 
         if( $entity->getADLDAPServerAccountPassword() != '' )
             $entity->setADLDAPServerAccountPassword($passw);

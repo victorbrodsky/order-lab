@@ -582,7 +582,7 @@ class SiteParametersType extends AbstractType
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
 
-        $this->addCoPath($builder);
+        $this->addLis($builder);
 
         $this->addThirdPartySoftware($builder);
 
@@ -909,35 +909,35 @@ class SiteParametersType extends AbstractType
 
 
     //Co-Path DB
-    public function addCoPath($builder) {
+    public function addLis($builder) {
 
         //Production
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'coPathDBServerAddress' )
-            $builder->add('coPathDBServerAddress',null,array(
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'lisDBServerAddress' )
+            $builder->add('lisDBServerAddress',null,array(
                 'label'=>'LIS DB Server Address:',
                 'attr' => array('class'=>'form-control')
             ));
 
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'coPathDBServerPort' )
-            $builder->add('coPathDBServerPort',null,array(
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'lisDBServerPort' )
+            $builder->add('lisDBServerPort',null,array(
                 'label'=>'LIS DB Server Port:',
                 'attr' => array('class'=>'form-control')
             ));
 
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'coPathDBAccountUserName' )
-            $builder->add('coPathDBAccountUserName',null,array(
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'lisDBAccountUserName' )
+            $builder->add('lisDBAccountUserName',null,array(
                 'label'=>'LIS DB Server Account User Name:',
                 'attr' => array('class'=>'form-control')
             ));
 
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'coPathDBAccountPassword' )
-            $builder->add('coPathDBAccountPassword',null,array(
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'lisDBAccountPassword' )
+            $builder->add('lisDBAccountPassword',null,array(
                 'label'=>'LIS DB Server Account Password:',
                 'attr' => array('class'=>'form-control')
             ));
 
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'coPathDBName' )
-            $builder->add('coPathDBName',null,array(
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'lisDBName' )
+            $builder->add('lisDBName',null,array(
                 'label'=>'LIS Database Name:',
                 'attr' => array('class'=>'form-control')
             ));
@@ -956,32 +956,32 @@ class SiteParametersType extends AbstractType
 
 
         //Test
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'coPathDBServerAddressTest' )
-            $builder->add('coPathDBServerAddressTest',null,array(
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'lisDBServerAddressTest' )
+            $builder->add('lisDBServerAddressTest',null,array(
                 'label'=>'Test LIS DB Server Address:',
                 'attr' => array('class'=>'form-control')
             ));
 
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'coPathDBServerPortTest' )
-            $builder->add('coPathDBServerPortTest',null,array(
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'lisDBServerPortTest' )
+            $builder->add('lisDBServerPortTest',null,array(
                 'label'=>'Test LIS DB Server Port:',
                 'attr' => array('class'=>'form-control')
             ));
 
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'coPathDBAccountUserNameTest' )
-            $builder->add('coPathDBAccountUserNameTest',null,array(
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'lisDBAccountUserNameTest' )
+            $builder->add('lisDBAccountUserNameTest',null,array(
                 'label'=>'Test LIS DB Server Account User Name:',
                 'attr' => array('class'=>'form-control')
             ));
 
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'coPathDBAccountPasswordTest' )
-            $builder->add('coPathDBAccountPasswordTest',null,array(
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'lisDBAccountPasswordTest' )
+            $builder->add('lisDBAccountPasswordTest',null,array(
                 'label'=>'Test LIS DB Server Account Password:',
                 'attr' => array('class'=>'form-control')
             ));
 
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'coPathDBNameTest' )
-            $builder->add('coPathDBNameTest',null,array(
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'lisDBNameTest' )
+            $builder->add('lisDBNameTest',null,array(
                 'label'=>'Test LIS Database Name:',
                 'attr' => array('class'=>'form-control')
             ));
@@ -1000,32 +1000,32 @@ class SiteParametersType extends AbstractType
 
 
         //Development
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'coPathDBServerAddressDevelopment' )
-            $builder->add('coPathDBServerAddressDevelopment',null,array(
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'lisDBServerAddressDevelopment' )
+            $builder->add('lisDBServerAddressDevelopment',null,array(
                 'label'=>'Development LIS DB Server Address:',
                 'attr' => array('class'=>'form-control')
             ));
 
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'coPathDBServerPortDevelopment' )
-            $builder->add('coPathDBServerPortDevelopment',null,array(
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'lisDBServerPortDevelopment' )
+            $builder->add('lisDBServerPortDevelopment',null,array(
                 'label'=>'Development LIS DB Server Port:',
                 'attr' => array('class'=>'form-control')
             ));
 
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'coPathDBAccountUserNameDevelopment' )
-            $builder->add('coPathDBAccountUserNameDevelopment',null,array(
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'lisDBAccountUserNameDevelopment' )
+            $builder->add('lisDBAccountUserNameDevelopment',null,array(
                 'label'=>'Development LIS DB Server Account User Name:',
                 'attr' => array('class'=>'form-control')
             ));
 
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'coPathDBAccountPasswordDevelopment' )
-            $builder->add('coPathDBAccountPasswordDevelopment',null,array(
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'lisDBAccountPasswordDevelopment' )
+            $builder->add('lisDBAccountPasswordDevelopment',null,array(
                 'label'=>'Development LIS DB Server Account Password:',
                 'attr' => array('class'=>'form-control')
             ));
 
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'coPathDBNameDevelopment' )
-            $builder->add('coPathDBNameDevelopment',null,array(
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'lisDBNameDevelopment' )
+            $builder->add('lisDBNameDevelopment',null,array(
                 'label'=>'Development LIS Database Name:',
                 'attr' => array('class'=>'form-control')
             ));
