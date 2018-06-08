@@ -1090,11 +1090,16 @@ class RequestController extends Controller
                     )
                 );
             }
+
+            $titleAdd = "";
             if( $filterType == "Submitted Requests for My Projects" ) {
                 //exit('start filtering '.$filterType);
                 //where I'm a project's requester
                 $filterTypeDone = true;
                 $showOnlyMyProjects = true;
+                $progressStates = array('All-except-Drafts');
+                $titleAdd = "All Except Draft ";
+
 //                return $this->redirectToRoute(
 //                    'translationalresearch_request_index_filter',
 //                    array(
@@ -1102,6 +1107,14 @@ class RequestController extends Controller
 //                        'title' => $filterType,
 //                    )
 //                );
+            }
+            if( $filterType == "Draft Requests for My Projects" ) {
+                //exit('start filtering '.$filterType);
+                //where I'm a project's requester
+                $filterTypeDone = true;
+                $showOnlyMyProjects = true;
+                $progressStates = array('draft');
+                $titleAdd = "Draft ";
             }
             if( $filterType == "My Draft Requests" ) {
                 //exit('start filtering '.$filterType);
@@ -1353,7 +1366,7 @@ class RequestController extends Controller
             );
 
             $dqlParameters["userId"] = $user->getId();
-            $filterTitle = "Requests for My Project (where I am a requester directly or where I am a project's requester)";
+            $filterTitle = $titleAdd."Requests for My Project (where I am a requester directly or where I am a project's requester)";
         }
 
 //        if( $projectSpecialty ) {
