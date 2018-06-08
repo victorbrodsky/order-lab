@@ -1092,6 +1092,7 @@ class RequestController extends Controller
             }
 
             $titleAdd = "";
+            //set filter's progressState or add a filter option "my projects only"
             if( $filterType == "Submitted Requests for My Projects" ) {
                 //exit('start filtering '.$filterType);
                 //where I'm a project's requester
@@ -1108,6 +1109,7 @@ class RequestController extends Controller
 //                    )
 //                );
             }
+            //set filter's progressState or add a filter option "my projects only"
             if( $filterType == "Draft Requests for My Projects" ) {
                 //exit('start filtering '.$filterType);
                 //where I'm a project's requester
