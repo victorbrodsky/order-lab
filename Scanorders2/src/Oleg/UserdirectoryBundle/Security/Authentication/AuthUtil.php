@@ -376,6 +376,7 @@ class AuthUtil {
         //exit('1');
 
         //"ORDER Local User", "NYP CWID", "WCMC CWID"
+        //TODO: try all primary user identifier types (the same as in login select box)?
 
         //Case 1: "ORDER Local User"
         if( $identifierKeytype == 'local-user' ) {

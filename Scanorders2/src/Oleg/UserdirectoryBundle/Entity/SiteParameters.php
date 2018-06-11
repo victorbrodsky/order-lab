@@ -860,7 +860,6 @@ class SiteParameters {
 
     /**
      * Full local name for active directory account:
-     * WCMC CWID
      *
      * @ORM\Column(type="text", nullable=true)
      */

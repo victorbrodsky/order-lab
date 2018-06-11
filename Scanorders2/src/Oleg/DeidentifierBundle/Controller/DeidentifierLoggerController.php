@@ -240,8 +240,6 @@ class DeidentifierLoggerController extends LoggerController
         $eventType = $em->getRepository('OlegUserdirectoryBundle:EventTypeList')->find($eventTypes[0]);
         $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($users[0]);
 
-        //Event Log showing 1 matching "Generate Accession Deidentifier ID" event(s) for user: firstname lastname - cwid (WCMC CWID)
-        //$loggerFormParams['titlePostfix'] = " matching \"".$eventType."\" event(s) for user: ".$user;
         $eventlogTitle = $this->container->getParameter('eventlog_title');
         if( $loggerFormParams['filtered'] ) {
             $loggerFormParams['eventLogTitle'] = $eventlogTitle . " showing " . count($loggerFormParams['pagination']) . " matching ".

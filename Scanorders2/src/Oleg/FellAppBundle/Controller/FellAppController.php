@@ -1537,7 +1537,7 @@ class FellAppController extends Controller {
             $emailSubject = $user." has marked ".$fellapp->getUser()->getUsernameShortest()."'s ".$fellapp->getFellowshipSubspecialty().
                 " fellowship application (ID:".$fellapp->getId().") as 'Priority'";
 
-            //Body: FirstName LastName (WCMC CWID: xxx1234) has marked FirstName LastName's FellowshipType
+            //Body: FirstName LastName (CWID: xxx1234) has marked FirstName LastName's FellowshipType
             // fellowship application (ID:id#) as "Priority" on MM/DD/YYY at HH:MM.
             //Link to the application:
             //Clickable Link leading to the application web page

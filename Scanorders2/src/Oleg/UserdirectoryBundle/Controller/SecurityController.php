@@ -186,15 +186,6 @@ class SecurityController extends Controller
 //            $session->remove(Security::AUTHENTICATION_ERROR);
 //        }
 
-//        $em = $this->getDoctrine()->getManager();
-//        $usernametypes = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findBy( array('type' => array('default', 'user-added')), array('orderinlist' => 'ASC') );
-//
-//        if( !$usernametypes || count($usernametypes) == 0 ) {
-//            $usernametypes = array();
-//            $option = array('abbreviation'=>'wcmc-cwid', 'name'=>'WCMC CWID');
-//            $usernametypes[] = $option;
-//        }
-
         //get error
         $error = $helper->getLastAuthenticationError();
 

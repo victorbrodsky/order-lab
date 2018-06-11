@@ -806,7 +806,7 @@ class UserSecurityUtil {
             $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername($name);
         }
 
-        //5) try firstname lastname - cwid (WCMC CWID)
+        //5) try firstname lastname - cwid
         if( !$user ) {
             $strArr = explode("-",$name);
 
@@ -1860,7 +1860,7 @@ class UserSecurityUtil {
 
         //[2016-12-31 16:19:50] request.CRITICAL: Uncaught PHP Exception Doctrine\ORM\ORMInvalidArgumentException:
         // "A new entity was found through the relationship 'Oleg\UserdirectoryBundle\Entity\LabResultUnitsMeasureList#creator'
-        // that was not configured to cascade persist operations for entity: firstname lastname - cwid (WCMC CWID).
+        // that was not configured to cascade persist operations for entity: firstname lastname - cwid.
         // To solve this issue: Either explicitly call EntityManager#persist() on this unknown entity or configure cascade persist
         if( $user instanceof User ) {
             $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->find($user->getId());

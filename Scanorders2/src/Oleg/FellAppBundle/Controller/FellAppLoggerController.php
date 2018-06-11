@@ -198,7 +198,7 @@ class FellAppLoggerController extends LoggerController
         $objectType = implode(' ', $objectTypeArr);
 
         //$loggerFormParams['titlePostfix'] = " for ".$objectType.": ".$objectId;//for FellowshipApplication: 162
-        //Event Log showing 1 matching "Generate Accession Deidentifier ID" event(s) for user: firstname lastname - cwid (WCMC CWID)
+        //Event Log showing 1 matching "Generate Accession Deidentifier ID" event(s) for user: firstname lastname - cwid
         //$loggerFormParams['titlePostfix'] = " matching \"".$eventType."\" event(s) for user: ".$user;
         $eventlogTitle = $this->container->getParameter('eventlog_title');
         if( $loggerFormParams['filtered'] ) {

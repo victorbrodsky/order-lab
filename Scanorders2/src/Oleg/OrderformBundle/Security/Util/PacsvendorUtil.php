@@ -48,7 +48,7 @@ class PacsvendorUtil {
     public function pacsvendorAuthenticateToken( TokenInterface $token, $serviceContainer, $em ) {
         $userSecUtil = $serviceContainer->get('user_security_utility');
 
-        //don't authenticate users without WCMC CWID keytype
+        //don't authenticate users without ldap keytype
         //$usernamePrefix = $userSecUtil->getUsernamePrefix($token->getUsername());
         //echo "usernamePrefix=".$usernamePrefix."<br>";
 

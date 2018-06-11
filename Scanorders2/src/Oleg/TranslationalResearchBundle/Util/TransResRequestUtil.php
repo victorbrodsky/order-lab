@@ -1489,7 +1489,7 @@ class TransResRequestUtil
         $body = "Please review the draft invoice pdf for request ".$transresRequest->getOid().
             " of project ".$projectTitle.":".$newline.$invoicePdfViewUrl.$newline;
 
-        //2) To issue the invoice to FirstNameOfSubmitter LastNameOfSubmitter (WCMC CWID: xxx) at
+        //2) To issue the invoice to FirstNameOfSubmitter LastNameOfSubmitter at
         // submitter'semail@some.com as it, please follow this link
         //Send the most recent Invoice PDF by Email (sendInvoicePDFByEmail)
         $sendPdfEmailUrl = $this->container->get('router')->generate(

@@ -518,7 +518,7 @@ class ScanAdminController extends AdminController
 
         //0       1                         2           3               4          5           6         7
         //ID	Name	                Short Name	Abbreviation	Description	Original	Synonyms	Type	 Display Order	///Creator	Creation Date	Updated By	Updated On
-        //1 	Hematoxylin and Eosin		            H&E				                                default	   10	        ///oli2002 (WCMC CWID) - Oleg Ivanov	42,256.68	hat9010 (WCMC CWID) - Hamilton Tsang	42,342.79
+        //1 	Hematoxylin and Eosin		            H&E				                                default	   10	        ///username	42,256.68	username (CWID) - username	42,342.79
 
         $firstRowWithData = 2; //2
 

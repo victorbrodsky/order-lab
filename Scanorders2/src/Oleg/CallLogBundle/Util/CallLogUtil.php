@@ -1042,7 +1042,7 @@ class CallLogUtil
                 if( !$referringProviderInfo ) {
                     $referringProviderInfo = "Pathology Department was contacted";
                 }
-                //firstname lastname - cwid (WCMC CWID) (Blood Bank Personnel, [Phone Number]/[ReferringProviderEmail])
+                //firstname lastname - cwid (Blood Bank Personnel, [Phone Number]/[ReferringProviderEmail])
                 // from 5th floor / 12345 reached out regarding Transfusion Medicine / First dose plasma.
                 if( $messageCategoryInfo ) {
                     $event .= $referringProviderInfo . " from " . $encounterLocation . " reached out regarding " . $messageCategoryInfo . ".";
@@ -1051,7 +1051,7 @@ class CallLogUtil
                 }
 
             } else {
-                //firstname lastname - cwid (WCMC CWID) (Blood Bank Personnel, [Phone Number]/[ReferringProviderEmail])
+                //firstname lastname - cwid (Blood Bank Personnel, [Phone Number]/[ReferringProviderEmail])
                 // reached out regarding Transfusion Medicine / First dose plasma.
                 if( $messageCategoryInfo ) {
                     if( !$referringProviderInfo ) {
@@ -1071,7 +1071,7 @@ class CallLogUtil
 
         }//if
 
-        //add [Attending: firstname lastname - cwid (WCMC CWID)]
+        //add [Attending: firstname lastname - cwid]
         if( $encounter ) {
             $attendingInfo = $encounter->obtainAttendingPhysicianInfo();
             if( $attendingInfo ) {

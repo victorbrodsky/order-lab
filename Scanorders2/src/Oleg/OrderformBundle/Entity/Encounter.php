@@ -1029,7 +1029,7 @@ class Encounter extends ObjectAbstract
                 $addInfo = "(" . implode(", ",$addInfoArr) . ")";
             }
 
-            //Oleg Ivanov - oli2222 (WCMC CWID) (Blood Bank Personnel, [Phone Number]/[ReferringProviderEmail])
+            //Oleg Ivanov - username (Blood Bank Personnel, [Phone Number]/[ReferringProviderEmail])
             if( $addInfo ) {
                 $info = $info . " " . $addInfo;
             }
@@ -1040,7 +1040,7 @@ class Encounter extends ObjectAbstract
         return implode("; ",$infoArr);
     }
 
-    //AttendingPhysician (i.e. firstname lastname - cwid (WCMC CWID))
+    //AttendingPhysician (i.e. firstname lastname - cwid)
     public function obtainAttendingPhysicianInfo() {
         $infoArr = array();
         //referringProviders_0_referringProviderSpecialty

@@ -56,7 +56,7 @@ class UserRequestType extends AbstractType
         ));
 
         $builder->add( 'cwid', TextType::class, array(
-                'label' => false,   //'WCMC CWID:',
+                'label' => false,  
                 'required'=> false,
                 'attr' => array('class'=>'form-control form-control-modif cwid'),
         ));

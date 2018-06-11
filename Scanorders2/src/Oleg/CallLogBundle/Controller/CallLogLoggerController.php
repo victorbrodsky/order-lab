@@ -263,7 +263,6 @@ class CallLogLoggerController extends LoggerController
         //echo "CallLogLoggerController: capacity=".$capacity."<br>";
         //echo "process Optional Fields <br>";
         $currentUser = $this->get('security.token_storage')->getToken()->getUser();
-        //search logger.event for [Attending Physician: firstname lastname - cwid (WCMC CWID)]
         $currentUserName = "Attending Physician: ".$currentUser."";
         //$currentUserName = $currentUser->getPrimaryPublicUserId()."";
         //echo "CallLogLoggerController: currentUserName=".$currentUserName."<br>";
