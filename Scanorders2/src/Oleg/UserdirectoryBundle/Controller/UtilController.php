@@ -1124,7 +1124,7 @@ class UtilController extends Controller {
     
     /**
      * Check if this cwid exists in LDAP active directory
-     * @Route("/cwid-usertype-userid", name="employees_check_cwid-usertype-userid", options={"expose"=true})
+     * @Route("/ldap-usertype-userid", name="employees_check_ldap-usertype-userid", options={"expose"=true})
      * @Method("GET")
      */
     public function checkCWIDUsertypeUseridAction(Request $request) {
@@ -1134,6 +1134,7 @@ class UtilController extends Controller {
         }
        
         $userId = trim( $request->get('userId') );
+        //$userTypeText = trim( $request->get('userTypeText') );
 
         $output = "ok";
         

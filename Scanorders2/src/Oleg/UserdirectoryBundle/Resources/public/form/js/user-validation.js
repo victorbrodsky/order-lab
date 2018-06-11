@@ -109,8 +109,9 @@ function validateUser(btnEl,origuserid) {
 
     //check if CWID exists in LDAP active directory
     var userTypeText = $('.user-keytype-field').select2('data').text;
-    if( userTypeText == "WCMC CWID" ) {
-        if( isValidCWID(primaryPublicUserId) == false ) {
+    //if( userTypeText == "WCMC CWID" ) {
+    if( userTypeText != "Local User" && userTypeText != "External Authentication" ) {
+        if( isValidCWID(primaryPublicUserId,userTypeText) == false ) {
             $('#userinfo').collapse('show');
             $('#oleg_userdirectorybundle_user_primaryPublicUserId').parent().addClass("has-error");        
 
@@ -235,7 +236,7 @@ function checkUsertypeUserid(userType,userId) {
 
 function isValidCWID(userId) {
     var valid = true;
-    var url = getCommonBaseUrl("util/"+"cwid-usertype-userid","employees");
+    var url = getCommonBaseUrl("util/"+"ldap-usertype-userid","employees");
     $.ajax({
         url: url,
         type: 'GET',

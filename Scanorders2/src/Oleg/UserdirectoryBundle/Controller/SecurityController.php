@@ -114,8 +114,8 @@ class SecurityController extends Controller
 
         if( count($usernametypes) == 0 ) {
             $usernametypes = array();
-            $option = array('abbreviation'=>'wcmc-cwid', 'name'=>'WCMC CWID');
-            $usernametypes[] = $option;
+            //$option = array('abbreviation'=>'wcmc-cwid', 'name'=>'WCM CWID');
+            //$usernametypes[] = $option;
             $option_localuser = array('abbreviation'=>'local-user', 'name'=>'Local User');
             $usernametypes[] = $option_localuser;
         }

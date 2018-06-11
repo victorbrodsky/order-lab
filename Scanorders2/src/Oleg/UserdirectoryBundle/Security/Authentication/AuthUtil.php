@@ -40,7 +40,7 @@ class AuthUtil {
     protected $requestStack;
 
     private $supportedUsertypesExternal = array('external');
-    private $supportedUsertypesLdap = array('wcmc-cwid');
+    private $supportedUsertypesLdap = null; //array('wcmc-cwid');
     private $supportedUsertypesLocal = array('local-user');
 
     public function __construct( $container, $em, RequestStack $requestStack=null )
@@ -49,6 +49,10 @@ class AuthUtil {
         $this->em = $em;
         $this->requestStack = $requestStack;
         $this->logger = $container->get('logger');
+
+        //set $supportedUsertypesLdap from defaultPrimaryPublicUserIdType
+        $userSecUtil = $this->container->get('user_security_utility');
+        $this->supportedUsertypesLdap = $userSecUtil->getSiteSettingParameter('defaultPrimaryPublicUserIdType');
     }
 
 
@@ -195,6 +199,11 @@ class AuthUtil {
         //$this->logger->notice("LdapAuthentication: LDAP authenticate user by token->getUsername()=".$token->getUsername());
         //echo "LdapAuthentication<br>";
         //exit();
+
+        if( !$this->supportedUsertypesLdap ) {
+            $this->logger->notice('LDAP usertype is not set.');
+            return false;
+        }
 
         //get clean username
         $userSecUtil = $this->container->get('user_security_utility');
@@ -391,6 +400,7 @@ class AuthUtil {
 
         //Case 2 and 3: LDAP - "NYP CWID", "WCMC CWID"
         if( $identifierKeytype == 'wcmc-cwid' ) {
+        //if( 1 ) { //all other case use ldap
 
             //Case 2: "NYP CWID"
             $identifierKeytypeStr = "NYP CWID";
