@@ -52,8 +52,12 @@ class AuthUtil {
 
         //set $supportedUsertypesLdap from defaultPrimaryPublicUserIdType
         $userSecUtil = $this->container->get('user_security_utility');
-        $this->supportedUsertypesLdap = $userSecUtil->getSiteSettingParameter('defaultPrimaryPublicUserIdType');
-        exit ("supportedUsertypesLdap=".$this->supportedUsertypesLdap."<br>");
+        $defaultPrimaryPublicUserIdType = $userSecUtil->getSiteSettingParameter('defaultPrimaryPublicUserIdType');
+        if( $defaultPrimaryPublicUserIdType ) {
+            $this->supportedUsertypesLdap = $defaultPrimaryPublicUserIdType->getAbbreviation();
+                //exit ("supportedUsertypesLdap=".$this->supportedUsertypesLdap."<br>");
+                $this->logger->notice("supportedUsertypesLdap=" . $this->supportedUsertypesLdap);
+        }
     }
 
 
