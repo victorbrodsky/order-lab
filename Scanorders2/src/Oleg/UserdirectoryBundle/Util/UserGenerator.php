@@ -156,7 +156,7 @@ class UserGenerator {
             }
 
             $usernamePrefix = null;
-            if( $userType == "WCMC CWID" ) {
+            if( $userType == "WCM CWID" ) {
                 $usernamePrefix = $this->usernamePrefix;
             }
             if( $userType == "Local User" ) {

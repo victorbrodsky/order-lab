@@ -795,7 +795,7 @@ class UserServiceUtil {
             //"noticeUseCwidLogin" => "Please use your CWID to log in",
             "noticeSignUpNoCwid" => "Sign up for an account if you have no CWID",
             "noticeHasLdapAccount" => "Do you (the person for whom the account is being requested) have a CWID username?",
-            "noticeLdapName" => "WCMC CWID",
+            "noticeLdapName" => "WCM CWID",
             ////////////////////////// EOF LDAP notice messages /////////////////////////
 
             "contentAboutPage" => '

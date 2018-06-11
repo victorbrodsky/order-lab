@@ -422,7 +422,7 @@ class AuthUtil {
             }
 
             //Case 3: "WCMC CWID"
-            $identifierKeytypeStr = "WCMC CWID";
+            $identifierKeytypeStr = "WCM CWID";
             $subjectUser = $this->findUserByIdentifierType($identifierKeytypeStr, $identifierUsername);
             if ($subjectUser) {
                 $token->setUser($subjectUser);

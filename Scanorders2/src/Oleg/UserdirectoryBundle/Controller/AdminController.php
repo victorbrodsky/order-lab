@@ -2027,7 +2027,7 @@ class AdminController extends Controller
             //"noticeUseCwidLogin" => "Please use your CWID to log in",
             "noticeSignUpNoCwid" => "Sign up for an account if you have no CWID",
             "noticeHasLdapAccount" => "Do you (the person for whom the account is being requested) have a CWID username?",
-            "noticeLdapName" => "WCMC CWID",
+            "noticeLdapName" => "WCM CWID",
             ////////////////////////// EOF LDAP notice messages /////////////////////////
 
             "contentAboutPage" => '
@@ -2336,9 +2336,9 @@ class AdminController extends Controller
         $pathDefaultGroup->setInstitution($pathology);
 
         //primaryPublicUserIdType
-        $primaryPublicUserIdType = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findOneByName("WCMC CWID");
+        $primaryPublicUserIdType = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findOneByName("WCM CWID");
         if( !$primaryPublicUserIdType ) {
-            exit('No UsernameType: "WCMC CWID"');
+            exit('No UsernameType: "WCM CWID"');
         }
         $pathDefaultGroup->setPrimaryPublicUserIdType($primaryPublicUserIdType);
 
@@ -3777,7 +3777,7 @@ class AdminController extends Controller
             'MRN',
             'ORDER Local User',
             'NYP CWID',
-            'WCMC CWID'
+            'WCM CWID'
         );
 
         $username = $this->get('security.token_storage')->getToken()->getUser();
