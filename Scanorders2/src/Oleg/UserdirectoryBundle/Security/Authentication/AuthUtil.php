@@ -388,7 +388,7 @@ class AuthUtil {
         }
 
         foreach( $identifiers as $identifier ) {
-            //$this->logger->notice($identifier->getName()."?=".$identifierKeytype->getName());
+            $this->logger->notice($identifier->getName()."?=".$identifierKeytype->getName());
 
             if( $identifier->getName() == $identifierKeytype->getName() ) {
 
@@ -402,6 +402,8 @@ class AuthUtil {
                     }
 
                     return $subjectUser;
+                } else {
+                    $this->logger->notice("User not found by authenticateUserByIdentifierType function. username=".$username."; identifierKeytype=".$identifierKeytype);
                 }
 
                 return NULL;
@@ -417,6 +419,7 @@ class AuthUtil {
 
         $identifierKeytype = $this->em->getRepository('OlegUserdirectoryBundle:IdentifierTypeList')->findOneByName($identifierKeytypeName);
         if( !$identifierKeytype ) {
+            $this->logger->notice('identifierKeytype not found by name='.$identifierKeytypeName);
             return NULL;
         }
 
