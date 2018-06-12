@@ -409,6 +409,7 @@ class AuthUtil {
         }
 
         //exit("no user found by username=$identifierUsername keytype=$identifierKeytype");
+        $this->logger->warning("Identifiers are not authenticated; Identifiers count=".count($identifiers));
         return NULL;
     }
     //find a user by user's identifier
