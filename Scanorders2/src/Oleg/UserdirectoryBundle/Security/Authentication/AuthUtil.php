@@ -359,6 +359,7 @@ class AuthUtil {
 
         $username = $token->getUsername();
         //$credentials = $token->getCredentials();
+        $this->logger->notice("identifierAuthentication with username ".$username);
 
         //oli2002c_@_local-user, oli2002c_@_wcmc-cwid
         $usernameArr = explode("_@_", $username);
