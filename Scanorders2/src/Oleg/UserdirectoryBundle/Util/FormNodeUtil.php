@@ -875,16 +875,17 @@ class FormNodeUtil
     }
 
     //assume only nodes of type "Form" can be attached to the $formNodeHolderEntity (MessageCategory)
-    public function getAllRealFormNodes( $formNodeHolderEntity ) {
+    public function getAllRealFormNodes( $formNodeHolderEntity, $cycle=null ) {
         $formNodes = array();
         //assume only one form attached to the message category holder
         $holderForms = $formNodeHolderEntity->getFormNodes();
         if( count($holderForms) > 0 ) {
-            $formNodes = $this->getRecursionAllFormNodes($holderForms->first(),$formNodes,'real');
+            $formNodes = $this->getRecursionAllFormNodes($holderForms->first(),$formNodes,'real',$cycle);
         }
         return $formNodes;
     }
-    public function getRecursionAllFormNodes( $formNode, $formNodes, $type ) {
+    public function getRecursionAllFormNodes( $formNode, $formNodes, $type, $cycle=null ) {
+        //TODO: add type-cycle logic
         $children = $formNode->getChildren();
         if( $type == 'real' ) {
             if( $this->hasValue($formNode) ) {
@@ -897,7 +898,7 @@ class FormNodeUtil
             }
         }
         foreach( $children as $formNodeChild ) {
-            $formNodes = $this->getRecursionAllFormNodes( $formNodeChild, $formNodes, $type );
+            $formNodes = $this->getRecursionAllFormNodes( $formNodeChild, $formNodes, $type, $cycle );
         }
         return $formNodes;
     }
@@ -2193,7 +2194,7 @@ class FormNodeUtil
     //Used by:
     // 1) getFormNodeFieldsAction in FormNodeController to render fields for new/edit/amend
     // 2) getSingleFormNodeHolderShortInfo for info array for home and view pages
-    public function getFormNodeValueByFormnodeAndReceivingmapper( $formNode, $mapper, $asObject=false ) {
+    public function getFormNodeValueByFormnodeAndReceivingmapper( $formNode, $mapper, $asObject=false, $cycle=null ) {
 
         if( !$formNode ) {
             //echo "formNode is null<br>";
@@ -2206,9 +2207,26 @@ class FormNodeUtil
         }
 
         $formNodeType = $formNode->getType();
-        if( $formNodeType == 'disabled' || $formNodeType == 'draft' || $formNodeType == 'hidden' ) {
+
+        //draft: not shown on new/edit/view
+        if( $formNodeType == 'draft' ) {
             return null;
         }
+        //disabled: not on new, yes on view/edit
+        if( $formNodeType == 'disabled' ) {
+            if( $cycle == "new" ) {
+                return null;
+            }
+        }
+        //hidden: not on new, yes on view/edit only if value != null
+        if( $formNodeType == 'hidden' ) {
+            if( $cycle == "new" ) {
+                return null;
+            }
+        }
+//        if( $formNodeType == 'disabled' || $formNodeType == 'draft' || $formNodeType == 'hidden' ) {
+//            return null;
+//        }
 
 //        echo "formNode=".$formNode."<br>";
 //        $class = new \ReflectionClass($object);
@@ -2251,6 +2269,9 @@ class FormNodeUtil
         }
 
         if( count($results) == 0 ) {
+            if( $formNodeType == 'hidden' ) {
+                return null; //TODO: testing
+            }
             //echo "no value were added to receiving object: ".$formNode->getName()."; entityNamespace=".$mapper['entityNamespace']."; entityName=".$mapper['entityName']."; entityId=".$mapper['entityId']."<br>";
             $complexRes = array(
                 'formNodeValue' => null,
@@ -2265,6 +2286,13 @@ class FormNodeUtil
             //$formNodeValue =  $this->getFormNodeValueByType($formNode,$results[0]);
             $formNodeValue = $this->processFormNodeValue($formNode,$results[0],$results[0]->getValue(),true);
             //echo "formNodeValue=".$formNodeValue."<br>";
+
+            if( $formNodeType == 'hidden' ) {
+                if( !isset($formNodeValue) ) {
+                    return null; //TODO: testing
+                }
+            }
+
             $complexRes = array(
                 'formNodeValue' => $formNodeValue,
                 'receivingEntity' => $results[0]
@@ -2279,6 +2307,13 @@ class FormNodeUtil
                 //$formNodeValue = $this->getFormNodeValueByType($formNode,$result);
                 $formNodeValue = $this->processFormNodeValue($formNode,$result,$result->getValue(),true);
                 //echo "formNodeValue=".$formNodeValue."<br>";
+
+                if( $formNodeType == 'hidden' ) {
+                    if( !isset($formNodeValue) ) {
+                        continue; //TODO: testing
+                    }
+                }
+
                 $res = array(
                     'formNodeValue' => $formNodeValue,
                     'formNodeId' => $formNode->getId(),

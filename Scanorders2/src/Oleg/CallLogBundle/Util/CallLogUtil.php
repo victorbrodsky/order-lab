@@ -1669,7 +1669,7 @@ class CallLogUtil
 
 
     //On the server side write in the "Versions" of the associated forms into this "Form Version" field in the same order as the Form titles+IDs
-    public function setFormVersions( $message ) {
+    public function setFormVersions( $message, $cycle ) {
 
         $targetMessageCategory = $message->getMessageCategory();
         if( !$targetMessageCategory ) {
@@ -1683,7 +1683,7 @@ class CallLogUtil
         foreach( $messageCategories as $messageCategory ) {
 
             //get only 'real' fields as $formNodes
-            $formNodes = $formNodeUtil->getAllRealFormNodes($messageCategory);
+            $formNodes = $formNodeUtil->getAllRealFormNodes($messageCategory,$cycle);
 
             foreach( $formNodes as $formNode ) {
 

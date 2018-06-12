@@ -1346,7 +1346,7 @@ class CallEntryController extends Controller
                 }
 
                 //On the server side write in the "Versions" of the associated forms into this "Form Version" field in the same order as the Form titles+IDs
-                $calllogUtil->setFormVersions($message);
+                $calllogUtil->setFormVersions($message,$cycle);
 
                 //////////////////// Processing ////////////////////////
                 if( $existingPatientDB ) {
