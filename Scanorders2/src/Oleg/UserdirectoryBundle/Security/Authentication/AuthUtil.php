@@ -354,7 +354,7 @@ class AuthUtil {
         return NULL;
     }
 
-    //check identifier by keytype "ORDER Local User", "NYP CWID", "WCMC CWID" and field username
+    //check identifier by keytype i.e. "Local User", identifier number and fields username and password (identifier number)
     public function identifierAuthentication($token, $userProvider) {
 
         $username = $token->getUsername();
@@ -367,7 +367,7 @@ class AuthUtil {
             return NULL;
         }
 
-        $identifierUsername = $usernameArr[0];
+        //$identifierUsername = $usernameArr[0];
         $identifierKeytype = $usernameArr[1];
 
         //$identifierUsername = "oli2002";
@@ -375,96 +375,23 @@ class AuthUtil {
         //echo "username=".$username."<br>";
         //exit('1');
 
-        //"ORDER Local User", "NYP CWID", "WCMC CWID"
-        //TODO: try all primary user identifier types (the same as in login select box)?
-
-//        //Case 1: "ORDER Local User"
-//        if( $identifierKeytype == 'local-user' ) {
-//            $this->logger->notice("identifierAuthentication: local: ".$identifierKeytype);
-//
-//            $identifierKeytypeStr = "ORDER Local User";
-//            $subjectUser = $this->authenticateUserByIdentifierType($username,$token->getCredentials(),$identifierKeytypeStr, $identifierUsername);
-//            if ($subjectUser) {
-//                //$token->setUser($subjectUser);
-//                //$this->logger->warning('Trying authenticating the local user with identifierKeytype=' . $identifierKeytypeStr . ' and identifierUsername=' . $identifierUsername);
-//                //$user = $this->LocalAuthentication($token, $userProvider);
-//
-//                //if( $user ) {
-//                    //Logger: "Logged in using [PublicIdentifierType] [PublicIdentifier ID]"
-//                    $this->addEventLog($subjectUser,$identifierKeytypeStr,$identifierUsername);
-//                //}
-//
-//                if( $this->canLogin($subjectUser) === false ) {
-//                    return NULL;
-//                }
-//
-//                return $subjectUser;
-//            }
-//
-//        }
-//
-//        //Case 2 and 3: LDAP - "NYP CWID", "WCMC CWID"
-//        if( $identifierKeytype == 'wcmc-cwid' ) {
-//        //if( 1 ) { //all other case use ldap
-//            $this->logger->notice("identifierAuthentication: ldap: ".$identifierKeytype);
-//
-//            //Case 2: "NYP CWID"
-//            $identifierKeytypeStr = "NYP CWID";
-//            $subjectUser = $this->authenticateUserByIdentifierType($username,$token->getCredentials(),$identifierKeytypeStr, $identifierUsername);
-//            if ($subjectUser) {
-//                //$token->setUser($subjectUser);
-//                //$this->logger->warning('Trying authenticating the LDAP user with identifierKeytype=' . $identifierKeytypeStr . ' and identifierUsername=' . $identifierUsername);
-//                //$user = $this->LdapAuthentication($token, $userProvider);
-//
-//                //if( $user ) {
-//                    $this->addEventLog($subjectUser,$identifierKeytypeStr,$identifierUsername);
-//                //}
-//
-//                if( $this->canLogin($subjectUser) === false ) {
-//                    return NULL;
-//                }
-//
-//                return $subjectUser;
-//            }
-//
-//            //Case 3: "WCMC CWID"
-//            $identifierKeytypeStr = "WCM CWID";
-//            $subjectUser = $this->authenticateUserByIdentifierType($username,$token->getCredentials(),$identifierKeytypeStr, $identifierUsername);
-//            if ($subjectUser) {
-//                $token->setUser($subjectUser);
-//                $this->logger->warning('Trying authenticating the LDAP user with identifierKeytype=' . $identifierKeytypeStr . ' and identifierUsername=' . $identifierUsername);
-//                $user = $this->LdapAuthentication($token, $userProvider);
-//
-//                if( $user ) {
-//                    $this->addEventLog($subjectUser,$identifierKeytypeStr,$identifierUsername);
-//                }
-//
-//                if( $this->canLogin($user) === false ) {
-//                    return NULL;
-//                }
-//
-//                return $user;
-//            }
-//        }
-
+        //try all matching identifier with primary user identifier type
         //1) get identifier types from Identifier Types (IdentifierTypeList)
         $identifiers = $this->em->getRepository('OlegUserdirectoryBundle:IdentifierTypeList')->findBy(array('type' => array('default','user-added')));
 
-        //2) get Primary Public User ID Types (UsernameType)
-        //$primaryPublicUserTypes = $this->em->getRepository('OlegUserdirectoryBundle:UsernameType')->findBy(array('type' => array('default','user-added')));
-
-        //get current Primary Public User ID Type (i.e. "Local User")
+        //2) get current Primary Public User ID Type (i.e. "Local User")
         $identifierKeytype = $this->em->getRepository('OlegUserdirectoryBundle:UsernameType')->findOneByAbbreviation($identifierKeytype);
         if( !$identifierKeytype ) {
+            $this->logger->warning("Identifier not found by abbreviation=".$identifierKeytype);
             return NULL;
         }
 
         foreach( $identifiers as $identifier ) {
-            $this->logger->notice($identifier->getName()."?=".$identifierKeytype->getName());
+            //$this->logger->notice($identifier->getName()."?=".$identifierKeytype->getName());
 
             if( $identifier->getName() == $identifierKeytype->getName() ) {
 
-                $this->logger->notice("identifier match: ".$identifier);
+                //$this->logger->notice("identifier match: ".$identifier);
                 $subjectUser = $this->authenticateUserByIdentifierType($username, $token->getCredentials(), $identifierKeytype->getName());
                 if( $subjectUser ) {
                     $this->addEventLog($subjectUser,$identifier);
@@ -483,8 +410,7 @@ class AuthUtil {
         //exit("no user found by username=$identifierUsername keytype=$identifierKeytype");
         return NULL;
     }
-
-    //find a user by "External ID" and "External Type"
+    //find a user by user's identifier
     public function authenticateUserByIdentifierType( $username, $credentials, $identifierKeytypeName ) {
 
         $identifierKeytype = $this->em->getRepository('OlegUserdirectoryBundle:IdentifierTypeList')->findOneByName($identifierKeytypeName);
@@ -516,7 +442,7 @@ class AuthUtil {
 
         $query = $this->em->createQuery($dql);
 
-        $this->logger->notice('username='.$username.'; identifierKeytype='.$identifierKeytype->getId()."; identifierField=".$credentials."; identifierStatus=".$identifierStatus."; identifierEnableAccess=".$identifierEnableAccess);
+        //$this->logger->notice('username='.$username.'; identifierKeytype='.$identifierKeytype->getId()."; identifierField=".$credentials."; identifierStatus=".$identifierStatus."; identifierEnableAccess=".$identifierEnableAccess);
 
         $query->setParameters(array(
             'username' => $username,
