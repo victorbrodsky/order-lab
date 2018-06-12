@@ -596,7 +596,7 @@ class CallLogPatientController extends PatientController {
         if( $messageCategoriePathCall ) {
             //$messageCategories = $messageCategoriePathCall->printTreeSelectList();
             //#51: Show them in the same way as the "Message Type" dropdown menu on the homepage shows its values.
-            $messageCategories = $messageCategoriePathCall->printTreeSelectListIncludingThis();
+            $messageCategories = $messageCategoriePathCall->printTreeSelectListIncludingThis(true,array("default","user-added"));
         }
         //print_r($messageCategories);
 

@@ -40,7 +40,8 @@ class ListType extends AbstractType
                             "default"=>"default",
                             "user-added"=>"user-added",
                             "disabled"=>"disabled",
-                            "draft"=>"draft"
+                            "draft"=>"draft",
+                            "hidden"=>"hidden"
                         );
 
     public function formConstructor( $params=null, $mapper=null )
@@ -160,8 +161,8 @@ class ListType extends AbstractType
             'attr' => array('class' => 'combobox combobox-width select2-list-synonyms'),
             'query_builder' => function(EntityRepository $er) {
                 return $er->createQueryBuilder('list')
-                    ->where( "list.type != :disabletype AND list.type != :drafttype" . $this->addwhere )
-                    ->setParameters( array('disabletype'=>'disabled','drafttype'=>'draft') );
+                    ->where( "list.type != :disabletype AND list.type != :drafttype AND list.type != :hiddentype" . $this->addwhere )
+                    ->setParameters( array('disabletype'=>'disabled','drafttype'=>'draft','hiddentype'=>'hidden') );
             },
         ));
 

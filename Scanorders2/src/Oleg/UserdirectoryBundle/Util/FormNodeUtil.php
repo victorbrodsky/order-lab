@@ -1775,7 +1775,7 @@ class FormNodeUtil
         }
 
         if( $node ) {
-            if( $node->getType() == 'disabled' || $node->getType() == 'draft' ) {
+            if( $node->getType() == 'disabled' || $node->getType() == 'draft' || $node->getType() == 'hidden' ) {
                 //exit("The node $name already exists, but it has ".$node->getType()." type.");
                 return $node;
             }
@@ -2206,7 +2206,7 @@ class FormNodeUtil
         }
 
         $formNodeType = $formNode->getType();
-        if( $formNodeType == 'disabled' || $formNodeType == 'draft' ) {
+        if( $formNodeType == 'disabled' || $formNodeType == 'draft' || $formNodeType == 'hidden' ) {
             return null;
         }
 

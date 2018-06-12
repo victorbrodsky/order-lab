@@ -51,6 +51,7 @@ class HierarchyFilterType extends AbstractType
             "disabled"=>"disabled",
             "draft"=>"draft",
             "user-added"=>"user-added",
+            "hidden"=>"hidden"
         );
 
         $params = array(

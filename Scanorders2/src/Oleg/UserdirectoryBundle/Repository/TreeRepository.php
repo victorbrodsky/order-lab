@@ -237,7 +237,7 @@ class TreeRepository extends NestedTreeRepository {
         $dql->leftJoin("institution.collaborationType","collaborationType");
 
         ///// replaced by getCriterionStrForCollaborationsByNode /////
-        $criteriastr = "institution.type != 'disabled' AND institution.type != 'draft'"; //->setParameters( array('disabletype'=>'disabled','drafttype'=>'draft')
+        $criteriastr = "institution.type != 'disabled' AND institution.type != 'draft' AND institution.type != 'hidden'"; //->setParameters( array('disabletype'=>'disabled','drafttype'=>'draft')
 
         $criteriastr = $criteriastr . " AND " . $this->selectNodesUnderParentNode( $node, "collaborationInstitutions" );
 

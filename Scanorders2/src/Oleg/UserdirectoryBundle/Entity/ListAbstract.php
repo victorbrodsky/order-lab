@@ -781,7 +781,7 @@ abstract class ListAbstract
     }
 
     public function isVisible() {
-        if( $this->getType() == 'disabled' || $this->getType() == 'draft' ) {
+        if( $this->getType() == 'disabled' || $this->getType() == 'draft' || $this->getType() == 'hidden' ) {
             return false;
         } else {
             return true;

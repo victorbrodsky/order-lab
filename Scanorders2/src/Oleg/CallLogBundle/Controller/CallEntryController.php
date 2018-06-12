@@ -217,8 +217,8 @@ class CallEntryController extends Controller
         $messageCategories = array();
         if( $messageCategoriePathCall ) {
             $messageCategorieDefaultIdStr = $messageCategoriePathCall->getName()."_".$messageCategoriePathCall->getId();
-
-            $messageCategories = $messageCategoriePathCall->printTreeSelectListIncludingThis();
+            
+            $messageCategories = $messageCategoriePathCall->printTreeSelectListIncludingThis(true,array("default","user-added"));
 
             /////////// sort alphabetically //////////////
             $sort = true;

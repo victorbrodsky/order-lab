@@ -64,8 +64,6 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
      */
     private $root;
 
-
-
     //May add additional properties of the tree node
 
 
@@ -282,8 +280,18 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
     }
 
     //make select ID as "name_id"
-    public function printTreeSelectList($nodes=array(),$nameMethod="getNodeNameWithParent",$asLabelValue=true) {
-        //echo $this;
+    public function printTreeSelectList( $nodes=array(), $nameMethod="getNodeNameWithParent", $asLabelValue=true, $types=array() ) {
+        echo $this."; typescount=".count($types)."; thistype=".$this->getType()."<br>";
+
+        if( count($types) > 0 ) {
+            if( in_array($this->getType(),$types) ) {
+                //ok: this type is in the provided types
+            } else {
+                echo "Not in types:".$this."<br>";
+                return $nodes;
+            }
+        }
+
         $name = $this->$nameMethod()."";
         //echo "id=".$this->getId().": ".$name."<br>";
         if( $name ) {
@@ -293,14 +301,13 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
             } else {
                 $nodes[$this->getName()."_".$this->getId()] = $name;
             }
-
-        }
+        }//if name
 
         foreach( $this->getChildren() as $subCategory ) {
 
             //echo "id=".$subCategory->getId().": ".$subCategory->getName()."<br>";
             if( count($subCategory->getChildren()) > 0 ) {
-                $nodes = $subCategory->printTreeSelectList($nodes,$nameMethod,$asLabelValue);
+                $nodes = $subCategory->printTreeSelectList($nodes,$nameMethod,$asLabelValue,$types);
             } else {
                 $name = $subCategory->$nameMethod()."";
                 if( $name ) {
@@ -309,8 +316,8 @@ abstract class BaseCompositeNode extends ListAbstract implements CompositeNodeIn
                     } else {
                         $nodes[$subCategory->getName() . "_" . $subCategory->getId()] = $name; //value => label
                     }
-                }
-            }
+                }//if name
+            }//if/else children
 
         }
 

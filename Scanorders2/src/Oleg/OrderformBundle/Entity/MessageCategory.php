@@ -79,7 +79,6 @@ class MessageCategory extends BaseCompositeNode {
      */
     private $organizationalGroupType;
 
-
 //    /**
 //     * a single form node can be used only by one message category
 //     * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\FormNode", cascade={"persist"})
@@ -190,8 +189,8 @@ class MessageCategory extends BaseCompositeNode {
     }
 
     //print this node and all children nodes
-    public function printTreeSelectListIncludingThis($asLabelValue=true) {
-        return $this->printTreeSelectList(array(),"getNodeNameWithParentsUntilThisParent",$asLabelValue);
+    public function printTreeSelectListIncludingThis( $asLabelValue=true, $showTypesArr=array() ) {
+        return $this->printTreeSelectList(array(),"getNodeNameWithParentsUntilThisParent",$asLabelValue,$showTypesArr);
     }
     public function getNodeNameWithParentsUntilThisParent() {
         return $this->getNodeNameWithParents(": ","Encounter Note");
