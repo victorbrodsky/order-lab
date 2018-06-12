@@ -3775,7 +3775,7 @@ class AdminController extends Controller
             'WCMC Employee Identification Number (EIN)',
             'National Provider Identifier (NPI)',
             'MRN',
-            'ORDER Local User',
+            'Local User',
             'NYP CWID',
             'WCM CWID'
         );

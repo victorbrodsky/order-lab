@@ -93,7 +93,7 @@ class CustomAuthenticator implements SimpleFormAuthenticatorInterface {
         //////////////////////////////////////////////////////////////////////
         //                       4) External IDs                            //
         //////////////////////////////////////////////////////////////////////
-        $user = $authUtil->ExternalIdAuthentication($token, $userProvider);
+        $user = $authUtil->identifierAuthentication($token, $userProvider);
         if( $user ) {
             $this->resetFailedAttemptCounter($user);
             return $this->getUsernamePasswordToken($user,$providerKey);
