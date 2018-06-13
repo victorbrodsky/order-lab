@@ -889,12 +889,16 @@ class FormNodeUtil
         $children = $formNode->getChildren();
         if( $type == 'real' ) {
             if( $this->hasValue($formNode) ) {
-                $formNodes[] = $formNode;
+                if( $this->showFromNodeByTypeCycleValue($formNode,$cycle,null,false) ) {
+                    $formNodes[] = $formNode;
+                }
             }
         }
         if( $type == 'section' ) {
             if( $this->isValidFormSection($formNode) ) {
-                $formNodes[] = $formNode;
+                if( $this->showFromNodeByTypeCycleValue($formNode,$cycle,null,false) ) {
+                    $formNodes[] = $formNode;
+                }
             }
         }
         foreach( $children as $formNodeChild ) {
@@ -1255,13 +1259,13 @@ class FormNodeUtil
             } else {
                 continue;
             }
-            //echo "formNode=".$formNode."<br>";
+            //echo "formNode=".$formNode."; ID=".$formNode->getId()."<br>";
 
             $formNodeValue = null;
             $receivingEntity = null;
 
-            $complexRes = $this->getFormNodeValueByFormnodeAndReceivingmapper($formNode,$mapper);
-            //echo $formNode->getName().": complexRes count=" . count($complexRes) . "<br>";
+            $complexRes = $this->getFormNodeValueByFormnodeAndReceivingmapper($formNode,$mapper,false,"view");
+            //echo $formNode->getId()."-".$formNode->getName().": complexRes count=" . count($complexRes) . "<br>";
             if( $complexRes ) {
                 $formNodeValue = $complexRes['formNodeValue'];
                 $receivingEntity = $complexRes['receivingEntity'];
@@ -2206,29 +2210,31 @@ class FormNodeUtil
             return null;
         }
 
-        $formNodeType = $formNode->getType();
-
-        //draft: not shown on new/edit/view
-        if( $formNodeType == 'draft' ) {
-            return null;
-        }
-        //disabled: not on new, yes on view/edit
-        if( $formNodeType == 'disabled' ) {
-            if( $cycle == "new" ) {
-                return null;
-            }
-        }
-        //hidden: not on new, yes on view/edit only if value != null
-        if( $formNodeType == 'hidden' ) {
-            if( $cycle == "new" ) {
-                return null;
-            }
-        }
 //        if( $formNodeType == 'disabled' || $formNodeType == 'draft' || $formNodeType == 'hidden' ) {
 //            return null;
 //        }
+//        $formNodeType = $formNode->getType();
+//        //draft: not shown on new/edit/view
+//        if( $formNodeType == 'draft' ) {
+//            return null;
+//        }
+//        //disabled: not on new, yes on view/edit
+//        if( $formNodeType == 'disabled' ) {
+//            if( $cycle == "new" ) {
+//                return null;
+//            }
+//        }
+//        //hidden: not on new, yes on view/edit only if value != null
+//        if( $formNodeType == 'hidden' ) {
+//            if( $cycle == "new" ) {
+//                return null;
+//            }
+//        }
+        if( $this->showFromNodeByTypeCycleValue($formNode,$cycle,null,true) === false ) {
+            return null;
+        }
 
-//        echo "formNode=".$formNode."<br>";
+//        echo "formNode=".$formNode."; ID=".$formNode->getId()."<br>";
 //        $class = new \ReflectionClass($object);
 //        $className = $class->getShortName();          //ObjectTypeText
 //        $classNamespace = $class->getNamespaceName(); //Oleg\UserdirectoryBundle\Entity
@@ -2269,7 +2275,10 @@ class FormNodeUtil
         }
 
         if( count($results) == 0 ) {
-            if( $formNodeType == 'hidden' ) {
+            //if( $formNodeType == 'hidden' ) {
+            //    return null; //TODO: testing
+            //}
+            if( $this->showFromNodeByTypeCycleValue($formNode,$cycle,null) === false ) {
                 return null; //TODO: testing
             }
             //echo "no value were added to receiving object: ".$formNode->getName()."; entityNamespace=".$mapper['entityNamespace']."; entityName=".$mapper['entityName']."; entityId=".$mapper['entityId']."<br>";
@@ -2287,10 +2296,13 @@ class FormNodeUtil
             $formNodeValue = $this->processFormNodeValue($formNode,$results[0],$results[0]->getValue(),true);
             //echo "formNodeValue=".$formNodeValue."<br>";
 
-            if( $formNodeType == 'hidden' ) {
-                if( !isset($formNodeValue) ) {
-                    return null; //TODO: testing
-                }
+//            if( $formNodeType == 'hidden' ) {
+//                if( !isset($formNodeValue) ) {
+//                    return null; //TODO: testing
+//                }
+//            }
+            if( $this->showFromNodeByTypeCycleValue($formNode,$cycle,$formNodeValue) === false ) {
+                return null; //TODO: testing
             }
 
             $complexRes = array(
@@ -2308,10 +2320,13 @@ class FormNodeUtil
                 $formNodeValue = $this->processFormNodeValue($formNode,$result,$result->getValue(),true);
                 //echo "formNodeValue=".$formNodeValue."<br>";
 
-                if( $formNodeType == 'hidden' ) {
-                    if( !isset($formNodeValue) ) {
-                        continue; //TODO: testing
-                    }
+//                if( $formNodeType == 'hidden' ) {
+//                    if( !isset($formNodeValue) ) {
+//                        continue; //TODO: testing
+//                    }
+//                }
+                if( $this->showFromNodeByTypeCycleValue($formNode,$cycle,$formNodeValue) === false ) {
+                    continue; //TODO: testing
                 }
 
                 $res = array(
@@ -2331,6 +2346,46 @@ class FormNodeUtil
         }
 
         return null;
+    }
+    //TODO: test it
+    public function showFromNodeByTypeCycleValue($formNode,$cycle,$value,$ignoreValue=false) {
+        //return true;
+        //return false;
+        //echo "cycle=".$cycle."<br>";
+
+        if( !$cycle ) {
+            return true;
+        }
+
+        $formNodeType = $formNode->getType();
+
+        //draft: not shown on new/edit/view
+        if( $formNodeType == 'draft' ) {
+            return false;
+        }
+        //disabled: not on new, yes on view/edit
+        if( $formNodeType == 'disabled' ) {
+            if( $cycle == "new" ) {
+                return false;
+            }
+        }
+        //hidden: not on new, yes on view/edit only if value != null
+        if( $formNodeType == 'hidden' ) {
+            if( $cycle == "new" ) {
+                return false;
+            } else {
+                if( $ignoreValue ) {
+                    return true;
+                }
+                //echo "value=".$value."<br>";
+                if( isset($value) && $value ) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
     //TODO: is it similar to processFormNodeValue - return value string (->getName) for dropdown menu - single and multiple (?)
 //    public function getFormNodeValueByType( $formNode, $list ) {

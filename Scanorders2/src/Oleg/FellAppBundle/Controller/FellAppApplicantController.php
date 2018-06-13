@@ -255,12 +255,14 @@ class FellAppApplicantController extends Controller {
         $email = $this->sendInvitationEmail($interview,$emailUtil);
 
         $fellapp = $interview->getFellapp();
+
         $emails = array();
-        $emails[] = $email;
+        if( $email ) {
+            $emails[] = $email;
+        }
 
         $event = "Invited interviewer to rate fellowship application ID " . $fellapp->getId() . " ".$fellapp->getUser().".";
         $this->sendConfirmationEmail($emails,$fellapp,$event,$emailUtil,$request);
-
 
 //        $response = new Response();
 //        $response->headers->set('Content-Type', 'application/json');
