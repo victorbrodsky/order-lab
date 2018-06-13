@@ -170,7 +170,8 @@
 {% macro addFormNodeByType( formNodeHolder, formNode, formNodeId, cycle, prototype, count, single, formNodeValue, receivingEntity ) %}
     {% import "OlegUserdirectoryBundle::FormNode/formnodemacros.html.twig" as formnodemacros %}
 
-    {% if formNode.type == "default" or formNode.type == "user-added" %}
+    {#{% if formNode.type == "default" or formNode.type == "user-added" or (formNode.type == "hidden" and formNodeValue) %}#}
+    {% if user_formnode_utility.showFromNodeByTypeCycleValue(formNode,cycle,formNodeValue) %}
 
         {% set formType = null %}
         {% if formNode.objectType %}

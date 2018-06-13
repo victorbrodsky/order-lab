@@ -885,18 +885,17 @@ class FormNodeUtil
         return $formNodes;
     }
     public function getRecursionAllFormNodes( $formNode, $formNodes, $type, $cycle=null ) {
-        //TODO: add type-cycle logic
         $children = $formNode->getChildren();
         if( $type == 'real' ) {
             if( $this->hasValue($formNode) ) {
-                if( $this->showFromNodeByTypeCycleValue($formNode,$cycle,null,false) ) {
+                if( $this->showFromNodeByTypeCycleValue($formNode,$cycle,null,true) ) {
                     $formNodes[] = $formNode;
                 }
             }
         }
         if( $type == 'section' ) {
             if( $this->isValidFormSection($formNode) ) {
-                if( $this->showFromNodeByTypeCycleValue($formNode,$cycle,null,false) ) {
+                if( $this->showFromNodeByTypeCycleValue($formNode,$cycle,null,true) ) {
                     $formNodes[] = $formNode;
                 }
             }
@@ -2094,9 +2093,9 @@ class FormNodeUtil
             if( method_exists($dropdownObject,'getOrderinlist') ) {
                 $query->orderBy("list.orderinlist", "ASC");
 
-                $query->where("list.type = :typedef OR list.type = :typeadd");
-                $parameters['typedef'] = 'default';
-                $parameters['typeadd'] = 'user-added';
+                //$query->where("list.type = 'default' OR list.type = 'user-added' OR list.type = 'hidden'");
+                //$parameters['typedef'] = 'default';
+                //$parameters['typeadd'] = 'user-added';
             }
 
             if( $formNodeId ) {
@@ -2213,23 +2212,6 @@ class FormNodeUtil
 //        if( $formNodeType == 'disabled' || $formNodeType == 'draft' || $formNodeType == 'hidden' ) {
 //            return null;
 //        }
-//        $formNodeType = $formNode->getType();
-//        //draft: not shown on new/edit/view
-//        if( $formNodeType == 'draft' ) {
-//            return null;
-//        }
-//        //disabled: not on new, yes on view/edit
-//        if( $formNodeType == 'disabled' ) {
-//            if( $cycle == "new" ) {
-//                return null;
-//            }
-//        }
-//        //hidden: not on new, yes on view/edit only if value != null
-//        if( $formNodeType == 'hidden' ) {
-//            if( $cycle == "new" ) {
-//                return null;
-//            }
-//        }
         if( $this->showFromNodeByTypeCycleValue($formNode,$cycle,null,true) === false ) {
             return null;
         }
@@ -2275,11 +2257,8 @@ class FormNodeUtil
         }
 
         if( count($results) == 0 ) {
-            //if( $formNodeType == 'hidden' ) {
-            //    return null; //TODO: testing
-            //}
-            if( $this->showFromNodeByTypeCycleValue($formNode,$cycle,null) === false ) {
-                return null; //TODO: testing
+            if( $this->showFromNodeByTypeCycleValue($formNode,$cycle,null,true) === false ) {
+                return null;
             }
             //echo "no value were added to receiving object: ".$formNode->getName()."; entityNamespace=".$mapper['entityNamespace']."; entityName=".$mapper['entityName']."; entityId=".$mapper['entityId']."<br>";
             $complexRes = array(
@@ -2296,13 +2275,8 @@ class FormNodeUtil
             $formNodeValue = $this->processFormNodeValue($formNode,$results[0],$results[0]->getValue(),true);
             //echo "formNodeValue=".$formNodeValue."<br>";
 
-//            if( $formNodeType == 'hidden' ) {
-//                if( !isset($formNodeValue) ) {
-//                    return null; //TODO: testing
-//                }
-//            }
             if( $this->showFromNodeByTypeCycleValue($formNode,$cycle,$formNodeValue) === false ) {
-                return null; //TODO: testing
+                return null;
             }
 
             $complexRes = array(
@@ -2320,13 +2294,8 @@ class FormNodeUtil
                 $formNodeValue = $this->processFormNodeValue($formNode,$result,$result->getValue(),true);
                 //echo "formNodeValue=".$formNodeValue."<br>";
 
-//                if( $formNodeType == 'hidden' ) {
-//                    if( !isset($formNodeValue) ) {
-//                        continue; //TODO: testing
-//                    }
-//                }
                 if( $this->showFromNodeByTypeCycleValue($formNode,$cycle,$formNodeValue) === false ) {
-                    continue; //TODO: testing
+                    continue;
                 }
 
                 $res = array(
@@ -2347,11 +2316,12 @@ class FormNodeUtil
 
         return null;
     }
-    //TODO: test it
+
     public function showFromNodeByTypeCycleValue($formNode,$cycle,$value,$ignoreValue=false) {
+        //echo "cycle=".$cycle."<br>";
+
         //return true;
         //return false;
-        //echo "cycle=".$cycle."<br>";
 
         if( !$cycle ) {
             return true;
