@@ -451,7 +451,7 @@ class EmailUtil {
     }
 
     public function getCronStatusWindows() {
-        $cronJobName = "Swiftmailer_Order";
+        $cronJobName = "Swiftmailer";
         $command = 'SchTasks | FINDSTR "'.$cronJobName.'"';
         $res = exec($command);
 

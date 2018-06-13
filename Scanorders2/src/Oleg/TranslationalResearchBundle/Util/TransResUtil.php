@@ -1072,6 +1072,8 @@ class TransResUtil
             $reviewerDelegate->addRole($reviewerSpecialtyRole);
         }
 
+        //TODO: add Test role for testing server
+
         //remove role: make sure if the user is not a default reviewer in all other objects. Or don't remove role at all.
         //if( $originalReviewerDelegate && $originalReviewerDelegate != $reviewerDelegate && $reviewerDelegateRole ) {
             //$originalReviewerDelegate->removeRole($reviewerDelegateRole);
