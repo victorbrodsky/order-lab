@@ -2317,6 +2317,7 @@ class FormNodeUtil
         return null;
     }
 
+    //Show or hide the field according to its type, form cycle and value
     public function showFromNodeByTypeCycleValue($formNode,$cycle,$value,$ignoreValue=false) {
         //echo "cycle=".$cycle."<br>";
 
