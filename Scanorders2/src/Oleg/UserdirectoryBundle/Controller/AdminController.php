@@ -318,11 +318,11 @@ class AdminController extends Controller
         $dirSep = DIRECTORY_SEPARATOR;
 
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            echo 'This is a server using Windows!';
+            echo 'This is a server using Windows! <br>';
             $windows = true;
             $linux = false;
         } else {
-            echo 'This is a server not using Windows! Assume Linux';
+            echo 'This is a server not using Windows! Assume Linux <br>';
             $windows = false;
             $linux = true;
         }
@@ -342,7 +342,7 @@ class AdminController extends Controller
         }
 
         //switch to deploy folder
-        echo chdir($deploy_path);
+        echo chdir($deploy_path)."<br>";
         echo "pwd=[".exec("pwd")."]<br>";
         //exec("pwd");
 
