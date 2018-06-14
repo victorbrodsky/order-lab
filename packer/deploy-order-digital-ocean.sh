@@ -75,7 +75,7 @@ dropletinfos=( $DROPLET )
 DROPLETIP="${dropletinfos[2]}"
 echo "droplet IP=$DROPLETIP"
 
-sleep 10
+sleep 30
 
 DROPLETIPWEB="http://$DROPLETIP/order/directory/admin/first-time-login-generation-init/"
 

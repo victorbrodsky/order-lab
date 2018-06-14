@@ -205,6 +205,11 @@ class InitialConfigurationType extends AbstractType
         ));
         //////////////// EOF Notices for LDAP and CWID ///////////////////
 
+        $builder->add('defaultPrimaryPublicUserIdType',null,array(
+            'label'=>'Default Primary Public User ID Type:',
+            'attr' => array('class'=>'combobox')
+        ));
+
         $builder->add('holidaysUrl',null,array(
             'label'=>'Link to list of holidays (http://intranet.med.cornell.edu/hr/):',
             'attr' => array('class'=>'form-control')

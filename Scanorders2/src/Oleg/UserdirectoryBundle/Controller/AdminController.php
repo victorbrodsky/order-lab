@@ -1903,383 +1903,383 @@ class AdminController extends Controller
         return $userServiceUtil->generateSiteParameters();
     }
 
-    public function generateSiteParameters_ORIG() {
-
-        $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
-
-        if( count($entities) > 0 ) {
-            return -1;
-        }
-
-        $types = array(
-            "maxIdleTime" => "30",
-            "environment" => "dev",
-            "siteEmail" => "email@email.com",
-            "loginInstruction" => 'Please use your <a href="http://weill.cornell.edu/its/identity-security/identity/cwid/">CWID</a> to log in.',
-
-            "smtpServerAddress" => "smtp.gmail.com",
-            "mailerPort" => "587",
-            "mailerTransport" => "smtp",
-            "mailerAuthMode" => "login",
-            "mailerUseSecureConnection" => "tls",
-            "mailerUser" => null,
-            "mailerPassword" => null,
-            "mailerSpool" => false,
-            "mailerFlushQueueFrequency" => 15, //minuts
-            "mailerDeliveryAddresses" => null,
-
-            "aDLDAPServerAddress" => "ldap.forumsys.com",
-            "aDLDAPServerPort" => "389",
-            "aDLDAPServerOu" => "dc=example,dc=com",    //used for DC
-            "aDLDAPServerAccountUserName" => "null",
-            "aDLDAPServerAccountPassword" => "null",
-            "ldapExePath" => "../src/Oleg/UserdirectoryBundle/Util/",
-            "ldapExeFilename" => "LdapSaslCustom.exe",
-
-            "dbServerAddress" => "127.0.0.1",
-            "dbServerPort" => "null",
-            "dbServerAccountUserName" => "null",
-            "dbServerAccountPassword" => "null",
-            "dbDatabaseName" => "null",
-
-            "pacsvendorSlideManagerDBServerAddress" => "127.0.0.1",
-            "pacsvendorSlideManagerDBServerPort" => "null",
-            "pacsvendorSlideManagerDBUserName" => "null",
-            "pacsvendorSlideManagerDBPassword" => "null",
-            "pacsvendorSlideManagerDBName" => "null",
-
-            "institutionurl" => "http://www.cornell.edu/",
-            "institutionname" => "Cornell University",
-            "subinstitutionurl" => "http://weill.cornell.edu",
-            "subinstitutionname" => "Weill Cornell Medicine",
-            "departmenturl" => "http://www.cornellpathology.com",
-            "departmentname" => "Pathology and Laboratory Medicine Department",
-            "showCopyrightOnFooter" => true,
-
-            ///////////////////// FELLAPP /////////////////////
-            "codeGoogleFormFellApp" => "",
-            "confirmationEmailFellApp" => "",
-            "confirmationSubjectFellApp" => "Your WCMC/NYP fellowship application has been succesfully received",
-            "confirmationBodyFellApp" => "Thank You for submitting the fellowship application to Weill Cornell Medical College/NewYork Presbyterian Hospital. ".
-                                         "Once we receive the associated recommendation letters, your application will be reviewed and considered. ".
-                                         "If You have any questions, please do not hesitate to contact me by phone or via email. ".
-                                         "Sincerely, Jessica Misner Fellowship Program Coordinator Weill Cornell Medicine Pathology and Laboratory Medicine 1300 York Avenue, Room C-302 T 212.746.6464 F 212.746.8192",
-            "clientEmailFellApp" => '',
-            "p12KeyPathFellApp" => 'E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\src\Oleg\FellAppBundle\Util',
-            "googleDriveApiUrlFellApp" => "https://www.googleapis.com/auth/drive https://spreadsheets.google.com/feeds",
-            "userImpersonateEmailFellApp" => "olegivanov@pathologysystems.org",
-            "templateIdFellApp" => "",
-            "backupFileIdFellApp" => "",
-            "folderIdFellApp" => "",
-            "localInstitutionFellApp" => "Pathology Fellowship Programs (WCMC)",
-            "deleteImportedAplicationsFellApp" => false,
-            "deleteOldAplicationsFellApp" => false,
-            "yearsOldAplicationsFellApp" => 2,
-            "spreadsheetsPathFellApp" => "fellapp/Spreadsheets",
-            "applicantsUploadPathFellApp" => "fellapp/FellowshipApplicantUploads",
-            "reportsUploadPathFellApp" => "fellapp/Reports",
-            "applicationPageLinkFellApp" => "http://wcmc.pathologysystems.org/fellowship-application",
-            "libreOfficeConvertToPDFPathFellApp" => 'C:\Program Files (x86)\LibreOffice 5\program',
-            "libreOfficeConvertToPDFFilenameFellApp" => "soffice",
-            "libreOfficeConvertToPDFArgumentsdFellApp" => "--headless -convert-to pdf -outdir",
-            "pdftkPathFellApp" => 'C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder',
-            "pdftkFilenameFellApp" => "pdftk",
-            "pdftkArgumentsFellApp" => "###inputFiles### cat output ###outputFile### dont_ask",
-            "gsPathFellApp" => "C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin",
-            "gsFilenameFellApp"=>"gswin64c.exe",
-            "gsArgumentsFellApp"=>"-q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile= ###outputFile###  -c .setpdfwrite -f ###inputFiles###",
-            ///////////////////// EOF FELLAPP /////////////////////
-
-            //VacReq
-            "vacationAccruedDaysPerMonth" => '2',
-            "academicYearStart" => new \DateTime('2017-07-01'),
-            "academicYearEnd" => new \DateTime('2017-06-30'),
-            "holidaysUrl" => "http://intranet.med.cornell.edu/hr/",
-
-            "initialConfigurationCompleted" => false,
-
-            "maintenance" => false,
-            //"maintenanceenddate" => null,
-            "maintenancelogoutmsg" =>   'The scheduled maintenance of this software has begun.'.
-                                        ' The administrators are planning to return this site to a fully functional state on or before [[datetime]].'.
-                                        'If you were in the middle of entering order information, it was saved as an "Unsubmitted" order '.
-                                        'and you should be able to submit that order after the maintenance is complete.',
-            "maintenanceloginmsg" =>    'The scheduled maintenance of this software has begun. The administrators are planning to return this site to a fully '.
-                                        'functional state on or before [[datetime]]. If you were in the middle of entering order information, '.
-                                        'it was saved as an "Unsubmitted" order and you should be able to submit that order after the maintenance is complete.',
-
-            //uploads
-            "avataruploadpath" => "directory/avatars",
-            "employeesuploadpath" => "directory/documents",
-            "scanuploadpath" => "scan-order/documents",
-            "fellappuploadpath" => "fellapp/documents",
-            "vacrequploadpath" => "directory/vacreq",
-            "transresuploadpath" => "transres/documents",
-
-            "mainHomeTitle" => "Welcome to the O R D E R platform!",
-            "listManagerTitle" => "List Manager",
-            "eventLogTitle" => "Event Log",
-            "siteSettingsTitle" => "Site Settings",
-
-            ////////////////////////// LDAP notice messages /////////////////////////
-            "noticeAttemptingPasswordResetLDAP" => "The password for your [[CWID]] can only be changed or reset by visiting the enterprise password management page or by calling the help desk at ‭1 (212) 746-4878‬.",
-            //"noticeUseCwidLogin" => "Please use your CWID to log in",
-            "noticeSignUpNoCwid" => "Sign up for an account if you have no CWID",
-            "noticeHasLdapAccount" => "Do you (the person for whom the account is being requested) have a CWID username?",
-            "noticeLdapName" => "WCM CWID",
-            ////////////////////////// EOF LDAP notice messages /////////////////////////
-
-            "contentAboutPage" => '
-                <p>
-                    This site is built on the platform titled "O R D E R" (as in the opposite of disorder).
-                </p>
-
-                <p>
-                    Designers: Victor Brodsky, Oleg Ivanov
-                </p>
-
-                <p>
-                    Developer: Oleg Ivanov
-                </p>
-
-                <p>
-                    Quality Assurance Testers: Oleg Ivanov, Steven Bowe, Emilio Madrigal
-                </p>
-
-                <p>
-                    We are continuing to improve this software. If you have a suggestion or believe you have encountered an issue, please don\'t hesitate to email
-                <a href="mailto:slidescan@med.cornell.edu" target="_top">slidescan@med.cornell.edu</a> and attach relevant screenshots.
-                </p>
-
-                <br>
-
-                <p>
-                O R D E R is made possible by:
-                </p>
-
-                <br>
-
-                <p>
-
-                        <ul>
-
-
-                    <li>
-                        <a href="http://php.net">PHP</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="http://symfony.com">Symfony</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="http://doctrine-project.org">Doctrine</a>
-                    </li>
-
-                    <br>                  
-					
-					<li>
-                        <a href="https://msdn.microsoft.com/en-us/library/aa366156.aspx">MSDN library: ldap_bind_s</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="https://github.com/symfony/SwiftmailerBundle">SwiftmailerBundle</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="https://github.com/symfony/AsseticBundle">AsseticBundle</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="https://github.com/FriendsOfSymfony/FOSUserBundle">FOSUserBundle</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-
-                        <a href="https://github.com/1up-lab/OneupUploaderBundle">OneupUploaderBundle</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="http://www.dropzonejs.com/">Dropzone JS</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="http://www.jstree.com/">jsTree</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="https://github.com/KnpLabs/KnpPaginatorBundle">KnpPaginatorBundle</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="http://twig.sensiolabs.org/doc/advanced.html">Twig</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="http://getbootstrap.com/">Bootstrap</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="https://github.com/kriskowal/q">JS promises Q</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="http://jquery.com">jQuery</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="http://jqueryui.com/">jQuery UI</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="https://github.com/RobinHerbots/jquery.inputmask">jQuery Inputmask</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="http://ivaynberg.github.io/select2/">Select2</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="http://www.eyecon.ro/bootstrap-datepicker/">Bootstrap Datepicker</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="http://www.malot.fr/bootstrap-datetimepicker/demo.php">Bootstrap DateTime Picker</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="https://github.com/twitter/typeahead.js/">Typeahead with Bloodhound</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="http://fengyuanchen.github.io/cropper/">Image Cropper</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="http://handsontable.com/">Handsontable</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="https://github.com/KnpLabs/KnpSnappyBundle">KnpSnappyBundle with wkhtmltopdf</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="https://github.com/myokyawhtun/PDFMerger">PDFMerger</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="https://github.com/bermi/password-generator">Password Generator</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="https://github.com/andreausu/UsuScryptPasswordEncoderBundle">Password Encoder</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="https://github.com/adesigns/calendar-bundle">jQuery FullCalendar bundle</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="https://sciactive.com/pnotify/">PNotify JavaScript notifications</a>
-                    </li>
-
-                    <br>
-
-                    <li>
-                        <a href="http://casperjs.org/">CasperJS</a>
-                    </li>
-
-                </ul>
-                </p>
-            '
-            //"underLoginMsgUser" => "",
-            //"underLoginMsgScan => ""
-
-        );
-
-        $params = new SiteParameters();
-
-        $count = 0;
-        foreach( $types as $key => $value ) {
-            $method = "set".$key;
-            $params->$method( $value );
-            $count = $count + 10;
-        }
-
-        //assign Institution
-        $institutionName = 'Weill Cornell Medical College';
-        $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName($institutionName);
-        if( !$institution ) {
-            throw new \Exception( 'Institution was not found for name='.$institutionName );
-        }
-        $params->setAutoAssignInstitution($institution);
-
-        //set AllowPopulateFellApp to false
-        $params->setAllowPopulateFellApp(false);
-
-        $em->persist($params);
-        $em->flush();
-
-        $emailUtil = $this->get('user_mailer_utility');
-        $emailUtil->createEmailCronJob();
-
-        return round($count/10);
-    }
+//    public function generateSiteParameters_ORIG() {
+//
+//        $em = $this->getDoctrine()->getManager();
+//        $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+//
+//        if( count($entities) > 0 ) {
+//            return -1;
+//        }
+//
+//        $types = array(
+//            "maxIdleTime" => "30",
+//            "environment" => "dev",
+//            "siteEmail" => "email@email.com",
+//            "loginInstruction" => 'Please use your <a href="http://weill.cornell.edu/its/identity-security/identity/cwid/">CWID</a> to log in.',
+//
+//            "smtpServerAddress" => "smtp.gmail.com",
+//            "mailerPort" => "587",
+//            "mailerTransport" => "smtp",
+//            "mailerAuthMode" => "login",
+//            "mailerUseSecureConnection" => "tls",
+//            "mailerUser" => null,
+//            "mailerPassword" => null,
+//            "mailerSpool" => false,
+//            "mailerFlushQueueFrequency" => 15, //minuts
+//            "mailerDeliveryAddresses" => null,
+//
+//            "aDLDAPServerAddress" => "ldap.forumsys.com",
+//            "aDLDAPServerPort" => "389",
+//            "aDLDAPServerOu" => "dc=example,dc=com",    //used for DC
+//            "aDLDAPServerAccountUserName" => "null",
+//            "aDLDAPServerAccountPassword" => "null",
+//            "ldapExePath" => "../src/Oleg/UserdirectoryBundle/Util/",
+//            "ldapExeFilename" => "LdapSaslCustom.exe",
+//
+//            "dbServerAddress" => "127.0.0.1",
+//            "dbServerPort" => "null",
+//            "dbServerAccountUserName" => "null",
+//            "dbServerAccountPassword" => "null",
+//            "dbDatabaseName" => "null",
+//
+//            "pacsvendorSlideManagerDBServerAddress" => "127.0.0.1",
+//            "pacsvendorSlideManagerDBServerPort" => "null",
+//            "pacsvendorSlideManagerDBUserName" => "null",
+//            "pacsvendorSlideManagerDBPassword" => "null",
+//            "pacsvendorSlideManagerDBName" => "null",
+//
+//            "institutionurl" => "http://www.cornell.edu/",
+//            "institutionname" => "Cornell University",
+//            "subinstitutionurl" => "http://weill.cornell.edu",
+//            "subinstitutionname" => "Weill Cornell Medicine",
+//            "departmenturl" => "http://www.cornellpathology.com",
+//            "departmentname" => "Pathology and Laboratory Medicine Department",
+//            "showCopyrightOnFooter" => true,
+//
+//            ///////////////////// FELLAPP /////////////////////
+//            "codeGoogleFormFellApp" => "",
+//            "confirmationEmailFellApp" => "",
+//            "confirmationSubjectFellApp" => "Your WCMC/NYP fellowship application has been succesfully received",
+//            "confirmationBodyFellApp" => "Thank You for submitting the fellowship application to Weill Cornell Medical College/NewYork Presbyterian Hospital. ".
+//                                         "Once we receive the associated recommendation letters, your application will be reviewed and considered. ".
+//                                         "If You have any questions, please do not hesitate to contact me by phone or via email. ".
+//                                         "Sincerely, Jessica Misner Fellowship Program Coordinator Weill Cornell Medicine Pathology and Laboratory Medicine 1300 York Avenue, Room C-302 T 212.746.6464 F 212.746.8192",
+//            "clientEmailFellApp" => '',
+//            "p12KeyPathFellApp" => 'E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\src\Oleg\FellAppBundle\Util',
+//            "googleDriveApiUrlFellApp" => "https://www.googleapis.com/auth/drive https://spreadsheets.google.com/feeds",
+//            "userImpersonateEmailFellApp" => "olegivanov@pathologysystems.org",
+//            "templateIdFellApp" => "",
+//            "backupFileIdFellApp" => "",
+//            "folderIdFellApp" => "",
+//            "localInstitutionFellApp" => "Pathology Fellowship Programs (WCMC)",
+//            "deleteImportedAplicationsFellApp" => false,
+//            "deleteOldAplicationsFellApp" => false,
+//            "yearsOldAplicationsFellApp" => 2,
+//            "spreadsheetsPathFellApp" => "fellapp/Spreadsheets",
+//            "applicantsUploadPathFellApp" => "fellapp/FellowshipApplicantUploads",
+//            "reportsUploadPathFellApp" => "fellapp/Reports",
+//            "applicationPageLinkFellApp" => "http://wcmc.pathologysystems.org/fellowship-application",
+//            "libreOfficeConvertToPDFPathFellApp" => 'C:\Program Files (x86)\LibreOffice 5\program',
+//            "libreOfficeConvertToPDFFilenameFellApp" => "soffice",
+//            "libreOfficeConvertToPDFArgumentsdFellApp" => "--headless -convert-to pdf -outdir",
+//            "pdftkPathFellApp" => 'C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder',
+//            "pdftkFilenameFellApp" => "pdftk",
+//            "pdftkArgumentsFellApp" => "###inputFiles### cat output ###outputFile### dont_ask",
+//            "gsPathFellApp" => "C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin",
+//            "gsFilenameFellApp"=>"gswin64c.exe",
+//            "gsArgumentsFellApp"=>"-q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile= ###outputFile###  -c .setpdfwrite -f ###inputFiles###",
+//            ///////////////////// EOF FELLAPP /////////////////////
+//
+//            //VacReq
+//            "vacationAccruedDaysPerMonth" => '2',
+//            "academicYearStart" => new \DateTime('2017-07-01'),
+//            "academicYearEnd" => new \DateTime('2017-06-30'),
+//            "holidaysUrl" => "http://intranet.med.cornell.edu/hr/",
+//
+//            "initialConfigurationCompleted" => false,
+//
+//            "maintenance" => false,
+//            //"maintenanceenddate" => null,
+//            "maintenancelogoutmsg" =>   'The scheduled maintenance of this software has begun.'.
+//                                        ' The administrators are planning to return this site to a fully functional state on or before [[datetime]].'.
+//                                        'If you were in the middle of entering order information, it was saved as an "Unsubmitted" order '.
+//                                        'and you should be able to submit that order after the maintenance is complete.',
+//            "maintenanceloginmsg" =>    'The scheduled maintenance of this software has begun. The administrators are planning to return this site to a fully '.
+//                                        'functional state on or before [[datetime]]. If you were in the middle of entering order information, '.
+//                                        'it was saved as an "Unsubmitted" order and you should be able to submit that order after the maintenance is complete.',
+//
+//            //uploads
+//            "avataruploadpath" => "directory/avatars",
+//            "employeesuploadpath" => "directory/documents",
+//            "scanuploadpath" => "scan-order/documents",
+//            "fellappuploadpath" => "fellapp/documents",
+//            "vacrequploadpath" => "directory/vacreq",
+//            "transresuploadpath" => "transres/documents",
+//
+//            "mainHomeTitle" => "Welcome to the O R D E R platform!",
+//            "listManagerTitle" => "List Manager",
+//            "eventLogTitle" => "Event Log",
+//            "siteSettingsTitle" => "Site Settings",
+//
+//            ////////////////////////// LDAP notice messages /////////////////////////
+//            "noticeAttemptingPasswordResetLDAP" => "The password for your [[CWID]] can only be changed or reset by visiting the enterprise password management page or by calling the help desk at ‭1 (212) 746-4878‬.",
+//            //"noticeUseCwidLogin" => "Please use your CWID to log in",
+//            "noticeSignUpNoCwid" => "Sign up for an account if you have no CWID",
+//            "noticeHasLdapAccount" => "Do you (the person for whom the account is being requested) have a CWID username?",
+//            "noticeLdapName" => "WCM CWID",
+//            ////////////////////////// EOF LDAP notice messages /////////////////////////
+//
+//            "contentAboutPage" => '
+//                <p>
+//                    This site is built on the platform titled "O R D E R" (as in the opposite of disorder).
+//                </p>
+//
+//                <p>
+//                    Designers: Victor Brodsky, Oleg Ivanov
+//                </p>
+//
+//                <p>
+//                    Developer: Oleg Ivanov
+//                </p>
+//
+//                <p>
+//                    Quality Assurance Testers: Oleg Ivanov, Steven Bowe, Emilio Madrigal
+//                </p>
+//
+//                <p>
+//                    We are continuing to improve this software. If you have a suggestion or believe you have encountered an issue, please don\'t hesitate to email
+//                <a href="mailto:slidescan@med.cornell.edu" target="_top">slidescan@med.cornell.edu</a> and attach relevant screenshots.
+//                </p>
+//
+//                <br>
+//
+//                <p>
+//                O R D E R is made possible by:
+//                </p>
+//
+//                <br>
+//
+//                <p>
+//
+//                        <ul>
+//
+//
+//                    <li>
+//                        <a href="http://php.net">PHP</a>
+//                    </li>
+//
+//                    <br>
+//
+//                    <li>
+//                        <a href="http://symfony.com">Symfony</a>
+//                    </li>
+//
+//                    <br>
+//
+//                    <li>
+//                        <a href="http://doctrine-project.org">Doctrine</a>
+//                    </li>
+//
+//                    <br>
+//
+//					<li>
+//                        <a href="https://msdn.microsoft.com/en-us/library/aa366156.aspx">MSDN library: ldap_bind_s</a>
+//                    </li>
+//
+//                    <br>
+//
+//                    <li>
+//                        <a href="https://github.com/symfony/SwiftmailerBundle">SwiftmailerBundle</a>
+//                    </li>
+//
+//                    <br>
+//
+//                    <li>
+//                        <a href="https://github.com/symfony/AsseticBundle">AsseticBundle</a>
+//                    </li>
+//
+//                    <br>
+//
+//                    <li>
+//                        <a href="https://github.com/FriendsOfSymfony/FOSUserBundle">FOSUserBundle</a>
+//                    </li>
+//
+//                    <br>
+//
+//                    <li>
+//
+//                        <a href="https://github.com/1up-lab/OneupUploaderBundle">OneupUploaderBundle</a>
+//                    </li>
+//
+//                    <br>
+//
+//                    <li>
+//                        <a href="http://www.dropzonejs.com/">Dropzone JS</a>
+//                    </li>
+//
+//                    <br>
+//
+//                    <li>
+//                        <a href="http://www.jstree.com/">jsTree</a>
+//                    </li>
+//
+//                    <br>
+//
+//                    <li>
+//                        <a href="https://github.com/KnpLabs/KnpPaginatorBundle">KnpPaginatorBundle</a>
+//                    </li>
+//
+//                    <br>
+//
+//                    <li>
+//                        <a href="http://twig.sensiolabs.org/doc/advanced.html">Twig</a>
+//                    </li>
+//
+//                    <br>
+//
+//                    <li>
+//                        <a href="http://getbootstrap.com/">Bootstrap</a>
+//                    </li>
+//
+//                    <br>
+//
+//                    <li>
+//                        <a href="https://github.com/kriskowal/q">JS promises Q</a>
+//                    </li>
+//
+//                    <br>
+//
+//                    <li>
+//                        <a href="http://jquery.com">jQuery</a>
+//                    </li>
+//
+//                    <br>
+//
+//                    <li>
+//                        <a href="http://jqueryui.com/">jQuery UI</a>
+//                    </li>
+//
+//                    <br>
+//
+//                    <li>
+//                        <a href="https://github.com/RobinHerbots/jquery.inputmask">jQuery Inputmask</a>
+//                    </li>
+//
+//                    <br>
+//
+//                    <li>
+//                        <a href="http://ivaynberg.github.io/select2/">Select2</a>
+//                    </li>
+//
+//                    <br>
+//
+//                    <li>
+//                        <a href="http://www.eyecon.ro/bootstrap-datepicker/">Bootstrap Datepicker</a>
+//                    </li>
+//
+//                    <br>
+//
+//                    <li>
+//                        <a href="http://www.malot.fr/bootstrap-datetimepicker/demo.php">Bootstrap DateTime Picker</a>
+//                    </li>
+//
+//                    <br>
+//
+//                    <li>
+//                        <a href="https://github.com/twitter/typeahead.js/">Typeahead with Bloodhound</a>
+//                    </li>
+//
+//                    <br>
+//
+//                    <li>
+//                        <a href="http://fengyuanchen.github.io/cropper/">Image Cropper</a>
+//                    </li>
+//
+//                    <br>
+//
+//                    <li>
+//                        <a href="http://handsontable.com/">Handsontable</a>
+//                    </li>
+//
+//                    <br>
+//
+//                    <li>
+//                        <a href="https://github.com/KnpLabs/KnpSnappyBundle">KnpSnappyBundle with wkhtmltopdf</a>
+//                    </li>
+//
+//                    <br>
+//
+//                    <li>
+//                        <a href="https://github.com/myokyawhtun/PDFMerger">PDFMerger</a>
+//                    </li>
+//
+//                    <br>
+//
+//                    <li>
+//                        <a href="https://github.com/bermi/password-generator">Password Generator</a>
+//                    </li>
+//
+//                    <br>
+//
+//                    <li>
+//                        <a href="https://github.com/andreausu/UsuScryptPasswordEncoderBundle">Password Encoder</a>
+//                    </li>
+//
+//                    <br>
+//
+//                    <li>
+//                        <a href="https://github.com/adesigns/calendar-bundle">jQuery FullCalendar bundle</a>
+//                    </li>
+//
+//                    <br>
+//
+//                    <li>
+//                        <a href="https://sciactive.com/pnotify/">PNotify JavaScript notifications</a>
+//                    </li>
+//
+//                    <br>
+//
+//                    <li>
+//                        <a href="http://casperjs.org/">CasperJS</a>
+//                    </li>
+//
+//                </ul>
+//                </p>
+//            '
+//            //"underLoginMsgUser" => "",
+//            //"underLoginMsgScan => ""
+//
+//        );
+//
+//        $params = new SiteParameters();
+//
+//        $count = 0;
+//        foreach( $types as $key => $value ) {
+//            $method = "set".$key;
+//            $params->$method( $value );
+//            $count = $count + 10;
+//        }
+//
+//        //assign Institution
+//        $institutionName = 'Weill Cornell Medical College';
+//        $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName($institutionName);
+//        if( !$institution ) {
+//            throw new \Exception( 'Institution was not found for name='.$institutionName );
+//        }
+//        $params->setAutoAssignInstitution($institution);
+//
+//        //set AllowPopulateFellApp to false
+//        $params->setAllowPopulateFellApp(false);
+//
+//        $em->persist($params);
+//        $em->flush();
+//
+//        $emailUtil = $this->get('user_mailer_utility');
+//        $emailUtil->createEmailCronJob();
+//
+//        return round($count/10);
+//    }
 
     public function generateDefaultOrgGroupSiteParameters() {
         $em = $this->getDoctrine()->getManager();
@@ -2337,6 +2337,12 @@ class AdminController extends Controller
 
         //primaryPublicUserIdType
         $primaryPublicUserIdType = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findOneByName("WCM CWID");
+        if( !$primaryPublicUserIdType ) {
+            $primaryPublicUserIdTypes = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findAll();
+            if( count($primaryPublicUserIdTypes) > 0 ) {
+                $primaryPublicUserIdType = $primaryPublicUserIdTypes[0];
+            }
+        }
         if( !$primaryPublicUserIdType ) {
             exit('No UsernameType: "WCM CWID"');
         }
