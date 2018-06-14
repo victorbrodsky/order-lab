@@ -366,8 +366,8 @@ class AdminController extends Controller
             }
 
             if( $composer ) {
-                $this->runProcess("composer self-update");
-                $this->runProcess("composer install");
+                $this->runProcess("/usr/local/bin/composer self-update");
+                $this->runProcess("/usr/local/bin/composer install");
             }
         }
 

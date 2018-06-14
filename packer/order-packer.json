@@ -84,10 +84,10 @@
         "inline": [             
            "cd /usr/local/bin/order-lab/Scanorders2",
            "composer install",
-		   "sudo chmod +x /usr/local/bin/order-lab/.git",
 	       "sudo chmod +x /usr/local/bin/order-lab/Scanorders2/deploy_prod.sh",
 	       "bash /usr/local/bin/order-lab/Scanorders2/deploy_prod.sh",
-	       "sudo chown -R www-data:www-data /usr/local/bin/order-lab"	                          
+	       "sudo chown -R www-data:www-data /usr/local/bin/order-lab",
+		   "sudo chown -R www-data:www-data /usr/local/bin/order-lab/.git/FETCH_HEAD"		   
          ]    
       }      
       
