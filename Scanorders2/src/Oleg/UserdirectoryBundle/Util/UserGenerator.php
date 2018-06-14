@@ -144,9 +144,6 @@ class UserGenerator {
 //            echo "fieldValue=".$fieldValue."<br>";
 //            exit('1');
 
-            $userType = $this->getValueBySectionHeaderName("Primary Public User ID Type",$rowData,$headers,$sectionNameContactInfoRange);
-            //echo "userType=".$userType."<br>";
-
             $username = $this->getValueBySectionHeaderName("Primary Public User ID",$rowData,$headers,$sectionNameContactInfoRange);
             //echo "username(cwid)=".$username."<br>";
 
@@ -156,15 +153,22 @@ class UserGenerator {
             }
 
             $usernamePrefix = null;
-            if( $userType == "WCM CWID" ) {
-                $usernamePrefix = $this->usernamePrefix;
+            $userTypeName = $this->getValueBySectionHeaderName("Primary Public User ID Type",$rowData,$headers,$sectionNameContactInfoRange);
+            //echo "userTypeName=".$userTypeName."<br>";
+            $userType = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findOneByName($userTypeName);
+            if( $userType ) {
+                $usernamePrefix = $userType->getAbbreviation();
             }
-            if( $userType == "Local User" ) {
-                $usernamePrefix = "local-user";
-            }
-            if( $userType == "External Authentication" ) {
-                $usernamePrefix = "external";
-            }
+
+//            if( $userType == "WCM CWID" ) {
+//                $usernamePrefix = $this->usernamePrefix;
+//            }
+//            if( $userType == "Local User" ) {
+//                $usernamePrefix = "local-user";
+//            }
+//            if( $userType == "External Authentication" ) {
+//                $usernamePrefix = "external";
+//            }
 
             if( !$usernamePrefix ) {
                 exit("usernamePrefix is not define for ".$userType);

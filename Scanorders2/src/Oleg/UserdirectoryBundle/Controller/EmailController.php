@@ -31,7 +31,7 @@ class EmailController extends Controller
 {
 
     /**
-     * @Route("/send-spooled-emails/", name="employees_send_spooled_emails")
+     * @Route("/send-queued-emails/", name="employees_send_spooled_emails")
      * @Method({"GET"})
      */
     public function sendSpooledEmailsAction(Request $request)
@@ -66,7 +66,7 @@ class EmailController extends Controller
     }
     
     /**
-     * @Route("/emailtest/", name="employees_emailtest")
+     * @Route("/send-a-test-email/", name="employees_emailtest")
      * @Template("OlegUserdirectoryBundle:Email:email-test.html.twig")
      * @Method({"GET","POST"})
      */

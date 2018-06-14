@@ -20,6 +20,7 @@ namespace Oleg\UserdirectoryBundle\Form;
 
 
 use Oleg\UserdirectoryBundle\Entity\User;
+use Oleg\UserdirectoryBundle\Form\CustomType\CustomSelectorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -208,6 +209,12 @@ class InitialConfigurationType extends AbstractType
         $builder->add('defaultPrimaryPublicUserIdType',null,array(
             'label'=>'Default Primary Public User ID Type:',
             'attr' => array('class'=>'combobox')
+        ));
+        $builder->add('defaultPrimaryPublicUserIdType', CustomSelectorType::class, array(
+            'label'=>'Default Primary Public User ID Type:',
+            'attr' => array('class' => 'ajax-combobox-usernametype', 'type' => 'hidden'),
+            'required' => false,
+            'classtype' => 'usernametype'
         ));
 
         $builder->add('holidaysUrl',null,array(

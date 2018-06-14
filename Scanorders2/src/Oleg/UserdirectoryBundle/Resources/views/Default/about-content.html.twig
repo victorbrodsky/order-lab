@@ -15,7 +15,15 @@
 #}
 
 
-<div style="margin-top: 100px;">
+<div style="margin-top: 20px;">
+
+    {% set ver = user_service_utility.getCurrentGitCommit() %}
+    {% if ver %}
+        <p>
+        {{ ver|raw }}
+        </p>
+        <br>
+    {% endif %}
 
     {% set contentabout_page = user_security_utility.getSiteSettingParameter("contentAboutPage") %}
     {{ contentabout_page|raw }}

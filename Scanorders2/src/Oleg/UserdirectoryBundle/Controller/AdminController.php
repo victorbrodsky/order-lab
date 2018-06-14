@@ -366,8 +366,8 @@ class AdminController extends Controller
             }
 
             if( $composer ) {
-                $this->runProcess("composer.phar self-update");
-                $this->runProcess("composer.phar install");
+                $this->runProcess("composer self-update");
+                $this->runProcess("composer install");
             }
         }
 
@@ -2335,8 +2335,8 @@ class AdminController extends Controller
         //target Institution
         $pathDefaultGroup->setInstitution($pathology);
 
-        //primaryPublicUserIdType
-        $primaryPublicUserIdType = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findOneByName("WCM CWID");
+        //primaryPublicUserIdType (WCM CWID)
+        $primaryPublicUserIdType = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findOneByName("Active Directory (LDAP)");
         if( !$primaryPublicUserIdType ) {
             $primaryPublicUserIdTypes = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findAll();
             if( count($primaryPublicUserIdTypes) > 0 ) {
@@ -2344,7 +2344,7 @@ class AdminController extends Controller
             }
         }
         if( !$primaryPublicUserIdType ) {
-            exit('No UsernameType: "WCM CWID"');
+            exit('No UsernameType found.');
         }
         $pathDefaultGroup->setPrimaryPublicUserIdType($primaryPublicUserIdType);
 
@@ -3782,6 +3782,7 @@ class AdminController extends Controller
             'National Provider Identifier (NPI)',
             'MRN',
             'Local User',
+            'Active Directory (LDAP)',
             'NYP CWID',
             'WCM CWID'
         );

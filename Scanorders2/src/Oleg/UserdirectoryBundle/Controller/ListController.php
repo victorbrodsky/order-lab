@@ -20,6 +20,7 @@ namespace Oleg\UserdirectoryBundle\Controller;
 use Oleg\OrderformBundle\Controller\ScanListController;
 use Oleg\UserdirectoryBundle\Entity\CompositeNodeInterface;
 use Oleg\UserdirectoryBundle\Entity\Permission;
+use Oleg\UserdirectoryBundle\Entity\UsernameType;
 use Oleg\UserdirectoryBundle\Form\ListFilterType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
@@ -525,6 +526,10 @@ class ListController extends Controller
 
             $user = $this->get('security.token_storage')->getToken()->getUser();
             $entity->setCreator($user);
+
+            if( $entity instanceof UsernameType ) {
+                $entity->setEmptyAbbreviation();
+            }
 
             $em->persist($entity);
             $em->flush();
@@ -1306,6 +1311,10 @@ class ListController extends Controller
             }
             /////////// EOF remove permissions. Used for roles ///////////
 
+            if( $entity instanceof UsernameType ) {
+                $entity->setEmptyAbbreviation();
+            }
+            
             //increments the version (current +1)
             $currentVersion = $entity->getVersion();
             if( $currentVersion === NULL ) {

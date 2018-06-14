@@ -349,7 +349,7 @@ class UploadController extends Controller {
     /**
      * Upload "Import Users" excel file for processing
      *
-     * @Route("/import-users/excel", name="employees_import_users_excel")
+     * @Route("/import-users/spreadsheet ", name="employees_import_users_excel")
      * @Method({"GET","POST"})
      * @Template("OlegUserdirectoryBundle:Admin:import-users.html.twig")
      */

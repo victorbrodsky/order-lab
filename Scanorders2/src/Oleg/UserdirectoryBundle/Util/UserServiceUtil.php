@@ -795,7 +795,7 @@ class UserServiceUtil {
             //"noticeUseCwidLogin" => "Please use your CWID to log in",
             "noticeSignUpNoCwid" => "Sign up for an account if you have no CWID",
             "noticeHasLdapAccount" => "Do you (the person for whom the account is being requested) have a CWID username?",
-            "noticeLdapName" => "WCM CWID",
+            "noticeLdapName" => "Active Directory (LDAP)",
             ////////////////////////// EOF LDAP notice messages /////////////////////////
 
             "contentAboutPage" => '
@@ -1050,32 +1050,65 @@ class UserServiceUtil {
         return round($count/10);
     }
 
-//    public function getGitVersionDate()
-//    {
-//        $commitHash = $this->runProcess('git log --pretty="%h" -n1 HEAD');
-//        $commitDate = $this->runProcess('git log -n1 --pretty=%ci HEAD');
-//        $commitDateStr = null;
-//        if( $commitDate ) {
-//            $commitDateStr = $commitDate->format('Y-m-d H:m:s');
-//        }
-//        $ver = $commitHash . " (" . $commitDateStr . ")";
-//        //echo "ver=".$ver."<br>";
-//        //print_r($ver);
-//        return $ver;
-//
-//        $MAJOR = 1;
-//        $MINOR = 2;
-//        $PATCH = 3;
-//
-//        $commitHash = trim(exec('git log --pretty="%h" -n1 HEAD'));
-//        echo "hash=".$commitHash."<br>";
-//
-//        $commitDate = new \DateTime(trim(exec('git log -n1 --pretty=%ci HEAD')));
-//        $commitDate->setTimezone(new \DateTimeZone('UTC'));
-//
-//        return $commitHash . " (" . $commitDate->format('Y-m-d H:m:s') . ")";
-//        //return sprintf('v%s.%s.%s-dev.%s (%s)', $MAJOR, $MINOR, $PATCH, $commitHash, $commitDate->format('Y-m-d H:m:s'));
-//    }
+    public function getGitVersionDate()
+    {
+        $ver = $this->getCurrentGitCommit('master');
+        return $ver;
+
+
+        $commitHash = $this->runProcess('git log --pretty="%h" -n1 HEAD');
+        $commitDate = $this->runProcess('git log -n1 --pretty=%ci HEAD');
+        $commitDateStr = null;
+        if( $commitDate ) {
+            $commitDateStr = $commitDate->format('Y-m-d H:m:s');
+        }
+        $ver = $commitHash . " (" . $commitDateStr . ")";
+        //echo "ver=".$ver."<br>";
+        //print_r($ver);
+        return $ver;
+
+        $MAJOR = 1;
+        $MINOR = 2;
+        $PATCH = 3;
+
+        $commitHash = trim(exec('git log --pretty="%h" -n1 HEAD'));
+        echo "hash=".$commitHash."<br>";
+
+        $commitDate = new \DateTime(trim(exec('git log -n1 --pretty=%ci HEAD')));
+        $commitDate->setTimezone(new \DateTimeZone('UTC'));
+
+        return $commitHash . " (" . $commitDate->format('Y-m-d H:m:s') . ")";
+        //return sprintf('v%s.%s.%s-dev.%s (%s)', $MAJOR, $MINOR, $PATCH, $commitHash, $commitDate->format('Y-m-d H:m:s'));
+    }
+
+    /**
+     * Get the hash of the current git HEAD
+     * @param str $branch The git branch to check
+     * @return mixed Either the hash or a boolean false
+     */
+    function getCurrentGitCommit( $branch='master' ) {
+        $projectDir = $this->container->get('kernel')->getProjectDir(); //C:\Users\ch3\Documents\MyDocs\WCMC\ORDER\scanorder\Scanorders2
+        $projectDir = str_replace("Scanorders2","",$projectDir);
+        $filename = $projectDir.".git".DIRECTORY_SEPARATOR."refs".DIRECTORY_SEPARATOR."heads".DIRECTORY_SEPARATOR.$branch;
+        //echo $filename."<br>";
+
+        //$filename = sprintf('.git/refs/heads/%s',$branch);
+        $hash = file_get_contents($filename);
+        $hash = trim($hash);
+
+        $timestamp = filemtime($filename);
+        if( $timestamp ) {
+            $timestamp = date("F d Y H:i:s.",$timestamp);
+        }
+
+        if ( $hash ) {
+            return "Current Version: " . $hash . "; " . $timestamp;
+        } else {
+            return false;
+        }
+    }
+
+
 //    public function gitVersion() {
 //        //exec('git describe --always',$version_mini_hash);
 //        $version_mini_hash = $this->runProcess('git describe --always');
@@ -1087,54 +1120,54 @@ class UserServiceUtil {
 //        $version['full'] = "v1.".trim($version_number[0]).".$version_mini_hash[0] (".str_replace('commit ','',$line[0]).")";
 //        return $version;
 //    }
-//    public function runProcess($command) {
-//        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-//            //echo 'This is a server using Windows!';
-//            $windows = true;
-//            $linux = false;
-//        } else {
-//            //echo 'This is a server not using Windows! Assume Linux';
-//            $windows = false;
-//            $linux = true;
-//        }
-//
-//        $old_path = getcwd();
-//        //echo "webPath=$old_path<br>";
-//
-//        $deploy_path = str_replace("web","",$old_path);
-//        //echo "deploy_path=$deploy_path<br>";
-//        //exit('111');
-//
-//        if( is_dir($deploy_path) ) {
-//            //echo "deploy path exists! <br>";
-//        } else {
-//            //echo "not deploy path exists: $deploy_path <br>";
-//            exit('No deploy path exists in the filesystem; deploy_path=: '.$deploy_path);
-//        }
-//
-//        //switch to deploy folder
-//        chdir($deploy_path);
-//        //echo "pwd=[".exec("pwd")."]<br>";
-//
-//        if( $linux ) {
-//            $process = new Process($command);
-//            $process->setTimeout(1800); //sec; 1800 sec => 30 min
-//            $process->run();
-//            if (!$process->isSuccessful()) {
-//                throw new ProcessFailedException($process);
-//            }
-//            $res = $process->getOutput();
-//        }
-//
-//        if( $windows ) {
-//            $res = exec($command);
-//            //echo "res=".$res."<br>";
-//        }
-//
-//        chdir($old_path);
-//
-//        return $res;
-//    }
+    public function runProcess($command) {
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            //echo 'This is a server using Windows!';
+            $windows = true;
+            $linux = false;
+        } else {
+            //echo 'This is a server not using Windows! Assume Linux';
+            $windows = false;
+            $linux = true;
+        }
+
+        $old_path = getcwd();
+        //echo "webPath=$old_path<br>";
+
+        $deploy_path = str_replace("web","",$old_path);
+        //echo "deploy_path=$deploy_path<br>";
+        //exit('111');
+
+        if( is_dir($deploy_path) ) {
+            //echo "deploy path exists! <br>";
+        } else {
+            //echo "not deploy path exists: $deploy_path <br>";
+            exit('No deploy path exists in the filesystem; deploy_path=: '.$deploy_path);
+        }
+
+        //switch to deploy folder
+        chdir($deploy_path);
+        //echo "pwd=[".exec("pwd")."]<br>";
+
+        if( $linux ) {
+            $process = new Process($command);
+            $process->setTimeout(1800); //sec; 1800 sec => 30 min
+            $process->run();
+            if (!$process->isSuccessful()) {
+                throw new ProcessFailedException($process);
+            }
+            $res = $process->getOutput();
+        }
+
+        if( $windows ) {
+            $res = exec($command);
+            //echo "res=".$res."<br>";
+        }
+
+        chdir($old_path);
+
+        return $res;
+    }
 
 
 

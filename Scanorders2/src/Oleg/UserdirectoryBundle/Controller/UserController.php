@@ -87,6 +87,7 @@ class UserController extends Controller
         //$ver = $userServiceUtil->getGitVersionDate();
         //echo "ver=".$ver."<br>";
         //print_r($ver);
+        //exit('1');
 
         return array('sitename'=>$this->container->getParameter('employees.sitename'));
     }

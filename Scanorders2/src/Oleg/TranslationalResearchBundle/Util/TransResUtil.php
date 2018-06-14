@@ -1056,6 +1056,7 @@ class TransResUtil
         if( $reviewer ) {
             $reviewer->addRole($reviewerRole);
             $reviewer->addRole($reviewerSpecialtyRole);
+            $this->addTesterRole($reviewer);
         }
         //remove role: make sure if the user is not a default reviewer in all other objects. Or don't remove role at all.
         //if( $originalReviewer && $originalReviewer != $reviewer ) {
@@ -1070,9 +1071,8 @@ class TransResUtil
         if( $reviewerDelegate ) {
             $reviewerDelegate->addRole($reviewerRole);
             $reviewerDelegate->addRole($reviewerSpecialtyRole);
+            $this->addTesterRole($reviewerDelegate);
         }
-
-        //TODO: add Test role for testing server
 
         //remove role: make sure if the user is not a default reviewer in all other objects. Or don't remove role at all.
         //if( $originalReviewerDelegate && $originalReviewerDelegate != $reviewerDelegate && $reviewerDelegateRole ) {
@@ -1080,6 +1080,16 @@ class TransResUtil
         //}
 
         return $defaultReviewer;
+    }
+
+    public function addTesterRole( $user ) {
+        $userSecUtil = $this->container->get('user_security_utility');
+        $environment = $userSecUtil->getSiteSettingParameter('environment');
+        if( $environment != 'live' ) {
+            $user->addRole("ROLE_TESTER");
+        }
+
+        return $user;
     }
 
     //get the review's form page according to the project's current state (i.e. IRB Review Page) and the logged in user

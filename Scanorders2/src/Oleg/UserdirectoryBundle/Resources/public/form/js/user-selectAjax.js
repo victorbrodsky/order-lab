@@ -58,10 +58,14 @@ var _grants = [];
 var _cities = [];
 var _organizations = [];
 
+var _usernametype = [];
+
 function initAllComboboxGeneric(newForm) {
 
     //console.log('init All Combobox Generic');
 
+    //getComboboxGeneric(holder,name,globalDataArray,multipleFlag,urlprefix,sitename,force,placeholder)
+    
     getComboboxGeneric(newForm,'identifierkeytype',_identifiers,false);
     getComboboxGeneric(newForm,'fellowshiptype',_fellowshiptype,false);
     //getComboboxGeneric(newForm,'researchlab',_researchlabs,false);
@@ -98,6 +102,7 @@ function initAllComboboxGeneric(newForm) {
 
     setBuidlingListener(newForm);
 
+    getComboboxGeneric(newForm,'usernametype',_usernametype,false);
 }
 
 

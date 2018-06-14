@@ -73,6 +73,27 @@ class UsernameType extends ListAbstract
         return $this->users;
     }
 
+    /**
+     * Set name
+     *
+     * @param string $name
+     * @return List
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
 
+        $this->setEmptyAbbreviation();
 
+        return $this;
+    }
+
+    public function setEmptyAbbreviation() {
+        if( $this->getName() && !$this->getAbbreviation() ) {
+            $abbreviation = $this->getName();
+            $abbreviation = strtolower($abbreviation);
+            $abbreviation = str_replace(" ","-",$abbreviation);
+            $this->setAbbreviation($abbreviation);
+        }
+    }
 }
