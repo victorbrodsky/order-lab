@@ -83,9 +83,7 @@
         "type": "shell",
         "inline": [             
            "cd /usr/local/bin/order-lab/Scanorders2",
-           "composer install",
-		   "export HOME=/root",
-		   "export COMPOSER_HOME=/root",
+           "composer install",		  
 	       "sudo chmod +x /usr/local/bin/order-lab/Scanorders2/deploy_prod.sh",
 	       "bash /usr/local/bin/order-lab/Scanorders2/deploy_prod.sh",
 	       "sudo chown -R www-data:www-data /usr/local/bin/order-lab",
