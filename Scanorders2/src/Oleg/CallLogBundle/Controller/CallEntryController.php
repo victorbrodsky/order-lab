@@ -681,8 +681,9 @@ class CallEntryController extends Controller
             }
 
             $entryBodySearchStr = "SELECT s FROM OlegUserdirectoryBundle:ObjectTypeText s WHERE " .
-                "(message.id = s.entityId AND s.entityName='Message')";
+                "(s.entityName='Message' AND s.value LIKE :entryBodySearch)";
             $dql->andWhere("EXISTS (" . $entryBodySearchStr . ")");
+            $queryParameters['entryBodySearch'] = "%" . $entryBodySearchFilter . "%";
 
             $advancedFilter++;
         }
