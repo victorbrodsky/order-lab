@@ -424,7 +424,7 @@ class TreeController extends Controller {
         $mapper = $this->classMapper($bundleName,$className);
 
         $treeRepository = $em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
-
+        exit("nodeid=$nodeid");
         $node = $treeRepository->find($nodeid);
 
         if( $node && $action == 'rename_node' ) {
