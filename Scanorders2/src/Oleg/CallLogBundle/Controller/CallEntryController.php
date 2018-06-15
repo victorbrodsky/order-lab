@@ -671,11 +671,19 @@ class CallEntryController extends Controller
         // (with an "OR" - a match in either one should list the entry).
         if( $entryBodySearchFilter ) {
             echo "entryBodySearchFilter=".$entryBodySearchFilter."<br>";
-            //find ObjectTypeText with value=$entryBodySearchFilter AND entityName="Message"
-            $entryBodySearchStr = "SELECT s FROM OlegUserdirectoryBundle:ObjectTypeText s WHERE ".
-              "(message.id = s.entityId AND s.entityName='Message' AND s.value LIKE :entryBodySearch)";
-            $dql->andWhere("EXISTS (".$entryBodySearchStr.")");
-            $queryParameters['entryBodySearch'] = "%".$entryBodySearchFilter."%";
+
+            if(0) {
+                //find ObjectTypeText with value=$entryBodySearchFilter AND entityName="Message"
+                $entryBodySearchStr = "SELECT s FROM OlegUserdirectoryBundle:ObjectTypeText s WHERE " .
+                    "(message.id = s.entityId AND s.entityName='Message' AND s.value LIKE :entryBodySearch)";
+                $dql->andWhere("EXISTS (" . $entryBodySearchStr . ")");
+                $queryParameters['entryBodySearch'] = "%" . $entryBodySearchFilter . "%";
+            }
+
+            $entryBodySearchStr = "SELECT s FROM OlegUserdirectoryBundle:ObjectTypeText s WHERE " .
+                "(message.id = s.entityId AND s.entityName='Message')";
+            $dql->andWhere("EXISTS (" . $entryBodySearchStr . ")");
+
             $advancedFilter++;
         }
 
