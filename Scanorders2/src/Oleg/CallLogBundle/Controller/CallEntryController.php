@@ -680,8 +680,13 @@ class CallEntryController extends Controller
                 $queryParameters['entryBodySearch'] = "%" . $entryBodySearchFilter . "%";
             }
 
+            $castAs = "INTEGER";
+            if( $this->getParameter('database_driver') == 'pdo_mysql' ) {
+                $castAs = "UNSIGNED";
+            }
+
             $entryBodySearchStr = "SELECT s FROM OlegUserdirectoryBundle:ObjectTypeText s WHERE " .
-                "(message.id = CAST(s.entityId AS INTEGER) AND s.entityName='Message' AND s.value LIKE :entryBodySearch)";
+                "(message.id = CAST(s.entityId AS ".$castAs.") AND s.entityName='Message' AND s.value LIKE :entryBodySearch)";
             $dql->andWhere("EXISTS (" . $entryBodySearchStr . ")");
             $queryParameters['entryBodySearch'] = "%" . $entryBodySearchFilter . "%";
 
