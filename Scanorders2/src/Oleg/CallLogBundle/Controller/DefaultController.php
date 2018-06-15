@@ -66,8 +66,8 @@ class DefaultController extends Controller
 
         //testing
         //metaphone (if enabled)
-        //$userServiceUtil = $this->get('user_service_utility');
-        //$userServiceUtil->metaphoneTest();
+        $userServiceUtil = $this->get('user_service_utility');
+        $userServiceUtil->metaphoneTest();
 
 //        $msg = "Notify Test!!!";
 //        $this->get('session')->getFlashBag()->add(
