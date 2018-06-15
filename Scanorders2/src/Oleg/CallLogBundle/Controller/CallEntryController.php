@@ -669,7 +669,8 @@ class CallEntryController extends Controller
 
         //"Entry Body": The value entered in this field should be searched for in the "History/Findings" and "Impression/Outcome" fields
         // (with an "OR" - a match in either one should list the entry).
-        if( 0 && $entryBodySearchFilter ) {
+        if( $entryBodySearchFilter ) {
+            echo "entryBodySearchFilter=".$entryBodySearchFilter."<br>";
             //find ObjectTypeText with value=$entryBodySearchFilter AND entityName="Message"
             $entryBodySearchStr = "SELECT s FROM OlegUserdirectoryBundle:ObjectTypeText s WHERE ".
               "(message.id = s.entityId AND s.entityName='Message' AND s.value LIKE :entryBodySearch)";
