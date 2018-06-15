@@ -476,7 +476,6 @@ class TreeController extends Controller {
 
 
         if( $action == 'create_node' ) {
-            //exit("111: $action");
             //check if already exists in DB by $nodetext and $pid
             $nodes = $treeRepository->findBy(array('parent'=>$pid,'name'=>$nodetext));
 
@@ -503,7 +502,6 @@ class TreeController extends Controller {
                 } else {
                     $organizationalGroupType = NULL;
                 }
-                //exit("111");
 
                 //////////// get max ordeinlist ////////////////////
                 $query = $treeRepository->createQueryBuilder('s');
