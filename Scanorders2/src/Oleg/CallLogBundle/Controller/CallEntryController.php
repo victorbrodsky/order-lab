@@ -763,7 +763,12 @@ class CallEntryController extends Controller
         $query = $em->createQuery($dql);
         $query->setParameters($queryParameters);
 
-        //echo "query=".$query->getSql()."<br>";
+        echo "query=".$query->getSql()."<br>";
+        //TODO: Postres error: with params ["Deleted", "%fesss%"]:  SQLSTATE[42883]: Undefined function: 7 ERROR:
+        //  operator does not exist: integer = character varying LINE 1: ...1_.id FROM user_objectTypeText u21_
+        // WHERE (s0_.id = u21_.ent...
+        //^ HINT:  No operator matches the given name and argument type(s). You might need to add explicit type casts."
+        
         //$messages = $query->getResult();
         //echo "messages count=".count($messages)."<br>";
 

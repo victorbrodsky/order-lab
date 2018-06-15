@@ -500,6 +500,7 @@ class TreeController extends Controller {
                 } else {
                     $organizationalGroupType = NULL;
                 }
+                exit("111");
 
                 //////////// get max ordeinlist ////////////////////
                 $query = $treeRepository->createQueryBuilder('s');
