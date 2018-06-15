@@ -424,8 +424,11 @@ class TreeController extends Controller {
         $mapper = $this->classMapper($bundleName,$className);
 
         $treeRepository = $em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
-        exit("nodeid=$nodeid");
-        $node = $treeRepository->find($nodeid);
+
+        if( $nodeid ) {
+            //postgres does not accept empty id
+            $node = $treeRepository->find($nodeid);
+        }
 
         if( $node && $action == 'rename_node' ) {
             if( $node->getName()."" != $nodetext ) {
@@ -473,7 +476,7 @@ class TreeController extends Controller {
 
 
         if( $action == 'create_node' ) {
-            exit("111: $action");
+            //exit("111: $action");
             //check if already exists in DB by $nodetext and $pid
             $nodes = $treeRepository->findBy(array('parent'=>$pid,'name'=>$nodetext));
 
@@ -500,7 +503,7 @@ class TreeController extends Controller {
                 } else {
                     $organizationalGroupType = NULL;
                 }
-                exit("111");
+                //exit("111");
 
                 //////////// get max ordeinlist ////////////////////
                 $query = $treeRepository->createQueryBuilder('s');
