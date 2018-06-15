@@ -561,6 +561,66 @@ class TreeController extends Controller {
     }
 
 
+    /**
+     * @Route("/tree/create-root/", name="employees_tree_create_root", options={"expose"=true})
+     * @Method({"GET","POST"})
+     */
+    public function createTopLevelRoot(Request $request) {
+//        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
+//            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
+//        }
+
+        $cycle = "new";
+
+        $className = trim( $request->get('classname') );
+        $bundleName = trim( $request->get('bundlename') );
+
+        $em = $this->getDoctrine()->getManager();
+
+        $mapper = $this->classMapper($bundleName,$className);
+        $treeRepository = $em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+
+        $form = $this->createForm('CompositeTreeRootType', array(
+            'disabled' => $disabled,
+            'form_custom_value' => $params
+        ));
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $transresUtil->processDefaultReviewersRole($defaultReviewer,$originalReviewer,$originalReviewerDelegate);
+
+            $this->getDoctrine()->getManager()->flush();
+
+            //Event Log
+            $eventType = "Default Reviewer Updated";
+            $reviewersArr = $transresUtil->getCurrentReviewersEmails($defaultReviewer,false);
+            $reviewer = $reviewersArr['reviewer'];
+            $reviewerDelegate = $reviewersArr['reviewerDelegate'];
+            $stateStr = $defaultReviewer->getState();
+            //get state string: irb_review=>IRB Review
+            $stateLabel = $transresUtil->getStateSimpleLabelByName($stateStr);
+            $specialtyStr = $defaultReviewer->getProjectSpecialty();
+            $msg = "Default Reviewer Object ($stateLabel, $specialtyStr) has been updated:"; //with reviewer=".$reviewer . " ; reviewerDelegate=".$reviewerDelegate;
+            $msg = $msg . "<br>Original reviewer=".$originalReviewer.";<br> New reviewer=".$reviewer;
+            $msg = $msg . "<br>Original reviewerDelegate=".$originalReviewerDelegate.";<br> New reviewerDelegate=".$reviewerDelegate;
+            $transresUtil->setEventLog($defaultReviewer,$eventType,$msg);
+
+            return $this->redirectToRoute('translationalresearch_default-reviewer_show', array('id' => $defaultReviewer->getId()));
+        }
+
+        return array(
+            'cycle' => $cycle,
+            'defaultReviewer' => $defaultReviewer,
+            'specialty' => $defaultReviewer->getProjectSpecialty(),
+            'form' => $form->createView(),
+            'title' => "Default Reviewer for ".$specialtyStr." ".$stateLabel,
+            'delete_form' => $deleteForm->createView(),
+        );
+
+    }
+
 
     public function classMapper($bundleName,$className) {
 

@@ -33,6 +33,36 @@
 
     <br>
 
+    {#Add top-level object#}
+    <p>
+        <a href="{{ path('employees_tree_create_root') }}">Create Top Level Root Tree</a>
+    </p>
+
+    <form id="tree_create_root" action="{{ path('employees_tree_create_root') }}" method="POST">
+
+        <div class="row">
+
+            <div class="col-xs-6" align="right">
+                <strong>Root Name:</strong>
+            </div>
+            <div class="col-xs-6" align="left">
+                <input class="form-control" name="root-name">
+            </div>
+
+        </div>
+
+        <div class="row">
+
+            <div class="col-xs-6" align="right">
+                <button name="create-root" type='submit' class="btn btn-info btn-sm">Create Top Level Root Tree</button>
+            </div>
+
+        </div>
+
+    </form>
+
+    <br>
+
     {{ treemacros.jstreemacros('composite-tree',bundleName,entityName,nodeshowpath,'search',filterform,routename) }}
 
 {% endblock %}
