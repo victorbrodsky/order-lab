@@ -671,20 +671,12 @@ class CallEntryController extends Controller
         // (with an "OR" - a match in either one should list the entry).
         if( $entryBodySearchFilter ) {
             //echo "entryBodySearchFilter=".$entryBodySearchFilter."<br>";
-
-            if(0) {
-                //find ObjectTypeText with value=$entryBodySearchFilter AND entityName="Message"
-                $entryBodySearchStr = "SELECT s FROM OlegUserdirectoryBundle:ObjectTypeText s WHERE " .
-                    "(message.id = s.entityId AND s.entityName='Message' AND s.value LIKE :entryBodySearch)";
-                $dql->andWhere("EXISTS (" . $entryBodySearchStr . ")");
-                $queryParameters['entryBodySearch'] = "%" . $entryBodySearchFilter . "%";
-            }
-
+            //UNSIGNED is not defined in SQL server version used in pacsvendor => use INTEGER
+            //use custom CastFunction
             $castAs = "INTEGER";
             if( $this->getParameter('database_driver') == 'pdo_mysql' ) {
                 $castAs = "UNSIGNED";
             }
-
             $entryBodySearchStr = "SELECT s FROM OlegUserdirectoryBundle:ObjectTypeText s WHERE " .
                 "(message.id = CAST(s.entityId AS ".$castAs.") AND s.entityName='Message' AND s.value LIKE :entryBodySearch)";
             $dql->andWhere("EXISTS (" . $entryBodySearchStr . ")");
@@ -778,7 +770,7 @@ class CallEntryController extends Controller
         $query = $em->createQuery($dql);
         $query->setParameters($queryParameters);
 
-        echo "query=".$query->getSql()."<br>";
+        //echo "query=".$query->getSql()."<br>";
         //TODO: Postres error: with params ["Deleted", "%fesss%"]:  SQLSTATE[42883]: Undefined function: 7 ERROR:
         //  operator does not exist: integer = character varying LINE 1: ...1_.id FROM user_objectTypeText u21_
         // WHERE (s0_.id = u21_.ent...
