@@ -570,54 +570,94 @@ class TreeController extends Controller {
 //            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
 //        }
 
-        $cycle = "new";
+        //$cycle = "new";
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        $className = trim( $request->get('classname') );
-        $bundleName = trim( $request->get('bundlename') );
+        $data = $request->request->all();
+        print_r($data);
+
+        $className = $data['entityName'];
+        $bundleName = $data['bundleName'];
+        $routename = $data['routename'];
+        $sitename = $data['sitename'];
+        $rootNodeName = $data['rootNodeName'];
 
         $em = $this->getDoctrine()->getManager();
 
         $mapper = $this->classMapper($bundleName,$className);
-        $treeRepository = $em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
+        //$treeRepository = $em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.$mapper['className']);
 
-        $form = $this->createForm('CompositeTreeRootType', array(
-            'disabled' => $disabled,
-            'form_custom_value' => $params
-        ));
+        $fullClassName = "Oleg\\".$mapper['bundleName']."\\Entity\\".$mapper['className'];
+        $root = new $fullClassName();
+        $userSecUtil = $this->get('user_security_utility');
+        $userSecUtil->setDefaultList($root,1,$user,$rootNodeName);
 
-        $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-
-            $transresUtil->processDefaultReviewersRole($defaultReviewer,$originalReviewer,$originalReviewerDelegate);
-
-            $this->getDoctrine()->getManager()->flush();
-
-            //Event Log
-            $eventType = "Default Reviewer Updated";
-            $reviewersArr = $transresUtil->getCurrentReviewersEmails($defaultReviewer,false);
-            $reviewer = $reviewersArr['reviewer'];
-            $reviewerDelegate = $reviewersArr['reviewerDelegate'];
-            $stateStr = $defaultReviewer->getState();
-            //get state string: irb_review=>IRB Review
-            $stateLabel = $transresUtil->getStateSimpleLabelByName($stateStr);
-            $specialtyStr = $defaultReviewer->getProjectSpecialty();
-            $msg = "Default Reviewer Object ($stateLabel, $specialtyStr) has been updated:"; //with reviewer=".$reviewer . " ; reviewerDelegate=".$reviewerDelegate;
-            $msg = $msg . "<br>Original reviewer=".$originalReviewer.";<br> New reviewer=".$reviewer;
-            $msg = $msg . "<br>Original reviewerDelegate=".$originalReviewerDelegate.";<br> New reviewerDelegate=".$reviewerDelegate;
-            $transresUtil->setEventLog($defaultReviewer,$eventType,$msg);
-
-            return $this->redirectToRoute('translationalresearch_default-reviewer_show', array('id' => $defaultReviewer->getId()));
+        if( $mapper['organizationalGroupType'] ) {
+            $organizationalGroupType = $em->getRepository($mapper['prefix'] . $mapper['bundleName'] . ':' . $mapper['organizationalGroupType'])->findOneByLevel(0);
+        } else {
+            $organizationalGroupType = NULL;
         }
 
-        return array(
-            'cycle' => $cycle,
-            'defaultReviewer' => $defaultReviewer,
-            'specialty' => $defaultReviewer->getProjectSpecialty(),
-            'form' => $form->createView(),
-            'title' => "Default Reviewer for ".$specialtyStr." ".$stateLabel,
-            'delete_form' => $deleteForm->createView(),
-        );
+        if( $organizationalGroupType ) {
+            $root->setOrganizationalGroupType($organizationalGroupType);
+        }
+
+        //add type for institution: Medical and Educational
+        if( method_exists($root,'addType') && $mapper['className'] == 'Institution' ) {
+            $institutionMedicalType = $em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.'InstitutionType')->findOneByName('Medical');
+            $root->addType($institutionMedicalType);
+            $institutionEducationalType = $em->getRepository($mapper['prefix'].$mapper['bundleName'].':'.'InstitutionType')->findOneByName('Educational');
+            $root->addType($institutionEducationalType);
+        }
+
+        $root->setType('user-added');
+
+        //exit("createTopLevelRoot");
+
+        $em->persist($root);
+        $em->flush();
+
+        return $this->redirectToRoute($routename);
+        
+//        $form = $this->createForm('CompositeTreeRootType', array(
+//            'disabled' => $disabled,
+//            'form_custom_value' => $params
+//        ));
+//
+//        $form->handleRequest($request);
+//
+//        if ($form->isSubmitted() && $form->isValid()) {
+//
+//            $transresUtil->processDefaultReviewersRole($defaultReviewer,$originalReviewer,$originalReviewerDelegate);
+//
+//            $this->getDoctrine()->getManager()->flush();
+//
+//            //Event Log
+//            $eventType = "Default Reviewer Updated";
+//            $reviewersArr = $transresUtil->getCurrentReviewersEmails($defaultReviewer,false);
+//            $reviewer = $reviewersArr['reviewer'];
+//            $reviewerDelegate = $reviewersArr['reviewerDelegate'];
+//            $stateStr = $defaultReviewer->getState();
+//            //get state string: irb_review=>IRB Review
+//            $stateLabel = $transresUtil->getStateSimpleLabelByName($stateStr);
+//            $specialtyStr = $defaultReviewer->getProjectSpecialty();
+//            $msg = "Default Reviewer Object ($stateLabel, $specialtyStr) has been updated:"; //with reviewer=".$reviewer . " ; reviewerDelegate=".$reviewerDelegate;
+//            $msg = $msg . "<br>Original reviewer=".$originalReviewer.";<br> New reviewer=".$reviewer;
+//            $msg = $msg . "<br>Original reviewerDelegate=".$originalReviewerDelegate.";<br> New reviewerDelegate=".$reviewerDelegate;
+//            $transresUtil->setEventLog($defaultReviewer,$eventType,$msg);
+//
+//            return $this->redirectToRoute('translationalresearch_default-reviewer_show', array('id' => $defaultReviewer->getId()));
+//        }
+//
+//        return array(
+//            'cycle' => $cycle,
+//            'defaultReviewer' => $defaultReviewer,
+//            'specialty' => $defaultReviewer->getProjectSpecialty(),
+//            'form' => $form->createView(),
+//            'title' => "Default Reviewer for ".$specialtyStr." ".$stateLabel,
+//            'delete_form' => $deleteForm->createView(),
+//        );
 
     }
 

@@ -33,37 +33,39 @@
 
     <br>
 
-    {#Add top-level object#}
-    <p>
-        <a href="{{ path('employees_tree_create_root') }}">Create Top Level Root Tree</a>
-    </p>
+    {{ treemacros.jstreemacros('composite-tree',bundleName,entityName,nodeshowpath,'search',filterform,routename) }}
 
+    <br>
+
+    {#Add top-level object#}
     <form id="tree_create_root" action="{{ path('employees_tree_create_root') }}" method="POST">
 
-        <div class="row">
-
-            <div class="col-xs-6" align="right">
-                <strong>Root Name:</strong>
-            </div>
-            <div class="col-xs-6" align="left">
-                <input class="form-control" name="root-name">
-            </div>
-
-        </div>
+        <input type="hidden" id="entityName" name="entityName" value="{{ entityName }}" />
+        <input type="hidden" id="bundleName" name="bundleName" value="{{ bundleName }}" />
+        <input type="hidden" id="routename" name="routename" value="{{ routename }}" />
+        <input type="hidden" id="sitename" name="sitename" value="{{ sitename }}" />
 
         <div class="row">
 
-            <div class="col-xs-6" align="right">
-                <button name="create-root" type='submit' class="btn btn-info btn-sm">Create Top Level Root Tree</button>
+            {#<div class="col-xs-6" align="right">#}
+            {#<strong>Root Name:</strong>#}
+            {#</div>#}
+            <div class="col-xs-3" align="right">
+                {##}
+            </div>
+            <div class="col-xs-4" align="right">
+                <input class="form-control" name="rootNodeName" id="rootNodeName" placeholder="New Top Level Root Name">
+            </div>
+            <div class="col-xs-2" align="left">
+                <button name="create-root" type='submit' class="btn btn-info btn-sm">Create Top Level Root</button>
+            </div>
+            <div class="col-xs-3" align="left">
+                {##}
             </div>
 
         </div>
 
     </form>
-
-    <br>
-
-    {{ treemacros.jstreemacros('composite-tree',bundleName,entityName,nodeshowpath,'search',filterform,routename) }}
 
 {% endblock %}
 
