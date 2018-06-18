@@ -37,10 +37,8 @@ if [ -z "$parameters" ]
     exit 0
 fi
 
-if [ -e order-packer.json ]
+if [ -z order-packer.json ]
 then
-	#ok
-else
     echo "order-packer.json not found."
 	exit 0
 fi
