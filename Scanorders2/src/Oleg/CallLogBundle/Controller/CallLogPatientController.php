@@ -705,6 +705,7 @@ class CallLogPatientController extends PatientController {
                 array(
                     'filter[mrntype]'=>$mrntype,
                     'filter[search]'=>$mrn,
+                    'filter[messageStatus]'=>"All except deleted",
                 ),
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
