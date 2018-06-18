@@ -201,18 +201,20 @@
 
                 <div class="calllog-search-fields">
 
-                    {#metaphone checkbox#}
-                    <p>
-                    <div class="row">
-                        <div class="col-xs-6" align="right">
-                            <strong>Search similar-sounding names:</strong>
+                    {% if user_security_utility.getSiteSettingParameter('enableMetaphone') %}
+                        {#metaphone checkbox#}
+                        <p>
+                        <div class="row">
+                            <div class="col-xs-6" align="right">
+                                <strong>Search similar-sounding names:</strong>
+                            </div>
+                            <div class="col-xs-6" align="left">
+                                {#name="search[metaphone]" class="navbar-search-metaphone"#}
+                                <input id="search_metaphone" style="margin:0; width: 20px;" value="1" type="checkbox">
+                            </div>
                         </div>
-                        <div class="col-xs-6" align="left">
-                            {#name="search[metaphone]" class="navbar-search-metaphone"#}
-                            <input id="search_metaphone" style="margin:0; width: 20px;" value="1" type="checkbox">
-                        </div>
-                    </div>
-                    </p>
+                        </p>
+                    {% endif %}
 
 
                     {% for mrn in form.mrn %}

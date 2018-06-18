@@ -165,7 +165,7 @@ function getJstree(bundleName,entityName,menu,search,closeall,type) {
                     //add Edit link to open a modal edit windows
                     if( nodeShowPath && nodeShowPath != 'undefined' ) {
                         tmp.editbyurl = {
-                            "label": "Edit",
+                            "label": "View",
                             "action": function (obj) {
                                 //this.edit_node(obj);
                                 //console.log(obj);

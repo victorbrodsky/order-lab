@@ -469,7 +469,7 @@ class CallEntryController extends Controller
                     //$queryParameters['search'] = "%".$searchFilter."%";
                     if( strpos($searchFilter, ',') === false ) {
                         //echo "no commas in search <br>";
-                        $lastnameOrMrn = "lastname.field LIKE :search OR (mrn.field = :searchMrn AND mrn.keytype = :keytype)";
+                        $lastnameOrMrn = "LOWER(lastname.field) LIKE LOWER(:search) OR (mrn.field = :searchMrn AND mrn.keytype = :keytype)";
                         //$lastnameOrMrn = "lastname.field LIKE :search OR (mrn.field = :searchMrn)";
                         $queryParameters['search'] = "%" . $searchFilter . "%";
                         $queryParameters['searchMrn'] = $searchFilter;
