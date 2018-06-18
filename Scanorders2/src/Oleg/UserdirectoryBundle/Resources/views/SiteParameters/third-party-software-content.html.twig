@@ -96,6 +96,12 @@
                         <td>{{ entity.gsArgumentsFellApp }}</td>
                         <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'gsArgumentsFellApp'}) }}">Edit</a></td>
                     </tr>
+
+                    <tr>
+                        <td>Path to wkhtmltopdf.exe</td>
+                        <td>{{ entity.wkhtmltopdfpath }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'wkhtmltopdfpath'}) }}">Edit</a></td>
+                    </tr>
                     {# EOF WINDOWS #}
 
                     {# LINUX #}
@@ -157,6 +163,12 @@
                         <td>Ghostscript arguments (-q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=###outputFile###  -c .setpdfwrite -f ###inputFiles###) - Linux</td>
                         <td>{{ entity.gsArgumentsFellAppLinux }}</td>
                         <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'gsArgumentsFellAppLinux'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Path to wkhtmltopdf binary - Linux</td>
+                        <td>{{ entity.wkhtmltopdfpathLinux }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'wkhtmltopdfpathLinux'}) }}">Edit</a></td>
                     </tr>
                     {# EOF LINUX #}
 

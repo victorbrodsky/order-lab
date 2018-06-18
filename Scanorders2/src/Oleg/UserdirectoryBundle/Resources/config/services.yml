@@ -14,6 +14,8 @@ parameters:
   department_name: your_value
   showcopyrightonfooter: your_value
 
+  wkhtmltopdfpath:
+
   #ldap
 #  ldaphost: your_value
 #  ldapport: your_value

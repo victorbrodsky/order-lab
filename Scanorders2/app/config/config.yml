@@ -256,7 +256,7 @@ stof_doctrine_extensions:
 knp_snappy:
     pdf:
         enabled:    true
-        binary:     "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
+        binary:     '%wkhtmltopdfpath%'   #"\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
         options:
 #            enable-forms: true       #Turn HTML form fields into pdf form fields
             javascript-delay: 7000    #Wait some milliseconds for javascript finish (default 200)

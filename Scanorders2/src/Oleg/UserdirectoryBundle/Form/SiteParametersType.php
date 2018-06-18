@@ -1169,6 +1169,17 @@ class SiteParametersType extends AbstractType
                 'label'=>'Ghostscript arguments (-q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=###outputFile###  -c .setpdfwrite -f ###inputFiles###) - Linux:',
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'wkhtmltopdfpath' )
+            $builder->add('wkhtmltopdfpath',null,array(
+                'label'=>'Path to wkhtmltopdf.exe:',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'wkhtmltopdfpathLinux' )
+            $builder->add('wkhtmltopdfpathLinux',null,array(
+                'label'=>'Path to wkhtmltopdf binary - Linux:',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
     }
 
 }

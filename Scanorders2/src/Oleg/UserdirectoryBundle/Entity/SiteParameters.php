@@ -639,6 +639,19 @@ class SiteParameters {
      * @ORM\Column(type="text", nullable=true)
      */
     private $gsArgumentsFellAppLinux;
+
+    /**
+     * C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $wkhtmltopdfpath;
+    /**
+     * path to wkhtmltopdf binary
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $wkhtmltopdfpathLinux;
     ////////////////////// EOF third party software //////////////////////////
     ///////////////////// EOF FELLAPP /////////////////////
 
@@ -3041,6 +3054,38 @@ class SiteParameters {
     public function setGsArgumentsFellAppLinux($gsArgumentsFellAppLinux)
     {
         $this->gsArgumentsFellAppLinux = $gsArgumentsFellAppLinux;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getWkhtmltopdfpath()
+    {
+        return $this->wkhtmltopdfpath;
+    }
+
+    /**
+     * @param mixed $wkhtmltopdfpath
+     */
+    public function setWkhtmltopdfpath($wkhtmltopdfpath)
+    {
+        $this->wkhtmltopdfpath = $wkhtmltopdfpath;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getWkhtmltopdfpathLinux()
+    {
+        return $this->wkhtmltopdfpathLinux;
+    }
+
+    /**
+     * @param mixed $wkhtmltopdfpathLinux
+     */
+    public function setWkhtmltopdfpathLinux($wkhtmltopdfpathLinux)
+    {
+        $this->wkhtmltopdfpathLinux = $wkhtmltopdfpathLinux;
     }
     ////////////////////// EOF third party software //////////////////////////
 

@@ -102,6 +102,9 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
         $department_name = null;
         $showcopyrightonfooter = false;
 
+        //third party software html to pdf
+        $wkhtmltopdfpath = null;
+
         //titles
         $mainhome_title = null;
         $listmanager_title = null;
@@ -173,6 +176,19 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
                 $department_name = $row['departmentname'];
             if( array_key_exists('showCopyrightOnFooter', $row) )
                 $showcopyrightonfooter = $row['showCopyrightOnFooter'];
+
+            //third party software html to pdf
+            if( strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ) {
+                //Windows
+                if( array_key_exists('wkhtmltopdfpath', $row) ) {
+                    $wkhtmltopdfpath = $row['wkhtmltopdfpath'];
+                }
+            } else {
+                //Linux
+                if( array_key_exists('wkhtmltopdfpathLinux', $row) ) {
+                    $wkhtmltopdfpath = $row['wkhtmltopdfpathLinux'];
+                }
+            }
 
             //employees
             $employeesuploadpath = $row['employeesuploadpath'];
@@ -249,6 +265,9 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
         $container->setParameter('department_url',$department_url);
         $container->setParameter('department_name',$department_name);
         $container->setParameter('showcopyrightonfooter',$showcopyrightonfooter);
+
+        //third party software html to pdf
+        $container->setParameter('wkhtmltopdfpath','"'.$wkhtmltopdfpath.'"');
 
         //uploads
         $container->setParameter('employees.avataruploadpath',$employeesavataruploadpath);
