@@ -24,6 +24,7 @@ echo "parameters=$parameters"
 echo "dbuser=$dbuser"
 echo "dbpass=$dbpass"
 
+echo "*** Verifying files presence ***"
 if [ -z "$apitoken" ]
   then 	
     echo "Error: no token is provided"
@@ -34,6 +35,12 @@ if [ -z "$parameters" ]
   then 	
     echo "Error: no parameter file is provided"
     exit 0
+fi
+
+if [ -z order-packer.json ]
+then
+    echo "order-packer.json not found."
+	exit 0
 fi
 
 echo "*** Pre processing json file ***"
