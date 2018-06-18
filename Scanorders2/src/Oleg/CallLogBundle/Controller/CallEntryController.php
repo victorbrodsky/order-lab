@@ -490,7 +490,7 @@ class CallEntryController extends Controller
                                 $latentLastname = trim($latentLastname);
                                 $latentFirstname = trim($latentFirstname);
                                 //echo "1: [$latentLastname] [$latentFirstname]<br>";
-                                $lastnameOrMrn = "(lastname.field LIKE :searchLastname AND firstname.field LIKE :searchFirstname) OR (mrn.field = :searchMrn AND mrn.keytype = :keytype)";
+                                $lastnameOrMrn = "(LOWER(lastname.field) LIKE LOWER(:searchLastname) AND LOWER(firstname.field) LIKE LOWER(:searchFirstname)) OR (mrn.field = :searchMrn AND mrn.keytype = :keytype)";
                                 $queryParameters['searchLastname'] = "%" . $latentLastname . "%";
                                 $queryParameters['searchFirstname'] = "%" . $latentFirstname . "%";
                                 $queryParameters['searchMrn'] = $searchFilter;
@@ -502,7 +502,7 @@ class CallEntryController extends Controller
                             }
                             if( $latentLastname && !$latentFirstname ) {
                                 //echo "2: [$latentLastname]<br>";
-                                $lastnameOrMrn = "(lastname.field LIKE :searchLastname) OR (mrn.field = :searchMrn AND mrn.keytype = :keytype)";
+                                $lastnameOrMrn = "(LOWER(lastname.field) LIKE LOWER(:searchLastname)) OR (mrn.field = :searchMrn AND mrn.keytype = :keytype)";
                                 $queryParameters['searchLastname'] = "%" . $latentLastname . "%";
                                 $queryParameters['searchMrn'] = $searchFilter;
                                 $queryParameters['keytype'] = $mrntypeFilter; //->getId()?
@@ -678,7 +678,7 @@ class CallEntryController extends Controller
                 $castAs = "UNSIGNED";
             }
             $entryBodySearchStr = "SELECT s FROM OlegUserdirectoryBundle:ObjectTypeText s WHERE " .
-                "(message.id = CAST(s.entityId AS ".$castAs.") AND s.entityName='Message' AND s.value LIKE :entryBodySearch)";
+                "(message.id = CAST(s.entityId AS ".$castAs.") AND s.entityName='Message' AND LOWER(s.value) LIKE LOWER(:entryBodySearch))";
             $dql->andWhere("EXISTS (" . $entryBodySearchStr . ")");
             $queryParameters['entryBodySearch'] = "%" . $entryBodySearchFilter . "%";
 
@@ -703,7 +703,7 @@ class CallEntryController extends Controller
                     $userServiceUtil->getMetaphoneLike("lastname.field", "lastname.fieldMetaphone", $calllogsearch, $dql, $queryParameters);
                 } else {
                     $dql->andWhere("lastname.status='valid'");
-                    $dql->andWhere("lastname.field LIKE :search");
+                    $dql->andWhere("LOWER(lastname.field) LIKE LOWER(:search)");
                     $queryParameters['search'] = "%".$calllogsearch."%";
                 }
             }
