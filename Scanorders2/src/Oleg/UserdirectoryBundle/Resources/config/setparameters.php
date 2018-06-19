@@ -181,6 +181,8 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
             if( strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ) {
                 //Windows
                 if( array_key_exists('wkhtmltopdfpath', $row) ) {
+                    echo "row['wkhtmltopdfpath']=".$row['wkhtmltopdfpath']."<br>";
+                    exit($row['wkhtmltopdfpath']);
                     $wkhtmltopdfpath = $row['wkhtmltopdfpath'];
                 }
             } else {
