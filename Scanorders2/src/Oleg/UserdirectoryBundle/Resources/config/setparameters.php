@@ -104,6 +104,9 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
 
         //third party software html to pdf
         $wkhtmltopdfpath = null;
+        if( isWindows() ) {
+            $wkhtmltopdfpath = "/usr/bin/xvfb-run /usr/bin/wkhtmltopdf";
+        }
 
         //titles
         $mainhome_title = null;
@@ -218,7 +221,7 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
             //third party software html to pdf
             //echo "EOF wkhtmltopdfpath=".getDBParameter($row,'wkhtmltopdfpath')."<br>";
             //echo "EOF wkhtmltopdfpathLinux=".getDBParameter($row,'wkhtmltopdfpathLinux')."<br>";
-            if( strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ) {
+            if( isWindows() ) {
                 //Windows
 //                if( $param = getDBParameter($row,'wkhtmltopdfpath') ) {
 //                    $wkhtmltopdfpath = $param;
@@ -451,4 +454,12 @@ function getDBParameter( $row, $originalParam, $name ) {
     }
 
     return $originalParam;
+}
+
+function isWindows() {
+    if( strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ) {
+        //Windows
+        return true;
+    }
+    return false;
 }

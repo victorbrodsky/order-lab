@@ -1020,6 +1020,12 @@ class UserServiceUtil {
 
         );
 
+        //set default Third-Party Software Dependencies for Linux
+        if( !$this->isWindows() ) {
+            $types['libreOfficeConvertToPDFPathFellAppLinux'] = "/usr/lib/libreoffice/program";
+            //TODO: test on digital ocean and set defaults (use http://159.89.45.169/order/directory/settings/)
+        }
+
         $params = new SiteParameters();
 
         $count = 0;
@@ -1048,6 +1054,13 @@ class UserServiceUtil {
         $emailUtil->createEmailCronJob();
 
         return round($count/10);
+    }
+
+    public function isWindows() {
+        if( substr(php_uname(), 0, 7) == "Windows" ){
+            return true;
+        }
+        return false;
     }
 
     public function getGitVersionDate()
