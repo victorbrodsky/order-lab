@@ -1020,11 +1020,11 @@ class UserServiceUtil {
 
         );
 
-        //set default Third-Party Software Dependencies for Linux
-        if( !$this->isWindows() ) {
-            $types['libreOfficeConvertToPDFPathFellAppLinux'] = "/usr/lib/libreoffice/program";
-            //TODO: test on digital ocean and set defaults (use http://159.89.45.169/order/directory/settings/)
-        }
+//        //set default Third-Party Software Dependencies for Linux not used in container
+//        if( !$this->isWindows() ) {
+//            $types['libreOfficeConvertToPDFPathFellAppLinux'] = "/usr/lib/libreoffice/program";
+//            //TODO: test on digital ocean and set defaults (use http://159.89.45.169/order/directory/settings/)
+//        }
 
         $params = new SiteParameters();
 

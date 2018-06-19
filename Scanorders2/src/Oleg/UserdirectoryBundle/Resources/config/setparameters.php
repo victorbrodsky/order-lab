@@ -104,7 +104,8 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
 
         //third party software html to pdf
         $wkhtmltopdfpath = null;
-        if( isWindows() ) {
+        //set default Third-Party Software Dependencies for Linux used in container
+        if( !isWindows() ) {
             $wkhtmltopdfpath = "/usr/bin/xvfb-run /usr/bin/wkhtmltopdf";
         }
 
