@@ -120,6 +120,13 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
 //        $maintenanceloginmsg = null;
 //        $maintenancelogoutmsg = null;
 
+        //Symfony DB
+        $database_host = null;
+        $database_port = null;
+        $database_name = null;
+        $database_user = null;
+        $database_password = null;
+
         //pacsvendor DB
         $database_host_pacsvendor = null;
         $database_port_pacsvendor = null;
