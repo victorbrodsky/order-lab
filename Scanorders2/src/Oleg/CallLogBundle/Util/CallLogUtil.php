@@ -1265,6 +1265,13 @@ class CallLogUtil
             'Message Type' => 'Message Type',
             'Entry full text' => 'Entry full text'
         );
+
+        //check if metaphone is enabled
+        $userSecUtil = $this->container->get('user_security_utility');
+        if( !$userSecUtil->getSiteSettingParameter('enableMetaphone') ) {
+            unset($navbarSearchTypes['Last Name similar to']);
+        }
+
         return $navbarSearchTypes;
     }
     public function createForm($type, $data = null, array $options = array())
