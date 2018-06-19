@@ -139,6 +139,8 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
 
         while( $row = $params->fetch() ) {
 
+            print_r($row);
+
 //            if( array_key_exists('aDLDAPServerAddress', $row) )
 //                $aDLDAPServerAddress = $row['aDLDAPServerAddress'];
 //            if( array_key_exists('aDLDAPServerPort', $row) )
