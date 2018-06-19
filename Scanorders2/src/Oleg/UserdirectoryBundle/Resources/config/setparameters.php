@@ -180,23 +180,25 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
                 $showcopyrightonfooter = $row['showCopyrightOnFooter'];
 
             //third party software html to pdf
-            echo "EOF wkhtmltopdfpath=".$row['wkhtmltopdfpath']."<br>";
-            echo "EOF wkhtmltopdfpathLinux=".$row['wkhtmltopdfpathLinux']."<br>";
+            echo "EOF wkhtmltopdfpath=".getParameter($row,'wkhtmltopdfpath')."<br>";
+            echo "EOF wkhtmltopdfpathLinux=".getParameter($row,'wkhtmltopdfpathLinux')."<br>";
             if( strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ) {
                 //Windows
-                if( array_key_exists('wkhtmltopdfpath', $row) ) {
-                    echo "row['wkhtmltopdfpath']=".$row['wkhtmltopdfpath']."<br>";
-                    exit($row['wkhtmltopdfpath']);
-                    $wkhtmltopdfpath = $row['wkhtmltopdfpath'];
-                }
+                $wkhtmltopdfpath = getParameter($row,'wkhtmltopdfpath');
+//                if( array_key_exists('wkhtmltopdfpath', $row) ) {
+//                    echo "row['wkhtmltopdfpath']=".$row['wkhtmltopdfpath']."<br>";
+//                    exit($row['wkhtmltopdfpath']);
+//                    $wkhtmltopdfpath = $row['wkhtmltopdfpath'];
+//                }
             } else {
                 //Linux
-                if( array_key_exists('wkhtmltopdfpathLinux', $row) ) {
-                    echo "row['wkhtmltopdfpathLinux']=".$row['wkhtmltopdfpathLinux']."<br>";
-                    exit($row['wkhtmltopdfpathLinux']);
-                    $wkhtmltopdfpath = $row['wkhtmltopdfpathLinux'];
-                    echo "wkhtmltopdfpath=".$wkhtmltopdfpath."<br>";
-                }
+                $wkhtmltopdfpath = getParameter($row,'wkhtmltopdfpathLinux');
+//                if( array_key_exists('wkhtmltopdfpathLinux', $row) ) {
+//                    echo "row['wkhtmltopdfpathLinux']=".$row['wkhtmltopdfpathLinux']."<br>";
+//                    exit($row['wkhtmltopdfpathLinux']);
+//                    $wkhtmltopdfpath = $row['wkhtmltopdfpathLinux'];
+//                    echo "wkhtmltopdfpath=".$wkhtmltopdfpath."<br>";
+//                }
             }
 
             //employees
@@ -357,4 +359,15 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
     //echo("table false<br>");
 }
 
-
+function getParameter($row,$name) {
+    if( strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ) {
+        //keep it for MSSQL
+    } else {
+        $name = strtolower($name);
+    }
+    if( array_key_exists($name, $row) ) {
+        echo "parameter=".$row[$name]."<br>";
+        return $row[$name];
+    }
+    return null;
+}
