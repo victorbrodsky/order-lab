@@ -178,6 +178,8 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
                 $showcopyrightonfooter = $row['showCopyrightOnFooter'];
 
             //third party software html to pdf
+            echo "EOF wkhtmltopdfpath=".$row['wkhtmltopdfpath']."<br>";
+            echo "EOF wkhtmltopdfpathLinux=".$row['wkhtmltopdfpathLinux']."<br>";
             if( strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ) {
                 //Windows
                 if( array_key_exists('wkhtmltopdfpath', $row) ) {
