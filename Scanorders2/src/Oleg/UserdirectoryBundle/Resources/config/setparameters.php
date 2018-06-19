@@ -187,6 +187,7 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
                 //Linux
                 if( array_key_exists('wkhtmltopdfpathLinux', $row) ) {
                     $wkhtmltopdfpath = $row['wkhtmltopdfpathLinux'];
+                    echo "wkhtmltopdfpath=$wkhtmltopdfpath<br>";
                 }
             }
 
@@ -267,6 +268,7 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
         $container->setParameter('showcopyrightonfooter',$showcopyrightonfooter);
 
         //third party software html to pdf
+        echo "set wkhtmltopdfpath=$wkhtmltopdfpath<br>";
         $container->setParameter('wkhtmltopdfpath','"'.$wkhtmltopdfpath.'"');
         //$container->setParameter('wkhtmltopdfpath',$wkhtmltopdfpath);
 
