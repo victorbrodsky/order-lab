@@ -186,8 +186,9 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
             } else {
                 //Linux
                 if( array_key_exists('wkhtmltopdfpathLinux', $row) ) {
+                    echo "row['wkhtmltopdfpathLinux']=".$row['wkhtmltopdfpathLinux']."<br>";
                     $wkhtmltopdfpath = $row['wkhtmltopdfpathLinux'];
-                    echo "wkhtmltopdfpath=$wkhtmltopdfpath<br>";
+                    echo "wkhtmltopdfpath=".$wkhtmltopdfpath."<br>";
                 }
             }
 
