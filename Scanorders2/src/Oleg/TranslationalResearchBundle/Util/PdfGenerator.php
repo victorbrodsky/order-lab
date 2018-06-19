@@ -160,8 +160,10 @@ class PdfGenerator
         ini_set('max_execution_time', 300); //300 sec
 
         //testing
-        //$wkhtmltopdfpath = $this->container->getParameter('wkhtmltopdfpath');
-        //echo "wkhtmltopdfpath=$wkhtmltopdfpath<br>";
+        $wkhtmltopdfpath = $this->container->getParameter('wkhtmltopdfpath');
+        echo "wkhtmltopdfpath=$wkhtmltopdfpath<br>";
+        $default_system_email = $this->container->getParameter('default_system_email');
+        echo "default_system_email=$default_system_email<br>";
 
         //generate application URL
         $router = $this->container->get('router');

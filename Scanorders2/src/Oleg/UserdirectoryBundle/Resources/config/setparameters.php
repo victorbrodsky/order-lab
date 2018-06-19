@@ -158,8 +158,9 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
 //                $ldapExeFilename = $row['ldapExeFilename'];
 //            }
 
-            if( array_key_exists('smtpServerAddress', $row) )
+            if( array_key_exists('smtpServerAddress', $row) ) {
                 $smtpServerAddress = $row['smtpServerAddress'];
+            }
 
             if( array_key_exists('siteEmail', $row) )
                 $defaultSiteEmail = $row['siteEmail'];
@@ -184,7 +185,7 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
             echo "EOF wkhtmltopdfpathLinux=".getParameter($row,'wkhtmltopdfpathLinux')."<br>";
             if( strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ) {
                 //Windows
-                $wkhtmltopdfpath = getParameter($row,'wkhtmltopdfpath');
+                $wkhtmltopdfpath = getDBParameter($row,'wkhtmltopdfpath');
 //                if( array_key_exists('wkhtmltopdfpath', $row) ) {
 //                    echo "row['wkhtmltopdfpath']=".$row['wkhtmltopdfpath']."<br>";
 //                    exit($row['wkhtmltopdfpath']);
@@ -192,7 +193,7 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
 //                }
             } else {
                 //Linux
-                $wkhtmltopdfpath = getParameter($row,'wkhtmltopdfpathLinux');
+                $wkhtmltopdfpath = getDBParameter($row,'wkhtmltopdfpathLinux');
 //                if( array_key_exists('wkhtmltopdfpathLinux', $row) ) {
 //                    echo "row['wkhtmltopdfpathLinux']=".$row['wkhtmltopdfpathLinux']."<br>";
 //                    exit($row['wkhtmltopdfpathLinux']);
@@ -359,7 +360,7 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
     //echo("table false<br>");
 }
 
-function getParameter($row,$name) {
+function getDBParameter($row,$name) {
     if( strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ) {
         //keep it for MSSQL
     } else {
