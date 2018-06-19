@@ -268,6 +268,7 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
 
         //third party software html to pdf
         $container->setParameter('wkhtmltopdfpath','"'.$wkhtmltopdfpath.'"');
+        //$container->setParameter('wkhtmltopdfpath',$wkhtmltopdfpath);
 
         //uploads
         $container->setParameter('employees.avataruploadpath',$employeesavataruploadpath);
