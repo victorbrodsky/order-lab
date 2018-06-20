@@ -1020,11 +1020,22 @@ class UserServiceUtil {
 
         );
 
-//        //set default Third-Party Software Dependencies for Linux not used in container
-//        if( !$this->isWindows() ) {
-//            $types['libreOfficeConvertToPDFPathFellAppLinux'] = "/usr/lib/libreoffice/program";
-//            //TODO: test on digital ocean and set defaults (use http://159.89.45.169/order/directory/settings/)
-//        }
+        //set default Third-Party Software Dependencies for Linux not used in container
+        if( !$this->isWindows() ) {
+            //set the same value as in setparameters.php run on deploy $wkhtmltopdfpath = "/usr/bin/xvfb-run /usr/bin/wkhtmltopdf";
+            $types['wkhtmltopdfpathLinux'] = "/usr/bin/xvfb-run /usr/bin/wkhtmltopdf";
+
+            //set other Linux parameters
+            $types['libreOfficeConvertToPDFPathFellAppLinux'] = "/usr/lib/libreoffice/program";
+            $types['libreOfficeConvertToPDFFilenameFellApp'] = "soffice";
+            $types['libreOfficeConvertToPDFArgumentsdFellAppLinux'] = "--headless -convert-to pdf -outdir";
+            $types['pdftkPathFellAppLinux'] = "/usr/bin";
+            $types['pdftkFilenameFellAppLinux'] = "pdftk";
+            $types['pdftkArgumentsFellAppLinux'] = "###inputFiles### cat output ###outputFile### dont_ask";
+            $types['gsPathFellAppLinux'] = "/usr/bin";
+            $types['gsFilenameFellAppLinux'] = "gs";
+            $types['gsArgumentsFellAppLinux'] = "-q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile= ###outputFile###  -c .setpdfwrite -f ###inputFiles###";
+        }
 
         $params = new SiteParameters();
 
