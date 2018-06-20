@@ -1283,7 +1283,7 @@ class ReportGenerator {
         return $filesStr;
     }
 
-    public function processFilesGostscript_ORIG( $filesArr ) {
+    public function processFilesGostscript( $filesArr ) {
 
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
@@ -1408,7 +1408,7 @@ class ReportGenerator {
 
         return $filesOutArr;
     }
-    public function processFilesGostscript( $filesArr ) {
+    public function processFilesGostscript_OLD( $filesArr ) {
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
         $userServiceUtil = $this->container->get('user_service_utility');
