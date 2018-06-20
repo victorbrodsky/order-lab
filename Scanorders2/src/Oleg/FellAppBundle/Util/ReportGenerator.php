@@ -436,11 +436,11 @@ class ReportGenerator {
             $reportsUploadPathFellApp = "Reports";
             $logger->warning('reportsUploadPathFellApp is not defined in Site Parameters. Use default "'.$reportsUploadPathFellApp.'" folder.');
         }
-        $uploadReportPath = $this->uploadDir.'/'.$reportsUploadPathFellApp;
-        //$uploadReportPath = $this->uploadDir.DIRECTORY_SEPARATOR.$reportsUploadPathFellApp;
+        //$uploadReportPath = $this->uploadDir.'/'.$reportsUploadPathFellApp;
+        $uploadReportPath = $this->uploadDir.DIRECTORY_SEPARATOR.$reportsUploadPathFellApp;
 
-        $reportPath = $this->container->get('kernel')->getRootDir() . '/../web/' . $uploadReportPath;
-        //$reportPath = $this->container->get('kernel')->getRootDir() . DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'web'.DIRECTORY_SEPARATOR. $uploadReportPath;
+        //$reportPath = $this->container->get('kernel')->getRootDir() . '/../web/' . $uploadReportPath;
+        $reportPath = $this->container->get('kernel')->getRootDir() . DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'web'.DIRECTORY_SEPARATOR. $uploadReportPath;
         $reportPath = realpath($reportPath);
 
         if( !file_exists($reportPath) ) {
@@ -448,8 +448,8 @@ class ReportGenerator {
             chmod($reportPath, 0700);
         }
 
-        $outdir = $reportPath.'/temp_'.$id.'/';
-        //$outdir = $reportPath.DIRECTORY_SEPARATOR.'temp_'.$id.DIRECTORY_SEPARATOR;
+        //$outdir = $reportPath.'/temp_'.$id.'/';
+        $outdir = $reportPath.DIRECTORY_SEPARATOR.'temp_'.$id.DIRECTORY_SEPARATOR;
 
         //echo "before generateApplicationPdf id=".$id."; outdir=".$outdir."<br>";
         //0) generate application pdf
