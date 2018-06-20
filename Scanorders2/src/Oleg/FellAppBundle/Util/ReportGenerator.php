@@ -971,7 +971,7 @@ class ReportGenerator {
 //        $pdf->merge('file', $filenameMerged);
 //    }
 
-    protected function mergeByPDFMerger_ORIG( $filesArr, $filenameMerged, $fellapp ) {
+    protected function mergeByPDFMerger( $filesArr, $filenameMerged, $fellapp ) {
 
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
@@ -1135,7 +1135,7 @@ class ReportGenerator {
 //        }
 
     }
-    protected function mergeByPDFMerger( $filesArr, $filenameMerged, $fellapp ) {
+    protected function mergeByPDFMerger_OLD( $filesArr, $filenameMerged, $fellapp ) {
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
         $userServiceUtil = $this->container->get('user_service_utility');
