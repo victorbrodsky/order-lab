@@ -828,7 +828,7 @@ class ReportGenerator {
 //        $pdf->merge('file', $filenameMerged);
 //    }
 
-    protected function mergeByPDFMerger( $filesArr, $filenameMerged, $fellapp ) {
+    protected function mergeByPDFMerger_ORIG( $filesArr, $filenameMerged, $fellapp ) {
 
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
@@ -991,6 +991,131 @@ class ReportGenerator {
 //            //exit('my error');
 //        }
 
+    }
+    protected function mergeByPDFMerger( $filesArr, $filenameMerged, $fellapp ) {
+        $logger = $this->container->get('logger');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $filesStr = $this->convertFilesArrToString($filesArr);
+        $filenameMerged = str_replace("/","\\", $filenameMerged);
+        $filenameMerged = str_replace("app\..","", $filenameMerged);
+        $filenameMerged = '"'.$filenameMerged.'"';
+        //echo "filenameMerged=".$filenameMerged."<br>";
+        if( $userServiceUtil->isWinOs() ) {
+            //$logger->notice('pdftk Windows');
+            //C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk.exe
+            //$pdftkLocation = '"C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk" ';
+            $userUtil = new UserUtil();
+            $pdftkPathFellApp = $userUtil->getSiteSetting($this->em, 'pdftkPathFellApp');
+            if (!$pdftkPathFellApp) {
+                throw new \InvalidArgumentException('pdftkPathFellApp is not defined in Site Parameters.');
+            }
+            $pdftkFilenameFellApp = $userUtil->getSiteSetting($this->em, 'pdftkFilenameFellApp');
+            if (!$pdftkFilenameFellApp) {
+                throw new \InvalidArgumentException('pdftkFilenameFellApp is not defined in Site Parameters.');
+            }
+            $pdftkArgumentsFellApp = $userUtil->getSiteSetting($this->em, 'pdftkArgumentsFellApp');
+            if (!$pdftkArgumentsFellApp) {
+                throw new \InvalidArgumentException('pdftkArgumentsFellApp is not defined in Site Parameters.');
+            }
+        } else {
+            //$logger->notice('pdftk not Windows');
+            $userUtil = new UserUtil();
+            $pdftkPathFellApp = $userUtil->getSiteSetting($this->em, 'pdftkPathFellAppLinux');
+            if (!$pdftkPathFellApp) {
+                throw new \InvalidArgumentException('pdftkPathFellAppLinux is not defined in Site Parameters.');
+            }
+            $pdftkFilenameFellApp = $userUtil->getSiteSetting($this->em, 'pdftkFilenameFellAppLinux');
+            if (!$pdftkFilenameFellApp) {
+                throw new \InvalidArgumentException('pdftkFilenameFellAppLinux is not defined in Site Parameters.');
+            }
+            $pdftkArgumentsFellApp = $userUtil->getSiteSetting($this->em, 'pdftkArgumentsFellAppLinux');
+            if (!$pdftkArgumentsFellApp) {
+                throw new \InvalidArgumentException('pdftkArgumentsFellAppLinux is not defined in Site Parameters.');
+            }
+        }
+        $pdftkLocation = '"' . $pdftkPathFellApp . '\\' . $pdftkFilenameFellApp . '"';
+        //quick fix for c.med running on E:
+        //collage is running on C:
+//        if( strpos(getcwd(),'E:') !== false ) {
+//            $pdftkLocation = str_replace('C:','E:',$pdftkLocation);
+//        }
+        //$cmd = $pdftkLocation . $filesStr . ' cat output ' . $filenameMerged . ' dont_ask';
+        //replace ###parameter### by appropriate variable
+        //###inputFiles### cat output ###outputFile### dont_ask
+        $pdftkArgumentsFellApp = str_replace('###inputFiles###',$filesStr,$pdftkArgumentsFellApp);
+        $pdftkArgumentsFellApp = str_replace('###outputFile###',$filenameMerged,$pdftkArgumentsFellApp);
+        $cmd = $pdftkLocation . ' ' . $pdftkArgumentsFellApp;
+        //echo "cmd=".$cmd."<br>";
+        $output = null;
+        $return = null;
+        $shellout = exec( $cmd, $output, $return );
+        //$shellout = exec( $cmd );
+        //$logger->error("pdftk output: " . print_r($output));
+        //$logger->error("pdftk return: " . $return);
+        //return 0 => ok, return 1 => failed
+        if( $return == 1 ) {
+            //$logger->error("pdftk return: " . implode("; ",$return));
+            $logger->error("pdftk return=".$return."; output=".print_r($output));
+            //from command cause Error:
+            //ERROR: 'Complete Application PDF' will not be generated! pdftk failed:
+            // "E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\\web\Uploaded\fellapp\Reports\temp_192\application_ID192.pdf"
+            // "E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\\web\Uploaded\fellapp\Reports\temp_192\1460046558ID0B2FwyaXvFk1edVYta1FTLThEalk.pdf"
+            // "E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\\web\Uploaded\fellapp\Reports\temp_192\1460046558ID0B2FwyaXvFk1eendWbUdzV0ZNelU.pdf"
+            // "E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\\web\Uploaded\fellapp\Reports\temp_192\1460046559ID0B2FwyaXvFk1eMWdxSjhGdDBWQW8.pdf"
+            // cat output
+            // "E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\\web\Uploaded\fellapp\Reports\Breast-Pathology-Fellowship-Application-2018-ID192-Doe7-Linda-generated-on-04-07-2016-at-05-12-14-pm_UTC.pdf"
+            // dont_ask [] []
+            // reason: 1460046558ID0B2FwyaXvFk1edVYta1FTLThEalk files don't exists
+            //correct: E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\web\Uploaded\fellapp\Reports
+            //actual : E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\web\Uploaded\fellapp\Reports
+            //event log
+            $event = "Probably there is an encrypted pdf: try to process by gs; pdftk failed cmd=" . $cmd;
+            //echo $event."<br>";
+            $logger->warning($event);
+            $systemUser = $userSecUtil->findSystemUser();
+            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Fellowship Application Creation Failed');
+            $filesInArr = $this->processFilesGostscript($filesArr);
+            //$logger->notice("GS output; filesInArr=".implode("; ",$filesInArr));
+            $filesInStr = $this->convertFilesArrToString($filesInArr, false);
+            //$logger->warning('pdftk encrypted filesInStr='.$filesInStr);
+            //$cmd = $pdftkLocation . $filesInStr . ' cat output ' . $filenameMerged . ' dont_ask';
+            //replace ###parameter### by appropriate variable
+            $pdftkArgumentsFellApp = $userUtil->getSiteSetting($this->em,'pdftkArgumentsFellApp');
+            if( !$pdftkArgumentsFellApp ) {
+                throw new \InvalidArgumentException('pdftkArgumentsFellApp is not defined in Site Parameters.');
+            }
+            //###inputFiles### cat output ###outputFile### dont_ask
+            $pdftkArgumentsFellApp = str_replace('###inputFiles###',$filesInStr,$pdftkArgumentsFellApp);
+            $pdftkArgumentsFellApp = str_replace('###outputFile###',$filenameMerged,$pdftkArgumentsFellApp);
+            $cmd = $pdftkLocation . ' ' . $pdftkArgumentsFellApp;
+            //$logger->notice('pdftk encrypted: cmd='.$cmd);
+            $output = null;
+            $return = null;
+            $shellout = exec( $cmd, $output, $return );
+            //$shellout = exec( $cmd );
+            //$logger->error("pdftk 2 output: " . print_r($output));
+            //$logger->error("pdftk 2 return: " . $return);
+            if( $return == 1 ) { //error
+                //event log
+                $subjectUser = $fellapp->getUser();
+                $fellappInfoStr = "ID #".$fellapp->getId()." (".$subjectUser."): ";
+                $event = "ERROR: ".$fellappInfoStr."'Complete Application PDF' will not be generated! Probably there is an encrypted pdf. pdftk second run failed: " . $cmd;
+                $logger->error($event);
+                $logger->error("pdftk second run return=".$return."; output=".print_r($output));
+                //$logger->error("GS return=".implode("; ",$return));
+                //send email
+                $userSecUtil->sendEmailToSystemEmail("ERROR: ".$fellappInfoStr."Probably there is an encrypted pdf. Complete Application PDF will not be generated - pdftk failed", $event);
+                $systemUser = $userSecUtil->findSystemUser();
+                $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Fellowship Application Creation Failed');
+            }
+        }
+//        if( file_exists($filenameMerged) ) {
+//            echo "filenameMerged exists \n<br>";
+//        } else {
+//            echo "filenameMerged does not exist\n<br>";
+//            //exit('my error');
+//        }
     }
 
     public function convertFilesArrToString($filesArr,$withquotes=true) {
