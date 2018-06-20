@@ -413,7 +413,7 @@ class ReportGenerator {
     //**************************************************************************************//
     ////////////////// generate Fellowship Application Report //////////////////////////////
     //generate Fellowship Application Report; can be run from console by: "php app/console fellapp:generatereport fellappid". fellappid is id of the fellowship application.
-    public function generateFellAppReport_ORIG( $id ) {
+    public function generateFellAppReport( $id ) {
 
         ini_set('max_execution_time', 300); //300 seconds = 5 minutes
         $logger = $this->container->get('logger');
@@ -589,7 +589,7 @@ class ReportGenerator {
 
         return $res;
     }
-    public function generateFellAppReport( $id ) {
+    public function generateFellAppReport_OLD( $id ) {
         ini_set('max_execution_time', 300); //300 seconds = 5 minutes
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
