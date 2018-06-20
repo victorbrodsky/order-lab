@@ -448,9 +448,13 @@ class ReportGenerator {
             chmod($reportPath, 0700);
         }
 
-        $outdir = $reportPath.'/temp_'.$id.'/'; //TODO: THIS CAUSED ERROR: 'Complete Application PDF' will no be generated! GS failed:
-        //$outdir = $reportPath . DIRECTORY_SEPARATOR . 'temp_'.$id . DIRECTORY_SEPARATOR;
-        $logger->notice("outdir=".$outdir);
+        //It works
+        $outdir = $reportPath.'/temp_'.$id.'/';
+        $logger->notice("1 outdir=".$outdir);
+
+        //TODO: THIS CAUSED ERROR: 'Complete Application PDF' will no be generated! GS failed:
+        $outdir = $reportPath . DIRECTORY_SEPARATOR . 'temp_'.$id . DIRECTORY_SEPARATOR;
+        $logger->notice("2 outdir=".$outdir);
 
         //echo "before generateApplicationPdf id=".$id."; outdir=".$outdir."<br>";
         //0) generate application pdf
