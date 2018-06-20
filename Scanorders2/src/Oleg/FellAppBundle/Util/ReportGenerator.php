@@ -413,7 +413,7 @@ class ReportGenerator {
     //**************************************************************************************//
     ////////////////// generate Fellowship Application Report //////////////////////////////
     //generate Fellowship Application Report; can be run from console by: "php app/console fellapp:generatereport fellappid". fellappid is id of the fellowship application.
-    public function generateFellAppReport( $id ) {
+    public function generateFellAppReport_ORIG( $id ) {
 
         ini_set('max_execution_time', 300); //300 seconds = 5 minutes
         $logger = $this->container->get('logger');
@@ -587,6 +587,149 @@ class ReportGenerator {
 
         $logger->notice($event);
 
+        return $res;
+    }
+    public function generateFellAppReport( $id ) {
+        ini_set('max_execution_time', 300); //300 seconds = 5 minutes
+        $logger = $this->container->get('logger');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $systemUser = $userSecUtil->findSystemUser();
+        $entity = $this->em->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
+        if( !$entity ) {
+            throw new EntityNotFoundException('Unable to find Fellowship Application by id='.$id);
+        }
+        //generate file name: LastName_FirstName_FellowshipType_StartYear.pdf
+        $fileFullReportUniqueName = $this->constructUniqueFileName($entity,"Fellowship-Application");
+        $logger->notice("Start to generate full report for ID=".$id."; filename=".$fileFullReportUniqueName);
+        //check and create Report and temp folders
+        $reportsUploadPathFellApp = $userSecUtil->getSiteSettingParameter('reportsUploadPathFellApp');
+        if( !$reportsUploadPathFellApp ) {
+            $reportsUploadPathFellApp = "Reports";
+            $logger->warning('reportsUploadPathFellApp is not defined in Site Parameters. Use default "'.$reportsUploadPathFellApp.'" folder.');
+        }
+        $uploadReportPath = $this->uploadDir.'/'.$reportsUploadPathFellApp;
+        $reportPath = $this->container->get('kernel')->getRootDir() . '/../web/' . $uploadReportPath;
+        $reportPath = realpath($reportPath);
+        if( !file_exists($reportPath) ) {
+            mkdir($reportPath, 0700, true);
+            chmod($reportPath, 0700);
+        }
+        $outdir = $reportPath.'/temp_'.$id.'/';
+        //echo "before generateApplicationPdf id=".$id."; outdir=".$outdir."<br>";
+        //0) generate application pdf
+        $applicationFilePath = $outdir . "application_ID" . $id . ".pdf";
+        $this->generateApplicationPdf($id,$applicationFilePath);
+        //$logger->notice("Successfully Generated Application PDF from HTML for ID=".$id."; file=".$applicationFilePath);
+        //1) get all upload documents
+        $filePathsArr = array();
+        //itinerarys
+        $itineraryDocument = $entity->getRecentItinerary();
+        if( $itineraryDocument ) {
+            $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($itineraryDocument);
+        }
+        //check if photo is not image
+        $photo = $entity->getRecentAvatar();
+        if( $photo ) {
+            $ext = pathinfo($photo->getOriginalnameClean(), PATHINFO_EXTENSION);
+            $photoUrl = null;
+            if( $ext == 'pdf' ) {
+                $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($photo);
+            }
+        }
+        //application form
+        $filePathsArr[] = $applicationFilePath;
+        //cv
+        $recentDocumentCv = $entity->getRecentCv();
+        if( $recentDocumentCv ) {
+            $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($recentDocumentCv);
+        }
+        //cover letter
+        $recentCoverLetter = $entity->getRecentCoverLetter();
+        if( $recentCoverLetter ) {
+            $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($recentCoverLetter);
+        }
+        //scores
+        $scores = $entity->getExaminationScores();
+        foreach( $scores as $score ) {
+            $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($score);
+        }
+        //Reprimand
+        $reprimand = $entity->getRecentReprimand();
+        if( $reprimand ) {
+            $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($reprimand);
+        }
+        //Legal Explanation
+        $legalExplanation = $entity->getRecentLegalExplanation();
+        if( $legalExplanation ) {
+            $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($legalExplanation);
+        }
+        //references
+        $references = $entity->getReferenceLetters();
+        foreach( $references as $reference ) {
+            $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($reference);
+        }
+        //other documents
+        $otherDocuments = $entity->getDocuments();
+        foreach( $otherDocuments as $otherDocument ) {
+            $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($otherDocument);
+        }
+        $createFlag = true;
+        //2) convert all uploads to pdf using LibreOffice
+        $fileNamesArr = $this->convertToPdf( $filePathsArr, $outdir );
+        //$logger->notice("Successfully converted all uploads to PDF for ID=".$id."; files count=".count($fileNamesArr));
+        //3) merge all pdfs
+        //$uniqueid = $filename;  //"report_ID" . $id;
+        //$fileUniqueName = $filename;    //$uniqueid . ".pdf";
+        $filenameMerged = $reportPath . '/' . $fileFullReportUniqueName;
+        $this->mergeByPDFMerger($fileNamesArr,$filenameMerged,$entity);
+        //$logger->notice("Successfully generated Application report pdf ok; path=" . $filenameMerged );
+        if( count($entity->getReports()) > 0 ) {
+            $createFlag = false;
+        }
+        //4) add the report to application report DB
+        $filesize = filesize($filenameMerged);
+        $deleteOldFileFromServer = false;
+        $documentPdf = $this->createFellAppReportDB($entity,"report",$systemUser,$fileFullReportUniqueName,$uploadReportPath,$filesize,'Complete Fellowship Application PDF',$deleteOldFileFromServer);
+        if( $documentPdf ) {
+            $documentPdfId = $documentPdf->getId();
+        } else {
+            $documentPdfId = null;
+        }
+        //keep application form pdf for "Application PDF without attached documents"
+        $fileUniqueName = $this->constructUniqueFileName($entity,"Fellowship-Application-Without-Attachments");
+        $formReportPath = $reportPath . '/' . $fileUniqueName;
+        if( file_exists($applicationFilePath) ) {
+            if( !copy($applicationFilePath, $formReportPath ) ) {
+                //echo "failed to copy $applicationFilePath...\n<br>";
+                $logger->warning("failed to copy Application PDF without attached documents ".$applicationFilePath);
+            } else {
+                $formReportSize = filesize($formReportPath);
+                //$holderEntity,$holderMethodSingularStr,$author,$uniqueTitle,$path,$filesize,$documentType
+                $deleteOldFileFromServer = true;
+                $this->createFellAppReportDB($entity,"formReport",$systemUser,$fileUniqueName,$uploadReportPath,$formReportSize,'Fellowship Application PDF Without Attached Documents',$deleteOldFileFromServer);
+            }
+        } else {
+            $logger->warning("Original Application PDF without attached documents does not exists on path: ".$applicationFilePath);
+        }
+        //log event
+        if( $createFlag ) {
+            $actionStr = "created";
+        } else {
+            $actionStr = "updated";
+        }
+        $event = "Report for Fellowship Application with ID".$id." has been successfully ".$actionStr." " . $fileFullReportUniqueName . " (PDF document ID".$documentPdfId.")";
+        //echo $event."<br>";
+        //$logger->notice($event);
+        //eventType should be something 'Fellowship Application Report Updated'?
+        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,$entity,null,'Fellowship Application Updated');
+        //delete application temp folder
+        $this->deleteDir($outdir);
+        $res = array(
+            'filename' => $fileFullReportUniqueName,
+            'report' => $filenameMerged,
+            'size' => $filesize
+        );
+        $logger->notice($event);
         return $res;
     }
     ////////////////// EOF generate Fellowship Application Report //////////////////////////////
