@@ -46,6 +46,9 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Oleg\FellAppBundle\Entity\ReportQueue;
 use Oleg\FellAppBundle\Entity\Process;
 
+
+//The last working commit before changing directory separator: 78518efa68a8d81070ea87755f40586f4534faae
+
 class ReportGenerator {
 
 
@@ -59,7 +62,6 @@ class ReportGenerator {
     protected $generatereportrunCmd;
     protected $runningGenerationReport;
     //protected $env;
-
 
     public function __construct( $em, $container, $templating ) {
         $this->em = $em;
@@ -1013,7 +1015,7 @@ class ReportGenerator {
         return $filesStr;
     }
 
-    public function processFilesGostscript( $filesArr ) {
+    public function processFilesGostscript_ORIG( $filesArr ) {
 
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
@@ -1136,6 +1138,97 @@ class ReportGenerator {
 
         }
 
+        return $filesOutArr;
+    }
+    public function processFilesGostscript( $filesArr ) {
+        $logger = $this->container->get('logger');
+        $userSecUtil = $this->container->get('user_security_utility');
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $systemUser = $userSecUtil->findSystemUser();
+        $filesOutArr = array();
+        if( $userServiceUtil->isWinOs() ) {
+            //$logger->notice('gs Windows');
+            //$gsLocation = '"C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin\gswin64c.exe" ';
+            $userUtil = new UserUtil();
+            $gsPathFellApp = $userUtil->getSiteSetting($this->em, 'gsPathFellApp');
+            if (!$gsPathFellApp) {
+                throw new \InvalidArgumentException('gsPathFellApp is not defined in Site Parameters.');
+            }
+            $gsFilenameFellApp = $userUtil->getSiteSetting($this->em, 'gsFilenameFellApp');
+            if (!$gsFilenameFellApp) {
+                throw new \InvalidArgumentException('gsFilenameFellApp is not defined in Site Parameters.');
+            }
+            $gsArgumentsFellAppOrig = $userUtil->getSiteSetting($this->em,'gsArgumentsFellApp');
+            if( !$gsArgumentsFellAppOrig ) {
+                throw new \InvalidArgumentException('gsArgumentsFellApp is not defined in Site Parameters.');
+            }
+        } else {
+            //$logger->notice('gs not Windows');
+            $userUtil = new UserUtil();
+            $gsPathFellApp = $userUtil->getSiteSetting($this->em, 'gsPathFellAppLinux');
+            if (!$gsPathFellApp) {
+                throw new \InvalidArgumentException('gsPathFellAppLinux is not defined in Site Parameters.');
+            }
+            $gsFilenameFellApp = $userUtil->getSiteSetting($this->em, 'gsFilenameFellAppLinux');
+            if (!$gsFilenameFellApp) {
+                throw new \InvalidArgumentException('gsFilenameFellAppLinux is not defined in Site Parameters.');
+            }
+            $gsArgumentsFellAppOrig = $userUtil->getSiteSetting($this->em,'gsArgumentsFellAppLinux');
+            if( !$gsArgumentsFellAppOrig ) {
+                throw new \InvalidArgumentException('gsArgumentsFellAppLinux is not defined in Site Parameters.');
+            }
+        }
+        $gsLocation = '"' . $gsPathFellApp . '\\' . $gsFilenameFellApp . '"';
+        //quick fix for c.med running on E:
+//        if( strpos(getcwd(),'E:') !== false ) {
+//            $gsLocation = str_replace('C:','E:',$gsLocation);
+//        }
+        foreach( $filesArr as $file ) {
+//            $gsArgumentsFellApp = $userUtil->getSiteSetting($this->em,'gsArgumentsFellApp');
+//            if( !$gsArgumentsFellApp ) {
+//                throw new \InvalidArgumentException('gsArgumentsFellApp is not defined in Site Parameters.');
+//            }
+            //$ "C:\Users\DevServer\Desktop\php\Ghostscript\bin\gswin64c.exe" -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile="C:\Temp New\out\out.pdf" -c .setpdfwrite -f "C:\Temp New\test.pdf"
+            //"C:\Users\DevServer\Desktop\php\Ghostscript\bin\gswin64.exe"
+            //$cmd = $gsLocation . ' -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite ';
+            //echo "add merge: filepath=(".$file.") <br>";
+            $filesStr = '"' . $file . '"';
+            $filesStr = str_replace("/","\\", $filesStr);
+            $filesStr = str_replace("app\..","", $filesStr);
+            $outFilename = pathinfo($file, PATHINFO_DIRNAME) . '\\' . pathinfo($file, PATHINFO_FILENAME) . "_gs.pdf";
+            $outFilename = '"'.$outFilename.'"';
+            $outFilename = str_replace("/","\\", $outFilename);
+            $outFilename = str_replace("app\..","", $outFilename);
+            //$logger->notice('GS: inputFiles='.$filesStr);
+            //$logger->notice('GS: outFilename='.$outFilename);
+            //gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=unencrypted.pdf -c .setpdfwrite -f encrypted.pdf
+            //$cmd = $cmd . '-sOutputFile=' . $outFilename . ' -c .setpdfwrite -f ' . $filesStr ;
+            //replace ###parameter### by appropriate variable
+            //-q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile= ###outputFile###  -c .setpdfwrite -f ###inputFiles###
+            //$logger->notice('0 gsArgumentsFellApp='.$gsArgumentsFellApp);
+            $gsArgumentsFellApp = $gsArgumentsFellAppOrig."";
+            $gsArgumentsFellApp = str_replace('###inputFiles###',$filesStr,$gsArgumentsFellApp);
+            $gsArgumentsFellApp = str_replace('###outputFile###',$outFilename,$gsArgumentsFellApp);
+            //$logger->notice('gsArgumentsFellApp='.$gsArgumentsFellApp);
+            $cmd = $gsLocation . ' ' . $gsArgumentsFellApp;
+            //$logger->notice('GS cmd='.$cmd);
+            $output = null;
+            $return = null;
+            exec( $cmd, $output, $return );
+            //$logger->error("GS output: " . print_r($output));
+            //$logger->error("GS return: " . $return);
+            if( $return == 1 ) {
+                //event log
+                $event = "ERROR: 'Complete Application PDF' will no be generated! GS failed: " . $cmd."; GS output=".implode("; ",$output);
+                $logger->error($event);
+                $userSecUtil->sendEmailToSystemEmail("Complete Application PDF will no be generated - GS failed", $event);
+                $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Fellowship Application Creation Failed');
+            } else {
+                //$logger->notice("GS converter OK: cmd=".$cmd."; output=".implode(";",$output));
+            }
+            //$logger->notice("GS final outFilename=".$outFilename);
+            $filesOutArr[] = $outFilename;
+        }
         return $filesOutArr;
     }
 
