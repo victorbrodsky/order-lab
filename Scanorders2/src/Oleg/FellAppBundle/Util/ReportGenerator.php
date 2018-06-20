@@ -836,8 +836,6 @@ class ReportGenerator {
 
         //$filenameMerged = str_replace("/","\\", $filenameMerged);
         //$filenameMerged = str_replace("app\..","", $filenameMerged);
-        //$filenameMerged = str_replace("/",DIRECTORY_SEPARATOR,$filenameMerged);
-        //$filenameMerged = str_replace("app".DIRECTORY_SEPARATOR."..","",$filenameMerged);
         $filenameMerged = $this->strReplace($filenameMerged);
 
         $filenameMerged = '"'.$filenameMerged.'"';
@@ -1010,8 +1008,6 @@ class ReportGenerator {
 
         //$filesStr = str_replace("/","\\", $filesStr);
         //$filesStr = str_replace("app\..","", $filesStr);
-        //$filesStr = str_replace("/",DIRECTORY_SEPARATOR, $filesStr);
-        //$filesStr = str_replace("app".DIRECTORY_SEPARATOR."..","", $filesStr);
         $filesStr = $this->strReplace($filesStr);
 
         return $filesStr;
@@ -1088,8 +1084,6 @@ class ReportGenerator {
             $logger->notice('GS: before inputFiles='.$filesStr);
             //$filesStr = str_replace("/","\\", $filesStr);
             //$filesStr = str_replace("app\..","", $filesStr);
-            //$filesStr = str_replace("/",DIRECTORY_SEPARATOR, $filesStr);
-            //$filesStr = str_replace("app".DIRECTORY_SEPARATOR."..","", $filesStr);
             $filesStr = $this->strReplace($filesStr);
 
             //$outFilename = pathinfo($file, PATHINFO_DIRNAME) . '\\' . pathinfo($file, PATHINFO_FILENAME) . "_gs.pdf";
@@ -1099,8 +1093,6 @@ class ReportGenerator {
 
             //$outFilename = str_replace("/","\\", $outFilename);
             //$outFilename = str_replace("app\..","", $outFilename);
-            //$outFilename = str_replace("/",DIRECTORY_SEPARATOR, $outFilename);
-            //$outFilename = str_replace("app".DIRECTORY_SEPARATOR."..","", $outFilename);
             $outFilename = $this->strReplace($outFilename);
 
             $logger->notice('GS: inputFiles='.$filesStr);
