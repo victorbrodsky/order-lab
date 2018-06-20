@@ -1147,10 +1147,10 @@ class ReportGenerator {
     }
 
     public function strReplace($string) {
-        $string = str_replace("/","\\", $string);
-        $string = str_replace("app\..","", $string);
-        //$string = str_replace("/",DIRECTORY_SEPARATOR, $string);
-        //$string = str_replace("app".DIRECTORY_SEPARATOR."..","", $string);
+        //$string = str_replace("/","\\", $string);
+        //$string = str_replace("app\..","", $string);
+        $string = str_replace("/",DIRECTORY_SEPARATOR, $string);
+        $string = str_replace("app".DIRECTORY_SEPARATOR."..","", $string);
 
         return $string;
     }
