@@ -68,7 +68,8 @@ class ReportGenerator {
 
         $this->uploadDir = 'Uploaded';
 
-        $this->generatereportrunCmd = 'php ../bin/console fellapp:generatereportrun --env=prod';
+        //$this->generatereportrunCmd = 'php ../bin/console fellapp:generatereportrun --env=prod';
+        $this->generatereportrunCmd = 'php ..'.DIRECTORY_SEPARATOR.'bin'.DIRECTORY_SEPARATOR.'console fellapp:generatereportrun --env=prod';
 
         $this->runningGenerationReport = false;
 
@@ -433,9 +434,9 @@ class ReportGenerator {
             $reportsUploadPathFellApp = "Reports";
             $logger->warning('reportsUploadPathFellApp is not defined in Site Parameters. Use default "'.$reportsUploadPathFellApp.'" folder.');
         }
-        $uploadReportPath = $this->uploadDir.'/'.$reportsUploadPathFellApp;
+        $uploadReportPath = $this->uploadDir.DIRECTORY_SEPARATOR.$reportsUploadPathFellApp;
 
-        $reportPath = $this->container->get('kernel')->getRootDir() . '/../web/' . $uploadReportPath;
+        $reportPath = $this->container->get('kernel')->getRootDir() . DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'web'.DIRECTORY_SEPARATOR. $uploadReportPath;
         $reportPath = realpath($reportPath);
 
         if( !file_exists($reportPath) ) {
@@ -443,7 +444,7 @@ class ReportGenerator {
             chmod($reportPath, 0700);
         }
 
-        $outdir = $reportPath.'/temp_'.$id.'/';
+        $outdir = $reportPath.DIRECTORY_SEPARATOR.'temp_'.$id.DIRECTORY_SEPARATOR;
 
         //echo "before generateApplicationPdf id=".$id."; outdir=".$outdir."<br>";
         //0) generate application pdf
@@ -524,7 +525,7 @@ class ReportGenerator {
         //3) merge all pdfs
         //$uniqueid = $filename;  //"report_ID" . $id;
         //$fileUniqueName = $filename;    //$uniqueid . ".pdf";
-        $filenameMerged = $reportPath . '/' . $fileFullReportUniqueName;
+        $filenameMerged = $reportPath . DIRECTORY_SEPARATOR . $fileFullReportUniqueName;
         $this->mergeByPDFMerger($fileNamesArr,$filenameMerged,$entity);
         //$logger->notice("Successfully generated Application report pdf ok; path=" . $filenameMerged );
 
@@ -544,7 +545,7 @@ class ReportGenerator {
 
         //keep application form pdf for "Application PDF without attached documents"
         $fileUniqueName = $this->constructUniqueFileName($entity,"Fellowship-Application-Without-Attachments");
-        $formReportPath = $reportPath . '/' . $fileUniqueName;
+        $formReportPath = $reportPath . DIRECTORY_SEPARATOR . $fileUniqueName;
         if( file_exists($applicationFilePath) ) {
             if( !copy($applicationFilePath, $formReportPath ) ) {
                 //echo "failed to copy $applicationFilePath...\n<br>";
@@ -830,8 +831,11 @@ class ReportGenerator {
 
         $filesStr = $this->convertFilesArrToString($filesArr);
 
-        $filenameMerged = str_replace("/","\\", $filenameMerged);
-        $filenameMerged = str_replace("app\..","", $filenameMerged);
+        //$filenameMerged = str_replace("/","\\", $filenameMerged);
+        //$filenameMerged = str_replace("app\..","", $filenameMerged);
+        $filenameMerged = str_replace("/",DIRECTORY_SEPARATOR, $filenameMerged);
+        $filenameMerged = str_replace("app".DIRECTORY_SEPARATOR."..","", $filenameMerged);
+
         $filenameMerged = '"'.$filenameMerged.'"';
 
         //echo "filenameMerged=".$filenameMerged."<br>";
@@ -874,7 +878,8 @@ class ReportGenerator {
             }
         }
 
-        $pdftkLocation = '"' . $pdftkPathFellApp . '\\' . $pdftkFilenameFellApp . '"';
+        //$pdftkLocation = '"' . $pdftkPathFellApp . '\\' . $pdftkFilenameFellApp . '"';
+        $pdftkLocation = '"' . $pdftkPathFellApp . DIRECTORY_SEPARATOR . $pdftkFilenameFellApp . '"';
 
         //quick fix for c.med running on E:
         //collage is running on C:
@@ -999,8 +1004,10 @@ class ReportGenerator {
 
         }
 
-        $filesStr = str_replace("/","\\", $filesStr);
-        $filesStr = str_replace("app\..","", $filesStr);
+        //$filesStr = str_replace("/","\\", $filesStr);
+        //$filesStr = str_replace("app\..","", $filesStr);
+        $filesStr = str_replace("/",DIRECTORY_SEPARATOR, $filesStr);
+        $filesStr = str_replace("app".DIRECTORY_SEPARATOR."..","", $filesStr);
 
         return $filesStr;
     }
@@ -1051,7 +1058,8 @@ class ReportGenerator {
             }
         }
 
-        $gsLocation = '"' . $gsPathFellApp . '\\' . $gsFilenameFellApp . '"';
+        //$gsLocation = '"' . $gsPathFellApp . '\\' . $gsFilenameFellApp . '"';
+        $gsLocation = '"' . $gsPathFellApp . DIRECTORY_SEPARATOR . $gsFilenameFellApp . '"';
 
         //quick fix for c.med running on E:
 //        if( strpos(getcwd(),'E:') !== false ) {
@@ -1072,15 +1080,20 @@ class ReportGenerator {
             //echo "add merge: filepath=(".$file.") <br>";
             $filesStr = '"' . $file . '"';
 
-            $filesStr = str_replace("/","\\", $filesStr);
-            $filesStr = str_replace("app\..","", $filesStr);
+            //$filesStr = str_replace("/","\\", $filesStr);
+            //$filesStr = str_replace("app\..","", $filesStr);
+            $filesStr = str_replace("/",DIRECTORY_SEPARATOR, $filesStr);
+            $filesStr = str_replace("app".DIRECTORY_SEPARATOR."..","", $filesStr);
 
-            $outFilename = pathinfo($file, PATHINFO_DIRNAME) . '\\' . pathinfo($file, PATHINFO_FILENAME) . "_gs.pdf";
+            //$outFilename = pathinfo($file, PATHINFO_DIRNAME) . '\\' . pathinfo($file, PATHINFO_FILENAME) . "_gs.pdf";
+            $outFilename = pathinfo($file, PATHINFO_DIRNAME) . DIRECTORY_SEPARATOR . pathinfo($file, PATHINFO_FILENAME) . "_gs.pdf";
 
             $outFilename = '"'.$outFilename.'"';
 
-            $outFilename = str_replace("/","\\", $outFilename);
-            $outFilename = str_replace("app\..","", $outFilename);
+            //$outFilename = str_replace("/","\\", $outFilename);
+            //$outFilename = str_replace("app\..","", $outFilename);
+            $outFilename = str_replace("/",DIRECTORY_SEPARATOR, $outFilename);
+            $outFilename = str_replace("app".DIRECTORY_SEPARATOR."..","", $outFilename);
 
             //$logger->notice('GS: inputFiles='.$filesStr);
             //$logger->notice('GS: outFilename='.$outFilename);
@@ -1131,8 +1144,11 @@ class ReportGenerator {
         if (! is_dir($dirPath)) {
             throw new \InvalidArgumentException("$dirPath must be a directory");
         }
-        if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
-            $dirPath .= '/';
+        //if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
+        //    $dirPath .= '/';
+        //}
+        if (substr($dirPath, strlen($dirPath) - 1, 1) != DIRECTORY_SEPARATOR) {
+            $dirPath .= DIRECTORY_SEPARATOR;
         }
         $files = glob($dirPath . '*', GLOB_MARK);
         foreach ($files as $file) {
@@ -1247,6 +1263,7 @@ class ReportGenerator {
         //replace all white spaces to _
         $filename = str_replace(" ","_",$filename);
         $filename = str_replace("/","_",$filename);
+        $filename = str_replace(DIRECTORY_SEPARATOR,"_",$filename);
 
         return $filename;
     }
@@ -1261,7 +1278,8 @@ class ReportGenerator {
         //$serverPath = $avatar->getFullServerPath();
         //echo "serverPath=".$serverPath." ";
 
-        $applicationOutputFilePath = getcwd() . "/web/" . $avatar->getUploadDirectory() . "/test/test.pdf";
+        //$applicationOutputFilePath = getcwd() . "/web/" . $avatar->getUploadDirectory() . "/test/test.pdf";
+        $applicationOutputFilePath = getcwd() . DIRECTORY_SEPARATOR . "web" . DIRECTORY_SEPARATOR . $avatar->getUploadDirectory() . DIRECTORY_SEPARATOR. "test".DIRECTORY_SEPARATOR."test.pdf";
         echo "path=".$applicationOutputFilePath." ";
 
         $this->generateApplicationPdf($fellapp->getId(),$applicationOutputFilePath);
