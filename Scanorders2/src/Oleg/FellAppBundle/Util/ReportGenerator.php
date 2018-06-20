@@ -530,8 +530,8 @@ class ReportGenerator {
         //3) merge all pdfs
         //$uniqueid = $filename;  //"report_ID" . $id;
         //$fileUniqueName = $filename;    //$uniqueid . ".pdf";
-        $filenameMerged = $reportPath . '/' . $fileFullReportUniqueName;
-        //$filenameMerged = $reportPath . DIRECTORY_SEPARATOR . $fileFullReportUniqueName;
+        //$filenameMerged = $reportPath . '/' . $fileFullReportUniqueName;
+        $filenameMerged = $reportPath . DIRECTORY_SEPARATOR . $fileFullReportUniqueName;
         $this->mergeByPDFMerger($fileNamesArr,$filenameMerged,$entity);
         //$logger->notice("Successfully generated Application report pdf ok; path=" . $filenameMerged );
 
@@ -551,8 +551,8 @@ class ReportGenerator {
 
         //keep application form pdf for "Application PDF without attached documents"
         $fileUniqueName = $this->constructUniqueFileName($entity,"Fellowship-Application-Without-Attachments");
-        $formReportPath = $reportPath . '/' . $fileUniqueName;
-        //$formReportPath = $reportPath . DIRECTORY_SEPARATOR . $fileUniqueName;
+        //$formReportPath = $reportPath . '/' . $fileUniqueName;
+        $formReportPath = $reportPath . DIRECTORY_SEPARATOR . $fileUniqueName;
         if( file_exists($applicationFilePath) ) {
             if( !copy($applicationFilePath, $formReportPath ) ) {
                 //echo "failed to copy $applicationFilePath...\n<br>";
