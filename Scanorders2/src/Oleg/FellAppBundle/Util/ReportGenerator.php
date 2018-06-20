@@ -836,8 +836,8 @@ class ReportGenerator {
 
         //$filenameMerged = str_replace("/","\\", $filenameMerged);
         //$filenameMerged = str_replace("app\..","", $filenameMerged);
-        $filenameMerged = str_replace("/",DIRECTORY_SEPARATOR, $filenameMerged);
-        $filenameMerged = str_replace("app".DIRECTORY_SEPARATOR."..","", $filenameMerged);
+        $filenameMerged = str_replace("/",DIRECTORY_SEPARATOR,$filenameMerged);
+        $filenameMerged = str_replace("app".DIRECTORY_SEPARATOR."..","",$filenameMerged);
 
         $filenameMerged = '"'.$filenameMerged.'"';
 
@@ -1098,8 +1098,8 @@ class ReportGenerator {
             $outFilename = str_replace("/",DIRECTORY_SEPARATOR, $outFilename);
             $outFilename = str_replace("app".DIRECTORY_SEPARATOR."..","", $outFilename);
 
-            //$logger->notice('GS: inputFiles='.$filesStr);
-            //$logger->notice('GS: outFilename='.$outFilename);
+            $logger->notice('GS: inputFiles='.$filesStr);
+            $logger->notice('GS: outFilename='.$outFilename);
 
             //gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=unencrypted.pdf -c .setpdfwrite -f encrypted.pdf
             //$cmd = $cmd . '-sOutputFile=' . $outFilename . ' -c .setpdfwrite -f ' . $filesStr ;
