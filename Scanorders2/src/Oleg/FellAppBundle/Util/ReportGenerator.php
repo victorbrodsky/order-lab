@@ -449,11 +449,13 @@ class ReportGenerator {
         }
 
         $outdir = $reportPath.'/temp_'.$id.'/'; //TODO: THIS CAUSED ERROR: 'Complete Application PDF' will no be generated! GS failed:
-        //$outdir = $reportPath.DIRECTORY_SEPARATOR.'temp_'.$id.DIRECTORY_SEPARATOR;
+        //$outdir = $reportPath . DIRECTORY_SEPARATOR . 'temp_'.$id . DIRECTORY_SEPARATOR;
+        $logger->notice("outdir=".$outdir);
 
         //echo "before generateApplicationPdf id=".$id."; outdir=".$outdir."<br>";
         //0) generate application pdf
         $applicationFilePath = $outdir . "application_ID" . $id . ".pdf";
+        $logger->notice("applicationFilePath=".$applicationFilePath);
         $this->generateApplicationPdf($id,$applicationFilePath);
         //$logger->notice("Successfully Generated Application PDF from HTML for ID=".$id."; file=".$applicationFilePath);
 
