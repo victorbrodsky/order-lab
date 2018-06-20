@@ -436,9 +436,11 @@ class ReportGenerator {
             $reportsUploadPathFellApp = "Reports";
             $logger->warning('reportsUploadPathFellApp is not defined in Site Parameters. Use default "'.$reportsUploadPathFellApp.'" folder.');
         }
-        $uploadReportPath = $this->uploadDir.DIRECTORY_SEPARATOR.$reportsUploadPathFellApp;
+        $uploadReportPath = $this->uploadDir.'/'.$reportsUploadPathFellApp;
+        //$uploadReportPath = $this->uploadDir.DIRECTORY_SEPARATOR.$reportsUploadPathFellApp;
 
-        $reportPath = $this->container->get('kernel')->getRootDir() . DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'web'.DIRECTORY_SEPARATOR. $uploadReportPath;
+        $reportPath = $this->container->get('kernel')->getRootDir() . '/../web/' . $uploadReportPath;
+        //$reportPath = $this->container->get('kernel')->getRootDir() . DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'web'.DIRECTORY_SEPARATOR. $uploadReportPath;
         $reportPath = realpath($reportPath);
 
         if( !file_exists($reportPath) ) {
@@ -446,7 +448,8 @@ class ReportGenerator {
             chmod($reportPath, 0700);
         }
 
-        $outdir = $reportPath.DIRECTORY_SEPARATOR.'temp_'.$id.DIRECTORY_SEPARATOR;
+        $outdir = $reportPath.'/temp_'.$id.'/';
+        //$outdir = $reportPath.DIRECTORY_SEPARATOR.'temp_'.$id.DIRECTORY_SEPARATOR;
 
         //echo "before generateApplicationPdf id=".$id."; outdir=".$outdir."<br>";
         //0) generate application pdf
@@ -527,7 +530,8 @@ class ReportGenerator {
         //3) merge all pdfs
         //$uniqueid = $filename;  //"report_ID" . $id;
         //$fileUniqueName = $filename;    //$uniqueid . ".pdf";
-        $filenameMerged = $reportPath . DIRECTORY_SEPARATOR . $fileFullReportUniqueName;
+        $filenameMerged = $reportPath . '/' . $fileFullReportUniqueName;
+        //$filenameMerged = $reportPath . DIRECTORY_SEPARATOR . $fileFullReportUniqueName;
         $this->mergeByPDFMerger($fileNamesArr,$filenameMerged,$entity);
         //$logger->notice("Successfully generated Application report pdf ok; path=" . $filenameMerged );
 
@@ -547,7 +551,8 @@ class ReportGenerator {
 
         //keep application form pdf for "Application PDF without attached documents"
         $fileUniqueName = $this->constructUniqueFileName($entity,"Fellowship-Application-Without-Attachments");
-        $formReportPath = $reportPath . DIRECTORY_SEPARATOR . $fileUniqueName;
+        $formReportPath = $reportPath . '/' . $fileUniqueName;
+        //$formReportPath = $reportPath . DIRECTORY_SEPARATOR . $fileUniqueName;
         if( file_exists($applicationFilePath) ) {
             if( !copy($applicationFilePath, $formReportPath ) ) {
                 //echo "failed to copy $applicationFilePath...\n<br>";
@@ -587,149 +592,6 @@ class ReportGenerator {
 
         $logger->notice($event);
 
-        return $res;
-    }
-    public function generateFellAppReport_OLD( $id ) {
-        ini_set('max_execution_time', 300); //300 seconds = 5 minutes
-        $logger = $this->container->get('logger');
-        $userSecUtil = $this->container->get('user_security_utility');
-        $systemUser = $userSecUtil->findSystemUser();
-        $entity = $this->em->getRepository('OlegFellAppBundle:FellowshipApplication')->find($id);
-        if( !$entity ) {
-            throw new EntityNotFoundException('Unable to find Fellowship Application by id='.$id);
-        }
-        //generate file name: LastName_FirstName_FellowshipType_StartYear.pdf
-        $fileFullReportUniqueName = $this->constructUniqueFileName($entity,"Fellowship-Application");
-        $logger->notice("Start to generate full report for ID=".$id."; filename=".$fileFullReportUniqueName);
-        //check and create Report and temp folders
-        $reportsUploadPathFellApp = $userSecUtil->getSiteSettingParameter('reportsUploadPathFellApp');
-        if( !$reportsUploadPathFellApp ) {
-            $reportsUploadPathFellApp = "Reports";
-            $logger->warning('reportsUploadPathFellApp is not defined in Site Parameters. Use default "'.$reportsUploadPathFellApp.'" folder.');
-        }
-        $uploadReportPath = $this->uploadDir.'/'.$reportsUploadPathFellApp;
-        $reportPath = $this->container->get('kernel')->getRootDir() . '/../web/' . $uploadReportPath;
-        $reportPath = realpath($reportPath);
-        if( !file_exists($reportPath) ) {
-            mkdir($reportPath, 0700, true);
-            chmod($reportPath, 0700);
-        }
-        $outdir = $reportPath.'/temp_'.$id.'/';
-        //echo "before generateApplicationPdf id=".$id."; outdir=".$outdir."<br>";
-        //0) generate application pdf
-        $applicationFilePath = $outdir . "application_ID" . $id . ".pdf";
-        $this->generateApplicationPdf($id,$applicationFilePath);
-        //$logger->notice("Successfully Generated Application PDF from HTML for ID=".$id."; file=".$applicationFilePath);
-        //1) get all upload documents
-        $filePathsArr = array();
-        //itinerarys
-        $itineraryDocument = $entity->getRecentItinerary();
-        if( $itineraryDocument ) {
-            $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($itineraryDocument);
-        }
-        //check if photo is not image
-        $photo = $entity->getRecentAvatar();
-        if( $photo ) {
-            $ext = pathinfo($photo->getOriginalnameClean(), PATHINFO_EXTENSION);
-            $photoUrl = null;
-            if( $ext == 'pdf' ) {
-                $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($photo);
-            }
-        }
-        //application form
-        $filePathsArr[] = $applicationFilePath;
-        //cv
-        $recentDocumentCv = $entity->getRecentCv();
-        if( $recentDocumentCv ) {
-            $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($recentDocumentCv);
-        }
-        //cover letter
-        $recentCoverLetter = $entity->getRecentCoverLetter();
-        if( $recentCoverLetter ) {
-            $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($recentCoverLetter);
-        }
-        //scores
-        $scores = $entity->getExaminationScores();
-        foreach( $scores as $score ) {
-            $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($score);
-        }
-        //Reprimand
-        $reprimand = $entity->getRecentReprimand();
-        if( $reprimand ) {
-            $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($reprimand);
-        }
-        //Legal Explanation
-        $legalExplanation = $entity->getRecentLegalExplanation();
-        if( $legalExplanation ) {
-            $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($legalExplanation);
-        }
-        //references
-        $references = $entity->getReferenceLetters();
-        foreach( $references as $reference ) {
-            $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($reference);
-        }
-        //other documents
-        $otherDocuments = $entity->getDocuments();
-        foreach( $otherDocuments as $otherDocument ) {
-            $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($otherDocument);
-        }
-        $createFlag = true;
-        //2) convert all uploads to pdf using LibreOffice
-        $fileNamesArr = $this->convertToPdf( $filePathsArr, $outdir );
-        //$logger->notice("Successfully converted all uploads to PDF for ID=".$id."; files count=".count($fileNamesArr));
-        //3) merge all pdfs
-        //$uniqueid = $filename;  //"report_ID" . $id;
-        //$fileUniqueName = $filename;    //$uniqueid . ".pdf";
-        $filenameMerged = $reportPath . '/' . $fileFullReportUniqueName;
-        $this->mergeByPDFMerger($fileNamesArr,$filenameMerged,$entity);
-        //$logger->notice("Successfully generated Application report pdf ok; path=" . $filenameMerged );
-        if( count($entity->getReports()) > 0 ) {
-            $createFlag = false;
-        }
-        //4) add the report to application report DB
-        $filesize = filesize($filenameMerged);
-        $deleteOldFileFromServer = false;
-        $documentPdf = $this->createFellAppReportDB($entity,"report",$systemUser,$fileFullReportUniqueName,$uploadReportPath,$filesize,'Complete Fellowship Application PDF',$deleteOldFileFromServer);
-        if( $documentPdf ) {
-            $documentPdfId = $documentPdf->getId();
-        } else {
-            $documentPdfId = null;
-        }
-        //keep application form pdf for "Application PDF without attached documents"
-        $fileUniqueName = $this->constructUniqueFileName($entity,"Fellowship-Application-Without-Attachments");
-        $formReportPath = $reportPath . '/' . $fileUniqueName;
-        if( file_exists($applicationFilePath) ) {
-            if( !copy($applicationFilePath, $formReportPath ) ) {
-                //echo "failed to copy $applicationFilePath...\n<br>";
-                $logger->warning("failed to copy Application PDF without attached documents ".$applicationFilePath);
-            } else {
-                $formReportSize = filesize($formReportPath);
-                //$holderEntity,$holderMethodSingularStr,$author,$uniqueTitle,$path,$filesize,$documentType
-                $deleteOldFileFromServer = true;
-                $this->createFellAppReportDB($entity,"formReport",$systemUser,$fileUniqueName,$uploadReportPath,$formReportSize,'Fellowship Application PDF Without Attached Documents',$deleteOldFileFromServer);
-            }
-        } else {
-            $logger->warning("Original Application PDF without attached documents does not exists on path: ".$applicationFilePath);
-        }
-        //log event
-        if( $createFlag ) {
-            $actionStr = "created";
-        } else {
-            $actionStr = "updated";
-        }
-        $event = "Report for Fellowship Application with ID".$id." has been successfully ".$actionStr." " . $fileFullReportUniqueName . " (PDF document ID".$documentPdfId.")";
-        //echo $event."<br>";
-        //$logger->notice($event);
-        //eventType should be something 'Fellowship Application Report Updated'?
-        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,$entity,null,'Fellowship Application Updated');
-        //delete application temp folder
-        $this->deleteDir($outdir);
-        $res = array(
-            'filename' => $fileFullReportUniqueName,
-            'report' => $filenameMerged,
-            'size' => $filesize
-        );
-        $logger->notice($event);
         return $res;
     }
     ////////////////// EOF generate Fellowship Application Report //////////////////////////////
@@ -856,11 +718,11 @@ class ReportGenerator {
             }
         }
 
-        //$cmd = '"' . $libreOfficeConvertToPDFPathFellApp . '\\' . $libreOfficeConvertToPDFFilenameFellApp .
-        //       '" ' . $libreOfficeConvertToPDFArgumentsdFellApp . ' "' . $outdir . '"';
+        $cmd = '"' . $libreOfficeConvertToPDFPathFellApp . '\\' . $libreOfficeConvertToPDFFilenameFellApp .
+               '" ' . $libreOfficeConvertToPDFArgumentsdFellApp . ' "' . $outdir . '"';
 
-        $cmd = '"' . $libreOfficeConvertToPDFPathFellApp . DIRECTORY_SEPARATOR . $libreOfficeConvertToPDFFilenameFellApp .
-            '" ' . $libreOfficeConvertToPDFArgumentsdFellApp . ' "' . $outdir . '"';
+        //$cmd = '"' . $libreOfficeConvertToPDFPathFellApp . DIRECTORY_SEPARATOR . $libreOfficeConvertToPDFFilenameFellApp .
+        //    '" ' . $libreOfficeConvertToPDFArgumentsdFellApp . ' "' . $outdir . '"';
 
         //echo "cmd=" . $cmd . "<br>";
 
@@ -1135,131 +997,6 @@ class ReportGenerator {
 //        }
 
     }
-    protected function mergeByPDFMerger_OLD( $filesArr, $filenameMerged, $fellapp ) {
-        $logger = $this->container->get('logger');
-        $userSecUtil = $this->container->get('user_security_utility');
-        $userServiceUtil = $this->container->get('user_service_utility');
-        $filesStr = $this->convertFilesArrToString($filesArr);
-        $filenameMerged = str_replace("/","\\", $filenameMerged);
-        $filenameMerged = str_replace("app\..","", $filenameMerged);
-        $filenameMerged = '"'.$filenameMerged.'"';
-        //echo "filenameMerged=".$filenameMerged."<br>";
-        if( $userServiceUtil->isWinOs() ) {
-            //$logger->notice('pdftk Windows');
-            //C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk.exe
-            //$pdftkLocation = '"C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\vendor\olegutil\PDFTKBuilderPortable\App\pdftkbuilder\pdftk" ';
-            $userUtil = new UserUtil();
-            $pdftkPathFellApp = $userUtil->getSiteSetting($this->em, 'pdftkPathFellApp');
-            if (!$pdftkPathFellApp) {
-                throw new \InvalidArgumentException('pdftkPathFellApp is not defined in Site Parameters.');
-            }
-            $pdftkFilenameFellApp = $userUtil->getSiteSetting($this->em, 'pdftkFilenameFellApp');
-            if (!$pdftkFilenameFellApp) {
-                throw new \InvalidArgumentException('pdftkFilenameFellApp is not defined in Site Parameters.');
-            }
-            $pdftkArgumentsFellApp = $userUtil->getSiteSetting($this->em, 'pdftkArgumentsFellApp');
-            if (!$pdftkArgumentsFellApp) {
-                throw new \InvalidArgumentException('pdftkArgumentsFellApp is not defined in Site Parameters.');
-            }
-        } else {
-            //$logger->notice('pdftk not Windows');
-            $userUtil = new UserUtil();
-            $pdftkPathFellApp = $userUtil->getSiteSetting($this->em, 'pdftkPathFellAppLinux');
-            if (!$pdftkPathFellApp) {
-                throw new \InvalidArgumentException('pdftkPathFellAppLinux is not defined in Site Parameters.');
-            }
-            $pdftkFilenameFellApp = $userUtil->getSiteSetting($this->em, 'pdftkFilenameFellAppLinux');
-            if (!$pdftkFilenameFellApp) {
-                throw new \InvalidArgumentException('pdftkFilenameFellAppLinux is not defined in Site Parameters.');
-            }
-            $pdftkArgumentsFellApp = $userUtil->getSiteSetting($this->em, 'pdftkArgumentsFellAppLinux');
-            if (!$pdftkArgumentsFellApp) {
-                throw new \InvalidArgumentException('pdftkArgumentsFellAppLinux is not defined in Site Parameters.');
-            }
-        }
-        $pdftkLocation = '"' . $pdftkPathFellApp . '\\' . $pdftkFilenameFellApp . '"';
-        //quick fix for c.med running on E:
-        //collage is running on C:
-//        if( strpos(getcwd(),'E:') !== false ) {
-//            $pdftkLocation = str_replace('C:','E:',$pdftkLocation);
-//        }
-        //$cmd = $pdftkLocation . $filesStr . ' cat output ' . $filenameMerged . ' dont_ask';
-        //replace ###parameter### by appropriate variable
-        //###inputFiles### cat output ###outputFile### dont_ask
-        $pdftkArgumentsFellApp = str_replace('###inputFiles###',$filesStr,$pdftkArgumentsFellApp);
-        $pdftkArgumentsFellApp = str_replace('###outputFile###',$filenameMerged,$pdftkArgumentsFellApp);
-        $cmd = $pdftkLocation . ' ' . $pdftkArgumentsFellApp;
-        //echo "cmd=".$cmd."<br>";
-        $output = null;
-        $return = null;
-        $shellout = exec( $cmd, $output, $return );
-        //$shellout = exec( $cmd );
-        //$logger->error("pdftk output: " . print_r($output));
-        //$logger->error("pdftk return: " . $return);
-        //return 0 => ok, return 1 => failed
-        if( $return == 1 ) {
-            //$logger->error("pdftk return: " . implode("; ",$return));
-            $logger->error("pdftk return=".$return."; output=".print_r($output));
-            //from command cause Error:
-            //ERROR: 'Complete Application PDF' will not be generated! pdftk failed:
-            // "E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\\web\Uploaded\fellapp\Reports\temp_192\application_ID192.pdf"
-            // "E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\\web\Uploaded\fellapp\Reports\temp_192\1460046558ID0B2FwyaXvFk1edVYta1FTLThEalk.pdf"
-            // "E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\\web\Uploaded\fellapp\Reports\temp_192\1460046558ID0B2FwyaXvFk1eendWbUdzV0ZNelU.pdf"
-            // "E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\\web\Uploaded\fellapp\Reports\temp_192\1460046559ID0B2FwyaXvFk1eMWdxSjhGdDBWQW8.pdf"
-            // cat output
-            // "E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\\web\Uploaded\fellapp\Reports\Breast-Pathology-Fellowship-Application-2018-ID192-Doe7-Linda-generated-on-04-07-2016-at-05-12-14-pm_UTC.pdf"
-            // dont_ask [] []
-            // reason: 1460046558ID0B2FwyaXvFk1edVYta1FTLThEalk files don't exists
-            //correct: E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\web\Uploaded\fellapp\Reports
-            //actual : E:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\web\Uploaded\fellapp\Reports
-            //event log
-            $event = "Probably there is an encrypted pdf: try to process by gs; pdftk failed cmd=" . $cmd;
-            //echo $event."<br>";
-            $logger->warning($event);
-            $systemUser = $userSecUtil->findSystemUser();
-            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Fellowship Application Creation Failed');
-            $filesInArr = $this->processFilesGostscript($filesArr);
-            //$logger->notice("GS output; filesInArr=".implode("; ",$filesInArr));
-            $filesInStr = $this->convertFilesArrToString($filesInArr, false);
-            //$logger->warning('pdftk encrypted filesInStr='.$filesInStr);
-            //$cmd = $pdftkLocation . $filesInStr . ' cat output ' . $filenameMerged . ' dont_ask';
-            //replace ###parameter### by appropriate variable
-            $pdftkArgumentsFellApp = $userUtil->getSiteSetting($this->em,'pdftkArgumentsFellApp');
-            if( !$pdftkArgumentsFellApp ) {
-                throw new \InvalidArgumentException('pdftkArgumentsFellApp is not defined in Site Parameters.');
-            }
-            //###inputFiles### cat output ###outputFile### dont_ask
-            $pdftkArgumentsFellApp = str_replace('###inputFiles###',$filesInStr,$pdftkArgumentsFellApp);
-            $pdftkArgumentsFellApp = str_replace('###outputFile###',$filenameMerged,$pdftkArgumentsFellApp);
-            $cmd = $pdftkLocation . ' ' . $pdftkArgumentsFellApp;
-            //$logger->notice('pdftk encrypted: cmd='.$cmd);
-            $output = null;
-            $return = null;
-            $shellout = exec( $cmd, $output, $return );
-            //$shellout = exec( $cmd );
-            //$logger->error("pdftk 2 output: " . print_r($output));
-            //$logger->error("pdftk 2 return: " . $return);
-            if( $return == 1 ) { //error
-                //event log
-                $subjectUser = $fellapp->getUser();
-                $fellappInfoStr = "ID #".$fellapp->getId()." (".$subjectUser."): ";
-                $event = "ERROR: ".$fellappInfoStr."'Complete Application PDF' will not be generated! Probably there is an encrypted pdf. pdftk second run failed: " . $cmd;
-                $logger->error($event);
-                $logger->error("pdftk second run return=".$return."; output=".print_r($output));
-                //$logger->error("GS return=".implode("; ",$return));
-                //send email
-                $userSecUtil->sendEmailToSystemEmail("ERROR: ".$fellappInfoStr."Probably there is an encrypted pdf. Complete Application PDF will not be generated - pdftk failed", $event);
-                $systemUser = $userSecUtil->findSystemUser();
-                $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Fellowship Application Creation Failed');
-            }
-        }
-//        if( file_exists($filenameMerged) ) {
-//            echo "filenameMerged exists \n<br>";
-//        } else {
-//            echo "filenameMerged does not exist\n<br>";
-//            //exit('my error');
-//        }
-    }
 
     public function convertFilesArrToString($filesArr,$withquotes=true) {
         $filesStr = "";
@@ -1406,97 +1143,6 @@ class ReportGenerator {
 
         }
 
-        return $filesOutArr;
-    }
-    public function processFilesGostscript_OLD( $filesArr ) {
-        $logger = $this->container->get('logger');
-        $userSecUtil = $this->container->get('user_security_utility');
-        $userServiceUtil = $this->container->get('user_service_utility');
-        $systemUser = $userSecUtil->findSystemUser();
-        $filesOutArr = array();
-        if( $userServiceUtil->isWinOs() ) {
-            //$logger->notice('gs Windows');
-            //$gsLocation = '"C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin\gswin64c.exe" ';
-            $userUtil = new UserUtil();
-            $gsPathFellApp = $userUtil->getSiteSetting($this->em, 'gsPathFellApp');
-            if (!$gsPathFellApp) {
-                throw new \InvalidArgumentException('gsPathFellApp is not defined in Site Parameters.');
-            }
-            $gsFilenameFellApp = $userUtil->getSiteSetting($this->em, 'gsFilenameFellApp');
-            if (!$gsFilenameFellApp) {
-                throw new \InvalidArgumentException('gsFilenameFellApp is not defined in Site Parameters.');
-            }
-            $gsArgumentsFellAppOrig = $userUtil->getSiteSetting($this->em,'gsArgumentsFellApp');
-            if( !$gsArgumentsFellAppOrig ) {
-                throw new \InvalidArgumentException('gsArgumentsFellApp is not defined in Site Parameters.');
-            }
-        } else {
-            //$logger->notice('gs not Windows');
-            $userUtil = new UserUtil();
-            $gsPathFellApp = $userUtil->getSiteSetting($this->em, 'gsPathFellAppLinux');
-            if (!$gsPathFellApp) {
-                throw new \InvalidArgumentException('gsPathFellAppLinux is not defined in Site Parameters.');
-            }
-            $gsFilenameFellApp = $userUtil->getSiteSetting($this->em, 'gsFilenameFellAppLinux');
-            if (!$gsFilenameFellApp) {
-                throw new \InvalidArgumentException('gsFilenameFellAppLinux is not defined in Site Parameters.');
-            }
-            $gsArgumentsFellAppOrig = $userUtil->getSiteSetting($this->em,'gsArgumentsFellAppLinux');
-            if( !$gsArgumentsFellAppOrig ) {
-                throw new \InvalidArgumentException('gsArgumentsFellAppLinux is not defined in Site Parameters.');
-            }
-        }
-        $gsLocation = '"' . $gsPathFellApp . '\\' . $gsFilenameFellApp . '"';
-        //quick fix for c.med running on E:
-//        if( strpos(getcwd(),'E:') !== false ) {
-//            $gsLocation = str_replace('C:','E:',$gsLocation);
-//        }
-        foreach( $filesArr as $file ) {
-//            $gsArgumentsFellApp = $userUtil->getSiteSetting($this->em,'gsArgumentsFellApp');
-//            if( !$gsArgumentsFellApp ) {
-//                throw new \InvalidArgumentException('gsArgumentsFellApp is not defined in Site Parameters.');
-//            }
-            //$ "C:\Users\DevServer\Desktop\php\Ghostscript\bin\gswin64c.exe" -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile="C:\Temp New\out\out.pdf" -c .setpdfwrite -f "C:\Temp New\test.pdf"
-            //"C:\Users\DevServer\Desktop\php\Ghostscript\bin\gswin64.exe"
-            //$cmd = $gsLocation . ' -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite ';
-            //echo "add merge: filepath=(".$file.") <br>";
-            $filesStr = '"' . $file . '"';
-            $filesStr = str_replace("/","\\", $filesStr);
-            $filesStr = str_replace("app\..","", $filesStr);
-            $outFilename = pathinfo($file, PATHINFO_DIRNAME) . '\\' . pathinfo($file, PATHINFO_FILENAME) . "_gs.pdf";
-            $outFilename = '"'.$outFilename.'"';
-            $outFilename = str_replace("/","\\", $outFilename);
-            $outFilename = str_replace("app\..","", $outFilename);
-            //$logger->notice('GS: inputFiles='.$filesStr);
-            //$logger->notice('GS: outFilename='.$outFilename);
-            //gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=unencrypted.pdf -c .setpdfwrite -f encrypted.pdf
-            //$cmd = $cmd . '-sOutputFile=' . $outFilename . ' -c .setpdfwrite -f ' . $filesStr ;
-            //replace ###parameter### by appropriate variable
-            //-q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile= ###outputFile###  -c .setpdfwrite -f ###inputFiles###
-            //$logger->notice('0 gsArgumentsFellApp='.$gsArgumentsFellApp);
-            $gsArgumentsFellApp = $gsArgumentsFellAppOrig."";
-            $gsArgumentsFellApp = str_replace('###inputFiles###',$filesStr,$gsArgumentsFellApp);
-            $gsArgumentsFellApp = str_replace('###outputFile###',$outFilename,$gsArgumentsFellApp);
-            //$logger->notice('gsArgumentsFellApp='.$gsArgumentsFellApp);
-            $cmd = $gsLocation . ' ' . $gsArgumentsFellApp;
-            //$logger->notice('GS cmd='.$cmd);
-            $output = null;
-            $return = null;
-            exec( $cmd, $output, $return );
-            //$logger->error("GS output: " . print_r($output));
-            //$logger->error("GS return: " . $return);
-            if( $return == 1 ) {
-                //event log
-                $event = "ERROR: 'Complete Application PDF' will no be generated! GS failed: " . $cmd."; GS output=".implode("; ",$output);
-                $logger->error($event);
-                $userSecUtil->sendEmailToSystemEmail("Complete Application PDF will no be generated - GS failed", $event);
-                $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$event,$systemUser,null,null,'Fellowship Application Creation Failed');
-            } else {
-                //$logger->notice("GS converter OK: cmd=".$cmd."; output=".implode(";",$output));
-            }
-            //$logger->notice("GS final outFilename=".$outFilename);
-            $filesOutArr[] = $outFilename;
-        }
         return $filesOutArr;
     }
 
