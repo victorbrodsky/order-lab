@@ -448,8 +448,8 @@ class ReportGenerator {
             chmod($reportPath, 0700);
         }
 
-        //$outdir = $reportPath.'/temp_'.$id.'/';
-        $outdir = $reportPath.DIRECTORY_SEPARATOR.'temp_'.$id.DIRECTORY_SEPARATOR;
+        $outdir = $reportPath.'/temp_'.$id.'/';
+        //$outdir = $reportPath.DIRECTORY_SEPARATOR.'temp_'.$id.DIRECTORY_SEPARATOR;
 
         //echo "before generateApplicationPdf id=".$id."; outdir=".$outdir."<br>";
         //0) generate application pdf
