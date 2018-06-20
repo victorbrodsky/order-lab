@@ -1513,6 +1513,7 @@ class RequestController extends Controller
 
         //$dql->groupBy("transresRequest.exportId");
         //$dql->groupBy("transresRequest.id");
+        $dql->groupBy("transresRequest");
 
         $limit = 10;
         $query = $em->createQuery($dql);
