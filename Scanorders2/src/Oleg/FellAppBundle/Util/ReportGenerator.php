@@ -1286,6 +1286,7 @@ class ReportGenerator {
         //replace all white spaces to _
         $filename = str_replace(" ","_",$filename);
         $filename = str_replace("/","_",$filename);
+        $filename = str_replace("\\","_",$filename);
         $filename = str_replace(DIRECTORY_SEPARATOR,"_",$filename);
 
         return $filename;
