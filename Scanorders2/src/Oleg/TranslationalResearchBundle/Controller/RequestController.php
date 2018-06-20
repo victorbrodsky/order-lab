@@ -1510,9 +1510,7 @@ class RequestController extends Controller
 //        }
         //$withMatching = true; //slower 7.5 sec
         //$withMatching = false; //twice faster 3.5 sec
-
-        //$dql->groupBy("transresRequest.exportId");
-        //$dql->groupBy("transresRequest.id");
+        
         $dql->groupBy("transresRequest");
 
         $limit = 10;
