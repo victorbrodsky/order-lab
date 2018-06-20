@@ -224,7 +224,7 @@ class EmailUtil {
         $host = $userSecUtil->getSiteSettingParameter('smtpServerAddress');
         if( !$host ) {
             return null;
-        }
+        } 
 
         $port = $userSecUtil->getSiteSettingParameter('mailerPort');
         $encrypt = $userSecUtil->getSiteSettingParameter('mailerUseSecureConnection');
