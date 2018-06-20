@@ -449,12 +449,12 @@ class ReportGenerator {
         }
 
         //It works
-        $outdir = $reportPath.'/temp_'.$id.'/';
-        $logger->notice("1 outdir=".$outdir);
+        //$outdir = $reportPath.'/temp_'.$id.'/';
+        //$logger->notice("1 outdir=".$outdir);
 
         //TODO: THIS CAUSED ERROR: 'Complete Application PDF' will no be generated! GS failed:
         $outdir = $reportPath . DIRECTORY_SEPARATOR . 'temp_'.$id . DIRECTORY_SEPARATOR;
-        $logger->notice("2 outdir=".$outdir);
+        //$logger->notice("2 outdir=".$outdir);
 
         //echo "before generateApplicationPdf id=".$id."; outdir=".$outdir."<br>";
         //0) generate application pdf
@@ -1155,6 +1155,7 @@ class ReportGenerator {
     public function strReplace($string) {
         //$string = str_replace("/","\\", $string);
         //$string = str_replace("app\..","", $string);
+        $string = str_replace("\\",DIRECTORY_SEPARATOR, $string);
         $string = str_replace("/",DIRECTORY_SEPARATOR, $string);
         $string = str_replace("app".DIRECTORY_SEPARATOR."..","", $string);
 
