@@ -2023,8 +2023,8 @@ class CallEntryController extends Controller
                     }
                 } else {
                     //exact search
-                    $searchCriterionArr[] = "lastname.field = :lastname AND $statusStr";
-                    $parameters['lastname'] = $lastname;
+                    $searchCriterionArr[] = "LOWER(lastname.field) LIKE (:lastname) AND $statusStr";
+                    $parameters['lastname'] = "%".$lastname."%";
                     $parameters['statusValid'] = 'valid';
                     $parameters['statusAlias'] = 'alias';
                     $where = true;
@@ -2064,8 +2064,8 @@ class CallEntryController extends Controller
                     }
                 } else {
                     //exact search
-                    $searchCriterionArr[] = "firstname.field = :firstname AND $statusStr";
-                    $parameters['firstname'] = $firstname;
+                    $searchCriterionArr[] = "LOWER(firstname.field) LIKE LOWER(:firstname) AND $statusStr";
+                    $parameters['firstname'] = "%".$firstname."%";
                     $parameters['statusValid'] = 'valid';
                     $parameters['statusAlias'] = 'alias';
                     $where = true;
