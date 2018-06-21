@@ -91,6 +91,19 @@ class CallLogUtilForm
             $dateTime = $date->getTime();
             $dateTimezone = $date->getTimezone();
             $encounterDateStr = $userServiceUtil->getSeparateDateTimeTzStr($dateField, $dateTime, $dateTimezone, true, false);
+
+            $user = $this->container->get('security.token_storage')->getToken()->getUser();
+            //echo "user=$user <br>";
+            $userServiceUtil = $this->container->get('user_service_utility');
+            echo "date=".$date."<br>";
+            echo "dateTime=".$dateTime->format("h:i (T)")."<br>";
+            echo "dateField=".$dateField->format("m/d/Y (T)")."<br>";
+            //$datetimeTz = $userServiceUtil->convertToTimezone($date,$dateTimezone);
+            $modifiedOnUserTz = $userServiceUtil->convertToUserTimezone($dateField,$user);
+            $modifiedOnUserTzStr = $modifiedOnUserTz->format("m/d/Y h:i (T)");
+
+            $encounterDateStr = $encounterDateStr . " (" . $modifiedOnUserTzStr . ")";
+
         } else {
             $dateField = null;
             $dateTime = null;
@@ -244,6 +257,8 @@ class CallLogUtilForm
 
     public function getCalllogAuthorsHtml( $message, $sitename ) {
 
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+
         $messageVersion = intval($message->getVersion());
 
         if( $messageVersion > 1) {
@@ -318,6 +333,7 @@ class CallLogUtilForm
 
                 $modifiedOn = $lastEditorInfo->getModifiedOn();
                 if( $modifiedOn ) {
+                    $modifiedOn = $userServiceUtil->convertFromUtcToUserTimezone($modifiedOn,$user);
                     $editedDate = $modifiedOn->format('m/d/Y') . " at " . $modifiedOn->format('h:i a (T)');
                     $html .= $this->getTrField("Last edited on ", $editedDate);
                 }

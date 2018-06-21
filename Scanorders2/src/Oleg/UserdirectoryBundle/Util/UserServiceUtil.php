@@ -196,7 +196,19 @@ class UserServiceUtil {
             $timeTz = $this->convertToTimezone($time,$tz);
         }
         $info = $dateTz->format('m/d/Y') . " at " . $timeTz->format('h:i a') . " (" . $tz . ")";
-
+        
+        //TODO: add timezone in the user's timezone
+        //$user = $this->secTokenStorage->getToken()->getUser();
+        //$dateTime = new \DateTime();
+        //$dateTime->setDate($date);
+        //$dateTime->setTime($time);
+        //$dateTime->setTimezone($tz);
+        //$datetimeTz = $userServiceUtil->convertToTimezone($dateTimeObject,$formValueTimezone);
+        //$modifiedOnUserTz = $this->convertToUserTimezone($dateTime,$user);
+        //$info = $info . " (" . $modifiedOnUserTz->format("m/d/Y at h:i (T)") . ")";
+//                    $formValueStr = $formValueStr . " (".$modifiedOnUserTz->format("m/d/Y").")";
+//                    exit($formValueStr);
+        
         //echo "output datetime=".$info."<br>";
         //exit('1');
 
@@ -1131,7 +1143,7 @@ class UserServiceUtil {
             $dateTime->setTimestamp($timestamp);
             //$dateTimeUtc = \DateTime::createFromFormat('F d Y H:i:s',$timestamp);
             $dateTimeUser = $this->convertFromUtcToUserTimezone($dateTime,$user);
-            $timestamp = $dateTimeUser->format("F d Y H:i:s");
+            $timestamp = $dateTimeUser->format("F d Y H:i");
         }
 
         if ( $hash ) {
