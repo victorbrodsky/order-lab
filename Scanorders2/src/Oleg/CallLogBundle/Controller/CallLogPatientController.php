@@ -535,6 +535,8 @@ class CallLogPatientController extends PatientController {
         $template = null;
         $filterMessageCategory = null;
 
+        $messageId = $request->query->get('messageid');
+
         $patientid = $request->query->get('patientid');
         //echo "patientid=".$patientid."<br>";
 
@@ -719,7 +721,8 @@ class CallLogPatientController extends PatientController {
             'route_path' => $request->get('_route'),
             'messages' => $messages,
             'title' => $title,
-            'limit' => $limit
+            'limit' => $limit,
+            'messageid' => $messageId
             //'testing' => true
         );
         $htmlPage = $this->render('OlegCallLogBundle:PatientList:patient_entries.html.twig',$params);

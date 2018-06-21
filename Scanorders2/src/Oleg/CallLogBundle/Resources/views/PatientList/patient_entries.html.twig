@@ -112,6 +112,10 @@
                     {#{% set trclassname = "order-reject-status" %}#}
                 {#{% endif %}#}
 
+                {% if messageid is defined and messageid and message.id == messageid %}
+                    {% set trclassname = "fell-app-status-legend-archived" %}
+                {% endif %}
+
                 <tr class="{{ trclassname }}">
 
                     {#style="display: none;"#}

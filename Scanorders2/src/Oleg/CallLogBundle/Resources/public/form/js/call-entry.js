@@ -2160,6 +2160,12 @@ function calllogListPreviousEntriesForPatient( holderId, messageCategoryId ) {
         return;
     }
 
+    var messageIdStr = "";
+    var messageId = $("#calllog-current-message-id").val();
+    if( messageId ) {
+        messageIdStr = "&messageid="+messageId;
+    }
+
     //reset: show button and clear entries list
     //$('#calllog-list-previous-entries').html("");
     calllogShowHideListPreviousEntriesBtn(true);
@@ -2174,7 +2180,7 @@ function calllogListPreviousEntriesForPatient( holderId, messageCategoryId ) {
     calllogStartBtn(lbtn);
 
     var url = Routing.generate('calllog-list-previous-entries');
-    url = url + "?patientid="+patientId+"&type="+messageCategoryId;
+    url = url + "?patientid="+patientId+"&type="+messageCategoryId+messageIdStr;
 
     $.ajax({
         url: url,
