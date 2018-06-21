@@ -1126,7 +1126,10 @@ class UserServiceUtil {
         if( $timestamp ) {
             $user = $this->secTokenStorage->getToken()->getUser();
             //$timestamp = date("F d Y H:i:s.",$timestamp);
-            $dateTime = new \DateTime($timestamp);
+            //$dateTime = new \DateTime($timestamp);
+            $dateTime = new \DateTime();
+            $dateTime->setTimestamp($timestamp);
+            //$dateTimeUtc = \DateTime::createFromFormat('F d Y H:i:s',$timestamp);
             $dateTimeUser = $this->convertFromUtcToUserTimezone($dateTime,$user);
             $timestamp = $dateTimeUser->format("F d Y H:i:s");
         }
