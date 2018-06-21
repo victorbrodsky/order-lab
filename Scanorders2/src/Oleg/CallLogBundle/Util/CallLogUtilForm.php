@@ -92,7 +92,7 @@ class CallLogUtilForm
             $dateTimezone = $date->getTimezone();
 
             //show it in the user's timezone
-            //TODO: test it
+            //TODO: test it. Usually, should be the same as submitted date on the header
             $user = $this->container->get('security.token_storage')->getToken()->getUser();
             //echo "user=$user <br>";
             $userServiceUtil = $this->container->get('user_service_utility');
