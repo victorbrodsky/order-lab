@@ -319,7 +319,9 @@ class CallLogUtilForm
                 $html .= $this->getTrField("Signed by ", $hreflink);
             }
             if ($messageSigneeInfo->getModifiedOn() ) {
-                $signedDate = $messageSigneeInfo->getModifiedOn()->format('m/d/Y') . " at " . $messageSigneeInfo->getModifiedOn()->format('h:i a (T)');
+                $messageModifyDate = $messageSigneeInfo->getModifiedOn();
+                $messageModifyDateTz = $userServiceUtil->convertFromUtcToUserTimezone($messageModifyDate,$user);
+                $signedDate = $messageModifyDateTz->format('m/d/Y') . " at " . $messageModifyDateTz->format('h:i a (T)');
                 $html .= $this->getTrField("Signed on ", $signedDate);
             }
             if (count($messageSigneeInfo->getModifierRoles()) > 0) {
