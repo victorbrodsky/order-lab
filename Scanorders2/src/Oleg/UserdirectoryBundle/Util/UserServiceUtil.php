@@ -757,6 +757,9 @@ class UserServiceUtil {
             "gsPathFellApp" => 'C:\Program Files (x86)\pacsvendor\pacsname\htdocs\order\scanorder\Scanorders2\vendor\olegutil\Ghostscript\bin',
             "gsFilenameFellApp"=>"gswin64c.exe",
             "gsArgumentsFellApp"=>"-q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile= ###outputFile###  -c .setpdfwrite -f ###inputFiles###",
+
+            "libreOfficeConvertToPDFPathFellAppLinux" => "/usr/lib/libreoffice/program",
+            "libreOfficeConvertToPDFFilenameFellAppLinux" => "soffice",
             ///////////////////// EOF FELLAPP /////////////////////
 
             //VacReq
@@ -1027,7 +1030,7 @@ class UserServiceUtil {
 
             //set other Linux parameters
             $types['libreOfficeConvertToPDFPathFellAppLinux'] = "/usr/lib/libreoffice/program";
-            $types['libreOfficeConvertToPDFFilenameFellApp'] = "soffice";
+            $types['libreOfficeConvertToPDFFilenameFellAppLinux'] = "soffice";
             $types['libreOfficeConvertToPDFArgumentsdFellAppLinux'] = "--headless -convert-to pdf -outdir";
             $types['pdftkPathFellAppLinux'] = "/usr/bin";
             $types['pdftkFilenameFellAppLinux'] = "pdftk";

@@ -452,7 +452,7 @@ class ReportGenerator {
         $outdir = $reportPath.'/temp_'.$id.'/';
         //$logger->notice("1 outdir=".$outdir);
 
-        //TODO: THIS CAUSED ERROR: 'Complete Application PDF' will no be generated! GS failed:
+        //Don't use it: DIRECTORY_SEPARATOR CAUSED ERROR: 'Complete Application PDF' will no be generated! GS failed:
         //$outdir = $reportPath . DIRECTORY_SEPARATOR . 'temp_'.$id . DIRECTORY_SEPARATOR;
         //$logger->notice("2 outdir=".$outdir);
 
