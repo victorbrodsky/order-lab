@@ -297,10 +297,10 @@ class ListController extends Controller
             }
 
             $searchStr = $searchStr."
-                ent.name LIKE :search 
-                OR ent.abbreviation LIKE :search 
-                OR ent.shortname LIKE :search 
-                OR ent.description LIKE :search
+                LOWER(ent.name) LIKE LOWER(:search) 
+                OR LOWER(ent.abbreviation) LIKE LOWER(:search) 
+                OR LOWER(ent.shortname) LIKE LOWER(:search) 
+                OR LOWER(ent.description) LIKE LOWER(:search)
                 ";
 
 //            //search location: phone, building, room
@@ -317,19 +317,19 @@ class ListController extends Controller
 //            }
 
             if (method_exists($entityClass, 'getSection')) {
-                $searchStr = $searchStr . " OR ent.section LIKE :search";
+                $searchStr = $searchStr . " OR LOWER(ent.section) LIKE LOWER(:search)";
             }
 
             if (method_exists($entityClass, 'getProductId')) {
-                $searchStr = $searchStr . " OR ent.productId LIKE :search";
+                $searchStr = $searchStr . " OR LOWER(ent.productId) LIKE LOWER(:search)";
             }
 
             if (method_exists($entityClass, 'getFeeUnit')) {
-                $searchStr = $searchStr . " OR ent.feeUnit LIKE :search";
+                $searchStr = $searchStr . " OR LOWER(ent.feeUnit) LIKE LOWER(:search)";
             }
 
             if (method_exists($entityClass, 'getFee')) {
-                $searchStr = $searchStr . " OR ent.fee LIKE :search";
+                $searchStr = $searchStr . " OR LOWER(ent.fee) LIKE LOWER(:search)";
             }
 
             $dql->andWhere($searchStr);
