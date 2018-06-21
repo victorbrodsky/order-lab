@@ -697,6 +697,23 @@ class CallLogPatientController extends PatientController {
         //}
         //exit('testing');
         //////////////// find messages ////////////////
+        //do not show section if none previous messages
+        if( count($messages) == 0 ) {
+            $json = json_encode(null);
+            $response = new Response($json);
+            $response->headers->set('Content-Type', 'application/json');
+            return $response;
+        }
+        //do not show if 1 result with the same message id (if there is only itself as the previous note)
+        if( count($messages) == 1 ) {
+            $singleMessage = $messages[0];
+            if( $messageId && $singleMessage->getId() == $messageId ) {
+                $json = json_encode(null);
+                $response = new Response($json);
+                $response->headers->set('Content-Type', 'application/json');
+                return $response;
+            }
+        }
 
         if( count($messages) > $limit ) {
             $mrnRes = $patient->obtainStatusField('mrn', "valid");

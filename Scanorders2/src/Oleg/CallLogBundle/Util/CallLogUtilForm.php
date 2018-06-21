@@ -90,19 +90,31 @@ class CallLogUtilForm
             $dateField = $date->getField();
             $dateTime = $date->getTime();
             $dateTimezone = $date->getTimezone();
-            $encounterDateStr = $userServiceUtil->getSeparateDateTimeTzStr($dateField, $dateTime, $dateTimezone, true, false);
 
+            //show it in the user's timezone
             $user = $this->container->get('security.token_storage')->getToken()->getUser();
             //echo "user=$user <br>";
             $userServiceUtil = $this->container->get('user_service_utility');
-            echo "date=".$date."<br>";
-            echo "dateTime=".$dateTime->format("h:i (T)")."<br>";
-            echo "dateField=".$dateField->format("m/d/Y (T)")."<br>";
-            //$datetimeTz = $userServiceUtil->convertToTimezone($date,$dateTimezone);
-            $modifiedOnUserTz = $userServiceUtil->convertToUserTimezone($dateField,$user);
-            $modifiedOnUserTzStr = $modifiedOnUserTz->format("m/d/Y h:i (T)");
+            //echo "dateTime=".$dateTime->format("h:i (T)")."<br>";
+            //echo "dateField=".$dateField->format("m/d/Y (T)")."<br>";
 
-            $encounterDateStr = $encounterDateStr . " (" . $modifiedOnUserTzStr . ")";
+            $dateFieldTz = $userServiceUtil->convertToUserTimezone($dateField,$user);
+            //echo "dateFieldTz=".$dateFieldTz->format("m/d/Y (T)")."<br>";
+
+            $dateTimeTz = $userServiceUtil->convertToUserTimezone($dateTime,$user);
+            //echo "dateTimeTz=".$dateTimeTz->format("h:i (T)")."<br>";
+
+            $user_tz = $user->getPreferences()->getTimezone();
+            //echo "user_tz=".$user_tz."<br>";
+
+            $encounterDateStr = $dateFieldTz->format("m/d/Y") . " at " . $dateTimeTz->format("h:i a") . ", " . $user_tz . " (". $dateFieldTz->format("T") . ")";
+
+            //show it as the entered timezone
+            //$encounterDateStr = $userServiceUtil->getSeparateDateTimeTzStr($dateField, $dateTime, $dateTimezone, true, false);
+            //$datetimeTz = $userServiceUtil->convertToTimezone($date,$dateTimezone);
+            //$modifiedOnUserTz = $userServiceUtil->convertToUserTimezone($dateField,$user);
+            //$modifiedOnUserTzStr = $modifiedOnUserTz->format("m/d/Y h:i (T)");
+            //$encounterDateStr = $encounterDateStr . " (" . $modifiedOnUserTzStr . ")";
 
         } else {
             $dateField = null;
