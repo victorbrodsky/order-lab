@@ -1124,7 +1124,11 @@ class UserServiceUtil {
 
         $timestamp = filemtime($filename);
         if( $timestamp ) {
-            $timestamp = date("F d Y H:i:s.",$timestamp);
+            $user = $this->secTokenStorage->getToken()->getUser();
+            //$timestamp = date("F d Y H:i:s.",$timestamp);
+            $dateTime = new \DateTime($timestamp);
+            $dateTimeUser = $this->convertFromUtcToUserTimezone($dateTime,$user);
+            $timestamp = $dateTimeUser->format("F d Y H:i:s");
         }
 
         if ( $hash ) {
