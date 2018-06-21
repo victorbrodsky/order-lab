@@ -2023,7 +2023,7 @@ class CallEntryController extends Controller
                     }
                 } else {
                     //exact search
-                    $searchCriterionArr[] = "LOWER(lastname.field) LIKE (:lastname) AND $statusStr";
+                    $searchCriterionArr[] = "LOWER(lastname.field) LIKE LOWER(:lastname) AND $statusStr";
                     $parameters['lastname'] = "%".$lastname."%";
                     $parameters['statusValid'] = 'valid';
                     $parameters['statusAlias'] = 'alias';
