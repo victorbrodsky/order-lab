@@ -2334,7 +2334,7 @@ class TransResRequestUtil
 
     public function isInvoiceShowableToUser($invoice) {
         $user = $this->secTokenStorage->getToken()->getUser();
-        $transresUtil = $this->container->get('transres_util');
+        //$transresUtil = $this->container->get('transres_util');
         $transresRequest = $invoice->getTransresRequest();
         if( $transresRequest ) {
             //ok
@@ -2383,11 +2383,11 @@ class TransResRequestUtil
             return true;
         }
 
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN') ) {
+        if( $this->container->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN') ) {
             return true;
         }
 
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ) {
+        if( $this->container->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ) {
             return true;
         }
 
