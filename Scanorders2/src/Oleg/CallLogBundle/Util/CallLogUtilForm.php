@@ -90,25 +90,56 @@ class CallLogUtilForm
             $dateField = $date->getField();
             $dateTime = $date->getTime();
             $dateTimezone = $date->getTimezone();
-
-            //show it in the user's timezone
-            //TODO: test it. Usually, should be the same as submitted date on the header
             $user = $this->container->get('security.token_storage')->getToken()->getUser();
-            //echo "user=$user <br>";
-            $userServiceUtil = $this->container->get('user_service_utility');
-            //echo "dateTime=".$dateTime->format("h:i (T)")."<br>";
-            //echo "dateField=".$dateField->format("m/d/Y (T)")."<br>";
+            $user_tz = $user->getPreferences()->getTimezone();
 
-            $dateFieldTz = $userServiceUtil->convertToUserTimezone($dateField,$user);
-            //echo "dateFieldTz=".$dateFieldTz->format("m/d/Y (T)")."<br>";
+            if(0) {
+                //show as original submitted timezone
+                //$dateField = $date->getField();
+                //$dateTime = $date->getTime();
+                //$dateTimezone = $date->getTimezone();
+                $encounterDateStr = $userServiceUtil->getSeparateDateTimeTzStr($dateField, $dateTime, $dateTimezone, true, false);
+            } else {
+                //show it in the user's timezone
+                //TODO: test it. Usually, should be the same as submitted date on the header
+                //echo "user=$user <br>";
+                $userServiceUtil = $this->container->get('user_service_utility');
+                //echo "dateTime=" . $dateTime->format("h:i (T)") . "<br>";
+                //echo "dateField=" . $dateField->format("m/d/Y (T)") . "<br>";
 
-            $dateTimeTz = $userServiceUtil->convertToUserTimezone($dateTime,$user);
+                $newDateTime = new \DateTime(null, new \DateTimeZone($user_tz));
+
+                //1) construct DateTime with $dateField and $dateTime
+                $newDateTime->setDate($dateField->format('Y'), $dateField->format('m'), $dateField->format('d'));
+                $newDateTime->setTime($dateTime->format('H'), $dateTime->format('i'));
+                $newDateTime->setTimezone(new \DateTimeZone($user_tz));
+                //echo "newDateTime=" . $newDateTime->format("m/d/Y H:i (T)") . "<br>";
+
+                //$dateField = new \DateTime($newDateTime->format('Y-m-d H:i'), new \DateTimeZone('UTC') );
+
+                //2) convert to $dateTimezone
+                $newDateTimeTz = $userServiceUtil->convertToTimezone($newDateTime, $dateTimezone);
+                //echo "dateFieldTz=" . $newDateTimeTz->format("m/d/Y H:i (T)") . "<br>";
+
+                //3) convert to user's tz
+                //$dateFieldTz = $userServiceUtil->convertToUserTimezone($newDateTimeTz, $user);
+                //echo "dateFieldTz=".$dateFieldTz->format("m/d/Y (T)")."<br>";
+
+                //original tz
+                $encounterDateStr = $userServiceUtil->getSeparateDateTimeTzStr($dateField, $dateTime, $dateTimezone, true, false);
+
+                //user tz
+                $encounterDateStr = $encounterDateStr . " - " . $newDateTimeTz->format("m/d/Y") . " at " . $newDateTimeTz->format("h:i a") . " (" . $user_tz . ")";
+            }
+
+            //$dateTimeTz = $userServiceUtil->convertToUserTimezone($dateTime,$user);
             //echo "dateTimeTz=".$dateTimeTz->format("h:i (T)")."<br>";
 
-            $user_tz = $user->getPreferences()->getTimezone();
+            //$user_tz = $user->getPreferences()->getTimezone();
             //echo "user_tz=".$user_tz."<br>";
 
-            $encounterDateStr = $dateFieldTz->format("m/d/Y") . " at " . $dateTimeTz->format("h:i a") . ", " . $user_tz . " (". $dateFieldTz->format("T") . ")";
+            //$encounterDateStr = $dateFieldTz->format("m/d/Y") . " at " . $dateTimeTz->format("h:i a") . ", " . $user_tz . " (". $dateFieldTz->format("T") . ")";
+            //$encounterDateStr = $dateFieldTz->format("m/d/Y") . " at " . $dateFieldTz->format("h:i a") . ", " . $user_tz . " (". $dateFieldTz->format("T") . ")";
 
             //show it as the entered timezone
             //$encounterDateStr = $userServiceUtil->getSeparateDateTimeTzStr($dateField, $dateTime, $dateTimezone, true, false);
