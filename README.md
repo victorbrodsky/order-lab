@@ -8,27 +8,31 @@
 > assurance, safe multi-user concurrency, proper versioning, and platform independence may need additional attention.
 >
 
+
 ## About
 
 O R D E R is a web-based software platform for development of clinical, administrative, research, and educational multi-user applications.
 
 It includes several functional applications:
 
-- Glass Slide Scan Ordering System
-
 - Employee Directory
-
-- Fellowship Application Submission and Candidate Evaluation System
-
-- Deidentifier / Honest Broker System for Accession Numbers
 
 - Vacation Request Approval / Vacation Day Carryover / Away Calendar System
 
 - Call Log Book
 
-## Data Model
+- Fellowship Application Submission and Candidate Evaluation System
 
-The [data models of the key objects are provided in UML and JPG formats](https://github.com/victorbrodsky/order-lab/tree/master/Scanorders2/uml) as part of the distribution.
+- Glass Slide Scan Ordering System
+
+- De-identifier / Honest Broker System for Accession Numbers
+
+- Translational Research Project Approval, Work Order Processing, and Invoicing
+
+
+## Data Models
+
+The [core data models of the key objects are provided in UML and JPG formats](https://github.com/victorbrodsky/order-lab/tree/master/Scanorders2/uml), although additional attributes may have been added since their creation.
 
 
 ## Support
@@ -73,29 +77,30 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 
 4. Install [doctl](https://github.com/digitalocean/doctl)
 
-5. Edit /packer/parameters.yml in this project's folder to set desired values (especially for passwords)
+5. Edit order-lab/packer/parameters.yml in this project's folder to set desired values (especially for passwords)
 
 6. Run /packer/deploy-order-digital-ocean.sh via (make sure to supply your API token):
 
 	 	bash deploy-order-digital-ocean.sh API-TOKEN-FROM-STEP-1 parameters.yml
 
-7. Visit http://IPADDRESS/order/directory/admin/first-time-login-generation-init/ in your browser to generate the initial Administrator account, where IPADDRESS is either the IP address or the domain name of the server. Then, log into the application with the user name "Administrator" and the password "1234567890" at http://IPADDRESS/order/. Change the default password for the Administrator account by visiting the account's profile page and clicking 'Edit'.
+7. If the browser window with this URL does not open automatically at the end of the previous step, visit http://IPADDRESS/order/directory/admin/first-time-login-generation-init/ to generate the initial Administrator account, where IPADDRESS is the IP address of the server. Wait until the site redirects to the log in screen (it might take a while.)
 
-8. To populate the default values for various tables, first use the 'Admin' dropdown menu in the top navigation bar after loging in as the Administrator. Select 'List Manager', then near the bottom of the page under 'Populate Lists', click 'Populate Country and City Lists', then confirm. When complete, click 'Populate All Lists With Default Values' in both Glass Slide Scan Orders and Employee Directory sites. 
+8. Log into the application with the user name "Administrator" and the password "1234567890" at http://IPADDRESS/order/directory/ (make sure to select "Local User" above the user name field). You should see the http://IPADDRESS/order/directory/settings/initial-configuration page asking you to supply the initial variables for your instance. If you choose to use Gmail's SMTP server to enable the site to send email notifications, make sure to [enable 2-step-verification, generate an 'app password', and disable 2-step-verification](https://support.google.com/mail/answer/185833?hl=en). You can test your email settings later by visiting http://IPADDRESS/order/directory/send-a-test-email/ and sending a test email message. Upon submission of this initial configuration form, visit http://IPADDRESS/order/directory/admin/update-system-cache-assets/ to enable the site footer to reflect the values you supplied. Make sure to change the default password for the Administrator account either on this initial configuration page or by visiting the account's profile page http://IPADDRESS/order/directory/user/2 and clicking 'Edit', then set the server's "Environment" variable's value to "live", "dev" or "test" in Admin->Site Settings->Platform Settings http://IPADDRESS/order/directory/settings/.
 
-9. For a live server, set the "Environment" variable's value to "live" in Admin->Site Settings->Platform Settings. For a development server set the "Environment" variable's value to "dev". For a test server set the "Environment" variable's value to "test".
+9. Populate the database tables with default values by logging in as the Administrator, selecting "Admin" > 'List Manager' in the top navigation bar, and arriving at (http://IPADDRESS/order/directory/admin/lists/). Near the bottom of the page under 'Populate Lists' heading, click each link in the order listed, and confirm the action in each resulting window, then wait for each function to finish: 
 
-10. Change the default password for the Administrator account by visiting the account's profile page and clicking 'Edit'.
+    1) Populate Country and City Lists (http://IPADDRESS/order/directory/admin/populate-country-city-list-with-default-values)
+    2) Populate All Lists With Default Values (http://IPADDRESS/order/directory/admin/populate-all-lists-with-default-values)
+    3) Populate All Scan Orders Lists With Default Values (http://IPADDRESS/order/scan/admin/populate-all-lists-with-default-values)
+    4) Pre-generate form node tree fields for Call Log Book (http://IPADDRESS/order/directory/admin/list/generate-form-node-tree/)
 
-11. Obtain and install these optional applications to enable associated functionality on the server:
+10. To enable HTTPS (SSL/TLS), first either purchase the certificate from your preferred vendor and add it to the server, or install the [certbot](https://certbot.eff.org/lets-encrypt/ubuntuxenial-apache) with a [Let's Encrypt](https://letsencrypt.org/) certificate (you can also use a [symfony bundle](https://packagist.org/packages/cert/letsencrypt-bundle)). For certificates form Let's Encrypt, verify that the cron job to automatically update them is set up since they expire in 90 days. Once that is done, uncomment (remove "#" from the beginning of) the line 289 in /order-lab/Scanorders2/app/config/security.yml file.
 
-	* [wkhtmltopdf](http://wkhtmltopdf.org) for html to pdf conversion (default path on Windows: C:\Program Files\wkhtmltopdf\ )
-	* [LibreOffice](https://www.libreoffice.org/) for Word to PDF conversion (default path on Windows: C:\Program Files (x86)\LibreOffice 5\ )
-	* [GhostScript](https://www.ghostscript.com/) for PDF decryption
-	* [PDFtk Server](https://www.pdflabs.com/tools/pdftk-server/) for PDF merging
-	* [PHPExcel](https://github.com/PHPOffice/PHPExcel) for importing and exporting Excel files
+11. To enable submission of applications for the Fellowship application site via Google services, use the files in the /order-lab/Scanorders2/src/Oleg/FellAppBundle/Util/GoogleForm folder with the [Google Apps Script](https://developers.google.com/apps-script/). Make sure to add the Google Apps Script API key on the Site Settings page http://IPADDRESS/order/directory/settings/.
 
-12. If bulk import of the initial set of users is desired, download the [ImportUsersTemplate.xlsx](https://github.com/victorbrodsky/order-lab/tree/master/importLists) file from the /importLists folder, fill it out with the user details, and upload it back via the the Navigation bar's "Admin > Import Users" function on the Employee Directory site.
+12. If bulk import of the initial set of users is desired, download the [ImportUsersTemplate.xlsx](https://github.com/victorbrodsky/order-lab/tree/master/importLists) file from the /importLists folder, fill it out with the user details, and upload it back via the the Navigation bar's "Admin > Import Users" (http://IPADDRESS/order/directory/import-users/spreadsheet) function on the Employee Directory site.
+
+Note: If you choose to use MySQL database on Linux instead of Postgres, you will need to increase the size of the sort buffer by setting "sort_buffer_size" to 512K in /etc/mysql/my.cnf.
 
 ##  Installation instructions for deploying a Linux-based server on MacOS X
 
@@ -105,7 +110,7 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 
 2. Choose a folder that will be used for installation of ORDER. This folder will be referred to as '/ORDER_LOCATION/' in these instructions, which you will need to replace with the actual file path of the location you select.
 	
-	a) Download [order-lab source code](https://github.com/victorbrodsky/order-lab) by clicking the "Clone or Download" button, followed by "Download as Zip". Double click the "order-lab-master" zip file, extract the contents, then move the folder to '/ORDER_LOCATION/'. Alternatively, if it is not installed already, install [Git](https://git-scm.com/) by either installing [Xcode](https://itunes.apple.com/us/app/xcode/id497799835) or by entering 'git' in the Terminal application's window and following the instructions to install the "dommand line developer tools". After Git is installed, change the directory to your chosen '/ORDER_LOCATION/' and run the git clone command in the Terminal window:
+	a) Download [order-lab source code](https://github.com/victorbrodsky/order-lab) by clicking the "Clone or Download" button, followed by "Download as Zip". Double click the "order-lab-master" zip file, extract the contents, then move the folder to '/ORDER_LOCATION/'. Alternatively, if it is not installed already, install [Git](https://git-scm.com/) by either installing [Xcode](https://itunes.apple.com/us/app/xcode/id497799835) or by entering 'git' in the Terminal application's window and following the instructions to install the "command line developer tools". After Git is installed, change the directory to your chosen '/ORDER_LOCATION/' and run the git clone command in the Terminal window:
 
 		cd /ORDER_LOCATION/
 		git clone https://github.com/victorbrodsky/order-lab.git
@@ -132,23 +137,24 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 		bash deploy-order-digital-ocean.sh API-TOKEN-FROM-STEP-1 parameters.yml
 
 
-7. Visit http://IPADDRESS/order/directory/admin/first-time-login-generation-init/ in your browser to generate the initial Administrator account, where IPADDRESS is either the IP address or the domain name of the server. Then, log into the application with the user name "Administrator" and the password "1234567890" at http://IPADDRESS/order/.
+7. If the browser window with this URL does not open automatically at the end of the previous step, visit http://IPADDRESS/order/directory/admin/first-time-login-generation-init/ to generate the initial Administrator account, where IPADDRESS is the IP address of the server. Wait until the site redirects to the log in screen (it might take a while.)
 
-8. To populate the default values for various tables, first use the 'Admin' dropdown menu in the top navigation bar after loging in as the Administrator. Select 'List Manager', then near the bottom of the page under 'Populate Lists', click 'Populate Country and City Lists', then confirm. When complete, click 'Populate All Lists With Default Values' in both Glass Slide Scan Orders and Employee Directory sites.
+8. Log into the application with the user name "Administrator" and the password "1234567890" at http://IPADDRESS/order/directory/ (make sure to select "Local User" above the user name field). You should see the http://IPADDRESS/order/directory/settings/initial-configuration page asking you to supply the initial variables for your instance. If you choose to use Gmail's SMTP server to enable the site to send email notifications, make sure to [enable 2-step-verification, generate an 'app password', and disable 2-step-verification](https://support.google.com/mail/answer/185833?hl=en). You can test your email settings later by visiting http://IPADDRESS/order/directory/send-a-test-email/ and sending a test email message. Upon submission of this initial configuration form, visit http://IPADDRESS/order/directory/admin/update-system-cache-assets/ to enable the site footer to reflect the values you supplied. Make sure to change the default password for the Administrator account either on this initial configuration page or by visiting the account's profile page http://IPADDRESS/order/directory/user/2 and clicking 'Edit', then set the server's "Environment" variable's value to "live", "dev" or "test" in Admin->Site Settings->Platform Settings http://IPADDRESS/order/directory/settings/.
 
-9. For a live server, set the "Environment" variable's value to "live" in Admin->Site Settings->Platform Settings. For a development server set the "Environment" variable's value to "dev". For a test server set the "Environment" variable's value to "test".
+9. Populate the database tables with default values by logging in as the Administrator, selecting "Admin" > 'List Manager' in the top navigation bar, and arriving at (http://IPADDRESS/order/directory/admin/lists/). Near the bottom of the page under 'Populate Lists' heading, click each link in the order listed, and confirm the action in each resulting window, then wait for each function to finish: 
 
-10. Change the default password for the Administrator account by visiting the account's profile page and clicking 'Edit'.
+    1) Populate Country and City Lists (http://IPADDRESS/order/directory/admin/populate-country-city-list-with-default-values)
+    2) Populate All Lists With Default Values (http://IPADDRESS/order/directory/admin/populate-all-lists-with-default-values)
+    3) Populate All Scan Orders Lists With Default Values (http://IPADDRESS/order/scan/admin/populate-all-lists-with-default-values)
+    4) Pre-generate form node tree fields for Call Log Book (http://IPADDRESS/order/directory/admin/list/generate-form-node-tree/)
 
-11. Obtain and install these optional applications to enable associated functionality on the server:
+10. To enable HTTPS (SSL/TLS), first either purchase the certificate from your preferred vendor and add it to the server, or install the [certbot](https://certbot.eff.org/lets-encrypt/ubuntuxenial-apache) with a [Let's Encrypt](https://letsencrypt.org/) certificate (you can also use a [symfony bundle](https://packagist.org/packages/cert/letsencrypt-bundle)). For certificates form Let's Encrypt, verify that the cron job to automatically update them is set up since they expire in 90 days. Once that is done, uncomment (remove "#" from the beginning of) the line 289 in /order-lab/Scanorders2/app/config/security.yml file.
 
-	* [wkhtmltopdf](http://wkhtmltopdf.org) for html to pdf conversion (default path on Windows: C:\Program Files\wkhtmltopdf\ )
-	* [LibreOffice](https://www.libreoffice.org/) for Word to PDF conversion (default path on Windows: C:\Program Files (x86)\LibreOffice 5\ )
-	* [GhostScript](https://www.ghostscript.com/) for PDF decryption
-	* [PDFtk Server](https://www.pdflabs.com/tools/pdftk-server/) for PDF merging
-	* [PHPExcel](https://github.com/PHPOffice/PHPExcel) for importing and exporting Excel files
+11. To enable submission of applications for the Fellowship application site via Google services, use the files in the /order-lab/Scanorders2/src/Oleg/FellAppBundle/Util/GoogleForm folder with the [Google Apps Script](https://developers.google.com/apps-script/). Make sure to add the Google Apps Script API key on the Site Settings page http://IPADDRESS/order/directory/settings/.
 
-12. If bulk import of the initial set of users is desired, download the [ImportUsersTemplate.xlsx](https://github.com/victorbrodsky/order-lab/tree/master/importLists) file from the /importLists folder, fill it out with the user details, and upload it back via the the Navigation bar's "Admin > Import Users" function on the Employee Directory site.
+12. If bulk import of the initial set of users is desired, download the [ImportUsersTemplate.xlsx](https://github.com/victorbrodsky/order-lab/tree/master/importLists) file from the /importLists folder, fill it out with the user details, and upload it back via the the Navigation bar's "Admin > Import Users" (http://IPADDRESS/order/directory/import-users/spreadsheet) function on the Employee Directory site.
+
+Note: If you choose to use MySQL database on Linux instead of Postgres, you will need to increase the size of the sort buffer by setting "sort_buffer_size" to 512K in /etc/mysql/my.cnf.
 
 ## Installation Instructions for deploying a Windows-based server on Windows
 
@@ -286,33 +292,35 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 		
 	b) Create the Administrator account with password 1234567890 by opening the following URL in your browser (specify the server's IP or domain name instead of "localhost"):
 
-	[http://localhost/order/directory/admin/first-time-login-generation-init/](http://localhost/order/directory/admin/first-time-login-generation-init/)
+	[http://localhost/order/directory/admin/first-time-login-generation-init/](http://localhost/order/directory/admin/first-time-login-generation-init/)  Wait until the site re-directs to the log in screen (it might take a while.)
 
-	c) Log into the application with the user name "Administrator" and the password "1234567890" at http://localhost/order/.
+	c) Log into the application with the user name "Administrator" and the password "1234567890" at http://IPADDRESS/order/directory/ (make sure to select "Local User" above the user name field). You should see the http://IPADDRESS/order/directory/settings/initial-configuration page asking you to supply the initial variables for your instance. If you choose to use Gmail's SMTP server to enable the site to send email notifications, make sure to [enable 2-step-verification, generate an 'app password', and disable 2-step-verification](https://support.google.com/mail/answer/185833?hl=en). You can test your email settings later by visiting http://IPADDRESS/order/directory/send-a-test-email/ and sending a test email message. Upon submission of this initial configuration form, visit http://IPADDRESS/order/directory/admin/update-system-cache-assets/ to enable the site footer to reflect the values you supplied. Make sure to change the default password for the Administrator account either on this initial configuration page or by visiting the account's profile page http://IPADDRESS/order/directory/user/2 and clicking 'Edit', then set the server's "Environment" variable's value to "live", "dev" or "test" in Admin->Site Settings->Platform Settings http://IPADDRESS/order/directory/settings/.
 	
-	d) Generate default country and city lists by navigating to Employee Directory->Admin->List Manager and clicking "Populate Country and City Lists"
+	d) Populate the database tables with default values by logging in as the Administrator, selecting "Admin" > 'List Manager' in the top navigation bar, and arriving at (http://IPADDRESS/order/directory/admin/lists/). Near the bottom of the page under 'Populate Lists' heading, click each link in the order listed, and confirm the action in each resulting window, then wait for each function to finish: 
+
+        1) Populate Country and City Lists (http://IPADDRESS/order/directory/admin/populate-country-city-list-with-default-values)
+        2) Populate All Lists With Default Values (http://IPADDRESS/order/directory/admin/populate-all-lists-with-default-values)
+        3) Populate All Scan Orders Lists With Default Values (http://IPADDRESS/order/scan/admin/populate-all-lists-with-default-values)
+        4) Pre-generate form node tree fields for Call Log Book (http://IPADDRESS/order/directory/admin/list/generate-form-node-tree/)
 	
-	e) Generate all other default parameters by navigating to Employee Directory->Admin->List Manager and clicking "Populate All Lists With Default Values"
-	
-	f) Generate default parameters for the "Glass Slide Scan Orders" site by navigating to Glass Slide Scan Orders->Scan Order List Manager->and clicking "Populate All Lists With Default Values".
-	
-	g) Run the deployment script again by following step 5a above:
+	e) Run the deployment script again by following step 5a above:
 
 	 	bash deploy_prod.sh
 
-	h) Change the default password for the Administrator account by visiting the account's profile page and clicking 'Edit'.
+6. Obtain and install these optional applications to enable associated functionality on the server (then ensure the path for each is correctly set on this page http://IPADDRESS/order/directory/settings/):
 
-8. For a live server, set the "Environment" variable's value to "live" in Admin->Site Settings->Platform Settings. For a development server set the "Environment" variable's value to "dev". For a test server set the "Environment" variable's value to "test".
+    * [wkhtmltopdf](http://wkhtmltopdf.org) for html to pdf conversion (default path on Windows: C:\Program Files\wkhtmltopdf\ )
+    * [LibreOffice](https://www.libreoffice.org/) for Word to PDF conversion (default path on Windows: C:\Program Files (x86)\LibreOffice 5\ )
+    * [GhostScript](https://www.ghostscript.com/) for PDF decryption
+    * [PDFtk Server](https://www.pdflabs.com/tools/pdftk-server/) for PDF merging
+    * [PHPExcel](https://github.com/PHPOffice/PHPExcel) for importing and exporting Excel files
+    * [PHPSpreadsheet](https://github.com/PHPOffice/PhpSpreadsheet)
 
-9. Obtain and install these optional applications:
+7. To enable HTTPS (SSL/TLS), first either purchase the certificate from your preferred vendor and add it to the server, or install either the [ACMESharp](https://github.com/ebekker/ACMESharp), [Certes](https://github.com/fszlin/certes), or [WinACME](https://github.com/PKISharp/win-acme) with a [Let's Encrypt](https://letsencrypt.org/) certificate (you can also use a [symfony bundle](https://packagist.org/packages/cert/letsencrypt-bundle)). For certificates from Let's Encrypt, verify that the scheduled task to automatically update them is set up since they expire in 90 days. Once that is done, uncomment (remove "#" from the beginning of) the line 289 in /order-lab/Scanorders2/app/config/security.yml file.
 
-	* [wkhtmltopdf](http://wkhtmltopdf.org) for html to pdf conversion ( default path: C:\Program Files\wkhtmltopdf\ )
-	* [LibreOffice](https://www.libreoffice.org/) for Word to PDF conversion (default path: C:\Program Files (x86)\LibreOffice 5\ )
-	* [GhostScript](https://www.ghostscript.com/) for PDF decryption
-	* [PDFtk Server](https://www.pdflabs.com/tools/pdftk-server/) for PDF merging
-	* [PHPExcel](https://github.com/PHPOffice/PHPExcel) for operating with Excel files
+8. To enable submission of applications for the Fellowship application site via Google services, use the files in the /order-lab/Scanorders2/src/Oleg/FellAppBundle/Util/GoogleForm folder with the [Google Apps Script](https://developers.google.com/apps-script/). Make sure to add the Google Apps Script API key on the Site Settings page http://IPADDRESS/order/directory/settings/.
 
-10. If bulk import of the initial set of users is desired, download the [ImportUsersTemplate.xlsx](https://github.com/victorbrodsky/order-lab/tree/master/importLists) file from the /importLists folder, fill it out with the user details, and upload it back via the the Navigation bar's "Admin > Import Users" function on the Employee Directory site.
+9. If bulk import of the initial set of users is desired, download the [ImportUsersTemplate.xlsx](https://github.com/victorbrodsky/order-lab/tree/master/importLists) file from the /importLists folder, fill it out with the user details, and upload it back via the the Navigation bar's "Admin > Import Users" (http://IPADDRESS/order/directory/import-users/spreadsheet) function on the Employee Directory site.
 
 ## Developer Notes
 
@@ -483,4 +491,4 @@ c) Run command:
 
 1. run   [/order/test/index.php](http://collage.med.cornell.edu/order/test/index.php)
 
-2. The resulting log and screenshots are in order/test folder)
+2. The resulting log and screen shots are in order/test folder)
