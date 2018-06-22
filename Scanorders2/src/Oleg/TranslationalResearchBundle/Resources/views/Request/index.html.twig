@@ -19,9 +19,11 @@
 
 {% if filterError is not defined or (filterError is defined and not filterError) %}
 
-    <p>
-        {{ requestTotalFeeHtml|raw }}
-    </p>
+    {% if requestTotalFeeHtml is defined and requestTotalFeeHtml %}
+        <p>
+            {{ requestTotalFeeHtml|raw }}
+        </p>
+    {% endif %}
 
     {% if project %}
         {% set isRequestCanBeCreated = transres_request_util.isRequestCanBeCreated(project) %}

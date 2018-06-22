@@ -1564,8 +1564,8 @@ class RequestController extends Controller
             $title = "Work Requests for " . $projectLink;
 
             $requestTotalFeeHtml = $transresRequestUtil->getTransResRequestTotalFeeHtml($project);
-            if ($requestTotalFeeHtml) {
-                $requestTotalFeeHtml = " (" . $requestTotalFeeHtml . ")";
+            if( $requestTotalFeeHtml ) {
+                $requestTotalFeeHtml = "; " . $requestTotalFeeHtml;
             }
         }
 
@@ -1576,7 +1576,7 @@ class RequestController extends Controller
             //$title = $title . " (Matching " . count($allTransresRequests) . ", Total " . count($allGlobalRequests) . ")";
             $allTransresRequests = $transresUtil->getTotalRequestCountByDqlParameters($dql,$dqlParameters);
             $allGlobalRequests = $transresUtil->getTotalRequestCount();
-            $title = $title . " (Matching " . $allTransresRequests . ", Total " . $allGlobalRequests . ")";
+            $title = $title . " (Matching " . $allTransresRequests . ", Total " . $allGlobalRequests . $requestTotalFeeHtml . ")";
         //}
         //$allGlobalRequests = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest')->findAll();
         //$title = $title . " (Matching " . count($allTransresRequests) . ", Total " . count($allGlobalRequests) . ")";
@@ -1598,7 +1598,7 @@ class RequestController extends Controller
             //'allTransresRequests' => $allTransresRequests,
             //'project' => null,
             'filterform' => $filterform->createView(),
-            'title' => $title.$requestTotalFeeHtml,
+            'title' => $title,
             'requestTotalFeeHtml' => null, //$requestTotalFeeHtml
             'advancedFilter' => $advancedFilter,
             'project' => $project
@@ -1693,7 +1693,8 @@ class RequestController extends Controller
         if(
             $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ||
             $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') ||
-            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE')
+            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE') ||
+            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
         ) {
             $params['admin'] = true;
         } else {

@@ -3007,7 +3007,7 @@ class CallEntryController extends Controller
         //$userName = str_replace("--", "-", $userName);
         //exit("userName=".$userName);
 
-        $fileName = "Call-Log-Book-Entries-exported-on-".date('m/d/Y')."-".date('H:i')."-by-".$userName.".csv";//".xlsx";
+        $fileName = "Call-Log-Book-Entries-exported-on-".date('m/d/Y')."-".date('H:i')."-by-".$userName;//.".csv";//".xlsx";
         $fileName = str_replace("  ", " ", $fileName);
         $fileName = str_replace(" ", "-", $fileName);
         $fileName = str_replace("--", "-", $fileName);

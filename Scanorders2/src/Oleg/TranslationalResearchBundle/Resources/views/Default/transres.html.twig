@@ -74,7 +74,8 @@
                         {{ formmacros.simplefield("ID:", project.oid, "input", "disabled") }}
                     {% endif %}
                     {% if project.state is defined %}
-                        {{ formmacros.simplefield("Status:", project.state, "input", "disabled") }}
+                        {% set projectStatusStr = transres_util.getStateLabelByName(project.state) %}
+                        {{ formmacros.simplefield("Status:", projectStatusStr, "input", "disabled") }}
                     {% endif %}
                     {% if project.projectSpecialty is defined %}
                         {{ formmacros.simplefield("Project Specialty:", project.projectSpecialty, "input", "disabled") }}

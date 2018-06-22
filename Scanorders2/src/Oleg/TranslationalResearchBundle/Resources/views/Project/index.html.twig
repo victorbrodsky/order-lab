@@ -416,6 +416,18 @@
                                 {% endif %}
                             {#{% endif %}#}
 
+
+                            {% if invoicesInfos.count > 0 %}
+                                <li>
+                                    <a target="_blank"
+                                       href="{{ path(translationalresearch_sitename~'_invoice_index_filter', {
+                                           'filter[idSearch]': project.oid
+                                       }) }} "
+                                    >Show All Associated Invoices</a>
+                                </li>
+                            {% endif %}
+
+
                             {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
                                 <li>
                                     <a href="{{ path(translationalresearch_sitename~'_project_delete_get', { 'id': project.id }) }}"
