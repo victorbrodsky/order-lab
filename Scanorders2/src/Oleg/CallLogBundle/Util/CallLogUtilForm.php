@@ -101,7 +101,6 @@ class CallLogUtilForm
                 $encounterDateStr = $userServiceUtil->getSeparateDateTimeTzStr($dateField, $dateTime, $dateTimezone, true, false);
             } else {
                 //show it in the user's timezone
-                //TODO: test it. Usually, should be the same as submitted date on the header
                 //echo "user=$user <br>";
                 $userServiceUtil = $this->container->get('user_service_utility');
                 //echo "dateTime=" . $dateTime->format("h:i (T)") . "<br>";
@@ -128,8 +127,9 @@ class CallLogUtilForm
                 //original tz
                 $encounterDateStr = $userServiceUtil->getSeparateDateTimeTzStr($dateField, $dateTime, $dateTimezone, true, false);
 
-                //user tz
-                $encounterDateStr = $encounterDateStr . " - " . $newDateTimeTz->format("m/d/Y") . " at " . $newDateTimeTz->format("h:i a") . " (" . $user_tz . ")";
+                //add user tz
+                $tzAbbreviation = (new \DateTime($user_tz))->format('T');
+                $encounterDateStr = $encounterDateStr . "; " . $newDateTimeTz->format("m/d/Y") . " at " . $newDateTimeTz->format("h:i a") . " (" . $user_tz . ", " . $tzAbbreviation . ")";
             }
 
             //$dateTimeTz = $userServiceUtil->convertToUserTimezone($dateTime,$user);
