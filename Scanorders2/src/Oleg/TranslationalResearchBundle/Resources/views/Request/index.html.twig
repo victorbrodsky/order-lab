@@ -146,7 +146,7 @@
                 <td class="rowlink-skip">
                     {% set invoicesCount = transresRequest.invoices|length %}
                     {% if invoicesCount > 0 %}
-                        <a data-toggle="tooltip" title="Show All Associated Invoices"
+                        <a data-toggle="tooltip" title="Show Associated Invoices"
                            href="{{ path(translationalresearch_sitename~'_invoice_index', { 'id': transresRequest.id }) }} "
                         >{{ invoicesCount }}</a>
                     {% endif %}
@@ -225,10 +225,14 @@
 
 
                             <li class="divider"></li>
-                            <li>
-                                <a href="{{ path(translationalresearch_sitename~'_invoice_index', { 'id': transresRequest.id }) }} "
-                                >Show All Associated Invoices</a>
-                            </li>
+                            {% if invoicesCount > 0 %}
+                                {% if transres_request_util.areInvoicesShowableToUser(transresRequest.project) %}
+                                    <li>
+                                        <a href="{{ path(translationalresearch_sitename~'_invoice_index', { 'id': transresRequest.id }) }} "
+                                        >Show Associated Invoices</a>
+                                    </li>
+                                {% endif %}
+                            {% endif %}
                             {% if is_granted('ROLE_TRANSRES_BILLING_ADMIN') %}
                                 <li>
                                     <a href="{{ path(translationalresearch_sitename~'_invoice_new', { 'id': transresRequest.id }) }} "

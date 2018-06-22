@@ -627,6 +627,14 @@ class InvoiceController extends Controller
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
+        if( $transresRequestUtil->isInvoiceShowableToUser($invoice) === false ) {
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                "You don't have a permission to view this invoice"
+            );
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
         $cycle = "show";
         $routeName = $request->get('_route');
 
@@ -827,6 +835,14 @@ class InvoiceController extends Controller
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
+        if( $transresRequestUtil->isInvoiceShowableToUser($invoice) === false ) {
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                "You don't have a permission to view this invoice"
+            );
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
         $res = $transresPdfUtil->generateInvoicePdf($invoice,$user);
         
         $filename = $res['filename'];
@@ -898,6 +914,14 @@ class InvoiceController extends Controller
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
+        if( $transresRequestUtil->isInvoiceShowableToUser($invoice) === false ) {
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                "You don't have a permission to view this invoice"
+            );
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
         $cycle = "download";
         //$routeName = $request->get('_route');
 
@@ -959,6 +983,14 @@ class InvoiceController extends Controller
             $this->get('session')->getFlashBag()->add(
                 'warning',
                 "You don't have a permission to access this specialty"
+            );
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
+        if( $transresRequestUtil->isInvoiceShowableToUser($invoice) === false ) {
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                "You don't have a permission to view this invoice"
             );
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }

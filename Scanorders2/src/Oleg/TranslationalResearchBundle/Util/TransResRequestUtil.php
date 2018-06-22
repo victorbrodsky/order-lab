@@ -2325,9 +2325,74 @@ class TransResRequestUtil
         } else {
             return true;
         }
-
         $project = $transresRequest->getProject();
         if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) ) {
+            return true;
+        }
+        return false;
+    }
+
+    public function isInvoiceShowableToUser($invoice) {
+        $user = $this->secTokenStorage->getToken()->getUser();
+        $transresUtil = $this->container->get('transres_util');
+        $transresRequest = $invoice->getTransresRequest();
+        if( $transresRequest ) {
+            //ok
+        } else {
+            return true;
+        }
+
+        $project = $transresRequest->getProject();
+
+        //check if the user is
+        // technologists (ROLE_TRANSRES_TECHNICIAN)/sys admin/platform admin/deputy platform admin/executive committee member/default reviewers
+//        if( $transresUtil->isAdminOrPrimaryReviewerOrExecutive() ) {
+//            return true;
+//        }
+//
+//        if( $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN') ) {
+//            return true;
+//        }
+//
+//        if( $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ) {
+//            return true;
+//        }
+//
+//        //this also check if isUserAllowedSpecialtyObject
+//        if( $transresUtil->isProjectReviewer($project) ) {
+//            return true;
+//        }
+        if( $this->areInvoicesShowableToUser($project) ) {
+            return true;
+        }
+
+        if( $this->isInvoiceBillingContact($invoice,$user) ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function areInvoicesShowableToUser($project) {
+        $user = $this->secTokenStorage->getToken()->getUser();
+        $transresUtil = $this->container->get('transres_util');
+
+        //check if the user is
+        // technologists (ROLE_TRANSRES_TECHNICIAN)/sys admin/platform admin/deputy platform admin/executive committee member/default reviewers
+        if( $transresUtil->isAdminOrPrimaryReviewerOrExecutive() ) {
+            return true;
+        }
+
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN') ) {
+            return true;
+        }
+
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ) {
+            return true;
+        }
+
+        //this also check if isUserAllowedSpecialtyObject
+        if( $transresUtil->isProjectReviewer($project) ) {
             return true;
         }
 
