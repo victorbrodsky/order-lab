@@ -72,7 +72,8 @@
 
     <div>
 
-        {% if is_granted('ROLE_TRANSRES_ADMIN') %}
+        {#{% if is_granted('ROLE_TRANSRES_ADMIN') %}#}
+        {% if is_granted('ROLE_TRANSRES_ADMIN') or transres_util.isProjectEditableByRequester(project) %}
             <br>
             <p>
                 <a class="btn btn-warning" href="{{ path(translationalresearch_sitename~'_project_edit', { 'id': project.id }) }}">Edit project</a>
