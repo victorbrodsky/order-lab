@@ -1978,6 +1978,12 @@ class User extends BaseUser {
         );
         return $phoneArr;
     }
+
+    public function getSinglePhone() {
+        $phoneArr = $this->getSinglePhoneAndPager();
+        return $phoneArr['phone'];
+    }
+
 //    public function getSinglePager() {
 //        foreach( $this->getLocations() as $location ) {
 //            if( count($location->getLocationTypes()) == 0 || !$location->hasLocationTypeName("Employee Home") ) {

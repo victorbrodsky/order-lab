@@ -1017,8 +1017,8 @@
         {% set personurl = path(sitename~'_showuser',{'id':person.id}) %}
         {% set personlink = '<a href="'~personurl~'">'~person.getUsernameOptimal()~'</a>'  %}
         {{ formmacros.simplefield( "Name:", personlink, "", "disabled" ) }}
-        {{ usermacros.emailPhoneField(person.preferredPhone,cycle,'phone',"Preferred Phone Number:") }}
-        {{ usermacros.emailPhoneField(person.email,cycle,'email',"Preferred Email:") }}
+        {{ usermacros.emailPhoneField(person.getSinglePhone,cycle,'phone',"Preferred Phone Number:") }}
+        {{ usermacros.emailPhoneField(person.getSingleEmail,cycle,'email',"Preferred Email:") }}
     </div>
     </p>
 {% endmacro %}
