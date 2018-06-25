@@ -171,7 +171,8 @@ class ProjectController extends Controller
             'transresUsers' => $transresUsers,
             'stateChoiceArr' => $stateChoiceArr,
             //'defaultStatesArr' => $defaultStatesArr,
-            'projectSpecialtyAllowedArr' => $projectSpecialtyAllowedArr
+            'projectSpecialtyAllowedArr' => $projectSpecialtyAllowedArr,
+            'defaultStatesArr' => array()
         );
 
         if( $routeName == "translationalresearch_my_request_project_draft_index" ) {

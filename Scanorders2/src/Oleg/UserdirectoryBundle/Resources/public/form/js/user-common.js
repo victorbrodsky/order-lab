@@ -37,7 +37,7 @@ if( !user_id ) {
 function setCicleShow() {
     //console.log("setCicleShow: cycle="+cycle);
     //console.log("setCicleShow: cycle.indexOf="+cycle.indexOf("show"));
-    if( cycle && cycle.indexOf("show") != -1 ) {
+    if( cycle && (cycle.indexOf("show") != -1 || cycle.indexOf("review") != -1) ) {
         _cycleShow = true;
         //console.log("setCicleShow: true");
     } else {

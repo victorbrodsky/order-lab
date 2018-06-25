@@ -294,7 +294,7 @@ class DefaultReviewerController extends Controller
         }
 
         $transresUtil = $this->container->get('transres_util');
-        $specialtyStr = $defaultReviewer->getProjectSpecialty()->getAbbreviation();
+        $specialtyStr = $defaultReviewer->getProjectSpecialty();
 
         $form = $this->createDeleteForm($defaultReviewer);
         $form->handleRequest($request);
@@ -321,12 +321,11 @@ class DefaultReviewerController extends Controller
             //Event Log
             $eventType = "Default Reviewer Deleted";
             $stateStr = $defaultReviewer->getState();
-            $specialtyStr = $defaultReviewer->getProjectSpecialty();
             $msg = "Default Reviewer Object ($stateStr, $specialtyStr) has been deleted with reviewer=".$reviewer . " ; reviewerDelegate=".$reviewerDelegate;
             $transresUtil->setEventLog($defaultReviewer,$eventType,$msg);
         }
 
-        return $this->redirectToRoute('translationalresearch_default-reviewer_index',array("specialtyStr"=>$specialtyStr ));
+        return $this->redirectToRoute('translationalresearch_default-reviewer_index',array("specialtyStr"=>$specialtyStr->getAbbreviation() ));
     }
 
     /**
