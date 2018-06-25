@@ -85,10 +85,12 @@
                 <td class="rowlink-skip">
                     {#{{ invoice.documents|length }}#}
                     {% if invoice.documents|length > 0 %}
-                        <a  data-toggle="tooltip" title="Show the Latest PDF"
-                            target="_blank"
-                            href="{{ path('translationalresearch_invoice_download_recent', {'oid': invoice.oid }) }}"
-                        >{{ invoice.documents|length }}</a>
+                        {% if transres_request_util.isUserHasInvoicePermission(invoice,"view-pdf") %}
+                            <a  data-toggle="tooltip" title="Show the Latest PDF"
+                                target="_blank"
+                                href="{{ path('translationalresearch_invoice_download_recent', {'oid': invoice.oid }) }}"
+                            >{{ invoice.documents|length }}</a>
+                        {% endif %}
                     {% endif %}
                 </td>
 
@@ -101,14 +103,19 @@
 
                         <ul class="dropdown-menu dropdown-menu-right">
 
-                            <li>
-                                <a href="{{ path('translationalresearch_invoice_show', {'oid': invoice.oid }) }}">Show Invoice</a>
-                            </li>
-
-                            {% if invoice.latestVersion and is_granted('ROLE_TRANSRES_BILLING_ADMIN') %}
+                            {% if transres_request_util.isUserHasInvoicePermission(invoice,"view") %}
                                 <li>
-                                    <a href="{{ path('translationalresearch_invoice_edit', {'oid': invoice.oid }) }}">Edit Invoice</a>
+                                    <a href="{{ path('translationalresearch_invoice_show', {'oid': invoice.oid }) }}">Show Invoice</a>
                                 </li>
+                            {% endif %}
+
+                            {% if invoice.latestVersion %}
+
+                                {% if transres_request_util.isUserHasInvoicePermission(invoice,"update") %}
+                                    <li>
+                                        <a href="{{ path('translationalresearch_invoice_edit', {'oid': invoice.oid }) }}">Edit Invoice</a>
+                                    </li>
+                                {% endif %}
 
                                 {#<li>#}
                                     {#<a#}
@@ -122,26 +129,30 @@
                                     {#>PDF Invoice Preview</a>#}
                                 {#</li>#}
 
-                                {% if invoice.documents|length > 0 %}
-                                    {% set generateLabel = "Regenerate Invoice PDF" %}
-                                {% else %}
-                                    {% set generateLabel = "Generate Invoice PDF" %}
+                                {% if transres_request_util.isUserHasInvoicePermission(invoice,"update") %}
+                                    {% if invoice.documents|length > 0 %}
+                                        {% set generateLabel = "Regenerate Invoice PDF" %}
+                                    {% else %}
+                                        {% set generateLabel = "Generate Invoice PDF" %}
+                                    {% endif %}
+                                    <li>
+                                        <a
+                                            general-data-confirm="Are you sure you want to {{ generateLabel|lower }} for this invoice {{ invoice.oid }}?"
+                                            href="{{ path('translationalresearch_invoice_generate_pdf', {'oid': invoice.oid }) }}"
+                                        >{{ generateLabel }}</a>
+                                    </li>
                                 {% endif %}
-                                <li>
-                                    <a
-                                        general-data-confirm="Are you sure you want to {{ generateLabel|lower }} for this invoice {{ invoice.oid }}?"
-                                        href="{{ path('translationalresearch_invoice_generate_pdf', {'oid': invoice.oid }) }}"
-                                    >{{ generateLabel }}</a>
-                                </li>
 
                                 {% if invoice.documents|length > 0 %}
-                                    <li>
-                                        {#Send the Latest Invoice PDF by Email#}
-                                        <a
-                                            general-data-confirm="Are you sure you want to send the latest invoice {{ invoice.oid }} pdf by email to PI?"
-                                            href="{{ path('translationalresearch_invoice_send_pdf_email', {'oid': invoice.oid }) }}"
-                                        >Send the Latest Invoice PDF by Email to PI</a>
-                                    </li>
+                                    {% if transres_request_util.isUserHasInvoicePermission(invoice,"send-invoice-pdf-email") %}
+                                        <li>
+                                            {#Send the Latest Invoice PDF by Email#}
+                                            <a
+                                                general-data-confirm="Are you sure you want to send the latest invoice {{ invoice.oid }} pdf by email to PI?"
+                                                href="{{ path('translationalresearch_invoice_send_pdf_email', {'oid': invoice.oid }) }}"
+                                            >Send the Latest Invoice PDF by Email to PI</a>
+                                        </li>
+                                    {% endif %}
                                 {% endif %}
 
                                 {#<hr>#}
@@ -167,21 +178,25 @@
                                 {#{% endfor %}#}
 
 
-                                <li>
-                                    <a href="#" data-toggle="modal" data-target="#modal_update_invoice_{{ invoice.oid }}"
-                                    >Update Invoice Status</a>
-                                </li>
+                                {% if transres_request_util.isUserHasInvoicePermission(invoice,"change-status") %}
+                                    <li>
+                                        <a href="#" data-toggle="modal" data-target="#modal_update_invoice_{{ invoice.oid }}"
+                                        >Update Invoice Status</a>
+                                    </li>
+                                {% endif %}
 
                                 {#<hr>#}
 
                             {% endif %}
 
                             {% if invoice.documents|length > 0 %}
-                                <li>
-                                    <a target="_blank"
-                                       href="{{ path('translationalresearch_invoice_download_recent', {'oid': invoice.oid }) }}"
-                                    >Show The Latest PDF Invoice</a>
-                                </li>
+                                {% if transres_request_util.isUserHasInvoicePermission(invoice,"view-pdf") %}
+                                    <li>
+                                        <a target="_blank"
+                                           href="{{ path('translationalresearch_invoice_download_recent', {'oid': invoice.oid }) }}"
+                                        >Show The Latest PDF Invoice</a>
+                                    </li>
+                                {% endif %}
                             {% endif %}
 
                             {#{% endif %}#}
@@ -194,7 +209,7 @@
         </tbody>
     </table>
 
-    {% if transresRequest and is_granted('ROLE_TRANSRES_BILLING_ADMIN') %}
+    {% if transresRequest and transres_request_util.isUserHasInvoicePermission(null,"create") %}
         <br>
         <p>
             <a class="btn btn-default" href="{{ path('translationalresearch_invoice_new', {'id': transresRequest.id}) }}">Create a new invoice</a>

@@ -275,7 +275,7 @@
                 {#</td>#}
                 {#all issued invoices associated with the project#}
                 <td class="rowlink-skip">
-                    {% if invoicesInfos.count > 0 %}
+                    {% if invoicesInfos.count > 0 and transres_request_util.areInvoicesShowableToUser(project) %}
                         <a target="_blank" data-toggle="tooltip" title="Show all issued invoice associated with this project"
                            href="{{ path(translationalresearch_sitename~'_invoice_index_filter', {
                                'filter[idSearch]': project.oid,
@@ -338,14 +338,14 @@
                             {% endif %}
 
                             {#add verification: requester => project is on the draft stage or in the reject stage#}
-                            {% if is_granted('ROLE_TRANSRES_ADMIN') or transres_util.isProjectEditableByRequester(project) %}
+                            {% if transres_util.isAdminOrPrimaryReviewer() or transres_util.isProjectEditableByRequester(project) %}
                                 <li>
                                     <a href="{{ path(translationalresearch_sitename~'_project_edit', { 'id': project.id }) }}"
                                     >Edit Project</a>
                                 </li>
                             {% endif %}
 
-                            {% if is_granted('ROLE_TRANSRES_ADMIN') %}
+                            {% if transres_util.isAdminOrPrimaryReviewer() %}
                                 {% if eventObjectTypeId is defined and eventObjectTypeId %}
                                     <li>
                                     <a href="{{ path('translationalresearch_event-log-per-object_log', { 'filter[objectType][]': eventObjectTypeId, 'filter[objectId]': project.id}) }}"
@@ -402,10 +402,12 @@
                             {#{% endif %}#}
                             {% if isRequestCanBeCreated == -3 %}
                                 <li class="divider"></li>
-                                <li>
-                                    <a href="{{ path(translationalresearch_sitename~'_project_edit', { 'id': project.id }) }}"
-                                       >Update IRB approval expiration date to submit new requests</a>
-                                </li>
+                                {% if transres_util.isAdminOrPrimaryReviewer() or transres_util.isProjectEditableByRequester(project) %}
+                                    <li>
+                                        <a href="{{ path(translationalresearch_sitename~'_project_edit', { 'id': project.id }) }}"
+                                           >Update IRB approval expiration date to submit new requests</a>
+                                    </li>
+                                {% endif %}
                             {% endif %}
                             {#{% if is_granted('ROLE_TRANSRES_REQUESTER') or transres_util.isAdminOrPrimaryReviewer() %}#}
                                 {% if project.getRequests()|length > 0 %}

@@ -696,7 +696,7 @@ class InvoiceController extends Controller
 //            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
 //        }
 
-        if( $transresRequestUtil->isUserHasInvoicePermission($invoice,"edit") === false ) {
+        if( $transresRequestUtil->isUserHasInvoicePermission($invoice,"update") === false ) {
             $this->get('session')->getFlashBag()->add(
                 'warning',
                 "You don't have a permission to edit this invoice"

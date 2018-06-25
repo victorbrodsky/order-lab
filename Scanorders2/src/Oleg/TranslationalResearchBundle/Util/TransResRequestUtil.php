@@ -2404,9 +2404,13 @@ class TransResRequestUtil
         $user = $this->secTokenStorage->getToken()->getUser();
         $transresUtil = $this->container->get('transres_util');
 
-        if( $this->isUserAllowedAccessInvoiceBySpecialty($invoice) === false ) {
-            return false;
+        $processed = false;
+        if( $invoice ) {
+            if( $this->isUserAllowedAccessInvoiceBySpecialty($invoice) == false ) {
+                return false;
+            }
         }
+        //exit('1');
 
         if( $transresUtil->isAdminOrPrimaryReviewerOrExecutive() ) {
             return true;
@@ -2419,6 +2423,22 @@ class TransResRequestUtil
         if( $this->container->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ) {
             return true;
         }
+
+        if( !$invoice ) {
+            if( $action == "create" ) {
+                return true;
+            } else {
+                //exit("Logical Error: Invoice is NULL and action is $action");
+                return false;
+            }
+        }
+
+//        if( $action == "create" ) {
+//            $processed = true;
+//            if( $this->secAuth->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ) {
+//                return true;
+//            }
+//        }
 
         $transresRequest = $invoice->getTransresRequest();
         if( $transresRequest ) {
@@ -2436,15 +2456,43 @@ class TransResRequestUtil
 
         //show: to users associated with this invoice, request or project
         if( $action == "view" ) {
+            $processed = true;
+
             if( $this->isInvoiceBillingContact($invoice,$user) ) {
                 return true;
             }
 
-            //associated with the request
+            //associated with the request as requester
             if( $this->isRequestRequester($transresRequest) ) {
                 return true;
             }
-            if( $this->isRequestStateReviewer() ) {
+
+            //associated with the request as reviewer
+            if( $this->isRequestStateReviewer($transresRequest) ) {
+                return true;
+            }
+
+            //associated with the project
+            if( $transresUtil->isProjectRequester($project) ) {
+                return true;
+            }
+        }
+
+        //view-pdf: show pdf if user can not edit, but can view
+        if( $action == "view-pdf" ) {
+            $processed = true;
+
+            //if( $this->isUserHasInvoicePermission($invoice,"view") and $this->isUserHasInvoicePermission($invoice,"update") == false ) {
+            //    return true;
+            //}
+
+            //associated with the request as requester
+            if( $this->isRequestRequester($transresRequest) ) {
+                return true;
+            }
+
+            //associated with the request as reviewer
+            if( $this->isRequestStateReviewer($transresRequest) ) {
                 return true;
             }
 
@@ -2456,21 +2504,33 @@ class TransResRequestUtil
         
         //edit: admin, technicians, 
         if( $action == "update" ) {
-            if( $this->container->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ) {
+            $processed = true;
+
+            if( $this->isInvoiceBillingContact($invoice,$user) ) {
                 return true;
             }
         }
 
         if( $action == "send-invoice-pdf-email" ) {
+            $processed = true;
+
             if( $this->isInvoiceBillingContact($invoice,$user) ) {
                 return true;
             }
         }
 
         if( $action == "change-status" ) {
-            if( $this->container->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ) {
+            $processed = true;
+
+            if( $this->isInvoiceBillingContact($invoice,$user) ) {
                 return true;
             }
+        }
+
+        if( !$processed ) {
+            //exit("Action is invalid: $action");
+            $logger = $this->container->get('logger');
+            $logger->warning("isUserHasInvoicePermission: Action is invalid: $action");
         }
 
         return false;
