@@ -199,7 +199,10 @@ class TransResRequestType extends AbstractType
 //            'required' => false,
 //        ));
 
-        if( $this->params['cycle'] != 'new' && $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN') ) {
+        //Request's "Support End Date" is pre-populated by Project's "IRB Expiration Date" and it is not editable, but visible on the view page only.
+        if( $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN') ||
+            ($this->params['cycle'] != 'new' && $this->params['cycle'] != 'edit')
+        ) {
 //            if( $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN') ) {
 //                $disabledSupportEndDate = false;
 //            } else {

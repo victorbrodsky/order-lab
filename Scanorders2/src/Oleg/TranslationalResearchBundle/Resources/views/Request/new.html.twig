@@ -276,6 +276,10 @@
 
                     //set BillingContact oleg_translationalresearchbundle_request_contact
                     $("#oleg_translationalresearchbundle_request_contact").select2('val',response.contact);
+
+                    //set supportEndDate (project's irbExpirationDate)
+                    //$("#oleg_translationalresearchbundle_request_supportEndDate").val(response.irbExpirationDate);
+
                 }).done(function() {
                     //
                 }).error(function(jqXHR, textStatus, errorThrown) {

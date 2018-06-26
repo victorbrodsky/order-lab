@@ -109,7 +109,7 @@ class RequestController extends Controller
                 $transresRequest->setContact($project->getBillingContact());
             }
 
-            //pre-populate Request's Support End Date by Project's IRB Expiration Date
+            //new: pre-populate Request's Support End Date by Project's IRB Expiration Date
             if( $project->getIrbExpirationDate() ) {
                 $transresRequest->setSupportEndDate($project->getIrbExpirationDate());
             }
@@ -143,6 +143,13 @@ class RequestController extends Controller
             //exit("Project submitted");
 
             $project = $transresRequest->getProject();
+
+            //new: pre-populate Request's Support End Date by Project's IRB Expiration Date
+            if( !$transresRequest->getSupportEndDate() ) {
+                if( $project->getIrbExpirationDate() ) {
+                    $transresRequest->setSupportEndDate($project->getIrbExpirationDate());
+                }
+            }
 
             //set project's funded account number
             $changedMsg = "";
@@ -367,6 +374,13 @@ class RequestController extends Controller
 
             //update updateBy
             $transresRequest->setUpdateUser($user);
+
+            //edit: pre-populate Request's Support End Date by Project's IRB Expiration Date
+            if( !$transresRequest->getSupportEndDate() ) {
+                if( $project->getIrbExpirationDate() ) {
+                    $transresRequest->setSupportEndDate($project->getIrbExpirationDate());
+                }
+            }
 
             //process Product or Service sections
             // remove the relationship between the tag and the Task

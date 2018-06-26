@@ -1890,11 +1890,17 @@ class ProjectController extends Controller
             $billingContactId = $project->getBillingContact()->getId();
         }
 
+        //$irbExpirationDate = null;
+        //if( $project->getIrbExpirationDate() ) {
+        //   $irbExpirationDate = $project->getIrbExpirationDate();
+        //}
+        
         $output = array(
             "fundedAccountNumber" => $project->getFundedAccountNumber(),
             "irbExpirationDate" => $project->getIrbExpirationDate()->format("m/d/Y"),
             "principalInvestigators" => $projectPisArr,
-            "contact" => $billingContactId //BillingContact
+            "contact" => $billingContactId, //BillingContact,
+            //"irbExpirationDate" => $irbExpirationDate
         ); 
 
         $response = new Response();
