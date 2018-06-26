@@ -304,7 +304,7 @@ class RequestFormNodeController extends Controller
             'edit_form' => $form->createView(),
             'cycle' => $cycle,
             'formtype' => $formtype,
-            'title' => "Edit Request ID ".$transresRequest->getOid(),
+            'title' => "Edit Work Request ID ".$transresRequest->getOid(),
             'triggerSearch' => 0,
             'formnodetrigger' => $formnodetrigger,
             'formnodeTopHolderId' => $formnodeTopHolderId,
