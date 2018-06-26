@@ -261,8 +261,10 @@ function setTranslationalResearchNavBar() {
     if( full.indexOf("/translational-research/projects-pending-my-review") !== -1 ) {
         id = 'translationalresearch-projects';
     }
-
-
+    if( full.indexOf("/translational-research/") !== -1 && full.indexOf("projects") !== -1 ) {
+        id = 'translationalresearch-projects';
+    }
+    
 
     if( full.indexOf("/translational-research/workflow") !== -1 ) {
         id = 'translationalresearch-project-workflow';
@@ -272,10 +274,10 @@ function setTranslationalResearchNavBar() {
         id = 'translationalresearch-default-reviewers';
     }
 
-    if( full.indexOf("/translational-research/request/new/") !== -1 ) {
+    if( full.indexOf("/translational-research/work-request/new/") !== -1 ) {
         id = 'translationalresearch-allmenu-requests';
     }
-    if( full.indexOf("/requests") !== -1 ) {
+    if( full.indexOf("/translational-research/work-requests") !== -1 ) {
         id = 'translationalresearch-allmenu-requests';
     }
 
@@ -290,7 +292,12 @@ function setTranslationalResearchNavBar() {
     if( full.indexOf("/translational-research/dashboard/") !== -1 ) {
         id = 'translationalresearch-dashboard';
     }
-    
+
+    //home page
+    if( full.indexOf("/translational-research/projects/") !== -1 ) {
+        id = 'translationalresearch-home';
+    }
+
     id = commonNavBar(full,id);
 
     //if( full.indexOf("/translational-research/event-log/event-log-per-user-per-event-type/") !== -1 ) {

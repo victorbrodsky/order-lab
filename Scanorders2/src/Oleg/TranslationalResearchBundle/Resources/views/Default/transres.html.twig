@@ -652,8 +652,13 @@
             {#Add field "Update expiration date" (irbExpirationDate) in the IRB Review page#}
             {% if project.state == "irb_review" %}
                 {#{% set irbExpDate = transres_formnode_util.getProjectFormNodeFieldByName(project,"IRB Expiration Date") %}#}
-                {% set irbExpDate = project.getIrbExpirationDate()|date("m/d/Y",false) %}
-                {{ transres.fieldDateLabel(irbExpDate,"Provided IRB Expiration Date (enter a new date to update it):",1) }}
+                {% set irbExpDate = project.getIrbExpirationDate() %}
+                {% if irbExpDate %}
+                    {% set irbExpDateStr = irbExpDate|date("m/d/Y",false) %}
+                {% else %}
+                    {% set irbExpDateStr = null %}
+                {% endif %}
+                {{ transres.fieldDateLabel(irbExpDateStr,"Provided IRB Expiration Date (enter a new date to update it):",1) }}
             {% endif %}
 
             {% for actionLink in actionLinks %}

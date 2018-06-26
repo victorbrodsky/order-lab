@@ -469,7 +469,7 @@ class RequestController extends Controller
             'form' => $form->createView(),
             'cycle' => $cycle,
             'formtype' => $formtype,
-            'title' => "Edit Request ".$transresRequest->getOid(),
+            'title' => "Edit Work Request ".$transresRequest->getOid(),
             'triggerSearch' => 0,
             //'formnodetrigger' => $formnodetrigger,
             //'formnodeTopHolderId' => $formnodeTopHolderId,

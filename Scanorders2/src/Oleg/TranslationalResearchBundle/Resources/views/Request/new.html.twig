@@ -21,6 +21,24 @@
     </h4>
     <br>
 
+    {% if cycle == "show" %}
+        {% if
+        is_granted('ROLE_TRANSRES_ADMIN') or
+        is_granted('ROLE_TRANSRES_TECHNICIAN') or
+        (
+        transres_util.isProjectRequester(transresRequest.project) and
+        transresRequest.getProgressState() == 'draft'
+        )
+        %}
+            <p>
+                <a class="btn btn-default"
+                   href="{{ path(translationalresearch_sitename~'_request_edit', { 'id': transresRequest.id }) }}"
+                >Edit Request</a>
+            </p>
+            <br>
+        {% endif %}
+    {% endif %}
+
 {% if routeName == "translationalresearch_new_standalone_request" and form.project is not defined %}
     <p>There are no approved projects are available at this time.</p>
 {% else %}

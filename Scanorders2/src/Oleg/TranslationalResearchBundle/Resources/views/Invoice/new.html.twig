@@ -176,8 +176,17 @@
         </div>
         </p>
 
-        {{ formmacros.field_left(form.discountNumeric) }}
-        {{ formmacros.field_left(form.discountPercent) }}
+        {% if cycle == "show" and not form.discountNumeric %}
+            {#show nothing on show page when empty#}
+        {% else %}
+            {{ formmacros.field_left(form.discountNumeric) }}
+        {% endif %}
+
+        {% if cycle == "show" and not form.discountPercent %}
+            {#show nothing on show page when empty#}
+        {% else %}
+            {{ formmacros.field_left(form.discountPercent) }}
+        {% endif %}
 
         {#{{ formmacros.field_left(form.total) }}#}
         <p>

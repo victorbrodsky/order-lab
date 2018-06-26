@@ -18,6 +18,14 @@
     </h4>
     <br>
 
+    {% if is_granted('ROLE_TRANSRES_ADMIN') or transres_util.isProjectEditableByRequester(project) %}
+        <p>
+            <a class="btn btn-warning" href="{{ path(translationalresearch_sitename~'_project_edit', { 'id': project.id }) }}">Edit project</a>
+        </p>
+        <br>
+    {% endif %}
+
+
     {% if project.state == "final_approved" %}
         {#Submit a New Request#}
         {% if transres_request_util.isRequestCanBeCreated(project) == 1 %}

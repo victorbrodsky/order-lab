@@ -123,6 +123,8 @@ class PdfGenerator
         $submitterName = $subjectUser->getUsernameShortest();
         $submitterName = str_replace(" ","-",$submitterName);
         $submitterName = str_replace(".","-",$submitterName);
+        $submitterName = str_replace("(","-",$submitterName);
+        $submitterName = str_replace(")","-",$submitterName);
         if( $submitterName ) {
             $submitterName = "-" . $submitterName;
         }
@@ -142,6 +144,7 @@ class PdfGenerator
         //replace all white spaces to _
         $filename = str_replace(" ","_",$filename);
         $filename = str_replace("/","_",$filename);
+        $filename = str_replace("--","-",$filename);
 
         return $filename;
     }
