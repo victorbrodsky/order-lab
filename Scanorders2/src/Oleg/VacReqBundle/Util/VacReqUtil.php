@@ -480,7 +480,6 @@ class VacReqUtil
     //totalAllocatedDays - vacationDays + carryOverDays for given $yearRange
     //carryOver days are from getUserCarryOverDays
     //TODO: might add "date of hire" and "end of employment date" to calculate the total vacation days
-    //TODO: subtract carry over days for the next year.
     public function totalVacationRemainingDays( $user, $totalAllocatedDays=null, $vacationDays=null, $carryOverDaysToNextYear=null, $carryOverDaysFromPreviousYear=null, $yearRange=null ) {
 
         if( !$totalAllocatedDays ) {
@@ -503,11 +502,13 @@ class VacReqUtil
             $carryOverDaysFromPreviousYear = $this->getUserCarryOverDays($user,$yearRange);
         }
 
-        //TODO: subtract carried over days from the current year to the next year.
-        $nextYearRange = $this->getNextAcademicYearRange();
-        //echo "nextYearRange=".$nextYearRange."<br>";
-        $carryOverDaysToNextYear = $this->getUserCarryOverDays($user,$nextYearRange);
-        //echo "carryOverDaysToNextYear=".$carryOverDaysToNextYear."<br>";
+        if( !$carryOverDaysToNextYear ) {
+            //subtract carried over days from the current year to the next year.
+            $nextYearRange = $this->getNextAcademicYearRange();
+            //echo "nextYearRange=".$nextYearRange."<br>";
+            $carryOverDaysToNextYear = $this->getUserCarryOverDays($user, $nextYearRange);
+            //echo "carryOverDaysToNextYear=".$carryOverDaysToNextYear."<br>";
+        }
 
 //        echo "yearRange=".$yearRange."<br>";
 //        echo "totalAllocatedDays=".$totalAllocatedDays."<br>";
@@ -3417,6 +3418,10 @@ class VacReqUtil
         $currentYearRange = $this->getCurrentAcademicYearRange();
         $carryOverDaysPreviousYear = $this->getUserCarryOverDays($user,$currentYearRange);
 
+        //carried over days from the current year to the next year.
+        $nextYearRange = $this->getNextAcademicYearRange();
+        $carryOverDaysToNextYear = $this->getUserCarryOverDays($user,$nextYearRange);
+
         $res = $this->getApprovedTotalDays($user,$requestTypeStr);
         $approvedVacationDays = $res['numberOfDays'];
         //$accurate = $res['accurate'];
@@ -3424,7 +3429,7 @@ class VacReqUtil
         //echo "current $totalAccruedDays + $carryOverDaysPreviousYear - $approvedVacationDays <br>";
 
         //                      12*2             carryover days from PREVIOUS year   approved days for CURRENT year
-        $unusedDays = (int)$totalAccruedDays + (int)$carryOverDaysPreviousYear - (int)$approvedVacationDays;
+        $unusedDays = (int)$totalAccruedDays + (int)$carryOverDaysPreviousYear - (int)$approvedVacationDays - (int)$carryOverDaysToNextYear;
 
         if( $unusedDays == 0 ) {
             return $unusedDays;
@@ -3453,11 +3458,17 @@ class VacReqUtil
 
         $yearRange = $this->getPreviousAcademicYearRange();
         $carryOverDaysPreviousYear = $this->getUserCarryOverDays($user,$yearRange);
+
+        //TODO: carried over days from the current year to the next year.
+        //$nextYearRange = $this->getNextAcademicYearRange();
+        //$carryOverDaysToNextYear = $this->getUserCarryOverDays($user,$nextYearRange);
+
         $res = $this->getPreviousYearApprovedTotalDays($user,$requestTypeStr);
         $approvedVacationDays = $res['numberOfDays'];
         //echo "previous: $totalAccruedDays + $carryOverDaysPreviousYear - $approvedVacationDays <br>";
         //                      12*2             carryover days from PREVIOUS year   approved days for CURRENT year
         $unusedDays = (int)$totalAccruedDays + (int)$carryOverDaysPreviousYear - (int)$approvedVacationDays;
+        //echo "unusedDays=$unusedDays<br>";
 
         if( $unusedDays == 0 ) {
             return $unusedDays;
@@ -3605,6 +3616,7 @@ class VacReqUtil
         return $requests;
     }
 
+    //UNUSED function
     //Get available carry over days for the CURRENT academical year.
     //Case 1, today is May 10: current academical year is 2015-2016 or "July 1st 2015 - 2016 June 30"
     //Case 2, today is July 12: current academical year is 2016-2017 or "July 1st 2016 - 2017 June 30"
@@ -3627,6 +3639,10 @@ class VacReqUtil
 
         $totalAccruedDays = $this->getTotalAccruedDays();
         $carryOverDaysPreviousYear = $this->getUserCarryOverDays($user,$year); //2015
+
+        //TODO: carried over days from the current year to the next year.
+        //$nextYearRange = $this->getNextAcademicYearRange();
+        //$carryOverDaysToNextYear = $this->getUserCarryOverDays($user,$nextYearRange);
 
         $requestTypeStr = 'vacation';
         $res = $this->getApprovedTotalDays($user,$requestTypeStr);
