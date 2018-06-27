@@ -3388,14 +3388,18 @@ class VacReqUtil
         //$res = $this->getAvailableCurrentYearCarryOverRequestString($user);
         //exit('current res='.$res);
 
-        $previousYearUnusedDaysMessage = $this->getPreviousYearUnusedDays( $user );
-
         //If the logged in user has the number of remaining vacation days > 0 IN THE PREVIOUS ACADEMIC YEAR
-        //If the current month is July or August => 7,8
+        //TODO: convert it to auto calculation based on the site settings: If the current month is July or August => 7,8
         $currentMonth = date('m');
         //echo "currentMonth=".$currentMonth."<br>";
 
-        if( $previousYearUnusedDaysMessage && ($currentMonth == '07' || $currentMonth == '08') ) {
+        $previousYearUnusedDaysMessage = null;
+
+        if( $currentMonth == '07' || $currentMonth == '08' ) {
+            $previousYearUnusedDaysMessage = $this->getPreviousYearUnusedDays($user);
+        }
+
+        if( $previousYearUnusedDaysMessage ) {
 
             return $previousYearUnusedDaysMessage;
 
@@ -3459,15 +3463,16 @@ class VacReqUtil
         $yearRange = $this->getPreviousAcademicYearRange();
         $carryOverDaysPreviousYear = $this->getUserCarryOverDays($user,$yearRange);
 
-        //TODO: carried over days from the current year to the next year.
-        //$nextYearRange = $this->getNextAcademicYearRange();
-        //$carryOverDaysToNextYear = $this->getUserCarryOverDays($user,$nextYearRange);
+        //TODO: carried over days from the current year to THIS year (from prospective of the previous year).
+        //For previous year. Use this year carry over days
+        $thisYearRange = $this->getCurrentAcademicYearRange();
+        $carryOverDaysToThisYear = $this->getUserCarryOverDays($user,$thisYearRange);
 
         $res = $this->getPreviousYearApprovedTotalDays($user,$requestTypeStr);
         $approvedVacationDays = $res['numberOfDays'];
         //echo "previous: $totalAccruedDays + $carryOverDaysPreviousYear - $approvedVacationDays <br>";
         //                      12*2             carryover days from PREVIOUS year   approved days for CURRENT year
-        $unusedDays = (int)$totalAccruedDays + (int)$carryOverDaysPreviousYear - (int)$approvedVacationDays;
+        $unusedDays = (int)$totalAccruedDays + (int)$carryOverDaysPreviousYear - (int)$approvedVacationDays - (int)$carryOverDaysToThisYear;
         //echo "unusedDays=$unusedDays<br>";
 
         if( $unusedDays == 0 ) {

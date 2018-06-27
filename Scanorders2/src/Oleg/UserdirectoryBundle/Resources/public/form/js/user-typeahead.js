@@ -190,7 +190,7 @@ function initTypeaheadUserSiteSearch() {
                 displayKey: 'text',
                 source: cwidDB.ttAdapter(),
                 templates: {
-                    header: '<h3 class="search-name">CWID</h3>'
+                    header: '<h3 class="search-name">User ID</h3>'
                 }
             }
         );
