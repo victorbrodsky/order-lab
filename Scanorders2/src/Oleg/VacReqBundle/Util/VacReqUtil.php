@@ -3342,9 +3342,9 @@ class VacReqUtil
         //$carriedOverDaysNextYearString = null;
         if( $carriedOverDaysNextYear ) {
             if( $carriedOverDaysString ) {
-                $carriedOverDaysString = $carriedOverDaysString . " and ".$carriedOverDaysNextYear." subtract vacation days carried over to ".$nextYearRange;
+                $carriedOverDaysString = $carriedOverDaysString . " and ".$carriedOverDaysNextYear." subtracted vacation days carried over to the next year ".$nextYearRange;
             } else {
-                $carriedOverDaysString = "You have ".$carriedOverDaysNextYear." subtract vacation days carried over to ".$nextYearRange;
+                $carriedOverDaysString = "You have ".$carriedOverDaysNextYear." subtracted vacation days carried over to the next year ".$nextYearRange;
             }
         }
 
