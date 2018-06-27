@@ -478,8 +478,10 @@ class VacReqUtil
     }
 
     //totalAllocatedDays - vacationDays + carryOverDays for given $yearRange
+    //carryOver days are from getUserCarryOverDays
     //TODO: might add "date of hire" and "end of employment date" to calculate the total vacation days
-    public function totalVacationRemainingDays( $user, $totalAllocatedDays=null, $vacationDays=null, $carryOverDays=null, $yearRange=null ) {
+    //TODO: subtract carry over days for the next year.
+    public function totalVacationRemainingDays( $user, $totalAllocatedDays=null, $vacationDays=null, $carryOverDaysToNextYear=null, $carryOverDaysFromPreviousYear=null, $yearRange=null ) {
 
         if( !$totalAllocatedDays ) {
             $totalAllocatedDays = $this->getTotalAccruedDays();
@@ -496,9 +498,16 @@ class VacReqUtil
             $vacationAccurate = $vacationDaysRes['accurate'];
         }
 
-        if( !$carryOverDays ) {
-            $carryOverDays = $this->getUserCarryOverDays($user,$yearRange);
+        if( !$carryOverDaysFromPreviousYear ) {
+            //carried over days from previous year
+            $carryOverDaysFromPreviousYear = $this->getUserCarryOverDays($user,$yearRange);
         }
+
+        //TODO: subtract carried over days from the current year to the next year.
+        $nextYearRange = $this->getNextAcademicYearRange();
+        //echo "nextYearRange=".$nextYearRange."<br>";
+        $carryOverDaysToNextYear = $this->getUserCarryOverDays($user,$nextYearRange);
+        //echo "carryOverDaysToNextYear=".$carryOverDaysToNextYear."<br>";
 
 //        echo "yearRange=".$yearRange."<br>";
 //        echo "totalAllocatedDays=".$totalAllocatedDays."<br>";
@@ -506,7 +515,7 @@ class VacReqUtil
 //        echo "carryOverDays=".$carryOverDays."<br>";
 
         $res = array(
-            'numberOfDays' => ( (int)$totalAllocatedDays - (int)$vacationDays + (int)$carryOverDays ),
+            'numberOfDays' => ( (int)$totalAllocatedDays - (int)$vacationDays + (int)$carryOverDaysFromPreviousYear ) - (int)$carryOverDaysToNextYear,
             'accurate' => $vacationAccurate
         );
 
@@ -889,6 +898,24 @@ class VacReqUtil
         }
 
         //echo "previous year=".$year."<br>";
+
+        $yearRange = $startYear."-".$endYear;
+
+        return $yearRange;
+    }
+
+    public function getNextAcademicYearRange() {
+        $dates = $this->getCurrentAcademicYearStartEndDates();
+        $startDate = $dates['startDate']; //Y-m-d
+        //echo "startDate=".$startDate."<br>";
+
+        $currentYearStartDateArr = explode("-",$startDate);
+        $year = $currentYearStartDateArr[0];
+
+        $startYear = ((int)$year) + 1;   //next year start
+        $endYear = $startYear + 1; //next year end
+
+        //echo "next year=".$year."<br>";
 
         $yearRange = $startYear."-".$endYear;
 
@@ -3305,9 +3332,25 @@ class VacReqUtil
         $carriedOverDaysString = null;
         if( $carriedOverDays ) {
             $lastYearRange = $this->getPreviousAcademicYearRange();
-            $carriedOverDaysString = "You have ".$carriedOverDays." additional vacation days carried over from ".$lastYearRange.".";
+            $carriedOverDaysString = "You have ".$carriedOverDays." additional vacation days carried over from ".$lastYearRange;
         }
 
+        //Carry over days to the next academic year
+        $nextYearRange = $this->getNextAcademicYearRange();
+        $carriedOverDaysNextYear = $this->getUserCarryOverDays($user,$nextYearRange);
+        //echo "carriedOverDaysNextYear=".$carriedOverDaysNextYear."<br>";
+        //$carriedOverDaysNextYearString = null;
+        if( $carriedOverDaysNextYear ) {
+            if( $carriedOverDaysString ) {
+                $carriedOverDaysString = $carriedOverDaysString . " and ".$carriedOverDaysNextYear." subtract vacation days carried over to ".$nextYearRange;
+            } else {
+                $carriedOverDaysString = "You have ".$carriedOverDaysNextYear." subtract vacation days carried over to ".$nextYearRange;
+            }
+        }
+
+        if( $carriedOverDaysString ) {
+            $carriedOverDaysString = $carriedOverDaysString . ".";
+        }
 
         //totalAllocatedDays - vacationDays + carryOverDays
         $remainingDaysRes = $this->totalVacationRemainingDays($user);
@@ -3328,6 +3371,7 @@ class VacReqUtil
         //$messages['accruedDays'] = $accruedDays;
         $messages['totalAccruedDays'] = $totalAccruedDays;
         $messages['carriedOverDaysString'] = $carriedOverDaysString;
+        //$messages['carriedOverDaysNextYearString'] = $carriedOverDaysNextYearString;
         $messages['remainingDaysString'] = $remainingDaysString;
 
 

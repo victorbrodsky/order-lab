@@ -94,6 +94,10 @@
             </th>
 
             <th style="background-color: {{ backgroundColor }}">
+                {{ yearRange }} Carried Over Vacation Days To Next Year
+            </th>
+
+            <th style="background-color: {{ backgroundColor }}">
                 {{ yearRange }} Carried Over Vacation Days From Previous Year
             </th>
 
@@ -134,7 +138,10 @@
                 {% set pendingDaysResV = vacreq_util.getApprovedTotalDaysAcademicYear(submitter,'vacation',yearRange,"pending") %}
                 {% set pendingDaysV = pendingDaysResV['numberOfDays'] %}
 
-                {% set carryOverDays = vacreq_util.getUserCarryOverDays(submitter,yearRange) %}
+                {% set carryOverDaysPrevYear = vacreq_util.getUserCarryOverDays(submitter,yearRange) %}
+
+                {% set nextYear = vacreq_util.getNextAcademicYearRange() %}
+                {% set carryOverDaysNextYear = vacreq_util.getUserCarryOverDays(submitter,nextYear) %}
 
                 {#{% set totalRemainingDays = totalAllocatedDays|number_format - vacationDays|number_format %}#}
                 {#totalRemainingDays={{ totalRemainingDays }}#}
@@ -181,8 +188,8 @@
                 {#Remaining days#}
                 <td style="background-color: {{ backgroundColor }}">
                     {#{{ totalRemainingDays }}#}
-                    {#{{ (totalAllocatedDays|number_format - vacationDays|number_format + carryOverDays|number_format) }}=>#}
-                    {% set totalRemainingDaysRes = vacreq_util.totalVacationRemainingDays(submitter,totalAllocatedDays,vacationDays,carryOverDays,yearRange) %}
+                    {#{{ (totalAllocatedDays|number_format - vacationDays|number_format + carryOverDaysPrevYear|number_format) }}=>#}
+                    {% set totalRemainingDaysRes = vacreq_util.totalVacationRemainingDays(submitter,totalAllocatedDays,vacationDays,carryOverDaysNextYear,carryOverDays,yearRange) %}
                     {{ totalRemainingDaysRes['numberOfDays'] }}
                     {% if not totalRemainingDaysRes['accurate'] %}
                         <span data-toggle="tooltip" title="{{ inaccuracyMessage }}">*</span>
@@ -190,7 +197,11 @@
                 </td>
 
                 <td style="background-color: {{ backgroundColor }}">
-                    {{ carryOverDays }}
+                    {{ carryOverDaysNextYear }}
+                </td>
+
+                <td style="background-color: {{ backgroundColor }}">
+                    {{ carryOverDaysPrevYear }}
                 </td>
 
             {% endfor %}
