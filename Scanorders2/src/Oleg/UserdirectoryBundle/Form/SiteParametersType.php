@@ -222,11 +222,11 @@ class SiteParametersType extends AbstractType
 
 
 
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'autoAssignInstitution' )
-            $builder->add('autoAssignInstitution',null,array(
-                'label'=>'Auto-Assign Institution name:',
-                'attr' => array('class'=>'form-control')
-            ));
+//        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'autoAssignInstitution' )
+//            $builder->add('autoAssignInstitution',null,array(
+//                'label'=>'Auto-Assign Institution name:',
+//                'attr' => array('class'=>'form-control')
+//            ));
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'enableAutoAssignmentInstitutionalScope' )
             $builder->add('enableAutoAssignmentInstitutionalScope',null,array(
@@ -235,6 +235,34 @@ class SiteParametersType extends AbstractType
             ));
 
 
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'autoAssignInstitution' ) {
+            $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+                $institution = $event->getData()->getDefaultOrganizationRecipient();
+                $form = $event->getForm();
+
+                $label = null;
+                if( $institution ) {
+                    $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
+                }
+                if( !$label ) {
+                    $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels(null) . ":";
+                }
+
+                $form->add('autoAssignInstitution', CustomSelectorType::class, array(
+                    'label' => "Auto-Assign Institution name - ".$label,
+                    'required' => false,
+                    'attr' => array(
+                        'class' => 'ajax-combobox-compositetree',
+                        'type' => 'hidden',
+                        'data-compositetree-bundlename' => 'UserdirectoryBundle',
+                        'data-compositetree-classname' => 'Institution',
+                        'data-label-prefix' => 'Auto-Assign Institution name -',  //'Originating Organizational Group',
+                        'data-label-postfix' => ''
+                    ),
+                    'classtype' => 'institution'
+                ));
+            });
+        }
 
 
         //pacsvendor DB

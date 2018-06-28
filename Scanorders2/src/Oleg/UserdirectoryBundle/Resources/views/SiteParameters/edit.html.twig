@@ -129,6 +129,10 @@
             {{ treemacros.compositeTreeNode(edit_form.defaultOrganizationRecipient,cycle,"noprototype") }}
         {% endif %}
 
+        {% if edit_form.autoAssignInstitution is defined %}
+            {{ treemacros.compositeTreeNode(edit_form.autoAssignInstitution,cycle,"noprototype") }}
+        {% endif %}
+
         <p>
             {{ form_rest(edit_form) }}
         </p>
