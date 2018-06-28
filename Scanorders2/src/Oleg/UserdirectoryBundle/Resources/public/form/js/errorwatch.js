@@ -28,12 +28,17 @@ window.onerror = function( msg, url, linenumber ){
 
         var newline = "\n";
 
-          alert(    'Internal system error. Please reload the page by clicking "OK" button. ' + newline +
-                    'Please e-mail us at slidescan@med.cornell.edu if the problem persists. ' + newline +
-                    'Error message: ' + msg + newline +
-                    ' URL: ' + url + newline +
-                    ' Line Number: ' + linenumber
-          );
+        var siteEmail = $("#siteEmail").val();
+        if( !siteEmail && siteEmail.length == 0 ) {
+            siteEmail = "system admin email";
+        }
+
+        alert(  'Internal system error. Please reload the page by clicking "OK" button. ' + newline +
+                'Please e-mail us at '+siteEmail+' if the problem persists. ' + newline +
+                'Error message: ' + msg + newline +
+                ' URL: ' + url + newline +
+                ' Line Number: ' + linenumber
+        );
 
         //location.reload();
     }

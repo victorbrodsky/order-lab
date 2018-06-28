@@ -692,6 +692,8 @@ class UserServiceUtil {
             return -1;
         }
 
+        $defaultSystemEmail = $this->container->getParameter('default_system_email');
+
         $types = array(
             "maxIdleTime" => "30",
             "environment" => "dev",
@@ -831,7 +833,7 @@ class UserServiceUtil {
 
                 <p>
                     We are continuing to improve this software. If you have a suggestion or believe you have encountered an issue, please don\'t hesitate to email
-                <a href="mailto:slidescan@med.cornell.edu" target="_top">slidescan@med.cornell.edu</a> and attach relevant screenshots.
+                <a href="mailto:'.$defaultSystemEmail.'" target="_top">'.$defaultSystemEmail.'</a> and attach relevant screenshots.
                 </p>
 
                 <br>
