@@ -147,10 +147,16 @@ class CallLogSiteParametersController extends SiteParametersController
         }
         $siteParameters = $entities[0];
         $calllogSiteParameter = $siteParameters->getCalllogSiteParameter();
-        echo "calllogSiteParameter=".$calllogSiteParameter->getId()."<br>";
+
         if( !$calllogSiteParameter ) {
-            exit("no calllogSiteParameter");
+            //exit("no calllogSiteParameter");
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                'Call Log Site Parameters are not found. Please complete the deployment procedure.'
+            );
+            return $this->redirect( $this->generateUrl('user_admin_index') );
         }
+        //echo "calllogSiteParameter=".$calllogSiteParameter->getId()."<br>";
 
         $form = $this->createCalllogSiteParameterForm($calllogSiteParameter,$cycle);
         $form->handleRequest($request);
