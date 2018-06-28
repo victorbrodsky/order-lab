@@ -198,6 +198,7 @@ class UtilController extends Controller {
             ->from('OlegUserdirectoryBundle:Institution', 'list')
             ->select("list.id as id, list.name as text")
             ->leftJoin("list.types","types")
+            ->groupBy("list.id")
             ->orderBy("list.orderinlist","ASC");
 
         $query->where("(types.name LIKE :instTypeEducational OR types.name LIKE :instTypeMedical) AND list.level = 0");
@@ -215,6 +216,9 @@ class UtilController extends Controller {
         $query->setParameters($paramArr);
 
         $output = $query->getQuery()->getResult();
+
+        //echo "traininginstitution count=".count($output)."<br>";
+        //print_r($output);
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
