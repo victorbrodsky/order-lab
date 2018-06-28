@@ -53,21 +53,22 @@ class CallLogSiteParametersController extends SiteParametersController
         }
 
         ////////// Create a new CalllogSiteParameter //////////
-        $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
-        if( count($entities) != 1 ) {
-            throw new \Exception( 'Must have only one parameter object. Found '.count($entities).'object(s)' );
-        }
-        $siteParameters = $entities[0];
-
-        //create one CalllogSiteParameter
-        if( !$siteParameters->getCalllogSiteParameter() ) {
-            //echo "CalllogSiteParameter null <br>";
-            $calllogSiteParameter = new CalllogSiteParameter();
-            $siteParameters->setCalllogSiteParameter($calllogSiteParameter);
-            $em->flush();
-        }
+//        $em = $this->getDoctrine()->getManager();
+//        $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+//        if( count($entities) != 1 ) {
+//            throw new \Exception( 'Must have only one parameter object. Found '.count($entities).'object(s)' );
+//        }
+//        $siteParameters = $entities[0];
+//
+//        //create one CalllogSiteParameter
+//        if( !$siteParameters->getCalllogSiteParameter() ) {
+//            //echo "CalllogSiteParameter null <br>";
+//            $calllogSiteParameter = new CalllogSiteParameter();
+//            $siteParameters->setCalllogSiteParameter($calllogSiteParameter);
+//            $em->flush();
+//        }
         ////////// EOF Create a new CalllogSiteParameter //////////
+        $this->getOrCreateNewCallLogParameters();
 
         return $this->indexParameters($request);
     }
@@ -140,22 +141,24 @@ class CallLogSiteParametersController extends SiteParametersController
 
         $cycle = "edit";
 
-        $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
-        if( count($entities) != 1 ) {
-            throw new \Exception( 'Must have only one parameter object. Found '.count($entities).'object(s)' );
-        }
-        $siteParameters = $entities[0];
-        $calllogSiteParameter = $siteParameters->getCalllogSiteParameter();
+//        $em = $this->getDoctrine()->getManager();
+//        $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+//        if( count($entities) != 1 ) {
+//            throw new \Exception( 'Must have only one parameter object. Found '.count($entities).'object(s)' );
+//        }
+//        $siteParameters = $entities[0];
+//        $calllogSiteParameter = $siteParameters->getCalllogSiteParameter();
+//
+//        if( !$calllogSiteParameter ) {
+//            //exit("no calllogSiteParameter");
+////            $this->get('session')->getFlashBag()->add(
+////                'warning',
+////                'Call Log Site Parameters are not found. Please complete the deployment procedure.'
+////            );
+////            return $this->redirect( $this->generateUrl('user_admin_index') );
+//        }
 
-        if( !$calllogSiteParameter ) {
-            //exit("no calllogSiteParameter");
-            $this->get('session')->getFlashBag()->add(
-                'warning',
-                'Call Log Site Parameters are not found. Please complete the deployment procedure.'
-            );
-            return $this->redirect( $this->generateUrl('user_admin_index') );
-        }
+        $calllogSiteParameter = $this->getOrCreateNewCallLogParameters();
         //echo "calllogSiteParameter=".$calllogSiteParameter->getId()."<br>";
 
         $form = $this->createCalllogSiteParameterForm($calllogSiteParameter,$cycle);
@@ -194,14 +197,17 @@ class CallLogSiteParametersController extends SiteParametersController
 
         $cycle = "show";
 
-        $em = $this->getDoctrine()->getManager();
+//        $em = $this->getDoctrine()->getManager();
+//
+//        $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+//        if( count($entities) != 1 ) {
+//            throw new \Exception( 'Must have only one parameter object. Found '.count($entities).'object(s)' );
+//        }
+//        $siteParameters = $entities[0];
+//        $calllogSiteParameter = $siteParameters->getCalllogSiteParameter();
 
-        $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
-        if( count($entities) != 1 ) {
-            throw new \Exception( 'Must have only one parameter object. Found '.count($entities).'object(s)' );
-        }
-        $siteParameters = $entities[0];
-        $calllogSiteParameter = $siteParameters->getCalllogSiteParameter();
+        $calllogSiteParameter = $this->getOrCreateNewCallLogParameters();
+        //echo "calllogSiteParameter=".$calllogSiteParameter->getId()."<br>";
 
         $form = $this->createCalllogSiteParameterForm($calllogSiteParameter,$cycle);
 
@@ -236,5 +242,26 @@ class CallLogSiteParametersController extends SiteParametersController
 
         return $form;
     }
-    
+
+    //Get or Create a new CalllogSiteParameter
+    public function getOrCreateNewCallLogParameters() {
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+        if( count($entities) != 1 ) {
+            throw new \Exception( 'Must have only one parameter object. Found '.count($entities).'object(s)' );
+        }
+        $siteParameters = $entities[0];
+
+        $calllogSiteParameter = $siteParameters->getCalllogSiteParameter();
+
+        //create one CalllogSiteParameter
+        if( !$calllogSiteParameter ) {
+            //echo "CalllogSiteParameter null <br>";
+            $calllogSiteParameter = new CalllogSiteParameter();
+            $siteParameters->setCalllogSiteParameter($calllogSiteParameter);
+            $em->flush();
+        }
+
+        return $calllogSiteParameter;
+    }
 }
