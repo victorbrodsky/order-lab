@@ -930,12 +930,14 @@ class UserGenerator {
                 $perSiteSettings = new PerSiteSettings($systemuser);
                 $perSiteSettings->setUser($user);
             }
-            $params = $this->em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
-            if( count($params) != 1 ) {
-                throw new \Exception( 'Must have only one parameter object. Found '.count($params).' object(s)' );
-            }
-            $param = $params[0];
-            $institution = $param->getAutoAssignInstitution();
+//            $params = $this->em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+//            if( count($params) != 1 ) {
+//                throw new \Exception( 'Must have only one parameter object. Found '.count($params).' object(s)' );
+//            }
+//            $param = $params[0];
+            //$institution = $param->getAutoAssignInstitution();
+            $institution = $userSecUtil->getAutoAssignInstitution();
+
             $perSiteSettings->addPermittedInstitutionalPHIScope($institution);
             $this->em->persist($perSiteSettings);
             $this->em->flush();
@@ -1852,12 +1854,16 @@ class UserGenerator {
                 $perSiteSettings = new PerSiteSettings($systemuser);
                 $perSiteSettings->setUser($user);
             }
-            $params = $this->em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
-            if( count($params) != 1 ) {
-                throw new \Exception( 'Must have only one parameter object. Found '.count($params).' object(s)' );
-            }
-            $param = $params[0];
-            $institution = $param->getAutoAssignInstitution();
+            
+//            $params = $this->em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+//            if( count($params) != 1 ) {
+//                throw new \Exception( 'Must have only one parameter object. Found '.count($params).' object(s)' );
+//            }
+//            $param = $params[0];
+//            $institution = $param->getAutoAssignInstitution();
+            
+            $institution = $userSecUtil->getAutoAssignInstitution();
+            
             $perSiteSettings->addPermittedInstitutionalPHIScope($institution);
             $this->em->persist($perSiteSettings);
             $this->em->flush();

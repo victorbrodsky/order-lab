@@ -143,6 +143,23 @@
             </tr>
 
             <tr>
+                <td>Enable auto-assignment of Institutional (PHI) Scope</td>
+                <td>
+                    {% set enableAutoAssignmentInstitutionalScopeStr = 'No' %}
+                    {% if entity.enableAutoAssignmentInstitutionalScope == true %}
+                        {% set enableAutoAssignmentInstitutionalScopeStr = 'Yes' %}
+                    {% endif %}
+                    {{ enableAutoAssignmentInstitutionalScopeStr }}
+                </td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'enableAutoAssignmentInstitutionalScope'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>Auto-Assign Institution name</td>
+                <td>{{ entity.autoAssignInstitution }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'autoAssignInstitution'}) }}">Edit</a></td>
+            </tr>
+
+            <tr>
                 <td class="rowlink-skip" colspan="3" align="center">
                     <h3>Mailer:</h3>
                 </td>
@@ -326,24 +343,6 @@
                 <td class="rowlink-skip" colspan="3" align="center">
                     <h3>AD/LDAP:</h3>
                 </td>
-            </tr>
-
-            <tr>
-                <td>Enable auto-assignment of Institutional (PHI) Scope</td>
-                <td>
-                    {% set enableAutoAssignmentInstitutionalScopeStr = 'No' %}
-                    {% if entity.enableAutoAssignmentInstitutionalScope == true %}
-                        {% set enableAutoAssignmentInstitutionalScopeStr = 'Yes' %}
-                    {% endif %}
-                    {{ enableAutoAssignmentInstitutionalScopeStr }}
-                </td>
-                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'enableAutoAssignmentInstitutionalScope'}) }}">Edit</a></td>
-            </tr>
-
-            <tr>
-                <td>Auto-Assign Institution name</td>
-                <td>{{ entity.autoAssignInstitution }}</td>
-                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'autoAssignInstitution'}) }}">Edit</a></td>
             </tr>
 
             <tr>

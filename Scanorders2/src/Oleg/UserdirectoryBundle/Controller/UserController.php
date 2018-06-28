@@ -1529,7 +1529,7 @@ class UserController extends Controller
 
         //add EIN identifier to credentials
         $identEin = new Identifier();
-        $identKeytypeEin = $em->getRepository('OlegUserdirectoryBundle:IdentifierTypeList')->findOneByName("WCMC Employee Identification Number (EIN)");
+        $identKeytypeEin = $em->getRepository('OlegUserdirectoryBundle:IdentifierTypeList')->findOneByName("Employee Identification Number (EIN)");
         if( $identKeytypeEin ) {
             $identEin->setKeytype($identKeytypeEin);
         }

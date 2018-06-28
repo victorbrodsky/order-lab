@@ -1025,6 +1025,11 @@ class UserUtil {
             $duser->setPerSiteSettings( new PerSiteSettings() );
         }
 
+        //Organizational Group for new user's default values in Employee Directory: oleg_userdirectorybundle_user_perSiteSettings_organizationalGroupDefault
+        if( $sourceDefault->getInstitution() ) {
+            $duser->getPerSiteSettings()->setOrganizationalGroupDefault($sourceDefault->getInstitution());
+        }
+
         if( $sourceDefault->getTooltip() ) {
             $duser->getPerSiteSettings()->setTooltip($sourceDefault->getTooltip());
         }
@@ -1052,6 +1057,12 @@ class UserUtil {
         if( $sourceDefault->getEmploymentType() ) {
             $employmentStatus = $duser->getEmploymentStatus()->first();
             $employmentStatus->setEmploymentType($sourceDefault->getEmploymentType());
+        }
+
+        //employmentInstitution
+        if( $sourceDefault->getEmploymentInstitution() ) {
+            $employmentStatus = $duser->getEmploymentStatus()->first();
+            $employmentStatus->setInstitution($sourceDefault->getEmploymentInstitution());
         }
 
         //locale

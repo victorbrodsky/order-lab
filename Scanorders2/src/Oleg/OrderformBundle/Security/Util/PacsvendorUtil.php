@@ -74,23 +74,37 @@ class PacsvendorUtil {
 
                 ////////// assign Institution //////////
                 $perSiteSettings = null;
-                $params = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
-                if( count($params) > 0 ) { //if zero found => initial admin login after DB clean
-                    if( count($params) != 1 ) {
-                        throw new \Exception( 'Must have only one parameter object. Found '.count($params).' object(s)' );
-                    }
-                    $param = $params[0];
-                    $institution = $param->getAutoAssignInstitution();
-                    if( $institution ) {
-                        //set institution to per site settings
-                        $perSiteSettings = new PerSiteSettings();
-                        $userSecUtil = $serviceContainer->get('user_security_utility');
-                        $systemUser = $userSecUtil->findSystemUser();
-                        $perSiteSettings->setAuthor($systemUser);
-                        $perSiteSettings->setUser($user);
-                        $perSiteSettings->addPermittedInstitutionalPHIScope($institution);
-                        $em->persist($perSiteSettings);
-                    }
+
+//                $params = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+//                if( count($params) > 0 ) { //if zero found => initial admin login after DB clean
+//                    if( count($params) != 1 ) {
+//                        throw new \Exception( 'Must have only one parameter object. Found '.count($params).' object(s)' );
+//                    }
+//                    $param = $params[0];
+//                    $institution = $param->getAutoAssignInstitution();
+//
+//                    if( $institution ) {
+//                        //set institution to per site settings
+//                        $perSiteSettings = new PerSiteSettings();
+//                        $userSecUtil = $serviceContainer->get('user_security_utility');
+//                        $systemUser = $userSecUtil->findSystemUser();
+//                        $perSiteSettings->setAuthor($systemUser);
+//                        $perSiteSettings->setUser($user);
+//                        $perSiteSettings->addPermittedInstitutionalPHIScope($institution);
+//                        $em->persist($perSiteSettings);
+//                    }
+//                }
+
+                $institution = $userSecUtil->getAutoAssignInstitution();
+                if( $institution ) {
+                    //set institution to per site settings
+                    $perSiteSettings = new PerSiteSettings();
+                    $userSecUtil = $serviceContainer->get('user_security_utility');
+                    $systemUser = $userSecUtil->findSystemUser();
+                    $perSiteSettings->setAuthor($systemUser);
+                    $perSiteSettings->setUser($user);
+                    $perSiteSettings->addPermittedInstitutionalPHIScope($institution);
+                    $em->persist($perSiteSettings);
                 }
                 ////////// EOF assign Institution //////////
 

@@ -1223,6 +1223,21 @@ class UserSecurityUtil {
         return $res;
     }
 
+    public function getAutoAssignInstitution( $withAutoAssignEnable=true ) {
+        if( $withAutoAssignEnable ) {
+            $enableAutoAssignmentInstitutionalScope = $this->getSiteSettingParameter('enableAutoAssignmentInstitutionalScope');
+            if( $enableAutoAssignmentInstitutionalScope ) {
+                $autoAssignInstitution = $this->getSiteSettingParameter('autoAssignInstitution');
+                return $autoAssignInstitution;
+            }
+        } else {
+            $autoAssignInstitution = $this->getSiteSettingParameter('autoAssignInstitution');
+            return $autoAssignInstitution;
+        }
+
+        return null;
+    }
+
     //return absolute file name on the server which will work for web and command
     public function getAbsoluteServerFilePath( $document ) {
         return realpath($this->container->get('kernel')->getRootDir() . "/../web/" . $document->getServerPath());

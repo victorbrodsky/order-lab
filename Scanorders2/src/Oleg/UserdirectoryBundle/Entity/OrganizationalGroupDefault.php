@@ -196,7 +196,14 @@ class OrganizationalGroupDefault
      * @ORM\JoinColumn(referencedColumnName="id", nullable=true)
      **/
     private $medicalLicenseState;
-    
+
+    /**
+     * Employment Period(s) [visible only to Editors and Administrators]: Organizational Group for Employment Period
+     *
+     * @ORM\ManyToOne(targetEntity="Institution")
+     */
+    private $employmentInstitution;
+
 
 
     public function __construct() {
@@ -595,6 +602,22 @@ class OrganizationalGroupDefault
     public function setMedicalLicenseState($medicalLicenseState)
     {
         $this->medicalLicenseState = $medicalLicenseState;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmploymentInstitution()
+    {
+        return $this->employmentInstitution;
+    }
+
+    /**
+     * @param mixed $employmentInstitution
+     */
+    public function setEmploymentInstitution($employmentInstitution)
+    {
+        $this->employmentInstitution = $employmentInstitution;
     }
 
 

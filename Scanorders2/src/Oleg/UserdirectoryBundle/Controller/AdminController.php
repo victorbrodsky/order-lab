@@ -3707,7 +3707,7 @@ class AdminController extends Controller
 //        }
 
         $elements = array(
-            'WCMC Employee Identification Number (EIN)',
+            'Employee Identification Number (EIN)',
             'National Provider Identifier (NPI)',
             'MRN',
             'Local User',
@@ -4722,18 +4722,20 @@ class AdminController extends Controller
             //**************** create PerSiteSettings for this user **************//
             $userSettings = $user->getPerSiteSettings();
             if( !$userSettings ) {
-                //TODO: ideally, this should be located on scanorder site
                 //get user from DB to avoid An exception occurred while executing 'INSERT INTO scan_perSiteSettings ... Key (fosuser)=(8) already exists
                 $user = $em->getRepository('OlegUserdirectoryBundle:User')->find($userId);
                 //echo "create new PerSiteSettings for user " . $user . ", id=" . $user->getId() . "<br>";
                 $perSiteSettings = new PerSiteSettings($systemuser);
                 $perSiteSettings->setUser($user);
-                $params = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
-                if (count($params) != 1) {
-                    throw new \Exception('Must have only one parameter object. Found ' . count($params) . ' object(s)');
-                }
-                $param = $params[0];
-                $institution = $param->getAutoAssignInstitution();
+
+//                $params = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+//                if (count($params) != 1) {
+//                    throw new \Exception('Must have only one parameter object. Found ' . count($params) . ' object(s)');
+//                }
+//                $param = $params[0];
+//                $institution = $param->getAutoAssignInstitution();
+                $institution = $userSecUtil->getAutoAssignInstitution();
+
                 $perSiteSettings->addPermittedInstitutionalPHIScope($institution);
                 $em->persist($perSiteSettings);
                 $em->flush();

@@ -408,6 +408,18 @@ class OrganizationalGroupDefaultType extends AbstractType
                 'classtype' => 'institution'
             ));
 
+            $form->add('employmentInstitution', CustomSelectorType::class, array(
+                'label' => "Organizational Group for Employment Period ".$label,
+                'required' => false,
+                'attr' => array(
+                    'class' => 'ajax-combobox-compositetree',
+                    'type' => 'hidden',
+                    'data-compositetree-bundlename' => 'UserdirectoryBundle',
+                    'data-compositetree-classname' => 'Institution',
+                    'data-label-prefix' => 'Organizational Group for Employment Period'
+                ),
+                'classtype' => 'institution'
+            ));
         });
         ///////////////////////// EOF tree node /////////////////////////
 

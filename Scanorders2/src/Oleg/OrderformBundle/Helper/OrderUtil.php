@@ -750,10 +750,11 @@ class OrderUtil {
         }
 
         $userSecUtil = $this->container->get('user_security_utility');
-        $enableAutoAssignmentInstitutionalScope = $userSecUtil->getSiteSettingParameter('enableAutoAssignmentInstitutionalScope');
-        $autoAssignInstitution = $userSecUtil->getSiteSettingParameter('autoAssignInstitution');
-
-        if( $enableAutoAssignmentInstitutionalScope && $autoAssignInstitution ) {
+        //$enableAutoAssignmentInstitutionalScope = $userSecUtil->getSiteSettingParameter('enableAutoAssignmentInstitutionalScope');
+        //$autoAssignInstitution = $userSecUtil->getSiteSettingParameter('autoAssignInstitution');
+        $autoAssignInstitution = $userSecUtil->getAutoAssignInstitution();
+        
+        if( $autoAssignInstitution ) {
             $userSiteSettings = $user->getPerSiteSettings();
             if( !$userSiteSettings ) {
                 //set institution to per site settings

@@ -51,6 +51,7 @@
         {{ formmacros.checkbox(formfield.tooltip) }}
         {{ formmacros.field(formfield.permittedInstitutionalPHIScope) }}
         {{ formmacros.field(formfield.employmentType) }}
+        {{ treemacros.compositeTreeNode(formfield.employmentInstitution,cycle,prototype) }}
 
         <hr>
         {{ treemacros.compositeTreeNode(formfield.administrativeTitleInstitution,cycle,prototype) }}
