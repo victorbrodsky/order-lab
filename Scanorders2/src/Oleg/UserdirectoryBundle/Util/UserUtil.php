@@ -997,7 +997,7 @@ class UserUtil {
         }
 
         if( !$sourceDefault ) {
-            echo 'no match <br>';
+            //echo 'no match <br>';
             return $duser;
         }
 
