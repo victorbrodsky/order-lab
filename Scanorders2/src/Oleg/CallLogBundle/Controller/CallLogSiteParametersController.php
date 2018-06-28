@@ -147,7 +147,10 @@ class CallLogSiteParametersController extends SiteParametersController
         }
         $siteParameters = $entities[0];
         $calllogSiteParameter = $siteParameters->getCalllogSiteParameter();
-        //echo "calllogSiteParameter=".$calllogSiteParameter->getId()."<br>";
+        echo "calllogSiteParameter=".$calllogSiteParameter->getId()."<br>";
+        if( !$calllogSiteParameter ) {
+            exit("no calllogSiteParameter");
+        }
 
         $form = $this->createCalllogSiteParameterForm($calllogSiteParameter,$cycle);
         $form->handleRequest($request);

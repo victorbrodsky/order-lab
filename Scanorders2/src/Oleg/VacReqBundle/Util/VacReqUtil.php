@@ -3463,7 +3463,7 @@ class VacReqUtil
         $yearRange = $this->getPreviousAcademicYearRange();
         $carryOverDaysPreviousYear = $this->getUserCarryOverDays($user,$yearRange);
 
-        //carried over days from the current year to THIS year (from prospective of the previous year).
+        //TODO: test it: carried over days from the current year to THIS year (from prospective of the previous year).
         //For previous year. Use this year carry over days
         $thisYearRange = $this->getCurrentAcademicYearRange();
         $carryOverDaysToThisYear = $this->getUserCarryOverDays($user,$thisYearRange);
