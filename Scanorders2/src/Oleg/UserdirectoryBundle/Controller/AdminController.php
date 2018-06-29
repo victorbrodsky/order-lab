@@ -21,6 +21,7 @@ namespace Oleg\UserdirectoryBundle\Controller;
 use Oleg\FellAppBundle\Entity\FellAppRank;
 use Oleg\FellAppBundle\Entity\FellAppStatus;
 use Oleg\FellAppBundle\Entity\LanguageProficiency;
+use Oleg\OrderformBundle\Controller\ScanListController;
 use Oleg\TranslationalResearchBundle\Entity\IrbApprovalTypeList;
 use Oleg\TranslationalResearchBundle\Entity\ProjectTypeList;
 use Oleg\TranslationalResearchBundle\Entity\RequestCategoryTypeList;
@@ -6310,6 +6311,8 @@ class AdminController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
+        $scanListController = new ScanListController();
+
         $types = array(
             "1"  => array('PlatformListManagerRootList','platformlistmanager-list'),
             "10" => array('SiteList','sites-list'),
@@ -6442,24 +6445,68 @@ class AdminController extends Controller
             "MrnType" => array('MrnType','mrntype-list','Mrn Types'),
             "AccessionType" => array('AccessionType','accessiontype-list','Accession Types'),
             "EncounterType" => array('EncounterType','encountertype-list',"Encounter Number Types"),
-            "1050" => array('','-list'),
-            "1050" => array('','-list'),
-            "1050" => array('','-list'),
-            "1050" => array('','-list'),
-
-
+            "ProcedureType" => array('ProcedureType','proceduretype-list','Procedure Number Types'),
+            "stain" => array('','-list'),
+            "organ" => array('','-list'),
+            "encounter" => array('','-list'),
+            "procedure" => array('','-list'),
+            "slidetype" => array('','-list'),
+            "messagecategorys" => array('','-list'),
+            "status" => array('','-list'),
+            "orderdelivery" => array('','-list'),
+            "regiontoscan" => array('','-list'),
+            "processorcomment" => array('','-list'),
+            "accounts" => array('','-list'),
+            "urgency" => array('','-list'),
+            "progresscommentseventtypes" => array('','-list'),
+            "scanloggereventtypes" => array('','-list'),
+            "races" => array('','-list'),
+            "reporttype" => array('','-list'),
+            "instruction" => array('','-list'),
+            "patienttype" => array('','-list'),
+            "magnifications" => array('','-list'),
+            "imageanalysisalgorithm" => array('','-list'),
+            "diseasetypes" => array('','-list'),
+            "diseaseorigins" => array('','-list'),
+            "labtesttype" => array('','-list'),
+            "parttitle" => array('','-list'),
+            "messagetypeclassifiers" => array('','-list'),
+            "amendmentreasons" => array('','-list'),
+            "patientlisthierarchys" => array('','-list'),
+            "pathologycallcomplexpatients" => array('','-list'),
+            "patientlisthierarchygrouptype" => array('','-list'),
+            "encounterstatuses" => array('','-list'),
+            "patientrecordstatuses" => array('','-list'),
+            "messagestatuses" => array('','-list'),
+            "encounterinfotypes" => array('','-list'),
+            "suggestedmessagecategorys" => array('','-list'),
+            "calllogentrytags" => array('','-list')
         );
 
         $count = 10;
         foreach( $types as $listId => $listArr ) {
 
-            $listName = $listArr[0];
-            $listRootName = $listArr[1];
+            $listName = $listArr[0];        //$className
+            $listRootName = $listArr[1];    //root
 
             if( count($listArr) == 3 ) {
                 $nameClean = $listArr[2];
             } else {
                 $nameClean = null;
+            }
+
+            if( !$listName ) {
+                //get it from ScanListController
+                $mapper = $scanListController->classListMapper($listId,$request);
+                //$className = $mapper['className'];
+                //$bundleName = $mapper['bundleName'];
+                //$displayName = $mapper['displayName'];
+                //$bundleName = str_replace("Oleg","",$bundleName);
+
+                $listName = $mapper['className'];
+                $listRootName = $listId.'-list';
+                $nameClean = $mapper['displayName'];
+                //exit('Get from ScanListController: listName='.$listName."; listRootName=".$listRootName."; nameClean=".$nameClean);
             }
 
 //            $listEntity = $em->getRepository('OlegUserdirectoryBundle:PlatformListManagerRootList')->findOneByListId($listId);
