@@ -1060,10 +1060,10 @@ class UserUtil {
         }
 
         //employmentInstitution
-//        if( $sourceDefault->getEmploymentInstitution() ) {
-//            $employmentStatus = $duser->getEmploymentStatus()->first();
-//            $employmentStatus->setInstitution($sourceDefault->getEmploymentInstitution());
-//        }
+        if( $sourceDefault->getEmploymentInstitution() ) {
+            $employmentStatus = $duser->getEmploymentStatus()->first();
+            $employmentStatus->setInstitution($sourceDefault->getEmploymentInstitution());
+        }
 
         //locale
         if( $sourceDefault->getLocale() ) {

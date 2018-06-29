@@ -6437,6 +6437,16 @@ class AdminController extends Controller
             //Add scan order lists
             "ProjectTitleTree" => array('ProjectTitleTree','researchprojecttitles-list',"Project Titles"),
             "ResearchGroupType" => array('ResearchGroupType','researchprojectgrouptype-list',"Research Project Group Types"),
+            "CourseTitleTree" => array('CourseTitleTree','educationalcoursetitles-list','Course Titles'),
+            "CourseGroupType" => array('CourseGroupType','educationalcoursegrouptypes-list','Educational Course Group Types'),
+            "MrnType" => array('MrnType','mrntype-list','Mrn Types'),
+            "AccessionType" => array('AccessionType','accessiontype-list','Accession Types'),
+            "EncounterType" => array('EncounterType','encountertype-list',"Encounter Number Types"),
+            "1050" => array('','-list'),
+            "1050" => array('','-list'),
+            "1050" => array('','-list'),
+            "1050" => array('','-list'),
+
 
         );
 
