@@ -355,13 +355,16 @@ class AccessRequestController extends Controller
     }
     public function getParams() {
 
+        $userSecUtil = $this->container->get('user_security_utility');
+
         $params = array();
 
         $em = $this->getDoctrine()->getManager();
         $params['em'] = $em;
 
         //departments
-        $department = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
+        $department = $userSecUtil->getAutoAssignInstitution();
+        //$department = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
 
         $params['institution'] = $department;
 

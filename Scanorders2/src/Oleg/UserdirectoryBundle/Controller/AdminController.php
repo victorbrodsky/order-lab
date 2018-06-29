@@ -2282,6 +2282,7 @@ class AdminController extends Controller
 //    }
 
     public function generateDefaultOrgGroupSiteParameters() {
+        $userSecUtil = $this->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
 
@@ -2296,30 +2297,35 @@ class AdminController extends Controller
             exit('No Institution: "NYP"');
         }
 
-        $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
-        if( !$wcmc ) {
-            exit('No Institution: "WCMC"');
+        $autoAssignInstitution = $userSecUtil->getAutoAssignInstitution();
+
+        if( !$autoAssignInstitution ) {
+            $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+            if( !$wcmc ) {
+                exit('No Institution: "WCMC"');
+            }
+
+            $mapper = array(
+                'prefix' => 'Oleg',
+                'bundleName' => 'UserdirectoryBundle',
+                'className' => 'Institution'
+            );
+            $autoAssignInstitution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+                "Pathology and Laboratory Medicine",
+                $wcmc,
+                $mapper
+            );
         }
 
-        $mapper = array(
-            'prefix' => 'Oleg',
-            'bundleName' => 'UserdirectoryBundle',
-            'className' => 'Institution'
-        );
-        $pathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
-            "Pathology and Laboratory Medicine",
-            $wcmc,
-            $mapper
-        );
-        if( !$pathology ) {
-            exit('No Institution: "Pathology and Laboratory Medicine"');
+        if( !$autoAssignInstitution ) {
+            exit('No Default Auto Assign Institution found.');
         }
 
         $pathDefaultGroup = null;
 
         foreach( $entity->getOrganizationalGroupDefaults() as $groupDefault ) {
             if( $groupDefault->getInstitution() ) {
-              if( $groupDefault->getInstitution()->getId() == $pathology->getId() ) {
+              if( $groupDefault->getInstitution()->getId() == $autoAssignInstitution->getId() ) {
                   $pathDefaultGroup = $groupDefault;
                   break;
               }
@@ -2333,7 +2339,7 @@ class AdminController extends Controller
         $pathDefaultGroup = new OrganizationalGroupDefault();
 
         //target Institution
-        $pathDefaultGroup->setInstitution($pathology);
+        $pathDefaultGroup->setInstitution($autoAssignInstitution);
 
         //primaryPublicUserIdType (WCM CWID)
         $primaryPublicUserIdType = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findOneByName("Active Directory (LDAP)");
@@ -2379,14 +2385,14 @@ class AdminController extends Controller
         $pathDefaultGroup->setTooltip(true);
 
         //showToInstitutions: WCMC, NYP
-        $pathDefaultGroup->addShowToInstitution($wcmc);
+        $pathDefaultGroup->addShowToInstitution($autoAssignInstitution);
         $pathDefaultGroup->addShowToInstitution($nyp);
 
         //defaultInstitution
-        $pathDefaultGroup->setDefaultInstitution($wcmc);
+        $pathDefaultGroup->setDefaultInstitution($autoAssignInstitution);
 
         //permittedInstitutionalPHIScope: WCMC
-        $pathDefaultGroup->addPermittedInstitutionalPHIScope($wcmc);
+        $pathDefaultGroup->addPermittedInstitutionalPHIScope($autoAssignInstitution);
 
         //employmentType
         $employmentType = $em->getRepository('OlegUserdirectoryBundle:EmploymentType')->findOneByName("Full Time");
@@ -2410,13 +2416,13 @@ class AdminController extends Controller
         $pathDefaultGroup->addLanguage($language);
 
         //administrativeTitleInstitution
-        $pathDefaultGroup->setAdministrativeTitleInstitution($pathology);
+        $pathDefaultGroup->setAdministrativeTitleInstitution($autoAssignInstitution);
 
         //academicTitleInstitution
-        $pathDefaultGroup->setAcademicTitleInstitution($pathology);
+        $pathDefaultGroup->setAcademicTitleInstitution($autoAssignInstitution);
 
         //medicalTitleInstitution
-        $pathDefaultGroup->setMedicalTitleInstitution($pathology);
+        $pathDefaultGroup->setMedicalTitleInstitution($autoAssignInstitution);
 
         //locationTypes
         $locationType = $em->getRepository('OlegUserdirectoryBundle:LocationTypeList')->findOneByName("Employee Office");
@@ -2426,7 +2432,7 @@ class AdminController extends Controller
         $pathDefaultGroup->addLocationType($locationType);
 
         //locationInstitution
-        $pathDefaultGroup->setLocationInstitution($wcmc);
+        $pathDefaultGroup->setLocationInstitution($autoAssignInstitution);
 
         //city
         $city = $em->getRepository('OlegUserdirectoryBundle:CityList')->findOneByName("New York");
@@ -4154,6 +4160,7 @@ class AdminController extends Controller
     public function generateResLabs() {
 
         $username = $this->get('security.token_storage')->getToken()->getUser();
+        $userSecUtil = $this->get('user_security_utility');
 
         $em = $this->getDoctrine()->getManager();
 
@@ -4163,21 +4170,26 @@ class AdminController extends Controller
         }
         //echo "researchLabOrgGroup=".$researchLabOrgGroup."<br>";
 
-        $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
-        if( !$wcmc ) {
-            exit('No Institution: "WCMC"');
-        }
-
         $mapper = array(
             'prefix' => 'Oleg',
             'bundleName' => 'UserdirectoryBundle',
             'className' => 'Institution'
         );
-        $pathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
-            "Pathology and Laboratory Medicine",
-            $wcmc,
-            $mapper
-        );
+
+        //AutoAssignInstitution
+        $pathology = $userSecUtil->getAutoAssignInstitution();
+
+        if( !$pathology ) {
+            $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+            if( !$wcmc ) {
+                exit('No Institution: "WCMC"');
+            }
+            $pathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+                "Pathology and Laboratory Medicine",
+                $wcmc,
+                $mapper
+            );
+        }
 
         $medicalType = $em->getRepository('OlegUserdirectoryBundle:InstitutionType')->findOneByName('Medical');
 
@@ -6557,22 +6569,27 @@ class AdminController extends Controller
             return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename') . '-order-nopermission'));
         }
 
+        $userSecUtil = $this->container->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
 
-        $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
-        if( !$wcmc ) {
-            exit('No Institution: "WCMC"');
+        $pathology = $userSecUtil->getAutoAssignInstitution();
+        if( !$pathology ) {
+            $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+            if( !$wcmc ) {
+                exit('No Institution: "WCMC"');
+            }
+            $mapper = array(
+                'prefix' => 'Oleg',
+                'bundleName' => 'UserdirectoryBundle',
+                'className' => 'Institution'
+            );
+            $pathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+                "Pathology and Laboratory Medicine",
+                $wcmc,
+                $mapper
+            );
         }
-        $mapper = array(
-            'prefix' => 'Oleg',
-            'bundleName' => 'UserdirectoryBundle',
-            'className' => 'Institution'
-        );
-        $pathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
-            "Pathology and Laboratory Medicine",
-            $wcmc,
-            $mapper
-        );
+
         if( !$pathology ) {
             exit('No Institution: "Pathology and Laboratory Medicine"');
         }
@@ -6595,27 +6612,30 @@ class AdminController extends Controller
             return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename') . '-order-nopermission'));
         }
 
+        $userSecUtil = $this->container->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
 
-        $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
-        if( !$wcmc ) {
-            exit('No Institution: "WCMC"');
+        $pathology = $userSecUtil->getAutoAssignInstitution();
+        if( !$pathology ) {
+            $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+            if (!$wcmc) {
+                exit('No Institution: "WCMC"');
+            }
+            $mapper = array(
+                'prefix' => 'Oleg',
+                'bundleName' => 'UserdirectoryBundle',
+                'className' => 'Institution'
+            );
+            $pathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+                "Pathology and Laboratory Medicine",
+                $wcmc,
+                $mapper
+            );
         }
-        $mapper = array(
-            'prefix' => 'Oleg',
-            'bundleName' => 'UserdirectoryBundle',
-            'className' => 'Institution'
-        );
-        $pathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
-            "Pathology and Laboratory Medicine",
-            $wcmc,
-            $mapper
-        );
         if( !$pathology ) {
             exit('No Institution: "Pathology and Laboratory Medicine"');
         }
-
-
+        
 //        $repository = $em->getRepository('OlegUserdirectoryBundle:User');
 //        $dql =  $repository->createQueryBuilder("user");
 //        $dql->select('user');

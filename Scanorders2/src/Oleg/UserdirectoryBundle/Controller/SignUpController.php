@@ -799,6 +799,7 @@ class SignUpController extends Controller
     //create empty collections
     public function addEmptyCollections($entity,$user=null) {
 
+        $userSecUtil = $this->container->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
 
         if( !$user ) {
@@ -841,30 +842,36 @@ class SignUpController extends Controller
         if( count($entity->getEmploymentStatus()) == 0 ) {
             $entity->addEmploymentStatus(new EmploymentStatus($user));
         }
+
+        $pathology = $userSecUtil->getAutoAssignInstitution();
+        if( !$pathology ) {
+            $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+            if (!$wcmc) {
+                //exit('No Institution: "WCMC"');
+                throw $this->createNotFoundException('No Institution: "WCMC"');
+            }
+            $mapper = array(
+                'prefix' => 'Oleg',
+                'bundleName' => 'UserdirectoryBundle',
+                'className' => 'Institution'
+            );
+            $pathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+                "Pathology and Laboratory Medicine",
+                $wcmc,
+                $mapper
+            );
+        }
+        if( !$pathology ) {
+            //exit('No Institution: "Pathology and Laboratory Medicine"');
+            throw $this->createNotFoundException('No Institution: "Pathology and Laboratory Medicine"');
+        }
+
         //check if Institution is assign
         foreach( $entity->getEmploymentStatus() as $employmentStatus ) {
             $employmentStatus->createAttachmentDocument();
             //echo "employ inst=".$employmentStatus->getInstitution()."<br>";
             if( !$employmentStatus->getInstitution() ) {
-                $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
-                if( !$wcmc ) {
-                    //exit('No Institution: "WCMC"');
-                    throw $this->createNotFoundException('No Institution: "WCMC"');
-                }
-                $mapper = array(
-                    'prefix' => 'Oleg',
-                    'bundleName' => 'UserdirectoryBundle',
-                    'className' => 'Institution'
-                );
-                $pathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
-                    "Pathology and Laboratory Medicine",
-                    $wcmc,
-                    $mapper
-                );
-                if( !$pathology ) {
-                    //exit('No Institution: "Pathology and Laboratory Medicine"');
-                    throw $this->createNotFoundException('No Institution: "Pathology and Laboratory Medicine"');
-                }
+
                 $employmentStatus->setInstitution($pathology);
             }
         }

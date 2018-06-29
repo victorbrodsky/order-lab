@@ -685,7 +685,9 @@ class UserServiceUtil {
 
     public function generateSiteParameters() {
 
+        $userSecUtil = $this->container->get('user_security_utility');
         $em = $this->em;
+
         $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
 
         if( count($entities) > 0 ) {
@@ -699,6 +701,8 @@ class UserServiceUtil {
             "environment" => "dev",
             "siteEmail" => "email@email.com",
             "loginInstruction" => 'Please use your <a href="http://weill.cornell.edu/its/identity-security/identity/cwid/">CWID</a> to log in.',
+
+            "enableAutoAssignmentInstitutionalScope" => true,
 
             "smtpServerAddress" => "smtp.gmail.com",
             "mailerPort" => "587",
@@ -1062,13 +1066,18 @@ class UserServiceUtil {
             $count = $count + 10;
         }
 
-        //assign Institution
-        $institutionName = 'Weill Cornell Medical College';
-        $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName($institutionName);
-        if( !$institution ) {
-            //throw new \Exception( 'Institution was not found for name='.$institutionName );
+        //auto assign Institution
+        $autoAssignInstitution = $userSecUtil->getAutoAssignInstitution();
+        if( $autoAssignInstitution ) {
+            $params->setAutoAssignInstitution($autoAssignInstitution);
         } else {
-            $params->setAutoAssignInstitution($institution);
+            $institutionName = 'Weill Cornell Medical College';
+            $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName($institutionName);
+            if (!$institution) {
+                //throw new \Exception( 'Institution was not found for name='.$institutionName );
+            } else {
+                $params->setAutoAssignInstitution($institution);
+            }
         }
 
         //set AllowPopulateFellApp to false

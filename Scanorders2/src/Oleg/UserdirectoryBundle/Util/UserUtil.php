@@ -1081,7 +1081,9 @@ class UserUtil {
         //administrativeTitleInstitution
         if( $sourceDefault->getAdministrativeTitleInstitution() ) {
             $title = $duser->getAdministrativeTitles()->first();
+            //echo "Admin title inst=".$title->getInstitution()."<br>";
             $title->setInstitution($sourceDefault->getAdministrativeTitleInstitution());
+            //echo "Admin title inst=".$title->getInstitution()."<br>";
         }
 
         //academicTitleInstitution

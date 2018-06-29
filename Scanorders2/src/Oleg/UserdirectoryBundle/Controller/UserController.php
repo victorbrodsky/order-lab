@@ -2524,6 +2524,7 @@ class UserController extends Controller
     //create empty collections
     public function addEmptyCollections($entity,$user=null) {
 
+        $userSecUtil = $this->container->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
 
         if( !$user ) {
@@ -2566,30 +2567,35 @@ class UserController extends Controller
         if( count($entity->getEmploymentStatus()) == 0 ) {
             $entity->addEmploymentStatus(new EmploymentStatus($user));
         }
+
+        $pathology = $userSecUtil->getAutoAssignInstitution();
+        if( !$pathology ) {
+            $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+            if( !$wcmc ) {
+                //exit('No Institution: "WCMC"');
+                throw $this->createNotFoundException('No Institution: "WCMC"');
+            }
+            $mapper = array(
+                'prefix' => 'Oleg',
+                'bundleName' => 'UserdirectoryBundle',
+                'className' => 'Institution'
+            );
+            $pathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+                "Pathology and Laboratory Medicine",
+                $wcmc,
+                $mapper
+            );
+            if( !$pathology ) {
+                //exit('No Institution: "Pathology and Laboratory Medicine"');
+                throw $this->createNotFoundException('No Institution: "Pathology and Laboratory Medicine"');
+            }
+        }
+
         //check if Institution is assign
         foreach( $entity->getEmploymentStatus() as $employmentStatus ) {
             $employmentStatus->createAttachmentDocument();
             //echo "employ inst=".$employmentStatus->getInstitution()."<br>";
             if( !$employmentStatus->getInstitution() ) {
-                $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
-                if( !$wcmc ) {
-                    //exit('No Institution: "WCMC"');
-                    throw $this->createNotFoundException('No Institution: "WCMC"');
-                }
-                $mapper = array(
-                    'prefix' => 'Oleg',
-                    'bundleName' => 'UserdirectoryBundle',
-                    'className' => 'Institution'
-                );
-                $pathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
-                    "Pathology and Laboratory Medicine",
-                    $wcmc,
-                    $mapper
-                );
-                if( !$pathology ) {
-                    //exit('No Institution: "Pathology and Laboratory Medicine"');
-                    throw $this->createNotFoundException('No Institution: "Pathology and Laboratory Medicine"');
-                }
                 $employmentStatus->setInstitution($pathology);
             }
         }
@@ -4314,6 +4320,8 @@ class UserController extends Controller
             return $this->redirect($this->generateUrl('employees-nopermission'));
         }
 
+        $userSecUtil = $this->container->get('user_security_utility');
+
         //$em = $this->getDoctrine()->getManager();
 
         //testing
@@ -4394,6 +4402,16 @@ class UserController extends Controller
         $locations = null;
         ////////////// EOF Locations /////////////
 
+        $autoAssignInstitution = $userSecUtil->getAutoAssignInstitution();
+        if( $autoAssignInstitution ) {
+            $sheetTitle = $autoAssignInstitution->getName();
+            if( $sheetTitle ) {
+                $sheetTitle = strtoupper($sheetTitle);
+                $sheetTitle = "DEPARTMENT OF " . $sheetTitle;
+            }
+        } else {
+            $sheetTitle = "DEPARTMENT OF PATHOLOGY AND LABORATORY MEDICINE";
+        }
 
         $excelBlob = null;
 
@@ -4405,7 +4423,7 @@ class UserController extends Controller
         if(1) {
             $sheetParams = array(
                 'excelBlob' => $excelBlob,
-                'sheetTitle' => "DEPARTMENT OF PATHOLOGY AND LABORATORY MEDICINE \n FACULTY ADMINISTRATION TELEPHONE LIST \n FY" . date('y') . "\n\n",
+                'sheetTitle' => $sheetTitle." \n FACULTY ADMINISTRATION TELEPHONE LIST \n FY" . date('y') . "\n\n",
                 'sheetFooter' => "Rev ".date('m-d-Y')." at ".date('H:i'),
                 'sheetName' => 'Faculty List',
                 'sheetIndex' => 0,
@@ -4453,7 +4471,7 @@ class UserController extends Controller
 
         $sheetParams = array(
             'excelBlob' => $excelBlob,
-            'sheetTitle' => "DEPARTMENT OF PATHOLOGY AND LABORATORY MEDICINE \n FACULTY AND KEY PERSONNEL FY".date('y')."\n\n",
+            'sheetTitle' => $sheetTitle." \n FACULTY AND KEY PERSONNEL FY".date('y')."\n\n",
             'sheetFooter' => "Rev ".date('m-d-Y')." at ".date('H:i'),
             'sheetName' => 'Department List',
             'sheetIndex' => 1,

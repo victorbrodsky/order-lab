@@ -96,7 +96,10 @@ class TransResImportData
         //$systemUser = $userSecUtil->findSystemUser();
         ////////////// end of add system user /////////////////
 
-        $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
+        $institution = $userSecUtil->getAutoAssignInstitution();
+        if( !$institution ) {
+            $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
+        }
 
         //////// Admin user ///////////
         $specialty = $this->em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation("ap-cp");
@@ -788,7 +791,10 @@ class TransResImportData
         //$systemUser = $userSecUtil->findSystemUser();
         ////////////// end of add system user /////////////////
 
-        $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
+        $institution = $userSecUtil->getAutoAssignInstitution();
+        if( !$institution ) {
+            $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
+        }
 
         //////// Admin user ///////////
         $specialty = $this->em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation("ap-cp");
@@ -1325,6 +1331,7 @@ class TransResImportData
 
     public function importProject( $request, $adminReviewer, $rowData, $headers, $exportId, $specialty, $systemUser, $notExistingStatuses, $notExistingUsers, $testing=false ) {
         $transresUtil = $this->container->get('transres_util');
+        $userSecUtil = $this->container->get('user_security_utility');
         $logger = $this->container->get('logger');
         $em = $this->em;
 
@@ -1350,7 +1357,10 @@ class TransResImportData
         $project->setImportDate(new \DateTime());
 
         if( !$project->getInstitution() ) {
-            $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
+            $institution = $userSecUtil->getAutoAssignInstitution();
+            if( !$institution ) {
+                $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
+            }
             $project->setInstitution($institution);
         }
 

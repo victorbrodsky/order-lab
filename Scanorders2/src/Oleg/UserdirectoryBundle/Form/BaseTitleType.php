@@ -130,6 +130,7 @@ class BaseTitleType extends AbstractType
             $label = null;
             if( $title ) {
                 $institution = $title->getInstitution();
+                //echo "inst=".$institution."<br>";
                 if( $institution ) {
                     $label = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->getLevelLabels($institution) . ":";
                 }
@@ -158,16 +159,17 @@ class BaseTitleType extends AbstractType
                 //$treeParams = null;
                 $treeData = null;
                 $newInstitution = null;
-                $mapper = array(
-                    'prefix' => "Oleg",
-                    'className' => "Institution",
-                    'bundleName' => "UserdirectoryBundle"
-                );
-                //preset default institution for AdministrativeTitle - Weill Cornell or New York Presbyterian Hospital
-                if ($this->params['fullClassName'] == "Oleg\UserdirectoryBundle\Entity\AdministrativeTitle") {
-                    //echo "AdministrativeTitle<br>"; //$treeParams = "entityIds=1,106";
+
+                $userSecUtil = $this->params['container']->get('user_security_utility');
+                $newInstitution = $userSecUtil->getAutoAssignInstitution();
+                if( !$newInstitution ) {
                     $wcmc = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
                     if( $wcmc ) {
+                        $mapper = array(
+                            'prefix' => "Oleg",
+                            'className' => "Institution",
+                            'bundleName' => "UserdirectoryBundle"
+                        );
                         $newInstitution = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
                             "Pathology and Laboratory Medicine",
                             $wcmc,
@@ -175,30 +177,44 @@ class BaseTitleType extends AbstractType
                         );
                     }
                 }
-                //preset default institution for AppointmentTitle (Academic Title) - Weill Cornell
-                if ($this->params['fullClassName'] == "Oleg\UserdirectoryBundle\Entity\AppointmentTitle") {
-                    //echo "AppointmentTitle<br>"; //$treeParams = "entityIds=1";
-                    $wcmc = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
-                    if( $wcmc ) {
-                        $newInstitution = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
-                            "Pathology and Laboratory Medicine",
-                            $wcmc,
-                            $mapper
-                        );
-                    }
-                }
-                //preset default institution for MedicalTitle (Academic Title) - New York Presbyterian Hospital
-                if ($this->params['fullClassName'] == "Oleg\UserdirectoryBundle\Entity\MedicalTitle") {
-                    //echo "MedicalTitle<br>"; //$treeParams = "entityIds=106";
-                    $nyp = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("NYP");
-                    if ($nyp) {
-                        $newInstitution = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
-                            "Pathology and Laboratory Medicine",
-                            $nyp,
-                            $mapper
-                        );
-                    }
-                }
+                //echo "newInstitution=".$newInstitution."<br>";
+
+//                //preset default institution for AdministrativeTitle - Weill Cornell or New York Presbyterian Hospital
+//                if ($this->params['fullClassName'] == "Oleg\UserdirectoryBundle\Entity\AdministrativeTitle") {
+//                    //echo "AdministrativeTitle<br>"; //$treeParams = "entityIds=1,106";
+//                    $wcmc = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+//                    if( $wcmc ) {
+//                        $newInstitution = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+//                            "Pathology and Laboratory Medicine",
+//                            $wcmc,
+//                            $mapper
+//                        );
+//                    }
+//                }
+//                //preset default institution for AppointmentTitle (Academic Title) - Weill Cornell
+//                if ($this->params['fullClassName'] == "Oleg\UserdirectoryBundle\Entity\AppointmentTitle") {
+//                    //echo "AppointmentTitle<br>"; //$treeParams = "entityIds=1";
+//                    $wcmc = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+//                    if( $wcmc ) {
+//                        $newInstitution = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+//                            "Pathology and Laboratory Medicine",
+//                            $wcmc,
+//                            $mapper
+//                        );
+//                    }
+//                }
+//                //preset default institution for MedicalTitle (Academic Title) - New York Presbyterian Hospital
+//                if ($this->params['fullClassName'] == "Oleg\UserdirectoryBundle\Entity\MedicalTitle") {
+//                    //echo "MedicalTitle<br>"; //$treeParams = "entityIds=106";
+//                    $nyp = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("NYP");
+//                    if ($nyp) {
+//                        $newInstitution = $this->params['em']->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+//                            "Pathology and Laboratory Medicine",
+//                            $nyp,
+//                            $mapper
+//                        );
+//                    }
+//                }
 
                 if( $newInstitution ) {
                     $treeFieldArray['data'] = $newInstitution->getId();

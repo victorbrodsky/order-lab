@@ -1553,6 +1553,7 @@ class ProjectController extends Controller
 
     public function createProjectEntity($user,$project=null) {
 
+        $userSecUtil = $this->container->get('user_security_utility');
         $formnode = false;
         $em = $this->getDoctrine()->getManager();
 
@@ -1562,8 +1563,11 @@ class ProjectController extends Controller
         }
 
         if( !$project->getInstitution() ) {
-            $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
-            $project->setInstitution($institution);
+            $autoAssignInstitution = $userSecUtil->getAutoAssignInstitution();
+            if( !$autoAssignInstitution ) {
+                $autoAssignInstitution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
+            }
+            $project->setInstitution($autoAssignInstitution);
         }
 
         //set order category

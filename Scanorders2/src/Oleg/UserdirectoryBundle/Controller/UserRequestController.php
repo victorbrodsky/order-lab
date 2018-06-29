@@ -412,14 +412,19 @@ class UserRequestController extends Controller
 
     public function getParams( $sitename ) {
 
+        $userSecUtil = $this->container->get('user_security_utility');
         //$user = $this->get('security.context')->getToken()->getUser();
+        
         $params = array();
 
         $em = $this->getDoctrine()->getManager();
         $params['em'] = $em;
 
         //departments
-        $department = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
+        $department = $userSecUtil->getAutoAssignInstitution();
+        if( !$department ) {
+            $department = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
+        }
 
         $params['institution'] = $department;
         $params['sitename'] = $sitename;

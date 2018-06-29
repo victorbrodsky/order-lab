@@ -1623,6 +1623,7 @@ class RequestController extends Controller
 
     public function createRequestEntity($user,$transresRequest=null,$formnode=false) {
 
+        $userSecUtil = $this->container->get('user_security_utility');
         $em = $this->getDoctrine()->getManager();
 
         if( !$transresRequest ) {
@@ -1631,8 +1632,11 @@ class RequestController extends Controller
         }
 
         if( !$transresRequest->getInstitution() ) {
-            $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
-            $transresRequest->setInstitution($institution);
+            $autoAssignInstitution = $userSecUtil->getAutoAssignInstitution();
+            if( !$autoAssignInstitution ) {
+                $autoAssignInstitution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
+            }
+            $transresRequest->setInstitution($autoAssignInstitution);
         }
 
         //set order category
