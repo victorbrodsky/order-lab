@@ -556,7 +556,7 @@ class ScanListController extends ListController
             $displayName = "Message categories";
             break;
         case "status":
-            $className = "status";
+            $className = "Status";
             $displayName = "Statuses";
             break;
         case "orderdelivery":

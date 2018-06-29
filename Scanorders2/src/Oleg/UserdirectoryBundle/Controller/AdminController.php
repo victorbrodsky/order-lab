@@ -6429,10 +6429,14 @@ class AdminController extends Controller
             "1070" => array('PositionTrackTypeList','positiontracktypes-list','Position Track Type List'),
             "1080" => array('SuggestedMessageCategoriesList','suggestedmessagecategorys-list','Suggested Message Categories List'),
             "1090" => array('CalllogEntryTagsList','calllogentrytags-list','Call Log Entry Tags List'),
-            "1100" => array('TranslationalResearchBundle','transresprojectspecialties-list','Translational Research Project Specialty List'),
-            "1110" => array('TranslationalResearchBundle','transresprojecttypes-list','Translational Research Project Type List'),
-            "1120" => array('TranslationalResearchBundle','transresrequestcategorytypes-list','Translational Research Request Category Type List'),
+            "1100" => array('SpecialtyList','transresprojectspecialties-list','Translational Research Project Specialty List'),
+            "1110" => array('ProjectTypeList','transresprojecttypes-list','Translational Research Project Type List'),
+            "1120" => array('RequestCategoryTypeList','transresrequestcategorytypes-list','Translational Research Request Category Type List'),
             //"1050" => array('','-list'),
+
+            //Add scan order lists
+            "ProjectTitleTree" => array('ProjectTitleTree','researchprojecttitles-list',"Project Titles"),
+            "ResearchGroupType" => array('ResearchGroupType','researchprojectgrouptype-list',"Research Project Group Types"),
 
         );
 
@@ -6635,7 +6639,7 @@ class AdminController extends Controller
         if( !$pathology ) {
             exit('No Institution: "Pathology and Laboratory Medicine"');
         }
-        
+
 //        $repository = $em->getRepository('OlegUserdirectoryBundle:User');
 //        $dql =  $repository->createQueryBuilder("user");
 //        $dql->select('user');
