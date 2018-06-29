@@ -1071,12 +1071,30 @@ class UserServiceUtil {
         if( $autoAssignInstitution ) {
             $params->setAutoAssignInstitution($autoAssignInstitution);
         } else {
-            $institutionName = 'Weill Cornell Medical College';
-            $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName($institutionName);
-            if (!$institution) {
-                //throw new \Exception( 'Institution was not found for name='.$institutionName );
-            } else {
-                $params->setAutoAssignInstitution($institution);
+//            $institutionName = 'Weill Cornell Medical College';
+//            $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName($institutionName);
+//            if (!$institution) {
+//                //throw new \Exception( 'Institution was not found for name='.$institutionName );
+//            } else {
+//                $params->setAutoAssignInstitution($institution);
+//            }
+            $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+            if( !$wcmc ) {
+                exit('No Institution: "WCMC"');
+            }
+
+            $mapper = array(
+                'prefix' => 'Oleg',
+                'bundleName' => 'UserdirectoryBundle',
+                'className' => 'Institution'
+            );
+            $autoAssignInstitution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+                "Pathology and Laboratory Medicine",
+                $wcmc,
+                $mapper
+            );
+            if( $autoAssignInstitution ) {
+                $params->setAutoAssignInstitution($autoAssignInstitution);
             }
         }
 

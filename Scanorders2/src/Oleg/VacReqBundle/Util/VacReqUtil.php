@@ -2145,6 +2145,8 @@ class VacReqUtil
             $nowDate = \DateTime::createFromFormat('Y-m-d', "2016-08-30"); //testing: expected 2016-2017
             $nowDate = \DateTime::createFromFormat('Y-m-d', "2017-01-30"); //testing: expected 2016-2017
             $nowDate = \DateTime::createFromFormat('Y-m-d', "2017-08-30"); //testing: expected 2017-2018
+            $nowDate = \DateTime::createFromFormat('Y-m-d', "2018-08-26");
+            //$nowDate = \DateTime::createFromFormat('Y-m-d', "2018-12-26");
         }
 
         $currentYear = $nowDate->format('Y'); //endDate
@@ -3389,14 +3391,28 @@ class VacReqUtil
         //exit('current res='.$res);
 
         //If the logged in user has the number of remaining vacation days > 0 IN THE PREVIOUS ACADEMIC YEAR
-        //TODO: convert it to auto calculation based on the site settings: If the current month is July or August => 7,8
-        $currentMonth = date('m');
+        //TODO: test it in july (2 months after start academic year)
+        $currentMonth = date('n');
+
+        //$currentMonth = "8"; //testing
         //echo "currentMonth=".$currentMonth."<br>";
+
+        //get first month of the academical year
+        $dates = $this->getCurrentAcademicYearStartEndDates(true);
+        $startAcademicYearDate = $dates['startDate'];
+        $startMonth = $startAcademicYearDate->format('n');
+        //echo "startMonth=".$startMonth."<br>";
+        $nextStartMonth = $startMonth + 1;
+        $nextNextStartMonth = $startMonth + 2;
+        //echo "nextStartMonth=".$nextStartMonth."<br>";
+        //echo "nextNextStartMonth=".$nextNextStartMonth."<br>";
 
         $previousYearUnusedDaysMessage = null;
 
-        if( $currentMonth == '07' || $currentMonth == '08' ) {
+        //if( $currentMonth == '07' || $currentMonth == '08' ) {
+        if( $currentMonth == $nextStartMonth || $currentMonth == $nextNextStartMonth ) {
             $previousYearUnusedDaysMessage = $this->getPreviousYearUnusedDays($user);
+            //echo "previousYearUnusedDaysMessage=".$previousYearUnusedDaysMessage."<br>";
         }
 
         if( $previousYearUnusedDaysMessage ) {
@@ -3462,6 +3478,7 @@ class VacReqUtil
 
         $yearRange = $this->getPreviousAcademicYearRange();
         $carryOverDaysPreviousYear = $this->getUserCarryOverDays($user,$yearRange);
+        //echo "carryOverDaysPreviousYear=$carryOverDaysPreviousYear<br>";
 
         //TODO: test it: carried over days from the current year to THIS year (from prospective of the previous year).
         //For previous year. Use this year carry over days

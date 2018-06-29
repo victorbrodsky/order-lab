@@ -791,10 +791,10 @@ class TransResImportData
         //$systemUser = $userSecUtil->findSystemUser();
         ////////////// end of add system user /////////////////
 
-        $institution = $userSecUtil->getAutoAssignInstitution();
-        if( !$institution ) {
-            $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
-        }
+        //$institution = $userSecUtil->getAutoAssignInstitution();
+        //if( !$institution ) {
+        //    $institution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName('Pathology and Laboratory Medicine');
+        //}
 
         //////// Admin user ///////////
         $specialty = $this->em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation("ap-cp");
