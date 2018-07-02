@@ -38,10 +38,10 @@
         {% endif %}
 
         {% if department_url and department_name and subinstitution_url and subinstitution_name %}
-            Instance for <a href="{{ department_url }}" target="_blank">{{ department_name }}</a> at
+            <a href="{{ department_url }}" target="_blank">{{ department_name }}</a> at
             <a href="{{ subinstitution_url }}" target="_blank">{{ subinstitution_name }}</a>.
         {% else %}
-            Instance for <a href="{{ path('employees_siteparameters') }}" target="_blank">[Add Your Department's Name]</a> at
+            <a href="{{ path('employees_siteparameters') }}" target="_blank">[Add Your Department's Name]</a> at
             <a href="{{ path('employees_siteparameters') }}" target="_blank">[Add Your Organization's Name]</a>.
         {% endif %}
 

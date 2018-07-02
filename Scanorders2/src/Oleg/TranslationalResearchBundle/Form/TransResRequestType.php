@@ -299,8 +299,15 @@ class TransResRequestType extends AbstractType
 
 
         if( $this->params['saveAsDraft'] === true ) {
+            $saveAsDraftLabel = "Save Request as Draft";
+            if( $this->params['cycle'] != 'new' ) {
+                $transresRequest = $this->params['transresRequest'];
+                if ($transresRequest && $transresRequest->getProgressState() != 'draft') {
+                    $saveAsDraftLabel = "Save and Revert Status to Draft";
+                }
+            }
             $builder->add('saveAsDraft', SubmitType::class, array(
-                'label' => 'Save Request as Draft',
+                'label' => $saveAsDraftLabel,
                 'attr' => array('class' => 'btn btn-warning', 'onclick'=>'transresValidateHandsonTable();') //'onclick'=>'transresValidateHandsonTable();'
             ));
         }
