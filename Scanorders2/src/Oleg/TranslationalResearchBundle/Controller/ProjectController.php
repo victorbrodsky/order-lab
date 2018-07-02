@@ -172,7 +172,7 @@ class ProjectController extends Controller
             'stateChoiceArr' => $stateChoiceArr,
             //'defaultStatesArr' => $defaultStatesArr,
             'projectSpecialtyAllowedArr' => $projectSpecialtyAllowedArr,
-            'defaultStatesArr' => array()
+            'defaultStatesArr' => array("All-except-Drafts")
         );
 
         if( $routeName == "translationalresearch_my_request_project_draft_index" ) {
@@ -295,7 +295,12 @@ class ProjectController extends Controller
             }
             $dql->andWhere("project.state IN (:states)" . $allExceptDraft);
             $dqlParameters["states"] = $states;
-            $advancedFilter++;
+
+            if( count($states) == 1 && $states[0] == "All-except-Drafts" ) {
+                //as regular filter
+            } else {
+                $advancedFilter++;
+            }
         }
 
         if( $searchId ) {

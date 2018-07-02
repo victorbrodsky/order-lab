@@ -605,6 +605,7 @@ class InvoiceController extends Controller
 //            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
 //        }
 
+        $transresUtil = $this->container->get('transres_util');
         $transresRequestUtil = $this->get('transres_request_util');
         $em = $this->getDoctrine()->getManager();
 
@@ -644,6 +645,10 @@ class InvoiceController extends Controller
 
         $transresRequest = $invoice->getTransresRequest();
         //echo "transresRequest=".$transresRequest."<br>";
+
+        $eventType = "Invoice Viewed";
+        $msg = "Invoice ".$invoice->getOid() ." has been viewed.";
+        $transresUtil->setEventLog($transresRequest,$eventType,$msg);
 
         return array(
             'transresRequest' => $transresRequest,

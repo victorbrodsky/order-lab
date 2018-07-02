@@ -1042,6 +1042,12 @@ class TransResRequestUtil
                 //check and add reviewers for this state by role? Do it when project is created?
                 //$this->addDefaultStateReviewers($project);
 
+                //When the Work Request status is set to "Completed and Notified",
+                // change the Work Request Billing Status to "Approved/Ready for Invoicing".
+                if( $to == "completedNotified" ) {
+                    $transresRequest->setBillingState('approvedInvoicing');
+                }
+
                 //write to DB
                 if( !$testing ) {
                     $this->em->flush();
@@ -1090,10 +1096,6 @@ class TransResRequestUtil
                 if( $to == "completedNotified" ) {
                     $emailMsg = $this->sendRequestCompletedNotifiedEmails($transresRequest,$statMachineType,$label,$testing);
                     $addMsg = $addMsg . "<br>" . $emailMsg;
-
-                    //When the Work Request status is set to "Completed and Notified",
-                    // change the Work Request Billing Status to "Approved/Ready for Invoicing".
-                    $transresRequest->setBillingState('approvedInvoicing');
                 }
 
                 //event log
