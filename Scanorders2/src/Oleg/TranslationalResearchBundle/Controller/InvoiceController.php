@@ -648,7 +648,7 @@ class InvoiceController extends Controller
 
         $eventType = "Invoice Viewed";
         $msg = "Invoice ".$invoice->getOid() ." has been viewed.";
-        $transresUtil->setEventLog($transresRequest,$eventType,$msg);
+        $transresUtil->setEventLog($invoice,$eventType,$msg);
 
         return array(
             'transresRequest' => $transresRequest,
