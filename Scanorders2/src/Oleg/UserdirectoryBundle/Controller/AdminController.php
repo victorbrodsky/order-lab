@@ -2303,7 +2303,7 @@ class AdminController extends Controller
         if( !$autoAssignInstitution ) {
             $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
             if( !$wcmc ) {
-                exit('No Institution: "WCMC"');
+                exit('generateDefaultOrgGroupSiteParameters: No Institution: "WCMC"');
             }
 
             $mapper = array(
@@ -4183,7 +4183,7 @@ class AdminController extends Controller
         if( !$pathology ) {
             $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
             if( !$wcmc ) {
-                exit('No Institution: "WCMC"');
+                exit('generateResLabs: No Institution: "WCMC"');
             }
             $pathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
                 "Pathology and Laboratory Medicine",
@@ -6637,7 +6637,7 @@ class AdminController extends Controller
         if( !$pathology ) {
             $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
             if( !$wcmc ) {
-                exit('No Institution: "WCMC"');
+                exit('setInstitutionEmploymentPeriodAction: No Institution: "WCMC"');
             }
             $mapper = array(
                 'prefix' => 'Oleg',
@@ -6680,7 +6680,7 @@ class AdminController extends Controller
         if( !$pathology ) {
             $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
             if (!$wcmc) {
-                exit('No Institution: "WCMC"');
+                exit('setDefaultOrgGroupAction: No Institution: "WCMC"');
             }
             $mapper = array(
                 'prefix' => 'Oleg',

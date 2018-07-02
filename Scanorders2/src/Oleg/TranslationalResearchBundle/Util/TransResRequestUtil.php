@@ -1211,16 +1211,21 @@ class TransResRequestUtil
 
             $invoiceItem->setProduct($product);
 
-            $quantity = null;
-            $requested = $product->getRequested();
-            if( $requested ) {
-                $quantity = $requested;
-            } else {
-                $completed = $product->getCompleted();
-                if( $completed ) {
-                    $quantity = $completed;
-                }
+            //Invoice should pull the Quantity from the "Completed Quantity" field
+            // (IF "Completed Quantity" field has a value; if it has no value, pull the number from the Requested Quantity field)
+            $quantity = $product->getCompleted();
+            if( !$quantity ) {
+                $quantity = $product->getRequested();
             }
+//            $requested = $product->getRequested();
+//            if( $requested ) {
+//                $quantity = $requested;
+//            } else {
+//                $completed = $product->getCompleted();
+//                if( $completed ) {
+//                    $quantity = $completed;
+//                }
+//            }
             $invoiceItem->setQuantity($quantity);
 
             $category = $product->getCategory();
@@ -1239,9 +1244,9 @@ class TransResRequestUtil
                 $invoiceItem->setUnitPrice($fee);
             }
 
-            if( $requested && $fee ) {
+            if( $quantity && $fee ) {
                 //Total
-                $total = intval($requested) * intval($fee);
+                $total = intval($quantity) * intval($fee);
                 $invoiceItem->setTotal($total);
             }
 

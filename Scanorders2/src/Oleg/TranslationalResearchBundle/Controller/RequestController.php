@@ -1748,6 +1748,11 @@ class RequestController extends Controller
             if( $transresRequest->getProgressState() == 'draft' ) {
                 $params['saveAsUpdate'] = true;
             }
+
+            //Make sure that the Request can be edited only in the "Draft" stage. Admin can edit the Request in any stage.
+            if( $params['admin'] ) {
+                $params['saveAsUpdate'] = true;
+            }
         }
 
         if( $cycle == "set-state" ) {

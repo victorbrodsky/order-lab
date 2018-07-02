@@ -1080,7 +1080,7 @@ class UserServiceUtil {
 //            }
             $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
             if( !$wcmc ) {
-                exit('No Institution: "WCMC"');
+                exit('generateSiteParameters: No Institution: "WCMC"');
             }
 
             $mapper = array(
