@@ -1079,22 +1079,21 @@ class UserServiceUtil {
 //                $params->setAutoAssignInstitution($institution);
 //            }
             $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
-            if( !$wcmc ) {
-                exit('generateSiteParameters: No Institution: "WCMC"');
-            }
-
-            $mapper = array(
-                'prefix' => 'Oleg',
-                'bundleName' => 'UserdirectoryBundle',
-                'className' => 'Institution'
-            );
-            $autoAssignInstitution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
-                "Pathology and Laboratory Medicine",
-                $wcmc,
-                $mapper
-            );
-            if( $autoAssignInstitution ) {
-                $params->setAutoAssignInstitution($autoAssignInstitution);
+            if( $wcmc ) {
+                //exit('generateSiteParameters: No Institution: "WCMC"');
+                $mapper = array(
+                    'prefix' => 'Oleg',
+                    'bundleName' => 'UserdirectoryBundle',
+                    'className' => 'Institution'
+                );
+                $autoAssignInstitution = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+                    "Pathology and Laboratory Medicine",
+                    $wcmc,
+                    $mapper
+                );
+                if( $autoAssignInstitution ) {
+                    $params->setAutoAssignInstitution($autoAssignInstitution);
+                }
             }
         }
 
