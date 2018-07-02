@@ -6442,7 +6442,7 @@ class AdminController extends Controller
             "ResearchGroupType" => array('ResearchGroupType','researchprojectgrouptype-list',"Research Project Group Types"),
             "CourseTitleTree" => array('CourseTitleTree','educationalcoursetitles-list','Course Titles'),
             "CourseGroupType" => array('CourseGroupType','educationalcoursegrouptypes-list','Educational Course Group Types'),
-            "MrnType" => array('MrnType','mrntype-list','Mrn Types'),
+            "mrntype" => array('','',''),
             "AccessionType" => array('AccessionType','accessiontype-list','Accession Types'),
             "EncounterType" => array('EncounterType','encountertype-list',"Encounter Number Types"),
             "ProcedureType" => array('ProcedureType','proceduretype-list','Procedure Number Types'),
