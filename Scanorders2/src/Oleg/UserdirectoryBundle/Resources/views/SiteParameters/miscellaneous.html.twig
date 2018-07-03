@@ -39,12 +39,12 @@
 
                 <p>
                     <a  general-data-confirm="Are you sure? This action will overwrite all values on all lists with defaults."
-                        href="{{ path('user_generate_all') }}">2) Populate All Lists With Default Values</a>
+                        href="{{ path('user_generate_all') }}">2) Populate All Lists with Default Values (Part A)</a>
                 </p>
 
                 <p>
-                    <a  general-data-confirm="Are you sure? This action will overwrite all values on all Scan Orders lists with defaults."
-                        href="{{ path('generate_all') }}">3) Populate All Scan Orders Lists With Default Values</a>
+                    <a  general-data-confirm="Are you sure? This action will overwrite all values on all Patients and Scan Orders lists with defaults."
+                        href="{{ path('generate_all') }}">3) Populate All Lists with Default Values (Part B)</a>
                 </p>
 
                 <p>
@@ -55,8 +55,8 @@
                 <hr>
 
                 <p>
-                    <a general-data-confirm="Are you sure? This action will populate new users from excel sheet."
-                       href="{{ path('generate_users') }}">Populate Users From Excel (optional). <strong>This should be run only once on the system initialization.</strong>
+                    <a general-data-confirm="Are you sure? This action will populate new users from spreadsheet."
+                       href="{{ path('generate_users') }}">Populate Users From Spreadsheet (this is optional and should only be run once upon system initialization). <strong>This should be run only once on the system initialization.</strong>
                     </a>
                 </p>
 
@@ -64,23 +64,17 @@
 
                 <p>
                     <a general-data-confirm="Are you sure? This action will generate metaphone key for all empty patients last, first, middle names."
-                       href="{{ path('user_generate-patient-metaphone-name') }}">Generate metaphone keys for all empty patients last, first, middle names (optional).
+                       href="{{ path('user_generate-patient-metaphone-name') }}">Generate Metaphone Keys for all empty first, last, and middle name fields for patients (if Metaphone was enabled after some patient records were added).
                     </a>
                 </p>
 
                 <hr>
 
-                <p>
-                    <a general-data-confirm="Are you sure? This action will populate new users from excel sheet."
-                       href="{{ path('generate_users') }}">Populate Users From Excel (optional). <strong>This should be run only once on the system initialization.</strong>
-                    </a>
+                <p><a  data-confirm="Are you sure? This action will create a Test Patient in Database."
+                       href="{{ path('scan_testpatient_new') }}">Create a Test Patient</a>
                 </p>
 
-                <p>
-                    <a general-data-confirm="Are you sure? This action will generate metaphone key for all empty patients last, first, middle names."
-                       href="{{ path('user_generate-patient-metaphone-name') }}">Generate metaphone keys for all empty patients last, first, middle names (optional).
-                    </a>
-                </p>
+                <hr>
 
                 <a href="{{ path('generate_residencyspecialties') }}">
                     Populate Residency Specialties List with Default Values
@@ -100,6 +94,21 @@
                 <p><a  data-confirm="Are you sure? This action will create a Test Patient in Database."
                        href="{{ path('scan_testpatient_new') }}">Create a Test Patient</a>
                 </p>
+
+                <hr>
+                <h4 class="text-info">Stains</h4>
+                <p>
+                    <a href="{{ path('generate_stain') }}">Populate Stain List with Default Values</a>
+                </p>
+
+                <p>
+                    <a href="{{ path('stain-list-excel',{'sort':'ent.type','direction':'asc'}) }}">Download Stains in Spreadsheet</a>
+                </p>
+
+                <p>
+                    <a href="{{ path('stain_update_fulltitle') }}">Update Stain Titles</a>
+                </p>
+
 
             {% endif %}
 

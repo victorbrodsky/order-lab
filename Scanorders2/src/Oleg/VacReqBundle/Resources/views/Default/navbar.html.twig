@@ -167,7 +167,7 @@
                             <li><a href="{{ path(vacreq_sitename~'_logger') }}">Event Log</a></li>
 
                             {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
-                                <li><a href="{{ path('user_admin_index') }}">List Manager</a></li>
+                                {#<li><a href="{{ path('user_admin_index') }}">List Manager</a></li>#}
                                 <li><a href="{{ path('platformlistmanager-list') }}">Platform List Manager</a></li>
                                 <li><a href="{{ path(vacreq_sitename~'_siteparameters') }}">Site Settings</a></li>
                             {% endif %}

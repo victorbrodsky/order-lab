@@ -163,7 +163,7 @@ class ScanAdminController extends AdminController
 
         //ini_set('max_execution_time', $max_exec_time); //set back to the original value
 
-        return $this->redirect($this->generateUrl('user_admin_index'));
+        return $this->redirect($this->generateUrl('employees_siteparameters'));
 
         //return $this->redirect($this->generateUrl('admin_index'));
     }
@@ -276,7 +276,7 @@ class ScanAdminController extends AdminController
                 'Generated '.$count. ' stain records.'
             );
 
-            return $this->redirect($this->generateUrl('admin_index'));
+            return $this->redirect($this->generateUrl('employees_siteparameters'));
 
         } else {
 
@@ -285,7 +285,7 @@ class ScanAdminController extends AdminController
                 'This table is already exists!'
             );
 
-            return $this->redirect($this->generateUrl('admin_index'));
+            return $this->redirect($this->generateUrl('employees_siteparameters'));
         }
 
     }
@@ -319,7 +319,7 @@ class ScanAdminController extends AdminController
                 'This table is already exists!'
             );
 
-            return $this->redirect($this->generateUrl('admin_index'));
+            return $this->redirect($this->generateUrl('employees_siteparameters'));
         }
 
     }
@@ -356,7 +356,7 @@ class ScanAdminController extends AdminController
                 'This table is already exists!'
             );
 
-            return $this->redirect($this->generateUrl('admin_index'));
+            return $this->redirect($this->generateUrl('employees_siteparameters'));
         }
 
     }
@@ -389,7 +389,7 @@ class ScanAdminController extends AdminController
 //                'This table is already exists!'
 //            );
 //
-//            return $this->redirect($this->generateUrl('admin_index'));
+//            return $this->redirect($this->generateUrl('employees_siteparameters'));
 //        }
 //
 //    }
@@ -421,7 +421,7 @@ class ScanAdminController extends AdminController
                 'This table is already exists!'
             );
 
-            return $this->redirect($this->generateUrl('admin_index'));
+            return $this->redirect($this->generateUrl('employees_siteparameters'));
         }
 
     }
@@ -453,7 +453,7 @@ class ScanAdminController extends AdminController
                 'This table is already exists!'
             );
 
-            return $this->redirect($this->generateUrl('admin_index'));
+            return $this->redirect($this->generateUrl('employees_siteparameters'));
         }
 
     }

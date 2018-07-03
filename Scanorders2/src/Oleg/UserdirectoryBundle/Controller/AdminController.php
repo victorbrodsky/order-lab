@@ -712,7 +712,7 @@ class AdminController extends Controller
 
         //return $this->redirect($this->generateUrl('generate_all'));
 
-        return $this->redirect($this->generateUrl('user_admin_index'));
+        return $this->redirect($this->generateUrl('employees_siteparameters'));
     }
 
     public function generateAll() {
@@ -973,7 +973,7 @@ class AdminController extends Controller
                 'Created '.$count. ' Residency Specialties'
             );
 
-            return $this->redirect($this->generateUrl('user_admin_index'));
+            return $this->redirect($this->generateUrl('employees_siteparameters'));
 
         } else {
 
@@ -982,7 +982,7 @@ class AdminController extends Controller
                 'This table is already exists!'
             );
 
-            return $this->redirect($this->generateUrl('user_admin_index'));
+            return $this->redirect($this->generateUrl('employees_siteparameters'));
         }
 
     }
@@ -1011,7 +1011,7 @@ class AdminController extends Controller
 
         ini_set('max_execution_time', $max_exec_time); //set back to the original value
 
-        return $this->redirect($this->generateUrl('user_admin_index'));
+        return $this->redirect($this->generateUrl('employees_siteparameters'));
     }
 
 
@@ -6598,7 +6598,7 @@ class AdminController extends Controller
 
         //if( $request->get('_route') == "user_populate_platform_list_manager" ) {
         if( $request ) {
-            return $this->redirect($this->generateUrl('user_admin_index'));
+            return $this->redirect($this->generateUrl('employees_siteparameters'));
         }
 
         return round($count/10);
@@ -6803,7 +6803,7 @@ class AdminController extends Controller
             'Inserted site objects to loggers count='.$count
         );
 
-        return $this->redirect($this->generateUrl('user_admin_index'));
+        return $this->redirect($this->generateUrl('employees_siteparameters'));
     }
 
 
@@ -6833,7 +6833,7 @@ class AdminController extends Controller
             'Research Labs clean count='.$count
         );
 
-        return $this->redirect($this->generateUrl('user_admin_index'));
+        return $this->redirect($this->generateUrl('employees_siteparameters'));
     }
     public function syncEventTypeListDb() {
 
@@ -7318,7 +7318,7 @@ class AdminController extends Controller
             'Form Node Fields generated='.$count
         );
 
-        return $this->redirect($this->generateUrl('user_admin_index'));
+        return $this->redirect($this->generateUrl('employees_siteparameters'));
         //exit("Form Node Tree generated: ".$count);
     }
 
