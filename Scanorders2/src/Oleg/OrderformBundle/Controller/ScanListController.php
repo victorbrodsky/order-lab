@@ -37,7 +37,7 @@ class ScanListController extends ListController
 {
 
     /**
-     * @Route("/stains-excel/", name="stain-list-excel")
+     * @Route("/stains-spreadsheet/", name="stain-list-excel")
      * @Method("GET")
      * @Template()
      */

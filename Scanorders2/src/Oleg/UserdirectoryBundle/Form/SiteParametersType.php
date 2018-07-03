@@ -1200,12 +1200,12 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'wkhtmltopdfpath' )
             $builder->add('wkhtmltopdfpath',null,array(
-                'label'=>'Path to wkhtmltopdf.exe (with double quotation marks for path with space i.e. "C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe"):',
+                'label'=>'Path to wkhtmltopdf.exe (with double quotation marks for path with space i.e. "C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe", update system cache is required):',
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'wkhtmltopdfpathLinux' )
             $builder->add('wkhtmltopdfpathLinux',null,array(
-                'label'=>'Path to wkhtmltopdf binary - Linux:',
+                'label'=>'Path to wkhtmltopdf binary - Linux (update system cache is required):',
                 'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
             ));
     }
