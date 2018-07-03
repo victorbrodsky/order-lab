@@ -198,7 +198,7 @@ class UtilController extends Controller {
             ->from('OlegUserdirectoryBundle:Institution', 'list')
             ->select("list.id as id, list.name as text")
             ->leftJoin("list.types","types")
-            ->groupBy("list.id")
+            //->groupBy("list.id")
             ->orderBy("list.orderinlist","ASC");
 
         $query->where("(types.name LIKE :instTypeEducational OR types.name LIKE :instTypeMedical) AND list.level = 0");
