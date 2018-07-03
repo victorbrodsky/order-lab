@@ -2817,6 +2817,11 @@ class AdminController extends Controller
         $treeCount = 10;
 
         foreach( $institutions as $institutionname=>$infos ) {
+
+            if( $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName($institutionname) ) {
+                continue;
+            }
+
             $institution = new Institution();
             $this->setDefaultList($institution,$treeCount,$username,$institutionname);
             $treeCount = $treeCount + 10;
@@ -2829,11 +2834,16 @@ class AdminController extends Controller
 
                 foreach( $infos['departments'] as $departmentname=>$divisions ) {
 
-                    $department = new Institution();
-
                     if( is_numeric($departmentname) ){
                         $departmentname = $infos['departments'][$departmentname];
                     }
+
+                    if( $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName($departmentname) ) {
+                        continue;
+                    }
+
+                    $department = new Institution();
+
                     //echo "departmentname=".$departmentname."<br>";
                     $this->setDefaultList($department,$treeCount,$username,$departmentname);
                     $treeCount = $treeCount + 10;
@@ -2850,10 +2860,16 @@ class AdminController extends Controller
                                 continue;
                             }
 
-                            $division = new Institution();
                             if( is_numeric($divisionname) ){
                                 $divisionname = $divisions[$divisionname];
                             }
+
+                            if( $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName($divisionname) ) {
+                                continue;
+                            }
+
+                            $division = new Institution();
+
                             $this->setDefaultList($division,$treeCount,$username,$divisionname);
                             $treeCount = $treeCount + 10;
                             $division->setOrganizationalGroupType($levelDivision);
@@ -2861,10 +2877,16 @@ class AdminController extends Controller
                             if( $services && is_array($services) ) {
 
                                 foreach( $services as $servicename ) {
-                                    $service = new Institution();
+
                                     if( is_numeric($servicename) ){
                                         $servicename = $services[$servicename];
                                     }
+
+                                    if( $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByName($servicename) ) {
+                                        continue;
+                                    }
+
+                                    $service = new Institution();
                                     $this->setDefaultList($service,$treeCount,$username,$servicename);
                                     $treeCount = $treeCount + 10;
                                     $service->setOrganizationalGroupType($levelService);
