@@ -772,6 +772,8 @@ class AuthUtil {
         //$LDAPFieldsToFind = array("sn");   //, "givenName", "displayName", "telephoneNumber");
         //$LDAPFieldsToFind = array("cn", "samaccountname");
 
+        $ldapBindDN = "dc=a,dc=wcmc-ad,dc=net";
+
         $sr = ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
 
         if( !$sr ) {
