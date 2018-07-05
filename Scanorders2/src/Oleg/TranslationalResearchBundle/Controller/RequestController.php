@@ -473,6 +473,17 @@ class RequestController extends Controller
             return $this->redirectToRoute('translationalresearch_request_show', array('id' => $transresRequest->getId()));
         }
 
+        //$sitename = $this->container->getParameter('translationalresearch.sitename');
+        //$defaultAccessionType = $userSecUtil->getSiteSettingParameter('accessionType',$sitename);
+        $projectSpecialty = $project->getProjectSpecialty();
+        $projectSpecialtyAbbreviation = $projectSpecialty->getAbbreviation();
+        $siteParameter = $transresRequestUtil->findCreateSiteParameterEntity($projectSpecialtyAbbreviation);
+        if( !$siteParameter ) {
+            throw new \Exception("SiteParameter is not found by specialty '" . $projectSpecialtyAbbreviation . "'");
+        }
+        $defaultAccessionType = $siteParameter->getAccessionType();
+        echo "defaultAccessionType=".$defaultAccessionType."<br>";
+
         $eventType = "Request Viewed";
         $msg = "Request ".$transresRequest->getOid() ." has been viewed on the edit page.";
         $transresUtil->setEventLog($transresRequest,$eventType,$msg);
@@ -493,7 +504,8 @@ class RequestController extends Controller
             'sitename' => $this->container->getParameter('translationalresearch.sitename'),
             'routeName' => $request->get('_route'),
             //'handsometableData' => json_encode($jsonData)
-            'handsometableData' => $jsonData
+            'handsometableData' => $jsonData,
+            'defaultAccessionType' => $defaultAccessionType
         );
     }
 

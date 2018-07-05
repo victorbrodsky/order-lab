@@ -1128,6 +1128,8 @@ class UtilController extends Controller {
     
     /**
      * Check if this cwid exists in LDAP active directory
+     * http://localhost/order/directory/util/ldap-usertype-userid?userId=cwid
+     *
      * @Route("/ldap-usertype-userid", name="employees_check_ldap-usertype-userid", options={"expose"=true})
      * @Method("GET")
      */

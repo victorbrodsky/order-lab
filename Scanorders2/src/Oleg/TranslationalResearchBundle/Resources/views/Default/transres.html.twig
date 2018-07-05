@@ -1254,6 +1254,8 @@
     {{ formmacros.field(form.requestCompletedNotifiedEmail) }}
     <hr>
 
+    {{ formmacros.field(form.accessionType) }}
+
     <p>
     {% if form.save is defined %}
         {{ form_widget(form.save) }}

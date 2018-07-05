@@ -29,6 +29,9 @@ var _tableMainIndexes = null; //table indexes for main columns: Acc Type, Acc, M
 var _colHeader = [];
 var _rowToProcessArr = [];
 
+var _accessiontype = [];
+var _accessiontypes_simple = new Array();
+
 // var _accessiontypes_simple = [];
 // var _mrntypes_simple = [];
 // var _partname_simple = [];
@@ -257,18 +260,28 @@ var imageRenderer = function (instance, td, row, col, prop, value, cellPropertie
 };
 
 //total 33
-var _columnData_scanorder = [
-    { header:'System', columns:{} },
-    { header:'Accession ID', columns:{} },
-    { header:'Part ID', columns:{} },
-    { header:'Block ID', columns:{} },
-    { header:'Slide ID', columns:{} },
-    { header:'Stain Name', columns:{} },
-    { header:'Other ID', columns:{} },
-    { header:'Barcode', columns:{} },
-    { header:'Barcode Image', columns:{renderer:imageRenderer} },
-    { header:'Comment', columns:{} }
-];
+var _columnData_scanorder = [];
+// [
+//     {
+//         header:'System',
+//         default: defaultAccessionTypeIndex,
+//         columns: {
+//             type: 'autocomplete',
+//             source: _accessiontypes_simple,
+//             strict: false,
+//             filter: false,
+//         }
+//     },
+//     { header:'Accession ID', columns:{} },
+//     { header:'Part ID', columns:{} },
+//     { header:'Block ID', columns:{} },
+//     { header:'Slide ID', columns:{} },
+//     { header:'Stain Name', columns:{} },
+//     { header:'Other ID', columns:{} },
+//     { header:'Barcode', columns:{} },
+//     { header:'Barcode Image', columns:{renderer:imageRenderer} },
+//     { header:'Comment', columns:{} }
+// ];
 
 $(document).ready(function() {
 
@@ -293,7 +306,58 @@ $(document).ready(function() {
     //     return validateHandsonTable();
     // });
 
+    getComboboxAccessionType();
+
+    // Wait until idle (busy must be false)
+    var _TIMEOUT = 300; // waitfor test rate [msec]
+
+    //console.log('before wait for');
+    waitfor( ajaxFinishedCondition, true, _TIMEOUT, 0, 'play->busy false', function() {
+        //console.log('The show can resume !');
+        transresMakeColumnData();
+
+        handsonTableInit();
+    });
+
 });
+
+function transresMakeColumnData() {
+
+    var defaultAccessionTypeIndex = 0;
+    var defaultAccessionType = $('#default-accession-type').val();
+    console.log("defaultAccessionType="+defaultAccessionType);
+    if( defaultAccessionType ) {
+        for(var i = 0; i < _accessiontypes_simple.length; i++) {
+            console.log(_accessiontypes_simple[i]+"=?"+defaultAccessionType);
+            if( _accessiontypes_simple[i] == defaultAccessionType ) {
+                defaultAccessionTypeIndex = i;
+            }
+        }
+    }
+
+    _columnData_scanorder = [
+        {
+            header:'System',
+            default: defaultAccessionTypeIndex,
+            columns: {
+                type: 'autocomplete',
+                source: _accessiontypes_simple,
+                strict: false,
+                filter: false,
+            }
+        },
+        { header:'Accession ID', columns:{} },
+        { header:'Part ID', columns:{} },
+        { header:'Block ID', columns:{} },
+        { header:'Slide ID', columns:{} },
+        { header:'Stain Name', columns:{} },
+        { header:'Other ID', columns:{} },
+        { header:'Barcode', columns:{} },
+        { header:'Barcode Image', columns:{renderer:imageRenderer} },
+        { header:'Comment', columns:{} }
+    ];
+
+}
 
 function handsonTableInit(handsometableDataArr,tableFormCycle) {
 

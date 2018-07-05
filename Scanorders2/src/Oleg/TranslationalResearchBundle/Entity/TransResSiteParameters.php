@@ -127,6 +127,14 @@ class TransResSiteParameters {
     private $invoiceSalesperson;
 
 
+    /**
+     * Default Accession Type used in the System column in the Work Request handsontable
+     *
+     * @ORM\ManyToOne(targetEntity="Oleg\OrderformBundle\Entity\AccessionType")
+     */
+    private $accessionType;
+
+
     public function __construct($user=null) {
         $this->setCreator($user);
         $this->setCreateDate(new \DateTime());
@@ -361,6 +369,22 @@ class TransResSiteParameters {
     public function setInvoiceSalesperson($invoiceSalesperson)
     {
         $this->invoiceSalesperson = $invoiceSalesperson;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAccessionType()
+    {
+        return $this->accessionType;
+    }
+
+    /**
+     * @param mixed $accessionType
+     */
+    public function setAccessionType($accessionType)
+    {
+        $this->accessionType = $accessionType;
     }
     
     

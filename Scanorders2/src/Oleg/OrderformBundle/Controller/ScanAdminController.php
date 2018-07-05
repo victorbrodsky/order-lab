@@ -1363,28 +1363,32 @@ class ScanAdminController extends AdminController
         }
 
         $types = array(
-            'NYH CoPath Anatomic Pathology Accession Number',
-            'De-Identified NYH Tissue Bank Research Specimen ID',
-            'De-Identified Personal Educational Slide Set Specimen ID',
-            'De-Identified Personal Research Project Specimen ID',
-            'California Tumor Registry Specimen ID',
-            'Specify Another Specimen ID Issuer',
-            'TMA Slide',
-            'Auto-generated Accession Number',
-            'Existing Auto-generated Accession Number',
-            'Deidentifier ID'
+            'NYH CoPath Anatomic Pathology Accession Number' => 'NYP CoPath',
+            'De-Identified NYH Tissue Bank Research Specimen ID' => '',
+            'De-Identified Personal Educational Slide Set Specimen ID' => '',
+            'De-Identified Personal Research Project Specimen ID' => '',
+            'California Tumor Registry Specimen ID' => '',
+            'Specify Another Specimen ID Issuer' => '',
+            'TMA Slide' => '',
+            'Auto-generated Accession Number' => '',
+            'Existing Auto-generated Accession Number' => '',
+            'Deidentifier ID' => ''
         );
 
         $username = $this->get('security.token_storage')->getToken()->getUser();
 
         $count = 10;
-        foreach( $types as $type ) {
+        foreach( $types as $type => $abbreviation ) {
 
             $accType = new AccessionType();
             $this->setDefaultList($accType,$count,$username,$type);
 
             if( $type == "TMA Slide" ) {
                 $accType->setType('TMA');
+            }
+
+            if( $abbreviation ) {
+                $accType->setAbbreviation($abbreviation);
             }
 
             $em->persist($accType);

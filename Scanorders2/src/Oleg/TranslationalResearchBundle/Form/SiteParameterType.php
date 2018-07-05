@@ -95,6 +95,24 @@ class SiteParameterType extends AbstractType
             'attr' => array('class' => 'textarea form-control')
         ));
 
+        $builder->add('accessionType', EntityType::class, array(
+            'class' => 'OlegOrderformBundle:AccessionType',
+            'label' => "Default Source System for Work Request Deliverables:",
+            'required' => false,
+            'multiple' => false,
+            'choice_label' => 'getOptimalName',
+            'attr' => array('class' => 'combobox combobox-width'),
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->orderBy("list.orderinlist","ASC")
+                    ->setParameters( array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
+            },
+        ));
+
 
         //Buttons
         if( $this->params['cycle'] === "new" ) {
