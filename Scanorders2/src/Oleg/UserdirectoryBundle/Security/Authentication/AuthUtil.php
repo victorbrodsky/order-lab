@@ -763,7 +763,7 @@ class AuthUtil {
             return NULL;
             //return -1;  //"Could not bind to LDAP server";
         } else {
-            $this->logger->notice("search Ldap: ldap_bind OK with admin authentication username=" . $LDAPUserAdmin);
+            //$this->logger->notice("search Ldap: ldap_bind OK with admin authentication username=" . $LDAPUserAdmin);
             //echo "OK simple LDAP: user=".$LDAPUserAdmin."<br>";
             //exit("OK simple LDAP: user=".$LDAPUserAdmin."<br>");
         }
@@ -773,8 +773,8 @@ class AuthUtil {
         //$LDAPFieldsToFind = array("cn", "samaccountname");
 
         //$ldapBindDN = "dc=a,dc=wcmc-ad,dc=net"; //testing
-        echo "ldapBindDN=".$ldapBindDN."<br>";
-        echo "filter=".$filter."<br>";
+        //echo "ldapBindDN=".$ldapBindDN."<br>";
+        //echo "filter=".$filter."<br>";
 
         $sr = ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
 
@@ -789,8 +789,8 @@ class AuthUtil {
 
         $info = ldap_get_entries($cnx, $sr);
 
-        $this->logger->notice("search Ldap: ldap_search ok with ldapBindDN=".$ldapBindDN."; filter=" . $filter . "; count=".$info["count"]);
-        print_r($info);
+        //$this->logger->notice("search Ldap: ldap_search ok with ldapBindDN=".$ldapBindDN."; filter=" . $filter . "; count=".$info["count"]);
+        //print_r($info);
 
         $searchRes = array();
 
@@ -838,7 +838,7 @@ class AuthUtil {
             //print "familyName is: ".$searchRes['lastName']."<br>";
             //print_r($info[$x]);
 
-            $this->logger->notice("search Ldap: mail=" . $searchRes['mail'] . "; lastName=".$searchRes['lastName']);
+            //$this->logger->notice("search Ldap: mail=" . $searchRes['mail'] . "; lastName=".$searchRes['lastName']);
 
             //we have only one result
             break;
