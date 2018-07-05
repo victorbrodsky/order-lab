@@ -228,7 +228,7 @@ class AuthUtil {
                 $this->logger->error("LdapAuthentication: can not find user by usernameClean=" . $usernameClean);
                 return NULL;
             } else {
-                $this->logger->error("LdapAuthentication: user found by  usernameClean=" . $usernameClean);
+                $this->logger->notice("LdapAuthentication: user found by  usernameClean=" . $usernameClean);
             }
         }
 
@@ -763,7 +763,7 @@ class AuthUtil {
             return NULL;
             //return -1;  //"Could not bind to LDAP server";
         } else {
-            $this->logger->error("search Ldap: ldap_bind OK with admin authentication username=" . $LDAPUserAdmin);
+            $this->logger->notice("search Ldap: ldap_bind OK with admin authentication username=" . $LDAPUserAdmin);
             //echo "OK simple LDAP: user=".$LDAPUserAdmin."<br>";
             //exit("OK simple LDAP: user=".$LDAPUserAdmin."<br>");
         }
@@ -777,12 +777,14 @@ class AuthUtil {
         if( !$sr ) {
             //echo 'Search failed <br>';
             //exit('Search failed');
+            $this->logger->error("search Ldap: ldap_search failed with filter=" . $filter);
             ldap_error($cnx);
             ldap_unbind($cnx);
             return NULL;
         }
 
         $info = ldap_get_entries($cnx, $sr);
+        $this->logger->notice("search Ldap: ldap_search ok with filter=" . $filter);
         //print_r($info);
 
         $searchRes = array();
