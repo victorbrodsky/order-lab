@@ -772,7 +772,7 @@ class AuthUtil {
         //$LDAPFieldsToFind = array("sn");   //, "givenName", "displayName", "telephoneNumber");
         //$LDAPFieldsToFind = array("cn", "samaccountname");
 
-        $ldapBindDN = "dc=a,dc=wcmc-ad,dc=net";
+        //$ldapBindDN = "dc=a,dc=wcmc-ad,dc=net"; //testing
         echo "ldapBindDN=".$ldapBindDN."<br>";
         echo "filter=".$filter."<br>";
 
@@ -788,7 +788,8 @@ class AuthUtil {
         }
 
         $info = ldap_get_entries($cnx, $sr);
-        $this->logger->notice("search Ldap: ldap_search ok with filter=" . $filter . "; count=".$info["count"]);
+
+        $this->logger->notice("search Ldap: ldap_search ok with ldapBindDN=".$ldapBindDN."; filter=" . $filter . "; count=".$info["count"]);
         print_r($info);
 
         $searchRes = array();
