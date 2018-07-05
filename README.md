@@ -69,36 +69,48 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 
 1. Sign up for [Digital Ocean](https://www.digitalocean.com/) and obtain an [API access key token](https://www.digitalocean.com/help/api/). It should look similar to this one: e4561f1b44faa16c2b43e94c5685e5960e852326b921883765b3b0e11111f705
 
-2. [Download](https://github.com/victorbrodsky/order-lab/archive/master.zip) and uncompress or [clone](https://help.github.com/articles/cloning-a-repository/) the source code from [github.com/victorbrodsky/order-lab](https://github.com/victorbrodsky/order-lab) via:
+2. [Download](https://github.com/victorbrodsky/order-lab/archive/master.zip) and uncompress or [clone](https://help.github.com/articles/cloning-a-repository/) the source code from [github.com/victorbrodsky/order-lab](https://github.com/victorbrodsky/order-lab) by running the following command in the Terminal / shell:
 
 	 	git clone https://github.com/victorbrodsky/order-lab.git
 
-3. Install [Packer](https://www.packer.io/)
+3. Install [Packer](https://www.packer.io/) and [doctl](https://github.com/digitalocean/doctl) by following the recommended installation instructions or by using snap:
 
-4. Install [doctl](https://github.com/digitalocean/doctl)
+        snap install packer
+        snap install doctl
 
-5. Edit order-lab/packer/parameters.yml in this project's folder to set desired values (especially for passwords)
+Make sure to add both to your PATH. For example, you can check for the latest versions of each [Packer](https://www.packer.io/downloads.html) and [doctl](https://github.com/digitalocean/doctl/releases), substitute the versions into the commands below instead of the now current 1.2.4 and 1.8.3, and run them:
 
-6. Run /packer/deploy-order-digital-ocean.sh via (make sure to supply your API token):
+        wget -P ~/Downloads https://releases.hashicorp.com/packer/1.2.4/packer_1.2.4_linux_amd64.zip
+        sudo mkdir /usr/local/packer
+        sudo unzip ~/Downloads/packer_1.2.4_linux_amd64.zip -d /usr/local/packer
+        wget -P ~/Downloads https://github.com/digitalocean/doctl/releases/download/v1.8.3/doctl-1.8.3-linux-amd64.tar.gz
+        sudo mkdir /usr/local/doctl
+        sudo tar xf ~/Downloads/doctl-1.8.3-linux-amd64.tar.gz -C /usr/local/doctl
+        echo "export PATH=\"\$PATH:/usr/local/packer:/usr/local/doctl\"" >> ~/.bashrc
+        source ~/.bashrc
+
+4. Optionally edit order-lab/packer/parameters.yml in this project's folder to set desired values (especially for passwords)
+
+5. Run /packer/deploy-order-digital-ocean.sh via (make sure to supply your API token):
 
 	 	bash deploy-order-digital-ocean.sh API-TOKEN-FROM-STEP-1 parameters.yml
 
-7. If the browser window with this URL does not open automatically at the end of the previous step, visit http://IPADDRESS/order/directory/admin/first-time-login-generation-init/ to generate the initial Administrator account, where IPADDRESS is the IP address of the server. Wait until the site redirects to the log in screen (it might take a while.)
+6. If the browser window with this URL does not open automatically at the end of the previous step, visit http://IPADDRESS/order/directory/admin/first-time-login-generation-init/ to generate the initial Administrator account, where IPADDRESS is the IP address of the server. Wait until the site redirects to the log in screen (it might take a while.)
 
-8. Log into the application with the user name "Administrator" and the password "1234567890" at http://IPADDRESS/order/directory/ (make sure to select "Local User" above the user name field). You should see the http://IPADDRESS/order/directory/settings/initial-configuration page asking you to supply the initial variables for your instance. If you choose to use Gmail's SMTP server to enable the site to send email notifications, make sure to [enable 2-step-verification, generate an 'app password', and disable 2-step-verification](https://support.google.com/mail/answer/185833?hl=en). You can test your email settings later by visiting http://IPADDRESS/order/directory/send-a-test-email/ and sending a test email message. Upon submission of this initial configuration form, visit http://IPADDRESS/order/directory/admin/update-system-cache-assets/ to enable the site footer to reflect the values you supplied. Make sure to change the default password for the Administrator account either on this initial configuration page or by visiting the account's profile page http://IPADDRESS/order/directory/user/2 and clicking 'Edit', then set the server's "Environment" variable's value to "live", "dev" or "test" in Admin->Site Settings->Platform Settings http://IPADDRESS/order/directory/settings/.
+7. Log into the application with the user name "Administrator" and the password "1234567890" at http://IPADDRESS/order/directory/ (make sure to select "Local User" above the user name field). You should see the http://IPADDRESS/order/directory/settings/initial-configuration page asking you to supply the initial variables for your instance. If you choose to use Gmail's SMTP server to enable the site to send email notifications, make sure to [enable 2-step-verification, generate an 'app password', and disable 2-step-verification](https://support.google.com/mail/answer/185833?hl=en). You can test your email settings later by visiting http://IPADDRESS/order/directory/send-a-test-email/ and sending a test email message. Upon submission of this initial configuration form, visit http://IPADDRESS/order/directory/admin/update-system-cache-assets/ to enable the site footer to reflect the values you supplied. Make sure to change the default password for the Administrator account either on this initial configuration page or by visiting the account's profile page http://IPADDRESS/order/directory/user/2 and clicking 'Edit', then set the server's "Environment" variable's value to "live", "dev" or "test" in Admin->Site Settings->Platform Settings http://IPADDRESS/order/directory/settings/.
 
-9. Populate the database tables with default values by logging in as the Administrator, selecting "Admin" > 'List Manager' in the top navigation bar, and arriving at (http://IPADDRESS/order/directory/admin/lists/). Near the bottom of the page under 'Populate Lists' heading, click each link in the order listed, and confirm the action in each resulting window, then wait for each function to finish: 
+8. Populate the database tables with default values by logging into the Employee Directory site as the Administrator, selecting "Admin" > 'Site Settings' in the top navigation bar, and arriving at (http://IPADDRESS/order/directory/settings/). Near the bottom of the page under the 'Miscellaneous' heading, click each link in the order listed, and confirm the action in each resulting window, then wait for each function to finish: 
 
     1) Populate Country and City Lists (http://IPADDRESS/order/directory/admin/populate-country-city-list-with-default-values)
     2) Populate All Lists With Default Values (http://IPADDRESS/order/directory/admin/populate-all-lists-with-default-values)
     3) Populate All Scan Orders Lists With Default Values (http://IPADDRESS/order/scan/admin/populate-all-lists-with-default-values)
     4) Pre-generate form node tree fields for Call Log Book (http://IPADDRESS/order/directory/admin/list/generate-form-node-tree/)
 
-10. To enable HTTPS (SSL/TLS), first either purchase the certificate from your preferred vendor and add it to the server, or install the [certbot](https://certbot.eff.org/lets-encrypt/ubuntuxenial-apache) with a [Let's Encrypt](https://letsencrypt.org/) certificate (you can also use a [symfony bundle](https://packagist.org/packages/cert/letsencrypt-bundle)). For certificates form Let's Encrypt, verify that the cron job to automatically update them is set up since they expire in 90 days. Once that is done, uncomment (remove "#" from the beginning of) the line 289 in /order-lab/Scanorders2/app/config/security.yml file.
+9. To enable HTTPS (SSL/TLS), first either purchase the certificate from your preferred vendor and add it to the server, or install the [certbot](https://certbot.eff.org/lets-encrypt/ubuntuxenial-apache) with a [Let's Encrypt](https://letsencrypt.org/) certificate (you can also use a [symfony bundle](https://packagist.org/packages/cert/letsencrypt-bundle)). For certificates form Let's Encrypt, verify that the cron job to automatically update them is set up since they expire in 90 days. Once that is done, uncomment (remove "#" from the beginning of) the line 289 in /order-lab/Scanorders2/app/config/security.yml file.
 
-11. To enable submission of applications for the Fellowship application site via Google services, use the files in the /order-lab/Scanorders2/src/Oleg/FellAppBundle/Util/GoogleForm folder with the [Google Apps Script](https://developers.google.com/apps-script/). Make sure to add the Google Apps Script API key on the Site Settings page http://IPADDRESS/order/directory/settings/.
+10. To enable submission of applications for the Fellowship application site via Google services, use the files in the /order-lab/Scanorders2/src/Oleg/FellAppBundle/Util/GoogleForm folder with the [Google Apps Script](https://developers.google.com/apps-script/). Make sure to add the Google Apps Script API key on the Site Settings page http://IPADDRESS/order/directory/settings/.
 
-12. If bulk import of the initial set of users is desired, download the [ImportUsersTemplate.xlsx](https://github.com/victorbrodsky/order-lab/tree/master/importLists) file from the /importLists folder, fill it out with the user details, and upload it back via the the Navigation bar's "Admin > Import Users" (http://IPADDRESS/order/directory/import-users/spreadsheet) function on the Employee Directory site.
+11. If bulk import of the initial set of users is desired, download the [ImportUsersTemplate.xlsx](https://github.com/victorbrodsky/order-lab/tree/master/importLists) file from the /importLists folder, fill it out with the user details, and upload it back via the the Navigation bar's "Admin > Import Users" (http://IPADDRESS/order/directory/import-users/spreadsheet) function on the Employee Directory site.
 
 Note: If you choose to use MySQL database on Linux instead of Postgres, you will need to increase the size of the sort buffer by setting "sort_buffer_size" to 512K in /etc/mysql/my.cnf.
 
@@ -124,7 +136,7 @@ Note: If you choose to use MySQL database on Linux instead of Postgres, you will
 		brew install packer
 		brew install doctl
 
-5. Edit /ORDER_LOCATION/order-lab-master/packer/parameters.yml in this project's folder to set desired values (especially for passwords) using a text editor such as TextEdit and save.
+5. Optionally edit /ORDER_LOCATION/order-lab-master/packer/parameters.yml in this project's folder to set desired values (especially for passwords) using a text editor such as TextEdit and save.
 
 6. Deploy ORDER:
 
@@ -141,7 +153,7 @@ Note: If you choose to use MySQL database on Linux instead of Postgres, you will
 
 8. Log into the application with the user name "Administrator" and the password "1234567890" at http://IPADDRESS/order/directory/ (make sure to select "Local User" above the user name field). You should see the http://IPADDRESS/order/directory/settings/initial-configuration page asking you to supply the initial variables for your instance. If you choose to use Gmail's SMTP server to enable the site to send email notifications, make sure to [enable 2-step-verification, generate an 'app password', and disable 2-step-verification](https://support.google.com/mail/answer/185833?hl=en). You can test your email settings later by visiting http://IPADDRESS/order/directory/send-a-test-email/ and sending a test email message. Upon submission of this initial configuration form, visit http://IPADDRESS/order/directory/admin/update-system-cache-assets/ to enable the site footer to reflect the values you supplied. Make sure to change the default password for the Administrator account either on this initial configuration page or by visiting the account's profile page http://IPADDRESS/order/directory/user/2 and clicking 'Edit', then set the server's "Environment" variable's value to "live", "dev" or "test" in Admin->Site Settings->Platform Settings http://IPADDRESS/order/directory/settings/.
 
-9. Populate the database tables with default values by logging in as the Administrator, selecting "Admin" > 'List Manager' in the top navigation bar, and arriving at (http://IPADDRESS/order/directory/admin/lists/). Near the bottom of the page under 'Populate Lists' heading, click each link in the order listed, and confirm the action in each resulting window, then wait for each function to finish: 
+9. Populate the database tables with default values by logging into the Employee Directory site as the Administrator, selecting "Admin" > 'Site Settings' in the top navigation bar, and arriving at (http://IPADDRESS/order/directory/settings/). Near the bottom of the page under the 'Miscellaneous' heading, click each link in the order listed, and confirm the action in each resulting window, then wait for each function to finish: 
 
     1) Populate Country and City Lists (http://IPADDRESS/order/directory/admin/populate-country-city-list-with-default-values)
     2) Populate All Lists With Default Values (http://IPADDRESS/order/directory/admin/populate-all-lists-with-default-values)
@@ -296,7 +308,7 @@ Note: If you choose to use MySQL database on Linux instead of Postgres, you will
 
 	c) Log into the application with the user name "Administrator" and the password "1234567890" at http://IPADDRESS/order/directory/ (make sure to select "Local User" above the user name field). You should see the http://IPADDRESS/order/directory/settings/initial-configuration page asking you to supply the initial variables for your instance. If you choose to use Gmail's SMTP server to enable the site to send email notifications, make sure to [enable 2-step-verification, generate an 'app password', and disable 2-step-verification](https://support.google.com/mail/answer/185833?hl=en). You can test your email settings later by visiting http://IPADDRESS/order/directory/send-a-test-email/ and sending a test email message. Upon submission of this initial configuration form, visit http://IPADDRESS/order/directory/admin/update-system-cache-assets/ to enable the site footer to reflect the values you supplied. Make sure to change the default password for the Administrator account either on this initial configuration page or by visiting the account's profile page http://IPADDRESS/order/directory/user/2 and clicking 'Edit', then set the server's "Environment" variable's value to "live", "dev" or "test" in Admin->Site Settings->Platform Settings http://IPADDRESS/order/directory/settings/.
 	
-	d) Populate the database tables with default values by logging in as the Administrator, selecting "Admin" > 'List Manager' in the top navigation bar, and arriving at (http://IPADDRESS/order/directory/admin/lists/). Near the bottom of the page under 'Populate Lists' heading, click each link in the order listed, and confirm the action in each resulting window, then wait for each function to finish: 
+	d) Populate the database tables with default values by logging into the Employee Directory site as the Administrator, selecting "Admin" > 'Site Settings' in the top navigation bar, and arriving at (http://IPADDRESS/order/directory/settings/). Near the bottom of the page under 'Miscellaneous' heading, click each link in the order listed, and confirm the action in each resulting window, then wait for each function to finish: 
 
         1) Populate Country and City Lists (http://IPADDRESS/order/directory/admin/populate-country-city-list-with-default-values)
         2) Populate All Lists With Default Values (http://IPADDRESS/order/directory/admin/populate-all-lists-with-default-values)
