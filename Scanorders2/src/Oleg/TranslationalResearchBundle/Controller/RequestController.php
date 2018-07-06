@@ -482,7 +482,7 @@ class RequestController extends Controller
             throw new \Exception("SiteParameter is not found by specialty '" . $projectSpecialtyAbbreviation . "'");
         }
         $defaultAccessionType = $siteParameter->getAccessionType();
-        echo "defaultAccessionType=".$defaultAccessionType."<br>";
+        //echo "defaultAccessionType=".$defaultAccessionType."<br>";
 
         $eventType = "Request Viewed";
         $msg = "Request ".$transresRequest->getOid() ." has been viewed on the edit page.";

@@ -183,6 +183,8 @@
     '@OlegUserdirectoryBundle/Resources/public/bwip-js/bwipjs.js'
     '@OlegUserdirectoryBundle/Resources/public/bwip-js/bwipp-min.js'
     '@OlegUserdirectoryBundle/Resources/public/bwip-js/freetype.js'
+    '@OlegOrderformBundle/Resources/public/form/js/selectAjax.js'
+    '@OlegOrderformBundle/Resources/public/form/js/masking.js'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
@@ -209,11 +211,27 @@
             //console.log('tableFormCycle='+tableFormCycle);
 
             if( tableFormCycle != "new" ) {
+
+                getComboboxAccessionType(null,true);
+
                 var _handsometableDataArr = {{ handsometableData|json_encode|raw }};
                 //console.log('init _handsometableDataArr:');
                 //console.log(_handsometableDataArr);
 
-                handsonTableInit(_handsometableDataArr, tableFormCycle);
+                //handsonTableInit(_handsometableDataArr, tableFormCycle);
+
+
+                // Wait until idle (busy must be false)
+                var _TIMEOUT = 300; // waitfor test rate [msec]
+
+                //console.log('before wait for');
+                waitfor( ajaxFinishedCondition, true, _TIMEOUT, 0, 'play->busy false', function() {
+                    //console.log('The show can resume !');
+                    transresMakeColumnData();
+
+                    handsonTableInit(_handsometableDataArr, tableFormCycle);
+                });
+
             }
 
 //            $('.table-barcode').on("change", function(event) {

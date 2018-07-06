@@ -505,7 +505,7 @@ class ScanUtilController extends UtilController {
 
         $query = $em->createQueryBuilder()
             ->from('OlegOrderformBundle:AccessionType', 'list')
-            ->select("list.id as id, list.name as text")
+            ->select("list.id as id, list.name as text, list.abbreviation as abbreviation")
             ->orderBy("list.orderinlist","ASC");
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
