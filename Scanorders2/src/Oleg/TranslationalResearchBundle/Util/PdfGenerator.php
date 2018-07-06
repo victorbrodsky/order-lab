@@ -265,4 +265,104 @@ class PdfGenerator
         rmdir($dirPath);
     }
 
+
+
+
+
+    public function generatePackingSlipPdf($transresRequest,$authorUser) {
+        $logger = $this->container->get('logger');
+
+        if( !$transresRequest ) {
+            return null;
+        }
+
+        //generate file name
+        $fileFullReportUniqueName = $this->constructUniqueFileName($transresRequest,"PackingSlip-PDF");
+        $logger->notice("Start to generate Packing Slip PDF ID=".$transresRequest->getOid()."; filename=".$fileFullReportUniqueName);
+
+        //check and create Report and temp folders
+        $reportsUploadPath = "transres/PackingSlipPDF";  //$userSecUtil->getSiteSettingParameter('reportsUploadPathFellApp');
+        if( !$reportsUploadPath ) {
+            $reportsUploadPath = "PackingSlipPDF";
+            $logger->warning('PackingSlipPDF UploadPath is not defined in Site Parameters. Use default "'.$reportsUploadPath.'" folder.');
+        }
+        $uploadReportPath = $this->uploadDir.'/'.$reportsUploadPath;
+
+        $reportPath = $this->container->get('kernel')->getRootDir() . '/../web/' . $uploadReportPath;
+        //echo "reportPath=".$reportPath."<br>";
+        //$reportPath = realpath($reportPath);
+        //echo "reportPath=".$reportPath."<br>";
+
+        if( !file_exists($reportPath) ) {
+            mkdir($reportPath, 0700, true);
+            chmod($reportPath, 0700);
+        }
+
+        //$outdir = $reportPath.'/temp_'.$invoice->getOid().'/';
+        //$outdir = $reportPath.'/'.$invoice->getOid().'/';
+        $outdir = $reportPath.'/';
+
+        //echo "before generateApplicationPdf id=".$id."; outdir=".$outdir."<br>";
+        //0) generate application pdf
+        //$applicationFilePath = $outdir . "application_ID" . $invoice->getOid() . ".pdf";
+        $applicationFilePath = $outdir . $fileFullReportUniqueName;
+
+        $this->generatePdfPackingSlip($transresRequest,$fileFullReportUniqueName,$applicationFilePath);
+
+        $filesize = filesize($applicationFilePath);
+        echo "filesize=".$filesize."<br>";
+
+        exit('exit generatePackingSlipPdf');
+    }
+
+    //use KnpSnappyBundle to convert html to pdf
+    //http://wkhtmltopdf.org must be installed on server
+    public function generatePdfPackingSlip($transresRequest,$fileFullReportUniqueName,$applicationOutputFilePath) {
+        $logger = $this->container->get('logger');
+        $logger->notice("Trying to generate PDF in ".$applicationOutputFilePath);
+        if( file_exists($applicationOutputFilePath) ) {
+            //return;
+            $logger->notice("generatePdf: unlink file already exists path=" . $applicationOutputFilePath );
+            unlink($applicationOutputFilePath);
+        }
+
+        ini_set('max_execution_time', 300); //300 sec
+
+        //testing
+        //$wkhtmltopdfpath = $this->container->getParameter('wkhtmltopdfpath');
+        //echo "wkhtmltopdfpath=$wkhtmltopdfpath<br>";
+        //$default_system_email = $this->container->getParameter('default_system_email');
+        //echo "default_system_email=$default_system_email<br>";
+
+        //generate application URL
+        $router = $this->container->get('router');
+        $context = $router->getContext();
+
+        //http://192.168.37.128/order/app_dev.php/translational-research/download-invoice-pdf/49
+        $context->setHost('localhost');
+        $context->setScheme('http');
+        $context->setBaseUrl('/order');
+
+        //invoice download
+        $pageUrl = $router->generate('translationalresearch_packing_slip_download',
+            array(
+                'id' => $transresRequest->getId()
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        ); //this does not work from console: 'order' is missing
+
+        //$logger->notice("### pageUrl=".$pageUrl);
+        //echo "pageurl=". $pageUrl . "<br>";
+        //exit();
+
+        //$application =
+        $this->container->get('knp_snappy.pdf')->generate(
+            $pageUrl,
+            $applicationOutputFilePath
+            //array('cookie' => array($session->getName() => $session->getId()))
+        );
+
+        //echo "generated ok! <br>";
+    }
+
 }

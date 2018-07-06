@@ -56,6 +56,8 @@
     {#{{ transresRequestMacros.transresRequestFormShow(form,transresRequest,cycle) }}#}
     {{ transresRequestMacros.transresRequestBody(form,transresRequest,cycle,sitename) }}
 
+    {{ transresRequestMacros.transresRequestPackingSlip(form,transresRequest,cycle) }}
+
     {{ transresRequestMacros.transresRequestHandsontable(form,transresRequest,cycle) }}
 
     {{ transresRequestMacros.transresRequestDetails(form,transresRequest,cycle,sitename) }}
@@ -109,6 +111,8 @@
         '@OlegUserdirectoryBundle/Resources/public/bwip-js/bwipjs.js'
         '@OlegUserdirectoryBundle/Resources/public/bwip-js/bwipp-min.js'
         '@OlegUserdirectoryBundle/Resources/public/bwip-js/freetype.js'
+        '@OlegOrderformBundle/Resources/public/form/js/selectAjax.js'
+        '@OlegOrderformBundle/Resources/public/form/js/masking.js'
     %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
@@ -121,8 +125,28 @@
 
         var tableFormCycle = '{{ cycle }}';
         if( tableFormCycle != "new" ) {
+            //var _handsometableDataArr = {{ handsometableData|json_encode|raw }};
+            //handsonTableInit(_handsometableDataArr, tableFormCycle);
+
+            getComboboxAccessionType(null,true);
+
             var _handsometableDataArr = {{ handsometableData|json_encode|raw }};
-            handsonTableInit(_handsometableDataArr, tableFormCycle);
+            //console.log('init _handsometableDataArr:');
+            //console.log(_handsometableDataArr);
+
+            //handsonTableInit(_handsometableDataArr, tableFormCycle);
+
+
+            // Wait until idle (busy must be false)
+            var _TIMEOUT = 300; // waitfor test rate [msec]
+
+            //console.log('before wait for');
+            waitfor( ajaxFinishedCondition, true, _TIMEOUT, 0, 'play->busy false', function() {
+                //console.log('The show can resume !');
+                transresMakeColumnData();
+
+                handsonTableInit(_handsometableDataArr, tableFormCycle);
+            });
         }
 
         //transres-review-submit

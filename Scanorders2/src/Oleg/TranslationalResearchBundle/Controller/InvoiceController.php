@@ -966,12 +966,12 @@ class InvoiceController extends Controller
 //        }
 
         //$em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $this->get('security.token_storage')->getToken()->getUser();
         //$logger = $this->container->get('logger');
         //$routeName = $request->get('_route');
         //$userSecUtil = $this->container->get('user_security_utility');
         $transresRequestUtil = $this->get('transres_request_util');
-        $transresUtil = $this->get('transres_util');
+        //$transresUtil = $this->get('transres_util');
 
         $em = $this->getDoctrine()->getManager();
         $invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($oid);
@@ -979,8 +979,8 @@ class InvoiceController extends Controller
             throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
         }
 
-        $transresRequest = $invoice->getTransresRequest();
-        $project = $transresRequest->getProject();
+        //$transresRequest = $invoice->getTransresRequest();
+        //$project = $transresRequest->getProject();
 
 //        if(
 //            false === $transresRequestUtil->isInvoiceBillingContact($invoice,$user) &&

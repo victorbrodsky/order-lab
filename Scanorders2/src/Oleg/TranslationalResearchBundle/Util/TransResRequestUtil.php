@@ -1234,6 +1234,9 @@ class TransResRequestUtil
 //            }
             $invoiceItem->setQuantity($quantity);
 
+            //TODO: split quantity to "requested quantity" and "completed quantity" from Work Request
+            //TODO: add "comment" from Work Request
+
             $category = $product->getCategory();
 
             if( $category ) {
