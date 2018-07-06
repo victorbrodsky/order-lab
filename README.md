@@ -78,7 +78,7 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
         snap install packer
         snap install doctl
 
-Make sure to add both to your PATH. For example, you can check for the latest versions of each [Packer](https://www.packer.io/downloads.html) and [doctl](https://github.com/digitalocean/doctl/releases), substitute the versions into the commands below instead of the now current 1.2.4 and 1.8.3, and run them:
+    Make sure to add both to your PATH. Alternatively, you can check for the latest versions of each [Packer](https://www.packer.io/downloads.html) and [doctl](https://github.com/digitalocean/doctl/releases), substitute the versions into the commands below instead of the now current 1.2.4 and 1.8.3, and run them:
 
         wget -P ~/Downloads https://releases.hashicorp.com/packer/1.2.4/packer_1.2.4_linux_amd64.zip
         sudo mkdir /usr/local/packer
