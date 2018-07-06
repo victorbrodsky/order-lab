@@ -71,7 +71,7 @@ var imageRenderer = function (instance, td, row, col, prop, value, cellPropertie
 var _columnData_scanorder = [];
 // [
 //     {
-//         header:'System',
+//         header:'Source',
 //         default: defaultAccessionTypeIndex,
 //         columns: {
 //             type: 'autocomplete',
@@ -171,7 +171,7 @@ function transresMakeColumnData() {
 
     _columnData_scanorder = [
         {
-            header:'System',
+            header:'Source',
             default: defaultAccessionTypeIndex,
             columns: {
                 type: 'autocomplete',
@@ -280,7 +280,7 @@ function handsonTableInit(handsometableDataArr,tableFormCycle) {
         //colWidths: [200, 200, 200, 60],
         // colHeaders: ["Title", "Description", "Comments", "Cover"],
         // columns: [
-        //     {data: "System", renderer: "html"},
+        //     {data: "Source", renderer: "html"},
         //     {data: "Accession ID", renderer: "html"},
         //     {data: "Part ID", renderer: "html"},
         //     {data: "cover", renderer: coverRenderer}
