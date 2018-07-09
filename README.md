@@ -102,11 +102,11 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 8. Populate the database tables with default values by logging into the Employee Directory site as the Administrator, selecting "Admin" > 'Site Settings' in the top navigation bar, and arriving at (http://IPADDRESS/order/directory/settings/). Near the bottom of the page under the 'Miscellaneous' heading, click each link in the order listed, and confirm the action in each resulting window, then wait for each function to finish: 
 
     1) Populate Country and City Lists (http://IPADDRESS/order/directory/admin/populate-country-city-list-with-default-values)
-    2) Populate All Lists With Default Values (http://IPADDRESS/order/directory/admin/populate-all-lists-with-default-values)
-    3) Populate All Scan Orders Lists With Default Values (http://IPADDRESS/order/scan/admin/populate-all-lists-with-default-values)
+    2) Populate All Lists With Default Values (Part A) (http://IPADDRESS/order/directory/admin/populate-all-lists-with-default-values)
+    3) Populate All Lists With Default Values (Part B) (http://IPADDRESS/order/scan/admin/populate-all-lists-with-default-values)
     4) Pre-generate form node tree fields for Call Log Book (http://IPADDRESS/order/directory/admin/list/generate-form-node-tree/)
 
-9. To enable HTTPS (SSL/TLS), first either purchase the certificate from your preferred vendor and add it to the server, or install the [certbot](https://certbot.eff.org/lets-encrypt/ubuntuxenial-apache) with a [Let's Encrypt](https://letsencrypt.org/) certificate (you can also use a [symfony bundle](https://packagist.org/packages/cert/letsencrypt-bundle)). For certificates form Let's Encrypt, verify that the cron job to automatically update them is set up since they expire in 90 days. Once that is done, uncomment (remove "#" from the beginning of) the line 289 in /order-lab/Scanorders2/app/config/security.yml file.
+9. To enable HTTPS (SSL/TLS), first either purchase the certificate from your preferred vendor and add it to the server, or install the [certbot](https://certbot.eff.org/lets-encrypt/ubuntuxenial-apache) with a [Let's Encrypt](https://letsencrypt.org/) certificate (you can also use a [symfony bundle](https://packagist.org/packages/cert/letsencrypt-bundle)). For certificates from Let's Encrypt, verify that the cron job to automatically update them is set up since they expire in 90 days. Once that is done, uncomment (remove "#" from the beginning of) the line 289 in /order-lab/Scanorders2/app/config/security.yml file.
 
 10. To enable submission of applications for the Fellowship application site via Google services, use the files in the /order-lab/Scanorders2/src/Oleg/FellAppBundle/Util/GoogleForm folder with the [Google Apps Script](https://developers.google.com/apps-script/). Make sure to add the Google Apps Script API key on the Site Settings page http://IPADDRESS/order/directory/settings/.
 
@@ -156,11 +156,11 @@ Note: If you choose to use MySQL database on Linux instead of Postgres, you will
 9. Populate the database tables with default values by logging into the Employee Directory site as the Administrator, selecting "Admin" > 'Site Settings' in the top navigation bar, and arriving at (http://IPADDRESS/order/directory/settings/). Near the bottom of the page under the 'Miscellaneous' heading, click each link in the order listed, and confirm the action in each resulting window, then wait for each function to finish: 
 
     1) Populate Country and City Lists (http://IPADDRESS/order/directory/admin/populate-country-city-list-with-default-values)
-    2) Populate All Lists With Default Values (http://IPADDRESS/order/directory/admin/populate-all-lists-with-default-values)
-    3) Populate All Scan Orders Lists With Default Values (http://IPADDRESS/order/scan/admin/populate-all-lists-with-default-values)
+    2) Populate All Lists With Default Values (Part A) (http://IPADDRESS/order/directory/admin/populate-all-lists-with-default-values)
+    3) Populate All Lists With Default Values (Part B) (http://IPADDRESS/order/scan/admin/populate-all-lists-with-default-values)
     4) Pre-generate form node tree fields for Call Log Book (http://IPADDRESS/order/directory/admin/list/generate-form-node-tree/)
 
-10. To enable HTTPS (SSL/TLS), first either purchase the certificate from your preferred vendor and add it to the server, or install the [certbot](https://certbot.eff.org/lets-encrypt/ubuntuxenial-apache) with a [Let's Encrypt](https://letsencrypt.org/) certificate (you can also use a [symfony bundle](https://packagist.org/packages/cert/letsencrypt-bundle)). For certificates form Let's Encrypt, verify that the cron job to automatically update them is set up since they expire in 90 days. Once that is done, uncomment (remove "#" from the beginning of) the line 289 in /order-lab/Scanorders2/app/config/security.yml file.
+10. To enable HTTPS (SSL/TLS), first either purchase the certificate from your preferred vendor and add it to the server, or install the [certbot](https://certbot.eff.org/lets-encrypt/ubuntuxenial-apache) with a [Let's Encrypt](https://letsencrypt.org/) certificate (you can also use a [symfony bundle](https://packagist.org/packages/cert/letsencrypt-bundle)). For certificates from Let's Encrypt, verify that the cron job to automatically update them is set up since they expire in 90 days. Once that is done, uncomment (remove "#" from the beginning of) the line 289 in /order-lab/Scanorders2/app/config/security.yml file.
 
 11. To enable submission of applications for the Fellowship application site via Google services, use the files in the /order-lab/Scanorders2/src/Oleg/FellAppBundle/Util/GoogleForm folder with the [Google Apps Script](https://developers.google.com/apps-script/). Make sure to add the Google Apps Script API key on the Site Settings page http://IPADDRESS/order/directory/settings/.
 
@@ -311,8 +311,8 @@ Note: If you choose to use MySQL database on Linux instead of Postgres, you will
 	d) Populate the database tables with default values by logging into the Employee Directory site as the Administrator, selecting "Admin" > 'Site Settings' in the top navigation bar, and arriving at (http://IPADDRESS/order/directory/settings/). Near the bottom of the page under 'Miscellaneous' heading, click each link in the order listed, and confirm the action in each resulting window, then wait for each function to finish: 
 
         1) Populate Country and City Lists (http://IPADDRESS/order/directory/admin/populate-country-city-list-with-default-values)
-        2) Populate All Lists With Default Values (http://IPADDRESS/order/directory/admin/populate-all-lists-with-default-values)
-        3) Populate All Scan Orders Lists With Default Values (http://IPADDRESS/order/scan/admin/populate-all-lists-with-default-values)
+        2) Populate All Lists With Default Values (Part A) (http://IPADDRESS/order/directory/admin/populate-all-lists-with-default-values)
+        3) Populate All Lists With Default Values (Part B) (http://IPADDRESS/order/scan/admin/populate-all-lists-with-default-values)
         4) Pre-generate form node tree fields for Call Log Book (http://IPADDRESS/order/directory/admin/list/generate-form-node-tree/)
 	
 	e) Run the deployment script again by following step 5a above:
