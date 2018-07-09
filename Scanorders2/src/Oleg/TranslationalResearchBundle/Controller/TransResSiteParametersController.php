@@ -156,6 +156,7 @@ class TransResSiteParametersController extends Controller
             'form' => $form->createView(),
             'cycle' => $cycle,
             'title' => $siteParameter,
+            'specialtyStr' => $specialtyStr
         );
     }
 
@@ -196,6 +197,8 @@ class TransResSiteParametersController extends Controller
             //process document
             //$em->getRepository('OlegUserdirectoryBundle:Document')->processSingleDocument($form,$siteParameter,"transresLogo");
             $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($siteParameter,"transresLogo");
+
+            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($siteParameter,"transresPackingSlipLogo");
 
             $em->flush();
 

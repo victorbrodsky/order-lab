@@ -28,7 +28,7 @@
 
     {% set sitename = translationalresearch_sitename %}
 
-    {{ transres.siteSettings(form,cycle,sitename) }}
+    {{ transres.siteSettings(form,cycle,sitename,siteParameter.getProjectSpecialty()) }}
 
     {% if cycle == "show" %}
         <p>

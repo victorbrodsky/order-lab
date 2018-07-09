@@ -1,0 +1,208 @@
+{% extends "OlegTranslationalResearchBundle::Default/base.html.twig" %}
+
+{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{% import "OlegTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}
+{% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+{% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block header %}
+    {#<div class="text-center col-xs-12">#}
+        {#<h1 style="color:#ff633b;"><b>{{ invoice.status|upper }}</b></h1>#}
+    {#</div>#}
+{% endblock %}
+
+{% block contentleft %}
+
+    <input type="hidden" id="formcycle" value="{{ cycle }}" />
+
+    {#<h4 class="text-info" align="center">#}
+        {#{{ title }}#}
+    {#</h4>#}
+    {#<br>#}
+
+    {#{% set bundleFileName = transres_request_util.getDefaultFile("transresPackingSlipLogos",transresRequest)|raw %}#}
+    {#{% if bundleFileName %}#}
+
+    {% set headlineColor = transres_request_util.getTransresSiteParameter('transresPackingSlipHighlightedColor',transresRequest) %}
+
+    <div style="opacity: {{ opacity }};">
+    <div class="row">
+        <div class="col-xs-1"></div>
+        <div class="col-xs-5" align="left">
+            <img src="{{ asset(packingSlipLogoFileName) }}" alt="Packing Slip Logo"/>
+            <br>
+            <br>
+            <div style="color: {{ transres_request_util.getTransresSiteParameter('transresPackingSlipHeadlineColor',transresRequest) }}">
+            {{ transres_request_util.getTransresSiteParameter('transresPackingSlipHeadline1',transresRequest) }}
+            <br>
+            {{ transres_request_util.getTransresSiteParameter('transresPackingSlipHeadline2',transresRequest) }}
+            </div>
+        </div>
+        <div class="col-xs-5" align="right">
+            <p><h2><b>
+                {#Packing Slip#}
+                {{ transres_request_util.getTransresSiteParameter('transresPackingSlipTitle',transresRequest) }}
+            </b></h2></p>
+            <p>
+                Work Request ID: <span style="color: {{ headlineColor }}">{{ transresRequest.oid }}</span>
+            </p>
+            <p>
+                {#barcode#}
+            </p>
+            <p>
+                <b>Submission Date:</b> <span style="color: {{ headlineColor }}">{{ transresRequest.createDate|date("m/d/Y") }}</span>
+            </p>
+            {#<p>#}
+                {#<b>WCM account number (if funded): {{ invoice.fundedAccountNumber }}</b>#}
+            {#</p>#}
+            <p>
+                Printed: Date & Time: <span style="color: {{ headlineColor }}">{{ "now"|date("m/d/Y H:i") }}</span>
+            </p>
+            <p>
+                <b>Submitter:</b> <span style="color: {{ headlineColor }}">{{ transresRequest.submitter.getUsernameOptimal() }}</span>
+                {#<b>Submitter:</b> <span style="color: #FF1800">{{ app.user.getUsernameOptimal() }}</span>#}
+            </p>
+            <p>
+                Progress Status: <span style="color: {{ headlineColor }}">{{ transres_request_util.getProgressStateLabelByName(transresRequest.progressState) }}</span>
+            </p>
+        </div>
+        <div class="col-xs-1"></div>
+    </div>
+    </div>
+
+    {#{% endif %}#}
+
+    <hr>
+
+    <p>
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead style="background-color: #BEBEBE;">
+            <tr>
+                <th>Item</th>
+                <th>Category Type</th>
+                <th>Requested Quantity</th>
+                <th>Completed Quantity</th>
+                <th>Comment</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for product in transresRequest.products %}
+                <tr>
+                    {#<td>{{ product.category.productId }} ({{ product.category.section }})</td>#}
+                    <td style="color:{{ headlineColor }}">{{ product.category.getShortInfo }}</td>
+                    <td style="color:{{ headlineColor }}">{{ product.category.name }}</td>
+
+                    <td style="color:{{ headlineColor }}">{{ product.requested }}</td>
+                    <td style="color:{{ headlineColor }}">{{ product.completed }}</td>
+
+                    <td style="color:{{ headlineColor }}">{{ product.comment }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    </p>
+
+    <hr>
+
+    <p>
+        <b>
+            {#COMMENT FOR REQUEST#}
+            {{ transres_request_util.getTransresSiteParameter('transresPackingSlipSubHeading1',transresRequest) }}
+        </b>
+        <br>
+        <span style="color: {{ headlineColor }}">{{ transresRequest.comment }}</span>
+    </p>
+
+    <hr>
+
+    <p>
+        <b>
+            {#LIST OF DELIVERABLE(S)#}
+            {{ transres_request_util.getTransresSiteParameter('transresPackingSlipSubHeading2',transresRequest) }}
+        </b>
+    </p>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead style="background-color: #BEBEBE;">
+                <tr>
+                    <th></th>
+                    {#colspan="2"#}
+                    <th>SAMPLE NAME</th>
+                    <th>BARCODE</th>
+                    <th>COMMENT</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for dataResult in transresRequest.dataResults %}
+                <tr>
+                    <td>
+                        {{ loop.index }}
+                    </td>
+                    <td style="color: {{ headlineColor }}">
+                        {{ dataResult.barcode }}
+                    </td>
+                    <td>BARCODE IMAGE</td>
+                    <td style="color: {{ headlineColor }}">
+                        {{ dataResult.comment }}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <br>
+    <hr>
+
+    <div align="left" style="opacity: {{ opacity }};">
+    <p>
+        {#Please contact us for more information about this slip.#}
+        {{ transres_request_util.getTransresSiteParameter('transresPackingSlipFooter1',transresRequest) }}
+    </p>
+    <p>
+        {#Translational Research Program • 1300 York Ave., F512, New York, NY 10065 • Tel: (212) 746-6255#}
+        {{ transres_request_util.getTransresSiteParameter('transresPackingSlipFooter2',transresRequest) }}
+    </p>
+    </div>
+
+{% endblock %}
+
+
+
+{% block additionalcss %}
+
+    {% stylesheets
+        'bundles/olegtranslationalresearch/form/css/pdf-show.css' filter='cssrewrite'
+    %}
+        <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
+{% endblock %}
+
+{% block additionaljs %}
+
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+
+            $('textarea').each(function () {
+                this.setAttribute('style', 'height:' + (this.scrollHeight) + 'px;overflow-y:hidden;');
+            }).on('input', function () {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
+
+        });
+
+    </script>
+
+{% endblock %}
+

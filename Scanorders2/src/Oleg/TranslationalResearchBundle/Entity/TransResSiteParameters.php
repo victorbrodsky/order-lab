@@ -135,11 +135,90 @@ class TransResSiteParameters {
     private $accessionType;
 
 
+    //Packing Slip
+    /**
+     * Default Packing Slip Logos
+     *
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="transres_transResSiteParameters_transresPackingSlipLogo",
+     *      joinColumns={@ORM\JoinColumn(name="transResSiteParameter_id", referencedColumnName="id", onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="transresPackingSlipLogo_id", referencedColumnName="id", onDelete="CASCADE")}
+     *      )
+     * @ORM\OrderBy({"createdate" = "DESC"})
+     **/
+    private $transresPackingSlipLogos;
+
+    /**
+     * Packing Slip
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $transresPackingSlipTitle;
+
+    /**
+     * Department of Pathology and Laboratory Medicine
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $transresPackingSlipHeadline1;
+
+    /**
+     * Translational Research Program
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $transresPackingSlipHeadline2;
+
+    /**
+     * Blue (HTML color value)
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $transresPackingSlipHeadlineColor;
+
+    /**
+     * Red (HTML Color Value)
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $transresPackingSlipHighlightedColor;
+
+    /**
+     * Comment for Request
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $transresPackingSlipSubHeading1;
+
+    /**
+     * List of Deliverables
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $transresPackingSlipSubHeading2;
+
+    /**
+     * Please contact us for more information about this slip.
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $transresPackingSlipFooter1;
+
+    /**
+     * Translational Research Program * 1300 York Ave., F512, New York, NY 10065 * Tel (212) 746-62255
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $transresPackingSlipFooter2;
+
+
+
     public function __construct($user=null) {
         $this->setCreator($user);
         $this->setCreateDate(new \DateTime());
 
         $this->transresLogos = new ArrayCollection();
+        $this->transresPackingSlipLogos = new ArrayCollection();
     }
 
 
@@ -386,7 +465,171 @@ class TransResSiteParameters {
     {
         $this->accessionType = $accessionType;
     }
-    
+
+    /**
+     * @return mixed
+     */
+    public function getTransresPackingSlipLogos()
+    {
+        return $this->transresPackingSlipLogos;
+    }
+    public function addTransresPackingSlipLogo($item)
+    {
+        if( $item && !$this->transresPackingSlipLogos->contains($item) ) {
+            $this->transresPackingSlipLogos->add($item);
+            $item->createUseObject($this);
+        }
+        return $this;
+    }
+    public function removeTransresPackingSlipLogo($item)
+    {
+        $this->transresPackingSlipLogos->removeElement($item);
+        $item->clearUseObject();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTransresPackingSlipTitle()
+    {
+        return $this->transresPackingSlipTitle;
+    }
+
+    /**
+     * @param mixed $transresPackingSlipTitle
+     */
+    public function setTransresPackingSlipTitle($transresPackingSlipTitle)
+    {
+        $this->transresPackingSlipTitle = $transresPackingSlipTitle;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTransresPackingSlipHeadline1()
+    {
+        return $this->transresPackingSlipHeadline1;
+    }
+
+    /**
+     * @param mixed $transresPackingSlipHeadline1
+     */
+    public function setTransresPackingSlipHeadline1($transresPackingSlipHeadline1)
+    {
+        $this->transresPackingSlipHeadline1 = $transresPackingSlipHeadline1;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTransresPackingSlipHeadline2()
+    {
+        return $this->transresPackingSlipHeadline2;
+    }
+
+    /**
+     * @param mixed $transresPackingSlipHeadline2
+     */
+    public function setTransresPackingSlipHeadline2($transresPackingSlipHeadline2)
+    {
+        $this->transresPackingSlipHeadline2 = $transresPackingSlipHeadline2;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTransresPackingSlipHeadlineColor()
+    {
+        return $this->transresPackingSlipHeadlineColor;
+    }
+
+    /**
+     * @param mixed $transresPackingSlipHeadlineColor
+     */
+    public function setTransresPackingSlipHeadlineColor($transresPackingSlipHeadlineColor)
+    {
+        $this->transresPackingSlipHeadlineColor = $transresPackingSlipHeadlineColor;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTransresPackingSlipHighlightedColor()
+    {
+        return $this->transresPackingSlipHighlightedColor;
+    }
+
+    /**
+     * @param mixed $transresPackingSlipHighlightedColor
+     */
+    public function setTransresPackingSlipHighlightedColor($transresPackingSlipHighlightedColor)
+    {
+        $this->transresPackingSlipHighlightedColor = $transresPackingSlipHighlightedColor;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTransresPackingSlipSubHeading1()
+    {
+        return $this->transresPackingSlipSubHeading1;
+    }
+
+    /**
+     * @param mixed $transresPackingSlipSubHeading1
+     */
+    public function setTransresPackingSlipSubHeading1($transresPackingSlipSubHeading1)
+    {
+        $this->transresPackingSlipSubHeading1 = $transresPackingSlipSubHeading1;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTransresPackingSlipSubHeading2()
+    {
+        return $this->transresPackingSlipSubHeading2;
+    }
+
+    /**
+     * @param mixed $transresPackingSlipSubHeading2
+     */
+    public function setTransresPackingSlipSubHeading2($transresPackingSlipSubHeading2)
+    {
+        $this->transresPackingSlipSubHeading2 = $transresPackingSlipSubHeading2;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTransresPackingSlipFooter1()
+    {
+        return $this->transresPackingSlipFooter1;
+    }
+
+    /**
+     * @param mixed $transresPackingSlipFooter1
+     */
+    public function setTransresPackingSlipFooter1($transresPackingSlipFooter1)
+    {
+        $this->transresPackingSlipFooter1 = $transresPackingSlipFooter1;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTransresPackingSlipFooter2()
+    {
+        return $this->transresPackingSlipFooter2;
+    }
+
+    /**
+     * @param mixed $transresPackingSlipFooter2
+     */
+    public function setTransresPackingSlipFooter2($transresPackingSlipFooter2)
+    {
+        $this->transresPackingSlipFooter2 = $transresPackingSlipFooter2;
+    }
     
 
 

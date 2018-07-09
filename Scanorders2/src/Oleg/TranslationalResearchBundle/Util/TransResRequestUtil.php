@@ -1360,8 +1360,8 @@ class TransResRequestUtil
         //$invoiceItemsArr->add(new InvoiceItem($user));
         return $invoiceItemsArr;
     }
-    
-    public function getInvoiceLogo($invoice, $transresRequest=null) {
+
+    public function getDefaultFile($fieldName, $invoice, $transresRequest=null) {
 
         //Get $transresRequest if null
         if( !$transresRequest ) {
@@ -1385,7 +1385,11 @@ class TransResRequestUtil
         }
 
         if( $siteParameter ) {
-            $logoDocuments = $siteParameter->getTransresLogos();
+
+            $getMethod = "get".$fieldName;
+            //echo "getMethod=$getMethod<br>";
+
+            $logoDocuments = $siteParameter->$getMethod();
             if( count($logoDocuments) > 0 ) {
                 $logoDocument = $logoDocuments->first(); //DESC order => the most recent first
                 $docPath = $logoDocument->getAbsoluteUploadFullPath();
@@ -2577,4 +2581,30 @@ class TransResRequestUtil
 
         return null;
     }
+
+
+    public function getTransresSiteParameter($fieldName,$transresRequest) {
+
+        if( !$fieldName ) {
+            throw new \Exception("Field name is empty");
+        }
+
+        $project = $transresRequest->getProject();
+        $projectSpecialty = $project->getProjectSpecialty();
+        $projectSpecialtyAbbreviation = $projectSpecialty->getAbbreviation();
+
+        $siteParameter = $this->findCreateSiteParameterEntity($projectSpecialtyAbbreviation);
+        if( !$siteParameter ) {
+            throw new \Exception("SiteParameter is not found by specialty '" . $projectSpecialtyAbbreviation . "'");
+        }
+
+        $getMethod = "get".$fieldName;
+
+        $value = $siteParameter->$getMethod();
+
+        return $value;
+    }
+
+
+
 }

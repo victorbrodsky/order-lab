@@ -74,7 +74,7 @@ class SiteParameterType extends AbstractType
 
         $builder->add('transresLogos', CollectionType::class, array(
             'entry_type' => DocumentType::class,
-            'label' => 'Logo(s):',
+            'label' => 'Invoice Logo(s):',
             'allow_add' => true,
             'allow_delete' => true,
             'required' => false,
@@ -112,6 +112,74 @@ class SiteParameterType extends AbstractType
                     ));
             },
         ));
+
+        //Packing Slip
+        $builder->add('transresPackingSlipLogos', CollectionType::class, array(
+            'entry_type' => DocumentType::class,
+            'label' => 'Packing Slip Logo(s):',
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__documentsid__',
+        ));
+
+        $builder->add('transresPackingSlipTitle', null, array(
+            'label' => "Title (i.e. 'Packing Slip'):",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+
+        $builder->add('transresPackingSlipHeadline1', null, array(
+            'label' => "Heading Line 1 (i.e. 'Department of Pathology and Laboratory Medicine'):",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+
+        $builder->add('transresPackingSlipHeadline2', null, array(
+            'label' => "Heading Line 2 (i.e. 'Translational Research Program'):",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+
+        $builder->add('transresPackingSlipHeadlineColor', null, array(
+            'label' => "Heading Font Color (Blue #1E90FF, HTML color value):",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+
+        $builder->add('transresPackingSlipHighlightedColor', null, array(
+            'label' => "Heading Font Color (Red #FF0000, HTML color value):",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+
+        $builder->add('transresPackingSlipSubHeading1', null, array(
+            'label' => "Sub-heading 1 (i.e. 'COMMENT FOR REQUEST'):",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+
+        $builder->add('transresPackingSlipSubHeading2', null, array(
+            'label' => "Sub-heading 2 (i.e. 'LIST OF DELIVERABLE(S)'):",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+
+        $builder->add('transresPackingSlipFooter1', null, array(
+            'label' => "Footer Line 1 (i.e. 'Please contact us for more information about this slip.'):",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+
+        $builder->add('transresPackingSlipFooter2', null, array(
+            'label' => "Footer Line 2 (i.e. 'Translational Research Program * 1300 York Ave., F512, New York, NY 10065 * Tel (212) 746-62255'):",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+        
+
 
 
         //Buttons

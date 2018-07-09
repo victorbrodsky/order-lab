@@ -849,6 +849,18 @@
                        href="{{ path(translationalresearch_sitename~'_email_packing_slip_change_status_pending_investigator', { 'id': transresRequest.id }) }}"
                        target="_blank">E-Mail Packing Slip to PIs and Submitter for Confirmation + Change Request Status to 'Pending Investigator'</a>
 
+
+                    <p>
+                    <div class="well form-element-holder user-documents">
+                        <label class="col-xs-12 control-label">Packing Slip Pdf(s)</label>
+                        <div class="row withpaddingtop">
+                            <div class="col-xs-12">
+                                {{ usermacros.documentsContainer(form,form.packingSlipPdfs,cycle,'noprototype',8,'default','Packing Slip Pdf','asForm',false) }}
+                            </div>
+                        </div>
+                    </div>
+                    </p>
+
                 </div>
             </div>
         </div>

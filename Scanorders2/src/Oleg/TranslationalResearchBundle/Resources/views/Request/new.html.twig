@@ -65,6 +65,10 @@
 
         {{ transresRequestMacros.transresRequestBody(form,transresRequest,cycle,sitename) }}
 
+        {% if cycle == "show" %}
+            {{ transresRequestMacros.transresRequestPackingSlip(form,transresRequest,cycle) }}
+        {% endif %}
+
         {% if cycle != "new" %}
             {{ transresRequestMacros.transresRequestHandsontable(form,transresRequest,cycle) }}
         {% endif %}

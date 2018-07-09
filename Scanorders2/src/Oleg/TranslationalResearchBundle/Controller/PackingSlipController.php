@@ -190,7 +190,7 @@ class PackingSlipController extends Controller
      * http://localhost/order/translational-research/work-request/download-packing-slip-invoice-pdf/HP8-REQ20-V2
      *
      * @Route("/download-packing-slip-pdf/{id}", name="translationalresearch_packing_slip_download")
-     * @Template("OlegTranslationalResearchBundle:Invoice:packing-slip-pdf-show.html.twig")
+     * @Template("OlegTranslationalResearchBundle:Request:packing-slip-pdf-show.html.twig")
      * @Method("GET")
      */
     public function showPackingSlipAsPdfAction(Request $request, TransResRequest $transresRequest)
@@ -222,44 +222,19 @@ class PackingSlipController extends Controller
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
-//        $em = $this->getDoctrine()->getManager();
-//        $invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($oid);
-//        if( !$invoice ) {
-//            throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
-//        }
-
-        // Check if user allowed to access by the project's specialty
-//        if( $transresRequestUtil->isUserAllowedAccessInvoiceBySpecialty($invoice) === false ) {
-//            $this->get('session')->getFlashBag()->add(
-//                'warning',
-//                "You don't have a permission to access this specialty"
-//            );
-//            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
-//        }
-
-//        if( $transresRequestUtil->isUserHasInvoicePermission($invoice,"view") === false ) {
-//            $this->get('session')->getFlashBag()->add(
-//                'warning',
-//                "You don't have a permission to view this invoice"
-//            );
-//            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
-//        }
-
         $cycle = "download";
-        //$routeName = $request->get('_route');
-
-        //$form = $this->createInvoiceForm($invoice,$cycle);
-
-        //$deleteForm = $this->createDeleteForm($invoice);
-
-        //$transresRequest = $invoice->getTransresRequest();
 
         $invoice = $transresRequestUtil->getLatestInvoice($transresRequest);
         //echo "invoice OID=".$invoice->getOid()."<br>";
 
+        $packingSlipLogoFileName = $transresRequestUtil->getDefaultFile("transresPackingSlipLogos",null,$transresRequest);
+        //echo "packingSlipLogoFileName=$packingSlipLogoFileName <br>";
+
         return array(
             'transresRequest' => $transresRequest,
             'invoice' => $invoice,
+            'packingSlipLogoFileName' => $packingSlipLogoFileName,
+            'opacity' => 0.6,
             //'form' => $form->createView(),
             //'delete_form' => $deleteForm->createView(),
             'cycle' => $cycle,

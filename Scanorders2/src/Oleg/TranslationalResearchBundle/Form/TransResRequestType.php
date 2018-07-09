@@ -295,6 +295,18 @@ class TransResRequestType extends AbstractType
             'required' => false,
             'attr' => array('class' => 'textarea form-control')
         ));
+
+        $builder->add('packingSlipPdfs', CollectionType::class, array(
+            'entry_type' => DocumentType::class,
+            'label' => 'Packing Slip Pdf(s):',
+            'allow_add' => true,
+            'allow_delete' => true,
+            'required' => false,
+            'by_reference' => false,
+            'prototype' => true,
+            'prototype_name' => '__documentsid__',
+            //'prototype_name' => '__packingslippdfsid__',
+        ));
         //////////////// EOF fields /////////////////////////
 
 

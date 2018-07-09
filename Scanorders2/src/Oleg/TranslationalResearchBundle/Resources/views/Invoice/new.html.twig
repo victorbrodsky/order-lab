@@ -39,7 +39,7 @@
 
     {% set sitename = translationalresearch_sitename %}
 
-    {% set bundleFileName = transres_request_util.getInvoiceLogo(invoice,transresRequest)|raw %}
+    {% set bundleFileName = transres_request_util.getDefaultFile("transresLogos",invoice)|raw %}
     {% if bundleFileName %}
 
         <p>

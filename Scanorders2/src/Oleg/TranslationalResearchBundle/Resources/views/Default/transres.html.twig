@@ -1203,7 +1203,7 @@
 
 
 
-{% macro siteSettings(form, cycle, sitename) %}
+{% macro siteSettings(form, cycle, sitename, specialty) %}
 
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
@@ -1225,36 +1225,115 @@
 
     <hr />
 
-    {% if form.transresLogos is defined %}
-        <p>
-        <div class="well form-element-holder user-documents">
-            <label class="col-xs-12 control-label">Logo(s) - the most recent will be used</label>
-            <div class="row withpaddingtop">
-                <div class="col-xs-12">
-                    {{ usermacros.documentsContainer(form,form.transresLogos,cycle,'noprototype',8,'default','Invoice Logo','asForm',false) }}
-                </div>
+
+    {#<div class="panel panel-primary">#}
+        {#<div class="panel-heading">#}
+            {#<h4 class="panel-title text-left">#}
+
+            {#</h4>#}
+        {#</div>#}
+        {#<div id="transres-content-111-{{ specialty.id }}" class="panel-collapse collapse">#}
+            {#<div class="panel-body">#}
+
+            {#</div>#}
+        {#</div>#}
+    {#</div>#}
+
+
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title text-left">
+                <a data-toggle="collapse" href="#transres-request-content-{{ specialty.id }}">Work Request Default Settings</a>
+            </h4>
+        </div>
+        <div id="transres-request-content-{{ specialty.id }}" class="panel-collapse collapse">
+            <div class="panel-body">
+                <p>
+                    Please use naming notation: [[PROJECT ID]] is for Project ID,  [[REQUEST ID]] is for Request ID and  [[INVOICE ID]] is for Invoice ID
+                </p>
+                {{ formmacros.field(form.requestCompletedNotifiedEmailSubject) }}
+                {{ formmacros.field(form.requestCompletedNotifiedEmail) }}
+                {{ formmacros.field(form.accessionType) }}
             </div>
         </div>
-        </p>
-    {% endif %}
+    </div>
 
 
-    {{ formmacros.field(form.transresFromHeader) }}
-    {{ formmacros.field(form.transresFooter) }}
-    {{ formmacros.field(form.invoiceSalesperson) }}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title text-left">
+                <a data-toggle="collapse" href="#transres-packingslip-content-{{ specialty.id }}">Packing Slip Default Settings</a>
+            </h4>
+        </div>
+        <div id="transres-packingslip-content-{{ specialty.id }}" class="panel-collapse collapse">
+            <div class="panel-body">
+                {% if form.transresPackingSlipLogos is defined %}
+                    <p>
+                    <div class="well form-element-holder user-documents">
+                        <label class="col-xs-12 control-label">Packing Slip logo(s) - the most recent will be used</label>
+                        <div class="row withpaddingtop">
+                            <div class="col-xs-12">
+                                {{ usermacros.documentsContainer(form,form.transresPackingSlipLogos,cycle,'noprototype',8,'default','Packing Slip Logo','asForm',false) }}
+                            </div>
+                        </div>
+                    </div>
+                    </p>
+                {% endif %}
 
-    <hr>
-    <p>
-        Please use naming notation: [[PROJECT ID]] is for Project ID,  [[REQUEST ID]] is for Request ID and  [[INVOICE ID]] is for Invoice ID
-    </p>
-    {{ formmacros.field(form.transresNotificationEmailSubject) }}
-    {{ formmacros.field(form.transresNotificationEmail) }}
+                {{ formmacros.field(form.transresPackingSlipTitle) }}
+                {{ formmacros.field(form.transresPackingSlipHeadline1) }}
+                {{ formmacros.field(form.transresPackingSlipHeadline2) }}
+                {{ formmacros.field(form.transresPackingSlipHeadlineColor) }}
+                {{ formmacros.field(form.transresPackingSlipHighlightedColor) }}
+                {{ formmacros.field(form.transresPackingSlipSubHeading1) }}
+                {{ formmacros.field(form.transresPackingSlipSubHeading2) }}
+                {{ formmacros.field(form.transresPackingSlipFooter1) }}
+                {{ formmacros.field(form.transresPackingSlipFooter2) }}
 
-    {{ formmacros.field(form.requestCompletedNotifiedEmailSubject) }}
-    {{ formmacros.field(form.requestCompletedNotifiedEmail) }}
-    <hr>
+            </div>
+        </div>
+    </div>
 
-    {{ formmacros.field(form.accessionType) }}
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title text-left">
+                <a data-toggle="collapse" href="#transres-invoice-content-{{ specialty.id }}">Invoice Default Settings</a>
+            </h4>
+        </div>
+        <div id="transres-invoice-content-{{ specialty.id }}" class="panel-collapse collapse">
+            <div class="panel-body">
+
+                {% if form.transresLogos is defined %}
+                    <p>
+                    <div class="well form-element-holder user-documents">
+                        <label class="col-xs-12 control-label">Invoice logo(s) - the most recent will be used</label>
+                        <div class="row withpaddingtop">
+                            <div class="col-xs-12">
+                                {{ usermacros.documentsContainer(form,form.transresLogos,cycle,'noprototype',8,'default','Invoice Logo','asForm',false) }}
+                            </div>
+                        </div>
+                    </div>
+                    </p>
+                {% endif %}
+
+
+                {{ formmacros.field(form.transresFromHeader) }}
+                {{ formmacros.field(form.transresFooter) }}
+                {{ formmacros.field(form.invoiceSalesperson) }}
+
+                <hr>
+                <p>
+                    Please use naming notation: [[PROJECT ID]] is for Project ID,  [[REQUEST ID]] is for Request ID and  [[INVOICE ID]] is for Invoice ID
+                </p>
+                {{ formmacros.field(form.transresNotificationEmailSubject) }}
+                {{ formmacros.field(form.transresNotificationEmail) }}
+
+            </div>
+        </div>
+    </div>
+
 
     <p>
     {% if form.save is defined %}
