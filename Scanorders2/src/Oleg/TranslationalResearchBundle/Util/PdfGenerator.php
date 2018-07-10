@@ -242,7 +242,7 @@ class PdfGenerator
         $this->em->persist($object);
         $this->em->flush();
 
-        $logger->notice("Document created with ID=".$object->getId()." for Invoice ID=".$holderEntity->getId() . "; documentType=".$documentType);
+        $logger->notice("Document created with ID=".$object->getId()." for ".get_class($holderEntity)." ID=".$holderEntity->getId() . "; documentType=".$documentType);
 
         return $object;
     }
@@ -271,6 +271,7 @@ class PdfGenerator
 
     public function generatePackingSlipPdf($transresRequest,$authorUser) {
         $logger = $this->container->get('logger');
+        $userSecUtil = $this->container->get('user_security_utility');
 
         if( !$transresRequest ) {
             return null;
@@ -311,6 +312,36 @@ class PdfGenerator
 
         $filesize = filesize($applicationFilePath);
         echo "filesize=".$filesize."<br>";
+
+
+        //add PDF to invoice DB
+        $filesize = filesize($applicationFilePath);
+        $documentPdf = $this->createInvoicePdfDB($transresRequest,"packingSlipPdf",$authorUser,$fileFullReportUniqueName,$uploadReportPath,$filesize,'Packing Slip PDF');
+        if( $documentPdf ) {
+            $documentPdfId = $documentPdf->getId();
+        } else {
+            $documentPdfId = null;
+        }
+
+        $event = "Packing Slip PDF for Work Request with ID".$transresRequest->getOid()." has been successfully created " . $fileFullReportUniqueName . " (PDF document ID".$documentPdfId.")";
+        //echo $event."<br>";
+        //$logger->notice($event);
+
+        $userSecUtil->createUserEditEvent($this->container->getParameter('translationalresearch.sitename'),$event,$authorUser,$transresRequest,null,'Packing Slip PDF Created');
+
+        //delete application temp folder
+        //$this->deleteDir($outdir);
+
+        $res = array(
+            'filename' => $fileFullReportUniqueName,
+            'pdf' => $applicationFilePath,
+            'size' => $filesize
+        );
+
+        $logger->notice($event);
+
+        return $res;
+
 
         exit('exit generatePackingSlipPdf');
     }

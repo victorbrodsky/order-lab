@@ -785,6 +785,9 @@ class RequestController extends Controller
         $msg = "Request ".$transresRequest->getOid() ." has been viewed on the show review page.";
         $transresUtil->setEventLog($transresRequest,$eventType,$msg);
 
+        //testing
+        echo "packing slips=".count($transresRequest->getPackingSlipPdfs())."<br>";
+
         return array(
             'transresRequest' => $transresRequest,
             'project' => $project,

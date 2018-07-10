@@ -823,6 +823,8 @@
 
 {% macro transresRequestPackingSlip( form, transresRequest, cycle ) %}
 
+    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
     {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') %}
 
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
@@ -837,9 +839,10 @@
             <div id="transresPackingSlip" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="transresPackingSlipHeading">
                 <div class="panel-body">
 
+                    {#Print Packing Slip#}
                     <a class="btn btn-primary"
                         href="{{ path(translationalresearch_sitename~'_print_packing_slip', { 'id': transresRequest.id }) }}"
-                        target="_blank">Print Packing Slip</a>
+                        target="_blank">Generate Packing Slip PDF</a>
 
                     <a class="btn btn-warning"
                        href="{{ path(translationalresearch_sitename~'_email_packing_slip', { 'id': transresRequest.id }) }}"

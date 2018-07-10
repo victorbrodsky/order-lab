@@ -83,7 +83,7 @@ class PackingSlipController extends Controller
         }
 
         //testing
-        return $this->redirect( $this->generateUrl('translationalresearch_packing_slip_download',array('id'=>$transresRequest->getId()) ));
+        //return $this->redirect( $this->generateUrl('translationalresearch_packing_slip_download',array('id'=>$transresRequest->getId()) ));
 
 
         //$invoice = $transresRequestUtil->getLatestInvoice($transresRequest);
@@ -92,13 +92,28 @@ class PackingSlipController extends Controller
         //Generate Packing Slip
         $res = $transresPdfUtil->generatePackingSlipPdf($transresRequest,$user);
 
-        //Print Packing Slip
-        
+        //TODO: Print Packing Slip?
 
-        return array(
-            'transresRequest' => $transresRequest,
-            'project' => $project,
+        $filename = $res['filename'];
+        $pdf = $res['pdf'];
+        $size = $res['size'];
+
+        $msg = "Packing Slip PDF has been created for Work Request ID " . $transresRequest->getOid() . "; filename=".$filename."; size=".$size;
+
+        //exit("<br><br>".$msg);
+
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            $msg
         );
+
+        //return $this->redirectToRoute('translationalresearch_invoice_index_all');
+        return $this->redirectToRoute('translationalresearch_request_show', array('id' => $transresRequest->getId()));
+
+//        return array(
+//            'transresRequest' => $transresRequest,
+//            'project' => $project,
+//        );
     }
 
 
