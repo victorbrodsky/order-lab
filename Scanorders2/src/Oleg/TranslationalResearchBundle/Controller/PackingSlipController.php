@@ -50,13 +50,13 @@ class PackingSlipController extends Controller
 {
 
     /**
-     * Print Packing Slip
+     * Generate Packing Slip
      *
-     * @Route("/print-packing_slip/{id}", name="translationalresearch_print_packing_slip")
+     * @Route("/generate-packing_slip/{id}", name="translationalresearch_generate_packing_slip")
      * @Template("OlegTranslationalResearchBundle:Request:new.html.twig")
      * @Method("GET")
      */
-    public function printPackingSlipAction(Request $request, TransResRequest $transresRequest)
+    public function generatePackingSlipAction(Request $request, TransResRequest $transresRequest)
     {
         $transresUtil = $this->container->get('transres_util');
         $transresPdfUtil = $this->get('transres_pdf_generator');
@@ -85,7 +85,6 @@ class PackingSlipController extends Controller
         //testing
         //return $this->redirect( $this->generateUrl('translationalresearch_packing_slip_download',array('id'=>$transresRequest->getId()) ));
 
-
         //$invoice = $transresRequestUtil->getLatestInvoice($transresRequest);
         //echo "invoice OID=".$invoice->getOid()."<br>";
 
@@ -95,7 +94,7 @@ class PackingSlipController extends Controller
         //TODO: Print Packing Slip?
 
         $filename = $res['filename'];
-        $pdf = $res['pdf'];
+        //$pdf = $res['pdf'];
         $size = $res['size'];
 
         $msg = "Packing Slip PDF has been created for Work Request ID " . $transresRequest->getOid() . "; filename=".$filename."; size=".$size;
@@ -109,18 +108,13 @@ class PackingSlipController extends Controller
 
         //return $this->redirectToRoute('translationalresearch_invoice_index_all');
         return $this->redirectToRoute('translationalresearch_request_show', array('id' => $transresRequest->getId()));
-
-//        return array(
-//            'transresRequest' => $transresRequest,
-//            'project' => $project,
-//        );
     }
 
 
     /**
-     * Print Packing Slip
+     * E-Mail Packing Slip to PIs and Submitter
      *
-     * @Route("/print-packing_slip/{id}", name="translationalresearch_email_packing_slip")
+     * @Route("/email-packing_slip/{id}", name="translationalresearch_email_packing_slip")
      * @Template("OlegTranslationalResearchBundle:Request:new.html.twig")
      * @Method("GET")
      */
