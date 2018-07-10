@@ -1410,24 +1410,18 @@ class TransResRequestUtil
         return $bundleFileName;
     }
 
-    public function sendRequestNotificationEmails($transresRequest, $subject, $body, $testing=false) {
-        //if( !$appliedTransition ) {
-        //    return null;
-        //}
-
+    //get emails: admins and primary reviewers, submitter, principalInvestigators, contact
+    public function getRequestEmails($transresRequest) {
         $transresUtil = $this->container->get('transres_util');
-        $emailUtil = $this->container->get('user_mailer_utility');
 
-        $senderEmail = null; //Admin email
         $emails = array();
 
-        //send to the
         // 1) admins and primary reviewers
         $admins = $transresUtil->getTransResAdminEmails(); //ok
         $emails = array_merge($emails,$admins);
 
         // 2) a) submitter, b) principalInvestigators, c) contact
-        //a submitter
+        //a) submitter
         if( $transresRequest->getSubmitter() ) {
             $submitterEmail = $transresRequest->getSubmitter()->getSingleEmail();
             if( $submitterEmail ) {
@@ -1435,7 +1429,7 @@ class TransResRequestUtil
             }
         }
 
-        //b principalInvestigators
+        //b) principalInvestigators
         $piEmailArr = array();
         $pis = $transresRequest->getPrincipalInvestigators();
         foreach( $pis as $pi ) {
@@ -1445,7 +1439,7 @@ class TransResRequestUtil
         }
         $emails = array_merge($emails,$piEmailArr);
 
-        //contact
+        //c) contact
         if( $transresRequest->getContact() ) {
             $contactEmail = $transresRequest->getContact()->getSingleEmail();
             if( $submitterEmail ) {
@@ -1454,6 +1448,55 @@ class TransResRequestUtil
         }
 
         $emails = array_unique($emails);
+
+        return $emails;
+    }
+
+    public function sendRequestNotificationEmails($transresRequest, $subject, $body, $testing=false) {
+        //if( !$appliedTransition ) {
+        //    return null;
+        //}
+
+        //$transresUtil = $this->container->get('transres_util');
+        $emailUtil = $this->container->get('user_mailer_utility');
+
+        $senderEmail = null; //Admin email
+
+//        $emails = array();
+//        //send to the
+//        // 1) admins and primary reviewers
+//        $admins = $transresUtil->getTransResAdminEmails(); //ok
+//        $emails = array_merge($emails,$admins);
+//
+//        // 2) a) submitter, b) principalInvestigators, c) contact
+//        //a submitter
+//        if( $transresRequest->getSubmitter() ) {
+//            $submitterEmail = $transresRequest->getSubmitter()->getSingleEmail();
+//            if( $submitterEmail ) {
+//                $emails = array_merge($emails,array($submitterEmail));
+//            }
+//        }
+//
+//        //b principalInvestigators
+//        $piEmailArr = array();
+//        $pis = $transresRequest->getPrincipalInvestigators();
+//        foreach( $pis as $pi ) {
+//            if( $pi ) {
+//                $piEmailArr[] = $pi->getSingleEmail();
+//            }
+//        }
+//        $emails = array_merge($emails,$piEmailArr);
+//
+//        //contact
+//        if( $transresRequest->getContact() ) {
+//            $contactEmail = $transresRequest->getContact()->getSingleEmail();
+//            if( $submitterEmail ) {
+//                $emails = array_merge($emails,array($contactEmail));
+//            }
+//        }
+//
+//        $emails = array_unique($emails);
+        $emails = $this->getRequestEmails($transresRequest);
 
         //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
         $emailUtil->sendEmail( $emails, $subject, $body, null, $senderEmail );
@@ -2582,6 +2625,16 @@ class TransResRequestUtil
         return null;
     }
 
+    public function getLatestPackingSlipPdf( $transresRequest ) {
+        $pdfs = $transresRequest->getPackingSlipPdfs();
+
+        if( count($pdfs) > 0 ) {
+            $latestPdf = $pdfs[0];
+            return $latestPdf;
+        }
+
+        return null;
+    }
 
     public function getTransresSiteParameter($fieldName,$transresRequest) {
 
@@ -2605,6 +2658,49 @@ class TransResRequestUtil
         return $value;
     }
 
+    //E-Mail Packing Slip to PIs and Submitter
+    public function sendPackingSlipPdfByEmail($transresRequest,$pdf) {
+        $emailUtil = $this->container->get('user_mailer_utility');
+        $transresUtil = $this->container->get('transres_util');
 
+        //get emails: admins and primary reviewers, submitter, principalInvestigators, contact
+        $emails = $this->getRequestEmails($transresRequest);
+
+        $user = $this->secTokenStorage->getToken()->getUser();
+        $senderEmail = $user->getSingleEmail();
+
+        $subject = "Please review attached deliverables for Work Request ID ".$transresRequest->getOid();
+
+        $adminEmailInfos = array();
+        $asEmail=false;
+        $onlyAdmin=true;
+        $admins = $transresUtil->getTransResAdminEmails($asEmail,$onlyAdmin);
+        foreach($admins as $admin) {
+            $adminEmailInfos[] = $admin->getUsernameOptimal()." (".$admin->getSingleEmail().")";
+        }
+
+        // The Translational Research group is working on your request (REQ-ID)
+        // and is planning to deliver the items listed in the attached document.
+        // Please review the items and comments (if any), and if you have any concerns,
+        // contact the Translational Research group by emailing [FirstName LastName] (email@address). (mailto: link)
+        //list all users with Translational Research Administrator roles
+        $body = "The Translational Research group is working on your request ".$transresRequest->getOid().
+        " and is planning to deliver the items listed in the attached document.".
+        " Please review the items and comments (if any), and if you have any concerns,".
+        " contact the Translational Research group by emailing ".implode(", ",$adminEmailInfos);
+
+        $attachmentPath = $pdf->getAbsoluteUploadFullPath();
+
+        //                    $emails, $subject, $message, $ccs=null, $fromEmail=null, $attachmentPath=null
+        $emailUtil->sendEmail($emails,$subject,$body,$ccs=null,$senderEmail,$attachmentPath);
+
+        $msg = "Packing Slip PDF ".$pdf->getUniquename()." has been sent to:<br>".implode(", ",$emails)."<br> Subject: ".$subject."<br> Body: ".$body;
+
+        //event log
+        $eventType = "Invoice PDF Issued";
+        $transresUtil->setEventLog($transresRequest,$eventType,$msg);
+
+        return $msg;
+    }
 
 }

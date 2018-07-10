@@ -115,7 +115,6 @@ class PackingSlipController extends Controller
      * E-Mail Packing Slip to PIs and Submitter
      *
      * @Route("/email-packing_slip/{id}", name="translationalresearch_email_packing_slip")
-     * @Template("OlegTranslationalResearchBundle:Request:new.html.twig")
      * @Method("GET")
      */
     public function emailPackingSlipAction(Request $request, TransResRequest $transresRequest)
@@ -143,12 +142,19 @@ class PackingSlipController extends Controller
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
-        //Print Packing Slip
+        //get latest packing slip PDF
+        $pdf = $transresRequestUtil->getLatestPackingSlipPdf($transresRequest);
+        echo "pdf=".$pdf."<br>";
+        //exit('1');
 
-        return array(
-            'transresRequest' => $transresRequest,
-            'project' => $project,
+        $res = $transresRequestUtil->sendPackingSlipPdfByEmail($transresRequest,$pdf);
+
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            $res
         );
+
+        return $this->redirectToRoute('translationalresearch_request_show', array('id' => $transresRequest->getId()));
     }
 
 
