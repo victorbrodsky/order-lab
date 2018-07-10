@@ -65,7 +65,7 @@
 
         {{ transresRequestMacros.transresRequestBody(form,transresRequest,cycle,sitename) }}
 
-        {% if cycle == "show" %}
+        {% if cycle != "new" %}
             {{ transresRequestMacros.transresRequestPackingSlip(form,transresRequest,cycle) }}
         {% endif %}
 

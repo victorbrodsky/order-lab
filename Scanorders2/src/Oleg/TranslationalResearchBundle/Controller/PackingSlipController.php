@@ -144,7 +144,7 @@ class PackingSlipController extends Controller
 
         //get latest packing slip PDF
         $pdf = $transresRequestUtil->getLatestPackingSlipPdf($transresRequest);
-        echo "pdf=".$pdf."<br>";
+        //echo "pdf=".$pdf."<br>";
         //exit('1');
 
         $res = $transresRequestUtil->sendPackingSlipPdfByEmail($transresRequest,$pdf);
@@ -161,12 +161,12 @@ class PackingSlipController extends Controller
     /**
      * E-Mail Packing Slip to PIs and Submitter for Confirmation + Change Request Status to 'Pending Investigator'
      *
-     * @Route("/print-packing_slip_change_status_pending_investigator/{id}", name="translationalresearch_email_packing_slip_change_status_pending_investigator")
-     * @Template("OlegTranslationalResearchBundle:Request:new.html.twig")
+     * @Route("/email-packing_slip_and_change_status_pending_investigator/{id}", name="translationalresearch_email_packing_slip_change_status_pending_investigator")
      * @Method("GET")
      */
     public function emailPackingSlipChangeStatusPendingInvestigatorAction(Request $request, TransResRequest $transresRequest)
     {
+        $em = $this->getDoctrine()->getManager();
         $transresUtil = $this->container->get('transres_util');
         $transresRequestUtil = $this->container->get('transres_request_util');
         //$em = $this->getDoctrine()->getManager();
@@ -192,10 +192,32 @@ class PackingSlipController extends Controller
 
         //Print Packing Slip
 
-        return array(
-            'transresRequest' => $transresRequest,
-            'project' => $project,
+        //get latest packing slip PDF
+        $pdf = $transresRequestUtil->getLatestPackingSlipPdf($transresRequest);
+        //echo "pdf=".$pdf."<br>";
+        //exit('1');
+
+        $res = $transresRequestUtil->sendPackingSlipPdfByEmail($transresRequest,$pdf);
+
+        //Change Request Status to 'Pending Investigator' (ProgressState: pendingInvestigatorInput)
+        $transresRequest->setProgressState("pendingInvestigatorInput");
+        $em->flush($transresRequest);
+
+        //Event Log
+        $changeStatusStr = "Completion Progress Status of Work Request ID ".
+            $transresRequest->getOid()." has been changed to " .
+            $transresRequestUtil->getProgressStateLabelByName($transresRequest->getProgressState()).".";
+        $eventType = "Request State Changed";
+        $transresUtil->setEventLog($transresRequest,$eventType,$changeStatusStr);
+
+        $res = $res . "<br>" . $changeStatusStr;
+
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            $res
         );
+
+        return $this->redirectToRoute('translationalresearch_request_show', array('id' => $transresRequest->getId()));
     }
 
 

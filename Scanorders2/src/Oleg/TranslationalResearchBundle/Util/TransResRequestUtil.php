@@ -2690,11 +2690,14 @@ class TransResRequestUtil
         " contact the Translational Research group by emailing ".implode(", ",$adminEmailInfos);
 
         $attachmentPath = $pdf->getAbsoluteUploadFullPath();
+        //echo "attachmentPath=$attachmentPath<br>";
+        //$logger = $this->container->get('logger');
+        //$logger->notice("attachmentPath=".$attachmentPath);
 
         //                    $emails, $subject, $message, $ccs=null, $fromEmail=null, $attachmentPath=null
         $emailUtil->sendEmail($emails,$subject,$body,$ccs=null,$senderEmail,$attachmentPath);
 
-        $msg = "Packing Slip PDF ".$pdf->getUniquename()." has been sent to:<br>".implode(", ",$emails)."<br> Subject: ".$subject."<br> Body: ".$body;
+        $msg = "Packing Slip PDF ".$pdf->getUniquename()." has been sent to:<br>".implode(", ",$emails)."<br> Subject: ".$subject."<br> Body: ".$body.".";
 
         //event log
         $eventType = "Invoice PDF Issued";

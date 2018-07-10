@@ -853,6 +853,7 @@
                        >E-Mail Packing Slip to PIs and Submitter for Confirmation + Change Request Status to 'Pending Investigator'</a>
 
 
+                    {% if form.packingSlipPdfs is defined %}
                     <p>
                     <div class="well form-element-holder user-documents">
                         <label class="col-xs-12 control-label">Packing Slip Pdf(s)</label>
@@ -863,6 +864,7 @@
                         </div>
                     </div>
                     </p>
+                    {% endif %}
 
                 </div>
             </div>
