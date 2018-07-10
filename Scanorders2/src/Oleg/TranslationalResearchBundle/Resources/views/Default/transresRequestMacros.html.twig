@@ -839,19 +839,20 @@
             <div id="transresPackingSlip" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="transresPackingSlipHeading">
                 <div class="panel-body">
 
-                    {#Print Packing Slip#}
-                    <a class="btn btn-primary"
-                        href="{{ path(translationalresearch_sitename~'_generate_packing_slip', { 'id': transresRequest.id }) }}"
-                        >Generate Packing Slip PDF</a>
+                    {#Packing Slip Actions#}
+                    {% if cycle != "new" or cycle != "edit" %}
+                        <a class="btn btn-primary"
+                            href="{{ path(translationalresearch_sitename~'_generate_packing_slip', { 'id': transresRequest.id }) }}"
+                            >Generate Packing Slip PDF</a>
 
-                    <a class="btn btn-warning"
-                       href="{{ path(translationalresearch_sitename~'_email_packing_slip', { 'id': transresRequest.id }) }}"
-                       >E-Mail Packing Slip to PIs and Submitter for Review</a>
+                        <a class="btn btn-warning"
+                           href="{{ path(translationalresearch_sitename~'_email_packing_slip', { 'id': transresRequest.id }) }}"
+                           >E-Mail Packing Slip to PIs and Submitter for Review</a>
 
-                    <a class="btn btn-warning"
-                       href="{{ path(translationalresearch_sitename~'_email_packing_slip_change_status_pending_investigator', { 'id': transresRequest.id }) }}"
-                       >E-Mail Packing Slip to PIs and Submitter for Confirmation + Change Request Status to 'Pending Investigator'</a>
-
+                        <a class="btn btn-warning"
+                           href="{{ path(translationalresearch_sitename~'_email_packing_slip_change_status_pending_investigator', { 'id': transresRequest.id }) }}"
+                           >E-Mail Packing Slip to PIs and Submitter for Confirmation + Change Request Status to 'Pending Investigator'</a>
+                    {% endif %}
 
                     {% if form.packingSlipPdfs is defined %}
                     <p>
