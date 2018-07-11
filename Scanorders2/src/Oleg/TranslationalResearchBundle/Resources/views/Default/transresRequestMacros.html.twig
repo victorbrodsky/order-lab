@@ -840,7 +840,7 @@
                 <div class="panel-body">
 
                     {#Packing Slip Actions#}
-                    {% if cycle != "new" or cycle != "edit" %}
+                    {% if cycle != "new" and cycle != "edit" %}
                         <a class="btn btn-primary"
                             href="{{ path(translationalresearch_sitename~'_generate_packing_slip', { 'id': transresRequest.id }) }}"
                             >Generate Packing Slip PDF</a>
@@ -855,16 +855,16 @@
                     {% endif %}
 
                     {% if form.packingSlipPdfs is defined %}
-                    <p>
-                    <div class="well form-element-holder user-documents">
-                        <label class="col-xs-12 control-label">Packing Slip Pdf(s)</label>
-                        <div class="row withpaddingtop">
-                            <div class="col-xs-12">
-                                {{ usermacros.documentsContainer(form,form.packingSlipPdfs,cycle,'noprototype',8,'default','Packing Slip Pdf','asForm',false) }}
+                        <p>
+                        <div class="well form-element-holder user-documents">
+                            <label class="col-xs-12 control-label">Packing Slip Pdf(s)</label>
+                            <div class="row withpaddingtop">
+                                <div class="col-xs-12">
+                                    {{ usermacros.documentsContainer(form,form.packingSlipPdfs,cycle,'noprototype',8,'default','Packing Slip Pdf','asForm',false) }}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    </p>
+                        </p>
                     {% endif %}
 
                 </div>
