@@ -46,9 +46,14 @@ class DataResult {
      */
     private $transresRequest;
 
+//    /**
+//     * @var string
+//     * @ORM\Column(type="string", nullable=true)
+//     */
+//    private $system;
     /**
-     * @var string
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Oleg\OrderformBundle\Entity\AccessionType")
+     * @ORM\JoinColumn(name="system_id", referencedColumnName="id", nullable=true)
      */
     private $system;
 

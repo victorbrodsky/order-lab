@@ -330,9 +330,9 @@ class RequestController extends Controller
         //get Table $jsonData
         $jsonData = $this->getTableData($transresRequest);
         //print_r($jsonData);
-//        echo 'jsonData:<pre>';
-//        print_r($jsonData);
-//        echo  '</pre>';
+        echo 'jsonData:<pre>';
+        print_r($jsonData);
+        echo  '</pre>';
 
         $form = $this->createRequestForm($transresRequest,$cycle,$request); //edit
 
@@ -556,8 +556,8 @@ class RequestController extends Controller
 
             $systemValue = $systemArr['val'];
             $systemId = $systemArr['id'];
-            //echo "systemId=".$systemId." <br>";
-            //echo "systemValue=".$systemValue." <br>";
+            echo "systemId=".$systemId." <br>";
+            echo "systemValue=".$systemValue." <br>";
 
             $accArr = $this->getValueByHeaderName('Accession ID',$row,$headers);
             $accValue = $accArr['val'];
@@ -569,10 +569,15 @@ class RequestController extends Controller
             $partArr = $this->getValueByHeaderName('Part ID',$row,$headers);
             $partValue = $partArr['val'];
             $partId = $partArr['id'];
+            echo "partId=".$partId." <br>";
+            echo "partValue=".$partValue." <br>";
 
             $blockArr = $this->getValueByHeaderName('Block ID',$row,$headers);
             $blockValue = $blockArr['val'];
             $blockId = $blockArr['id'];
+            echo "blockId=".$blockId." <br>";
+            echo "blockValue=".$blockValue." <br>";
+            exit('1');
 
             $slideArr = $this->getValueByHeaderName('Slide ID',$row,$headers);
             $slideValue = $slideArr['val'];
@@ -681,8 +686,11 @@ class RequestController extends Controller
             $rowArr = array();
 
             //System
-            $rowArr['System']['id'] = $dataResult->getId();
-            $rowArr['System']['value'] = $dataResult->getSystem();
+            $system = $dataResult->getSystem();
+            if( $system ) {
+                $rowArr['System']['id'] = $system->getId();
+                $rowArr['System']['value'] = $system;
+            }
 
             //Accession ID
             $rowArr['Accession ID']['id'] = $dataResult->getId();

@@ -135,6 +135,7 @@
                 <tr>
                     <th></th>
                     {#colspan="2"#}
+                    <th>SOURCE</th>
                     <th>SAMPLE NAME</th>
                     <th>BARCODE</th>
                     <th>COMMENT</th>
@@ -145,6 +146,9 @@
                 <tr>
                     <td>
                         {{ loop.index }}
+                    </td>
+                    <td style="color: {{ headlineColor }}">
+                        {{ dataResult.system }}
                     </td>
                     <td style="color: {{ headlineColor }}">
                         {{ dataResult.barcode }}
