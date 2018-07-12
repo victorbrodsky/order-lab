@@ -217,7 +217,12 @@ class CalllogFilterType extends AbstractType
             'query_builder' => function (EntityRepository $er) {
                 return $er->createQueryBuilder('u')
                     ->where("u.level = 3")
-                    ->orderBy("u.orderinlist","ASC");
+                    ->andWhere("u.type = :typedef OR u.type = :typeadd")
+                    ->orderBy("u.orderinlist","ASC")
+                    ->setParameters( array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
             },
         ));
 

@@ -285,7 +285,8 @@ class CallEntryController extends Controller
             $searchFilter = $calllogsearch;
             //$mrntypeFilter = $defaultMrnTypeId;
         }
-        if( $calllogsearchtype == 'NYH MRN' ) {
+        //if( $calllogsearchtype == 'NYH MRN' ) {
+        if( $calllogsearchtype == $defaultMrnType ) {
             $searchFilter = $calllogsearch;
         }
         if( $calllogsearchtype == 'Entry full text' ) {
@@ -690,7 +691,7 @@ class CallEntryController extends Controller
             if( $calllogsearchtype == 'MRN or Last Name' ) {
                 //use regular filter by replacing an appropriate filter string
             }
-            if( $calllogsearchtype == 'NYH MRN' ) {
+            if( $calllogsearchtype == $defaultMrnType ) {
                 $dql->andWhere("mrn.field = :search");
                 $queryParameters['search'] = $calllogsearch;
                 //add AND type MRN Type="NYH MRN"

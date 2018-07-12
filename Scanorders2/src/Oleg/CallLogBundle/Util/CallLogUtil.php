@@ -1257,14 +1257,22 @@ class CallLogUtil
         return $navbarfilterform->createView();
     }
     public function getNavbarSearchTypes() {
+
         $navbarSearchTypes = array(
             'MRN or Last Name' => 'MRN or Last Name',
-            'NYH MRN' => 'NYH MRN',
+            //'NYH MRN' => 'NYH MRN',
             'Last Name' => 'Last Name',
             'Last Name similar to' => 'Last Name similar to',
             'Message Type' => 'Message Type',
             'Entry full text' => 'Entry full text'
         );
+
+        $mrnType = $this->getDefaultMrnType();
+        if( $mrnType ) {
+            $mrnTypeStr = $mrnType."";
+            $inserted = array($mrnTypeStr=>$mrnTypeStr);
+            $navbarSearchTypes = $this->array_insert_after($navbarSearchTypes,'MRN or Last Name',$inserted);
+        }
 
         //check if metaphone is enabled
         $userSecUtil = $this->container->get('user_security_utility');
@@ -1277,6 +1285,23 @@ class CallLogUtil
     public function createForm($type, $data = null, array $options = array())
     {
         return $this->container->get('form.factory')->create($type, $data, $options);
+    }
+
+    /**
+     * Insert a value or key/value pair after a specific key in an array.  If key doesn't exist, value is appended
+     * to the end of the array.
+     *
+     * @param array $array
+     * @param string $key
+     * @param array $new
+     *
+     * @return array
+     */
+    function array_insert_after( array $array, $key, array $new ) {
+        $keys = array_keys( $array );
+        $index = array_search( $key, $keys );
+        $pos = false === $index ? count( $array ) : $index + 1;
+        return array_merge( array_slice( $array, 0, $pos ), $new, array_slice( $array, $pos ) );
     }
 
     //Upon submission of a new entry on /entry/new , send an email to the Preferred Email of the "Attending:"
