@@ -127,6 +127,10 @@ class AccessionTypeTransformer implements DataTransformerInterface
 
         //check if it is already exists in db
         $entity = $this->em->getRepository('OlegOrderformBundle:AccessionType')->findOneByName($name);
+
+        if( !$entity ) {
+            $entity = $this->em->getRepository('OlegOrderformBundle:AccessionType')->findOneByAbbreviation($name);
+        }
         
         if( null === $entity ) {
 

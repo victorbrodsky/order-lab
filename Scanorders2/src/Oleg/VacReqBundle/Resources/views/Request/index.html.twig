@@ -59,7 +59,7 @@
         {% if requestTypeAbbreviation == 'carryover' %}
             {% set colspanRequestInfo = 5 %}
         {% else %}
-            {% set colspanRequestInfo = 8 %}
+            {% set colspanRequestInfo = 9 %}
         {% endif %}
         {% set showUserInfo = true %}
     {% else %}
@@ -134,6 +134,7 @@
 
             {% if requestTypeAbbreviation != 'carryover' %}
                 <th>{{ knp_pagination_sortable(pagination, 'First Day Back in Office', 'request.firstDayBackInOffice') }}</th>
+                <th>Remaining Vacation Days in Corresponding Academic Year</th>
             {% endif %}
 
             {% if requestTypeAbbreviation != 'carryover' %}
@@ -225,6 +226,15 @@
                     <td>
                         {% if entity.firstDayBackInOffice %}
                             {{ entity.firstDayBackInOffice|date('m/d/Y','UTC') }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {#remaining vacation days#}
+                        {% set totalRemainingDaysRes = vacreq_util.totalVacationRemainingDays(entity.user) %}
+                        {{ totalRemainingDaysRes['numberOfDays'] }}
+                        {% if not totalRemainingDaysRes['accurate'] %}
+                            {% set inaccuracyMessage = vacreq_util.getInaccuracyMessage() %}
+                            <span data-toggle="tooltip" title="{{ inaccuracyMessage }}">*</span>
                         {% endif %}
                     </td>
                 {% endif %}

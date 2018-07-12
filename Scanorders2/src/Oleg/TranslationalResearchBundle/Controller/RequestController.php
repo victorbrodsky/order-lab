@@ -26,6 +26,7 @@ namespace Oleg\TranslationalResearchBundle\Controller;
 
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Oleg\OrderformBundle\Form\DataTransformer\AccessionTypeTransformer;
 use Oleg\TranslationalResearchBundle\Entity\DataResult;
 use Oleg\TranslationalResearchBundle\Entity\Product;
 use Oleg\TranslationalResearchBundle\Entity\Project;
@@ -176,7 +177,7 @@ class RequestController extends Controller
 
             $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($transresRequest,"document");
 
-            $this->processTableData($transresRequest,$form,$user);
+            $this->processTableData($transresRequest,$form,$user); //new
 
             if( $testing ) {
                 echo "Btn clicked=".$form->getClickedButton()->getName()."<br>";
@@ -398,7 +399,7 @@ class RequestController extends Controller
 
             $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($transresRequest,"document");
 
-            $updatedDataResults = $this->processTableData($transresRequest,$form,$user);
+            $updatedDataResults = $this->processTableData($transresRequest,$form,$user); //edit
 
             // remove the relationship between the tag and the Task
             foreach($originalDataResults as $dataResult) {
@@ -512,6 +513,7 @@ class RequestController extends Controller
     //return created/updated array of DataResult objects existing in the Request
     public function processTableData( $transresRequest, $form, $user ) {
         $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         //////////////// process handsontable rows ////////////////
         $datajson = $form->get('datalocker')->getData();
 //        echo "<br>datajson:<br>";
@@ -550,21 +552,20 @@ class RequestController extends Controller
             //exit();
 
             $systemArr = $this->getValueByHeaderName('System',$row,$headers);
-//            echo "<br>systemArr:<br>";
-//            var_dump($systemArr);
-//            echo "<br>";
+            echo "<br>systemArr:<br>";
+            var_dump($systemArr);
+            echo "<br>";
 
             $systemValue = $systemArr['val'];
             $systemId = $systemArr['id'];
             echo "systemId=".$systemId." <br>";
             echo "systemValue=".$systemValue." <br>";
+            //TODO: get AccessionType Entity
 
             $accArr = $this->getValueByHeaderName('Accession ID',$row,$headers);
             $accValue = $accArr['val'];
             $accId = $accArr['id'];
             //echo "accValue=".$accValue." <br>";
-
-
 
             $partArr = $this->getValueByHeaderName('Part ID',$row,$headers);
             $partValue = $partArr['val'];
@@ -577,7 +578,7 @@ class RequestController extends Controller
             $blockId = $blockArr['id'];
             echo "blockId=".$blockId." <br>";
             echo "blockValue=".$blockValue." <br>";
-            exit('1');
+            //exit('1');
 
             $slideArr = $this->getValueByHeaderName('Slide ID',$row,$headers);
             $slideValue = $slideArr['val'];
@@ -606,7 +607,7 @@ class RequestController extends Controller
             $commentValue = $commentArr['val'];
             $commentId = $commentArr['id'];
 
-            if( $systemValue || $accValue || $barcodeValue || $commentValue) {
+            if( $accValue || $barcodeValue || $commentValue) {
                 //get $dataResult object
                 $dataResult = null;
                 $objectId = null;
@@ -637,7 +638,13 @@ class RequestController extends Controller
                     $dataResult = new DataResult($user);
                 }
 
-                $dataResult->setSystem($systemValue);
+                if( $systemValue ) {
+                    $accTransformer = new AccessionTypeTransformer($em,$user);
+                    $systemEntity = $accTransformer->reverseTransform($systemValue);
+                    echo "systemEntity=".$systemEntity->getId()."<br>";
+                    //exit('111');
+                    $dataResult->setSystem($systemEntity);
+                }
 
                 $dataResult->setAccessionId($accValue);
                 $dataResult->setPartId($partValue);
