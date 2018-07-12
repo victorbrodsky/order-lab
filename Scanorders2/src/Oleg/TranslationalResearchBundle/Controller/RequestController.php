@@ -331,9 +331,9 @@ class RequestController extends Controller
         //get Table $jsonData
         $jsonData = $this->getTableData($transresRequest);
         //print_r($jsonData);
-        echo 'jsonData:<pre>';
-        print_r($jsonData);
-        echo  '</pre>';
+//        echo 'jsonData:<pre>';
+//        print_r($jsonData);
+//        echo  '</pre>';
 
         $form = $this->createRequestForm($transresRequest,$cycle,$request); //edit
 
@@ -551,15 +551,15 @@ class RequestController extends Controller
 //            echo "<br>";
             //exit();
 
-            $systemArr = $this->getValueByHeaderName('System',$row,$headers);
-            echo "<br>systemArr:<br>";
-            var_dump($systemArr);
-            echo "<br>";
+            $systemArr = $this->getValueByHeaderName('Source',$row,$headers);
+//            echo "<br>systemArr:<br>";
+//            var_dump($systemArr);
+//            echo "<br>";
 
             $systemValue = $systemArr['val'];
             $systemId = $systemArr['id'];
-            echo "systemId=".$systemId." <br>";
-            echo "systemValue=".$systemValue." <br>";
+            //echo "systemId=".$systemId." <br>";
+            //echo "systemValue=".$systemValue." <br>";
             //TODO: get AccessionType Entity
 
             $accArr = $this->getValueByHeaderName('Accession ID',$row,$headers);
@@ -570,14 +570,14 @@ class RequestController extends Controller
             $partArr = $this->getValueByHeaderName('Part ID',$row,$headers);
             $partValue = $partArr['val'];
             $partId = $partArr['id'];
-            echo "partId=".$partId." <br>";
-            echo "partValue=".$partValue." <br>";
+            //echo "partId=".$partId." <br>";
+            //echo "partValue=".$partValue." <br>";
 
             $blockArr = $this->getValueByHeaderName('Block ID',$row,$headers);
             $blockValue = $blockArr['val'];
             $blockId = $blockArr['id'];
-            echo "blockId=".$blockId." <br>";
-            echo "blockValue=".$blockValue." <br>";
+            //echo "blockId=".$blockId." <br>";
+            //echo "blockValue=".$blockValue." <br>";
             //exit('1');
 
             $slideArr = $this->getValueByHeaderName('Slide ID',$row,$headers);
@@ -641,7 +641,7 @@ class RequestController extends Controller
                 if( $systemValue ) {
                     $accTransformer = new AccessionTypeTransformer($em,$user);
                     $systemEntity = $accTransformer->reverseTransform($systemValue);
-                    echo "systemEntity=".$systemEntity->getId()."<br>";
+                    //echo "systemEntity=".$systemEntity->getId()."name=".$systemEntity."<br>";
                     //exit('111');
                     $dataResult->setSystem($systemEntity);
                 }
@@ -695,8 +695,8 @@ class RequestController extends Controller
             //System
             $system = $dataResult->getSystem();
             if( $system ) {
-                $rowArr['System']['id'] = $system->getId();
-                $rowArr['System']['value'] = $system;
+                $rowArr['Source']['id'] = $system->getId();
+                $rowArr['Source']['value'] = $system."";
             }
 
             //Accession ID
@@ -776,7 +776,6 @@ class RequestController extends Controller
 
         //get Table $jsonData
         $jsonData = $this->getTableData($transresRequest);
-        //print_r($jsonData);
 //        echo 'jsonData:<pre>';
 //        print_r($jsonData);
 //        echo  '</pre>';

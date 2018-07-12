@@ -230,6 +230,7 @@
                     </td>
                     <td>
                         {#remaining vacation days#}
+                        {#TODO: 24 + carry over days from previous year - carry over to next year = total days; Then, total days - prior days #}
                         {% set totalRemainingDaysRes = vacreq_util.totalVacationRemainingDays(entity.user) %}
                         {{ totalRemainingDaysRes['numberOfDays'] }}
                         {% if not totalRemainingDaysRes['accurate'] %}

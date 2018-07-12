@@ -240,6 +240,7 @@ function handsonTableInit(handsometableDataArr,tableFormCycle) {
                     //console.log(')');
                     if( handsometableDataArr[i-1][headerTitle] ) {
                         var cellValue = handsometableDataArr[i-1][headerTitle]["value"];
+                        //console.log( "cellValue="+cellValue );
                         //var cellId = handsometableDataArr[i-1][headerTitle]["id"];
                         //console.log('cellValue='+cellValue);
                         //var value = handsometableDataArr[i-1][headerTitle];
