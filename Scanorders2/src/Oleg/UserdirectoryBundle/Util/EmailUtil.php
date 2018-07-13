@@ -87,6 +87,14 @@ class EmailUtil {
             $logger->error("sendEmail: emails empty, count=".count($emails));
             return false;
         }
+
+        if( count($emails) > 0 ) {
+            if( !$emails[0] ) {
+                $logger->error("sendEmail: emails[0] empty=" . $emails[0]);
+                return false;
+            }
+        }
+
 //        $logger->notice("emails count=".count($emails));
 //        $logger->notice("emails=".implode(", ",$emails));
 //        $logger->notice("emails[0]=".$emails[0]);
