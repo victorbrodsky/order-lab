@@ -2964,34 +2964,34 @@ class FormNodeUtil
             //Microbiology [Message Category]
             //Laboratory Values [Form Section]
             //    Relevant Laboratory Values: [Form Field - Free Text]
-            $this->createLabValuesSection($parent,"Microbiology");
+            $this->createLabValuesSection($parent,"Microbiology",null,false);
 
             //Coagulation [Message Category]
             //Laboratory Values [Form Section]
             //    Relevant Laboratory Values: [Form Field - Free Text]
-            $this->createLabValuesSection($parent,"Coagulation");
+            $this->createLabValuesSection($parent,"Coagulation",null,false);
             //$this->createOtherSection($parent,"Other","Coagulation","Issue Category","What would you call this issue?");
 
             //Hematology [Message Category]
             //Laboratory Values [Form Section]
             //    Relevant Laboratory Values: [Form Field - Free Text]
-            $this->createLabValuesSection($parent,"Hematology");
+            $this->createLabValuesSection($parent,"Hematology",null,false);
             //$this->createOtherSection($parent,"Other","Hematology","Issue Category","What would you call this issue?");
 
             //Chemistry [Message Category]
             //Laboratory Values [Form Section]
             //    Relevant Laboratory Values: [Form Field - Free Text]
-            $this->createLabValuesSection($parent,"Chemistry");
+            $this->createLabValuesSection($parent,"Chemistry",null,false);
 
             //Cytogenetics [Message Category]
             //Laboratory Values [Form Section]
             //    Relevant Laboratory Values: [Form Field - Free Text]
-            $this->createLabValuesSection($parent,"Cytogenetics");
+            $this->createLabValuesSection($parent,"Cytogenetics",null,false);
 
             //Molecular [Message Category]
             //Laboratory Values [Form Section]
             //    Relevant Laboratory Values: [Form Field - Free Text]
-            $this->createLabValuesSection($parent,"Molecular");
+            $this->createLabValuesSection($parent,"Molecular",null,false);
 
             //Other [Message Category]
             //Laboratory Values [Form Section]

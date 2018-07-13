@@ -46,10 +46,11 @@ class SiteParametersController extends Controller
      * Lists all SiteParameters entities.
      *
      * @Route("/", name="employees_siteparameters")
+     * @Route("/{id}", name="employees_siteparameters_id")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:SiteParameters:index.html.twig")
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request, $id=null)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );

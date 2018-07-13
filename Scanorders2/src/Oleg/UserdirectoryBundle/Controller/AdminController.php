@@ -856,6 +856,8 @@ class AdminController extends Controller
 
         $count_generatePlatformListManagerList = $this->generatePlatformListManagerList();
 
+        $count_populateClassUrl = $this->populateClassUrl();
+
 
         $msg =
             'Generated Tables: '.
@@ -950,6 +952,7 @@ class AdminController extends Controller
             'TransResRequestCategoryType='.$count_generateTransResRequestCategoryType.', '.
             'PlatformListManagerList='.$count_generatePlatformListManagerList.', '.
             'IrbApprovalTypeList='.$count_generateIrbApprovalTypeList.', '.
+            'populateClassUrl='.$count_populateClassUrl.', '.
 
             ' (Note: -1 means that this table is already exists)';
 
@@ -1734,6 +1737,16 @@ class AdminController extends Controller
                 }
             }
 
+            if( $role == "ROLE_PLATFORM_ADMIN" || $role == "ROLE_PLATFORM_DEPUTY_ADMIN" ) {
+                $nameAbbreviationSites = $this->getSiteList();
+                foreach( $nameAbbreviationSites as $name=>$abbreviation ) {
+                    $siteObject = $em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation($abbreviation);
+                    if( !$entity->getSites()->contains($siteObject) ) {
+                        $entity->addSite($siteObject);
+                    }
+                }
+            }
+
             //set institution and Fellowship Subspecialty types to role
             $this->setInstitutionFellowship($entity,$role);
 
@@ -2479,15 +2492,16 @@ class AdminController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $elements = array(
-            'directory' => 'employees',
-            'scan' => 'scan',
-            'fellowship-applications' => 'fellapp',
-            'deidentifier' => 'deidentifier',
-            'vacation-request' => 'vacreq',
-            'call-log-book' => 'calllog',
-            'translational-research' => 'translationalresearch'
-        );
+//        $elements = array(
+//            'directory' => 'employees',
+//            'scan' => 'scan',
+//            'fellowship-applications' => 'fellapp',
+//            'deidentifier' => 'deidentifier',
+//            'vacation-request' => 'vacreq',
+//            'call-log-book' => 'calllog',
+//            'translational-research' => 'translationalresearch'
+//        );
+        $elements = $this->getSiteList();
 
         $count = 10;
         foreach( $elements as $name => $abbreviation ) {
@@ -2511,6 +2525,18 @@ class AdminController extends Controller
 
         return round($count/10);
 
+    }
+    public function getSiteList() {
+        $elements = array(
+            'directory' => 'employees',
+            'scan' => 'scan',
+            'fellowship-applications' => 'fellapp',
+            'deidentifier' => 'deidentifier',
+            'vacation-request' => 'vacreq',
+            'call-log-book' => 'calllog',
+            'translational-research' => 'translationalresearch'
+        );
+        return $elements;
     }
 
     public function generateInstitutionTypes() {
@@ -6320,6 +6346,88 @@ class AdminController extends Controller
         }
 
         return round($count/10);
+    }
+
+    /**
+     *
+     * @Route("/populate-class-url/", name="user_populate_class_url")
+     * @Method("GET")
+     */
+    public function populateClassUrlAction( Request $request=null ) {
+        $this->populateClassUrl();
+    }
+    public function populateClassUrl() {
+        $em = $this->getDoctrine()->getManager();
+
+        $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:Logger');
+        $query = $repository->createQueryBuilder('logger')
+            ->select('logger.entityName')
+            ->distinct()
+            ->getQuery();
+        $types = $query->getResult();
+
+        $count = 0;
+        foreach( $types as $type ) {
+            $entityName = $type['entityName'];
+            //echo "entityName=".$entityName."<br>";
+
+            if( !$entityName ) {
+                continue;
+            }
+
+            $listEntity = $em->getRepository('OlegUserdirectoryBundle:EventObjectTypeList')->findOneByName($entityName);
+            //echo "listEntity=".$listEntity."<br>";
+            if( !$listEntity ) {
+                continue;
+            }
+
+            $url = $this->classNameUrlMapper($entityName);
+            //echo "url=".$url."<br>";
+
+            $listEntity->setUrl($url);
+            $em->persist($listEntity);
+            $em->flush();
+            //echo "Set url=[".$url."]<br><br>";
+
+            $count++;
+        }
+
+        //exit("populateClassUrl count=".$count);
+        return $count;
+    }
+    public function classNameUrlMapper($className) {
+
+        //$className => path
+        $mapArr = array(
+            "SiteList"                  => "admin/list/sites",
+            "User"                      => "user",
+            "Patient"                   => "patient",
+            "Message"                   => "entry/view",
+            "Roles"                     => "admin/list-manager/id/4",
+            "VacReqRequest"             => "show",
+            "Document"                  => "file-view",
+            "Institution"               => "",  //"admin/list-manager/id/5",
+            "FellowshipApplication"     => "show",
+            "SiteParameters"            => "settings",
+            "FellowshipSubspecialty"    => "",
+            "VacReqUserCarryOver"       => "",
+            "Accession"                 => "",
+            "AccessionAccession"        => "",
+            "IrbReview"                 => "",
+            "AdminReview"               => "",
+            "CommitteeReview"           => "",
+            "FinalReview"               => "",
+            "Project"                   => "project/show",
+            "TransResRequest"           => "request/show",
+            "DefaultReviewer"           => "default-reviewers/show",
+            "Invoice"                   => "invoice/show",
+            "SignUp"                    => "",
+            "ResetPassword"             => ""
+        );
+        
+        $url = $mapArr[$className];
+
+        return $url;
     }
 
     /**

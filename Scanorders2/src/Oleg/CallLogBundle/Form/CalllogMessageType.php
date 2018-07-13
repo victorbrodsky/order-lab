@@ -175,11 +175,10 @@ class CalllogMessageType extends AbstractType
                     //'data-readonly-parent-level' => '2', //readonly all children from level 2 up (including this level)
                     'data-read-only-exclusion-after-level' => '2', //readonly will be disable for all levels after indicated level
                     'data-label-postfix-value-level' => '<span style="color:red">*</span>', //postfix after level
-                    'data-label-postfix-level' => '4', //postfix after level "Issue"
+                    'data-label-postfix-level' => '3', //postfix after level "Message Group"
                 ),
                 'classtype' => 'messageCategory'
             ));
-
 
             //add form node fields
             //$form = $this->addFormNodes($form,$messageCategory,$this->params);
