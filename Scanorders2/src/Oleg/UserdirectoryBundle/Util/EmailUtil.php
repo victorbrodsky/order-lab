@@ -88,6 +88,7 @@ class EmailUtil {
         }
         $logger->notice("emails count=".count($emails));
         $logger->notice("emails=".implode(", ",$emails));
+        $logger->notice("emails[0]=".$emails[0]);
 
 //        if( $this->em ) {
 //            $smtpServerAddress = $userSecUtil->getSiteSettingParameter('smtpServerAddress');
