@@ -80,6 +80,8 @@ class EmailUtil {
         $emails = $this->checkEmails($emails);
         $ccs = $this->checkEmails($ccs);
 
+        $logger->notice(print_r($emails));
+
 //        if( $this->em ) {
 //            $smtpServerAddress = $userSecUtil->getSiteSettingParameter('smtpServerAddress');
 //            $smtp_host_ip = gethostbyname($smtpServerAddress);
