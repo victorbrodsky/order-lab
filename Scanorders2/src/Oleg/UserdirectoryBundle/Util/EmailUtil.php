@@ -49,8 +49,10 @@ class EmailUtil {
         $logger = $this->container->get('logger');
         //set_time_limit(0); //set time limit to 600 sec == 10 min
 
-        //echo "emails=".$emails."<br>";
-        //echo "ccs=".$ccs."<br>";
+        echo "emails=".$emails."<br>";
+        echo "ccs=".$ccs."<br>";
+        $logger->notice("emails=".$emails);
+        $logger->notice("ccs=".$ccs);
 
 //        if( $this->hasConnection() == false ) {
 //            $logger->error("sendEmail: connection error");
