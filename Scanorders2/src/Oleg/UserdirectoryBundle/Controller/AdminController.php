@@ -6384,7 +6384,14 @@ class AdminController extends Controller
             $url = $this->classNameUrlMapper($entityName);
             //echo "url=".$url."<br>";
 
+            if( $entityName == "Patient" ) {
+                //add SiteList scan
+                $scanSite = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation('scan');
+                $listEntity->addExclusivelySite($scanSite);
+            }
+
             $listEntity->setUrl($url);
+
             $em->persist($listEntity);
             $em->flush();
             //echo "Set url=[".$url."]<br><br>";
