@@ -88,12 +88,12 @@ class EmailUtil {
             return false;
         }
 
-        if( count($emails) > 0 ) {
-            if( !$emails[0] ) {
-                $logger->error("sendEmail: emails[0] empty=" . $emails[0]);
-                return false;
-            }
-        }
+//        if( count($emails) > 0 ) {
+//            if( !$emails[0] ) {
+//                $logger->error("sendEmail: emails[0] empty=" . $emails[0]);
+//                return false;
+//            }
+//        }
 
 //        $logger->notice("emails count=".count($emails));
 //        $logger->notice("emails=".implode(", ",$emails));
@@ -189,34 +189,49 @@ class EmailUtil {
     }
 
     public function checkEmails($emails) {
-
-        $logger = $this->container->get('logger');
-        $logger->notice("emails count=".count($emails));
-        $logger->notice("emails=".implode(", ",$emails));
-        $logger->notice("emails[0]=".$emails[0]);
+        //$logger = $this->container->get('logger');
 
         if( !$emails ) {
             return $emails;
         }
 
         if( is_array($emails) ) {
-            return $emails;
+            return $this->validateEmailsArr($emails);
+            //return $emails;
         }
 
         //$logger = $this->container->get('logger');
         //$logger->notice("checkEmails: input emails=".print_r($emails));
         if( strpos($emails, ',') !== false ) {
             $emails = str_replace(" ","",$emails);
-            return explode(',', $emails);
+            //return explode(',', $emails);
+            return $this->validateEmailsArr(explode(',', $emails));
         } else {
             if( $emails ) {
-                return array( $emails );
+                //return array( $emails );
+                return $this->validateEmailsArr(array($emails));
             }
         }
-        //$logger->notice("checkEmails: output emails=".implode(";",$emails));
-        return $emails;
-    }
 
+        //$logger->notice("checkEmails: output emails=".implode(";",$emails));
+        //return $emails;
+        return $this->validateEmailsArr($emails);
+    }
+    public function validateEmailsArr($emails) {
+        $validEmails = array();
+
+        if( !is_array($emails) ) {
+            return $validEmails;
+        }
+
+        foreach($emails as $email) {
+            if( $email ) {
+                $validEmails[] = $email;
+            }
+        }
+        
+        return $validEmails;
+    }
 
     //https://ourcodeworld.com/articles/read/14/swiftmailer-send-mails-from-php-easily-and-effortlessly
     public function getSwiftMailer() {
