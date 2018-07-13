@@ -63,12 +63,14 @@ class EmailUtil {
         //exit('yes connection');
 
         if( !$emails || $emails == "" ) {
-            $logger->error("sendEmail: emails empty=".$emails);
+            //$logger->error("sendEmail: emails empty=".$emails);
+            $logger->error("sendEmail: Email has not been sent (emails empty): subject=".$subject."; body=".$body);
             return false;
         }
 
         if( !$body || $body == "" ) {
-            $logger->error("sendEmail: message body empty=".$body);
+            //$logger->error("sendEmail: message body empty=".$body);
+            $logger->error("sendEmail: Email has not been sent (message body empty): subject=".$subject."; body=".$body);
             return false;
         }
 
@@ -77,6 +79,7 @@ class EmailUtil {
         }
 
         if( !$fromEmail ) {
+            $logger->error("sendEmail: Email has not been sent (fromEmail empty): subject=".$subject."; body=".$body);
             return false;
         }
 
@@ -84,7 +87,8 @@ class EmailUtil {
         $ccs = $this->checkEmails($ccs);
 
         if( count($emails) == 0 ) {
-            $logger->error("sendEmail: emails empty, count=".count($emails));
+            //$logger->error("sendEmail: Email has not been sent, because emails array is empty");
+            $logger->error("sendEmail: Email has not been sent ('To:' emails array is empty): From:".$fromEmail."; subject=".$subject."; body=".$body);
             return false;
         }
 
@@ -229,7 +233,7 @@ class EmailUtil {
                 $validEmails[] = $email;
             }
         }
-        
+
         return $validEmails;
     }
 
