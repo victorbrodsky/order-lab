@@ -231,6 +231,35 @@
                             {% endif %}
                             {% endif %}
 
+                            {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') %}
+                                <li class="divider"></li>
+                                <li>
+                                    <a general-data-confirm="Are you sure you want to Generate Packing Slip PDF?"
+                                       target="_blank"
+                                       href="{{ path(translationalresearch_sitename~'_generate_packing_slip', { 'id': transresRequest.id }) }}"
+                                    >Generate Packing Slip PDF</a>
+                                </li>
+                                {% if transresRequest.packingSlipPdfs|length > 0 %}
+                                    <li>
+                                        <a
+                                           target="_blank"
+                                           href="{{ path(translationalresearch_sitename~'_file_view', { 'id': transresRequest.packingSlipPdfs[0].id }) }}"
+                                        >Show Packing Slip PDF</a>
+                                    </li>
+                                    <li>
+                                        <a general-data-confirm="Are you sure you want to E-Mail Packing Slip to PIs and Submitter for Review?"
+                                           target="_blank"
+                                           href="{{ path(translationalresearch_sitename~'_email_packing_slip', { 'id': transresRequest.id }) }}"
+                                        >E-Mail Packing Slip PDF to PIs and Submitter for Review</a>
+                                    </li>
+                                    <li>
+                                        <a general-data-confirm="Are you sure you want to E-Mail Packing Slip to PIs and Submitter for Confirmation + Change Request Status to 'Pending Investigator'?"
+                                           target="_blank"
+                                           href="{{ path(translationalresearch_sitename~'_email_packing_slip_change_status_pending_investigator', { 'id': transresRequest.id }) }}"
+                                        >E-Mail Packing Slip PDF to PIs and Submitter for Confirmation + Change Request Status to 'Pending Investigator'</a>
+                                    </li>
+                                {% endif %}
+                            {% endif %}
 
                             <li class="divider"></li>
                             {% if invoicesCount > 0 %}
