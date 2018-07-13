@@ -50,6 +50,7 @@ class EmailUtil {
         //set_time_limit(0); //set time limit to 600 sec == 10 min
 
         echo "emails=".$emails."<br>";
+        print_r($emails);
         echo "ccs=".$ccs."<br>";
         $logger->notice("emails=".$emails);
         $logger->notice("ccs=".$ccs);
