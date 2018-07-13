@@ -86,7 +86,7 @@ class EmailUtil {
             $logger->error("sendEmail: emails empty, count=".count($emails));
             return false;
         }
-        //$logger->notice(print_r($emails));
+        $logger->notice(implode(", ",$emails));
 
 //        if( $this->em ) {
 //            $smtpServerAddress = $userSecUtil->getSiteSettingParameter('smtpServerAddress');
