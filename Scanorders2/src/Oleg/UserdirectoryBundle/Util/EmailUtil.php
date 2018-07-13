@@ -80,7 +80,11 @@ class EmailUtil {
         $emails = $this->checkEmails($emails);
         $ccs = $this->checkEmails($ccs);
 
-        $logger->notice(print_r($emails));
+        if( count($emails) == 0 ) {
+            $logger->error("sendEmail: emails empty, count=".count($emails));
+            return false;
+        }
+        //$logger->notice(print_r($emails));
 
 //        if( $this->em ) {
 //            $smtpServerAddress = $userSecUtil->getSiteSettingParameter('smtpServerAddress');
