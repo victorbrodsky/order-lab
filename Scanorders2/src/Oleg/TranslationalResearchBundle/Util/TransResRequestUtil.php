@@ -396,6 +396,7 @@ class TransResRequestUtil
             'missinginfo',
             'invoiced',
             'paid',
+            'partiallyPaid',
             'refunded',
             'partiallyRefunded',
         );
@@ -514,6 +515,9 @@ class TransResRequestUtil
                 break;
             case "paid":
                 $state = "Paid";
+                break;
+            case "partiallyPaid":
+                $state = "Partially Paid";
                 break;
             case "refunded":
                 $state = "Refunded Fully";
@@ -2765,7 +2769,7 @@ class TransResRequestUtil
             //event log
             $transresUtil = $this->container->get('transres_util');
             $eventType = "Request State Changed";
-            $msg = "Work Request ID ".$transresRequest->getId()." billing state has been changed to ".$billingLabel.
+            $msg = "Work Request ID ".$transresRequest->getOid()." billing state has been changed to ".$billingLabel.
                 ", triggered by progress status change to ".$progressLabel;;
             $transresUtil->setEventLog($transresRequest,$eventType,$msg);
         }
@@ -2826,9 +2830,9 @@ class TransResRequestUtil
         // record auto-action to the Event log as a separate Billing Status event
         // (different from the event log entry for the manual progress setting).
         if( $invoiceState == "Paid Partially" ) {
-            //$billingState = "partiallyPaid";
-            //$transresRequest->setBillingState($billingState);
-            //$eventlog = true;
+            $billingState = "partiallyPaid";
+            $transresRequest->setBillingState($billingState);
+            $eventlog = true;
         }
 
         //record auto-action to the Event log as a separate Billing Status event
@@ -2841,7 +2845,7 @@ class TransResRequestUtil
             //event log
             $transresUtil = $this->container->get('transres_util');
             $eventType = "Request State Changed";
-            $msg = "Work Request ID ".$transresRequest->getId()." billing state has been changed to ".$stateLabel.
+            $msg = "Work Request ID ".$transresRequest->getOid()." billing state has been changed to ".$stateLabel.
                 ", triggered by invoice status change to ".$invoiceState;
             $transresUtil->setEventLog($transresRequest,$eventType,$msg);
         }

@@ -185,6 +185,7 @@ framework:
                 - missinginfo
                 - invoiced
                 - paid
+                - partiallyPaid
                 - refunded
                 - partiallyRefunded
             transitions:
@@ -218,6 +219,9 @@ framework:
                 invoiced_paid:
                     from: invoiced
                     to: paid
+                invoiced_partiallyPaid:
+                    from: invoiced
+                    to: partiallyPaid
                 invoiced_refunded:
                     from: invoiced
                     to: refunded
@@ -233,9 +237,21 @@ framework:
                 paid_refunded:
                     from: paid
                     to: refunded
-                #Add arrows from "Paid", "Refunded", and "Partially Refunded" to "Canceled" and to "Invoiced" (6 new arrows total)
+                partiallyPaid_refunded:
+                    from: partiallyPaid
+                    to: refunded
+                partiallyPaid_paid:
+                    from: partiallyPaid
+                    to: paid
+                paid_partiallyPaid:
+                    from: paid
+                    to: partiallyPaid
+                #Add arrows from "Paid", "Partially Paid", "Refunded", and "Partially Refunded" to "Canceled" and to "Invoiced" (6 new arrows total)
                 paid_canceled:
                     from: paid
+                    to: canceled
+                partiallyPaid_canceled:
+                    from: partiallyPaid
                     to: canceled
                 refunded_canceled:
                     from: refunded
@@ -245,6 +261,9 @@ framework:
                     to: canceled
                 paid_invoiced:
                     from: paid
+                    to: invoiced
+                partiallyPaid_invoiced:
+                    from: partiallyPaid
                     to: invoiced
                 refunded_invoiced:
                     from: refunded
