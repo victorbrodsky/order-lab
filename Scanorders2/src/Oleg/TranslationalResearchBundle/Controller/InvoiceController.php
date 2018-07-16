@@ -109,6 +109,8 @@ class InvoiceController extends Controller
                         'filter[status][0]' => "Unpaid/Issued",
                         'filter[status][1]' => "Paid in Full",
                         'filter[status][2]' => "Paid Partially",
+                        'filter[status][3]' => 'Refunded Fully',
+                        'filter[status][4]' => 'Refunded Partially',
                         'title' => $filterType,
                     )
                 );
@@ -154,6 +156,8 @@ class InvoiceController extends Controller
                         'filter[status][0]' => "Unpaid/Issued",
                         'filter[status][1]' => "Paid in Full",
                         'filter[status][2]' => "Paid Partially",
+                        'filter[status][3]' => 'Refunded Fully',
+                        'filter[status][4]' => 'Refunded Partially',
 
                         'title' => $filterType,
                     )
@@ -167,6 +171,8 @@ class InvoiceController extends Controller
                         'filter[status][0]' => "Unpaid/Issued",
                         'filter[status][1]' => "Paid in Full",
                         'filter[status][2]' => "Paid Partially",
+                        'filter[status][3]' => 'Refunded Fully',
+                        'filter[status][4]' => 'Refunded Partially',
                         'title' => $filterType,
                     )
                 );
@@ -560,6 +566,8 @@ class InvoiceController extends Controller
 
         $invoice = $transresRequestUtil->createNewInvoice($transresRequest,$user);
 
+        $originalInvoiceStatus = $invoice->getStatus();
+
         $form = $this->createInvoiceForm($invoice,$cycle,$transresRequest);
 
         $form->handleRequest($request);
@@ -570,6 +578,11 @@ class InvoiceController extends Controller
             $msg = $transresRequestUtil->createSubmitNewInvoice($transresRequest,$invoice);
 
             $msg2 = $this->processInvoiceAfterSave($invoice,$form,$user);
+
+            $invoiceStatus = $invoice->getStatus();
+            if( $invoiceStatus != $originalInvoiceStatus ) {
+                $transresRequestUtil->syncInvoiceRequestStatus($invoice, $invoiceStatus);
+            }
 
             //$msg = "New Invoice has been successfully created for the request ID ".$transresRequest->getOid();
 
@@ -716,6 +729,8 @@ class InvoiceController extends Controller
         //Get $transresRequest (Assume invoice has a single $transresRequest)
         $transresRequest = $invoice->getTransresRequest();
 
+        $originalInvoiceStatus = $invoice->getStatus();
+
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $cycle = "edit";
 
@@ -739,6 +754,11 @@ class InvoiceController extends Controller
             $transresRequestUtil->updateInvoiceStatus($invoice);
 
             $em->flush();
+
+            $invoiceStatus = $invoice->getStatus();
+            if( $invoiceStatus != $originalInvoiceStatus ) {
+                $transresRequestUtil->syncInvoiceRequestStatus($invoice, $invoiceStatus);
+            }
 
             $msg2 = $this->processInvoiceAfterSave($invoice,$editForm,$user);
 

@@ -516,10 +516,10 @@ class TransResRequestUtil
                 $state = "Paid";
                 break;
             case "refunded":
-                $state = "Refunded";
+                $state = "Refunded Fully";
                 break;
             case "partiallyRefunded":
-                $state = "Partially Refunded";
+                $state = "Refunded Partially";
                 break;
 
             default:
@@ -1051,6 +1051,11 @@ class TransResRequestUtil
                 //write to DB
                 if( !$testing ) {
                     $this->em->flush();
+                }
+
+                //If Work Request’s Progress Status is changed
+                if( $statMachineType == 'progress' ) {
+                    $this->syncRequestStatus($transresRequest,$to,$testing);
                 }
 
                 $label = $this->getRequestStateLabelByName($to,$statMachineType);
@@ -2330,6 +2335,8 @@ class TransResRequestUtil
             "Unpaid/Issued" => "Unpaid/Issued",
             "Paid in Full" => "Paid in Full",
             "Paid Partially" => "Paid Partially",
+            "Refunded Fully" => "Refunded Fully",
+            "Refunded Partially" => "Refunded Partially",
             "Canceled" => "Canceled"
         );
     }
@@ -2710,4 +2717,138 @@ class TransResRequestUtil
         return $msg;
     }
 
+    public function syncRequestStatus($transresRequest,$toState,$testing) {
+        $eventlog = false;
+        $billingState = null;
+
+        //5 - If Work Request’s Progress Status is changed to “Canceled”
+        // (both via Action button dropdown menu - add it - or via Edit),
+        // set its Billing Status to “Canceled” and
+        // record auto-action to the Event log as a separate Billing Status event
+        // (different from the event log entry for the manual progress setting).
+        if( $toState == "canceled" ) {
+            $billingState = "canceled";
+            $transresRequest->setBillingState($billingState);
+            $eventlog = true;
+        }
+
+        //6 - If Work Request’s Progress Status is changed to “Draft”
+        // (both at time of initial submission or via Edit), set its Billing Status to “Draft”
+        // and record auto-action to the Event log as a separate Billing Status event
+        // (different from the event log entry for the manual progress setting).
+        if( $toState == "draft" ) {
+            $billingState = "draft";
+            $transresRequest->setBillingState($billingState);
+            $eventlog = true;
+        }
+
+        //7- If Work Request’s Progress Status is changed to “Active”
+        // (both at time of submission or via Edit), set its Billing Status to “Active”
+        // and record auto-action to the Event log as a separate Billing Status event
+        // (different from the event log entry for the manual progress setting).
+        if( $toState == "active" ) {
+            $billingState = "active";
+            $transresRequest->setBillingState($billingState);
+            $eventlog = true;
+        }
+
+        //record auto-action to the Event log as a separate Billing Status event
+        $msg = null;
+        if( $eventlog ) {
+
+            if( !$testing ) {
+                $this->em->flush($transresRequest);
+            }
+            
+            $billingLabel = $this->getRequestStateLabelByName($billingState,"billing");
+            $progressLabel = $this->getRequestStateLabelByName($toState,"progress");
+            //event log
+            $transresUtil = $this->container->get('transres_util');
+            $eventType = "Request State Changed";
+            $msg = "Work Request ID ".$transresRequest->getId()." billing state has been changed to ".$billingLabel.
+                ", triggered by progress status change to ".$progressLabel;;
+            $transresUtil->setEventLog($transresRequest,$eventType,$msg);
+        }
+
+        return $msg;
+    }
+
+    public function syncInvoiceRequestStatus($invoice,$invoiceState) {
+
+        $transresRequest = $invoice->getTransresRequest();
+
+        $eventlog = false;
+        $billingState = null;
+
+        //8- If associated Invoice’s Status is changed to “Unpaid / Issued”,
+        // set the associated Work Request’s Billing Status to “Invoiced” and
+        // record auto-action to the Event log as a separate Billing Status event
+        // (different from the event log entry for the manual progress setting).
+        if( $invoiceState == "Unpaid/Issued" ) {
+            $billingState = "invoiced";
+            $transresRequest->setBillingState($billingState);
+            $eventlog = true;
+        }
+
+        //9- If associated Invoice’s Status is changed to “Paid in Full”,
+        // set the associated Work Request’s Billing Status to “Paid” and
+        // record auto-action to the Event log as a separate Billing Status event
+        // (different from the event log entry for the manual progress setting).
+        if( $invoiceState == "Paid in Full" ) {
+            $billingState = "paid";
+            $transresRequest->setBillingState($billingState);
+            $eventlog = true;
+        }
+
+        //10- If associated Invoice’s Status is changed to “Refunded Fully”,
+        // set the associated Work Request’s Billing Status to “Refunded Fully” and
+        // record auto-action to the Event log as a separate Billing Status event
+        // (different from the event log entry for the manual progress setting).
+        if( $invoiceState == "Refunded Fully" ) {
+            $billingState = "refunded";
+            $transresRequest->setBillingState($billingState);
+            $eventlog = true;
+        }
+
+        //11- If associated Invoice’s Status is changed to “Refunded Partially”,
+        // set the associated Work Request’s Billing Status to “Refunded Partially” and
+        // record auto-action to the Event log as a separate Billing Status event
+        // (different from the event log entry for the manual progress setting).
+        if( $invoiceState == "Refunded Partially" ) {
+            $billingState = "partiallyRefunded";
+            $transresRequest->setBillingState($billingState);
+            $eventlog = true;
+        }
+
+        //12- If associated Invoice’s Status is changed to “Paid Partially”
+        // via Edit or automatically by entering the paid amount,
+        // set the associated Work Request’s Billing Status to “Paid Partially” and
+        // record auto-action to the Event log as a separate Billing Status event
+        // (different from the event log entry for the manual progress setting).
+        if( $invoiceState == "Paid Partially" ) {
+            //$billingState = "partiallyPaid";
+            //$transresRequest->setBillingState($billingState);
+            //$eventlog = true;
+        }
+
+        //record auto-action to the Event log as a separate Billing Status event
+        $msg = null;
+        if( $eventlog ) {
+
+            $this->em->flush($transresRequest);
+
+            $stateLabel = $this->getRequestStateLabelByName($billingState,"billing");
+            //event log
+            $transresUtil = $this->container->get('transres_util');
+            $eventType = "Request State Changed";
+            $msg = "Work Request ID ".$transresRequest->getId()." billing state has been changed to ".$stateLabel.
+                ", triggered by invoice status change to ".$invoiceState;
+            $transresUtil->setEventLog($transresRequest,$eventType,$msg);
+        }
+
+        return $msg;
+    }
 }
+
+
+

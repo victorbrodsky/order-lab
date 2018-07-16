@@ -1348,3 +1348,14 @@
     {{ form_end(form) }}
 
 {% endmacro %}
+
+{% macro newSaveWarning(nameStr) %}
+    <p>
+        <i>
+            Please make sure to save your {{ nameStr }} as a draft prior leaving this page.
+        </i>
+    </p>
+{% endmacro %}
+
+
+

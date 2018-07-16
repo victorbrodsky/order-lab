@@ -335,6 +335,8 @@ class RequestController extends Controller
 //        print_r($jsonData);
 //        echo  '</pre>';
 
+        $originalProgressState = $transresRequest->getProgressState();
+
         $form = $this->createRequestForm($transresRequest,$cycle,$request); //edit
 
 //        $messageTypeId = true;//testing
@@ -435,6 +437,12 @@ class RequestController extends Controller
             if( !$testing ) {
                 $em->persist($transresRequest);
                 $em->flush();
+            }
+
+            //If Work Request’s Progress Status is changed
+            $progressState = $transresRequest->getProgressState();
+            if( $progressState != $originalProgressState ) {
+                $transresRequestUtil->syncRequestStatus($transresRequest,$progressState,$testing);
             }
 
             //testing

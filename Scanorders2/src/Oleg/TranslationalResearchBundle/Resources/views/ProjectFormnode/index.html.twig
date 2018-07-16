@@ -236,7 +236,9 @@
                                'filter[idSearch]': project.oid,
                                'filter[status][0]': 'Unpaid/Issued',
                                'filter[status][1]': 'Paid in Full',
-                               'filter[status][2]': 'Paid Partially'
+                               'filter[status][2]': 'Paid Partially',
+                               'filter[status][3]': 'Refunded Fully',
+                               'filter[status][4]': 'Refunded Partially'
                            }) }} "
                         >{{ invoicesInfos.count }}</a>
                     {% else %}

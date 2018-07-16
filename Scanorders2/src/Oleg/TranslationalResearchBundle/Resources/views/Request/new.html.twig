@@ -20,7 +20,8 @@
     <h4 class="text-info" align="center">
         {{ title }}
     </h4>
-    <br>
+
+    {{ transres.newSaveWarning("Work Request") }}
 
     {% if cycle == "show" %}
         {% if
