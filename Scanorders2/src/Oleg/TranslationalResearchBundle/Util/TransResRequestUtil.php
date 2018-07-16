@@ -2659,18 +2659,20 @@ class TransResRequestUtil
     }
 
     //E-Mail Packing Slip to PIs and Submitter
-    public function sendPackingSlipPdfByEmail($transresRequest,$pdf) {
+    public function sendPackingSlipPdfByEmail($transresRequest,$pdf,$subject,$body) {
         $emailUtil = $this->container->get('user_mailer_utility');
         $transresUtil = $this->container->get('transres_util');
 
         //get emails: admins and primary reviewers, submitter, principalInvestigators, contact
         $emails = $this->getRequestEmails($transresRequest);
 
+        if( count($emails) == 0 ) {
+            return "Error: Packing Slip PDF ".$pdf->getUniquename()." has not been sent, because the email list (admins and primary reviewers, submitter, principalInvestigators, contact) is empty.";
+        }
+
         $user = $this->secTokenStorage->getToken()->getUser();
         $senderEmail = $user->getSingleEmail();
-
-        $subject = "Please review attached deliverables for Work Request ID ".$transresRequest->getOid();
-
+        
         $adminEmailInfos = array();
         $asEmail=false;
         $onlyAdmin=true;
@@ -2684,10 +2686,12 @@ class TransResRequestUtil
         // Please review the items and comments (if any), and if you have any concerns,
         // contact the Translational Research group by emailing [FirstName LastName] (email@address). (mailto: link)
         //list all users with Translational Research Administrator roles
-        $body = "The Translational Research group is working on your request ".$transresRequest->getOid().
-        " and is planning to deliver the items listed in the attached document.".
-        " Please review the items and comments (if any), and if you have any concerns,".
-        " contact the Translational Research group by emailing ".implode(", ",$adminEmailInfos);
+//        $body = "The Translational Research group is working on your request ".$transresRequest->getOid().
+//        " and is planning to deliver the items listed in the attached document.".
+//        " Please review the items and comments (if any), and if you have any concerns,".
+//        " contact the Translational Research group by emailing ".implode(", ",$adminEmailInfos);
+        //Replace [[EMAILS]] with
+        $body = str_replace("[[EMAILS]]",implode(", ",$adminEmailInfos),$body);
 
         $attachmentPath = $pdf->getAbsoluteUploadFullPath();
         //echo "attachmentPath=$attachmentPath<br>";
