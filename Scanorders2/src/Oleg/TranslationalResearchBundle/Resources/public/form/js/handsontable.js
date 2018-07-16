@@ -388,10 +388,14 @@ function transresTableBarcodeGeneration( barcodeField ) {
     console.log("generate barcode");
     //generate barcode
     var barcode = null;
-    //var image = '<img src="https://www.imgonline.com.ua/examples/random-pixels.jpg" height="42" width="42">';
-    //var image = "https://www.imgonline.com.ua/examples/random-pixels.jpg";
-    var image = "https://arifdiyanto.files.wordpress.com/2015/11/qrcodeuk.gif";
-    console.log("image="+image);
+
+    //testing dummy image
+    if(0) {
+        //var image = '<img src="https://www.imgonline.com.ua/examples/random-pixels.jpg" height="42" width="42">';
+        //var image = "https://www.imgonline.com.ua/examples/random-pixels.jpg";
+        var image = "https://arifdiyanto.files.wordpress.com/2015/11/qrcodeuk.gif";
+        console.log("image=" + image);
+    }
 
     //var imageEl = '<img src="' + image + '" height="42" width="42">';
     //$("#test-barcode-image").html(imageEl);
@@ -417,7 +421,7 @@ function transresTableBarcodeGeneration( barcodeField ) {
     //     }
     // });
 
-    //transresGenerateBarcode();
+    image = transresGenerateBarcode();
 
     return image;
 }
@@ -426,7 +430,9 @@ function transresTableBarcodeGeneration( barcodeField ) {
 // const BWIPJS  = require('./bwipjs');
 // const BWIPP   = require('./bwipp');
 // const fontlib = require('./node-fonts');
-
+//use demo: https://github.com/metafloor/bwip-js/blob/master/demo.html
+//http://jsfiddle.net/josh3736/tAaBe/
+//QR alternative: https://davidshimjs.github.io/qrcodejs/
 function transresGenerateBarcode() {
     // Initialize a barcode writer object.  This is the interface between
     // the low-level BWIPP code, the font-manager, and the Bitmap object.

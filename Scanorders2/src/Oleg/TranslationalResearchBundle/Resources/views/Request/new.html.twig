@@ -21,7 +21,30 @@
         {{ title }}
     </h4>
 
-    {{ transres.newSaveWarning("Work Request") }}
+    {% if cycle == "new" %}
+        <p>
+            <i>
+                Please make sure to save your Work Request as a draft prior leaving this page.
+            </i>
+        </p>
+    {% endif %}
+    {% if cycle == "edit" %}
+        <p>
+            <i>
+                Please make sure to update/save your Work Request prior leaving this page.
+            </i>
+        </p>
+    {% endif %}
+
+    {#barcode image test#}
+    <button onclick="render()">Show Barcode</button>
+    Img:<img id="myimg">
+    <br>
+    //Canvas:<canvas id="canvas" width=1 height=1 style="border:1px solid #fff;visibility:hidden"></canvas>
+    <br><br><hr>
+    {{ transresRequestMacros.barcodedemo() }}
+    <br><br><hr>
+
 
     {% if cycle == "show" %}
         {% if
@@ -177,6 +200,13 @@
     <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
 
+    {% stylesheets
+    'bundles/oleguserdirectory/bwip-js/lib/demo.css' filter='cssrewrite'
+    'bundles/oleguserdirectory/bwip-js/lib/jquery-ui.min.css' filter='cssrewrite'
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
 {% endblock %}
 
 
@@ -185,11 +215,18 @@
     {% javascripts
     '@OlegOrderformBundle/Resources/public/handsontable/jquery.handsontable.full.js'
     '@OlegTranslationalResearchBundle/Resources/public/form/js/handsontable.js'
-    '@OlegUserdirectoryBundle/Resources/public/bwip-js/bwipjs.js'
-    '@OlegUserdirectoryBundle/Resources/public/bwip-js/bwipp-min.js'
+    '@OlegTranslationalResearchBundle/Resources/public/form/js/barcode.js'
     '@OlegUserdirectoryBundle/Resources/public/bwip-js/freetype.js'
     '@OlegOrderformBundle/Resources/public/form/js/selectAjax.js'
     '@OlegOrderformBundle/Resources/public/form/js/masking.js'
+    '@OlegUserdirectoryBundle/Resources/public/bwip-js/bwipp.js'
+    '@OlegUserdirectoryBundle/Resources/public/bwip-js/bwipjs.js'
+    '@OlegUserdirectoryBundle/Resources/public/bwip-js/lib/jquery-ui.min.js'
+    '@OlegUserdirectoryBundle/Resources/public/bwip-js/lib/xhr-fonts.js'
+    '@OlegUserdirectoryBundle/Resources/public/bwip-js/lib/bitmap.js'
+    '@OlegUserdirectoryBundle/Resources/public/bwip-js/lib/symdesc.js'
+    '@OlegUserdirectoryBundle/Resources/public/bwip-js/lib/canvas-toblob.js'
+    '@OlegUserdirectoryBundle/Resources/public/bwip-js/lib/filesaver.js'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
@@ -242,6 +279,8 @@
 //            $('.table-barcode').on("change", function(event) {
 //                transresTableBarcodeGeneration( $(this) );
 //            });
+
+            bwipInit();
 
         });
 
@@ -346,3 +385,7 @@
 
 
 {% endblock %}
+
+
+
+

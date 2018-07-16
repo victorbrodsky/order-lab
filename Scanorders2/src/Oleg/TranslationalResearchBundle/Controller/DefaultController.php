@@ -238,4 +238,13 @@ class DefaultController extends Controller
     }
 
 
+    /**
+     * http://localhost/order/translational-research/barcode-demo
+     *
+     * @Route("/barcode-demo", name="translationalresearch_barcode-demo")
+     * @Template("OlegTranslationalResearchBundle:Request:barcodedemo.html.twig")
+     */
+    public function barcodeDemoAction( Request $request ) {
+        return array();
+    }
 }
