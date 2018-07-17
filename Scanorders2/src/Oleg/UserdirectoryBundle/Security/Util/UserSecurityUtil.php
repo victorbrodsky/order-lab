@@ -1415,7 +1415,7 @@ class UserSecurityUtil {
 
         }
 
-        if( $logger->getObjectType() == "SiteList" ) {
+        if( $logger->getObjectType() == "SiteList" || $logger->getObjectType() == "Institution" ) {
             $siteName = "directory";
         }
 

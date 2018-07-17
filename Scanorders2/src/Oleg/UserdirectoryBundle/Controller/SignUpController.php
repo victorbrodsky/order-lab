@@ -372,12 +372,14 @@ class SignUpController extends Controller
         //$em->persist($signUp);
         $em->flush($signUp);
 
+        $signUpUser = $signUp->getUser();
+
         //Event Log
         $systemuser = $userSecUtil->findSystemUser();
         $event = "New user registration has been created:<br>".$signUp;
         $event = $event . "<br>Email Subject: " . $subject;
         $event = $event . "<br>Email Body:<br>" . $body;
-        $userSecUtil->createUserEditEvent($this->siteName,$event,$systemuser,$signUp,$request,'Activation Email Sent');
+        $userSecUtil->createUserEditEvent($this->siteName,$event,$systemuser,$signUpUser,$request,'Activation Email Sent');
 
         $res = array('subject'=>$subject,'body'=>$body);
         return $res;
@@ -643,7 +645,7 @@ class SignUpController extends Controller
             $systemuser = $userSecUtil->findSystemUser();
             $event = "Successful Account Activation:<br>".$signUp;
             $userSecUtil = $this->get('user_security_utility');
-            $userSecUtil->createUserEditEvent($this->siteName,$event,$systemuser,$signUp,$request,'Successful Account Activation');
+            $userSecUtil->createUserEditEvent($this->siteName,$event,$systemuser,$user,$request,'Successful Account Activation');
 
             $this->get('session')->getFlashBag()->add(
                 'notice',
@@ -1145,13 +1147,15 @@ class SignUpController extends Controller
         //$em->persist($signUp);
         $em->flush($resetPassword);
 
+        $signUpUser = $resetPassword->getUser();
+
         //Event Log
         //$author = $this->get('security.token_storage')->getToken()->getUser();
         $systemuser = $userSecUtil->findSystemUser();
         $event = "ORDER Password reset link has been used for ".$this->siteNameStr." for:<br>".$resetPassword;
         $event = $event . "<br>Email Subject: " . $subject;
         $event = $event . "<br>Email Body:<br>" . $body;
-        $userSecUtil->createUserEditEvent($this->siteName,$event,$systemuser,$resetPassword,$request,'Password Reset Email Sent');
+        $userSecUtil->createUserEditEvent($this->siteName,$event,$systemuser,$signUpUser,$request,'Password Reset Email Sent');
 
         $res = array('subject'=>$subject,'body'=>$body);
         return $res;
@@ -1352,7 +1356,7 @@ class SignUpController extends Controller
             $systemuser = $userSecUtil->findSystemUser();
             $event = "Successful Password Reset:<br>".$resetPassword;
             $userSecUtil = $this->get('user_security_utility');
-            $userSecUtil->createUserEditEvent($this->siteName,$event,$systemuser,$resetPassword,$request,'Successful Password Reset');
+            $userSecUtil->createUserEditEvent($this->siteName,$event,$systemuser,$user,$request,'Successful Password Reset');
 
             $this->get('session')->getFlashBag()->add(
                 'notice',
