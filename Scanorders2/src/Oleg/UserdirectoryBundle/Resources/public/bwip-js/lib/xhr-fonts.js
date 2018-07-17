@@ -10,11 +10,55 @@ var bwipjs_fonts = {
 	toload:	{},
 };
 
+function bwipjsGetFontDit() {
+	var fontDir = null;
+	// Get the url to this script.  The fonts will be in: ../fonts/
+	if(0) {
+		//var srcpath = document.querySelector('script[src$="xhr-fonts.js"]').getAttribute('src');
+		var srcpath = "/order/bundles/oleguserdirectory/bwip-js/lib/xhr-fonts.js";
+		fontDir = srcpath.replace(/lib\/xhr-fonts.js$/, 'fonts/');
+		//correct url: bwipjs_fonts.fontdir=/order/bundles/oleguserdirectory/bwip-js/fonts/
+	} else {
+		var srcpath = document.querySelector('script[src*="xhr-fonts.js"]').getAttribute('src');
+		//var srcpath = "/order/bundles/oleguserdirectory/bwip-js/lib/xhr-fonts.js";
+		console.log("srcpath="+srcpath);
+		//order/bundles/oleguserdirectory/bwip-js/lib/xhr-fonts.js?1531837781
+		var urlArr = srcpath.split("lib/xhr-fonts.js");
+		if( urlArr.length > 0 ) {
+			fontDir = urlArr[0]+"fonts/";
+		}
+	}
+	console.log("fontDir="+fontDir);
+
+	return fontDir;
+}
+
 // Load the font metrics
 (function() {
 	// Get the url to this script.  The fonts will be in: ../fonts/
-	var srcpath = document.querySelector('script[src$="xhr-fonts.js"]').getAttribute('src');
-	bwipjs_fonts.fontdir = srcpath.replace(/lib\/xhr-fonts.js$/, 'fonts/');
+	//var srcpath = document.querySelector('script[src$="xhr-fonts.js"]').getAttribute('src');
+	//bwipjs_fonts.fontdir = srcpath.replace(/lib\/xhr-fonts.js$/, 'fonts/');
+
+	// Get the url to this script.  The fonts will be in: ../fonts/
+	// if(0) {
+	// 	//var srcpath = document.querySelector('script[src$="xhr-fonts.js"]').getAttribute('src');
+	// 	var srcpath = "/order/bundles/oleguserdirectory/bwip-js/lib/xhr-fonts.js";
+	// 	bwipjs_fonts.fontdir = srcpath.replace(/lib\/xhr-fonts.js$/, 'fonts/');
+	// 	//correct url: bwipjs_fonts.fontdir=/order/bundles/oleguserdirectory/bwip-js/fonts/
+	// } else {
+	// 	var srcpath = document.querySelector('script[src*="xhr-fonts.js"]').getAttribute('src');
+	// 	//var srcpath = "/order/bundles/oleguserdirectory/bwip-js/lib/xhr-fonts.js";
+	// 	console.log("srcpath="+srcpath);
+	// 	///order/bundles/oleguserdirectory/bwip-js/lib/xhr-fonts.js?1531837781
+	// 	//bwipjs_fonts.fontdir = srcpath.replace(/lib\/xhr-fonts.js$/, 'fonts/');
+	// 	//bwipjs_fonts.fontdir = srcpath.replace(/lib\/xhr-fonts.js$/, 'fonts/');
+	// 	var urlArr = srcpath.split("lib/xhr-fonts.js");
+	// 	if( urlArr.length > 0 ) {
+	// 		bwipjs_fonts.fontdir = urlArr[0]+"fonts/";
+	// 	}
+	// }
+	bwipjs_fonts.fontdir = bwipjsGetFontDit();
+	console.log("bwipjs_fonts.fontdir="+bwipjs_fonts.fontdir);
 
 	// Begin loading the font metrics
 	metrics(0);

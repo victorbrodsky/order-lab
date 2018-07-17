@@ -2,6 +2,29 @@
  * Created by ch3 on 7/16/2018.
  */
 
+function bwipjsGetFontDit() {
+    var fontDir = null;
+    // Get the url to this script.  The fonts will be in: ../fonts/
+    if(0) {
+        //var srcpath = document.querySelector('script[src$="xhr-fonts.js"]').getAttribute('src');
+        var srcpath = "/order/bundles/oleguserdirectory/bwip-js/lib/xhr-fonts.js";
+        fontDir = srcpath.replace(/lib\/xhr-fonts.js$/, 'fonts/');
+        //correct url: bwipjs_fonts.fontdir=/order/bundles/oleguserdirectory/bwip-js/fonts/
+    } else {
+        var srcpath = document.querySelector('script[src*="xhr-fonts.js"]').getAttribute('src');
+        //var srcpath = "/order/bundles/oleguserdirectory/bwip-js/lib/xhr-fonts.js";
+        console.log("srcpath="+srcpath);
+        //order/bundles/oleguserdirectory/bwip-js/lib/xhr-fonts.js?1531837781
+        var urlArr = srcpath.split("lib/xhr-fonts.js");
+        if( urlArr.length > 0 ) {
+            fontDir = urlArr[0]+"fonts/";
+        }
+    }
+    console.log("fontDir="+fontDir);
+
+    return fontDir;
+}
+
 function bwipInit() {
     var lastSymbol	= localStorage.getItem('bwipjsLastSymbol');
     var lastBarText	= localStorage.getItem('bwipjsLastBarText');
