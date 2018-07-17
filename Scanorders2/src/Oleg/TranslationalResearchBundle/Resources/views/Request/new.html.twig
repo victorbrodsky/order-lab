@@ -12,10 +12,13 @@
 
 {% block content %}
 
+    {% set bwipjsSrcpath = "/order/bundles/oleguserdirectory/bwip-js/" %}
+
     {#<input type="hidden" id="formnodetrigger" value="{{ formnodetrigger }}" />#}
     {#<input type="hidden" id="formnodeTopHolderId" value="{{ formnodeTopHolderId }}" />#}
     <input type="hidden" id="formcycle" value="{{ cycle }}" />
     <input type="hidden" id="default-accession-type" value="{{ defaultAccessionType }}" />
+    <input type="hidden" id="bwipjs-srcpath" value="{{ bwipjsSrcpath }}" />
 
     <h4 class="text-info" align="center">
         {{ title }}
@@ -37,13 +40,13 @@
     {% endif %}
 
     {#barcode image test#}
-    <button onclick="render()">Show Barcode</button>
-    Img:<img id="myimg">
-    <br>
-    //Canvas:<canvas id="canvas" width=1 height=1 style="border:1px solid #fff;visibility:hidden"></canvas>
+    {#<button onclick="render()">Show Barcode</button>#}
+    {#Img:<img id="myimg">#}
+    {#<br>#}
+    {#Canvas:<canvas id="canvas" width=1 height=1 style="border:1px solid #fff;visibility:hidden"></canvas>#}
     <br><br><hr>
     {{ transresRequestMacros.barcodedemo() }}
-    <br><br><hr>
+    <hr><br><br>
 
 
     {% if cycle == "show" %}
@@ -212,13 +215,14 @@
 
 {% block additionaljs %}
 
+    {#'@OlegUserdirectoryBundle/Resources/public/bwip-js/lib/jquery.js'#}
     {% javascripts
     '@OlegOrderformBundle/Resources/public/handsontable/jquery.handsontable.full.js'
     '@OlegTranslationalResearchBundle/Resources/public/form/js/handsontable.js'
-    '@OlegTranslationalResearchBundle/Resources/public/form/js/barcode.js'
     '@OlegUserdirectoryBundle/Resources/public/bwip-js/freetype.js'
     '@OlegOrderformBundle/Resources/public/form/js/selectAjax.js'
     '@OlegOrderformBundle/Resources/public/form/js/masking.js'
+    '@OlegTranslationalResearchBundle/Resources/public/form/js/barcode.js'
     '@OlegUserdirectoryBundle/Resources/public/bwip-js/bwipp.js'
     '@OlegUserdirectoryBundle/Resources/public/bwip-js/bwipjs.js'
     '@OlegUserdirectoryBundle/Resources/public/bwip-js/lib/jquery-ui.min.js'
@@ -280,7 +284,7 @@
 //                transresTableBarcodeGeneration( $(this) );
 //            });
 
-            bwipInit();
+            //bwipInit();
 
         });
 

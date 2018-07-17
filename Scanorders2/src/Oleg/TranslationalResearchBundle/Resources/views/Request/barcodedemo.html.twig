@@ -250,6 +250,7 @@
         }
 
         function saveCanvas(type, ext) {
+            console.log("saveCanvas !!!");
             var canvas = document.getElementById('canvas');
             canvas.toBlob(function (blob) {
                 saveAs(blob, saveCanvas.basename + ext);

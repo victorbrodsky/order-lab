@@ -11,21 +11,29 @@ function bwipjsGetFontDit() {
         fontDir = srcpath.replace(/lib\/xhr-fonts.js$/, 'fonts/');
         //correct url: bwipjs_fonts.fontdir=/order/bundles/oleguserdirectory/bwip-js/fonts/
     } else {
-        var srcpath = document.querySelector('script[src*="xhr-fonts.js"]').getAttribute('src');
-        //var srcpath = "/order/bundles/oleguserdirectory/bwip-js/lib/xhr-fonts.js";
-        console.log("srcpath="+srcpath);
-        //order/bundles/oleguserdirectory/bwip-js/lib/xhr-fonts.js?1531837781
-        var urlArr = srcpath.split("lib/xhr-fonts.js");
-        if( urlArr.length > 0 ) {
-            fontDir = urlArr[0]+"fonts/";
+        var scripthPath = document.querySelector('script[src*="xhr-fonts.js"]');
+        if( scripthPath ) {
+            var srcpath = scripthPath.getAttribute('src');
+            //var srcpath = "/order/bundles/oleguserdirectory/bwip-js/lib/xhr-fonts.js";
+            console.log("srcpath=" + srcpath);
+            //order/bundles/oleguserdirectory/bwip-js/lib/xhr-fonts.js?1531837781
+            var urlArr = srcpath.split("lib/xhr-fonts.js");
+            if (urlArr.length > 0) {
+                fontDir = urlArr[0] + "fonts/";
+            }
         }
+    }
+    if( !fontDir ) {
+        // "/order/bundles/oleguserdirectory/bwip-js/"
+        var srcpath = $("#bwipjs-srcpath").val();
+        fontDir = srcpath + "fonts/";
     }
     console.log("fontDir="+fontDir);
 
     return fontDir;
 }
 
-function bwipInit() {
+$(document).ready(function() {
     var lastSymbol	= localStorage.getItem('bwipjsLastSymbol');
     var lastBarText	= localStorage.getItem('bwipjsLastBarText');
     var lastAltText	= localStorage.getItem('bwipjsLastAltText');
@@ -34,6 +42,7 @@ function bwipInit() {
     var lastScaleX  = +localStorage.getItem('bwipjsLastScaleX');
     var lastScaleY  = +localStorage.getItem('bwipjsLastScaleY');
     var lastFntMono	= +localStorage.getItem('bwipjsLastFontMono');
+
     var $sel = $('#symbol')
         .change(function(ev) {
             var desc = symdesc[$(this).val()];
@@ -51,12 +60,14 @@ function bwipInit() {
             var canvas = document.getElementById('canvas');
             canvas.width = canvas.width;
         });
+
     if (lastSymbol) {
         $sel.val(lastSymbol);
     } else {
         $sel.prop('selectedIndex', 0);
     }
     $sel.trigger('change');
+
     if (lastBarText) {
         $('#symtext').val(lastBarText);
         $('#symaltx').val(lastAltText);
@@ -72,6 +83,7 @@ function bwipInit() {
     if (lastFntMono) {
         document.getElementById('fontMono').checked = true;
     }
+
     $('#scaleX').spinner({ min:1 })
         .on("spinstop", function(ev) {
             $('#scaleY').val(this.value);
@@ -79,6 +91,7 @@ function bwipInit() {
     $('#scaleY').spinner({ min:1 });
     $('#render').button().click(render);
     $('.saveas').css('visibility', 'hidden');
+
     if (location.search.indexOf('proofs=1') != -1) {
         // Show the images from BWIPP with Ghostscript
         var img = document.createElement('img');
@@ -89,6 +102,7 @@ function bwipInit() {
         img.style.left			= '0px';
         $('#proof').append(img);
     }
+
     // Allow Enter to render
     $('#params').keypress(function(ev) {
         if (ev.which == 13) {
@@ -98,78 +112,144 @@ function bwipInit() {
             return false;
         }
     });
+
     document.getElementById('versions').textContent =
         'bwip-js ' + BWIPJS.VERSION + ' / BWIPP ' + BWIPP.VERSION;
-}
+});
 
 function render() {
-    var elt = symdesc[$('#symbol')[0].selectedIndex];
+    var elt  = symdesc[$('#symbol').val()];
     var text = $('#symtext').val().replace(/^\s+/,'').replace(/\s+$/,'');
     var altx = $('#symaltx').val().replace(/^\s+/,'').replace(/\s+$/,'');
     var opts = $('#symopts').val().replace(/^\s+/,'').replace(/\s+$/,'');
+    var rot  = document.querySelector('input[name="rot"]:checked').value;
 
-    var bw = new BWIPJS;
+    // Anti-aliased or monochrome fonts and scaling factors.
+    var monochrome = document.getElementById('fontMono').checked;
+    var scaleX = +document.getElementById('scaleX').value || 2;
+    var scaleY = +document.getElementById('scaleY').value || 2;
+
+    localStorage.setItem('bwipjsLastSymbol',  elt.sym);
+    localStorage.setItem('bwipjsLastBarText', text);
+    localStorage.setItem('bwipjsLastAltText', altx);
+    localStorage.setItem('bwipjsLastOptions', opts);
+    localStorage.setItem('bwipjsLastScaleX', scaleX);
+    localStorage.setItem('bwipjsLastScaleY', scaleY);
+    localStorage.setItem('bwipjsLastFontMono', monochrome ? 1 : 0);
+    localStorage.setItem('bwipjsLastRotation', rot);
+
+    var bw = new BWIPJS(bwipjs_fonts, monochrome);
+
+    // Clear the page
+    $('#output').text('');
+    $('#stats').text('');
+    $('#proof-img').css('visibility', 'hidden');
+    $('.saveas').css('visibility', 'hidden');
+
+    var canvas = document.getElementById('canvas');
+    canvas.height = 1;
+    canvas.width  = 1;
+    canvas.style.visibility = 'hidden';
 
     // Convert the options to a dictionary object, so we can pass alttext with
     // spaces.
     var tmp = opts.split(' ');
     opts = {};
     for (var i = 0; i < tmp.length; i++) {
-        if (!tmp[i])
+        if (!tmp[i]) {
             continue;
+        }
         var eq = tmp[i].indexOf('=');
-        if (eq == -1)
-            opts[tmp[i]] = bw.value(true);
-        else
-            opts[tmp[i].substr(0, eq)] = bw.value(tmp[i].substr(eq+1));
-    }
-
-    // Add the alternate text
-    if (altx)
-        opts.alttext = bw.value(altx);
-
-    // Add any hard-coded options required to fix problems in the javascript
-    // emulation.
-    opts.inkspread = bw.value(0);
-    if (needyoffset[elt.sym] && !opts.textxalign && !opts.textyalign &&
-        !opts.alttext && opts.textyoffset === undefined)
-        opts.textyoffset = bw.value(-10);
-
-    var rot  = 'N';
-    var rots = [ 'rotL', 'rotR', 'rotI' ];
-    for (var i = 0; i < rots.length; i++) {
-        if (document.getElementById(rots[i]).checked) {
-            rot = rots[i].charAt(3);
-            break;
+        if (eq == -1) {
+            opts[tmp[i]] = true;
+        } else {
+            opts[tmp[i].substr(0, eq)] = tmp[i].substr(eq+1);
         }
     }
 
-    bw.bitmap(new Bitmap);
+    // Add the alternate text
+    if (altx) {
+        opts.alttext = altx;
+        opts.includetext = true;
+    }
+    // We use mm rather than inches for height - except pharmacode2 height
+    // which is expected to be in mm
+    if (+opts.height && elt.sym != 'pharmacode2') {
+        opts.height = opts.height / 25.4 || 0.5;
+    }
+    // Likewise, width.
+    if (+opts.width) {
+        opts.width = opts.width / 25.4 || 0;
+    }
+    // BWIPP does not extend the background color into the
+    // human readable text.  Fix that in the bitmap interface.
+    if (opts.backgroundcolor) {
+        bw.bitmap(new Bitmap(canvas, rot, opts.backgroundcolor));
+        delete opts.backgroundcolor;
+    } else {
+        bw.bitmap(new Bitmap(canvas, rot));
+    }
 
-    var scl = parseInt(document.getElementById('scale').value, 10) || 2;
-    bw.scale(scl,scl);
+    // Set the scaling factors
+    bw.scale(scaleX, scaleY);
 
-    var div = document.getElementById('output');
-    if (div)
-        div.innerHTML = '';
+    // Add optional padding to the image
+    bw.bitmap().pad(+opts.paddingwidth*scaleX || 0,
+        +opts.paddingheight*scaleY || 0);
 
-    bw.push(text);
-    bw.push(opts);
-
+    var ts0 = Date.now();
     try {
-        bw.call(elt.sym);
-        bw.bitmap().show('canvas', rot);
-    } catch(e) {
-        var s = '';
-        if (e.fileName)
-            s += e.fileName + ' ';
-        if (e.lineNumber)
-            s += '[line ' + e.lineNumber + '] ';
-        alert(s + (s ? ': ' : '') + e.message);
+        // Call into the BWIPP cross-compiled code.
+        BWIPP()(bw, elt.sym, text, opts);
+
+        // Allow the font manager to demand-load any required fonts
+        // before calling render().
+        var ts1 = Date.now();
+        bwipjs_fonts.loadfonts(function(e) {
+            if (e) {
+                $('#output').text(e.stack || (''+e));
+            } else {
+                show();
+            }
+        });
+    } catch (e) {
+        // Watch for BWIPP generated raiseerror's.
+        var msg = ''+e;
+        if (msg.indexOf("bwipp.") >= 0) {
+            $('#output').text(msg);
+        } else if (e.stack) {
+            $('#output').text(e.stack);
+        } else {
+            $('#output').text(e);
+        }
+        return;
+    }
+
+    // Draw the barcode to the canvas
+    function show() {
+        bw.render();
+        var ts2 = Date.now();
+
+        canvas.style.visibility = 'visible';
+        setURL();
+        $('#stats').text('Rendered in ' + (ts2-ts0) + ' msecs');
+        $('.saveas').css('visibility', 'visible');
+        saveCanvas.basename = elt.sym + '-' +
+            text.replace(/[^a-zA-Z0-9._]+/g, '-');
+
+        // Show proofs?
+        if (location.search.indexOf('proofs=1') != -1) {
+            var img = document.getElementById('proof-img');
+            if (img) {
+                img.src = 'proofs/' + elt.sym + '.png';
+                img.style.visibility = 'visible';
+            }
+        }
     }
 }
 
 function saveCanvas(type, ext) {
+    console.log("saveCanvas !!!");
     var canvas = document.getElementById('canvas');
     canvas.toBlob(function (blob) {
         saveAs(blob, saveCanvas.basename + ext);
@@ -184,6 +264,7 @@ function setURL() {
     var mono = document.getElementById('fontMono').checked;
     var scaleX = +document.getElementById('scaleX').value || 2;
     var scaleY = +document.getElementById('scaleY').value || scaleX;
+
     var url = 'http://bwipjs-api.metafloor.com/?bcid=' + elt.sym +
         '&text=' + encodeURIComponent(text) +
         (altx ? '&alttext=' + encodeURIComponent(altx) : '') +
@@ -192,5 +273,6 @@ function setURL() {
         (scaleX == scaleY ? '&scale=' + scaleX
             : '&scaleX=' + scaleX + '&scaleY=' + scaleY) +
         (mono ? '&monochrome' : '');
+
     document.getElementById('apiurl').href = url;
 }

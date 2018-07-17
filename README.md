@@ -69,9 +69,10 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 
 1. Sign up for [Digital Ocean](https://www.digitalocean.com/) and obtain an [API access key token](https://www.digitalocean.com/help/api/). It should look similar to this one: e4561f1b44faa16c2b43e94c5685e5960e852326b921883765b3b0e11111f705
 
-2. [Download](https://github.com/victorbrodsky/order-lab/archive/master.zip) and uncompress or [clone](https://help.github.com/articles/cloning-a-repository/) the source code from [github.com/victorbrodsky/order-lab](https://github.com/victorbrodsky/order-lab) by running the following command in the Terminal / shell:
+2. [Download](https://github.com/victorbrodsky/order-lab/archive/master.zip) and uncompress or [clone](https://help.github.com/articles/cloning-a-repository/) the source code from [github.com/victorbrodsky/order-lab](https://github.com/victorbrodsky/order-lab) by running the following commands in the Terminal / shell:
 
-	 	git clone https://github.com/victorbrodsky/order-lab.git
+	 	sudo apt install -y git
+        git clone https://github.com/victorbrodsky/order-lab.git
 
 3. Install [Packer](https://www.packer.io/) and [doctl](https://github.com/digitalocean/doctl) by following the recommended installation instructions or by using snap:
 
@@ -93,7 +94,8 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 
 5. Run /packer/deploy-order-digital-ocean.sh via (make sure to supply your API token):
 
-	 	bash deploy-order-digital-ocean.sh API-TOKEN-FROM-STEP-1 parameters.yml
+	 	cd order-lab/packer
+        bash deploy-order-digital-ocean.sh API-TOKEN-FROM-STEP-1 parameters.yml
 
 6. If the browser window with this URL does not open automatically at the end of the previous step, visit http://IPADDRESS/order/directory/admin/first-time-login-generation-init/ to generate the initial Administrator account, where IPADDRESS is the IP address of the server. Wait until the site redirects to the log in screen (it might take a while.)
 
@@ -111,6 +113,17 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
 10. To enable submission of applications for the Fellowship application site via Google services, use the files in the /order-lab/Scanorders2/src/Oleg/FellAppBundle/Util/GoogleForm folder with the [Google Apps Script](https://developers.google.com/apps-script/). Make sure to add the Google Apps Script API key on the Site Settings page http://IPADDRESS/order/directory/settings/.
 
 11. If bulk import of the initial set of users is desired, download the [ImportUsersTemplate.xlsx](https://github.com/victorbrodsky/order-lab/tree/master/importLists) file from the /importLists folder, fill it out with the user details, and upload it back via the the Navigation bar's "Admin > Import Users" (http://IPADDRESS/order/directory/import-users/spreadsheet) function on the Employee Directory site.
+
+12. In order to later update to the latest version, connect to your server via:
+
+        ssh root@YOUR-IP-OR-DOMAIN-NAME
+
+    (you may be asked to change your password if connecting for the first time), then run:
+
+        cd /usr/local/bin/order-lab
+        git pull
+        cd Scanorders2
+        bash deploy_prod.sh
 
 Note: If you choose to use MySQL database on Linux instead of Postgres, you will need to increase the size of the sort buffer by setting "sort_buffer_size" to 512K in /etc/mysql/my.cnf.
 
@@ -165,6 +178,17 @@ Note: If you choose to use MySQL database on Linux instead of Postgres, you will
 11. To enable submission of applications for the Fellowship application site via Google services, use the files in the /order-lab/Scanorders2/src/Oleg/FellAppBundle/Util/GoogleForm folder with the [Google Apps Script](https://developers.google.com/apps-script/). Make sure to add the Google Apps Script API key on the Site Settings page http://IPADDRESS/order/directory/settings/.
 
 12. If bulk import of the initial set of users is desired, download the [ImportUsersTemplate.xlsx](https://github.com/victorbrodsky/order-lab/tree/master/importLists) file from the /importLists folder, fill it out with the user details, and upload it back via the the Navigation bar's "Admin > Import Users" (http://IPADDRESS/order/directory/import-users/spreadsheet) function on the Employee Directory site.
+
+13. In order to later update to the latest version, connect to your server via:
+
+        ssh root@YOUR-IP-OR-DOMAIN-NAME
+
+    (you may be asked to change your password if connecting for the first time), then run:
+
+        cd /usr/local/bin/order-lab
+        git pull
+        cd Scanorders2
+        bash deploy_prod.sh
 
 Note: If you choose to use MySQL database on Linux instead of Postgres, you will need to increase the size of the sort buffer by setting "sort_buffer_size" to 512K in /etc/mysql/my.cnf.
 
@@ -333,6 +357,17 @@ Note: If you choose to use MySQL database on Linux instead of Postgres, you will
 8. To enable submission of applications for the Fellowship application site via Google services, use the files in the /order-lab/Scanorders2/src/Oleg/FellAppBundle/Util/GoogleForm folder with the [Google Apps Script](https://developers.google.com/apps-script/). Make sure to add the Google Apps Script API key on the Site Settings page http://IPADDRESS/order/directory/settings/.
 
 9. If bulk import of the initial set of users is desired, download the [ImportUsersTemplate.xlsx](https://github.com/victorbrodsky/order-lab/tree/master/importLists) file from the /importLists folder, fill it out with the user details, and upload it back via the the Navigation bar's "Admin > Import Users" (http://IPADDRESS/order/directory/import-users/spreadsheet) function on the Employee Directory site.
+
+10. In order to later update to the latest version, connect to your server via:
+
+        ssh root@YOUR-IP-OR-DOMAIN-NAME
+
+    (you may be asked to change your password if connecting for the first time), then:
+
+        cd C:\ORDER_LOCATION\order-lab-master\
+        git pull
+        cd Scanorders2
+        bash deploy_prod.sh (via details in step 5 (a) above)
 
 ## Developer Notes
 
