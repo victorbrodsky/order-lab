@@ -1348,7 +1348,7 @@ class CallLogUtil
 
         if( $message->getId() ) {
             //View the Pathology Call Log Book entry 12345 submitted by SubmitterFirstName SubmitterLastName at [submission timestamp] by visiting:
-            $body = $body . $break . $break . "View the Pathology Call Log Book entry " . $message->getId() . " submitted on " . $userServiceUtil->getSubmitterInfo() . " by visiting:";
+            $body = $body . $break . $break . "View the Pathology Call Log Book entry " . $message->getId() . " submitted on " . $userServiceUtil->getSubmitterInfo($message) . " by visiting:";
 
             // http://collage.med.cornell.edu/order/call-log-book/entry/view/XXXID
             $messageUrl = $this->container->get('router')->generate(
