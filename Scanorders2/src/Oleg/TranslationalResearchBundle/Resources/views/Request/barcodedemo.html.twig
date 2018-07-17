@@ -79,7 +79,13 @@
                 $('#scaleY').val(lastScaleY);
             }
             if (lastRotate) {
-                document.getElementById('rot' + lastRotate).checked = true;
+                console.log("lastRotate="+lastRotate);
+                var rotEl = document.getElementById('rot' + lastRotate);
+                if( !rotEl ) {
+                    rotEl = document.getElementById('rot' + 'N');
+                }
+                //document.getElementById('rot' + lastRotate).checked = true;
+                rotEl.checked = true;
             }
             if (lastFntMono) {
                 document.getElementById('fontMono').checked = true;

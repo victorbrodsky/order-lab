@@ -13,12 +13,13 @@
 {% block content %}
 
     {% set bwipjsSrcpath = "/order/bundles/oleguserdirectory/bwip-js/" %}
+    <input type="hidden" id="bwipjs-srcpath" value="{{ bwipjsSrcpath }}" />
 
     {#<input type="hidden" id="formnodetrigger" value="{{ formnodetrigger }}" />#}
     {#<input type="hidden" id="formnodeTopHolderId" value="{{ formnodeTopHolderId }}" />#}
     <input type="hidden" id="formcycle" value="{{ cycle }}" />
     <input type="hidden" id="default-accession-type" value="{{ defaultAccessionType }}" />
-    <input type="hidden" id="bwipjs-srcpath" value="{{ bwipjsSrcpath }}" />
+
 
     <h4 class="text-info" align="center">
         {{ title }}

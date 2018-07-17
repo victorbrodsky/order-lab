@@ -10,28 +10,42 @@ var bwipjs_fonts = {
 	toload:	{},
 };
 
-// function bwipjsGetFontDit() {
-// 	var fontDir = null;
-// 	// Get the url to this script.  The fonts will be in: ../fonts/
-// 	if(0) {
-// 		//var srcpath = document.querySelector('script[src$="xhr-fonts.js"]').getAttribute('src');
-// 		var srcpath = "/order/bundles/oleguserdirectory/bwip-js/lib/xhr-fonts.js";
-// 		fontDir = srcpath.replace(/lib\/xhr-fonts.js$/, 'fonts/');
-// 		//correct url: bwipjs_fonts.fontdir=/order/bundles/oleguserdirectory/bwip-js/fonts/
-// 	} else {
-// 		var srcpath = document.querySelector('script[src*="xhr-fonts.js"]').getAttribute('src');
-// 		//var srcpath = "/order/bundles/oleguserdirectory/bwip-js/lib/xhr-fonts.js";
-// 		console.log("srcpath="+srcpath);
-// 		//order/bundles/oleguserdirectory/bwip-js/lib/xhr-fonts.js?1531837781
-// 		var urlArr = srcpath.split("lib/xhr-fonts.js");
-// 		if( urlArr.length > 0 ) {
-// 			fontDir = urlArr[0]+"fonts/";
-// 		}
-// 	}
-// 	console.log("fontDir="+fontDir);
-//
-// 	return fontDir;
-// }
+function bwipjsGetFontDit() {
+	var fontDir = null;
+	// Get the url to this script.  The fonts will be in: ../fonts/
+	if(0) {
+		//var srcpath = document.querySelector('script[src$="xhr-fonts.js"]').getAttribute('src');
+		var srcpath = "/order/bundles/oleguserdirectory/bwip-js/lib/xhr-fonts.js";
+		fontDir = srcpath.replace(/lib\/xhr-fonts.js$/, 'fonts/');
+		//correct url: bwipjs_fonts.fontdir=/order/bundles/oleguserdirectory/bwip-js/fonts/
+	} else {
+		var scripthPath = document.querySelector('script[src*="xhr-fonts.js"]');
+		if( scripthPath ) {
+			var srcpath = scripthPath.getAttribute('src');
+			//var srcpath = "/order/bundles/oleguserdirectory/bwip-js/lib/xhr-fonts.js";
+			console.log("srcpath=" + srcpath);
+			//order/bundles/oleguserdirectory/bwip-js/lib/xhr-fonts.js?1531837781
+			var urlArr = srcpath.split("lib/xhr-fonts.js");
+			if (urlArr.length > 0) {
+				fontDir = urlArr[0] + "fonts/";
+			}
+		}
+	}
+	if( !fontDir ) {
+		// "/order/bundles/oleguserdirectory/bwip-js/"
+		var srcpath = $("#bwipjs-srcpath").val();
+		if( srcpath ) {
+			fontDir = srcpath + "fonts/";
+		}
+	}
+	if( !fontDir ) {
+		var srcpath = "/order/bundles/oleguserdirectory/bwip-js/";
+		fontDir = srcpath + "fonts/";
+	}
+	console.log("fontDir="+fontDir);
+
+	return fontDir;
+}
 
 // Load the font metrics
 (function() {
