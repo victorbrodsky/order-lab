@@ -502,6 +502,9 @@ class UserSecurityUtil {
 
         $logger = $this->container->get('logger');
         $em = $this->em;
+        $userServiceUtil = $this->container->get('user_service_utility');
+
+        $saveEventObjectType = false;
 
         //if( !$user ) {
         //    $logger->warning("createUserEditEvent: "."User is not defined for $sitename for event=".$event);
@@ -577,6 +580,16 @@ class UserSecurityUtil {
             $eventObjectType = $this->getObjectByNameTransformer($user,$className,'UserdirectoryBundle','EventObjectTypeList');
             if( $eventObjectType ) {
                 $eventLog->setObjectType($eventObjectType);
+
+                //generate url if not exists
+                $url = $eventObjectType->getUrl();
+                //echo "url=".$url."<br>";
+                //exit();
+                if( !$url ) {
+                    $url = $userServiceUtil->classNameUrlMapper($className);
+                    $eventObjectType->setUrl($url);
+                    $saveEventObjectType = true;
+                }
             }
 
         } else {
@@ -588,6 +601,10 @@ class UserSecurityUtil {
 
         $em->persist($eventLog);
         $em->flush($eventLog);
+
+        if( $saveEventObjectType ) {
+            $em->flush($eventObjectType);
+        }
 
         return $eventLog;
     }
@@ -1365,6 +1382,7 @@ class UserSecurityUtil {
         //baseUrl ~ '/' ~ sitenameFull ~ '/' ~ entity.objectType.url ~ '/' ~ entity.entityId
 
         if( !$logger->getObjectType() ) {
+            //echo "no object type url=".$url."<br>";
             return $url;
         }
 
@@ -1439,6 +1457,7 @@ class UserSecurityUtil {
                     //UrlGeneratorInterface::ABSOLUTE_URL
                 );
 
+                //echo "no url=".$url."<br>";
                 return $url;
             }
 

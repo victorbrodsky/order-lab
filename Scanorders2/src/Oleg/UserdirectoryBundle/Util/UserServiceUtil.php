@@ -1242,7 +1242,30 @@ class UserServiceUtil {
         return $res;
     }
 
+    public function classNameUrlMapper($className) {
 
+        $mapArr = array(
+            "SiteList"                  => "admin/list/sites",
+            "User"                      => "user",
+            "Patient"                   => "patient",
+            "Message"                   => "entry/view",
+            "Roles"                     => "admin/list-manager/id/4",
+            "VacReqRequest"             => "show",
+            "Document"                  => "file-view",
+            "Institution"               => "admin/list/institutions",
+            "FellowshipApplication"     => "show",
+            "SiteParameters"            => "settings",
+            "VacReqUserCarryOver"       => "show",
+            "Project"                   => "project/show",
+            "TransResRequest"           => "request/show",
+            "DefaultReviewer"           => "default-reviewers/show",
+            "Invoice"                   => "invoice/show",
+        );
+
+        $url = $mapArr[$className];
+
+        return $url;
+    }
 
 
 

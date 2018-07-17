@@ -208,7 +208,7 @@
                     <td>{{ entity.id }}</td>
                 {%  endif %}
 
-                <td>{% if entity.creationdate %}{{ entity.creationdate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td class="rowlink-skip">{% if entity.creationdate %}{{ entity.creationdate|date('Y-m-d H:i:s') }}{% endif %}</td>
 
                 {% if hideIp is not defined or hideIp == false %}
                     <td>{{ entity.ip }}</td>
@@ -259,7 +259,7 @@
                     </td>
                 {% endif %}
 
-                <td>{{ entity.eventType }}</td>
+                <td class="rowlink-skip">{{ entity.eventType }}</td>
                 <td class="rowlink-skip">{{ entity.event|raw }}</td>
 
                 {% if hideADServerResponse is not defined or hideADServerResponse == false %}

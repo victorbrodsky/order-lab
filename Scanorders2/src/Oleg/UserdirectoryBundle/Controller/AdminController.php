@@ -6358,6 +6358,7 @@ class AdminController extends Controller
     }
     public function populateClassUrl() {
         $em = $this->getDoctrine()->getManager();
+        $userServiceUtil = $this->get('user_service_utility');
 
         $repository = $this->getDoctrine()->getRepository('OlegUserdirectoryBundle:Logger');
         $query = $repository->createQueryBuilder('logger')
@@ -6381,7 +6382,7 @@ class AdminController extends Controller
                 continue;
             }
 
-            $url = $this->classNameUrlMapper($entityName);
+            $url = $userServiceUtil->classNameUrlMapper($entityName);
             //echo "url=".$url."<br>";
 
             if( $entityName == "Patient" ) {
@@ -6401,40 +6402,6 @@ class AdminController extends Controller
 
         //exit("populateClassUrl count=".$count);
         return $count;
-    }
-    public function classNameUrlMapper($className) {
-
-        //$className => path
-        $mapArr = array(
-            "SiteList"                  => "admin/list/sites",
-            "User"                      => "user",
-            "Patient"                   => "patient",
-            "Message"                   => "entry/view",
-            "Roles"                     => "admin/list-manager/id/4",
-            "VacReqRequest"             => "show",
-            "Document"                  => "file-view",
-            "Institution"               => "admin/list/institutions",  //"admin/list-manager/id/5",
-            "FellowshipApplication"     => "show",
-            "SiteParameters"            => "settings",
-            //"FellowshipSubspecialty"    => "",
-            "VacReqUserCarryOver"       => "show",
-            //"Accession"                 => "",
-            //"AccessionAccession"        => "",
-            //"IrbReview"                 => "",
-            //"AdminReview"               => "",
-            //"CommitteeReview"           => "",
-            //"FinalReview"               => "",
-            "Project"                   => "project/show",
-            "TransResRequest"           => "request/show",
-            "DefaultReviewer"           => "default-reviewers/show",
-            "Invoice"                   => "invoice/show",
-            //"SignUp"                    => "",
-            //"ResetPassword"             => ""
-        );
-        
-        $url = $mapArr[$className];
-
-        return $url;
     }
 
     /**

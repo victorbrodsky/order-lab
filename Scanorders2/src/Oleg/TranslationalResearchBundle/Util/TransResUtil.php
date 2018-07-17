@@ -2290,36 +2290,6 @@ class TransResUtil
     public function setEventLog($project, $eventType, $event, $testing=false) {
         $user = $this->secTokenStorage->getToken()->getUser();
         $userSecUtil = $this->container->get('user_security_utility');
-
-//        if( $appliedTransition ) {
-//            $eventType = "Review Submitted";
-//
-//            if( !$event ) {
-//                $event = "Project's (ID# " . $project->getId() . ") review has been successfully submitted. " . $review->getSubmittedReviewerInfo();
-//
-//                //testing
-//                echo "appliedTransition=" . $appliedTransition . "<br>";
-//                //echo "printTransition=".$this->printTransition($appliedTransition)."<br>";
-//
-//                $event .= ";<br> Project transitioned from '" . $this->getStateLabelByName($originalStateStr) . "'" .
-//                    " to '" . $this->getStateLabelByName($project->getState()) . "'";
-//                echo "event=" . $event . "<br>";
-//
-//                //exit('1');
-//            }
-//
-//        } else {
-//            $eventType = "Review Submitting Not Performed";
-//            if( !$event ) {
-//                $event = "Project's (ID# " . $project->getId() . ") review submitting not performed. " . $review->getSubmittedReviewerInfo();
-//                $event .= ";<br> Project transitioned from '" . $this->getStateLabelByName($originalStateStr) . "'" .
-//                    " to '" . $this->getStateLabelByName($project->getState()) . "'";
-//                echo "event=" . $event . "<br>";
-//
-//                //exit('2');
-//            }
-//        }
-
         if( !$testing ) {
             $userSecUtil->createUserEditEvent($this->container->getParameter('translationalresearch.sitename'), $event, $user, $project, null, $eventType);
         }
