@@ -507,7 +507,7 @@ class SiteParametersController extends Controller
      */
     public function initialConfigurationAction(Request $request)
     {
-        //exit('EXIT: initialConfigurationAction');
+        exit('EXIT: initialConfigurationAction');
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
