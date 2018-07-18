@@ -560,7 +560,7 @@ class SiteParametersController extends Controller
 
         if( $form->isSubmitted() && $form->isValid() ) {
 
-            //exit("form is valid");
+            exit("initialConfigurationAction: form is valid");
 
             $modifiedAdminUser = false;
 
