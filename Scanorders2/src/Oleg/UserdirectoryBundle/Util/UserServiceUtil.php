@@ -1254,7 +1254,7 @@ class UserServiceUtil {
             "Document"                  => "file-view",
             "Institution"               => "admin/list/institutions",
             "FellowshipApplication"     => "show",
-            "SiteParameters"            => "settings",
+            "SiteParameters"            => "settings/settings-id", //"settings",
             "VacReqUserCarryOver"       => "show",
             "Project"                   => "project/show",
             "TransResRequest"           => "request/show",

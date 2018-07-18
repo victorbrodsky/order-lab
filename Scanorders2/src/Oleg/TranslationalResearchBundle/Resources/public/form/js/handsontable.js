@@ -362,13 +362,23 @@ function handsonTableInit(handsometableDataArr,tableFormCycle) {
                 }
 
                 if( oldValue != newValue ) {
-                    var barcodeImage = transresTableBarcodeGeneration(newValue);
-                    console.log("barcodeImage=" + barcodeImage);
-                    //barcodeImage = barcodeImage.replace('&lt;', '<').replace('&gt;', '>');
-                    //barcodeImage = '"' + barcodeImage + '"';
+                    //var barcodeImage = transresTableBarcodeGeneration(newValue);
+                    //console.log("barcodeImage=" + barcodeImage);
+                    //_sotable.setDataAtCell(rowNumber, columnNumber + 1, barcodeImage);
 
-                    //_sotable.setDataAtRowProp(rowNumber, 'Barcode Image', barcodeImage);
-                    _sotable.setDataAtCell(rowNumber, columnNumber + 1, barcodeImage);
+                    // //Returns a TD element for the given row and column arguments, if it is rendered on screen.
+                    // //Returns null if the TD is not rendered on screen (probably because that part of the table is not visible).
+                    // var cellEl = _sotable.getCell(rowNumber, columnNumber + 1);
+                    // //create canvas element in this TD
+                    // //<canvas id="canvas" width=1 height=1 style="border:1px solid #fff;visibility:hidden"></canvas>
+                    // var canvasId = "canvas-"+rowNumber+"-"+columnNumber + 1;
+                    // var canvasEl = '<canvas id="'+canvasId+'" width=1 height=1 style="border:1px solid #fff;visibility:hidden"></canvas>';
+                    //
+                    // $(cellEl).append(canvasEl,newValue);
+                    //
+                    // render(canvasId);
+
+                    setBarcodeImageApi(newValue,rowNumber,columnNumber+1);
                 }
             }
         }
@@ -383,6 +393,34 @@ function handsonTableInit(handsometableDataArr,tableFormCycle) {
 
 }
 
+//https://github.com/metafloor/bwip-js/wiki/Online-Barcode-API
+function setBarcodeImageApi(barcodeText,rowNumber,columnNumber) {
+    var code = "qrcode";
+    var img = '<img alt="Barcoded value '+barcodeText+'" src="http://bwipjs-api.metafloor.com/?bcid='+code+'&text='+barcodeText+'&includetext&scale=0.5">';
+
+    var cellEl = _sotable.getCell(rowNumber, columnNumber);
+    //create canvas element in this TD
+    //<canvas id="canvas" width=1 height=1 style="border:1px solid #fff;visibility:hidden"></canvas>
+    //var canvasId = "canvas-"+rowNumber+"-"+columnNumber;
+    //var canvasEl = '<canvas id="'+canvasId+'" width=1 height=1 style="border:1px solid #fff;visibility:hidden"></canvas>';
+
+    $(cellEl).append(img);
+}
+
+function setBarcodeImage(barcodeText,rowNumber,columnNumber) {
+    console.log("setBarcodeImage: barcodeText="+barcodeText+"; rowNumber="+rowNumber+"; columnNumber="+columnNumber);
+    //Returns a TD element for the given row and column arguments, if it is rendered on screen.
+    //Returns null if the TD is not rendered on screen (probably because that part of the table is not visible).
+    var cellEl = _sotable.getCell(rowNumber, columnNumber);
+    //create canvas element in this TD
+    //<canvas id="canvas" width=1 height=1 style="border:1px solid #fff;visibility:hidden"></canvas>
+    var canvasId = "canvas-"+rowNumber+"-"+columnNumber;
+    var canvasEl = '<canvas id="'+canvasId+'" width=1 height=1 style="border:1px solid #fff;visibility:hidden"></canvas>';
+
+    $(cellEl).append(canvasEl);
+
+    render(canvasId,barcodeText);
+}
 
 function transresTableBarcodeGeneration( barcodeField ) {
     console.log("generate barcode");

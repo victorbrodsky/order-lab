@@ -42,6 +42,22 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class SiteParametersController extends Controller
 {
 
+    /**
+     * Lists all SiteParameters entities.
+     *
+     * @Route("/settings-id/{id}", name="employees_siteparameters_id")
+     * @Method("GET")
+     * @Template("OlegUserdirectoryBundle:SiteParameters:index.html.twig")
+     */
+    public function indexIdAction(Request $request, $id=null)
+    {
+        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+            return $this->redirect($this->generateUrl('employees-nopermission'));
+        }
+
+        return $this->redirect($this->generateUrl('employees_siteparameters'));
+    }
+
     //@Route("/{id}", name="employees_siteparameters_id")
     //, $id=null
     /**

@@ -39,7 +39,7 @@ function bwipjsGetFontDit() {
     return fontDir;
 }
 
-function testBarcode() {
+function testBarcode(canvasId) {
 
     var elt  = {sym:"qrcode"};      //symdesc[$('#symbol').val()];
     //var elt  = symdesc[$('#symbol').val()];
@@ -49,7 +49,9 @@ function testBarcode() {
     var rot  = 'N'; //document.querySelector('input[name="rot"]:checked').value;
 
     // Anti-aliased or monochrome fonts and scaling factors.
-    var monochrome = false; //document.getElementById('fontMono').checked;
+    //var monochrome = false; //document.getElementById('fontMono').checked;
+    var monochrome = document.getElementById('fontMono').checked;
+
     var scaleX = 1; //+document.getElementById('scaleX').value || 2;
     var scaleY = 1; //+document.getElementById('scaleY').value || 2;
 
@@ -72,6 +74,9 @@ function testBarcode() {
     // Initialize a barcode writer object.  This is the interface between
     // the low-level BWIPP code, the font manager, and the Bitmap object.
     var bw = new BWIPJS(bwipjs_fonts, monochrome);
+
+    console.log("bwipjs_fonts:");
+    console.log(bwipjs_fonts);
 
     var canvas = document.getElementById('canvas');
     canvas.height = 1;
@@ -110,6 +115,7 @@ function testBarcode() {
     }
     // BWIPP does not extend the background color into the
     // human readable text.  Fix that in the bitmap interface.
+    console.log("bw.bitmap - canvas");
     if (opts.backgroundcolor) {
         bw.bitmap(new Bitmap(canvas, rot, opts.backgroundcolor));
         delete opts.backgroundcolor;
@@ -126,20 +132,28 @@ function testBarcode() {
 
     var ts0 = Date.now();
     try {
+        console.log("try: BWIPP");
+
         // Call into the BWIPP cross-compiled code.
         BWIPP()(bw, elt.sym, text, opts);
+
+        console.log("BWIPP ok");
 
         // Allow the font manager to demand-load any required fonts
         // before calling render().
         var ts1 = Date.now();
         bwipjs_fonts.loadfonts(function(e) {
             if (e) {
+                console.log("loadfonts: e="+e);
                 $('#output').text(e.stack || (''+e));
             } else {
+                console.log("loadfonts: show");
                 show();
             }
         });
+
     } catch (e) {
+        console.log("catch e="+e);
         // Watch for BWIPP generated raiseerror's.
         var msg = ''+e;
         if (msg.indexOf("bwipp.") >= 0) {
@@ -269,35 +283,138 @@ function barcodeInit() {
         'bwip-js ' + BWIPJS.VERSION + ' / BWIPP ' + BWIPP.VERSION;
 }
 
-$(document).ready(function() {
-    barcodeInit();
+//$(document).ready(function() {
+    //barcodeInit();
 
-    testBarcode();
-});
+    //testBarcode();
+    //render();
 
-function render() {
-    var elt  = symdesc[$('#symbol').val()];
-    var text = $('#symtext').val().replace(/^\s+/,'').replace(/\s+$/,'');
-    var altx = $('#symaltx').val().replace(/^\s+/,'').replace(/\s+$/,'');
-    var opts = $('#symopts').val().replace(/^\s+/,'').replace(/\s+$/,'');
-    var rot  = document.querySelector('input[name="rot"]:checked').value;
+    //$('#render').click();
+//});
 
-    // Anti-aliased or monochrome fonts and scaling factors.
-    var monochrome = document.getElementById('fontMono').checked;
-    var scaleX = +document.getElementById('scaleX').value || 2;
-    var scaleY = +document.getElementById('scaleY').value || 2;
+//multiple barcodes: https://github.com/metafloor/bwip-js/issues/101
+//https://github.com/metafloor/bwip-js/issues/73
+function render(canvasId, barcodeText) {
+    var bw = new BWIPJS(bwipjs_fonts,false);
+    var canvas = document.getElementById(canvasId);
+    canvas.height = 1;
+    canvas.width  = 1;
+    //bw.bitmap(new Bitmap);
+    //bw.scale('5', '5');
 
-    // var elt  = {sym:"qrcode"};      //symdesc[$('#symbol').val()];
-    // //var elt  = symdesc[$('#symbol').val()];
-    // var text = '123';   //$('#symtext').val().replace(/^\s+/,'').replace(/\s+$/,'');
-    // var altx = '123';   //$('#symaltx').val().replace(/^\s+/,'').replace(/\s+$/,'');
-    // var opts = 'eclevel=M';  //eclevel=M //$('#symopts').val().replace(/^\s+/,'').replace(/\s+$/,'');
-    // var rot  = 'N'; //document.querySelector('input[name="rot"]:checked').value;
-    //
-    // // Anti-aliased or monochrome fonts and scaling factors.
-    // var monochrome = false; //document.getElementById('fontMono').checked;
-    // var scaleX = 1; //+document.getElementById('scaleX').value || 2;
-    // var scaleY = 1; //+document.getElementById('scaleY').value || 2;
+    var scaleX = 0.5;
+    var scaleY = 0.5;
+    var rot = 'N';
+    //var barcodeName = "azteccode";
+    var barcodeName = "qrcode";
+
+    ///////////////////////////
+    var opts = {};
+    // Add the alternate text
+    var altx = barcodeText;
+    if (altx) {
+        opts.alttext = altx;
+        opts.includetext = true;
+    }
+    // We use mm rather than inches for height - except pharmacode2 height
+    // which is expected to be in mm
+    if (+opts.height && barcodeName != 'pharmacode2') {
+        opts.height = opts.height / 25.4 || 0.5;
+    }
+    // Likewise, width.
+    if (+opts.width) {
+        opts.width = opts.width / 25.4 || 0;
+    }
+    // BWIPP does not extend the background color into the
+    // human readable text.  Fix that in the bitmap interface.
+    if (opts.backgroundcolor) {
+        bw.bitmap(new Bitmap(canvas, rot, opts.backgroundcolor));
+        delete opts.backgroundcolor;
+    } else {
+        bw.bitmap(new Bitmap(canvas, rot));
+    }
+
+    // Set the scaling factors
+    bw.scale(scaleX, scaleY);
+
+    // Add optional padding to the image
+    //bw.bitmap().pad(+opts.paddingwidth*scaleX || 0,
+    //    +opts.paddingheight*scaleY || 0);
+    //////////////////////////
+
+
+    try {
+        //BWIPP()(bw, barcodeName, barcodeText);
+        BWIPP()(bw, barcodeName, barcodeText, opts);
+
+        bwipjs_fonts.loadfonts(function(e) {
+            if (e) {
+                console.log("loadfonts: e="+e);
+                $('#output').text(e.stack || (''+e));
+            } else {
+                console.log("loadfonts: show");
+                show(canvas,barcodeName);
+            }
+        });
+    } catch (e) {
+        console.log("catch e="+e);
+        return;
+    }
+    //bw.bitmap().show(canvas);
+
+    // Draw the barcode to the canvas
+    function show(canvas,barcodeName) {
+        bw.render();
+        //var ts2 = Date.now();
+
+        canvas.style.visibility = 'visible';
+        //setURL();
+
+        //$('#stats').text('Rendered in ' + (ts2-ts0) + ' msecs');
+        //$('.saveas').css('visibility', 'visible');
+        //saveCanvas.basename = barcodeName + '-' + text.replace(/[^a-zA-Z0-9._]+/g, '-');
+
+        // Show proofs?
+        // if (location.search.indexOf('proofs=1') != -1) {
+        //     var img = document.getElementById('proof-img');
+        //     if (img) {
+        //         img.src = 'proofs/' + barcodeName + '.png';
+        //         img.style.visibility = 'visible';
+        //     }
+        // }
+    }
+}
+
+
+function render_orig( canvasId, barcodeText ) {
+    if(0) {
+        var elt = symdesc[$('#symbol').val()];
+        var text = $('#symtext').val().replace(/^\s+/, '').replace(/\s+$/, '');
+        var altx = $('#symaltx').val().replace(/^\s+/, '').replace(/\s+$/, '');
+        var opts = $('#symopts').val().replace(/^\s+/, '').replace(/\s+$/, '');
+        var rot = document.querySelector('input[name="rot"]:checked').value;
+
+        // Anti-aliased or monochrome fonts and scaling factors.
+        var monochrome = document.getElementById('fontMono').checked;
+        var scaleX = +document.getElementById('scaleX').value || 2;
+        var scaleY = +document.getElementById('scaleY').value || 2;
+    } else {
+        var elt = {sym: "qrcode"};      //symdesc[$('#symbol').val()];
+        //var elt  = symdesc[$('#symbol').val()];
+        var text = '123';   //$('#symtext').val().replace(/^\s+/,'').replace(/\s+$/,'');
+        var altx = '123';   //$('#symaltx').val().replace(/^\s+/,'').replace(/\s+$/,'');
+        var opts = 'eclevel=M';  //eclevel=M //$('#symopts').val().replace(/^\s+/,'').replace(/\s+$/,'');
+        var rot = 'N'; //document.querySelector('input[name="rot"]:checked').value;
+
+        // Anti-aliased or monochrome fonts and scaling factors.
+        var monochrome = false; //document.getElementById('fontMono').checked;
+        var scaleX = 0.5; //+document.getElementById('scaleX').value || 2;
+        var scaleY = 0.5; //+document.getElementById('scaleY').value || 2;
+    }
+
+    text = barcodeText;
+    altx = barcodeText;
+    //elt.sym = "qrcode";
 
     console.log("text="+text);
     console.log("altx="+altx);
@@ -322,13 +439,17 @@ function render() {
     // the low-level BWIPP code, the font manager, and the Bitmap object.
     var bw = new BWIPJS(bwipjs_fonts, monochrome);
 
-    // Clear the page
-    $('#output').text('');
-    $('#stats').text('');
-    $('#proof-img').css('visibility', 'hidden');
-    $('.saveas').css('visibility', 'hidden');
+    //console.log("bwipjs_fonts:");
+    //console.log(bwipjs_fonts);
 
-    var canvas = document.getElementById('canvas');
+    // Clear the page
+    // $('#output').text('');
+    // $('#stats').text('');
+    // $('#proof-img').css('visibility', 'hidden');
+    // $('.saveas').css('visibility', 'hidden');
+
+    //var canvas = document.getElementById('canvas');
+    var canvas = document.getElementById(canvasId);
     canvas.height = 1;
     canvas.width  = 1;
     canvas.style.visibility = 'hidden';
@@ -381,20 +502,28 @@ function render() {
 
     var ts0 = Date.now();
     try {
+        console.log("try: BWIPP");
+
         // Call into the BWIPP cross-compiled code.
         BWIPP()(bw, elt.sym, text, opts);
+
+        console.log("BWIPP ok");
 
         // Allow the font manager to demand-load any required fonts
         // before calling render().
         var ts1 = Date.now();
         bwipjs_fonts.loadfonts(function(e) {
             if (e) {
+                console.log("loadfonts: e="+e);
                 $('#output').text(e.stack || (''+e));
             } else {
-                show();
+                console.log("loadfonts: show");
+                show(canvas);
             }
         });
     } catch (e) {
+        console.log("catch e="+e);
+
         // Watch for BWIPP generated raiseerror's.
         var msg = ''+e;
         if (msg.indexOf("bwipp.") >= 0) {
@@ -408,7 +537,7 @@ function render() {
     }
 
     // Draw the barcode to the canvas
-    function show() {
+    function show(canvas) {
         bw.render();
         var ts2 = Date.now();
 
