@@ -541,6 +541,7 @@ class SiteParametersController extends Controller
 
         //exit('initial ConfigurationAction');
         echo "SiteParameters=".$entity->getId()."<br>";
+        exit('111');
 
         $form = $this->createForm(InitialConfigurationType::class, $entity, array(
             'action' => $this->generateUrl('employees_initial_configuration', array('id' => $entity->getId() )),
@@ -605,7 +606,7 @@ class SiteParametersController extends Controller
             );
 
             echo "SiteParameters Submit Done! <br>";
-            exit('111');
+            exit('esit');
             return $this->redirect($this->generateUrl('employees_siteparameters'));
         }
         echo "SiteParameters show form <br>";
