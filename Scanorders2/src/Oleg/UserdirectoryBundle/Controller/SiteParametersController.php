@@ -514,7 +514,7 @@ class SiteParametersController extends Controller
      */
     public function initialConfigurationAction(Request $request)
     {
-        //exit('EXIT: initialConfigurationAction');
+        exit('EXIT: initialConfigurationAction');
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
@@ -547,8 +547,8 @@ class SiteParametersController extends Controller
         $entity = $entities[0];
 
         //exit('initial ConfigurationAction');
-        //echo "SiteParameters=".$entity->getId()."<br>";
-        //exit('EXIT: SiteParameters Found');
+        echo "SiteParameters=".$entity->getId()."<br>";
+        exit('EXIT: SiteParameters Found');
 
         $form = $this->createForm(InitialConfigurationType::class, $entity, array(
             'action' => $this->generateUrl('employees_initial_configuration', array('id' => $entity->getId() )),
