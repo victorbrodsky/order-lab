@@ -231,12 +231,12 @@ class AdminController extends Controller
             $adminRes
         );
 
-        //make sure sitesettings is initialized
-        $siteParams = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
-        if( count($siteParams) != 1 ) {
-            $userServiceUtil = $this->get('user_service_utility');
-            $userServiceUtil->generateSiteParameters();
-        }
+//        //make sure sitesettings is initialized
+//        $siteParams = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+//        if( count($siteParams) != 1 ) {
+//            $userServiceUtil = $this->get('user_service_utility');
+//            $userServiceUtil->generateSiteParameters();
+//        }
         
         return $this->redirect($this->generateUrl('employees_home'));
     }

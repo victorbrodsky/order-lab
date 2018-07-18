@@ -42,15 +42,16 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class SiteParametersController extends Controller
 {
 
+    //@Route("/{id}", name="employees_siteparameters_id")
+    //, $id=null
     /**
      * Lists all SiteParameters entities.
      *
      * @Route("/", name="employees_siteparameters")
-     * @Route("/{id}", name="employees_siteparameters_id")
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:SiteParameters:index.html.twig")
      */
-    public function indexAction(Request $request, $id=null)
+    public function indexAction(Request $request)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
@@ -81,12 +82,12 @@ class SiteParametersController extends Controller
 
         $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
 
-        //make sure sitesettings is initialized
-        if( count($entities) != 1 ) {
-            $userServiceUtil = $this->get('user_service_utility');
-            $userServiceUtil->generateSiteParameters();
-            $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
-        }
+//        //make sure sitesettings is initialized
+//        if( count($entities) != 1 ) {
+//            $userServiceUtil = $this->get('user_service_utility');
+//            $userServiceUtil->generateSiteParameters();
+//            $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
+//        }
 
         if( count($entities) != 1 ) {
             throw new \Exception( 'Must have only one parameter object. Found '.count($entities).' object(s)' );
@@ -514,7 +515,7 @@ class SiteParametersController extends Controller
      */
     public function initialConfigurationAction(Request $request)
     {
-        exit('EXIT: initialConfigurationAction');
+        //exit('EXIT: initialConfigurationAction');
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
@@ -547,8 +548,8 @@ class SiteParametersController extends Controller
         $entity = $entities[0];
 
         //exit('initial ConfigurationAction');
-        echo "SiteParameters=".$entity->getId()."<br>";
-        exit('EXIT: SiteParameters Found');
+        //echo "SiteParameters=".$entity->getId()."<br>";
+        //exit('EXIT: SiteParameters Found');
 
         $form = $this->createForm(InitialConfigurationType::class, $entity, array(
             'action' => $this->generateUrl('employees_initial_configuration', array('id' => $entity->getId() )),
@@ -560,7 +561,7 @@ class SiteParametersController extends Controller
 
         if( $form->isSubmitted() && $form->isValid() ) {
 
-            exit("initialConfigurationAction: form is valid");
+            //exit("initialConfigurationAction: form is valid");
 
             $modifiedAdminUser = false;
 
