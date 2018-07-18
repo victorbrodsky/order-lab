@@ -507,7 +507,7 @@ class SiteParametersController extends Controller
      */
     public function initialConfigurationAction(Request $request)
     {
-        exit('000');
+        //exit('EXIT: initialConfigurationAction');
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl('employees-nopermission') );
         }
@@ -540,8 +540,8 @@ class SiteParametersController extends Controller
         $entity = $entities[0];
 
         //exit('initial ConfigurationAction');
-        echo "SiteParameters=".$entity->getId()."<br>";
-        exit('111');
+        //echo "SiteParameters=".$entity->getId()."<br>";
+        //exit('EXIT: SiteParameters Found');
 
         $form = $this->createForm(InitialConfigurationType::class, $entity, array(
             'action' => $this->generateUrl('employees_initial_configuration', array('id' => $entity->getId() )),
@@ -605,11 +605,11 @@ class SiteParametersController extends Controller
                 "You can set other options to ensure proper operation on this 'Site Settings' page!"
             );
 
-            echo "SiteParameters Submit Done! <br>";
-            exit('esit');
+            //echo "SiteParameters Submit Done! <br>";
+            //exit('EXIT: SiteParameters Submit Done!');
             return $this->redirect($this->generateUrl('employees_siteparameters'));
         }
-        echo "SiteParameters show form <br>";
+        //echo "SiteParameters show form <br>";
 
         return array(
             'title' => "Thank You for installing O R D E R!",
