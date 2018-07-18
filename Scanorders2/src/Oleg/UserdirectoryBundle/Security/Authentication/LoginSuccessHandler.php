@@ -84,8 +84,8 @@ class LoginSuccessHandler implements AuthenticationFailureHandlerInterface, Auth
 
         $options['sitename'] = $this->siteName;
 
-        echo "userdirectory: employees authentication success: Success. User=".$user.", setCreatedby=".$user->getCreatedby()."<br>";
-        exit;
+        //echo "userdirectory: employees authentication success: Success. User=".$user.", setCreatedby=".$user->getCreatedby()."<br>";
+        //exit;
 
         //echo "roleBanned=".$this->roleBanned."<br>";
         //echo "siteName=".$this->siteName."<br>";
