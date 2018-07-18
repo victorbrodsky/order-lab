@@ -82,7 +82,7 @@ class SiteParametersController extends Controller
         $entities = $em->getRepository('OlegUserdirectoryBundle:SiteParameters')->findAll();
 
         if( count($entities) != 1 ) {
-            throw new \Exception( 'Must have only one parameter object. Found '.count($entities).'object(s)' );
+            throw new \Exception( 'Must have only one parameter object. Found '.count($entities).' object(s)' );
         }
 
         $entity = $entities[0];
@@ -534,12 +534,13 @@ class SiteParametersController extends Controller
         }
 
         if( count($entities) != 1 ) {
-            throw new \Exception( 'Must have only one parameter object. Found '.count($entities).'object(s)' );
+            throw new \Exception( 'Must have only one parameter object. Found '.count($entities).' object(s)' );
         }
 
         $entity = $entities[0];
 
         //exit('initial ConfigurationAction');
+        echo "SiteParameters=".$entity->getId()."<br>";
 
         $form = $this->createForm(InitialConfigurationType::class, $entity, array(
             'action' => $this->generateUrl('employees_initial_configuration', array('id' => $entity->getId() )),
@@ -603,8 +604,10 @@ class SiteParametersController extends Controller
                 "You can set other options to ensure proper operation on this 'Site Settings' page!"
             );
 
+            echo "SiteParameters Submit Done! <br>";
             return $this->redirect($this->generateUrl('employees_siteparameters'));
         }
+        echo "SiteParameters show form <br>";
 
         return array(
             'title' => "Thank You for installing O R D E R!",
