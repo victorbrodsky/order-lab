@@ -79,7 +79,7 @@ class CalllogEntryMessageType extends AbstractType
 
             $form->add('patientLists', CustomSelectorType::class, array(
                 'label' => $label,
-                'required' => true,
+                'required' => false,
                 'attr' => array('class' => 'ajax-combobox-patientlists', 'type' => 'hidden'),
                 //'multiple' => true,
                 'classtype' => 'patientLists'
@@ -113,7 +113,7 @@ class CalllogEntryMessageType extends AbstractType
             'label' => "Amount of Time Spent in Minutes:",
             'required' => false,
             //'data' => $this->params['mrntype'],
-            'attr' => array('class' => 'form-control'),
+            'attr' => array('class' => 'form-control', 'maxlength' => 7),
         ));
 
     }
