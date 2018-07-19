@@ -667,3 +667,7 @@ Bootstrap NavBar not collapsing as expected - separating onto two lines.
     background-color: #FF6600;
     border-color: #FF6600;
 }
+
+.handsontable td {
+    height: 100px;
+}

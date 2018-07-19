@@ -40,14 +40,34 @@ function bwipjsGetFontDit() {
 }
 
 
-//$(document).ready(function() {
+$(document).ready(function() {
     //barcodeInit();
 
     //testBarcode();
     //render();
 
     //$('#render').click();
-//});
+
+    // $("img").on("remove", function () {
+    //     alert("img Element was removed: id="+$(this).attr('id'));
+    // });
+    // $("canvas").on("remove", function () {
+    //     alert("Canvas Element was removed: id="+$(this).attr('id'));
+    // });
+    // $("td").on("remove", function () {
+    //     alert("TD Element was removed: id="+$(this).attr('id'));
+    // });
+    //
+    // $(document).bind("img", function(e) {
+    //     alert("DOMNodeRemoved: " + e.target.nodeName);
+    // });
+    // $(document).bind("canvas", function(e) {
+    //     alert("DOMNodeRemoved: " + e.target.nodeName);
+    // });
+    // $(document).bind("td", function(e) {
+    //     alert("DOMNodeRemoved: " + e.target.nodeName);
+    // });
+});
 
 //multiple barcodes: https://github.com/metafloor/bwip-js/issues/101
 //https://github.com/metafloor/bwip-js/issues/73
