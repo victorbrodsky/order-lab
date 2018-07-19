@@ -2,6 +2,7 @@
  * Created by ch3 on 7/16/2018.
  */
 
+//USED in bwip-js/lib/xhr-fonts.js
 function bwipjsGetFontDit() {
     var fontDir = null;
     // Get the url to this script.  The fonts will be in: ../fonts/
@@ -40,14 +41,6 @@ function bwipjsGetFontDit() {
 }
 
 
-//$(document).ready(function() {
-    //barcodeInit();
-
-    //testBarcode();
-    //render();
-
-    //$('#render').click();
-//});
 
 //multiple barcodes: https://github.com/metafloor/bwip-js/issues/101
 //https://github.com/metafloor/bwip-js/issues/73
@@ -121,18 +114,25 @@ function render(canvasId, barcodeText) {
 
     // Draw the barcode to the canvas
     function show(canvas,barcodeName) {
-
         bw.render();
+        //var ts2 = Date.now();
 
         canvas.style.visibility = 'visible';
+        //setURL();
 
-        // //$("canvas").style.visibility = 'visible';
-        // $("canvas").each(function(element) {
-        //     var thisCanvasId = $(this).attr('id');
-        //     console.log("thisCanvasId="+thisCanvasId);
-        //     var thisCanvas = document.getElementById(thisCanvasId);
-        //     thisCanvas.style.visibility = 'visible';
-        // });
-        
+        //$('#stats').text('Rendered in ' + (ts2-ts0) + ' msecs');
+        //$('.saveas').css('visibility', 'visible');
+        //saveCanvas.basename = barcodeName + '-' + text.replace(/[^a-zA-Z0-9._]+/g, '-');
+
+        // Show proofs?
+        // if (location.search.indexOf('proofs=1') != -1) {
+        //     var img = document.getElementById('proof-img');
+        //     if (img) {
+        //         img.src = 'proofs/' + barcodeName + '.png';
+        //         img.style.visibility = 'visible';
+        //     }
+        // }
     }
 }
+
+

@@ -313,6 +313,8 @@ class DefaultController extends Controller
         //echo "accessionType=".$accessionTypeId."<br>";
         //exit();
 
+        $accessionTypeObj = $em->getRepository('OlegOrderformBundle:AccessionType')->find($accessionTypeId);
+
         if( !$accessionNumber ) {
             $this->get('session')->getFlashBag()->add(
                 'warning',
@@ -321,18 +323,24 @@ class DefaultController extends Controller
             return $this->redirect( $this->generateUrl('deidentifier_home') );
         }
 
-        //check if accession number is not empty containing only something like "-"
-        //echo "accessionNumber=".$accessionNumber."<br>";
-        //$accessMaskValid = preg_match('/[A-Za-z]{2,}[1-9]{2,}-[1-9]/',$accessionNumber);
-        $accessMaskValid = preg_match('/^[A-Za-z]{1,2}[1-9][0-9]{0,1}-[1-9][0-9]{0,5}$/',$accessionNumber);
-        if( !$accessMaskValid ) {
-            //exit('mask invalid');
-            $msg =  "Valid accession numbers must start with up to two letters followed by two digits, then followed by up to six digits with no leading zeros (e.g. SC14-231956).";
-            $this->get('session')->getFlashBag()->add(
-                'warning',
-                'Accession Number is not valid. ' . $msg
-            );
-            return $this->redirect( $this->generateUrl('deidentifier_home') );
+//        if(
+//            $accessionTypeObj->getName() != "Deidentifier ID" &&
+//            strpos($accessionTypeObj->getName(),'De-Identified') === false
+//        )
+         if( strpos($accessionTypeObj->getName(),'CoPath Anatomic Pathology Accession Number') !== false ) {
+            //check if accession number is not empty containing only something like "-"
+            //echo "accessionNumber=".$accessionNumber."<br>";
+            //$accessMaskValid = preg_match('/[A-Za-z]{2,}[1-9]{2,}-[1-9]/',$accessionNumber);
+            $accessMaskValid = preg_match('/^[A-Za-z]{1,2}[1-9][0-9]{0,1}-[1-9][0-9]{0,5}$/', $accessionNumber);
+            if (!$accessMaskValid) {
+                //exit('mask invalid');
+                $msg = "Valid accession numbers must start with up to two letters followed by two digits, then followed by up to six digits with no leading zeros (e.g. SC14-231956).";
+                $this->get('session')->getFlashBag()->add(
+                    'warning',
+                    'Accession Number is not valid. ' . $msg
+                );
+                return $this->redirect($this->generateUrl('deidentifier_home'));
+            }
         }
         //exit('mask is valid');
 
