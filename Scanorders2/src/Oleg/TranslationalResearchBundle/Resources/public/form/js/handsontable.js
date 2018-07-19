@@ -278,10 +278,11 @@ function handsonTableInit(handsometableDataArr,tableFormCycle) {
         manualColumnMove: true,
         manualColumnResize: true,
         autoWrapRow: true,
-        rowHeight: function(row) {
-            return 100;
-        },
-        defaultRowHeight: 100,
+        autoRowSize: {syncLimit: 300},
+        // rowHeight: function(row) {
+        //     return 100;
+        // },
+        // defaultRowHeight: 100,
         renderAllRows: true,
         currentRowClassName: 'currentRowScanorder',
         currentColClassName: 'currentColScanorder',
@@ -321,6 +322,7 @@ function handsonTableInit(handsometableDataArr,tableFormCycle) {
         },
         afterChange: function (change, source) {
             if (source === 'loadData') {
+                console.log("ignore source="+source);
                 return; //don't save this change
             }
 
@@ -341,7 +343,7 @@ function handsonTableInit(handsometableDataArr,tableFormCycle) {
                 //    return;
                 //}
                 if( columnNumber != _barcodeCol ) {
-                    //console.log("ignore changes in col="+columnNumber);
+                    console.log("ignore changes in col="+columnNumber);
                     return;
                 }
 
@@ -400,6 +402,7 @@ function handsonTableInit(handsometableDataArr,tableFormCycle) {
 
                     //setQrcode(newValue,rowNumber,columnNumber+1);
                     setMultipleQrcode();
+
                 }
             }
         }
@@ -412,10 +415,30 @@ function handsonTableInit(handsometableDataArr,tableFormCycle) {
     //set scan order table object as global reference
     _sotable = $(_htableid).handsontable('getInstance');
 
-
     //generate barcodes
     //setBarcodeMultipleCanvas(_barcodeCol);
     setMultipleQrcode();
+
+    // _sotable.addHook("afterCreateRow", function(){
+    //     console.log("afterCreateRow");
+    //     //_sotable.render();
+    //     setMultipleQrcode();
+    //
+    // });
+    // _sotable.addHook("afterRemoveRow", function(){
+    //     console.log("afterRemoveRow");
+    //     //_sotable.render();
+    //     setMultipleQrcode();
+    //
+    // });
+
+}
+
+function resizeTableHeight() {
+    console.log("Setting height");
+    var countRow = _sotable.countRows();
+    var newHeight = countRow*50+200;
+    _sotable.updateSettings({height: newHeight});
 }
 
 function setQrcode(barcodeText,rowNumber,columnNumber) {
@@ -441,6 +464,8 @@ function setQrcode(barcodeText,rowNumber,columnNumber) {
     );
 }
 function setMultipleQrcode() {
+    resizeTableHeight();
+
     var col = _barcodeCol;
     var countRow = _sotable.countRows();
     console.log("countRow="+countRow+"; col="+col);
