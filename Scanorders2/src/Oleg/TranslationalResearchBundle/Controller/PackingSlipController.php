@@ -247,7 +247,7 @@ class PackingSlipController extends Controller
 
     /**
      * Show Packing Slip PDF version of Work Request
-     * http://localhost/order/translational-research/work-request/download-packing-slip-invoice-pdf/HP8-REQ20-V2
+     * http://localhost/order/translational-research/work-request/download-packing-slip-pdf/HP8-REQ20-V2
      *
      * @Route("/download-packing-slip-pdf/{id}", name="translationalresearch_packing_slip_download")
      * @Template("OlegTranslationalResearchBundle:Request:packing-slip-pdf-show.html.twig")

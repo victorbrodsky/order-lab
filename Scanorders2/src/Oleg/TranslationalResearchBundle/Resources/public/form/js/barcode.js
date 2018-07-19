@@ -2,6 +2,30 @@
  * Created by ch3 on 7/16/2018.
  */
 
+//packing slip barcode
+function drawBarcodeImages() {
+    $(".barcode-value").each(function(e) {
+        var barcodeText = $(this).text();
+        console.log("barcodeText=" + barcodeText);
+        if( barcodeText ) {
+            var parentTr = $(this).parent();
+
+            new QRCode(
+                parentTr.find(".barcode-image")[0],
+                {
+                    text: barcodeText,
+                    width: 42,
+                    height: 42,
+                    colorDark : "#000000",
+                    colorLight : "#ffffff",
+                    correctLevel : QRCode.CorrectLevel.H
+                }
+            );
+        }
+    });
+}
+
+
 function bwipjsGetFontDit() {
     var fontDir = null;
     // Get the url to this script.  The fonts will be in: ../fonts/

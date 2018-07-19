@@ -398,9 +398,10 @@ function handsonTableInit(handsometableDataArr,tableFormCycle) {
                         _sotable.setDataAtCell(rowNumber, columnNumber + 1, barcodeImageSrc);
                     }
 
-                    //setBarcodeMultipleCanvas(_barcodeCol);
+                    //WORKING:
+                    // setBarcodeMultipleCanvas(_barcodeCol);
 
-                    //setQrcode(newValue,rowNumber,columnNumber+1);
+                    //WORKING: setQrcode(newValue,rowNumber,columnNumber+1);
                     setMultipleQrcode();
 
                 }
@@ -450,7 +451,7 @@ function setQrcode(barcodeText,rowNumber,columnNumber) {
 
     appendBarcode($(cellEl),canvasEl);
 
-    var qrcode = new QRCode(
+    new QRCode(
         document.getElementById(canvasId),
         //barcodeText
         {

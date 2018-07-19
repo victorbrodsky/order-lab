@@ -150,10 +150,10 @@
                     <td style="color: {{ headlineColor }}">
                         {{ dataResult.system }}
                     </td>
-                    <td style="color: {{ headlineColor }}">
+                    <td class="barcode-value" style="color: {{ headlineColor }}">
                         {{ dataResult.barcode }}
                     </td>
-                    <td>BARCODE IMAGE</td>
+                    <td class="barcode-image"></td>
                     <td style="color: {{ headlineColor }}">
                         {{ dataResult.comment }}
                     </td>
@@ -193,6 +193,28 @@
 
 {% block additionaljs %}
 
+
+    {#'@OlegUserdirectoryBundle/Resources/public/bwip-js/lib/jquery.js'#}
+    {% javascripts
+    '@OlegOrderformBundle/Resources/public/handsontable/jquery.handsontable.full.js'
+    '@OlegTranslationalResearchBundle/Resources/public/form/js/handsontable.js'
+    '@OlegUserdirectoryBundle/Resources/public/bwip-js/freetype.js'
+    '@OlegOrderformBundle/Resources/public/form/js/selectAjax.js'
+    '@OlegOrderformBundle/Resources/public/form/js/masking.js'
+    '@OlegTranslationalResearchBundle/Resources/public/form/js/barcode.js'
+    '@OlegUserdirectoryBundle/Resources/public/bwip-js/bwipp.js'
+    '@OlegUserdirectoryBundle/Resources/public/bwip-js/bwipjs.js'
+    '@OlegUserdirectoryBundle/Resources/public/bwip-js/lib/jquery-ui.min.js'
+    '@OlegUserdirectoryBundle/Resources/public/bwip-js/lib/xhr-fonts.js'
+    '@OlegUserdirectoryBundle/Resources/public/bwip-js/lib/bitmap.js'
+    '@OlegUserdirectoryBundle/Resources/public/bwip-js/lib/symdesc.js'
+    '@OlegUserdirectoryBundle/Resources/public/bwip-js/lib/canvas-toblob.js'
+    '@OlegUserdirectoryBundle/Resources/public/bwip-js/lib/filesaver.js'
+    '@OlegUserdirectoryBundle/Resources/public/qrcode/qrcode.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
     <script type="text/javascript">
 
         $(document).ready(function() {
@@ -203,6 +225,8 @@
                 this.style.height = 'auto';
                 this.style.height = (this.scrollHeight) + 'px';
             });
+
+            drawBarcodeImages();
 
         });
 
