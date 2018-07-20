@@ -40,11 +40,14 @@
     <div class="well form-search">
         {{ form_start(filterform) }}
         <div class="row">
-            <div class="col-xs-4">
+            <div class="col-xs-3">
                 {{ formmacros.fielddate(filterform.startDate,'allow-future-date') }}
             </div>
-            <div class="col-xs-4">
+            <div class="col-xs-3">
                 {{ formmacros.fielddate(filterform.endDate,'allow-future-date') }}
+            </div>
+            <div class="col-xs-3">
+                {{ form_widget(filterform.projectSpecialty, {'attr': {'placeholder': 'Specialty'}}) }}
             </div>
             <div class="col-xs-2">
                 <button id="filter-btn" type="submit" class="btn btn-default">Filter</button>

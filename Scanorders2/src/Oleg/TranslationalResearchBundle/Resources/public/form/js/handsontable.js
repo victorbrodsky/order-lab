@@ -34,6 +34,10 @@ var _accessiontypes_simple = [];
 
 var _barcodeCol = 7;
 
+var _tdSize = 64;
+var _tdPadding = 5;
+var _rowHeight =  _tdSize + 2*_tdPadding;
+
 //from: http://past.handsontable.com/demo/renderers_html.html
 var imageRenderer = function (instance, td, row, col, prop, value, cellProperties) {
     var escaped = Handsontable.helper.stringify(value),
@@ -43,8 +47,8 @@ var imageRenderer = function (instance, td, row, col, prop, value, cellPropertie
         img = document.createElement('IMG');
 
         img.src = value;
-        img.height = 42;
-        img.width = 42;
+        img.height = _tdSize;
+        img.width = _tdSize;
         //img.margin = "5px 5px 5px 5px";
         //img.style.cssText = "margin: 5px;";
         img.style.marginTop = "5px";
@@ -76,8 +80,8 @@ var canvasRenderer = function (instance, td, row, col, prop, value, cellProperti
         canvas = document.createElement('CANVAS');
 
         //canvas.src = value;
-        canvas.height = 42;
-        canvas.width = 42;
+        canvas.height = _tdSize;
+        canvas.width = _tdSize;
         //img.margin = "5px 5px 5px 5px";
         //img.style.cssText = "margin: 5px;";
         //canvas.style.marginTop = "5px";
@@ -279,10 +283,10 @@ function handsonTableInit(handsometableDataArr,tableFormCycle) {
         manualColumnResize: true,
         autoWrapRow: true,
         autoRowSize: {syncLimit: 300},
-        // rowHeight: function(row) {
-        //     return 100;
-        // },
-        // defaultRowHeight: 100,
+        rowHeight: function(row) {
+            return _rowHeight;
+        },
+        defaultRowHeight: _rowHeight,
         renderAllRows: true,
         currentRowClassName: 'currentRowScanorder',
         currentColClassName: 'currentColScanorder',
@@ -434,6 +438,8 @@ function handsonTableInit(handsometableDataArr,tableFormCycle) {
     //setMultipleQrcode(); //Working!
     setMultipleJqueryQrcode();
 
+    //resizeTableHeight();
+
     // _sotable.addHook("afterCreateRow", function(){
     //     console.log("afterCreateRow");
     //     //_sotable.render();
@@ -452,7 +458,7 @@ function handsonTableInit(handsometableDataArr,tableFormCycle) {
 function resizeTableHeight() {
     console.log("Setting height");
     var countRow = _sotable.countRows();
-    var newHeight = countRow*50+200;
+    var newHeight = countRow*(_tdSize + _tdPadding*3) + 200;
     _sotable.updateSettings({height: newHeight});
 }
 
@@ -461,7 +467,7 @@ function setQrcode(barcodeText,rowNumber,columnNumber) {
     var cellEl = _sotable.getCell(rowNumber, columnNumber);
     var canvasId = "canvas-"+rowNumber+"-"+columnNumber;
     //var canvasEl = '<canvas id="'+canvasId+'" width=100 height=100 style="border:1px solid #fff;visibility:visible"></canvas>';
-    var canvasEl = '<div id="'+canvasId+'" style="padding: 5px;"></div>';
+    var canvasEl = '<div id="'+canvasId+'" style="padding: '+_tdPadding+'px;"></div>';
 
     appendBarcode($(cellEl),canvasEl);
 
@@ -469,8 +475,8 @@ function setQrcode(barcodeText,rowNumber,columnNumber) {
         document.getElementById(canvasId),
         {
             text: barcodeText,
-            width: 42,
-            height: 42,
+            width: _tdSize,
+            height: _tdSize,
             colorDark : "#000000",
             colorLight : "#ffffff",
             correctLevel : QRCode.CorrectLevel.H
@@ -478,7 +484,7 @@ function setQrcode(barcodeText,rowNumber,columnNumber) {
     );
 }
 function setMultipleQrcode() {
-    resizeTableHeight();
+    //resizeTableHeight();
 
     var col = _barcodeCol;
     var countRow = _sotable.countRows();
@@ -501,20 +507,20 @@ function jqueryQrcode(barcodeText,rowNumber,columnNumber) {
         //appendBarcode($(cellEl),divEl);
         //$("#"+canvasId).qrcode({width: 64,height: 64,text: barcodeText});
 
-        $(cellEl).css('padding', '5px');
+        $(cellEl).css('padding', _tdPadding);
 
         $(cellEl).qrcode({
             render: "canvas",
             //render: "table",
-            width: 64,
-            height: 64,
+            width: _tdSize,
+            height: _tdSize,
             text: barcodeText,
             //correctLevel: QRCode.CorrectLevel.H
         });
     }
 }
 function setMultipleJqueryQrcode() {
-    resizeTableHeight();
+    //resizeTableHeight();
 
     var col = _barcodeCol;
     var countRow = _sotable.countRows();

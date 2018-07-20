@@ -40,6 +40,7 @@ class DashboardController extends Controller
         $params = array(
             //'startDate' => $today,
             //'endDate' => $today
+            "projectSpecialty" => true
         );
         $filterform = $this->createForm(FilterDashboardType::class, null,array(
             'method' => 'GET',
@@ -197,6 +198,21 @@ class DashboardController extends Controller
             $chartsArray = $this->addChart( $chartsArray, $invoiceDataArr, "Billed – Paid – Outstanding");
         }
 
+
+        if( $routeName == "translationalresearch_dashboard_compare" ) {
+
+            //Pie charts of the number of PIs in Hemepath vs AP/CP
+
+
+            //number of Hematopathology vs AP/CP project requests as a Pie chart
+
+
+            //3 bar graphs showing the number of project requests, work requests, invoices per month since
+            // the beginning based on submission date: Total, Hematopatholgy, AP/CP
+
+
+        }
+
         return array(
             'infos' => $infos,
             'title' => $title,
@@ -206,6 +222,80 @@ class DashboardController extends Controller
             'chartsArray' => $chartsArray
         );
     }
+
+
+    /**
+     * @Route("/comparison-statistics/", name="translationalresearch_dashboard_compare")
+     * @Template("OlegTranslationalResearchBundle:Dashboard:dashboard.html.twig")
+     */
+    public function compareStatisticsAction( Request $request )
+    {
+
+        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER')) {
+            return $this->redirect($this->generateUrl($this->container->getParameter('translationalresearch.sitename') . '-nopermission'));
+        }
+
+        $transresUtil = $this->container->get('transres_util');
+        //$transResFormNodeUtil = $this->container->get('transres_formnode_util');
+        $routeName = $request->get('_route');
+        $infos = array();
+
+        //////////// Filter ////////////
+        //default date range from today to 1 year back
+        $params = array(
+            //'startDate' => $today,
+            //'endDate' => $today
+            "projectSpecialty" => false
+        );
+        $filterform = $this->createForm(FilterDashboardType::class, null, array(
+            'method' => 'GET',
+            'form_custom_value' => $params
+        ));
+        $filterform->handleRequest($request);
+        //////////// EOF Filter ////////////
+
+        $title = "Dashboard: Comparison Statistics";
+
+        $layoutArray = array(
+            'height' => 600,
+            'width' => 600,
+        );
+
+//            var data = [{
+//                values: [19, 26, 55],
+//                labels: ['Residential', 'Non-Residential', 'Utility'],
+//                type: 'pie'
+//            }];
+        //$labels = array('Residential', 'Non-Residential', 'Utility');
+        //$values = array(19, 26, 55);
+
+        $chartsArray = array();
+
+        $apcpProjects = $this->getProjectPis($filterform,"ap-cp");
+        $hemaProjects = $this->getProjectPis($filterform,"hematopathology");
+
+
+        //Pie charts of the number of PIs in Hemepath vs AP/CP
+
+
+        //number of Hematopathology vs AP/CP project requests as a Pie chart
+
+
+        //3 bar graphs showing the number of project requests, work requests, invoices per month since
+        // the beginning based on submission date: Total, Hematopatholgy, AP/CP
+
+
+
+        return array(
+            'infos' => $infos,
+            'title' => $title,
+            'filterform' => $filterform->createView(),
+            //'dataArray' => $dataArray,
+            //'layoutArray' => $layoutArray
+            'chartsArray' => $chartsArray
+        );
+    }
+
 
     //select top 25, BUT make sure the other PIs are still shown as "Other"
     public function getTopArray($piProjectCountArr) {
@@ -306,8 +396,9 @@ class DashboardController extends Controller
 //    }
 
 
-    public function getProjectPis($filterform) {
+    public function getProjectPis($filterform, $projectSpecialtyAbbreviation=null) {
         $em = $this->getDoctrine()->getManager();
+        $transresUtil = $this->container->get('transres_util');
 
         $repository = $em->getRepository('OlegTranslationalResearchBundle:Project');
         $dql =  $repository->createQueryBuilder("project");
@@ -321,6 +412,13 @@ class DashboardController extends Controller
 
         $startDate = $filterform['startDate']->getData();
         $endDate = $filterform['endDate']->getData();
+        if( $projectSpecialtyAbbreviation == null ) {
+            $projectSpecialties = $filterform['projectSpecialty']->getData();
+        } else {
+            $specialtyObject = $transresUtil->getSpecialtyObject("hematopathology");
+            $projectSpecialties[] = $specialtyObject;
+        }
+
         $dqlParameters = array();
 
         if( $startDate ) {
@@ -332,6 +430,16 @@ class DashboardController extends Controller
             $endDate->modify('+1 day');
             $dql->andWhere('project.createDate <= :endDate');
             $dqlParameters['endDate'] = $endDate->format('Y-m-d H:i:s');
+        }
+
+        if( $projectSpecialties && count($projectSpecialties) > 0 ) {
+            $dql->leftJoin('project.projectSpecialty','projectSpecialty');
+            $projectSpecialtyIdsArr = array();
+            foreach($projectSpecialties as $projectSpecialty) {
+                $projectSpecialtyIdsArr[] = $projectSpecialty->getId();
+            }
+            $dql->andWhere("projectSpecialty.id IN (:projectSpecialtyIdsArr)");
+            $dqlParameters["projectSpecialtyIdsArr"] = $projectSpecialtyIdsArr;
         }
 
         $query = $em->createQuery($dql);
