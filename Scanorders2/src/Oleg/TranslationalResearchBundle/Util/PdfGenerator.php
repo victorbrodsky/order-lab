@@ -386,12 +386,15 @@ class PdfGenerator
         //echo "pageurl=". $pageUrl . "<br>";
         //exit();
 
-        //$application =
         $this->container->get('knp_snappy.pdf')->generate(
             $pageUrl,
             $applicationOutputFilePath
-            //array('cookie' => array($session->getName() => $session->getId()))
         );
+
+//        $this->container->get('knp_snappy.image')->generate(
+//            $pageUrl,
+//            $applicationOutputFilePath
+//        );
 
         //echo "generated ok! <br>";
     }

@@ -258,14 +258,16 @@ knp_snappy:
         enabled:    true
         binary:     '%wkhtmltopdfpath%' #/usr/bin/xvfb-run /usr/bin/wkhtmltopdf #'%wkhtmltopdfpath%'   #"\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe\""
         options:
-#            enable-forms: true       #Turn HTML form fields into pdf form fields
             javascript-delay: 7000    #Wait some milliseconds for javascript finish (default 200)
+            enable-forms: true       #Turn HTML form fields into pdf form fields
+            enable-javascript: true
+            debug-javascript: true
 
 #    image:
 #        enabled:    true
 #        binary:     "\"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltoimage.exe\""
-##        binary:      "\"%kernel.root_dir%\\..\\vendor\\olegutil\\wkhtmltopdf\\bin\\wkhtmltoimage.exe\""
-#        options:    []
+#        options:
+#            javascript-delay: 7000
 
 #fos_comment:
 #    db_driver: orm

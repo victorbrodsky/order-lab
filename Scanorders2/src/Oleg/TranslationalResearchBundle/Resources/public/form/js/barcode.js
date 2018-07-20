@@ -10,8 +10,10 @@ function drawBarcodeImages() {
         if( barcodeText ) {
             var parentTr = $(this).parent();
 
+            var imageTdDomEl = parentTr.find(".barcode-image")[0];
+
             new QRCode(
-                parentTr.find(".barcode-image")[0],
+                imageTdDomEl,
                 {
                     text: barcodeText,
                     width: 42,
@@ -21,6 +23,42 @@ function drawBarcodeImages() {
                     correctLevel : QRCode.CorrectLevel.H
                 }
             );
+        }
+    });
+}
+
+//https://github.com/wkhtmltopdf/wkhtmltopdf/issues/3654
+function drawBarcodeImagesTest() {
+    $(".barcode-value").each(function(e) {
+        var barcodeText = $(this).text();
+        console.log("barcodeText=" + barcodeText);
+        if( barcodeText ) {
+            var parentTr = $(this).parent();
+
+            var imageTdDomEl = parentTr.find(".barcode-image")[0];
+
+            new QRCode(
+                imageTdDomEl,
+                {
+                    text: barcodeText,
+                    width: 42,
+                    height: 42,
+                    colorDark : "#000000",
+                    colorLight : "#ffffff",
+                    correctLevel : QRCode.CorrectLevel.H
+                }
+            );
+
+
+            // var src = $(imageTdDomEl).find("canvas").toDataURL('image/png');
+            // console.log("src="+src);
+
+
+            // var imageEl = '<img src="' + src + '" height="42" width="42">';
+            // $(imageTdDomEl).append(imageEl);
+
+            //$(imageTdDomEl).find("canvas").remove();
+
         }
     });
 }
