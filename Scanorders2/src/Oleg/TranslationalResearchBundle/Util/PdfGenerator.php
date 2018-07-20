@@ -474,6 +474,7 @@ class PdfGenerator
 //            ;
 
         $cmd = $phantomjs . ' ' . $rasterize . ' ' . $pageUrl . ' ' . $applicationOutputFilePath;
+        $logger->notice("cmd=".$cmd);
 
         //$shellout = shell_exec( $cmd );
         $shellout = exec( $cmd );
