@@ -308,8 +308,8 @@ class PdfGenerator
         //$applicationFilePath = $outdir . "application_ID" . $invoice->getOid() . ".pdf";
         $applicationFilePath = $outdir . $fileFullReportUniqueName;
 
-        $this->generatePdfPackingSlip($transresRequest,$fileFullReportUniqueName,$applicationFilePath);
-        //$this->generatePdfPhantomjsPackingSlip($transresRequest,$fileFullReportUniqueName,$applicationFilePath);
+        //$this->generatePdfPackingSlip($transresRequest,$fileFullReportUniqueName,$applicationFilePath);
+        $this->generatePdfPhantomjsPackingSlip($transresRequest,$fileFullReportUniqueName,$applicationFilePath);
 
         $filesize = filesize($applicationFilePath);
         echo "filesize=".$filesize."<br>";
