@@ -520,6 +520,7 @@ function setMultipleJqueryQrcode() {
     for( var row=0; row<countRow; row++ ) { //for each row (except the last one)
         var barcode = _sotable.getDataAtCell(row,col);
         if( barcode ) {
+            barcode = barcode.trim();
             console.log("barcode="+barcode+"; row="+row+"; col="+col);
             jqueryQrcode(barcode,row,col+1);
         }

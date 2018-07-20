@@ -652,6 +652,30 @@ class SiteParameters {
      * @ORM\Column(type="text", nullable=true)
      */
     private $wkhtmltopdfpathLinux;
+
+    /**
+     * C:\Program Files\wkhtmltopdf\bin\phantomjs.exe
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $phantomjs;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $phantomjsLinux;
+
+    /**
+     * C:\Program Files\wkhtmltopdf\examples\rasterize.js
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $rasterize;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $rasterizeLinux;
     ////////////////////// EOF third party software //////////////////////////
     ///////////////////// EOF FELLAPP /////////////////////
 
@@ -3391,6 +3415,70 @@ class SiteParameters {
     public function setDefaultScanner($defaultScanner)
     {
         $this->defaultScanner = $defaultScanner;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPhantomjs()
+    {
+        return $this->phantomjs;
+    }
+
+    /**
+     * @param mixed $phantomjs
+     */
+    public function setPhantomjs($phantomjs)
+    {
+        $this->phantomjs = $phantomjs;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPhantomjsLinux()
+    {
+        return $this->phantomjsLinux;
+    }
+
+    /**
+     * @param mixed $phantomjsLinux
+     */
+    public function setPhantomjsLinux($phantomjsLinux)
+    {
+        $this->phantomjsLinux = $phantomjsLinux;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRasterize()
+    {
+        return $this->rasterize;
+    }
+
+    /**
+     * @param mixed $rasterize
+     */
+    public function setRasterize($rasterize)
+    {
+        $this->rasterize = $rasterize;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRasterizeLinux()
+    {
+        return $this->rasterizeLinux;
+    }
+
+    /**
+     * @param mixed $rasterizeLinux
+     */
+    public function setRasterizeLinux($rasterizeLinux)
+    {
+        $this->rasterizeLinux = $rasterizeLinux;
     }
 
     

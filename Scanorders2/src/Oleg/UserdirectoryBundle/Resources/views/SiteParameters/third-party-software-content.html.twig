@@ -102,6 +102,17 @@
                         <td>{{ entity.wkhtmltopdfpath }}</td>
                         <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'wkhtmltopdfpath'}) }}">Edit</a></td>
                     </tr>
+
+                    <tr>
+                        <td>Path to phantomjs.exe (with double quotation marks for path with space i.e. "C:\Program Files\phantomjs\bin\phantomjs.exe")</td>
+                        <td>{{ entity.phantomjs }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'phantomjs'}) }}">Edit</a></td>
+                    </tr>
+                    <tr>
+                        <td>Path to rasterize.js (with double quotation marks for path with space i.e. "C:\Program Files\rasterize\example\rasterize.js")</td>
+                        <td>{{ entity.rasterize }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'rasterize'}) }}">Edit</a></td>
+                    </tr>
                     {# EOF WINDOWS #}
 
                     {# LINUX #}
@@ -169,6 +180,17 @@
                         <td>Path to wkhtmltopdf binary - Linux (update system cache is required)</td>
                         <td>{{ entity.wkhtmltopdfpathLinux }}</td>
                         <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'wkhtmltopdfpathLinux'}) }}">Edit</a></td>
+                    </tr>
+
+                    <tr>
+                        <td>Path to phantomjsLinux</td>
+                        <td>{{ entity.phantomjsLinux }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'phantomjsLinux'}) }}">Edit</a></td>
+                    </tr>
+                    <tr>
+                        <td>Path to rasterizeLinux.js</td>
+                        <td>{{ entity.rasterizeLinux }}</td>
+                        <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'rasterizeLinux'}) }}">Edit</a></td>
                     </tr>
                     {# EOF LINUX #}
 

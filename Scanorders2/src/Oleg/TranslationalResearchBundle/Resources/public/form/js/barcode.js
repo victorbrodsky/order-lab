@@ -5,13 +5,32 @@
 function drawBarcodeImages() {
     drawBarcodeImagesJqueryQrcode();
     //drawBarcodeImagesQRCode();
+
+    drawIdBarcode();
+}
+
+function drawIdBarcode() {
+    var barcodeText = $("#work-request-id").text();
+    if( barcodeText ) {
+        barcodeText = barcodeText.trim();
+        console.log("barcodeText=" + barcodeText);
+
+        //var canvasId = "canvas-barcode-id";
+        //var canvasEl = '<div><canvas id="'+canvasId+'" width=100 height=100></canvas></div>';
+        //canvasEl = "<p>"+canvasEl+"</p>";
+        //$("#id-barcode").append(canvasEl);
+
+        render("id-barcode",barcodeText,"code128");
+        //render("id-barcode","12344","qrcode");
+    }
 }
 
 function drawBarcodeImagesJqueryQrcode() {
     $(".barcode-value").each(function(e) {
         var barcodeText = $(this).text();
-        console.log("barcodeText=" + barcodeText);
+        //console.log("barcodeText=" + barcodeText);
         if( barcodeText ) {
+            barcodeText = barcodeText.trim();
             var parentTr = $(this).parent();
 
             var imageTdEl = parentTr.find(".barcode-image");
@@ -36,6 +55,7 @@ function drawBarcodeImagesQRCode() {
         var barcodeText = $(this).text();
         console.log("barcodeText=" + barcodeText);
         if( barcodeText ) {
+            barcodeText = barcodeText.trim();
             var parentTr = $(this).parent();
 
             var imageTdDomEl = parentTr.find(".barcode-image")[0];
@@ -53,6 +73,8 @@ function drawBarcodeImagesQRCode() {
             );
         }
     });
+
+
 }
 
 //https://github.com/wkhtmltopdf/wkhtmltopdf/issues/3654
@@ -61,6 +83,7 @@ function drawBarcodeImagesTest() {
         var barcodeText = $(this).text();
         console.log("barcodeText=" + barcodeText);
         if( barcodeText ) {
+            barcodeText = barcodeText.trim();
             var parentTr = $(this).parent();
 
             var imageTdDomEl = parentTr.find(".barcode-image")[0];
@@ -161,19 +184,22 @@ $(document).ready(function() {
 
 //multiple barcodes: https://github.com/metafloor/bwip-js/issues/101
 //https://github.com/metafloor/bwip-js/issues/73
-function render(canvasId, barcodeText) {
+function render(canvasId, barcodeText, barcodeName) {
     var bw = new BWIPJS(bwipjs_fonts,false);
     var canvas = document.getElementById(canvasId);
-    canvas.height = 1;
-    canvas.width  = 1;
+    canvas.height = 100;
+    canvas.width  = 100;
     //bw.bitmap(new Bitmap);
     //bw.scale('5', '5');
 
-    var scaleX = 0.5;
-    var scaleY = 0.5;
+    var scaleX = 1;
+    var scaleY = 1;
     var rot = 'N';
-    //var barcodeName = "azteccode";
-    var barcodeName = "qrcode";
+
+     if( barcodeName === undefined ) {
+        var barcodeName = "azteccode";
+        barcodeName = "qrcode";
+     }
 
     ///////////////////////////
     var opts = {};

@@ -49,10 +49,13 @@
                 {{ transres_request_util.getTransresSiteParameter('transresPackingSlipTitle',transresRequest) }}
             </b></h2></p>
             <p>
-                Work Request ID: <span style="color: {{ headlineColor }}">{{ transresRequest.oid }}</span>
+                Work Request ID: <span id="work-request-id" style="color: {{ headlineColor }}">{{ transresRequest.oid }}</span>
             </p>
             <p>
                 {#barcode#}
+                {#<div id="id-barcode-div">#}
+                    <canvas id="id-barcode"></canvas>
+                {#</div>#}
             </p>
             <p>
                 <b>Submission Date:</b> <span style="color: {{ headlineColor }}">{{ transresRequest.createDate|date("m/d/Y") }}</span>
@@ -215,6 +218,14 @@
     '@OlegTranslationalResearchBundle/Resources/public/form/js/barcode.js'
     '@OlegUserdirectoryBundle/Resources/public/qrcode/qrcode.js'
     '@OlegUserdirectoryBundle/Resources/public/jquery-qrcode/jquery.qrcode.min.js'
+    '@OlegUserdirectoryBundle/Resources/public/bwip-js/bwipp.js'
+    '@OlegUserdirectoryBundle/Resources/public/bwip-js/bwipjs.js'
+    '@OlegUserdirectoryBundle/Resources/public/bwip-js/lib/jquery-ui.min.js'
+    '@OlegUserdirectoryBundle/Resources/public/bwip-js/lib/xhr-fonts.js'
+    '@OlegUserdirectoryBundle/Resources/public/bwip-js/lib/bitmap.js'
+    '@OlegUserdirectoryBundle/Resources/public/bwip-js/lib/symdesc.js'
+    '@OlegUserdirectoryBundle/Resources/public/bwip-js/lib/canvas-toblob.js'
+    '@OlegUserdirectoryBundle/Resources/public/bwip-js/lib/filesaver.js'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}

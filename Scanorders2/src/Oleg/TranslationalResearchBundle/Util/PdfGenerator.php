@@ -405,10 +405,13 @@ class PdfGenerator
     //http://wkhtmltopdf.org must be installed on server
     public function generatePdfPhantomjsPackingSlip($transresRequest,$fileFullReportUniqueName,$applicationOutputFilePath) {
         $logger = $this->container->get('logger');
-        $logger->notice("Trying to generate PDF in ".$applicationOutputFilePath);
+        $userServiceUtil = $this->container->get('user_service_utility');
+        $userSecUtil = $this->container->get('user_security_utility');
+
+        $logger->notice("Trying to generate PDF by Phantomjs in ".$applicationOutputFilePath);
         if( file_exists($applicationOutputFilePath) ) {
             //return;
-            $logger->notice("generatePdf: unlink file already exists path=" . $applicationOutputFilePath );
+            $logger->notice("Phantomjs: unlink file already exists path=" . $applicationOutputFilePath );
             unlink($applicationOutputFilePath);
         }
 
@@ -422,12 +425,12 @@ class PdfGenerator
 
         //generate application URL
         $router = $this->container->get('router');
-        $context = $router->getContext();
-
-        //http://192.168.37.128/order/app_dev.php/translational-research/download-invoice-pdf/49
-        $context->setHost('localhost');
-        $context->setScheme('http');
-        $context->setBaseUrl('/order');
+//        $context = $router->getContext();
+//
+//        //http://192.168.37.128/order/app_dev.php/translational-research/download-invoice-pdf/49
+//        $context->setHost('localhost');
+//        $context->setScheme('http');
+//        $context->setBaseUrl('/order');
 
         //invoice download
         $pageUrl = $router->generate('translationalresearch_packing_slip_download',
@@ -441,12 +444,36 @@ class PdfGenerator
         //$cmd = '"' . $libreOfficeConvertToPDFPathFellApp . DIRECTORY_SEPARATOR . $libreOfficeConvertToPDFFilenameFellApp .
         //    '" ' . $libreOfficeConvertToPDFArgumentsdFellApp . ' "' . $outdir . '"';
 
-        $cmd =
-            '"C:/Users/ch3/Desktop/php/phantomjs-2.1.1-windows/phantomjs-2.1.1-windows/bin/phantomjs.exe"' .
-            ' "C:/Users/ch3/Desktop/php/phantomjs-2.1.1-windows/phantomjs-2.1.1-windows/examples/rasterize.js"' .
-            ' ' . $pageUrl .
-            ' ' . $applicationOutputFilePath
-            ;
+        if( $userServiceUtil->isWinOs() ) {
+            $phantomjs = $userSecUtil->getSiteSettingParameter('phantomjs');
+            if (!$phantomjs) {
+                throw new \InvalidArgumentException('phantomjs is not defined in Site Parameters.');
+            }
+
+            $rasterize = $userSecUtil->getSiteSettingParameter('rasterize');
+            if (!$rasterize) {
+                throw new \InvalidArgumentException('rasterize is not defined in Site Parameters.');
+            }
+        } else {
+            $phantomjs = $userSecUtil->getSiteSettingParameter('phantomjsLinux');
+            if (!$phantomjs) {
+                throw new \InvalidArgumentException('phantomjsLinux is not defined in Site Parameters.');
+            }
+
+            $rasterize = $userSecUtil->getSiteSettingParameter('rasterizeLinux');
+            if (!$rasterize) {
+                throw new \InvalidArgumentException('rasterizeLinux is not defined in Site Parameters.');
+            }
+        }
+
+//        $cmd =
+//            '"C:/Users/ch3/Desktop/php/phantomjs-2.1.1-windows/phantomjs-2.1.1-windows/bin/phantomjs.exe"' .
+//            ' "C:/Users/ch3/Desktop/php/phantomjs-2.1.1-windows/phantomjs-2.1.1-windows/examples/rasterize.js"' .
+//            ' ' . $pageUrl .
+//            ' ' . $applicationOutputFilePath
+//            ;
+
+        $cmd = $phantomjs . ' ' . $rasterize . ' ' . $pageUrl . ' ' . $applicationOutputFilePath;
 
         //$shellout = shell_exec( $cmd );
         $shellout = exec( $cmd );
