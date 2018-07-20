@@ -243,6 +243,12 @@ class FilterRequestType extends AbstractType
             'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'External ID'),
         ));
 
+        $builder->add('requestId', TextType::class, array(
+            'required'=>false,
+            'label' => false,
+            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'Request ID'),
+        ));
+
 //        $builder->add('showMatchingAndTotal', ChoiceType::class, array(
 //            'label' => false,
 //            'required' => true,

@@ -434,10 +434,13 @@
                 <div class="col-xs-4">
                     {{ form_widget(filterform.category,{'attr': {'placeholder': 'Category'}}) }}
                 </div>
-                <div class="col-xs-3">
+                <div class="col-xs-2">
                     {{ form_widget(filterform.projectSpecialty, {'attr': {'placeholder': 'Project Specialty'}}) }}
                 </div>
-                <div class="col-xs-4">
+                <div class="col-xs-2">
+                    {{ form_widget(filterform.requestId) }}
+                </div>
+                <div class="col-xs-3">
                     {{ form_widget(filterform.project) }}
                 </div>
                 <div class="col-xs-1">

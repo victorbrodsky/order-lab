@@ -932,6 +932,7 @@ class RequestController extends Controller
         $submitter = null;
         $project = null;
 
+        $requestId = $filterform['requestId']->getData();
         $externalId = $filterform['externalId']->getData();
         $submitter = $filterform['submitter']->getData();
         $progressStates = $filterform['progressState']->getData();
@@ -1489,6 +1490,11 @@ class RequestController extends Controller
             $dql->andWhere('transresRequest.exportId = :exportId');
             $dqlParameters['exportId'] = $externalId;
             $advancedFilter++;
+        }
+
+        if( $requestId ) {
+            $dql->andWhere('transresRequest.oid LIKE :requestId');
+            $dqlParameters['requestId'] = "%".$requestId."%";
         }
 
 //        if( $accountNumber ) {
