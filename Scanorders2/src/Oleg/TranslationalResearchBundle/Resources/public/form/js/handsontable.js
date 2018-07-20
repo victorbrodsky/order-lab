@@ -343,10 +343,12 @@ function handsonTableInit(handsometableDataArr,tableFormCycle) {
                 //    return;
                 //}
 
+                //always re-generate images, because when any cell is modified, then table is refreshed
+                setMultipleJqueryQrcode();
 
                 if( columnNumber == _barcodeCol+1 ) {
                     //_sotable.setDataAtCell(rowNumber,columnNumber,null);
-                    setMultipleJqueryQrcode();
+                    //setMultipleJqueryQrcode();
                 }
 
                 if( columnNumber != _barcodeCol ) {
@@ -413,7 +415,7 @@ function handsonTableInit(handsometableDataArr,tableFormCycle) {
 
                     //jquery.qrcode.min.js
                     //jqueryQrcode(newValue,rowNumber,columnNumber+1);
-                    setMultipleJqueryQrcode();
+                    //setMultipleJqueryQrcode();
 
                 }
             }
