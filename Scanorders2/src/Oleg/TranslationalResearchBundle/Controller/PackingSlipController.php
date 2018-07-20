@@ -247,7 +247,7 @@ class PackingSlipController extends Controller
 
     /**
      * Show Packing Slip PDF version of Work Request
-     * http://localhost/order/translational-research/work-request/download-packing-slip-pdf/HP8-REQ20-V2
+     * http://localhost/order/translational-research/work-request/download-packing-slip-pdf/3
      *
      * @Route("/download-packing-slip-pdf/{id}", name="translationalresearch_packing_slip_download")
      * @Template("OlegTranslationalResearchBundle:Request:packing-slip-pdf-show.html.twig")
@@ -294,7 +294,7 @@ class PackingSlipController extends Controller
             'transresRequest' => $transresRequest,
             'invoice' => $invoice,
             'packingSlipLogoFileName' => $packingSlipLogoFileName,
-            'opacity' => 0.6,
+            'opacity' => 1, //0.6
             //'form' => $form->createView(),
             //'delete_form' => $deleteForm->createView(),
             'cycle' => $cycle,

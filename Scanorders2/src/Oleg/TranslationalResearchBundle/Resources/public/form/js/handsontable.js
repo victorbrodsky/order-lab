@@ -342,6 +342,13 @@ function handsonTableInit(handsometableDataArr,tableFormCycle) {
                 //if( _columnData_scanorder[columnNumber].header != "Barcode") {
                 //    return;
                 //}
+
+
+                if( columnNumber == _barcodeCol+1 ) {
+                    //_sotable.setDataAtCell(rowNumber,columnNumber,null);
+                    setMultipleJqueryQrcode();
+                }
+
                 if( columnNumber != _barcodeCol ) {
                     console.log("ignore changes in col="+columnNumber);
                     return;
@@ -398,11 +405,15 @@ function handsonTableInit(handsometableDataArr,tableFormCycle) {
                         _sotable.setDataAtCell(rowNumber, columnNumber + 1, barcodeImageSrc);
                     }
 
-                    //WORKING:
-                    // setBarcodeMultipleCanvas(_barcodeCol);
+                    //WORKING: problem does not generate for all rows, generate only the first row
+                    //setBarcodeMultipleCanvas(_barcodeCol);
 
                     //WORKING: setQrcode(newValue,rowNumber,columnNumber+1);
-                    setMultipleQrcode();
+                    //setMultipleQrcode();
+
+                    //jquery.qrcode.min.js
+                    //jqueryQrcode(newValue,rowNumber,columnNumber+1);
+                    setMultipleJqueryQrcode();
 
                 }
             }
@@ -418,18 +429,19 @@ function handsonTableInit(handsometableDataArr,tableFormCycle) {
 
     //generate barcodes
     //setBarcodeMultipleCanvas(_barcodeCol);
-    setMultipleQrcode();
+    //setMultipleQrcode(); //Working!
+    setMultipleJqueryQrcode();
 
     // _sotable.addHook("afterCreateRow", function(){
     //     console.log("afterCreateRow");
     //     //_sotable.render();
-    //     setMultipleQrcode();
+    //     setMultipleJqueryQrcode();
     //
     // });
     // _sotable.addHook("afterRemoveRow", function(){
     //     console.log("afterRemoveRow");
     //     //_sotable.render();
-    //     setMultipleQrcode();
+    //     setMultipleJqueryQrcode();
     //
     // });
 
@@ -453,7 +465,6 @@ function setQrcode(barcodeText,rowNumber,columnNumber) {
 
     new QRCode(
         document.getElementById(canvasId),
-        //barcodeText
         {
             text: barcodeText,
             width: 42,
@@ -478,6 +489,43 @@ function setMultipleQrcode() {
         }
     } //for each row
 }
+
+function jqueryQrcode(barcodeText,rowNumber,columnNumber) {
+    if( barcodeText ) {
+        var cellEl = _sotable.getCell(rowNumber, columnNumber);
+
+        //var canvasId = "canvas-"+rowNumber+"-"+columnNumber;
+        //var divEl = '<div> id="'+canvasId+'"></div>';
+        //appendBarcode($(cellEl),divEl);
+        //$("#"+canvasId).qrcode({width: 64,height: 64,text: barcodeText});
+
+        $(cellEl).css('padding', '5px');
+
+        $(cellEl).qrcode({
+            render: "canvas",
+            //render: "table",
+            width: 64,
+            height: 64,
+            text: barcodeText,
+            //correctLevel: QRCode.CorrectLevel.H
+        });
+    }
+}
+function setMultipleJqueryQrcode() {
+    resizeTableHeight();
+
+    var col = _barcodeCol;
+    var countRow = _sotable.countRows();
+    console.log("countRow="+countRow+"; col="+col);
+    for( var row=0; row<countRow; row++ ) { //for each row (except the last one)
+        var barcode = _sotable.getDataAtCell(row,col);
+        if( barcode ) {
+            console.log("barcode="+barcode+"; row="+row+"; col="+col);
+            jqueryQrcode(barcode,row,col+1);
+        }
+    } //for each row
+}
+
 
 function getBarcodeImageSrcApi(barcodeText) {
     var code = "qrcode";
@@ -510,7 +558,7 @@ function setBarcodeCanvas(barcodeText,rowNumber,columnNumber) {
     //<canvas id="canvas" width=1 height=1 style="border:1px solid #fff;visibility:hidden"></canvas>
     var canvasId = "canvas-"+rowNumber+"-"+columnNumber;
     //var canvasEl = '<canvas id="'+canvasId+'" width=100 height=100 style="border:1px solid #fff;visibility:visible"></canvas>';
-    var canvasEl = '<canvas id="'+canvasId+'" width=100 height=100></canvas>';
+    var canvasEl = '<div><canvas id="'+canvasId+'" width=100 height=100></canvas></div>';
     canvasEl = "<p>"+canvasEl+"</p>";
 
     appendBarcode($(cellEl),canvasEl);
@@ -519,7 +567,7 @@ function setBarcodeCanvas(barcodeText,rowNumber,columnNumber) {
 
     render(canvasId,barcodeText);
 
-    $("#"+canvasId).show();
+    //$("#"+canvasId).show();
 }
 function getBarcodeImg(barcodeText,rowNumber,columnNumber) {
     console.log("getBarcodeCanvasSrc: barcodeText="+barcodeText+"; rowNumber="+rowNumber+"; columnNumber="+columnNumber);

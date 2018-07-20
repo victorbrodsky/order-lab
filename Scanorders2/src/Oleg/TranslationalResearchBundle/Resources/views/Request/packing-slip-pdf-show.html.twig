@@ -28,16 +28,16 @@
     {#{% set bundleFileName = transres_request_util.getDefaultFile("transresPackingSlipLogos",transresRequest)|raw %}#}
     {#{% if bundleFileName %}#}
 
-    {% set headlineColor = transres_request_util.getTransresSiteParameter('transresPackingSlipHighlightedColor',transresRequest) %}
+    {% set headlineColor = transres_request_util.getTransresSiteParameter('transresPackingSlipHighlightedColor',transresRequest)~" !important;" %}
 
-    <div style="opacity: {{ opacity }};">
+    <div style="opacity: {{ opacity }} !important;">
     <div class="row">
         <div class="col-xs-1"></div>
         <div class="col-xs-5" align="left">
             <img src="{{ asset(packingSlipLogoFileName) }}" alt="Packing Slip Logo"/>
             <br>
             <br>
-            <div style="color: {{ transres_request_util.getTransresSiteParameter('transresPackingSlipHeadlineColor',transresRequest) }}">
+            <div style="color: {{ transres_request_util.getTransresSiteParameter('transresPackingSlipHeadlineColor',transresRequest) }} !important;">
             {{ transres_request_util.getTransresSiteParameter('transresPackingSlipHeadline1',transresRequest) }}
             <br>
             {{ transres_request_util.getTransresSiteParameter('transresPackingSlipHeadline2',transresRequest) }}
@@ -82,7 +82,7 @@
     <p>
     <div class="table-responsive">
         <table class="table table-bordered table-striped">
-            <thead style="background-color: #BEBEBE;">
+            <thead style="background-color: #BEBEBE !important;">
             <tr>
                 <th>Item</th>
                 <th>Category Type</th>
@@ -131,7 +131,7 @@
 
     <div class="table-responsive">
         <table class="table table-bordered table-striped">
-            <thead style="background-color: #BEBEBE;">
+            <thead style="background-color: #BEBEBE !important;">
                 <tr>
                     <th></th>
                     {#colspan="2"#}
@@ -153,7 +153,10 @@
                     <td class="barcode-value" style="color: {{ headlineColor }}">
                         {{ dataResult.barcode }}
                     </td>
-                    <td class="barcode-image" style="width: 50px; height: 50px;"></td>
+                    {#style="width: 50px; height: 50px; padding: 5px;"#}
+                    <td>
+                       <div class="barcode-image"></div>
+                    </td>
                     <td style="color: {{ headlineColor }}">
                         {{ dataResult.comment }}
                     </td>
@@ -186,7 +189,7 @@
     {% stylesheets
         'bundles/olegtranslationalresearch/form/css/pdf-show.css' filter='cssrewrite'
     %}
-        <link rel="stylesheet" type="text/css" media="screen" href="{{ asset_url }}" />
+        <link rel="stylesheet" type="text/css" media="all" href="{{ asset_url }}" />
     {% endstylesheets %}
 
 {% endblock %}
@@ -211,6 +214,7 @@
     '@OlegOrderformBundle/Resources/public/form/js/masking.js'
     '@OlegTranslationalResearchBundle/Resources/public/form/js/barcode.js'
     '@OlegUserdirectoryBundle/Resources/public/qrcode/qrcode.js'
+    '@OlegUserdirectoryBundle/Resources/public/jquery-qrcode/jquery.qrcode.min.js'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}

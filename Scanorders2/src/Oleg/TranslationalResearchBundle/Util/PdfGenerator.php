@@ -308,7 +308,8 @@ class PdfGenerator
         //$applicationFilePath = $outdir . "application_ID" . $invoice->getOid() . ".pdf";
         $applicationFilePath = $outdir . $fileFullReportUniqueName;
 
-        $this->generatePdfPackingSlip($transresRequest,$fileFullReportUniqueName,$applicationFilePath);
+        //$this->generatePdfPackingSlip($transresRequest,$fileFullReportUniqueName,$applicationFilePath);
+        $this->generatePdfPhantomjsPackingSlip($transresRequest,$fileFullReportUniqueName,$applicationFilePath);
 
         $filesize = filesize($applicationFilePath);
         echo "filesize=".$filesize."<br>";
@@ -395,6 +396,67 @@ class PdfGenerator
 //            $pageUrl,
 //            $applicationOutputFilePath
 //        );
+
+        //echo "generated ok! <br>";
+    }
+
+
+    //use KnpSnappyBundle to convert html to pdf
+    //http://wkhtmltopdf.org must be installed on server
+    public function generatePdfPhantomjsPackingSlip($transresRequest,$fileFullReportUniqueName,$applicationOutputFilePath) {
+        $logger = $this->container->get('logger');
+        $logger->notice("Trying to generate PDF in ".$applicationOutputFilePath);
+        if( file_exists($applicationOutputFilePath) ) {
+            //return;
+            $logger->notice("generatePdf: unlink file already exists path=" . $applicationOutputFilePath );
+            unlink($applicationOutputFilePath);
+        }
+
+        ini_set('max_execution_time', 300); //300 sec
+
+        //testing
+        //$wkhtmltopdfpath = $this->container->getParameter('wkhtmltopdfpath');
+        //echo "wkhtmltopdfpath=$wkhtmltopdfpath<br>";
+        //$default_system_email = $this->container->getParameter('default_system_email');
+        //echo "default_system_email=$default_system_email<br>";
+
+        //generate application URL
+        $router = $this->container->get('router');
+        $context = $router->getContext();
+
+        //http://192.168.37.128/order/app_dev.php/translational-research/download-invoice-pdf/49
+        $context->setHost('localhost');
+        $context->setScheme('http');
+        $context->setBaseUrl('/order');
+
+        //invoice download
+        $pageUrl = $router->generate('translationalresearch_packing_slip_download',
+            array(
+                'id' => $transresRequest->getId()
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        ); //this does not work from console: 'order' is missing
+
+        //$ bin/phantomjs.exe examples/rasterize.js 'http://localhost/order/translational-research/work-request/download-packing-slip-pdf/3' result.pdf
+        //$cmd = '"' . $libreOfficeConvertToPDFPathFellApp . DIRECTORY_SEPARATOR . $libreOfficeConvertToPDFFilenameFellApp .
+        //    '" ' . $libreOfficeConvertToPDFArgumentsdFellApp . ' "' . $outdir . '"';
+
+        $cmd =
+            '"C:/Users/ch3/Desktop/php/phantomjs-2.1.1-windows/phantomjs-2.1.1-windows/bin/phantomjs.exe"' .
+            ' "C:/Users/ch3/Desktop/php/phantomjs-2.1.1-windows/phantomjs-2.1.1-windows/examples/rasterize.js"' .
+            ' ' . $pageUrl .
+            ' ' . $applicationOutputFilePath
+            ;
+
+        //$shellout = shell_exec( $cmd );
+        $shellout = exec( $cmd );
+
+        if( $shellout ) {
+            //echo "shellout=".$shellout."<br>";
+            //$logger->notice("Phantomjs converted output file=" . $applicationOutputFilePath);
+        } else {
+            $logger->error("Phantomjs failed to convert output file=" . $applicationOutputFilePath);
+        }
 
         //echo "generated ok! <br>";
     }

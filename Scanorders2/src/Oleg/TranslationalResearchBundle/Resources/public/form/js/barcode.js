@@ -2,8 +2,36 @@
  * Created by ch3 on 7/16/2018.
  */
 
-//packing slip barcode
 function drawBarcodeImages() {
+    drawBarcodeImagesJqueryQrcode();
+    //drawBarcodeImagesQRCode();
+}
+
+function drawBarcodeImagesJqueryQrcode() {
+    $(".barcode-value").each(function(e) {
+        var barcodeText = $(this).text();
+        console.log("barcodeText=" + barcodeText);
+        if( barcodeText ) {
+            var parentTr = $(this).parent();
+
+            var imageTdEl = parentTr.find(".barcode-image");
+
+            //var imageTdDomEl = imageTdEl[0];
+
+            imageTdEl.qrcode({
+                render : "canvas",
+                //render : "table",
+                width: 64,
+                height: 64,
+                text: barcodeText,
+                //correctLevel: QRCode.CorrectLevel.H
+            });
+        }
+    });
+}
+
+//packing slip barcode
+function drawBarcodeImagesQRCode() {
     $(".barcode-value").each(function(e) {
         var barcodeText = $(this).text();
         console.log("barcodeText=" + barcodeText);
@@ -16,8 +44,8 @@ function drawBarcodeImages() {
                 imageTdDomEl,
                 {
                     text: barcodeText,
-                    width: 42,
-                    height: 42,
+                    width: 64,
+                    height: 64,
                     colorDark : "#000000",
                     colorLight : "#ffffff",
                     correctLevel : QRCode.CorrectLevel.H
