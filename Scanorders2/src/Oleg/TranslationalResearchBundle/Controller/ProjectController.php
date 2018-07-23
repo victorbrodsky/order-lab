@@ -310,8 +310,8 @@ class ProjectController extends Controller
         }
 
         if( $exportId ) {
-            $dql->andWhere("project.exportId = :exportId");
-            $dqlParameters["exportId"] = $exportId;
+            $dql->andWhere("project.exportId LIKE :exportId");
+            $dqlParameters["exportId"] = "%".$exportId."%";
             $advancedFilter++;
         }
 

@@ -106,8 +106,16 @@ class PackingSlipController extends Controller
             $msg
         );
 
-        //return $this->redirectToRoute('translationalresearch_invoice_index_all');
-        return $this->redirectToRoute('translationalresearch_request_show', array('id' => $transresRequest->getId()));
+        //view generated packing slip
+        $packingSlips = $transresRequest->getPackingSlipPdfs();
+        if( count($packingSlips) > 0 ) {
+            $packingSlip = $packingSlips[0];
+            return $this->redirectToRoute('translationalresearch_file_view', array('id' => $packingSlip->getId()));
+
+        } else {
+            return $this->redirectToRoute('translationalresearch_request_show', array('id' => $transresRequest->getId()));
+        }
+
     }
 
 

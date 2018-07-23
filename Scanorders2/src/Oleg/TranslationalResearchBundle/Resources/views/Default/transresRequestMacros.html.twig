@@ -844,9 +844,10 @@
 
                     {#Packing Slip Actions#}
                     {% if cycle != "new" and cycle != "edit" %}
-                        <a class="btn btn-primary"
+                        <a  class="btn btn-primary"
+                            target="_blank"
                             href="{{ path(translationalresearch_sitename~'_generate_packing_slip', { 'id': transresRequest.id }) }}"
-                            >Generate Packing Slip PDF</a>
+                            >Generate and View Packing Slip PDF</a>
 
                         <a class="btn btn-success"
                            href="{{ path(translationalresearch_sitename~'_email_packing_slip', { 'id': transresRequest.id }) }}"

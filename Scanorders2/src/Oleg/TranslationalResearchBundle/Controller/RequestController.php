@@ -1487,8 +1487,8 @@ class RequestController extends Controller
 
         if( $externalId ) {
             //echo $externalId."<br>";
-            $dql->andWhere('transresRequest.exportId = :exportId');
-            $dqlParameters['exportId'] = $externalId;
+            $dql->andWhere('transresRequest.exportId LIKE :exportId');
+            $dqlParameters['exportId'] = "%".$externalId."%";
             $advancedFilter++;
         }
 
