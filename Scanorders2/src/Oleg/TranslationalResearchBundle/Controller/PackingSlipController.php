@@ -316,11 +316,10 @@ class PackingSlipController extends Controller
         $packingSlipLogoFileName = $transresRequestUtil->getDefaultFile("transresPackingSlipLogos",null,$transresRequest);
         //echo "packingSlipLogoFileName=$packingSlipLogoFileName <br>";
 
-        $barcodeTdSize = $transresRequestUtil->getTransresSiteParameter('barcodeSize',$transresRequest);
-        if( !$barcodeTdSize ) {
-            $barcodeTdSize = "54";
+        $barcodeImageSize = $transresRequestUtil->getTransresSiteParameter('barcodeSize',$transresRequest);
+        if( !$barcodeImageSize ) {
+            $barcodeImageSize = "54";
         }
-        //echo "barcodeTdSize=$barcodeTdSize<br>";
 
         return array(
             'transresRequest' => $transresRequest,
@@ -331,7 +330,8 @@ class PackingSlipController extends Controller
             //'delete_form' => $deleteForm->createView(),
             'cycle' => $cycle,
             'title' => "Packing Slip for Work Request ID ".$transresRequest->getOid(),
-            'barcodeTdSize' => $barcodeTdSize //"54"
+            'barcodeImageSize' => $barcodeImageSize,
+            'barcodeTdSize' => ($barcodeImageSize*2+10)."px;"
         );
     }
 }

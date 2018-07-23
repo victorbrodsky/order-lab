@@ -47,7 +47,9 @@
                 {{ formmacros.fielddate(filterform.endDate,'allow-future-date') }}
             </div>
             <div class="col-xs-3">
-                {{ form_widget(filterform.projectSpecialty, {'attr': {'placeholder': 'Specialty'}}) }}
+                {% if filterform.projectSpecialty is defined %}
+                    {{ form_widget(filterform.projectSpecialty, {'attr': {'placeholder': 'Specialty'}}) }}
+                {% endif %}
             </div>
             <div class="col-xs-2">
                 <button id="filter-btn" type="submit" class="btn btn-default">Filter</button>

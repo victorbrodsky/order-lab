@@ -282,11 +282,11 @@ function handsonTableInit(handsometableDataArr,tableFormCycle) {
         manualColumnMove: true,
         manualColumnResize: true,
         autoWrapRow: true,
-        autoRowSize: {syncLimit: 300},
-        rowHeight: function(row) {
-            return _rowHeight;
-        },
-        defaultRowHeight: _rowHeight,
+        //autoRowSize: {syncLimit: 300},
+        // rowHeight: function(row) {
+        //     return _rowHeight;
+        // },
+        // defaultRowHeight: _rowHeight,
         renderAllRows: true,
         currentRowClassName: 'currentRowScanorder',
         currentColClassName: 'currentColScanorder',
@@ -452,13 +452,19 @@ function handsonTableInit(handsometableDataArr,tableFormCycle) {
     //     setMultipleJqueryQrcode();
     //
     // });
+    // _sotable.addHook("afterChangesObserved", function(){
+    //     console.log("afterChangesObserved");
+    //     //_sotable.render();
+    //     setMultipleJqueryQrcode();
+    //
+    // });
 
 }
 
 function resizeTableHeight() {
     console.log("Setting height");
     var countRow = _sotable.countRows();
-    var newHeight = countRow*(_tdSize + _tdPadding*3) + 200;
+    var newHeight = countRow*(_tdSize + _tdPadding*4);
     _sotable.updateSettings({height: newHeight});
 }
 
@@ -520,7 +526,9 @@ function jqueryQrcode(barcodeText,rowNumber,columnNumber) {
     }
 }
 function setMultipleJqueryQrcode() {
-    //resizeTableHeight();
+    //if( $("#formcycle").val() == "show" ) {
+        resizeTableHeight();
+    //}
 
     var col = _barcodeCol;
     var countRow = _sotable.countRows();

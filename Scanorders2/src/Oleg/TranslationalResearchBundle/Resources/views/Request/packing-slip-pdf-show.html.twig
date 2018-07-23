@@ -19,7 +19,7 @@
 {% block contentleft %}
 
     <input type="hidden" id="formcycle" value="{{ cycle }}" />
-    <input type="hidden" id="barcode_td_size" value="{{ barcodeTdSize }}" />
+    <input type="hidden" id="barcode_image_size" value="{{ barcodeImageSize }}" />
 
     {#<h4 class="text-info" align="center">#}
         {#{{ title }}#}
@@ -158,7 +158,7 @@
                         {{ dataResult.barcode }}
                     </td>
                     {#style="width: 50px; height: 50px; padding: 5px;"#}
-                    <td>
+                    <td width="{{ barcodeTdSize }}">
                         {% if loop.index is even %}
                             {% set alignBarcode = "left" %}
                         {% else %}

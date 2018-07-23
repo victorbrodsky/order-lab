@@ -202,8 +202,15 @@
     <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
 
+    {#{% stylesheets#}
+    {#'bundles/olegorderform/handsontable/jquery.handsontable.full.css' filter='cssrewrite'#}
+    {#'bundles/olegorderform/form/css/handsontable.css' filter='cssrewrite'#}
+    {#%}#}
+    {#<link rel="stylesheet" href="{{ asset_url }}" />#}
+    {#{% endstylesheets %}#}
+
     {% stylesheets
-    'bundles/olegorderform/handsontable/jquery.handsontable.full.css' filter='cssrewrite'
+    'bundles/oleguserdirectory/handsontable-5/dist/handsontable.full.css' filter='cssrewrite'
     'bundles/olegorderform/form/css/handsontable.css' filter='cssrewrite'
     %}
     <link rel="stylesheet" href="{{ asset_url }}" />
@@ -242,9 +249,15 @@
     {#%}#}
     {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
     {#{% endjavascripts %}#}
+    {#'@OlegOrderformBundle/Resources/public/handsontable/jquery.handsontable.full.js'#}
 
     {% javascripts
-    '@OlegOrderformBundle/Resources/public/handsontable/jquery.handsontable.full.js'
+    '@OlegUserdirectoryBundle/Resources/public/handsontable-5/dist/handsontable.full.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    {% javascripts
     '@OlegTranslationalResearchBundle/Resources/public/form/js/handsontable.js'
     '@OlegUserdirectoryBundle/Resources/public/bwip-js/freetype.js'
     '@OlegOrderformBundle/Resources/public/form/js/selectAjax.js'

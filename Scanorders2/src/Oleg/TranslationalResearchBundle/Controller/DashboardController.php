@@ -64,7 +64,7 @@ class DashboardController extends Controller
 
         $chartsArray = array();
 
-        $projects = $this->getProjectPis($filterform);
+        $projects = $this->getProjectsByFilter($filterform);
 
         //Projects per PIs
         if( $routeName == "translationalresearch_dashboard_pilevel" ) {
@@ -237,7 +237,7 @@ class DashboardController extends Controller
 
         $transresUtil = $this->container->get('transres_util');
         //$transResFormNodeUtil = $this->container->get('transres_formnode_util');
-        $routeName = $request->get('_route');
+        //$routeName = $request->get('_route');
         $infos = array();
 
         //////////// Filter ////////////
@@ -271,19 +271,45 @@ class DashboardController extends Controller
 
         $chartsArray = array();
 
-        $apcpProjects = $this->getProjectPis($filterform,"ap-cp");
-        $hemaProjects = $this->getProjectPis($filterform,"hematopathology");
+        $apcpProjects = $this->getProjectsByFilter($filterform,"ap-cp");
+        $hemaProjects = $this->getProjectsByFilter($filterform,"hematopathology");
+
+        ///////////////// Pie charts of the number of PIs in Hemepath vs AP/CP /////////////////
+        $apcpPis = 0;
+        $hemaPis = 0;
+        foreach($apcpProjects as $project) {
+            $apcpPis = $apcpPis + count($project->getPrincipalInvestigators());
+        }
+        foreach($hemaProjects as $project) {
+            $hemaPis = $hemaPis + count($project->getPrincipalInvestigators());
+        }
+
+        $pisDataArr = array();
+        $pisDataArr['AP/CP PIs'] = $apcpPis;
+        $pisDataArr['Hematopathology PIs'] = $hemaPis;
+
+        $chartsArray = $this->addChart( $chartsArray, $pisDataArr, "Number of PIs in Hematopathology vs AP/CP");
+        ///////////////// EOF Pie charts of the number of PIs in Hemepath vs AP/CP /////////////////
 
 
-        //Pie charts of the number of PIs in Hemepath vs AP/CP
 
+        ///////////////// number of Hematopathology vs AP/CP project requests as a Pie chart /////////////////
+        $projectsDataArr = array();
+        $projectsDataArr['AP/CP Project Requests'] = count($apcpProjects);
+        $projectsDataArr['Hematopathology Project Requests'] = count($hemaProjects);
 
-        //number of Hematopathology vs AP/CP project requests as a Pie chart
+        $chartsArray = $this->addChart( $chartsArray, $projectsDataArr, "Number of Hematopathology vs AP/CP Project Requests");
+        ///////////////// EOF number of Hematopathology vs AP/CP project requests as a Pie chart /////////////////
+
 
 
         //3 bar graphs showing the number of project requests, work requests, invoices per month since
         // the beginning based on submission date: Total, Hematopatholgy, AP/CP
+        /////////// number of project requests, work requests, invoices per month  ///////////
 
+
+
+        /////////// EOF number of project requests, work requests, invoices per month  ///////////
 
 
         return array(
@@ -396,7 +422,7 @@ class DashboardController extends Controller
 //    }
 
 
-    public function getProjectPis($filterform, $projectSpecialtyAbbreviation=null) {
+    public function getProjectsByFilter($filterform, $projectSpecialtyAbbreviation=null) {
         $em = $this->getDoctrine()->getManager();
         $transresUtil = $this->container->get('transres_util');
 
@@ -415,7 +441,7 @@ class DashboardController extends Controller
         if( $projectSpecialtyAbbreviation == null ) {
             $projectSpecialties = $filterform['projectSpecialty']->getData();
         } else {
-            $specialtyObject = $transresUtil->getSpecialtyObject("hematopathology");
+            $specialtyObject = $transresUtil->getSpecialtyObject($projectSpecialtyAbbreviation);
             $projectSpecialties[] = $specialtyObject;
         }
 
@@ -436,6 +462,7 @@ class DashboardController extends Controller
             $dql->leftJoin('project.projectSpecialty','projectSpecialty');
             $projectSpecialtyIdsArr = array();
             foreach($projectSpecialties as $projectSpecialty) {
+                //echo "projectSpecialty=$projectSpecialty<br>";
                 $projectSpecialtyIdsArr[] = $projectSpecialty->getId();
             }
             $dql->andWhere("projectSpecialty.id IN (:projectSpecialtyIdsArr)");

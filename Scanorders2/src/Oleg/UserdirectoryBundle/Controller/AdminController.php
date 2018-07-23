@@ -8655,6 +8655,26 @@ class AdminController extends Controller
     }
 
 
+    /**
+     * Load Antibody list into Platform List Manager
+     * run: http://localhost/order/directory/admin/generate-patient-metaphone-name/
+     * @Route("/generate-antibody-list/", name="user_generate_antibody_list")
+     */
+    public function generateAntibodyListAction() {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
+        }
+
+        $userServiceUtil = $this->get('user_service_utility');
+        $em = $this->getDoctrine()->getManager();
+
+        
+
+        exit("Finished.");
+    }
+
+
+
 //    /**
 //     * TODO: NOT USED: Instead of this, try to use bundle: https://github.com/jr-k/JrkLevenshteinBundle
 //     *
