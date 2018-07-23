@@ -96,7 +96,10 @@
         {{ transresRequestMacros.transresRequestBody(form,transresRequest,cycle,sitename) }}
 
         {% if cycle != "new" %}
-            {{ transresRequestMacros.transresRequestPackingSlip(form,transresRequest,cycle) }}
+            {% if showPackingSlip is not defined %}
+                {% set showPackingSlip = false %}
+            {% endif %}
+            {{ transresRequestMacros.transresRequestPackingSlip(form,transresRequest,cycle,showPackingSlip) }}
         {% endif %}
 
         {% if cycle != "new" %}
@@ -303,6 +306,13 @@
 //            });
 
             //bwipInit();
+
+            var showPackingSlip = document.getElementById("latest-packing-slip-pdf-view");
+            console.log("1 show showPackingSlip");
+            if( showPackingSlip ) {
+                console.log("2 show showPackingSlip");
+                showPackingSlip.click();
+            }
 
         });
 

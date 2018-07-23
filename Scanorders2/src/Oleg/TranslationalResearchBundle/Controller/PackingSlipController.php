@@ -61,7 +61,7 @@ class PackingSlipController extends Controller
         $transresUtil = $this->container->get('transres_util');
         $transresPdfUtil = $this->get('transres_pdf_generator');
         $transresRequestUtil = $this->container->get('transres_request_util');
-        //$em = $this->getDoctrine()->getManager();
+        $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $project = $transresRequest->getProject();
@@ -88,14 +88,32 @@ class PackingSlipController extends Controller
         //$invoice = $transresRequestUtil->getLatestInvoice($transresRequest);
         //echo "invoice OID=".$invoice->getOid()."<br>";
 
+
+        $packingSlips = new ArrayCollection();
+        foreach($transresRequest->getPackingSlipPdfs() as $packingSlip) {
+            $packingSlips->add($packingSlip);
+        }
+        echo "0 packingSlips count=".count($packingSlips)."<br>";
+
         //Generate Packing Slip
         $res = $transresPdfUtil->generatePackingSlipPdf($transresRequest,$user);
-
-        //TODO: Print Packing Slip?
 
         $filename = $res['filename'];
         //$pdf = $res['pdf'];
         $size = $res['size'];
+
+        if( $size > 0 ) {
+            //move $oldPackingSlips to oldPackingSlipPdfs
+            $resave = false;
+            foreach ($packingSlips as $packingSlip) {
+                $transresRequest->removePackingSlipPdf($packingSlip);
+                $transresRequest->addOldPackingSlipPdf($packingSlip);
+                $resave = true;
+            }
+            if( $resave ) {
+                $em->flush();
+            }
+        }
 
         $msg = "Packing Slip PDF has been created for Work Request ID " . $transresRequest->getOid() . "; filename=".$filename."; size=".$size;
 
@@ -109,13 +127,13 @@ class PackingSlipController extends Controller
         //view generated packing slip
         $packingSlips = $transresRequest->getPackingSlipPdfs();
         if( count($packingSlips) > 0 ) {
-            $packingSlip = $packingSlips[0];
-            return $this->redirectToRoute('translationalresearch_file_view', array('id' => $packingSlip->getId()));
-
+            $latestPackingSlip = $packingSlips->first();
+            return $this->redirectToRoute('translationalresearch_file_view', array('id' => $latestPackingSlip->getId()));
         } else {
-            return $this->redirectToRoute('translationalresearch_request_show', array('id' => $transresRequest->getId()));
+            return $this->redirectToRoute('translationalresearch_request_show_with_packingslip', array('id' => $transresRequest->getId()));
         }
 
+        return $this->redirectToRoute('translationalresearch_request_show_with_packingslip', array('id' => $transresRequest->getId()));
     }
 
 
@@ -298,6 +316,12 @@ class PackingSlipController extends Controller
         $packingSlipLogoFileName = $transresRequestUtil->getDefaultFile("transresPackingSlipLogos",null,$transresRequest);
         //echo "packingSlipLogoFileName=$packingSlipLogoFileName <br>";
 
+        $barcodeTdSize = $transresRequestUtil->getTransresSiteParameter('barcodeSize',$transresRequest);
+        if( !$barcodeTdSize ) {
+            $barcodeTdSize = "54";
+        }
+        //echo "barcodeTdSize=$barcodeTdSize<br>";
+
         return array(
             'transresRequest' => $transresRequest,
             'invoice' => $invoice,
@@ -307,6 +331,7 @@ class PackingSlipController extends Controller
             //'delete_form' => $deleteForm->createView(),
             'cycle' => $cycle,
             'title' => "Packing Slip for Work Request ID ".$transresRequest->getOid(),
+            'barcodeTdSize' => $barcodeTdSize //"54"
         );
     }
 }

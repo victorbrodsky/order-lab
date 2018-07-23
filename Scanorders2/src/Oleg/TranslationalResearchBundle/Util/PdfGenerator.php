@@ -314,7 +314,6 @@ class PdfGenerator
         $filesize = filesize($applicationFilePath);
         echo "filesize=".$filesize."<br>";
 
-
         //add PDF to invoice DB
         $filesize = filesize($applicationFilePath);
         $documentPdf = $this->createInvoicePdfDB($transresRequest,"packingSlipPdf",$authorUser,$fileFullReportUniqueName,$uploadReportPath,$filesize,'Packing Slip PDF');

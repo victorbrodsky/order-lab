@@ -219,7 +219,21 @@ class TransResRequest {
      **/
     private $packingSlipPdfs;
 
+    /**
+     * Old Packing Slip PDFs
+     *
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="transres_request_oldPackingSlipPdf",
+     *      joinColumns={@ORM\JoinColumn(name="request_id", referencedColumnName="id", onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="oldPackingSlipPdf_id", referencedColumnName="id", onDelete="CASCADE")}
+     *      )
+     * @ORM\OrderBy({"createdate" = "DESC"})
+     **/
+    private $oldPackingSlipPdfs;
 
+
+
+    
     public function __construct($user=null) {
         $this->setSubmitter($user);
         //$this->setState('draft');
@@ -231,6 +245,7 @@ class TransResRequest {
         $this->dataResults = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->packingSlipPdfs = new ArrayCollection();
+        $this->oldPackingSlipPdfs = new ArrayCollection();
     }
 
 
@@ -664,6 +679,27 @@ class TransResRequest {
     public function removePackingSlipPdf($item)
     {
         $this->packingSlipPdfs->removeElement($item);
+        $item->clearUseObject();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOldPackingSlipPdfs()
+    {
+        return $this->oldPackingSlipPdfs;
+    }
+    public function addOldPackingSlipPdf($item)
+    {
+        if( $item && !$this->oldPackingSlipPdfs->contains($item) ) {
+            $this->oldPackingSlipPdfs->add($item);
+            $item->createUseObject($this);
+        }
+        return $this;
+    }
+    public function removeOldPackingSlipPdf($item)
+    {
+        $this->oldPackingSlipPdfs->removeElement($item);
         $item->clearUseObject();
     }
 

@@ -26,6 +26,15 @@ function drawIdBarcode() {
 }
 
 function drawBarcodeImagesJqueryQrcode() {
+    var _tdSize = null;
+    var tdSizeEl = $("#barcode_td_size");
+    if( tdSizeEl && tdSizeEl.length > 0 ) {
+        _tdSize = tdSizeEl.val();
+    }
+    //console.log("_tdSize="+_tdSize);
+    if( !_tdSize ) {
+        _tdSize = 54;
+    }
     $(".barcode-value").each(function(e) {
         var barcodeText = $(this).text();
         //console.log("barcodeText=" + barcodeText);
@@ -40,8 +49,8 @@ function drawBarcodeImagesJqueryQrcode() {
             imageTdEl.qrcode({
                 render : "canvas",
                 //render : "table",
-                width: 64,
-                height: 64,
+                width: _tdSize,
+                height: _tdSize,
                 text: barcodeText,
                 //correctLevel: QRCode.CorrectLevel.H
             });

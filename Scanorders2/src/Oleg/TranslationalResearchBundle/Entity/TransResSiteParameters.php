@@ -211,6 +211,12 @@ class TransResSiteParameters {
      */
     private $transresPackingSlipFooter2;
 
+    /**
+     * Barcode size
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $barcodeSize;
 
 
     public function __construct($user=null) {
@@ -630,6 +636,23 @@ class TransResSiteParameters {
     {
         $this->transresPackingSlipFooter2 = $transresPackingSlipFooter2;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getBarcodeSize()
+    {
+        return $this->barcodeSize;
+    }
+
+    /**
+     * @param mixed $barcodeSize
+     */
+    public function setBarcodeSize($barcodeSize)
+    {
+        $this->barcodeSize = $barcodeSize;
+    }
+
     
 
 

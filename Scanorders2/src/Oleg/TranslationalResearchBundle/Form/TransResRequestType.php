@@ -306,7 +306,17 @@ class TransResRequestType extends AbstractType
                 'by_reference' => false,
                 'prototype' => true,
                 'prototype_name' => '__documentsid__',
-                //'prototype_name' => '__packingslippdfsid__',
+            ));
+
+            $builder->add('oldPackingSlipPdfs', CollectionType::class, array(
+                'entry_type' => DocumentType::class,
+                'label' => 'Old Packing Slip Pdf(s):',
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__documentsid__',
             ));
         }
         //////////////// EOF fields /////////////////////////

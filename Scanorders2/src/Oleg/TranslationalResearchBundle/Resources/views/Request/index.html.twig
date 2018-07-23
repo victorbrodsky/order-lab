@@ -234,7 +234,7 @@
                             {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') %}
                                 <li class="divider"></li>
                                 <li>
-                                    <a general-data-confirm="Are you sure you want to Generate Packing Slip PDF?"
+                                    <a general-data-confirm="Are you sure you want to Generate and View Packing Slip PDF?"
                                        target="_blank"
                                        href="{{ path(translationalresearch_sitename~'_generate_packing_slip', { 'id': transresRequest.id }) }}"
                                     >Generate and View Packing Slip PDF</a>

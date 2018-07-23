@@ -178,8 +178,12 @@ class SiteParameterType extends AbstractType
             'required' => false,
             'attr' => array('class' => 'textarea form-control')
         ));
-        
 
+        $builder->add('barcodeSize', null, array(
+            'label' => "Packing Slip Barcode size (i.e. 54):",
+            'required' => false,
+            'attr' => array('class' => 'form-control')
+        ));
 
 
         //Buttons

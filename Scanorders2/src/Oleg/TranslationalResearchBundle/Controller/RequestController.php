@@ -750,6 +750,7 @@ class RequestController extends Controller
      * Displays the list of requests for the given project.
      *
      * @Route("/request/show/{id}", name="translationalresearch_request_show")
+     * @Route("/request/show-with-packingslip/{id}", name="translationalresearch_request_show_with_packingslip")
      * @Template("OlegTranslationalResearchBundle:Request:new.html.twig")
      * @Method("GET")
      */
@@ -806,7 +807,12 @@ class RequestController extends Controller
         $eventType = "Request Viewed";
         $msg = "Request ".$transresRequest->getOid() ." has been viewed on the show review page.";
         $transresUtil->setEventLog($transresRequest,$eventType,$msg);
-        
+
+        $showPackingSlip = false;
+        if( $request->get('_route') == "translationalresearch_request_show_with_packingslip" ) {
+            $showPackingSlip = true;
+        }
+
         return array(
             'transresRequest' => $transresRequest,
             'project' => $project,
@@ -815,7 +821,8 @@ class RequestController extends Controller
             'title' => "Request ".$transresRequest->getOid() . $feeHtml,
             'routeName' => $request->get('_route'),
             //'handsometableData' => json_encode($jsonData)
-            'handsometableData' => $jsonData
+            'handsometableData' => $jsonData,
+            'showPackingSlip' => $showPackingSlip
             //'delete_form' => $deleteForm->createView(),
             //'review_forms' => $reviewFormViews
         );
