@@ -47,7 +47,7 @@ class AntibodyList extends ListAbstract
 
     /**
      * Indicates the order in the list
-     * @ORM\Column(type="integer", , nullable=true)
+     * @ORM\Column(type="integer", nullable=true)
      */
     protected $orderinlist;
 
