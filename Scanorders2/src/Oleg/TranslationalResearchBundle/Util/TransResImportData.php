@@ -2532,7 +2532,7 @@ class TransResImportData
 
         $lists = $this->em->getRepository('OlegTranslationalResearchBundle:AntibodyList')->findAll();
         if( count($lists) > 0 ) {
-            //return "AntibodyList is already exists";
+            return "AntibodyList is already exists";
         }
 
         $filename = 'IHC_antibody.sql';
