@@ -7,14 +7,6 @@
 -- Server version: 5.6.14
 -- PHP Version: 5.3.13
 
--- SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
--- SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
 
 --
 -- Database: `biobank`
@@ -1604,6 +1596,3 @@ INSERT INTO `transres_antibodyList` (`id`, `category`, `name`, `altname`, `compa
 (1885, 'T', 'KDM5C', 'JaridC/SMCX', 'LifeSpan BioSciences', 'LS-B9465', '114478', '', '', 'Mouse', 'Human, Mouse, Rat, Bovine, Dog', 'Tonsil', 'Protocol F', 'H120, H220', '1:50', '-20 oC', 'PI: Dr. Tam', '', 'upload/pdf/1160231783.'),
 (1886, 'T', 'PHLPPL', NULL, 'Bethyl Laboratories, Inc', 'A300-661A', 'A300-661A-1', 'IgG 200 ug/ml', 'Polyclonal', 'Rabbit', 'Human, mouse', 'Normal Colon, Test TMA', 'F 15 0 8', 'H130, H220', '1:100-1:200', '4 oC', 'Dr. Brian Robinson, and David Nowak', '', 'upload/pdf/2011334196.');
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
