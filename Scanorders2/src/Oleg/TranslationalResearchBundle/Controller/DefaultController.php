@@ -271,5 +271,27 @@ class DefaultController extends Controller
         //exit("res=".$res);
         return $this->redirectToRoute('translationalresearch_home');
     }
+    /**
+     * Load Antibody list into Platform List Manager
+     * run: http://localhost/order/translational-research/set-properties-antibody-list/
+     * @Route("/set-properties-antibody-list/", name="translationalresearch_set_properties_antibody_list")
+     */
+    public function setPropertiesAntibodyListAction() {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
+        }
+
+        $importUtil = $this->get('transres_import');
+        $res = $importUtil->setAntibodyListProperties();
+
+        //Flash
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            'Antibody set properties result: '.$res
+        );
+
+        //exit("res=".$res);
+        return $this->redirectToRoute('translationalresearch_home');
+    }
 
 }
