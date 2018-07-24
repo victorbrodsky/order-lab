@@ -275,18 +275,25 @@ class DashboardController extends Controller
         $hemaProjects = $this->getProjectsByFilter($filterform,"hematopathology");
 
         ///////////////// Pie charts of the number of PIs in Hemepath vs AP/CP /////////////////
-        $apcpPis = 0;
-        $hemaPis = 0;
+        $apcpPisArr = array();
+        $hemaPisArr = array();
         foreach($apcpProjects as $project) {
-            $apcpPis = $apcpPis + count($project->getPrincipalInvestigators());
+            foreach($project->getPrincipalInvestigators() as $pi) {
+                $apcpPisArr[] = $pi->getId();
+            }
         }
         foreach($hemaProjects as $project) {
-            $hemaPis = $hemaPis + count($project->getPrincipalInvestigators());
+            foreach($project->getPrincipalInvestigators() as $pi) {
+                $hemaPisArr[] = $pi->getId();
+            }
         }
 
+        $apcpPisArr = array_unique($apcpPisArr);
+        $hemaPisArr = array_unique($hemaPisArr);
+
         $pisDataArr = array();
-        $pisDataArr['AP/CP PIs'] = $apcpPis;
-        $pisDataArr['Hematopathology PIs'] = $hemaPis;
+        $pisDataArr['AP/CP PIs'] = count($apcpPisArr);
+        $pisDataArr['Hematopathology PIs'] = count($hemaPisArr);
 
         $chartsArray = $this->addChart( $chartsArray, $pisDataArr, "Number of PIs in Hematopathology vs AP/CP");
         ///////////////// EOF Pie charts of the number of PIs in Hemepath vs AP/CP /////////////////
@@ -454,6 +461,7 @@ class DashboardController extends Controller
         }
         if( $endDate ) {
             $endDate->modify('+1 day');
+            //echo "endDate=" . $endDate->format('Y-m-d H:i:s') . "<br>";
             $dql->andWhere('project.createDate <= :endDate');
             $dqlParameters['endDate'] = $endDate->format('Y-m-d H:i:s');
         }
