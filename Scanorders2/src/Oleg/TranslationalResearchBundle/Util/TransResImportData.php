@@ -2535,7 +2535,7 @@ class TransResImportData
             //return "AntibodyList is already exists";
         }
 
-        $filename = 'IHC_antibody.sql';
+        $filename = 'IHC_antibody_test.sql';
         $inputFileName = __DIR__ . "/" . $filename;
         echo "==================== Processing $filename =====================<br>";
 
