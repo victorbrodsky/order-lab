@@ -32,7 +32,10 @@ var _rowToProcessArr = [];
 var _accessiontype = [];
 var _accessiontypes_simple = [];
 
-var _barcodeCol = 7;
+var _antibodies = [];
+var _antibodies_simple = [];
+
+var _barcodeCol = 8;
 
 var _tdSize = 64;
 var _tdPadding = 5;
@@ -114,6 +117,35 @@ var _columnData_scanorder = [];
 //
 //});
 
+function getAntobodies(holder,force) {
+
+    var cycle = 'edit';
+
+    var url = getCommonBaseUrl("util/common/generic/"+"antibody","employees");
+    //console.log("getAntobodies url="+url);
+
+    if( typeof cycle === 'undefined' ) {
+        cycle = 'new';
+    }
+    url = url + "?cycle=" + cycle;
+
+    if( cycle == "new" || cycle == "create" ) {
+        url = url + "&opt=default";
+    }
+
+    //console.log("run url="+url);
+
+    if( _antibodies.length == 0 ) {
+        $.ajax({
+            url: url,
+            timeout: _ajaxTimeout,
+            async: asyncflag
+        }).success(function(data) {
+            _antibodies = data;
+        });
+    }
+}
+
 function ajaxFinishedCondition() {
 
     //console.log('_accessiontype.length='+_accessiontype.length);
@@ -124,7 +156,10 @@ function ajaxFinishedCondition() {
 
     if( _accessiontype.length > 0 ) {
 
-        if( _accessiontypes_simple.length == _accessiontype.length ) {
+        if(
+            _accessiontypes_simple.length == _accessiontype.length
+            && _antibodies_simple.length == _antibodies.length
+        ) {
             return true;
         }
 
@@ -136,6 +171,16 @@ function ajaxFinishedCondition() {
             //console.log('acctypeName='+acctypeName);
             _accessiontypes_simple.push(acctypeName);
         }
+
+        for(var i = 0; i < _antibodies.length; i++) {
+            var antibodyName = _antibodies[i].text;
+            if(  _antibodies[i].abbreviation ) {
+                antibodyName = _antibodies[i].abbreviation;
+            }
+            console.log('antibodyName='+antibodyName);
+            _antibodies_simple.push(antibodyName);
+        }
+
         return true;
     } else {
         return false;
@@ -156,6 +201,18 @@ function transresMakeColumnData() {
         }
     }
 
+    var defaultAntibodyIndex = 0;
+    var defaultAntibody = $('#default-antibody').val();
+    //console.log("defaultAccessionType="+defaultAccessionType);
+    if( defaultAccessionType ) {
+        for(var i = 0; i < _antibodies_simple.length; i++) {
+            //console.log(_accessiontypes_simple[i]+"=?"+defaultAccessionType);
+            if( _antibodies_simple[i] == defaultAntibody ) {
+                defaultAntibodyIndex = i;
+            }
+        }
+    }
+
     _columnData_scanorder = [
         {
             header:'Source',
@@ -172,6 +229,16 @@ function transresMakeColumnData() {
         { header:'Block ID', columns:{} },
         { header:'Slide ID', columns:{} },
         { header:'Stain Name', columns:{} },
+        {
+            header:'Antibody',
+            default: defaultAccessionTypeIndex,
+            columns: {
+                type: 'autocomplete',
+                source: _antibodies_simple,
+                strict: false,
+                filter: false,
+            }
+        },
         { header:'Other ID', columns:{} },
         { header:'Barcode', columns:{} },
         //{ header:'Barcode Image', columns:{renderer:imageRenderer} },
@@ -180,7 +247,7 @@ function transresMakeColumnData() {
         { header:'Comment', columns:{} }
     ];
 
-    _barcodeCol = 7;
+    //_barcodeCol = 7;
 }
 
 function handsonTableInit(handsometableDataArr,tableFormCycle) {
@@ -714,8 +781,6 @@ function transresTableBarcodeGeneration( barcodeField ) {
 
     return image;
 }
-
-
 // const BWIPJS  = require('./bwipjs');
 // const BWIPP   = require('./bwipp');
 // const fontlib = require('./node-fonts');

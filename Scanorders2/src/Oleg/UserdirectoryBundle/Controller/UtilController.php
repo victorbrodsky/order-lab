@@ -1544,6 +1544,11 @@ class UtilController extends Controller {
                 $className = "UsernameType";
                 break;
 
+            case "antibody":
+                $className = "AntibodyList";
+                $bundleName = "TranslationalResearchBundle";
+                break;
+
 //            case "patientLists":
 //                $bundleName = "OrderformBundle";
 //                $className = "PatientListHierarchy";

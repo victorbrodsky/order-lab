@@ -518,7 +518,5 @@ class AntibodyList extends ListAbstract
         $this->comment2 = $comment2;
     }
 
-    
-
 
 }

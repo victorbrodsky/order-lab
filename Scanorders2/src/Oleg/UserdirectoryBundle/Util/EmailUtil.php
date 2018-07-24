@@ -62,6 +62,14 @@ class EmailUtil {
 //        }
         //exit('yes connection');
 
+        //adding “[TRP] “ in front of every notifications’ subject line
+        $request = $this->container->get('request_stack')->getCurrentRequest();
+        $url = $request->getRequestUri();
+        if( strpos($url,"/translational-research/") !== false ) {
+            $subject = "[TRP] " . $subject;
+        }
+
+
         if( !$emails || $emails == "" ) {
             //$logger->error("sendEmail: emails empty=".$emails);
             $logger->error("sendEmail: Email has not been sent (emails empty): subject=".$subject."; body=".$body);

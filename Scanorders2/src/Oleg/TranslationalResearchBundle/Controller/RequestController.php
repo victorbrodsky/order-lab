@@ -33,6 +33,7 @@ use Oleg\TranslationalResearchBundle\Entity\Project;
 use Oleg\TranslationalResearchBundle\Entity\TransResRequest;
 use Oleg\TranslationalResearchBundle\Form\FilterRequestType;
 use Oleg\TranslationalResearchBundle\Form\TransResRequestType;
+use Oleg\UserdirectoryBundle\Form\DataTransformer\GenericTreeTransformer;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -176,8 +177,8 @@ class RequestController extends Controller
             }
 
             $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($transresRequest,"document");
-            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($transresRequest,"packingSlipPdfs");
-            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($transresRequest,"oldPackingSlipPdfs");
+            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($transresRequest,"packingSlipPdf");
+            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($transresRequest,"oldPackingSlipPdf");
 
             $this->processTableData($transresRequest,$form,$user); //new
 
@@ -402,8 +403,8 @@ class RequestController extends Controller
             }
 
             $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($transresRequest,"document");
-            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($transresRequest,"packingSlipPdfs");
-            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($transresRequest,"oldPackingSlipPdfs");
+            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($transresRequest,"packingSlipPdf");
+            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($transresRequest,"oldPackingSlipPdf");
 
             $updatedDataResults = $this->processTableData($transresRequest,$form,$user); //edit
 
@@ -600,6 +601,10 @@ class RequestController extends Controller
             $stainValue = $stainArr['val'];
             $stainId = $stainArr['id'];
 
+            $antibodyArr = $this->getValueByHeaderName('Antibody',$row,$headers);
+            $antibodyValue = $antibodyArr['val'];
+            $antibodyId = $antibodyArr['id'];
+
             $otherArr = $this->getValueByHeaderName('Other ID',$row,$headers);
             $otherValue = $otherArr['val'];
             $otherId = $otherArr['id'];
@@ -658,6 +663,14 @@ class RequestController extends Controller
                     $dataResult->setSystem($systemEntity);
                 }
 
+                if( $antibodyValue ) {
+                    $transformer = new GenericTreeTransformer($em, $user, 'AntibodyList','TranslationalResearchBundle');
+                    $antibodyEntity = $transformer->reverseTransform($antibodyValue);
+                    //echo "systemEntity=".$systemEntity->getId()."name=".$systemEntity."<br>";
+                    //exit('111');
+                    $dataResult->setAntibody($antibodyEntity);
+                }
+
                 $dataResult->setAccessionId($accValue);
                 $dataResult->setPartId($partValue);
                 $dataResult->setBlockId($blockValue);
@@ -694,7 +707,7 @@ class RequestController extends Controller
 
         $res['id'] = $id;
 
-        echo "key=".$key.": id=".$res['id'].", val=".$res['val']."<br>";
+        //echo "key=".$key.": id=".$res['id'].", val=".$res['val']."<br>";
         return $res;
     }
 
@@ -730,6 +743,13 @@ class RequestController extends Controller
             //Stain Name
             $rowArr['Stain Name']['id'] = $dataResult->getId();
             $rowArr['Stain Name']['value'] = $dataResult->getStainName();
+
+            //Antibody
+            $antibody = $dataResult->getAntibody();
+            if( $antibody ) {
+                $rowArr['Antibody']['id'] = $antibody->getId();
+                $rowArr['Antibody']['value'] = $antibody."";
+            }
 
             //Other ID
             $rowArr['Other ID']['id'] = $dataResult->getId();

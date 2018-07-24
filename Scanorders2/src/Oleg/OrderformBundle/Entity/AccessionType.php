@@ -71,6 +71,5 @@ class AccessionType extends ListAbstract
     {
         return $this->accessionaccession;
     }
-
-
+    
 }

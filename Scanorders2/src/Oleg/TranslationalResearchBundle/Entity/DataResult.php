@@ -105,6 +105,12 @@ class DataResult {
      */
     private $otherId;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Oleg\TranslationalResearchBundle\Entity\AntibodyList")
+     * @ORM\JoinColumn(name="antibody_id", referencedColumnName="id", nullable=true)
+     */
+    private $antibody;
+
 //    /**
 //     * @var string
 //     * @ORM\Column(type="string", nullable=true)
@@ -324,6 +330,22 @@ class DataResult {
     public function setOtherId($otherId)
     {
         $this->otherId = $otherId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAntibody()
+    {
+        return $this->antibody;
+    }
+
+    /**
+     * @param mixed $antibody
+     */
+    public function setAntibody($antibody)
+    {
+        $this->antibody = $antibody;
     }
 
     
