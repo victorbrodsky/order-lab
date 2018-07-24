@@ -42,9 +42,14 @@ class AntibodyList extends ListAbstract
 
     /**
      * @ORM\Column(type="string", nullable=true)
-     * @Assert\NotBlank
      */
     protected $type;
+
+    /**
+     * Indicates the order in the list
+     * @ORM\Column(type="integer", , nullable=true)
+     */
+    protected $orderinlist;
 
 //`category` varchar(32) NOT NULL,
 //`name` varchar(255) NOT NULL,
