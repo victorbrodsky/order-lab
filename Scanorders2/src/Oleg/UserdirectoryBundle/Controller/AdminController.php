@@ -864,6 +864,7 @@ class AdminController extends Controller
         $count_generatePlatformListManagerList = $this->generatePlatformListManagerList();
 
         $count_populateClassUrl = $this->populateClassUrl();
+        $count_createAdminAntibodyList = $this->createAdminAntibodyList();
 
 
         $msg =
@@ -960,6 +961,7 @@ class AdminController extends Controller
             'PlatformListManagerList='.$count_generatePlatformListManagerList.', '.
             'IrbApprovalTypeList='.$count_generateIrbApprovalTypeList.', '.
             'populateClassUrl='.$count_populateClassUrl.', '.
+            'createAdminAntibodyList='.$count_createAdminAntibodyList.', '.
 
             ' (Note: -1 means that this table is already exists)';
 
@@ -8657,7 +8659,7 @@ class AdminController extends Controller
 
     /**
      * Load Antibody list into Platform List Manager
-     * run: http://localhost/order/directory/admin/generate-patient-metaphone-name/
+     * run: http://localhost/order/directory/admin/generate-antibody-list/
      * @Route("/generate-antibody-list/", name="user_generate_antibody_list")
      */
     public function generateAntibodyListAction() {
@@ -8665,16 +8667,24 @@ class AdminController extends Controller
             return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
         }
 
-        $userServiceUtil = $this->get('user_service_utility');
-        $em = $this->getDoctrine()->getManager();
+        $res = $this->createAdminAntibodyList();
+        //exit("generateAntibodyListAction: Finished with res=".$res);
 
-        //AntibodyList
-        //INSERT INTO `IHC_antibody` (`id`, `category`, `name`, `altname`, `company`, `catalog`, `lot`, `igconcentration`, `clone`, `host`, `reactivity`, `control`, `protocol`, `retrieval`, `dilution`, `storage`, `comment`, `datasheet`, `pdf`) VALUES
-        //(1, 'M', 'Androgen Receptor', 'AR ', 'Abcam', 'ab74272', 'GR32463-1', '0.2 mg/ml', 'Poly', 'Rabbit ', 'Human, mouse', 'Xenograft Control/Prostate Ca.', 'Envision Rabbit R. ', 'H130', '1:200', '-20 oC', 'Project: 12743 RS#: 30323 PI: Rubin/Kyung Condition confirmed by Dr. Rubin/Kyung on 03/09/2011', 'http://www.abcam.com/Androgen-Receptor-antibody-ab74272.html', 'upload/pdf/1296507249.pdf'),
+        //Flash
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            'Antibody list imported result: '.$res
+        );
 
-
-        exit("Finished.");
+        return $res;
     }
+    public function createAdminAntibodyList() {
+        $importUtil = $this->get('transres_import');
+        $res = $importUtil->createAntibodyList();
+        //exit("generateAntibodyListAction: Finished with res=".$res);
+        return $res;
+    }
+
 
 
 

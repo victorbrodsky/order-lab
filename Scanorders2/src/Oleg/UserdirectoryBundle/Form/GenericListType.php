@@ -760,7 +760,9 @@ class GenericListType extends AbstractType
         ///////////////// EOF Many To Many relationship /////////////////
 
 
-
+        if( strtolower($this->mapper['className']) == strtolower("AntibodyList") ) {
+            
+        }
 
 
 

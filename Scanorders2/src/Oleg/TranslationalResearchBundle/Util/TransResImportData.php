@@ -2517,8 +2517,69 @@ class TransResImportData
 //        8	IRB Review/Committee Review
     }
 
+    public function createAntibodyList() {
+        $importUtil = $this->get('transres_import');
+        $importUtil->generateAntibodyList();
+        $res = $importUtil->setAntibodyListProperties();
+        //exit("generateAntibodyListAction: Finished with res=".$res);
+        return $res;
+    }
+    public function generateAntibodyList() {
 
+        //AntibodyList
+        //INSERT INTO `IHC_antibody` (`id`, `category`, `name`, `altname`, `company`, `catalog`, `lot`, `igconcentration`, `clone`, `host`, `reactivity`, `control`, `protocol`, `retrieval`, `dilution`, `storage`, `comment`, `datasheet`, `pdf`) VALUES
+        //(1, 'M', 'Androgen Receptor', 'AR ', 'Abcam', 'ab74272', 'GR32463-1', '0.2 mg/ml', 'Poly', 'Rabbit ', 'Human, mouse', 'Xenograft Control/Prostate Ca.', 'Envision Rabbit R. ', 'H130', '1:200', '-20 oC', 'Project: 12743 RS#: 30323 PI: Rubin/Kyung Condition confirmed by Dr. Rubin/Kyung on 03/09/2011', 'http://www.abcam.com/Androgen-Receptor-antibody-ab74272.html', 'upload/pdf/1296507249.pdf'),
 
+        $lists = $this->em->getRepository('OlegTranslationalResearchBundle:AntibodyList')->findAll();
+        if( count($lists) > 0 ) {
+            return "AntibodyList is already exists";
+        }
+
+        $filename = 'IHC_antibody.sql';
+        $inputFileName = __DIR__ . "/" . $filename;
+        echo "==================== Processing $filename =====================<br>";
+
+        $sql = file_get_contents($inputFileName);  // Read file contents
+        $this->em->getConnection()->exec($sql);  // Execute native SQL
+
+        $this->em->flush();
+
+        //exit("generateAntibodyList: Finished");
+    }
+    public function setAntibodyListProperties() {
+        $userSecUtil = $this->container->get('user_security_utility');
+        $systemuser = $userSecUtil->findSystemUser();
+
+        //set creator, createdate, type, orderinlist and creation time
+        $orderinlist = 1;
+        $counter = 1;
+        $batchSize = 20;
+        $lists = $this->em->getRepository('OlegTranslationalResearchBundle:AntibodyList')->findAll();
+        foreach($lists as $list) {
+            if( !$list->getType() ) {
+                $list->setCreator($systemuser);
+                $list->setCreatedate(new \DateTime());
+                $list->setType('default');
+                $list->setOrderinlist($orderinlist);
+                $list->setVersion(1);
+                $orderinlist = $orderinlist + 10;
+
+                if (($counter % $batchSize) === 0) {
+                    $this->em->flush();
+                    $this->em->clear(); // Detaches all objects from Doctrine!
+                }
+
+                $counter++;
+            }
+        }
+
+        $this->em->flush(); //Persist objects that did not make up an entire batch
+        $this->em->clear();
+
+        $res = "Inserted $counter anti body records to the AntibodyList object.";
+
+        return $res;
+    }
 
 
 }

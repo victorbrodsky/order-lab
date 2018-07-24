@@ -156,6 +156,12 @@ class AntibodyList extends ListAbstract
     private $datasheet;
 
     /**
+     * @var string
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $pdf;
+
+    /**
      * Old Packing Slip PDFs
      *
      * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
@@ -166,6 +172,19 @@ class AntibodyList extends ListAbstract
      * @ORM\OrderBy({"createdate" = "DESC"})
      **/
     private $documents;
+
+    /**
+     * @var string
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $comment1;
+
+    /**
+     * @var string
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $comment2;
+
 
 
     public function __construct($author=null) {
@@ -453,6 +472,55 @@ class AntibodyList extends ListAbstract
         $this->datasheet = $datasheet;
     }
 
+    /**
+     * @return string
+     */
+    public function getPdf()
+    {
+        return $this->pdf;
+    }
+
+    /**
+     * @param string $pdf
+     */
+    public function setPdf($pdf)
+    {
+        $this->pdf = $pdf;
+    }
+
+    /**
+     * @return string
+     */
+    public function getComment1()
+    {
+        return $this->comment1;
+    }
+
+    /**
+     * @param string $comment1
+     */
+    public function setComment1($comment1)
+    {
+        $this->comment1 = $comment1;
+    }
+
+    /**
+     * @return string
+     */
+    public function getComment2()
+    {
+        return $this->comment2;
+    }
+
+    /**
+     * @param string $comment2
+     */
+    public function setComment2($comment2)
+    {
+        $this->comment2 = $comment2;
+    }
+
+    
 
 
 }
