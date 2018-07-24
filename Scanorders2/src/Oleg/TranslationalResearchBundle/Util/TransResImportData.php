@@ -2558,7 +2558,7 @@ class TransResImportData
         $batchSize = 20;
 
         foreach($lists as $list) {
-            //if( !$list->getType() || !$list->getCreatedate() ) {
+            if( !$list->getType() || !$list->getCreatedate() ) {
                 echo "set Properties for list ID=".$list->getId()."<br>";
                 $list->setCreator($systemuser);
                 $list->setCreatedate(new \DateTime());
@@ -2573,7 +2573,7 @@ class TransResImportData
                 }
 
                 $counter++;
-            //}
+            }
         }
 
         $this->em->flush(); //Persist objects that did not make up an entire batch
