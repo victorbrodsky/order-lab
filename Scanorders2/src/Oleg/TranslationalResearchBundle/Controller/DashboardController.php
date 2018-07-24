@@ -62,9 +62,13 @@ class DashboardController extends Controller
         //$labels = array('Residential', 'Non-Residential', 'Utility');
         //$values = array(19, 26, 55);
 
+        $startDate = $filterform['startDate']->getData();
+        $endDate = $filterform['endDate']->getData();
+        $projectSpecialties = $filterform['projectSpecialty']->getData();
+
         $chartsArray = array();
 
-        $projects = $this->getProjectsByFilter($filterform);
+        $projects = $this->getProjectsByFilter($startDate,$endDate,$projectSpecialties);
 
         //Projects per PIs
         if( $routeName == "translationalresearch_dashboard_pilevel" ) {
@@ -236,8 +240,7 @@ class DashboardController extends Controller
         }
 
         $transresUtil = $this->container->get('transres_util');
-        //$transResFormNodeUtil = $this->container->get('transres_formnode_util');
-        //$routeName = $request->get('_route');
+        $transresRequestUtil = $this->container->get('transres_request_util');
         $infos = array();
 
         //////////// Filter ////////////
@@ -269,10 +272,15 @@ class DashboardController extends Controller
         //$labels = array('Residential', 'Non-Residential', 'Utility');
         //$values = array(19, 26, 55);
 
+        $startDate = $filterform['startDate']->getData();
+        $endDate = $filterform['endDate']->getData();
+        $specialtyApcpObject = $transresUtil->getSpecialtyObject("ap-cp");
+        $specialtyHemaObject = $transresUtil->getSpecialtyObject("hematopathology");
+
         $chartsArray = array();
 
-        $apcpProjects = $this->getProjectsByFilter($filterform,"ap-cp");
-        $hemaProjects = $this->getProjectsByFilter($filterform,"hematopathology");
+        $apcpProjects = $this->getProjectsByFilter($startDate,$endDate,array($specialtyApcpObject));
+        $hemaProjects = $this->getProjectsByFilter($startDate,$endDate,array($specialtyHemaObject));
 
         ///////////////// Pie charts of the number of PIs in Hemepath vs AP/CP /////////////////
         $apcpPisArr = array();
@@ -314,7 +322,55 @@ class DashboardController extends Controller
         // the beginning based on submission date: Total, Hematopatholgy, AP/CP
         /////////// number of project requests, work requests, invoices per month  ///////////
 
+        $apcpProjectsData = array();
+        $hemaProjectsData = array();
 
+        //get startDate and add 1 month until the date is less than endDate
+        $startDate = $filterform['startDate']->getData();
+        $endDate = $filterform['endDate']->getData();
+        //$filterform['startDate']->setData($startDate);
+        //$apcpProjects = $this->getProjectsByFilter($filterform,"ap-cp");
+        $startDate->modify( 'first day of last month' );
+        do {
+            //$startDate->modify( 'first day of last month' );
+            //$filterform['startDate']->setData($startDate);
+            $thisEndDate = clone $startDate;
+            $thisEndDate->modify( 'first day of next month' );
+            //$filterform['endDate']->setData($thisEndDate);
+            //echo "StartDate=".$startDate->format("d-m-Y")."; EndDate=".$thisEndDate->format("d-m-Y")."<br>";
+            $barName = "Number of project requests, work requests, invoices per month ".$startDate->format("m/d/Y")." - ".$thisEndDate->format("m/d/Y");
+            $apcpProjects = $this->getProjectsByFilter($startDate,$thisEndDate,array($specialtyApcpObject));
+            $hemaProjects = $this->getProjectsByFilter($startDate,$endDate,array($specialtyHemaObject));
+            $startDate->modify( 'first day of next month' );
+
+            //get requests, invoices
+//            //$requestArr = array();
+//            $invoiceCount = 0;
+//            $requestCount = 10;
+//            foreach($apcpProjects as $project) {
+//                foreach($project->getRequests() as $request) {
+//                    //$requestArr[] = $request;
+//                    $requestCount++;
+//                    $latestInvoice = $transresRequestUtil->getLatestInvoice($request);
+//                    if( $latestInvoice ) {
+//                        $invoiceCount++;
+//                    }
+//                }
+//            }
+//            echo "invoiceCount=$invoiceCount<br>";
+//            $fullStatArr = array();
+//            $fullStatArr['Project Requests'] = count($apcpProjects);
+//            $fullStatArr['Work Requests'] = $requestCount;
+//            $fullStatArr['Invoices'] = $invoiceCount;
+//
+//            $chartsArray = $this->addChart( $chartsArray, $fullStatArr, $barName);
+            $apcpProjectsData[] = $this->getProjectRequestInvoiceChart($apcpProjects);
+            $hemaProjectsData[] = $this->getProjectRequestInvoiceChart($hemaProjects);
+
+        } while( $startDate < $endDate );
+
+        //$projectRequestInvoiceDataArr[] = array();
+        //$chartsArray = $this->addChart( $chartsArray, $projectRequestInvoiceDataArr, "Number of Hematopathology vs AP/CP Project Requests");
 
         /////////// EOF number of project requests, work requests, invoices per month  ///////////
 
@@ -429,7 +485,7 @@ class DashboardController extends Controller
 //    }
 
 
-    public function getProjectsByFilter($filterform, $projectSpecialtyAbbreviation=null) {
+    public function getProjectsByFilter($startDate, $endDate, $projectSpecialties) {
         $em = $this->getDoctrine()->getManager();
         $transresUtil = $this->container->get('transres_util');
 
@@ -443,14 +499,14 @@ class DashboardController extends Controller
         //echo "projectId=".$project->getId()."<br>";
         //echo "reviewId=".$reviewId."<br>";
 
-        $startDate = $filterform['startDate']->getData();
-        $endDate = $filterform['endDate']->getData();
-        if( $projectSpecialtyAbbreviation == null ) {
-            $projectSpecialties = $filterform['projectSpecialty']->getData();
-        } else {
-            $specialtyObject = $transresUtil->getSpecialtyObject($projectSpecialtyAbbreviation);
-            $projectSpecialties[] = $specialtyObject;
-        }
+        //$startDate = $filterform['startDate']->getData();
+        //$endDate = $filterform['endDate']->getData();
+//        if( $projectSpecialtyAbbreviation == null ) {
+//            $projectSpecialties = $filterform['projectSpecialty']->getData();
+//        } else {
+//            $specialtyObject = $transresUtil->getSpecialtyObject($projectSpecialtyAbbreviation);
+//            $projectSpecialties[] = $specialtyObject;
+//        }
 
         $dqlParameters = array();
 
@@ -484,7 +540,37 @@ class DashboardController extends Controller
 
         $projects = $query->getResult();
 
+        //echo "Projects=".count($projects)." (".$startDate->format('Y-m-d')." - ".$endDate->format('Y-m-d')."<br>";
+
         return $projects;
+    }
+
+    public function getProjectRequestInvoiceChart($apcpProjects) {
+        $transresRequestUtil = $this->container->get('transres_request_util');
+        //get requests, invoices
+        $invoiceCount = 0;
+        $requestCount = 0;
+        foreach($apcpProjects as $project) {
+            foreach($project->getRequests() as $request) {
+                //$requestArr[] = $request;
+                $requestCount++;
+                $latestInvoice = $transresRequestUtil->getLatestInvoice($request);
+                if( $latestInvoice ) {
+                    $invoiceCount++;
+                }
+            }
+        }
+        //echo "invoiceCount=$invoiceCount<br>";
+        $fullStatArr = array();
+        $fullStatArr['Project Requests'] = count($apcpProjects);
+        $fullStatArr['Work Requests'] = $requestCount;
+        $fullStatArr['Invoices'] = $invoiceCount;
+
+
+
+        //$chartsArray = $this->addChart( $chartsArray, $fullStatArr, $barName, 'stack');
+
+        //return $chartsArray;
     }
 
 }
