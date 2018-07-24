@@ -176,6 +176,8 @@ class RequestController extends Controller
             }
 
             $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($transresRequest,"document");
+            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($transresRequest,"packingSlipPdfs");
+            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($transresRequest,"oldPackingSlipPdfs");
 
             $this->processTableData($transresRequest,$form,$user); //new
 
@@ -400,6 +402,8 @@ class RequestController extends Controller
             }
 
             $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($transresRequest,"document");
+            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($transresRequest,"packingSlipPdfs");
+            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($transresRequest,"oldPackingSlipPdfs");
 
             $updatedDataResults = $this->processTableData($transresRequest,$form,$user); //edit
 

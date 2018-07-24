@@ -6593,7 +6593,8 @@ class AdminController extends Controller
             "messagestatuses" => array('','-list'),
             "encounterinfotypes" => array('','-list'),
             "suggestedmessagecategorys" => array('','-list'),
-            "calllogentrytags" => array('','-list')
+            "calllogentrytags" => array('','-list'),
+            "antibodies" => array('AntibodyList','antibodies-list','Antibody List'),
         );
 
         $count = 10;
@@ -8656,28 +8657,6 @@ class AdminController extends Controller
         exit("Finished.");
     }
 
-
-    /**
-     * Load Antibody list into Platform List Manager
-     * run: http://localhost/order/directory/admin/generate-antibody-list/
-     * @Route("/generate-antibody-list/", name="user_generate_antibody_list")
-     */
-    public function generateAntibodyListAction() {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
-        }
-
-        $res = $this->createAdminAntibodyList();
-        //exit("generateAntibodyListAction: Finished with res=".$res);
-
-        //Flash
-        $this->get('session')->getFlashBag()->add(
-            'notice',
-            'Antibody list imported result: '.$res
-        );
-
-        return $res;
-    }
     public function createAdminAntibodyList() {
         $importUtil = $this->get('transres_import');
         $res = $importUtil->createAntibodyList();

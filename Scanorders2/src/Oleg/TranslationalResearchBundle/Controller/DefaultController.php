@@ -247,4 +247,29 @@ class DefaultController extends Controller
     public function barcodeDemoAction( Request $request ) {
         return array();
     }
+
+    /**
+     * Load Antibody list into Platform List Manager
+     * run: http://localhost/order/translational-research/generate-antibody-list/
+     * @Route("/generate-antibody-list/", name="translationalresearch_generate_antibody_list")
+     */
+    public function generateAntibodyListAction() {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
+        }
+
+        $importUtil = $this->get('transres_import');
+        $res = $importUtil->createAntibodyList();
+        //exit("generateAntibodyListAction: Finished with res=".$res);
+
+        //Flash
+        $this->get('session')->getFlashBag()->add(
+            'notice',
+            'Antibody list imported result: '.$res
+        );
+
+        //exit("res=".$res);
+        return $this->redirectToRoute('translationalresearch_home');
+    }
+
 }

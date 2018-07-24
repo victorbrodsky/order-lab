@@ -162,8 +162,6 @@ class AntibodyList extends ListAbstract
     private $pdf;
 
     /**
-     * Old Packing Slip PDFs
-     *
      * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
      * @ORM\JoinTable(name="transres_antibody_document",
      *      joinColumns={@ORM\JoinColumn(name="request_id", referencedColumnName="id", onDelete="CASCADE")},

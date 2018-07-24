@@ -761,7 +761,130 @@ class GenericListType extends AbstractType
 
 
         if( strtolower($this->mapper['className']) == strtolower("AntibodyList") ) {
-            
+            $builder->add('category',null,array(
+                'label' => "Category:",
+                'required' => false,
+                'attr' => array('class'=>'form-control'),
+            ));
+
+            $builder->add('altname',null,array(
+                'label' => "Alternative Name:",
+                'required' => false,
+                'attr' => array('class'=>'form-control'),
+            ));
+
+            $builder->add('company',null,array(
+                'label' => "Company:",
+                'required' => false,
+                'attr' => array('class'=>'form-control'),
+            ));
+
+            $builder->add('catalog',null,array(
+                'label' => "Catalog:",
+                'required' => false,
+                'attr' => array('class'=>'form-control'),
+            ));
+
+            $builder->add('lot',null,array(
+                'label' => "Lot:",
+                'required' => false,
+                'attr' => array('class'=>'form-control'),
+            ));
+
+            $builder->add('igconcentration',null,array(
+                'label' => "ig Concentration:",
+                'required' => false,
+                'attr' => array('class'=>'form-control'),
+            ));
+
+            $builder->add('clone',null,array(
+                'label' => "Clone:",
+                'required' => false,
+                'attr' => array('class'=>'form-control'),
+            ));
+
+            $builder->add('host',null,array(
+                'label' => "Host:",
+                'required' => false,
+                'attr' => array('class'=>'form-control'),
+            ));
+
+            $builder->add('reactivity',null,array(
+                'label' => "Reactivity:",
+                'required' => false,
+                'attr' => array('class'=>'form-control'),
+            ));
+
+            $builder->add('control',null,array(
+                'label' => "Control:",
+                'required' => false,
+                'attr' => array('class'=>'form-control'),
+            ));
+
+            $builder->add('protocol',null,array(
+                'label' => "Protocol:",
+                'required' => false,
+                'attr' => array('class'=>'form-control'),
+            ));
+
+            $builder->add('retrieval',null,array(
+                'label' => "Retrieval:",
+                'required' => false,
+                'attr' => array('class'=>'form-control'),
+            ));
+
+            $builder->add('dilution',null,array(
+                'label' => "Dilution:",
+                'required' => false,
+                'attr' => array('class'=>'form-control'),
+            ));
+
+            $builder->add('storage',null,array(
+                'label' => "Storage:",
+                'required' => false,
+                'attr' => array('class'=>'form-control'),
+            ));
+
+            $builder->add('comment',null,array(
+                'label' => "Comment:",
+                'required' => false,
+                'attr' => array('class'=>'form-control textarea'),
+            ));
+
+            $builder->add('comment1',null,array(
+                'label' => "Additional Comment 1:",
+                'required' => false,
+                'attr' => array('class'=>'form-control textarea'),
+            ));
+
+            $builder->add('comment2',null,array(
+                'label' => "Additional Comment 2:",
+                'required' => false,
+                'attr' => array('class'=>'form-control textarea'),
+            ));
+
+            $builder->add('datasheet',null,array(
+                'label' => "Datasheet:",
+                'required' => false,
+                'attr' => array('class'=>'form-control textarea'),
+            ));
+
+//            $builder->add('pdf',null,array(
+//                'label' => "Pdf link:",
+//                'required' => false,
+//                'attr' => array('class'=>'form-control'),
+//            ));
+
+            $builder->add('documents', CollectionType::class, array(
+                'entry_type' => DocumentType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__documentsid__',
+            ));
+
         }
 
 

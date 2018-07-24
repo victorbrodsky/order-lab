@@ -2518,7 +2518,7 @@ class TransResImportData
     }
 
     public function createAntibodyList() {
-        $importUtil = $this->get('transres_import');
+        $importUtil = $this->container->get('transres_import');
         $importUtil->generateAntibodyList();
         $res = $importUtil->setAntibodyListProperties();
         //exit("generateAntibodyListAction: Finished with res=".$res);
@@ -2550,23 +2550,26 @@ class TransResImportData
         $userSecUtil = $this->container->get('user_security_utility');
         $systemuser = $userSecUtil->findSystemUser();
 
+        $lists = $this->em->getRepository('OlegTranslationalResearchBundle:AntibodyList')->findAll();
+
         //set creator, createdate, type, orderinlist and creation time
         $orderinlist = 1;
-        $counter = 1;
+        $counter = 0;
         $batchSize = 20;
-        $lists = $this->em->getRepository('OlegTranslationalResearchBundle:AntibodyList')->findAll();
+
         foreach($lists as $list) {
-            if( !$list->getType() ) {
+            if( !$list->getType() || !$list->getCreatedate() ) {
+                echo "set Properties for list ID=".$list->getId()."<br>";
                 $list->setCreator($systemuser);
                 $list->setCreatedate(new \DateTime());
                 $list->setType('default');
                 $list->setOrderinlist($orderinlist);
                 $list->setVersion(1);
                 $orderinlist = $orderinlist + 10;
-
-                if (($counter % $batchSize) === 0) {
+                
+                if( ($counter % $batchSize) === 0 ) {
                     $this->em->flush();
-                    $this->em->clear(); // Detaches all objects from Doctrine!
+                    //$this->em->clear(); // Detaches all objects from Doctrine!
                 }
 
                 $counter++;
@@ -2574,7 +2577,7 @@ class TransResImportData
         }
 
         $this->em->flush(); //Persist objects that did not make up an entire batch
-        $this->em->clear();
+        //$this->em->clear();
 
         $res = "Inserted $counter anti body records to the AntibodyList object.";
 
