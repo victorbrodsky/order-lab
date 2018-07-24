@@ -2532,7 +2532,7 @@ class TransResImportData
 
         $lists = $this->em->getRepository('OlegTranslationalResearchBundle:AntibodyList')->findAll();
         if( count($lists) > 0 ) {
-            return "AntibodyList is already exists";
+            //return "AntibodyList is already exists";
         }
 
         $filename = 'IHC_antibody.sql';
@@ -2566,7 +2566,7 @@ class TransResImportData
                 $list->setOrderinlist($orderinlist);
                 $list->setVersion(1);
                 $orderinlist = $orderinlist + 10;
-                
+
                 if( ($counter % $batchSize) === 0 ) {
                     $this->em->flush();
                     //$this->em->clear(); // Detaches all objects from Doctrine!
