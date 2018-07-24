@@ -57,7 +57,6 @@ Scanorders2/web/uploads/documents/*.txt
 /src/Oleg/OrderformBundle/Security/AperioLdap
 /src/Oleg/OrderformBundle/SDK
 /src/Oleg/TranslationalResearchBundle/Util/*.xlsx
-/src/Oleg/TranslationalResearchBundle/Util/*.sql
 ### add manually to the source code: /vendor/aperio and /vendor/olegutil
 ### ignore aperio and  olegutil for pdf processing (ghostscript, LibreOffice, PDFTK)
 #!/vendor/aperio

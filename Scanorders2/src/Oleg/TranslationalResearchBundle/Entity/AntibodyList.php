@@ -40,6 +40,12 @@ class AntibodyList extends ListAbstract
      **/
     protected $original;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     * @Assert\NotBlank
+     */
+    protected $type;
+
 //`category` varchar(32) NOT NULL,
 //`name` varchar(255) NOT NULL,
 //`altname` varchar(255) DEFAULT NULL,
