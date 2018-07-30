@@ -48,28 +48,44 @@
                 </p>
 
                 <p>
-                    <a  general-data-confirm="Are you sure? This action will pre-generate from node fields for Call Log Book system."
-                        href="{{ path('employees_generate_form_node_tree') }}">4) Pre-generate form node tree fields for Call Log Book</a>
+                    <a general-data-confirm="Are you sure? This action will populate new Antibody list from SQL file."
+                       href="{{ path('translationalresearch_generate_antibody_list',{'filename':'ihc_antibody_mysql.sql'}) }}">4a) Import Antibodies for the MySQL database
+                    </a>
                 </p>
-
-                <hr>
+                <p>
+                    <a general-data-confirm="Are you sure? This action will populate new Antibody list from SQL file."
+                       href="{{ path('translationalresearch_generate_antibody_list',{'filename':'ihc_antibody_mssql.sql'}) }}">4b) Import Antibodies for the MS SQL database
+                    </a>
+                </p>
+                <p>
+                    <a general-data-confirm="Are you sure? This action will populate new Antibody list from SQL file."
+                       href="{{ path('translationalresearch_generate_antibody_list',{'filename':'ihc_antibody_postgresql.sql'}) }}">4c) Import Antibodies for the Postgres database
+                    </a>
+                </p>
 
                 <p>
-                    Populate Antibody List from SQL file:<br>
-                    <a general-data-confirm="Are you sure? This action will populate new Antibody list from SQL file."
-                       href="{{ path('translationalresearch_generate_antibody_list',{'filename':'ihc_antibody_mysql.sql'}) }}">a) MySql
-                    </a>
-                    <br>
-                    <a general-data-confirm="Are you sure? This action will populate new Antibody list from SQL file."
-                       href="{{ path('translationalresearch_generate_antibody_list',{'filename':'ihc_antibody_mssql.sql'}) }}">b) Microsoft SQL (MSSql)
-                    </a>
-                    <br>
-                    <a general-data-confirm="Are you sure? This action will populate new Antibody list from SQL file."
-                       href="{{ path('translationalresearch_generate_antibody_list',{'filename':'ihc_antibody_postgresql.sql'}) }}">c) PostgreSql
-                    </a>
+                    <a  general-data-confirm="Are you sure? This action will pre-generate from node fields for Call Log Book system."
+                        href="{{ path('employees_generate_form_node_tree') }}">5) Pre-generate form node tree fields for Call Log Book</a>
                 </p>
 
                 <hr>
+
+                {#<p>#}
+                    {#Populate Antibody List from SQL file:<br>#}
+                    {#<a general-data-confirm="Are you sure? This action will populate new Antibody list from SQL file."#}
+                       {#href="{{ path('translationalresearch_generate_antibody_list',{'filename':'ihc_antibody_mysql.sql'}) }}">a) MySql#}
+                    {#</a>#}
+                    {#<br>#}
+                    {#<a general-data-confirm="Are you sure? This action will populate new Antibody list from SQL file."#}
+                       {#href="{{ path('translationalresearch_generate_antibody_list',{'filename':'ihc_antibody_mssql.sql'}) }}">b) Microsoft SQL (MSSql)#}
+                    {#</a>#}
+                    {#<br>#}
+                    {#<a general-data-confirm="Are you sure? This action will populate new Antibody list from SQL file."#}
+                       {#href="{{ path('translationalresearch_generate_antibody_list',{'filename':'ihc_antibody_postgresql.sql'}) }}">c) PostgreSql#}
+                    {#</a>#}
+                {#</p>#}
+
+                {#<hr>#}
 
                 <p>
                     <a general-data-confirm="Are you sure? This action will populate new users from spreadsheet."
