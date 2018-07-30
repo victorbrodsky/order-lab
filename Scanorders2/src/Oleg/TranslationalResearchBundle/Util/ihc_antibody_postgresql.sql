@@ -26,7 +26,7 @@ SET time_zone = "+00:00";
 -- Dumping data for table 'transres_antibodyList' - transres_antibodyList
 --
 
-INSERT INTO 'transres_antibodyList' ('id', 'category', 'name', 'altname', 'company', 'catalog', 'lot', 'igconcentration', 'clone', 'host', 'reactivity', 'control', 'protocol', 'retrieval', 'dilution', 'storage', 'comment', 'datasheet', 'pdf') VALUES
+INSERT INTO transres_antibodyList (id, category, name, altname, company, catalog, lot, igconcentration, clone, host, reactivity, control, protocol, retrieval, dilution, storage, comment, datasheet, pdf) VALUES
 (1, 'M', 'Androgen Receptor', 'AR ', 'Abcam', 'ab74272', 'GR32463-1', '0.2 mg/ml', 'Poly', 'Rabbit ', 'Human, mouse', 'Xenograft Control/Prostate Ca.', 'Envision Rabbit R. ', 'H130', '1:200', '-20 oC', 'Project: 12743 RS#: 30323 PI: Rubin/Kyung Condition confirmed by Dr. Rubin/Kyung on 03/09/2011', 'http://www.abcam.com/Androgen-Receptor-antibody-ab74272.html', 'upload/pdf/1296507249.pdf'),
 (3, 'M', 'Bcl-6 -  Rabbit Anti-mouse', NULL, 'Santa Cruz', 'Bcl6 (sc-858)', '', '200 ug/ml', 'Poly', 'Rabbit', 'Mouse, human, rat', 'I08-995 A1 (#22)) Flip CD19 Promotor/', 'Envision Rabbit Refine', 'H230', '1 to 50', '4C', 'Project: 10820 RS#:  PI: Cesarman ', 'http://www.scbt.com/datasheet-858-bcl-6-n-3-antibody.html', ' '),
 (4, 'M', 'Blimp-1(6D3) - Rat anti mouseSanta Cruz', NULL, 'Santa Cruz', 'sc-47732', 'F2408', '200ug/ml (IgG2a)', '6D3', 'Rat', 'Mouse, Human', 'mouse LN', 'ABC Rat (1h 25 25 DAB15'')', 'PC or H220', '1:25', '4 oC', 'Project: 10820 RS#:  PI: Cesarman\r\nWorks on human tissue as well. ', 'http://www.scbt.com/datasheet-47732-blimp-1-6d3-antibody.html', ''),
