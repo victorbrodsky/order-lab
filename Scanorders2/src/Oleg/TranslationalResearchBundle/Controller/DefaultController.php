@@ -250,22 +250,24 @@ class DefaultController extends Controller
 
     /**
      * Load Antibody list into Platform List Manager
-     * run: http://localhost/order/translational-research/generate-antibody-list/
-     * @Route("/generate-antibody-list/", name="translationalresearch_generate_antibody_list")
+     * run: http://localhost/order/translational-research/generate-antibody-list/ihc_antibody_mssql.sql
+     * @Route("/generate-antibody-list/{filename}", name="translationalresearch_generate_antibody_list")
      */
-    public function generateAntibodyListAction() {
+    public function generateAntibodyListAction(Request $request, $filename) {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
         }
 
+        //exit("generateAntibodyList: ".$filename);
+
         $importUtil = $this->get('transres_import');
-        $res = $importUtil->createAntibodyList();
+        $res = $importUtil->createAntibodyList($filename);
         //exit("generateAntibodyListAction: Finished with res=".$res);
 
         //Flash
         $this->get('session')->getFlashBag()->add(
             'notice',
-            'Antibody list imported result: '.$res
+            "Antibody list imported result ($filename): <br>".$res
         );
 
         //exit("res=".$res);

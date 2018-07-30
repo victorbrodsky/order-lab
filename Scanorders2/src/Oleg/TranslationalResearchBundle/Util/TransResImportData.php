@@ -2517,14 +2517,14 @@ class TransResImportData
 //        8	IRB Review/Committee Review
     }
 
-    public function createAntibodyList() {
+    public function createAntibodyList($filename) {
         $importUtil = $this->container->get('transres_import');
-        $importUtil->generateAntibodyList();
-        $res = $importUtil->setAntibodyListProperties();
+        $res1 = $importUtil->generateAntibodyList($filename);
+        $res2 = $importUtil->setAntibodyListProperties();
         //exit("generateAntibodyListAction: Finished with res=".$res);
-        return $res;
+        return $res1 . "<br>" . $res2;
     }
-    public function generateAntibodyList() {
+    public function generateAntibodyList($filename) {
 
         //AntibodyList
         //INSERT INTO `IHC_antibody` (`id`, `category`, `name`, `altname`, `company`, `catalog`, `lot`, `igconcentration`, `clone`, `host`, `reactivity`, `control`, `protocol`, `retrieval`, `dilution`, `storage`, `comment`, `datasheet`, `pdf`) VALUES
@@ -2532,11 +2532,18 @@ class TransResImportData
 
         $lists = $this->em->getRepository('OlegTranslationalResearchBundle:AntibodyList')->findAll();
         if( count($lists) > 0 ) {
-            return "AntibodyList is already exists";
+            return "AntibodyList is already exists.";
         }
 
-        $filename = 'IHC_antibody.sql';
+        //$filename = 'ihc_antibody.sql';
         $inputFileName = __DIR__ . "/" . $filename;
+
+        if (file_exists($inputFileName)) {
+            //echo "The file $filename exists";
+        } else {
+            return "The file $inputFileName does not exist";
+        }
+
         echo "==================== Processing $filename =====================<br>";
 
         $sql = file_get_contents($inputFileName);  // Read file contents

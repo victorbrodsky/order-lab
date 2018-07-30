@@ -864,7 +864,7 @@ class AdminController extends Controller
         $count_generatePlatformListManagerList = $this->generatePlatformListManagerList();
 
         $count_populateClassUrl = $this->populateClassUrl();
-        $count_createAdminAntibodyList = $this->createAdminAntibodyList();
+        //$count_createAdminAntibodyList = $this->createAdminAntibodyList();
 
 
         $msg =
@@ -961,7 +961,7 @@ class AdminController extends Controller
             'PlatformListManagerList='.$count_generatePlatformListManagerList.', '.
             'IrbApprovalTypeList='.$count_generateIrbApprovalTypeList.', '.
             'populateClassUrl='.$count_populateClassUrl.', '.
-            'createAdminAntibodyList='.$count_createAdminAntibodyList.', '.
+            //'createAdminAntibodyList='.$count_createAdminAntibodyList.', '.
 
             ' (Note: -1 means that this table is already exists)';
 
@@ -8657,12 +8657,12 @@ class AdminController extends Controller
         exit("Finished.");
     }
 
-    public function createAdminAntibodyList() {
-        $importUtil = $this->get('transres_import');
-        $res = $importUtil->createAntibodyList();
-        //exit("generateAntibodyListAction: Finished with res=".$res);
-        return $res;
-    }
+//    public function createAdminAntibodyList($filename) {
+//        $importUtil = $this->get('transres_import');
+//        $res = $importUtil->createAntibodyList($filename);
+//        //exit("generateAntibodyListAction: Finished with res=".$res);
+//        return $res;
+//    }
 
 
 
