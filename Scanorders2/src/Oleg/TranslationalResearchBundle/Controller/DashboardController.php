@@ -116,24 +116,24 @@ class DashboardController extends Controller
             ///////////// top $piProjectCountArr //////////////
             $piProjectCountTopArr = $this->getTopArray($piProjectCountArr);
             //Projects per PI
-            $chartsArray = $this->addChart( $chartsArray, $piProjectCountTopArr, "Number of Projects per PI");
+            $chartsArray = $this->addChart( $chartsArray, $piProjectCountTopArr, "Number of Project Requests per PI");
             ///////////// EOF top $piProjectCountArr //////////////
 
             //Total per PI
             $piTotalTopArr = $this->getTopArray($piTotalArr);
-            $chartsArray = $this->addChart( $chartsArray, $piTotalTopArr, "Total($) of Projects per PI");
+            $chartsArray = $this->addChart( $chartsArray, $piTotalTopArr, "Total($) of Project Requests per PI");
 
             //We likes to see which funded PI”s are using the TRP lab,
             // so we can try to capture a (Top Ten PI’s) and the percent of services they requested from TRP lab.
             $piRequestsTopArr = $this->getTopArray($piRequestsArr);
-            $chartsArray = $this->addChart( $chartsArray, $piRequestsTopArr, "Number of Funded Requests per PI");
+            $chartsArray = $this->addChart( $chartsArray, $piRequestsTopArr, "Number of Funded Work Requests per PI");
 
         }
 
         if( $routeName == "translationalresearch_dashboard_projectlevel" ) {
             $piTotalArr = array();
             $title = "Dashboard: Project Statistics";
-            $layoutArray['title'] = "Number of Funded vs Un-Funded Projects";
+            $layoutArray['title'] = "Number of Funded vs Un-Funded Project Requests";
             $nameValueArr = array();
             $fundedCount = 0;
             $unfundedCount = 0;
@@ -163,7 +163,7 @@ class DashboardController extends Controller
             $chartDataArray = array();
             $type = 'pie';
 
-            $labels = array('Number of Funded Projects','Number of Un-Funded Projects');
+            $labels = array('Number of Funded Projects','Number of Un-Funded Project Requests');
             $values = array($fundedCount,$unfundedCount);
 
             $chartDataArray['values'] = $values;
@@ -304,7 +304,7 @@ class DashboardController extends Controller
         $pisDataArr['AP/CP PIs'] = count($apcpPisArr);
         $pisDataArr['Hematopathology PIs'] = count($hemaPisArr);
 
-        $chartsArray = $this->addChart( $chartsArray, $pisDataArr, "Number of PIs in Hematopathology vs AP/CP");
+        $chartsArray = $this->addChart( $chartsArray, $pisDataArr, "Number of PIs in AP/CP vs Hematopathology");
         ///////////////// EOF Pie charts of the number of PIs in Hemepath vs AP/CP /////////////////
 
 
@@ -314,7 +314,7 @@ class DashboardController extends Controller
         $projectsDataArr['AP/CP Project Requests'] = count($apcpProjects);
         $projectsDataArr['Hematopathology Project Requests'] = count($hemaProjects);
 
-        $chartsArray = $this->addChart( $chartsArray, $projectsDataArr, "Number of Hematopathology vs AP/CP Project Requests");
+        $chartsArray = $this->addChart( $chartsArray, $projectsDataArr, "Number of AP/CP vs Hematopathology Project Requests");
         ///////////////// EOF number of Hematopathology vs AP/CP project requests as a Pie chart /////////////////
 
 
@@ -329,55 +329,23 @@ class DashboardController extends Controller
         //get startDate and add 1 month until the date is less than endDate
         $startDate = $filterform['startDate']->getData();
         $endDate = $filterform['endDate']->getData();
-        //$filterform['startDate']->setData($startDate);
-        //$apcpProjects = $this->getProjectsByFilter($filterform,"ap-cp");
         $startDate->modify( 'first day of last month' );
         do {
-            //$startDate->modify( 'first day of last month' );
-            //$filterform['startDate']->setData($startDate);
             $startDateLabel = $startDate->format('M-Y');
             $thisEndDate = clone $startDate;
             $thisEndDate->modify( 'first day of next month' );
-            //$filterform['endDate']->setData($thisEndDate);
             //echo "StartDate=".$startDate->format("d-M-Y")."; EndDate=".$thisEndDate->format("d-M-Y")."<br>";
-            //$barName = "Number of project requests, work requests, invoices per month ".$startDate->format("m/d/Y")." - ".$thisEndDate->format("m/d/Y");
             $apcpProjects = $this->getProjectsByFilter($startDate,$thisEndDate,array($specialtyApcpObject),false);
             $hemaProjects = $this->getProjectsByFilter($startDate,$thisEndDate,array($specialtyHemaObject),false);
             $startDate->modify( 'first day of next month' );
 
             //echo "<br>";
-            //get requests, invoices
-//            //$requestArr = array();
-//            $invoiceCount = 0;
-//            $requestCount = 10;
-//            foreach($apcpProjects as $project) {
-//                foreach($project->getRequests() as $request) {
-//                    //$requestArr[] = $request;
-//                    $requestCount++;
-//                    $latestInvoice = $transresRequestUtil->getLatestInvoice($request);
-//                    if( $latestInvoice ) {
-//                        $invoiceCount++;
-//                    }
-//                }
-//            }
-//            echo "invoiceCount=$invoiceCount<br>";
-//            $fullStatArr = array();
-//            $fullStatArr['Project Requests'] = count($apcpProjects);
-//            $fullStatArr['Work Requests'] = $requestCount;
-//            $fullStatArr['Invoices'] = $invoiceCount;
-//
-//            $chartsArray = $this->addChart( $chartsArray, $fullStatArr, $barName);
-
             //echo "hemaProjects=".count($hemaProjects)." (".$startDateLabel.")<br>";
 
             $apcpResultStatArr = $this->getProjectRequestInvoiceChart($apcpProjects,$apcpResultStatArr,$startDateLabel);
             $hemaResultStatArr = $this->getProjectRequestInvoiceChart($hemaProjects,$hemaResultStatArr,$startDateLabel);
 
         } while( $startDate < $endDate );
-
-        //$apcpProjects = $apcpProjectsData['projects'];
-        //$apcpRequests = $apcpProjectsData['requests'];
-        //$apcpInvoices = $apcpProjectsData['invoices'];
 
         //AP/CP
         $apcpProjectsData = array();
@@ -421,26 +389,19 @@ class DashboardController extends Controller
         $combinedProjectsData = array();
         $combinedProjectsData['AP/CP'] = $apcpProjectsData;
         $combinedProjectsData['Hematopathology'] = $hemaProjectsData;
-        $chartsArray = $this->addStackedChart( $chartsArray, $combinedProjectsData, "Number of AP/CP and Hematopathology Projects by months", "stack");
+        $chartsArray = $this->addStackedChart( $chartsArray, $combinedProjectsData, "Number of AP/CP vs Hematopathology Project Requests", "stack");
 
         //Requests
         $combinedRequestsData = array();
         $combinedRequestsData['AP/CP'] = $apcpRequestsData;
         $combinedRequestsData['Hematopathology'] = $hemaRequestsData;
-        $chartsArray = $this->addStackedChart( $chartsArray, $combinedRequestsData, "Number of AP/CP and Hematopathology Requests by months", "stack");
+        $chartsArray = $this->addStackedChart( $chartsArray, $combinedRequestsData, "Number of AP/CP vs Hematopathology Work Requests", "stack");
 
         //Invoices
         $combinedInvoicesData = array();
         $combinedInvoicesData['AP/CP'] = $apcpInvoicesData;
         $combinedInvoicesData['Hematopathology'] = $hemaInvoicesData;
-        $chartsArray = $this->addStackedChart( $chartsArray, $combinedInvoicesData, "Number of AP/CP and Hematopathology Invoices by months", "stack");
-
-        //echo "<pre>";
-        //print_r($apcpProjectsData);
-        //echo "</pre>";
-
-        //$projectRequestInvoiceDataArr[] = array();
-        //$chartsArray = $this->addChart( $chartsArray, $apcpProjectsData, "Number of AP/CP Project Requests by months", "bar");
+        $chartsArray = $this->addStackedChart( $chartsArray, $combinedInvoicesData, "Number of AP/CP vs Hematopathology Invoices", "stack");
 
         //echo "chartsArray:<pre>";
         //print_r($chartsArray);
