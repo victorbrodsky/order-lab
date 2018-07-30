@@ -169,6 +169,11 @@ class DefaultController extends Controller
 
         }
 
+        //6) Update Request from "UpdatedReqStatus.xlsx": Price, Status, Comment
+        if(0) {
+            $resArr[] = $importUtil->updateRequests($request,$filename,$startRow,1000);
+        }
+
         //edit requests without oid
         if(0) {
             $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
@@ -249,7 +254,7 @@ class DefaultController extends Controller
     }
 
     /**
-     * Load Antibody list into Platform List Manager
+     * generateAntibodyList and setAntibodyListProperties
      * run: http://localhost/order/translational-research/generate-antibody-list/ihc_antibody_mssql.sql
      * @Route("/generate-antibody-list/{filename}", name="translationalresearch_generate_antibody_list")
      */
@@ -295,5 +300,8 @@ class DefaultController extends Controller
         //exit("res=".$res);
         return $this->redirectToRoute('translationalresearch_home');
     }
+
+
+
 
 }

@@ -2591,5 +2591,9 @@ class TransResImportData
         return $res;
     }
 
+    //Update Request from "UpdatedReqStatus.xlsx": Price, Status, Comment
+    public function updateRequests( $request, $filename ) {
+
+    }
 
 }
