@@ -2613,11 +2613,15 @@ class TransResImportData
         $highestRow = $sheet->getHighestRow();
         $highestColumn = $sheet->getHighestColumn();
 
+        echo "Highest row=$highestRow <br>";
+
         $headers = $rowData = $sheet->rangeToArray('A' . 1 . ':' . $highestColumn . 1,
             NULL,
             TRUE,
             FALSE);
 
+        $batchSize = 300;
+        $count = 0;
 
         //for each request in excel (start at row 2)
         for( $row = 2; $row <= $highestRow; $row++ ) {
@@ -2633,11 +2637,90 @@ class TransResImportData
             //var_dump($rowData);
             //echo "<br>";
 
-            $exportId = $this->getValueByHeaderName('PROJECT_ID', $rowData, $headers);
+            $exportId = $this->getValueByHeaderName('REQUEST', $rowData, $headers);
             $exportId = trim($exportId);
-            echo "<br>########## exportId=" . $exportId . "#############<br>";
+            //echo "<br>########## Request exportId=" . $exportId . "#############<br>";
 
+            $transresRequest = $this->em->getRepository('OlegTranslationalResearchBundle:TransResRequest')->findOneByExportId($exportId);
+            if( !$transresRequest ) {
+                //exit("Request not found by External ID ".$exportId);
+                continue;
+            }
+
+            $price = $this->getValueByHeaderName('PRICE', $rowData, $headers);
+            $status = $this->getValueByHeaderName('STATUS', $rowData, $headers);
+            $comment = $this->getValueByHeaderName('COMMENTS', $rowData, $headers);
+
+            $updatedCount = 0;
+
+            if( $status ) {
+                if( $status == "Completed" ) {
+                    //$status = "completed";
+                    $statusProgress = "completed";
+                    $statusBilling = "paid";
+                }
+                if( $status == "Suspended" ) {
+                    //Comments for two requests said "canceled", therefore I assume that the status is "canceled".
+                    //$status = "pending";
+                    $statusProgress = "canceled";
+                    $statusBilling = "canceled";
+                }
+
+                if( $transresRequest->getProgressState() != $statusProgress ) {
+                    $transresRequest->setProgressState($statusProgress);
+                    $updatedCount++;
+                }
+                if( $transresRequest->getBillingState() != $statusBilling ) {
+                    $transresRequest->setBillingState($statusBilling);
+                    $updatedCount++;
+                }
+            }
+
+            if( $comment ) {
+                $requestComment = $transresRequest->getComment();
+                if( $requestComment ) {
+                    if( strpos($requestComment, $comment) === false ) {
+                        //Append to the Comment
+                        $requestComment = $requestComment . "\r\n \r\n" .
+                            "### Updated comment: ###" . "\r\n" . $comment . "\r\n" . "#########";
+                        $transresRequest->setComment($requestComment);
+                        $updatedCount++;
+                    }
+                }
+            }
+
+            if( $price ) {
+                $requestComment = $transresRequest->getComment();
+                if( $requestComment ) {
+                    if( strpos($requestComment, $price) === false ) {
+                        //Append to the Comment
+                        $requestComment = $requestComment . "\r\n \r\n" .
+                            "### Updated price: ###" . "\r\n" . $price . "\r\n" . "#########";
+                        $transresRequest->setComment($requestComment);
+                        $updatedCount++;
+                    }
+                }
+            }
+
+            if( $updatedCount > 0 ) {
+                //$this->em->flush($transresRequest);
+                //echo $count.": Updated $updatedCount times<br>";
+                echo ".";
+            }
+
+            if( ($count % $batchSize) === 0 ) {
+                $this->em->flush();
+                //$this->em->clear(); // Detaches all objects from Doctrine!
+                echo "<br>";
+            }
+
+            $count++;
         }
+
+        $this->em->flush();
+        echo "<br>";
+
+        return "Processed $count records";
     }
 
 }

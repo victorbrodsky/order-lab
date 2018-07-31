@@ -61,6 +61,7 @@ class DefaultController extends Controller
 
 
     /**
+     * http://localhost/order/translational-research/import-old-data/0
      * 1) Disable comments first in the FosCommentListener - $disable = true
      * 2) Make sure the Admin and default AP-CP reviewers are set correctly
      * 3) Run Steps 1, 2, 3 and 4
@@ -75,7 +76,7 @@ class DefaultController extends Controller
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
-        exit('not allowed');
+        //exit('not allowed');
         set_time_limit(10800); //18000 seconds => 5 hours
         ini_set('memory_limit', '7168M');
 
@@ -170,8 +171,9 @@ class DefaultController extends Controller
         }
 
         //6) Update Request from "UpdatedReqStatus.xlsx": Price, Status, Comment
-        if(0) {
-            $resArr[] = $importUtil->updateRequests($request,$filename,$startRow,1000);
+        if(1) {
+            $filename = "UpdatedReqStatus.xlsx";
+            $resArr[] = $importUtil->updateRequests($request,$filename);
         }
 
         ///////////////////// AUX Functions ///////////////////////
