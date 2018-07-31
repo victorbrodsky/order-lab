@@ -3023,7 +3023,7 @@ class CallEntryController extends Controller
         $fileName = str_replace(" ", "-", $fileName);
         $fileName = str_replace("--", "-", $fileName);
         $fileName = str_replace("--", "-", $fileName);
-        //exit($fileName);
+        exit($fileName);
 
         //testing: render in html with excel header
         if(0) {
