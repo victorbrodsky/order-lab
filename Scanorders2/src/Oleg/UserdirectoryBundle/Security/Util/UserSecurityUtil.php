@@ -561,7 +561,7 @@ class UserSecurityUtil {
                     $idsArr[] = $subjectObject->getId();
                 }
 
-                $ids = implode(",",$idsArr);
+                $ids = implode(", ",$idsArr);
                 $ids = substr($ids,0,255); //max length for string field
                 $subjectEntity = $subjectEntities[0];
 
