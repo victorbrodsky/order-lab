@@ -105,16 +105,28 @@
 
 {% block additionaljs %}
 
+    {#'@OlegTranslationalResearchBundle/Resources/public/form/js/handsontable.js'#}
+    {#'@OlegUserdirectoryBundle/Resources/public/bwip-js/bwipjs.js'#}
+    {#'@OlegUserdirectoryBundle/Resources/public/bwip-js/bwipp-min.js'#}
+    {#'@OlegUserdirectoryBundle/Resources/public/bwip-js/freetype.js'#}
+    {#'@OlegOrderformBundle/Resources/public/form/js/selectAjax.js'#}
+    {#'@OlegOrderformBundle/Resources/public/form/js/masking.js'#}
     {% javascripts
         '@OlegOrderformBundle/Resources/public/handsontable/jquery.handsontable.full.js'
-        '@OlegTranslationalResearchBundle/Resources/public/form/js/handsontable.js'
-        '@OlegUserdirectoryBundle/Resources/public/bwip-js/bwipjs.js'
-        '@OlegUserdirectoryBundle/Resources/public/bwip-js/bwipp-min.js'
-        '@OlegUserdirectoryBundle/Resources/public/bwip-js/freetype.js'
-        '@OlegOrderformBundle/Resources/public/form/js/selectAjax.js'
-        '@OlegOrderformBundle/Resources/public/form/js/masking.js'
     %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    {% javascripts
+    '@OlegTranslationalResearchBundle/Resources/public/form/js/handsontable.js'
+    '@OlegUserdirectoryBundle/Resources/public/bwip-js/freetype.js'
+    '@OlegOrderformBundle/Resources/public/form/js/selectAjax.js'
+    '@OlegOrderformBundle/Resources/public/form/js/masking.js'
+    '@OlegTranslationalResearchBundle/Resources/public/form/js/barcode.js'
+    '@OlegUserdirectoryBundle/Resources/public/qrcode/qrcode.js'
+    '@OlegUserdirectoryBundle/Resources/public/jquery-qrcode/jquery.qrcode.min.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
 
 <script type="text/javascript">

@@ -70,7 +70,7 @@ class TransResRequestType extends AbstractType
             ));
 
             $builder->add('progressState', ChoiceType::class, array(
-                'label' => 'Progress Status:',
+                'label' => 'Work Progress Status:',
                 'required' => false,
                 'disabled' => $disabled,
                 'choices' => $this->params['progressStateChoiceArr'],

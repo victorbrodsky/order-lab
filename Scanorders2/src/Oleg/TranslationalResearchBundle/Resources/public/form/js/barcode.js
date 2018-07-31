@@ -206,8 +206,9 @@ function render(canvasId, barcodeText, barcodeName) {
     var rot = 'N';
 
      if( barcodeName === undefined ) {
-        var barcodeName = "azteccode";
-        barcodeName = "qrcode";
+        //var barcodeName = "azteccode";
+        //barcodeName = "qrcode";
+        barcodeName = "datamatrix"; //Also known as: Data Matrix ECC 200.
      }
 
     ///////////////////////////

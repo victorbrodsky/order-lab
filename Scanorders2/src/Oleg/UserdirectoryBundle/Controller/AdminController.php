@@ -6594,7 +6594,11 @@ class AdminController extends Controller
             "encounterinfotypes" => array('','-list'),
             "suggestedmessagecategorys" => array('','-list'),
             "calllogentrytags" => array('','-list'),
+            
             "antibodies" => array('AntibodyList','antibodies-list','Antibody List'),
+            "custom1" => array('Custom1List','custom1-list','Custom1 List'),
+            "custom2" => array('Custom2List','custom2-list','Custom2 List'),
+            "custom3" => array('Custom3List','custom3-list','Custom3 List'),
         );
 
         $count = 10;

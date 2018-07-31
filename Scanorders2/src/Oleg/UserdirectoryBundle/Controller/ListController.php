@@ -154,6 +154,9 @@ class ListController extends Controller
      * @Route("/list/translational-research-request-category-types/", name="transresrequestcategorytypes-list")
      * @Route("/list/translational-irb-approval-types/", name="transresirbapprovaltypes-list")
      * @Route("/list/antibodies/", name="antibodies-list")
+     * @Route("/list/custom1/", name="custom1-list")
+     * @Route("/list/custom2/", name="custom2-list")
+     * @Route("/list/custom3/", name="custom3-list")
      *
      *
      * @Method("GET")
@@ -513,6 +516,9 @@ class ListController extends Controller
      * @Route("/list/translational-research-request-category-types/", name="transresrequestcategorytypes_create")
      * @Route("/list/translational-irb-approval-types/", name="transresirbapprovaltypes_create")
      * @Route("/list/antibodies/", name="antibodies_create")
+     * @Route("/list/custom1/", name="custom1_create")
+     * @Route("/list/custom2/", name="custom2_create")
+     * @Route("/list/custom3/", name="custom3_create")
      *
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -714,6 +720,9 @@ class ListController extends Controller
      * @Route("/list/translational-research-request-category-types/new", name="transresrequestcategorytypes_new")
      * @Route("/list/translational-irb-approval-types/new", name="transresirbapprovaltypes_new")
      * @Route("/list/antibodies/new", name="antibodies_new")
+     * @Route("/list/custom1/new", name="custom1_new")
+     * @Route("/list/custom2/new", name="custom2_new")
+     * @Route("/list/custom3/new", name="custom3_new")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -877,7 +886,9 @@ class ListController extends Controller
      * @Route("/list/translational-research-request-category-types/{id}", name="transresrequestcategorytypes_show")
      * @Route("/list/translational-irb-approval-types/{id}", name="transresirbapprovaltypes_show")
      * @Route("/list/antibodies/{id}", name="antibodies_show")
-     *
+     * @Route("/list/custom1/{id}", name="custom1_show")
+     * @Route("/list/custom2/{id}", name="custom2_show")
+     * @Route("/list/custom3/{id}", name="custom3_show")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:show.html.twig")
@@ -1031,6 +1042,9 @@ class ListController extends Controller
      * @Route("/list/translational-research-request-category-types/{id}/edit", name="transresrequestcategorytypes_edit")
      * @Route("/list/translational-irb-approval-types/{id}/edit", name="transresirbapprovaltypes_edit")
      * @Route("/list/antibodies/{id}/edit", name="antibodies_edit")
+     * @Route("/list/custom1/{id}/edit", name="custom1_edit")
+     * @Route("/list/custom2/{id}/edit", name="custom2_edit")
+     * @Route("/list/custom3/{id}/edit", name="custom3_edit")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -1228,6 +1242,9 @@ class ListController extends Controller
      * @Route("/list/translational-research-request-category-types/{id}", name="transresrequestcategorytypes_update")
      * @Route("/list/translational-irb-approval-types/{id}", name="transresirbapprovaltypes_update")
      * @Route("/list/antibodies/{id}", name="antibodies_update")
+     * @Route("/list/custom1/{id}", name="custom1_update")
+     * @Route("/list/custom2/{id}", name="custom2_update")
+     * @Route("/list/custom3/{id}", name="custom3_update")
      *
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -1997,6 +2014,19 @@ class ListController extends Controller
                 $bundleName = "TranslationalResearchBundle";
                 break;
 
+            case "custom1":
+                $className = "Custom1List";
+                $displayName = "Custom1 List";
+                break;
+            case "custom2":
+                $className = "Custom2List";
+                $displayName = "Custom2 List";
+                break;
+            case "custom3":
+                $className = "Custom3List";
+                $displayName = "Custom3 List";
+                break;
+
 //            case "employees_locations":
 //                $className = "Location";
 //                $displayName = "Locations";
@@ -2176,6 +2206,9 @@ class ListController extends Controller
      * @Route("/list/translational-research-request-category-types/{id}", name="transresrequestcategorytypes_delete")
      * @Route("/list/translational-irb-approval-types/{id}", name="transresirbapprovaltypes_delete")
      * @Route("/list/antibodies/{id}", name="antibodies_delete")
+     * @Route("/list/custom1/{id}", name="custom1_delete")
+     * @Route("/list/custom2/{id}", name="custom2_delete")
+     * @Route("/list/custom3/{id}", name="custom3_delete")
      *
      *
      * @Method("DELETE")
