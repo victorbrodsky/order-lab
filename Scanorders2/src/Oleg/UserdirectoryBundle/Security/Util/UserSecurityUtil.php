@@ -562,7 +562,7 @@ class UserSecurityUtil {
                 }
 
                 $ids = implode(",",$idsArr);
-                $ids = substr($ids,0,2000);
+                $ids = substr($ids,0,255); //max length for string field
                 $subjectEntity = $subjectEntities[0];
 
             }
