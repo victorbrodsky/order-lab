@@ -167,7 +167,7 @@ class CallEntryController extends Controller
         );
     }
 
-    public function getCalllogEntryFilter(Request $request)
+    public function getCalllogEntryFilter(Request $request, $limit=null)
     {
 
         $em = $this->getDoctrine()->getManager();
@@ -764,6 +764,10 @@ class CallEntryController extends Controller
                 $dql->orWhere("patient.id IN (:mergePatientIds)");
                 $queryParameters['mergePatientIds'] = $mergedPatientIds;
             }
+        }
+
+        if( $limit ) {
+            $dql->setMaxResults($limit);
         }
 
 
@@ -2976,7 +2980,8 @@ class CallEntryController extends Controller
         //$all = $request->get('all');
         //echo "all=".$all."<br>";
 
-        $res = $this->getCalllogEntryFilter($request);
+        $limit = 500;
+        $res = $this->getCalllogEntryFilter($request,$limit);
 
         if( $res['redirect'] ) {
             //exit('redirect to home page');
