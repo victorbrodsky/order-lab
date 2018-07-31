@@ -770,6 +770,8 @@ class CallEntryController extends Controller
         $query = $em->createQuery($dql);
         $query->setParameters($queryParameters);
 
+        $logger = $this->container->get('logger');
+        $logger->notice("setMaxResults limit=".$limit);
         if( $limit ) {
             $query->setMaxResults($limit);
         }
