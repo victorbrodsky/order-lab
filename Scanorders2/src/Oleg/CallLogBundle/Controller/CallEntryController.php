@@ -770,8 +770,8 @@ class CallEntryController extends Controller
         $query = $em->createQuery($dql);
         $query->setParameters($queryParameters);
 
-        $logger = $this->container->get('logger');
-        $logger->notice("setMaxResults limit=".$limit);
+        //$logger = $this->container->get('logger');
+        //$logger->notice("setMaxResults limit=".$limit);
         if( $limit ) {
             $query->setMaxResults($limit);
         }
@@ -2996,7 +2996,7 @@ class CallEntryController extends Controller
         //$advancedFilter = $res['advancedFilter'];
 
         $entries = $query->getResult();
-        echo "number of entries=".count($entries)."<br>";
+        //echo "number of entries=".count($entries)."<br>";
         $logger->notice("exportCsvAction: number of entries=".count($entries));
 
         if( count($entries) == 0 ) {
