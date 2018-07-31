@@ -2972,6 +2972,8 @@ class CallEntryController extends Controller
             return $this->redirect( $this->generateUrl('calllog-nopermission') );
         }
 
+        set_time_limit(600); //600 seconds => 10 mins
+
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $userSecUtil = $this->get('user_security_utility');
         $logger = $this->container->get('logger');
@@ -2986,8 +2988,6 @@ class CallEntryController extends Controller
             //exit('redirect to home page');
             return $res['redirect'];
         }
-
-        set_time_limit(600); //600 seconds => 10 mins
 
         $query = $res['query'];
         //$filterform = $res['filterform'];
