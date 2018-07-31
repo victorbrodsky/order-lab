@@ -766,14 +766,13 @@ class CallEntryController extends Controller
             }
         }
 
-        if( $limit ) {
-            $dql->setMaxResults($limit);
-        }
-
-
         //$limit = 10;
         $query = $em->createQuery($dql);
         $query->setParameters($queryParameters);
+
+        if( $limit ) {
+            $query->setMaxResults($limit);
+        }
 
         //echo "query=".$query->getSql()."<br>";
         //$messages = $query->getResult();
