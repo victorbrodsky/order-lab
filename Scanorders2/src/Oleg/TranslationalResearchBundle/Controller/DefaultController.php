@@ -174,6 +174,7 @@ class DefaultController extends Controller
             $resArr[] = $importUtil->updateRequests($request,$filename,$startRow,1000);
         }
 
+        ///////////////////// AUX Functions ///////////////////////
         //edit requests without oid
         if(0) {
             $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
@@ -204,6 +205,7 @@ class DefaultController extends Controller
             $endRow = null;//3927;
             $resCount = $importUtil->editWorkRequests($request, $filename, $startRow, $endRow);
         }
+        ///////////////////// EOF AUX Functions ///////////////////////
 
         $res = implode("<br><br>",$resArr);
 
@@ -276,7 +278,7 @@ class DefaultController extends Controller
         );
 
         //exit("res=".$res);
-        return $this->redirectToRoute('translationalresearch_home');
+        return $this->redirectToRoute('employees_siteparameters');
     }
     /**
      * Load Antibody list into Platform List Manager
@@ -298,7 +300,7 @@ class DefaultController extends Controller
         );
 
         //exit("res=".$res);
-        return $this->redirectToRoute('translationalresearch_home');
+        return $this->redirectToRoute('employees_siteparameters');
     }
 
 

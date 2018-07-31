@@ -2594,6 +2594,50 @@ class TransResImportData
     //Update Request from "UpdatedReqStatus.xlsx": Price, Status, Comment
     public function updateRequests( $request, $filename ) {
 
+        $logger = $this->container->get('logger');
+
+        $inputFileName = __DIR__ . "/" . $filename; //'/TRF_PROJECT_INFO.xlsx';
+        echo "==================== Processing $filename =====================<br>";
+
+        try {
+            $inputFileType = \PhpOffice\PhpSpreadsheet\IOFactory::identify($inputFileName);
+            $objReader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+            $objPHPExcel = $objReader->load($inputFileName);
+        } catch( Exception $e ) {
+            $error = 'Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage();
+            $logger->error($error);
+            die($error);
+        }
+
+        $sheet = $objPHPExcel->getSheet(0);
+        $highestRow = $sheet->getHighestRow();
+        $highestColumn = $sheet->getHighestColumn();
+
+        $headers = $rowData = $sheet->rangeToArray('A' . 1 . ':' . $highestColumn . 1,
+            NULL,
+            TRUE,
+            FALSE);
+
+
+        //for each request in excel (start at row 2)
+        for( $row = 2; $row <= $highestRow; $row++ ) {
+
+            //Read a row of data into an array
+            $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
+                NULL,
+                TRUE,
+                FALSE);
+
+            //Insert row data array into the database
+            //echo $row.": ";
+            //var_dump($rowData);
+            //echo "<br>";
+
+            $exportId = $this->getValueByHeaderName('PROJECT_ID', $rowData, $headers);
+            $exportId = trim($exportId);
+            echo "<br>########## exportId=" . $exportId . "#############<br>";
+
+        }
     }
 
 }
