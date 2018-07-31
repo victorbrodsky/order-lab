@@ -2978,7 +2978,7 @@ class CallEntryController extends Controller
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $userSecUtil = $this->get('user_security_utility');
-        $logger = $this->container->get('logger');
+        //$logger = $this->container->get('logger');
 
         //$all = $request->get('all');
         //echo "all=".$all."<br>";
@@ -2997,7 +2997,7 @@ class CallEntryController extends Controller
 
         $entries = $query->getResult();
         //echo "number of entries=".count($entries)."<br>";
-        $logger->notice("exportCsvAction: number of entries=".count($entries));
+        //$logger->notice("exportCsvAction: number of entries=".count($entries));
 
         if( count($entries) == 0 ) {
             $this->get('session')->getFlashBag()->add(
