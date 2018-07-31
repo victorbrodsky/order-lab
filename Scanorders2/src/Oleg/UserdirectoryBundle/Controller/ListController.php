@@ -1354,7 +1354,9 @@ class ListController extends Controller
             $newVersion = $currentVersion + 1;
             $entity->setVersion($newVersion);
 
-            $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($entity,"document");
+            if( method_exists($entity, "getDocuments") ) {
+                $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($entity, "document");
+            }
 
             $em->flush();
 
