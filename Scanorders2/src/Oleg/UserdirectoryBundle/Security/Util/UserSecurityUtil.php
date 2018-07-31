@@ -562,7 +562,7 @@ class UserSecurityUtil {
                 }
 
                 $ids = implode(",",$idsArr);
-                $ids = substr($ids,0,4000);
+                $ids = substr($ids,0,2000);
                 $subjectEntity = $subjectEntities[0];
 
             }
