@@ -2989,7 +2989,7 @@ class CallEntryController extends Controller
         //$advancedFilter = $res['advancedFilter'];
 
         $entries = $query->getResult();
-        //echo "number of entries=".count($entries)."<br>";
+        echo "number of entries=".count($entries)."<br>";
 
         if( count($entries) == 0 ) {
             $this->get('session')->getFlashBag()->add(
