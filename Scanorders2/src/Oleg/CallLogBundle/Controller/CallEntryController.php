@@ -2982,6 +2982,8 @@ class CallEntryController extends Controller
             return $res['redirect'];
         }
 
+        set_time_limit(600); //600 seconds => 10 mins
+
         $query = $res['query'];
         //$filterform = $res['filterform'];
         //$advancedFilter = $res['advancedFilter'];
