@@ -561,7 +561,8 @@ class UserSecurityUtil {
                     $idsArr[] = $subjectObject->getId();
                 }
 
-                $ids = implode(", ",$idsArr);
+                $ids = implode(",",$idsArr);
+                $ids = substr($ids,0,4000);
                 $subjectEntity = $subjectEntities[0];
 
             }
