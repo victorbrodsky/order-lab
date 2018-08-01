@@ -22,18 +22,18 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="user_custom3List")
+ * @ORM\Table(name="user_custom040List")
  */
-class Custom3List extends ListAbstract
+class Custom040List extends ListAbstract
 {
 
     /**
-     * @ORM\OneToMany(targetEntity="Custom3List", mappedBy="original")
+     * @ORM\OneToMany(targetEntity="Custom040List", mappedBy="original")
      **/
     protected $synonyms;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Custom3List", inversedBy="synonyms")
+     * @ORM\ManyToOne(targetEntity="Custom040List", inversedBy="synonyms")
      * @ORM\JoinColumn(name="original_id", referencedColumnName="id")
      **/
     protected $original;

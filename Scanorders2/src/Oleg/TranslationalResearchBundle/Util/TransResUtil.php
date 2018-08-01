@@ -3714,6 +3714,10 @@ class TransResUtil
 
         $query = $dql->getQuery();
 
+        //doctrine cache queries
+        $query->useQueryCache(true);
+        $query->useResultCache(true);
+
         if( count($dqlParameters) > 0 ) {
             $query->setParameters($dqlParameters);
         }

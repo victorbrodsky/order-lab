@@ -846,7 +846,8 @@ class RequestController extends Controller
             'routeName' => $request->get('_route'),
             //'handsometableData' => json_encode($jsonData)
             'handsometableData' => $jsonData,
-            'showPackingSlip' => $showPackingSlip
+            'showPackingSlip' => $showPackingSlip,
+            'defaultAccessionType' => null
             //'delete_form' => $deleteForm->createView(),
             //'review_forms' => $reviewFormViews
         );
@@ -896,6 +897,8 @@ class RequestController extends Controller
      */
     public function myRequestsAction(Request $request)
     {
+        $time_pre = microtime(true);
+
 //        if(
 //            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER') &&
 //            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
@@ -1007,65 +1010,9 @@ class RequestController extends Controller
         //echo "project ID=".$project->getId()."; INFO=".$project->getProjectInfoName()."<br>";
         //exit('project='.$project);
 
-        if(0) {
-            if ($project) {
-                if ($transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false) {
-                    exit('project exists, but specialty not allowed.');
-                    $this->get('session')->getFlashBag()->add(
-                        'warning',
-                        "You don't have a permission to access the " . $project->getProjectSpecialty() . " project specialty"
-                    );
-                    return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
-                }
-            } else {
-                if (!$filterType) {
-                    if (
-                        false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER') &&
-                        false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
-                    ) {
-                        exit('project does not exists and not requester and filterType is not set');
-                        return $this->redirect($this->generateUrl($this->container->getParameter('translationalresearch.sitename') . '-nopermission'));
-                    }
-                }
-            }
-        }
-        //exit('reqs');
-
 
         //force to set project specialty filter for non-admin users
         if( $transresUtil->isAdminOrPrimaryReviewer() === false ) {
-
-            //1) check if $projectSpecialties is not set => set $projectSpecialties as $projectSpecialtyAllowedArr
-//            if (count($projectSpecialties) == 0) {
-//                $projectSpecialtyReturn = $transresUtil->getReturnIndexSpecialtyArray($projectSpecialtyAllowedArr,$project,$filterType);
-//
-//                print_r($projectSpecialtyReturn);
-//                //exit('111');
-//
-//                return $this->redirectToRoute(
-//                    $routeName,
-//                    $projectSpecialtyReturn
-//                );
-//            } else {
-//                //2) construct $tempAllowedProjectSpecialties containing only allowed specialty from the $projectSpecialties
-//                $tempAllowedProjectSpecialties = new ArrayCollection();
-//                foreach ($projectSpecialties as $projectSpecialty) {
-//                    if (!$projectSpecialtyDeniedArr->contains($projectSpecialty)) {
-//                        $tempAllowedProjectSpecialties->add($projectSpecialty);
-//                    }
-//                }
-//
-//                //to prevent redirection loop, check if $projectSpecialties is different than $tempAllowedProjectSpecialties
-//                $diff = $transresUtil->getObjectDiff($projectSpecialties->toArray(), $tempAllowedProjectSpecialties->toArray());
-//
-//                if (count($diff) > 0) {
-//                    $projectSpecialtyReturn = $transresUtil->getReturnIndexSpecialtyArray($tempAllowedProjectSpecialties,$project,$filterType);
-//                    return $this->redirectToRoute(
-//                        $routeName,
-//                        $projectSpecialtyReturn
-//                    );
-//                }
-//            }
 
             //TODO: fix no specialty cases
             if( 0 && count($projectSpecialties) == 0 ) {
@@ -1601,6 +1548,10 @@ class RequestController extends Controller
         $limit = 10;
         $query = $em->createQuery($dql);
 
+        //doctrine cache queries
+        $query->useQueryCache(true);
+        $query->useResultCache(true);
+
         //if($withMatching) {
             //$query2 = $em->createQuery($dql);
         //}
@@ -1634,6 +1585,11 @@ class RequestController extends Controller
             $title = $filterTitle;
         }
 
+        $time_post = microtime(true); //microseconds
+        $exec_time = round(($time_post - $time_pre),1);
+        echo "query exec_time=$exec_time<br>";
+        //$time_pre = microtime(true);
+
         //Title
         $requestTotalFeeHtml = null;
         if( $project ) {
@@ -1653,6 +1609,10 @@ class RequestController extends Controller
                 $requestTotalFeeHtml = "; " . $requestTotalFeeHtml;
             }
         }
+
+        $time_post = microtime(true); //microseconds
+        $exec_time = round(($time_post - $time_pre),1);
+        echo "Title exec_time=$exec_time<br>";
 
         //if($withMatching) {
             //$allFilteredTransresRequests = $query2->getResult();
@@ -1676,6 +1636,10 @@ class RequestController extends Controller
 //        } else {
 //            $title = $title . " (Total " . count($allTransresRequests) . ")";
 //        }
+
+        $time_post = microtime(true); //microseconds
+        $exec_time = round(($time_post - $time_pre),1);
+        echo "Counter exec_time=$exec_time<br>";
 
         return array(
             //'filterDisable' => true, //testing
@@ -1894,8 +1858,11 @@ class RequestController extends Controller
         //get Table $jsonData
         $jsonData = $this->getTableData($transresRequest);
 
+        $project = $transresRequest->getProject();
+
         return array(
             'transresRequest' => $transresRequest,
+            'project' => $project,
             'form' => $form->createView(),
             'cycle' => $cycle,
             'statMachineType' => 'progress',

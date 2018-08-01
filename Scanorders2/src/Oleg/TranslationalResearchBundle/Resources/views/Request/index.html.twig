@@ -1,6 +1,10 @@
+{% stopwatch "### header ###" %}
+
 {% extends "OlegTranslationalResearchBundle::Default/base.html.twig" %}
 
 {% import "OlegTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}
+
+{% endstopwatch %}
 
 {% block title %}
     {% if project %}
@@ -25,6 +29,7 @@
         </p>
     {% endif %}
 
+    {% stopwatch "### New Work Request ###" %}
     {% if project %}
         {% set isRequestCanBeCreated = transres_request_util.isRequestCanBeCreated(project) %}
         {% if isRequestCanBeCreated == 1 %}
@@ -36,13 +41,17 @@
             {#<br>#}
         {% endif %}
     {% endif %}
+    {% endstopwatch %}
 
+    {% stopwatch "### transresRequestsFilter ###" %}
     {% if filterDisable is not defined %}
         {{ transresRequestMacros.transresRequestsFilter(filterform,advancedFilter) }}
     {% endif %}
+    {% endstopwatch %}
 
     <br>
 
+    {% stopwatch "### table ###" %}
     {#<table class="table table-hover table-condensed text-left table-bordered">#}
     <table class="records_list table table-condensed text-left my-table-class">
         <thead>
@@ -72,10 +81,12 @@
         {#{% set count = 0 %}#}
         {% for transresRequest in transresRequests %}
 
+            {% stopwatch "### getLatestInvoice ###" %}
             {% set latestInvoice = transres_request_util.getLatestInvoice(transresRequest) %}
             {% if latestInvoice and latestInvoice.oid %}
                 {{ transresRequestMacros.unpaidModal(latestInvoice) }}
             {% endif %}
+            {% endstopwatch %}
 
             {#{% if count is odd %}#}
                 {#{% set trclassname = "table-row-separator-gray" %}#}
@@ -96,19 +107,23 @@
                     <a href="{{ path(translationalresearch_sitename~'_request_show', { 'id': transresRequest.id }) }}" target="_blank">{{ transresRequest.oid }}</a>
                 </td>
 
+                {% stopwatch "### transresRequest.project.getOid() ###" %}
                 {% if not project %}
                     <td class="rowlink-skip">
                         <a href="{{ path(translationalresearch_sitename~'_project_show', { 'id': transresRequest.project.id }) }}"
                            target="_blank">{{ transresRequest.project.getOid() }}</a>
                     </td>
                 {% endif %}
+                {% endstopwatch %}
 
+                {% stopwatch "### submitter.getUsernameOptimal() ###" %}
                 <td class="rowlink-skip">
                     {#{{ principalInvestigator }}<br>#}
                     {% set personurl = path(translationalresearch_sitename~'_showuser',{'id':transresRequest.submitter.id}) %}
                     {% set personlink = '<a href="'~personurl~'" target="_blank">'~transresRequest.submitter.getUsernameOptimal()~'</a>'  %}
                     {{ personlink|raw }}<br>
                 </td>
+                {% endstopwatch %}
 
                 <td>
                     {% if transresRequest.createDate %}
@@ -120,14 +135,19 @@
                     {{ transresRequest.fundedAccountNumber }}
                 </td>
 
+                {% stopwatch "### getProgressStateLabelByName ###" %}
                 <td>
                     {{ transres_request_util.getProgressStateLabelByName(transresRequest.progressState) }}
                 </td>
+                {% endstopwatch %}
 
+                {% stopwatch "### getBillingStateLabelByName ###" %}
                 <td>
                     {{ transres_request_util.getBillingStateLabelByName(transresRequest.billingState) }}
                 </td>
+                {% endstopwatch %}
 
+                {% stopwatch "### product.category.getShortInfo() ###" %}
                 <td>
                     {% for product in transresRequest.products %}
                         {% if product.category %}
@@ -135,14 +155,18 @@
                         {% endif %}
                     {% endfor %}
                 </td>
+                {% endstopwatch %}
 
+                {% stopwatch "### getTransResRequestFeeHtml ###" %}
                 <td>
                     {% set fee = transres_request_util.getTransResRequestFeeHtml(transresRequest) %}
                     {% if fee %}
                         ${{ fee|raw }}
                     {% endif %}
                 </td>
+                {% endstopwatch %}
 
+                {% stopwatch "### invoicesCount ###" %}
                 <td class="rowlink-skip">
                     {% set invoicesCount = transresRequest.invoices|length %}
                     {% if invoicesCount > 0 %}
@@ -159,6 +183,7 @@
                         {% endif %}
                     {% endif %}
                 </td>
+                {% endstopwatch %}
 
                 <td>
                 {% if latestInvoice and latestInvoice.oid %}
@@ -166,6 +191,7 @@
                 {% endif %}
                 </td>
 
+                {% stopwatch "### getInvoicesInfosByRequest ###" %}
                 {#Invoices #}
                 {% set invoicesInfos = transres_request_util.getInvoicesInfosByRequest(transresRequest) %}
                 <td>
@@ -183,7 +209,9 @@
                         ${{ invoicesInfos.due }}
                     {% endif %}
                 </td>
+                {% endstopwatch %}
 
+                {% stopwatch "### Action ###" %}
                 <td class="rowlink-skip">
                     <div class="btn-group">
                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -374,6 +402,7 @@
 
                     </div>
                 </td>
+                {% endstopwatch %}
             </tr>
             {#<tr class="table-no-border">#}
                 {#<td style="display: none">#}
@@ -384,11 +413,14 @@
         {% endfor %}
         </tbody>
     </table>
+    {% endstopwatch %}
 
+    {% stopwatch "### knp_pagination_render ###" %}
     {# display navigation #}
     <div class="navigation">
         {{ knp_pagination_render(transresRequests) }}
     </div>
+    {% endstopwatch %}
 
     {#{{ render(controller('OlegTranslationalResearchBundle:Project:threadComments', { 'id': "3-9-committee_review" })) }}#}
     {#{% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': "3-9-committee_review"} %}#}

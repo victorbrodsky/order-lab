@@ -861,7 +861,7 @@ class AdminController extends Controller
         $count_generateTransResRequestCategoryType = $this->generateTransResRequestCategoryType();
         $count_generateIrbApprovalTypeList = $this->generateIrbApprovalTypeList();
 
-        $count_generatePlatformListManagerList = $this->generatePlatformListManagerList();
+        $count_generatePlatformListManagerList = $this->generatePlatformListManagerList(null,null);
 
         $count_populateClassUrl = $this->populateClassUrl();
         //$count_createAdminAntibodyList = $this->createAdminAntibodyList();
@@ -6415,10 +6415,10 @@ class AdminController extends Controller
 
     /**
      * populate Platform List Manager Root List: url="order/directory/admin/list-manager-populate/"
-     * @Route("/list-manager-populate/", name="user_populate_platform_list_manager")
+     * @Route("/list/generate-empty-lists/{withcustom}", name="user_populate_platform_list_manager")
      * @Method("GET")
      */
-    public function generatePlatformListManagerList( Request $request=null ) {
+    public function generatePlatformListManagerList( Request $request=null, $withcustom=null ) {
 
         $username = $this->get('security.token_storage')->getToken()->getUser();
 
@@ -6595,11 +6595,113 @@ class AdminController extends Controller
             "suggestedmessagecategorys" => array('','-list'),
             "calllogentrytags" => array('','-list'),
             
-            "antibodies" => array('AntibodyList','antibodies-list','Antibody List'),
-            "custom1" => array('Custom1List','custom1-list','Custom1 List'),
-            "custom2" => array('Custom2List','custom2-list','Custom2 List'),
-            "custom3" => array('Custom3List','custom3-list','Custom3 List'),
+            "antibodies" => array('AntibodyList','antibodies-list','Antibody List')
         );
+
+        if( $withcustom ) {
+            $types = array(
+                "custom000" => array('Custom000List','custom000-list','Custom000 List'),
+                "custom001" => array('Custom001List','custom001-list','Custom001 List'),
+                "custom002" => array('Custom002List','custom002-list','Custom002 List'),
+                "custom003" => array('Custom003List','custom003-list','Custom003 List'),
+                "custom004" => array('Custom004List','custom004-list','Custom004 List'),
+                "custom005" => array('Custom005List','custom005-list','Custom005 List'),
+                "custom006" => array('Custom006List','custom006-list','Custom006 List'),
+                "custom007" => array('Custom007List','custom007-list','Custom007 List'),
+                "custom008" => array('Custom008List','custom008-list','Custom008 List'),
+                "custom009" => array('Custom009List','custom009-list','Custom009 List'),
+                "custom010" => array('Custom010List','custom010-list','Custom010 List'),
+                "custom011" => array('Custom011List','custom011-list','Custom011 List'),
+                "custom012" => array('Custom012List','custom012-list','Custom012 List'),
+                "custom013" => array('Custom013List','custom013-list','Custom013 List'),
+                "custom014" => array('Custom014List','custom014-list','Custom014 List'),
+                "custom015" => array('Custom015List','custom015-list','Custom015 List'),
+                "custom016" => array('Custom016List','custom016-list','Custom016 List'),
+                "custom017" => array('Custom017List','custom017-list','Custom017 List'),
+                "custom018" => array('Custom018List','custom018-list','Custom018 List'),
+                "custom019" => array('Custom019List','custom019-list','Custom019 List'),
+                "custom020" => array('Custom020List','custom020-list','Custom020 List'),
+                "custom021" => array('Custom021List','custom021-list','Custom021 List'),
+                "custom022" => array('Custom022List','custom022-list','Custom022 List'),
+                "custom023" => array('Custom023List','custom023-list','Custom023 List'),
+                "custom024" => array('Custom024List','custom024-list','Custom024 List'),
+                "custom025" => array('Custom025List','custom025-list','Custom025 List'),
+                "custom026" => array('Custom026List','custom026-list','Custom026 List'),
+                "custom027" => array('Custom027List','custom027-list','Custom027 List'),
+                "custom028" => array('Custom028List','custom028-list','Custom028 List'),
+                "custom029" => array('Custom029List','custom029-list','Custom029 List'),
+                "custom030" => array('Custom030List','custom030-list','Custom030 List'),
+                "custom031" => array('Custom031List','custom031-list','Custom031 List'),
+                "custom032" => array('Custom032List','custom032-list','Custom032 List'),
+                "custom033" => array('Custom033List','custom033-list','Custom033 List'),
+                "custom034" => array('Custom034List','custom034-list','Custom034 List'),
+                "custom035" => array('Custom035List','custom035-list','Custom035 List'),
+                "custom036" => array('Custom036List','custom036-list','Custom036 List'),
+                "custom037" => array('Custom037List','custom037-list','Custom037 List'),
+                "custom038" => array('Custom038List','custom038-list','Custom038 List'),
+                "custom039" => array('Custom039List','custom039-list','Custom039 List'),
+                "custom040" => array('Custom040List','custom040-list','Custom040 List'),
+                "custom041" => array('Custom041List','custom041-list','Custom041 List'),
+                "custom042" => array('Custom042List','custom042-list','Custom042 List'),
+                "custom043" => array('Custom043List','custom043-list','Custom043 List'),
+                "custom044" => array('Custom044List','custom044-list','Custom044 List'),
+                "custom045" => array('Custom045List','custom045-list','Custom045 List'),
+                "custom046" => array('Custom046List','custom046-list','Custom046 List'),
+                "custom047" => array('Custom047List','custom047-list','Custom047 List'),
+                "custom048" => array('Custom048List','custom048-list','Custom048 List'),
+                "custom049" => array('Custom049List','custom049-list','Custom049 List'),
+                "custom050" => array('Custom050List','custom050-list','Custom050 List'),
+                "custom051" => array('Custom051List','custom051-list','Custom051 List'),
+                "custom052" => array('Custom052List','custom052-list','Custom052 List'),
+                "custom053" => array('Custom053List','custom053-list','Custom053 List'),
+                "custom054" => array('Custom054List','custom054-list','Custom054 List'),
+                "custom055" => array('Custom055List','custom055-list','Custom055 List'),
+                "custom056" => array('Custom056List','custom056-list','Custom056 List'),
+                "custom057" => array('Custom057List','custom057-list','Custom057 List'),
+                "custom058" => array('Custom058List','custom058-list','Custom058 List'),
+                "custom059" => array('Custom059List','custom059-list','Custom059 List'),
+                "custom060" => array('Custom060List','custom060-list','Custom060 List'),
+                "custom061" => array('Custom061List','custom061-list','Custom061 List'),
+                "custom062" => array('Custom062List','custom062-list','Custom062 List'),
+                "custom063" => array('Custom063List','custom063-list','Custom063 List'),
+                "custom064" => array('Custom064List','custom064-list','Custom064 List'),
+                "custom065" => array('Custom065List','custom065-list','Custom065 List'),
+                "custom066" => array('Custom066List','custom066-list','Custom066 List'),
+                "custom067" => array('Custom067List','custom067-list','Custom067 List'),
+                "custom068" => array('Custom068List','custom068-list','Custom068 List'),
+                "custom069" => array('Custom069List','custom069-list','Custom069 List'),
+                "custom070" => array('Custom070List','custom070-list','Custom070 List'),
+                "custom071" => array('Custom071List','custom071-list','Custom071 List'),
+                "custom072" => array('Custom072List','custom072-list','Custom072 List'),
+                "custom073" => array('Custom073List','custom073-list','Custom073 List'),
+                "custom074" => array('Custom074List','custom074-list','Custom074 List'),
+                "custom075" => array('Custom075List','custom075-list','Custom075 List'),
+                "custom076" => array('Custom076List','custom076-list','Custom076 List'),
+                "custom077" => array('Custom077List','custom077-list','Custom077 List'),
+                "custom078" => array('Custom078List','custom078-list','Custom078 List'),
+                "custom079" => array('Custom079List','custom079-list','Custom079 List'),
+                "custom080" => array('Custom080List','custom080-list','Custom080 List'),
+                "custom081" => array('Custom081List','custom081-list','Custom081 List'),
+                "custom082" => array('Custom082List','custom082-list','Custom082 List'),
+                "custom083" => array('Custom083List','custom083-list','Custom083 List'),
+                "custom084" => array('Custom084List','custom084-list','Custom084 List'),
+                "custom085" => array('Custom085List','custom085-list','Custom085 List'),
+                "custom086" => array('Custom086List','custom086-list','Custom086 List'),
+                "custom087" => array('Custom087List','custom087-list','Custom087 List'),
+                "custom088" => array('Custom088List','custom088-list','Custom088 List'),
+                "custom089" => array('Custom089List','custom089-list','Custom089 List'),
+                "custom090" => array('Custom090List','custom090-list','Custom090 List'),
+                "custom091" => array('Custom091List','custom091-list','Custom091 List'),
+                "custom092" => array('Custom092List','custom092-list','Custom092 List'),
+                "custom093" => array('Custom093List','custom093-list','Custom093 List'),
+                "custom094" => array('Custom094List','custom094-list','Custom094 List'),
+                "custom095" => array('Custom095List','custom095-list','Custom095 List'),
+                "custom096" => array('Custom096List','custom096-list','Custom096 List'),
+                "custom097" => array('Custom097List','custom097-list','Custom097 List'),
+                "custom098" => array('Custom098List','custom098-list','Custom098 List'),
+                "custom099" => array('Custom099List','custom099-list','Custom099 List'),
+            );
+        }
 
         $count = 10;
         foreach( $types as $listId => $listArr ) {
@@ -6715,7 +6817,7 @@ class AdminController extends Controller
         //exit($res);
 
         //if( $request->get('_route') == "user_populate_platform_list_manager" ) {
-        if( $request ) {
+        if( $request || $withcustom ) {
             return $this->redirect($this->generateUrl('employees_siteparameters'));
         }
 

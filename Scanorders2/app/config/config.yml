@@ -34,8 +34,10 @@ framework:
 #        assets_version: SomeVersionScheme
     default_locale:  "%locale%"
 #    trusted_proxies: ~
-    session:         ~
+#    session:         ~
 #        save_path: ~
+    session:
+        cookie_lifetime: 0 #Setting a cookie_lifetime to 0 will cause the cookie to live only as long as the browser remains open
     fragments:       ~
 #    fragments: { path: /_fragment }
     http_method_override: true
@@ -141,6 +143,9 @@ doctrine:
         default_entity_manager: default
         entity_managers:
             default:
+                metadata_cache_driver: zenddata
+                result_cache_driver: zenddata
+                query_cache_driver: zenddata
                 connection: default
                 mappings:
                     OlegOrderformBundle: ~
@@ -169,7 +174,14 @@ doctrine:
 #                    OlegOrderformBundle: ~
 #                    OlegUserdirectoryBundle: ~
 
-
+#doctrine_cache:
+#    providers:
+#        my_apc_metadata_cache:
+#            type: apc
+#            namespace: metadata_cache_ns
+#        my_apc_query_cache:
+#            namespace: query_cache_ns
+#            apc: ~
 
 monolog:
     handlers:

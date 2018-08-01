@@ -154,9 +154,106 @@ class ListController extends Controller
      * @Route("/list/translational-research-request-category-types/", name="transresrequestcategorytypes-list")
      * @Route("/list/translational-irb-approval-types/", name="transresirbapprovaltypes-list")
      * @Route("/list/antibodies/", name="antibodies-list")
-     * @Route("/list/custom1/", name="custom1-list")
-     * @Route("/list/custom2/", name="custom2-list")
-     * @Route("/list/custom3/", name="custom3-list")
+     * @Route("/list/custom000/", name="custom000-list")
+     * @Route("/list/custom001/", name="custom001-list")
+     * @Route("/list/custom002/", name="custom002-list")
+     * @Route("/list/custom003/", name="custom003-list")
+     * @Route("/list/custom004/", name="custom004-list")
+     * @Route("/list/custom005/", name="custom005-list")
+     * @Route("/list/custom006/", name="custom006-list")
+     * @Route("/list/custom007/", name="custom007-list")
+     * @Route("/list/custom008/", name="custom008-list")
+     * @Route("/list/custom009/", name="custom009-list")
+     * @Route("/list/custom010/", name="custom010-list")
+     * @Route("/list/custom011/", name="custom011-list")
+     * @Route("/list/custom012/", name="custom012-list")
+     * @Route("/list/custom013/", name="custom013-list")
+     * @Route("/list/custom014/", name="custom014-list")
+     * @Route("/list/custom015/", name="custom015-list")
+     * @Route("/list/custom016/", name="custom016-list")
+     * @Route("/list/custom017/", name="custom017-list")
+     * @Route("/list/custom018/", name="custom018-list")
+     * @Route("/list/custom019/", name="custom019-list")
+     * @Route("/list/custom020/", name="custom020-list")
+     * @Route("/list/custom021/", name="custom021-list")
+     * @Route("/list/custom022/", name="custom022-list")
+     * @Route("/list/custom023/", name="custom023-list")
+     * @Route("/list/custom024/", name="custom024-list")
+     * @Route("/list/custom025/", name="custom025-list")
+     * @Route("/list/custom026/", name="custom026-list")
+     * @Route("/list/custom027/", name="custom027-list")
+     * @Route("/list/custom028/", name="custom028-list")
+     * @Route("/list/custom029/", name="custom029-list")
+     * @Route("/list/custom030/", name="custom030-list")
+     * @Route("/list/custom031/", name="custom031-list")
+     * @Route("/list/custom032/", name="custom032-list")
+     * @Route("/list/custom033/", name="custom033-list")
+     * @Route("/list/custom034/", name="custom034-list")
+     * @Route("/list/custom035/", name="custom035-list")
+     * @Route("/list/custom036/", name="custom036-list")
+     * @Route("/list/custom037/", name="custom037-list")
+     * @Route("/list/custom038/", name="custom038-list")
+     * @Route("/list/custom039/", name="custom039-list")
+     * @Route("/list/custom040/", name="custom040-list")
+     * @Route("/list/custom041/", name="custom041-list")
+     * @Route("/list/custom042/", name="custom042-list")
+     * @Route("/list/custom043/", name="custom043-list")
+     * @Route("/list/custom044/", name="custom044-list")
+     * @Route("/list/custom045/", name="custom045-list")
+     * @Route("/list/custom046/", name="custom046-list")
+     * @Route("/list/custom047/", name="custom047-list")
+     * @Route("/list/custom048/", name="custom048-list")
+     * @Route("/list/custom049/", name="custom049-list")
+     * @Route("/list/custom050/", name="custom050-list")
+     * @Route("/list/custom051/", name="custom051-list")
+     * @Route("/list/custom052/", name="custom052-list")
+     * @Route("/list/custom053/", name="custom053-list")
+     * @Route("/list/custom054/", name="custom054-list")
+     * @Route("/list/custom055/", name="custom055-list")
+     * @Route("/list/custom056/", name="custom056-list")
+     * @Route("/list/custom057/", name="custom057-list")
+     * @Route("/list/custom058/", name="custom058-list")
+     * @Route("/list/custom059/", name="custom059-list")
+     * @Route("/list/custom060/", name="custom060-list")
+     * @Route("/list/custom061/", name="custom061-list")
+     * @Route("/list/custom062/", name="custom062-list")
+     * @Route("/list/custom063/", name="custom063-list")
+     * @Route("/list/custom064/", name="custom064-list")
+     * @Route("/list/custom065/", name="custom065-list")
+     * @Route("/list/custom066/", name="custom066-list")
+     * @Route("/list/custom067/", name="custom067-list")
+     * @Route("/list/custom068/", name="custom068-list")
+     * @Route("/list/custom069/", name="custom069-list")
+     * @Route("/list/custom070/", name="custom070-list")
+     * @Route("/list/custom071/", name="custom071-list")
+     * @Route("/list/custom072/", name="custom072-list")
+     * @Route("/list/custom073/", name="custom073-list")
+     * @Route("/list/custom074/", name="custom074-list")
+     * @Route("/list/custom075/", name="custom075-list")
+     * @Route("/list/custom076/", name="custom076-list")
+     * @Route("/list/custom077/", name="custom077-list")
+     * @Route("/list/custom078/", name="custom078-list")
+     * @Route("/list/custom079/", name="custom079-list")
+     * @Route("/list/custom080/", name="custom080-list")
+     * @Route("/list/custom081/", name="custom081-list")
+     * @Route("/list/custom082/", name="custom082-list")
+     * @Route("/list/custom083/", name="custom083-list")
+     * @Route("/list/custom084/", name="custom084-list")
+     * @Route("/list/custom085/", name="custom085-list")
+     * @Route("/list/custom086/", name="custom086-list")
+     * @Route("/list/custom087/", name="custom087-list")
+     * @Route("/list/custom088/", name="custom088-list")
+     * @Route("/list/custom089/", name="custom089-list")
+     * @Route("/list/custom090/", name="custom090-list")
+     * @Route("/list/custom091/", name="custom091-list")
+     * @Route("/list/custom092/", name="custom092-list")
+     * @Route("/list/custom093/", name="custom093-list")
+     * @Route("/list/custom094/", name="custom094-list")
+     * @Route("/list/custom095/", name="custom095-list")
+     * @Route("/list/custom096/", name="custom096-list")
+     * @Route("/list/custom097/", name="custom097-list")
+     * @Route("/list/custom098/", name="custom098-list")
+     * @Route("/list/custom099/", name="custom099-list")
      *
      *
      * @Method("GET")
@@ -516,9 +613,106 @@ class ListController extends Controller
      * @Route("/list/translational-research-request-category-types/", name="transresrequestcategorytypes_create")
      * @Route("/list/translational-irb-approval-types/", name="transresirbapprovaltypes_create")
      * @Route("/list/antibodies/", name="antibodies_create")
-     * @Route("/list/custom1/", name="custom1_create")
-     * @Route("/list/custom2/", name="custom2_create")
-     * @Route("/list/custom3/", name="custom3_create")
+     * @Route("/list/custom000/", name="custom000_create")
+     * @Route("/list/custom001/", name="custom001_create")
+     * @Route("/list/custom002/", name="custom002_create")
+     * @Route("/list/custom003/", name="custom003_create")
+     * @Route("/list/custom004/", name="custom004_create")
+     * @Route("/list/custom005/", name="custom005_create")
+     * @Route("/list/custom006/", name="custom006_create")
+     * @Route("/list/custom007/", name="custom007_create")
+     * @Route("/list/custom008/", name="custom008_create")
+     * @Route("/list/custom009/", name="custom009_create")
+     * @Route("/list/custom010/", name="custom010_create")
+     * @Route("/list/custom011/", name="custom011_create")
+     * @Route("/list/custom012/", name="custom012_create")
+     * @Route("/list/custom013/", name="custom013_create")
+     * @Route("/list/custom014/", name="custom014_create")
+     * @Route("/list/custom015/", name="custom015_create")
+     * @Route("/list/custom016/", name="custom016_create")
+     * @Route("/list/custom017/", name="custom017_create")
+     * @Route("/list/custom018/", name="custom018_create")
+     * @Route("/list/custom019/", name="custom019_create")
+     * @Route("/list/custom020/", name="custom020_create")
+     * @Route("/list/custom021/", name="custom021_create")
+     * @Route("/list/custom022/", name="custom022_create")
+     * @Route("/list/custom023/", name="custom023_create")
+     * @Route("/list/custom024/", name="custom024_create")
+     * @Route("/list/custom025/", name="custom025_create")
+     * @Route("/list/custom026/", name="custom026_create")
+     * @Route("/list/custom027/", name="custom027_create")
+     * @Route("/list/custom028/", name="custom028_create")
+     * @Route("/list/custom029/", name="custom029_create")
+     * @Route("/list/custom030/", name="custom030_create")
+     * @Route("/list/custom031/", name="custom031_create")
+     * @Route("/list/custom032/", name="custom032_create")
+     * @Route("/list/custom033/", name="custom033_create")
+     * @Route("/list/custom034/", name="custom034_create")
+     * @Route("/list/custom035/", name="custom035_create")
+     * @Route("/list/custom036/", name="custom036_create")
+     * @Route("/list/custom037/", name="custom037_create")
+     * @Route("/list/custom038/", name="custom038_create")
+     * @Route("/list/custom039/", name="custom039_create")
+     * @Route("/list/custom040/", name="custom040_create")
+     * @Route("/list/custom041/", name="custom041_create")
+     * @Route("/list/custom042/", name="custom042_create")
+     * @Route("/list/custom043/", name="custom043_create")
+     * @Route("/list/custom044/", name="custom044_create")
+     * @Route("/list/custom045/", name="custom045_create")
+     * @Route("/list/custom046/", name="custom046_create")
+     * @Route("/list/custom047/", name="custom047_create")
+     * @Route("/list/custom048/", name="custom048_create")
+     * @Route("/list/custom049/", name="custom049_create")
+     * @Route("/list/custom050/", name="custom050_create")
+     * @Route("/list/custom051/", name="custom051_create")
+     * @Route("/list/custom052/", name="custom052_create")
+     * @Route("/list/custom053/", name="custom053_create")
+     * @Route("/list/custom054/", name="custom054_create")
+     * @Route("/list/custom055/", name="custom055_create")
+     * @Route("/list/custom056/", name="custom056_create")
+     * @Route("/list/custom057/", name="custom057_create")
+     * @Route("/list/custom058/", name="custom058_create")
+     * @Route("/list/custom059/", name="custom059_create")
+     * @Route("/list/custom060/", name="custom060_create")
+     * @Route("/list/custom061/", name="custom061_create")
+     * @Route("/list/custom062/", name="custom062_create")
+     * @Route("/list/custom063/", name="custom063_create")
+     * @Route("/list/custom064/", name="custom064_create")
+     * @Route("/list/custom065/", name="custom065_create")
+     * @Route("/list/custom066/", name="custom066_create")
+     * @Route("/list/custom067/", name="custom067_create")
+     * @Route("/list/custom068/", name="custom068_create")
+     * @Route("/list/custom069/", name="custom069_create")
+     * @Route("/list/custom070/", name="custom070_create")
+     * @Route("/list/custom071/", name="custom071_create")
+     * @Route("/list/custom072/", name="custom072_create")
+     * @Route("/list/custom073/", name="custom073_create")
+     * @Route("/list/custom074/", name="custom074_create")
+     * @Route("/list/custom075/", name="custom075_create")
+     * @Route("/list/custom076/", name="custom076_create")
+     * @Route("/list/custom077/", name="custom077_create")
+     * @Route("/list/custom078/", name="custom078_create")
+     * @Route("/list/custom079/", name="custom079_create")
+     * @Route("/list/custom080/", name="custom080_create")
+     * @Route("/list/custom081/", name="custom081_create")
+     * @Route("/list/custom082/", name="custom082_create")
+     * @Route("/list/custom083/", name="custom083_create")
+     * @Route("/list/custom084/", name="custom084_create")
+     * @Route("/list/custom085/", name="custom085_create")
+     * @Route("/list/custom086/", name="custom086_create")
+     * @Route("/list/custom087/", name="custom087_create")
+     * @Route("/list/custom088/", name="custom088_create")
+     * @Route("/list/custom089/", name="custom089_create")
+     * @Route("/list/custom090/", name="custom090_create")
+     * @Route("/list/custom091/", name="custom091_create")
+     * @Route("/list/custom092/", name="custom092_create")
+     * @Route("/list/custom093/", name="custom093_create")
+     * @Route("/list/custom094/", name="custom094_create")
+     * @Route("/list/custom095/", name="custom095_create")
+     * @Route("/list/custom096/", name="custom096_create")
+     * @Route("/list/custom097/", name="custom097_create")
+     * @Route("/list/custom098/", name="custom098_create")
+     * @Route("/list/custom099/", name="custom099_create")
      *
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -720,9 +914,106 @@ class ListController extends Controller
      * @Route("/list/translational-research-request-category-types/new", name="transresrequestcategorytypes_new")
      * @Route("/list/translational-irb-approval-types/new", name="transresirbapprovaltypes_new")
      * @Route("/list/antibodies/new", name="antibodies_new")
-     * @Route("/list/custom1/new", name="custom1_new")
-     * @Route("/list/custom2/new", name="custom2_new")
-     * @Route("/list/custom3/new", name="custom3_new")
+     * @Route("/list/custom000/new", name="custom000_new")
+     * @Route("/list/custom001/new", name="custom001_new")
+     * @Route("/list/custom002/new", name="custom002_new")
+     * @Route("/list/custom003/new", name="custom003_new")
+     * @Route("/list/custom004/new", name="custom004_new")
+     * @Route("/list/custom005/new", name="custom005_new")
+     * @Route("/list/custom006/new", name="custom006_new")
+     * @Route("/list/custom007/new", name="custom007_new")
+     * @Route("/list/custom008/new", name="custom008_new")
+     * @Route("/list/custom009/new", name="custom009_new")
+     * @Route("/list/custom010/new", name="custom010_new")
+     * @Route("/list/custom011/new", name="custom011_new")
+     * @Route("/list/custom012/new", name="custom012_new")
+     * @Route("/list/custom013/new", name="custom013_new")
+     * @Route("/list/custom014/new", name="custom014_new")
+     * @Route("/list/custom015/new", name="custom015_new")
+     * @Route("/list/custom016/new", name="custom016_new")
+     * @Route("/list/custom017/new", name="custom017_new")
+     * @Route("/list/custom018/new", name="custom018_new")
+     * @Route("/list/custom019/new", name="custom019_new")
+     * @Route("/list/custom020/new", name="custom020_new")
+     * @Route("/list/custom021/new", name="custom021_new")
+     * @Route("/list/custom022/new", name="custom022_new")
+     * @Route("/list/custom023/new", name="custom023_new")
+     * @Route("/list/custom024/new", name="custom024_new")
+     * @Route("/list/custom025/new", name="custom025_new")
+     * @Route("/list/custom026/new", name="custom026_new")
+     * @Route("/list/custom027/new", name="custom027_new")
+     * @Route("/list/custom028/new", name="custom028_new")
+     * @Route("/list/custom029/new", name="custom029_new")
+     * @Route("/list/custom030/new", name="custom030_new")
+     * @Route("/list/custom031/new", name="custom031_new")
+     * @Route("/list/custom032/new", name="custom032_new")
+     * @Route("/list/custom033/new", name="custom033_new")
+     * @Route("/list/custom034/new", name="custom034_new")
+     * @Route("/list/custom035/new", name="custom035_new")
+     * @Route("/list/custom036/new", name="custom036_new")
+     * @Route("/list/custom037/new", name="custom037_new")
+     * @Route("/list/custom038/new", name="custom038_new")
+     * @Route("/list/custom039/new", name="custom039_new")
+     * @Route("/list/custom040/new", name="custom040_new")
+     * @Route("/list/custom041/new", name="custom041_new")
+     * @Route("/list/custom042/new", name="custom042_new")
+     * @Route("/list/custom043/new", name="custom043_new")
+     * @Route("/list/custom044/new", name="custom044_new")
+     * @Route("/list/custom045/new", name="custom045_new")
+     * @Route("/list/custom046/new", name="custom046_new")
+     * @Route("/list/custom047/new", name="custom047_new")
+     * @Route("/list/custom048/new", name="custom048_new")
+     * @Route("/list/custom049/new", name="custom049_new")
+     * @Route("/list/custom050/new", name="custom050_new")
+     * @Route("/list/custom051/new", name="custom051_new")
+     * @Route("/list/custom052/new", name="custom052_new")
+     * @Route("/list/custom053/new", name="custom053_new")
+     * @Route("/list/custom054/new", name="custom054_new")
+     * @Route("/list/custom055/new", name="custom055_new")
+     * @Route("/list/custom056/new", name="custom056_new")
+     * @Route("/list/custom057/new", name="custom057_new")
+     * @Route("/list/custom058/new", name="custom058_new")
+     * @Route("/list/custom059/new", name="custom059_new")
+     * @Route("/list/custom060/new", name="custom060_new")
+     * @Route("/list/custom061/new", name="custom061_new")
+     * @Route("/list/custom062/new", name="custom062_new")
+     * @Route("/list/custom063/new", name="custom063_new")
+     * @Route("/list/custom064/new", name="custom064_new")
+     * @Route("/list/custom065/new", name="custom065_new")
+     * @Route("/list/custom066/new", name="custom066_new")
+     * @Route("/list/custom067/new", name="custom067_new")
+     * @Route("/list/custom068/new", name="custom068_new")
+     * @Route("/list/custom069/new", name="custom069_new")
+     * @Route("/list/custom070/new", name="custom070_new")
+     * @Route("/list/custom071/new", name="custom071_new")
+     * @Route("/list/custom072/new", name="custom072_new")
+     * @Route("/list/custom073/new", name="custom073_new")
+     * @Route("/list/custom074/new", name="custom074_new")
+     * @Route("/list/custom075/new", name="custom075_new")
+     * @Route("/list/custom076/new", name="custom076_new")
+     * @Route("/list/custom077/new", name="custom077_new")
+     * @Route("/list/custom078/new", name="custom078_new")
+     * @Route("/list/custom079/new", name="custom079_new")
+     * @Route("/list/custom080/new", name="custom080_new")
+     * @Route("/list/custom081/new", name="custom081_new")
+     * @Route("/list/custom082/new", name="custom082_new")
+     * @Route("/list/custom083/new", name="custom083_new")
+     * @Route("/list/custom084/new", name="custom084_new")
+     * @Route("/list/custom085/new", name="custom085_new")
+     * @Route("/list/custom086/new", name="custom086_new")
+     * @Route("/list/custom087/new", name="custom087_new")
+     * @Route("/list/custom088/new", name="custom088_new")
+     * @Route("/list/custom089/new", name="custom089_new")
+     * @Route("/list/custom090/new", name="custom090_new")
+     * @Route("/list/custom091/new", name="custom091_new")
+     * @Route("/list/custom092/new", name="custom092_new")
+     * @Route("/list/custom093/new", name="custom093_new")
+     * @Route("/list/custom094/new", name="custom094_new")
+     * @Route("/list/custom095/new", name="custom095_new")
+     * @Route("/list/custom096/new", name="custom096_new")
+     * @Route("/list/custom097/new", name="custom097_new")
+     * @Route("/list/custom098/new", name="custom098_new")
+     * @Route("/list/custom099/new", name="custom099_new")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -886,9 +1177,106 @@ class ListController extends Controller
      * @Route("/list/translational-research-request-category-types/{id}", name="transresrequestcategorytypes_show")
      * @Route("/list/translational-irb-approval-types/{id}", name="transresirbapprovaltypes_show")
      * @Route("/list/antibodies/{id}", name="antibodies_show")
-     * @Route("/list/custom1/{id}", name="custom1_show")
-     * @Route("/list/custom2/{id}", name="custom2_show")
-     * @Route("/list/custom3/{id}", name="custom3_show")
+     * @Route("/list/custom000/{id}", name="custom000_show")
+     * @Route("/list/custom001/{id}", name="custom001_show")
+     * @Route("/list/custom002/{id}", name="custom002_show")
+     * @Route("/list/custom003/{id}", name="custom003_show")
+     * @Route("/list/custom004/{id}", name="custom004_show")
+     * @Route("/list/custom005/{id}", name="custom005_show")
+     * @Route("/list/custom006/{id}", name="custom006_show")
+     * @Route("/list/custom007/{id}", name="custom007_show")
+     * @Route("/list/custom008/{id}", name="custom008_show")
+     * @Route("/list/custom009/{id}", name="custom009_show")
+     * @Route("/list/custom010/{id}", name="custom010_show")
+     * @Route("/list/custom011/{id}", name="custom011_show")
+     * @Route("/list/custom012/{id}", name="custom012_show")
+     * @Route("/list/custom013/{id}", name="custom013_show")
+     * @Route("/list/custom014/{id}", name="custom014_show")
+     * @Route("/list/custom015/{id}", name="custom015_show")
+     * @Route("/list/custom016/{id}", name="custom016_show")
+     * @Route("/list/custom017/{id}", name="custom017_show")
+     * @Route("/list/custom018/{id}", name="custom018_show")
+     * @Route("/list/custom019/{id}", name="custom019_show")
+     * @Route("/list/custom020/{id}", name="custom020_show")
+     * @Route("/list/custom021/{id}", name="custom021_show")
+     * @Route("/list/custom022/{id}", name="custom022_show")
+     * @Route("/list/custom023/{id}", name="custom023_show")
+     * @Route("/list/custom024/{id}", name="custom024_show")
+     * @Route("/list/custom025/{id}", name="custom025_show")
+     * @Route("/list/custom026/{id}", name="custom026_show")
+     * @Route("/list/custom027/{id}", name="custom027_show")
+     * @Route("/list/custom028/{id}", name="custom028_show")
+     * @Route("/list/custom029/{id}", name="custom029_show")
+     * @Route("/list/custom030/{id}", name="custom030_show")
+     * @Route("/list/custom031/{id}", name="custom031_show")
+     * @Route("/list/custom032/{id}", name="custom032_show")
+     * @Route("/list/custom033/{id}", name="custom033_show")
+     * @Route("/list/custom034/{id}", name="custom034_show")
+     * @Route("/list/custom035/{id}", name="custom035_show")
+     * @Route("/list/custom036/{id}", name="custom036_show")
+     * @Route("/list/custom037/{id}", name="custom037_show")
+     * @Route("/list/custom038/{id}", name="custom038_show")
+     * @Route("/list/custom039/{id}", name="custom039_show")
+     * @Route("/list/custom040/{id}", name="custom040_show")
+     * @Route("/list/custom041/{id}", name="custom041_show")
+     * @Route("/list/custom042/{id}", name="custom042_show")
+     * @Route("/list/custom043/{id}", name="custom043_show")
+     * @Route("/list/custom044/{id}", name="custom044_show")
+     * @Route("/list/custom045/{id}", name="custom045_show")
+     * @Route("/list/custom046/{id}", name="custom046_show")
+     * @Route("/list/custom047/{id}", name="custom047_show")
+     * @Route("/list/custom048/{id}", name="custom048_show")
+     * @Route("/list/custom049/{id}", name="custom049_show")
+     * @Route("/list/custom050/{id}", name="custom050_show")
+     * @Route("/list/custom051/{id}", name="custom051_show")
+     * @Route("/list/custom052/{id}", name="custom052_show")
+     * @Route("/list/custom053/{id}", name="custom053_show")
+     * @Route("/list/custom054/{id}", name="custom054_show")
+     * @Route("/list/custom055/{id}", name="custom055_show")
+     * @Route("/list/custom056/{id}", name="custom056_show")
+     * @Route("/list/custom057/{id}", name="custom057_show")
+     * @Route("/list/custom058/{id}", name="custom058_show")
+     * @Route("/list/custom059/{id}", name="custom059_show")
+     * @Route("/list/custom060/{id}", name="custom060_show")
+     * @Route("/list/custom061/{id}", name="custom061_show")
+     * @Route("/list/custom062/{id}", name="custom062_show")
+     * @Route("/list/custom063/{id}", name="custom063_show")
+     * @Route("/list/custom064/{id}", name="custom064_show")
+     * @Route("/list/custom065/{id}", name="custom065_show")
+     * @Route("/list/custom066/{id}", name="custom066_show")
+     * @Route("/list/custom067/{id}", name="custom067_show")
+     * @Route("/list/custom068/{id}", name="custom068_show")
+     * @Route("/list/custom069/{id}", name="custom069_show")
+     * @Route("/list/custom070/{id}", name="custom070_show")
+     * @Route("/list/custom071/{id}", name="custom071_show")
+     * @Route("/list/custom072/{id}", name="custom072_show")
+     * @Route("/list/custom073/{id}", name="custom073_show")
+     * @Route("/list/custom074/{id}", name="custom074_show")
+     * @Route("/list/custom075/{id}", name="custom075_show")
+     * @Route("/list/custom076/{id}", name="custom076_show")
+     * @Route("/list/custom077/{id}", name="custom077_show")
+     * @Route("/list/custom078/{id}", name="custom078_show")
+     * @Route("/list/custom079/{id}", name="custom079_show")
+     * @Route("/list/custom080/{id}", name="custom080_show")
+     * @Route("/list/custom081/{id}", name="custom081_show")
+     * @Route("/list/custom082/{id}", name="custom082_show")
+     * @Route("/list/custom083/{id}", name="custom083_show")
+     * @Route("/list/custom084/{id}", name="custom084_show")
+     * @Route("/list/custom085/{id}", name="custom085_show")
+     * @Route("/list/custom086/{id}", name="custom086_show")
+     * @Route("/list/custom087/{id}", name="custom087_show")
+     * @Route("/list/custom088/{id}", name="custom088_show")
+     * @Route("/list/custom089/{id}", name="custom089_show")
+     * @Route("/list/custom090/{id}", name="custom090_show")
+     * @Route("/list/custom091/{id}", name="custom091_show")
+     * @Route("/list/custom092/{id}", name="custom092_show")
+     * @Route("/list/custom093/{id}", name="custom093_show")
+     * @Route("/list/custom094/{id}", name="custom094_show")
+     * @Route("/list/custom095/{id}", name="custom095_show")
+     * @Route("/list/custom096/{id}", name="custom096_show")
+     * @Route("/list/custom097/{id}", name="custom097_show")
+     * @Route("/list/custom098/{id}", name="custom098_show")
+     * @Route("/list/custom099/{id}", name="custom099_show")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:show.html.twig")
@@ -1042,9 +1430,106 @@ class ListController extends Controller
      * @Route("/list/translational-research-request-category-types/{id}/edit", name="transresrequestcategorytypes_edit")
      * @Route("/list/translational-irb-approval-types/{id}/edit", name="transresirbapprovaltypes_edit")
      * @Route("/list/antibodies/{id}/edit", name="antibodies_edit")
-     * @Route("/list/custom1/{id}/edit", name="custom1_edit")
-     * @Route("/list/custom2/{id}/edit", name="custom2_edit")
-     * @Route("/list/custom3/{id}/edit", name="custom3_edit")
+     * @Route("/list/custom000/{id}/edit", name="custom000_edit")
+     * @Route("/list/custom001/{id}/edit", name="custom001_edit")
+     * @Route("/list/custom002/{id}/edit", name="custom002_edit")
+     * @Route("/list/custom003/{id}/edit", name="custom003_edit")
+     * @Route("/list/custom004/{id}/edit", name="custom004_edit")
+     * @Route("/list/custom005/{id}/edit", name="custom005_edit")
+     * @Route("/list/custom006/{id}/edit", name="custom006_edit")
+     * @Route("/list/custom007/{id}/edit", name="custom007_edit")
+     * @Route("/list/custom008/{id}/edit", name="custom008_edit")
+     * @Route("/list/custom009/{id}/edit", name="custom009_edit")
+     * @Route("/list/custom010/{id}/edit", name="custom010_edit")
+     * @Route("/list/custom011/{id}/edit", name="custom011_edit")
+     * @Route("/list/custom012/{id}/edit", name="custom012_edit")
+     * @Route("/list/custom013/{id}/edit", name="custom013_edit")
+     * @Route("/list/custom014/{id}/edit", name="custom014_edit")
+     * @Route("/list/custom015/{id}/edit", name="custom015_edit")
+     * @Route("/list/custom016/{id}/edit", name="custom016_edit")
+     * @Route("/list/custom017/{id}/edit", name="custom017_edit")
+     * @Route("/list/custom018/{id}/edit", name="custom018_edit")
+     * @Route("/list/custom019/{id}/edit", name="custom019_edit")
+     * @Route("/list/custom020/{id}/edit", name="custom020_edit")
+     * @Route("/list/custom021/{id}/edit", name="custom021_edit")
+     * @Route("/list/custom022/{id}/edit", name="custom022_edit")
+     * @Route("/list/custom023/{id}/edit", name="custom023_edit")
+     * @Route("/list/custom024/{id}/edit", name="custom024_edit")
+     * @Route("/list/custom025/{id}/edit", name="custom025_edit")
+     * @Route("/list/custom026/{id}/edit", name="custom026_edit")
+     * @Route("/list/custom027/{id}/edit", name="custom027_edit")
+     * @Route("/list/custom028/{id}/edit", name="custom028_edit")
+     * @Route("/list/custom029/{id}/edit", name="custom029_edit")
+     * @Route("/list/custom030/{id}/edit", name="custom030_edit")
+     * @Route("/list/custom031/{id}/edit", name="custom031_edit")
+     * @Route("/list/custom032/{id}/edit", name="custom032_edit")
+     * @Route("/list/custom033/{id}/edit", name="custom033_edit")
+     * @Route("/list/custom034/{id}/edit", name="custom034_edit")
+     * @Route("/list/custom035/{id}/edit", name="custom035_edit")
+     * @Route("/list/custom036/{id}/edit", name="custom036_edit")
+     * @Route("/list/custom037/{id}/edit", name="custom037_edit")
+     * @Route("/list/custom038/{id}/edit", name="custom038_edit")
+     * @Route("/list/custom039/{id}/edit", name="custom039_edit")
+     * @Route("/list/custom040/{id}/edit", name="custom040_edit")
+     * @Route("/list/custom041/{id}/edit", name="custom041_edit")
+     * @Route("/list/custom042/{id}/edit", name="custom042_edit")
+     * @Route("/list/custom043/{id}/edit", name="custom043_edit")
+     * @Route("/list/custom044/{id}/edit", name="custom044_edit")
+     * @Route("/list/custom045/{id}/edit", name="custom045_edit")
+     * @Route("/list/custom046/{id}/edit", name="custom046_edit")
+     * @Route("/list/custom047/{id}/edit", name="custom047_edit")
+     * @Route("/list/custom048/{id}/edit", name="custom048_edit")
+     * @Route("/list/custom049/{id}/edit", name="custom049_edit")
+     * @Route("/list/custom050/{id}/edit", name="custom050_edit")
+     * @Route("/list/custom051/{id}/edit", name="custom051_edit")
+     * @Route("/list/custom052/{id}/edit", name="custom052_edit")
+     * @Route("/list/custom053/{id}/edit", name="custom053_edit")
+     * @Route("/list/custom054/{id}/edit", name="custom054_edit")
+     * @Route("/list/custom055/{id}/edit", name="custom055_edit")
+     * @Route("/list/custom056/{id}/edit", name="custom056_edit")
+     * @Route("/list/custom057/{id}/edit", name="custom057_edit")
+     * @Route("/list/custom058/{id}/edit", name="custom058_edit")
+     * @Route("/list/custom059/{id}/edit", name="custom059_edit")
+     * @Route("/list/custom060/{id}/edit", name="custom060_edit")
+     * @Route("/list/custom061/{id}/edit", name="custom061_edit")
+     * @Route("/list/custom062/{id}/edit", name="custom062_edit")
+     * @Route("/list/custom063/{id}/edit", name="custom063_edit")
+     * @Route("/list/custom064/{id}/edit", name="custom064_edit")
+     * @Route("/list/custom065/{id}/edit", name="custom065_edit")
+     * @Route("/list/custom066/{id}/edit", name="custom066_edit")
+     * @Route("/list/custom067/{id}/edit", name="custom067_edit")
+     * @Route("/list/custom068/{id}/edit", name="custom068_edit")
+     * @Route("/list/custom069/{id}/edit", name="custom069_edit")
+     * @Route("/list/custom070/{id}/edit", name="custom070_edit")
+     * @Route("/list/custom071/{id}/edit", name="custom071_edit")
+     * @Route("/list/custom072/{id}/edit", name="custom072_edit")
+     * @Route("/list/custom073/{id}/edit", name="custom073_edit")
+     * @Route("/list/custom074/{id}/edit", name="custom074_edit")
+     * @Route("/list/custom075/{id}/edit", name="custom075_edit")
+     * @Route("/list/custom076/{id}/edit", name="custom076_edit")
+     * @Route("/list/custom077/{id}/edit", name="custom077_edit")
+     * @Route("/list/custom078/{id}/edit", name="custom078_edit")
+     * @Route("/list/custom079/{id}/edit", name="custom079_edit")
+     * @Route("/list/custom080/{id}/edit", name="custom080_edit")
+     * @Route("/list/custom081/{id}/edit", name="custom081_edit")
+     * @Route("/list/custom082/{id}/edit", name="custom082_edit")
+     * @Route("/list/custom083/{id}/edit", name="custom083_edit")
+     * @Route("/list/custom084/{id}/edit", name="custom084_edit")
+     * @Route("/list/custom085/{id}/edit", name="custom085_edit")
+     * @Route("/list/custom086/{id}/edit", name="custom086_edit")
+     * @Route("/list/custom087/{id}/edit", name="custom087_edit")
+     * @Route("/list/custom088/{id}/edit", name="custom088_edit")
+     * @Route("/list/custom089/{id}/edit", name="custom089_edit")
+     * @Route("/list/custom090/{id}/edit", name="custom090_edit")
+     * @Route("/list/custom091/{id}/edit", name="custom091_edit")
+     * @Route("/list/custom092/{id}/edit", name="custom092_edit")
+     * @Route("/list/custom093/{id}/edit", name="custom093_edit")
+     * @Route("/list/custom094/{id}/edit", name="custom094_edit")
+     * @Route("/list/custom095/{id}/edit", name="custom095_edit")
+     * @Route("/list/custom096/{id}/edit", name="custom096_edit")
+     * @Route("/list/custom097/{id}/edit", name="custom097_edit")
+     * @Route("/list/custom098/{id}/edit", name="custom098_edit")
+     * @Route("/list/custom099/{id}/edit", name="custom099_edit")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -1242,9 +1727,106 @@ class ListController extends Controller
      * @Route("/list/translational-research-request-category-types/{id}", name="transresrequestcategorytypes_update")
      * @Route("/list/translational-irb-approval-types/{id}", name="transresirbapprovaltypes_update")
      * @Route("/list/antibodies/{id}", name="antibodies_update")
-     * @Route("/list/custom1/{id}", name="custom1_update")
-     * @Route("/list/custom2/{id}", name="custom2_update")
-     * @Route("/list/custom3/{id}", name="custom3_update")
+     * @Route("/list/custom000/{id}", name="custom000_update")
+     * @Route("/list/custom001/{id}", name="custom001_update")
+     * @Route("/list/custom002/{id}", name="custom002_update")
+     * @Route("/list/custom003/{id}", name="custom003_update")
+     * @Route("/list/custom004/{id}", name="custom004_update")
+     * @Route("/list/custom005/{id}", name="custom005_update")
+     * @Route("/list/custom006/{id}", name="custom006_update")
+     * @Route("/list/custom007/{id}", name="custom007_update")
+     * @Route("/list/custom008/{id}", name="custom008_update")
+     * @Route("/list/custom009/{id}", name="custom009_update")
+     * @Route("/list/custom010/{id}", name="custom010_update")
+     * @Route("/list/custom011/{id}", name="custom011_update")
+     * @Route("/list/custom012/{id}", name="custom012_update")
+     * @Route("/list/custom013/{id}", name="custom013_update")
+     * @Route("/list/custom014/{id}", name="custom014_update")
+     * @Route("/list/custom015/{id}", name="custom015_update")
+     * @Route("/list/custom016/{id}", name="custom016_update")
+     * @Route("/list/custom017/{id}", name="custom017_update")
+     * @Route("/list/custom018/{id}", name="custom018_update")
+     * @Route("/list/custom019/{id}", name="custom019_update")
+     * @Route("/list/custom020/{id}", name="custom020_update")
+     * @Route("/list/custom021/{id}", name="custom021_update")
+     * @Route("/list/custom022/{id}", name="custom022_update")
+     * @Route("/list/custom023/{id}", name="custom023_update")
+     * @Route("/list/custom024/{id}", name="custom024_update")
+     * @Route("/list/custom025/{id}", name="custom025_update")
+     * @Route("/list/custom026/{id}", name="custom026_update")
+     * @Route("/list/custom027/{id}", name="custom027_update")
+     * @Route("/list/custom028/{id}", name="custom028_update")
+     * @Route("/list/custom029/{id}", name="custom029_update")
+     * @Route("/list/custom030/{id}", name="custom030_update")
+     * @Route("/list/custom031/{id}", name="custom031_update")
+     * @Route("/list/custom032/{id}", name="custom032_update")
+     * @Route("/list/custom033/{id}", name="custom033_update")
+     * @Route("/list/custom034/{id}", name="custom034_update")
+     * @Route("/list/custom035/{id}", name="custom035_update")
+     * @Route("/list/custom036/{id}", name="custom036_update")
+     * @Route("/list/custom037/{id}", name="custom037_update")
+     * @Route("/list/custom038/{id}", name="custom038_update")
+     * @Route("/list/custom039/{id}", name="custom039_update")
+     * @Route("/list/custom040/{id}", name="custom040_update")
+     * @Route("/list/custom041/{id}", name="custom041_update")
+     * @Route("/list/custom042/{id}", name="custom042_update")
+     * @Route("/list/custom043/{id}", name="custom043_update")
+     * @Route("/list/custom044/{id}", name="custom044_update")
+     * @Route("/list/custom045/{id}", name="custom045_update")
+     * @Route("/list/custom046/{id}", name="custom046_update")
+     * @Route("/list/custom047/{id}", name="custom047_update")
+     * @Route("/list/custom048/{id}", name="custom048_update")
+     * @Route("/list/custom049/{id}", name="custom049_update")
+     * @Route("/list/custom050/{id}", name="custom050_update")
+     * @Route("/list/custom051/{id}", name="custom051_update")
+     * @Route("/list/custom052/{id}", name="custom052_update")
+     * @Route("/list/custom053/{id}", name="custom053_update")
+     * @Route("/list/custom054/{id}", name="custom054_update")
+     * @Route("/list/custom055/{id}", name="custom055_update")
+     * @Route("/list/custom056/{id}", name="custom056_update")
+     * @Route("/list/custom057/{id}", name="custom057_update")
+     * @Route("/list/custom058/{id}", name="custom058_update")
+     * @Route("/list/custom059/{id}", name="custom059_update")
+     * @Route("/list/custom060/{id}", name="custom060_update")
+     * @Route("/list/custom061/{id}", name="custom061_update")
+     * @Route("/list/custom062/{id}", name="custom062_update")
+     * @Route("/list/custom063/{id}", name="custom063_update")
+     * @Route("/list/custom064/{id}", name="custom064_update")
+     * @Route("/list/custom065/{id}", name="custom065_update")
+     * @Route("/list/custom066/{id}", name="custom066_update")
+     * @Route("/list/custom067/{id}", name="custom067_update")
+     * @Route("/list/custom068/{id}", name="custom068_update")
+     * @Route("/list/custom069/{id}", name="custom069_update")
+     * @Route("/list/custom070/{id}", name="custom070_update")
+     * @Route("/list/custom071/{id}", name="custom071_update")
+     * @Route("/list/custom072/{id}", name="custom072_update")
+     * @Route("/list/custom073/{id}", name="custom073_update")
+     * @Route("/list/custom074/{id}", name="custom074_update")
+     * @Route("/list/custom075/{id}", name="custom075_update")
+     * @Route("/list/custom076/{id}", name="custom076_update")
+     * @Route("/list/custom077/{id}", name="custom077_update")
+     * @Route("/list/custom078/{id}", name="custom078_update")
+     * @Route("/list/custom079/{id}", name="custom079_update")
+     * @Route("/list/custom080/{id}", name="custom080_update")
+     * @Route("/list/custom081/{id}", name="custom081_update")
+     * @Route("/list/custom082/{id}", name="custom082_update")
+     * @Route("/list/custom083/{id}", name="custom083_update")
+     * @Route("/list/custom084/{id}", name="custom084_update")
+     * @Route("/list/custom085/{id}", name="custom085_update")
+     * @Route("/list/custom086/{id}", name="custom086_update")
+     * @Route("/list/custom087/{id}", name="custom087_update")
+     * @Route("/list/custom088/{id}", name="custom088_update")
+     * @Route("/list/custom089/{id}", name="custom089_update")
+     * @Route("/list/custom090/{id}", name="custom090_update")
+     * @Route("/list/custom091/{id}", name="custom091_update")
+     * @Route("/list/custom092/{id}", name="custom092_update")
+     * @Route("/list/custom093/{id}", name="custom093_update")
+     * @Route("/list/custom094/{id}", name="custom094_update")
+     * @Route("/list/custom095/{id}", name="custom095_update")
+     * @Route("/list/custom096/{id}", name="custom096_update")
+     * @Route("/list/custom097/{id}", name="custom097_update")
+     * @Route("/list/custom098/{id}", name="custom098_update")
+     * @Route("/list/custom099/{id}", name="custom099_update")
      *
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -2014,17 +2596,405 @@ class ListController extends Controller
                 $bundleName = "TranslationalResearchBundle";
                 break;
 
-            case "custom1":
-                $className = "Custom1List";
-                $displayName = "Custom1 List";
+            case "custom000":
+                $className = "Custom000List";
+                $displayName = "Custom000 List";
                 break;
-            case "custom2":
-                $className = "Custom2List";
-                $displayName = "Custom2 List";
+            case "custom001":
+                $className = "Custom001List";
+                $displayName = "Custom001 List";
                 break;
-            case "custom3":
-                $className = "Custom3List";
-                $displayName = "Custom3 List";
+            case "custom002":
+                $className = "Custom002List";
+                $displayName = "Custom002 List";
+                break;
+            case "custom003":
+                $className = "Custom003List";
+                $displayName = "Custom003 List";
+                break;
+            case "custom004":
+                $className = "Custom004List";
+                $displayName = "Custom004 List";
+                break;
+            case "custom005":
+                $className = "Custom005List";
+                $displayName = "Custom005 List";
+                break;
+            case "custom006":
+                $className = "Custom006List";
+                $displayName = "Custom006 List";
+                break;
+            case "custom007":
+                $className = "Custom007List";
+                $displayName = "Custom007 List";
+                break;
+            case "custom008":
+                $className = "Custom008List";
+                $displayName = "Custom008 List";
+                break;
+            case "custom009":
+                $className = "Custom009List";
+                $displayName = "Custom009 List";
+                break;
+            case "custom010":
+                $className = "Custom010List";
+                $displayName = "Custom010 List";
+                break;
+            case "custom011":
+                $className = "Custom011List";
+                $displayName = "Custom011 List";
+                break;
+            case "custom012":
+                $className = "Custom012List";
+                $displayName = "Custom012 List";
+                break;
+            case "custom013":
+                $className = "Custom013List";
+                $displayName = "Custom013 List";
+                break;
+            case "custom014":
+                $className = "Custom014List";
+                $displayName = "Custom014 List";
+                break;
+            case "custom015":
+                $className = "Custom015List";
+                $displayName = "Custom015 List";
+                break;
+            case "custom016":
+                $className = "Custom016List";
+                $displayName = "Custom016 List";
+                break;
+            case "custom017":
+                $className = "Custom017List";
+                $displayName = "Custom017 List";
+                break;
+            case "custom018":
+                $className = "Custom018List";
+                $displayName = "Custom018 List";
+                break;
+            case "custom019":
+                $className = "Custom019List";
+                $displayName = "Custom019 List";
+                break;
+            case "custom020":
+                $className = "Custom020List";
+                $displayName = "Custom020 List";
+                break;
+            case "custom021":
+                $className = "Custom021List";
+                $displayName = "Custom021 List";
+                break;
+            case "custom022":
+                $className = "Custom022List";
+                $displayName = "Custom022 List";
+                break;
+            case "custom023":
+                $className = "Custom023List";
+                $displayName = "Custom023 List";
+                break;
+            case "custom024":
+                $className = "Custom024List";
+                $displayName = "Custom024 List";
+                break;
+            case "custom025":
+                $className = "Custom025List";
+                $displayName = "Custom025 List";
+                break;
+            case "custom026":
+                $className = "Custom026List";
+                $displayName = "Custom026 List";
+                break;
+            case "custom027":
+                $className = "Custom027List";
+                $displayName = "Custom027 List";
+                break;
+            case "custom028":
+                $className = "Custom028List";
+                $displayName = "Custom028 List";
+                break;
+            case "custom029":
+                $className = "Custom029List";
+                $displayName = "Custom029 List";
+                break;
+            case "custom030":
+                $className = "Custom030List";
+                $displayName = "Custom030 List";
+                break;
+            case "custom031":
+                $className = "Custom031List";
+                $displayName = "Custom031 List";
+                break;
+            case "custom032":
+                $className = "Custom032List";
+                $displayName = "Custom0032 List";
+                break;
+            case "custom033":
+                $className = "Custom033List";
+                $displayName = "Custom033 List";
+                break;
+            case "custom034":
+                $className = "Custom034List";
+                $displayName = "Custom034 List";
+                break;
+            case "custom035":
+                $className = "Custom035List";
+                $displayName = "Custom035 List";
+                break;
+            case "custom036":
+                $className = "Custom036List";
+                $displayName = "Custom036 List";
+                break;
+            case "custom037":
+                $className = "Custom037List";
+                $displayName = "Custom037 List";
+                break;
+            case "custom038":
+                $className = "Custom038List";
+                $displayName = "Custom038 List";
+                break;
+            case "custom039":
+                $className = "Custom039List";
+                $displayName = "Custom039 List";
+                break;
+            case "custom040":
+                $className = "Custom040List";
+                $displayName = "Custom040 List";
+                break;
+            case "custom041":
+                $className = "Custom041List";
+                $displayName = "Custom041 List";
+                break;
+            case "custom042":
+                $className = "Custom042List";
+                $displayName = "Custom042 List";
+                break;
+            case "custom043":
+                $className = "Custom043List";
+                $displayName = "Custom043 List";
+                break;
+            case "custom044":
+                $className = "Custom044List";
+                $displayName = "Custom044 List";
+                break;
+            case "custom045":
+                $className = "Custom045List";
+                $displayName = "Custom045 List";
+                break;
+            case "custom046":
+                $className = "Custom046List";
+                $displayName = "Custom046 List";
+                break;
+            case "custom047":
+                $className = "Custom047List";
+                $displayName = "Custom047 List";
+                break;
+            case "custom048":
+                $className = "Custom048List";
+                $displayName = "Custom048 List";
+                break;
+            case "custom049":
+                $className = "Custom049List";
+                $displayName = "Custom049 List";
+                break;
+            case "custom050":
+                $className = "Custom050List";
+                $displayName = "Custom050 List";
+                break;
+            case "custom051":
+                $className = "Custom051List";
+                $displayName = "Custom051 List";
+                break;
+            case "custom052":
+                $className = "Custom052List";
+                $displayName = "Custom052 List";
+                break;
+            case "custom053":
+                $className = "Custom053List";
+                $displayName = "Custom053 List";
+                break;
+            case "custom054":
+                $className = "Custom054List";
+                $displayName = "Custom054 List";
+                break;
+            case "custom055":
+                $className = "Custom055List";
+                $displayName = "Custom055 List";
+                break;
+            case "custom056":
+                $className = "Custom056List";
+                $displayName = "Custom056 List";
+                break;
+            case "custom057":
+                $className = "Custom057List";
+                $displayName = "Custom057 List";
+                break;
+            case "custom058":
+                $className = "Custom058List";
+                $displayName = "Custom058 List";
+                break;
+            case "custom059":
+                $className = "Custom059List";
+                $displayName = "Custom059 List";
+                break;
+            case "custom060":
+                $className = "Custom060List";
+                $displayName = "Custom060 List";
+                break;
+            case "custom061":
+                $className = "Custom061List";
+                $displayName = "Custom061 List";
+                break;
+            case "custom062":
+                $className = "Custom062List";
+                $displayName = "Custom062 List";
+                break;
+            case "custom063":
+                $className = "Custom063List";
+                $displayName = "Custom063 List";
+                break;
+            case "custom064":
+                $className = "Custom064List";
+                $displayName = "Custom064 List";
+                break;
+            case "custom065":
+                $className = "Custom065List";
+                $displayName = "Custom065 List";
+                break;
+            case "custom066":
+                $className = "Custom066List";
+                $displayName = "Custom066 List";
+                break;
+            case "custom067":
+                $className = "Custom067List";
+                $displayName = "Custom067 List";
+                break;
+            case "custom068":
+                $className = "Custom068List";
+                $displayName = "Custom068 List";
+                break;
+            case "custom069":
+                $className = "Custom069List";
+                $displayName = "Custom069 List";
+                break;
+            case "custom070":
+                $className = "Custom070List";
+                $displayName = "Custom070 List";
+                break;
+            case "custom071":
+                $className = "Custom071List";
+                $displayName = "Custom071 List";
+                break;
+            case "custom072":
+                $className = "Custom072List";
+                $displayName = "Custom072 List";
+                break;
+            case "custom073":
+                $className = "Custom073List";
+                $displayName = "Custom073 List";
+                break;
+            case "custom074":
+                $className = "Custom074List";
+                $displayName = "Custom074 List";
+                break;
+            case "custom075":
+                $className = "Custom075List";
+                $displayName = "Custom075 List";
+                break;
+            case "custom076":
+                $className = "Custom076List";
+                $displayName = "Custom076 List";
+                break;
+            case "custom077":
+                $className = "Custom077List";
+                $displayName = "Custom077 List";
+                break;
+            case "custom078":
+                $className = "Custom078List";
+                $displayName = "Custom078 List";
+                break;
+            case "custom079":
+                $className = "Custom079List";
+                $displayName = "Custom079 List";
+                break;
+            case "custom080":
+                $className = "Custom080List";
+                $displayName = "Custom080 List";
+                break;
+            case "custom081":
+                $className = "Custom081List";
+                $displayName = "Custom081 List";
+                break;
+            case "custom082":
+                $className = "Custom082List";
+                $displayName = "Custom082 List";
+                break;
+            case "custom083":
+                $className = "Custom083List";
+                $displayName = "Custom083 List";
+                break;
+            case "custom084":
+                $className = "Custom084List";
+                $displayName = "Custom084 List";
+                break;
+            case "custom085":
+                $className = "Custom085List";
+                $displayName = "Custom085 List";
+                break;
+            case "custom086":
+                $className = "Custom086List";
+                $displayName = "Custom086 List";
+                break;
+            case "custom087":
+                $className = "Custom087List";
+                $displayName = "Custom087 List";
+                break;
+            case "custom088":
+                $className = "Custom088List";
+                $displayName = "Custom088 List";
+                break;
+            case "custom089":
+                $className = "Custom089List";
+                $displayName = "Custom089 List";
+                break;
+            case "custom090":
+                $className = "Custom090List";
+                $displayName = "Custom090 List";
+                break;
+            case "custom091":
+                $className = "Custom091List";
+                $displayName = "Custom091 List";
+                break;
+            case "custom092":
+                $className = "Custom092List";
+                $displayName = "Custom092 List";
+                break;
+            case "custom093":
+                $className = "Custom093List";
+                $displayName = "Custom093 List";
+                break;
+            case "custom094":
+                $className = "Custom094List";
+                $displayName = "Custom094 List";
+                break;
+            case "custom095":
+                $className = "Custom095List";
+                $displayName = "Custom095 List";
+                break;
+            case "custom096":
+                $className = "Custom096List";
+                $displayName = "Custom096 List";
+                break;
+            case "custom097":
+                $className = "Custom097List";
+                $displayName = "Custom097 List";
+                break;
+            case "custom098":
+                $className = "Custom098List";
+                $displayName = "Custom098 List";
+                break;
+            case "custom099":
+                $className = "Custom099List";
+                $displayName = "Custom099 List";
                 break;
 
 //            case "employees_locations":
@@ -2206,9 +3176,106 @@ class ListController extends Controller
      * @Route("/list/translational-research-request-category-types/{id}", name="transresrequestcategorytypes_delete")
      * @Route("/list/translational-irb-approval-types/{id}", name="transresirbapprovaltypes_delete")
      * @Route("/list/antibodies/{id}", name="antibodies_delete")
-     * @Route("/list/custom1/{id}", name="custom1_delete")
-     * @Route("/list/custom2/{id}", name="custom2_delete")
-     * @Route("/list/custom3/{id}", name="custom3_delete")
+     * @Route("/list/custom000/{id}", name="custom000_delete")
+     * @Route("/list/custom001/{id}", name="custom001_delete")
+     * @Route("/list/custom002/{id}", name="custom002_delete")
+     * @Route("/list/custom003/{id}", name="custom003_delete")
+     * @Route("/list/custom004/{id}", name="custom004_delete")
+     * @Route("/list/custom005/{id}", name="custom005_delete")
+     * @Route("/list/custom006/{id}", name="custom006_delete")
+     * @Route("/list/custom007/{id}", name="custom007_delete")
+     * @Route("/list/custom008/{id}", name="custom008_delete")
+     * @Route("/list/custom009/{id}", name="custom009_delete")
+     * @Route("/list/custom010/{id}", name="custom010_delete")
+     * @Route("/list/custom011/{id}", name="custom011_delete")
+     * @Route("/list/custom012/{id}", name="custom012_delete")
+     * @Route("/list/custom013/{id}", name="custom013_delete")
+     * @Route("/list/custom014/{id}", name="custom014_delete")
+     * @Route("/list/custom015/{id}", name="custom015_delete")
+     * @Route("/list/custom016/{id}", name="custom016_delete")
+     * @Route("/list/custom017/{id}", name="custom017_delete")
+     * @Route("/list/custom018/{id}", name="custom018_delete")
+     * @Route("/list/custom019/{id}", name="custom019_delete")
+     * @Route("/list/custom020/{id}", name="custom020_delete")
+     * @Route("/list/custom021/{id}", name="custom021_delete")
+     * @Route("/list/custom022/{id}", name="custom022_delete")
+     * @Route("/list/custom023/{id}", name="custom023_delete")
+     * @Route("/list/custom024/{id}", name="custom024_delete")
+     * @Route("/list/custom025/{id}", name="custom025_delete")
+     * @Route("/list/custom026/{id}", name="custom026_delete")
+     * @Route("/list/custom027/{id}", name="custom027_delete")
+     * @Route("/list/custom028/{id}", name="custom028_delete")
+     * @Route("/list/custom029/{id}", name="custom029_delete")
+     * @Route("/list/custom030/{id}", name="custom030_delete")
+     * @Route("/list/custom031/{id}", name="custom031_delete")
+     * @Route("/list/custom032/{id}", name="custom032_delete")
+     * @Route("/list/custom033/{id}", name="custom033_delete")
+     * @Route("/list/custom034/{id}", name="custom034_delete")
+     * @Route("/list/custom035/{id}", name="custom035_delete")
+     * @Route("/list/custom036/{id}", name="custom036_delete")
+     * @Route("/list/custom037/{id}", name="custom037_delete")
+     * @Route("/list/custom038/{id}", name="custom038_delete")
+     * @Route("/list/custom039/{id}", name="custom039_delete")
+     * @Route("/list/custom040/{id}", name="custom040_delete")
+     * @Route("/list/custom041/{id}", name="custom041_delete")
+     * @Route("/list/custom042/{id}", name="custom042_delete")
+     * @Route("/list/custom043/{id}", name="custom043_delete")
+     * @Route("/list/custom044/{id}", name="custom044_delete")
+     * @Route("/list/custom045/{id}", name="custom045_delete")
+     * @Route("/list/custom046/{id}", name="custom046_delete")
+     * @Route("/list/custom047/{id}", name="custom047_delete")
+     * @Route("/list/custom048/{id}", name="custom048_delete")
+     * @Route("/list/custom049/{id}", name="custom049_delete")
+     * @Route("/list/custom050/{id}", name="custom050_delete")
+     * @Route("/list/custom051/{id}", name="custom051_delete")
+     * @Route("/list/custom052/{id}", name="custom052_delete")
+     * @Route("/list/custom053/{id}", name="custom053_delete")
+     * @Route("/list/custom054/{id}", name="custom054_delete")
+     * @Route("/list/custom055/{id}", name="custom055_delete")
+     * @Route("/list/custom056/{id}", name="custom056_delete")
+     * @Route("/list/custom057/{id}", name="custom057_delete")
+     * @Route("/list/custom058/{id}", name="custom058_delete")
+     * @Route("/list/custom059/{id}", name="custom059_delete")
+     * @Route("/list/custom060/{id}", name="custom060_delete")
+     * @Route("/list/custom061/{id}", name="custom061_delete")
+     * @Route("/list/custom062/{id}", name="custom062_delete")
+     * @Route("/list/custom063/{id}", name="custom063_delete")
+     * @Route("/list/custom064/{id}", name="custom064_delete")
+     * @Route("/list/custom065/{id}", name="custom065_delete")
+     * @Route("/list/custom066/{id}", name="custom066_delete")
+     * @Route("/list/custom067/{id}", name="custom067_delete")
+     * @Route("/list/custom068/{id}", name="custom068_delete")
+     * @Route("/list/custom069/{id}", name="custom069_delete")
+     * @Route("/list/custom070/{id}", name="custom070_delete")
+     * @Route("/list/custom071/{id}", name="custom071_delete")
+     * @Route("/list/custom072/{id}", name="custom072_delete")
+     * @Route("/list/custom073/{id}", name="custom073_delete")
+     * @Route("/list/custom074/{id}", name="custom074_delete")
+     * @Route("/list/custom075/{id}", name="custom075_delete")
+     * @Route("/list/custom076/{id}", name="custom076_delete")
+     * @Route("/list/custom077/{id}", name="custom077_delete")
+     * @Route("/list/custom078/{id}", name="custom078_delete")
+     * @Route("/list/custom079/{id}", name="custom079_delete")
+     * @Route("/list/custom080/{id}", name="custom080_delete")
+     * @Route("/list/custom081/{id}", name="custom081_delete")
+     * @Route("/list/custom082/{id}", name="custom082_delete")
+     * @Route("/list/custom083/{id}", name="custom083_delete")
+     * @Route("/list/custom084/{id}", name="custom084_delete")
+     * @Route("/list/custom085/{id}", name="custom085_delete")
+     * @Route("/list/custom086/{id}", name="custom086_delete")
+     * @Route("/list/custom087/{id}", name="custom087_delete")
+     * @Route("/list/custom088/{id}", name="custom088_delete")
+     * @Route("/list/custom089/{id}", name="custom089_delete")
+     * @Route("/list/custom090/{id}", name="custom090_delete")
+     * @Route("/list/custom091/{id}", name="custom091_delete")
+     * @Route("/list/custom092/{id}", name="custom092_delete")
+     * @Route("/list/custom093/{id}", name="custom093_delete")
+     * @Route("/list/custom094/{id}", name="custom094_delete")
+     * @Route("/list/custom095/{id}", name="custom095_delete")
+     * @Route("/list/custom096/{id}", name="custom096_delete")
+     * @Route("/list/custom097/{id}", name="custom097_delete")
+     * @Route("/list/custom098/{id}", name="custom098_delete")
+     * @Route("/list/custom099/{id}", name="custom099_delete")
      *
      *
      * @Method("DELETE")
