@@ -106,7 +106,9 @@ The source files are available at [github.com/victorbrodsky/order-lab](https://g
     1) Populate Country and City Lists (http://IPADDRESS/order/directory/admin/populate-country-city-list-with-default-values)
     2) Populate All Lists With Default Values (Part A) (http://IPADDRESS/order/directory/admin/populate-all-lists-with-default-values)
     3) Populate All Lists With Default Values (Part B) (http://IPADDRESS/order/scan/admin/populate-all-lists-with-default-values)
-    4) Pre-generate form node tree fields for Call Log Book (http://IPADDRESS/order/directory/admin/list/generate-form-node-tree/)
+    4c) Import Antibodies for the Postgres database (http://IPADDRESS/order/translational-research/generate-antibody-list/ihc_antibody_postgresql.sql)
+    5) Pre-generate form node tree fields for Call Log Book (http://IPADDRESS/order/directory/admin/list/generate-form-node-tree/)
+    6) Pre-generate empty custom lists (http://IPADDRESS/order/directory/admin/list/generate-empty-lists/)
 
 9. To enable HTTPS (SSL/TLS), first either purchase the certificate from your preferred vendor and add it to the server, or install the [certbot](https://certbot.eff.org/lets-encrypt/ubuntuxenial-apache) with a [Let's Encrypt](https://letsencrypt.org/) certificate (you can also use a [symfony bundle](https://packagist.org/packages/cert/letsencrypt-bundle)). For certificates from Let's Encrypt, verify that the cron job to automatically update them is set up since they expire in 90 days. Once that is done, uncomment (remove "#" from the beginning of) the line 289 in /order-lab/Scanorders2/app/config/security.yml file.
 
@@ -171,7 +173,9 @@ Note: If you choose to use MySQL database on Linux instead of Postgres, you will
     1) Populate Country and City Lists (http://IPADDRESS/order/directory/admin/populate-country-city-list-with-default-values)
     2) Populate All Lists With Default Values (Part A) (http://IPADDRESS/order/directory/admin/populate-all-lists-with-default-values)
     3) Populate All Lists With Default Values (Part B) (http://IPADDRESS/order/scan/admin/populate-all-lists-with-default-values)
-    4) Pre-generate form node tree fields for Call Log Book (http://IPADDRESS/order/directory/admin/list/generate-form-node-tree/)
+    4c) Import Antibodies for the Postgres database (http://IPADDRESS/order/translational-research/generate-antibody-list/ihc_antibody_postgresql.sql)
+    5) Pre-generate form node tree fields for Call Log Book (http://IPADDRESS/order/directory/admin/list/generate-form-node-tree/)
+    6) Pre-generate empty custom lists (http://IPADDRESS/order/directory/admin/list/generate-empty-lists/)
 
 10. To enable HTTPS (SSL/TLS), first either purchase the certificate from your preferred vendor and add it to the server, or install the [certbot](https://certbot.eff.org/lets-encrypt/ubuntuxenial-apache) with a [Let's Encrypt](https://letsencrypt.org/) certificate (you can also use a [symfony bundle](https://packagist.org/packages/cert/letsencrypt-bundle)). For certificates from Let's Encrypt, verify that the cron job to automatically update them is set up since they expire in 90 days. Once that is done, uncomment (remove "#" from the beginning of) the line 289 in /order-lab/Scanorders2/app/config/security.yml file.
 
@@ -337,7 +341,9 @@ Note: If you choose to use MySQL database on Linux instead of Postgres, you will
         1) Populate Country and City Lists (http://IPADDRESS/order/directory/admin/populate-country-city-list-with-default-values)
         2) Populate All Lists With Default Values (Part A) (http://IPADDRESS/order/directory/admin/populate-all-lists-with-default-values)
         3) Populate All Lists With Default Values (Part B) (http://IPADDRESS/order/scan/admin/populate-all-lists-with-default-values)
-        4) Pre-generate form node tree fields for Call Log Book (http://IPADDRESS/order/directory/admin/list/generate-form-node-tree/)
+        4a) Import Antibodies for the MySQL database (http://IPADDRESS/order/translational-research/generate-antibody-list/ihc_antibody_mysql.sql)
+        5) Pre-generate form node tree fields for Call Log Book (http://IPADDRESS/order/directory/admin/list/generate-form-node-tree/)
+        6) Pre-generate empty custom lists (http://IPADDRESS/order/directory/admin/list/generate-empty-lists/)
 	
 	e) Run the deployment script again by following step 5a above:
 
