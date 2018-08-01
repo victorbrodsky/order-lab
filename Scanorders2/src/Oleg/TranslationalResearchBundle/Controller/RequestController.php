@@ -897,7 +897,11 @@ class RequestController extends Controller
      */
     public function myRequestsAction(Request $request)
     {
-        $time_pre = microtime(true);
+        $timer = false;
+        //$timer = true;
+        if( $timer ) {
+            $time_pre = microtime(true);
+        }
 
 //        if(
 //            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER') &&
@@ -1573,6 +1577,10 @@ class RequestController extends Controller
             'wrap-queries' => true
         );
 
+        if( $timer ) {
+            $time_pre2 = microtime(true);
+        }
+
         $paginator  = $this->get('knp_paginator');
         $transresRequests = $paginator->paginate(
             $query,
@@ -1581,14 +1589,22 @@ class RequestController extends Controller
             $paginationParams
         );
 
+        if( $timer ) {
+            $time_post2 = microtime(true); //microseconds
+            $exec_time2 = round(($time_post2 - $time_pre2), 1);
+            echo "Paginator exec_time=$exec_time2<br>";
+        }
+
         if( $filterTitle ) {
             $title = $filterTitle;
         }
 
-        $time_post = microtime(true); //microseconds
-        $exec_time = round(($time_post - $time_pre),1);
-        echo "query exec_time=$exec_time<br>";
-        //$time_pre = microtime(true);
+        if( $timer ) {
+            $time_post = microtime(true); //microseconds
+            $exec_time = round(($time_post - $time_pre), 1);
+            echo "query exec_time=$exec_time<br>";
+            //$time_pre = microtime(true);
+        }
 
         //Title
         $requestTotalFeeHtml = null;
@@ -1610,9 +1626,11 @@ class RequestController extends Controller
             }
         }
 
-        $time_post = microtime(true); //microseconds
-        $exec_time = round(($time_post - $time_pre),1);
-        echo "Title exec_time=$exec_time<br>";
+        if( $timer ) {
+            $time_post = microtime(true); //microseconds
+            $exec_time = round(($time_post - $time_pre), 1);
+            echo "Title exec_time=$exec_time<br>";
+        }
 
         //if($withMatching) {
             //$allFilteredTransresRequests = $query2->getResult();
@@ -1637,9 +1655,11 @@ class RequestController extends Controller
 //            $title = $title . " (Total " . count($allTransresRequests) . ")";
 //        }
 
-        $time_post = microtime(true); //microseconds
-        $exec_time = round(($time_post - $time_pre),1);
-        echo "Counter exec_time=$exec_time<br>";
+        if( $timer ) {
+            $time_post = microtime(true); //microseconds
+            $exec_time = round(($time_post - $time_pre), 1);
+            echo "Counter exec_time=$exec_time<br>";
+        }
 
         return array(
             //'filterDisable' => true, //testing
