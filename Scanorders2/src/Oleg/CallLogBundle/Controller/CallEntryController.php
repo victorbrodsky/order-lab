@@ -149,6 +149,10 @@ class CallEntryController extends Controller
             $defaultPatientListId = $defaultPatientList->getId();
         }
 
+        if( $messages && count($messages)>0 ) {
+            $title = $title . " (Matching ".$messages->getTotalItemCount().")";
+        }
+        
         return array(
             'messages' => $messages,
             'alerts' => $alerts,
@@ -2966,6 +2970,7 @@ class CallEntryController extends Controller
 
     /**
      * @Route("/export_csv/", name="calllog_export_csv")
+     * @Route("/export_csv/all/", name="calllog_export_csv_all")
      * @Template("OlegCallLogBundle:Export:call-entry-export-csv.html.twig")
      */
     public function exportCsvAction(Request $request)
@@ -2983,7 +2988,14 @@ class CallEntryController extends Controller
         //$all = $request->get('all');
         //echo "all=".$all."<br>";
 
-        $limit = 500;
+        $routename = $request->get('_route');
+
+        if( $routename == "calllog_export_csv" ) {
+            $limit = 500;
+        } else {
+            $limit = null;
+        }
+
         $res = $this->getCalllogEntryFilter($request,$limit);
 
         if( $res['redirect'] ) {

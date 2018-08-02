@@ -28,9 +28,12 @@
 
 {% block content %}
 
-    {#<h4 class="text-info" align="center">#}
-        {#{{ title }}#}
-    {#</h4>#}
+    <h4 class="text-info" align="center">
+        {{ title }}
+        {#{% if messages and messages|length > 0 %}#}
+            {#( {{ messages.getTotalItemCount }} )#}
+        {#{% endif %}#}
+    </h4>
     {#<br>#}
 
 
