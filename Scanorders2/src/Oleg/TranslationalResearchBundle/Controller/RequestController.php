@@ -1652,33 +1652,29 @@ class RequestController extends Controller
         $withMatching = true;
         //$withMatching = false;
         if($withMatching) {
-        //Title
-        $requestTotalFeeHtml = null;
-        if( $project ) {
-            $projectUrl = $this->container->get('router')->generate(
-                'translationalresearch_project_show',
-                array(
-                    'id' => $project->getId(),
-                ),
-                UrlGeneratorInterface::ABSOLUTE_URL
-            );
-            $projectLink = "<a href=" . $projectUrl . ">" . "Project ID " . $project->getOid() . "</a>";
-            //$title = "Requests for the project ID ".$project->getOid();
-            $title = "Work Requests for " . $projectLink;
+            //Title
+            $requestTotalFeeHtml = null;
+            if( $project ) {
+                $projectUrl = $this->container->get('router')->generate(
+                    'translationalresearch_project_show',
+                    array(
+                        'id' => $project->getId(),
+                    ),
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                $projectLink = "<a href=" . $projectUrl . ">" . "Project ID " . $project->getOid() . "</a>";
+                //$title = "Requests for the project ID ".$project->getOid();
+                $title = "Work Requests for " . $projectLink;
 
-            $requestTotalFeeHtml = $transresRequestUtil->getTransResRequestTotalFeeHtml($project);
-            if( $requestTotalFeeHtml ) {
-                $requestTotalFeeHtml = "; " . $requestTotalFeeHtml;
+                $requestTotalFeeHtml = $transresRequestUtil->getTransResRequestTotalFeeHtml($project);
+                if( $requestTotalFeeHtml ) {
+                    $requestTotalFeeHtml = "; " . $requestTotalFeeHtml;
+                }
             }
-        }
 
-        if( $timer ) {
-//            $time_post = microtime(true); //microseconds
-//            $exec_time = round(($time_post - $time_pre), 1);
-//            echo "Title exec_time=$exec_time<br>";
-
-            $stopwatch->start('GetTitle');
-        }
+            if( $timer ) {
+                $stopwatch->start('GetTitle');
+            }
 
 //        $withMatching = true;
 //        $withMatching = false;
