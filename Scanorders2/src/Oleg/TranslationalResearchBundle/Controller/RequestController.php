@@ -1585,6 +1585,9 @@ class RequestController extends Controller
         
         $dql->groupBy("transresRequest");
 
+        //testing
+        //$dql->andWhere("transresRequest.id = 2");
+
         $limit = 10;
         $query = $em->createQuery($dql);
 
@@ -1628,6 +1631,7 @@ class RequestController extends Controller
             $limit,                                         /*limit per page*/
             $paginationParams
         );
+        //echo "transresRequests count=".count($transresRequests)."<br>";
 
         if( $timer ) {
 //            $time_post2 = microtime(true); //microseconds
@@ -1645,6 +1649,9 @@ class RequestController extends Controller
             $title = $filterTitle;
         }
 
+        $withMatching = true;
+        $withMatching = false;
+        if($withMatching) {
         //Title
         $requestTotalFeeHtml = null;
         if( $project ) {
@@ -1673,7 +1680,9 @@ class RequestController extends Controller
             $stopwatch->start('GetTitle');
         }
 
-        //if($withMatching) {
+//        $withMatching = true;
+//        $withMatching = false;
+//        if($withMatching) {
             //$allFilteredTransresRequests = $query2->getResult();
             //echo "allFilteredTransresRequests=".count($allFilteredTransresRequests)."<br>";
             //$allGlobalRequests = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest')->findAll();
@@ -1681,7 +1690,13 @@ class RequestController extends Controller
             $allTransresRequests = $transresUtil->getTotalRequestCountByDqlParameters($dql,$dqlParameters);
             $allGlobalRequests = $transresUtil->getTotalRequestCount();
             $title = $title . " (Matching " . $allTransresRequests . ", Total " . $allGlobalRequests . $requestTotalFeeHtml . ")";
-        //}
+
+            if( $timer ) {
+                $event = $stopwatch->stop('GetTitle');
+                echo "GetTitle duration: " . ($event->getDuration() / 1000) . " sec<br>";
+            }
+        }
+
         //$allGlobalRequests = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest')->findAll();
         //$title = $title . " (Matching " . count($allTransresRequests) . ", Total " . count($allGlobalRequests) . ")";
 
@@ -1697,14 +1712,6 @@ class RequestController extends Controller
 //        }
 
         if( $timer ) {
-//            $time_post = microtime(true); //microseconds
-//            $exec_time = round(($time_post - $time_pre), 1);
-//            echo "Counter exec_time=$exec_time<br>";
-
-            $event = $stopwatch->stop('GetTitle');
-            echo "GetTitle duration: ".($event->getDuration()/1000)." sec<br>";
-            //print_r($event);
-
             $event = $stopwatch->stop('myRequestsAction');
             echo "myRequestsAction duration: ".($event->getDuration()/1000)." sec<br>";
             echo "myRequestsAction memory: ".($event->getMemory()/1000000)." MB<br>";
@@ -1721,8 +1728,8 @@ class RequestController extends Controller
             'requestTotalFeeHtml' => null, //$requestTotalFeeHtml
             'advancedFilter' => $advancedFilter,
             'project' => $project,
-            'hideaction' => true,
-            'hiderows' => true,
+            //'hideaction' => true,
+            //'hiderows' => true,
 
         );
     }
