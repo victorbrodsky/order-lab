@@ -1,10 +1,12 @@
+{% if hideheader is not defined or not hideheader %}
 {% stopwatch "### header ###" %}
 
-{% extends "OlegTranslationalResearchBundle::Default/base.html.twig" %}
-
-{% import "OlegTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}
+{#{% extends "OlegTranslationalResearchBundle::Default/base.html.twig" %}#}
 
 {% endstopwatch %}
+{% endif %}
+
+{% import "OlegTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}
 
 {% block title %}
     {% if project %}
