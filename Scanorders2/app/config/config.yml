@@ -34,10 +34,10 @@ framework:
 #        assets_version: SomeVersionScheme
     default_locale:  "%locale%"
 #    trusted_proxies: ~
-#    session:         ~
+    session:         ~
 #        save_path: ~
-    session:
-        cookie_lifetime: 0 #Setting a cookie_lifetime to 0 will cause the cookie to live only as long as the browser remains open
+#    session:
+#        cookie_lifetime: 0 #Setting a cookie_lifetime to 0 will cause the cookie to live only as long as the browser remains open
     fragments:       ~
 #    fragments: { path: /_fragment }
     http_method_override: true
