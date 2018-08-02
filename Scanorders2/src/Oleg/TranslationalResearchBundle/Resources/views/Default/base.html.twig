@@ -18,7 +18,9 @@
 
 
 {% block header %}
+    {% stopwatch "### TransRes navbar ###" %}
     {% include 'OlegTranslationalResearchBundle:Default:navbar.html.twig' %}
+    {% endstopwatch %}
 {% endblock %}
 
 {% block favicon %}

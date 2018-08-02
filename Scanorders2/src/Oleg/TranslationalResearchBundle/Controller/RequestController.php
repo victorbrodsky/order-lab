@@ -1721,10 +1721,9 @@ class RequestController extends Controller
             'requestTotalFeeHtml' => null, //$requestTotalFeeHtml
             'advancedFilter' => $advancedFilter,
             'project' => $project,
-            'hideaction' => true,
-            'hiderows' => true,
-            'hideheader' => true
-            
+            //'hideaction' => true,
+            //'hiderows' => true,
+
         );
     }
 
