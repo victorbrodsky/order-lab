@@ -41,6 +41,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 
 /**
@@ -897,10 +898,14 @@ class RequestController extends Controller
      */
     public function myRequestsAction(Request $request)
     {
+
         $timer = false;
-        //$timer = true;
+        $timer = true;
         if( $timer ) {
-            $time_pre = microtime(true);
+            $stopwatch = new Stopwatch();
+            //$time_pre = microtime(true);
+            $stopwatch->start('myRequestsAction');
+            $stopwatch->start('Paginator');
         }
 
 //        if(
@@ -953,6 +958,10 @@ class RequestController extends Controller
         //add "All except Drafts"
         $progressStateArr["All except Drafts"] = "All-except-Drafts";
 
+        if( $timer ) {
+            $stopwatch->start('FilterRequestType');
+        }
+
         $params = array(
             'transresUsers' => $transresUsers,
             'progressStateArr'=>$progressStateArr,
@@ -966,9 +975,26 @@ class RequestController extends Controller
             'form_custom_value'=>$params
         ));
 
+        if( $timer ) {
+            $event = $stopwatch->stop('FilterRequestType');
+            echo "FilterRequestType duration: ".($event->getDuration()/1000)." sec<br>";
+
+            $stopwatch->start('handleRequest');
+        }
+
         $filterform->handleRequest($request);
+
+        if( $timer ) {
+            $event = $stopwatch->stop('handleRequest');
+            echo "handleRequest duration: ".($event->getDuration()/1000)." sec<br>";
+        }
+
         $submitter = null;
         $project = null;
+
+        if( $timer ) {
+            $stopwatch->start('getFilterData');
+        }
 
         $requestId = $filterform['requestId']->getData();
         $externalId = $filterform['externalId']->getData();
@@ -1008,6 +1034,11 @@ class RequestController extends Controller
 //        } else {
 //            $projectSpecialties = $projectSpecialtyAllowedArr;
 //        }
+
+        if( $timer ) {
+            $event = $stopwatch->stop('getFilterData');
+            echo "getFilterData duration: ".($event->getDuration()/1000)." sec<br>";
+        }
         //////// EOF create filter //////////
 
         //echo "project=".$project."<br>";
@@ -1345,6 +1376,11 @@ class RequestController extends Controller
 
         //exit("Start filtering...");
 
+        if( $timer ) {
+            //$time_pre2 = microtime(true);
+            $stopwatch->start('createQueryBuilder');
+        }
+
         $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
         $dql =  $repository->createQueryBuilder("transresRequest");
         $dql->select('transresRequest');
@@ -1578,7 +1614,11 @@ class RequestController extends Controller
         );
 
         if( $timer ) {
-            $time_pre2 = microtime(true);
+            $event = $stopwatch->stop('createQueryBuilder');
+            echo "createQueryBuilder duration: ".($event->getDuration()/1000)." sec<br>";
+
+            //$time_pre2 = microtime(true);
+            $stopwatch->start('PaginatorResult');
         }
 
         $paginator  = $this->get('knp_paginator');
@@ -1590,20 +1630,19 @@ class RequestController extends Controller
         );
 
         if( $timer ) {
-            $time_post2 = microtime(true); //microseconds
-            $exec_time2 = round(($time_post2 - $time_pre2), 1);
-            echo "Paginator exec_time=$exec_time2<br>";
+//            $time_post2 = microtime(true); //microseconds
+//            $exec_time2 = round(($time_post2 - $time_pre2), 1);
+//            echo "Paginator exec_time=$exec_time2<br>";
+
+            $event = $stopwatch->stop('PaginatorResult');
+            echo "PaginatorResult duration: ".($event->getDuration()/1000)." sec<br>";
+
+            $event = $stopwatch->stop('Paginator');
+            echo "Paginator duration: ".($event->getDuration()/1000)." sec<br>";
         }
 
         if( $filterTitle ) {
             $title = $filterTitle;
-        }
-
-        if( $timer ) {
-            $time_post = microtime(true); //microseconds
-            $exec_time = round(($time_post - $time_pre), 1);
-            echo "query exec_time=$exec_time<br>";
-            //$time_pre = microtime(true);
         }
 
         //Title
@@ -1627,9 +1666,11 @@ class RequestController extends Controller
         }
 
         if( $timer ) {
-            $time_post = microtime(true); //microseconds
-            $exec_time = round(($time_post - $time_pre), 1);
-            echo "Title exec_time=$exec_time<br>";
+//            $time_post = microtime(true); //microseconds
+//            $exec_time = round(($time_post - $time_pre), 1);
+//            echo "Title exec_time=$exec_time<br>";
+
+            $stopwatch->start('GetTitle');
         }
 
         //if($withMatching) {
@@ -1656,9 +1697,17 @@ class RequestController extends Controller
 //        }
 
         if( $timer ) {
-            $time_post = microtime(true); //microseconds
-            $exec_time = round(($time_post - $time_pre), 1);
-            echo "Counter exec_time=$exec_time<br>";
+//            $time_post = microtime(true); //microseconds
+//            $exec_time = round(($time_post - $time_pre), 1);
+//            echo "Counter exec_time=$exec_time<br>";
+
+            $event = $stopwatch->stop('GetTitle');
+            echo "GetTitle duration: ".($event->getDuration()/1000)." sec<br>";
+            //print_r($event);
+
+            $event = $stopwatch->stop('myRequestsAction');
+            echo "myRequestsAction duration: ".($event->getDuration()/1000)." sec<br>";
+            echo "myRequestsAction memory: ".($event->getMemory()/1000000)." MB<br>";
         }
 
         return array(
