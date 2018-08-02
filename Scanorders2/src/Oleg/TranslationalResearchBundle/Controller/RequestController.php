@@ -1586,7 +1586,7 @@ class RequestController extends Controller
         $dql->groupBy("transresRequest");
 
         //testing
-        //$dql->andWhere("transresRequest.id = 2");
+        $dql->andWhere("transresRequest.id = 2");
 
         $limit = 10;
         $query = $em->createQuery($dql);
@@ -1650,7 +1650,7 @@ class RequestController extends Controller
         }
 
         $withMatching = true;
-        $withMatching = false;
+        //$withMatching = false;
         if( $withMatching ) {
             //Title
             $requestTotalFeeHtml = null;
