@@ -22,6 +22,9 @@
 # ./deploy1
 
 PARAM1="-full"
+PARAM2="-withdb"
+#PARAM1=$1
+#PARAM2=$2
 
 if [ $# -eq 0 ]
   then
@@ -30,13 +33,29 @@ if [ $# -eq 0 ]
     PARAM1=$1
 fi
 
+if [ $# -eq 0 ]
+  then
+    echo "No arguments supplied"
+  else
+    PARAM2=$2
+fi
+
 echo
-if [ $PARAM1 == "-fast" ]
+
+if [[ $PARAM1 == "-fast" ]]
 then
     echo "************* Start deploy fast (no cache warmup) *************"
 else
     echo "************* Start deploy with cache warmup  *************"
 fi
+
+if [[ $PARAM2 == "-nodb" ]]
+then
+    echo "************* Start deploy without DB update *************"
+else
+    echo "************* Start deploy with DB update  *************"
+fi
+
 echo
 
 ##### Constants #####
@@ -59,8 +78,12 @@ function prep(){
     #try to set permission
     chown -R www-data:www-data $PROJECT_LOCAL_PATH/web
 
-    echo "*** Update tables in Doctrine DB ***"
-    php -d memory_limit=1024M $PROJECT_LOCAL_PATH/bin/console doctrine:schema:update --force
+    if [[ $PARAM2 != "-nodb" ]]
+    then
+        echo
+        echo "*** Update tables in Doctrine DB ***"
+        php -d memory_limit=1024M $PROJECT_LOCAL_PATH/bin/console doctrine:schema:update --force
+    fi
 
     #echo "*** Create LEVENSHTEIN functions for fuzzy search ***"
     #php $PROJECT_LOCAL_PATH/app/console jrk:levenshtein:install
@@ -73,7 +96,7 @@ function prep(){
     #php $PROJECT_LOCAL_PATH/app/console cache:clear --env=prod --no-debug
     #php $PROJECT_LOCAL_PATH/app/console cache:clear --env=prod --no-debug --no-warmup
 
-    if [ $PARAM1 != "-fast" ]
+    if [[ $PARAM1 != "-fast" ]]
     then
         echo "*** Warmup cache ***"
         php -d memory_limit=1024M $PROJECT_LOCAL_PATH/bin/console cache:warmup --env=prod

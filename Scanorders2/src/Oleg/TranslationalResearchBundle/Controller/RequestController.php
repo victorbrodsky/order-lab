@@ -1710,6 +1710,7 @@ class RequestController extends Controller
             echo "myRequestsAction memory: ".($event->getMemory()/1000000)." MB<br>";
         }
 
+        //Template: OlegTranslationalResearchBundle:Request:index.html.twig
         return array(
             //'filterDisable' => true, //testing
             'transresRequests' => $transresRequests,
@@ -1719,7 +1720,10 @@ class RequestController extends Controller
             'title' => $title,
             'requestTotalFeeHtml' => null, //$requestTotalFeeHtml
             'advancedFilter' => $advancedFilter,
-            'project' => $project
+            'project' => $project,
+            'noaction' => true,
+            'norows' => true
+            
         );
     }
 

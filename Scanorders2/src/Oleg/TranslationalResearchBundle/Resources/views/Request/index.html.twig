@@ -103,6 +103,7 @@
 
             <tbody data-link="row" class="rowlink table-tbody-hover {{ trclassname }}">
             <tr style="border-bottom: 1px solid #C6C6C6;">
+                {% if norows is defined and norows %}
                 <td>
                     <a href="{{ path(translationalresearch_sitename~'_request_show', { 'id': transresRequest.id }) }}" target="_blank">{{ transresRequest.oid }}</a>
                 </td>
@@ -211,6 +212,7 @@
                 </td>
                 {% endstopwatch %}
 
+                {% if noaction is defined and noaction %}
                 {% stopwatch "### Action ###" %}
                 <td class="rowlink-skip">
                     <div class="btn-group">
@@ -403,6 +405,7 @@
                     </div>
                 </td>
                 {% endstopwatch %}
+                {% endif %}
             </tr>
             {#<tr class="table-no-border">#}
                 {#<td style="display: none">#}
