@@ -697,5 +697,16 @@ class UserRepository extends EntityRepository {
         return $permissions;
     }
 
+    public function findNotFellowshipUsers() {
+        $query = $this->_em->createQueryBuilder()
+            ->from('OlegUserdirectoryBundle:User', 'list')
+            ->select("list")
+            ->leftJoin("list.infos", "infos")
+            ->where("list.createdby != 'googleapi'")
+            ->orderBy("infos.displayName","ASC")
+        ;
+
+        return $query->getQuery()->getResult();
+    }
 }
 

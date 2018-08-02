@@ -3733,19 +3733,29 @@ class TransResUtil
     }
 
     public function getAppropriatedUsers() {
+        //$users = $this->em->getRepository('OlegUserdirectoryBundle:User')->findAll();
+
+        //$users = $this->em->getRepository('OlegUserdirectoryBundle:User')->findBy(array('createdby'=>array('googleapi')));
+        //return $users;
+
         $repository = $this->em->getRepository('OlegUserdirectoryBundle:User');
         $dql = $repository->createQueryBuilder("list");
         $dql->select('list');
 
-        $dql->leftJoin("list.employmentStatus", "employmentStatus");
-        $dql->leftJoin("employmentStatus.employmentType", "employmentType");
+        //$dql->leftJoin("list.employmentStatus", "employmentStatus");
+        //$dql->leftJoin("employmentStatus.employmentType", "employmentType");
         $dql->leftJoin("list.infos", "infos");
 
-        $dql->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL");
+        //$dql->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL");
+        $dql->where("list.createdby != 'googleapi'"); //googleapi is used only by fellowship application population
 
         $dql->orderBy("infos.displayName","ASC");
 
         $query = $dql->getQuery();
+
+        //doctrine cache queries
+        //$query->useQueryCache(true);
+        //$query->useResultCache(true);
 
         $users = $query->getResult();
 

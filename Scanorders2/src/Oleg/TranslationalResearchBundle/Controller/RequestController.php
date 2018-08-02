@@ -929,6 +929,10 @@ class RequestController extends Controller
         $title = "Work Requests";
         $formnode = false;
 
+
+        //TESTING
+        //return $this->testingReturn($request,$stopwatch);
+
         $advancedFilter = 0;
 
         //get allowed and denied projectSpecialties
@@ -950,10 +954,14 @@ class RequestController extends Controller
         }
 
         //////// create filter //////////
+        $transresUsers = $transresUtil->getAppropriatedUsers(); // this will cause ~400 DB queries
+        //$transresUsers = $em->getRepository('OlegUserdirectoryBundle:User')->findNotFellowshipUsers();
+        //TESTING
+        return $this->testingReturn($request,$stopwatch);
+
         $availableProjects = $transresUtil->getAvailableRequesterOrReviewerProjects();
         $progressStateArr = $transresRequestUtil->getProgressStateArr();
         $billingStateArr = $transresRequestUtil->getBillingStateArr();
-        $transresUsers = $transresUtil->getAppropriatedUsers();
 
         //add "All except Drafts"
         $progressStateArr["All except Drafts"] = "All-except-Drafts";
@@ -1724,6 +1732,45 @@ class RequestController extends Controller
             'requestTotalFeeHtml' => null, //$requestTotalFeeHtml
             'advancedFilter' => $advancedFilter,
             'project' => $project,
+            //'hideaction' => true,
+            //'hiderows' => true,
+
+        );
+    }
+    public function testingReturn($request,$stopwatch=null) {
+        //TESTING
+        $em = $this->getDoctrine()->getManager();
+        $title = "Work Requests";
+        $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
+        $dql =  $repository->createQueryBuilder("transresRequest");
+        $dql->select('transresRequest');
+        $dql->where("transresRequest.id=2");
+        $query = $em->createQuery($dql);
+        $paginationParams = array(
+            'defaultSortFieldName' => 'transresRequest.id',
+            'defaultSortDirection' => 'DESC',
+            'wrap-queries' => true
+        );
+        $paginator  = $this->get('knp_paginator');
+        $transresRequests = $paginator->paginate(
+            $query,
+            $request->query->get('page', 1),   /*page number*/
+            10,                                         /*limit per page*/
+            $paginationParams
+        );
+        $event = $stopwatch->stop('myRequestsAction');
+        echo "myRequestsAction duration: ".($event->getDuration()/1000)." sec<br>";
+        echo "myRequestsAction memory: ".($event->getMemory()/1000000)." MB<br>";
+        return array(
+            'filterDisable' => true, //testing
+            'transresRequests' => $transresRequests,
+            //'allTransresRequests' => $allTransresRequests,
+            //'project' => null,
+            //'filterform' => $filterform->createView(),
+            'title' => $title,
+            'requestTotalFeeHtml' => null, //$requestTotalFeeHtml
+            //'advancedFilter' => $advancedFilter,
+            'project' => null,
             //'hideaction' => true,
             //'hiderows' => true,
 
