@@ -1722,7 +1722,7 @@ class RequestController extends Controller
             'advancedFilter' => $advancedFilter,
             'project' => $project,
             //'hideaction' => true,
-            'hiderows' => true,
+            //'hiderows' => true,
 
         );
     }
