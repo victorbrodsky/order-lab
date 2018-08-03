@@ -1051,7 +1051,9 @@ class RequestController extends Controller
             $billingStates = $filterform['billingState']->getData();
             $category = $filterform['category']->getData();
             $projectSpecialties = $filterform['projectSpecialty']->getData();
-            $projectFilter = $filterform['project']->getData();
+
+            //testing
+            //$projectFilter = $filterform['project']->getData();
 
             $searchStr = $filterform['comment']->getData();
             $startDate = $filterform['startDate']->getData();
