@@ -901,21 +901,12 @@ class RequestController extends Controller
     {
 
         $timer = false;
-        //$timer = true;
+        $timer = true;
         if( $timer ) {
             $stopwatch = new Stopwatch();
             //$time_pre = microtime(true);
             $stopwatch->start('myRequestsAction');
             $stopwatch->start('Paginator');
-        }
-
-        //TESTING
-        if(0) {
-            $transresUtil = $this->container->get('transres_util');
-            $transresUsers = $transresUtil->getAppropriatedUsers(); // this will cause ~400 DB queries
-            //$transresUsers = $em->getRepository('OlegUserdirectoryBundle:User')->findNotFellowshipUsers();
-            //TESTING
-            return $this->testingReturn($request, $stopwatch);
         }
 
 //        if(
@@ -985,11 +976,11 @@ class RequestController extends Controller
         $submitter = null;
         $project = null;
         $ids = array();
-
         $showOnlyMyProjects = false;
-    $withfilter = true;
-    //$withfilter = false;
-    if( $withfilter ) {
+
+        $withfilter = true;
+        //$withfilter = false;
+        if( $withfilter ) {
         $transresUsers = $transresUtil->getAppropriatedUsers();
         //$transresUsers = $em->getRepository('OlegUserdirectoryBundle:User')->findNotFellowshipUsers();
         //TESTING
@@ -1733,9 +1724,6 @@ class RequestController extends Controller
                 $stopwatch->start('GetTitle');
             }
 
-//        $withMatching = true;
-//        $withMatching = false;
-//        if($withMatching) {
             //$allFilteredTransresRequests = $query2->getResult();
             //echo "allFilteredTransresRequests=".count($allFilteredTransresRequests)."<br>";
             //$allGlobalRequests = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest')->findAll();
@@ -1750,20 +1738,6 @@ class RequestController extends Controller
             }
         }
 
-        //$allGlobalRequests = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest')->findAll();
-        //$title = $title . " (Matching " . count($allTransresRequests) . ", Total " . count($allGlobalRequests) . ")";
-
-//        if( count($allTransresRequests) > 0 ) {
-//            $pageNumber = $transresRequests->getCurrentPageNumber();
-//            $items = $transresRequests->getItems();
-//            $startPageItems = (intval($pageNumber) - 1) * intval($limit) + 1;
-//            $endPageItems = intval($startPageItems) + count($items) - 1;
-//            //echo "pageNumber=$pageNumber; items=".count($items)."; startPageItems=".$startPageItems."; endPageItems=".$endPageItems."<br>";
-//            $title = $title . " (" . $startPageItems . " of " . $endPageItems . ", Total " . count($allTransresRequests) . ")";
-//        } else {
-//            $title = $title . " (Total " . count($allTransresRequests) . ")";
-//        }
-
         if( $timer ) {
             $event = $stopwatch->stop('myRequestsAction');
             echo "myRequestsAction duration: ".($event->getDuration()/1000)." sec<br>";
@@ -1777,17 +1751,15 @@ class RequestController extends Controller
 
         //Template: OlegTranslationalResearchBundle:Request:index.html.twig
         return array(
-            //'filterDisable' => true, //testing
             'transresRequests' => $transresRequests,
-            //'allTransresRequests' => $allTransresRequests,
-            //'project' => null,
             'filterform' => $filterformView,
             'title' => $title,
             'requestTotalFeeHtml' => null, //$requestTotalFeeHtml
             'advancedFilter' => $advancedFilter,
             'project' => $project,
-            //'hideaction' => true,
-            //'hiderows' => true,
+            //'filterDisable' => true, //testing
+            //'hideaction' => true,    //testing
+            //'hiderows' => true,      //testing
 
         );
     }
