@@ -1051,10 +1051,6 @@ class RequestController extends Controller
             $billingStates = $filterform['billingState']->getData();
             $category = $filterform['category']->getData();
             $projectSpecialties = $filterform['projectSpecialty']->getData();
-
-            //testing
-            //$projectFilter = $filterform['project']->getData();
-
             $searchStr = $filterform['comment']->getData();
             $startDate = $filterform['startDate']->getData();
             $endDate = $filterform['endDate']->getData();
@@ -1068,6 +1064,10 @@ class RequestController extends Controller
 
             //replace - with space
             $filterType = str_replace("-", " ", $filterType);
+
+            if (isset($filterform['project'])) {
+                $projectFilter = $filterform['project']->getData();
+            }
         }
 
         //$showMatchingAndTotal = $filterform['showMatchingAndTotal']->getData();
