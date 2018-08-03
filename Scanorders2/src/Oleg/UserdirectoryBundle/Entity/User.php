@@ -1521,7 +1521,6 @@ class User extends BaseUser {
     //FirstName LastName, MD
     //if $inverted is true => LastName FirstName
     public function getUsernameOptimal( $inverted=false ) {
-
         $degrees = array();
         $titles = array();
 

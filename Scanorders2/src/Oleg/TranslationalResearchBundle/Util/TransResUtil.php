@@ -3755,7 +3755,7 @@ class TransResUtil
 
         $query = $dql->getQuery();
 
-        $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+        //$query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
 
         //doctrine cache queries
         //$query->useQueryCache(true);
