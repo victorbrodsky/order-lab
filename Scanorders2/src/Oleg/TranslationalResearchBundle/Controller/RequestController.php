@@ -908,6 +908,15 @@ class RequestController extends Controller
             $stopwatch->start('Paginator');
         }
 
+        //TESTING
+        if(0) {
+            $transresUtil = $this->container->get('transres_util');
+            $transresUsers = $transresUtil->getAppropriatedUsers(); // this will cause ~400 DB queries
+            //$transresUsers = $em->getRepository('OlegUserdirectoryBundle:User')->findNotFellowshipUsers();
+            //TESTING
+            return $this->testingReturn($request, $stopwatch);
+        }
+
 //        if(
 //            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER') &&
 //            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
@@ -957,7 +966,7 @@ class RequestController extends Controller
         $transresUsers = $transresUtil->getAppropriatedUsers(); // this will cause ~400 DB queries
         //$transresUsers = $em->getRepository('OlegUserdirectoryBundle:User')->findNotFellowshipUsers();
         //TESTING
-        return $this->testingReturn($request,$stopwatch);
+        //return $this->testingReturn($request,$stopwatch);
 
         $availableProjects = $transresUtil->getAvailableRequesterOrReviewerProjects();
         $progressStateArr = $transresRequestUtil->getProgressStateArr();
@@ -1594,7 +1603,7 @@ class RequestController extends Controller
         $dql->groupBy("transresRequest");
 
         //testing
-        $dql->andWhere("transresRequest.id = 2");
+        //$dql->andWhere("transresRequest.id = 2");
 
         $limit = 10;
         $query = $em->createQuery($dql);

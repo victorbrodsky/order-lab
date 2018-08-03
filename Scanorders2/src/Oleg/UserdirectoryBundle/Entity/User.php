@@ -1526,13 +1526,16 @@ class User extends BaseUser {
         $titles = array();
 
         //get appended degrees
-        foreach( $this->getTrainings() as $training ) {
-            if( $training->getAppendDegreeToName() && $training->getDegree() ) {
-                $degrees[] = $training->getDegree();
-            }
-            if( $training->getAppendFellowshipTitleToName() && $training->getFellowshipTitle() ) {
-                if( $training->getFellowshipTitle()->getAbbreviation() ) {
-                    $titles[] = $training->getFellowshipTitle()->getAbbreviation();
+        $trainings = $this->getTrainings();
+        if( $trainings && is_array($trainings) ) {
+            foreach($trainings as $training) {
+                if ($training->getAppendDegreeToName() && $training->getDegree()) {
+                    $degrees[] = $training->getDegree();
+                }
+                if ($training->getAppendFellowshipTitleToName() && $training->getFellowshipTitle()) {
+                    if ($training->getFellowshipTitle()->getAbbreviation()) {
+                        $titles[] = $training->getFellowshipTitle()->getAbbreviation();
+                    }
                 }
             }
         }

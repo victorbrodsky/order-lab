@@ -20,6 +20,7 @@ namespace Oleg\TranslationalResearchBundle\Util;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query;
 use Oleg\TranslationalResearchBundle\Entity\AdminReview;
 use Oleg\TranslationalResearchBundle\Entity\CommitteeReview;
 use Oleg\TranslationalResearchBundle\Entity\FinalReview;
@@ -3738,6 +3739,7 @@ class TransResUtil
         //$users = $this->em->getRepository('OlegUserdirectoryBundle:User')->findBy(array('createdby'=>array('googleapi')));
         //return $users;
 
+        //Multiple (384 - all users in DB) FROM scan_perSiteSettings t0 WHERE t0.fosuser = ?
         $repository = $this->em->getRepository('OlegUserdirectoryBundle:User');
         $dql = $repository->createQueryBuilder("list");
         $dql->select('list');
@@ -3752,6 +3754,8 @@ class TransResUtil
         $dql->orderBy("infos.displayName","ASC");
 
         $query = $dql->getQuery();
+
+        $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
 
         //doctrine cache queries
         //$query->useQueryCache(true);
