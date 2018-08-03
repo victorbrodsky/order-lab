@@ -1167,6 +1167,12 @@ class Project {
 
     //used by select2. Limit by 15 chars
     public function getProjectInfoNameChoice() {
+        return $this->getProjectInfoLimited(false);
+    }
+    public function getProjectInfoNameWithPIChoice() {
+        return $this->getProjectInfoLimited(true);
+    }
+    public function getProjectInfoLimited($withpis=true) {
         //$info = $this->getProjectInfoName();
         //$info = $this->getOid() . " submitted on ".$this->getCreateDate()->format('m/d/Y'); //. " at ".$this->getCreateDate()->format('H:i:s')
         //$info = $this->getOid() . ", submitted on " . $this->getCreateDate()->format('m/d/Y');
@@ -1181,17 +1187,14 @@ class Project {
             $info = $info . ", " . $title;
         }
 
-        $pis = $this->getPrincipalInvestigators();
-        if( count($pis) > 0 ) {
-            $pi = $pis[0];
-            $piStr = ", PI " . $pi->getUsernameShortest();
-
-//            $limit = 30;
-//            if( strlen($piStr) > $limit ) {
-//                $piStr = substr($piStr, 0, $limit) . '...';
-//            }
-
-            $info = $info . $piStr;
+        //This PI's info will add number of queries equal to the number of existing projects
+        if($withpis) {
+            $pis = $this->getPrincipalInvestigators();
+            if (count($pis) > 0) {
+                $pi = $pis[0];
+                $piStr = ", PI " . $pi->getUsernameShortest();
+                $info = $info . $piStr;
+            }
         }
 
         if( $this->getCreateDate() ) {
