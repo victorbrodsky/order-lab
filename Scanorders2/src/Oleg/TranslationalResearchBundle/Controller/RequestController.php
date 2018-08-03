@@ -1777,7 +1777,7 @@ class RequestController extends Controller
 
         //Template: OlegTranslationalResearchBundle:Request:index.html.twig
         return array(
-            'filterDisable' => true, //testing
+            //'filterDisable' => true, //testing
             'transresRequests' => $transresRequests,
             //'allTransresRequests' => $allTransresRequests,
             //'project' => null,
@@ -1786,8 +1786,8 @@ class RequestController extends Controller
             'requestTotalFeeHtml' => null, //$requestTotalFeeHtml
             'advancedFilter' => $advancedFilter,
             'project' => $project,
-            'hideaction' => true,
-            'hiderows' => true,
+            //'hideaction' => true,
+            //'hiderows' => true,
 
         );
     }
