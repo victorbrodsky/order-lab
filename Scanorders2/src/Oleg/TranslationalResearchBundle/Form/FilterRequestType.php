@@ -250,7 +250,7 @@ class FilterRequestType extends AbstractType
 //                'label' => false,
 //                'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Project"),
 //            ));
-            echo "Use all projects <br>";
+            //echo "Use all projects <br>";
             $builder->add('project', EntityType::class, array(
                 'class' => 'OlegTranslationalResearchBundle:Project',
                 'choice_label' => 'getProjectInfoNameChoice', //this option causes ~135 additional DB queries (~number of existing projects)
