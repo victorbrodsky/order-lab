@@ -1,7 +1,7 @@
 
-{% stopwatch "### header ###" %}
+{#{% stopwatch "### header ###" %}#}
 {% extends "OlegTranslationalResearchBundle::Default/base.html.twig" %}
-{% endstopwatch %}
+{#{% endstopwatch %}#}
 
 {% import "OlegTranslationalResearchBundle::Default/transresRequestMacros.html.twig" as transresRequestMacros %}
 
@@ -28,7 +28,7 @@
         </p>
     {% endif %}
 
-    {% stopwatch "### New Work Request ###" %}
+    {#{% stopwatch "### New Work Request ###" %}#}
     {% if project %}
         {% set isRequestCanBeCreated = transres_request_util.isRequestCanBeCreated(project) %}
         {% if isRequestCanBeCreated == 1 %}
@@ -40,17 +40,17 @@
             {#<br>#}
         {% endif %}
     {% endif %}
-    {% endstopwatch %}
+    {#{% endstopwatch %}#}
 
-    {% stopwatch "### transresRequestsFilter ###" %}
+    {#{% stopwatch "### transresRequestsFilter ###" %}#}
     {% if filterDisable is not defined %}
         {{ transresRequestMacros.transresRequestsFilter(filterform,advancedFilter) }}
     {% endif %}
-    {% endstopwatch %}
+    {#{% endstopwatch %}#}
 
     <br>
 
-    {% stopwatch "### table ###" %}
+    {#{% stopwatch "### table ###" %}#}
     {#<table class="table table-hover table-condensed text-left table-bordered">#}
     <table class="records_list table table-condensed text-left my-table-class">
         <thead>
@@ -80,12 +80,12 @@
         {#{% set count = 0 %}#}
         {% for transresRequest in transresRequests %}
 
-            {% stopwatch "### getLatestInvoice ###" %}
+            {#{% stopwatch "### getLatestInvoice ###" %}#}
             {% set latestInvoice = transres_request_util.getLatestInvoice(transresRequest) %}
             {% if latestInvoice and latestInvoice.oid %}
                 {{ transresRequestMacros.unpaidModal(latestInvoice) }}
             {% endif %}
-            {% endstopwatch %}
+            {#{% endstopwatch %}#}
 
             {#{% if count is odd %}#}
                 {#{% set trclassname = "table-row-separator-gray" %}#}
@@ -107,23 +107,23 @@
                     <a href="{{ path(translationalresearch_sitename~'_request_show', { 'id': transresRequest.id }) }}" target="_blank">{{ transresRequest.oid }}</a>
                 </td>
 
-                {% stopwatch "### transresRequest.project.getOid() ###" %}
+                {#{% stopwatch "### transresRequest.project.getOid() ###" %}#}
                 {% if not project %}
                     <td class="rowlink-skip">
                         <a href="{{ path(translationalresearch_sitename~'_project_show', { 'id': transresRequest.project.id }) }}"
                            target="_blank">{{ transresRequest.project.getOid() }}</a>
                     </td>
                 {% endif %}
-                {% endstopwatch %}
+                {#{% endstopwatch %}#}
 
-                {% stopwatch "### submitter.getUsernameOptimal() ###" %}
+                {#{% stopwatch "### submitter.getUsernameOptimal() ###" %}#}
                 <td class="rowlink-skip">
                     {#{{ principalInvestigator }}<br>#}
                     {% set personurl = path(translationalresearch_sitename~'_showuser',{'id':transresRequest.submitter.id}) %}
                     {% set personlink = '<a href="'~personurl~'" target="_blank">'~transresRequest.submitter.getUsernameOptimal()~'</a>'  %}
                     {{ personlink|raw }}<br>
                 </td>
-                {% endstopwatch %}
+                {#{% endstopwatch %}#}
 
                 <td>
                     {% if transresRequest.createDate %}
@@ -135,19 +135,19 @@
                     {{ transresRequest.fundedAccountNumber }}
                 </td>
 
-                {% stopwatch "### getProgressStateLabelByName ###" %}
+                {#{% stopwatch "### getProgressStateLabelByName ###" %}#}
                 <td>
                     {{ transres_request_util.getProgressStateLabelByName(transresRequest.progressState) }}
                 </td>
-                {% endstopwatch %}
+                {#{% endstopwatch %}#}
 
-                {% stopwatch "### getBillingStateLabelByName ###" %}
+                {#{% stopwatch "### getBillingStateLabelByName ###" %}#}
                 <td>
                     {{ transres_request_util.getBillingStateLabelByName(transresRequest.billingState) }}
                 </td>
-                {% endstopwatch %}
+                {#{% endstopwatch %}#}
 
-                {% stopwatch "### product.category.getShortInfo() ###" %}
+                {#{% stopwatch "### product.category.getShortInfo() ###" %}#}
                 <td>
                     {% for product in transresRequest.products %}
                         {% if product.category %}
@@ -155,18 +155,18 @@
                         {% endif %}
                     {% endfor %}
                 </td>
-                {% endstopwatch %}
+                {#{% endstopwatch %}#}
 
-                {% stopwatch "### getTransResRequestFeeHtml ###" %}
+                {#{% stopwatch "### getTransResRequestFeeHtml ###" %}#}
                 <td>
                     {% set fee = transres_request_util.getTransResRequestFeeHtml(transresRequest) %}
                     {% if fee %}
                         ${{ fee|raw }}
                     {% endif %}
                 </td>
-                {% endstopwatch %}
+                {#{% endstopwatch %}#}
 
-                {% stopwatch "### invoicesCount ###" %}
+                {#{% stopwatch "### invoicesCount ###" %}#}
                 <td class="rowlink-skip">
                     {% set invoicesCount = transresRequest.invoices|length %}
                     {% if invoicesCount > 0 %}
@@ -183,7 +183,7 @@
                         {% endif %}
                     {% endif %}
                 </td>
-                {% endstopwatch %}
+                {#{% endstopwatch %}#}
 
                 <td>
                 {% if latestInvoice and latestInvoice.oid %}
@@ -191,7 +191,7 @@
                 {% endif %}
                 </td>
 
-                {% stopwatch "### getInvoicesInfosByRequest ###" %}
+                {#{% stopwatch "### getInvoicesInfosByRequest ###" %}#}
                 {#Invoices #}
                 {% set invoicesInfos = transres_request_util.getInvoicesInfosByRequest(transresRequest) %}
                 <td>
@@ -209,11 +209,11 @@
                         ${{ invoicesInfos.due }}
                     {% endif %}
                 </td>
-                {% endstopwatch %}
+                {#{% endstopwatch %}#}
                 {% endif %} {#hiderows#}
 
                 {% if hideaction is not defined or not hideaction %}
-                {% stopwatch "### Action ###" %}
+                {#{% stopwatch "### Action ###" %}#}
                 <td class="rowlink-skip">
                     <div class="btn-group">
                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -404,7 +404,7 @@
 
                     </div>
                 </td>
-                {% endstopwatch %}
+                {#{% endstopwatch %}#}
                 {% endif %} {#hideaction#}
             </tr>
             {#<tr class="table-no-border">#}
@@ -416,14 +416,14 @@
         {% endfor %}
         </tbody>
     </table>
-    {% endstopwatch %}
+    {#{% endstopwatch %}#}
 
-    {% stopwatch "### knp_pagination_render ###" %}
+    {#{% stopwatch "### knp_pagination_render ###" %}#}
     {# display navigation #}
     <div class="navigation">
         {{ knp_pagination_render(transresRequests) }}
     </div>
-    {% endstopwatch %}
+    {#{% endstopwatch %}#}
 
     {#{{ render(controller('OlegTranslationalResearchBundle:Project:threadComments', { 'id': "3-9-committee_review" })) }}#}
     {#{% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': "3-9-committee_review"} %}#}
