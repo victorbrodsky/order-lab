@@ -112,7 +112,7 @@ class TransResRequestType extends AbstractType
             //echo "2availableProjects count=".count($this->params['availableProjects'])."<br>";
             $builder->add('project', EntityType::class, array(
                 'class' => 'OlegTranslationalResearchBundle:Project',
-                'choice_label' => 'getProjectInfoNameChoice',
+                'choice_label' => 'getProjectInfoNameWithPIsChoice',
                 'choices' => $this->params['availableProjects'],
                 'label' => 'Project:',
                 //'disabled' => ($this->params['admin'] ? false : true),
