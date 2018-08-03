@@ -231,12 +231,12 @@ class FilterRequestType extends AbstractType
 //            'attr' => array('class' => 'combobox'),
 //        ));
 
-        return;
+        //return;
         if( $this->params['routeName'] == "translationalresearch_request_index" ) {
             //echo "Use data projects <br>";
             $builder->add('project', EntityType::class, array(
                 'class' => 'OlegTranslationalResearchBundle:Project',
-                //'choice_label' => "getProjectInfoNameChoice",
+                'choice_label' => "getProjectInfoNameChoice",
                 'required' => false,
                 'label' => false,
                 'data' => $this->params['project'],
@@ -253,7 +253,7 @@ class FilterRequestType extends AbstractType
             echo "Use all projects <br>";
             $builder->add('project', EntityType::class, array(
                 'class' => 'OlegTranslationalResearchBundle:Project',
-                //'choice_label' => 'getProjectInfoNameChoice', //this option causes ~135 additional DB queries (~number of existing projects)
+                'choice_label' => 'getProjectInfoNameChoice', //this option causes ~135 additional DB queries (~number of existing projects)
                 'choices' => $this->params['availableProjects'],
                 //'disabled' => ($this->params['admin'] ? false : true),
                 //'disabled' => true,
