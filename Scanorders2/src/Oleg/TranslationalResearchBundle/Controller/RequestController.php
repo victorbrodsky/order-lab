@@ -963,7 +963,7 @@ class RequestController extends Controller
         }
 
         //////// create filter //////////
-        $transresUsers = $transresUtil->getAppropriatedUsers(); // this will cause ~400 DB queries
+        $transresUsers = $transresUtil->getAppropriatedUsers();
         //$transresUsers = $em->getRepository('OlegUserdirectoryBundle:User')->findNotFellowshipUsers();
         //TESTING
         //return $this->testingReturn($request,$stopwatch);

@@ -19,6 +19,7 @@ namespace Oleg\UserdirectoryBundle\Repository;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query;
 
 
 class UserRepository extends EntityRepository {
@@ -705,8 +706,7 @@ class UserRepository extends EntityRepository {
             ->where("list.createdby != 'googleapi'")
             ->orderBy("infos.displayName","ASC")
         ;
-
-        return $query->getQuery()->getResult();
+        return $query->getQuery()->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)->getResult();
     }
 }
 
