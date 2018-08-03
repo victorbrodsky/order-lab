@@ -60,36 +60,7 @@ class FilterRequestType extends AbstractType
 //                },
             ));
         //}
-        
-        if( $this->params['routeName'] == "translationalresearch_request_index" ) {
-            $builder->add('project', EntityType::class, array(
-                'class' => 'OlegTranslationalResearchBundle:Project',
-                'choice_label' => "getProjectInfoNameChoice",
-                'required' => false,
-                'label' => false,
-                'data' => $this->params['project'],
-                'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Project"),
-            ));
-        } else {
-//            $builder->add('project', EntityType::class, array(
-//                'class' => 'OlegTranslationalResearchBundle:Project',
-//                'choice_label' => "getProjectInfoName",
-//                'required' => false,
-//                'label' => false,
-//                'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Project"),
-//            ));
-            $builder->add('project', EntityType::class, array(
-                'class' => 'OlegTranslationalResearchBundle:Project',
-                'choice_label' => 'getProjectInfoNameChoice',
-                'choices' => $this->params['availableProjects'],
-                //'disabled' => ($this->params['admin'] ? false : true),
-                //'disabled' => true,
-                'required' => false,
-                'multiple' => false,
-                'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Project")
-            ));
-        }
-        
+
         $builder->add('comment', TextType::class, array(
             'required'=>false,
             'label' => false,
@@ -259,6 +230,38 @@ class FilterRequestType extends AbstractType
 //            ),
 //            'attr' => array('class' => 'combobox'),
 //        ));
+
+
+        if( $this->params['routeName'] == "translationalresearch_request_index" ) {
+            //echo "Use data projects <br>";
+            $builder->add('project', EntityType::class, array(
+                'class' => 'OlegTranslationalResearchBundle:Project',
+                //'choice_label' => "getProjectInfoNameChoice",
+                'required' => false,
+                'label' => false,
+                'data' => $this->params['project'],
+                'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Project"),
+            ));
+        } else {
+//            $builder->add('project', EntityType::class, array(
+//                'class' => 'OlegTranslationalResearchBundle:Project',
+//                'choice_label' => "getProjectInfoName",
+//                'required' => false,
+//                'label' => false,
+//                'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Project"),
+//            ));
+            echo "Use all projects <br>";
+            $builder->add('project', EntityType::class, array(
+                'class' => 'OlegTranslationalResearchBundle:Project',
+                //'choice_label' => 'getProjectInfoNameChoice', //this option causes ~135 additional DB queries (~number of existing projects)
+                'choices' => $this->params['availableProjects'],
+                //'disabled' => ($this->params['admin'] ? false : true),
+                //'disabled' => true,
+                'required' => false,
+                'multiple' => false,
+                'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Project")
+            ));
+        }
 
     }
 

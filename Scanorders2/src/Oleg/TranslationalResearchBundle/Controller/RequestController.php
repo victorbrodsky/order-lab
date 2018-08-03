@@ -964,6 +964,32 @@ class RequestController extends Controller
         }
 
         //////// create filter //////////
+        $requestId = null;
+        $externalId = null;
+        $submitter = null;
+        $progressStates = null;
+        $billingStates = null;
+        $category = null;
+        $projectSpecialties = null;
+        $projectFilter = null;
+        $searchStr = null;
+        $startDate = null;
+        $endDate = null;
+        $principalInvestigators = null;
+        $billingContact = null;
+        $fundingNumber = null;
+        $fundingType = null;
+        $filterType = null;
+        $filterTitle = null;
+        $projectSpecialties = array();
+        $submitter = null;
+        $project = null;
+        $ids = array();
+
+        $showOnlyMyProjects = false;
+    $withfilter = true;
+    //$withfilter = false;
+    if( $withfilter ) {
         $transresUsers = $transresUtil->getAppropriatedUsers();
         //$transresUsers = $em->getRepository('OlegUserdirectoryBundle:User')->findNotFellowshipUsers();
         //TESTING
@@ -976,26 +1002,26 @@ class RequestController extends Controller
         //add "All except Drafts"
         $progressStateArr["All except Drafts"] = "All-except-Drafts";
 
-        if( $timer ) {
+        if ($timer) {
             $stopwatch->start('FilterRequestType');
         }
 
         $params = array(
             'transresUsers' => $transresUsers,
-            'progressStateArr'=>$progressStateArr,
-            'billingStateArr'=>$billingStateArr,
-            'routeName'=>$routeName,
+            'progressStateArr' => $progressStateArr,
+            'billingStateArr' => $billingStateArr,
+            'routeName' => $routeName,
             'projectSpecialtyAllowedArr' => $projectSpecialtyAllowedArr,
             'availableProjects' => $availableProjects
         );
-        $filterform = $this->createForm(FilterRequestType::class, null,array(
+        $filterform = $this->createForm(FilterRequestType::class, null, array(
             'method' => 'GET',
-            'form_custom_value'=>$params
+            'form_custom_value' => $params
         ));
 
-        if( $timer ) {
+        if ($timer) {
             $event = $stopwatch->stop('FilterRequestType');
-            echo "FilterRequestType duration: ".($event->getDuration()/1000)." sec<br>";
+            echo "FilterRequestType duration: " . ($event->getDuration() / 1000) . " sec<br>";
 
             $stopwatch->start('handleRequest');
         }
@@ -1005,49 +1031,51 @@ class RequestController extends Controller
         //TESTING
         //return $this->testingReturn($request,$stopwatch);
 
-        if( $timer ) {
+        if ($timer) {
             $event = $stopwatch->stop('handleRequest');
-            echo "handleRequest duration: ".($event->getDuration()/1000)." sec<br>";
+            echo "handleRequest duration: " . ($event->getDuration() / 1000) . " sec<br>";
         }
 
         $submitter = null;
         $project = null;
 
-        if( $timer ) {
+        if ($timer) {
             $stopwatch->start('getFilterData');
         }
 
-        $requestId = $filterform['requestId']->getData();
-        $externalId = $filterform['externalId']->getData();
-        $submitter = $filterform['submitter']->getData();
-        $progressStates = $filterform['progressState']->getData();
-        $billingStates = $filterform['billingState']->getData();
-        $category = $filterform['category']->getData();
-        $projectSpecialties = $filterform['projectSpecialty']->getData();
-        $projectFilter = $filterform['project']->getData();
+        if(1) {
+            $requestId = $filterform['requestId']->getData();
+            $externalId = $filterform['externalId']->getData();
+            $submitter = $filterform['submitter']->getData();
+            $progressStates = $filterform['progressState']->getData();
+            $billingStates = $filterform['billingState']->getData();
+            $category = $filterform['category']->getData();
+            $projectSpecialties = $filterform['projectSpecialty']->getData();
+            $projectFilter = $filterform['project']->getData();
 
-        $searchStr = $filterform['comment']->getData();
-        $startDate = $filterform['startDate']->getData();
-        $endDate = $filterform['endDate']->getData();
-        $principalInvestigators = $filterform['principalInvestigators']->getData();
-        //$accountNumber = $filterform['accountNumber']->getData();
-        $billingContact = $filterform['billingContact']->getData();
-        $fundingNumber = $filterform['fundingNumber']->getData();
-        $fundingType = $filterform['fundingType']->getData();
-        $filterType = trim( $request->get('type') );
-        $filterTitle = trim( $request->get('title') );
+            $searchStr = $filterform['comment']->getData();
+            $startDate = $filterform['startDate']->getData();
+            $endDate = $filterform['endDate']->getData();
+            $principalInvestigators = $filterform['principalInvestigators']->getData();
+            //$accountNumber = $filterform['accountNumber']->getData();
+            $billingContact = $filterform['billingContact']->getData();
+            $fundingNumber = $filterform['fundingNumber']->getData();
+            $fundingType = $filterform['fundingType']->getData();
+            $filterType = trim($request->get('type'));
+            $filterTitle = trim($request->get('title'));
 
-        //replace - with space
-        $filterType = str_replace("-"," ",$filterType);
+            //replace - with space
+            $filterType = str_replace("-", " ", $filterType);
+        }
 
         //$showMatchingAndTotal = $filterform['showMatchingAndTotal']->getData();
         //echo "filterType=$filterType<br>";
         //exit();
 
-        if( isset($filterform['submitter']) ) {
+        if (isset($filterform['submitter'])) {
             $submitter = $filterform['submitter']->getData();
         }
-        if( isset($filterform['project']) ) {
+        if (isset($filterform['project'])) {
             $project = $filterform['project']->getData();
         }
 //        if( isset($filterform['projectSpecialty']) ) {
@@ -1056,9 +1084,9 @@ class RequestController extends Controller
 //            $projectSpecialties = $projectSpecialtyAllowedArr;
 //        }
 
-        if( $timer ) {
+        if ($timer) {
             $event = $stopwatch->stop('getFilterData');
-            echo "getFilterData duration: ".($event->getDuration()/1000)." sec<br>";
+            echo "getFilterData duration: " . ($event->getDuration() / 1000) . " sec<br>";
         }
         //////// EOF create filter //////////
 
@@ -1068,13 +1096,13 @@ class RequestController extends Controller
 
 
         //force to set project specialty filter for non-admin users
-        if( $transresUtil->isAdminOrPrimaryReviewer() === false ) {
+        if ($transresUtil->isAdminOrPrimaryReviewer() === false) {
 
             //TODO: fix no specialty cases
-            if( 0 && count($projectSpecialties) == 0 ) {
+            if (0 && count($projectSpecialties) == 0) {
                 //echo "allowed spec=".count($projectSpecialtyAllowedArr)."<br>";
                 //echo "filterType=".$filterType."<br>";
-                $projectSpecialtyReturn = $transresUtil->getReturnIndexSpecialtyArray($projectSpecialtyAllowedArr,$project,$filterType);
+                $projectSpecialtyReturn = $transresUtil->getReturnIndexSpecialtyArray($projectSpecialtyAllowedArr, $project, $filterType);
                 //print_r($projectSpecialtyReturn);
                 //exit("no spec");
                 return $this->redirectToRoute(
@@ -1083,13 +1111,13 @@ class RequestController extends Controller
                 );
             }
 
-            if( count($projectSpecialties) == 0 ) {
+            if (count($projectSpecialties) == 0) {
                 $projectSpecialties = $projectSpecialtyAllowedArr;
             }
 
             //if specialty contains $projectSpecialtyDeniedArr => exit
-            foreach($projectSpecialties as $thisProjectSpecialty) {
-                if( $projectSpecialtyDeniedArr->contains($thisProjectSpecialty) ) {
+            foreach ($projectSpecialties as $thisProjectSpecialty) {
+                if ($projectSpecialtyDeniedArr->contains($thisProjectSpecialty)) {
                     $this->get('session')->getFlashBag()->add(
                         'warning',
                         "You project specialty $thisProjectSpecialty conflicting with your allowed specialty"
@@ -1103,19 +1131,19 @@ class RequestController extends Controller
 
         //Non admin, Primary Reviewers and Executive can see all projects.
         // All other users can view only their projects (where they are requesters: PI, Pathologists Involved, Co-Investigators, Contacts, Billing Contacts)
-        if( $transresUtil->isAdminOrPrimaryReviewerOrExecutive() || $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN') ) {
+        if ($transresUtil->isAdminOrPrimaryReviewerOrExecutive() || $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')) {
             $showOnlyMyProjects = false;
         } else {
             $showOnlyMyProjects = true;
         }
-        if( $submitter ) {
+        if ($submitter) {
             $showOnlyMyProjects = false;
         }
         //echo 'showOnlyMyProjects='.$showOnlyMyProjects."<br>";
 
         //////////////// get Requests IDs with the form node filter ////////////////
         $ids = array();
-        if( $formnode ) {
+        if ($formnode) {
             //echo "use formnode<br>";
             if ($category) {
                 $categoryIds = $transresRequestUtil->getRequestIdsFormNodeByCategory($category);
@@ -1126,7 +1154,7 @@ class RequestController extends Controller
                 $ids = array_merge($ids, $commentIds);
             }
         }
-        if( count($ids) > 0 ) {
+        if (count($ids) > 0) {
             $ids = array_unique($ids);
             //print_r($ids);
         }
@@ -1134,14 +1162,14 @@ class RequestController extends Controller
 
         //exit('start filtering requests');
 
-        if( $filterType ) {
+        if ($filterType) {
             $filterTypeDone = false;
 
-            if( $filterType == "All Requests (including Drafts)" ) {
+            if ($filterType == "All Requests (including Drafts)") {
                 $title = "All Work Requests (including Drafts)";
                 $filterTypeDone = true;
             }
-            if( $filterType == "All Requests" ) {
+            if ($filterType == "All Requests") {
                 //$title = "All Work Requests";
                 //$filterTypeDone = true;
                 return $this->redirectToRoute(
@@ -1163,7 +1191,7 @@ class RequestController extends Controller
 //                    )
 //                );
 //            }
-            if( $filterType == "My Submitted Requests" ) {
+            if ($filterType == "My Submitted Requests") {
                 //exit('start filtering '.$filterType);
                 return $this->redirectToRoute(
                     'translationalresearch_request_index_filter',
@@ -1176,7 +1204,7 @@ class RequestController extends Controller
 
             $titleAdd = "";
             //set filter's progressState or add a filter option "my projects only"
-            if( $filterType == "Submitted Requests for My Projects" ) {
+            if ($filterType == "Submitted Requests for My Projects") {
                 //exit('start filtering '.$filterType);
                 //where I'm a project's requester
                 $filterTypeDone = true;
@@ -1193,7 +1221,7 @@ class RequestController extends Controller
 //                );
             }
             //set filter's progressState or add a filter option "my projects only"
-            if( $filterType == "Draft Requests for My Projects" ) {
+            if ($filterType == "Draft Requests for My Projects") {
                 //exit('start filtering '.$filterType);
                 //where I'm a project's requester
                 $filterTypeDone = true;
@@ -1201,7 +1229,7 @@ class RequestController extends Controller
                 $progressStates = array('draft');
                 $titleAdd = "Draft ";
             }
-            if( $filterType == "My Draft Requests" ) {
+            if ($filterType == "My Draft Requests") {
                 //exit('start filtering '.$filterType);
                 return $this->redirectToRoute(
                     'translationalresearch_request_index_filter',
@@ -1213,7 +1241,7 @@ class RequestController extends Controller
                 );
             }
 
-            if( $filterType == "All AP/CP Requests" ) {
+            if ($filterType == "All AP/CP Requests") {
                 $projectSpecialtyObject = $transresUtil->getSpecialtyObject("ap-cp");
                 return $this->redirectToRoute(
                     'translationalresearch_request_index_filter',
@@ -1224,7 +1252,7 @@ class RequestController extends Controller
                     )
                 );
             }
-            if( $filterType == "All Hematopathology Requests" ) {
+            if ($filterType == "All Hematopathology Requests") {
                 $projectSpecialtyObject = $transresUtil->getSpecialtyObject("hematopathology");
                 return $this->redirectToRoute(
                     'translationalresearch_request_index_filter',
@@ -1237,7 +1265,7 @@ class RequestController extends Controller
             }
 
             //"Pending" is all status except, Canceled, Completed, CompletedNotified
-            if( $filterType == "All Pending Requests" ) {
+            if ($filterType == "All Pending Requests") {
                 $pendingRequestArr = $transresRequestUtil->getFilterPendingRequestArr($filterType);
 
                 return $this->redirectToRoute(
@@ -1245,7 +1273,7 @@ class RequestController extends Controller
                     $pendingRequestArr
                 );
             }
-            if( $filterType == "All AP/CP Pending Requests" ) {
+            if ($filterType == "All AP/CP Pending Requests") {
                 $pendingRequestArr = $transresRequestUtil->getFilterPendingRequestArr($filterType);
 
                 $projectSpecialtyObject = $transresUtil->getSpecialtyObject("ap-cp");
@@ -1256,7 +1284,7 @@ class RequestController extends Controller
                     $pendingRequestArr
                 );
             }
-            if( $filterType == "All Hematopathology Pending Requests" ) {
+            if ($filterType == "All Hematopathology Pending Requests") {
                 $pendingRequestArr = $transresRequestUtil->getFilterPendingRequestArr($filterType);
 
                 $projectSpecialtyObject = $transresUtil->getSpecialtyObject("hematopathology");
@@ -1282,7 +1310,7 @@ class RequestController extends Controller
                 );
             }
 
-            if( $filterType == "All Active Requests" ) {
+            if ($filterType == "All Active Requests") {
                 return $this->redirectToRoute(
                     'translationalresearch_request_index_filter',
                     array(
@@ -1291,7 +1319,7 @@ class RequestController extends Controller
                     )
                 );
             }
-            if( $filterType == "All AP/CP Active Requests" ) {
+            if ($filterType == "All AP/CP Active Requests") {
                 $projectSpecialtyObject = $transresUtil->getSpecialtyObject("ap-cp");
                 return $this->redirectToRoute(
                     'translationalresearch_request_index_filter',
@@ -1302,7 +1330,7 @@ class RequestController extends Controller
                     )
                 );
             }
-            if( $filterType == "All Hematopathology Active Requests" ) {
+            if ($filterType == "All Hematopathology Active Requests") {
                 $projectSpecialtyObject = $transresUtil->getSpecialtyObject("hematopathology");
                 return $this->redirectToRoute(
                     'translationalresearch_request_index_filter',
@@ -1314,7 +1342,7 @@ class RequestController extends Controller
                 );
             }
 
-            if( $filterType == "All Completed Requests" ) {
+            if ($filterType == "All Completed Requests") {
                 return $this->redirectToRoute(
                     'translationalresearch_request_index_filter',
                     array(
@@ -1323,7 +1351,7 @@ class RequestController extends Controller
                     )
                 );
             }
-            if( $filterType == "All AP/CP Completed Requests" ) {
+            if ($filterType == "All AP/CP Completed Requests") {
                 $projectSpecialtyObject = $transresUtil->getSpecialtyObject("ap-cp");
                 return $this->redirectToRoute(
                     'translationalresearch_request_index_filter',
@@ -1334,7 +1362,7 @@ class RequestController extends Controller
                     )
                 );
             }
-            if( $filterType == "All Hematopathology Completed Requests" ) {
+            if ($filterType == "All Hematopathology Completed Requests") {
                 $projectSpecialtyObject = $transresUtil->getSpecialtyObject("hematopathology");
                 return $this->redirectToRoute(
                     'translationalresearch_request_index_filter',
@@ -1346,7 +1374,7 @@ class RequestController extends Controller
                 );
             }
 
-            if( $filterType == "All Completed and Notified Requests" ) {
+            if ($filterType == "All Completed and Notified Requests") {
                 return $this->redirectToRoute(
                     'translationalresearch_request_index_filter',
                     array(
@@ -1355,7 +1383,7 @@ class RequestController extends Controller
                     )
                 );
             }
-            if( $filterType == "All AP/CP Completed and Notified Requests" ) {
+            if ($filterType == "All AP/CP Completed and Notified Requests") {
                 $projectSpecialtyObject = $transresUtil->getSpecialtyObject("ap-cp");
                 return $this->redirectToRoute(
                     'translationalresearch_request_index_filter',
@@ -1366,7 +1394,7 @@ class RequestController extends Controller
                     )
                 );
             }
-            if( $filterType == "All Hematopathology Completed and Notified Requests" ) {
+            if ($filterType == "All Hematopathology Completed and Notified Requests") {
                 $projectSpecialtyObject = $transresUtil->getSpecialtyObject("hematopathology");
                 return $this->redirectToRoute(
                     'translationalresearch_request_index_filter',
@@ -1386,15 +1414,15 @@ class RequestController extends Controller
 //                );
 //            }
 
-            if( !$filterTypeDone ) {
+            if (!$filterTypeDone) {
                 $this->get('session')->getFlashBag()->add(
                     'notice',
                     "Filter pre-set type '$filterType' is not defined"
                 );
-                exit("Filter Type not known ".$filterType);
+                exit("Filter Type not known " . $filterType);
             }
         }
-
+    }
         //exit("Start filtering...");
 
         if( $timer ) {
@@ -1740,13 +1768,18 @@ class RequestController extends Controller
             echo "myRequestsAction memory: ".($event->getMemory()/1000000)." MB<br>";
         }
 
+        $filterformView = null;
+        if( $withfilter ) {
+            $filterformView = $filterform->createView();
+        }
+
         //Template: OlegTranslationalResearchBundle:Request:index.html.twig
         return array(
             //'filterDisable' => true, //testing
             'transresRequests' => $transresRequests,
             //'allTransresRequests' => $allTransresRequests,
             //'project' => null,
-            'filterform' => $filterform->createView(),
+            'filterform' => $filterformView,
             'title' => $title,
             'requestTotalFeeHtml' => null, //$requestTotalFeeHtml
             'advancedFilter' => $advancedFilter,
@@ -1790,8 +1823,8 @@ class RequestController extends Controller
             'requestTotalFeeHtml' => null, //$requestTotalFeeHtml
             //'advancedFilter' => $advancedFilter,
             'project' => null,
-            //'hideaction' => true,
-            //'hiderows' => true,
+            'hideaction' => true,
+            'hiderows' => true,
 
         );
     }
