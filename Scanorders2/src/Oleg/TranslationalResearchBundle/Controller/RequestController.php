@@ -26,6 +26,7 @@ namespace Oleg\TranslationalResearchBundle\Controller;
 
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Query;
 use Oleg\OrderformBundle\Form\DataTransformer\AccessionTypeTransformer;
 use Oleg\TranslationalResearchBundle\Entity\DataResult;
 use Oleg\TranslationalResearchBundle\Entity\Product;
@@ -1001,6 +1002,9 @@ class RequestController extends Controller
 
         $filterform->handleRequest($request);
 
+        //TESTING
+        //return $this->testingReturn($request,$stopwatch);
+
         if( $timer ) {
             $event = $stopwatch->stop('handleRequest');
             echo "handleRequest duration: ".($event->getDuration()/1000)." sec<br>";
@@ -1641,6 +1645,9 @@ class RequestController extends Controller
             $stopwatch->start('PaginatorResult');
         }
 
+        //TESTING
+        //$query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+
         $paginator  = $this->get('knp_paginator');
         $transresRequests = $paginator->paginate(
             $query,
@@ -1649,6 +1656,9 @@ class RequestController extends Controller
             $paginationParams
         );
         //echo "transresRequests count=".count($transresRequests)."<br>";
+
+        //TESTING
+        //return $this->testingReturn($request,$stopwatch);
 
         if( $timer ) {
 //            $time_post2 = microtime(true); //microseconds
@@ -1667,7 +1677,7 @@ class RequestController extends Controller
         }
 
         $withMatching = true;
-        $withMatching = false;
+        //$withMatching = false;
         if( $withMatching ) {
             //Title
             $requestTotalFeeHtml = null;
