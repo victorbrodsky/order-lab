@@ -1169,7 +1169,7 @@ class Project {
     public function getProjectInfoNameChoice() {
         return $this->getProjectInfoLimited(false);
     }
-    public function getProjectInfoNameWithPIChoice() {
+    public function getProjectInfoNameWithPIsChoice() {
         return $this->getProjectInfoLimited(true);
     }
     public function getProjectInfoLimited($withpis=true) {
