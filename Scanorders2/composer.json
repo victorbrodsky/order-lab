@@ -75,8 +75,7 @@
         ]
     },
     "config": {
-        "bin-dir": "bin",
-        "optimize-autoloader": true
+        "bin-dir": "bin"
     },
     "minimum-stability": "stable",
     "extra": {

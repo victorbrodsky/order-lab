@@ -890,6 +890,8 @@ class RequestController extends Controller
         );
     }
 
+    //OPTIMIZATION:
+    //TRY composer: config: "optimize-autoloader": true
     /**
      * Finds and displays the filtered requests lists
      *
@@ -1634,8 +1636,8 @@ class RequestController extends Controller
         $query = $em->createQuery($dql);
 
         //doctrine cache queries
-        $query->useQueryCache(true);
-        $query->useResultCache(true);
+        //$query->useQueryCache(true);
+        //$query->useResultCache(true);
 
         //if($withMatching) {
             //$query2 = $em->createQuery($dql);
