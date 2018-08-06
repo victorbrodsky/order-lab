@@ -1484,37 +1484,8 @@ function getAddNewUserModalByForm(btnDom,sitename,otherUserParam,newUserFormHtml
     //get field id (assume select box)
     var comboboxEl = $(btnDom).closest('.row').find('select.combobox');
     var fieldId = comboboxEl.attr('id');
-    //fieldId = "'"+fieldId+"'";
     //console.log("fieldId="+fieldId);
-
-    //sitename = "'"+sitename+"'";
-    //otherUserParam = "'"+otherUserParam+"'";
     //console.log("sitename="+sitename);
-
-    // var modalHtml =
-    //     '<div id="user-add-new-user" class="modal fade">' +
-    //         '<div class="modal-dialog">' +
-    //             '<div class="modal-content">' +
-    //                 '<div class="modal-header text-center">' +
-    //                     '<button id="user-add-btn-dismiss" type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
-    //                     '<h3 id="dataConfirmLabel">Add name and contact info for an unlisted person</h3>' +
-    //                 '</div>' +
-    //                 '<div class="modal-body text-center">' +
-    //                     newUserFormHtml +
-    //                     '<div id="add-user-danger-box" class="alert alert-danger" style="display: none;"></div>' +
-    //                 '</div>' +
-    //                 '<div class="modal-footer">' +
-    //                     '<button id="user-add-btn-cancel" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Cancel</button>' +
-    //                     '<a class="btn btn-primary add-user-btn-add" id="add-user-btn-add" onclick="addNewUserAction('+fieldId+','+sitename+','+otherUserParam+')">Add</a>' +
-    //                 '</div>' +
-    //             '</div>' +
-    //         '</div>' +
-    //     '</div>';
-    //
-    // $('body').append(modalHtml);
-    //
-    // getComboboxGeneric($('#user-add-new-user'),'administrativetitletype',_addmintitles,false);
-    // getComboboxCompositetree($('#user-add-new-user'));
 
     constructAddNewUserModalByForm(newUserFormHtml,fieldId,sitename,otherUserParam,'body');
 

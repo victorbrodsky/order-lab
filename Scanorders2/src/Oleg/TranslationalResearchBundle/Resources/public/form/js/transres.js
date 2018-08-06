@@ -31,7 +31,6 @@ $(document).ready(function() {
         if(1) {
             var url = Routing.generate('employees_new_simple_user');
             var comboboxValue = null;
-
             $.ajax({
                 url: url,
                 timeout: _ajaxTimeout,
@@ -44,8 +43,6 @@ $(document).ready(function() {
                 console.log(response);
                 //newUserFormHtml,fieldId,sitename,otherUserParam,appendHolder
                 constructAddNewUserModalByForm(response, "[[fieldId]]", "translationalresearch", "[[otherUserParam]]", "#add-new-user-modal-prototype",false);
-                //getComboboxGeneric($('#user-add-new-user'),'administrativetitletype',_addmintitles,false);
-                //getComboboxCompositetree($('#user-add-new-user'));
             }).done(function () {
                 //lbtn.stop();
             }).error(function (jqXHR, textStatus, errorThrown) {
