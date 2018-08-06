@@ -1919,19 +1919,22 @@ class ProjectController extends Controller
     }
 
     /**
-     * @Route("/download-projects-excel/{ids}", name="translationalresearch_download_projects_excel")
+     * @Route("/download-projects-excel/{ids}/{limit}", name="translationalresearch_download_projects_excel")
      */
-    public function downloadApplicantListExcelAction(Request $request, $ids) {
+    public function downloadApplicantListExcelAction(Request $request, $ids, $limit=null) {
 
         if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER')) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
         //exit("ids=".$ids);
+        //exit("limit=".$limit);
 
         if( count($ids) == 0 ) {
             exit("No Projects to Export to Excel");
         }
+
+        ini_set('memory_limit', '3072M');
 
         //$em = $this->getDoctrine()->getManager();
         $transresUtil = $this->container->get('transres_util');
@@ -1945,7 +1948,7 @@ class ProjectController extends Controller
 
         $projectIdsArr = explode(',', $ids);
 
-        $excelBlob = $transresUtil->createProjectListExcel($projectIdsArr);
+        $excelBlob = $transresUtil->createProjectListExcel($projectIdsArr,$limit);
 
         //$writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($excelBlob, 'Excel2007');
         $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($excelBlob, 'Xlsx');

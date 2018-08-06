@@ -1670,13 +1670,16 @@ class UserController extends Controller
         $user->setFirstName($firstName);
         $user->setLastName($lastName);
 
+        $primaryPublicUserIdLabel = $userSecUtil->getSiteSettingParameter('noticeLdapName');
+
         $params = array(
             'cycle' => 'create',
             'user' => $user,
             'cloneuser' => $subjectUser,
             'roles' => $rolesArr,
             'container' => $this->container,
-            'em' => $em
+            'em' => $em,
+            'primaryPublicUserIdLabel' => $primaryPublicUserIdLabel
         );
 
 //        $form = $this->createForm(new UserType($params), $user, array(

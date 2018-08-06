@@ -3016,10 +3016,10 @@ class TransResUtil
     }
 
     //use https://phpspreadsheet.readthedocs.io/en/develop/topics/recipes/
-    public function createProjectListExcel($projectIdsArr) {
+    public function createProjectListExcel($projectIdsArr,$limit=null) {
 
         $transresRequestUtil = $this->container->get('transres_request_util');
-        $transResFormNodeUtil = $this->container->get('transres_formnode_util');
+        //$transResFormNodeUtil = $this->container->get('transres_formnode_util');
 
         $author = $this->container->get('security.token_storage')->getToken()->getUser();
         //$transformer = new DateTimeToStringTransformer(null,null,'d/m/Y');
@@ -3114,6 +3114,7 @@ class TransResUtil
 
         $ews->getStyle('A1:P1')->applyFromArray($styleBoldArray);
 
+        $count = 0;
         $totalRequests = 0;
         $totalInvoices = 0;
         $totalTotal = 0;
@@ -3122,6 +3123,10 @@ class TransResUtil
 
         $row = 2;
         foreach( $projectIdsArr as $projectId ) {
+
+            if( $limit && ($count++ > $limit) ) {
+                break;
+            }
 
             $project = $this->em->getRepository('OlegTranslationalResearchBundle:Project')->find($projectId);
             if( !$project ) {

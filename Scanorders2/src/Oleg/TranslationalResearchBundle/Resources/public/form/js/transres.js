@@ -19,10 +19,40 @@ _transresprojecttypes = [];
 
 $(document).ready(function() {
 
+    var cycle = $("#formcycle").val();
+
     //console.log('transres form ready');
     transresIrbApprovalLetterListener();
 
-    transresNewUserListener();
+    if( cycle == "new" || cycle == "edit") {
+        transresNewUserListener();
+
+        //CONSTRUCT MODAL with Preloaded
+        if(1) {
+            var url = Routing.generate('employees_new_simple_user');
+            var comboboxValue = null;
+
+            $.ajax({
+                url: url,
+                timeout: _ajaxTimeout,
+                type: "GET",
+                //type: "POST",
+                data: {comboboxValue: comboboxValue},
+                //dataType: 'json',
+                async: asyncflag
+            }).success(function (response) {
+                console.log(response);
+                //newUserFormHtml,fieldId,sitename,otherUserParam,appendHolder
+                constructAddNewUserModalByForm(response, "[[fieldId]]", "translationalresearch", "[[otherUserParam]]", "#add-new-user-modal-prototype",false);
+                //getComboboxGeneric($('#user-add-new-user'),'administrativetitletype',_addmintitles,false);
+                //getComboboxCompositetree($('#user-add-new-user'));
+            }).done(function () {
+                //lbtn.stop();
+            }).error(function (jqXHR, textStatus, errorThrown) {
+                console.log('Error : ' + errorThrown);
+            });
+        }
+    }
 
     getComboboxGeneric(null,'transresprojecttypes',_transresprojecttypes,false);
 

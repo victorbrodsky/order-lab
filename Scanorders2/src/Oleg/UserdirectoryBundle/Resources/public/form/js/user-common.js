@@ -1364,7 +1364,57 @@ function waitfor(test, expectedValue, msec, count, source, callback) {
 }
 
 
+function constructNewUserModal(btnDom, sitename, otherUserParam) {
+    //1) get html form from add-new-user-modal-prototype
+    //var modalHtml = $("#add-new-user-modal-prototype").text();
+    var modalDiv = document.getElementById('add-new-user-modal-prototype');
+    var modalHtml = modalDiv.innerHTML;
 
+    console.log("modalHtml="+modalHtml);
+
+    //2) get fieldId and otherUserParam
+    //2a) get otherUserParam
+    var holder = $(btnDom).closest('.row');
+    //console.log(holder);
+    otherUserParam = holder.find('select.add-new-user-on-enter').data("otheruserparam");
+    if (otherUserParam === undefined) {
+        otherUserParam = holder.find('select.add-new-user-on-enter').data("otheruserparam");
+    }
+
+    //2b) get field id (assume select box)
+    var comboboxEl = $(btnDom).closest('.row').find('select.combobox');
+    var fieldId = comboboxEl.attr('id');
+
+    //3) replace fieldId and otherUserParam
+    modalHtml = modalHtml.replace("[[fieldId]]",fieldId);
+    modalHtml = modalHtml.replace("[[otherUserParam]]",otherUserParam);
+    modalHtml = modalHtml.replace("user-add-new-user","user-add-new-user-instance");
+    console.log("modalHtml="+modalHtml);
+
+    //4) show modal
+    $('body').append(modalHtml);
+
+    getComboboxGeneric($('#user-add-new-user-instance'),'administrativetitletype',_addmintitles,false);
+    getComboboxCompositetree($('#user-add-new-user-instance'));
+
+    $('#user-add-new-user-instance').modal(
+        {
+            show:true,
+            keyboard: false,
+            backdrop: 'static'
+        }
+    );
+
+    $("#user-add-new-user-instance").on('hidden.bs.modal', function () {
+        //console.log("hidden.bs.modal");
+        $('#user-add-new-user-instance').find( '.modal' ).modal( 'hide' ).data( 'bs.modal', null );
+
+        $('#user-add-new-user-instance').find( '.modal' ).remove();
+        $('#user-add-new-user-instance').find( '.modal-backdrop' ).remove();
+        $('#user-add-new-user-instance').remove();
+        $('body').removeClass( "modal-open" );
+    });
+}
 
 //btnDom - is the 'this' button attached to the field where a new user is to be created
 //otherUserParam - ap-cp, hematopathology
@@ -1372,14 +1422,30 @@ function addNewUserOnFly( btnDom, sitename, otherUserParam ) {
     //console.log("Add New User on Fly");
     constructAddNewUserModalByAjax(btnDom,sitename,otherUserParam);
 }
-function constructAddNewUserModalByAjax(btnDom,sitename,otherUserParam1,selectElement) {
+function constructAddNewUserModalByAjax(btnDom,sitename,otherUserParam,selectElement) {
+
+    //Show temp modal "Please wait..."
+    var tempModalHtml = '<div id="new-user-temp-modal" class="modal fade" role="dialog">'+
+                        '<div class="modal-dialog">'+
+                            '<div class="modal-content">'+
+                                '<div class="modal-header">'+
+                                    '<h4 class="modal-title">Loading ...</h4>'+
+                                '</div>'+
+                            '</div>'+
+                        '</div>'+
+                    '</div>';
+    console.log("Create temp modal tempModalHtml="+tempModalHtml);
+    $('body').append(tempModalHtml);
+
     var url = Routing.generate('employees_new_simple_user');
 
-    var holder = $(btnDom).closest('.row');
-    //console.log(holder);
-    var otherUserParam = holder.find('select.add-new-user-on-enter').data("otheruserparam");
     if( otherUserParam === undefined ) {
-        otherUserParam = holder.find('select.add-new-user-on-enter').data("otheruserparam");
+        var holder = $(btnDom).closest('.row');
+        //console.log(holder);
+        var otherUserParam = holder.find('select.add-new-user-on-enter').data("otheruserparam");
+        if (otherUserParam === undefined) {
+            otherUserParam = holder.find('select.add-new-user-on-enter').data("otheruserparam");
+        }
     }
     //console.log("otherUserParam="+otherUserParam);
     
@@ -1389,13 +1455,6 @@ function constructAddNewUserModalByAjax(btnDom,sitename,otherUserParam1,selectEl
         //console.log("selectElement exists: comboboxValue="+comboboxValue);
     }
     //console.log("comboboxValue="+comboboxValue);
-    
-    // var holder = $(this).closest('.col-xs-6');
-    // var comboboxValue2 = holder.find('.select2-search > input.select2-input').select2('val');
-    // var comboboxValue3 = holder.find('.select2-search > input.select2-input').val();
-    // console.log("comboboxValue2="+comboboxValue2);
-    // console.log(comboboxValue2);
-    // console.log("comboboxValue3="+comboboxValue3);
     
     $.ajax({
         url: url,
@@ -1407,7 +1466,11 @@ function constructAddNewUserModalByAjax(btnDom,sitename,otherUserParam1,selectEl
         async: asyncflag
     }).success(function(response) {
         //console.log(response);
-        constructAddNewUserModalByForm(btnDom,sitename,otherUserParam,response)
+        //Remove temp modal addNewUserOnFly
+        $('.modal').modal('hide').data('bs.modal', null );
+        $('.modal').remove();
+        $("#new-user-temp-modal").remove();
+        getAddNewUserModalByForm(btnDom,sitename,otherUserParam,response)
     }).done(function() {
         //lbtn.stop();
     }).error(function(jqXHR, textStatus, errorThrown) {
@@ -1415,40 +1478,45 @@ function constructAddNewUserModalByAjax(btnDom,sitename,otherUserParam1,selectEl
     });
 }
 //employees_new_simple_user
-function constructAddNewUserModalByForm(btnDom,sitename,otherUserParam,newUserFormHtml) {
+function getAddNewUserModalByForm(btnDom,sitename,otherUserParam,newUserFormHtml) {
     //console.log("construct modal");
 
     //get field id (assume select box)
     var comboboxEl = $(btnDom).closest('.row').find('select.combobox');
     var fieldId = comboboxEl.attr('id');
-    fieldId = "'"+fieldId+"'";
+    //fieldId = "'"+fieldId+"'";
     //console.log("fieldId="+fieldId);
 
-    sitename = "'"+sitename+"'";
-    otherUserParam = "'"+otherUserParam+"'";
+    //sitename = "'"+sitename+"'";
+    //otherUserParam = "'"+otherUserParam+"'";
     //console.log("sitename="+sitename);
 
-    var modalHtml =
-        '<div id="user-add-new-user" class="modal fade">' +
-            '<div class="modal-dialog">' +
-                '<div class="modal-content">' +
-                    '<div class="modal-header text-center">' +
-                        '<button id="user-add-btn-dismiss" type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
-                        '<h3 id="dataConfirmLabel">Add name and contact info for an unlisted person</h3>' +
-                    '</div>' +
-                    '<div class="modal-body text-center">' +
-                        newUserFormHtml +
-                        '<div id="add-user-danger-box" class="alert alert-danger" style="display: none;"></div>' +
-                    '</div>' +
-                    '<div class="modal-footer">' +
-                        '<button id="user-add-btn-cancel" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Cancel</button>' +
-                        '<a class="btn btn-primary add-user-btn-add" id="add-user-btn-add" onclick="addNewUserAction('+fieldId+','+sitename+','+otherUserParam+')">Add</a>' +
-                    '</div>' +
-                '</div>' +
-            '</div>' +
-        '</div>';
+    // var modalHtml =
+    //     '<div id="user-add-new-user" class="modal fade">' +
+    //         '<div class="modal-dialog">' +
+    //             '<div class="modal-content">' +
+    //                 '<div class="modal-header text-center">' +
+    //                     '<button id="user-add-btn-dismiss" type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
+    //                     '<h3 id="dataConfirmLabel">Add name and contact info for an unlisted person</h3>' +
+    //                 '</div>' +
+    //                 '<div class="modal-body text-center">' +
+    //                     newUserFormHtml +
+    //                     '<div id="add-user-danger-box" class="alert alert-danger" style="display: none;"></div>' +
+    //                 '</div>' +
+    //                 '<div class="modal-footer">' +
+    //                     '<button id="user-add-btn-cancel" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Cancel</button>' +
+    //                     '<a class="btn btn-primary add-user-btn-add" id="add-user-btn-add" onclick="addNewUserAction('+fieldId+','+sitename+','+otherUserParam+')">Add</a>' +
+    //                 '</div>' +
+    //             '</div>' +
+    //         '</div>' +
+    //     '</div>';
+    //
+    // $('body').append(modalHtml);
+    //
+    // getComboboxGeneric($('#user-add-new-user'),'administrativetitletype',_addmintitles,false);
+    // getComboboxCompositetree($('#user-add-new-user'));
 
-    $('body').append(modalHtml);
+    constructAddNewUserModalByForm(newUserFormHtml,fieldId,sitename,otherUserParam,'body');
 
     getComboboxGeneric($('#user-add-new-user'),'administrativetitletype',_addmintitles,false);
     getComboboxCompositetree($('#user-add-new-user'));
@@ -1475,6 +1543,36 @@ function constructAddNewUserModalByForm(btnDom,sitename,otherUserParam,newUserFo
     });
 
     return false;
+}
+function constructAddNewUserModalByForm(newUserFormHtml,fieldId,sitename,otherUserParam,appendHolder) {
+    fieldId = "'"+fieldId+"'";
+    sitename = "'"+sitename+"'";
+    otherUserParam = "'"+otherUserParam+"'";
+    var modalHtml =
+        '<div id="user-add-new-user" class="modal fade">' +
+        '<div class="modal-dialog">' +
+        '<div class="modal-content">' +
+        '<div class="modal-header text-center">' +
+        '<button id="user-add-btn-dismiss" type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
+        '<h3 id="dataConfirmLabel">Add name and contact info for an unlisted person</h3>' +
+        '</div>' +
+        '<div class="modal-body text-center">' +
+        newUserFormHtml +
+        '<div id="add-user-danger-box" class="alert alert-danger" style="display: none;"></div>' +
+        '</div>' +
+        '<div class="modal-footer">' +
+        '<button id="user-add-btn-cancel" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Cancel</button>' +
+        '<a class="btn btn-primary add-user-btn-add" id="add-user-btn-add" onclick="addNewUserAction('+fieldId+','+sitename+','+otherUserParam+')">Add</a>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '</div>';
+
+    if( appendHolder === undefined ) {
+        appendHolder = 'body';
+    }
+
+    $(appendHolder).append(modalHtml);
 }
 
 function addNewUserAction( fieldId, sitename, otherUserParam ) {

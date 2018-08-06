@@ -102,14 +102,14 @@ class UserSimpleType extends AbstractType
 
     public function userNamePreferredContactInfo($builder) {
 
-        $primaryPublicUserIdLabel = 'CWID:';
+        $primaryPublicUserIdLabel = 'CWID';
         if( isset($this->params['primaryPublicUserIdLabel']) ) {
             $primaryPublicUserIdLabel = $this->params['primaryPublicUserIdLabel'];
         }
 
         $primaryPublicUserIdAttr = array('class'=>'form-control form-control-modif');
         $builder->add('primaryPublicUserId', null, array(
-            'label' => $primaryPublicUserIdLabel,
+            'label' => $primaryPublicUserIdLabel.":",
             'required' => false,
             //'disabled' => $readOnly,   //($this->cycle == 'create' ? false : true ), //it is not possible to edit keytype for existed user
             //'attr' => array('class'=>'form-control', 'readonly'=>$readOnly),

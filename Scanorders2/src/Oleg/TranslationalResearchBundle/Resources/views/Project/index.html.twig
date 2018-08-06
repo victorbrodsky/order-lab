@@ -16,19 +16,19 @@
 
 {% if filterError is not defined or (filterError is defined and not filterError) %}
 
-    {% if allProjectIdsArr|length > 0 %}
-        {% set exportProjectLimit = 500 %}
-        {% if allProjectIdsArr|length <= exportProjectLimit %}
+    {#{% if allProjectIdsArr|length > 0 %}#}
+        {#{% set exportProjectLimit = 500 %}#}
+        {#{% if allProjectIdsArr|length <= exportProjectLimit %}#}
             {#transres_util.getProjectsIdsStr(allProjectIds)#}
-            <p>
-                <a href="{{ path('translationalresearch_download_projects_excel',{'ids':allProjectIdsArr|join(',')}) }}">
-                    <i class="fa fa-file-excel-o"></i> Export matching project summaries to Excel</a>
-            </p>
-        {% else %}
-            <p>Project export to Excel is not available (too many projects). Limit is {{ exportProjectLimit }} project requests.</p>
-        {% endif %}
+            {#<p>#}
+                {#<a href="{{ path('translationalresearch_download_projects_excel',{'ids':allProjectIdsArr|join(',')}) }}">#}
+                    {#<i class="fa fa-file-excel-o"></i> Export matching project summaries to Excel</a>#}
+            {#</p>#}
+        {#{% else %}#}
+            {#<p>Project export to Excel is not available (too many projects). Limit is {{ exportProjectLimit }} project requests.</p>#}
+        {#{% endif %}#}
 
-    {% endif %}
+    {#{% endif %}#}
 
     {% if filterDisable is not defined %}
     <div class="well form-search">

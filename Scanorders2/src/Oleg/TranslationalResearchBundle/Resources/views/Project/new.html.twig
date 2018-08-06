@@ -14,6 +14,8 @@
     <input type="hidden" id="formnodeTopHolderId" value="{{ formnodeTopHolderId }}" />
     <input type="hidden" id="formcycle" value="{{ cycle }}" />
 
+    <div id="add-new-user-modal-prototype"></div>
+
     <h4 class="text-info" align="center">
         {{ title }}
     </h4>
@@ -48,7 +50,7 @@
             is_granted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE') or
             is_granted('ROLE_TRANSRES_TECHNICIAN')
         %}
-            {{ transres.projectInfo(form,project,cycle) }}
+            {#{{ transres.projectInfo(form,project,cycle) }}#}
             {{ transres.projectReviews(form,cycle,sitename) }}
         {% endif %}
 
