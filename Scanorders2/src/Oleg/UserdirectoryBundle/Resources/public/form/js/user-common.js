@@ -1533,7 +1533,7 @@ function constructAddNewUserModalByForm(newUserFormHtml,fieldId,sitename,otherUs
         '</div>' +
         '<div class="modal-footer">' +
         '<button id="user-add-btn-cancel" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Cancel</button>' +
-        '<a class="btn btn-primary add-user-btn-add" id="add-user-btn-add" onclick="addNewUserAction('+fieldId+','+sitename+','+otherUserParam+')">Add</a>' +
+        '<a class="btn btn-primary add-user-btn-add" id="add-user-btn-add" onclick="addNewUserAction(this,'+fieldId+','+sitename+','+otherUserParam+')">Add</a>' +
         '</div>' +
         '</div>' +
         '</div>' +
@@ -1546,39 +1546,41 @@ function constructAddNewUserModalByForm(newUserFormHtml,fieldId,sitename,otherUs
     $(appendHolder).append(modalHtml);
 }
 
-function addNewUserAction( fieldId, sitename, otherUserParam ) {
+function addNewUserAction( addUserBtn, fieldId, sitename, otherUserParam ) {
 
-    $('#add-user-danger-box').hide();
-    $('#add-user-danger-box').html(null);
+    var holder = $(addUserBtn).closest(".modal");
+
+    holder.find('#add-user-danger-box').hide();
+    holder.find('#add-user-danger-box').html(null);
 
     var btn = document.getElementById("add-user-btn-add");
     //var btn = btnEl.get(0);
     var lbtn = Ladda.create( btn );
     lbtn.start();
-    $("#user-add-btn-dismiss").hide();
-    $("#user-add-btn-cancel").hide();
+    holder.find("#user-add-btn-dismiss").hide();
+    holder.find("#user-add-btn-cancel").hide();
 
     var transTime = 500;
 
     //console.log("add New UserAction: Add New User Ajax");
 
-    var cwid = $("#oleg_userdirectorybundle_user_primaryPublicUserId").val();
+    var cwid = holder.find("#oleg_userdirectorybundle_user_primaryPublicUserId").val();
     //console.log("cwid="+cwid);
     //var userid = $("#add-new-user-userid").val();
     //console.log("userid="+userid);
-    var email = $("#oleg_userdirectorybundle_user_infos_0_email").val();
+    var email = holder.find("#oleg_userdirectorybundle_user_infos_0_email").val();
     //console.log("email="+email);
     //var displayname = $("#add-new-user-displayname").val();
     //console.log("displayname="+displayname);
-    var firstname = $("#oleg_userdirectorybundle_user_infos_0_firstName").val();
+    var firstname = holder.find("#oleg_userdirectorybundle_user_infos_0_firstName").val();
     //console.log("firstname="+firstname);
-    var lastname = $("#oleg_userdirectorybundle_user_infos_0_lastName").val();
+    var lastname = holder.find("#oleg_userdirectorybundle_user_infos_0_lastName").val();
     //console.log("lastname="+lastname);
-    var phone = $("#oleg_userdirectorybundle_user_infos_0_preferredPhone").val();
+    var phone = holder.find("#oleg_userdirectorybundle_user_infos_0_preferredPhone").val();
     //console.log("phone="+phone);
-    var administrativetitle = $("#oleg_userdirectorybundle_user_administrativeTitles_0_name").select2('val');
+    var administrativetitle = holder.find("#oleg_userdirectorybundle_user_administrativeTitles_0_name").select2('val');
     //console.log("administrativetitle="+administrativetitle);
-    var institution = $("#oleg_userdirectorybundle_user_administrativeTitles_0_institution").select2('val');
+    var institution = holder.find("#oleg_userdirectorybundle_user_administrativeTitles_0_institution").select2('val');
     //console.log("institution="+institution);
 
     var errorMsg = null;
@@ -1595,12 +1597,12 @@ function addNewUserAction( fieldId, sitename, otherUserParam ) {
     }
 
     if( errorMsg ) {
-        $('#add-user-danger-box').html(errorMsg);   //"Please enter a new user email address");
-        $('#add-user-danger-box').show(transTime);
+        holder.find('#add-user-danger-box').html(errorMsg);   //"Please enter a new user email address");
+        holder.find('#add-user-danger-box').show(transTime);
 
         lbtn.stop();
-        $("#user-add-btn-dismiss").show();
-        $("#user-add-btn-cancel").show();
+        holder.find("#user-add-btn-dismiss").show();
+        holder.find("#user-add-btn-cancel").show();
 
         return false;
     }
@@ -1635,11 +1637,11 @@ function addNewUserAction( fieldId, sitename, otherUserParam ) {
         if( response.flag == "NOTOK" ) {
             //console.log('NOTOK');
             lbtn.stop();
-            $("#user-add-btn-dismiss").show();
-            $("#user-add-btn-cancel").show();
+            holder.find("#user-add-btn-dismiss").show();
+            holder.find("#user-add-btn-cancel").show();
 
-            $('#add-user-danger-box').html(response.error);
-            $('#add-user-danger-box').show(transTime);
+            holder.find('#add-user-danger-box').html(response.error);
+            holder.find('#add-user-danger-box').show(transTime);
         } else {
             //console.log('OK');
             updateUserComboboxes(response,fieldId);
@@ -1649,16 +1651,16 @@ function addNewUserAction( fieldId, sitename, otherUserParam ) {
 
     }).done(function() {
         lbtn.stop();
-        $("#user-add-btn-dismiss").show();
-        $("#user-add-btn-cancel").show();
+        holder.find("#user-add-btn-dismiss").show();
+        holder.find("#user-add-btn-cancel").show();
     }).error(function(jqXHR, textStatus, errorThrown) {
         console.log('Error : ' + errorThrown);
         lbtn.stop();
-        $("#user-add-btn-dismiss").show();
-        $("#user-add-btn-cancel").show();
+        holder.find("#user-add-btn-dismiss").show();
+        holder.find("#user-add-btn-cancel").show();
 
-        $('#add-user-danger-box').html('Error : ' + errorThrown);
-        $('#add-user-danger-box').show(transTime);
+        holder.find('#add-user-danger-box').html('Error : ' + errorThrown);
+        holder.find('#add-user-danger-box').show(transTime);
     });
 
 }
