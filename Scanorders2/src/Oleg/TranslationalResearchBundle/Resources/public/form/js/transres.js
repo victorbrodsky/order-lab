@@ -30,7 +30,7 @@ $(document).ready(function() {
         //CONSTRUCT MODAL with Preloaded
         if(1) {
             var url = Routing.generate('employees_new_simple_user');
-            var comboboxValue = null;
+            var comboboxValue = "[[lastName]]";
             $.ajax({
                 url: url,
                 timeout: _ajaxTimeout,
@@ -255,5 +255,14 @@ function transresOpenNewUserModal(thisElement) {
     var btnDom = $(thisElement).closest('.row').find('a'); //.click();
     var sitename = "translationalresearch";
     var otherUserParam = null;
-    constructAddNewUserModalByAjax(btnDom,sitename,otherUserParam,thisElement);
+
+    //constructAddNewUserModalByAjax(btnDom,sitename,otherUserParam,thisElement);
+
+    var comboboxValue = null;
+    if( thisElement !== undefined ) {
+        comboboxValue = thisElement.value;
+        //console.log("thisElement exists: comboboxValue="+comboboxValue);
+    }
+
+    constructNewUserModal(btnDom,sitename,otherUserParam,comboboxValue);
 }

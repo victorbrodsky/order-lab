@@ -1364,7 +1364,7 @@ function waitfor(test, expectedValue, msec, count, source, callback) {
 }
 
 
-function constructNewUserModal(btnDom, sitename, otherUserParam) {
+function constructNewUserModal(btnDom, sitename, otherUserParam, comboboxValue) {
     //1) get html form from add-new-user-modal-prototype
     //var modalHtml = $("#add-new-user-modal-prototype").text();
     var modalDiv = document.getElementById('add-new-user-modal-prototype');
@@ -1385,11 +1385,18 @@ function constructNewUserModal(btnDom, sitename, otherUserParam) {
     var comboboxEl = $(btnDom).closest('.row').find('select.combobox');
     var fieldId = comboboxEl.attr('id');
 
-    //3) replace fieldId and otherUserParam
+    //3a) replace fieldId and otherUserParam
     modalHtml = modalHtml.replace("[[fieldId]]",fieldId);
     modalHtml = modalHtml.replace("[[otherUserParam]]",otherUserParam);
     modalHtml = modalHtml.replace("user-add-new-user","user-add-new-user-instance");
     console.log("modalHtml="+modalHtml);
+
+    //3b) replace lastName by comboboxValue
+    if( comboboxValue !== undefined ) {
+        modalHtml = modalHtml.replace("[[lastName]]",comboboxValue);
+    } else {
+        modalHtml = modalHtml.replace("[[lastName]]","");
+    }
 
     //4) show modal
     $('body').append(modalHtml);

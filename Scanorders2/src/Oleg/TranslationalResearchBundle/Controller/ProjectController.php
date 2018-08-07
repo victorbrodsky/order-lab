@@ -1919,7 +1919,7 @@ class ProjectController extends Controller
     }
 
     /**
-     * @Route("/download-projects-excel/{ids}/{limit}", name="translationalresearch_download_projects_excel")
+     * @Route("/download-projects-spreadsheet/{ids}/{limit}", name="translationalresearch_download_projects_excel")
      */
     public function downloadApplicantListExcelAction(Request $request, $ids, $limit=null) {
 
