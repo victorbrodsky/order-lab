@@ -91,6 +91,7 @@ class SiteList extends ListAbstract
 
         $this->setShowLinkHomePage(true);
         $this->setShowLinkNavbar(true);
+        $this->setAccessibility(true);
     }
     
 

@@ -89,9 +89,9 @@ class MaintenanceListener {
             strpos($uri, '/admin/') === false
         ) {
             $sitename = $this->getSiteName($controller);
-            if( $sitename ) {
+            if( $sitename && $sitename != "employees" ) {
                 $siteObject = $this->em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation($sitename);
-                if( $siteObject && $siteObject->getAccessibility() === false ) {
+                if( $siteObject && $userSecUtil->isSiteAccessible($sitename) ) {
                     $systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
 
                     $session = $this->container->get('session');
