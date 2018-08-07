@@ -1370,26 +1370,32 @@ function constructNewUserModal(btnDom, sitename, otherUserParam, comboboxValue) 
     var modalDiv = document.getElementById('add-new-user-modal-prototype');
     var modalHtml = modalDiv.innerHTML;
 
-    console.log("modalHtml="+modalHtml);
+    //console.log("modalHtml="+modalHtml);
+    //console.log($(btnDom));
+    var holder = $(btnDom).closest('.row');
+    //console.log(holder);
 
     //2) get fieldId and otherUserParam
     //2a) get otherUserParam
-    var holder = $(btnDom).closest('.row');
-    //console.log(holder);
-    otherUserParam = holder.find('select.add-new-user-on-enter').data("otheruserparam");
-    if (otherUserParam === undefined) {
+    if( otherUserParam === undefined || !otherUserParam ) {
+        //console.log(holder);
         otherUserParam = holder.find('select.add-new-user-on-enter').data("otheruserparam");
+        if (otherUserParam === undefined) {
+            otherUserParam = holder.find('select.add-new-user-on-enter').data("otheruserparam");
+        }
     }
+    //console.log("otherUserParam="+otherUserParam);
 
     //2b) get field id (assume select box)
-    var comboboxEl = $(btnDom).closest('.row').find('select.combobox');
+    var comboboxEl = holder.find('select.combobox');
     var fieldId = comboboxEl.attr('id');
+    //console.log("fieldId="+fieldId);
 
     //3a) replace fieldId and otherUserParam
     modalHtml = modalHtml.replace("[[fieldId]]",fieldId);
     modalHtml = modalHtml.replace("[[otherUserParam]]",otherUserParam);
     modalHtml = modalHtml.replace("user-add-new-user","user-add-new-user-instance");
-    console.log("modalHtml="+modalHtml);
+    //console.log("modalHtml="+modalHtml);
 
     //3b) replace lastName by comboboxValue
     if( comboboxValue !== undefined ) {
@@ -1441,7 +1447,7 @@ function constructAddNewUserModalByAjax(btnDom,sitename,otherUserParam,selectEle
                             '</div>'+
                         '</div>'+
                     '</div>';
-    console.log("Create temp modal tempModalHtml="+tempModalHtml);
+    //console.log("Create temp modal tempModalHtml="+tempModalHtml);
     $('body').append(tempModalHtml);
 
     var url = Routing.generate('employees_new_simple_user');
@@ -1702,7 +1708,10 @@ function updateUserComboboxes(response,fieldId) {
 
 }
 
-function selectExistingUserComboboxes(userId,fieldId) {
+//oleg_translationalresearchbundle_project_billingContact
+function selectExistingUserComboboxes(clickedDomEl, userId, fieldId) {
     $('#'+fieldId).val(userId).trigger("change");
-    document.getElementById("user-add-btn-dismiss").click();
+    var holder = $(clickedDomEl).closest(".modal");
+    //document.getElementById("user-add-btn-dismiss").click();
+    holder.find("#user-add-btn-dismiss").click();
 }

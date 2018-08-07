@@ -1798,7 +1798,7 @@ class UserController extends Controller
 
             $fieldId = "'".$fieldId."'";
             $selectExistingPerson =
-                '<a onclick="selectExistingUserComboboxes('.$user->getId().','.$fieldId.');"'.
+                '<a onclick="selectExistingUserComboboxes(this,'.$user->getId().','.$fieldId.');"'.
                 ' href="javascript:;"'.
                 '>click here to select this existing person</a>'
             ;

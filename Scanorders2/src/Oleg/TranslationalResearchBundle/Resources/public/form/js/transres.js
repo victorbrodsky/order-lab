@@ -40,7 +40,7 @@ $(document).ready(function() {
                 //dataType: 'json',
                 async: asyncflag
             }).success(function (response) {
-                console.log(response);
+                //console.log(response);
                 //newUserFormHtml,fieldId,sitename,otherUserParam,appendHolder
                 constructAddNewUserModalByForm(response, "[[fieldId]]", "translationalresearch", "[[otherUserParam]]", "#add-new-user-modal-prototype",false);
             }).done(function () {
@@ -234,19 +234,42 @@ function transresNewUserListener() {
     $('.add-new-user-on-enter').find('.select2-search-field > input.select2-input').on('keyup', function (e) {
         if (e.keyCode === 13)
         {
-            //console.log("value="+this.value);
-            transresOpenNewUserModal(this,e);
-        }
-    });
-    $('.add-new-user-on-enter').find('.select2-search > input.select2-input').on('keyup', function (e) {
-        if (e.keyCode === 13)
-        {
-            //console.log("value="+this.value);
+            //console.log("1 value="+this.value);
+            //console.log($(this));
             transresOpenNewUserModal(this);
         }
     });
+
+    //case for single select2: it does not work
+    // $('.add-new-user-on-enter').find('.select2-search > input.select2-input').on('keyup', function (e) {
+    //     if (e.keyCode === 13)
+    //     {
+    //         console.log("2 value="+this.value);
+    //         console.log(this);
+    //         console.log($(this));
+    //         transresOpenNewUserModal(this);
+    //     }
+    // });
+
+    //Special cases for single select2
+    $('#s2id_oleg_translationalresearchbundle_project_principalIrbInvestigator').find('.select2-search > input.select2-input').on('keyup', function (e) {
+        if (e.keyCode === 13)
+        {
+            //console.log("principalIrbInvestigator value="+this.value);
+            transresOpenNewUserModal($('#s2id_oleg_translationalresearchbundle_project_principalIrbInvestigator'),this.value);
+        }
+    });
+    $('#s2id_oleg_translationalresearchbundle_project_billingContact').find('.select2-search > input.select2-input').on('keyup', function (e) {
+        if (e.keyCode === 13)
+        {
+            //console.log("principalIrbInvestigator value="+this.value);
+            transresOpenNewUserModal($('#s2id_oleg_translationalresearchbundle_project_billingContact'),this.value);
+        }
+    });
+
+
 }
-function transresOpenNewUserModal(thisElement) {
+function transresOpenNewUserModal(thisElement,comboboxValue) {
     //console.log("value="+thisElement.value);
 
     //select2-no-results select2-drop
@@ -258,10 +281,12 @@ function transresOpenNewUserModal(thisElement) {
 
     //constructAddNewUserModalByAjax(btnDom,sitename,otherUserParam,thisElement);
 
-    var comboboxValue = null;
-    if( thisElement !== undefined ) {
-        comboboxValue = thisElement.value;
-        //console.log("thisElement exists: comboboxValue="+comboboxValue);
+    if( comboboxValue === undefined ) {
+        //var comboboxValue = null;
+        if (thisElement !== undefined) {
+            comboboxValue = thisElement.value;
+            //console.log("thisElement exists: comboboxValue="+comboboxValue);
+        }
     }
 
     constructNewUserModal(btnDom,sitename,otherUserParam,comboboxValue);
