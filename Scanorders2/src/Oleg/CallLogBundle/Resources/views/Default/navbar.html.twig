@@ -124,8 +124,8 @@
                                 <li><a href="{{ path(calllog_sitename~'_set_master_patient_record') }}">Set master record</a></li>
                             {% endif %}
                             {% if shownavbarfilter is defined and shownavbarfilter == false %}
-                                <li><a href="{{ path(calllog_sitename~'_export_csv',app.request.query.all) }}">Export the first 500 entries in .CSV</a></li>
-                                <li><a href="{{ path(calllog_sitename~'_export_csv_all',app.request.query.all) }}">Try to export all entries in .CSV</a></li>
+                                <li><a href="{{ path(calllog_sitename~'_export_csv',app.request.query.all) }}">Export the first 500 matching entries in .CSV</a></li>
+                                <li><a href="{{ path(calllog_sitename~'_export_csv_all',app.request.query.all) }}">Export all matching entrees in .CSV</a></li>
                             {% endif %}
                             {#{% if is_granted('ROLE_CALLLOG_PATHOLOGY_ATTENDING') %}#}
                                 {#<li>#}

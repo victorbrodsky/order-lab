@@ -169,6 +169,8 @@ class DashboardController extends Controller
             $chartDataArray['values'] = $values;
             $chartDataArray['labels'] = $labels;
             $chartDataArray['type'] = $type;
+            $chartDataArray["textinfo"] = "value+percent";
+            $chartDataArray["outsidetextfont"] = array('size'=>1,'color'=>'white');
             $dataArray[] = $chartDataArray;
 
             //$chartsArray['layout'] = $layoutArray;
@@ -453,12 +455,14 @@ class DashboardController extends Controller
 
         $labels = array();
         $values = array();
+        //$text = array();
         $layoutArray['title'] = $title;
 
         foreach( $dataArr as $label => $value ) {
             if( $type == "bar" || $value ) {
                 $labels[] = $label;
                 $values[] = $value;
+                //$text[] = $value;
             }
         }
 
@@ -477,6 +481,12 @@ class DashboardController extends Controller
         $chartDataArray[$xAxis] = $labels;
         $chartDataArray[$yAxis] = $values;
         $chartDataArray['type'] = $type;
+
+        //$chartDataArray["text"] = $text;
+        $chartDataArray["textinfo"] = "value+percent";
+        //hoverinfo: label+text+value+percent
+        $chartDataArray["outsidetextfont"] = array('size'=>1,'color'=>'white');
+
         $dataArray[] = $chartDataArray;
 
         //$chartsArray['layout'] = $layoutArray;
