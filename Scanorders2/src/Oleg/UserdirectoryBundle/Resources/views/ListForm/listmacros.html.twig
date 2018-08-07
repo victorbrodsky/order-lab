@@ -545,7 +545,7 @@
 
 
     {#additional attributes#}
-    {{ listmacros.additionalRelationships( form ) }}
+    {{ listmacros.additionalRelationships(form,entity) }}
 
     {#permissionList attributes#}
     {{ listmacros.permissionListAttributes( form ) }}
@@ -679,7 +679,7 @@
 
 
     {#additional attributes#}
-    {{ listmacros.additionalRelationships( edit_form ) }}
+    {{ listmacros.additionalRelationships(edit_form,entity) }}
 
     {#permissionList attributes#}
     {{ listmacros.permissionListAttributes( edit_form ) }}
@@ -727,7 +727,7 @@
 
 
 {#additional attributes#}
-{% macro additionalRelationships( form ) %}
+{% macro additionalRelationships( form, entity ) %}
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
@@ -921,18 +921,49 @@
         {#{{ formmacros.field(form.pdf) }}#}
         {#{{ formmacros.field(form.documents) }}#}
         {#{{ usermacros.documentsContainer(form,form.documents,cycle,'noprototype',8,'default','Document(s)','asForm',false) }}#}
+        {#<p>#}
+        {#<div class="well form-element-holder user-documents">#}
+            {#<label class="col-xs-12 control-label">Document(s)</label>#}
+            {#<div class="row withpaddingtop">#}
+                {#<div class="col-xs-12">#}
+                    {#{{ usermacros.documentsContainer(form,form.documents,cycle,'noprototype',8,'default','AntiBody Document','asForm',false) }}#}
+                {#</div>#}
+            {#</div>#}
+        {#</div>#}
+        {#</p>#}
+
+    {% endif %}
+
+    {% if form.documents is defined %}
+        <div id="form-prototype-data"
+             data-userurllink = "{{ usermacros.userUrlLink()|e }}"
+             data-uploadurl = "{{ oneup_uploader_endpoint('transres_gallery') }}"
+             data-userid = "{{ app.user.id }}"
+        ></div>
+
+        {% set docLabel = "Document(s)" %}
+        {% set docObjectType = "Document" %}
+        {% if entity.getEntityClassName() == "AntibodyList" %}
+            {% set docLabel = "Document(s)" %}
+            {% set docObjectType = "AntiBody Document" %}
+        {% endif %}
+        {% if entity.getEntityClassName() == "SiteList" %}
+            {% set docLabel = "Logo(s)" %}
+            {% set docObjectType = "Logo Document" %}
+        {% endif %}
         <p>
         <div class="well form-element-holder user-documents">
-            <label class="col-xs-12 control-label">Document(s)</label>
+            <label class="col-xs-12 control-label">{{ docLabel }}</label>
             <div class="row withpaddingtop">
                 <div class="col-xs-12">
-                    {{ usermacros.documentsContainer(form,form.documents,cycle,'noprototype',8,'default','AntiBody Document','asForm',false) }}
+                    {{ usermacros.documentsContainer(form,form.documents,cycle,'noprototype',8,'default',docObjectType,'asForm',false) }}
                 </div>
             </div>
         </div>
         </p>
 
     {% endif %}
+
 
 
 {% endmacro %}

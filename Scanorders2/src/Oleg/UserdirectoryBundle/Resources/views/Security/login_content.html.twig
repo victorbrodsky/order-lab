@@ -18,7 +18,14 @@
 {{ usermacros.nonLiveSiteWarning() }}
 {{ usermacros.browserCheck() }}
 
-<h2 class="alert alert-info well-lg safary-fix" align="center">{{ title }}</h2>
+    {% if logo is defined and logo %}
+        <img src="{{ asset(logo) }}" alt="{{ title }}" height="{{ logoHeight }}" width="{{ logoWidth }}">
+    {% else %}
+        <h2 class="alert alert-info well-lg safary-fix" align="center">
+            {{ title }}
+        </h2>
+    {% endif %}
+
 
 <br>
 

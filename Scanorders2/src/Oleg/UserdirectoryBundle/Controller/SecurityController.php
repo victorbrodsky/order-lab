@@ -170,6 +170,7 @@ class SecurityController extends Controller
             return null;
         }
 
+        $em = $this->getDoctrine()->getManager();
         $helper = $this->get('security.authentication_utils');
 
         //Symfony < 2.6 deprecated methods
@@ -194,10 +195,24 @@ class SecurityController extends Controller
         $lastUsernameArr = explode("_@_", $lastUsername);
         $lastUsername = $lastUsernameArr[0];
 
+        $logoPath = null;
+        $siteObject = $em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation($sitename);
+        if( $siteObject ) {
+            $logos = $siteObject->getDocuments();
+            if( count($logos) > 0 ) {
+                $logo = $logos->first();
+                //$packingSlipLogoFileName = $transresRequestUtil->getDefaultFile("transresPackingSlipLogos",null,$transresRequest);
+                $logoPath = $logo->getAbsoluteUploadFullPath();
+            }
+        }
+
         $formArr = array(
                             'last_username' => $lastUsername,   // last username entered by the user
                             'error'         => $error,
-                            'sitename'     => $sitename
+                            'sitename'     => $sitename,
+                            'logo'  => $logoPath,
+                            'logoHeight' => 80,
+                            'logoWidth' => 300
                         );
 
         return $formArr;

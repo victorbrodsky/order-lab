@@ -818,4 +818,14 @@ abstract class ListAbstract
 //    }
 
 
+    public function getEntityClassName() {
+        //$className = get_class($this);
+        //echo "className=".$className."<br>";
+        //exit('1');
+        //return get_class($this); //Oleg\TranslationalResearchBundle\Entity\AntibodyList
+
+        $reflect = new \ReflectionClass($this);
+        return $reflect->getShortName();
+    }
+
 }

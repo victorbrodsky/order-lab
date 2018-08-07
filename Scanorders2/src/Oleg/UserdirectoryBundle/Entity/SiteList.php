@@ -71,12 +71,23 @@ class SiteList extends ListAbstract
      */
     private $showLinkNavbar;
 
+    /**
+     * Logo image
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="user_site_document",
+     *      joinColumns={@ORM\JoinColumn(name="site_id", referencedColumnName="id", onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")}
+     *      )
+     * @ORM\OrderBy({"createdate" = "DESC"})
+     **/
+    private $documents;
 
 
     public function __construct( $creator = null ) {
         parent::__construct($creator);
 
         $this->lowestRoles = new ArrayCollection();
+        $this->documents = new ArrayCollection();
 
         $this->setShowLinkHomePage(true);
         $this->setShowLinkNavbar(true);
@@ -162,7 +173,26 @@ class SiteList extends ListAbstract
         $this->showLinkNavbar = $showLinkNavbar;
     }
 
-    
+    /**
+     * @return mixed
+     */
+    public function getDocuments()
+    {
+        return $this->documents;
+    }
+    public function addDocument($item)
+    {
+        if( $item && !$this->documents->contains($item) ) {
+            $this->documents->add($item);
+            $item->createUseObject($this);
+        }
+        return $this;
+    }
+    public function removeDocument($item)
+    {
+        $this->documents->removeElement($item);
+        $item->clearUseObject();
+    }
 
 
 
