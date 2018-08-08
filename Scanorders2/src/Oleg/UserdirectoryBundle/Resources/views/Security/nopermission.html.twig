@@ -52,6 +52,14 @@
                 <a href="javascript:;" onclick="history.go(-1);">Return to previous page.</a>
             {% endif %}
         </p>
+
+        {% if additionalMessage is defined and additionalMessage %}
+            <br><br>
+            <p>
+                {{ additionalMessage|raw }}
+            </p>
+        {% endif %}
+
     </div>
 
 {% endblock %}

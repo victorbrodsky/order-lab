@@ -29,6 +29,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Workflow\DefinitionBuilder;
 use Symfony\Component\Workflow\Dumper\GraphvizDumper;
 use Symfony\Component\Workflow\Transition;
@@ -1224,20 +1225,35 @@ class ProjectController extends Controller
     {
         $transresUtil = $this->container->get('transres_util');
 
+        if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
+            );
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
+
         if(
             $transresUtil->isAdminOrPrimaryReviewer() ||
             $transresUtil->isProjectReviewer($project)
         ) {
             //ok
         } else {
-            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
-        }
+            //show no access page with view link for allowed users
+            if( $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
+                //return $this->redirectToRoute('translationalresearch_project_show', array('id' => $project->getId()));
+                $projectUrl = $this->container->get('router')->generate(
+                    'translationalresearch_project_show',
+                    array(
+                        'id' => $project->getId(),
+                    ),
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                $projectLink = "<a href=" . $projectUrl . ">" . "View Project Request Details with ID " . $project->getOid() . "</a>";
 
-        if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
-            $this->get('session')->getFlashBag()->add(
-                'warning',
-                "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
-            );
+                return $this->redirect($this->generateUrl('translationalresearch-nopermission',array('additionalMessage'=>$projectLink)));
+            }
+
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 

@@ -66,10 +66,12 @@ class TranslationalResearchSecurityController extends SecurityController
     public function actionNoPermission( Request $request )
     {
         $empty = $request->get('empty');
+        $additionalMessage = $request->get('additionalMessage');
 
         return array(
             'sitename' => $this->container->getParameter('translationalresearch.sitename'),
-            'empty' => $empty
+            'empty' => $empty,
+            'additionalMessage' => $additionalMessage
         );
     }
 
