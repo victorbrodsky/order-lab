@@ -289,29 +289,29 @@ knp_snappy:
 #            thread: Oleg\UserdirectoryBundle\Entity\FosThread
 
 
-#https://github.com/nodesha88/LetsEncryptBundle
-cert_lets_encrypt:
-
-    # Path to the Let's Encrypt executable (usually your letsencrypt-auto binary)
-    letsencrypt: "%kernel.root_dir%/../bin/letsencrypt/letsencrypt-auto"
-
-    # Recovery email used by Let's Encrypt for registration and recovery contact
-    recovery_email: "oli2002@med.cornell.edu"
-
-    # Logs directory (if not specified, the application logs directory will be used)
-    logs_directory: null
-
-    # Domains to get certificates for (this application should response to these domains)
-    domains:
-        - collage.med.cornell.edu
-        - tincry.com
-
-    # Monitorings to be warned if an error occured during the renewal of one of your certificates
-    monitoring:
-
-        # Email monitoring
-        email:
-            enabled: true
-
-            # If an error occured, emails where a warning should be sent
-            to: [ "oli2002@med.cornell.edu" ]
+##https://github.com/nodesha88/LetsEncryptBundle
+#cert_lets_encrypt:
+#
+#    # Path to the Let's Encrypt executable (usually your letsencrypt-auto binary)
+#    letsencrypt: "%kernel.root_dir%/../bin/letsencrypt/letsencrypt-auto"
+#
+#    # Recovery email used by Let's Encrypt for registration and recovery contact
+#    recovery_email: "oli2002@med.cornell.edu"
+#
+#    # Logs directory (if not specified, the application logs directory will be used)
+#    logs_directory: null
+#
+#    # Domains to get certificates for (this application should response to these domains)
+#    domains:
+#        - collage.med.cornell.edu
+#        - tincry.com
+#
+#    # Monitorings to be warned if an error occured during the renewal of one of your certificates
+#    monitoring:
+#
+#        # Email monitoring
+#        email:
+#            enabled: true
+#
+#            # If an error occured, emails where a warning should be sent
+#            to: [ "oli2002@med.cornell.edu" ]
