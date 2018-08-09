@@ -49,9 +49,9 @@
         "bmatzner/fontawesome-bundle": "~4.4",
         "adesigns/calendar-bundle": "^1.1",
         "yzalis/crontab": "1.0.x-dev",
-        "acmephp/acmephp": "dev-master",
 
-        "sinergi/browser-detector": "6.1.2"
+        "sinergi/browser-detector": "6.1.2",
+        "cert/letsencrypt-bundle": "1.0.x-dev"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",

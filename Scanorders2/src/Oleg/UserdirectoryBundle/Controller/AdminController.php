@@ -1493,7 +1493,7 @@ class AdminController extends Controller
                 30
             ),
             "ROLE_VACREQ_SUBMITTER_SURGICALPATHOLOGY" => array(
-                "Vacation Request Submitter for the Surgical Pathology",
+                "Vacation Request Submitter for the Surgical Pathology (Anatomic Pathology)",
                 "Can search and create vacation requests for specified service",
                 30
             ),
