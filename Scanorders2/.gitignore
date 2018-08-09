@@ -4,6 +4,7 @@
 /web/log/
 /web/test/
 /web/Uploaded/
+/web/.well-known/
 #/app/bootstrap.php.cache
 /app/cache/*
 
