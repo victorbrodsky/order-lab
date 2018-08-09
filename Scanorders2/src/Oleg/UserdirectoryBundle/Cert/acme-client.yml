@@ -33,9 +33,9 @@ certificates:
     - bits: 4096
       rekey: true
       paths:
-        web:
+        c:/users/ch3/documents/mydocs/wcmc/order/scanorder/scanorders2/web:
             - collage.med.cornell.edu
     # You can have multiple certificate with different users and key options.
     - user: www-data
       paths:
-        web: collage.med.cornell.edu
+        c:/users/ch3/documents/mydocs/wcmc/order/scanorder/scanorders2/web: collage.med.cornell.edu
