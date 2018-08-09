@@ -286,7 +286,7 @@ security:
     access_control:
 
        ##################### Uncomment this line to use https for all pages ##########################
-#       - { path: ^/, role: [IS_AUTHENTICATED_ANONYMOUSLY,ROLE_TRANSRES_USER], requires_channel: https }
+       - { path: ^/, role: [IS_AUTHENTICATED_ANONYMOUSLY,ROLE_TRANSRES_USER], requires_channel: https }
 
        ############################## local system user init ##############################
        - { path: ^/directory/admin/first-time-login-generation-init/, role: IS_AUTHENTICATED_ANONYMOUSLY }
