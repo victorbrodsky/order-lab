@@ -516,7 +516,7 @@ class SignUpController extends Controller
             }
 
             //add site specific creation string
-            //$createdBy = "Manually by Translational Research WCM User";
+            //$createdBy = "Manually by Translational Research User";
             //$createdBy = "manual";
             $createdBy = "selfsignup-" . $this->siteName;
             $user->setCreatedby($createdBy);

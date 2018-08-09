@@ -60,7 +60,7 @@ class AuthorizedUserFilterType extends AbstractType
             //'max_length' => 200,
             'required' => false,
             'label' => false,
-            'attr' => array('class' => 'form-control submit-on-enter-field', 'placeholder'=>'Search by Name, CWID or email'),
+            'attr' => array('class' => 'form-control submit-on-enter-field', 'placeholder'=>'Search by name, user name, or email'),
         ));
 
         $builder->add('condition', ChoiceType::class, array(

@@ -274,7 +274,7 @@ class ProjectType extends AbstractType
 
         $builder->add( 'pathologists', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
-            'label'=> "WCM Pathologist(s) Involved$addUserOnFly:",
+            'label'=> "Pathologist(s) Involved$addUserOnFly:",
             'required'=> false,
             'multiple' => true,
             'attr' => array('class'=>'combobox combobox-width add-new-user-on-enter', 'data-otheruserparam'=>$this->params['otherUserParam']),

@@ -25,6 +25,9 @@
                     <div class="col-xs-6" align="right">
                         <a data-toggle="collapse" href="#vacreq-organizational-group-{{ organizationalGroupId }}">
                             {{ organizationalGroupName }}
+                            {% if organizationalGroupName == "Anatomic Pathology" %}
+                                (Surgical Pathology Roles)
+                            {% endif %}
                         </a>
                     </div>
                     <div class="col-xs-6" align="left">

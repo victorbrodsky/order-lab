@@ -1818,7 +1818,7 @@ class UserController extends Controller
             $resArr["error"] =
                 "A person $thisLink already has an account on this system and" .
                 " should be listed in the dropdown menus of the Project Request page." .
-                "<br>Please $selectExistingPerson, change the CWID of the new," .
+                "<br>Please $selectExistingPerson, change the user name of the new," .
                 "<br>different person you would like to add, or $systemAdministrator" .
                 " if you believe you discovered an issue."
             ;
@@ -1846,7 +1846,7 @@ class UserController extends Controller
         $user = $userSecUtil->constractNewUser($username); //publicUserId_@_wcmc-cwid
 
         //add site specific creation string
-        //$createdBy = "Manually by Translational Research WCM User";
+        //$createdBy = "Manually by Translational Research User";
         //$createdBy = "manual";
         $createdBy = "manual-".$sitename;
         $user->setCreatedby($createdBy);

@@ -102,7 +102,7 @@ class UserSimpleType extends AbstractType
 
     public function userNamePreferredContactInfo($builder) {
 
-        $primaryPublicUserIdLabel = 'CWID';
+        $primaryPublicUserIdLabel = 'User Name';
         if( isset($this->params['primaryPublicUserIdLabel']) ) {
             $primaryPublicUserIdLabel = $this->params['primaryPublicUserIdLabel'];
         }

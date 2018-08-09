@@ -49,12 +49,13 @@
         "bmatzner/fontawesome-bundle": "~4.4",
         "adesigns/calendar-bundle": "^1.1",
         "yzalis/crontab": "1.0.x-dev",
+        "acmephp/acmephp": "dev-master",
 
         "sinergi/browser-detector": "6.1.2"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",
-        "symfony/phpunit-bridge" : "^3.0"
+        "symfony/phpunit-bridge": "^3.0"
     },
     "scripts": {
         "post-install-cmd": [

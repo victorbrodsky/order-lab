@@ -65,7 +65,7 @@ class VacReqFilterType extends AbstractType
                 'label' => false,
                 'required' => false,
                 'multiple' => false,
-                'attr' => array('class' => 'combobox', 'placeholder' => 'Person Away - Name or CWID)'),
+                'attr' => array('class' => 'combobox', 'placeholder' => 'Person Away - Name or User Name)'),
                 'choices' => $this->params['filterUsers'],
             ));
 
@@ -75,7 +75,7 @@ class VacReqFilterType extends AbstractType
                 'label' => false,
                 'required' => false,
                 'multiple' => false,
-                'attr' => array('class' => 'combobox', 'placeholder' => 'Submitter - Name or CWID'),
+                'attr' => array('class' => 'combobox', 'placeholder' => 'Submitter - Name or User Name'),
                 'choices' => $this->params['filterUsers'],
             ));
         }
