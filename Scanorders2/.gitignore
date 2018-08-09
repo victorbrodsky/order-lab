@@ -62,4 +62,6 @@ Scanorders2/web/uploads/documents/*.txt
 #!/vendor/aperio
 #!/vendor/olegutil
 
-
+### Certificate ###
+/src/Oleg/UserdirectoryBundle/Cert/*
+!/src/Oleg/UserdirectoryBundle/Cert/acme-client*
