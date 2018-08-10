@@ -50,8 +50,7 @@
         "adesigns/calendar-bundle": "^1.1",
         "yzalis/crontab": "1.0.x-dev",
 
-        "sinergi/browser-detector": "6.1.2",
-        "kelunik/acme-client": "v0.2.14"
+        "sinergi/browser-detector": "6.1.2"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",
