@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5e8b4a55d4da72c192326b5cf666aa08",
+    "content-hash": "400d4113d78b59a1e94d4899ed888b40",
     "packages": [
         {
             "name": "adesigns/calendar-bundle",
@@ -630,67 +630,6 @@
                 "webfonts"
             ],
             "time": "2016-11-02T15:34:33+00:00"
-        },
-        {
-            "name": "cert/letsencrypt-bundle",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/nodesha88/LetsEncryptBundle.git",
-                "reference": "e91108b2ccca21f968eb1758113103d98163fb75"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/nodesha88/LetsEncryptBundle/zipball/e91108b2ccca21f968eb1758113103d98163fb75",
-                "reference": "e91108b2ccca21f968eb1758113103d98163fb75",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4",
-                "symfony/console": "~2.3|~3.0",
-                "symfony/framework-bundle": "~2.3|~3.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^4.8.21",
-                "swiftmailer/swiftmailer": "~4.3|~5",
-                "symfony/yaml": "~2.3|~3.0"
-            },
-            "type": "symfony-bundle",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Cert\\LetsEncryptBundle\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Daria",
-                    "email": "nodesha.nodesha@gmail.com",
-                    "homepage": "https://github.com/nodesha88"
-                }
-            ],
-            "description": "Free SSL/HTTPS for your Symfony application with automatic renewal and certificates monitoring",
-            "homepage": "https://github.com/nodesha88/LetsEncryptBundle",
-            "keywords": [
-                "automatic",
-                "certificates",
-                "free",
-                "https",
-                "letsencrypt",
-                "monitoring",
-                "renewal",
-                "ssl",
-                "symfony"
-            ],
-            "time": "2016-11-11T11:16:02+00:00"
         },
         {
             "name": "clegginabox/pdf-merger",
@@ -6037,8 +5976,7 @@
         "google/apiclient": 10,
         "itbz/fpdi": 20,
         "clegginabox/pdf-merger": 20,
-        "yzalis/crontab": 20,
-        "cert/letsencrypt-bundle": 20
+        "yzalis/crontab": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
