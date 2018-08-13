@@ -86,6 +86,7 @@ twig:
         calllog_util_form: "@calllog_util_form"
         transres_util: "@transres_util"
         transres_request_util: "@transres_request_util"
+        transres_permission_util: "@transres_permission_util"
         transres_formnode_util: "@transres_formnode_util"
         user_mailer_utility: "@user_mailer_utility"
 

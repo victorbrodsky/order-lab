@@ -40,6 +40,17 @@ class SpecialtyList extends ListAbstract
      **/
     protected $original;
 
+
+    public function getUppercaseName() {
+        if( $this->getAbbreviation() == "hematopathology" ) {
+            return "HEMATOPATHOLOGY";
+        }
+        if( $this->getAbbreviation() == "ap-cp" ) {
+            return "APCP";
+        }
+        throw new \Exception("Unknown project specialty: ".$this->getAbbreviation());
+    }
+
     //new-ap-cp-project
 //    public function getNewProjectUrlPrefix() {
 //        if( $this->getAbbreviation() ) {

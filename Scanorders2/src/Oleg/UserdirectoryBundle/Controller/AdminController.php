@@ -1555,127 +1555,122 @@ class AdminController extends Controller
             ),
 
             //TRANSRES - similar to ROLE_FELLAPP_INTERVIEWER_WCMC_HEMATOPATHOLOGY - _WCMC_HEMEPATH and _WCMC_APCP
-            "ROLE_TRANSRES_ADMIN" => array(
-                "Translational Research Admin",
-                "Full Access for Translational Research site",
+            "ROLE_TRANSRES_ADMIN_APCP" => array(
+                "Translational Research AP/CP Admin",
+                "Full Access for Translational Research AP/CP site",
                 90,
                 "translational-research"
             ),
-//            "ROLE_TRANSRES_ADMIN_DELEGATE" => array(
-//                "Translational Research Admin Delegate",
-//                "Full Access for Translational Research site",
-//                80,
-//                "translational-research"
-//            ),
-
-            "ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY" => array(
-                "Hematopathology Executive Committee",
-                "Full View Access for Hematopathology Translational Research site",
-                80,
+            "ROLE_TRANSRES_ADMIN_HEMATOPATHOLOGY" => array(
+                "Translational Research Hematopathology Admin",
+                "Full Access for Translational Research Hematopathology site",
+                90,
                 "translational-research"
             ),
+
             "ROLE_TRANSRES_EXECUTIVE_APCP" => array(
-                "AP/CP Executive Committee",
+                "Translational Research AP/CP Executive Committee",
                 "Full View Access for AP/CP Translational Research site",
                 80,
                 "translational-research"
             ),
+            "ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY" => array(
+                "Translational Research Hematopathology Executive Committee",
+                "Full View Access for Hematopathology Translational Research site",
+                80,
+                "translational-research"
+            ),
 
-            "ROLE_TRANSRES_PRIMARY_REVIEWER" => array(
-                "Translational Research Primary Reviewer",
-                "Review for all states",
+            "ROLE_TRANSRES_PRIMARY_REVIEWER_APCP" => array(
+                "Translational Research AP/CP Primary Reviewer",
+                "Review for all states for AP/CP",
+                70,
+                "translational-research"
+            ),
+            "ROLE_TRANSRES_PRIMARY_REVIEWER_HEMATOPATHOLOGY" => array(
+                "Translational Research Hematopathology Primary Reviewer",
+                "Review for all states for Hematopathology",
                 70,
                 "translational-research"
             ),
 
-//            "ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE" => array(
-//                "Translational Research Committee Reviewer Delegate",
-//                "Translational Research Primary Reviewer Delegate",
-//                50,
-//                "translational-research"
-//            ),
-
-            "ROLE_TRANSRES_IRB_REVIEWER" => array(
-                "Translational Research IRB Reviewer",
-                "IRB Review",
+            "ROLE_TRANSRES_IRB_REVIEWER_APCP" => array(
+                "Translational Research AP/CP IRB Reviewer",
+                "AP/CP IRB Review",
+                50,
+                "translational-research"
+            ),
+            "ROLE_TRANSRES_IRB_REVIEWER_HEMATOPATHOLOGY" => array(
+                "Translational Research Hematopathology IRB Reviewer",
+                "Hematopathology IRB Review",
                 50,
                 "translational-research"
             ),
 
-//            "ROLE_TRANSRES_IRB_REVIEWER_DELEGATE" => array(
-//                "Translational Research IRB Reviewer Delegate",
-//                "IRB Review Delegate",
-//                50,
-//                "translational-research"
-//            ),
-
-            "ROLE_TRANSRES_COMMITTEE_REVIEWER" => array(
-                "Translational Research Committee Reviewer",
-                "Committee Review",
+            "ROLE_TRANSRES_COMMITTEE_REVIEWER_APCP" => array(
+                "Translational Research AP/CP Committee Reviewer",
+                "AP/CP Committee Review",
+                50,
+                "translational-research"
+            ),
+            "ROLE_TRANSRES_COMMITTEE_REVIEWER_HEMATOPATHOLOGY" => array(
+                "Translational Research Hematopathology Committee Reviewer",
+                "Hematopathology Committee Review",
                 50,
                 "translational-research"
             ),
 
-//            "ROLE_TRANSRES_COMMITTEE_REVIEWER_DELEGATE" => array(
-//                "Translational Research Committee Reviewer Delegate",
-//                "Committee Review Delegate",
-//                50,
-//                "translational-research"
-//            ),
-
-//            "ROLE_TRANSRES_PRINCIPAL_INVESTIGATOR" => array(
-//                "Translational Research Project Submitter",
-//                "Submit, View and Edit a Translational Research Project",
-//                30,
-//                "translational-research"
-//            ),
-//            "ROLE_TRANSRES_PRINCIPAL_COINVESTIGATOR" => array(
-//                "Translational Research Project Submitter",
-//                "Submit, View and Edit a Translational Research Project",
-//                30,
-//                "translational-research"
-//            ),
-//            "ROLE_TRANSRES_PATHOLOGIST" => array(
-//                "Translational Research Project Submitter",
-//                "Submit, View and Edit a Translational Research Project",
-//                30,
-//                "translational-research"
-//            ),
-            "ROLE_TRANSRES_REQUESTER" => array(
-                "Translational Research Project Requester",
-                "Submit, View and Edit a Translational Research Project",
+            "ROLE_TRANSRES_REQUESTER_APCP" => array(
+                "Translational Research AP/CP Project Requester",
+                "Submit, View and Edit a Translational Research AP/CP Project",
+                30,
+                "translational-research"
+            ),
+            "ROLE_TRANSRES_REQUESTER_HEMATOPATHOLOGY" => array(
+                "Translational Research Hematopathology Project Requester",
+                "Submit, View and Edit a Translational Research Hematopathology Project",
                 30,
                 "translational-research"
             ),
 
-            "ROLE_TRANSRES_BILLING_ADMIN" => array(
-                "Translational Research Billing Administrator",
-                "Create, View, Edit and Send an Invoice for Translational Research Project",
+            "ROLE_TRANSRES_BILLING_ADMIN_APCP" => array(
+                "Translational Research AP/CP Billing Administrator",
+                "Create, View, Edit and Send an Invoice for Translational Research AP/CP Project",
+                50,
+                "translational-research"
+            ),
+            "ROLE_TRANSRES_BILLING_ADMIN_HEMATOPATHOLOGY" => array(
+                "Translational Research Hematopathology Billing Administrator",
+                "Create, View, Edit and Send an Invoice for Translational Research Hematopathology Project",
                 50,
                 "translational-research"
             ),
 
-            "ROLE_TRANSRES_HEMATOPATHOLOGY" => array(
-                "Translational Research Hematopathology User",
-                "Access to the Hematopathology Projects, Requests and Invoices",
+            "ROLE_TRANSRES_TECHNICIAN_APCP" => array(
+                "Translational Research AP/CP Technician",
+                "View and Edit a Translational Research AP/CP Request",
+                50,
+                "translational-research"
+            ),
+            "ROLE_TRANSRES_TECHNICIAN_HEMATOPATHOLOGY" => array(
+                "Translational Research Hematopathology Technician",
+                "View and Edit a Translational Research Hematopathology Request",
                 50,
                 "translational-research"
             ),
 
-            "ROLE_TRANSRES_APCP" => array(
-                "Translational Research AP/CP User",
-                "Access to the AP/CP Projects, Requests and Invoices",
-                50,
-                "translational-research"
-            ),
-
-            "ROLE_TRANSRES_TECHNICIAN" => array(
-                "Translational Research Technician",
-                "View and Edit a Translational Research Request",
-                30,
-                "translational-research"
-            ),
-
+//            "ROLE_TRANSRES_HEMATOPATHOLOGY" => array(
+//                "Translational Research Hematopathology User",
+//                "Access to the Hematopathology Projects, Requests and Invoices",
+//                50,
+//                "translational-research"
+//            ),
+//            "ROLE_TRANSRES_APCP" => array(
+//                "Translational Research AP/CP User",
+//                "Access to the AP/CP Projects, Requests and Invoices",
+//                50,
+//                "translational-research"
+//            ),
         );
 
         $username = $this->get('security.token_storage')->getToken()->getUser();
@@ -1695,7 +1690,7 @@ class AdminController extends Controller
                     $em->persist($entity);
                     $em->flush();
                 }
-                continue;
+                //continue; //temporary disable to override alias, description, level
             }
 
             if( !$entity ) {

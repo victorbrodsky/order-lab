@@ -848,6 +848,7 @@ class InvoiceController extends Controller
         $em = $this->getDoctrine()->getManager();
         $transresPdfUtil = $this->get('transres_pdf_generator');
         $transresRequestUtil = $this->get('transres_request_util');
+        $transresPermissionUtil = $this->get('transres_permission_util');
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($oid);
@@ -855,7 +856,7 @@ class InvoiceController extends Controller
             throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
         }
 
-        if( false === $transresRequestUtil->isInvoiceBillingContact($invoice,$user) ) {
+        if( false === $transresPermissionUtil->isInvoiceBillingContact($invoice,$user) ) {
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
@@ -1165,6 +1166,7 @@ class InvoiceController extends Controller
     public function sendByEmailAction( Request $request, $oid ) {
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $transresRequestUtil = $this->get('transres_request_util');
+        $transresPermissionUtil = $this->get('transres_permission_util');
         $em = $this->getDoctrine()->getManager();
 
         $invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($oid);
@@ -1172,7 +1174,7 @@ class InvoiceController extends Controller
             throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
         }
 
-        if( false === $transresRequestUtil->isInvoiceBillingContact($invoice,$user) ) {
+        if( false === $transresPermissionUtil->isInvoiceBillingContact($invoice,$user) ) {
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 

@@ -11,8 +11,10 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -224,6 +226,41 @@ class ProjectType extends AbstractType
             //'model_timezone' => $user_tz,
             'attr' => array('class' => 'datepicker form-control transres-project-iacucExpirationDate'),
             'required' => false,
+        ));
+
+
+        $builder->add('hypothesis',null,array(
+            'label' => "Hypothesis:",
+            'attr' => array('class'=>'textarea form-control')
+        ));
+
+        $builder->add('objective',null,array(
+            'label' => "Objective:",
+            'attr' => array('class'=>'textarea form-control')
+        ));
+
+        $builder->add('numberOfCases',TextType::class,array(
+            'label' => "Number Of Cases:",
+            'required' => false,
+            'attr' => array('class'=>'form-control digit-mask mask-text-align-left')
+        ));
+
+        $builder->add('numberOfCohorts',TextType::class,array(
+            'label' => "Number of cohorts:",
+            'required' => false,
+            'attr' => array('class'=>'form-control digit-mask mask-text-align-left')
+        ));
+
+        $builder->add('expectedResults',null,array(
+            'label' => "Expected Results:",
+            'attr' => array('class'=>'textarea form-control')
+        ));
+
+        $builder->add('expectedCompletionDate',null,array(
+            'label' => "Expected Completion Date:",
+            'widget' => 'single_text',
+            'format' => 'MM/dd/yyyy',
+            'attr' => array('class'=>'datepicker form-control')
         ));
         //////////// EOF Project fields ////////////
 
@@ -494,6 +531,9 @@ class ProjectType extends AbstractType
             'expanded' => true,
             'attr' => array('class' => 'horizontal_type involveHumanTissue')
         ));
+
+
+
 
 
         if( $this->params['saveAsDraft'] === true ) {

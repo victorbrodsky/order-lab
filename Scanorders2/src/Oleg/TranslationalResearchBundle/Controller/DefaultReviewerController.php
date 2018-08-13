@@ -304,15 +304,15 @@ class DefaultReviewerController extends Controller
             //remove roles
             $roles = $defaultReviewer->getRoleByState();
             $reviewerRole = $roles['reviewer'];
-            $reviewerDelegateRole = $roles['reviewerDelegate'];
+            //$reviewerDelegateRole = $roles['reviewerDelegate'];
             $reviewer = $defaultReviewer->getReviewer();
             if( $reviewer ) {
                 $reviewer->removeRole($reviewerRole);
             }
-            $reviewerDelegate = $defaultReviewer->getReviewerDelegate();
-            if( $reviewerDelegate && $reviewerDelegateRole ) {
-                $reviewerDelegate->removeRole($reviewerDelegateRole);
-            }
+            //$reviewerDelegate = $defaultReviewer->getReviewerDelegate();
+            //if( $reviewerDelegate && $reviewerDelegateRole ) {
+            //    $reviewerDelegate->removeRole($reviewerDelegateRole);
+            //}
 
             $em = $this->getDoctrine()->getManager();
             $em->remove($defaultReviewer);

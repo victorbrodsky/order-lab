@@ -284,13 +284,6 @@ class FosCommentListener implements EventSubscriberInterface {
             $authorTypeArr['description'] = "Primary Reviewer";
             return $authorTypeArr;
         }
-        if( $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE') ) {
-            //$comment->setAuthorType("Primary Reviewer Delegate");
-            //$authorType = "Primary Reviewer";
-            $authorTypeArr['type'] = "Administrator";
-            $authorTypeArr['description'] = "Primary Reviewer";
-            return $authorTypeArr;
-        }
 
         //if not found
         $transresUtil = $this->container->get('transres_util');

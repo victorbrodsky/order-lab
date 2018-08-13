@@ -126,10 +126,10 @@
                             {{ form_widget(filterform.exemptIrbApproval) }}
                         </div>
                         <div class="col-xs-4">
-                            {##}
+                            {{ formmacros.fielddate(filterform.fromExpectedCompletionDate,'allow-future-date') }}
                         </div>
                         <div class="col-xs-4">
-                            {##}
+                            {{ formmacros.fielddate(filterform.toExpectedCompletionDate,'allow-future-date') }}
                         </div>
                     </div>
 
@@ -275,7 +275,7 @@
                 {#</td>#}
                 {#all issued invoices associated with the project#}
                 <td class="rowlink-skip">
-                    {% if invoicesInfos.count > 0 and transres_request_util.areInvoicesShowableToUser(project) %}
+                    {% if invoicesInfos.count > 0 and transres_permission_util.areInvoicesShowableToUser(project) %}
                         <a target="_blank" data-toggle="tooltip" title="Show all issued invoice associated with this project"
                            href="{{ path(translationalresearch_sitename~'_invoice_index_filter', {
                                'filter[idSearch]': project.oid,
@@ -422,7 +422,7 @@
 
 
                             {% if invoicesInfos.count > 0 %}
-                                {% if transres_request_util.areInvoicesShowableToUser(project) %}
+                                {% if transres_permission_util.areInvoicesShowableToUser(project) %}
                                     <li>
                                         <a target="_blank"
                                            href="{{ path(translationalresearch_sitename~'_invoice_index_filter', {
@@ -467,7 +467,8 @@
     {#{{ render(controller('OlegTranslationalResearchBundle:Project:threadComments', { 'id': "3-9-committee_review" })) }}#}
     {#{% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': "3-9-committee_review"} %}#}
 
-    {% if is_granted('ROLE_TRANSRES_REQUESTER') %}
+    {#{% if is_granted('ROLE_TRANSRES_REQUESTER') %}#}
+    {% if transres_permission_util.hasProjectPermission('create') %}
         <br>
         <p>
             <a class="btn btn-primary" href="{{ path(translationalresearch_sitename~'_project_new_selector') }}">New Project Request</a>

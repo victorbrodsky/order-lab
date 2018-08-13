@@ -342,6 +342,36 @@ class Project {
      */
     private $iacucNumber;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $hypothesis;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $objective;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $numberOfCases;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $numberOfCohorts;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $expectedResults;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $expectedCompletionDate;
+
 
     public function __construct($user=null) {
 
@@ -1117,6 +1147,102 @@ class Project {
         $this->iacucNumber = $iacucNumber;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getHypothesis()
+    {
+        return $this->hypothesis;
+    }
+
+    /**
+     * @param mixed $hypothesis
+     */
+    public function setHypothesis($hypothesis)
+    {
+        $this->hypothesis = $hypothesis;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getObjective()
+    {
+        return $this->objective;
+    }
+
+    /**
+     * @param mixed $objective
+     */
+    public function setObjective($objective)
+    {
+        $this->objective = $objective;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNumberOfCases()
+    {
+        return $this->numberOfCases;
+    }
+
+    /**
+     * @param mixed $numberOfCases
+     */
+    public function setNumberOfCases($numberOfCases)
+    {
+        $this->numberOfCases = $numberOfCases;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNumberOfCohorts()
+    {
+        return $this->numberOfCohorts;
+    }
+
+    /**
+     * @param mixed $numberOfCohorts
+     */
+    public function setNumberOfCohorts($numberOfCohorts)
+    {
+        $this->numberOfCohorts = $numberOfCohorts;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getExpectedResults()
+    {
+        return $this->expectedResults;
+    }
+
+    /**
+     * @param mixed $expectedResults
+     */
+    public function setExpectedResults($expectedResults)
+    {
+        $this->expectedResults = $expectedResults;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getExpectedCompletionDate()
+    {
+        return $this->expectedCompletionDate;
+    }
+
+    /**
+     * @param mixed $expectedCompletionDate
+     */
+    public function setExpectedCompletionDate($expectedCompletionDate)
+    {
+        $this->expectedCompletionDate = $expectedCompletionDate;
+    }
+    
 
     //show the name of the form (from the form hierarchy) that was used to generate this submitted message.
     // Make sure to save this form ID of the form linked from the Message Type at the time of message submission
@@ -1133,6 +1259,8 @@ class Project {
     public function isEditable() {
         return true;
     }
+
+
 
 
     /**

@@ -112,8 +112,7 @@ class TransResUtil
                 }
             }
             if (
-                $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') ||
-                $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE')
+                $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER')
             ) {
                 $showEditLink = true;
                 $editLinkLabel = "Edit Project as Primary Reviewer";
@@ -491,9 +490,10 @@ class TransResUtil
     }
     public function isAdminOrPrimaryReviewer() {
         if(
-            $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') ||
-            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') ||
-            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE')
+            $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN_APCP') ||
+            $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN_HEMATOPATHOLOGY') ||
+            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_APCP') ||
+            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_HEMATOPATHOLOGY')
         ) {
             return true;
         }
@@ -535,9 +535,10 @@ class TransResUtil
     }
     public function isAdminOrPrimaryReviewerOrExecutive() {
         if(
-            $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') ||
-            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') ||
-            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE') ||
+            $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN_APCP') ||
+            $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN_HEMATOPATHOLOGY') ||
+            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_APCP') ||
+            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_HEMATOPATHOLOGY') ||
             $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') ||
             $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP')
         ) {
@@ -1048,15 +1049,10 @@ class TransResUtil
 
         $roles = $defaultReviewer->getRoleByState();
         $reviewerRole = $roles['reviewer'];
-        //$reviewerDelegateRole = $roles['reviewerDelegate'];
-
-        $specialtyObject = $defaultReviewer->getProjectSpecialty();
-        $reviewerSpecialtyRole = $this->getSpecialtyRole($specialtyObject);
 
         $reviewer = $defaultReviewer->getReviewer();
         if( $reviewer ) {
             $reviewer->addRole($reviewerRole);
-            $reviewer->addRole($reviewerSpecialtyRole);
             $this->addTesterRole($reviewer);
         }
         //remove role: make sure if the user is not a default reviewer in all other objects. Or don't remove role at all.
@@ -1064,17 +1060,11 @@ class TransResUtil
             //$originalReviewer->removeRole($reviewerRole);
         //}
 
-//        $reviewerDelegate = $defaultReviewer->getReviewerDelegate();
-//        if( $reviewerDelegate && $reviewerDelegateRole ) {
-//            $reviewerDelegate->addRole($reviewerDelegateRole);
-//        }
         $reviewerDelegate = $defaultReviewer->getReviewerDelegate();
         if( $reviewerDelegate ) {
             $reviewerDelegate->addRole($reviewerRole);
-            $reviewerDelegate->addRole($reviewerSpecialtyRole);
             $this->addTesterRole($reviewerDelegate);
         }
-
         //remove role: make sure if the user is not a default reviewer in all other objects. Or don't remove role at all.
         //if( $originalReviewerDelegate && $originalReviewerDelegate != $reviewerDelegate && $reviewerDelegateRole ) {
             //$originalReviewerDelegate->removeRole($reviewerDelegateRole);
@@ -1822,8 +1812,7 @@ class TransResUtil
 
         if(
             $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') ||
-            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') ||
-            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE')
+            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER')
         ) {
             return true;
         }
@@ -2015,8 +2004,7 @@ class TransResUtil
         //echo "reviewId=".$review->getId()."<br>";
         if(
             $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') ||
-            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') ||
-            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE')
+            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER')
         ) {
             //echo "isUserAllowedReview: admin ok <br>";
             return true;
@@ -2690,30 +2678,11 @@ class TransResUtil
         if( !$this->secAuth->isGranted("ROLE_TRANSRES_ADMIN") ) {
             $specialtyIds = array();
             $specialties = $this->getTransResProjectSpecialties();
-            foreach ($specialties as $specialtyObject) {
-                $hasRole = false;
-//                $role = null;
-//                if ($specialtyObject->getAbbreviation() == "hematopathology") {
-//                    $role = "ROLE_TRANSRES_HEMATOPATHOLOGY";
-//                }
-//                if ($specialtyObject->getAbbreviation() == "ap-cp") {
-//                    $role = "ROLE_TRANSRES_APCP";
-//                }
-                $role = $this->getSpecialtyRole($specialtyObject);
-                if ($role) {
-                    //check security context
-                    if ($this->secAuth->isGranted($role)) {
-                        $hasRole = true;
-                    }
-
-                    //check user's roles
-                    if ($user && $user->hasRole($role)) {
-                        $hasRole = true;
-                    }
-                    if( $hasRole ) {
-                        //$specialtyIds[] = "'".$specialtyObject->getId()."'";
-                        $specialtyIds[] = $specialtyObject->getId();
-                    }
+            foreach( $specialties as $specialtyObject ) {
+                //check user's roles
+                $partialRoleStr = $specialtyObject->getUppercaseName();
+                if( $user->hasPartialRole($partialRoleStr) ) {
+                    $specialtyIds[] = $specialtyObject->getId();
                 }
             }
 
@@ -2833,32 +2802,12 @@ class TransResUtil
             $specialtyIds = array();
             $specialties = $this->getTransResProjectSpecialties();
             foreach ($specialties as $specialtyObject) {
-                $hasRole = false;
-//                $role = null;
-//                if ($specialtyObject->getAbbreviation() == "hematopathology") {
-//                    $role = "ROLE_TRANSRES_HEMATOPATHOLOGY";
-//                }
-//                if ($specialtyObject->getAbbreviation() == "ap-cp") {
-//                    $role = "ROLE_TRANSRES_APCP";
-//                }
-                $role = $this->getSpecialtyRole($specialtyObject);
-                if ($role) {
-                    //check security context
-                    if ($this->secAuth->isGranted($role)) {
-                        $hasRole = true;
-                    }
-
-                    //check user's roles
-                    if ($user && $user->hasRole($role)) {
-                        $hasRole = true;
-                    }
-                    if ($hasRole) {
-                        //$specialtyIds[] = "'".$specialtyObject->getId()."'";
-                        $specialtyIds[] = $specialtyObject->getId();
-                    }
+                $partialRoleStr = $specialtyObject->getUppercaseName();
+                if( $user->hasPartialRole($partialRoleStr) ) {
+                    $specialtyIds[] = $specialtyObject->getId();
                 }
 
-                if (count($specialtyIds) > 0) {
+                if( count($specialtyIds) > 0 ) {
                     $specialtyStr = "projectSpecialty.id IN (" . implode(",", $specialtyIds) . ")";
                     //echo "specialtyStr=$specialtyStr<br>";
                     $dql->andWhere($specialtyStr);
@@ -3401,6 +3350,39 @@ class TransResUtil
             $user = $this->secTokenStorage->getToken()->getUser();
         }
 
+        $partialRoleStr = "_".$specialtyObject->getUppercaseName();
+
+        //if admin or deputy admin
+        $adminRole = "ROLE_TRANSRES_ADMIN"."_".$partialRoleStr;
+        if( $this->secAuth->isGranted($adminRole) ) {
+            return true;
+        }
+        //check user's roles
+        if( $user && $user->hasRole($adminRole) ) {
+            return true;
+        }
+
+        //check if user has role: use $user->hasPartialRole() or isUserHasSiteAndPartialRoleName()
+        if( $user->hasPartialRole($partialRoleStr) ) {
+            return true;
+        }
+
+//        if( $role ) {
+//            //check security context
+//            if( $this->secAuth->isGranted($role) ) {
+//                return true;
+//            }
+//
+//            //check user's roles
+//            if( $user && $user->hasRole($role) ) {
+//                return true;
+//            }
+//        }
+
+        return false;
+    }
+
+//    public function getSpecialtyRole($specialtyObject) {
 //        $role = null;
 //        if( $specialtyObject->getAbbreviation() == "hematopathology" ) {
 //            $role = "ROLE_TRANSRES_HEMATOPATHOLOGY";
@@ -3408,53 +3390,8 @@ class TransResUtil
 //        if( $specialtyObject->getAbbreviation() == "ap-cp" ) {
 //            $role = "ROLE_TRANSRES_APCP";
 //        }
-        $role = $this->getSpecialtyRole($specialtyObject);
-
-        if( $role ) {
-            //check security context
-            if( $this->secAuth->isGranted($role) ) {
-                return true;
-            }
-
-            //check user's roles
-            if( $user && $user->hasRole($role) ) {
-                return true;
-            }
-        }
-
-        //exception for executive role: check by partial role name
-        if( $role == "ROLE_TRANSRES_HEMATOPATHOLOGY" ) {
-            $execRole = "ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY";
-            if( $this->secAuth->isGranted($execRole) ) {
-                return true;
-            }
-            if( $user && $user->hasRole($execRole) ) {
-                return true;
-            }
-        }
-        if( $role == "ROLE_TRANSRES_APCP" ) {
-            $execRole = "ROLE_TRANSRES_EXECUTIVE_APCP";
-            if( $this->secAuth->isGranted($execRole) ) {
-                return true;
-            }
-            if( $user && $user->hasRole($execRole) ) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public function getSpecialtyRole($specialtyObject) {
-        $role = null;
-        if( $specialtyObject->getAbbreviation() == "hematopathology" ) {
-            $role = "ROLE_TRANSRES_HEMATOPATHOLOGY";
-        }
-        if( $specialtyObject->getAbbreviation() == "ap-cp" ) {
-            $role = "ROLE_TRANSRES_APCP";
-        }
-        return $role;
-    }
+//        return $role;
+//    }
 
     public function userQueryBuilder() {
         return function(EntityRepository $er) {
@@ -3532,29 +3469,34 @@ class TransResUtil
     }
 
     //check if user does not have ROLE_TRANSRES_REQUESTER and specialty role
-    public function addMinimumRolesToCreateProject( $specialtyObject=null ) {
+    public function addMinimumRolesToCreateProject( $specialtyObject ) {
         $userSecUtil = $this->container->get('user_security_utility');
         $user = $this->secTokenStorage->getToken()->getUser();
         $flushUser = false;
         $roleAddedArr = array();
 
-        if( false == $this->secAuth->isGranted('ROLE_TRANSRES_REQUESTER') ) {
-            $user->addRole('ROLE_TRANSRES_REQUESTER');
-            $flushUser = true;
-            $roleAddedArr[] = "ROLE_TRANSRES_REQUESTER";
+        if( $specialtyObject ) {
+            $uppercaseName = $specialtyObject->getUppercaseName();
+            $uppercaseName = "_".$uppercaseName;
+            $role = 'ROLE_TRANSRES_REQUESTER'.$uppercaseName;
+            if (false == $this->secAuth->isGranted($role)) {
+                $user->addRole($role);
+                $flushUser = true;
+                $roleAddedArr[] = $role;
+            }
         }
 
-        if( $specialtyObject ) {
-            $specialtyRole = $this->getSpecialtyRole($specialtyObject);
-            if( false == $this->secAuth->isGranted($specialtyRole) ) {
-                $user->addRole($specialtyRole);
-                $flushUser = true;
-                $roleAddedArr[] = $specialtyRole;
-            }
-            $specialtyStr = $specialtyObject."";
-        } else {
-            $specialtyStr = null;
-        }
+//        if( $specialtyObject ) {
+//            $specialtyRole = $this->getSpecialtyRole($specialtyObject);
+//            if( false == $this->secAuth->isGranted($specialtyRole) ) {
+//                $user->addRole($specialtyRole);
+//                $flushUser = true;
+//                $roleAddedArr[] = $specialtyRole;
+//            }
+//            $specialtyStr = $specialtyObject."";
+//        } else {
+//            $specialtyStr = null;
+//        }
 
         $environment = $userSecUtil->getSiteSettingParameter('environment');
         if( $environment != 'live' ) {

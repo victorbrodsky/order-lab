@@ -293,7 +293,7 @@
 
                             <li class="divider"></li>
                             {% if invoicesCount > 0 %}
-                                {% if transres_request_util.areInvoicesShowableToUser(transresRequest.project) %}
+                                {% if transres_permission_util.areInvoicesShowableToUser(transresRequest.project) %}
                                     <li>
                                         <a href="{{ path(translationalresearch_sitename~'_invoice_index', { 'id': transresRequest.id }) }} "
                                         >Show Associated Invoices</a>

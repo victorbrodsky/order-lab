@@ -280,21 +280,23 @@ class DefaultReviewer
     public function getRoleByState() {
         $roles = array();
 
+        $projectSpecialty = $this->getProjectSpecialty();
+        if( !$projectSpecialty ) {
+            throw new \Exception("getRoleByState: default reviewer does not have ProjectSpecialty");
+        }
+        $projectSpecialtyStr = "_".$projectSpecialty->getUppercaseName();
+
         if( $this->getState() == "irb_review" ) {
-            $roles['reviewer'] = "ROLE_TRANSRES_IRB_REVIEWER";
-            //$roles['reviewerDelegate'] = "ROLE_TRANSRES_IRB_REVIEWER_DELEGATE";
+            $roles['reviewer'] = "ROLE_TRANSRES_IRB_REVIEWER".$projectSpecialtyStr;
         }
         if( $this->getState() == "admin_review" ) {
-            $roles['reviewer'] = "ROLE_TRANSRES_ADMIN";
-            //$roles['reviewerDelegate'] = null;  //"ROLE_TRANSRES_ADMIN_DELEGATE";
+            $roles['reviewer'] = "ROLE_TRANSRES_ADMIN".$projectSpecialtyStr;
         }
         if( $this->getState() == "committee_review" ) {
-            $roles['reviewer'] = "ROLE_TRANSRES_COMMITTEE_REVIEWER";
-            //$roles['reviewerDelegate'] = "ROLE_TRANSRES_COMMITTEE_REVIEWER_DELEGATE";
+            $roles['reviewer'] = "ROLE_TRANSRES_COMMITTEE_REVIEWER".$projectSpecialtyStr;
         }
         if( $this->getState() == "final_review" ) {
-            $roles['reviewer'] = "ROLE_TRANSRES_PRIMARY_REVIEWER";
-            //$roles['reviewerDelegate'] = "ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE";
+            $roles['reviewer'] = "ROLE_TRANSRES_PRIMARY_REVIEWER".$projectSpecialtyStr;
         }
 
         return $roles;

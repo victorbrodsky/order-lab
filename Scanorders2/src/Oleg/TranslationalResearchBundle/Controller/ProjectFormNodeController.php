@@ -58,7 +58,7 @@ class ProjectFormNodeController extends ProjectController
         $specialties = $transresUtil->getTransResProjectSpecialties(false);
 
         //check if user does not have ROLE_TRANSRES_REQUESTER and specialty role
-        $transresUtil->addMinimumRolesToCreateProject();
+        //$transresUtil->addMinimumRolesToCreateProject();
 
         return array(
             'specialties' => $specialties,

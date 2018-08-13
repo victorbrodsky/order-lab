@@ -568,6 +568,15 @@ class User extends BaseUser {
         return in_array(strtoupper($role), $this->roles, true);
     }
 
+    public function hasPartialRole($partialRoleStr)
+    {
+        foreach( $this->getRoles() as $role ) {
+            if( strpos($role, $partialRoleStr) !== false ) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     /**
      * @param mixed $preferences

@@ -793,8 +793,10 @@ class RequestController extends Controller
         if(
             false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') &&
             false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP') &&
-            false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER') &&
-            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN') &&
+            false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER_HEMATOPATHOLOGY') &&
+            false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER_APCP') &&
+            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN_HEMATOPATHOLOGY') &&
+            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN_APCP') &&
             $transresUtil->isProjectRequester($project) === false
         ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
@@ -1897,7 +1899,6 @@ class RequestController extends Controller
         if(
             $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ||
             $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') ||
-            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE') ||
             $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
         ) {
             $params['admin'] = true;

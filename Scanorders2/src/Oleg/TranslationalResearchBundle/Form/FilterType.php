@@ -233,6 +233,20 @@ class FilterType extends AbstractType
             'attr' => array('class' => 'combobox', 'placeholder'=>'Exempt from IRB Approval'),
         ));
 
+        $builder->add('fromExpectedCompletionDate', DateTimeType::class, array(
+            'label' => false,
+            'widget' => 'single_text',
+            'required' => false,
+            'format' => 'MM/dd/yyyy',
+            'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'From Expected Completion Date'),
+        ));
+        $builder->add('toExpectedCompletionDate', DateTimeType::class, array(
+            'label' => false,
+            'widget' => 'single_text',
+            'required' => false,
+            'format' => 'MM/dd/yyyy',
+            'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'To Expected Completion Date'),
+        ));
 
 //        $builder->add('showMatchingAndTotal', ChoiceType::class, array(
 //            'label' => false,

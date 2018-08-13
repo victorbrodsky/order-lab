@@ -39,6 +39,10 @@ services:
         class: Oleg\TranslationalResearchBundle\Util\TransResRequestUtil
         arguments: ["@doctrine.orm.entity_manager", "@service_container"]
 
+    transres_permission_util:
+            class: Oleg\TranslationalResearchBundle\Util\TransResPermissionUtil
+            arguments: ["@doctrine.orm.entity_manager", "@service_container"]
+
     transres_formnode_util:
         class: Oleg\TranslationalResearchBundle\Util\TransResFormNodeUtil
         arguments: ["@doctrine.orm.entity_manager", "@service_container"]

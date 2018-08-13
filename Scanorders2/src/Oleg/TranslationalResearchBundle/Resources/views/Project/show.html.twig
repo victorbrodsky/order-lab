@@ -18,7 +18,8 @@
     </h4>
     <br>
 
-    {% if is_granted('ROLE_TRANSRES_ADMIN') or transres_util.isProjectEditableByRequester(project) %}
+    {#{% if is_granted('ROLE_TRANSRES_ADMIN') or transres_util.isProjectEditableByRequester(project) %}#}
+    {% if transres_permission_util.hasProjectPermission('update',project) %}
         <p>
             <a class="btn btn-warning" href="{{ path(translationalresearch_sitename~'_project_edit', { 'id': project.id }) }}">Edit project</a>
         </p>
@@ -42,7 +43,8 @@
         {% endif %}
 
         {#See event log#}
-        {% if is_granted('ROLE_TRANSRES_ADMIN') %}
+        {#{% if is_granted('ROLE_TRANSRES_ADMIN') %}#}
+        {% if transres_permission_util.hasProjectPermission('view-log',project) %}
             {% if eventObjectTypeId is defined and eventObjectTypeId %}
                 <a class="btn btn-primary"
                    href="{{ path('translationalresearch_event-log-per-object_log', { 'filter[objectType][]': eventObjectTypeId, 'filter[objectId]': project.id}) }}"
@@ -80,8 +82,8 @@
 
     <div>
 
-        {#{% if is_granted('ROLE_TRANSRES_ADMIN') %}#}
-        {% if is_granted('ROLE_TRANSRES_ADMIN') or transres_util.isProjectEditableByRequester(project) %}
+        {#{% if is_granted('ROLE_TRANSRES_ADMIN') or transres_util.isProjectEditableByRequester(project) %}#}
+        {% if transres_permission_util.hasProjectPermission('update',project) %}
             <br>
             <p>
                 <a class="btn btn-warning" href="{{ path(translationalresearch_sitename~'_project_edit', { 'id': project.id }) }}">Edit project</a>

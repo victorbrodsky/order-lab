@@ -44,12 +44,12 @@
         {{ transres.projectBodyFormFields(form,project,cycle) }}
 
         {#show it only to: System Administrator, TRP Technician, Platform Administrator, Deputy Platform Administrator roles#}
-        {% if
-            is_granted('ROLE_TRANSRES_ADMIN') or
-            is_granted('ROLE_TRANSRES_PRIMARY_REVIEWER') or
-            is_granted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE') or
-            is_granted('ROLE_TRANSRES_TECHNICIAN')
-        %}
+        {#{% if#}
+            {#is_granted('ROLE_TRANSRES_ADMIN') or#}
+            {#is_granted('ROLE_TRANSRES_PRIMARY_REVIEWER') or#}
+            {#is_granted('ROLE_TRANSRES_TECHNICIAN')#}
+        {#%}#}
+        {% if transres_permission_util.hasProjectPermission('review',project) %}
             {#{{ transres.projectInfo(form,project,cycle) }}#}
             {{ transres.projectReviews(form,cycle,sitename) }}
         {% endif %}

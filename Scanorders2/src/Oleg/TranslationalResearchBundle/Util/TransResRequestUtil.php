@@ -1943,20 +1943,20 @@ class TransResRequestUtil
         return $invoice;
     }
     
-    public function isInvoiceBillingContact( $invoice, $user ) {
-        //ROLE_TRANSRES_BILLING_ADMIN role
-        if( $this->secAuth->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ) {
-            return true;
-        }
-        
-        //Invoice's billing contact (salesperson)
-        $salesperson = $invoice->getSalesperson();
-        if( $salesperson->getId() == $user->getId() ) {
-            return true;
-        }
-
-        return false;
-    }
+//    public function isInvoiceBillingContact( $invoice, $user ) {
+//        //ROLE_TRANSRES_BILLING_ADMIN role
+//        if( $this->secAuth->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ) {
+//            return true;
+//        }
+//        
+//        //Invoice's billing contact (salesperson)
+//        $salesperson = $invoice->getSalesperson();
+//        if( $salesperson->getId() == $user->getId() ) {
+//            return true;
+//        }
+//
+//        return false;
+//    }
 
     public function generateInvoiceOid( $transresRequest, $invoice ) {
         $version = 1;
@@ -2439,173 +2439,177 @@ class TransResRequestUtil
 //
 //        return false;
 //    }
-    public function areInvoicesShowableToUser($project) {
-        $user = $this->secTokenStorage->getToken()->getUser();
-        $transresUtil = $this->container->get('transres_util');
-
-        if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) ) {
-            return true;
-        }
-
-        //check if the user is
-        // technologists (ROLE_TRANSRES_TECHNICIAN)/sys admin/platform admin/deputy platform admin/executive committee member/default reviewers
-        if( $transresUtil->isAdminOrPrimaryReviewerOrExecutive() ) {
-            return true;
-        }
-
-        if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) ) {
-            return true;
-        }
-
-        if( $this->container->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN') ) {
-            return true;
-        }
-
-        if( $this->container->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ) {
-            return true;
-        }
-
-        //this also check if isUserAllowedSpecialtyObject
-        if( $transresUtil->isProjectReviewer($project) ) {
-            return true;
-        }
-
-        return false;
-    }
-    public function isUserHasInvoicePermission( $invoice, $action ) {
-        $user = $this->secTokenStorage->getToken()->getUser();
-        $transresUtil = $this->container->get('transres_util');
-
-        $processed = false;
-        if( $invoice ) {
-            if( $this->isUserAllowedAccessInvoiceBySpecialty($invoice) == false ) {
-                return false;
-            }
-        }
-        //exit('1');
-
-        if( $transresUtil->isAdminOrPrimaryReviewerOrExecutive() ) {
-            return true;
-        }
-
-        if( $this->container->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN') ) {
-            return true;
-        }
-
-        if( $this->container->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ) {
-            return true;
-        }
-
-        if( !$invoice ) {
-            if( $action == "create" ) {
-                return true;
-            } else {
-                //exit("Logical Error: Invoice is NULL and action is $action");
-                return false;
-            }
-        }
-
-//        if( $action == "create" ) {
+//    public function areInvoicesShowableToUser($project) {
+//        $user = $this->secTokenStorage->getToken()->getUser();
+//        $transresUtil = $this->container->get('transres_util');
+//
+//        if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) ) {
+//            return true;
+//        }
+//
+//        //check if the user is
+//        // technologists (ROLE_TRANSRES_TECHNICIAN)/sys admin/platform admin/deputy platform admin/executive committee member/default reviewers
+//        if( $transresUtil->isAdminOrPrimaryReviewerOrExecutive() ) {
+//            return true;
+//        }
+//
+//        if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) ) {
+//            return true;
+//        }
+//
+//        if( $this->container->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN') ) {
+//            return true;
+//        }
+//
+//        if( $this->container->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ) {
+//            return true;
+//        }
+//
+//        //this also check if isUserAllowedSpecialtyObject
+//        if( $transresUtil->isProjectReviewer($project) ) {
+//            return true;
+//        }
+//
+//        return false;
+//    }
+//    public function isUserHasInvoicePermission( $invoice, $action ) {
+//        $user = $this->secTokenStorage->getToken()->getUser();
+//        $transresUtil = $this->container->get('transres_util');
+//
+//        $processed = false;
+//        if( $invoice ) {
+//            if( $this->isUserAllowedAccessInvoiceBySpecialty($invoice) == false ) {
+//                return false;
+//            }
+//        }
+//        //exit('1');
+//
+//        if( $transresUtil->isAdminOrPrimaryReviewerOrExecutive() ) {
+//            return true;
+//        }
+//
+//        if( $this->container->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN') ) {
+//            return true;
+//        }
+//
+//        if( $this->container->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ) {
+//            return true;
+//        }
+//
+//        if( !$invoice ) {
+//            if( $action == "create" ) {
+//                return true;
+//            } else {
+//                //exit("Logical Error: Invoice is NULL and action is $action");
+//                return false;
+//            }
+//        }
+//
+////        if( $action == "create" ) {
+////            $processed = true;
+////            if( $this->secAuth->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ) {
+////                return true;
+////            }
+////        }
+//
+//        $transresRequest = $invoice->getTransresRequest();
+//        if( $transresRequest ) {
+//            //ok
+//        } else {
+//            return true;
+//        }
+//
+//        $project = $transresRequest->getProject();
+//        if( $project ) {
+//            //ok
+//        } else {
+//            return true;
+//        }
+//
+//        //show: to users associated with this invoice, request or project
+//        if( $action == "view" ) {
 //            $processed = true;
-//            if( $this->secAuth->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ) {
+//
+//            if( $this->isInvoiceBillingContact($invoice,$user) ) {
+//                return true;
+//            }
+//
+//            //associated with the request as requester
+//            if( $this->isRequestRequester($transresRequest) ) {
+//                return true;
+//            }
+//
+//            //associated with the request as reviewer
+//            if( $this->isRequestStateReviewer($transresRequest) ) {
+//                return true;
+//            }
+//
+//            //associated with the project
+//            if( $transresUtil->isProjectRequester($project) ) {
 //                return true;
 //            }
 //        }
-
-        $transresRequest = $invoice->getTransresRequest();
-        if( $transresRequest ) {
-            //ok
-        } else {
-            return true;
-        }
-
-        $project = $transresRequest->getProject();
-        if( $project ) {
-            //ok
-        } else {
-            return true;
-        }
-
-        //show: to users associated with this invoice, request or project
-        if( $action == "view" ) {
-            $processed = true;
-
-            if( $this->isInvoiceBillingContact($invoice,$user) ) {
-                return true;
-            }
-
-            //associated with the request as requester
-            if( $this->isRequestRequester($transresRequest) ) {
-                return true;
-            }
-
-            //associated with the request as reviewer
-            if( $this->isRequestStateReviewer($transresRequest) ) {
-                return true;
-            }
-
-            //associated with the project
-            if( $transresUtil->isProjectRequester($project) ) {
-                return true;
-            }
-        }
-
-        //view-pdf: show pdf if user can not edit, but can view
-        if( $action == "view-pdf" ) {
-            $processed = true;
-
-            //if( $this->isUserHasInvoicePermission($invoice,"view") and $this->isUserHasInvoicePermission($invoice,"update") == false ) {
-            //    return true;
-            //}
-
-            //associated with the request as requester
-            if( $this->isRequestRequester($transresRequest) ) {
-                return true;
-            }
-
-            //associated with the request as reviewer
-            if( $this->isRequestStateReviewer($transresRequest) ) {
-                return true;
-            }
-
-            //associated with the project
-            if( $transresUtil->isProjectRequester($project) ) {
-                return true;
-            }
-        }
-        
-        //edit: admin, technicians, 
-        if( $action == "update" ) {
-            $processed = true;
-
-            if( $this->isInvoiceBillingContact($invoice,$user) ) {
-                return true;
-            }
-        }
-
-        if( $action == "send-invoice-pdf-email" ) {
-            $processed = true;
-
-            if( $this->isInvoiceBillingContact($invoice,$user) ) {
-                return true;
-            }
-        }
-
-        if( $action == "change-status" ) {
-            $processed = true;
-
-            if( $this->isInvoiceBillingContact($invoice,$user) ) {
-                return true;
-            }
-        }
-
-        if( !$processed ) {
-            //exit("Action is invalid: $action");
-            $logger = $this->container->get('logger');
-            $logger->warning("isUserHasInvoicePermission: Action is invalid: $action");
-        }
-
-        return false;
+//
+//        //view-pdf: show pdf if user can not edit, but can view
+//        if( $action == "view-pdf" ) {
+//            $processed = true;
+//
+//            //if( $this->isUserHasInvoicePermission($invoice,"view") and $this->isUserHasInvoicePermission($invoice,"update") == false ) {
+//            //    return true;
+//            //}
+//
+//            //associated with the request as requester
+//            if( $this->isRequestRequester($transresRequest) ) {
+//                return true;
+//            }
+//
+//            //associated with the request as reviewer
+//            if( $this->isRequestStateReviewer($transresRequest) ) {
+//                return true;
+//            }
+//
+//            //associated with the project
+//            if( $transresUtil->isProjectRequester($project) ) {
+//                return true;
+//            }
+//        }
+//
+//        //edit: admin, technicians,
+//        if( $action == "update" ) {
+//            $processed = true;
+//
+//            if( $this->isInvoiceBillingContact($invoice,$user) ) {
+//                return true;
+//            }
+//        }
+//
+//        if( $action == "send-invoice-pdf-email" ) {
+//            $processed = true;
+//
+//            if( $this->isInvoiceBillingContact($invoice,$user) ) {
+//                return true;
+//            }
+//        }
+//
+//        if( $action == "change-status" ) {
+//            $processed = true;
+//
+//            if( $this->isInvoiceBillingContact($invoice,$user) ) {
+//                return true;
+//            }
+//        }
+//
+//        if( !$processed ) {
+//            //exit("Action is invalid: $action");
+//            $logger = $this->container->get('logger');
+//            $logger->warning("isUserHasInvoicePermission: Action is invalid: $action");
+//        }
+//
+//        return false;
+//    }
+    public function isUserHasInvoicePermission( $invoice, $action ) {
+        $transresPermissionUtil = $this->container->get('transres_permission_util');
+        return $transresPermissionUtil->isUserHasInvoicePermission($invoice,$action);
     }
 
     public function getLatestInvoice( $transresRequest ) {

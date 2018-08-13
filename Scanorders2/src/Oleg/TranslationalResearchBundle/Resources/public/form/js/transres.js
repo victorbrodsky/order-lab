@@ -62,6 +62,8 @@ $(document).ready(function() {
 
     transresIrbExemptListener('transres-project-exemptIrbApproval');
     transresIrbExemptListener('transres-project-exemptIACUCApproval');
+
+    //fieldInputMask();
     
 });
 
@@ -123,8 +125,8 @@ function transresValidateProjectForm() {
     transresHideBtn();
 
     //required class loop
-    $( ".required" ).each(function( index ) {
-        //console.log( "Required: "+index + ": " + $( this ).text() );
+    $("form[name=oleg_translationalresearchbundle_project]").find(".required").each(function( index ) {
+        console.log( "Required: "+index + ": " + $( this ).text() );
         label = $( this ).text();   //$(this).find("label").text();
         value = null;
 

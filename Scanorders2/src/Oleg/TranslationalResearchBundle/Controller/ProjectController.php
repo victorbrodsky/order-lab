@@ -221,6 +221,9 @@ class ProjectController extends Controller
         $humanTissue = $filterform['humanTissue']->getData();
         $exemptIrbApproval = $filterform['exemptIrbApproval']->getData();
 
+        $fromExpectedCompletionDate = $filterform['fromExpectedCompletionDate']->getData();
+        $toExpectedCompletionDate = $filterform['toExpectedCompletionDate']->getData();
+
         //$showMatchingAndTotal = $filterform['showMatchingAndTotal']->getData();
 //        $archived = $filterform['completed']->getData();
 //        $complete = $filterform['review']->getData();
@@ -472,6 +475,18 @@ class ProjectController extends Controller
             //echo "endDate=" . $endDate->format('Y-m-d H:i:s') . "<br>";
             $dql->andWhere('project.createDate <= :endDate');
             $dqlParameters['endDate'] = $endDate->format('Y-m-d H:i:s');
+            $advancedFilter++;
+        }
+
+        if( $fromExpectedCompletionDate ) {
+            $dql->andWhere('project.expectedCompletionDate >= :fromExpectedCompletionDate');
+            $dqlParameters['fromExpectedCompletionDate'] = $fromExpectedCompletionDate->format('Y-m-d H:i:s');
+            $advancedFilter++;
+        }
+        if( $toExpectedCompletionDate ) {
+            $toExpectedCompletionDate->modify('+1 day');
+            $dql->andWhere('project.expectedCompletionDate >= :toExpectedCompletionDate');
+            $dqlParameters['toExpectedCompletionDate'] = $toExpectedCompletionDate->format('Y-m-d H:i:s');
             $advancedFilter++;
         }
 
@@ -739,7 +754,7 @@ class ProjectController extends Controller
         $specialties = $transresUtil->getTransResProjectSpecialties(false);
 
         //check if user does not have ROLE_TRANSRES_REQUESTER and specialty role
-        $transresUtil->addMinimumRolesToCreateProject();
+        //$transresUtil->addMinimumRolesToCreateProject();
 
         return array(
             'specialties' => $specialties,
@@ -929,9 +944,9 @@ class ProjectController extends Controller
     public function editAction(Request $request, Project $project)
     {
 
-//        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER')) {
-//            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
-//        }
+        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER')) {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
         $transresUtil = $this->container->get('transres_util');
 
         if(
@@ -1641,8 +1656,7 @@ class ProjectController extends Controller
         $params['showFinalReviewer'] = true;
         if(
             $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ||
-            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') ||
-            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE')
+            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER')
         ) {
             $params['admin'] = true;
 //            $params['showIrbReviewer'] = true;

@@ -39,7 +39,6 @@
         {% if
             is_granted('ROLE_TRANSRES_ADMIN') or
             is_granted('ROLE_TRANSRES_PRIMARY_REVIEWER') or
-            is_granted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE') or
             is_granted('ROLE_TRANSRES_TECHNICIAN')
         %}
             {{ transres.projectInfo(form,project,cycle) }}

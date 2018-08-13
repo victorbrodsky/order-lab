@@ -179,7 +179,15 @@
 
                     {{ formmacros.field(form.budgetSummary) }}
 
+                    {{ formmacros.field(form.hypothesis) }}
+                    {{ formmacros.field(form.objective) }}
+                    {{ formmacros.field(form.numberOfCases) }}
+                    {{ formmacros.field(form.numberOfCohorts) }}
+                    {{ formmacros.field(form.expectedResults) }}
+                    {{ formmacros.fieldDateLabel(form.expectedCompletionDate,'allow-future-date') }}
+
                     {{ formmacros.field(form.totalCost) }}
+
 
 
                 </div>
@@ -695,7 +703,7 @@
     {% set showFinalReview = 1 %}
 
     {% set showAddDeleteBtn = 0 %}
-    {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_PRIMARY_REVIEWER') or is_granted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE') %}
+    {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_PRIMARY_REVIEWER') %}
         {% set showAddDeleteBtn = 1 %}
     {% endif %}
 
@@ -773,7 +781,7 @@
     {% set showFinalReview = 1 %}
 
     {% set showAddDeleteBtn = 0 %}
-    {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_PRIMARY_REVIEWER') or is_granted('ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE') %}
+    {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_PRIMARY_REVIEWER') %}
         {% set showAddDeleteBtn = 1 %}
     {% endif %}
 

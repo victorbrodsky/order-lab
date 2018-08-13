@@ -319,7 +319,7 @@ class InvoiceType extends AbstractType
             ));
             $builder->add('saveAndGeneratePdfAndSendByEmail', SubmitType::class, array(
                 'label' => 'Save, Generate PDF Invoice and Send PDF Invoice by Email to PI',
-                'attr' => array('class' => 'btn btn-warning btn-with-wait', "data-toggle"=>"modal", "data-target"=>"#pleaseWaitModal")
+                'attr' => array('class' => 'btn btn-success btn-with-wait', "data-toggle"=>"modal", "data-target"=>"#pleaseWaitModal")
             ));
         }
         if( $this->params['invoice']->getLatestVersion() === true ) {
