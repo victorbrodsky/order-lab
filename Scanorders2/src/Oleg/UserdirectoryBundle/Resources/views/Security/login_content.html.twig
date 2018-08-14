@@ -19,13 +19,19 @@
 {{ usermacros.browserCheck() }}
 
     {% if logo is defined and logo %}
+        <p>
         <img src="{{ asset(logo) }}" alt="{{ title }}" height="{{ logoHeight }}" width="{{ logoWidth }}">
+        {#{{ title }}#}
+        </p>
     {% else %}
-        <h2 class="alert alert-info well-lg safary-fix" align="center">
-            {{ title }}
-        </h2>
+        {#<h2 class="alert alert-info well-lg safary-fix" align="center">#}
+            {#{{ title }}#}
+        {#</h2>#}
     {% endif %}
 
+    <h2 class="alert alert-info well-lg safary-fix" align="center">
+        {{ title }}
+    </h2>
 
 <br>
 
