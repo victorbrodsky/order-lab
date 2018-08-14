@@ -88,13 +88,15 @@ class TranslationalResearchUserController extends UserController
     }
     public function processOtherUserParam($user,$otherUserParam) {
         if( $otherUserParam == "hematopathology" ) {
-            $user->addRole("ROLE_TRANSRES_HEMATOPATHOLOGY");
+            //$user->addRole("ROLE_TRANSRES_HEMATOPATHOLOGY");
+            $user->addRole("ROLE_TRANSRES_REQUESTER_HEMATOPATHOLOGY");
         }
         if( $otherUserParam == "ap-cp" ) {
-            $user->addRole("ROLE_TRANSRES_APCP");
+            //$user->addRole("ROLE_TRANSRES_APCP");
+            $user->addRole("ROLE_TRANSRES_REQUESTER_APCP");
         }
 
-        $user->addRole("ROLE_TRANSRES_REQUESTER");
+        //$user->addRole("ROLE_TRANSRES_REQUESTER");
 
         $userSecUtil = $this->container->get('user_security_utility');
         $environment = $userSecUtil->getSiteSettingParameter('environment');
