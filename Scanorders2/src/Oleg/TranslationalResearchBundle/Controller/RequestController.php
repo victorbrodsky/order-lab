@@ -178,6 +178,8 @@ class RequestController extends Controller
                 }
             }
 
+            $transresUtil->assignMinimumRequestRoles($transresRequest);
+
             $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($transresRequest,"document");
             $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($transresRequest,"packingSlipPdf");
             $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($transresRequest,"oldPackingSlipPdf");
@@ -403,6 +405,8 @@ class RequestController extends Controller
                     $em->remove($product);
                 }
             }
+
+            $transresUtil->assignMinimumRequestRoles($transresRequest);
 
             $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($transresRequest,"document");
             $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($transresRequest,"packingSlipPdf");

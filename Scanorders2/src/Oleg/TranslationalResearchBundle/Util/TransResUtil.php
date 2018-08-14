@@ -3476,17 +3476,27 @@ class TransResUtil
     }
 
     //check if user does not have ROLE_TRANSRES_REQUESTER and specialty role
-    public function addMinimumRolesToCreateProject( $specialtyObject ) {
+    public function addMinimumRolesToCreateProject( $specialtyObject, $user=null ) {
         $userSecUtil = $this->container->get('user_security_utility');
-        $user = $this->secTokenStorage->getToken()->getUser();
+
+        if( !$user ) {
+            $user = $this->secTokenStorage->getToken()->getUser();
+        }
+
         $flushUser = false;
         $roleAddedArr = array();
+
+        //echo "specialtyObject=".$specialtyObject."<br>";
 
         if( $specialtyObject ) {
             $uppercaseName = $specialtyObject->getUppercaseName();
             $uppercaseName = "_".$uppercaseName;
             $role = 'ROLE_TRANSRES_REQUESTER'.$uppercaseName;
-            if (false == $this->secAuth->isGranted($role)) {
+            //echo "check role=".$role."<br>";
+            if(
+                false == $this->secAuth->isGranted($role) ||
+                false == $user->hasRole($role)
+            ) {
                 $user->addRole($role);
                 $flushUser = true;
                 $roleAddedArr[] = $role;
@@ -3507,7 +3517,10 @@ class TransResUtil
 
         $environment = $userSecUtil->getSiteSettingParameter('environment');
         if( $environment != 'live' ) {
-            if( false == $this->secAuth->isGranted('ROLE_TESTER') ) {
+            if(
+                false == $this->secAuth->isGranted('ROLE_TESTER') ||
+                false == $user->hasRole('ROLE_TESTER')
+            ) {
                 $user->addRole('ROLE_TESTER');
                 $flushUser = true;
                 $roleAddedArr[] = 'ROLE_TESTER';
@@ -3527,7 +3540,7 @@ class TransResUtil
             $sitename = $this->container->getParameter('translationalresearch.sitename');
             $userSecUtil = $this->container->get('user_security_utility');
             $eventType = "User record updated";
-            $eventMsg = "User information of " . $user . " has been automatically changed to be able to access a new $specialtyStr project page" . "<br>";
+            $eventMsg = "User information of " . $user . " has been automatically changed to be able to access a new $specialtyObject project page" . "<br>";
 
             if( count($roleAddedArr) > 0 ) {
                 $eventMsg = $eventMsg . "Added roles:" . implode(", ", $roleAddedArr);
@@ -3540,6 +3553,72 @@ class TransResUtil
         }
 
         return null;
+    }
+
+    public function assignMinimumProjectRoles($project) {
+        $resArr = array();
+        //1 principalInvestigators
+        $pis = $project->getPrincipalInvestigators();
+        foreach( $pis as $pi ) {
+            if( $pi ) {
+                $resArr[] = $pi;
+            }
+        }
+
+        //2 principalIrbInvestigator
+        $principalIrbInvestigators = $project->getPrincipalIrbInvestigators();
+        foreach( $principalIrbInvestigators as $principalIrbInvestigator ) {
+            if( $principalIrbInvestigator ) {
+                $resArr[] = $principalIrbInvestigator;
+            }
+        }
+
+        //3 coInvestigators
+        $cois = $project->getCoInvestigators();
+        foreach( $cois as $coi ) {
+            if( $coi ) {
+                $resArr[] = $coi;
+            }
+        }
+
+        //4 pathologists
+        $pathologists = $project->getPathologists();
+        foreach( $pathologists as $pathologist ) {
+            if( $pathologist ) {
+                $resArr[] = $pathologist;
+            }
+        }
+
+        //5 contacts
+        $contacts = $project->getContacts();
+        foreach( $contacts as $contact ) {
+            if( $contact ) {
+                $resArr[] = $contact;
+            }
+        }
+
+        //6 Billing contacts
+        $billingContacts = $project->getBillingContacts();
+        foreach( $billingContacts as $billingContact ) {
+            if( $billingContact ) {
+                $resArr[] = $billingContact;
+            }
+        }
+
+        foreach($resArr as $user) {
+            //echo "user=$user <br>";
+            $this->addMinimumRolesToCreateProject($project->getProjectSpecialty(),$user);
+        }
+        //exit('111');
+        return $resArr;
+    }
+
+    public function assignMinimumRequestRoles($transresRequest) {
+        $contact = $transresRequest->getContact();
+        if( $contact ) {
+            $project = $transresRequest->getProject();
+            $this->addMinimumRolesToCreateProject($project->getProjectSpecialty(),$contact);
+        }
     }
 
     public function getNumberOfFundedRequests( $project ) {

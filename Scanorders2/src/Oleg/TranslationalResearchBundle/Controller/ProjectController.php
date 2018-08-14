@@ -854,6 +854,8 @@ class ProjectController extends Controller
                 $startProjectReview = true;
             }
 
+            $transresUtil->assignMinimumProjectRoles($project);
+
             $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($project,"document");
             $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($project,"irbApprovalLetter");
             $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($project,"humanTissueForm");
@@ -1072,6 +1074,8 @@ class ProjectController extends Controller
                     $msg = "Project ID " . $project->getOid() . " has been successfully updated and the status has been changed from '$originalStateLabel' to '$label'";
                 }
             }
+
+            $transresUtil->assignMinimumProjectRoles($project);
 
             $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($project, "document");
             $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($project, "irbApprovalLetter");
