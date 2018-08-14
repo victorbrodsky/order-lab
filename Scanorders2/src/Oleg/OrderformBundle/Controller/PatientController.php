@@ -394,7 +394,7 @@ class PatientController extends Controller
         $system = $securityUtil->getDefaultSourceSystem();
 
         ini_set('max_execution_time', 300); //300 seconds = 5 minutes
-        ini_set('memory_limit', '3072M');
+        ini_set('memory_limit', '5120M');
 
         //add tracker if does not exists
         if( !$entity->getTracker() ) {
@@ -526,7 +526,7 @@ class PatientController extends Controller
         }
 
         ini_set('max_execution_time', 300); //300 seconds = 5 minutes
-        ini_set('memory_limit', '3072M');
+        ini_set('memory_limit', '5120M');
 
         //assign temp source and user for updated array fields
         $tempSource = $securityUtil->getDefaultSourceSystem($parameters['sitename']);
