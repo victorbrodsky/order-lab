@@ -292,9 +292,15 @@ class DefaultReviewer
         if( $this->getState() == "admin_review" ) {
             $roles['reviewer'] = "ROLE_TRANSRES_ADMIN".$projectSpecialtyStr;
         }
+
         if( $this->getState() == "committee_review" ) {
-            $roles['reviewer'] = "ROLE_TRANSRES_COMMITTEE_REVIEWER".$projectSpecialtyStr;
+            if( $this->getPrimaryReview() === true ) {
+                $roles['reviewer'] = "ROLE_TRANSRES_PRIMARY_COMMITTEE_REVIEWER".$projectSpecialtyStr;
+            } else {
+                $roles['reviewer'] = "ROLE_TRANSRES_COMMITTEE_REVIEWER".$projectSpecialtyStr;
+            }
         }
+
         if( $this->getState() == "final_review" ) {
             $roles['reviewer'] = "ROLE_TRANSRES_PRIMARY_REVIEWER".$projectSpecialtyStr;
         }

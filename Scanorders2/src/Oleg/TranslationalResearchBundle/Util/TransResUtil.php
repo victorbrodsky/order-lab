@@ -2305,7 +2305,7 @@ class TransResUtil
 
         //send to the
         // 1) admins and primary reviewers
-        $admins = $this->getTransResAdminEmails(); //ok
+        $admins = $this->getTransResAdminEmails($project->getProjectSpecialty()); //ok
         $emails = array_merge($emails,$admins);
 
         // 2) project's Requester (submitter, principalInvestigators, coInvestigators, pathologists)
@@ -2329,10 +2329,17 @@ class TransResUtil
 
     }
     //get all users with admin and ROLE_TRANSRES_PRIMARY_REVIEWER, ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE
-    public function getTransResAdminEmails($asEmail=true, $onlyAdmin=false) {
+    public function getTransResAdminEmails($projectSpecialty=null, $asEmail=true, $onlyAdmin=false) {
         $users = array();
 
-        $admins = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole("ROLE_TRANSRES_ADMIN");
+        if( $projectSpecialty ) {
+            $specialtyPostfix = $projectSpecialty->getUppercaseName();
+            $specialtyPostfix = "_" . $specialtyPostfix;
+        } else {
+            $specialtyPostfix = null;
+        }
+
+        $admins = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUsersByRoles(array("ROLE_TRANSRES_ADMIN".$specialtyPostfix));
         foreach( $admins as $user ) {
             if( $user ) {
                 if( $asEmail ) {
@@ -2347,7 +2354,7 @@ class TransResUtil
             return $users;
         }
 
-        $primarys = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole("ROLE_TRANSRES_PRIMARY_REVIEWER");
+        $primarys = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUsersByRoles(array("ROLE_TRANSRES_PRIMARY_REVIEWER".$specialtyPostfix));
         foreach( $primarys as $user ) {
             if( $user ) {
                 if( $asEmail ) {

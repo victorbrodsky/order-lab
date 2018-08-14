@@ -227,6 +227,24 @@ class UserRepository extends EntityRepository {
         return $query->getQuery()->getResult();
     }
 
+    //$roles: role or partial role name
+    public function findUsersByRoles($roles) {
+
+        $whereArr = array();
+        foreach($roles as $role) {
+            $whereArr[] = 'u.roles LIKE '."'%\"" . $role . "\"%'";
+        }
+
+        $qb = $this->_em->createQueryBuilder();
+        $qb->select('u')
+            ->from('OlegUserdirectoryBundle:User', 'u')
+            ->where( implode(' OR ',$whereArr) );
+
+        //echo "query=".$qb."<br>";
+
+        return $qb->getQuery()->getResult();
+    }
+
     public function isUserHasPermissionObjectAction( $user, $object, $action ) {
 
         //check if user has direct permission

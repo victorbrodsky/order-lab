@@ -1568,28 +1568,28 @@ class AdminController extends Controller
                 "translational-research"
             ),
 
+            "ROLE_TRANSRES_PRIMARY_REVIEWER_APCP" => array(
+                "Translational Research AP/CP Final Reviewer",
+                "Review for all states for AP/CP",
+                80,
+                "translational-research"
+            ),
+            "ROLE_TRANSRES_PRIMARY_REVIEWER_HEMATOPATHOLOGY" => array(
+                "Translational Research Hematopathology Final Reviewer",
+                "Review for all states for Hematopathology",
+                80,
+                "translational-research"
+            ),
+
             "ROLE_TRANSRES_EXECUTIVE_APCP" => array(
                 "Translational Research AP/CP Executive Committee",
                 "Full View Access for AP/CP Translational Research site",
-                80,
+                70,
                 "translational-research"
             ),
             "ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY" => array(
                 "Translational Research Hematopathology Executive Committee",
                 "Full View Access for Hematopathology Translational Research site",
-                80,
-                "translational-research"
-            ),
-
-            "ROLE_TRANSRES_PRIMARY_REVIEWER_APCP" => array(
-                "Translational Research AP/CP Primary Reviewer",
-                "Review for all states for AP/CP",
-                70,
-                "translational-research"
-            ),
-            "ROLE_TRANSRES_PRIMARY_REVIEWER_HEMATOPATHOLOGY" => array(
-                "Translational Research Hematopathology Primary Reviewer",
-                "Review for all states for Hematopathology",
                 70,
                 "translational-research"
             ),
@@ -1620,16 +1620,16 @@ class AdminController extends Controller
                 "translational-research"
             ),
 
-            "ROLE_TRANSRES_REQUESTER_APCP" => array(
-                "Translational Research AP/CP Project Requester",
-                "Submit, View and Edit a Translational Research AP/CP Project",
-                30,
+            "ROLE_TRANSRES_PRIMARY_COMMITTEE_REVIEWER_APCP" => array(
+                "Translational Research AP/CP Primary Committee Reviewer",
+                "AP/CP Committee Review",
+                50,
                 "translational-research"
             ),
-            "ROLE_TRANSRES_REQUESTER_HEMATOPATHOLOGY" => array(
-                "Translational Research Hematopathology Project Requester",
-                "Submit, View and Edit a Translational Research Hematopathology Project",
-                30,
+            "ROLE_TRANSRES_PRIMARY_COMMITTEE_REVIEWER_HEMATOPATHOLOGY" => array(
+                "Translational Research Hematopathology Primary Committee Reviewer",
+                "Hematopathology Committee Review",
+                50,
                 "translational-research"
             ),
 
@@ -1656,6 +1656,19 @@ class AdminController extends Controller
                 "Translational Research Hematopathology Technician",
                 "View and Edit a Translational Research Hematopathology Request",
                 50,
+                "translational-research"
+            ),
+
+            "ROLE_TRANSRES_REQUESTER_APCP" => array(
+                "Translational Research AP/CP Project Requester",
+                "Submit, View and Edit a Translational Research AP/CP Project",
+                30,
+                "translational-research"
+            ),
+            "ROLE_TRANSRES_REQUESTER_HEMATOPATHOLOGY" => array(
+                "Translational Research Hematopathology Project Requester",
+                "Submit, View and Edit a Translational Research Hematopathology Project",
+                30,
                 "translational-research"
             ),
 
@@ -8757,6 +8770,95 @@ class AdminController extends Controller
 
         exit("Finished.");
     }
+
+    /**
+     * Update roles
+     * run: http://127.0.0.1/order/directory/admin/update-user-roles/
+     * @Route("/update-user-roles/", name="user_update_user_roles")
+     */
+    public function updateUserRolesAction()
+    {
+        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+            return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename') . '-order-nopermission'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $roles = array(
+            "ROLE_TRANSRES_ADMIN",
+            "ROLE_TRANSRES_TECHNICIAN",
+            "ROLE_TRANSRES_REQUESTER",
+            "ROLE_TRANSRES_IRB_REVIEWER",
+            "ROLE_TRANSRES_COMMITTEE_REVIEWER",
+            "ROLE_TRANSRES_PRIMARY_REVIEWER",
+            "ROLE_TRANSRES_BILLING_ADMIN",
+            "ROLE_TRANSRES_HEMATOPATHOLOGY",
+            "ROLE_TRANSRES_APCP"
+            //"ROLE_TRANSRES_EXECUTIVE_APCP",
+            //"ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY"
+        );
+
+        //1) get all users with TRANSRES roles
+        $users = $em->getRepository('OlegUserdirectoryBundle:User')->findUsersByRoles($roles);
+
+        $msg = "Found ".count($users). " transres users <br>";
+
+        foreach($users as $user) {
+            $msg = $msg . "User $user: ";
+            $hema = false;
+            $apcp = false;
+            if( $user->hasRole("ROLE_TRANSRES_HEMATOPATHOLOGY") ) {
+                $user->removeRole("ROLE_TRANSRES_HEMATOPATHOLOGY");
+                $msg = $msg . "Remove ROLE_TRANSRES_HEMATOPATHOLOGY role; ";
+                $hema = true;
+            }
+            if( $user->hasRole("ROLE_TRANSRES_APCP") ) {
+                $user->removeRole("ROLE_TRANSRES_APCP");
+                $msg = $msg . "Remove ROLE_TRANSRES_APCP role; ";
+                $apcp = true;
+            }
+
+            if( $apcp == false && $hema == false ) {
+                $apcp = true;
+            }
+
+            foreach($roles as $role) {
+                //$msg = $msg . "[$role]: ";
+                if( $role == "ROLE_TRANSRES_EXECUTIVE_APCP" || $role == "ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY" ) {
+                    continue; //skip
+                }
+                if( $role == "ROLE_TRANSRES_APCP" || $role == "ROLE_TRANSRES_HEMATOPATHOLOGY" ) {
+                    continue; //skip
+                }
+                if( $user->hasRole($role) ) {
+                    //$msg = $msg . "#######Has $role ##########; ";
+                    if( $apcp ) {
+                        $user->addRole($role . "_APCP");
+                        $msg = $msg . "Update $role by _APCP; ";
+                    }
+                    if( $hema ) {
+                        $user->addRole($role . "_HEMATOPATHOLOGY");
+                        $msg = $msg . "Update $role by _HEMATOPATHOLOGY; ";
+                    }
+                    if( $apcp || $hema ) {
+                        $user->removeRole($role);
+                        $msg = $msg . "###Remove $role###; ";
+                    }
+                }
+            }
+
+            $msg = $msg . "<br>Roles:" . implode(",",$user->getRoles())."<br>";
+
+            $msg = $msg . "<br><br>";
+
+            $em->flush($user);
+
+            //exit($msg);
+        }
+
+        exit($msg);
+    }
+
 
 //    public function createAdminAntibodyList($filename) {
 //        $importUtil = $this->get('transres_import');

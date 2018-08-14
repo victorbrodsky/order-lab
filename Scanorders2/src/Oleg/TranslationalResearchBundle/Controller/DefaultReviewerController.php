@@ -306,10 +306,12 @@ class DefaultReviewerController extends Controller
             $reviewerRole = $roles['reviewer'];
             //$reviewerDelegateRole = $roles['reviewerDelegate'];
             $reviewer = $defaultReviewer->getReviewer();
-            if( $reviewer ) {
-                $reviewer->removeRole($reviewerRole);
-            }
-            //$reviewerDelegate = $defaultReviewer->getReviewerDelegate();
+            //remove role: make sure if the user is not a default reviewer in all other objects. Or don't remove role at all.
+            //if( $reviewer ) {
+            //    $reviewer->removeRole($reviewerRole);
+            //}
+            $reviewerDelegate = $defaultReviewer->getReviewerDelegate();
+            //remove role: make sure if the user is not a default reviewer in all other objects. Or don't remove role at all.
             //if( $reviewerDelegate && $reviewerDelegateRole ) {
             //    $reviewerDelegate->removeRole($reviewerDelegateRole);
             //}

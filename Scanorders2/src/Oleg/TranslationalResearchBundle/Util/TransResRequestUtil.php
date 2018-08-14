@@ -1425,8 +1425,10 @@ class TransResRequestUtil
 
         $emails = array();
 
+        $project = $transresRequest->getProject();
+
         // 1) admins and primary reviewers
-        $admins = $transresUtil->getTransResAdminEmails(); //ok
+        $admins = $transresUtil->getTransResAdminEmails($project->getProjectSpecialty()); //ok
         $emails = array_merge($emails,$admins);
 
         // 2) a) submitter, b) principalInvestigators, c) contact
@@ -1471,40 +1473,6 @@ class TransResRequestUtil
 
         $senderEmail = null; //Admin email
 
-//        $emails = array();
-//        //send to the
-//        // 1) admins and primary reviewers
-//        $admins = $transresUtil->getTransResAdminEmails(); //ok
-//        $emails = array_merge($emails,$admins);
-//
-//        // 2) a) submitter, b) principalInvestigators, c) contact
-//        //a submitter
-//        if( $transresRequest->getSubmitter() ) {
-//            $submitterEmail = $transresRequest->getSubmitter()->getSingleEmail();
-//            if( $submitterEmail ) {
-//                $emails = array_merge($emails,array($submitterEmail));
-//            }
-//        }
-//
-//        //b principalInvestigators
-//        $piEmailArr = array();
-//        $pis = $transresRequest->getPrincipalInvestigators();
-//        foreach( $pis as $pi ) {
-//            if( $pi ) {
-//                $piEmailArr[] = $pi->getSingleEmail();
-//            }
-//        }
-//        $emails = array_merge($emails,$piEmailArr);
-//
-//        //contact
-//        if( $transresRequest->getContact() ) {
-//            $contactEmail = $transresRequest->getContact()->getSingleEmail();
-//            if( $submitterEmail ) {
-//                $emails = array_merge($emails,array($contactEmail));
-//            }
-//        }
-//
-//        $emails = array_unique($emails);
         $emails = $this->getRequestEmails($transresRequest);
 
         //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
@@ -2687,11 +2655,13 @@ class TransResRequestUtil
 
         $user = $this->secTokenStorage->getToken()->getUser();
         $senderEmail = $user->getSingleEmail();
-        
+
+        $project = $transresRequest->getProject();
+
         $adminEmailInfos = array();
         $asEmail=false;
         $onlyAdmin=true;
-        $admins = $transresUtil->getTransResAdminEmails($asEmail,$onlyAdmin);
+        $admins = $transresUtil->getTransResAdminEmails($project->getProjectSpecialty(),$asEmail,$onlyAdmin);
         foreach($admins as $admin) {
             $adminEmailInfos[] = $admin->getUsernameOptimal()." (".$admin->getSingleEmail().")";
         }

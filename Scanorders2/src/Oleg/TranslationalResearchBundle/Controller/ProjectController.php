@@ -186,7 +186,7 @@ class ProjectController extends Controller
         ));
 
         if( count($projectSpecialtyAllowedArr) == 0 ) {
-            $sysAdminEmailArr = $transresUtil->getTransResAdminEmails(true,true);
+            $sysAdminEmailArr = $transresUtil->getTransResAdminEmails(null,true,true);
             $errorMsg = "You don't have any allowed project specialty in your profile.".
                         "<br>Please contact the system admin(s):".
                         "<br>".implode(", ",$sysAdminEmailArr);

@@ -427,7 +427,7 @@ class UserSecurityUtil {
             return null;
         }
 
-        $users = $this->findByRoles($roles); //supports partial role name
+        $users = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUsersByRoles($roles); //supports partial role name
 
         //echo "user count=".count($users)."<br>";
 
@@ -451,23 +451,23 @@ class UserSecurityUtil {
         return $emails;
     }
 
-    //$roles: role or partial role name
-    public function findByRoles($roles) {
-
-        $whereArr = array();
-        foreach($roles as $role) {
-            $whereArr[] = 'u.roles LIKE '."'%\"" . $role . "\"%'";
-        }
-
-        $qb = $this->em->createQueryBuilder();
-        $qb->select('u')
-            ->from('OlegUserdirectoryBundle:User', 'u')
-            ->where( implode(' OR ',$whereArr) );
-
-        //echo "query=".$qb."<br>";
-
-        return $qb->getQuery()->getResult();
-    }
+//    //$roles: role or partial role name
+//    public function findByRoles($roles) {
+//
+//        $whereArr = array();
+//        foreach($roles as $role) {
+//            $whereArr[] = 'u.roles LIKE '."'%\"" . $role . "\"%'";
+//        }
+//
+//        $qb = $this->em->createQueryBuilder();
+//        $qb->select('u')
+//            ->from('OlegUserdirectoryBundle:User', 'u')
+//            ->where( implode(' OR ',$whereArr) );
+//
+//        //echo "query=".$qb."<br>";
+//
+//        return $qb->getQuery()->getResult();
+//    }
 
     public function findSystemUser() {
 
