@@ -772,7 +772,6 @@ class ProjectController extends Controller
     public function newProjectAction(Request $request, $specialtyStr)
     {
         $transresPermissionUtil = $this->container->get('transres_permission_util');
-
         $transresUtil = $this->container->get('transres_util');
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
@@ -780,7 +779,7 @@ class ProjectController extends Controller
         //$specialty is a url prefix (i.e. "new-ap-cp-project")
         $specialty = $transresUtil->getSpecialtyObject($specialtyStr);
 
-        if( $transresPermissionUtil->hasProjectPermission('create',null,$specialty) ) {
+        if( false === $transresPermissionUtil->hasProjectPermission('create',null,$specialty) ) {
             //exit('NOT GRANTED: new project '.$specialtyStr);
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
@@ -972,7 +971,7 @@ class ProjectController extends Controller
 
         $transresPermissionUtil = $this->container->get('transres_permission_util');
 
-        if( $transresPermissionUtil->hasProjectPermission("update",$project) === false ) {
+        if( false === $transresPermissionUtil->hasProjectPermission("update",$project) ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
@@ -1201,7 +1200,7 @@ class ProjectController extends Controller
 
         $transresPermissionUtil = $this->container->get('transres_permission_util');
 
-        if( $transresPermissionUtil->hasProjectPermission("view",$project) === false ) {
+        if( false === $transresPermissionUtil->hasProjectPermission("view",$project) ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 

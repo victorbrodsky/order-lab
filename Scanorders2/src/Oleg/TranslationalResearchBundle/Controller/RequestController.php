@@ -61,20 +61,21 @@ class RequestController extends Controller
      */
     public function newFormNodeAction(Request $request, Project $project=null)
     {
-        $transResFormNodeUtil = $this->get('transres_formnode_util');
+        $transresPermissionUtil = $this->container->get('transres_permission_util');
+        //$transResFormNodeUtil = $this->get('transres_formnode_util');
         $transresRequestUtil = $this->get('transres_request_util');
         $transresUtil = $this->get('transres_util');
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
-        if(
-            false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER') &&
-            $transresUtil->isProjectRequester($project) === false
-        ) {
+//        if(
+//            false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER') &&
+//            $transresUtil->isProjectRequester($project) === false
+//        )
+        if( false === $transresPermissionUtil->hasRequestPermission('create',null) ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
-
-
+        
         $cycle = "new";
         $formnode = false;
 
@@ -91,16 +92,17 @@ class RequestController extends Controller
 
         if( $project ) {
 
-            if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
-                $this->get('session')->getFlashBag()->add(
-                    'warning',
-                    "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
-                );
-                return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
-            }
-
             $transresRequest->setProject($project);
             $title = "New Work Request for project ID ".$project->getOid();
+
+            //if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
+            if( false === $transresPermissionUtil->hasRequestPermission('create',$transresRequest) ) {
+//                $this->get('session')->getFlashBag()->add(
+//                    'warning',
+//                    "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
+//                );
+                return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+            }
 
             //$projectFundedAccountNumber = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"If funded, please provide account number");
             $projectFundedAccountNumber = $project->getFundedAccountNumber();
@@ -268,6 +270,7 @@ class RequestController extends Controller
     public function editAction(Request $request, TransResRequest $transresRequest)
     {
         //$transResFormNodeUtil = $this->get('transres_formnode_util');
+        $transresPermissionUtil = $this->container->get('transres_permission_util');
         $transresRequestUtil = $this->container->get('transres_request_util');
         $transresUtil = $this->container->get('transres_util');
         $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -286,33 +289,46 @@ class RequestController extends Controller
 
         $project = $transresRequest->getProject();
 
-        if(
-            false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER') &&
-            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN') &&
-            $transresUtil->isProjectRequester($project) === false
-        ) {
-            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
-        }
+//        if(
+//            false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER') &&
+//            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN') &&
+//            $transresUtil->isProjectRequester($project) === false
+//        ) {
+//            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+//        }
+//
+//        if( $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') === false ) {
+//            if ($transresUtil->isProjectRequester($project)) {
+//                if ($transresRequest->getProgressState() != 'draft') {
+//                    $stageLabel = $transresRequestUtil->getRequestStateLabelByName($transresRequest->getProgressState(), 'progress');
+//                    $this->get('session')->getFlashBag()->add(
+//                        'warning',
+//                        "You can not edit this Working Request, because it's not in the Draft stage. Current stage is " . $stageLabel
+//                    );
+//                    //return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+//                    return $this->redirectToRoute('translationalresearch_request_show', array('id' => $transresRequest->getId()));
+//                }
+//            }
+//        }
+//
+//        if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
+//            $this->get('session')->getFlashBag()->add(
+//                'warning',
+//                "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
+//            );
+//            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+//        }
 
-        if( $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') === false ) {
-            if ($transresUtil->isProjectRequester($project)) {
-                if ($transresRequest->getProgressState() != 'draft') {
-                    $stageLabel = $transresRequestUtil->getRequestStateLabelByName($transresRequest->getProgressState(), 'progress');
-                    $this->get('session')->getFlashBag()->add(
-                        'warning',
-                        "You can not edit this Working Request, because it's not in the Draft stage. Current stage is " . $stageLabel
-                    );
-                    //return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
-                    return $this->redirectToRoute('translationalresearch_request_show', array('id' => $transresRequest->getId()));
-                }
+        if( false === $transresPermissionUtil->hasRequestPermission('update',$transresRequest) ) {
+            if( $transresUtil->isProjectRequester($project) && $transresRequest->getProgressState() != 'draft' ) {
+                $stageLabel = $transresRequestUtil->getRequestStateLabelByName($transresRequest->getProgressState(), 'progress');
+                $this->get('session')->getFlashBag()->add(
+                    'warning',
+                    "You can not edit this Working Request, because it's not in the Draft stage. Current stage is " . $stageLabel
+                );
+                //return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+                return $this->redirectToRoute('translationalresearch_request_show', array('id' => $transresRequest->getId()));
             }
-        }
-
-        if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
-            $this->get('session')->getFlashBag()->add(
-                'warning',
-                "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
-            );
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
@@ -786,6 +802,7 @@ class RequestController extends Controller
      */
     public function showAction(Request $request, TransResRequest $transresRequest)
     {
+        $transresPermissionUtil = $this->container->get('transres_permission_util');
         $transresUtil = $this->container->get('transres_util');
         $transresRequestUtil = $this->container->get('transres_request_util');
         //$em = $this->getDoctrine()->getManager();
@@ -794,24 +811,28 @@ class RequestController extends Controller
         $cycle = "show";
         $project = $transresRequest->getProject();
 
-        if(
-            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') &&
-            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP') &&
-            false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER_HEMATOPATHOLOGY') &&
-            false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER_APCP') &&
-            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN_HEMATOPATHOLOGY') &&
-            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN_APCP') &&
-            $transresUtil->isProjectRequester($project) === false
-        ) {
-            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
-        }
+//        if(
+//            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE_HEMATOPATHOLOGY') &&
+//            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE_APCP') &&
+//            false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER_HEMATOPATHOLOGY') &&
+//            false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER_APCP') &&
+//            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN_HEMATOPATHOLOGY') &&
+//            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN_APCP') &&
+//            $transresUtil->isProjectRequester($project) === false
+//        ) {
+//            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+//        }
+//
+//
+//        if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
+//            $this->get('session')->getFlashBag()->add(
+//                'warning',
+//                "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
+//            );
+//            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+//        }
 
-
-        if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
-            $this->get('session')->getFlashBag()->add(
-                'warning',
-                "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
-            );
+        if( false === $transresPermissionUtil->hasRequestPermission('view',$transresRequest) ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
@@ -1988,18 +2009,22 @@ class RequestController extends Controller
      */
     public function reviewProgressAction(Request $request, TransResRequest $transresRequest)
     {
+        $transresPermissionUtil = $this->container->get('transres_permission_util');
         $transresUtil = $this->container->get('transres_util');
-        $transresRequestUtil = $this->container->get('transres_request_util');
 
-        if(
-            $transresRequestUtil->isRequestProgressReviewable($transresRequest) && //check state
-            (
-                $transresUtil->isAdminOrPrimaryReviewer() ||
-                $transresRequestUtil->isRequestProgressReviewer($transresRequest)
-            )
-        ) {
-            //ok
-        } else {
+//        $transresRequestUtil = $this->container->get('transres_request_util');
+//        if(
+//            $transresRequestUtil->isRequestProgressReviewable($transresRequest) && //check state
+//            (
+//                $transresUtil->isAdminOrPrimaryReviewer() ||
+//                $transresRequestUtil->isRequestProgressReviewer($transresRequest)
+//            )
+//        ) {
+//            //ok
+//        } else {
+//            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+//        }
+        if( false === $transresPermissionUtil->hasRequestPermission("progress-review",$transresRequest) ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
@@ -2036,18 +2061,22 @@ class RequestController extends Controller
      */
     public function reviewBillingAction(Request $request, TransResRequest $transresRequest)
     {
+        $transresPermissionUtil = $this->container->get('transres_permission_util');
         $transresUtil = $this->container->get('transres_util');
-        $transresRequestUtil = $this->container->get('transres_request_util');
 
-        if(
-            $transresRequestUtil->isRequestProgressReviewable($transresRequest) && //check state
-            (
-                $transresUtil->isAdminOrPrimaryReviewer() ||
-                $transresRequestUtil->isRequestProgressReviewer($transresRequest)
-            )
-        ) {
-            //ok
-        } else {
+//        $transresRequestUtil = $this->container->get('transres_request_util');
+//        if(
+//            $transresRequestUtil->isRequestProgressReviewable($transresRequest) && //check state
+//            (
+//                $transresUtil->isAdminOrPrimaryReviewer() ||
+//                $transresRequestUtil->isRequestProgressReviewer($transresRequest)
+//            )
+//        ) {
+//            //ok
+//        } else {
+//            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+//        }
+        if( false === $transresPermissionUtil->hasRequestPermission("billing-review",$transresRequest) ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
@@ -2076,19 +2105,24 @@ class RequestController extends Controller
      */
     public function updateIrbExpDateAction( Request $request ) {
         //set permission: project irb reviewer or admin
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
-            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
-        }
+//        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
+//            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+//        }
 
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
         //$transresRequestUtil = $this->get('transres_request_util');
         $transresUtil = $this->container->get('transres_util');
         //$userServiceUtil = $this->container->get('user_service_utility');
-        $res = "NotOK";
 
         $projectId = trim( $request->get('projectId') );
         $project = $em->getRepository('OlegTranslationalResearchBundle:Project')->find($projectId);
+
+        if( $transresUtil->isAdminOrPrimaryReviewer($project->getProjectSpecialty()) || $transresUtil->isProjectEditableByRequester($project) ) {
+            //ok
+        } else {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
 
         if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
             $this->get('session')->getFlashBag()->add(
@@ -2098,8 +2132,10 @@ class RequestController extends Controller
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
+        $res = "NotOK";
+
         if(
-            $transresUtil->isAdminOrPrimaryReviewer() ||
+            $transresUtil->isAdminOrPrimaryReviewer($project->getProjectSpecialty()) ||
             $this->isReviewsReviewer($user,$project->getIrbReviews())
         ) {
             //ok

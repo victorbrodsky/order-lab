@@ -410,12 +410,16 @@ class TransResPermissionUtil
 
 
     /////////////// Request ///////////////////////
-    public function hasRequestPermission( $action, $request ) {
+    public function hasRequestPermission( $action, $request=null ) {
 
         $transresUtil = $this->container->get('transres_util');
 
         $done = false;
-        $project = $request->getProject();
+        $project = null;
+
+        if( $request ) {
+            $project = $request->getProject();
+        }
 
         $specialtyStr = null;
         if( $project ) {
@@ -427,12 +431,30 @@ class TransResPermissionUtil
             $done = true;
             if(
                 $this->secAuth->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ||
-                $this->secAuth->isGranted("ROLE_TRANSRES_PRIMARY_REVIEWER".$specialtyStr) ||
-                $this->secAuth->isGranted("ROLE_TRANSRES_TECHNICIAN".$specialtyStr) ||
-                $this->secAuth->isGranted("ROLE_TRANSRES_REQUESTER".$specialtyStr)
+                $this->secAuth->isGranted("ROLE_TRANSRES_PRIMARY_REVIEWER".$specialtyStr)
             ) {
                 return true;
             }
+
+            if( $project ) {
+                if( $transresUtil->isProjectRequester($project) ) {
+                    if( $transresUtil->isRequestCanBeCreated($project) ) {
+                        return true;
+                    }
+                }
+            } else {
+                if( $this->secAuth->isGranted("ROLE_TRANSRES_REQUESTER".$specialtyStr) ) {
+                    return true;
+                }
+            }
+        }
+
+        //all actions below require request and project
+        if( !$request ) {
+            return false;
+        }
+        if( !$project ) {
+            return false;
         }
 
         if( $action == "update" || $action == "edit" ) {
@@ -444,10 +466,7 @@ class TransResPermissionUtil
             ) {
                 return true;
             }
-            if (
-                $transresUtil->isProjectRequester($project) &&
-                $transresUtil->getProgressState() == 'draft'
-            ) {
+            if( $transresUtil->isProjectRequester($project) && $transresUtil->getProgressState() == 'draft' ) {
                 return true;
             }
         }
@@ -477,19 +496,37 @@ class TransResPermissionUtil
             }
         }
 
-        //TODO
-        if( $action == "review" ) {
+        if( $action == "progress-review" ) {
             $done = true;
+//            if(
+//                $this->secAuth->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ||
+//                $this->secAuth->isGranted("ROLE_TRANSRES_PRIMARY_REVIEWER".$specialtyStr)
+//            ) {
+//                return true;
+//            }
+            $transresRequestUtil = $this->container->get('transres_request_util');
             if(
-                $this->secAuth->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ||
-                $this->secAuth->isGranted("ROLE_TRANSRES_PRIMARY_REVIEWER".$specialtyStr) ||
-                $this->secAuth->isGranted("ROLE_TRANSRES_TECHNICIAN".$specialtyStr)
+                $transresRequestUtil->isRequestProgressReviewable($request) &&
+                (
+                    $transresUtil->isAdminOrPrimaryReviewer($project->getProjectSpecialty()) ||
+                    $transresRequestUtil->isRequestProgressReviewer($request)
+                )
             ) {
                 return true;
             }
-
-
-
+        }
+        if( $action == "billing-review" ) {
+            $done = true;
+            $transresRequestUtil = $this->container->get('transres_request_util');
+            if(
+                $transresRequestUtil->isRequestBillingReviewable($request) &&
+                (
+                    $transresUtil->isAdminOrPrimaryReviewer($project->getProjectSpecialty()) ||
+                    $transresRequestUtil->isRequestBillingReviewer($request)
+                )
+            ) {
+                return true;
+            }
         }
 
         if( $action == "packing-slip" ) {

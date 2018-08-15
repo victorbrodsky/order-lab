@@ -244,23 +244,25 @@
                                 </li>
                             {% endif %}
 
-                            {% if transres_request_util.isRequestProgressReviewable(transresRequest) %}
-                            {% if transres_util.isAdminOrPrimaryReviewer() or transres_request_util.isRequestProgressReviewer(transresRequest) %}
+                            {#{% if transres_request_util.isRequestProgressReviewable(transresRequest) %}#}
+                            {#{% if transres_util.isAdminOrPrimaryReviewer() or transres_request_util.isRequestProgressReviewer(transresRequest) %}#}
+                            {% if transres_permission_util.hasRequestPermission('progress-review',transresRequest) %}
                                 <li>
                                     <a href="{{ path(translationalresearch_sitename~'_request_review_progress_state', { 'id': transresRequest.id }) }} "
                                     >Change Completion Status</a>
                                 </li>
                             {% endif %}
-                            {% endif %}
+                            {#{% endif %}#}
 
-                            {% if transres_request_util.isRequestBillingReviewable(transresRequest) %}
-                            {% if transres_util.isAdminOrPrimaryReviewer() or transres_request_util.isRequestBillingReviewer(transresRequest) %}
+                            {#{% if transres_request_util.isRequestBillingReviewable(transresRequest) %}#}
+                            {#{% if transres_util.isAdminOrPrimaryReviewer() or transres_request_util.isRequestBillingReviewer(transresRequest) %}#}
+                            {% if transres_permission_util.hasRequestPermission('billing-review',transresRequest) %}
                                 <li>
                                     <a href="{{ path(translationalresearch_sitename~'_request_review_billing_state', { 'id': transresRequest.id }) }} "
                                     >Change Billing Status</a>
                                 </li>
                             {% endif %}
-                            {% endif %}
+                            {#{% endif %}#}
 
                             {#{% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') %}#}
                             {% if transres_permission_util.hasRequestPermission("packing-slip",transresRequest) %}
