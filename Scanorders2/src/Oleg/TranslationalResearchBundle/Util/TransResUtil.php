@@ -1364,8 +1364,9 @@ class TransResUtil
             $returnLabel = ucwords($label);
         }
 
-        //if not the actual user show name "(as Mister John)"
+        //if not the actual reviewer show name "(as Mister John)"
         //if( $transitionName != "committee_finalreview_approved" ) {
+        //TODO: to diffirentiate, add if actual user can not use this $transitionName
         if( strpos($transitionName, "finalreview_approved") === false ) {
             $user = $this->secTokenStorage->getToken()->getUser();
             $showReviewer = false;
