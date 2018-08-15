@@ -543,11 +543,11 @@ class ProjectController extends Controller
         }
 
         if( $routeName == "translationalresearch_my_request_project_index" ) {
-            $myRequestProjectsCriterion = $this->getProjectWhereIamRequester();
+            $myRequestProjectsCriterion = "submitter.id = :userId";
             $dql->andWhere($myRequestProjectsCriterion);
 
             $dqlParameters["userId"] = $user->getId();
-            $title = "Projects I Personally Requested, where I am a Requester"; //"My Project Requests, Where I am a Requester";
+            $title = "Projects I Personally Requested"; //"My Project Requests, Where I am a Requester";
         }
 
         if( $routeName == "translationalresearch_my_request_project_draft_index" ) {
@@ -555,7 +555,7 @@ class ProjectController extends Controller
             $dql->andWhere($myRequestProjectsCriterion." AND project.state != 'draft'");
 
             $dqlParameters["userId"] = $user->getId();
-            $title = "Projects I Personally Requested, where I am a Requester"; //"My Project Requests, Where I am a Requester";
+            $title = "Draft Projects, where I am a Requester"; //"My Project Requests, Where I am a Requester";
         }
 
         if( $routeName == "translationalresearch_my_review_project_index" ) {
