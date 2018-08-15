@@ -55,94 +55,94 @@ class TransResUtil
 
     //NOT USED
     //get links to change states: Reject IRB Review and Approve IRB Review (translationalresearch_transition_action)
-    public function getEnabledLinkActions( $project, $classEdit=null, $classTransition=null ) {
-        $workflow = $this->container->get('state_machine.transres_project');
-        $transitions = $workflow->getEnabledTransitions($project);
-
-        $links = array();
-        foreach( $transitions as $transition ) {
-
-            //$this->printTransition($transition);
-            $transitionName = $transition->getName();
-
-            //$tos = $transition->getTos();
-            $froms = $transition->getFroms();
-            foreach( $froms as $from ) {
-                //echo "from=".$from."<br>"; //irb_review
-
-                //add user's validation: $from=irb_review => user has role _IRB_REVIEW_
-                if( false === $this->isUserAllowedFromThisStateByRole($from) ) {
-                    continue;
-                }
-
-                //don't sent state $to (get it from transition object)
-                $thisUrl = $this->container->get('router')->generate(
-                    'translationalresearch_transition_action',
-                    array(
-                        'transitionName'=>$transitionName,
-                        'id'=>$project->getId()
-                    ),
-                    UrlGeneratorInterface::ABSOLUTE_URL
-                );
-
-                //$label = ucfirst($transitionName)." (mark as ".ucfirst($to);
-                $label = $this->getTransitionLabelByName($transitionName); //not used
-
-                $classTransition = $this->getHtmlClassTransition($transitionName);
-
-                $thisLink = "<a ".
-                    "general-data-confirm='Are you sure you want to $label?'".
-                    "href=".$thisUrl." class='".$classTransition."'>".$label."</a>";
-                $links[] = $thisLink;
-
-            }//foreach
-
-        }//foreach
-
-        if(0) {
-            ////////// add links to edit if the current state is "_rejected" //////////
-            $froms = $transition->getFroms();
-            $fromState = $froms[0];
-            $showEditLink = false;
-            $editLinkLabel = "Edit Project";
-            if (strpos($fromState, '_rejected') !== false || $fromState == 'draft') {
-                if ($this->secAuth->isGranted('ROLE_TRANSRES_REQUESTER')) {
-                    $showEditLink = true;
-                    $editLinkLabel = "Edit Project as Requester";
-                }
-            }
-            if (
-                $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER')
-            ) {
-                $showEditLink = true;
-                $editLinkLabel = "Edit Project as Primary Reviewer";
-            }
-            if ($this->secAuth->isGranted('ROLE_TRANSRES_ADMIN')) {
-                $showEditLink = true;
-                $editLinkLabel = "Edit Project as Administrator";
-            }
-
-            if ($showEditLink) {
-                $thisUrl = $this->container->get('router')->generate(
-                    'translationalresearch_project_edit',
-                    array(
-                        'id' => $project->getId()
-                    ),
-                    UrlGeneratorInterface::ABSOLUTE_URL
-                );
-                $editLink = "<a " .
-                    //"general-data-confirm='Are you sure you want to $label?'".
-                    "href=" . $thisUrl . " class='" . $classEdit . "'>" . $editLinkLabel . "</a>";
-                //$links[] = $editLink;
-                array_unshift($links, $editLink);
-            }
-            ////////// EOF add links to edit if the current state is "_rejected" //////////
-        }
-
-        //echo "count=".count($links)."<br>";
-
-        return $links;
-    }
+//    public function getEnabledLinkActions( $project, $classEdit=null, $classTransition=null ) {
+//        $workflow = $this->container->get('state_machine.transres_project');
+//        $transitions = $workflow->getEnabledTransitions($project);
+//
+//        $links = array();
+//        foreach( $transitions as $transition ) {
+//
+//            //$this->printTransition($transition);
+//            $transitionName = $transition->getName();
+//
+//            //$tos = $transition->getTos();
+//            $froms = $transition->getFroms();
+//            foreach( $froms as $from ) {
+//                //echo "from=".$from."<br>"; //irb_review
+//
+//                //add user's validation: $from=irb_review => user has role _IRB_REVIEW_
+//                if( false === $this->isUserAllowedFromThisStateByRole($from) ) {
+//                    continue;
+//                }
+//
+//                //don't sent state $to (get it from transition object)
+//                $thisUrl = $this->container->get('router')->generate(
+//                    'translationalresearch_transition_action',
+//                    array(
+//                        'transitionName'=>$transitionName,
+//                        'id'=>$project->getId()
+//                    ),
+//                    UrlGeneratorInterface::ABSOLUTE_URL
+//                );
+//
+//                //$label = ucfirst($transitionName)." (mark as ".ucfirst($to);
+//                $label = $this->getTransitionLabelByName($transitionName); //not used
+//
+//                $classTransition = $this->getHtmlClassTransition($transitionName);
+//
+//                $thisLink = "<a ".
+//                    "general-data-confirm='Are you sure you want to $label?'".
+//                    "href=".$thisUrl." class='".$classTransition."'>".$label."</a>";
+//                $links[] = $thisLink;
+//
+//            }//foreach
+//
+//        }//foreach
+//
+//        if(0) {
+//            ////////// add links to edit if the current state is "_rejected" //////////
+//            $froms = $transition->getFroms();
+//            $fromState = $froms[0];
+//            $showEditLink = false;
+//            $editLinkLabel = "Edit Project";
+//            if (strpos($fromState, '_rejected') !== false || $fromState == 'draft') {
+//                if ($this->secAuth->isGranted('ROLE_TRANSRES_REQUESTER')) {
+//                    $showEditLink = true;
+//                    $editLinkLabel = "Edit Project as Requester";
+//                }
+//            }
+//            if (
+//                $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER')
+//            ) {
+//                $showEditLink = true;
+//                $editLinkLabel = "Edit Project as Primary Reviewer";
+//            }
+//            if ($this->secAuth->isGranted('ROLE_TRANSRES_ADMIN')) {
+//                $showEditLink = true;
+//                $editLinkLabel = "Edit Project as Administrator";
+//            }
+//
+//            if ($showEditLink) {
+//                $thisUrl = $this->container->get('router')->generate(
+//                    'translationalresearch_project_edit',
+//                    array(
+//                        'id' => $project->getId()
+//                    ),
+//                    UrlGeneratorInterface::ABSOLUTE_URL
+//                );
+//                $editLink = "<a " .
+//                    //"general-data-confirm='Are you sure you want to $label?'".
+//                    "href=" . $thisUrl . " class='" . $classEdit . "'>" . $editLinkLabel . "</a>";
+//                //$links[] = $editLink;
+//                array_unshift($links, $editLink);
+//            }
+//            ////////// EOF add links to edit if the current state is "_rejected" //////////
+//        }
+//
+//        //echo "count=".count($links)."<br>";
+//
+//        return $links;
+//    }
 
     //MAIN method to show allowed transition to state links
     //get links to change states: Reject IRB Review and Approve IRB Review (translationalresearch_transition_action)
@@ -1362,6 +1362,27 @@ class TransResUtil
             $label = str_replace("_"," ",$transitionName);
             $label = str_replace("missinginfo","missing information",$label);
             $returnLabel = ucwords($label);
+        }
+
+        //if not the actual user show name "(as Mister John)"
+        //if( $transitionName != "committee_finalreview_approved" ) {
+        if( strpos($transitionName, "finalreview_approved") === false ) {
+            $user = $this->secTokenStorage->getToken()->getUser();
+            $showReviewer = false;
+            $reviewer = $review->getReviewer();
+            $reviewerDelegate = $review->getReviewerDelegate();
+            if ($reviewer && $reviewer->getId() != $user->getId()) {
+                $showReviewer = true;
+            }
+            if ($reviewerDelegate && $reviewerDelegate->getId() != $user->getId()) {
+                $showReviewer = true;
+            }
+            if ($showReviewer) {
+                if (strpos($returnLabel, "(as ") === false) {
+                    $userInfo = $this->getReviewerInfo($review);
+                    $returnLabel = $returnLabel . $userInfo;
+                }
+            }
         }
 
         return $returnLabel;

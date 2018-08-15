@@ -95,27 +95,32 @@ class TransResPermissionUtil
             return true;
         }
 
-        $transresRequest = $invoice->getTransresRequest();
-        if( $transresRequest ) {
-            //ok
-        } else {
-            return true;
+        if( $invoice ) {
+            $transresRequest = $invoice->getTransresRequest();
+            if ($transresRequest) {
+                //ok
+            } else {
+                return true;
+            }
+
+            $project = $transresRequest->getProject();
+            if ($project) {
+                //ok
+            } else {
+                return true;
+            }
         }
 
-        $project = $transresRequest->getProject();
         if( $project ) {
-            //ok
-        } else {
+            $specialtyStr = $project->getProjectSpecialty()->getUppercaseName();
+            $specialtyStr = "_".$specialtyStr;
+        }
+
+        if( $this->container->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN'.$specialtyStr) ) {
             return true;
         }
 
-        $specialtyStr = $project->getProjectSpecialty()->getUppercaseName();
-
-        if( $this->container->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN_'.$specialtyStr) ) {
-            return true;
-        }
-
-        if( $this->container->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_BILLING_ADMIN_'.$specialtyStr) ) {
+        if( $this->container->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_BILLING_ADMIN'.$specialtyStr) ) {
             return true;
         }
 
@@ -466,7 +471,7 @@ class TransResPermissionUtil
             ) {
                 return true;
             }
-            if( $transresUtil->isProjectRequester($project) && $transresUtil->getProgressState() == 'draft' ) {
+            if( $transresUtil->isProjectRequester($project) && $request->getProgressState() == 'draft' ) {
                 return true;
             }
         }

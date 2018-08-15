@@ -555,15 +555,15 @@
 {% endmacro %}
 
 {#NOT USED#}
-{% macro projectEnabledLinkActionsHeader(project) %}
-    {% set actionLinks = transres_util.getEnabledLinkActions(project) %}
+{#{% macro projectEnabledLinkActionsHeader(project) %}#}
+    {#{% set actionLinks = transres_util.getEnabledLinkActions(project) %}#}
     {#<div class="well">#}
         {#<p>Project State: <strong>{{ transres_util.getStateLabelByProject(project) }}</strong></p>#}
-        {% for actionLink in actionLinks %}
-                {{ actionLink|raw }}
-        {% endfor %}
+        {#{% for actionLink in actionLinks %}#}
+                {#{{ actionLink|raw }}#}
+        {#{% endfor %}#}
     {#</div>#}
-{% endmacro %}
+{#{% endmacro %}#}
 {#{% macro reviewEnabledLinkActionsHeader(project,review,cycle) %}#}
     {#{% set actionLinks = transres_util.getReviewEnabledLinkActions(review) %}#}
     {#{% for actionLink in actionLinks %}#}
