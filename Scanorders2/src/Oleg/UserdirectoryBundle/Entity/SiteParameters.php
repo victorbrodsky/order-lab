@@ -999,7 +999,7 @@ class SiteParameters {
      *      joinColumns={@ORM\JoinColumn(name="siteParameter_id", referencedColumnName="id", onDelete="CASCADE")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="platformLogo_id", referencedColumnName="id", onDelete="CASCADE")}
      *      )
-     * @ORM\OrderBy({"createdate" = "ASC"})
+     * @ORM\OrderBy({"createdate" = "DESC"})
      **/
     private $platformLogos;
 

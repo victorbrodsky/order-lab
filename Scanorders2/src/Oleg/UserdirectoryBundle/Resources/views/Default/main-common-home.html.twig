@@ -52,8 +52,9 @@
 
         {% set platformLogo = user_security_utility.getPlatformLogo() %}
         {% if platformLogo is defined and platformLogo %}
+            {#height="80" width="300"#}
             <p>
-                <img src="{{ asset(platformLogo) }}" alt="O R D E R" height="80" width="300">
+                <img src="{{ asset(platformLogo) }}" alt="O R D E R">
             </p>
         {% else %}
             <h2 class="alert alert-info well-lg safary-fix" align="center">O R D E R</h2>
