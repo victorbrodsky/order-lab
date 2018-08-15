@@ -340,7 +340,8 @@
                             {% endif %}
 
                             {#add verification: requester => project is on the draft stage or in the reject stage#}
-                            {% if transres_util.isAdminOrPrimaryReviewer() or transres_util.isProjectEditableByRequester(project) %}
+                            {#{% if transres_util.isAdminOrPrimaryReviewer() or transres_util.isProjectEditableByRequester(project) %}#}
+                            {% if transres_permission_util.hasProjectPermission("update",project) %}
                                 <li>
                                     <a href="{{ path(translationalresearch_sitename~'_project_edit', { 'id': project.id }) }}"
                                     >Edit Project</a>

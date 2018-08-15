@@ -229,14 +229,15 @@
 
 
                             {#transresRequest.submitter.id == app.user.id and#}
-                            {% if
-                                is_granted('ROLE_TRANSRES_ADMIN') or
-                                is_granted('ROLE_TRANSRES_TECHNICIAN') or
-                                (
-                                    transres_util.isProjectRequester(transresRequest.project) and
-                                    transresRequest.getProgressState() == 'draft'
-                                )
-                            %}
+                            {#{% if#}
+                                {#is_granted('ROLE_TRANSRES_ADMIN') or#}
+                                {#is_granted('ROLE_TRANSRES_TECHNICIAN') or#}
+                                {#(#}
+                                    {#transres_util.isProjectRequester(transresRequest.project) and#}
+                                    {#transresRequest.getProgressState() == 'draft'#}
+                                {#)#}
+                            {#%}#}
+                            {% if transres_permission_util.hasRequestPermission("update",transresRequest) %}
                                 <li>
                                     <a href="{{ path(translationalresearch_sitename~'_request_edit', { 'id': transresRequest.id }) }}"
                                     >Edit Work Request</a>
@@ -261,7 +262,8 @@
                             {% endif %}
                             {% endif %}
 
-                            {% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') %}
+                            {#{% if is_granted('ROLE_TRANSRES_ADMIN') or is_granted('ROLE_TRANSRES_TECHNICIAN') %}#}
+                            {% if transres_permission_util.hasRequestPermission("packing-slip",transresRequest) %}
                                 <li class="divider"></li>
                                 <li>
                                     <a general-data-confirm="Are you sure you want to Generate and View Packing Slip PDF?"

@@ -55,7 +55,7 @@ class ProjectController extends Controller
 
         $transresUtil = $this->container->get('transres_util');
         if( $transresUtil->isAdminOrPrimaryReviewer() === false ) {
-            if ($this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER')) {
+            if( $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER') ) {
                 return $this->redirectToRoute('translationalresearch_my_project_index');
             }
         }
@@ -738,7 +738,7 @@ class ProjectController extends Controller
 
 
     /**
-     * Creates a new project entity with formnode.
+     * Select new project specialty
      *
      * @Route("/project/new", name="translationalresearch_project_new_selector")
      * @Template("OlegTranslationalResearchBundle:Project:new-project-selector.html.twig")
@@ -763,18 +763,15 @@ class ProjectController extends Controller
     }
 
     /**
-     * Creates a new project entity with formnode.
+     * Select new project specialty
      *
      * @Route("/project/new/{specialtyStr}", name="translationalresearch_project_new")
      * @Template("OlegTranslationalResearchBundle:Project:new.html.twig")
      * @Method({"GET", "POST"})
      */
-    public function newFormNodeAction(Request $request, $specialtyStr)
+    public function newProjectAction(Request $request, $specialtyStr)
     {
-        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_USER')) { //ROLE_USER, IS_AUTHENTICATED_ANONYMOUSLY, ROLE_TRANSRES_REQUESTER
-            //exit('NOT GRANTED: new project '.$specialtyStr);
-            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
-        }
+        $transresPermissionUtil = $this->container->get('transres_permission_util');
 
         $transresUtil = $this->container->get('transres_util');
         $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -782,6 +779,11 @@ class ProjectController extends Controller
 
         //$specialty is a url prefix (i.e. "new-ap-cp-project")
         $specialty = $transresUtil->getSpecialtyObject($specialtyStr);
+
+        if( $transresPermissionUtil->hasProjectPermission('create',null,$specialty) ) {
+            //exit('NOT GRANTED: new project '.$specialtyStr);
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
 
         //check if user does not have ROLE_TRANSRES_REQUESTER and specialty role
         $transresUtil->addMinimumRolesToCreateProject($specialty);
@@ -946,27 +948,35 @@ class ProjectController extends Controller
     public function editAction(Request $request, Project $project)
     {
 
-        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER')) {
+//        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER')) {
+//            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+//        }
+//        $transresUtil = $this->container->get('transres_util');
+//
+//        if(
+//            $transresUtil->isAdminOrPrimaryReviewer() ||
+//            $transresUtil->isProjectEditableByRequester($project)
+//        ) {
+//            //ok
+//        } else {
+//            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+//        }
+//
+//        if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
+//            $this->get('session')->getFlashBag()->add(
+//                'warning',
+//                "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
+//            );
+//            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+//        }
+
+        $transresPermissionUtil = $this->container->get('transres_permission_util');
+
+        if( $transresPermissionUtil->hasProjectPermission("update",$project) === false ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
+
         $transresUtil = $this->container->get('transres_util');
-
-        if(
-            $transresUtil->isAdminOrPrimaryReviewer() ||
-            $transresUtil->isProjectEditableByRequester($project)
-        ) {
-            //ok
-        } else {
-            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
-        }
-
-        if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
-            $this->get('session')->getFlashBag()->add(
-                'warning',
-                "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
-            );
-            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
-        }
 
         //$userSecUtil = $this->get('user_security_utility');
         $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -1173,21 +1183,30 @@ class ProjectController extends Controller
      */
     public function showAction(Request $request, Project $project)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+//        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
+//            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+//        }
+
+//        $transresUtil = $this->container->get('transres_util');
+//        $em = $this->getDoctrine()->getManager();
+//        //$user = $this->get('security.token_storage')->getToken()->getUser();
+//
+//        if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
+//            $this->get('session')->getFlashBag()->add(
+//                'warning',
+//                "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
+//            );
+//            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+//        }
+
+        $transresPermissionUtil = $this->container->get('transres_permission_util');
+
+        if( $transresPermissionUtil->hasProjectPermission("view",$project) === false ) {
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
         $transresUtil = $this->container->get('transres_util');
         $em = $this->getDoctrine()->getManager();
-        //$user = $this->get('security.token_storage')->getToken()->getUser();
-
-        if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
-            $this->get('session')->getFlashBag()->add(
-                'warning',
-                "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
-            );
-            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
-        }
 
         $cycle = "show";
 
@@ -1243,24 +1262,13 @@ class ProjectController extends Controller
     public function reviewAction(Request $request, Project $project)
     {
         $transresUtil = $this->container->get('transres_util');
+        $transresPermissionUtil = $this->container->get('transres_permission_util');
 
-        if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
-            $this->get('session')->getFlashBag()->add(
-                'warning',
-                "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
-            );
-            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
-        }
-
-        if(
-            $transresUtil->isAdminOrPrimaryReviewer() ||
-            $transresUtil->isProjectReviewer($project)
-        ) {
+        if( $transresPermissionUtil->hasProjectPermission("review",$project) ) {
             //ok
         } else {
             //show no access page with view link for allowed users
-            if( $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
-                //return $this->redirectToRoute('translationalresearch_project_show', array('id' => $project->getId()));
+            if( $transresPermissionUtil->hasProjectPermission("view",$project) ) {
                 $projectUrl = $this->container->get('router')->generate(
                     'translationalresearch_project_show',
                     array(
@@ -1275,6 +1283,39 @@ class ProjectController extends Controller
 
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
+
+
+//        if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
+//            $this->get('session')->getFlashBag()->add(
+//                'warning',
+//                "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
+//            );
+//            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+//        }
+
+//        if(
+//            $transresUtil->isAdminOrPrimaryReviewer() ||
+//            $transresUtil->isProjectReviewer($project)
+//        ) {
+//            //ok
+//        } else {
+//            //show no access page with view link for allowed users
+//            if( $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
+//                //return $this->redirectToRoute('translationalresearch_project_show', array('id' => $project->getId()));
+//                $projectUrl = $this->container->get('router')->generate(
+//                    'translationalresearch_project_show',
+//                    array(
+//                        'id' => $project->getId(),
+//                    ),
+//                    UrlGeneratorInterface::ABSOLUTE_URL
+//                );
+//                $projectLink = "<a href=" . $projectUrl . ">" . "View Project Request Details with ID " . $project->getOid() . "</a>";
+//
+//                return $this->redirect($this->generateUrl('translationalresearch-nopermission',array('additionalMessage'=>$projectLink)));
+//            }
+//
+//            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+//        }
 
         //$transresUtil = $this->container->get('transres_util');
         //$em = $this->getDoctrine()->getManager();
@@ -1327,7 +1368,7 @@ class ProjectController extends Controller
         $transresUtil = $this->container->get('transres_util');
 
         if(
-            $transresUtil->isAdminOrPrimaryReviewer() ||
+            $transresUtil->isAdminOrPrimaryReviewer($project->getProjectSpecialty()) ||
             $transresUtil->isProjectStateRequesterResubmit($project)
         ) {
             //ok

@@ -424,25 +424,29 @@ class TransResUtil
         return $links;
     }
 
-    public function isProjectEditableByRequester( $project ) {
-        if( $project && $this->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
-            return false;
+    public function isProjectEditableByRequester( $project, $checkProjectSpecialty=true ) {
+        if( $checkProjectSpecialty ) {
+            if ($project && $this->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false) {
+                return false;
+            }
         }
 
         $state = $project->getState();
         if( strpos($state, '_rejected') !== false || $state == 'draft' ) { //|| strpos($state, "_missinginfo") !== false
-            if( $this->isProjectRequester($project) === true ) {
+            if( $this->isProjectRequester($project,$checkProjectSpecialty) === true ) {
                 return true;
             }
         }
-        if( $this->isProjectStateRequesterResubmit($project) ) {
+        if( $this->isProjectStateRequesterResubmit($project,$checkProjectSpecialty) === true ) {
             return true;
         }
         return false;
     }
-    public function isProjectRequester( $project ) {
-        if( $project && $this->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
-            return false;
+    public function isProjectRequester( $project, $checkProjectSpecialty=true ) {
+        if( $checkProjectSpecialty ) {
+            if ($project && $this->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false) {
+                return false;
+            }
         }
 
         $user = $this->secTokenStorage->getToken()->getUser();
@@ -482,18 +486,21 @@ class TransResUtil
         if( $this->isProjectRequester($project) === true ) {
             return true;
         }
-        if( $this->isAdminOrPrimaryReviewer() === true ) {
+        if( $this->isAdminOrPrimaryReviewer($project->getProjectSpecialty()) === true ) {
             return true;
         }
 
         return false;
     }
-    public function isAdminOrPrimaryReviewer() {
+    public function isAdminOrPrimaryReviewer( $projectSpecialty=null ) {
+        $specialtyStr = null;
+        if( $projectSpecialty ) {
+            $specialtyStr = $projectSpecialty->getUppercaseName();
+            $specialtyStr = "_" . $specialtyStr;
+        }
         if(
-            $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN_APCP') ||
-            $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN_HEMATOPATHOLOGY') ||
-            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_APCP') ||
-            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER_HEMATOPATHOLOGY')
+            $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyStr) ||
+            $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER'.$specialtyStr)
         ) {
             return true;
         }
@@ -514,10 +521,13 @@ class TransResUtil
         }
         return false;
     }
-    public function isProjectReviewer( $project ) {
-        if( $project && $this->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
-            return false;
+    public function isProjectReviewer( $project, $checkProjectSpecialty=true ) {
+        if( $checkProjectSpecialty ) {
+            if ($project && $this->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false) {
+                return false;
+            }
         }
+
         $user = $this->secTokenStorage->getToken()->getUser();
         if( $this->isReviewsReviewer($user,$project->getIrbReviews()) ) {
             return true;
@@ -1893,10 +1903,12 @@ class TransResUtil
     }
 
     //return true if the project is in missinginfo state and logged in user is a requester or admin
-    public function isProjectStateRequesterResubmit($project) {
+    public function isProjectStateRequesterResubmit($project, $checkProjectSpecialty=true) {
 
-        if( $project && $this->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
-            return false;
+        if( $checkProjectSpecialty ) {
+            if ($project && $this->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false) {
+                return false;
+            }
         }
 
         $stateStr = $this->getAllowedFromState($project);
@@ -1905,10 +1917,10 @@ class TransResUtil
         }
 
         if( strpos($stateStr, "_missinginfo") !== false ) {
-            if ($this->isAdminOrPrimaryReviewer()) {
+            if ($this->isAdminOrPrimaryReviewer($project->getProjectSpecialty())) {
                 return true;
             }
-            if( $this->isProjectRequester($project) ) {
+            if( $this->isProjectRequester($project,$checkProjectSpecialty) ) {
                 return true;
             }
         }

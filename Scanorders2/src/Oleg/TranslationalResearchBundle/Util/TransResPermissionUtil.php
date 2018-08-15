@@ -265,7 +265,11 @@ class TransResPermissionUtil
 
 
     /////////////// PROJECT ///////////////////////
-    public function hasProjectPermission( $action, $project=null ) {
+    public function hasProjectPermission( $action, $project=null, $projectSpecialtyObject=null ) {
+
+        $transresUtil = $this->container->get('transres_util');
+
+        $done = false;
 
         $specialtyStr = null;
         if( $project ) {
@@ -273,7 +277,13 @@ class TransResPermissionUtil
             $specialtyStr = "_" . $specialtyStr;
         }
 
+        if( !$project && $projectSpecialtyObject ) {
+            $specialtyStr = $projectSpecialtyObject->getUppercaseName();
+            $specialtyStr = "_" . $specialtyStr;
+        }
+
         if( $action == "create" ) {
+            $done = true;
             if(
                 $this->secAuth->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ||
                 $this->secAuth->isGranted("ROLE_TRANSRES_PRIMARY_REVIEWER".$specialtyStr) ||
@@ -284,20 +294,192 @@ class TransResPermissionUtil
             }
         }
 
-        if( $action == "update" ) {
+        if( $action == "update" || $action == "edit" ) {
+            $done = true;
+            if(
+                $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyStr) ||
+                $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER'.$specialtyStr)
+            ) {
+                return true;
+            }
 
+            //if( $transresUtil->isProjectEditableByRequester($project,false) ) {
+            //    return true;
+            //}
+
+            $state = $project->getState();
+            if( strpos($state, '_rejected') !== false || $state == 'draft' ) {
+                if( $transresUtil->isProjectRequester($project,false) === true ) {
+                    return true;
+                }
+            }
+
+            //return true if the project is in missinginfo state and logged in user is a requester or admin
+            if( $transresUtil->isProjectStateRequesterResubmit($project,false) === true ) {
+                return true;
+            }
         }
 
-        if( $action == "view" ) {
-            
+        if( $action == "view" || $action == "shows" ) {
+            $done = true;
+
+            if(
+                $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyStr) ||
+                $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER'.$specialtyStr)
+            ) {
+                return true;
+            }
+
+            if(
+                $this->secAuth->isGranted("ROLE_TRANSRES_TECHNICIAN".$specialtyStr) ||
+                $this->secAuth->isGranted("ROLE_TRANSRES_EXECUTIVE".$specialtyStr)
+            ) {
+                return true;
+            }
+
+            if( $transresUtil->isProjectRequester($project,false) === true ) {
+                return true;
+            }
+
+//            if( $this->hasProjectPermission("update",$project) ) {
+//                return true;
+//            }
         }
 
         if( $action == "delete" ) {
-
+            $done = true;
+            if( $this->secAuth->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ) {
+                return true;
+            }
         }
 
         if( $action == "review" ) {
+            $done = true;
+            if(
+                $this->secAuth->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ||
+                $this->secAuth->isGranted("ROLE_TRANSRES_PRIMARY_REVIEWER".$specialtyStr)
+            ) {
+                return true;
+            }
 
+            if( $transresUtil->isProjectReviewer($project,false) ) {
+                return true;
+            }
+        }
+
+        if( $action == "view-log" ) {
+            $done = true;
+            if(
+                $this->secAuth->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ||
+                $this->secAuth->isGranted("ROLE_TRANSRES_PRIMARY_REVIEWER".$specialtyStr) ||
+                $this->secAuth->isGranted("ROLE_TRANSRES_TECHNICIAN".$specialtyStr) ||
+                $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE'.$specialtyStr)
+            ) {
+                return true;
+            }
+        }
+
+        if( $action == "list" ) {
+            $done = true;
+            if( $this->secAuth->isGranted("ROLE_TRANSRES_USER") ) {
+                return true;
+            }
+            if(
+                $this->secAuth->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ||
+                $this->secAuth->isGranted("ROLE_TRANSRES_PRIMARY_REVIEWER".$specialtyStr) ||
+                $this->secAuth->isGranted("ROLE_TRANSRES_TECHNICIAN".$specialtyStr) ||
+                $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE'.$specialtyStr)
+            ) {
+                return true;
+            }
+
+            if(
+                $this->secAuth->isGranted("ROLE_TRANSRES_REQUESTER".$specialtyStr)
+            ) {
+                return true;
+            }
+        }
+
+        if( !$done ) {
+            throw new \Exception( 'Action is not defined: '.$action );
+        }
+
+        return false;
+    }
+    /////////////// EOF PROJECT ///////////////////////
+
+
+    /////////////// Request ///////////////////////
+    public function hasRequestPermission( $action, $request ) {
+
+        $transresUtil = $this->container->get('transres_util');
+
+        $done = false;
+        $project = $request->getProject();
+
+        $specialtyStr = null;
+        if( $project ) {
+            $specialtyStr = $project->getProjectSpecialty()->getUppercaseName();
+            $specialtyStr = "_" . $specialtyStr;
+        }
+
+        if( $action == "create" ) {
+            $done = true;
+            if(
+                $this->secAuth->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ||
+                $this->secAuth->isGranted("ROLE_TRANSRES_PRIMARY_REVIEWER".$specialtyStr) ||
+                $this->secAuth->isGranted("ROLE_TRANSRES_TECHNICIAN".$specialtyStr) ||
+                $this->secAuth->isGranted("ROLE_TRANSRES_REQUESTER".$specialtyStr)
+            ) {
+                return true;
+            }
+        }
+
+        if( $action == "update" || $action == "edit" ) {
+            $done = true;
+            if(
+                $this->secAuth->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ||
+                $this->secAuth->isGranted("ROLE_TRANSRES_PRIMARY_REVIEWER".$specialtyStr) ||
+                $this->secAuth->isGranted("ROLE_TRANSRES_TECHNICIAN".$specialtyStr)
+            ) {
+                return true;
+            }
+            if (
+                $transresUtil->isProjectRequester($project) &&
+                $transresUtil->getProgressState() == 'draft'
+            ) {
+                return true;
+            }
+        }
+
+        if( $action == "view" || $action == "show" ) {
+            $done = true;
+
+            if(
+                $this->secAuth->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ||
+                $this->secAuth->isGranted("ROLE_TRANSRES_PRIMARY_REVIEWER".$specialtyStr) ||
+                $this->secAuth->isGranted("ROLE_TRANSRES_TECHNICIAN".$specialtyStr) ||
+                $this->secAuth->isGranted("ROLE_TRANSRES_EXECUTIVE".$specialtyStr)
+            ) {
+                return true;
+            }
+
+            if( $transresUtil->isProjectRequester($project) ) {
+                return true;
+            }
+        }
+
+        if( $action == "delete" ) {
+            $done = true;
+
+            if( $this->secAuth->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ) {
+                return true;
+            }
+        }
+
+        //TODO
+        if( $action == "review" ) {
+            $done = true;
             if(
                 $this->secAuth->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ||
                 $this->secAuth->isGranted("ROLE_TRANSRES_PRIMARY_REVIEWER".$specialtyStr) ||
@@ -310,21 +492,24 @@ class TransResPermissionUtil
 
         }
 
-        if( $action == "view-log" ) {
+        if( $action == "packing-slip" ) {
+            $done = true;
             if(
                 $this->secAuth->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ||
-                $this->secAuth->isGranted("ROLE_TRANSRES_PRIMARY_REVIEWER".$specialtyStr) ||
-                $this->secAuth->isGranted("ROLE_TRANSRES_TECHNICIAN".$specialtyStr) ||
-                $this->secAuth->isGranted('ROLE_TRANSRES_EXECUTIVE'.$specialtyStr)
+                //$this->secAuth->isGranted("ROLE_TRANSRES_PRIMARY_REVIEWER".$specialtyStr) ||
+                $this->secAuth->isGranted("ROLE_TRANSRES_TECHNICIAN".$specialtyStr)
             ) {
                 return true;
             }
         }
 
+        if( !$done ) {
+            throw new \Exception( 'Action is not defined: '.$action );
+        }
+
+        return false;
     }
-    /////////////// EOF PROJECT ///////////////////////
-
-
+    /////////////// EOF Request ///////////////////////
 
 
 }
