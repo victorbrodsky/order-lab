@@ -195,6 +195,30 @@ class SiteList extends ListAbstract
         $item->clearUseObject();
     }
 
-
+    public function getSiteName() {
+        $abbreviation = $this->getAbbreviation();
+        if( $abbreviation == "employees" ) {
+            return "Employee Directory";
+        }
+        if( $abbreviation == "translationalresearch" ) {
+            return "Translational Research";
+        }
+        if( $abbreviation == "scan" ) {
+            return "Glass Slide Scan Orders";
+        }
+        if( $abbreviation == "fellapp" ) {
+            return "Fellowship Applications";
+        }
+        if( $abbreviation == "deidentifier" ) {
+            return "Deidentifier";
+        }
+        if( $abbreviation == "vacreq" ) {
+            return "Vacation Request";
+        }
+        if( $abbreviation == "calllog" ) {
+            return "Call Log Book";
+        }
+        return ucfirst($this->getName());
+    }
 
 }

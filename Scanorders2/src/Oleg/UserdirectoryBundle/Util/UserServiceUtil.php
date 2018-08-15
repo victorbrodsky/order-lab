@@ -1267,9 +1267,6 @@ class UserServiceUtil {
         return $url;
     }
 
-
-
-
     /////////////// NOT USED ///////////////////
     //NOT USED
     //MSSQL error: [Microsoft][ODBC Driver 11 for SQL Server][SQL Server]'LEVENSHTEIN' is not a recognized built-in function name

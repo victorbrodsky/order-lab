@@ -50,7 +50,14 @@
         {{ usermacros.nonLiveSiteWarning() }}
         {{ usermacros.browserCheck() }}
 
-        <h2 class="alert alert-info well-lg safary-fix" align="center">O R D E R</h2>
+        {% set platformLogo = user_security_utility.getPlatformLogo() %}
+        {% if platformLogo is defined and platformLogo %}
+            <p>
+                <img src="{{ asset(platformLogo) }}" alt="O R D E R" height="80" width="300">
+            </p>
+        {% else %}
+            <h2 class="alert alert-info well-lg safary-fix" align="center">O R D E R</h2>
+        {% endif %}
 
         <br>
 

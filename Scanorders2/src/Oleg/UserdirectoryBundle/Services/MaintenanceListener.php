@@ -97,7 +97,7 @@ class MaintenanceListener {
                     $session = $this->container->get('session');
                     $session->getFlashBag()->add(
                         'warning',
-                        ucfirst($siteObject->getAbbreviation()) . " site is currently not accessible. If you have any questions, please contact the $systemEmail."
+                        $siteObject->getSiteName() . " site is not currently accessible. If you have any questions, please contact $systemEmail."
                     );
 
                     $url = $this->container->get('router')->generate('main_common_home');

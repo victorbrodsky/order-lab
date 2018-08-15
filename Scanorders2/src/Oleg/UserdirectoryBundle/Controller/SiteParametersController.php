@@ -284,6 +284,26 @@ class SiteParametersController extends Controller
         $editForm->handleRequest($request);
 
         if( $editForm->isValid() ) {
+
+            $updatedParam = $entity->$getMethod();
+
+            if( $param == 'platformLogos' ) {
+                $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($entity,"platformLogo");
+                if( $originalParam && count($originalParam)>0 ) {
+                    $platformLogo = $originalParam->first();
+                    $originalParam = $platformLogo->getAbsoluteUploadFullPath();
+                } else {
+                    $originalParam = null;
+                }
+                if( $updatedParam && count($updatedParam)>0 ) {
+                    $platformLogo = $updatedParam->first();
+                    $updatedParam = $platformLogo->getAbsoluteUploadFullPath();
+                } else {
+                    $updatedParam = null;
+                }
+                //exit("originalParam=$originalParam; updatedParam=$updatedParam");
+            }
+
             $em->flush();
 
             $redirectPathPostfix = '_siteparameters';
@@ -305,7 +325,7 @@ class SiteParametersController extends Controller
             $eventType = "Site Settings Parameter Updated";
             $eventStr = "Site Settings parameter [$param] has been updated by ".$user;
             $eventStr = $eventStr . "<br>original value:<br>".$originalParam;
-            $eventStr = $eventStr . "<br>updated value:<br>".$entity->$getMethod();
+            $eventStr = $eventStr . "<br>updated value:<br>".$updatedParam;
             $userSecUtil->createUserEditEvent($sitename, $eventStr, $user, $entity, $request, $eventType);
 
             return $this->redirect($this->generateUrl($sitename.$redirectPathPostfix)); //'_siteparameters'

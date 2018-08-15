@@ -914,6 +914,18 @@ class SiteParametersType extends AbstractType
             ));
         }
 
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'platformLogos' ) {
+            $builder->add('platformLogos', CollectionType::class, array(
+                'entry_type' => DocumentType::class,
+                'label' => 'Platform Logo Image:',
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__documentsid__',
+            ));
+        }
     }
     
     /**

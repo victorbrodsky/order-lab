@@ -985,10 +985,29 @@ class SiteParameters {
      */
     private $defaultScanner;
 
+//    /**
+//     * @ORM\ManyToMany(targetEntity="Document", cascade={"persist","remove"})
+//     * @ORM\JoinTable(name="user_siteparameter_platformLogo",
+//     *      joinColumns={@ORM\JoinColumn(name="siteParameter_id", referencedColumnName="id")},
+//     *      inverseJoinColumns={@ORM\JoinColumn(name="platformLogo_id", referencedColumnName="id", unique=true)}
+//     *      )
+//     **/
+//    protected $platformLogos;
+    /**
+     * @ORM\ManyToMany(targetEntity="Oleg\UserdirectoryBundle\Entity\Document", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="user_siteparameter_platformLogo",
+     *      joinColumns={@ORM\JoinColumn(name="siteParameter_id", referencedColumnName="id", onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="platformLogo_id", referencedColumnName="id", onDelete="CASCADE")}
+     *      )
+     * @ORM\OrderBy({"createdate" = "ASC"})
+     **/
+    private $platformLogos;
+
 
     function __construct( $addobjects=true )
     {
         $this->organizationalGroupDefaults = new ArrayCollection();
+        $this->platformLogos = new ArrayCollection();
         $this->setMaintenance(false);
         $this->setShowCopyrightOnFooter(true);
     }
@@ -1011,6 +1030,25 @@ class SiteParameters {
     public function getOrganizationalGroupDefaults()
     {
         return $this->organizationalGroupDefaults;
+    }
+
+    public function addPlatformLogo($item)
+    {
+        if( $item && !$this->platformLogos->contains($item) ) {
+            $this->platformLogos->add($item);
+            $item->createUseObject($this);
+        }
+
+        return $this;
+    }
+    public function removePlatformLogo($item)
+    {
+        $this->platformLogos->removeElement($item);
+        $item->clearUseObject();
+    }
+    public function getPlatformLogos()
+    {
+        return $this->platformLogos;
     }
 
     /**

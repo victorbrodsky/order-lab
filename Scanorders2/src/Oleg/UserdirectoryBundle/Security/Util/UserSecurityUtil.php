@@ -2080,5 +2080,14 @@ class UserSecurityUtil {
 
         return $defaultParameter;
     }
-    
+
+    public function getPlatformLogo() {
+        $platformLogoPath = null;
+        $platformLogos = $this->getSiteSettingParameter('platformLogos');
+        if( count($platformLogos) > 0 ) {
+            $platformLogo = $platformLogos->first();
+            $platformLogoPath = $platformLogo->getAbsoluteUploadFullPath();
+        }
+        return $platformLogoPath;
+    }
 }

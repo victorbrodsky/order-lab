@@ -27,7 +27,7 @@ class DocumentRepository extends EntityRepository {
     public function processDocuments($documentHolder, $docfieldname=null, $docType=null, $attachmentHolder=null) {
 
         if( $documentHolder == null ) {
-           // echo "not exists: document=".$documentHolder."<br>";
+            //echo "not exists: document=".$documentHolder."<br>";
             return $documentHolder;
         }
 
@@ -37,7 +37,7 @@ class DocumentRepository extends EntityRepository {
 //        echo "<br><br>className=".$className."<br>";
 
         if( $docfieldname ) {
-
+            //
         } else {
             $docfieldname = "Document";
         }
@@ -46,6 +46,7 @@ class DocumentRepository extends EntityRepository {
         $removeMethodName = "remove".$docfieldname;
         $getMethod = "get".$docfieldname."s";
         //echo "getMethod=".$getMethod."<br>";
+        //echo "removeMethodName=".$removeMethodName."<br>";
 
         if( count($documentHolder->$getMethod()) == 0 ) {
             //echo "return: no documents<br>";
@@ -78,10 +79,10 @@ class DocumentRepository extends EntityRepository {
 
         foreach( $documentHolder->$getMethod() as $doc ) {
 
-            //echo "document id:<br>";
-            //print_r($doc->getId());
-            //echo "doc id=".$doc->getId()."<br>";
-            //echo "<br>";
+//            echo "document id:<br>";
+//            print_r($doc->getId());
+//            echo "doc id=".$doc->getId()."<br>";
+//            echo "<br>";
 
             $documentHolder->$removeMethodName($doc);
 

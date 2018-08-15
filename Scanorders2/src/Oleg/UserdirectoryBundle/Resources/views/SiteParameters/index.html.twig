@@ -730,6 +730,38 @@
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'vacationAccruedDaysPerMonth'}) }}">Edit</a></td>
             </tr>
 
+            <tr>
+                <td class="rowlink-skip" colspan="3" align="center">
+                    <h3>Platform Logo Image:</h3>
+                </td>
+            </tr>
+            <tr>
+                <td>Platform Logo Image</td>
+                <td>
+                    {% if entity.platformLogos %}
+                        {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+                        <input type="hidden" id="formcycle" value="{{ cycle }}" />
+                        <div id="form-prototype-data"
+                             data-userurllink = "{{ usermacros.userUrlLink()|e }}"
+                             data-uploadurl = "{{ oneup_uploader_endpoint('employees_gallery') }}"
+                             data-userid = "{{ app.user.id }}"
+                        ></div>
+
+                        <p>
+                        <div class="well form-element-holder user-platformLogos">
+                            <label class="col-xs-12 control-label">Platform Logo Image(s) - the most recent will be used</label>
+                            <div class="row withpaddingtop">
+                                <div class="col-xs-12">
+                                    {{ usermacros.documentsContainer(null,entity.platformLogos,cycle,'noprototype',8,'default','Platform Logo',"asEntity") }}
+                                </div>
+                            </div>
+                        </div>
+                        </p>
+                    {% endif %}
+                </td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'platformLogos'}) }}">Edit</a></td>
+            </tr>
+
         </tbody>
     </table>
 

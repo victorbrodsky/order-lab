@@ -133,6 +133,29 @@
             {{ treemacros.compositeTreeNode(edit_form.autoAssignInstitution,cycle,"noprototype") }}
         {% endif %}
 
+        {% if edit_form.platformLogos is defined %}
+
+            {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
+            <input type="hidden" id="formcycle" value="{{ cycle }}" />
+            <div id="form-prototype-data"
+                 data-userurllink = "{{ usermacros.userUrlLink()|e }}"
+                 data-uploadurl = "{{ oneup_uploader_endpoint('employees_gallery') }}"
+                 data-userid = "{{ app.user.id }}"
+            ></div>
+
+            <p>
+            <div class="well form-element-holder user-platformLogos">
+                <label class="col-xs-12 control-label">Platform Logo Image(s) - the most recent will be used</label>
+                <div class="row withpaddingtop">
+                    <div class="col-xs-12">
+                        {{ usermacros.documentsContainer(edit_form,edit_form.platformLogos,cycle,'noprototype',8,'default','Platform Logo','asForm') }}
+                    </div>
+                </div>
+            </div>
+            </p>
+        {% endif %}
+
         <p>
             {{ form_rest(edit_form) }}
         </p>
