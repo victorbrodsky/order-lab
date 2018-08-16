@@ -939,7 +939,7 @@ class TransResUtil
         return false;
     }
 
-    public function isReviewer($reviewerUser, $review ) {
+    public function isReviewer($reviewerUser, $review, $asPrimary=false ) {
         if( !$reviewerUser || !$reviewerUser->getId() ) {
             return false;
         }
@@ -947,12 +947,28 @@ class TransResUtil
 
         if ($review->getReviewer() && $review->getReviewer()->getId() ) {
             if ($review->getReviewer()->getId() == $reviewerUser->getId()) {
-                return true;
+                if( $asPrimary ) {
+                    if( method_exists($review, 'getPrimaryReview') ) {
+                        if( $review->getPrimaryReview() ) {
+                            return true;
+                        }
+                    }
+                } else {
+                    return true;
+                }
             }
         }
         if ($review->getReviewerDelegate() && $review->getReviewerDelegate()->getId()) {
             if ($review->getReviewerDelegate()->getId() == $reviewerUser->getId()) {
-                return true;
+                if( $asPrimary ) {
+                    if( method_exists($review, 'getPrimaryReview') ) {
+                        if( $review->getPrimaryReview() ) {
+                            return true;
+                        }
+                    }
+                } else {
+                    return true;
+                }
             }
         }
 
@@ -3831,5 +3847,50 @@ class TransResUtil
         $users = $query->getResult();
 
         return $users;
+    }
+
+    //show current review's reccomendations for committee review status for primary reviewer
+    public function showProjectReviewInfo($project) {
+        $user = $this->secTokenStorage->getToken()->getUser();
+        $res = null;
+        //echo "threadId=$threadId<br>";
+
+        if( $project->getState() == "committee_review" ) {
+            $show = false;
+            if( $this->isAdminOrPrimaryReviewer($project->getProjectSpecialty()) ) {
+                $show = true;
+            }
+            $reviews = $project->getCommitteeReviews();
+            if( $this->isReviewsReviewer($user,$reviews) ) {
+                $show = true;
+            }
+            if( $show ) {
+                $resArr = array();
+                $primaryReviewer = 0;
+                foreach($reviews as $review) {
+                    $currentPrimaryReview = false;
+                    $reviewStatus = $review->getDecision();
+                    //echo "reviewStatus=$reviewStatus<br>";
+                    if( $this->isReviewer($user,$review,true) ) {
+                        $currentPrimaryReview = true;
+                        $primaryReviewer++;
+                    }
+                    if( $reviewStatus && $reviewStatus != "pending" ) {
+                        if( $currentPrimaryReview ) {
+                            $reviewStatus = $reviewStatus . "(Primary Review)";
+                        }
+                        $resArr[] = "<b>".ucfirst($reviewStatus)."</b>";
+                    }
+                }
+                if( $primaryReviewer > 0 ) { //show it only to primary reviewers
+                    if( count($resArr) > 0 ) {
+                        $res = "<i>"."Committee member recommendation(s): " .  implode(", ", $resArr) . "</i>";
+                        $res = "<p>" . $res . "</p>";
+                    }
+                }
+            }
+        }
+
+        return $res;
     }
 }

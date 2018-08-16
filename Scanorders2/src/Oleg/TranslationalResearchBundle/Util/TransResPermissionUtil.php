@@ -342,7 +342,11 @@ class TransResPermissionUtil
                 return true;
             }
 
-            if( $transresUtil->isProjectRequester($project,false) === true ) {
+            if( $transresUtil->isProjectRequester($project,false) ) {
+                return true;
+            }
+
+            if( $transresUtil->isProjectReviewer($project,false) ) {
                 return true;
             }
 
