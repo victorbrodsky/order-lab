@@ -683,8 +683,6 @@
 
             {% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': threadId} %}
         </div>
-    {% else %}
-        <p>You can not review this project. The current project status is {{ transres_util.getStateLabelByName(project.state) }}</p>
     {% endif %}
 {% endmacro %}
 
@@ -717,42 +715,48 @@
 
     {% if showIrbReview and project.irbReviews is defined %}
         {#show project.irbReviews<br>#}
-        {{ transres.projectReviewsEnabledLinkActions(project,project.irbReviews,cycle) }}
-        {% set hasReviews = true %}
+        {#{{ transres.projectReviewsEnabledLinkActions(project,project.irbReviews,cycle) }}#}
+        {% set irbLinks = transres.projectReviewsEnabledLinkActions(project,project.irbReviews,cycle) %}
+        {% if irbLinks|trim %}
+            {{ irbLinks }}
+            {% set hasReviews = true %}
+        {% endif %}
     {% endif %}
 
     {% if showAdminReview and project.adminReviews is defined %}
-        {#{% for review in project.adminReviews %}#}
-            {#{{ transres.projectSingleReview(project,review,cycle,'transres-adminreviews','noprototype',sitename,showAddDeleteBtn,addReviewButtons) }}#}
-            {#{{ transres.reviewEnabledLinkActionsHeader(project,review,cycle) }}#}
-        {#{% endfor %}#}
         {#show project.adminReviews<br>#}
-        {{ transres.projectReviewsEnabledLinkActions(project,project.adminReviews,cycle) }}
-        {% set hasReviews = true %}
+        {#{{ transres.projectReviewsEnabledLinkActions(project,project.adminReviews,cycle) }}#}
+        {%  set adminLinks = transres.projectReviewsEnabledLinkActions(project,project.adminReviews,cycle) %}
+        {% if adminLinks|trim %}
+            {{ adminLinks }}
+            {% set hasReviews = true %}
+        {% endif %}
     {% endif %}
 
     {% if showCommiteeReview and project.committeeReviews is defined %}
-        {#{% for review in project.committeeReviews %}#}
-            {#{{ transres.projectSingleReview(project,review,cycle,'transres-committeereviews','noprototype',sitename,showAddDeleteBtn,addReviewButtons) }}#}
-            {#{{ transres.reviewEnabledLinkActionsHeader(project,review,cycle) }}#}
-        {#{% endfor %}#}
         {#show project.committeeReviews<br>#}
-        {{ transres.projectReviewsEnabledLinkActions(project,project.committeeReviews,cycle) }}
-        {% set hasReviews = true %}
+        {#{{ transres.projectReviewsEnabledLinkActions(project,project.committeeReviews,cycle) }}#}
+        {% set committeeLinks = transres.projectReviewsEnabledLinkActions(project,project.committeeReviews,cycle) %}
+        {% if committeeLinks|trim %}
+            {{ committeeLinks }}
+            {% set hasReviews = true %}
+        {% endif %}
     {% endif %}
 
     {% if showFinalReview and project.finalReviews is defined %}
-        {#{% for review in project.finalReviews %}#}
-            {#{{ transres.projectSingleReview(project,review,cycle,'transres-finalreviews','noprototype',sitename,showAddDeleteBtn,addReviewButtons) }}#}
-            {#{{ transres.reviewEnabledLinkActionsHeader(project,review,cycle) }}#}
-        {#{% endfor %}#}
         {#show project.finalReviews<br>#}
-        {{ transres.projectReviewsEnabledLinkActions(project,project.finalReviews,cycle) }}
-        {% set hasReviews = true %}
+        {#{{ transres.projectReviewsEnabledLinkActions(project,project.finalReviews,cycle) }}#}
+        {% set finalLinks = transres.projectReviewsEnabledLinkActions(project,project.finalReviews,cycle) %}
+        {% if finalLinks|trim %}
+            {{ finalLinks }}
+            {% set hasReviews = true %}
+        {% endif %}
     {% endif %}
 
     {% if not hasReviews %}
-        <p>You can not review this project. The current project status is {{ transres_util.getStateLabelByName(project.state) }}</p>
+        <div class="alert alert-info">
+            <p>You can not review this project. The current project status is "{{ transres_util.getStateLabelByName(project.state) }}".</p>
+        </div>
     {% endif %}
 
 {% endmacro %}
