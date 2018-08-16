@@ -318,8 +318,12 @@ security:
 #       - { path: ^/, role: [IS_AUTHENTICATED_ANONYMOUSLY,ROLE_TRANSRES_USER], requires_channel: https }
        - path: ^/
          roles: [IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER,
-                ROLE_TRANSRES_USER,ROLE_CALLLOG_USER,ROLE_DEIDENTIFICATOR_USER,
-                ROLE_FELLAPP_USER,ROLE_SCANORDER_SUBMITTER,ROLE_USERDIRECTORY_OBSERVER]
+                ROLE_TRANSRES_USER,
+                ROLE_CALLLOG_USER,
+                ROLE_SCANORDER_SUBMITTER,ROLE_SCANORDER_ALL_PATHOLOGY,ROLE_SCANORDER_PROCESSOR,ROLE_SCANORDER_ADMIN
+                ROLE_DEIDENTIFICATOR_USER,
+                ROLE_FELLAPP_USER,
+                ROLE_USERDIRECTORY_OBSERVER,ROLE_USERDIRECTORY_EDITOR,ROLE_USERDIRECTORY_ADMIN]
          requires_channel: '%connection_channel%'
 #        requires_channel: https
 
@@ -486,5 +490,11 @@ security:
        - { path: ^/translational-research/, role: ROLE_TRANSRES_USER }
 
 #       - path: ^/
-#         roles: [IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER,ROLE_TRANSRES_USER,ROLE_CALLLOG_USER,ROLE_DEIDENTIFICATOR_USER,ROLE_FELLAPP_USER,ROLE_SCANORDER_SUBMITTER,ROLE_USERDIRECTORY_OBSERVER]
+#         roles: [IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER,
+#                        ROLE_TRANSRES_USER,
+#                        ROLE_CALLLOG_USER,ROLE_SCANORDER_SUBMITTER,
+#                        ROLE_DEIDENTIFICATOR_USER,
+#                        ROLE_FELLAPP_USER,
+#                        ROLE_USERDIRECTORY_OBSERVER]
 #         requires_channel: '%connection_channel%'
+
