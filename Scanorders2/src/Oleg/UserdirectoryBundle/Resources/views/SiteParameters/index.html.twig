@@ -127,6 +127,12 @@
             </tr>
 
             <tr>
+                <td>Connection Channel (http or https)</td>
+                <td>{{ entity.connectionChannel }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'connectionChannel'}) }}">Edit</a></td>
+            </tr>
+
+            <tr>
                 <td class="rowlink-skip" colspan="3" align="center">
                     <h3>Default Values:</h3>
                 </td>

@@ -28,3 +28,5 @@ parameters:
     database_password_external: ~
 
     swift_delivery_addresses: [oli2002@med.cornell.edu]
+
+    connection_channel: null

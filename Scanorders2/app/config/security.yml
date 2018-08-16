@@ -316,6 +316,12 @@ security:
 
        ##################### Uncomment this line to use https for all pages ##########################
 #       - { path: ^/, role: [IS_AUTHENTICATED_ANONYMOUSLY,ROLE_TRANSRES_USER], requires_channel: https }
+       - path: ^/
+         roles: [IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER,
+                ROLE_TRANSRES_USER,ROLE_CALLLOG_USER,ROLE_DEIDENTIFICATOR_USER,
+                ROLE_FELLAPP_USER,ROLE_SCANORDER_SUBMITTER,ROLE_USERDIRECTORY_OBSERVER]
+         requires_channel: '%connection_channel%'
+#        requires_channel: https
 
        ############################## local system user init ##############################
        - { path: ^/directory/admin/first-time-login-generation-init/, role: IS_AUTHENTICATED_ANONYMOUSLY }
@@ -468,7 +474,7 @@ security:
 
 #       - { path: ^/translational-research/project/new/hematopathology, role: ROLE_USER }
 #       - { path: ^/translational-research/project/new/ap-cp, role: ROLE_USER }
-       - { path: ^/translational-research/project/new, role: ROLE_USER }
+       - { path: ^/translational-research/project/new, role: ROLE_TRANSRES_USER }
 #       - { path: ^/translational-research/account-confirmation/, role: ROLE_USER }
 
        - { path: ^/translational-research/invoice/download-invoice-pdf/, roles: IS_AUTHENTICATED_ANONYMOUSLY, ips: [127.0.0.1, ::1] }
@@ -478,3 +484,7 @@ security:
        - { path: ^/translational-research/work-request/download-packing-slip-pdf/, roles: ROLE_TRANSRES_USER }
 
        - { path: ^/translational-research/, role: ROLE_TRANSRES_USER }
+
+#       - path: ^/
+#         roles: [IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER,ROLE_TRANSRES_USER,ROLE_CALLLOG_USER,ROLE_DEIDENTIFICATOR_USER,ROLE_FELLAPP_USER,ROLE_SCANORDER_SUBMITTER,ROLE_USERDIRECTORY_OBSERVER]
+#         requires_channel: '%connection_channel%'

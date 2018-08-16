@@ -81,6 +81,10 @@ class SiteParametersController extends Controller
 //            echo "Not Windows <br>";
 //        }
 
+        //testing
+        //$connection_channel = $this->container->getParameter('connection_channel');
+        //echo "connection_channel=".$connection_channel."<br>";
+
         return $this->indexParameters($request);
     }
 

@@ -26,6 +26,8 @@ $dbname = $container->getParameter('database_name');
 $user = $container->getParameter('database_user');
 $password = $container->getParameter('database_password');
 
+$connection_channel = $container->getParameter('connection_channel');
+
 //echo "driver=".$driver."<br>";
 //echo "host=".$host."<br>";
 //echo "dbname=".$dbname."<br>";
@@ -338,7 +340,11 @@ if( $conn && $schemaManager->tablesExist(array($table)) == true ) {
 //                $database_password_pacsvendor = $row['pacsvendorSlideManagerDBPassword'];
             $database_password_pacsvendor = getDBParameter($row,$database_password_pacsvendor,'pacsvendorSlideManagerDBPassword');
 
+            $connection_channel = getDBParameter($row,$connection_channel,'connectionChannel');
+            echo "connection_channel=[".$connection_channel."]\n";
         }
+
+        $container->setParameter('connection_channel',$connection_channel);
 
         $container->setParameter('mailer_host',$smtpServerAddress);
         $container->setParameter('default_system_email',$defaultSiteEmail);
@@ -444,14 +450,14 @@ function getDBParameter( $row, $originalParam, $name ) {
     //1) try as it is
     if( array_key_exists($name, $row) ) {
         //echo "1 parameter=".$row[$name]."<br>";
-        return $row[$name];
+        return trim($row[$name]);
     }
 
     //2) try with lowercase for postgresql
     $name = strtolower($name);
     if( array_key_exists($name, $row) ) {
         //echo "2 parameter=".$row[$name]."<br>";
-        return $row[$name];
+        return trim($row[$name]);
     }
 
     return $originalParam;

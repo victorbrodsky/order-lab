@@ -1003,6 +1003,13 @@ class SiteParameters {
      **/
     private $platformLogos;
 
+    /**
+     * http or https or null
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $connectionChannel;
+
 
     function __construct( $addobjects=true )
     {
@@ -3517,6 +3524,22 @@ class SiteParameters {
     public function setRasterizeLinux($rasterizeLinux)
     {
         $this->rasterizeLinux = $rasterizeLinux;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConnectionChannel()
+    {
+        return $this->connectionChannel;
+    }
+
+    /**
+     * @param mixed $connectionChannel
+     */
+    public function setConnectionChannel($connectionChannel)
+    {
+        $this->connectionChannel = $connectionChannel;
     }
 
     

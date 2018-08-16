@@ -697,6 +697,8 @@ class UserServiceUtil {
         $defaultSystemEmail = $this->container->getParameter('default_system_email');
 
         $types = array(
+            "connectionChannel" => "http",
+
             "maxIdleTime" => "30",
             "environment" => "dev",
             "siteEmail" => "email@email.com",

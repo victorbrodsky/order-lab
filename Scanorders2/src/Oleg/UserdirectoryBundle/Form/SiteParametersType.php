@@ -56,6 +56,19 @@ class SiteParametersType extends AbstractType
 
         //echo "$always_empty=".$always_empty."<br>";
 
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'connectionChannel' ) {
+//            $builder->add('connectionChannel',null,array(
+//                'label'=>'Connection Channel (blank, http or https):',
+//                'attr' => array('class'=>'form-control textarea')
+//            ));
+            $builder->add('connectionChannel',ChoiceType::class,array( //flipped
+                'label'=>'Connection Channel (http or https; Clear Cache is required):',
+                'choices' => array("http"=>"http", "https"=>"https"),
+                'choices_as_values' => true,
+                'attr' => array('class'=>'form-control')
+            ));
+        }
+
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'maxIdleTime' )
         $builder->add('maxIdleTime',null,array(
             'label'=>'Max Idle Time (min):',
