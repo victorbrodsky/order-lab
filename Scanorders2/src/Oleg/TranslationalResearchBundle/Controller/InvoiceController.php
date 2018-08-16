@@ -1106,6 +1106,7 @@ class InvoiceController extends Controller
             'principalInvestigators' => $principalInvestigators,
             //'piEm' => $piEm,
             'SecurityAuthChecker' => $this->get('security.authorization_checker'),
+            'transres_request_util' => $transresRequestUtil
         );
 
         if( $cycle == "new" ) {

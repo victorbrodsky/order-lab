@@ -308,6 +308,7 @@ class InvoiceType extends AbstractType
         //"data-toggle"=>"modal", "data-target"=>"#pleaseWaitModal"
 
         //Buttons
+        $pis = $this->getInvoicePis($builder->getData());
         if( $this->params['cycle'] === "new" ) {
 //            $builder->add('save', SubmitType::class, array(
 //                'label' => 'Generate Invoice',
@@ -318,7 +319,7 @@ class InvoiceType extends AbstractType
                 'attr' => array('class' => 'btn btn-primary btn-with-wait', "data-toggle"=>"modal", "data-target"=>"#pleaseWaitModal")
             ));
             $builder->add('saveAndGeneratePdfAndSendByEmail', SubmitType::class, array(
-                'label' => 'Save, Generate PDF Invoice and Send PDF Invoice by Email to PI',
+                'label' => 'Save, Generate PDF Invoice and Send PDF Invoice by Email to PI'.$pis,
                 'attr' => array('class' => 'btn btn-success btn-with-wait', "data-toggle"=>"modal", "data-target"=>"#pleaseWaitModal")
             ));
         }
@@ -340,7 +341,7 @@ class InvoiceType extends AbstractType
                     'attr' => array('class' => 'btn btn-primary btn-with-wait', "data-toggle"=>"modal", "data-target"=>"#pleaseWaitModal") //'onClick'=>"this.disabled=true; this.value = 'Please Wait!';"
                 ));
                 $builder->add('saveAndGeneratePdfAndSendByEmail', SubmitType::class, array(
-                    'label' => "Update, $generatePrefix PDF Invoice and Send PDF Invoice by Email to PI",
+                    'label' => "Update, $generatePrefix PDF Invoice and Send PDF Invoice by Email to PI".$pis,
                     'attr' => array('class' => 'btn btn-warning btn-with-wait', "data-toggle"=>"modal", "data-target"=>"#pleaseWaitModal")
                 ));
 
@@ -383,5 +384,9 @@ class InvoiceType extends AbstractType
         return 'oleg_translationalresearchbundle_invoice';
     }
 
+    public function getInvoicePis($invoice) {
+        $transresRequestUtil = $this->params['transres_request_util'];
+        return $transresRequestUtil->getInvoicePisStr($invoice);
+    }
 
 }

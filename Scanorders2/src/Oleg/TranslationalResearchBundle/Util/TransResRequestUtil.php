@@ -2197,29 +2197,32 @@ class TransResRequestUtil
         $siteParameter = null;
         $attachmentPath = null;
         $ccs = null;
-        $piEmailArr = array();
 
-        $pi = $invoice->getPrincipalInvestigator();
+//        $piEmailArr = array();
+//
+//        $pi = $invoice->getPrincipalInvestigator();
+//
+//        if( !$pi ) {
+//            //return "There is no PI. Email has not been sent.";
+//            //use submitter
+//            $pi = $invoice->getSubmitter();
+//        }
+//
+//        $piEmail = $pi->getSingleEmail();
+//        if( $piEmail ) {
+//            $piEmailArr[] = $piEmail;
+//        }
+//
+//        //Invoice's Billing Contact
+//        $invoiceBillingContact = $invoice->getBillingContact();
+//        if( $invoiceBillingContact ) {
+//            $invoiceBillingContactEmail = $invoiceBillingContact->getSingleEmail();
+//            if( $invoiceBillingContactEmail) {
+//                $piEmailArr[] = $invoiceBillingContactEmail;
+//            }
+//        }
 
-        if( !$pi ) {
-            //return "There is no PI. Email has not been sent.";
-            //use submitter
-            $pi = $invoice->getSubmitter();
-        }
-
-        $piEmail = $pi->getSingleEmail();
-        if( $piEmail ) {
-            $piEmailArr[] = $piEmail;
-        }
-
-        //Invoice's Billing Contact
-        $invoiceBillingContact = $invoice->getBillingContact();
-        if( $invoiceBillingContact ) {
-            $invoiceBillingContactEmail = $invoiceBillingContact->getSingleEmail();
-            if( $invoiceBillingContactEmail) {
-                $piEmailArr[] = $invoiceBillingContactEmail;
-            }
-        }
+        $piEmailArr = $this->getInvoicePis($invoice);
 
         if( count($piEmailArr) == 0 ) {
             return "There are no PI and/or Billing Contact emails. Email has not been sent.";
@@ -2299,6 +2302,60 @@ class TransResRequestUtil
         $transresUtil->setEventLog($invoice,$eventType,$msg);
 
         return $msg;
+    }
+
+    public function getInvoicePis($invoice,$asEmail=true) {
+        $piEmailArr = array();
+
+        $pi = $invoice->getPrincipalInvestigator();
+
+        if( !$pi ) {
+            //return "There is no PI. Email has not been sent.";
+            //use submitter
+            $pi = $invoice->getSubmitter();
+        }
+
+        if( $asEmail ) {
+            $piEmail = $pi->getSingleEmail();
+            if( $piEmail ) {
+                $piEmailArr[] = $piEmail;
+            }
+        } else {
+            $piEmailArr[] = $pi;
+        }
+
+        //Invoice's Billing Contact
+        $invoiceBillingContact = $invoice->getBillingContact();
+        if( $invoiceBillingContact ) {
+            if( $asEmail ) {
+                $invoiceBillingContactEmail = $invoiceBillingContact->getSingleEmail();
+                if ($invoiceBillingContactEmail) {
+                    $piEmailArr[] = $invoiceBillingContactEmail;
+                }
+            } else {
+                $piEmailArr[] = $invoiceBillingContact;
+            }
+        }
+
+        return $piEmailArr;
+
+//        if( count($piEmailArr) > 0 ) {
+//            return " (".implode(", ",$piEmailArr).")";
+//        }
+//
+//        return " (no pis)";
+    }
+    public function getInvoicePisStr($invoice) {
+        $pis = $this->getInvoicePis($invoice,false);
+        $piArr = array();
+        foreach($pis as $pi) {
+            $piArr[] = $pi->getUsernameOptimal();
+        }
+        if( count($piArr) > 0 ) {
+            return " (".implode(", ",$piArr).")";
+        }
+
+        return null;
     }
 
     public function getInvoiceStatuses() {

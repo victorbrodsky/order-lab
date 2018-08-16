@@ -150,7 +150,7 @@
                                             <a
                                                 general-data-confirm="Are you sure you want to send the latest invoice {{ invoice.oid }} pdf by email to PI?"
                                                 href="{{ path('translationalresearch_invoice_send_pdf_email', {'oid': invoice.oid }) }}"
-                                            >Send the Latest Invoice PDF by Email to PI</a>
+                                            >Send the Latest Invoice PDF by Email to PI{{ transres_request_util.getInvoicePisStr(invoice) }}</a>
                                         </li>
                                     {% endif %}
                                 {% endif %}

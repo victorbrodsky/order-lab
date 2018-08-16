@@ -306,7 +306,7 @@
             {#Send the Latest Invoice PDF by Email#}
             <p>
             <a class="btn btn-warning" href="{{ path('translationalresearch_invoice_send_pdf_email', {'oid': invoice.oid }) }}"
-            >Send the Latest Invoice PDF by Email to PI</a>
+            >Send the Latest Invoice PDF by Email to PI{{ transres_request_util.getInvoicePisStr(invoice) }}</a>
             </p>
         {% endif %}
 
