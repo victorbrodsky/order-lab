@@ -62,7 +62,7 @@ class SiteParametersType extends AbstractType
 //                'attr' => array('class'=>'form-control textarea')
 //            ));
             $builder->add('connectionChannel',ChoiceType::class,array( //flipped
-                'label'=>'Connection Channel (http or https; Clear Cache is required):',
+                'label'=>'Connection Channel (http or https; Clearing Cache is required):',
                 'choices' => array("http"=>"http", "https"=>"https"),
                 'choices_as_values' => true,
                 'attr' => array('class'=>'form-control')
