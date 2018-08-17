@@ -12,36 +12,43 @@ oleg_deidentifier:
     resource: "@OlegDeidentifierBundle/Controller/"
     type:     annotation
     prefix:   /deidentifier
+    schemes:  ['%connection_channel%']
 
 oleg_fellapp:
     resource: "@OlegFellAppBundle/Controller/"
     type:     annotation
     prefix:   /fellowship-applications
+    schemes:  ['%connection_channel%']
 
 oleg_vacreq:
     resource: "@OlegVacReqBundle/Controller/"
     type:     annotation
     prefix:   /vacation-request
+    schemes:  ['%connection_channel%']
 
 oleg_calllog:
     resource: "@OlegCallLogBundle/Controller/"
     type:     annotation
     prefix:   /call-log-book
+    schemes:  ['%connection_channel%']
 
 oleg_orderform:
     resource: "@OlegOrderformBundle/Controller/"
     type:     annotation
     prefix:   /scan
+    schemes:  ['%connection_channel%']
 
 oleg_translationalresearch:
     resource: "@OlegTranslationalResearchBundle/Controller/"
     type:     annotation
     prefix:   /translational-research
+    schemes:  ['%connection_channel%']
 
 oleg_userdirectory:
     resource: "@OlegUserdirectoryBundle/Controller/"
     type:     annotation
     prefix:   /directory
+    schemes:  ['%connection_channel%']
 
 
 adesigns_calendar:
