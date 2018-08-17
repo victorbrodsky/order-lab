@@ -128,7 +128,14 @@
 
             <tr>
                 <td>Connection Channel (http or https; Clearing Cache is required)</td>
-                <td>{{ entity.connectionChannel }}</td>
+                <td>
+                    {#{{ entity.connectionChannel }}#}
+                    {% if entity.connectionChannel %}
+                        {{ entity.connectionChannel }}
+                    {% else %}
+                        http
+                    {% endif %}
+                </td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'connectionChannel'}) }}">Edit</a></td>
             </tr>
 
