@@ -29,4 +29,4 @@ parameters:
 
     swift_delivery_addresses: [oli2002@med.cornell.edu]
 
-    connection_channel: null
+    connection_channel: http
