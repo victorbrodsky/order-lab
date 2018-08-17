@@ -315,18 +315,17 @@ security:
     access_control:
 
        ##################### Uncomment this line to use https for all pages ##########################
-       - { path: ^/, role: [IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER], requires_channel: '%connection_channel%' }
-#       - path: ^/
-#         roles: [IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER,
-#                ROLE_TRANSRES_USER,
-#                ROLE_CALLLOG_USER,
-#                ROLE_SCANORDER_SUBMITTER,ROLE_SCANORDER_ALL_PATHOLOGY,ROLE_SCANORDER_PROCESSOR,ROLE_SCANORDER_ADMIN
-#                ROLE_DEIDENTIFICATOR_USER,
-#                ROLE_FELLAPP_USER,
-#                ROLE_USERDIRECTORY_OBSERVER,ROLE_USERDIRECTORY_EDITOR,ROLE_USERDIRECTORY_ADMIN,
-#                ROLE_PLATFORM_DEPUTY_ADMIN,ROLE_PLATFORM_ADMIN]
-#         requires_channel: '%connection_channel%'
-#         requires_channel: http
+#       - { path: ^/, role: [IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER], requires_channel: '%connection_channel%' }
+       - path: ^/
+         roles: [IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER,
+                ROLE_TRANSRES_USER,
+                ROLE_CALLLOG_USER,
+                ROLE_SCANORDER_SUBMITTER,ROLE_SCANORDER_ALL_PATHOLOGY,ROLE_SCANORDER_PROCESSOR,ROLE_SCANORDER_ADMIN
+                ROLE_DEIDENTIFICATOR_USER,
+                ROLE_FELLAPP_USER,
+                ROLE_USERDIRECTORY_OBSERVER,ROLE_USERDIRECTORY_EDITOR,ROLE_USERDIRECTORY_ADMIN,
+                ROLE_PLATFORM_DEPUTY_ADMIN,ROLE_PLATFORM_ADMIN]
+         requires_channel: '%connection_channel%'
 
        ############################## local system user init ##############################
        - { path: ^/directory/admin/first-time-login-generation-init/, role: IS_AUTHENTICATED_ANONYMOUSLY }
