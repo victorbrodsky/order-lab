@@ -1341,17 +1341,17 @@ class SiteParameters {
     /**
      * @param mixed $LISName
      */
-    public function setLISName($LISName)
+    public function setLisName($LISName)
     {
-        $this->LISName = $LISName;
+        $this->lisName = $LISName;
     }
 
     /**
      * @return mixed
      */
-    public function getLISName()
+    public function getLisName()
     {
-        return $this->LISName;
+        return $this->lisName;
     }
 
     /**
