@@ -315,7 +315,7 @@ security:
     access_control:
 
        ##################### Uncomment this line to use https for all pages ##########################
-#       - { path: ^/, role: [IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER], requires_channel: '%connection_channel%' }
+       - { path: ^/, role: [IS_AUTHENTICATED_ANONYMOUSLY], requires_channel: '%connection_channel%' }
 #       - path: ^/
 #         roles: [IS_AUTHENTICATED_ANONYMOUSLY,ROLE_USER,
 #                ROLE_TRANSRES_USER,
