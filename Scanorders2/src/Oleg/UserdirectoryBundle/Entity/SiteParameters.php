@@ -1357,17 +1357,17 @@ class SiteParameters {
     /**
      * @param mixed $LISVersion
      */
-    public function setLISVersion($LISVersion)
+    public function setLisVersion($LISVersion)
     {
-        $this->LISVersion = $LISVersion;
+        $this->lisVersion = $LISVersion;
     }
 
     /**
      * @return mixed
      */
-    public function getLISVersion()
+    public function getLisVersion()
     {
-        return $this->LISVersion;
+        return $this->lisVersion;
     }
 
 
