@@ -1703,7 +1703,7 @@ class AdminController extends Controller
                     $em->persist($entity);
                     $em->flush();
                 }
-                //continue; //temporary disable to override alias, description, level
+                continue; //temporary disable to override alias, description, level
             }
 
             if( !$entity ) {
