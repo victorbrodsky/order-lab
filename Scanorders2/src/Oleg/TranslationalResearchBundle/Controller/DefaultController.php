@@ -91,7 +91,7 @@ class DefaultController extends Controller
         $importUtil = $this->get('transres_import');
 
         //Step 1: import projects and admin Comments from TRF_PROJECT_INFO
-        if(1) {
+        if(0) {
             //import projects
             $resArr[] = $importUtil->importOldData($request, 'TRF_PROJECT_INFO.xlsx', 'project_adminComments');
         }
@@ -111,7 +111,7 @@ class DefaultController extends Controller
         //Step 2: import projects and admin Comments from TRF_DRAFT_PROJECT
         if(0) {
             //import projects
-            $resArr[] = $importUtil->importOldData($request, 'TRF_DRAFT_PROJECT.xlsx', 'project_adminComments');
+            $resArr[] = $importUtil->importOldData($request, 'TRF_DRAFT_PROJECT_INFO.xlsx', 'project_adminComments');
         }
         if(0) {
             //import projects
@@ -129,12 +129,12 @@ class DefaultController extends Controller
         //Step 3: import Committee Comments from TRF_COMMITTEE_REV
         //Committee comments
         if(0) {
-            $resArr[] = $importUtil->importCommitteeComments($request, 'TRF_COMMITTEE_REV.xlsx');
+            $resArr[] = $importUtil->importCommitteeComments($request, 'TRF_COMMITTEE_REVIEW_INFO.xlsx');
         }
 
         //Step 4: import Committee Comments from TRF_COMMENTS_RESP
         if(0) {
-            $resArr[] = $importUtil->importCommitteeComments2($request, 'TRF_COMMENTS_RESP.xlsx');
+            $resArr[] = $importUtil->importCommitteeComments2($request, 'TRF_COMMENTS_RESPONSE_INFO.xlsx');
         }
 
         //Step 5: import working requests (~14k ~10 hours)
