@@ -1249,6 +1249,7 @@ class TransResImportData
             $exportId = $this->getValueByHeaderName('PROJECT_ID', $rowData, $headers);
             $exportId = trim($exportId);
             echo "<br>########## exportId=".$exportId."#############<br>";
+            //exit('$project OID='.$exportId);
 
             //if( $exportId != 1840 ) {continue;} //testing
 

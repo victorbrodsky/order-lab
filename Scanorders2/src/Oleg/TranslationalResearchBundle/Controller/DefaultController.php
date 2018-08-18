@@ -91,7 +91,7 @@ class DefaultController extends Controller
         $importUtil = $this->get('transres_import');
 
         //Step 1: import projects and admin Comments from TRF_PROJECT_INFO
-        if(0) {
+        if(1) {
             //import projects
             $resArr[] = $importUtil->importOldData($request, 'TRF_PROJECT_INFO.xlsx', 'project_adminComments');
         }
@@ -171,7 +171,7 @@ class DefaultController extends Controller
         }
 
         //6) Update Request from "UpdatedReqStatus.xlsx": Price, Status, Comment
-        if(1) {
+        if(0) {
             $filename = "UpdatedReqStatus.xlsx";
             $resArr[] = $importUtil->updateRequests($request,$filename);
         }

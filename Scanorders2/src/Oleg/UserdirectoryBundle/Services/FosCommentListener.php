@@ -35,8 +35,8 @@ class FosCommentListener implements EventSubscriberInterface {
     private $em;
     protected $secTokenStorage;
 
-    protected $disable = false;
-    //protected $disable = true;
+    //protected $disable = false;
+    protected $disable = true; //disable comments when importing data
 
     protected $secAuth;
 
