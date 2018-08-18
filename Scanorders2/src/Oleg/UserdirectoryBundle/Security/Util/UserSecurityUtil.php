@@ -2026,9 +2026,6 @@ class UserSecurityUtil {
     }
 
     public function isSiteAccessible( $sitename ) {
-        if( $this->secAuth->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-            return true;
-        }
         if( $sitename == "employees" ) {
             //always enabled for employees site
             return true;
@@ -2037,6 +2034,11 @@ class UserSecurityUtil {
         if( $siteObject && $siteObject->getAccessibility() === true ) {
             return true;
         }
+
+        if( $this->secAuth->isGranted('IS_AUTHENTICATED_ANONYMOUSLY') || $this->secAuth->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return true;
+        }
+
         return false;
     }
 

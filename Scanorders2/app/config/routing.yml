@@ -6,6 +6,7 @@ main_common_home:
 main_under_construction:
     path:      /under-construction
     defaults:  { _controller: OlegUserdirectoryBundle:Home:underConstruction }
+    schemes:  ['%connection_channel%']
 
 #order is important: base bundle userdirectory must be the last one
 oleg_deidentifier:
@@ -42,7 +43,7 @@ oleg_translationalresearch:
     resource: "@OlegTranslationalResearchBundle/Controller/"
     type:     annotation
     prefix:   /translational-research
-    schemes:  ['%connection_channel%']
+#    schemes:  ['%connection_channel%']
 
 oleg_userdirectory:
     resource: "@OlegUserdirectoryBundle/Controller/"
@@ -54,6 +55,7 @@ oleg_userdirectory:
 adesigns_calendar:
     resource: "@ADesignsCalendarBundle/Resources/config/routing.xml"
     prefix:   /vacation-request
+    schemes:  ['%connection_channel%']
 
 
 #acme_demo:
