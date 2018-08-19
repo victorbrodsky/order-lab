@@ -53,7 +53,7 @@ class TransResImportData
         $this->secTokenStorage = $container->get('security.token_storage'); //$user = $this->secTokenStorage->getToken()->getUser();
     }
 
-    //TRF_COMMITTEE_REV
+    //Import Work Requests
     public function importWorkRequests( $request, $filename, $startRaw=2, $endRaw=null ) {
         set_time_limit(18000); //18000 seconds => 5 hours 3600sec=>1 hour
         ini_set('memory_limit', '7168M');
