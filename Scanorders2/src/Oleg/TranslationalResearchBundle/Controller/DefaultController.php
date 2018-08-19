@@ -138,7 +138,7 @@ class DefaultController extends Controller
         }
 
         //Step 5: import working requests (~14k ~10 hours)
-        if(1) {
+        if(0) {
             //use only 1000 per time
 //            $startRow = 2;
 //            $endRow = $startRow + 1000;
@@ -172,7 +172,7 @@ class DefaultController extends Controller
         }
 
         //6) Update Request from "UpdatedReqStatus.xlsx": Price, Status, Comment
-        if(0) {
+        if(1) {
             $filename = "UpdatedReqStatus.xlsx";
             $resArr[] = $importUtil->updateRequests($request,$filename);
         }
