@@ -663,6 +663,7 @@ class TransResImportData
                     if( $ADMIN_COMMENT ) {
                         $this->addComment($request, $adminReviewer, $transresRequest, $ADMIN_COMMENT, "progress", "[imported comment]",$CREATED_DATE_STR);
                     }
+                    $logger->notice("Imported request with ID=".$transresRequest->getOid());
                 } else {
                     $em->persist($transresRequest); //it looks like we don't have any other new objects created, which require persist
 
@@ -922,18 +923,20 @@ class TransResImportData
     public function getUserBySingleEmail($email) {
         $logger = $this->container->get('logger');
         $email = trim($email);
+        $email = strtolower($email);
         $emailParts = explode("@", $email);
 
         if( count($emailParts) == 0 || count($emailParts) == 1 ) {
             return null;
         }
 
-        if( $emailParts[1] == "med.cornell.edu" || $emailParts[1] == "nyp.org" ) {
+        $emailParts1 = $emailParts[1];
+        if( $emailParts1 == "med.cornell.edu" || $emailParts1 == "nyp.org" ) {
             //ok
         } else {
             $msg = "email [".$email."] is not CWID user";
             //echo $msg."<br>";
-            $logger->warning($msg);
+            $logger->warning("getUserBySingleEmail: ".$msg);
         }
 
         $cwid = $emailParts[0];
@@ -2045,12 +2048,13 @@ class TransResImportData
                 continue;
             }
 
-            if( $emailParts[1] == "med.cornell.edu" || $emailParts[1] == "nyp.org" ) {
+            $emailParts1 = $emailParts[1];
+            if( $emailParts1 == "med.cornell.edu" || $emailParts1 == "nyp.org" ) {
                 //ok
             } else {
                 $msg = "email [".$emailStr."] is not CWID user";
                 //echo $msg."<br>";
-                $logger->warning($msg);
+                $logger->warning("getUserByEmail: ".$msg);
             }
 
             $cwid = $emailParts[0];
