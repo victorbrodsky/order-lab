@@ -2030,12 +2030,22 @@ class UserSecurityUtil {
             //always enabled for employees site
             return true;
         }
+
         $siteObject = $this->em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation($sitename);
         if( $siteObject && $siteObject->getAccessibility() === true ) {
             return true;
         }
 
-        if( $this->secAuth->isGranted('IS_AUTHENTICATED_ANONYMOUSLY') || $this->secAuth->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+        //show login page, but not allowed when authenticated and visit the not accessible sites
+        $user = $this->secToken->getToken()->getUser();
+        //exit("user=".$user);
+        if( $user && $user instanceof User ) {
+            if( $this->secAuth->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+                //echo "admin <br>";
+                return true;
+            }
+        } else {
+            //anon. user -> not logged in (login page)
             return true;
         }
 

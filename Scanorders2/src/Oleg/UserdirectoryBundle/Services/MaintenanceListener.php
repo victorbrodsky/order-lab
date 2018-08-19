@@ -64,8 +64,8 @@ class MaintenanceListener {
 //        if( HttpKernelInterface::MASTER_REQUEST != $event->getRequestType() ) {
 //            return;
 //        }
-
         if( !$event->isMasterRequest() ) {
+            //exit('1');
             return;
         }
 
