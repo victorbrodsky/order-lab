@@ -138,7 +138,7 @@ class DefaultController extends Controller
         }
 
         //Step 5: import working requests (~14k ~10 hours)
-        if(0) {
+        if(1) {
             //use only 1000 per time
 //            $startRow = 2;
 //            $endRow = $startRow + 1000;
@@ -157,12 +157,13 @@ class DefaultController extends Controller
                 $startRow = 2;
             }
 
-            $filename = 'TRF_REQUESTED_3.xlsx';
+            $filename = 'TRF_REQUESTED_SERVICE_INFO.xlsx';
+            //$filename = 'TRF_REQUESTED_3.xlsx';
 
             //check
             //$this->importRequests($request,$filename,$startRow,null);
 
-            $this->importRequests($request,$filename,$startRow,1000);
+            $this->importRequests($request,$filename,$startRow,100);
 
             //$this->importRequests($request,$filename,3000);
             //$this->importRequests($request,$filename,2,1000);
