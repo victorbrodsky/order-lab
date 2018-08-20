@@ -8784,7 +8784,6 @@ class AdminController extends Controller
 
         $opcache_reset = opcache_reset();
         exit('opcache_reset=' . $opcache_reset);
-
     }
 
     /**
@@ -8799,8 +8798,8 @@ class AdminController extends Controller
         }
 
         //testing
-        $opcache_reset = opcache_reset();
-        exit('opcache_reset='.$opcache_reset);
+        //$opcache_reset = opcache_reset();
+        //exit('opcache_reset='.$opcache_reset);
 
         exit("not permitted. It has been used only for changing the TRP roles.");
 
