@@ -232,12 +232,23 @@ class TransResRequest {
     private $oldPackingSlipPdfs;
 
 
+//    /**
+//     * Reference antibody
+//     *
+//     * @ORM\ManyToOne(targetEntity="Oleg\TranslationalResearchBundle\Entity\AntibodyList")
+//     */
+//    private $antibodyReference;
     /**
      * Reference antibody
      *
-     * @ORM\ManyToOne(targetEntity="Oleg\TranslationalResearchBundle\Entity\AntibodyList")
-     */
-    private $antibodyReference;
+     * @ORM\ManyToMany(targetEntity="Oleg\TranslationalResearchBundle\Entity\AntibodyList", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="transres_request_antibody",
+     *      joinColumns={@ORM\JoinColumn(name="request_id", referencedColumnName="id", onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="antibody_id", referencedColumnName="id", onDelete="CASCADE")}
+     *      )
+     * @ORM\OrderBy({"createdate" = "DESC"})
+     **/
+    private $antibodyReferences;
 
 
     
@@ -253,6 +264,7 @@ class TransResRequest {
         $this->documents = new ArrayCollection();
         $this->packingSlipPdfs = new ArrayCollection();
         $this->oldPackingSlipPdfs = new ArrayCollection();
+        $this->antibodyReferences = new ArrayCollection();
     }
 
 
@@ -731,17 +743,20 @@ class TransResRequest {
     /**
      * @return mixed
      */
-    public function getAntibodyReference()
+    public function getAntibodyReferences()
     {
-        return $this->antibodyReference;
+        return $this->antibodyReferences;
     }
-
-    /**
-     * @param mixed $antibodyReference
-     */
-    public function setAntibodyReference($antibodyReference)
+    public function addAntibodyReference($item)
     {
-        $this->antibodyReference = $antibodyReference;
+        if( $item && !$this->antibodyReferences->contains($item) ) {
+            $this->antibodyReferences->add($item);
+        }
+        return $this;
+    }
+    public function removeAntibodyReference($item)
+    {
+        $this->antibodyReferences->removeElement($item);
     }
 
     //////////////// EOF fields /////////////////////////

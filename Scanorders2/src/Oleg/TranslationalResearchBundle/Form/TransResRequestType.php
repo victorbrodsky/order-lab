@@ -88,9 +88,9 @@ class TransResRequestType extends AbstractType
         }
 
         if( $this->params['cycle'] == 'show' || $this->params['cycle'] == 'edit' ) {
-            $builder->add('antibodyReference', null, array(
-                'label' => "Antibody Reference:",
-                //'disabled' => true,
+            $builder->add('antibodyReferences', null, array(
+                'label' => "Antibody Reference(s):",
+                'multiple' => true,
                 'attr' => array('class' => 'combobox combobox-width')
             ));
         }

@@ -453,7 +453,7 @@ class FellAppController extends Controller {
 //            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
 //        }
 
-        //ini_set('memory_limit', '3072M');
+        ini_set('memory_limit', '7168M');
 
         $em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -934,6 +934,8 @@ class FellAppController extends Controller {
         if( false == $this->get('security.authorization_checker')->isGranted("update",$entity) ){
             return $this->redirect( $this->generateUrl('fellapp-nopermission') );
         }
+
+        ini_set('memory_limit', '7168M');
 
         ////// PRE Update INFO //////
         // Create an ArrayCollection of the current interviews
