@@ -2655,8 +2655,8 @@ class TransResImportData
             $price = $this->getValueByHeaderName('TOTAL CHARGE', $rowData, $headers);
             $status = $this->getValueByHeaderName('STATUS', $rowData, $headers);
             $comment = $this->getValueByHeaderName('COMMENT', $rowData, $headers);
-            echo "Request $exportId: Price=$price; status=$status; comment=$comment <br>";
-            exit('111');
+            //echo "Request $exportId: Price=$price; status=$status; comment=$comment <br>";
+            //exit('111');
 
             $updatedCount = 0;
 
