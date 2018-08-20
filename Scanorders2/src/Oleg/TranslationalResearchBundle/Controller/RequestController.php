@@ -1682,7 +1682,7 @@ class RequestController extends Controller
         //$allTransresRequests = $query->getResult();
 
         $paginationParams = array(
-            'defaultSortFieldName' => 'transresRequest.id',
+            'defaultSortFieldName' => 'transresRequest.createDate',
             'defaultSortDirection' => 'DESC',
             'wrap-queries' => true
         );

@@ -615,7 +615,7 @@ class ProjectController extends Controller
         }
         //////////////////// EOF Start Filter ////////////////////
 
-        $dql->orderBy('project.id', 'DESC');
+        $dql->orderBy('project.createDate', 'DESC');
 
         //echo "showMatchingAndTotal=".$showMatchingAndTotal."<br>";
 //        if( $showMatchingAndTotal == "WithTotal" ) {
