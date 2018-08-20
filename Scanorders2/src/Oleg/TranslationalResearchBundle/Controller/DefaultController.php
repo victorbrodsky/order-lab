@@ -173,7 +173,7 @@ class DefaultController extends Controller
 
         //6) Update Request from "UpdatedReqStatus.xlsx": Price, Status, Comment
         if(1) {
-            $filename = "UpdatedReqStatus.xlsx";
+            $filename = "Updated_All_REQUESTS_08202018.xlsx";
             $resArr[] = $importUtil->updateRequests($request,$filename);
         }
 
