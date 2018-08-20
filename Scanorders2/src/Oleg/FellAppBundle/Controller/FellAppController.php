@@ -72,14 +72,14 @@ class FellAppController extends Controller {
 //        }
 
         //testing
-        $memory_limit = ini_get('memory_limit');
-        echo "before memory_limit=$memory_limit <br>";
+        //$memory_limit = ini_get('memory_limit');
+        //echo "before memory_limit=$memory_limit <br>";
 
         ini_set('memory_limit', '7168M');
 
         //testing
-        $memory_limit = ini_get('memory_limit');
-        echo "before memory_limit=$memory_limit <br>";
+        //$memory_limit = ini_get('memory_limit');
+        //echo "before memory_limit=$memory_limit <br>";
 
         $route = $request->get('_route');
         //echo "route".$route."<br>";
