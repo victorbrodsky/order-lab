@@ -2249,7 +2249,8 @@ class FellAppController extends Controller {
             'Queue with ' . count($processes) . ' will be re-run. Estimated processing time is ' . $estimatedTime . ' minutes. Number of reset processes in queue ' . $numUpdated
         );
 
-        return $this->redirect( $this->generateUrl('fellapp_home') );
+        //return $this->redirect( $this->generateUrl('fellapp_home') );
+        return $this->redirect( $this->generateUrl('main_common_home') );
     }
 
 
