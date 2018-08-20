@@ -2044,7 +2044,8 @@ class UserSecurityUtil {
                 //echo "admin <br>";
                 return true;
             }
-        } else {
+        }
+        if( $user && !($user instanceof User) ) {
             //anon. user -> not logged in (login page)
             return true;
         }
