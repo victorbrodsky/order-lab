@@ -76,7 +76,7 @@ class DefaultController extends Controller
             return $this->redirect( $this->generateUrl('vacreq-nopermission') );
         }
 
-        //exit('not allowed');
+        exit('not allowed');
         set_time_limit(10800); //18000 seconds => 5 hours
         ini_set('memory_limit', '7168M');
 
@@ -172,7 +172,7 @@ class DefaultController extends Controller
         }
 
         //6) Update Request from "UpdatedReqStatus.xlsx": Price, Status, Comment
-        if(1) {
+        if(0) {
             $filename = "Updated_All_REQUESTS_08202018.xlsx";
             $resArr[] = $importUtil->updateRequests($request,$filename);
         }
