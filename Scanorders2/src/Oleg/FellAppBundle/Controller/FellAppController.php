@@ -71,6 +71,8 @@ class FellAppController extends Controller {
 //            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
 //        }
 
+        ini_set('memory_limit', '7168M');
+
         $route = $request->get('_route');
         //echo "route".$route."<br>";
         //exit();
