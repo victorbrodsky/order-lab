@@ -87,6 +87,14 @@ class TransResRequestType extends AbstractType
 //            ));
         }
 
+        if( $this->params['cycle'] == 'show' || $this->params['cycle'] == 'edit' ) {
+            $builder->add('antibodyReference', null, array(
+                'label' => "Antibody Reference:",
+                //'disabled' => true,
+                'attr' => array('class' => 'combobox combobox-width')
+            ));
+        }
+
         if(
             $this->params['cycle'] != 'new' &&
             $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN') &&

@@ -8773,6 +8773,22 @@ class AdminController extends Controller
 
     /**
      * Update roles
+     * run: http://127.0.0.1/order/directory/admin/opcache-reset/
+     * @Route("/opcache-reset/", name="user_opcache-reset")
+     */
+    public function opcacheResetAction()
+    {
+        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+            return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename') . '-order-nopermission'));
+        }
+
+        $opcache_reset = opcache_reset();
+        exit('opcache_reset=' . $opcache_reset);
+
+    }
+
+    /**
+     * Update roles
      * run: http://127.0.0.1/order/directory/admin/update-user-roles/
      * @Route("/update-user-roles/", name="user_update_user_roles")
      */
@@ -8781,6 +8797,12 @@ class AdminController extends Controller
         if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
             return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename') . '-order-nopermission'));
         }
+
+        //testing
+        $opcache_reset = opcache_reset();
+        exit('opcache_reset='.$opcache_reset);
+
+        exit("not permitted. It has been used only for changing the TRP roles.");
 
         $em = $this->getDoctrine()->getManager();
 

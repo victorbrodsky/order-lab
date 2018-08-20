@@ -232,6 +232,13 @@ class TransResRequest {
     private $oldPackingSlipPdfs;
 
 
+    /**
+     * Reference antibody
+     *
+     * @ORM\ManyToOne(targetEntity="Oleg\TranslationalResearchBundle\Entity\AntibodyList")
+     */
+    private $antibodyReference;
+
 
     
     public function __construct($user=null) {
@@ -719,6 +726,22 @@ class TransResRequest {
     public function setComment($comment)
     {
         $this->comment = $comment;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAntibodyReference()
+    {
+        return $this->antibodyReference;
+    }
+
+    /**
+     * @param mixed $antibodyReference
+     */
+    public function setAntibodyReference($antibodyReference)
+    {
+        $this->antibodyReference = $antibodyReference;
     }
 
     //////////////// EOF fields /////////////////////////

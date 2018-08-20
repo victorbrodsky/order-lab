@@ -807,6 +807,8 @@
 
 {% macro transresRequestHandsontable( form, transresRequest, cycle ) %}
 
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel panel-info">
             <div class="panel-heading" role="tab" id="transresRequestTableHeading">
@@ -818,6 +820,10 @@
             </div>
             <div id="transresRequestTable" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="transresRequestTableHeading">
                 <div class="panel-body">
+
+                    {{ formmacros.field(form.antibodyReference) }}
+                    <br>
+
                     <div id="transresDataTable" class="text-center" align="middle" style="overflow: scroll"></div>
                 </div>
             </div>

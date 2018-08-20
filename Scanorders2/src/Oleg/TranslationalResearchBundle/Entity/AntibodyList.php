@@ -529,5 +529,13 @@ class AntibodyList extends ListAbstract
         $this->comment2 = $comment2;
     }
 
+    public function __toString()
+    {
+        $company = $this->getCompany();
+        if( $company ) {
+            $company = " (".$this->getCompany().")";
+        }
+        return $this->getName().$company;
+    }
 
 }
