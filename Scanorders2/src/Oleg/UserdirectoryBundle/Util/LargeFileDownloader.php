@@ -36,7 +36,7 @@ class LargeFileDownloader {
     function __construct() {
         /* You may need these ini settings too */
         set_time_limit(0);
-        ini_set('memory_limit', '512M');
+        ini_set('memory_limit', '7168M');
     }
 
 
