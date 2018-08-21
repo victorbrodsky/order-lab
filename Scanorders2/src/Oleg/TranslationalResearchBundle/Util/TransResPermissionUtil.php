@@ -331,6 +331,7 @@ class TransResPermissionUtil
             //all request's requesters associated with this project.
             //We can search all requests and then verify if this user is request's requester
             //but for perfomarnce, just show the project to requester roles
+            //TODO: test
             if( $this->secAuth->isGranted("ROLE_TRANSRES_REQUESTER".$specialtyStr) ) {
                 return true;
             }
@@ -485,8 +486,15 @@ class TransResPermissionUtil
             ) {
                 return true;
             }
-            if( $transresUtil->isProjectRequester($project) && $request->getProgressState() == 'draft' ) {
-                return true;
+
+            if( $request->getProgressState() == 'draft' ) {
+                if ($transresUtil->isProjectRequester($project) ) {
+                    return true;
+                }
+
+                if ($transresRequestUtil->isRequestRequester($request)) {
+                    return true;
+                }
             }
         }
 
@@ -503,6 +511,10 @@ class TransResPermissionUtil
             }
 
             if( $transresUtil->isProjectRequester($project) ) {
+                return true;
+            }
+
+            if( $transresRequestUtil->isRequestRequester($request) ) {
                 return true;
             }
         }
