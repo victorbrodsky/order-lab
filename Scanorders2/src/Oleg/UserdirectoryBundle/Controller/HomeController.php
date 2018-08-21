@@ -34,7 +34,26 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 class HomeController extends Controller {
 
     public function mainCommonHomeAction() {
-        return $this->render('OlegUserdirectoryBundle:Default:main-common-home.html.twig');
+
+        $userSecUtil = $this->get('user_security_utility');
+
+        $width = "300";
+        $height = "80";
+
+        $platformLogoPath = null;
+        $platformLogos = $userSecUtil->getSiteSettingParameter('platformLogos');
+        if( count($platformLogos) > 0 ) {
+            $platformLogo = $platformLogos->first();
+            $platformLogoPath = $platformLogo->getAbsoluteUploadFullPath();
+        }
+
+        return $this->render('OlegUserdirectoryBundle:Default:main-common-home.html.twig',
+            array(
+                'platformLogo' => $platformLogoPath,
+                'width' => $width,
+                'height' => $height
+            )
+        );
     }
 
     /**
