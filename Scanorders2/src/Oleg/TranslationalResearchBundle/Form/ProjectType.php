@@ -499,16 +499,18 @@ class ProjectType extends AbstractType
             'prototype_name' => '__documentsid__',
         ));
 
-        $builder->add('irbApprovalLetters', CollectionType::class, array(
-            'entry_type' => DocumentType::class,
-            'label' => 'IRB Approval Letter:',
-            'allow_add' => true,
-            'allow_delete' => true,
-            'required' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__documentsid__',
-        ));
+        if( $this->params['cycle'] == 'new' || $this->params['cycle'] == 'edit' ) {
+            $builder->add('irbApprovalLetters', CollectionType::class, array(
+                'entry_type' => DocumentType::class,
+                'label' => 'IRB Approval Letter:',
+                'allow_add' => true,
+                'allow_delete' => true,
+                'required' => false,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__documentsid__',
+            ));
+        }
 
         $builder->add('humanTissueForms', CollectionType::class, array(
             'entry_type' => DocumentType::class,
