@@ -908,11 +908,11 @@ class InvoiceController extends Controller
     /**
      * Show PDF version of invoice
      *
-     * @Route("/download-invoice-pdf/{oid}", name="translationalresearch_invoice_download")
+     * @Route("/download-invoice-pdf/{id}", name="translationalresearch_invoice_download")
      * @Template("OlegTranslationalResearchBundle:Invoice:pdf-show.html.twig")
      * @Method("GET")
      */
-    public function downloadPdfAction(Request $request, $oid)
+    public function downloadPdfAction(Request $request, Invoice $invoice)
     {
         //$em = $this->getDoctrine()->getManager();
         $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -941,11 +941,11 @@ class InvoiceController extends Controller
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
-        $em = $this->getDoctrine()->getManager();
-        $invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($oid);
-        if( !$invoice ) {
-            throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
-        }
+        //$em = $this->getDoctrine()->getManager();
+        //$invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($oid);
+        //if( !$invoice ) {
+        //    throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
+        //}
 
         // Check if user allowed to access by the project's specialty
 //        if( $transresRequestUtil->isUserAllowedAccessInvoiceBySpecialty($invoice) === false ) {
@@ -984,11 +984,11 @@ class InvoiceController extends Controller
     /**
      * Show the most recent PDF version of invoice
      *
-     * @Route("/download-recent-invoice-pdf/{oid}", name="translationalresearch_invoice_download_recent")
+     * @Route("/download-recent-invoice-pdf/{id}", name="translationalresearch_invoice_download_recent")
      * @Template("OlegTranslationalResearchBundle:Invoice:pdf-show.html.twig")
      * @Method("GET")
      */
-    public function downloadRecentPdfAction(Request $request, $oid)
+    public function downloadRecentPdfAction(Request $request, Invoice $invoice)
     {
 //        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
 //            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
@@ -1002,11 +1002,11 @@ class InvoiceController extends Controller
         $transresRequestUtil = $this->get('transres_request_util');
         //$transresUtil = $this->get('transres_util');
 
-        $em = $this->getDoctrine()->getManager();
-        $invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($oid);
-        if( !$invoice ) {
-            throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
-        }
+        //$em = $this->getDoctrine()->getManager();
+        //$invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($oid);
+        //if( !$invoice ) {
+        //    throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
+        //}
 
         //$transresRequest = $invoice->getTransresRequest();
         //$project = $transresRequest->getProject();

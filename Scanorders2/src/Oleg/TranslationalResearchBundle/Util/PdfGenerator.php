@@ -177,10 +177,12 @@ class PdfGenerator
         $context->setScheme('http');
         $context->setBaseUrl('/order');
 
+        //exit("oid=".$invoice->getOid());
+
         //invoice download
         $pageUrl = $router->generate('translationalresearch_invoice_download',
             array(
-                'oid' => $invoice->getOid()
+                'id' => $invoice->getId()
             ),
             UrlGeneratorInterface::ABSOLUTE_URL
         ); //this does not work from console: 'order' is missing

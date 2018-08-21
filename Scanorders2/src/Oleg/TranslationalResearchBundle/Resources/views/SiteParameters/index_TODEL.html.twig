@@ -62,7 +62,7 @@
                     {% if invoice.documents|length > 0 %}
                         <a  data-toggle="tooltip" title="Show the most recent PDF"
                             target="_blank"
-                            href="{{ path('translationalresearch_invoice_download_recent', {'oid': invoice.oid }) }}"
+                            href="{{ path('translationalresearch_invoice_download_recent', {'id': invoice.id }) }}"
                         >{{ invoice.documents|length }}</a>
                     {% endif %}
                 </td>
@@ -93,7 +93,7 @@
 
                             {#{% if is_granted('ROLE_TRANSRES_ADMIN') %}#}
                                 <li>
-                                    <a href="{{ path('translationalresearch_invoice_download', {'oid': invoice.oid }) }}"
+                                    <a href="{{ path('translationalresearch_invoice_download', {'id': invoice.id }) }}"
                                     >PDF Invoice Preview</a>
                                 </li>
 
@@ -106,7 +106,7 @@
                             {% if invoice.documents|length > 0 %}
                                 <li>
                                     <a target="_blank"
-                                       href="{{ path('translationalresearch_invoice_download_recent', {'oid': invoice.oid }) }}"
+                                       href="{{ path('translationalresearch_invoice_download_recent', {'id': invoice.id }) }}"
                                     >Show The Latest PDF Invoice</a>
                                 </li>
                             {% endif %}

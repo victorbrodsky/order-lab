@@ -177,7 +177,7 @@
                         {% else %}
                             {% if latestInvoice and transres_request_util.isUserHasInvoicePermission(latestInvoice,"view-pdf") %}
                                 <a target="_blank" data-toggle="tooltip" title="Show Latest Associated PDF Invoice"
-                                   href="{{ path('translationalresearch_invoice_download_recent', {'oid': latestInvoice.oid }) }}"
+                                   href="{{ path('translationalresearch_invoice_download_recent', {'id': latestInvoice.id }) }}"
                                 ><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
                             {% endif %}
                         {% endif %}
@@ -332,7 +332,7 @@
                                     {% if latestInvoice.documents|length > 0 and transres_request_util.isUserHasInvoicePermission(latestInvoice,"view-pdf") %}
                                         <li>
                                             <a target="_blank"
-                                               href="{{ path('translationalresearch_invoice_download_recent', {'oid': latestInvoice.oid }) }}"
+                                               href="{{ path('translationalresearch_invoice_download_recent', {'id': latestInvoice.id }) }}"
                                             >Show The Latest PDF Invoice</a>
                                         </li>
                                     {% endif %}
@@ -396,7 +396,7 @@
                                 {#{% if latestInvoice.documents|length > 0 %}#}
                                     {#<li>#}
                                         {#<a target="_blank"#}
-                                           {#href="{{ path('translationalresearch_invoice_download_recent', {'oid': latestInvoice.oid }) }}"#}
+                                           {#href="{{ path('translationalresearch_invoice_download_recent', {'id': latestInvoice.id }) }}"#}
                                         {#>Show The Latest PDF Invoice</a>#}
                                     {#</li>#}
                                 {#{% endif %}#}

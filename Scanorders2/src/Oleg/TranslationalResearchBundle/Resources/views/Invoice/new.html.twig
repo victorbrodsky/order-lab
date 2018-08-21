@@ -286,7 +286,7 @@
         </p>
 
         {#<p>#}
-            {#<a href="{{ path('translationalresearch_invoice_download', {'oid': invoice.oid }) }}" target="_blank"#}
+            {#<a href="{{ path('translationalresearch_invoice_download', {'id': invoice.id }) }}" target="_blank"#}
             {#>PDF Invoice Preview</a>#}
         {#</p>#}
 
@@ -311,7 +311,7 @@
         {% endif %}
 
         <p>
-            <a href="{{ path('translationalresearch_invoice_download', {'oid': invoice.oid }) }}" target="_blank"
+            <a href="{{ path('translationalresearch_invoice_download', {'id': invoice.id }) }}" target="_blank"
             >PDF Invoice Preview</a>
         </p>
 
@@ -320,7 +320,7 @@
     {% if cycle == "edit" %}
 
         {#<p>#}
-            {#<a href="{{ path('translationalresearch_invoice_download', {'oid': invoice.oid }) }}" target="_blank"#}
+            {#<a href="{{ path('translationalresearch_invoice_download', {'id': invoice.id }) }}" target="_blank"#}
             {#>PDF Invoice Preview</a>#}
         {#</p>#}
 

@@ -1599,7 +1599,7 @@ class TransResRequestUtil
         $invoicePdfViewUrl = $this->container->get('router')->generate(
             'translationalresearch_invoice_download_recent',
             array(
-                'oid'=>$invoice->getOid()
+                'id'=>$invoice->getId()
             ),
             UrlGeneratorInterface::ABSOLUTE_URL
         );
