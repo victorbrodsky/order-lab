@@ -502,9 +502,12 @@ class RequestController extends Controller
             $msg = $msg . $changedMsg;
             $transresUtil->setEventLog($transresRequest,$eventType,$msg);
 
-            $subject = "Request ".$transresRequest->getOid()." has been successfully updated for the project ID ".$project->getOid();
-            $msg = str_replace("<br>","\r\n",$msg);
-            $transresRequestUtil->sendRequestNotificationEmails($transresRequest,$subject,$msg,$testing);
+            //disable update Request email
+            if(0) {
+                $subject = "Request " . $transresRequest->getOid() . " has been successfully updated for the project ID " . $project->getOid();
+                $msg = str_replace("<br>", "\r\n", $msg);
+                $transresRequestUtil->sendRequestNotificationEmails($transresRequest, $subject, $msg, $testing);
+            }
 
             return $this->redirectToRoute('translationalresearch_request_show', array('id' => $transresRequest->getId()));
         }
