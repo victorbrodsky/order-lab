@@ -154,7 +154,7 @@ class FosCommentListener implements EventSubscriberInterface {
         $reviews = $transresUtil->getReviewsByProjectAndState($project,$stateStr);
 
         //1) admins
-        $adminEmails = $transresUtil->getTransResAdminEmails($project->getProjectSpecialty());
+        $adminEmails = $transresUtil->getTransResAdminEmails($project->getProjectSpecialty(),true,true);
         $emails = array_merge($emails,$adminEmails);
 
         //2) reviewers of this review
@@ -202,7 +202,7 @@ class FosCommentListener implements EventSubscriberInterface {
         $emails = array();
 
         //1) admins
-        $adminEmails = $transresUtil->getTransResAdminEmails($project->getProjectSpecialty());
+        $adminEmails = $transresUtil->getTransResAdminEmails($project->getProjectSpecialty(),true,true);
         $emails = array_merge($emails,$adminEmails);
 
         //2) contact

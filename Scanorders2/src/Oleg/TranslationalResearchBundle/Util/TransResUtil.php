@@ -655,7 +655,7 @@ class TransResUtil
                         $projectUrl = $transresUtil->getProjectShowUrl($project);
                         $emailBody = $body . $break.$break. "Please click on the URL below to view this project:".$break.$projectUrl;
 
-                        //send notification emails
+                        //send notification emails (project transition: committee recomendation - committe_review)
                         $this->sendNotificationEmails($project,$review,$subject,$emailBody,$testing);
 
                         //event log
@@ -704,7 +704,7 @@ class TransResUtil
                 $projectUrl = $transresUtil->getProjectShowUrl($project);
                 $emailBody = $statusChangeMsg . $break.$break. "Please click on the URL below to view this project:".$break.$projectUrl;
 
-                //send confirmation email
+                //send confirmation email (project transition)
                 $this->sendNotificationEmails($project,$review,$subject,$emailBody,$testing);
 
                 //event log
@@ -2164,7 +2164,7 @@ class TransResUtil
         $projectUrl = $transresUtil->getProjectShowUrl($project);
         $emailBody = $body . $break.$break. "Please click on the URL below to view this project:".$break.$projectUrl;
 
-        //send notification emails
+        //send notification emails (not used)
         $this->sendNotificationEmails($project,$review,$subject,$emailBody,$testing);
 
 //        $workflow = $this->container->get('state_machine.transres_project');
@@ -2334,43 +2334,48 @@ class TransResUtil
         }
     }
 
+    //1) I can change the code to send only notifications emails to admins (not primary reviewers) when status is changed.
+    //2) When project is in the particular stage, then the reviewers of this particular stag receive emails too.
+    //3) The emails will be send to the project's requesters only when project is approved, closed, rejected or "additional information is required".
     public function sendNotificationEmails($project, $review, $subject, $body, $testing=false) {
-        //if( !$appliedTransition ) {
-        //    return null;
-        //}
-
         $emailUtil = $this->container->get('user_mailer_utility');
 
         $senderEmail = null; //Admin email
         $emails = array();
 
-//        $label = $this->getTransitionLabelByName($appliedTransition,$review);
-//        if( $recommended ) {
-//            $subject = "Project ID ".$project->getOid()." has been recommended to send to the status '$label'";
-//            $body = "Project ID ".$project->getOid()." has been sent to the status '$label'";
-//        } else {
-//            $subject = "Project ID ".$project->getOid()." has been sent to the status '$label'";
-//            $body = "Project ID ".$project->getOid()." has been sent to the status '$label'";
-//        }
-
         //send to the
         // 1) admins and primary reviewers
-        $admins = $this->getTransResAdminEmails($project->getProjectSpecialty()); //ok
+        //                                      $projectSpecialty=null, $asEmail=true, $onlyAdmin=false
+        $admins = $this->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //ok
         $emails = array_merge($emails,$admins);
 
+        //project's submitter only
+        $submitter = $project->getSubmitter()->getSingleEmail();
+        $emails = array_merge($emails, array($submitter));
+
         // 2) project's Requester (submitter, principalInvestigators, coInvestigators, pathologists)
-        $requesterEmails = $this->getRequesterEmails($project); //ok
-        $emails = array_merge($emails,$requesterEmails);
+        if( $review ) {
+            //3) The emails will be send to the project's requesters only when project is approved, closed, rejected or "additional information is required".
+            if(
+                //$project->getState() == "irb_review" ||
+                $project->getState() == "irb_missinginfo" || $project->getState() == "admin_missinginfo" ||
+                $project->getState() == "final_approved" || $project->getState() == "final_rejected" ||
+                $project->getState() == "closed"
+            ) {
+                $requesterEmails = $this->getRequesterEmails($project); //ok
+                $emails = array_merge($emails, $requesterEmails);
+            }
+        }
 
         if( $review ) {
             // 3) current project's reviewers
             $currentReviewerEmails = $this->getCurrentReviewersEmails($review); //ok
             $emails = array_merge($emails, $currentReviewerEmails);
-        }
 
-        // 4) next state project's reviewers
-        $nextStateReviewerEmails = $this->getNextStateReviewersEmails($project,$project->getState());
-        $emails = array_merge($emails,$nextStateReviewerEmails);
+            // 4) next state project's reviewers
+            $nextStateReviewerEmails = $this->getNextStateReviewersEmails($project,$project->getState());
+            $emails = array_merge($emails,$nextStateReviewerEmails);
+        }
 
         $emails = array_unique($emails);
 

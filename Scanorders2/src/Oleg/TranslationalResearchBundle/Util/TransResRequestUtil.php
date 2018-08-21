@@ -706,12 +706,23 @@ class TransResRequestUtil
     public function isRequestProgressReviewer($transresRequest) {
         $transresUtil = $this->container->get('transres_util');
 
+        $project = $transresRequest->getProject();
+        if( $project ) {
+            $projectSpecialty = $project->getProjectSpecialty();
+            if( $projectSpecialty ) {
+                $specialtyPostfix = $projectSpecialty->getUppercaseName();
+                $specialtyPostfix = "_" . $specialtyPostfix;
+            } else {
+                $specialtyPostfix = null;
+            }
+        }
+
         //For now it is only isAdminOrPrimaryReviewer
-        if( $transresUtil->isAdminOrPrimaryReviewer() ) {
+        if( $transresUtil->isAdminOrPrimaryReviewer($project->getProjectSpecialty()) ) {
             return true; //admin or primary reviewer or delegate
         }
 
-        if( $this->secAuth->isGranted('ROLE_TRANSRES_TECHNICIAN') ) {
+        if( $this->secAuth->isGranted('ROLE_TRANSRES_TECHNICIAN'.$specialtyPostfix) ) {
             return true;
         }
 
@@ -732,12 +743,23 @@ class TransResRequestUtil
     public function isRequestBillingReviewer($transresRequest) {
         $transresUtil = $this->container->get('transres_util');
 
+        $project = $transresRequest->getProject();
+        if( $project ) {
+            $projectSpecialty = $project->getProjectSpecialty();
+            if( $projectSpecialty ) {
+                $specialtyPostfix = $projectSpecialty->getUppercaseName();
+                $specialtyPostfix = "_" . $specialtyPostfix;
+            } else {
+                $specialtyPostfix = null;
+            }
+        }
+
         //For now it is only isAdminOrPrimaryReviewer
-        if( $transresUtil->isAdminOrPrimaryReviewer() ) {
+        if( $transresUtil->isAdminOrPrimaryReviewer($project->getProjectSpecialty()) ) {
             return true; //admin or primary reviewer or delegate
         }
 
-        if( $this->secAuth->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ) {
+        if( $this->secAuth->isGranted('ROLE_TRANSRES_BILLING_ADMIN'.$specialtyPostfix) ) {
             return true;
         }
 
@@ -800,11 +822,21 @@ class TransResRequestUtil
         $transresUtil = $this->container->get('transres_util');
         //$transResFormNodeUtil = $this->container->get('transres_formnode_util');
 
+        if( $project ) {
+            $projectSpecialty = $project->getProjectSpecialty();
+            if( $projectSpecialty ) {
+                $specialtyPostfix = $projectSpecialty->getUppercaseName();
+                $specialtyPostfix = "_" . $specialtyPostfix;
+            } else {
+                $specialtyPostfix = null;
+            }
+        }
+
         //1) is_granted('ROLE_TRANSRES_REQUESTER')
         if(
             $transresUtil->isProjectRequester($project) === false &&
-            $this->secAuth->isGranted('ROLE_TRANSRES_REQUESTER') === false &&
-            $transresUtil->isAdminOrPrimaryReviewer() === false
+            $this->secAuth->isGranted('ROLE_TRANSRES_REQUESTER'.$specialtyPostfix) === false &&
+            $transresUtil->isAdminOrPrimaryReviewer($project->getProjectSpecialty()) === false
         ) {
             return -1;
         }
@@ -841,13 +873,24 @@ class TransResRequestUtil
         //$project = $transresRequest->getProject();
         //$user = $this->secTokenStorage->getToken()->getUser();
 
+        $project = $transresRequest->getProject();
+        if( $project ) {
+            $projectSpecialty = $project->getProjectSpecialty();
+            if( $projectSpecialty ) {
+                $specialtyPostfix = $projectSpecialty->getUppercaseName();
+                $specialtyPostfix = "_" . $specialtyPostfix;
+            } else {
+                $specialtyPostfix = null;
+            }
+        }
+
         $links = array();
 
         ////////// Check permission //////////
         //Request's review can be done only by isAdminOrPrimaryReviewer
         $verified = false;
         if( $statMachineType == 'progress' ) {
-            if( $transresUtil->isAdminOrPrimaryReviewer() === false && $this->isRequestProgressReviewer($transresRequest) === false ) {
+            if( $transresUtil->isAdminOrPrimaryReviewer($project->getProjectSpecialty()) === false && $this->isRequestProgressReviewer($transresRequest) === false ) {
                 //exit("return: progress not allowed");
                 return $links;
             }
@@ -856,7 +899,7 @@ class TransResRequestUtil
             $verified = true;
         }
         if( $statMachineType == 'billing' ) {
-            if( $transresUtil->isAdminOrPrimaryReviewer() === false && $this->isRequestBillingReviewer($transresRequest) === false ) {
+            if( $transresUtil->isAdminOrPrimaryReviewer($project->getProjectSpecialty()) === false && $this->isRequestBillingReviewer($transresRequest) === false ) {
                 //exit("return: billing not allowed");
                 return $links;
             }
@@ -885,18 +928,18 @@ class TransResRequestUtil
                 //echo "from=".$from."<br>"; //irb_review
 
                 //exception: ok: if $to == "approvedInvoicing" and TRP Administrator
-                if( $to == "approvedInvoicing" && !$this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') ) {
+                if( $to == "approvedInvoicing" && !$this->secAuth->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyPostfix) ) {
                     continue; //skip this $to state
                 }
 
                 //exception: Only admin can set status to "completedNotified"
-                if( $to == "completedNotified" && !$this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') ) {
+                if( $to == "completedNotified" && !$this->secAuth->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyPostfix) ) {
                     continue; //skip this $to state
                 }
 
                 if( $to == "canceled" ) {
                     //do not show canceled for non-admin and non-technician
-                    if( !$this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') && !$this->secAuth->isGranted('ROLE_TRANSRES_TECHNICIAN') ) {
+                    if( !$this->secAuth->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyPostfix) && !$this->secAuth->isGranted('ROLE_TRANSRES_TECHNICIAN'.$specialtyPostfix) ) {
                         continue; //skip this $to state
                     }
                 }
@@ -968,6 +1011,17 @@ class TransResRequestUtil
             throw new \Exception('Request object ID is null');
         }
 
+        $project = $transresRequest->getProject();
+        if( $project ) {
+            $projectSpecialty = $project->getProjectSpecialty();
+            if( $projectSpecialty ) {
+                $specialtyPostfix = $projectSpecialty->getUppercaseName();
+                $specialtyPostfix = "_" . $specialtyPostfix;
+            } else {
+                $specialtyPostfix = null;
+            }
+        }
+
         //echo "transitionName=".$transitionName."<br>";
         $user = $this->secTokenStorage->getToken()->getUser();
         $transresUtil = $this->container->get('transres_util');
@@ -1003,7 +1057,7 @@ class TransResRequestUtil
         //exception
         if( $to == "completedNotified" ) {
             //only Admin can change the status to completedNotified
-            if( !$this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') ) {
+            if( !$this->secAuth->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyPostfix) ) {
                 $toLabel = $this->getRequestStateLabelByName($to,$statMachineType);
                 $this->container->get('session')->getFlashBag()->add(
                     'warning',
@@ -1016,7 +1070,7 @@ class TransResRequestUtil
         //exception
         if( $to == "canceled" ) {
             //only Admin can change the status to canceled
-            if( !$this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') && !$this->secAuth->isGranted('ROLE_TRANSRES_TECHNICIAN') ) {
+            if( !$this->secAuth->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyPostfix) && !$this->secAuth->isGranted('ROLE_TRANSRES_TECHNICIAN'.$specialtyPostfix) ) {
                 $toLabel = $this->getRequestStateLabelByName($to,$statMachineType);
                 $this->container->get('session')->getFlashBag()->add(
                     'warning',
@@ -1419,7 +1473,7 @@ class TransResRequestUtil
         return $bundleFileName;
     }
 
-    //get emails: admins and primary reviewers, submitter, principalInvestigators, contact
+    //get emails: admins, submitter, principalInvestigators, contact
     public function getRequestEmails($transresRequest) {
         $transresUtil = $this->container->get('transres_util');
 
@@ -1428,7 +1482,7 @@ class TransResRequestUtil
         $project = $transresRequest->getProject();
 
         // 1) admins and primary reviewers
-        $admins = $transresUtil->getTransResAdminEmails($project->getProjectSpecialty()); //ok
+        $admins = $transresUtil->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //ok
         $emails = array_merge($emails,$admins);
 
         // 2) a) submitter, b) principalInvestigators, c) contact
@@ -1440,21 +1494,25 @@ class TransResRequestUtil
             }
         }
 
-        //b) principalInvestigators
-        $piEmailArr = array();
-        $pis = $transresRequest->getPrincipalInvestigators();
-        foreach( $pis as $pi ) {
-            if( $pi ) {
-                $piEmailArr[] = $pi->getSingleEmail();
+        //the rest emails: send only in main activities (completed,canceled,completedNotified)
+        $progressStatus = $transresRequest->getProgressState();
+        if( $progressStatus == 'canceled' || $progressStatus == 'completed' || $progressStatus == 'completedNotified' ) {
+            //b) principalInvestigators
+            $piEmailArr = array();
+            $pis = $transresRequest->getPrincipalInvestigators();
+            foreach ($pis as $pi) {
+                if ($pi) {
+                    $piEmailArr[] = $pi->getSingleEmail();
+                }
             }
-        }
-        $emails = array_merge($emails,$piEmailArr);
+            $emails = array_merge($emails, $piEmailArr);
 
-        //c) contact
-        if( $transresRequest->getContact() ) {
-            $contactEmail = $transresRequest->getContact()->getSingleEmail();
-            if( $submitterEmail ) {
-                $emails = array_merge($emails,array($contactEmail));
+            //c) contact
+            if ($transresRequest->getContact()) {
+                $contactEmail = $transresRequest->getContact()->getSingleEmail();
+                if ($submitterEmail) {
+                    $emails = array_merge($emails, array($contactEmail));
+                }
             }
         }
 
@@ -1496,11 +1554,21 @@ class TransResRequestUtil
             //$projectTitle = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"Title");
             $projectTitle = $project->getTitle();
         }
+
+        if( $project ) {
+            $projectSpecialty = $project->getProjectSpecialty();
+            if( $projectSpecialty ) {
+                $specialtyPostfix = $projectSpecialty->getUppercaseName();
+                $specialtyPostfix = "_" . $specialtyPostfix;
+            } else {
+                $specialtyPostfix = null;
+            }
+        }
         
         $emails = array();
 
         //0) get ROLE_TRANSRES_BILLING_ADMIN
-        $adminUsers = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole("ROLE_TRANSRES_ADMIN");
+        $adminUsers = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole("ROLE_TRANSRES_ADMIN".$specialtyPostfix);
         foreach( $adminUsers as $user ) {
             if( $user ) {
                 $emails[] = $user->getSingleEmail();
@@ -1508,7 +1576,7 @@ class TransResRequestUtil
         }
 
         //1) get ROLE_TRANSRES_BILLING_ADMIN
-        $billingUsers = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole("ROLE_TRANSRES_BILLING_ADMIN");
+        $billingUsers = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole("ROLE_TRANSRES_BILLING_ADMIN".$specialtyPostfix);
         foreach( $billingUsers as $user ) {
             if( $user ) {
                 $emails[] = $user->getSingleEmail();
@@ -1616,8 +1684,19 @@ class TransResRequestUtil
 
         $emails = array();
 
+        $project = $transresRequest->getProject();
+        if( $project ) {
+            $projectSpecialty = $project->getProjectSpecialty();
+            if( $projectSpecialty ) {
+                $specialtyPostfix = $projectSpecialty->getUppercaseName();
+                $specialtyPostfix = "_" . $specialtyPostfix;
+            } else {
+                $specialtyPostfix = null;
+            }
+        }
+
         //1) get ROLE_TRANSRES_BILLING_ADMIN
-        $adminUsers = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole("ROLE_TRANSRES_ADMIN");
+        $adminUsers = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole("ROLE_TRANSRES_ADMIN".$specialtyPostfix);
         foreach( $adminUsers as $user ) {
             if( $user ) {
                 $emails[] = $user->getSingleEmail();

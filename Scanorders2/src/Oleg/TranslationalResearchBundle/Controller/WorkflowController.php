@@ -344,16 +344,15 @@ class WorkflowController extends Controller
         $transresUtil = $this->container->get('transres_util');
         $transresRequestUtil = $this->container->get('transres_request_util');
 
-        //TODO: who can change the status of the Request? Do we need an additional role "ROLE_TRANSRES_TECHNICIAN"?
+        $project = $transresRequest->getProject();
+
         if(
-            $transresUtil->isAdminOrPrimaryReviewer() === false &&
+            $transresUtil->isAdminOrPrimaryReviewer($project->getProjectSpecialty()) === false &&
             $transresRequestUtil->isRequestStateReviewer($transresRequest,$statMachineType) === false
         ) {
             //exit("no permission");
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
-
-        $project = $transresRequest->getProject();
 
         //echo $transresRequest->getId().": transitionName=".$transitionName."<br>";
         //exit();
