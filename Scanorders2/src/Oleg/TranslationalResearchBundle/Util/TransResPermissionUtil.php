@@ -328,6 +328,13 @@ class TransResPermissionUtil
         if( $action == "view" || $action == "shows" ) {
             $done = true;
 
+            //all request's requesters associated with this project.
+            //We can search all requests and then verify if this user is request's requester
+            //but for perfomarnce, just show the project to requester roles
+            if( $this->secAuth->isGranted("ROLE_TRANSRES_REQUESTER".$specialtyStr) ) {
+                return true;
+            }
+
             if(
                 $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyStr) ||
                 $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER'.$specialtyStr)
@@ -350,9 +357,11 @@ class TransResPermissionUtil
                 return true;
             }
 
-//            if( $this->hasProjectPermission("update",$project) ) {
-//                return true;
-//            }
+            //all request's requesters associated with this project
+            if( $this->secAuth->isGranted("ROLE_TRANSRES_REQUESTER".$specialtyStr) ) {
+                return true;
+            }
+
         }
 
         if( $action == "delete" ) {
