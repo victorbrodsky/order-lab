@@ -315,7 +315,8 @@ class PdfGenerator
         echo "filesize=".$filesize."<br>";
 
         if( !$filesize ) {
-            $logger->warning('PackingSlipPDF failed. filesize=['.$filesize.']');
+            $logger->warning('PackingSlipPDF failed. filesize=['.$filesize.']; applicationFilePath='.$applicationFilePath);
+            throw new \Exception('PackingSlipPDF failed. filesize=['.$filesize.']; applicationFilePath='.$applicationFilePath);
         }
 
         //add PDF to invoice DB
