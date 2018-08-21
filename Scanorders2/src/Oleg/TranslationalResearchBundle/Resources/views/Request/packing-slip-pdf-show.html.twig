@@ -195,6 +195,19 @@
 
 {% block additionalcss %}
 
+    {#{% stylesheets#}
+    {#'bundles/oleguserdirectory/bootstrap/css/*' filter='cssrewrite'#}
+    {#'bundles/oleguserdirectory/form/css/form.css' filter='cssrewrite'#}
+    {#%}#}
+    {#<link rel="stylesheet" href="{{ asset_url }}" />#}
+    {#{% endstylesheets %}#}
+
+    {#{% stylesheets#}
+    {#'bundles/oleguserdirectory/form/css/action.css' filter='cssrewrite'#}
+    {#%}#}
+    {#<link rel="stylesheet" href="{{ asset_url }}" />#}
+    {#{% endstylesheets %}#}
+
     {% stylesheets
         'bundles/olegtranslationalresearch/form/css/pdf-show.css' filter='cssrewrite'
     %}
@@ -205,7 +218,6 @@
 
 {% block additionaljs %}
 
-
     {#'@OlegUserdirectoryBundle/Resources/public/bwip-js/lib/jquery.js'#}
     {#'@OlegUserdirectoryBundle/Resources/public/bwip-js/bwipp.js'#}
     {#'@OlegUserdirectoryBundle/Resources/public/bwip-js/bwipjs.js'#}
@@ -215,6 +227,19 @@
     {#'@OlegUserdirectoryBundle/Resources/public/bwip-js/lib/symdesc.js'#}
     {#'@OlegUserdirectoryBundle/Resources/public/bwip-js/lib/canvas-toblob.js'#}
     {#'@OlegUserdirectoryBundle/Resources/public/bwip-js/lib/filesaver.js'#}
+
+    {#{% javascripts#}
+    {#'@OlegUserdirectoryBundle/Resources/public/jquery/jquery-1.11.0.min.js'#}
+    {#'@OlegUserdirectoryBundle/Resources/public/jquery-ui-1.11.2/jquery-ui.js'#}
+    {#'@OlegUserdirectoryBundle/Resources/public/bootstrap/js/*'#}
+
+    {#'@OlegUserdirectoryBundle/Resources/public/form/js/user-form.js'#}
+    {#'@OlegUserdirectoryBundle/Resources/public/form/js/user-common.js'#}
+    {#'@OlegUserdirectoryBundle/Resources/public/form/js/user-formReady.js'#}
+    {#%}#}
+    {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+
     {% javascripts
     '@OlegOrderformBundle/Resources/public/handsontable/jquery.handsontable.full.js'
     '@OlegTranslationalResearchBundle/Resources/public/form/js/handsontable.js'

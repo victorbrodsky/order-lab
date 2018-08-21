@@ -281,7 +281,7 @@ class PdfGenerator
         $fileFullReportUniqueName = $this->constructUniqueFileName($transresRequest,"PackingSlip-PDF");
         $logger->notice("Start to generate Packing Slip PDF ID=".$transresRequest->getOid()."; filename=".$fileFullReportUniqueName);
 
-        //check and create Report and temp folders
+        //check and create Report and temp folders (transresuploadpath)
         $reportsUploadPath = "transres/PackingSlipPDF";  //$userSecUtil->getSiteSettingParameter('reportsUploadPathFellApp');
         if( !$reportsUploadPath ) {
             $reportsUploadPath = "PackingSlipPDF";
@@ -314,8 +314,12 @@ class PdfGenerator
         $filesize = filesize($applicationFilePath);
         echo "filesize=".$filesize."<br>";
 
+        if( !$filesize ) {
+            $logger->warning('PackingSlipPDF failed. filesize=['.$filesize.']');
+        }
+
         //add PDF to invoice DB
-        $filesize = filesize($applicationFilePath);
+        //$filesize = filesize($applicationFilePath);
         $documentPdf = $this->createInvoicePdfDB($transresRequest,"packingSlipPdf",$authorUser,$fileFullReportUniqueName,$uploadReportPath,$filesize,'Packing Slip PDF');
         if( $documentPdf ) {
             $documentPdfId = $documentPdf->getId();
