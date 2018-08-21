@@ -543,9 +543,9 @@ class InvoiceController extends Controller
      */
     public function newAction(Request $request, TransResRequest $transresRequest)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
-        }
+        //if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_BILLING_ADMIN') ) {
+        //    return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+        //}
 
         //$em = $this->getDoctrine()->getManager();
         $transresUtil = $this->get('transres_util');
@@ -565,6 +565,14 @@ class InvoiceController extends Controller
         }
 
         $invoice = $transresRequestUtil->createNewInvoice($transresRequest,$user);
+
+        if( $transresRequestUtil->isUserHasInvoicePermission($invoice,"create") === false ) {
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                "You don't have a permission to create this invoice."
+            );
+            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
+        }
 
         $originalInvoiceStatus = $invoice->getStatus();
 
