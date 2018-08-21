@@ -422,6 +422,7 @@ class TransResPermissionUtil
     public function hasRequestPermission( $action, $request=null ) {
 
         $transresUtil = $this->container->get('transres_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
 
         $done = false;
         $project = null;
@@ -447,7 +448,7 @@ class TransResPermissionUtil
 
             if( $project ) {
                 if( $transresUtil->isProjectRequester($project) ) {
-                    if( $transresUtil->isRequestCanBeCreated($project) ) {
+                    if( $transresRequestUtil->isRequestCanBeCreated($project) ) {
                         return true;
                     }
                 }
@@ -513,7 +514,6 @@ class TransResPermissionUtil
 //            ) {
 //                return true;
 //            }
-            $transresRequestUtil = $this->container->get('transres_request_util');
             if(
                 $transresRequestUtil->isRequestProgressReviewable($request) &&
                 (
@@ -526,7 +526,6 @@ class TransResPermissionUtil
         }
         if( $action == "billing-review" ) {
             $done = true;
-            $transresRequestUtil = $this->container->get('transres_request_util');
             if(
                 $transresRequestUtil->isRequestBillingReviewable($request) &&
                 (

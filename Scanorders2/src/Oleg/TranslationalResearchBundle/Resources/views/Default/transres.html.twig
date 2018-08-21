@@ -205,17 +205,13 @@
     {% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
     {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
-    {% if cycle != "show" %}
+    {#{% if cycle == "new" || cycle == "edit" %}#}
+    {% if form.irbApprovalLetters is defined %}
         {% set asFormOrEntity = "asForm" %}
-        {#{% set documents = form.documents %}#}
         {% set irbApprovalLetters = form.irbApprovalLetters %}
-        {#{% set humanTissueForms = form.humanTissueForms %}#}
     {% else %}
-        {#{% set cycle = "show" %}#}
         {% set asFormOrEntity = "asEntity" %}
-        {#{% set documents = project.documents %}#}
         {% set irbApprovalLetters = project.irbApprovalLetters %}
-        {#{% set humanTissueForms = project.humanTissueForms %}#}
     {% endif %}
 
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
