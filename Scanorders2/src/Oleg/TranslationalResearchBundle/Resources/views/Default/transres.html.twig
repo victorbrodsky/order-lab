@@ -203,6 +203,20 @@
 
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+
+    {% if cycle != "show" %}
+        {% set asFormOrEntity = "asForm" %}
+        {#{% set documents = form.documents %}#}
+        {% set irbApprovalLetters = form.irbApprovalLetters %}
+        {#{% set humanTissueForms = form.humanTissueForms %}#}
+    {% else %}
+        {#{% set cycle = "show" %}#}
+        {% set asFormOrEntity = "asEntity" %}
+        {#{% set documents = project.documents %}#}
+        {% set irbApprovalLetters = project.irbApprovalLetters %}
+        {#{% set humanTissueForms = project.humanTissueForms %}#}
+    {% endif %}
 
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel panel-default">
@@ -226,6 +240,16 @@
                     <div class="well transres-project-exemptIrbApproval-panel" style="{{ hideshow }}">
                         {{ formmacros.field(form.irbNumber) }}
                         {{ formmacros.fieldDateLabel(form.irbExpirationDate,'allow-future-date') }}
+
+                        <div class="well form-element-holder user-irbApprovalLetters">
+                            <label class="col-xs-12 control-label">IRB Approval Letter</label>
+                            <div class="row withpaddingtop">
+                                <div class="col-xs-12">
+                                    {{ usermacros.documentsContainer(null,irbApprovalLetters,cycle,'noprototype',8,'default','IRB Approval Letter',asFormOrEntity) }}
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
 
                 </div>
@@ -317,13 +341,13 @@
     {% if form %}
         {% set asFormOrEntity = "asForm" %}
         {% set documents = form.documents %}
-        {% set irbApprovalLetters = form.irbApprovalLetters %}
+        {#{% set irbApprovalLetters = form.irbApprovalLetters %}#}
         {% set humanTissueForms = form.humanTissueForms %}
     {% else %}
         {% set cycle = "show" %}
         {% set asFormOrEntity = "asEntity" %}
         {% set documents = project.documents %}
-        {% set irbApprovalLetters = project.irbApprovalLetters %}
+        {#{% set irbApprovalLetters = project.irbApprovalLetters %}#}
         {% set humanTissueForms = project.humanTissueForms %}
     {% endif %}
 
@@ -341,14 +365,14 @@
     {#</div>#}
     {#</p>#}
 
-    <div class="well form-element-holder user-irbApprovalLetters">
-        <label class="col-xs-12 control-label">IRB Approval Letter</label>
-        <div class="row withpaddingtop">
-            <div class="col-xs-12">
-                {{ usermacros.documentsContainer(null,irbApprovalLetters,cycle,'noprototype',8,'default','IRB Approval Letter',asFormOrEntity) }}
-            </div>
-        </div>
-    </div>
+    {#<div class="well form-element-holder user-irbApprovalLetters">#}
+        {#<label class="col-xs-12 control-label">IRB Approval Letter</label>#}
+        {#<div class="row withpaddingtop">#}
+            {#<div class="col-xs-12">#}
+                {#{{ usermacros.documentsContainer(null,irbApprovalLetters,cycle,'noprototype',8,'default','IRB Approval Letter',asFormOrEntity) }}#}
+            {#</div>#}
+        {#</div>#}
+    {#</div>#}
 
     {#involveHumanTissue "Will this project involve human tissue?"#}
     {% set humanTissueFormStyle = "display: none;" %}
