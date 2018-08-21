@@ -289,6 +289,7 @@ class FosCommentListener implements EventSubscriberInterface {
 
         //if not found
         $transresUtil = $this->container->get('transres_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
         $user = $this->secTokenStorage->getToken()->getUser();
 
         //1) check if the user is entity requester
@@ -298,11 +299,22 @@ class FosCommentListener implements EventSubscriberInterface {
         }
 
         //check if reviewer
-        if( $transresUtil->isProjectReviewer($entity) ) {
-            //return "Reviewer";
-            $authorTypeArr['type'] = "Reviewer";
-            $authorTypeArr['description'] = "Reviewer";
-            return $authorTypeArr;
+        if( $entity->getEntityName() == "Project" ) {
+            if ($transresUtil->isProjectReviewer($entity)) {
+                //return "Reviewer";
+                $authorTypeArr['type'] = "Reviewer";
+                $authorTypeArr['description'] = "Reviewer";
+                return $authorTypeArr;
+            }
+        }
+
+        if( $entity->getEntityName() == "Request" ) {
+            if( $transresRequestUtil->isRequestStateReviewer($entity,"progress") ) {
+                //return "Reviewer";
+                $authorTypeArr['type'] = "Reviewer";
+                $authorTypeArr['description'] = "Reviewer";
+                return $authorTypeArr;
+            }
         }
 
         if( $entity->getEntityName() == "Project" ) {

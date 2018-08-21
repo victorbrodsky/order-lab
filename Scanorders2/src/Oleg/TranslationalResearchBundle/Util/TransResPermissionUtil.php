@@ -370,7 +370,7 @@ class TransResPermissionUtil
             ) {
                 return true;
             }
-
+    
             if( $transresUtil->isProjectReviewer($project,false) ) {
                 return true;
             }
