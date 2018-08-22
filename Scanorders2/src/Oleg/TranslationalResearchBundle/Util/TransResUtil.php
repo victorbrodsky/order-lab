@@ -615,6 +615,7 @@ class TransResUtil
             }
         }
         //echo "to=".$to."<br>";
+        //exit('0');
 
         $originalStateStr = $project->getState();
         $originalStateLabel = $this->getStateLabelByName($originalStateStr);
@@ -2409,6 +2410,9 @@ class TransResUtil
         $projectInfo = $project->getProjectInfoName();
         $projectReviewUrl = $this->getProjectReviewUrl($project);
 
+        //echo "currentStateStr=$currentStateStr<br>";
+        //exit("111");
+
         //Case 1) awaiting for review stage: send only to reviewers, ccs: admins
         if(
             $currentStateStr == "irb_review" ||
@@ -2417,7 +2421,11 @@ class TransResUtil
             $currentStateStr == "final_review"
         ) {
             //get reviewers
-            $emailRecipients = $this->getCurrentReviewersEmails($review);
+            //$emailRecipients = $this->getCurrentReviewersEmails($review);
+            //get reviewers based on the current state project's reviewers
+            echo "currentStateStr=$currentStateStr<br>";
+            $emailRecipients = $this->getNextStateReviewersEmails($project,$currentStateStr);
+            exit("tos:".implode("; ",$emailRecipients));
 
             //Subject: Project request APCP28 is ready for your review. Its current status is 'IRB Review'.
             $subject = "Project request $oid is ready for your review. Its current status is '$currentStateLabel'.";
@@ -2486,8 +2494,8 @@ class TransResUtil
         }
 
         if( $subject && $body ) {
-            $msg = "Email To: ".implode(";",$emailRecipients);
-            $msg = $msg . $break . "Email Css: ".implode(";",$adminsCcs);
+            $msg = "Email To: ".implode("; ",$emailRecipients);
+            $msg = $msg . $break . "Email Css: ".implode("; ",$adminsCcs);
             $msg = $msg . $break . "Subject: " . $subject . "<br>" . "Body: " . $body;
             $msg = str_replace($break, "<br>", $msg);
         }
