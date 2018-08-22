@@ -922,8 +922,8 @@ class ProjectController extends Controller
                 //$transresUtil->sendNotificationEmails($project,null,$emailSubject,$emailBody,$testing);
 
                 $emailUtil = $this->container->get('user_mailer_utility');
-                $requesterEmails = $this->getRequesterMiniEmails($project);
-                $adminsCcs = $this->getTransResAdminEmails($project->getProjectSpecialty(),true,true);
+                $requesterEmails = $transresUtil->getRequesterMiniEmails($project);
+                $adminsCcs = $transresUtil->getTransResAdminEmails($project->getProjectSpecialty(),true,true);
                 //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
                 $emailUtil->sendEmail($requesterEmails,$emailSubject,$emailBody,$adminsCcs);
                 ///////////// EOF send confirmation email to submitter and contact only ///////////////
@@ -1157,8 +1157,8 @@ class ProjectController extends Controller
                 //$transresUtil->sendNotificationEmails($project,null,$msg,$emailBody,$testing);
 
                 $emailUtil = $this->container->get('user_mailer_utility');
-                $requesterEmails = $this->getRequesterMiniEmails($project);
-                $adminsCcs = $this->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //ok
+                $requesterEmails = $transresUtil->getRequesterMiniEmails($project);
+                $adminsCcs = $transresUtil->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //ok
                 //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
                 $emailUtil->sendEmail($requesterEmails,$msg,$emailBody,$adminsCcs);
                 ///////////// EOF send confirmation email to submitter and contact only ///////////////

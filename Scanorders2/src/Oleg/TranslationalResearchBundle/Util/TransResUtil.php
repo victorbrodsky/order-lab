@@ -2426,7 +2426,7 @@ class TransResUtil
             //At the time of this notification, the status of this project request is 'IRB Review'.
             //To review this project request, please visit the link below: http://LINK TO THE REVIEW PAGE FOR THIS PROJECT REQUEST
             $body = $projectInfo . " is now awaiting your review.";
-            $body = $body . "At the time of this notification, the status of this project request is '$currentStateLabel'.";
+            $body = $body . " At the time of this notification, the status of this project request is '$currentStateLabel'.";
             $body = $body . $break.$break;
             $body = $body . "To review this project request, please visit the link below:";
             $body = $body . $break. $projectReviewUrl;
