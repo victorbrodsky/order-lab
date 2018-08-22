@@ -246,7 +246,7 @@ class ProjectType extends AbstractType
         ));
 
         $builder->add('numberOfCohorts',TextType::class,array(
-            'label' => "Number of cohorts:",
+            'label' => "Number of Cohorts:",
             'required' => false,
             'attr' => array('class'=>'form-control digit-mask mask-text-align-left')
         ));

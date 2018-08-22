@@ -38,21 +38,15 @@
     {#{{ form_start(form,{'attr': {'onsubmit':'transresUpdateIrbExpDate(this);'}}) }}#}
     {{ form_start(form) }}
 
-    {#hidden field to be copied by JS#}
-    {#{% if form.irbExpirationDate is defined %}#}
-        {#{{ form_row(form.irbExpirationDate) }}#}
-    {#{% endif %}#}
-
     {{ transres.getProjectShowPrototypeFormData(form,cycle,sitename) }}
+
+    {{ transres.projectRequesters(form,project,cycle) }}
 
     {{ transres.projectReviews(form,cycle,sitename,0) }}
 
     {{ transres.projectInfo(form,project,cycle) }}
 
-    {#{{ transres.projectFormShow(form,project,cycle) }}#}
     {{ transres.projectBodyFormFields(form,project,cycle) }}
-
-    {{ transres.projectRequesters(form,project,cycle) }}
 
     {{ form_end(form) }}
 
