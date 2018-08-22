@@ -70,27 +70,21 @@ framework:
             places:
                 - start
                 - draft
-#                - completed
                 # irb
                 - irb_review        #available for IRB review
-#                - irb_approved     #approved by IRB review. Project goes to the next stage
                 - irb_rejected      #rejected by IRB review. User can re-submit the project -resubmit_irb_rejected-> irb_review
                 - irb_missinginfo   #Pending additional information from submitter - Request additional information from submitter
                 # admin
                 - admin_review
-#                - admin_approved
                 - admin_rejected
                 - admin_missinginfo
                 # committee
                 - committee_review
-#                - committee_approved
                 - committee_rejected
-#                - committee_missinginfo
                 # final
                 - final_review
                 - final_approved
                 - final_rejected
-#                - final_missinginfo
                 # closed
                 - closed
 

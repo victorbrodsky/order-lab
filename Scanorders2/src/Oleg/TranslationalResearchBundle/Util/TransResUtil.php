@@ -656,7 +656,11 @@ class TransResUtil
                         $emailBody = $body . $break.$break. "Please click on the URL below to view this project:".$break.$projectUrl;
 
                         //send notification emails (project transition: committee recomendation - committe_review)
-                        $this->sendNotificationEmails($project,$review,$subject,$emailBody,$testing);
+                        //$this->sendNotificationEmails($project,$review,$subject,$emailBody,$testing);
+                        $admins = $this->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //ok
+                        $emailUtil = $this->container->get('user_mailer_utility');
+                        //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
+                        $emailUtil->sendEmail( $admins, $subject, $body, null, null );
 
                         //event log
                         //$this->setEventLog($project,$review,$transitionName,$originalStateStr,$body,$testing);
@@ -701,18 +705,19 @@ class TransResUtil
                 $statusChangeMsg = $this->getNotificationMsgByStates($originalStateStr,$to,$project);
                 //$body = $statusChangeMsg;
                 //get project url
-                $projectUrl = $transresUtil->getProjectShowUrl($project);
-                $emailBody = $statusChangeMsg . $break.$break. "Please click on the URL below to view this project:".$break.$projectUrl;
-
+                //$projectUrl = $transresUtil->getProjectShowUrl($project);
+                //$emailBody = $statusChangeMsg . $break.$break. "Please click on the URL below to view this project:".$break.$projectUrl;
                 //send confirmation email (project transition)
-                $this->sendNotificationEmails($project,$review,$subject,$emailBody,$testing);
+                //$this->sendNotificationEmails($project,$review,$subject,$emailBody,$testing);
+
+                $resultMsg = $this->sendAfterReviewEmail($project,$review,$originalStateStr,$testing);
 
                 //event log
                 //$this->setEventLog($project,$review,$transitionName,$originalStateStr,$body,$testing);
-                $emailBody = $emailBody . $eventResetMsg;
-                $emailBody = str_replace($break,"<br>",$emailBody);
+                //$emailBody = $emailBody . $eventResetMsg;
+                //$emailBody = str_replace($break,"<br>",$emailBody);
                 $eventType = "Review Submitted";
-                $this->setEventLog($project,$eventType,$emailBody,$testing);
+                $this->setEventLog($project,$eventType,$resultMsg,$testing);
 
                 $this->container->get('session')->getFlashBag()->add(
                     'notice',
@@ -2334,6 +2339,7 @@ class TransResUtil
         }
     }
 
+    //NOT USED
     //1) I can change the code to send only notifications emails to admins (not primary reviewers) when status is changed.
     //2) When project is in the particular stage, then the reviewers of this particular stag receive emails too.
     //3) The emails will be send to the project's requesters only when project is approved, closed, rejected or "additional information is required".
@@ -2357,8 +2363,9 @@ class TransResUtil
         if( $review ) {
             //3) The emails will be send to the project's requesters only when project is approved, closed, rejected or "additional information is required".
             if(
-                //$project->getState() == "irb_review" ||
+                $project->getState() == "draft" || $project->getState() == "irb_review" ||
                 $project->getState() == "irb_missinginfo" || $project->getState() == "admin_missinginfo" ||
+                $project->getState() == "irb_rejected" || $project->getState() == "admin_rejected" || $project->getState() == "committee_rejected" ||
                 $project->getState() == "final_approved" || $project->getState() == "final_rejected" ||
                 $project->getState() == "closed"
             ) {
@@ -2367,15 +2374,16 @@ class TransResUtil
             }
         }
 
-        if( $review ) {
-            // 3) current project's reviewers
-            $currentReviewerEmails = $this->getCurrentReviewersEmails($review); //ok
-            $emails = array_merge($emails, $currentReviewerEmails);
-
-            // 4) next state project's reviewers
-            $nextStateReviewerEmails = $this->getNextStateReviewersEmails($project,$project->getState());
-            $emails = array_merge($emails,$nextStateReviewerEmails);
-        }
+//        //Reviewers
+//        if( 0 && $review ) {
+//            // 3) current project's reviewers
+//            $currentReviewerEmails = $this->getCurrentReviewersEmails($review); //ok
+//            $emails = array_merge($emails, $currentReviewerEmails);
+//
+//            // 4) next state project's reviewers
+//            $nextStateReviewerEmails = $this->getNextStateReviewersEmails($project,$project->getState());
+//            $emails = array_merge($emails,$nextStateReviewerEmails);
+//        }
 
         $emails = array_unique($emails);
 
@@ -2383,6 +2391,109 @@ class TransResUtil
         $emailUtil->sendEmail( $emails, $subject, $body, null, $senderEmail );
 
     }
+
+    //Use to send notification emails when project send to a new transition (awaiting review, missing info, rejected, final, closed)
+    public function sendAfterReviewEmail($project,$review,$originalStateStr,$testing=false) {
+        $emailUtil = $this->container->get('user_mailer_utility');
+        $subject = null;
+        $body = null;
+        $msg = null;
+        $senderEmail = null; //Admin email
+        $break = "\r\n";
+        $oid = $project->getOid();
+        $currentStateStr = $project->getState();
+        $currentStateLabel = $this->getStateLabelByProject($project);
+        $originalStateLabel = $this->getStateLabelByName($originalStateStr);
+        //$submitter = $project->getSubmitter();
+        //Project request APCP1 'Project Title' submitted by FirstName LastName on MM/DD/YYYY
+        $projectInfo = $project->getProjectInfoName();
+        $projectReviewUrl = $this->getProjectReviewUrl($project);
+
+        //Case 1) awaiting for review stage: send only to reviewers, ccs: admins
+        if(
+            $currentStateStr == "irb_review" ||
+            $currentStateStr == "admin_review" ||
+            $currentStateStr == "committee_review" ||
+            $currentStateStr == "final_review"
+        ) {
+            //get reviewers
+            $currentReviewerEmails = $this->getCurrentReviewersEmails($review);
+
+            //Subject: Project request APCP28 is ready for your review. Its current status is 'IRB Review'.
+            $subject = "Project request $oid is ready for your review. Its current status is '$currentStateLabel'.";
+
+            //Body: Project request APCP28 'Project Title' submitted by FirstName LastName on MM/DD/YYYY is now awaiting your review.
+            //At the time of this notification, the status of this project request is 'IRB Review'.
+            //To review this project request, please visit the link below: http://LINK TO THE REVIEW PAGE FOR THIS PROJECT REQUEST
+            $body = $projectInfo . " is now awaiting your review.";
+            $body = $body . "At the time of this notification, the status of this project request is '$currentStateLabel'.";
+            $body = $body . $break.$break;
+            $body = $body . "To review this project request, please visit the link below:";
+            $body = $body . $break. $projectReviewUrl;
+
+            //Admins as css
+            $adminsCcs = $this->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //ok
+
+            //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
+            $emailUtil->sendEmail( $currentReviewerEmails, $subject, $body, $adminsCcs, $senderEmail );
+        }
+
+        //Case 2) missing info and rejected: send to requesters(submitter, contact), ccs: admins
+        if(
+            $currentStateStr == "irb_missinginfo" ||
+            $currentStateStr == "admin_missinginfo" ||
+            $currentStateStr == "irb_rejected" ||
+            $currentStateStr == "admin_rejected" ||
+            $currentStateStr == "committee_rejected" ||
+            $currentStateStr == "final_rejected"
+        ) {
+            $requesterEmails = $this->getRequesterMiniEmails($project);
+
+            $subject = "Project ID $oid status has been changed from '$originalStateLabel' to '$currentStateLabel'";
+
+            //"Additional information has been requested for the project with ID $id '".$title."' for the '".$fromLabel."' stage.";
+            $statusChangeMsg = $this->getNotificationMsgByStates($originalStateStr,$currentStateStr,$project);
+            //get project url
+            $projectUrl = $this->getProjectShowUrl($project);
+            $body = $statusChangeMsg . $break.$break. "Please click on the URL below to view this project:".$break.$projectUrl;
+
+            //Admins as css
+            $adminsCcs = $this->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //ok
+
+            //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
+            $emailUtil->sendEmail( $requesterEmails, $subject, $body, $adminsCcs, $senderEmail );
+        }
+
+        //All other cases: final approved, closes ...
+        if( $subject && $body ) {
+            //ok
+        } else {
+            $requesterEmails = $this->getRequesterMiniEmails($project);
+
+            $subject = "Project ID $oid status has been changed from '$originalStateLabel' to '$currentStateLabel'";
+
+            //"Additional information has been requested for the project with ID $id '".$title."' for the '".$fromLabel."' stage.";
+            $statusChangeMsg = $this->getNotificationMsgByStates($originalStateStr,$currentStateStr,$project);
+            //get project url
+            $projectUrl = $this->getProjectShowUrl($project);
+            $body = $statusChangeMsg . $break.$break. "Please click on the URL below to view this project:".$break.$projectUrl;
+
+            //Admins as css
+            $adminsCcs = $this->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //ok
+
+            //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
+            $emailUtil->sendEmail( $requesterEmails, $subject, $body, $adminsCcs, $senderEmail );
+        }
+
+        if( $subject && $body ) {
+            $msg = "Subject: " . $subject . "<br>" . "Body: " . $body;
+            $msg = str_replace($break, "<br>", $msg);
+        }
+
+        return $msg;
+    }
+
+
     //get all users with admin and ROLE_TRANSRES_PRIMARY_REVIEWER, ROLE_TRANSRES_PRIMARY_REVIEWER_DELEGATE
     public function getTransResAdminEmails($projectSpecialty=null, $asEmail=true, $onlyAdmin=false) {
         $users = array();
@@ -2509,7 +2620,33 @@ class TransResUtil
 
         return $resArr;
     }
+    //project's Requester (submitter, principalInvestigators, coInvestigators, pathologists)
+    public function getRequesterMiniEmails($project, $asEmail=true) {
+        $resArr = array();
 
+        //1 submitter
+        if( $project->getSubmitter() ) {
+            if( $asEmail ) {
+                $resArr[] = $project->getSubmitter()->getSingleEmail();
+            } else {
+                $resArr[] = $project->getSubmitter();
+            }
+        }
+
+        //2 contacts
+        $contacts = $project->getContacts();
+        foreach( $contacts as $contact ) {
+            if( $contact ) {
+                if( $asEmail ) {
+                    $resArr[] = $contact->getSingleEmail();
+                } else {
+                    $resArr[] = $contact;
+                }
+            }
+        }
+
+        return $resArr;
+    }
     //current project's reviewers
     public function getCurrentReviewersEmails($review, $asEmail=true) {
         $resArr = array();
@@ -2610,6 +2747,17 @@ class TransResUtil
     public function getProjectShowUrl($project) {
         $projectUrl = $this->container->get('router')->generate(
             'translationalresearch_project_show',
+            array(
+                'id' => $project->getId(),
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+
+        return $projectUrl;
+    }
+    public function getProjectReviewUrl($project) {
+        $projectUrl = $this->container->get('router')->generate(
+            'translationalresearch_project_review',
             array(
                 'id' => $project->getId(),
             ),
@@ -3700,17 +3848,12 @@ class TransResUtil
 
     //$fromStateStr and $toStateStr - state string from workflow (i.e. 'irb_review')
     public function getNotificationMsgByStates( $fromStateStr, $toStateStr, $project ) {
-        $transResFormNodeUtil = $this->container->get('transres_formnode_util');
 
         $msg = null;
 
         $id = $project->getOid();
 
-        //$title = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"Title");
         $title = $project->getTitle();
-        //if( !$title ) {
-        //    $title = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"Title");
-        //}
 
         $fromLabel = $this->getStateSimpleLabelByName($fromStateStr);
         $toLabel = $this->getStateSimpleLabelByName($toStateStr);

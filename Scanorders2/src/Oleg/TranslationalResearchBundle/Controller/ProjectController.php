@@ -914,12 +914,24 @@ class ProjectController extends Controller
             $transresUtil->setEventLog($project,$eventType,$msg,$testing);
 
             if( $startProjectReview ) {
-                //send confirmation email
+                ///////////// send confirmation email to submitter and contact only ///////////////
                 $break = "\r\n";
                 //get project url
                 $projectUrl = $transresUtil->getProjectShowUrl($project);
                 $emailBody = $msg . $break.$break. "Please click on the URL below to view this project:".$break.$projectUrl;
-                $transresUtil->sendNotificationEmails($project,null,$emailSubject,$emailBody,$testing);
+                //$transresUtil->sendNotificationEmails($project,null,$emailSubject,$emailBody,$testing);
+
+                $emailUtil = $this->container->get('user_mailer_utility');
+                $requesterEmails = $this->getRequesterMiniEmails($project);
+                $adminsCcs = $this->getTransResAdminEmails($project->getProjectSpecialty(),true,true);
+                //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
+                $emailUtil->sendEmail($requesterEmails,$emailSubject,$emailBody,$adminsCcs);
+                ///////////// EOF send confirmation email to submitter and contact only ///////////////
+
+                $irbReviews = $project->getIrbReviews();
+                foreach($irbReviews as $irbReview) {
+                    $transresUtil->sendAfterReviewEmail($project, $irbReview, "draft", $testing);
+                }
             }
 
             return $this->redirectToRoute('translationalresearch_project_show', array('id' => $project->getId()));
@@ -1137,12 +1149,24 @@ class ProjectController extends Controller
             $transresUtil->setEventLog($project,$eventType,$msg.$eventResetMsg,$testing);
 
             if( $startProjectReview ) {
-                //send confirmation email
+                ///////////// send confirmation email to submitter and contact only ///////////////
                 $break = "\r\n";
                 //get project url
                 $projectUrl = $transresUtil->getProjectShowUrl($project);
                 $emailBody = $msg . $break.$break. "Please click on the URL below to view this project:".$break.$projectUrl;
-                $transresUtil->sendNotificationEmails($project,null,$msg,$emailBody,$testing);
+                //$transresUtil->sendNotificationEmails($project,null,$msg,$emailBody,$testing);
+
+                $emailUtil = $this->container->get('user_mailer_utility');
+                $requesterEmails = $this->getRequesterMiniEmails($project);
+                $adminsCcs = $this->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //ok
+                //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
+                $emailUtil->sendEmail($requesterEmails,$msg,$emailBody,$adminsCcs);
+                ///////////// EOF send confirmation email to submitter and contact only ///////////////
+
+                $irbReviews = $project->getIrbReviews();
+                foreach($irbReviews as $irbReview) {
+                    $transresUtil->sendAfterReviewEmail($project, $irbReview, "draft", $testing);
+                }
             }
 
             return $this->redirectToRoute('translationalresearch_project_show', array('id' => $project->getId()));

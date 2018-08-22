@@ -1284,13 +1284,14 @@ class Project {
         $this->setOid($oid);
     }
 
-    //Project ID - Project Title - Submitted by FirstName LastName on MM/DD/YYYY at HH:MM
+    //Project request APCP1 'Project Title' submitted by FirstName LastName on MM/DD/YYYY
     public function getProjectInfoName() {
+        $title = $this->getTitle();
         $createDateStr = null;
         if( $this->getCreateDate() ) {
             $createDateStr = " on " . $this->getCreateDate()->format('m/d/Y');
         }
-        return "Project ID " . $this->getOid() . " - Submitted by ".$this->getSubmitter()->getUsernameOptimal() . $createDateStr; //. " at ".$this->getCreateDate()->format('H:i:s')
+        return "Project request " . $this->getOid() . " $title submitted by ".$this->getSubmitter()->getUsernameOptimal() . $createDateStr; //. " at ".$this->getCreateDate()->format('H:i:s')
     }
 
     //used by select2. Limit by 15 chars
