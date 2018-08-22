@@ -2417,7 +2417,7 @@ class TransResUtil
             $currentStateStr == "final_review"
         ) {
             //get reviewers
-            $currentReviewerEmails = $this->getCurrentReviewersEmails($review);
+            $emailRecipients = $this->getCurrentReviewersEmails($review);
 
             //Subject: Project request APCP28 is ready for your review. Its current status is 'IRB Review'.
             $subject = "Project request $oid is ready for your review. Its current status is '$currentStateLabel'.";
@@ -2435,7 +2435,7 @@ class TransResUtil
             $adminsCcs = $this->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //ok
 
             //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-            $emailUtil->sendEmail( $currentReviewerEmails, $subject, $body, $adminsCcs, $senderEmail );
+            $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail );
         }
 
         //Case 2) missing info and rejected: send to requesters(submitter, contact), ccs: admins
@@ -2447,7 +2447,7 @@ class TransResUtil
             $currentStateStr == "committee_rejected" ||
             $currentStateStr == "final_rejected"
         ) {
-            $requesterEmails = $this->getRequesterMiniEmails($project);
+            $emailRecipients = $this->getRequesterMiniEmails($project);
 
             $subject = "Project ID $oid status has been changed from '$originalStateLabel' to '$currentStateLabel'";
 
@@ -2461,14 +2461,14 @@ class TransResUtil
             $adminsCcs = $this->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //ok
 
             //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-            $emailUtil->sendEmail( $requesterEmails, $subject, $body, $adminsCcs, $senderEmail );
+            $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail );
         }
 
         //All other cases: final approved, closes ...
         if( $subject && $body ) {
             //ok
         } else {
-            $requesterEmails = $this->getRequesterMiniEmails($project);
+            $emailRecipients = $this->getRequesterMiniEmails($project);
 
             $subject = "Project ID $oid status has been changed from '$originalStateLabel' to '$currentStateLabel'";
 
@@ -2482,11 +2482,13 @@ class TransResUtil
             $adminsCcs = $this->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //ok
 
             //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-            $emailUtil->sendEmail( $requesterEmails, $subject, $body, $adminsCcs, $senderEmail );
+            $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail );
         }
 
         if( $subject && $body ) {
-            $msg = "Subject: " . $subject . "<br>" . "Body: " . $body;
+            $msg = "Email To:".implode(";",$emailRecipients);
+            $msg = $msg . $break . "Email Css:".implode(";",$adminsCcs);
+            $msg = $msg . $break . "Subject: " . $subject . "<br>" . "Body: " . $body;
             $msg = str_replace($break, "<br>", $msg);
         }
 

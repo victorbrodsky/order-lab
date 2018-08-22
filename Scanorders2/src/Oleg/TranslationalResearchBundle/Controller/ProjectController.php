@@ -910,9 +910,6 @@ class ProjectController extends Controller
                 $msg
             );
 
-            $eventType = "Project Created";
-            $transresUtil->setEventLog($project,$eventType,$msg,$testing);
-
             if( $startProjectReview ) {
                 ///////////// send confirmation email to submitter and contact only ///////////////
                 $break = "\r\n";
@@ -928,11 +925,17 @@ class ProjectController extends Controller
                 $emailUtil->sendEmail($requesterEmails,$emailSubject,$emailBody,$adminsCcs);
                 ///////////// EOF send confirmation email to submitter and contact only ///////////////
 
+                $emailResults = array();
                 $irbReviews = $project->getIrbReviews();
                 foreach($irbReviews as $irbReview) {
-                    $transresUtil->sendTransitionEmail($project, $irbReview, "draft", $testing);
+                    $emailResults[] = $transresUtil->sendTransitionEmail($project, $irbReview, "draft", $testing);
                 }
+
+                $msg = $msg . "<br><br>" . implode("<br>",$emailResults);
             }
+
+            $eventType = "Project Created";
+            $transresUtil->setEventLog($project,$eventType,$msg,$testing);
 
             return $this->redirectToRoute('translationalresearch_project_show', array('id' => $project->getId()));
         }
@@ -1144,10 +1147,6 @@ class ProjectController extends Controller
                 $msg
             );
 
-            //eventlog
-            $eventType = "Project Updated";
-            $transresUtil->setEventLog($project,$eventType,$msg.$eventResetMsg,$testing);
-
             if( $startProjectReview ) {
                 ///////////// send confirmation email to submitter and contact only ///////////////
                 $break = "\r\n";
@@ -1163,11 +1162,18 @@ class ProjectController extends Controller
                 $emailUtil->sendEmail($requesterEmails,$msg,$emailBody,$adminsCcs);
                 ///////////// EOF send confirmation email to submitter and contact only ///////////////
 
+                $emailResults = array();
                 $irbReviews = $project->getIrbReviews();
                 foreach($irbReviews as $irbReview) {
-                    $transresUtil->sendTransitionEmail($project, $irbReview, "draft", $testing);
+                    $emailResults[] = $transresUtil->sendTransitionEmail($project, $irbReview, "draft", $testing);
                 }
+
+                $msg = $msg . "<br><br>" . implode("<br>",$emailResults);
             }
+
+            //eventlog
+            $eventType = "Project Updated";
+            $transresUtil->setEventLog($project,$eventType,$msg.$eventResetMsg,$testing);
 
             return $this->redirectToRoute('translationalresearch_project_show', array('id' => $project->getId()));
         }
