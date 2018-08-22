@@ -661,7 +661,7 @@ class TransResUtil
                         $admins = $this->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //ok
                         $emailUtil = $this->container->get('user_mailer_utility');
                         //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-                        $emailUtil->sendEmail( $admins, $subject, $body, null, null );
+                        $emailUtil->sendEmail( $admins, $subject, $emailBody, null, null );
 
                         //event log
                         //$this->setEventLog($project,$review,$transitionName,$originalStateStr,$body,$testing);
