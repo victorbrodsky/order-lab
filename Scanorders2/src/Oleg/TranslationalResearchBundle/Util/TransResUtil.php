@@ -1915,7 +1915,7 @@ class TransResUtil
 //        foreach($transitions as $transition) {
 //            $this->printTransition($transition);
 //        }
-//        exit('1');
+//        //exit('1');
 
         $stateStr = $this->getAllowedFromState($project); //must be equal to the current project state
         if( !$stateStr ) {
@@ -2423,9 +2423,9 @@ class TransResUtil
             //get reviewers
             //$emailRecipients = $this->getCurrentReviewersEmails($review);
             //get reviewers based on the current state project's reviewers
-            echo "currentStateStr=$currentStateStr<br>";
+            //echo "currentStateStr=$currentStateStr<br>";
             $emailRecipients = $this->getNextStateReviewersEmails($project,$currentStateStr);
-            exit("tos:".implode("; ",$emailRecipients));
+            //exit("tos:".implode("; ",$emailRecipients));
 
             //Subject: Project request APCP28 is ready for your review. Its current status is 'IRB Review'.
             $subject = "Project request $oid is ready for your review. Its current status is '$currentStateLabel'.";
