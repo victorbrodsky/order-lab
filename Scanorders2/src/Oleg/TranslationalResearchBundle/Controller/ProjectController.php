@@ -930,7 +930,7 @@ class ProjectController extends Controller
 
                 $irbReviews = $project->getIrbReviews();
                 foreach($irbReviews as $irbReview) {
-                    $transresUtil->sendAfterReviewEmail($project, $irbReview, "draft", $testing);
+                    $transresUtil->sendTransitionEmail($project, $irbReview, "draft", $testing);
                 }
             }
 
@@ -1165,7 +1165,7 @@ class ProjectController extends Controller
 
                 $irbReviews = $project->getIrbReviews();
                 foreach($irbReviews as $irbReview) {
-                    $transresUtil->sendAfterReviewEmail($project, $irbReview, "draft", $testing);
+                    $transresUtil->sendTransitionEmail($project, $irbReview, "draft", $testing);
                 }
             }
 

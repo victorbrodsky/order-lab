@@ -710,7 +710,7 @@ class TransResUtil
                 //send confirmation email (project transition)
                 //$this->sendNotificationEmails($project,$review,$subject,$emailBody,$testing);
 
-                $resultMsg = $this->sendAfterReviewEmail($project,$review,$originalStateStr,$testing);
+                $resultMsg = $this->sendTransitionEmail($project,$review,$originalStateStr,$testing);
 
                 //event log
                 //$this->setEventLog($project,$review,$transitionName,$originalStateStr,$body,$testing);
@@ -2392,8 +2392,8 @@ class TransResUtil
 
     }
 
-    //Use to send notification emails when project send to a new transition (awaiting review, missing info, rejected, final, closed)
-    public function sendAfterReviewEmail($project,$review,$originalStateStr,$testing=false) {
+    //Use to send notification emails for project transition (awaiting review, missing info, rejected, final, closed)
+    public function sendTransitionEmail($project,$review,$originalStateStr,$testing=false) {
         $emailUtil = $this->container->get('user_mailer_utility');
         $subject = null;
         $body = null;
