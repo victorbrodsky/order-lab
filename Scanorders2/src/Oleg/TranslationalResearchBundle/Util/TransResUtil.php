@@ -2486,8 +2486,8 @@ class TransResUtil
         }
 
         if( $subject && $body ) {
-            $msg = "Email To:".implode(";",$emailRecipients);
-            $msg = $msg . $break . "Email Css:".implode(";",$adminsCcs);
+            $msg = "Email To: ".implode(";",$emailRecipients);
+            $msg = $msg . $break . "Email Css: ".implode(";",$adminsCcs);
             $msg = $msg . $break . "Subject: " . $subject . "<br>" . "Body: " . $body;
             $msg = str_replace($break, "<br>", $msg);
         }
