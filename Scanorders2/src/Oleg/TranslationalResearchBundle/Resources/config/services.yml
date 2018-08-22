@@ -380,6 +380,29 @@ framework:
                     from: pendingTissueMicroArray
                     to: completed
 
+                #pending to completedNotified
+                pendingInvestigatorInput_completedNotified:
+                    from: pendingInvestigatorInput
+                    to: completedNotified
+                pendingHistology_completedNotified:
+                    from: pendingHistology
+                    to: completedNotified
+                pendingImmunohistochemistry_completedNotified:
+                    from: pendingImmunohistochemistry
+                    to: completedNotified
+                pendingMolecular_completedNotified:
+                    from: pendingMolecular
+                    to: completedNotified
+                pendingCaseRetrieval_completedNotified:
+                    from: pendingCaseRetrieval
+                    to: completedNotified
+                pendingSlideScanning_completedNotified:
+                    from: pendingSlideScanning
+                    to: completedNotified
+                pendingTissueMicroArray_completedNotified:
+                    from: pendingTissueMicroArray
+                    to: completedNotified
+
                 #pending to active
                 pendingInvestigatorInput_active:
                     from: pendingInvestigatorInput
