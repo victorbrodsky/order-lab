@@ -238,7 +238,7 @@ class ProjectFormNodeController extends ProjectController
                 $break = "\r\n";
                 //get project url
                 $projectUrl = $transresUtil->getProjectShowUrl($project);
-                $emailBody = $msg . $break.$break. "Please click on the URL below to view this project:".$break.$projectUrl;
+                $emailBody = $msg . $break.$break. "To view this project request, please visit the link below:".$break.$projectUrl;
                 $transresUtil->sendNotificationEmails($project,null,$emailSubject,$emailBody,$testing);
             }
 
@@ -458,7 +458,7 @@ class ProjectFormNodeController extends ProjectController
                 $break = "\r\n";
                 //get project url
                 $projectUrl = $transresUtil->getProjectShowUrl($project);
-                $emailBody = $msg . $break.$break. "Please click on the URL below to view this project:".$break.$projectUrl;
+                $emailBody = $msg . $break.$break. "To view this project request, please visit the link below:".$break.$projectUrl;
                 $transresUtil->sendNotificationEmails($project,null,$msg,$emailBody,$testing);
             }
 

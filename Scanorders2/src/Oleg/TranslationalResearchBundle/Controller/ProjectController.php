@@ -887,7 +887,7 @@ class ProjectController extends Controller
                 " please make sure to complete your submission once your draft is ready.".
                 " Project requests with a 'draft' status will not be reviewed until they are finalized and submitted.";
             if( $startProjectReview ) {
-                //$msg = "Project ID ".$project->getOid()." has been successfully created and sent to the status '$label'";
+                //$msg = "Project request ".$project->getOid()." has been successfully created and sent to the status '$label'";
                 //Thank you for your submission! Your project request has been assigned an ID
                 // of "[ID]" and will be reviewed. You should receive notifications of approval
                 // status updates by email. You can also log back in to this site to review
@@ -915,7 +915,7 @@ class ProjectController extends Controller
                 $break = "\r\n";
                 //get project url
                 $projectUrl = $transresUtil->getProjectShowUrl($project);
-                $emailBody = $msg . $break.$break. "Please click on the URL below to view this project:".$break.$projectUrl;
+                $emailBody = $msg . $break.$break. "To view this project request, please visit the link below:".$break.$projectUrl;
                 //$transresUtil->sendNotificationEmails($project,null,$emailSubject,$emailBody,$testing);
 
                 $emailUtil = $this->container->get('user_mailer_utility');
@@ -1062,7 +1062,7 @@ class ProjectController extends Controller
             $originalStateStr = $project->getState();
             $originalStateLabel = $transresUtil->getStateLabelByName($originalStateStr);
 
-            $msg = "Project ID " . $project->getOid() . " has been successfully updated";
+            $msg = "Project request " . $project->getOid() . " has been successfully updated";
 
             //////////// remove the relationship between the review and the project ////////////
             $transresUtil->removeReviewsFromProject($project, $originalIrbReviews, $project->getIrbReviews());
@@ -1095,7 +1095,7 @@ class ProjectController extends Controller
                     $startProjectReview = true;
 
                     $label = $transresUtil->getStateLabelByName($project->getState());
-                    $msg = "Project ID " . $project->getOid() . " has been successfully updated and the status has been changed from '$originalStateLabel' to '$label'";
+                    $msg = "Project request " . $project->getOid() . " has been successfully updated and the status has been changed from '$originalStateLabel' to '$label'";
                 }
             }
 
@@ -1152,7 +1152,7 @@ class ProjectController extends Controller
                 $break = "\r\n";
                 //get project url
                 $projectUrl = $transresUtil->getProjectShowUrl($project);
-                $emailBody = $msg . $break.$break. "Please click on the URL below to view this project:".$break.$projectUrl;
+                $emailBody = $msg . $break.$break. "To view this project request, please visit the link below:".$break.$projectUrl;
                 //$transresUtil->sendNotificationEmails($project,null,$msg,$emailBody,$testing);
 
                 $emailUtil = $this->container->get('user_mailer_utility');
@@ -1180,7 +1180,7 @@ class ProjectController extends Controller
 
         $eventType = "Project Viewed";
 
-        $msg = "Project ID ".$project->getOid() ." has been viewed on the edit page.";
+        $msg = "Project request ".$project->getOid() ." has been viewed on the edit page.";
         $label = $transresUtil->getStateLabelByName($project->getState());
         $msg = $msg . " The project's current status is '".$label."'.";
 
@@ -1250,7 +1250,7 @@ class ProjectController extends Controller
 
         $eventType = "Project Viewed";
 
-        $msg = "Project ID ".$project->getOid() ." has been viewed on the show page.";
+        $msg = "Project request ".$project->getOid() ." has been viewed on the show page.";
         $label = $transresUtil->getStateLabelByName($project->getState());
         $msg = $msg . " The project's current status is ".$label.".";
 
@@ -1267,7 +1267,7 @@ class ProjectController extends Controller
             'project' => $project,
             'form' => $form->createView(),
             'cycle' => $cycle,
-            'title' => $project->getProjectInfoName(), //"Project ID ".$project->getOid(),
+            'title' => $project->getProjectInfoName(), //"Project request ".$project->getOid(),
             'delete_form' => $deleteForm->createView(),
             'eventObjectTypeId' => $eventObjectTypeId,
             //'review_forms' => $reviewFormViews
@@ -1277,7 +1277,7 @@ class ProjectController extends Controller
 //            'project' => $project,
 //            'cycle' => 'show',
 //            'delete_form' => $deleteForm->createView(),
-//            'title' => "Project ID ".$project->getId()
+//            'title' => "Project request ".$project->getId()
 //        );
     }
 
@@ -1365,7 +1365,7 @@ class ProjectController extends Controller
         //$reviewFormViews = $transresUtil->getReviewForm($project,$user);
 
         $eventType = "Project Viewed";
-        $msg = "Project ID ".$project->getOid() ." has been viewed on the review page.";
+        $msg = "Project request ".$project->getOid() ." has been viewed on the review page.";
         $transresUtil->setEventLog($project,$eventType,$msg);
 
         return array(
@@ -1381,7 +1381,7 @@ class ProjectController extends Controller
 //            'project' => $project,
 //            'cycle' => 'show',
 //            'delete_form' => $deleteForm->createView(),
-//            'title' => "Project ID ".$project->getId()
+//            'title' => "Project request ".$project->getId()
 //        );
     }
 
@@ -1889,7 +1889,7 @@ class ProjectController extends Controller
             'project' => $project,
             'form' => $form->createView(),
             'cycle' => $cycle,
-            'title' => "Set State for Project ID ".$project->getOid()
+            'title' => "Set State for Project request ".$project->getOid()
         );
     }
 

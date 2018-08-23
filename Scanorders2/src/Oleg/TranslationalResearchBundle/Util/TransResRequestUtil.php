@@ -1121,7 +1121,7 @@ class TransResRequestUtil
                 $body = $subject;
                 //get request url
                 $requestUrl = $this->getRequestShowUrl($transresRequest);
-                $emailBody = $body . $break.$break. "Please click on the URL below to view this project:".$break.$requestUrl;
+                $emailBody = $body . $break.$break. "To view this work Request, please visit the link below:".$break.$requestUrl;
 
                 //send confirmation email
                 $this->sendRequestNotificationEmails($transresRequest,$subject,$emailBody,$testing);

@@ -371,7 +371,7 @@ class TransResUtil
 
     //NOT USED
     //get Review links for this user: irb_review => "IRB Review" or "IRB Review as Admin"
-    //project/review/2/6 - project ID 2, review ID 6
+    //project/review/2/6 - project request 2, review ID 6
     public function getProjectReviewLinks( $project, $user ) {
         //get project reviews for appropriate state (i.e. irb_review)
         $links = array();
@@ -647,25 +647,56 @@ class TransResUtil
                             $this->em->flush($review);
                         }
 
-                        //$recommended = true;
-                        //$label = $this->getStateLabelByName($project->getState());
-                        $subject = "Project ID ".$project->getOid(). " has been reviewed by a committee member with recommendation: ".$review->getDecision();
-                        $body = $subject;
+                        $emailRes = array();
+                        $emailUtil = $this->container->get('user_mailer_utility');
+                        $projectReviewUrl = $this->getProjectReviewUrl($project);
+                        $subject = "Project request ".$project->getOid(). " has been reviewed by a committee member";
+                        $body = $subject . " who is recommending it to be " . $review->getDecisionStr();
 
+                        /////////////////// Email to Admin ///////////////////////
                         //get project url
                         $projectUrl = $transresUtil->getProjectShowUrl($project);
-                        $emailBody = $body . $break.$break. "Please click on the URL below to view this project:".$break.$projectUrl;
+                        $emailBody = $body . $break.$break. "To view this project request, please visit the link below:".$break.$projectUrl;
+
+                        //To review this project request, please visit the link below: LINK-TO-REVIEW-PROJECT-REQUEST
+                        $emailBody = $emailBody .$break.$break. "To review this project request, please visit the link below:";
+                        $emailBody = $emailBody . $break. $projectReviewUrl;
 
                         //send notification emails (project transition: committee recomendation - committe_review)
-                        //$this->sendNotificationEmails($project,$review,$subject,$emailBody,$testing);
-                        $admins = $this->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //ok
-                        $emailUtil = $this->container->get('user_mailer_utility');
+                        $admins = $this->getTransResAdminEmails($project->getProjectSpecialty(),true,true);
                         //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
                         $emailUtil->sendEmail( $admins, $subject, $emailBody, null, null );
 
+                        if( $subject && $emailBody ) {
+                            $emailResAdmin = "Email To: ".implode("; ",$admins);
+                            $emailResAdmin = $emailResAdmin . $break . "Subject: " . $subject . "<br>" . "Body: " . $emailBody;
+                            $emailResAdmin = str_replace($break, "<br>", $emailResAdmin);
+                            $emailRes[] = $emailResAdmin;
+                        }
+                        /////////////////// EOF Email to Admin ///////////////////////
+
+                        /////////////////// Email to Primary Reviewer, TO: PRIMARY COMMITTEE REVIEWER ONLY ///////////////////////
+                        $emailBody = $body .$break.$break. "At the time of this notification, the status of this project request is '$originalStateLabel'.";
+
+                        //To review this project request, please visit the link below: LINK-TO-REVIEW-PROJECT-REQUEST
+                        $emailBody = $emailBody .$break.$break. "To review this project request, please visit the link below:";
+                        $emailBody = $emailBody . $break. $projectReviewUrl;
+
+                        //send notification emails (project transition: committee recomendation - committe_review)
+                        $primaryReviewerEmails = $this->getCommiteePrimaryReviewerEmails($project); //ok
+                        //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
+                        $emailUtil->sendEmail( $primaryReviewerEmails, $subject, $emailBody, null, null );
+
+                        if( $subject && $emailBody ) {
+                            $emailResPrimary = "Email To: ".implode("; ",$admins);
+                            $emailResPrimary = $emailResPrimary . $break . "Subject: " . $subject . "<br>" . "Body: " . $emailBody;
+                            $emailResPrimary = str_replace($break, "<br>", $emailResPrimary);
+                            $emailRes[] = $emailResPrimary;
+                        }
+                        /////////////////// EOF Email to Primary Reviewer, PRIMARY COMMITTEE REVIEWER ONLY ///////////////////////
+
                         //event log
-                        //$this->setEventLog($project,$review,$transitionName,$originalStateStr,$body,$testing);
-                        $emailBody = str_replace($break,"<br>",$emailBody);
+                        $emailBody = implode("<br><br>",$emailRes);
                         $eventType = "Review Submitted";
                         $this->setEventLog($project,$eventType,$emailBody,$testing);
 
@@ -701,13 +732,13 @@ class TransResUtil
 
                 //$recommended = false;
                 $label = $this->getTransitionLabelByName($transitionName,$review); //set transition
-                $subject = "Project ID ".$project->getOid()." status has been changed from '$originalStateLabel' to '$label'";
+                $subject = "Project request ".$project->getOid()." status has been changed from '$originalStateLabel' to '$label'";
 
                 $statusChangeMsg = $this->getNotificationMsgByStates($originalStateStr,$to,$project);
                 //$body = $statusChangeMsg;
                 //get project url
                 //$projectUrl = $transresUtil->getProjectShowUrl($project);
-                //$emailBody = $statusChangeMsg . $break.$break. "Please click on the URL below to view this project:".$break.$projectUrl;
+                //$emailBody = $statusChangeMsg . $break.$break. "To view this project request, please visit the link below:".$break.$projectUrl;
                 //send confirmation email (project transition)
                 //$this->sendNotificationEmails($project,$review,$subject,$emailBody,$testing);
 
@@ -2156,19 +2187,19 @@ class TransResUtil
             //$recommended = false;
             $eventType = "Review Submitted";
             $label = $this->getTransitionLabelByName($appliedTransition,$review);//not used
-            $subject = "Project ID ".$project->getOid()." has been sent to the status '$label'";
-            $body = "Project ID ".$project->getOid()." has been sent to the status '$label'";
+            $subject = "Project request ".$project->getOid()." has been sent to the status '$label'";
+            $body = "Project request ".$project->getOid()." has been sent to the status '$label'";
         } else {
             //$recommended = true;
             $eventType = "Review Submitted";
             $label = $this->getStateLabelByName($project->getState());
-            $subject = "Project ID ".$project->getOid(). " (" .$label. "). Recommendation: ".$review->getDecision();
+            $subject = "Project request ".$project->getOid(). " (" .$label. "). Recommendation: ".$review->getDecision();
             $body = $subject;
         }
 
         //get project url
         $projectUrl = $transresUtil->getProjectShowUrl($project);
-        $emailBody = $body . $break.$break. "Please click on the URL below to view this project:".$break.$projectUrl;
+        $emailBody = $body . $break.$break. "To view this project request, please visit the link below:".$break.$projectUrl;
 
         //send notification emails (not used)
         $this->sendNotificationEmails($project,$review,$subject,$emailBody,$testing);
@@ -2396,6 +2427,7 @@ class TransResUtil
     //Use to send notification emails for project transition (awaiting review, missing info, rejected, final, closed)
     public function sendTransitionEmail($project,$review,$originalStateStr,$testing=false) {
         $emailUtil = $this->container->get('user_mailer_utility');
+        $user = $this->secTokenStorage->getToken()->getUser();
         $subject = null;
         $body = null;
         $msg = null;
@@ -2457,13 +2489,67 @@ class TransResUtil
         ) {
             $emailRecipients = $this->getRequesterMiniEmails($project);
 
-            $subject = "Project ID $oid status has been changed from '$originalStateLabel' to '$currentStateLabel'";
+            $subject = "Project request $oid status has been changed from '$originalStateLabel' to '$currentStateLabel'";
 
             //"Additional information has been requested for the project with ID $id '".$title."' for the '".$fromLabel."' stage.";
             $statusChangeMsg = $this->getNotificationMsgByStates($originalStateStr,$currentStateStr,$project);
             //get project url
             $projectUrl = $this->getProjectShowUrl($project);
-            $body = $statusChangeMsg . $break.$break. "Please click on the URL below to view this project:".$break.$projectUrl;
+            $body = $statusChangeMsg . $break.$break. "To view this project request, please visit the link below:".$break.$projectUrl;
+
+            //Admins as css
+            $adminsCcs = $this->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //ok
+
+            //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
+            $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail );
+        }
+
+        //3) Final Approved
+        if(
+            $currentStateStr == "final_approved"
+        ) {
+            $emailRecipients = $this->getRequesterMiniEmails($project);
+
+            $subject = "Project request $oid has been approved";
+
+            //"Additional information has been requested for the project with ID $id '".$title."' for the '".$fromLabel."' stage.";
+            $body = $this->getNotificationMsgByStates($originalStateStr,$currentStateStr,$project);
+
+            //To submit a work request associated with this project request, please visit the link below: LINK-TO-NEW-WORK-REQUEST-PAGE
+            $linkNewRequest = $this->container->get('router')->generate(
+                'translationalresearch_request_new',
+                array(
+                    'id' => $project->getId(),
+                ),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $body = $body .$break.$break .  "To submit a work request associated with this project request, please visit the link below:";
+            $body = $body . $break . $linkNewRequest;
+
+            //Any invoices associated with this project request or your other project requests can be accessed via the following link: LINK-TO-MY-INVOICES
+            $linkMyInvoices = $this->container->get('router')->generate(
+                'translationalresearch_invoice_index_filter',
+                array(
+                    'filter[submitter]' => $user->getId(),
+                    'filter[salesperson]' => $user->getId(),
+                    'filter[principalInvestigator]' => $user->getId(),
+
+                    'filter[status][0]' => "Unpaid/Issued",
+                    'filter[status][1]' => "Paid in Full",
+                    'filter[status][2]' => "Paid Partially",
+                    'filter[status][3]' => 'Refunded Fully',
+                    'filter[status][4]' => 'Refunded Partially',
+
+                    'title' => "My Invoices",
+                )
+            );
+            $body = $body . $break.$break . "Any invoices associated with this project request or your other project requests can be accessed via the following link:";
+            $body = $body . $break . $linkMyInvoices;
+
+            //get project url
+            $projectUrl = $this->getProjectShowUrl($project);
+
+            $body = $body . $break.$break. "To view this project request, please visit the link below:".$break.$projectUrl;
 
             //Admins as css
             $adminsCcs = $this->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //ok
@@ -2478,13 +2564,15 @@ class TransResUtil
         } else {
             $emailRecipients = $this->getRequesterMiniEmails($project);
 
-            $subject = "Project ID $oid status has been changed from '$originalStateLabel' to '$currentStateLabel'";
+            $subject = "Project request $oid status has been changed from '$originalStateLabel' to '$currentStateLabel'";
 
             //"Additional information has been requested for the project with ID $id '".$title."' for the '".$fromLabel."' stage.";
-            $statusChangeMsg = $this->getNotificationMsgByStates($originalStateStr,$currentStateStr,$project);
+            $body = $this->getNotificationMsgByStates($originalStateStr,$currentStateStr,$project);
+
             //get project url
             $projectUrl = $this->getProjectShowUrl($project);
-            $body = $statusChangeMsg . $break.$break. "Please click on the URL below to view this project:".$break.$projectUrl;
+
+            $body = $body . $break.$break. "To view this project request, please visit the link below:".$break.$projectUrl;
 
             //Admins as css
             $adminsCcs = $this->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //ok
@@ -2681,6 +2769,17 @@ class TransResUtil
         }
 
         return $resArr;
+    }
+
+    //current project's primary committee reviewers
+    public function getCommiteePrimaryReviewerEmails($project) {
+        foreach($project->getCommitteeReviews() as $committeeReview) {
+            if($committeeReview->getPrimaryReview() === true ) {
+                return $this->getCurrentReviewersEmails($committeeReview);
+            }
+        }
+
+        return null;
     }
 
     //next state project's reviewers
@@ -3869,20 +3968,20 @@ class TransResUtil
         $toLabel = $this->getStateSimpleLabelByName($toStateStr);
 
         //Case1: irb_review -> admin_review
-        //Project ID [xxx] "[project title]" has successfully passed the "IRB review" stage and is now awaiting "Admin review".
+        //Project request [xxx] "[project title]" has successfully passed the "IRB review" stage and is now awaiting "Admin review".
         if( strpos($fromStateStr, "_review") !== false && strpos($toStateStr, "_review") !== false ) {
-            $msg = "Project ID $id '".$title."' has successfully passed the '".$fromLabel."' stage and is now awaiting '".$toLabel."'.";
+            $msg = "Project request $id '".$title."' has successfully passed the '".$fromLabel."' stage and is now awaiting '".$toLabel."'.";
         }
 
         //Case2: final_review -> final_approved
-        //Project ID [xxx] "[project title]" has successfully passed all stages of review and received final approval.
+        //Project request [xxx] "[project title]" has successfully passed all stages of review and received final approval.
         if( strpos($fromStateStr, "_review") !== false && strpos($toStateStr, "_approved") !== false ) {
-            $msg = "Project ID $id '".$title."' has successfully passed all stages of review and received final approval.";
+            $msg = "Project request $id '".$title."' has successfully passed all stages of review and has received final approval.";
         }
 
         //Case3: irb_review -> irb_rejected
         if( strpos($fromStateStr, "_review") !== false && strpos($toStateStr, "_rejected") !== false ) {
-            $msg = "Project ID $id '".$title."' has been rejected as a result of '".$fromLabel."'.";
+            $msg = "Project request $id '".$title."' has been rejected as a result of '".$fromLabel."'.";
         }
 
         //Case4: irb_review -> irb_missinginfo
@@ -3892,11 +3991,11 @@ class TransResUtil
 
         //Case5: irb_missinginfo -> irb_review
         if( strpos($fromStateStr, "_missinginfo") !== false && strpos($toStateStr, "_review") !== false ) {
-            $msg = "Project ID $id '".$title."' has been re-submitted for '".$toLabel."' stage.";
+            $msg = "Project request $id '".$title."' has been re-submitted for '".$toLabel."' stage.";
         }
 
         if( !$msg ) {
-            $msg = "The status of the project ID $id '".$title."' has been changed from '".$fromLabel."' to '".$toLabel."'.";
+            $msg = "The status of the project request $id '".$title."' has been changed from '".$fromLabel."' to '".$toLabel."'.";
         }
 
         return $msg;

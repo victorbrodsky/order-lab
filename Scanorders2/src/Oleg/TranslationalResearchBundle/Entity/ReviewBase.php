@@ -283,6 +283,24 @@ class ReviewBase
         return $info;
     }
 
+    public function getDecisionStr() {
+        $decision = $this->getDecision();
+        if( $decision ) {
+            if( $decision == "approved" ) {
+                $decision = "approved";
+            }
+            if( $decision == "rejected" ) {
+                $decision = "rejected";
+            }
+            if( $decision == "missinginfo" ) {
+                $decision = "held until additional information is received";
+            }
+        } else {
+            $decision = "Pending";
+        }
+        return $decision;
+    }
+
     public function setDecisionByTransitionName( $transitionName ) {
 
         //irb_review_approved => IRB Review Approved
