@@ -186,6 +186,33 @@ class FosComment extends FosBaseComment implements SignedCommentInterface
         $this->prefix = $prefix;
     }
 
+    //array(
+    //*                0 => array(
+    //*                   'comment' => CommentInterface,
+    //*                   'children' => array(
+    //*                       0 => array (
+    //*                       'comment' => CommentInterface,
+    //*                       'children' => array(...)
+    //*                   ),
+    //*                1 => array (
+    //*                   'comment' => CommentInterface,
+    //*                   'children' => array(...)
+    //*                )
+    public function getCommentTreeStr($comments,$level=0) {
+        foreach($comments as $commentArr) {
+            $comment = $commentArr['comment'];
+            echo $comment->getCommentShort() . "<br>";
+            $children = $commentArr['children'];
+            $this->getCommentTreeStr($children,($level+1));
+        }
+    }
+
+    public function getCommentShort() {
+        $createdStr = $this->getCreatedAt()->format("m/d/Y H:i");
+        $info = "Submitted by ".$this->getAuthorTypeDescription()." on ".$createdStr.": ".$this->getBody();
+
+        return $info;
+    }
 
 
     public function __toString() {

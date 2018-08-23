@@ -124,6 +124,7 @@ class FosCommentListener implements EventSubscriberInterface {
 
         $resArr = $this->getMsgSubjectAndBody($comment,$entity,$stateLabel);
         $body = $resArr['body'];
+        $body = str_replace("\r\n","<br>",$body);
         $transresUtil->setEventLog($entity,$eventType,$body);
 
         return $resArr;
@@ -155,7 +156,6 @@ class FosCommentListener implements EventSubscriberInterface {
 
         //1) admins
         $adminEmails = $transresUtil->getTransResAdminEmails($project->getProjectSpecialty(),true,true);
-        $emails = array_merge($emails,$adminEmails);
 
         //2) reviewers of this review
         foreach($reviews as $review) {
@@ -163,8 +163,8 @@ class FosCommentListener implements EventSubscriberInterface {
             $emails = array_merge($emails,$reviewerEmails);
         }
 
-        //3) requesters
-        $requesterEmails = $transresUtil->getRequesterEmails($project);
+        //3) submitter and contact
+        $requesterEmails = $transresUtil->getRequesterMiniEmails($project);
         $emails = array_merge($emails,$requesterEmails);
 
         $emails = array_unique($emails);
@@ -183,10 +183,13 @@ class FosCommentListener implements EventSubscriberInterface {
 
         //get entity url
         $projectUrl = $transresUtil->getProjectShowUrl($project);
-        $body = $body . $break . $break . "Please click on the URL below to view this ".$project->getEntityName().":" . $break . $projectUrl;
+        //$body = $body . $break . $break . "Please click on the URL below to view this ".$project->getEntityName().":" . $break . $projectUrl;
+        //To view this project request, please visit the link below
+        $body = $body . $break . $break . "To view this project request, please visit the link below:" . $break . $projectUrl;
 
         $emailUtil = $this->container->get('user_mailer_utility');
-        $emailUtil->sendEmail( $emails, $subject, $body, null, $senderEmail );
+        //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
+        $emailUtil->sendEmail( $emails, $subject, $body, $adminEmails, $senderEmail );
     }
 
     public function sendCommentRequestEmails($comment, $transresRequest, $resArr) {
@@ -203,7 +206,7 @@ class FosCommentListener implements EventSubscriberInterface {
 
         //1) admins
         $adminEmails = $transresUtil->getTransResAdminEmails($project->getProjectSpecialty(),true,true);
-        $emails = array_merge($emails,$adminEmails);
+        //$emails = array_merge($emails,$adminEmails);
 
         //2) contact
         $contact = $transresRequest->getContact();
@@ -248,10 +251,11 @@ class FosCommentListener implements EventSubscriberInterface {
 
         //get entity url
         $transresRequestUrl = $transresUtil->getProjectShowUrl($transresRequest);
-        $body = $body . $break . $break . "Please click on the URL below to view this ".$transresRequest->getEntityName().":" . $break . $transresRequestUrl;
+        //$body = $body . $break . $break . "Please click on the URL below to view this ".$transresRequest->getEntityName().":" . $break . $transresRequestUrl;
+        $body = $body . $break . $break . "To view this work request, please visit the link below:" . $break . $transresRequestUrl;
 
         $emailUtil = $this->container->get('user_mailer_utility');
-        $emailUtil->sendEmail( $emails, $subject, $body, null, $senderEmail );
+        $emailUtil->sendEmail( $emails, $subject, $body, $adminEmails, $senderEmail );
     }
 
     public function getMsgSubjectAndBody($comment,$entity,$stateLabel=null) {
@@ -259,8 +263,8 @@ class FosCommentListener implements EventSubscriberInterface {
         if( $stateLabel ) {
             $stateLabel = " for the stage '".$stateLabel."'";
         }
-        $subject = "New Comment for ".$entity->getEntityName()." ID ".$entity->getOid()." has been posted".$stateLabel;
-        $body = $subject . ":" . $break . $comment->getBody();
+        $subject = "New Comment for ".$entity->getEntityName()." ".$entity->getOid()." has been posted".$stateLabel;
+        $body = $subject . ":" . $break . "'" . $comment->getBody() . "'";
 
         return array('subject'=>$subject, 'body'=>$body);
     }
@@ -274,13 +278,32 @@ class FosCommentListener implements EventSubscriberInterface {
 
         $authorTypeArr = array();
 
-        if( $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') ) {
+        if( $entity->getEntityName() == "Project" ) {
+            $specialtyStr = null;
+            $projectSpecialty = $entity->getProjectSpecialty();
+            if( $projectSpecialty ) {
+                $specialtyStr = $projectSpecialty->getUppercaseName();
+                $specialtyStr = "_" . $specialtyStr;
+            }
+        }
+
+        if( $entity->getEntityName() == "Request" ) {
+            $specialtyStr = null;
+            $project = $entity->getProject();
+            $projectSpecialty = $project->getProjectSpecialty();
+            if( $projectSpecialty ) {
+                $specialtyStr = $projectSpecialty->getUppercaseName();
+                $specialtyStr = "_" . $specialtyStr;
+            }
+        }
+
+        if( $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyStr) ) {
             //$authorType = "Administrator";
             $authorTypeArr['type'] = "Administrator";
             $authorTypeArr['description'] = "Administrator";
             return $authorTypeArr;
         }
-        if( $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER') ) {
+        if( $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER'.$specialtyStr) ) {
             //$authorType = "Primary Reviewer";
             $authorTypeArr['type'] = "Administrator";
             $authorTypeArr['description'] = "Primary Reviewer";

@@ -615,7 +615,6 @@ class TransResUtil
             }
         }
         //echo "to=".$to."<br>";
-        //exit('0');
 
         $originalStateStr = $project->getState();
         $originalStateLabel = $this->getStateLabelByName($originalStateStr);
@@ -624,18 +623,7 @@ class TransResUtil
         if( $workflow->can($project, $transitionName) ) {
             try {
 
-                //$decision = $this->getDecisionByTransitionName($transitionName);
-                //$review->setDecision($decision);
                 $review->setDecisionByTransitionName($transitionName);
-
-                //if committee_finalreview_approved => set final review decision to approve
-                //because we search pending project assigned to me by decision == NULL
-//                if( $transitionName == "committee_finalreview_approved" ) {
-//                    $finalReviews = $project->getFinalReviews();
-//                    foreach($finalReviews as $finalReview) {
-//                        $finalReview->setDecisionByTransitionName($transitionName);
-//                    }
-//                }
 
                 $review->setReviewedBy($user);
 
@@ -717,43 +705,23 @@ class TransResUtil
                 //change state
                 $project->setState($to); //i.e. 'irb_review'
 
-                //check and add reviewers for this state by role? Do it when project is created?
-                //$this->addDefaultStateReviewers($project);
-
                 $eventResetMsg = null;
-//                if( $originalStateStr != $project->getState() ) {
-//                    $eventResetMsg = $this->resetReviewDecision($project,$review);
-//                }
 
                 //write to DB
                 if( !$testing ) {
                     $this->em->flush();
                 }
 
-                //$recommended = false;
-                $label = $this->getTransitionLabelByName($transitionName,$review); //set transition
-                $subject = "Project request ".$project->getOid()." status has been changed from '$originalStateLabel' to '$label'";
-
-                $statusChangeMsg = $this->getNotificationMsgByStates($originalStateStr,$to,$project);
-                //$body = $statusChangeMsg;
-                //get project url
-                //$projectUrl = $transresUtil->getProjectShowUrl($project);
-                //$emailBody = $statusChangeMsg . $break.$break. "To view this project request, please visit the link below:".$break.$projectUrl;
-                //send confirmation email (project transition)
-                //$this->sendNotificationEmails($project,$review,$subject,$emailBody,$testing);
-
+                //Send transition emails
                 $resultMsg = $this->sendTransitionEmail($project,$review,$originalStateStr,$testing);
 
                 //event log
-                //$this->setEventLog($project,$review,$transitionName,$originalStateStr,$body,$testing);
-                //$emailBody = $emailBody . $eventResetMsg;
-                //$emailBody = str_replace($break,"<br>",$emailBody);
                 $eventType = "Review Submitted";
                 $this->setEventLog($project,$eventType,$resultMsg,$testing);
 
                 $this->container->get('session')->getFlashBag()->add(
                     'notice',
-                    $statusChangeMsg    //"Successful action: ".$label
+                    $this->getNotificationMsgByStates($originalStateStr,$to,$project)    //"Successful action: ".$label
                 );
                 return true;
             } catch (\LogicException $e) {
@@ -1587,42 +1555,38 @@ class TransResUtil
         return $state;
     }
 
-    public function getReviewClassNameByState($state) {
-//        switch( $state ) {
-//            case "irb_review":
-//                $reviewEntityName = "IrbReview";
-//                break;
-//            case "admin_review":
-//                $reviewEntityName = "AdminReview";
-//                break;
-//            case "committee_review":
-//                $reviewEntityName = "CommitteeReview";
-//                break;
-//            case "final_review":
-//                $reviewEntityName = "FinalReview";
-//                break;
-//            default:
-//                $reviewEntityName = null;
-//        }
-
+    public function getReviewClassNameByState($state, $asClassName=true) {
         //echo "state=".$state."<br>";
-
-        $reviewEntityName = null;
-
         if( strpos($state, "irb_") !== false ) {
-            $reviewEntityName = "IrbReview";
+            if( $asClassName ) {
+                return "IrbReview";
+            } else {
+                return "irb_review";
+            }
         }
         if( strpos($state, "admin_") !== false ) {
-            $reviewEntityName = "AdminReview";
+            if( $asClassName ) {
+                return "AdminReview";
+            } else {
+                return "admin_review";
+            }
         }
         if( strpos($state, "committee_") !== false ) {
-            $reviewEntityName = "CommitteeReview";
+            if( $asClassName ) {
+                return "CommitteeReview";
+            } else {
+                return "committee_review";
+            }
         }
         if( strpos($state, "final_") !== false ) {
-            $reviewEntityName = "FinalReview";
+            if( $asClassName ) {
+                return "FinalReview";
+            } else {
+                return "final_review";
+            }
         }
 
-        return $reviewEntityName;
+        return $state;
     }
 
     public function getStateChoisesArr() {
@@ -2445,7 +2409,7 @@ class TransResUtil
         //echo "currentStateStr=$currentStateStr<br>";
         //exit("111");
 
-        //Case 1) awaiting for review stage: send only to reviewers, ccs: admins
+        //Case: awaiting for review stage: send only to reviewers, ccs: admins
         if(
             $currentStateStr == "irb_review" ||
             $currentStateStr == "admin_review" ||
@@ -2478,10 +2442,48 @@ class TransResUtil
             $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail );
         }
 
-        //Case 2) missing info and rejected: send to requesters(submitter, contact), ccs: admins
+        //Case: missing info: send to requesters(submitter, contact), ccs: admins
         if(
             $currentStateStr == "irb_missinginfo" ||
-            $currentStateStr == "admin_missinginfo" ||
+            $currentStateStr == "admin_missinginfo"
+        ) {
+
+            $projectTitle = $project->getTitle();
+            $emailRecipients = $this->getRequesterMiniEmails($project);
+
+            //Please provide additional information for project request APCP1171 'Project test 11'
+            $subject = "Please provide additional information for project request $oid '$projectTitle'";
+
+            //"Additional information has been requested for the project with ID $id '".$title."' for the '".$fromLabel."' stage.";
+            //$statusChangeMsg = $this->getNotificationMsgByStates($originalStateStr,$currentStateStr,$project);
+            //Additional information is needed for the project request APCP1171 'Project test 11' in order to complete the 'IRB Review' stage.
+            $body = "Additional information is needed for the project request $oid '$projectTitle' in order to complete the '$originalStateLabel' stage.";
+
+            //The following comment has been provided by the reviewer: [most recent value of comment field added by reviewer]
+            //TODO: comments added by reviewer
+            $reviewComments = $this->getReviewComments($project);
+            echo "comments:<br>";
+            print_r($reviewComments);
+            exit('1');
+
+            $body = $body . $break.$break. "The following comment has been provided by the reviewer:".$break.$reviewComments;
+
+            $body = $body . $break.$break. "The review process will resume once the requested information is added.";
+
+            //To supply the requested information and re-submit for review, please visit:
+            //TODO: get project resubmit link
+            $projectResubmitUrl = $this->getProjectResubmitUrl($project);
+            $body = $body . $break.$break. "To supply the requested information and re-submit for review, please visit:".$break.$projectResubmitUrl;
+
+            //Admins as css
+            $adminsCcs = $this->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //ok
+
+            //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
+            $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail );
+        }
+
+        //Case: rejected: send to requesters(submitter, contact), ccs: admins
+        if(
             $currentStateStr == "irb_rejected" ||
             $currentStateStr == "admin_rejected" ||
             $currentStateStr == "committee_rejected" ||
@@ -2504,7 +2506,7 @@ class TransResUtil
             $emailUtil->sendEmail( $emailRecipients, $subject, $body, $adminsCcs, $senderEmail );
         }
 
-        //3) Final Approved
+        //Case: Final Approved
         if(
             $currentStateStr == "final_approved"
         ) {
@@ -2824,6 +2826,7 @@ class TransResUtil
         return $allowedSpecialties;
     }
 
+    //NOT USED?
     public function getCommentAuthorNameByLoggedUser( $comment ) {
 
         $authorType = $comment->getAuthorTypeDescription();
@@ -2842,6 +2845,10 @@ class TransResUtil
 
         $user = $this->secTokenStorage->getToken()->getUser();
 
+        //TODO: get project from thread id:
+        // Project: transres-Project-2252-admin_review
+        // Request: transres-Request-13530-progress
+
         if( $this->isAdminOrPrimaryReviewer() ) {
             return $comment->getAuthorName() . $authorType . $comment->getPrefix();
         }
@@ -2851,6 +2858,93 @@ class TransResUtil
         }
 
         return "Anonymous" . $authorType . $comment->getPrefix();
+    }
+
+    //Get all comments with dates for the current project state
+    public function getReviewComments($project,$newline="\r\n") {
+        $comments = null;
+
+        $reviewState = $this->getReviewClassNameByState($project->getState(),false);
+        $reviewStateLabel = $this->getStateLabelByName($reviewState);
+
+        //{{ render(controller('OlegTranslationalResearchBundle:Project:threadCommentsShow', { 'id': threadId })) }}
+        $threadId = "transres-" . $project->getEntityName() . "-" . $project->getId() . "-" . $reviewState;
+        //echo "thread=[$threadId] <br>";
+
+        $thread = $this->container->get('fos_comment.manager.thread')->findThreadById($threadId);
+        //echo "thread=[$thread] <br>";
+
+        if( $thread ) {
+            $thread->setCommentable(false);
+            $comments = $this->container->get('fos_comment.manager.comment')->findCommentTreeByThread($thread);
+        } else {
+            $comments = array();
+        }
+
+        $newline = "<br>";
+        $commentStrArr = array();
+//        foreach($comments as $comment) {
+//            //$commentStrArr[] = "count=".count($comment);
+//            foreach($comment as $singleComment) {
+//                if( !is_array($singleComment) ) {
+//                    //$commentStrArr[] = $singleComment->getCommentShort();
+//                    echo "".$singleComment->getCommentShort()."<br>";
+//                } else {
+//                    //echo "singleComment count=".count($singleComment)."<br>";
+//                    foreach($singleComment as $sss) {
+//                        //echo "ss=".$ss."<br>";
+//                        foreach($sss as $ss) {
+//                            if(is_array($ss)) {
+//                                foreach($ss as $s) {
+//                                    echo "###".$s->getCommentShort()."<br>";
+//                                }
+//                            } else {
+//                                echo "########".$ss->getCommentShort()."<br>";
+//                            }
+//                        }
+//                    }
+//                }
+//
+//            }
+//            //$commentStrArr[] = "<br>";
+//        }
+
+        $this->getCommentTreeStr($comments,0,"<br>");
+
+        $info = null;
+        //$info = $reviewStateLabel." Comments: $newline".implode($newline,$commentStrArr);
+
+        return $info;
+    }
+    //array:
+    //0 => array(
+    //   'comment' => CommentInterface,
+    //   'children' => array(
+    //       0 => array (
+    //       'comment' => CommentInterface,
+    //       'children' => array(...)
+    //   ),
+    //1 => array (
+    //   'comment' => CommentInterface,
+    //   'children' => array(...)
+    //)
+    public function getCommentTreeStr($comments,$level=0,$newline) {
+        foreach($comments as $commentArr) {
+            $comment = $commentArr['comment'];
+            echo $this->getCommentPrefixSpace($level) . $comment->getCommentShort() . $newline;
+            $children = $commentArr['children'];
+            $this->getCommentTreeStr($children,($level+1),$newline);
+            echo $newline;
+        }
+    }
+    public function getCommentPrefixSpace($level) {
+        $prefix = "";
+        for($i=0; $i<$level; $i++) {
+            $prefix = $prefix . "---";
+        }
+        $prefix = $prefix . " Reply ";
+        //echo $level.": prefix=[$prefix]<br>";
+        return $prefix;
     }
 
     public function getProjectShowUrl($project) {
@@ -2867,6 +2961,17 @@ class TransResUtil
     public function getProjectReviewUrl($project) {
         $projectUrl = $this->container->get('router')->generate(
             'translationalresearch_project_review',
+            array(
+                'id' => $project->getId(),
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+
+        return $projectUrl;
+    }
+    public function getProjectResubmitUrl($project) {
+        $projectUrl = $this->container->get('router')->generate(
+            'translationalresearch_project_resubmit',
             array(
                 'id' => $project->getId(),
             ),
