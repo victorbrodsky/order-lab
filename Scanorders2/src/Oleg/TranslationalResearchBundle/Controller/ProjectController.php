@@ -1228,12 +1228,10 @@ class ProjectController extends Controller
 //            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
 //        }
 
-        //TODO: comments added by reviewer
-        $transresUtil = $this->container->get('transres_util');
-        $reviewComments = $transresUtil->getReviewComments($project);
-        echo "comments:$reviewComments<br>";
-        //print_r($reviewComments);
-        //exit('1');
+        //test
+//        $transresUtil = $this->container->get('transres_util');
+//        $reviewComments = $transresUtil->getReviewComments($project);
+//        echo "comments:<br>$reviewComments<br>";
 
         $transresPermissionUtil = $this->container->get('transres_permission_util');
 

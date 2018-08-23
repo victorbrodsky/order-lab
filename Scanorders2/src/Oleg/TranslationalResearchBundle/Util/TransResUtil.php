@@ -2460,13 +2460,9 @@ class TransResUtil
             $body = "Additional information is needed for the project request $oid '$projectTitle' in order to complete the '$originalStateLabel' stage.";
 
             //The following comment has been provided by the reviewer: [most recent value of comment field added by reviewer]
-            //TODO: comments added by reviewer
             $reviewComments = $this->getReviewComments($project);
-            echo "comments:<br>";
-            print_r($reviewComments);
-            exit('1');
 
-            $body = $body . $break.$break. "The following comment has been provided by the reviewer:".$break.$reviewComments;
+            $body = $body . $break.$break. "The following comments has been provided by the reviewer:".$break.$reviewComments;
 
             $body = $body . $break.$break. "The review process will resume once the requested information is added.";
 
@@ -2881,40 +2877,10 @@ class TransResUtil
             $comments = array();
         }
 
-        $newline = "<br>";
-        $commentStrArr = array();
-//        foreach($comments as $comment) {
-//            //$commentStrArr[] = "count=".count($comment);
-//            foreach($comment as $singleComment) {
-//                if( !is_array($singleComment) ) {
-//                    //$commentStrArr[] = $singleComment->getCommentShort();
-//                    echo "".$singleComment->getCommentShort()."<br>";
-//                } else {
-//                    //echo "singleComment count=".count($singleComment)."<br>";
-//                    foreach($singleComment as $sss) {
-//                        //echo "ss=".$ss."<br>";
-//                        foreach($sss as $ss) {
-//                            if(is_array($ss)) {
-//                                foreach($ss as $s) {
-//                                    echo "###".$s->getCommentShort()."<br>";
-//                                }
-//                            } else {
-//                                echo "########".$ss->getCommentShort()."<br>";
-//                            }
-//                        }
-//                    }
-//                }
-//
-//            }
-//            //$commentStrArr[] = "<br>";
-//        }
+        //$newline = "<br>";
+        $commentStr = $this->getCommentTreeStr($comments,$newline);
 
-        $this->getCommentTreeStr($comments,0,"<br>");
-
-        $info = null;
-        //$info = $reviewStateLabel." Comments: $newline".implode($newline,$commentStrArr);
-
-        return $info;
+        return $commentStr;
     }
     //array:
     //0 => array(
@@ -2928,21 +2894,25 @@ class TransResUtil
     //   'comment' => CommentInterface,
     //   'children' => array(...)
     //)
-    public function getCommentTreeStr($comments,$level=0,$newline) {
+    public function getCommentTreeStr($comments,$newline,$level=0) {
+        $res = "";
         foreach($comments as $commentArr) {
             $comment = $commentArr['comment'];
-            echo $this->getCommentPrefixSpace($level) . $comment->getCommentShort() . $newline;
+            $res = $res . $this->getCommentPrefixSpace($level) . $comment->getCommentShort() . $newline;
             $children = $commentArr['children'];
-            $this->getCommentTreeStr($children,($level+1),$newline);
-            echo $newline;
+            $res = $res . $this->getCommentTreeStr($children,$newline,($level+1));
+            //$res = $res . $newline;
         }
+        return $res;
     }
     public function getCommentPrefixSpace($level) {
         $prefix = "";
         for($i=0; $i<$level; $i++) {
             $prefix = $prefix . "---";
         }
-        $prefix = $prefix . " Reply ";
+        if( $prefix ) {
+            $prefix = $prefix . " Reply ";
+        }
         //echo $level.": prefix=[$prefix]<br>";
         return $prefix;
     }
