@@ -2376,13 +2376,28 @@ class TransResUtil
         ) {
             $emailRecipients = $this->getRequesterMiniEmails($project);
 
-            $subject = "Project request $oid status has been changed from '$originalStateLabel' to '$currentStateLabel'";
+            //Project request APCP3365 has been rejected at the 'Committee Review' stage
+            $subject = "Project request $oid has been rejected at the '$originalStateLabel' stage";
 
             //"Additional information has been requested for the project with ID $id '".$title."' for the '".$fromLabel."' stage.";
             $statusChangeMsg = $this->getNotificationMsgByStates($originalStateStr,$currentStateStr,$project);
             //get project url
             $projectUrl = $this->getProjectShowUrl($project);
-            $body = $statusChangeMsg . $break.$break. "To view this project request, please visit the link below:".$break.$projectUrl;
+            $body = $statusChangeMsg . $break.$break. "To view the details of this project request, please visit the link below:".$break.$projectUrl;
+
+            //If you have any questions, please contact
+            // [FirstNameOfCurrentTRPAdminForCorrespondingSpecialty-AP/CPorHemePath
+            // LastNameOfCurrentTRPAdminForCorrespondingSpecialty-AP/CPorHemePath
+            // email@domain.tld – list all users with TRP sysadmin roles associated with project specialty separated by comma ]
+            $body = $body . $break.$break. "If you have any questions, please contact";
+            $admins = $this->getTransResAdminEmails($project->getProjectSpecialty(),false,true);
+            $adminInfos = array();
+            foreach( $admins as $admin ) {
+                $adminInfos[] = $admin->getUsernameOptimal() . " " . $admin->getSingleEmail();
+            }
+            if( count($adminInfos) > 0 ) {
+                $body = $body . " " . implode(", ",$adminInfos);
+            }
 
             //Admins as css
             $adminsCcs = $this->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //ok
