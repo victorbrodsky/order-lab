@@ -276,7 +276,7 @@
                 {#all issued invoices associated with the project#}
                 <td class="rowlink-skip">
                     {% if invoicesInfos.count > 0 and transres_permission_util.areInvoicesShowableToUser(project) %}
-                        <a target="_blank" data-toggle="tooltip" title="Show all issued invoice associated with this project"
+                        <a target="_blank" data-toggle="tooltip" title="Show all issued invoices associated with this project"
                            href="{{ path(translationalresearch_sitename~'_invoice_index_filter', {
                                'filter[idSearch]': project.oid,
                                'filter[status][0]': 'Unpaid/Issued',
