@@ -961,29 +961,6 @@ class ProjectController extends Controller
      */
     public function editAction(Request $request, Project $project)
     {
-
-//        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER')) {
-//            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
-//        }
-//        $transresUtil = $this->container->get('transres_util');
-//
-//        if(
-//            $transresUtil->isAdminOrPrimaryReviewer() ||
-//            $transresUtil->isProjectEditableByRequester($project)
-//        ) {
-//            //ok
-//        } else {
-//            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
-//        }
-//
-//        if( $transresUtil->isUserAllowedSpecialtyObject($project->getProjectSpecialty()) === false ) {
-//            $this->get('session')->getFlashBag()->add(
-//                'warning',
-//                "You don't have a permission to access the ".$project->getProjectSpecialty()." project specialty"
-//            );
-//            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
-//        }
-
         $transresPermissionUtil = $this->container->get('transres_permission_util');
 
         if( false === $transresPermissionUtil->hasProjectPermission("update",$project) ) {
@@ -1418,8 +1395,8 @@ class ProjectController extends Controller
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
-        //$cycle = "show";
         $cycle = "review";
+        //$cycle = "resubmit";
 
         $form = $this->createProjectForm($project,$cycle,$request); //show
 
@@ -1798,6 +1775,10 @@ class ProjectController extends Controller
             $disabled = true;
         }
 
+        if( $cycle == "resubmit" ) {
+            $disabled = false;
+        }
+
         if( $cycle == "edit" ) {
             $disabled = false;
 //            if( $project->getState() && $project->getState() == "draft" ) {
@@ -1811,6 +1792,10 @@ class ProjectController extends Controller
                     $params['updateProject'] = true;
                 }
             }
+
+            //if( $project->getState() && strpos($project->getState(),"_missinginfo") !== false ) {
+            //    $params['submitIrbReview'] = true;
+            //}
 
             //allow edit if admin at any time
             if( $transresUtil->isAdminOrPrimaryReviewer($project->getProjectSpecialty()) || $transresUtil->isProjectEditableByRequester($project) ) {

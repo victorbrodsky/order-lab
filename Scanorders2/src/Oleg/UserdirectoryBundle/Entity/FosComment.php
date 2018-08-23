@@ -188,8 +188,8 @@ class FosComment extends FosBaseComment implements SignedCommentInterface
 
     public function getCommentShort() {
         $createdStr = $this->getCreatedAt()->format("m/d/Y H:i");
-        $info = "Submitted by a ".$this->getAuthorTypeDescription()." on ".$createdStr.": '".$this->getBody()."'";
-
+        //$info = "Submitted by a ".$this->getAuthorTypeDescription()." on ".$createdStr.": '".$this->getBody()."'";
+        $info = $this->getAuthorTypeDescription()." on ".$createdStr.": '".$this->getBody()."'";
         return $info;
     }
 

@@ -636,13 +636,9 @@
     {% set threadId = null %}
 
     {% for review in reviews %}
-        {#{{ transres.projectSingleReview(project,review,cycle,'transres-irbreviews','noprototype',sitename,showAddDeleteBtn,addReviewButtons) }}#}
-        {#{{ transres.reviewEnabledLinkActionsHeader(project,review,cycle) }}#}
 
-        {#transres_util.isUserAllowedReview(review) and#}
-        {#transres_util.isReviewCorrespondsToState(review)#}
         {% if
-            cycle == "review" and
+            (cycle == "review" or cycle == "resubmit") and
             review.id and
             transres_util.isUserAllowedFromThisStateByProjectOrReview(null,review) and
             transres_util.isReviewCorrespondsToState(review)
@@ -652,20 +648,9 @@
             {% set actionLinks = actionLinks|merge({ (loop.index0): actionReviewLinks}) %}
 
             {% set threadId = "transres-" ~ project.getEntityName() ~ "-" ~ project.id ~ "-" ~ review.getStateStr() %}
-            {#{% set threadIds = threadIds|merge({ (loop.index0): threadId}) %}#}
         {% else %}
             {#no getReviewEnabledLinkActions<br>#}
         {% endif %}
-
-        {#getResubmitButtons#}
-        {#{% if review.id %}#}
-            {#<p>#}
-                {#{% set actionReSubmitLinks = transres_util.getResubmitButtons(review) %}#}
-                {#{% for actionReSubmitLink in actionReSubmitLinks %}#}
-                    {#{{ actionReSubmitLink|raw }}#}
-                {#{% endfor %}#}
-            {#</p>#}
-        {#{% endif %}#}
 
     {% endfor %}
     {% if threadId and actionLinks|length > 0 %}

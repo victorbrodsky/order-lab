@@ -53,97 +53,6 @@ class TransResUtil
         $this->secTokenStorage = $container->get('security.token_storage'); //$user = $this->secTokenStorage->getToken()->getUser();
     }
 
-    //NOT USED
-    //get links to change states: Reject IRB Review and Approve IRB Review (translationalresearch_transition_action)
-//    public function getEnabledLinkActions( $project, $classEdit=null, $classTransition=null ) {
-//        $workflow = $this->container->get('state_machine.transres_project');
-//        $transitions = $workflow->getEnabledTransitions($project);
-//
-//        $links = array();
-//        foreach( $transitions as $transition ) {
-//
-//            //$this->printTransition($transition);
-//            $transitionName = $transition->getName();
-//
-//            //$tos = $transition->getTos();
-//            $froms = $transition->getFroms();
-//            foreach( $froms as $from ) {
-//                //echo "from=".$from."<br>"; //irb_review
-//
-//                //add user's validation: $from=irb_review => user has role _IRB_REVIEW_
-//                if( false === $this->isUserAllowedFromThisStateByRole($from) ) {
-//                    continue;
-//                }
-//
-//                //don't sent state $to (get it from transition object)
-//                $thisUrl = $this->container->get('router')->generate(
-//                    'translationalresearch_transition_action',
-//                    array(
-//                        'transitionName'=>$transitionName,
-//                        'id'=>$project->getId()
-//                    ),
-//                    UrlGeneratorInterface::ABSOLUTE_URL
-//                );
-//
-//                //$label = ucfirst($transitionName)." (mark as ".ucfirst($to);
-//                $label = $this->getTransitionLabelByName($transitionName); //not used
-//
-//                $classTransition = $this->getHtmlClassTransition($transitionName);
-//
-//                $thisLink = "<a ".
-//                    "general-data-confirm='Are you sure you want to $label?'".
-//                    "href=".$thisUrl." class='".$classTransition."'>".$label."</a>";
-//                $links[] = $thisLink;
-//
-//            }//foreach
-//
-//        }//foreach
-//
-//        if(0) {
-//            ////////// add links to edit if the current state is "_rejected" //////////
-//            $froms = $transition->getFroms();
-//            $fromState = $froms[0];
-//            $showEditLink = false;
-//            $editLinkLabel = "Edit Project";
-//            if (strpos($fromState, '_rejected') !== false || $fromState == 'draft') {
-//                if ($this->secAuth->isGranted('ROLE_TRANSRES_REQUESTER')) {
-//                    $showEditLink = true;
-//                    $editLinkLabel = "Edit Project as Requester";
-//                }
-//            }
-//            if (
-//                $this->secAuth->isGranted('ROLE_TRANSRES_PRIMARY_REVIEWER')
-//            ) {
-//                $showEditLink = true;
-//                $editLinkLabel = "Edit Project as Primary Reviewer";
-//            }
-//            if ($this->secAuth->isGranted('ROLE_TRANSRES_ADMIN')) {
-//                $showEditLink = true;
-//                $editLinkLabel = "Edit Project as Administrator";
-//            }
-//
-//            if ($showEditLink) {
-//                $thisUrl = $this->container->get('router')->generate(
-//                    'translationalresearch_project_edit',
-//                    array(
-//                        'id' => $project->getId()
-//                    ),
-//                    UrlGeneratorInterface::ABSOLUTE_URL
-//                );
-//                $editLink = "<a " .
-//                    //"general-data-confirm='Are you sure you want to $label?'".
-//                    "href=" . $thisUrl . " class='" . $classEdit . "'>" . $editLinkLabel . "</a>";
-//                //$links[] = $editLink;
-//                array_unshift($links, $editLink);
-//            }
-//            ////////// EOF add links to edit if the current state is "_rejected" //////////
-//        }
-//
-//        //echo "count=".count($links)."<br>";
-//
-//        return $links;
-//    }
-
     //MAIN method to show allowed transition to state links
     //get links to change states: Reject IRB Review and Approve IRB Review (translationalresearch_transition_action)
     public function getReviewEnabledLinkActions( $review ) {
@@ -169,36 +78,11 @@ class TransResUtil
             }
         }
 
-        //add current state of the review object
-        //if( $review->getDecision() ) {
-        //    $links[] = "<p>(Existing " . $review->getSubmittedReviewerInfo() . ")</p>";
-        //}
-
-//        $stateStr = $this->getAllowedFromState($project);
-//
-//        if( !$stateStr ) {
-//            return $links;
-//        }
-//
-//        if( $review->getStateStr() === "committee_review" ) {
-//            if( strpos($stateStr, "missinginfo") !== false ) {
-//                return $links;
-//            }
-//        }
-//
-//        if( false === $this->isUserAllowedFromThisStateByProjectOrReview($project,$review) ) {
-//            return $links;
-//        }
-
         foreach( $transitions as $transition ) {
 
             //$this->printTransition($transition);
             $transitionName = $transition->getName();
             //echo "transitionName=".$transitionName."<br>";
-
-//            if( $this->isExceptionTransition($transitionName) === true ) {
-//                continue;
-//            }
 
             if( $review->getStateStr() === "committee_review" ) {
                 if( strpos($transitionName, "missinginfo") !== false ) {
@@ -2468,8 +2352,13 @@ class TransResUtil
 
             //To supply the requested information and re-submit for review, please visit:
             //TODO: get project resubmit link
+            //edit
+            $projectEditUrl = $this->getProjectEditUrl($project);
+            $body = $body . $break.$break. "To supply the requested information for review, please visit:".$break.$projectEditUrl;
+            //resubmit
             $projectResubmitUrl = $this->getProjectResubmitUrl($project);
-            $body = $body . $break.$break. "To supply the requested information and re-submit for review, please visit:".$break.$projectResubmitUrl;
+            //$body = $body . $break.$break. "To supply the requested information and re-submit for review, please visit:".$break.$projectResubmitUrl;
+            $body = $body . $break.$break. "To re-submit for review, please visit:".$break.$projectResubmitUrl;
 
             //Admins as css
             $adminsCcs = $this->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //ok
@@ -2920,6 +2809,17 @@ class TransResUtil
     public function getProjectShowUrl($project) {
         $projectUrl = $this->container->get('router')->generate(
             'translationalresearch_project_show',
+            array(
+                'id' => $project->getId(),
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+
+        return $projectUrl;
+    }
+    public function getProjectEditUrl($project) {
+        $projectUrl = $this->container->get('router')->generate(
+            'translationalresearch_project_edit',
             array(
                 'id' => $project->getId(),
             ),

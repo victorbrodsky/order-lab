@@ -65,9 +65,13 @@
         {#{% if edit_form.saveAsComplete is defined %}#}
             {#{{ form_widget(edit_form.saveAsComplete) }}#}
         {#{% endif %}#}
+
+        {#{% set showComment = false %}#}
         {% if edit_form.submitIrbReview is defined %}
+            {#{% set showComment = true %}#}
             {{ form_widget(edit_form.submitIrbReview) }}
         {% endif %}
+
         {% if edit_form.updateProject is defined %}
             {{ form_widget(edit_form.updateProject) }}
         {% endif %}
@@ -75,6 +79,13 @@
         <div id="please-wait" style="display: none;">Please Wait ...</div>
 
     {{ form_end(edit_form) }}
+
+    {#{% if showComment %}#}
+        {#{% set reviewState = transres_util.getReviewClassNameByState(project.getState(),false) %}#}
+        {#{% set threadId = "transres-" ~ project.getEntityName() ~ "-" ~ project.id ~ "-" ~ reviewState %}#}
+        {#threadId={{ threadId }}<br>#}
+        {#{% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': threadId} %}#}
+    {#{% endif %}#}
 
     <br>
 
