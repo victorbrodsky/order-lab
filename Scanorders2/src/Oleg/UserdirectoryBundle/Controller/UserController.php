@@ -1778,16 +1778,15 @@ class UserController extends Controller
 
         if( $publicUserId ) {
             $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByPrimaryPublicUserId($publicUserId);
-        }
+            if (!$user) {
+                $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByEmailCanonical($email);
 
-        if( !$user ) {
-            $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByEmailCanonical($email);
-
-        }
-        if( !$user ) {
-            $users = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByUserInfoEmail($email);
-            if( count($users) > 0 ) {
-                $user = $users[0];
+            }
+            if (!$user) {
+                $users = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByUserInfoEmail($email);
+                if (count($users) > 0) {
+                    $user = $users[0];
+                }
             }
         }
 

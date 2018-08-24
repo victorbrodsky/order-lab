@@ -1601,6 +1601,11 @@ function addNewUserAction( addUserBtn, fieldId, sitename, otherUserParam ) {
     //1) validate email
     if( !email ) {
         errorMsg = "Please enter a new user's email address";
+    } else {
+        var emailArr = email.split("@");
+        if( emailArr.length != 2 ) {
+            errorMsg = "Please enter a valid user's email address";
+        }
     }
     if( !firstname ) {
         errorMsg = "Please enter a new user's first name";

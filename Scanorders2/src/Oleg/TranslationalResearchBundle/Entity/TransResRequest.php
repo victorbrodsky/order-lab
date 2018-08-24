@@ -796,6 +796,10 @@ class TransResRequest {
         return "Request";
     }
 
+    public function getDisplayName() {
+        return "Work Request";
+    }
+
     public function __toString() {
         return "Request id=".$this->getId();
     }

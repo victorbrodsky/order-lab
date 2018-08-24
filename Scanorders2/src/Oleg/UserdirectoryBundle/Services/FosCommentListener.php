@@ -194,6 +194,7 @@ class FosCommentListener implements EventSubscriberInterface {
 
     public function sendCommentRequestEmails($comment, $transresRequest, $resArr) {
         $transresUtil = $this->container->get('transres_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
 
         if( !$transresRequest ) {
             $transresRequest = $this->getEntityFromComment($comment);
@@ -250,7 +251,7 @@ class FosCommentListener implements EventSubscriberInterface {
         $body = $resArr['body'];
 
         //get entity url
-        $transresRequestUrl = $transresUtil->getProjectShowUrl($transresRequest);
+        $transresRequestUrl = $transresRequestUtil->getRequestShowUrl($transresRequest);
         //$body = $body . $break . $break . "Please click on the URL below to view this ".$transresRequest->getEntityName().":" . $break . $transresRequestUrl;
         $body = $body . $break . $break . "To view this work request, please visit the link below:" . $break . $transresRequestUrl;
 
@@ -263,7 +264,7 @@ class FosCommentListener implements EventSubscriberInterface {
         if( $stateLabel ) {
             $stateLabel = " for the stage '".$stateLabel."'";
         }
-        $subject = "New Comment for ".$entity->getEntityName()." ".$entity->getOid()." has been posted".$stateLabel;
+        $subject = "New Comment for ".$entity->getDisplayName()." ".$entity->getOid()." has been added".$stateLabel;
         $body = $subject . ":" . $break . "'" . $comment->getBody() . "'";
 
         return array('subject'=>$subject, 'body'=>$body);

@@ -1342,6 +1342,10 @@ class Project {
         return "Project";
     }
 
+    public function getDisplayName() {
+        return "Project request";
+    }
+
     public function __toString() {
         return "Project id=[".$this->getId()."]";
     }

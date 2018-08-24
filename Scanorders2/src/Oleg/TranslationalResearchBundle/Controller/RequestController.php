@@ -158,6 +158,7 @@ class RequestController extends Controller
             }
 
             //set project's funded account number
+            $break = "\r\n";
             $changedMsg = "";
             //$changedProjectFundNumber = false;
             $originalFundedAccountNumber = $project->getFundedAccountNumber();
@@ -168,9 +169,9 @@ class RequestController extends Controller
 //                $transresRequestUtil->setValueToFormNodeProject($project, "If funded, please provide account number", $fundedAccountNumber);
                 $project->setFundedAccountNumber($fundedAccountNumber);
                 //$changedProjectFundNumber = true;
-                $changedMsg = $changedMsg . "<br>Project's Account Fund Number has been updated: ";
-                $changedMsg = $changedMsg . "<br>Original account number " . $originalFundedAccountNumber;
-                $changedMsg = $changedMsg . "<br>New account number " . $project->getFundedAccountNumber();
+                $changedMsg = $changedMsg . $break . "Project's Account Fund Number has been updated: ";
+                $changedMsg = $changedMsg . $break . "Original account number " . $originalFundedAccountNumber;
+                $changedMsg = $changedMsg . $break . "New account number " . $project->getFundedAccountNumber();
             }
 
             //set submitter to product
@@ -221,11 +222,13 @@ class RequestController extends Controller
                 $formNodeUtil->processFormNodes($request, $transresRequest->getMessageCategory(), $transresRequest, $testing);
             }
 
-            $msg = "New work request has been successfully submitted for the project ID ".$project->getOid();
-            $msg = $msg . $changedMsg;
 
-            if( $testing ) {
-                exit('form is submitted and finished, msg='.$msg);
+            $msg = "New work request " . $transresRequestUtil->getOid() . " has been submitted.";
+            $msg = $msg . $break.$break . $changedMsg;
+            $msg = str_replace($break,"<br>",$msg);
+
+            if ($testing) {
+                exit('form is submitted and finished, msg=' . $msg);
             }
 
             $this->get('session')->getFlashBag()->add(
@@ -233,14 +236,24 @@ class RequestController extends Controller
                 $msg
             );
 
-            $eventType = "Request Created";
-            $msg = "New work request with ID ".$transresRequest->getOid()." has been successfully submitted for the project ID ".$project->getOid();
-            $msg = $msg . $changedMsg;
-            $transresUtil->setEventLog($transresRequest,$eventType,$msg);
+            //////////// Event Log and Email for Create //////////////////
+            //exit("create: ID=".$transresRequest->getOid()."; state=".$transresRequest->getProgressState());
+            if( $transresRequest->getProgressState() == 'active' ) {
+                $eventType = "Request Created";
+                $msg = "New work request " . $transresRequest->getOid() . " has been submitted";
+                $msg = $msg . $break.$break . $changedMsg;
 
-            $subject = "New work request has been successfully submitted for the project ID ".$project->getOid();
-            $msg = str_replace("<br>","\r\n",$msg);
-            $transresRequestUtil->sendRequestNotificationEmails($transresRequest,$subject,$msg,$testing);
+                $requestUrl = $transresRequestUtil->getRequestShowUrl($transresRequest);
+                $msg = $msg . $break.$break . "To view this work request, please visit the link below: " . $break . $requestUrl;
+
+                $subject = "New work request has been submitted " . $transresRequestUtil->getOid();
+                $emailRes = $transresRequestUtil->sendRequestNotificationEmails($transresRequest, $subject, $msg, $testing);
+                $msg = $break.$break . $emailRes;
+
+                $msg = str_replace($break,"<br>",$msg);
+                $transresUtil->setEventLog($transresRequest, $eventType, $msg);
+            }
+            //////////// EOF Event Log and Email for Create //////////////////
 
             return $this->redirectToRoute('translationalresearch_request_show', array('id' => $transresRequest->getId()));
         }
@@ -384,6 +397,7 @@ class RequestController extends Controller
 
             //set project's funded account number
             $changedMsg = "";
+            $break = "\r\n";
             //$changedProjectFundNumber = false;
             $originalFundedAccountNumber = $project->getFundedAccountNumber();
             $fundedAccountNumber = $transresRequest->getFundedAccountNumber();
@@ -393,9 +407,9 @@ class RequestController extends Controller
 //                $transresRequestUtil->setValueToFormNodeProject($project, "If funded, please provide account number", $fundedAccountNumber);
                 $project->setFundedAccountNumber($fundedAccountNumber);
                 //$changedProjectFundNumber = true;
-                $changedMsg = $changedMsg . "<br>Project's Account Fund Number has been updated: ";
-                $changedMsg = $changedMsg . "<br>Original account number " . $originalFundedAccountNumber;
-                $changedMsg = $changedMsg . "<br>New account number " . $project->getFundedAccountNumber();
+                $changedMsg = $changedMsg . $break . "Project's Account Fund Number has been updated: ";
+                $changedMsg = $changedMsg . $break . "Original account number " . $originalFundedAccountNumber;
+                $changedMsg = $changedMsg . $break . "New account number " . $project->getFundedAccountNumber();
             }
 
             //update updateBy
@@ -485,8 +499,9 @@ class RequestController extends Controller
                 $formNodeUtil->processFormNodes($request, $transresRequest->getMessageCategory(), $transresRequest, $testing); //testing
             }
 
-            $msg = "Request ".$transresRequest->getOid()." has been successfully updated for the project ID ".$project->getOid();
-            $msg = $msg . $changedMsg;
+            $msg = "Work Request ".$transresRequest->getOid()." has been updated.";
+            $msg = $msg . $break.$break. $changedMsg;
+            $msg = str_replace($break,"<br>",$msg);
 
             if( $testing ) {
                 exit('form is submitted and finished, msg='.$msg);
@@ -497,17 +512,28 @@ class RequestController extends Controller
                 $msg
             );
 
-            $eventType = "Request Updated";
-            $msg = "Request ".$transresRequest->getOid() ." has been updated.";
+            //////////// Event Log and Email for Update //////////////////
+            $progressLabel = $transresRequestUtil->getRequestStateLabelByName($transresRequest->getProgressState(),"progress");
+            $msg = "Work Request ".$transresRequest->getOid() ." has been updated.";
+            $msg = $msg . $break.$break . "The request's current status is '$progressLabel'.";
             $msg = $msg . $changedMsg;
-            $transresUtil->setEventLog($transresRequest,$eventType,$msg);
 
-            //disable update Request email
-            if(0) {
-                $subject = "Request " . $transresRequest->getOid() . " has been successfully updated for the project ID " . $project->getOid();
-                $msg = str_replace("<br>", "\r\n", $msg);
-                $transresRequestUtil->sendRequestNotificationEmails($transresRequest, $subject, $msg, $testing);
+            $requestUrl = $transresRequestUtil->getRequestShowUrl($transresRequest);
+            $msg = $msg . $break.$break . "To view this work request, please visit the link below: " . $break . $requestUrl;
+
+            //update Request email
+            if( $transresRequest->getProgressState() == 'active' ) {
+                //exit("create: ID=".$transresRequest->getOid()."; state=".$transresRequest->getProgressState());
+                $subject = "Work Request " . $transresRequest->getOid() . " has been updated ans set to Active.";
+                $emailRes = $transresRequestUtil->sendRequestNotificationEmails($transresRequest, $subject, $msg, $testing);
+
+                $msg = $msg."<br><br>".$emailRes;
             }
+
+            $eventType = "Request Updated";
+            $msg = str_replace($break,"<br>",$msg);
+            $transresUtil->setEventLog($transresRequest,$eventType,$msg);
+            //////////// EOF Event Log and Email for Update //////////////////
 
             return $this->redirectToRoute('translationalresearch_request_show', array('id' => $transresRequest->getId()));
         }

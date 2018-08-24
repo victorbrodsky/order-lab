@@ -1477,6 +1477,9 @@ class FellAppController extends Controller {
         //.itinerarys
         $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $application, 'itinerary' );
 
+        $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $application, 'report' );
+        $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $application, 'formReport' );
+        $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments( $application, 'oldReport' );
     }
 
 

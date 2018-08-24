@@ -1473,17 +1473,16 @@ class TransResRequestUtil
         return $bundleFileName;
     }
 
-    //get emails: admins, submitter, principalInvestigators, contact
+    //get emails: submitter, principalInvestigators, contact
     public function getRequestEmails($transresRequest) {
         $transresUtil = $this->container->get('transres_util');
 
         $emails = array();
 
-        $project = $transresRequest->getProject();
-
+        //$project = $transresRequest->getProject();
         // 1) admins and primary reviewers
-        $admins = $transresUtil->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //ok
-        $emails = array_merge($emails,$admins);
+        //$admins = $transresUtil->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //ok
+        //$emails = array_merge($emails,$admins);
 
         // 2) a) submitter, b) principalInvestigators, c) contact
         //a) submitter
@@ -1520,11 +1519,49 @@ class TransResRequestUtil
 
         return $emails;
     }
+    //get emails: admins, technician
+    public function getRequestAdminEmails($transresRequest,$asEmail=true) {
+        $transresUtil = $this->container->get('transres_util');
+
+        $emails = array();
+
+        $project = $transresRequest->getProject();
+        if( $project ) {
+            $projectSpecialty = $project->getProjectSpecialty();
+            if( $projectSpecialty ) {
+                $specialtyPostfix = $projectSpecialty->getUppercaseName();
+                $specialtyPostfix = "_" . $specialtyPostfix;
+            } else {
+                $specialtyPostfix = null;
+            }
+        }
+
+        // 1) admins and primary reviewers
+        $admins = $transresUtil->getTransResAdminEmails($project->getProjectSpecialty(),$asEmail,true); //ok
+        $emails = array_merge($emails,$admins);
+
+        // 2) Technicians
+        $technicians = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUsersByRoles(array("ROLE_TRANSRES_TECHNICIAN".$specialtyPostfix));
+        foreach( $technicians as $technician ) {
+            if( $technician ) {
+                if( $asEmail ) {
+                    $users[] = $technician->getSingleEmail();
+                } else {
+                    $users[] = $technician;
+                }
+            }
+        }
+
+        $emails = array_unique($emails);
+
+        return $emails;
+    }
 
     public function sendRequestNotificationEmails($transresRequest, $subject, $body, $testing=false) {
         //if( !$appliedTransition ) {
         //    return null;
         //}
+        $break = "\r\n";
 
         //$transresUtil = $this->container->get('transres_util');
         $emailUtil = $this->container->get('user_mailer_utility');
@@ -1533,9 +1570,17 @@ class TransResRequestUtil
 
         $emails = $this->getRequestEmails($transresRequest);
 
-        //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-        $emailUtil->sendEmail( $emails, $subject, $body, null, $senderEmail );
+        $admins = $this->getRequestAdminEmails($transresRequest);
 
+        //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
+        $emailUtil->sendEmail( $emails, $subject, $body, $admins, $senderEmail );
+
+        $res = "To: ".implode(", ",$emails);
+        $res = $res . $break . "Css: ".implode(", ",$admins);
+        $res = $res . $break . "Subject: ".$subject;
+        $res = $res . $break . "Body: ".$body;
+
+        return $res;
     }
 
     //Changing the status of request to "Approved/Ready for Invoicing" (approvedInvoicing) should send an email notification
@@ -2795,11 +2840,15 @@ class TransResRequestUtil
         $project = $transresRequest->getProject();
 
         $adminEmailInfos = array();
+        $adminEmails = array();
         $asEmail=false;
-        $onlyAdmin=true;
-        $admins = $transresUtil->getTransResAdminEmails($project->getProjectSpecialty(),$asEmail,$onlyAdmin);
+        //$onlyAdmin=true;
+        //$admins = $transresUtil->getTransResAdminEmails($project->getProjectSpecialty(),$asEmail,$onlyAdmin);
+        $admins = $this->getRequestAdminEmails($transresRequest,$asEmail);
         foreach($admins as $admin) {
-            $adminEmailInfos[] = $admin->getUsernameOptimal()." (".$admin->getSingleEmail().")";
+            $adminSingleEmail = $admin->getSingleEmail();
+            $adminEmailInfos[] = $admin->getUsernameOptimal()." (".$adminSingleEmail.")";
+            $adminEmails[] = $adminSingleEmail;
         }
 
         // The Translational Research group is working on your request (REQ-ID)
@@ -2820,7 +2869,7 @@ class TransResRequestUtil
         //$logger->notice("attachmentPath=".$attachmentPath);
 
         //                    $emails, $subject, $message, $ccs=null, $fromEmail=null, $attachmentPath=null
-        $emailUtil->sendEmail($emails,$subject,$body,$ccs=null,$senderEmail,$attachmentPath);
+        $emailUtil->sendEmail($emails,$subject,$body,$adminEmails,$senderEmail,$attachmentPath);
 
         $msg = "Packing Slip PDF ".$pdf->getUniquename()." has been sent to:<br>".implode(", ",$emails)."<br> Subject: ".$subject."<br> Body: ".$body.".";
 
