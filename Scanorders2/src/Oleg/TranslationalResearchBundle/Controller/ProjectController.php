@@ -925,13 +925,8 @@ class ProjectController extends Controller
                 $emailUtil->sendEmail($requesterEmails,$emailSubject,$emailBody,$adminsCcs);
                 ///////////// EOF send confirmation email to submitter and contact only ///////////////
 
-                $emailResults = array();
-                $irbReviews = $project->getIrbReviews();
-                foreach($irbReviews as $irbReview) {
-                    $emailResults[] = $transresUtil->sendTransitionEmail($project, $irbReview, "draft", $testing);
-                }
-
-                $msg = $msg . "<br><br>" . implode("<br>",$emailResults);
+                $emailResult = $transresUtil->sendTransitionEmail($project,"draft",$testing);
+                $msg = $msg . "<br><br>" . $emailResult;
             }
 
             $eventType = "Project Created";
@@ -1139,13 +1134,8 @@ class ProjectController extends Controller
                 $emailUtil->sendEmail($requesterEmails,$msg,$emailBody,$adminsCcs);
                 ///////////// EOF send confirmation email to submitter and contact only ///////////////
 
-                $emailResults = array();
-                $irbReviews = $project->getIrbReviews();
-                foreach($irbReviews as $irbReview) {
-                    $emailResults[] = $transresUtil->sendTransitionEmail($project, $irbReview, "draft", $testing);
-                }
-
-                $msg = $msg . "<br><br>" . implode("<br>",$emailResults);
+                $emailResult = $transresUtil->sendTransitionEmail($project,"draft",$testing);
+                $msg = $msg . "<br><br>" . $emailResult;
             }
 
             //eventlog
@@ -1686,6 +1676,8 @@ class ProjectController extends Controller
 
         $stateChoiceArr = $transresUtil->getStateChoisesArr();
 
+        $otherUserParam = $project->getProjectSpecialty()->getAbbreviation();
+
         $params = array(
             'cycle' => $cycle,
             'em' => $em,
@@ -1693,7 +1685,7 @@ class ProjectController extends Controller
             'transresUtil' => $transresUtil,
             'SecurityAuthChecker' => $this->get('security.authorization_checker'),
             'project' => $project,
-            'otherUserParam' => $project->getProjectSpecialty()->getAbbreviation(),
+            'otherUserParam' => $otherUserParam,
             'routeName' => $routeName,
             'disabledReviewerFields' => true,
             'disabledState' => true,

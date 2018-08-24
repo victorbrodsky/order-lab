@@ -1269,6 +1269,11 @@ class UserServiceUtil {
         return $url;
     }
 
+    public function getSiteNameByAbbreviation($abbreviation) {
+        $siteObject = $this->em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation($abbreviation);
+        return $siteObject->getSiteName();
+    }
+
     /////////////// NOT USED ///////////////////
     //NOT USED
     //MSSQL error: [Microsoft][ODBC Driver 11 for SQL Server][SQL Server]'LEVENSHTEIN' is not a recognized built-in function name

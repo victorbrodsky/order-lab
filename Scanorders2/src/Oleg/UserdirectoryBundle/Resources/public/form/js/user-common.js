@@ -1659,7 +1659,8 @@ function addNewUserAction( addUserBtn, fieldId, sitename, otherUserParam ) {
             //console.log('OK');
             updateUserComboboxes(response,fieldId);
             //$("#user-add-btn-dismiss").click();
-            document.getElementById("user-add-btn-dismiss").click();
+            //document.getElementById("user-add-btn-dismiss").click();
+            holder.find("#user-add-btn-dismiss").click();
         }
 
     }).done(function() {

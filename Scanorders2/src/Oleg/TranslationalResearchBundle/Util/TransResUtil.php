@@ -597,7 +597,7 @@ class TransResUtil
                 }
 
                 //Send transition emails
-                $resultMsg = $this->sendTransitionEmail($project,$review,$originalStateStr,$testing);
+                $resultMsg = $this->sendTransitionEmail($project,$originalStateStr,$testing);
 
                 //event log
                 $eventType = "Review Submitted";
@@ -2273,7 +2273,7 @@ class TransResUtil
     }
 
     //Use to send notification emails for project transition (awaiting review, missing info, rejected, final, closed)
-    public function sendTransitionEmail($project,$review,$originalStateStr,$testing=false) {
+    public function sendTransitionEmail($project,$originalStateStr,$testing=false) {
         $emailUtil = $this->container->get('user_mailer_utility');
         $user = $this->secTokenStorage->getToken()->getUser();
         $subject = null;

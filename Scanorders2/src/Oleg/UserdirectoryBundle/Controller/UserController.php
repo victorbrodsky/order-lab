@@ -1746,6 +1746,7 @@ class UserController extends Controller
         $creator = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
         $userSecUtil = $this->get('user_security_utility');
+        $userServiceUtil = $this->get('user_service_utility');
         $username = null;
 
         if( !$publicUserId ) {
@@ -1781,9 +1782,13 @@ class UserController extends Controller
 
         if( !$user ) {
             $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByEmailCanonical($email);
+
         }
         if( !$user ) {
-            $user = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByUserInfoEmail($email);
+            $users = $em->getRepository('OlegUserdirectoryBundle:User')->findUserByUserInfoEmail($email);
+            if( count($users) > 0 ) {
+                $user = $users[0];
+            }
         }
 
         if( $user ) {
@@ -1913,7 +1918,18 @@ class UserController extends Controller
             $em->flush();
 
             //record create user to Event Log
-            $event = "User " . $user . " has been created by " . $creator . " on the ".$sitename." site"."<br>";
+            $userUrl = $this->container->get('router')->generate(
+                $sitename.'_showuser',
+                array(
+                    'id'=>$user->getId()
+                ),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $sitenameStr = $userServiceUtil->getSiteNameByAbbreviation($sitename);
+            $event = "User account for " . $user . " has been created by " . $creator . " on the ".$sitenameStr." site.";
+            $event = $event . "<br><br>" . "To review the details for this user account, please visit the link below:";
+            $event = $event . "<br>" . $userUrl;
+
             $userSecUtil = $this->get('user_security_utility');
             $userSecUtil->createUserEditEvent(
                 $sitename,
@@ -1925,6 +1941,7 @@ class UserController extends Controller
             );
 
             //Email to Admin
+            $event = str_replace("<br>","\r\n",$event);
             $emailUtil = $this->get('user_mailer_utility');
             $adminEmails = $userSecUtil->getUserEmailsByRole($sitename,"Administrator");
             $ccEmails = $userSecUtil->getUserEmailsByRole($sitename,"Platform Administrator");
