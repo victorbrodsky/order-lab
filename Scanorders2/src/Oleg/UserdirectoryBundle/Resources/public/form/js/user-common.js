@@ -842,9 +842,14 @@ function expandTextarea(holder) {
 
         if( cycle != 'download' && resize ) {
             //console.log('resize textarea');
-            var height = $(element).prop('scrollHeight');
+
+            //ver1
+            //var height = $(element).prop('scrollHeight');
             //console.log('height='+height);
-            $(element).height(height);
+            //$(element).height(height);
+
+            //ver2
+            onchangeFunction(this);
         }
 
         //this does not work anymore (5 July 2017) => changed to on('input'

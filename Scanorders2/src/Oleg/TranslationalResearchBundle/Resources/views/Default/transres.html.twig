@@ -138,6 +138,8 @@
 
     <div id="form-node-holder"></div>
 
+    {{ transres.tissueRequestDetails(form,project,cycle) }}
+
     {{ transres.projectDocument(form,project,cycle) }}
 
 {% endmacro %}
@@ -181,9 +183,11 @@
 
                     {{ formmacros.field(form.hypothesis) }}
                     {{ formmacros.field(form.objective) }}
-                    {{ formmacros.field(form.numberOfCases) }}
-                    {{ formmacros.field(form.numberOfCohorts) }}
                     {{ formmacros.field(form.expectedResults) }}
+
+                    {#{{ formmacros.field(form.numberOfCases) }}#}
+                    {{ formmacros.field(form.numberOfCohorts) }}
+
                     {{ formmacros.fieldDateLabel(form.expectedCompletionDate,'allow-future-date') }}
 
                     {{ formmacros.field(form.totalCost) }}
@@ -194,6 +198,8 @@
             </div>
         </div>
     </div>
+
+    {{ transres.tissueRequestDetails(form,project,cycle) }}
 
     {{ transres.projectDocument(form,project,cycle) }}
 
@@ -312,11 +318,9 @@
                         {{ user_formnode_utility.getFormNodeHolderShortInfoForView(project,project.messageCategory,false)|raw }}
                     </div>
 
-                    {#{% if form %}#}
-                        {{ transres.projectDocument(form,project,cycle) }}
-                    {#{% else %}#}
+                    {{ transres.tissueRequestDetails(form,project,cycle) }}
 
-                    {#{% endif %}#}
+                    {{ transres.projectDocument(form,project,cycle) }}
 
                 </div>
             </div>
@@ -338,58 +342,35 @@
         {% set asFormOrEntity = "asForm" %}
         {% set documents = form.documents %}
         {#{% set irbApprovalLetters = form.irbApprovalLetters %}#}
-        {% set humanTissueForms = form.humanTissueForms %}
+        {#{% set humanTissueForms = form.humanTissueForms %}#}
     {% else %}
         {% set cycle = "show" %}
         {% set asFormOrEntity = "asEntity" %}
         {% set documents = project.documents %}
         {#{% set irbApprovalLetters = project.irbApprovalLetters %}#}
-        {% set humanTissueForms = project.humanTissueForms %}
+        {#{% set humanTissueForms = project.humanTissueForms %}#}
     {% endif %}
 
     {#involveHumanTissue "Will this project involve human tissue?"#}
-    {#{{ formmacros.field(form.involveHumanTissue) }}#}
-    {#You can download the blank form here. "download blank form here" should link to the blank form document#}
-    {#<p>#}
-    {#<div class="row">#}
-        {#<div class="col-xs-6" align="right">#}
-            {#<b>Do you (the person for whom the account is being requested) have a <a href="http://weill.cornell.edu/its/identity-security/identity/cwid/">CWID</a> username?</b>#}
-        {#</div>#}
-        {#<div class="col-xs-6" align="left">#}
-            {#{{ form_widget(form.hascwid) }}#}
-        {#</div>#}
-    {#</div>#}
-    {#</p>#}
+    {#{% set humanTissueFormStyle = "display: none;" %}#}
+    {#{% if project.involveHumanTissue == "Yes" %}#}
+        {#{% set humanTissueFormStyle = "" %}#}
+    {#{% endif %}#}
+    {#{% if form %}#}
+        {#{{ formmacros.field(form.involveHumanTissue) }}#}
+    {#{% else %}#}
+        {#{{ formmacros.simplefield("Will this project involve human tissue?:", project.involveHumanTissue, "input", "disabled") }}#}
+    {#{% endif %}#}
 
-    {#<div class="well form-element-holder user-irbApprovalLetters">#}
-        {#<label class="col-xs-12 control-label">IRB Approval Letter</label>#}
+    {#<div class="well form-element-holder user-humanTissueForms" style="{{ humanTissueFormStyle }}">#}
+        {#<label class="col-xs-12 control-label">Human Tissue Form</label>#}
+        {#<p>You can <a href="{{ path(translationalresearch_sitename~'_download_humanTissueForm') }}" target="_blank">download the blank form here.</a></p>#}
         {#<div class="row withpaddingtop">#}
             {#<div class="col-xs-12">#}
-                {#{{ usermacros.documentsContainer(null,irbApprovalLetters,cycle,'noprototype',8,'default','IRB Approval Letter',asFormOrEntity) }}#}
+                {#{{ usermacros.documentsContainer(null,humanTissueForms,cycle,'noprototype',8,'default','Human Tissue Form',asFormOrEntity) }}#}
             {#</div>#}
         {#</div>#}
     {#</div>#}
-
-    {#involveHumanTissue "Will this project involve human tissue?"#}
-    {% set humanTissueFormStyle = "display: none;" %}
-    {% if project.involveHumanTissue == "Yes" %}
-        {% set humanTissueFormStyle = "" %}
-    {% endif %}
-    {% if form %}
-        {{ formmacros.field(form.involveHumanTissue) }}
-    {% else %}
-        {{ formmacros.simplefield("Will this project involve human tissue?:", project.involveHumanTissue, "input", "disabled") }}
-    {% endif %}
-
-    <div class="well form-element-holder user-humanTissueForms" style="{{ humanTissueFormStyle }}">
-        <label class="col-xs-12 control-label">Human Tissue Form</label>
-        <p>You can <a href="{{ path(translationalresearch_sitename~'_download_humanTissueForm') }}" target="_blank">download the blank form here.</a></p>
-        <div class="row withpaddingtop">
-            <div class="col-xs-12">
-                {{ usermacros.documentsContainer(null,humanTissueForms,cycle,'noprototype',8,'default','Human Tissue Form',asFormOrEntity) }}
-            </div>
-        </div>
-    </div>
 
     <div class="well form-element-holder user-documents">
         <label class="col-xs-12 control-label">Project Documents</label>
@@ -401,6 +382,109 @@
     </div>
 {% endmacro %}
 
+
+{% macro tissueRequestDetails( form, project, cycle ) %}
+    {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+    {% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}
+
+    {% if cycle == "review" %}
+        {% set cycle = "show" %}
+    {% endif %}
+
+    {% if form %}
+        {% set asFormOrEntity = "asForm" %}
+        {% set humanTissueForms = form.humanTissueForms %}
+    {% else %}
+        {% set cycle = "show" %}
+        {% set asFormOrEntity = "asEntity" %}
+        {% set humanTissueForms = project.humanTissueForms %}
+    {% endif %}
+
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="tissueRequestDetailsHeading">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#tissueRequestDetails" aria-expanded="true">
+                        Tissue Request Details
+                    </a>
+                </h4>
+            </div>
+            <div id="tissueRequestDetails" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="tissueRequestDetailsHeading">
+                <div class="panel-body">
+
+                    {#involveHumanTissue "Will this project involve human tissue?"#}
+                    {% set humanTissueFormStyle = "display: none;" %}
+                    {% if project.involveHumanTissue == "Yes" %}
+                        {% set humanTissueFormStyle = "" %}
+                    {% endif %}
+                    {% if form %}
+                        {{ formmacros.field(form.involveHumanTissue) }}
+                    {% else %}
+                        {{ formmacros.simplefield("Will this project involve human tissue?:", project.involveHumanTissue, "input", "disabled") }}
+                    {% endif %}
+
+                    <div class="well form-element-holder user-humanTissueForms" style="{{ humanTissueFormStyle }}">
+                        <label class="col-xs-12 control-label">Human Tissue Form</label>
+                        <p>You can <a href="{{ path(translationalresearch_sitename~'_download_humanTissueForm') }}" target="_blank">download the blank form here.</a></p>
+                        <div class="row withpaddingtop">
+                            <div class="col-xs-12">
+                                {{ usermacros.documentsContainer(null,humanTissueForms,cycle,'noprototype',8,'default','Human Tissue Form',asFormOrEntity) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    {{ transres.tissueProcurement(form,project,cycle) }}
+                    {{ transres.archivalSpecimens(form,project,cycle) }}
+
+                    {% if form.tissueFormComment is defined %}
+                        {{ formmacros.field(form.tissueFormComment) }}
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endmacro %}
+{% macro tissueProcurement( form, project, cycle ) %}
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="tissueProcurementHeading">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#tissueProcurement" aria-expanded="true">
+                        Tissue Procurement/Processing
+                    </a>
+                </h4>
+            </div>
+            <div id="tissueProcurement" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="tissueProcurementHeading">
+                <div class="panel-body">
+                    <p><font color="red">This is for RESEARCH ONLY tissue and NOT for archival slides from FFPE blocks</font></p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+{% macro archivalSpecimens( form, project, cycle ) %}
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="archivalSpecimensHeading">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#archivalSpecimens" aria-expanded="true">
+                        Archival Specimens
+                    </a>
+                </h4>
+            </div>
+            <div id="archivalSpecimens" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="archivalSpecimensHeading">
+                <div class="panel-body">
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
 
 {% macro projectRequesters( form, project, cycle ) %}
     {% import "OlegTranslationalResearchBundle::Default/transres.html.twig" as transres %}

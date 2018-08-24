@@ -239,11 +239,11 @@ class ProjectType extends AbstractType
             'attr' => array('class'=>'textarea form-control')
         ));
 
-        $builder->add('numberOfCases',TextType::class,array(
-            'label' => "Number Of Cases:",
-            'required' => false,
-            'attr' => array('class'=>'form-control digit-mask mask-text-align-left')
-        ));
+//        $builder->add('numberOfCases',TextType::class,array(
+//            'label' => "Number Of Cases:",
+//            'required' => false,
+//            'attr' => array('class'=>'form-control digit-mask mask-text-align-left')
+//        ));
 
         $builder->add('numberOfCohorts',TextType::class,array(
             'label' => "Number of Cohorts:",

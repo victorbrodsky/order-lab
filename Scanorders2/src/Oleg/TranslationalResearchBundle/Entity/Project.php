@@ -373,6 +373,10 @@ class Project {
     private $expectedCompletionDate;
 
 
+    //Tissue Request Details
+    //totalPatientCases
+    //tissueFormComment
+
     public function __construct($user=null) {
 
         $this->principalInvestigators = new ArrayCollection();

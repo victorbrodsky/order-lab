@@ -446,7 +446,8 @@ div.fellapp-application-holder .ajax-combobox-trainingmajors .select2-default {
 /*.ordersearch .select2-choices {height: 200px;}*/
 
 .textarea {
-    min-height: 75px;
+    /*min-height: 75px;*/
+    min-height: 40px;
 }
 
 .print_helper {
