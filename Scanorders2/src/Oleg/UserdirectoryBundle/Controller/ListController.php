@@ -254,6 +254,8 @@ class ListController extends Controller
      * @Route("/list/custom097/", name="custom097-list")
      * @Route("/list/custom098/", name="custom098-list")
      * @Route("/list/custom099/", name="custom099-list")
+     * @Route("/list/translational-tissue-processing-services/", name="transrestissueprocessingservices-list")
+     * @Route("/list/translational-other-requested-services/", name="transresotherrequestedservices-list")
      *
      *
      * @Method("GET")
@@ -713,6 +715,8 @@ class ListController extends Controller
      * @Route("/list/custom097/", name="custom097_create")
      * @Route("/list/custom098/", name="custom098_create")
      * @Route("/list/custom099/", name="custom099_create")
+     * @Route("/list/translational-tissue-processing-services/", name="transrestissueprocessingservices_create")
+     * @Route("/list/translational-other-requested-services/", name="transresotherrequestedservices_create")
      *
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -1014,6 +1018,9 @@ class ListController extends Controller
      * @Route("/list/custom097/new", name="custom097_new")
      * @Route("/list/custom098/new", name="custom098_new")
      * @Route("/list/custom099/new", name="custom099_new")
+     * @Route("/list/translational-tissue-processing-services/new", name="transrestissueprocessingservices_new")
+     * @Route("/list/translational-other-requested-services/new", name="transresotherrequestedservices_new")
+     *
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
@@ -1277,6 +1284,8 @@ class ListController extends Controller
      * @Route("/list/custom097/{id}", name="custom097_show")
      * @Route("/list/custom098/{id}", name="custom098_show")
      * @Route("/list/custom099/{id}", name="custom099_show")
+     * @Route("/list/translational-tissue-processing-services/{id}", name="transrestissueprocessingservices_show")
+     * @Route("/list/translational-other-requested-services/{id}", name="transresotherrequestedservices_show")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:show.html.twig")
@@ -1530,6 +1539,8 @@ class ListController extends Controller
      * @Route("/list/custom097/{id}/edit", name="custom097_edit")
      * @Route("/list/custom098/{id}/edit", name="custom098_edit")
      * @Route("/list/custom099/{id}/edit", name="custom099_edit")
+     * @Route("/list/translational-tissue-processing-services/{id}/edit", name="transrestissueprocessingservices_edit")
+     * @Route("/list/translational-other-requested-services/{id}/edit", name="transresotherrequestedservices_edit")
      *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -1827,6 +1838,8 @@ class ListController extends Controller
      * @Route("/list/custom097/{id}", name="custom097_update")
      * @Route("/list/custom098/{id}", name="custom098_update")
      * @Route("/list/custom099/{id}", name="custom099_update")
+     * @Route("/list/translational-tissue-processing-services/{id}", name="transrestissueprocessingservices_update")
+     * @Route("/list/translational-other-requested-services/{id}", name="transresotherrequestedservices_update")
      *
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
@@ -2589,6 +2602,16 @@ class ListController extends Controller
                 $displayName = "Translational Research Irb Approval Type List";
                 $bundleName = "TranslationalResearchBundle";
                 break;
+            case "transrestissueprocessingservices":
+                $className = "TissueProcessingServiceList";
+                $displayName = "Translational Research Tissue Processing Service List";
+                $bundleName = "TranslationalResearchBundle";
+                break;
+            case "transresotherrequestedservices":
+                $className = "OtherRequestedServiceList";
+                $displayName = "Translational Research Other Requested Service List";
+                $bundleName = "TranslationalResearchBundle";
+                break;
 
             case "antibodies":
                 $className = "AntibodyList";
@@ -3276,6 +3299,8 @@ class ListController extends Controller
      * @Route("/list/custom097/{id}", name="custom097_delete")
      * @Route("/list/custom098/{id}", name="custom098_delete")
      * @Route("/list/custom099/{id}", name="custom099_delete")
+     * @Route("/list/translational-tissue-processing-services/{id}", name="transrestissueprocessingservices_delete")
+     * @Route("/list/translational-other-requested-services/{id}", name="transresotherrequestedservices_delete")
      *
      *
      * @Method("DELETE")

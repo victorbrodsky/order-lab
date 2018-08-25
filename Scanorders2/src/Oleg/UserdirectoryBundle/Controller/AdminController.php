@@ -23,9 +23,11 @@ use Oleg\FellAppBundle\Entity\FellAppStatus;
 use Oleg\FellAppBundle\Entity\LanguageProficiency;
 use Oleg\OrderformBundle\Controller\ScanListController;
 use Oleg\TranslationalResearchBundle\Entity\IrbApprovalTypeList;
+use Oleg\TranslationalResearchBundle\Entity\OtherRequestedServiceList;
 use Oleg\TranslationalResearchBundle\Entity\ProjectTypeList;
 use Oleg\TranslationalResearchBundle\Entity\RequestCategoryTypeList;
 use Oleg\TranslationalResearchBundle\Entity\SpecialtyList;
+use Oleg\TranslationalResearchBundle\Entity\TissueProcessingServiceList;
 use Oleg\UserdirectoryBundle\Entity\AuthorshipRoles;
 use Oleg\UserdirectoryBundle\Entity\BloodProductTransfusedList;
 use Oleg\UserdirectoryBundle\Entity\BloodTypeList;
@@ -860,6 +862,8 @@ class AdminController extends Controller
         $count_generateTransResProjectTypeList = $this->generateTransResProjectTypeList();
         $count_generateTransResRequestCategoryType = $this->generateTransResRequestCategoryType();
         $count_generateIrbApprovalTypeList = $this->generateIrbApprovalTypeList();
+        $count_generateTissueProcessingServiceList = $this->generateTissueProcessingServiceList();
+        $count_generateRestrictedServiceList = $this->generateRestrictedServiceList();
 
         $count_generatePlatformListManagerList = $this->generatePlatformListManagerList(null,null);
 
@@ -960,6 +964,8 @@ class AdminController extends Controller
             'TransResRequestCategoryType='.$count_generateTransResRequestCategoryType.', '.
             'PlatformListManagerList='.$count_generatePlatformListManagerList.', '.
             'IrbApprovalTypeList='.$count_generateIrbApprovalTypeList.', '.
+            'TissueProcessingServiceList='.$count_generateTissueProcessingServiceList.', '.
+            'RestrictedServiceList='.$count_generateRestrictedServiceList.', '.
             'populateClassUrl='.$count_populateClassUrl.', '.
             //'createAdminAntibodyList='.$count_createAdminAntibodyList.', '.
 
@@ -8430,6 +8436,70 @@ class AdminController extends Controller
             }
 
             $listEntity = new IrbApprovalTypeList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            //exit('exit generateObjectTypeActions');
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+    public function generateTissueProcessingServiceList() {
+        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "Paraffin Block Processing",
+            "Fresh/Frozen Tissue Procurement",
+            "Frozen Tissue Storage",
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository('OlegTranslationalResearchBundle:TissueProcessingServiceList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new TissueProcessingServiceList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
+            //exit('exit generateObjectTypeActions');
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+    public function generateRestrictedServiceList() {
+        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "Flow Cytometry",
+            "Immunohistochemistry",
+            "FISH",
+            "Tissue Microarray",
+            "Laser Capture Microdissection"
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository('OlegTranslationalResearchBundle:OtherRequestedServiceList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new OtherRequestedServiceList();
             $this->setDefaultList($listEntity,$count,$username,$name);
 
             //exit('exit generateObjectTypeActions');

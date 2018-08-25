@@ -185,7 +185,7 @@
                     {{ formmacros.field(form.objective) }}
                     {{ formmacros.field(form.expectedResults) }}
 
-                    {#{{ formmacros.field(form.numberOfCases) }}#}
+                    {{ formmacros.field(form.numberOfCases) }}
                     {{ formmacros.field(form.numberOfCohorts) }}
 
                     {{ formmacros.fieldDateLabel(form.expectedCompletionDate,'allow-future-date') }}
@@ -434,6 +434,9 @@
                         </div>
                     </div>
 
+                    <br>
+                    <hr>
+                    <p>The answers you provide must reflect what has been requested in the approved IRB and the approved tissue request form.</p>
                     {{ transres.tissueProcurement(form,project,cycle) }}
                     {{ transres.archivalSpecimens(form,project,cycle) }}
 
@@ -448,12 +451,29 @@
 
 {% endmacro %}
 {% macro tissueProcurement( form, project, cycle ) %}
+
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    {#Will this project require tissue procurement/processing:#}
+    {#{% if form.requireTissueProcessing is defined %}#}
+        {#{{ formmacros.field(form.requireTissueProcessing) }}#}
+    {#{% endif %}#}
+    {% set requireTissueProcessing = "display: none;" %}
+    {% if project.requireTissueProcessing == "Yes" %}
+        {% set requireTissueProcessingStyle = "" %}
+    {% endif %}
+    {% if form %}
+        {{ formmacros.field(form.requireTissueProcessing) }}
+    {% else %}
+        {{ formmacros.simplefield("Will this project require tissue procurement/processing?:", project.requireTissueProcessing, "input", "disabled") }}
+    {% endif %}
+
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel panel-default">
             <div class="panel-heading" role="tab" id="tissueProcurementHeading">
                 <h4 class="panel-title">
                     <a role="button" data-toggle="collapse" data-parent="#accordion" href="#tissueProcurement" aria-expanded="true">
-                        Tissue Procurement/Processing
+                        Histology Tissue Procurement/Processing
                     </a>
                 </h4>
             </div>
@@ -461,12 +481,33 @@
                 <div class="panel-body">
                     <p><font color="red">This is for RESEARCH ONLY tissue and NOT for archival slides from FFPE blocks</font></p>
 
+                    {{ formmacros.field(form.totalNumberOfPatientsProcessing) }}
+                    {{ formmacros.field(form.totalNumberOfSpecimensProcessing) }}
+                    {{ formmacros.field(form.tissueProcessingServices) }}
+
                 </div>
             </div>
         </div>
     </div>
 {% endmacro %}
 {% macro archivalSpecimens( form, project, cycle ) %}
+
+    {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+
+    {#Will this project require archival specimens#}
+    {#{% if form.requireArchivalProcessing is defined %}#}
+        {#{{ formmacros.field(form.requireArchivalProcessing) }}#}
+    {#{% endif %}#}
+    {% set requireArchivalProcessing = "display: none;" %}
+    {% if project.requireArchivalProcessing == "Yes" %}
+        {% set requireArchivalProcessingStyle = "" %}
+    {% endif %}
+    {% if form %}
+        {{ formmacros.field(form.requireArchivalProcessing) }}
+    {% else %}
+        {{ formmacros.simplefield("Will this project require archival specimens?:", project.requireArchivalProcessing, "input", "disabled") }}
+    {% endif %}
+
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel panel-default">
             <div class="panel-heading" role="tab" id="archivalSpecimensHeading">
@@ -479,6 +520,18 @@
             <div id="archivalSpecimens" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="archivalSpecimensHeading">
                 <div class="panel-body">
 
+                    {{ formmacros.field(form.totalNumberOfPatientsArchival) }}
+                    {{ formmacros.field(form.totalNumberOfSpecimensArchival) }}
+                    {{ formmacros.field(form.totalNumberOfBlocksPerCase) }}
+
+                    {{ formmacros.field(form.quantityOfSlidesPerBlockStained) }}
+                    {{ formmacros.field(form.quantityOfSlidesPerBlockUnstained) }}
+                    {{ formmacros.field(form.quantityOfSlidesPerBlockUnstainedIHC) }}
+                    {{ formmacros.field(form.quantityOfSpecialStainsPerBlock) }}
+                    {{ formmacros.field(form.quantityOfParaffinSectionsRnaDnaPerBlock) }}
+                    {{ formmacros.field(form.quantityOfTmaCoresRnaDnaAnalysisPerBlock) }}
+
+                    {{ formmacros.field(form.restrictedServices) }}
 
                 </div>
             </div>

@@ -106,6 +106,44 @@ function transresShowHideHumanTissueUploadSection(involveHumanTissue) {
     }
 }
 
+function transresRequireTissueProcessingListener() {
+    $(".requireTissueProcessing").on("change", function(e) {
+        var requireTissueProcessing = $(".requireTissueProcessing").find('input[name="oleg_translationalresearchbundle_project[requireTissueProcessing]"]:checked').val();
+        //console.log("change: checked value requireTissueProcessing="+requireTissueProcessing);
+        transresShowHideRequireTissueProcessing(requireTissueProcessing);
+    });
+}
+function transresShowHideRequireTissueProcessing(requireTissueProcessing) {
+    if( requireTissueProcessing == "Yes" ) {
+        //console.log("requireTissueProcessing show");
+        $("#tissueRequestDetails").collapse('show');
+    }
+
+    if( requireTissueProcessing == "No" ) {
+        //console.log("requireTissueProcessing hide");
+        $("#tissueRequestDetails").collapse('hide');
+    }
+}
+
+function transresRequireArchivalProcessingListener() {
+    $(".requireArchivalProcessing").on("change", function(e) {
+        var requireArchivalProcessing = $(".requireArchivalProcessing").find('input[name="oleg_translationalresearchbundle_project[requireArchivalProcessing]"]:checked').val();
+        //console.log("change: checked value requireArchivalProcessing="+requireArchivalProcessing);
+        transresShowHideRequireArchivalProcessing(requireArchivalProcessing);
+    });
+}
+function transresShowHideRequireArchivalProcessing(requireArchivalProcessing) {
+    if( requireArchivalProcessing == "Yes" ) {
+        //console.log("requireArchivalProcessing show");
+        $("#tissueProcurement").collapse('show');
+    }
+
+    if( requireArchivalProcessing == "No" ) {
+        //console.log("requireArchivalProcessing hide");
+        $("#tissueProcurement").collapse('hide');
+    }
+}
+
 //form with multiple buttons don't use form.submit(); because it does not pass buttons in the post.
 //Therefore use button 'onclick'=>'transresValidateProjectForm();' in php form type
 function transresValidateProjectForm() {

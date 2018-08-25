@@ -374,8 +374,135 @@ class Project {
 
 
     //Tissue Request Details
-    //totalPatientCases
-    //tissueFormComment
+    /**
+     * Will this project require tissue procurement/processing:
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $requireTissueProcessing;
+
+    /**
+     * Total number of patients:
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $totalNumberOfPatientsProcessing;
+
+    /**
+     * Total number of patient cases:
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $totalNumberOfSpecimensProcessing;
+
+    /**
+     * Tissue Processing Services: [v] Paraffin Block Processing [v] Fresh/Frozen Tissue Procurement [v] Frozen Tissue Storage
+     *
+     * @ORM\OneToMany(targetEntity="TissueProcessingServiceList", mappedBy="project", cascade={"persist"})
+     */
+    private $tissueProcessingServices;
+//    /**
+//     * Services: Paraffin Block Processing
+//     *
+//     * @ORM\Column(type="boolean", nullable=true)
+//     */
+//    private $paraffinBlockProcessing;
+//    /**
+//     * Services: Fresh/Frozen Tissue Procurement
+//     *
+//     * @ORM\Column(type="boolean", nullable=true)
+//     */
+//    private $freshFrozenTissueProcurement;
+//    /**
+//     * Services: Frozen Tissue Storage
+//     *
+//     * @ORM\Column(type="boolean", nullable=true)
+//     */
+//    private $frozenTissueStorage;
+
+    //Archival Specimens
+    /**
+     * Will this project require archival specimens:
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $requireArchivalProcessing;
+
+    /**
+     * Total number of patients
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $totalNumberOfPatientsArchival;
+
+    /**
+     * Total number of patient cases:
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $totalNumberOfSpecimensArchival;
+
+    /**
+     * Total number of blocks per case:
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $totalNumberOfBlocksPerCase;
+
+    /**
+     * Quantity of slides per block - stained:
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $quantityOfSlidesPerBlockStained;
+
+    /**
+     * Quantity of slides per block - unstained:
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $quantityOfSlidesPerBlockUnstained;
+
+    /**
+     * Quantity of slides per block - unstained for IHC:
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $quantityOfSlidesPerBlockUnstainedIHC;
+
+    /**
+     * Quantity of special stains per block:
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $quantityOfSpecialStainsPerBlock;
+
+    /**
+     * Quantity of paraffin sections for RNA/DNA (Tube) per block:
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $quantityOfParaffinSectionsRnaDnaPerBlock;
+
+    /**
+     * Quantity of TMA cores for RNA/DNA analysis (Tube) per block:
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $quantityOfTmaCoresRnaDnaAnalysisPerBlock;
+
+    /**
+     * Other Requested Services: [v] Flow Cytometry [v] Immunohistochemistry [v] FISH [v] Tissue Microarray [v] Laser Capture Microdissection
+     *
+     * @ORM\OneToMany(targetEntity="OtherRequestedServiceList", mappedBy="project", cascade={"persist"})
+     */
+    private $restrictedServices;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $tissueFormComment;
+
 
     public function __construct($user=null) {
 
@@ -397,12 +524,18 @@ class Project {
 
         $this->requests = new ArrayCollection();
 
+        $this->tissueProcessingServices = new ArrayCollection();
+        $this->restrictedServices = new ArrayCollection();
+
         //$this->formVersions = new ArrayCollection();
 
         $this->setSubmitter($user);
         $this->addContact($user);
         $this->setState('draft');
         $this->setCreateDate(new \DateTime());
+
+        //$this->setRequireTissueProcessing("Yes");
+        //$this->setRequireArchivalProcessing("Yes");
     }
 
 
@@ -1246,7 +1379,266 @@ class Project {
     {
         $this->expectedCompletionDate = $expectedCompletionDate;
     }
-    
+
+
+    public function getTissueProcessingServices()
+    {
+        return $this->tissueProcessingServices;
+    }
+    public function addTissueProcessingService($item)
+    {
+        if( $item && !$this->tissueProcessingServices->contains($item) ) {
+            $this->tissueProcessingServices->add($item);
+        }
+        return $this;
+    }
+    public function removeTissueProcessingService($item)
+    {
+        $this->tissueProcessingServices->removeElement($item);
+    }
+
+    public function getRestrictedServices()
+    {
+        return $this->restrictedServices;
+    }
+    public function addRestrictedService($item)
+    {
+        if( $item && !$this->restrictedServices->contains($item) ) {
+            $this->restrictedServices->add($item);
+        }
+        return $this;
+    }
+    public function removeRestrictedService($item)
+    {
+        $this->restrictedServices->removeElement($item);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRequireTissueProcessing()
+    {
+        return $this->requireTissueProcessing;
+    }
+
+    /**
+     * @param mixed $requireTissueProcessing
+     */
+    public function setRequireTissueProcessing($requireTissueProcessing)
+    {
+        $this->requireTissueProcessing = $requireTissueProcessing;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTotalNumberOfPatientsProcessing()
+    {
+        return $this->totalNumberOfPatientsProcessing;
+    }
+
+    /**
+     * @param mixed $totalNumberOfPatientsProcessing
+     */
+    public function setTotalNumberOfPatientsProcessing($totalNumberOfPatientsProcessing)
+    {
+        $this->totalNumberOfPatientsProcessing = $totalNumberOfPatientsProcessing;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTotalNumberOfSpecimensProcessing()
+    {
+        return $this->totalNumberOfSpecimensProcessing;
+    }
+
+    /**
+     * @param mixed $totalNumberOfSpecimensProcessing
+     */
+    public function setTotalNumberOfSpecimensProcessing($totalNumberOfSpecimensProcessing)
+    {
+        $this->totalNumberOfSpecimensProcessing = $totalNumberOfSpecimensProcessing;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRequireArchivalProcessing()
+    {
+        return $this->requireArchivalProcessing;
+    }
+
+    /**
+     * @param mixed $requireArchivalProcessing
+     */
+    public function setRequireArchivalProcessing($requireArchivalProcessing)
+    {
+        $this->requireArchivalProcessing = $requireArchivalProcessing;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTotalNumberOfPatientsArchival()
+    {
+        return $this->totalNumberOfPatientsArchival;
+    }
+
+    /**
+     * @param mixed $totalNumberOfPatientsArchival
+     */
+    public function setTotalNumberOfPatientsArchival($totalNumberOfPatientsArchival)
+    {
+        $this->totalNumberOfPatientsArchival = $totalNumberOfPatientsArchival;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTotalNumberOfSpecimensArchival()
+    {
+        return $this->totalNumberOfSpecimensArchival;
+    }
+
+    /**
+     * @param mixed $totalNumberOfSpecimensArchival
+     */
+    public function setTotalNumberOfSpecimensArchival($totalNumberOfSpecimensArchival)
+    {
+        $this->totalNumberOfSpecimensArchival = $totalNumberOfSpecimensArchival;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTotalNumberOfBlocksPerCase()
+    {
+        return $this->totalNumberOfBlocksPerCase;
+    }
+
+    /**
+     * @param mixed $totalNumberOfBlocksPerCase
+     */
+    public function setTotalNumberOfBlocksPerCase($totalNumberOfBlocksPerCase)
+    {
+        $this->totalNumberOfBlocksPerCase = $totalNumberOfBlocksPerCase;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getQuantityOfSlidesPerBlockStained()
+    {
+        return $this->quantityOfSlidesPerBlockStained;
+    }
+
+    /**
+     * @param mixed $quantityOfSlidesPerBlockStained
+     */
+    public function setQuantityOfSlidesPerBlockStained($quantityOfSlidesPerBlockStained)
+    {
+        $this->quantityOfSlidesPerBlockStained = $quantityOfSlidesPerBlockStained;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getQuantityOfSlidesPerBlockUnstained()
+    {
+        return $this->quantityOfSlidesPerBlockUnstained;
+    }
+
+    /**
+     * @param mixed $quantityOfSlidesPerBlockUnstained
+     */
+    public function setQuantityOfSlidesPerBlockUnstained($quantityOfSlidesPerBlockUnstained)
+    {
+        $this->quantityOfSlidesPerBlockUnstained = $quantityOfSlidesPerBlockUnstained;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getQuantityOfSlidesPerBlockUnstainedIHC()
+    {
+        return $this->quantityOfSlidesPerBlockUnstainedIHC;
+    }
+
+    /**
+     * @param mixed $quantityOfSlidesPerBlockUnstainedIHC
+     */
+    public function setQuantityOfSlidesPerBlockUnstainedIHC($quantityOfSlidesPerBlockUnstainedIHC)
+    {
+        $this->quantityOfSlidesPerBlockUnstainedIHC = $quantityOfSlidesPerBlockUnstainedIHC;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getQuantityOfSpecialStainsPerBlock()
+    {
+        return $this->quantityOfSpecialStainsPerBlock;
+    }
+
+    /**
+     * @param mixed $quantityOfSpecialStainsPerBlock
+     */
+    public function setQuantityOfSpecialStainsPerBlock($quantityOfSpecialStainsPerBlock)
+    {
+        $this->quantityOfSpecialStainsPerBlock = $quantityOfSpecialStainsPerBlock;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getQuantityOfParaffinSectionsRnaDnaPerBlock()
+    {
+        return $this->quantityOfParaffinSectionsRnaDnaPerBlock;
+    }
+
+    /**
+     * @param mixed $quantityOfParaffinSectionsRnaDnaPerBlock
+     */
+    public function setQuantityOfParaffinSectionsRnaDnaPerBlock($quantityOfParaffinSectionsRnaDnaPerBlock)
+    {
+        $this->quantityOfParaffinSectionsRnaDnaPerBlock = $quantityOfParaffinSectionsRnaDnaPerBlock;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getQuantityOfTmaCoresRnaDnaAnalysisPerBlock()
+    {
+        return $this->quantityOfTmaCoresRnaDnaAnalysisPerBlock;
+    }
+
+    /**
+     * @param mixed $quantityOfTmaCoresRnaDnaAnalysisPerBlock
+     */
+    public function setQuantityOfTmaCoresRnaDnaAnalysisPerBlock($quantityOfTmaCoresRnaDnaAnalysisPerBlock)
+    {
+        $this->quantityOfTmaCoresRnaDnaAnalysisPerBlock = $quantityOfTmaCoresRnaDnaAnalysisPerBlock;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTissueFormComment()
+    {
+        return $this->tissueFormComment;
+    }
+
+    /**
+     * @param mixed $tissueFormComment
+     */
+    public function setTissueFormComment($tissueFormComment)
+    {
+        $this->tissueFormComment = $tissueFormComment;
+    }
+
+
+
 
     //show the name of the form (from the form hierarchy) that was used to generate this submitted message.
     // Make sure to save this form ID of the form linked from the Message Type at the time of message submission

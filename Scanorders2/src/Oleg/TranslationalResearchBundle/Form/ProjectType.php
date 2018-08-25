@@ -239,11 +239,11 @@ class ProjectType extends AbstractType
             'attr' => array('class'=>'textarea form-control')
         ));
 
-//        $builder->add('numberOfCases',TextType::class,array(
-//            'label' => "Number Of Cases:",
-//            'required' => false,
-//            'attr' => array('class'=>'form-control digit-mask mask-text-align-left')
-//        ));
+        $builder->add('numberOfCases',TextType::class,array(
+            'label' => "Number Of Cases:",
+            'required' => false,
+            'attr' => array('class'=>'form-control digit-mask mask-text-align-left')
+        ));
 
         $builder->add('numberOfCohorts',TextType::class,array(
             'label' => "Number of Cohorts:",
@@ -535,7 +535,120 @@ class ProjectType extends AbstractType
         ));
 
 
+        //Histology Tissue Procurement/Processing
+        $builder->add('requireTissueProcessing',ChoiceType::class,array(
+            'label' => "Will this project require tissue procurement/processing:",
+            'choices' => array("Yes"=>"Yes", "No"=>"No"),
+            'multiple' => false,
+            'required' => true,
+            'expanded' => true,
+            'attr' => array('class'=>'horizontal_type requireTissueProcessing')
+        ));
+        $builder->add('totalNumberOfPatientsProcessing',TextType::class,array(
+            'label' => "Total number of patients:",
+            'required' => false,
+            'attr' => array('class'=>'form-control digit-mask mask-text-align-left')
+        ));
+        $builder->add('totalNumberOfSpecimensProcessing',TextType::class,array(
+            'label' => "Total number of patient cases:",
+            'required' => false,
+            'attr' => array('class'=>'form-control digit-mask mask-text-align-left')
+        ));
+        $builder->add( 'tissueProcessingServices', EntityType::class, array(
+            'class' => 'OlegTranslationalResearchBundle:TissueProcessingServiceList',
+            'label'=>'Services:',
+            'required'=>false,
+            'multiple' => true,
+            'expanded' => true,
+            'attr' => array('class' => 'horizontal_type tissueProcessingServices'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->orderBy("list.orderinlist","ASC")
+                    ->setParameters( array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
+            }
+        ));
 
+        //Archival Specimens
+        $builder->add('requireArchivalProcessing',ChoiceType::class,array(
+            'label' => "Will this project require archival specimens:",
+            'choices' => array("Yes"=>"Yes", "No"=>"No"),
+            'multiple' => false,
+            'required' => true,
+            'expanded' => true,
+            'attr' => array('class'=>'horizontal_type requireArchivalProcessing')
+        ));
+        $builder->add('totalNumberOfPatientsArchival',TextType::class,array(
+            'label' => "Total number of patients:",
+            'required' => false,
+            'attr' => array('class'=>'form-control digit-mask mask-text-align-left')
+        ));
+        $builder->add('totalNumberOfSpecimensArchival',TextType::class,array(
+            'label' => "Total number of patient cases:",
+            'required' => false,
+            'attr' => array('class'=>'form-control digit-mask mask-text-align-left')
+        ));
+        $builder->add('totalNumberOfBlocksPerCase',TextType::class,array(
+            'label' => "Total number of blocks per case:",
+            'required' => false,
+            'attr' => array('class'=>'form-control digit-mask mask-text-align-left')
+        ));
+        $builder->add('quantityOfSlidesPerBlockStained',TextType::class,array(
+            'label' => "Quantity of slides per block - stained:",
+            'required' => false,
+            'attr' => array('class'=>'form-control digit-mask mask-text-align-left')
+        ));
+        $builder->add('quantityOfSlidesPerBlockUnstained',TextType::class,array(
+            'label' => "Quantity of slides per block - unstained:",
+            'required' => false,
+            'attr' => array('class'=>'form-control digit-mask mask-text-align-left')
+        ));
+        $builder->add('quantityOfSlidesPerBlockUnstainedIHC',TextType::class,array(
+            'label' => "Quantity of slides per block - unstained for IHC:",
+            'required' => false,
+            'attr' => array('class'=>'form-control digit-mask mask-text-align-left')
+        ));
+        $builder->add('quantityOfSpecialStainsPerBlock',TextType::class,array(
+            'label' => "Quantity of special stains per block:",
+            'required' => false,
+            'attr' => array('class'=>'form-control digit-mask mask-text-align-left')
+        ));
+        $builder->add('quantityOfParaffinSectionsRnaDnaPerBlock',TextType::class,array(
+            'label' => "Quantity of paraffin sections for RNA/DNA (Tube) per block:",
+            'required' => false,
+            'attr' => array('class'=>'form-control digit-mask mask-text-align-left')
+        ));
+        $builder->add('quantityOfTmaCoresRnaDnaAnalysisPerBlock',TextType::class,array(
+            'label' => "Quantity of TMA cores for RNA/DNA analysis (Tube) per block:",
+            'required' => false,
+            'attr' => array('class'=>'form-control digit-mask mask-text-align-left')
+        ));
+        $builder->add( 'restrictedServices', EntityType::class, array(
+            'class' => 'OlegTranslationalResearchBundle:OtherRequestedServiceList',
+            'label'=>'Other Requested Services:',
+            'required'=>false,
+            'multiple' => true,
+            'expanded' => true,
+            'attr' => array('class' => 'horizontal_type restrictedServices'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->orderBy("list.orderinlist","ASC")
+                    ->setParameters( array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
+            }
+        ));
+
+        $builder->add('tissueFormComment',null,array(
+            'label' => "Comment:",
+            'required' => false,
+            'attr' => array('class'=>'form-control textarea')
+        ));
 
 
         if( $this->params['saveAsDraft'] === true ) {
