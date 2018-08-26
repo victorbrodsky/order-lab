@@ -183,6 +183,7 @@
                 <th>Actions</th>
             </tr>
         </thead>
+        <tbody data-link="row" class="rowlink table-tbody-hover">
 
         {#{% set count = 0 %}#}
         {% for project in projects %}
@@ -200,10 +201,16 @@
                 {% set trclassname = "order-reject-status" %}
             {% endif %}
 
+            {% if project.state == 'not_approved' or project.state == 'closed' %}
+                {% set trclassname = "order-reject-status" %}
+            {% endif %}
+            {% if project.state == 'not_approved' or project.state == 'closed' %}
+                {% set trclassname = "order-reject-status" %}
+            {% endif %}
+
             {% set projectTitle = project.getTitle() %}
 
-            <tbody data-link="row" class="rowlink table-tbody-hover {{ trclassname }}">
-            <tr style="border-bottom: 1px solid #C6C6C6;" data-toggle="tooltip" title="{{ projectTitle }}">
+            <tr style="border-bottom: 1px solid #C6C6C6;" data-toggle="tooltip" title="{{ projectTitle }}" {{ trclassname }}>
                 <td>
                     <a href="{{ path(translationalresearch_sitename~'_project_show', { 'id': project.id }) }}" target="_blank">{{ project.oid }}</a>
                 </td>

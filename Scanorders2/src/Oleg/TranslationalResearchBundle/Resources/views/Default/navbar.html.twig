@@ -119,7 +119,17 @@
 
                                 {#{% if transres_util.hasReviewerRoles() %}#}
                                 <li id="nav-bar-translationalresearch-my-review-projects">
-                                    <a href="{{ path(translationalresearch_sitename~'_my_review_project_index') }}">Projects Assigned To Me For Review</a>
+                                    <a href="{{ path(translationalresearch_sitename~'_my_reviewed_project_index') }}">Projects I have reviewed (History)</a>
+                                </li>
+
+                                <hr style="margin-top: 10px; margin-bottom: 10px;">
+
+                                <li id="nav-bar-translationalresearch-my-review-projects">
+                                    <a href="{{ path(translationalresearch_sitename~'_active_expired_project_index') }}">Active Project Requests with Expired IRB</a>
+                                </li>
+
+                                <li id="nav-bar-translationalresearch-my-review-projects">
+                                    <a href="{{ path(translationalresearch_sitename~'_active_expired_soon_project_index') }}">Active Project Requests with IRB Expiring Soon</a>
                                 </li>
 
                                 {#<li id="nav-bar-translationalresearch-my-review-projects">#}

@@ -112,18 +112,18 @@ function transresShowHideHumanTissueUploadSection(involveHumanTissue) {
 function transresRequireTissueProcessingListener() {
     $(".requireTissueProcessing").on("change", function(e) {
         var requireTissueProcessing = $(".requireTissueProcessing").find('input[name="oleg_translationalresearchbundle_project[requireTissueProcessing]"]:checked').val();
-        console.log("change: checked value requireTissueProcessing="+requireTissueProcessing);
+        //console.log("change: checked value requireTissueProcessing="+requireTissueProcessing);
         transresShowHideRequireTissueProcessing(requireTissueProcessing);
     });
 }
 function transresShowHideRequireTissueProcessing(requireTissueProcessing) {
     if( requireTissueProcessing == "Yes" ) {
-        console.log("requireTissueProcessing show");
+        //console.log("requireTissueProcessing show");
         $("#tissueprocurement").show('slow');
     }
 
     if( requireTissueProcessing == "No" ) {
-        console.log("requireTissueProcessing hide");
+        //console.log("requireTissueProcessing hide");
         $("#tissueprocurement").hide('slow');
     }
 }
@@ -131,18 +131,18 @@ function transresShowHideRequireTissueProcessing(requireTissueProcessing) {
 function transresRequireArchivalProcessingListener() {
     $(".requireArchivalProcessing").on("change", function(e) {
         var requireArchivalProcessing = $(".requireArchivalProcessing").find('input[name="oleg_translationalresearchbundle_project[requireArchivalProcessing]"]:checked').val();
-        console.log("change: checked value requireArchivalProcessing="+requireArchivalProcessing);
+        //console.log("change: checked value requireArchivalProcessing="+requireArchivalProcessing);
         transresShowHideRequireArchivalProcessing(requireArchivalProcessing);
     });
 }
 function transresShowHideRequireArchivalProcessing(requireArchivalProcessing) {
     if( requireArchivalProcessing == "Yes" ) {
-        console.log("requireArchivalProcessing show");
+        //console.log("requireArchivalProcessing show");
         $("#archivalspecimens").show('slow');
     }
 
     if( requireArchivalProcessing == "No" ) {
-        console.log("requireArchivalProcessing hide");
+        //console.log("requireArchivalProcessing hide");
         $("#archivalspecimens").hide('slow');
     }
 }

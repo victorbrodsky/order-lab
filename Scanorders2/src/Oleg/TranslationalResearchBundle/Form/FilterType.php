@@ -260,6 +260,7 @@ class FilterType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
+            'data' => $this->params['toIrbExpDate'],
             'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'To IRB Expiration Date'),
         ));
 

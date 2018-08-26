@@ -460,12 +460,9 @@
 
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
-    {#Will this project require tissue procurement/processing:#}
-    {#{% if form.requireTissueProcessing is defined %}#}
-        {#{{ formmacros.field(form.requireTissueProcessing) }}#}
-    {#{% endif %}#}
+    {#Will this project require tissue procurement/processing?#}
     {% set panelStyle = "" %}
-    {% if project.requireTissueProcessing == "Yes" %}
+    {% if project.requireTissueProcessing == "No" %}
         {% set panelStyle = "display: none;" %}
     {% endif %}
     {% if form %}
@@ -473,28 +470,6 @@
     {% else %}
         {{ formmacros.simplefield("Will this project require tissue procurement/processing?:", project.requireTissueProcessing, "input", "disabled") }}
     {% endif %}
-
-    {#<div class="panel-group collapse {{ collapse }}" id="accordion-tissueProcurement" role="tablist" aria-multiselectable="true">#}
-        {#<div class="panel panel-default">#}
-            {#<div class="panel-heading" role="tab" id="tissueProcurementHeading">#}
-                {#<h4 class="panel-title">#}
-                    {#<a role="button" data-toggle="collapse" data-parent="#accordion-tissueProcurement" href="#tissueProcurement" aria-expanded="true">#}
-                        {#Histology Tissue Procurement/Processing#}
-                    {#</a>#}
-                {#</h4>#}
-            {#</div>#}
-            {#<div id="tissueProcurement" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="tissueProcurementHeading">#}
-                {#<div class="panel-body">#}
-                    {#<p><font color="red">This is for RESEARCH ONLY tissue and NOT for archival slides from FFPE blocks</font></p>#}
-
-                    {#{{ formmacros.field(form.totalNumberOfPatientsProcessing) }}#}
-                    {#{{ formmacros.field(form.totalNumberOfSpecimensProcessing) }}#}
-                    {#{{ formmacros.field(form.tissueProcessingServices) }}#}
-
-                {#</div>#}
-            {#</div>#}
-        {#</div>#}
-    {#</div>#}
 
     <div id="tissueprocurement" class="panel panel-default" style="{{ panelStyle }}">
         <div class="panel-heading">Histology Tissue Procurement/Processing</div>
@@ -511,10 +486,7 @@
 
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
 
-    {#Will this project require archival specimens#}
-    {#{% if form.requireArchivalProcessing is defined %}#}
-        {#{{ formmacros.field(form.requireArchivalProcessing) }}#}
-    {#{% endif %}#}
+    {#Will this project require archival specimens?#}
     {% set panelStyle = "" %}
     {% if project.requireArchivalProcessing == "No" %}
         {% set panelStyle = "display: none;" %}
@@ -524,34 +496,6 @@
     {% else %}
         {{ formmacros.simplefield("Will this project require archival specimens?:", project.requireArchivalProcessing, "input", "disabled") }}
     {% endif %}
-
-    {#<div class="panel-group collapse {{ collapse }}" id="accordion-archivalSpecimens" role="tablist" aria-multiselectable="true">#}
-        {#<div class="panel panel-default">#}
-            {#<div class="panel-heading" role="tab" id="archivalSpecimensHeading">#}
-                {#<h4 class="panel-title">#}
-                    {#<a role="button" data-toggle="collapse" data-parent="#accordion-archivalSpecimens" href="#archivalSpecimens" aria-expanded="true">#}
-                        {#Archival Specimens#}
-                    {#</a>#}
-                {#</h4>#}
-            {#</div>#}
-            {#<div id="archivalSpecimens" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="archivalSpecimensHeading">#}
-                {#<div class="panel-body">#}
-
-                    {#{{ formmacros.field(form.totalNumberOfPatientsArchival) }}#}
-                    {#{{ formmacros.field(form.totalNumberOfSpecimensArchival) }}#}
-                    {#{{ formmacros.field(form.totalNumberOfBlocksPerCase) }}#}
-
-                    {#{{ formmacros.field(form.quantityOfSlidesPerBlockStained) }}#}
-                    {#{{ formmacros.field(form.quantityOfSlidesPerBlockUnstained) }}#}
-                    {#{{ formmacros.field(form.quantityOfSlidesPerBlockUnstainedIHC) }}#}
-                    {#{{ formmacros.field(form.quantityOfSpecialStainsPerBlock) }}#}
-                    {#{{ formmacros.field(form.quantityOfParaffinSectionsRnaDnaPerBlock) }}#}
-                    {#{{ formmacros.field(form.quantityOfTmaCoresRnaDnaAnalysisPerBlock) }}#}
-
-                {#</div>#}
-            {#</div>#}
-        {#</div>#}
-    {#</div>#}
 
     <div id="archivalspecimens" class="panel panel-default" style="{{ panelStyle }}">
         <div class="panel-heading">Archival Specimens</div>

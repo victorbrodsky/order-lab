@@ -70,8 +70,12 @@ class ProjectController extends Controller
      * @Route("/my-projects/", name="translationalresearch_my_project_index")
      * @Route("/projects-where-i-am-requester/", name="translationalresearch_my_request_project_index")
      * @Route("/draft-projects-where-i-am-requester/", name="translationalresearch_my_request_project_draft_index")
-     * @Route("/projects-assigned-to-me-for-review/", name="translationalresearch_my_review_project_index")
+     * @Route("/projects-i-have-reviewed/", name="translationalresearch_my_reviewed_project_index")
      * @Route("/projects-pending-my-review/", name="translationalresearch_my_pending_review_project_index")
+     *
+     * @Route("/active-expired-projects/", name="translationalresearch_active_expired_project_index")
+     * @Route("/active-expired-soon-projects/", name="translationalresearch_active_expired_soon_project_index")
+     *
      * @Template("OlegTranslationalResearchBundle:Project:index.html.twig")
      * @Method("GET")
      */
@@ -173,12 +177,22 @@ class ProjectController extends Controller
             'stateChoiceArr' => $stateChoiceArr,
             //'defaultStatesArr' => $defaultStatesArr,
             'projectSpecialtyAllowedArr' => $projectSpecialtyAllowedArr,
-            'defaultStatesArr' => array("All-except-Drafts")
+            'defaultStatesArr' => array("All-except-Drafts"),
+            'toIrbExpDate' => null
         );
 
         if( $routeName == "translationalresearch_my_request_project_draft_index" ) {
             $params['defaultStatesArr'] = array('draft');
         }
+
+        if( $routeName == "translationalresearch_active_expired_project_index" ) {
+            $params['toIrbExpDate'] =new \DateTime();
+        }
+        if( $routeName == "translationalresearch_active_expired_soon_project_index" ) {
+            $today = new \DateTime();
+            $params['toIrbExpDate'] = $today->modify('+3 months');;
+        }
+
 
         $filterform = $this->createForm(FilterType::class, null,array(
             'method' => 'GET',
@@ -573,16 +587,25 @@ class ProjectController extends Controller
             $title = "Draft Projects, where I am a Requester"; //"My Project Requests, Where I am a Requester";
         }
 
-        if( $routeName == "translationalresearch_my_review_project_index" ) {
-            $myReviewProjectsCriterion = $this->getProjectWhereIamReviewer();
-            $dql->andWhere($myReviewProjectsCriterion);
+        //Projects I have reviewed (History):
+        // only shows projects previously reviewed by the reviewer, not any of the projects currently pending this user's review
+        if( $routeName == "translationalresearch_my_reviewed_project_index" ) {
+            //$myReviewProjectsCriterion = $this->getProjectWhereIamReviewer();
+
+            $myReviewedProjectsCriterion =
+                "( (irbReviewer.id = :userId OR irbReviewerDelegate.id = :userId) AND (irbReviews.decision='approved' OR irbReviews.decision='rejected') )".
+                " OR ".
+                "((adminReviewer.id = :userId OR adminReviewerDelegate.id = :userId) AND (adminReviews.decision='approved' OR adminReviews.decision='rejected') )".
+                " OR ".
+                "((committeeReviewer.id = :userId OR committeeReviewerDelegate.id = :userId) AND (committeeReviews.decision='approved' OR committeeReviews.decision='rejected') )".
+                " OR ".
+                "((finalReviewer.id = :userId OR finalReviewerDelegate.id = :userId) AND (finalReviews.decision='approved' OR finalReviews.decision='rejected') )"
+            ;
+
+            $dql->andWhere($myReviewedProjectsCriterion);
 
             $dqlParameters["userId"] = $user->getId();
-            $title = "Project Requests Assigned to Me For Review";
-
-//            if( $preroute == "translationalresearch_my_pending_review_project_index" ) {
-//                $title = "Project Requests Pending My Review";
-//            }
+            $title = "Projects I have reviewed (History)";
         }
 
         if( $routeName == "translationalresearch_my_pending_review_project_index" ) {
@@ -628,6 +651,14 @@ class ProjectController extends Controller
             $dqlParameters["userId"] = $user->getId();
             $title = "Project Requests Pending My Review";
         }
+
+//        if( $routeName == "translationalresearch_active_expired_project_index" ) {
+//
+//        }
+//        if( $routeName == "translationalresearch_active_expired_soon_project_index" ) {
+//
+//        }
+
         //////////////////// EOF Start Filter ////////////////////
 
         $dql->orderBy('project.createDate', 'DESC');

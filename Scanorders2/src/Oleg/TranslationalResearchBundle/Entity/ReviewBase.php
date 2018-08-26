@@ -93,7 +93,7 @@ class ReviewBase
     protected $updatedate;
 
     /**
-     * approved, rejected, pending additional information from submitter, pending review
+     * approved, missinginfo, rejected, pending additional information from submitter, pending review
      * @ORM\Column(type="string", nullable=true)
      */
     protected $decision;
