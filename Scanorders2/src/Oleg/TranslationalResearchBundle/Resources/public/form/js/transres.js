@@ -23,6 +23,9 @@ $(document).ready(function() {
 
     //console.log('transres form ready');
     transresIrbApprovalLetterListener();
+    transresRequireTissueProcessingListener();
+    transresRequireArchivalProcessingListener();
+
 
     if( cycle == "new" || cycle == "edit") {
         transresNewUserListener();
@@ -97,50 +100,50 @@ function transresIrbApprovalLetterListener() {
 function transresShowHideHumanTissueUploadSection(involveHumanTissue) {
     if( involveHumanTissue == "Yes" ) {
         //console.log("humanTissueForms show");
-        $(".user-humanTissueForms").show();
+        $(".user-humanTissueForms").show('slow');
     }
 
     if( involveHumanTissue == "No" ) {
         //console.log("humanTissueForms hide");
-        $(".user-humanTissueForms").hide();
+        $(".user-humanTissueForms").hide('slow');
     }
 }
 
 function transresRequireTissueProcessingListener() {
     $(".requireTissueProcessing").on("change", function(e) {
         var requireTissueProcessing = $(".requireTissueProcessing").find('input[name="oleg_translationalresearchbundle_project[requireTissueProcessing]"]:checked').val();
-        //console.log("change: checked value requireTissueProcessing="+requireTissueProcessing);
+        console.log("change: checked value requireTissueProcessing="+requireTissueProcessing);
         transresShowHideRequireTissueProcessing(requireTissueProcessing);
     });
 }
 function transresShowHideRequireTissueProcessing(requireTissueProcessing) {
     if( requireTissueProcessing == "Yes" ) {
-        //console.log("requireTissueProcessing show");
-        $("#tissueRequestDetails").collapse('show');
+        console.log("requireTissueProcessing show");
+        $("#tissueprocurement").show('slow');
     }
 
     if( requireTissueProcessing == "No" ) {
-        //console.log("requireTissueProcessing hide");
-        $("#tissueRequestDetails").collapse('hide');
+        console.log("requireTissueProcessing hide");
+        $("#tissueprocurement").hide('slow');
     }
 }
 
 function transresRequireArchivalProcessingListener() {
     $(".requireArchivalProcessing").on("change", function(e) {
         var requireArchivalProcessing = $(".requireArchivalProcessing").find('input[name="oleg_translationalresearchbundle_project[requireArchivalProcessing]"]:checked').val();
-        //console.log("change: checked value requireArchivalProcessing="+requireArchivalProcessing);
+        console.log("change: checked value requireArchivalProcessing="+requireArchivalProcessing);
         transresShowHideRequireArchivalProcessing(requireArchivalProcessing);
     });
 }
 function transresShowHideRequireArchivalProcessing(requireArchivalProcessing) {
     if( requireArchivalProcessing == "Yes" ) {
-        //console.log("requireArchivalProcessing show");
-        $("#tissueProcurement").collapse('show');
+        console.log("requireArchivalProcessing show");
+        $("#archivalspecimens").show('slow');
     }
 
     if( requireArchivalProcessing == "No" ) {
-        //console.log("requireArchivalProcessing hide");
-        $("#tissueProcurement").collapse('hide');
+        console.log("requireArchivalProcessing hide");
+        $("#archivalspecimens").hide('slow');
     }
 }
 
@@ -249,6 +252,40 @@ function transresValidateProjectForm() {
         }
     }
 
+    //requireTissueProcessing
+    var requireTissueProcessing = $(".requireTissueProcessing").find('input[name="oleg_translationalresearchbundle_project[requireTissueProcessing]"]:checked').val();
+    //console.log("requireTissueProcessing="+requireTissueProcessing);
+    if( !requireTissueProcessing ) {
+        console.log("Error: requireTissueProcessing is NULL!");
+        //var msg = "Please upload a completed human tissue form";
+        var msg = "Please answer the required question: 'Will this project require tissue procurement/processing?'";
+        $("#projectError").show();
+        $("#projectError").html(msg);
+
+        //validated = false;
+        transresShowBtn();
+        return false;
+    } else {
+        //validate fields
+    }
+
+    //requireArchivalProcessing
+    var requireArchivalProcessing = $(".requireArchivalProcessing").find('input[name="oleg_translationalresearchbundle_project[requireArchivalProcessing]"]:checked').val();
+    //console.log("requireArchivalProcessing="+requireArchivalProcessing);
+    if( !requireArchivalProcessing ) {
+        console.log("Error: requireArchivalProcessing is NULL!");
+        //var msg = "Please upload a completed human tissue form";
+        var msg = "Please answer the required question: 'Will this project require archival specimens?'";
+        $("#projectError").show();
+        $("#projectError").html(msg);
+
+        //validated = false;
+        transresShowBtn();
+        return false;
+    } else {
+        //validate fields
+    }
+    
     //console.log("No Error");
     //return false; //testing
 

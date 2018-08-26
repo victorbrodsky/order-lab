@@ -1389,6 +1389,7 @@ class Project {
     {
         if( $item && !$this->tissueProcessingServices->contains($item) ) {
             $this->tissueProcessingServices->add($item);
+            $item->setProject($this);
         }
         return $this;
     }
@@ -1405,6 +1406,7 @@ class Project {
     {
         if( $item && !$this->restrictedServices->contains($item) ) {
             $this->restrictedServices->add($item);
+            $item->setProject($this);
         }
         return $this;
     }

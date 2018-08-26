@@ -537,7 +537,7 @@ class ProjectType extends AbstractType
 
         //Histology Tissue Procurement/Processing
         $builder->add('requireTissueProcessing',ChoiceType::class,array(
-            'label' => "Will this project require tissue procurement/processing:",
+            'label' => "Will this project require tissue procurement/processing?:",
             'choices' => array("Yes"=>"Yes", "No"=>"No"),
             'multiple' => false,
             'required' => true,
@@ -574,7 +574,7 @@ class ProjectType extends AbstractType
 
         //Archival Specimens
         $builder->add('requireArchivalProcessing',ChoiceType::class,array(
-            'label' => "Will this project require archival specimens:",
+            'label' => "Will this project require archival specimens?:",
             'choices' => array("Yes"=>"Yes", "No"=>"No"),
             'multiple' => false,
             'required' => true,

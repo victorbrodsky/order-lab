@@ -224,6 +224,9 @@ class ProjectController extends Controller
         $fromExpectedCompletionDate = $filterform['fromExpectedCompletionDate']->getData();
         $toExpectedCompletionDate = $filterform['toExpectedCompletionDate']->getData();
 
+        $fromIrbExpDate = $filterform['fromIrbExpDate']->getData();
+        $toIrbExpDate = $filterform['toIrbExpDate']->getData();
+
         //$showMatchingAndTotal = $filterform['showMatchingAndTotal']->getData();
 //        $archived = $filterform['completed']->getData();
 //        $complete = $filterform['review']->getData();
@@ -485,8 +488,20 @@ class ProjectController extends Controller
         }
         if( $toExpectedCompletionDate ) {
             $toExpectedCompletionDate->modify('+1 day');
-            $dql->andWhere('project.expectedCompletionDate >= :toExpectedCompletionDate');
+            $dql->andWhere('project.expectedCompletionDate <= :toExpectedCompletionDate');
             $dqlParameters['toExpectedCompletionDate'] = $toExpectedCompletionDate->format('Y-m-d H:i:s');
+            $advancedFilter++;
+        }
+
+        if( $fromIrbExpDate ) {
+            $dql->andWhere('project.irbExpirationDate >= :fromIrbExpirationDate');
+            $dqlParameters['fromIrbExpirationDate'] = $fromIrbExpDate->format('Y-m-d H:i:s');
+            $advancedFilter++;
+        }
+        if( $toIrbExpDate ) {
+            $toIrbExpDate->modify('+1 day');
+            $dql->andWhere('project.irbExpirationDate <= :toIrbExpirationDate');
+            $dqlParameters['toIrbExpirationDate'] = $toIrbExpDate->format('Y-m-d H:i:s');
             $advancedFilter++;
         }
 
