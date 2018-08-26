@@ -607,14 +607,44 @@ class ProjectController extends Controller
         if( $routeName == "translationalresearch_my_reviewed_project_index" ) {
             //$myReviewProjectsCriterion = $this->getProjectWhereIamReviewer();
 
+            //rely on decision: problem that imported projects do not have decision set
+//            $myReviewedProjectsCriterion =
+//                "( (irbReviewer.id = :userId OR irbReviewerDelegate.id = :userId) AND (irbReviews.decision='approved' OR irbReviews.decision='rejected') )".
+//                " OR ".
+//                "((adminReviewer.id = :userId OR adminReviewerDelegate.id = :userId) AND (adminReviews.decision='approved' OR adminReviews.decision='rejected') )".
+//                " OR ".
+//                "((committeeReviewer.id = :userId OR committeeReviewerDelegate.id = :userId) AND (committeeReviews.decision='approved' OR committeeReviews.decision='rejected') )".
+//                " OR ".
+//                "((finalReviewer.id = :userId OR finalReviewerDelegate.id = :userId) AND (finalReviews.decision='approved' OR finalReviews.decision='rejected') )"
+//            ;
+
+            //rely on state after reviewer's state
             $myReviewedProjectsCriterion =
-                "( (irbReviewer.id = :userId OR irbReviewerDelegate.id = :userId) AND (irbReviews.decision='approved' OR irbReviews.decision='rejected') )".
+                "( (irbReviewer.id = :userId OR irbReviewerDelegate.id = :userId) AND (".
+                "project.state='irb_rejected' OR project.state='admin_review' OR ".
+                "project.state='admin_rejected' OR project.state='committee_review' OR ".
+                "project.state='committee_rejected' OR project.state='final_review' OR ".
+                "project.state='final_review' OR project.state='final_approved' OR ".
+                "project.state='final_rejected' OR project.state='closed'".
+                "))".
                 " OR ".
-                "((adminReviewer.id = :userId OR adminReviewerDelegate.id = :userId) AND (adminReviews.decision='approved' OR adminReviews.decision='rejected') )".
+                "((adminReviewer.id = :userId OR adminReviewerDelegate.id = :userId) AND (".
+                "project.state='admin_rejected' OR project.state='committee_review' OR ".
+                "project.state='committee_rejected' OR project.state='final_review' OR ".
+                "project.state='final_review' OR project.state='final_approved' OR ".
+                "project.state='final_rejected' OR project.state='closed'".
+                "))".
                 " OR ".
-                "((committeeReviewer.id = :userId OR committeeReviewerDelegate.id = :userId) AND (committeeReviews.decision='approved' OR committeeReviews.decision='rejected') )".
+                "((committeeReviewer.id = :userId OR committeeReviewerDelegate.id = :userId) AND (".
+                "project.state='committee_rejected' OR project.state='final_review' OR ".
+                "project.state='final_review' OR project.state='final_approved' OR ".
+                "project.state='final_rejected' OR project.state='closed'".
+                "))".
                 " OR ".
-                "((finalReviewer.id = :userId OR finalReviewerDelegate.id = :userId) AND (finalReviews.decision='approved' OR finalReviews.decision='rejected') )"
+                "((finalReviewer.id = :userId OR finalReviewerDelegate.id = :userId) AND (".
+                "project.state='final_review' OR project.state='final_approved' OR ".
+                "project.state='final_rejected' OR project.state='closed'".
+                "))"
             ;
 
             $dql->andWhere($myReviewedProjectsCriterion);
