@@ -72,6 +72,7 @@ class ProjectController extends Controller
      * @Route("/draft-projects-where-i-am-requester/", name="translationalresearch_my_request_project_draft_index")
      * @Route("/projects-i-have-reviewed/", name="translationalresearch_my_reviewed_project_index")
      * @Route("/projects-pending-my-review/", name="translationalresearch_my_pending_review_project_index")
+     * @Route("/projects-awaiting-additional-info-to-be-reviewed/", name="translationalresearch_my_missinginfo_review_project_index")
      *
      * @Route("/active-expired-projects/", name="translationalresearch_active_expired_project_index")
      * @Route("/active-expired-soon-projects/", name="translationalresearch_active_expired_soon_project_index")
@@ -666,12 +667,18 @@ class ProjectController extends Controller
             $title = "Project Requests Pending My Review";
         }
 
-//        if( $routeName == "translationalresearch_active_expired_project_index" ) {
-//
-//        }
-//        if( $routeName == "translationalresearch_active_expired_soon_project_index" ) {
-//
-//        }
+        if( $routeName == "translationalresearch_my_missinginfo_review_project_index" ) {
+            $myPendingProjectsCriterion =
+                "((irbReviewer.id = :userId OR irbReviewerDelegate.id = :userId) AND project.state='irb_missinginfo')".
+                " OR ".
+                "((adminReviewer.id = :userId OR adminReviewerDelegate.id = :userId) AND project.state='admin_missinginfo')"
+            ;
+
+            $dql->andWhere($myPendingProjectsCriterion);
+
+            $dqlParameters["userId"] = $user->getId();
+            $title = "Project Requests Awaiting Additional Info To Be Reviewed";
+        }
 
         //////////////////// EOF Start Filter ////////////////////
 
