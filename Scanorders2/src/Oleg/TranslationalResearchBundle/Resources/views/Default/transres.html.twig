@@ -318,7 +318,9 @@
                         {{ user_formnode_utility.getFormNodeHolderShortInfoForView(project,project.messageCategory,false)|raw }}
                     </div>
 
-                    {{ transres.tissueRequestDetails(form,project,cycle) }}
+                    {% if form and form is defined %}
+                        {{ transres.tissueRequestDetails(form,project,cycle) }}
+                    {% endif %}
 
                     {{ transres.projectDocument(form,project,cycle) }}
 
