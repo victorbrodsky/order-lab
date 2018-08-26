@@ -39,28 +39,7 @@ class TissueProcessingServiceList extends ListAbstract
      * @ORM\JoinColumn(name="original_id", referencedColumnName="id", nullable=true)
      **/
     protected $original;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Project", inversedBy="tissueProcessingServices", cascade={"persist"})
-     * @ORM\JoinColumn(name="project_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
-     */
-    protected $project;
-
-    /**
-     * @return mixed
-     */
-    public function getProject()
-    {
-        return $this->project;
-    }
-
-    /**
-     * @param mixed $project
-     */
-    public function setProject($project)
-    {
-        $this->project = $project;
-    }
+    
 
     
 }

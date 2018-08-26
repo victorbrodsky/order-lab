@@ -941,6 +941,8 @@ class ProjectController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
 
+            //$services = $project->getTissueProcessingServices();
+            //echo "services=".count($services)."<br>";
             //exit("Project submitted");
 
             $startProjectReview = false;
@@ -1130,6 +1132,8 @@ class ProjectController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
 
+            $services = $project->getTissueProcessingServices();
+            echo "services=".count($services)."<br>";
             //exit("Project update submitted");
 
             $project->setUpdateUser($user);
@@ -1192,6 +1196,14 @@ class ProjectController extends Controller
                 $em->persist($project);
                 $em->flush();
             }
+
+            //testing
+            $services = $project->getTissueProcessingServices();
+            echo "services=".count($services)."<br>";
+            foreach($services as $service){
+                echo "servise=".$service->getId()."<br>";
+            }
+            //exit("Project update submitted");
 
             //testing
 //            print "<pre>";

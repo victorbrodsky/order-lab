@@ -41,8 +41,8 @@ framework:
     fragments:       ~
 #    fragments: { path: /_fragment }
     http_method_override: true
-    profiler:
-        collect: false
+#    profiler:
+#        collect: false
 
 # Twig Configuration
 twig:

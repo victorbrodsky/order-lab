@@ -398,27 +398,14 @@ class Project {
     /**
      * Tissue Processing Services: [v] Paraffin Block Processing [v] Fresh/Frozen Tissue Procurement [v] Frozen Tissue Storage
      *
-     * @ORM\OneToMany(targetEntity="TissueProcessingServiceList", mappedBy="project", cascade={"persist"})
-     */
+     * @ORM\ManyToMany(targetEntity="TissueProcessingServiceList", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="transres_project_tissueProcessingService",
+     *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id", onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="tissueProcessingService_id", referencedColumnName="id", onDelete="CASCADE")}
+     *      )
+     * @ORM\OrderBy({"createdate" = "ASC"})
+     **/
     private $tissueProcessingServices;
-//    /**
-//     * Services: Paraffin Block Processing
-//     *
-//     * @ORM\Column(type="boolean", nullable=true)
-//     */
-//    private $paraffinBlockProcessing;
-//    /**
-//     * Services: Fresh/Frozen Tissue Procurement
-//     *
-//     * @ORM\Column(type="boolean", nullable=true)
-//     */
-//    private $freshFrozenTissueProcurement;
-//    /**
-//     * Services: Frozen Tissue Storage
-//     *
-//     * @ORM\Column(type="boolean", nullable=true)
-//     */
-//    private $frozenTissueStorage;
 
     //Archival Specimens
     /**
@@ -494,8 +481,13 @@ class Project {
     /**
      * Other Requested Services: [v] Flow Cytometry [v] Immunohistochemistry [v] FISH [v] Tissue Microarray [v] Laser Capture Microdissection
      *
-     * @ORM\OneToMany(targetEntity="OtherRequestedServiceList", mappedBy="project", cascade={"persist"})
-     */
+     * @ORM\ManyToMany(targetEntity="OtherRequestedServiceList", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="transres_project_restrictedService",
+     *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id", onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="restrictedService_id", referencedColumnName="id", onDelete="CASCADE")}
+     *      )
+     * @ORM\OrderBy({"createdate" = "ASC"})
+     **/
     private $restrictedServices;
 
     /**
@@ -1389,7 +1381,7 @@ class Project {
     {
         if( $item && !$this->tissueProcessingServices->contains($item) ) {
             $this->tissueProcessingServices->add($item);
-            $item->setProject($this);
+            //$item->setProject($this);
         }
         return $this;
     }
@@ -1406,7 +1398,7 @@ class Project {
     {
         if( $item && !$this->restrictedServices->contains($item) ) {
             $this->restrictedServices->add($item);
-            $item->setProject($this);
+            //$item->setProject($this);
         }
         return $this;
     }

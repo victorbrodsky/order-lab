@@ -6609,7 +6609,10 @@ class AdminController extends Controller
             "suggestedmessagecategorys" => array('','-list'),
             "calllogentrytags" => array('','-list'),
             
-            "antibodies" => array('AntibodyList','antibodies-list','Antibody List')
+            "antibodies" => array('AntibodyList','antibodies-list','Antibody List'),
+            "transrestissueprocessingservices" => array('TissueProcessingServiceList','transrestissueprocessingservices-list','Translational Research Tissue Processing Service List'),
+            "transresotherrequestedservices" => array('OtherRequestedServiceList','transresotherrequestedservices-list','Translational Research Other Requested Service List'),
+
         );
 
         if( $withcustom ) {
