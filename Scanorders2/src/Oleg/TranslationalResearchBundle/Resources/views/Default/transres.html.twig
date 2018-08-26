@@ -469,6 +469,7 @@
     {% if project.requireTissueProcessing == "No" %}
         {% set panelStyle = "display: none;" %}
     {% endif %}
+    <div class="well">
     {% if form %}
         {{ formmacros.field(form.requireTissueProcessing) }}
     {% else %}
@@ -484,6 +485,7 @@
             {{ formmacros.field(form.tissueProcessingServices) }}
         </div>
     </div>
+    </div>
 
 {% endmacro %}
 {% macro archivalSpecimens( form, project, cycle ) %}
@@ -495,6 +497,8 @@
     {% if project.requireArchivalProcessing == "No" %}
         {% set panelStyle = "display: none;" %}
     {% endif %}
+
+    <div class="well">
     {% if form %}
         {{ formmacros.field(form.requireArchivalProcessing) }}
     {% else %}
@@ -514,6 +518,7 @@
             {{ formmacros.field(form.quantityOfParaffinSectionsRnaDnaPerBlock) }}
             {{ formmacros.field(form.quantityOfTmaCoresRnaDnaAnalysisPerBlock) }}
         </div>
+    </div>
     </div>
 
 {% endmacro %}
