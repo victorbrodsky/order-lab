@@ -201,11 +201,11 @@
                 {% set trclassname = "order-reject-status" %}
             {% endif %}
 
-            {% if project.state == 'not_approved' or project.state == 'closed' %}
-                {% set trclassname = "order-reject-status" %}
+            {% if project.state == 'final_approved' and date(project.irbExpirationDate) > date() %}
+                {% set trclassname = "table-row-red" %}
             {% endif %}
-            {% if project.state == 'not_approved' or project.state == 'closed' %}
-                {% set trclassname = "order-reject-status" %}
+            {% if if project.state == 'final_approved' and date(project.irbExpirationDate) > date()|date_modify("+3 months") %}
+                {% set trclassname = "table-row-lightred" %}
             {% endif %}
 
             {% set projectTitle = project.getTitle() %}

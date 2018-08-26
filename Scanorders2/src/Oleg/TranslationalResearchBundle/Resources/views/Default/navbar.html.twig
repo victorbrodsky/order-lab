@@ -122,16 +122,6 @@
                                     <a href="{{ path(translationalresearch_sitename~'_my_reviewed_project_index') }}">Projects I have reviewed (History)</a>
                                 </li>
 
-                                <hr style="margin-top: 10px; margin-bottom: 10px;">
-
-                                <li id="nav-bar-translationalresearch-my-review-projects">
-                                    <a href="{{ path(translationalresearch_sitename~'_active_expired_project_index') }}">Active Project Requests with Expired IRB</a>
-                                </li>
-
-                                <li id="nav-bar-translationalresearch-my-review-projects">
-                                    <a href="{{ path(translationalresearch_sitename~'_active_expired_soon_project_index') }}">Active Project Requests with IRB Expiring Soon</a>
-                                </li>
-
                                 {#<li id="nav-bar-translationalresearch-my-review-projects">#}
                                     {#<a href="{{ path(translationalresearch_sitename~'_my_review_project_index',{#}
                                         {#'filter[state][0]':'irb_review',#}
@@ -142,6 +132,14 @@
                                 {#</li>#}
                                 <li id="nav-bar-translationalresearch-my-review-projects">
                                     <a href="{{ path(translationalresearch_sitename~'_my_pending_review_project_index') }}">Projects Pending My Review</a>
+                                </li>
+
+                                <hr style="margin-top: 10px; margin-bottom: 10px;">
+                                <li id="nav-bar-translationalresearch-my-review-projects">
+                                    <a href="{{ path(translationalresearch_sitename~'_active_expired_project_index') }}">Active Project Requests with Expired IRB</a>
+                                </li>
+                                <li id="nav-bar-translationalresearch-my-review-projects">
+                                    <a href="{{ path(translationalresearch_sitename~'_active_expired_soon_project_index') }}">Active Project Requests with IRB Expiring Soon</a>
                                 </li>
                                 {#EOF my projects#}
 
