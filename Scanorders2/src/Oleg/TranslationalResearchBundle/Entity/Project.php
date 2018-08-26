@@ -396,11 +396,12 @@ class Project {
     private $totalNumberOfSpecimensProcessing;
 
     /**
+     * onDelete="CASCADE"
      * Tissue Processing Services: [v] Paraffin Block Processing [v] Fresh/Frozen Tissue Procurement [v] Frozen Tissue Storage
      *
      * @ORM\ManyToMany(targetEntity="TissueProcessingServiceList", cascade={"persist","remove"})
      * @ORM\JoinTable(name="transres_project_tissueProcessingService",
-     *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id", onDelete="CASCADE")},
+     *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="tissueProcessingService_id", referencedColumnName="id", onDelete="CASCADE")}
      *      )
      * @ORM\OrderBy({"createdate" = "ASC"})
