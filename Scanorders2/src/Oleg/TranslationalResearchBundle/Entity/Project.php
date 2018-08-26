@@ -401,7 +401,7 @@ class Project {
      *
      * @ORM\ManyToMany(targetEntity="TissueProcessingServiceList", cascade={"persist","remove"})
      * @ORM\JoinTable(name="transres_project_tissueProcessingService",
-     *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id")},
+     *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id", onDelete="CASCADE")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="tissueProcessingService_id", referencedColumnName="id", onDelete="CASCADE")}
      *      )
      * @ORM\OrderBy({"createdate" = "ASC"})
