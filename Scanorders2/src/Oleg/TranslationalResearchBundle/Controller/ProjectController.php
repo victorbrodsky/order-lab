@@ -680,6 +680,14 @@ class ProjectController extends Controller
             $title = "Project Requests Awaiting Additional Info To Be Reviewed";
         }
 
+        //set title
+        if( $routeName == "translationalresearch_active_expired_project_index" ) {
+            $title = "Active Project Requests with Expired IRB";
+        }
+        if( $routeName == "translationalresearch_active_expired_soon_project_index" ) {
+            $title = "Active Project Requests with IRB Expiring Soon";
+        }
+
         //////////////////// EOF Start Filter ////////////////////
 
         $dql->orderBy('project.createDate', 'DESC');
