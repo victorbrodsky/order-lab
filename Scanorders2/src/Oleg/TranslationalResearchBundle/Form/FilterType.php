@@ -253,6 +253,7 @@ class FilterType extends AbstractType
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
+            'data' => $this->params['fromIrbExpDate'],
             'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'From IRB Expiration Date'),
         ));
         $builder->add('toIrbExpDate', DateTimeType::class, array(

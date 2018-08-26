@@ -197,20 +197,39 @@
 
             {#add if state has "_rejected"?#}
             {% set trclassname = null %}
-            {% if project.state == 'not_approved' or project.state == 'closed' %}
+            {% if project.state == 'final_rejected' or project.state == 'closed' %}
                 {% set trclassname = "order-reject-status" %}
             {% endif %}
 
-            {% if project.state == 'final_approved' and date(project.irbExpirationDate) > date() %}
-                {% set trclassname = "table-row-red" %}
+            {#NOT equal to Draft AND NOT equal to Closed#}
+            {#Active Project Requests with IRB Expiring Soon#}
+            {% if
+                    (
+                    project.state != 'draft' and project.state != 'closed' and
+                    project.state != 'irb_rejected' and project.state != 'admin_rejected' and
+                    project.state != 'committee_rejected' and project.state != 'final_rejected'
+                    )
+                    and
+                    date(project.irbExpirationDate) < date()|date_modify("+3 months")
+            %}
+                {% set trclassname = "table-row-lightyellow" %}
             {% endif %}
-            {% if if project.state == 'final_approved' and date(project.irbExpirationDate) > date()|date_modify("+3 months") %}
+            {#Active Project Requests with Expired IRB#}
+            {% if
+                    (
+                    project.state != 'draft' and project.state != 'closed' and
+                    project.state != 'irb_rejected' and project.state != 'admin_rejected' and
+                    project.state != 'committee_rejected' and project.state != 'final_rejected'
+                    )
+                    and
+                    date(project.irbExpirationDate) < date()
+            %}
                 {% set trclassname = "table-row-lightred" %}
             {% endif %}
 
             {% set projectTitle = project.getTitle() %}
 
-            <tr style="border-bottom: 1px solid #C6C6C6;" data-toggle="tooltip" title="{{ projectTitle }}" {{ trclassname }}>
+            <tr class="{{ trclassname }}" style="border-bottom: 1px solid #C6C6C6;" data-toggle="tooltip" title="{{ projectTitle }}">
                 <td>
                     <a href="{{ path(translationalresearch_sitename~'_project_show', { 'id': project.id }) }}" target="_blank">{{ project.oid }}</a>
                 </td>

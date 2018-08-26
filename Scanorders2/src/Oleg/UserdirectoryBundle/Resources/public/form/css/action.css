@@ -116,9 +116,9 @@
     /*background-color: #C6C9CD;*/
 }
 
-.table-row-red {
-    background: #EEA1AA;
-}
 .table-row-lightred {
-    background: #F7D2D5;
+    background: #ffcccc;
+}
+.table-row-lightyellow {
+    background: #FFFACD;
 }

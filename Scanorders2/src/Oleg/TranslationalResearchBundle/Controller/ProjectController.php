@@ -178,7 +178,8 @@ class ProjectController extends Controller
             //'defaultStatesArr' => $defaultStatesArr,
             'projectSpecialtyAllowedArr' => $projectSpecialtyAllowedArr,
             'defaultStatesArr' => array("All-except-Drafts"),
-            'toIrbExpDate' => null
+            'toIrbExpDate' => null,
+            'fromIrbExpDate' => null
         );
 
         if( $routeName == "translationalresearch_my_request_project_draft_index" ) {
@@ -186,11 +187,24 @@ class ProjectController extends Controller
         }
 
         if( $routeName == "translationalresearch_active_expired_project_index" ) {
+            $params['defaultStatesArr'] = array(
+                'irb_review','irb_missinginfo',
+                'admin_review','admin_missinginfo',
+                'committee_review','final_review','final_approved'
+            );
             $params['toIrbExpDate'] =new \DateTime();
+            $title = "Active Project Requests with Expired IRB";
         }
         if( $routeName == "translationalresearch_active_expired_soon_project_index" ) {
+            $params['defaultStatesArr'] = array(
+                'irb_review','irb_missinginfo',
+                'admin_review','admin_missinginfo',
+                'committee_review','final_review','final_approved'
+            );
             $today = new \DateTime();
-            $params['toIrbExpDate'] = $today->modify('+3 months');;
+            $params['fromIrbExpDate'] = new \DateTime();
+            $params['toIrbExpDate'] = $today->modify('+3 months');
+            $title = "Active Project Requests with IRB Expiring Soon";
         }
 
 
