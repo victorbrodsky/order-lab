@@ -1685,6 +1685,37 @@ class Project {
         return "Project request " . $this->getOid() . " '$title' submitted by ".$this->getSubmitter()->getUsernameOptimal() . $createDateStr; //. " at ".$this->getCreateDate()->format('H:i:s')
     }
 
+    //"IRB with PI FirstName LastName expires on MM/DD/YYYY."
+    public function getIrbInfo() {
+        $info = null;
+
+        if( $this->getIrbNumber() ) {
+            $info = "IRB# ".$this->getIrbNumber();
+        }
+
+        if( $this->getPrincipalIrbInvestigator() ) {
+            $info = $info . " with PI " . $this->getPrincipalIrbInvestigator()->getUsernameOptimal();
+        } else {
+            $pis = $this->getPrincipalInvestigators();
+            if( count($pis) > 0 ) {
+                $piArr = array();
+                foreach($pis as $pi) {
+                    $piArr[] = $pi->getUsernameOptimal();
+                }
+                $info = $info . " with PI(s) " . implode(", ",$piArr);
+            }
+        }
+
+        //if( $this->getIrbExpirationDate() ) {
+        //    $info = $info . ", expires on " . $this->getIrbExpirationDate()->format('m/d/Y');
+        //}
+
+        //$info = '<div class="well">'.$info.'</div>';
+        $info = '<p class="text-primary">'.$info.'</p>';
+
+        return $info;
+    }
+
     //used by select2. Limit by 15 chars
     public function getProjectInfoNameChoice() {
         return $this->getProjectInfoLimited(false);

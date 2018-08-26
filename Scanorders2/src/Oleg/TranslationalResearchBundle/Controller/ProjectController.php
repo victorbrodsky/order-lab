@@ -707,15 +707,15 @@ class ProjectController extends Controller
             $dql->andWhere($myPendingProjectsCriterion);
 
             $dqlParameters["userId"] = $user->getId();
-            $title = "Project Requests Awaiting Additional Info To Be Reviewed";
+            $title = "Projects Awaiting Additional Info To Be Reviewed";
         }
 
         //set title
         if( $routeName == "translationalresearch_active_expired_project_index" ) {
-            $title = "Active Project Requests with Expired IRB";
+            $title = "Active Projects with Expired IRB";
         }
         if( $routeName == "translationalresearch_active_expired_soon_project_index" ) {
-            $title = "Active Project Requests with IRB Expiring Soon";
+            $title = "Active Projects with IRB Expiring Soon";
         }
 
         //////////////////// EOF Start Filter ////////////////////

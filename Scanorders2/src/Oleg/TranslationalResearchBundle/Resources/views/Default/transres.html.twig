@@ -438,9 +438,13 @@
                     <hr>
                     <br>
 
-                    <p class="text-primary"></p>
-                    <h4>The answers you provide must reflect what has been requested in the approved IRB and the approved tissue request form.</h4>
-                    </p>
+                    <h4>
+                        <p class="text-primary">
+                            The answers you provide must reflect what has been requested in the approved IRB and the approved tissue request form.
+                        </p>
+                    </h4>
+                    <br>
+
                     {{ transres.tissueProcurement(form,project,cycle) }}
                     {{ transres.archivalSpecimens(form,project,cycle) }}
 
@@ -777,6 +781,9 @@
         <div class="well transres-review-holder text-center col-xs-12">
             {#Add field "Update expiration date" (irbExpirationDate) in the IRB Review page#}
             {% if project.state == "irb_review" %}
+                {#"IRB with PI FirstName LastName expires on MM/DD/YYYY."#}
+                {{ project.getIrbInfo()|raw }}
+
                 {#{% set irbExpDate = transres_formnode_util.getProjectFormNodeFieldByName(project,"IRB Expiration Date") %}#}
                 {% set irbExpDate = project.getIrbExpirationDate() %}
                 {% if irbExpDate %}
