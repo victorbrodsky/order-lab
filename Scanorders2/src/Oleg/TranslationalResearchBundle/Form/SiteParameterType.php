@@ -185,6 +185,21 @@ class SiteParameterType extends AbstractType
             'attr' => array('class' => 'form-control')
         ));
 
+        $builder->add('specimenDetailsComment', null, array(
+            'label' => "Specimen Details Comment (The answers you provide must reflect what has been requested in the approved IRB and the approved tissue request form.):",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+        $builder->add('institutionName', null, array(
+            'label' => "Institution Name (NYP/WCM):",
+            'required' => false,
+            'attr' => array('class' => 'form-control')
+        ));
+        $builder->add('fromEmail', null, array(
+            'label' => "TRP Admin Email (trp-admin@med.cornell.edu):",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
 
         //Buttons
         if( $this->params['cycle'] === "new" ) {

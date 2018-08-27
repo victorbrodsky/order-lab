@@ -1571,8 +1571,9 @@ class TransResRequestUtil
 
         //$transresUtil = $this->container->get('transres_util');
         $emailUtil = $this->container->get('user_mailer_utility');
+        $transresUtil = $this->container->get('transres_util');
 
-        $senderEmail = null; //Admin email
+        $senderEmail = $transresUtil->getTransresSiteProjectParameter('fromEmail',$transresRequest->getProject());
 
         $emails = $this->getRequestEmails($transresRequest);
 
@@ -1596,7 +1597,6 @@ class TransResRequestUtil
         $transresUtil = $this->container->get('transres_util');
         $emailUtil = $this->container->get('user_mailer_utility');
 
-        $senderEmail = null; //Admin email
         //$newline = "\r\n";
         $newline = "<br>";
 
@@ -1710,6 +1710,8 @@ class TransResRequestUtil
         $body = $body . $newline. "To edit the invoice and generate an updated copy, please follow this link:".$newline.
             $editInvoiceUrl.$newline;
 
+        $senderEmail = $transresUtil->getTransresSiteProjectParameter('fromEmail',$project);
+
         //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
         $emailUtil->sendEmail( $emails, $subject, $body, null, $senderEmail );
 
@@ -1728,7 +1730,6 @@ class TransResRequestUtil
         $transresUtil = $this->container->get('transres_util');
         $emailUtil = $this->container->get('user_mailer_utility');
 
-        $senderEmail = null; //Admin email
         //$newline = "\r\n";
         $newline = "<br>";
 
@@ -1772,6 +1773,7 @@ class TransResRequestUtil
         }
 
         //3) Send email        $emails, $subject, $message, $ccs=null, $fromEmail=null
+        $senderEmail = $transresUtil->getTransresSiteProjectParameter('fromEmail',$project);
         $emailUtil->sendEmail( $emails, $subject, $body, null, $senderEmail );
 
         //4) set event log
@@ -1790,7 +1792,6 @@ class TransResRequestUtil
         $transresUtil = $this->container->get('transres_util');
         $emailUtil = $this->container->get('user_mailer_utility');
 
-        $senderEmail = null;
         //$newline = "\r\n";
         //$newline = "<br>";
         $emails = array();
@@ -1830,6 +1831,7 @@ class TransResRequestUtil
         }
 
         //send by email
+        $senderEmail = $transresUtil->getTransresSiteProjectParameter('fromEmail',$project);
         //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
         $emailUtil->sendEmail( $emails, $emailSubject, $emailBody, null, $senderEmail );
 
@@ -2265,58 +2267,60 @@ class TransResRequestUtil
     }
 
     public function findCreateSiteParameterEntity($specialtyStr) {
-        $em = $this->em;
-        $user = $this->secTokenStorage->getToken()->getUser();
-
-        //$entity = $em->getRepository('OlegTranslationalResearchBundle:TransResSiteParameters')->findOneByOid($specialtyStr);
-
-        $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResSiteParameters');
-        $dql = $repository->createQueryBuilder("siteParameter");
-        $dql->select('siteParameter');
-        $dql->leftJoin('siteParameter.projectSpecialty','projectSpecialty');
-
-        $dqlParameters = array();
-
-        $dql->where("projectSpecialty.abbreviation = :specialtyStr");
-
-        $dqlParameters["specialtyStr"] = $specialtyStr;
-
-        $query = $em->createQuery($dql);
-
-        if( count($dqlParameters) > 0 ) {
-            $query->setParameters($dqlParameters);
-        }
-
-        $entities = $query->getResult();
-        //echo "projectSpecialty count=".count($entities)."<br>";
-
-        if( count($entities) > 0 ) {
-            return $entities[0];
-        }
-
-        //Create New
-        $specialty = $em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation($specialtyStr);
-        if( !$specialty ) {
-            throw new \Exception("SpecialtyList is not found by specialty abbreviation '" . $specialtyStr . "'");
-        } else {
-            $entity = new TransResSiteParameters($user);
-
-            $entity->setProjectSpecialty($specialty);
-
-//            //remove null Logo document if exists
-//            $logoDocument = $entity->getTransresLogo();
-//            if( $logoDocument ) {
-//                $entity->setTransresLogo(null);
-//                $em->remove($logoDocument);
-//            }
-
-            $em->persist($entity);
-            $em->flush($entity);
-
-            return $entity;
-        }
-
-        return null;
+        $transresUtil = $this->container->get('transres_util');
+        return $transresUtil->findCreateSiteParameterEntity($specialtyStr);
+//        $em = $this->em;
+//        $user = $this->secTokenStorage->getToken()->getUser();
+//
+//        //$entity = $em->getRepository('OlegTranslationalResearchBundle:TransResSiteParameters')->findOneByOid($specialtyStr);
+//
+//        $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResSiteParameters');
+//        $dql = $repository->createQueryBuilder("siteParameter");
+//        $dql->select('siteParameter');
+//        $dql->leftJoin('siteParameter.projectSpecialty','projectSpecialty');
+//
+//        $dqlParameters = array();
+//
+//        $dql->where("projectSpecialty.abbreviation = :specialtyStr");
+//
+//        $dqlParameters["specialtyStr"] = $specialtyStr;
+//
+//        $query = $em->createQuery($dql);
+//
+//        if( count($dqlParameters) > 0 ) {
+//            $query->setParameters($dqlParameters);
+//        }
+//
+//        $entities = $query->getResult();
+//        //echo "projectSpecialty count=".count($entities)."<br>";
+//
+//        if( count($entities) > 0 ) {
+//            return $entities[0];
+//        }
+//
+//        //Create New
+//        $specialty = $em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation($specialtyStr);
+//        if( !$specialty ) {
+//            throw new \Exception("SpecialtyList is not found by specialty abbreviation '" . $specialtyStr . "'");
+//        } else {
+//            $entity = new TransResSiteParameters($user);
+//
+//            $entity->setProjectSpecialty($specialty);
+//
+////            //remove null Logo document if exists
+////            $logoDocument = $entity->getTransresLogo();
+////            if( $logoDocument ) {
+////                $entity->setTransresLogo(null);
+////                $em->remove($logoDocument);
+////            }
+//
+//            $em->persist($entity);
+//            $em->flush($entity);
+//
+//            return $entity;
+//        }
+//
+//        return null;
     }
 
     //send by email to recipient (principalInvestigator)
@@ -2424,8 +2428,9 @@ class TransResRequestUtil
         }
 
         //send by email
+        $senderEmail = $transresUtil->getTransresSiteProjectParameter('fromEmail',$project);
         //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-        $emailUtil->sendEmail( $piEmailArr, $emailSubject, $emailBody, $ccs, $ccs, $attachmentPath );
+        $emailUtil->sendEmail( $piEmailArr, $emailSubject, $emailBody, $ccs, $senderEmail, $attachmentPath );
 
         $msg =  "Invoice ".$invoice->getOid()." PDF has been sent by email to " . implode(", ",$piEmailArr) . " with CC to " . $ccs;
         $msg = $msg . ".<br> Subject: " . $emailSubject . ".<br> Body: " . $emailBody;
@@ -2843,8 +2848,8 @@ class TransResRequestUtil
             return "Error: Packing Slip PDF ".$pdf->getUniquename()." has not been sent, because the email list (admins and primary reviewers, submitter, principalInvestigators, contact) is empty.";
         }
 
-        $user = $this->secTokenStorage->getToken()->getUser();
-        $senderEmail = $user->getSingleEmail();
+        //$user = $this->secTokenStorage->getToken()->getUser();
+        //$senderEmail = $user->getSingleEmail();
 
         $project = $transresRequest->getProject();
 
@@ -2876,6 +2881,8 @@ class TransResRequestUtil
         //echo "attachmentPath=$attachmentPath<br>";
         //$logger = $this->container->get('logger');
         //$logger->notice("attachmentPath=".$attachmentPath);
+
+        $senderEmail = $transresUtil->getTransresSiteProjectParameter('fromEmail',$project);
 
         //                    $emails, $subject, $message, $ccs=null, $fromEmail=null, $attachmentPath=null
         $emailUtil->sendEmail($emails,$subject,$body,$adminEmails,$senderEmail,$attachmentPath);

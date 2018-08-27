@@ -218,6 +218,28 @@ class TransResSiteParameters {
      */
     private $barcodeSize;
 
+    //Project:
+    /**
+     * The answers you provide must reflect what has been requested in the approved IRB and the approved tissue request form.
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $specimenDetailsComment;
+
+    /**
+     * 'NYP/WCM' Pathologist(s) Involved
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $institutionName;
+
+    /**
+     * from email address: trp-admin@med.cornell.edu
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $fromEmail;
+
 
     public function __construct($user=null) {
         $this->setCreator($user);
@@ -652,6 +674,55 @@ class TransResSiteParameters {
     {
         $this->barcodeSize = $barcodeSize;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getSpecimenDetailsComment()
+    {
+        return $this->specimenDetailsComment;
+    }
+
+    /**
+     * @param mixed $specimenDetailsComment
+     */
+    public function setSpecimenDetailsComment($specimenDetailsComment)
+    {
+        $this->specimenDetailsComment = $specimenDetailsComment;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInstitutionName()
+    {
+        return $this->institutionName;
+    }
+
+    /**
+     * @param mixed $institutionName
+     */
+    public function setInstitutionName($institutionName)
+    {
+        $this->institutionName = $institutionName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFromEmail()
+    {
+        return $this->fromEmail;
+    }
+
+    /**
+     * @param mixed $fromEmail
+     */
+    public function setFromEmail($fromEmail)
+    {
+        $this->fromEmail = $fromEmail;
+    }
+
 
     
 

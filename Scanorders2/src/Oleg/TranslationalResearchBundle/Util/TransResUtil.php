@@ -523,6 +523,7 @@ class TransResUtil
                         $emailRes = array();
                         $emailUtil = $this->container->get('user_mailer_utility');
                         $projectReviewUrl = $this->getProjectReviewUrl($project);
+                        $senderEmail = $transresUtil->getTransresSiteProjectParameter('fromEmail',$project);
                         $subject = "Project request ".$project->getOid(). " has been reviewed by a committee member";
                         $body = $subject . " who is recommending it to be " . $review->getDecisionStr();
 
@@ -538,7 +539,7 @@ class TransResUtil
                         //send notification emails (project transition: committee recomendation - committe_review)
                         $admins = $this->getTransResAdminEmails($project->getProjectSpecialty(),true,true);
                         //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-                        $emailUtil->sendEmail( $admins, $subject, $emailBody, null, null );
+                        $emailUtil->sendEmail( $admins, $subject, $emailBody, null, $senderEmail );
 
                         if( $subject && $emailBody ) {
                             $emailResAdmin = "Email To: ".implode("; ",$admins);
@@ -558,7 +559,7 @@ class TransResUtil
                         //send notification emails (project transition: committee recomendation - committe_review)
                         $primaryReviewerEmails = $this->getCommiteePrimaryReviewerEmails($project); //ok
                         //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-                        $emailUtil->sendEmail( $primaryReviewerEmails, $subject, $emailBody, null, null );
+                        $emailUtil->sendEmail( $primaryReviewerEmails, $subject, $emailBody, null, $senderEmail );
 
                         if( $subject && $emailBody ) {
                             $emailResPrimary = "Email To: ".implode("; ",$admins);
@@ -2190,9 +2191,11 @@ class TransResUtil
     //3) The emails will be send to the project's requesters only when project is approved, closed, rejected or "additional information is required".
     public function sendNotificationEmails($project, $review, $subject, $body, $testing=false) {
         $emailUtil = $this->container->get('user_mailer_utility');
+        $transresUtil = $this->container->get('transres_util');
 
-        $senderEmail = null; //Admin email
         $emails = array();
+
+        $senderEmail = $transresUtil->getTransresSiteProjectParameter('fromEmail',$project);
 
         //send to the
         // 1) admins and primary reviewers
@@ -2240,11 +2243,13 @@ class TransResUtil
     //Use to send notification emails for project transition (awaiting review, missing info, rejected, final, closed)
     public function sendTransitionEmail($project,$originalStateStr,$testing=false) {
         $emailUtil = $this->container->get('user_mailer_utility');
+        $transresUtil = $this->container->get('transres_util');
         $user = $this->secTokenStorage->getToken()->getUser();
         $subject = null;
         $body = null;
         $msg = null;
-        $senderEmail = null; //Admin email
+        //$senderEmail = null; //Admin email
+        $senderEmail = $transresUtil->getTransresSiteProjectParameter('fromEmail',$project);
         //$break = "\r\n";
         $break = "<br>";
         $oid = $project->getOid();
@@ -2312,7 +2317,7 @@ class TransResUtil
             //The following comment has been provided by the reviewer: [most recent value of comment field added by reviewer]
             $reviewComments = $this->getReviewComments($project);
 
-            $body = $body . $break.$break. "The following comments has been provided by the reviewer:".$break.$reviewComments;
+            $body = $body . $break.$break. "The following comments has been provided:".$break.$reviewComments;
 
             $body = $body . $break.$break. "The review process will resume once the requested information is added.";
 
@@ -4127,5 +4132,80 @@ class TransResUtil
         }
 
         return $res;
+    }
+
+    public function getTransresSiteProjectParameter($fieldName,$project) {
+
+        if( !$fieldName ) {
+            throw new \Exception("Field name is empty");
+        }
+
+        $projectSpecialty = $project->getProjectSpecialty();
+        $projectSpecialtyAbbreviation = $projectSpecialty->getAbbreviation();
+
+        $siteParameter = $this->findCreateSiteParameterEntity($projectSpecialtyAbbreviation);
+        if( !$siteParameter ) {
+            throw new \Exception("SiteParameter is not found by specialty '" . $projectSpecialtyAbbreviation . "'");
+        }
+
+        $getMethod = "get".$fieldName;
+
+        $value = $siteParameter->$getMethod();
+
+        return $value;
+    }
+    public function findCreateSiteParameterEntity($specialtyStr) {
+        $em = $this->em;
+        $user = $this->secTokenStorage->getToken()->getUser();
+
+        //$entity = $em->getRepository('OlegTranslationalResearchBundle:TransResSiteParameters')->findOneByOid($specialtyStr);
+
+        $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResSiteParameters');
+        $dql = $repository->createQueryBuilder("siteParameter");
+        $dql->select('siteParameter');
+        $dql->leftJoin('siteParameter.projectSpecialty','projectSpecialty');
+
+        $dqlParameters = array();
+
+        $dql->where("projectSpecialty.abbreviation = :specialtyStr");
+
+        $dqlParameters["specialtyStr"] = $specialtyStr;
+
+        $query = $em->createQuery($dql);
+
+        if( count($dqlParameters) > 0 ) {
+            $query->setParameters($dqlParameters);
+        }
+
+        $entities = $query->getResult();
+        //echo "projectSpecialty count=".count($entities)."<br>";
+
+        if( count($entities) > 0 ) {
+            return $entities[0];
+        }
+
+        //Create New
+        $specialty = $em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation($specialtyStr);
+        if( !$specialty ) {
+            throw new \Exception("SpecialtyList is not found by specialty abbreviation '" . $specialtyStr . "'");
+        } else {
+            $entity = new TransResSiteParameters($user);
+
+            $entity->setProjectSpecialty($specialty);
+
+//            //remove null Logo document if exists
+//            $logoDocument = $entity->getTransresLogo();
+//            if( $logoDocument ) {
+//                $entity->setTransresLogo(null);
+//                $em->remove($logoDocument);
+//            }
+
+            $em->persist($entity);
+            $em->flush($entity);
+
+            return $entity;
+        }
+
+        return null;
     }
 }

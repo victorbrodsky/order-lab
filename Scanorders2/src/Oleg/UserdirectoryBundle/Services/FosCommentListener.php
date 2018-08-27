@@ -268,7 +268,7 @@ class FosCommentListener implements EventSubscriberInterface {
             $stateLabel = " for the stage '".$stateLabel."'";
         }
         $subject = "New Comment for ".$entity->getDisplayName()." ".$entity->getOid()." has been added".$stateLabel;
-        $body = $subject . ":" . $break . "'" . $comment->getBody() . "'";
+        $body = $subject . ":" . $break . "<b>" . $comment->getBody() . "</b>";
 
         return array('subject'=>$subject, 'body'=>$body);
     }

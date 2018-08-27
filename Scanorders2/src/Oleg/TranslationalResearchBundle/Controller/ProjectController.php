@@ -1026,10 +1026,11 @@ class ProjectController extends Controller
                 //$transresUtil->sendNotificationEmails($project,null,$emailSubject,$emailBody,$testing);
 
                 $emailUtil = $this->container->get('user_mailer_utility');
+                $senderEmail = $transresUtil->getTransresSiteProjectParameter('fromEmail',$project);
                 $requesterEmails = $transresUtil->getRequesterMiniEmails($project);
                 $adminsCcs = $transresUtil->getTransResAdminEmails($project->getProjectSpecialty(),true,true);
                 //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-                $emailUtil->sendEmail($requesterEmails,$emailSubject,$emailBody,$adminsCcs);
+                $emailUtil->sendEmail($requesterEmails,$emailSubject,$emailBody,$adminsCcs,$senderEmail);
                 ///////////// EOF send confirmation email to submitter and contact only ///////////////
 
                 $emailResult = $transresUtil->sendTransitionEmail($project,"draft",$testing);
@@ -1245,10 +1246,11 @@ class ProjectController extends Controller
                 //$transresUtil->sendNotificationEmails($project,null,$msg,$emailBody,$testing);
 
                 $emailUtil = $this->container->get('user_mailer_utility');
+                $senderEmail = $transresUtil->getTransresSiteProjectParameter('fromEmail',$project);
                 $requesterEmails = $transresUtil->getRequesterMiniEmails($project);
                 $adminsCcs = $transresUtil->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //ok
                 //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-                $emailUtil->sendEmail($requesterEmails,$msg,$emailBody,$adminsCcs);
+                $emailUtil->sendEmail($requesterEmails,$msg,$emailBody,$adminsCcs,$senderEmail);
                 ///////////// EOF send confirmation email to submitter and contact only ///////////////
 
                 $emailResult = $transresUtil->sendTransitionEmail($project,"draft",$testing);
@@ -1795,6 +1797,8 @@ class ProjectController extends Controller
 
         $otherUserParam = $project->getProjectSpecialty()->getAbbreviation();
 
+        $institutionName = $transresUtil->getTransresSiteProjectParameter('institutionName',$project);
+
         $params = array(
             'cycle' => $cycle,
             'em' => $em,
@@ -1811,7 +1815,8 @@ class ProjectController extends Controller
             //'saveAsComplete' => false,
             'updateProject' => false,
             'submitIrbReview' => false,
-            'stateChoiceArr'=>$stateChoiceArr
+            'stateChoiceArr'=>$stateChoiceArr,
+            'institutionName'=>$institutionName
         );
 
         $params['admin'] = false;
