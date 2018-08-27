@@ -224,7 +224,7 @@ class RequestController extends Controller
             }
 
 
-            $msg = "New work request " . $transresRequestUtil->getOid() . " has been submitted.";
+            $msg = "New work request " . $transresRequest->getOid() . " has been submitted.";
             $msg = $msg . $break.$break . $changedMsg;
             $msg = str_replace($break,"<br>",$msg);
 

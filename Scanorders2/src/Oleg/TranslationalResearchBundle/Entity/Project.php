@@ -396,6 +396,13 @@ class Project {
     private $totalNumberOfSpecimensProcessing;
 
     /**
+     * Number of blocks per case:
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $tissueNumberOfBlocksPerCase;
+
+    /**
      * onDelete="CASCADE"
      * Tissue Processing Services: [v] Paraffin Block Processing [v] Fresh/Frozen Tissue Procurement [v] Frozen Tissue Storage
      *
@@ -1632,8 +1639,24 @@ class Project {
         $this->tissueFormComment = $tissueFormComment;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getTissueNumberOfBlocksPerCase()
+    {
+        return $this->tissueNumberOfBlocksPerCase;
+    }
+
+    /**
+     * @param mixed $tissueNumberOfBlocksPerCase
+     */
+    public function setTissueNumberOfBlocksPerCase($tissueNumberOfBlocksPerCase)
+    {
+        $this->tissueNumberOfBlocksPerCase = $tissueNumberOfBlocksPerCase;
+    }
 
 
+    
 
     //show the name of the form (from the form hierarchy) that was used to generate this submitted message.
     // Make sure to save this form ID of the form linked from the Message Type at the time of message submission

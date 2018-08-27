@@ -66,7 +66,7 @@ class InvoiceController extends Controller
         if( $routeName == "translationalresearch_invoice_index" ) {
 
             //Title
-            $requestUrl = $transresRequestUtil->getRequestShowUrl($transresRequest);
+            $requestUrl = $transresRequestUtil->getRequestShowUrl($transresRequest,false);
             $thisLink = "<a href=".$requestUrl.">"."Request ID ".$transresRequest->getOid()."</a>";
             //$title = "List of Invoices for Request ID ".$transresRequest->getOid();
             $title = "List of Invoices for " . $thisLink;

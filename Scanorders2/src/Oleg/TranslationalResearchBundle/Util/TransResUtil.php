@@ -2391,6 +2391,8 @@ class TransResUtil
                 ),
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
+            $linkNewRequest = '<a href="'.$linkNewRequest.'">'.$linkNewRequest.'</a>';
+
             $body = $body .$break.$break .  "To submit a work request associated with this project request, please visit the link below:";
             $body = $body . $break . $linkNewRequest;
 
@@ -2796,6 +2798,8 @@ class TransResUtil
             UrlGeneratorInterface::ABSOLUTE_URL
         );
 
+        $projectUrl = '<a href="'.$projectUrl.'">'.$projectUrl.'</a>';
+
         return $projectUrl;
     }
     public function getProjectEditUrl($project) {
@@ -2807,6 +2811,8 @@ class TransResUtil
             UrlGeneratorInterface::ABSOLUTE_URL
         );
 
+        $projectUrl = '<a href="'.$projectUrl.'">'.$projectUrl.'</a>';
+
         return $projectUrl;
     }
     public function getProjectReviewUrl($project) {
@@ -2817,6 +2823,8 @@ class TransResUtil
             ),
             UrlGeneratorInterface::ABSOLUTE_URL
         );
+
+        $projectUrl = '<a href="'.$projectUrl.'">'.$projectUrl.'</a>';
 
         return $projectUrl;
     }

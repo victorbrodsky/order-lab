@@ -1206,7 +1206,7 @@ class TransResRequestUtil
         return null;
     }
 
-    public function getRequestShowUrl($transresRequest) {
+    public function getRequestShowUrl($transresRequest,$asHref=true) {
         $url = $this->container->get('router')->generate(
             'translationalresearch_request_show',
             array(
@@ -1215,6 +1215,10 @@ class TransResRequestUtil
             UrlGeneratorInterface::ABSOLUTE_URL
         );
 
+        if( $asHref ) {
+            $url = '<a href="'.$url.'">'.$url.'</a>';
+        }
+        
         return $url;
     }
 
@@ -1756,7 +1760,7 @@ class TransResRequestUtil
         $subject = "Request ".$transresRequest->getOid()." has been sent to ".$label;
 
         $body = $subject . ".". $newline."Please confirm the '$label' status by clicking the following link ".
-            "and changing the status to 'Completed and Notified':".$newline;
+            "and changing the status to 'Completed and Notified'".$newline;
 
         //2 get allowed transactions as array with labels, data
         $linksArray = $this->getReviewEnabledLinkActions($transresRequest,$statMachineType,false);
@@ -1773,7 +1777,7 @@ class TransResRequestUtil
         //4) set event log
         if( !$testing ) {
             $body = "Notification Email has been sent to ".implode(", ",$emails).":<br>".$body;
-            $body = str_replace($newline,"<br>",$body);
+            //$body = str_replace($newline,"<br>",$body);
             $eventType = "Email Sent";
             $transresUtil->setEventLog($transresRequest, $eventType, $body, $testing);
         }

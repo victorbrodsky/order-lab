@@ -276,10 +276,10 @@ class ProjectType extends AbstractType
             //Original modal with "Loading..."
             $addUserOnFly = ' (<a href="javascript:void(0)" data-toggle="modal" data-target="#new-user-temp-modal" onclick="addNewUserOnFly(this,' . $sitename . ','.$otherUserParam.');">Add New</a>)';
 
-            //$addUserOnFly = '(<a href="javascript:void(0)" data-toggle="modal" data-target="#user-add-new-user">Add New</a>)';
+            //$addUserOnFly = ' (<a href="javascript:void(0)" data-toggle="modal" data-target="#user-add-new-user">Add New</a>)';
 
             //Preloaded
-            $addUserOnFly = '(<a href="javascript:void(0)" onclick="constructNewUserModal(this,' . $sitename . ','.$otherUserParam.');">Add New</a>)';
+            $addUserOnFly = ' (<a href="javascript:void(0)" onclick="constructNewUserModal(this,' . $sitename . ','.$otherUserParam.');">Add New</a>)';
         }
 
         $builder->add( 'principalInvestigators', EntityType::class, array(
@@ -311,7 +311,7 @@ class ProjectType extends AbstractType
 
         $builder->add( 'pathologists', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
-            'label'=> "Pathologist(s) Involved$addUserOnFly:",
+            'label'=> "NYP/WCM Pathologist(s) Involved$addUserOnFly:",
             'required'=> false,
             'multiple' => true,
             'attr' => array('class'=>'combobox combobox-width add-new-user-on-enter', 'data-otheruserparam'=>$this->params['otherUserParam']),
@@ -554,6 +554,11 @@ class ProjectType extends AbstractType
             'required' => false,
             'attr' => array('class'=>'form-control digit-mask mask-text-align-left')
         ));
+        $builder->add('tissueNumberOfBlocksPerCase',TextType::class,array(
+            'label' => "Number of blocks per case:",
+            'required' => false,
+            'attr' => array('class'=>'form-control digit-mask mask-text-align-left')
+        ));
         $builder->add( 'tissueProcessingServices', EntityType::class, array(
             'class' => 'OlegTranslationalResearchBundle:TissueProcessingServiceList',
             'label'=>'Services:',
@@ -592,7 +597,7 @@ class ProjectType extends AbstractType
             'attr' => array('class'=>'form-control digit-mask mask-text-align-left')
         ));
         $builder->add('totalNumberOfBlocksPerCase',TextType::class,array(
-            'label' => "Total number of blocks per case:",
+            'label' => "Number of blocks per case:",
             'required' => false,
             'attr' => array('class'=>'form-control digit-mask mask-text-align-left')
         ));
