@@ -247,7 +247,7 @@ class RequestController extends Controller
                 $requestUrl = $transresRequestUtil->getRequestShowUrl($transresRequest);
                 $msg = $msg . $break.$break . "To view this work request, please visit the link below: " . $break . $requestUrl;
 
-                $subject = "New work request has been submitted " . $transresRequestUtil->getOid();
+                $subject = "New work request has been submitted " . $transresRequest->getOid();
                 $emailRes = $transresRequestUtil->sendRequestNotificationEmails($transresRequest, $subject, $msg, $testing);
                 $msg = $break.$break . $emailRes;
 
