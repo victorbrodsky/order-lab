@@ -82,6 +82,7 @@ class TransResPermissionUtil
     public function isUserHasInvoicePermission( $invoice, $action ) {
         $user = $this->secTokenStorage->getToken()->getUser();
         $transresUtil = $this->container->get('transres_util');
+        $transresRequestUtil = $this->container->get('transres_request_util');
 
         $processed = false;
         if( $invoice ) {
@@ -149,7 +150,7 @@ class TransResPermissionUtil
             }
 
             //associated with the request as requester
-            if( $this->isRequestRequester($transresRequest) ) {
+            if( $transresRequestUtil->isRequestRequester($transresRequest) ) {
                 return true;
             }
 
@@ -173,7 +174,7 @@ class TransResPermissionUtil
             //}
 
             //associated with the request as requester
-            if( $this->isRequestRequester($transresRequest) ) {
+            if( $transresRequestUtil->isRequestRequester($transresRequest) ) {
                 return true;
             }
 
