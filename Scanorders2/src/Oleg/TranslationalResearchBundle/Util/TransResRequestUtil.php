@@ -1026,7 +1026,8 @@ class TransResRequestUtil
         $user = $this->secTokenStorage->getToken()->getUser();
         $transresUtil = $this->container->get('transres_util');
         $transresPdfUtil = $this->container->get('transres_pdf_generator');
-        $break = "\r\n";
+        //$break = "\r\n";
+        $break = "<br>";
         $addMsg = "";
 
         if( $statMachineType == 'progress' ) {
@@ -1561,7 +1562,8 @@ class TransResRequestUtil
         //if( !$appliedTransition ) {
         //    return null;
         //}
-        $break = "\r\n";
+        //$break = "\r\n";
+        $break = "<br>";
 
         //$transresUtil = $this->container->get('transres_util');
         $emailUtil = $this->container->get('user_mailer_utility');
@@ -1591,7 +1593,8 @@ class TransResRequestUtil
         $emailUtil = $this->container->get('user_mailer_utility');
 
         $senderEmail = null; //Admin email
-        $newline = "\r\n";
+        //$newline = "\r\n";
+        $newline = "<br>";
 
         $project = $transresRequest->getProject();
         $projectTitle = $project->getTitle();
@@ -1722,7 +1725,8 @@ class TransResRequestUtil
         $emailUtil = $this->container->get('user_mailer_utility');
 
         $senderEmail = null; //Admin email
-        $newline = "\r\n";
+        //$newline = "\r\n";
+        $newline = "<br>";
 
         //$project = $transresRequest->getProject();
         //$projectTitle = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"Title");
@@ -1783,7 +1787,8 @@ class TransResRequestUtil
         $emailUtil = $this->container->get('user_mailer_utility');
 
         $senderEmail = null;
-        $newline = "\r\n";
+        //$newline = "\r\n";
+        //$newline = "<br>";
         $emails = array();
 
         //get Request's PI emails
@@ -1827,7 +1832,7 @@ class TransResRequestUtil
         //4) set event log
         if( !$testing ) {
             $body = "Notification Email has been sent to ".implode(", ",$emails).":<br>".$emailBody;
-            $body = str_replace($newline,"<br>",$body);
+            //$body = str_replace($newline,"<br>",$body);
             $eventType = "Email Sent";
             $transresUtil->setEventLog($transresRequest, $eventType, $body, $testing);
         }

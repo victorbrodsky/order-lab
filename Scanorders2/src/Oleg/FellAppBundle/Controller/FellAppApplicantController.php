@@ -321,7 +321,8 @@ class FellAppApplicantController extends Controller {
         //$pdfLink = $this->generateUrl( 'fellapp_file_download', array("id"=>$fellapp->getRecentReport()->getId()), true );
         $pdfLink = $this->generateUrl( 'fellapp_download_pdf', array("id"=>$fellapp->getId()), UrlGeneratorInterface::ABSOLUTE_URL );
 
-        $break = "\r\n";
+        //$break = "\r\n";
+        $break = "<br>";
 
         $text = "Dear " . $interviewer->getUsernameOptimal().",".$break.$break;
         $text .= "Please review the FELLOWSHIP INTERVIEW SCHEDULE for the candidate ".$applicant->getUsernameOptimal()." and submit your evaluation after the interview.".$break.$break;
@@ -459,7 +460,8 @@ class FellAppApplicantController extends Controller {
 
             $applicant = $entity->getUser();
 
-            $break = "\r\n";
+            //$break = "\r\n";
+            $break = "<br>";
 
             $text = "Dear " . $observer->getUsernameOptimal().",".$break.$break;
             $text .= "Please review the FELLOWSHIP APPLICATION for the candidate ".$applicant->getUsernameOptimal() . " (ID: ".$entity->getId().")".$break.$break;

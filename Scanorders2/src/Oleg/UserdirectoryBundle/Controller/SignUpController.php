@@ -333,7 +333,7 @@ class SignUpController extends Controller
         $userSecUtil = $this->get('user_security_utility');
 
         $systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
-        $newline = "\r\n";
+        $newline = "<br>";
         $subject = $this->siteNameStr." Registration";
 
         //$orderUrl = ""; //[URL/order]
@@ -653,7 +653,7 @@ class SignUpController extends Controller
             );
 
             //////////////// send email to admin //////////////////////
-            $newline = "\r\n";
+            $newline = "<br>";
             $emails = $userSecUtil->getUserEmailsByRole($this->siteName,"Administrator");
             $ccEmails = $userSecUtil->getUserEmailsByRole($this->siteName,"Platform Administrator");
             $adminEmails = $userSecUtil->getUserEmailsByRole($this->siteName,null,$this->roleAdmins);
@@ -1117,7 +1117,7 @@ class SignUpController extends Controller
         $systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
 
         //Email
-        $newline = "\r\n";
+        $newline = "<br>";
         $subject = "ORDER Password reset link";
 
         //$activationUrl = ""; //http://URL/order/activate-account/REGISTRATION-LINK-ID

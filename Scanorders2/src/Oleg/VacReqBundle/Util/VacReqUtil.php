@@ -198,7 +198,8 @@ class VacReqUtil
     }
     public function createEmailBody( $entity, $emailToUser=null, $addText=null, $withLinks=true ) {
 
-        $break = "\r\n";
+        //$break = "\r\n";
+        $break = "<br>";
 
         $submitter = $entity->getUser();
 
@@ -405,7 +406,8 @@ class VacReqUtil
 
         $logger = $this->container->get('logger');
         $emailUtil = $this->container->get('user_mailer_utility');
-        $break = "\r\n";
+        //$break = "\r\n";
+        $break = "<br>";
 
         $institution = $entity->getInstitution();
         if( !$institution ) {
@@ -2917,7 +2919,8 @@ class VacReqUtil
         return $this->sendGeneralEmailToApproversAndEmailUsers($entity,$subject,$message,$sendCopy);
     }
     public function createCancelEmailBody( $entity, $emailUser=null, $addText=null ) {
-        $break = "\r\n";
+        //$break = "\r\n";
+        $break = "<br>";
 
         //$message = "Dear " . $emailUser->getUsernameOptimal() . "," . $break.$break;
         $message = "Dear ###emailuser###," . $break.$break;
@@ -2949,7 +2952,8 @@ class VacReqUtil
         }
 
         $emailUtil = $this->container->get('user_mailer_utility');
-        $break = "\r\n";
+        //$break = "\r\n";
+        $break = "<br>";
 
         //$requestName = $entity->getRequestName();
 
@@ -3819,7 +3823,8 @@ class VacReqUtil
         $em = $this->em;
         $emailUtil = $this->container->get('user_mailer_utility');
         $userSecUtil = $this->container->get('user_security_utility');
-        $break = "\r\n";
+        //$break = "\r\n";
+        $break = "<br>";
         $action = null;
 
         /////////////////// TWO CASES: pre-approval and final approval ///////////////////

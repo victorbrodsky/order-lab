@@ -127,9 +127,13 @@ class EmailUtil {
         $message->setSubject($subject);
         $message->setFrom($fromEmail);
 
+        //for html
+        $body = str_replace("\r\n","<br>",$body);
+
         $message->setBody(
             $body,
-            'text/plain'
+            'text/html'
+            //'text/plain'
         );
 
         $mailerDeliveryAddresses = trim($userSecUtil->getSiteSettingParameter('mailerDeliveryAddresses'));

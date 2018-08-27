@@ -265,9 +265,9 @@ class CarryOverController extends Controller
         $routeName = $request->get('_route');
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $vacreqUtil = $this->get('vacreq_util');
-        $emailUtil = $this->container->get('user_mailer_utility');
-        $userSecUtil = $this->container->get('user_security_utility');
-        $break = "\r\n";
+        //$emailUtil = $this->container->get('user_mailer_utility');
+        //$userSecUtil = $this->container->get('user_security_utility');
+        //$break = "\r\n";
 
         if( !$status ) {
             throw $this->createNotFoundException('Status is invalid: status='.$status);

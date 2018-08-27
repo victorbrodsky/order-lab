@@ -1940,7 +1940,7 @@ class UserController extends Controller
             );
 
             //Email to Admin
-            $event = str_replace("<br>","\r\n",$event);
+            //$event = str_replace("<br>","\r\n",$event);
             $emailUtil = $this->get('user_mailer_utility');
             $adminEmails = $userSecUtil->getUserEmailsByRole($sitename,"Administrator");
             $ccEmails = $userSecUtil->getUserEmailsByRole($sitename,"Platform Administrator");

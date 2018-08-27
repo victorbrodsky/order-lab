@@ -112,7 +112,8 @@ class VacReqRequestBusiness extends VacReqRequestBase
 
     public function __toString()
     {
-        $break = "\r\n";
+        //$break = "\r\n";
+        $break = "<br>";
         $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
 
         $res = "### Business Travel Request ###".$break;

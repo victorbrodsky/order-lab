@@ -1541,7 +1541,8 @@ class FellAppController extends Controller {
 
         //Every time an application is marked as "Priority", send an email to the user(s) with the corresponding "Fellowship Prpgram Coordinator" role (Cytopathology, etc), - in our case it will be Jessica - saying:
         if( $status == 'priority' ) {
-            $break = "\r\n";
+            //$break = "\r\n";
+            $break = "<br>";
             $fellappUtil = $this->container->get('fellapp_util');
             $directorEmails = $fellappUtil->getDirectorsOfFellAppEmails($fellapp);
             $coordinatorEmails = $fellappUtil->getCoordinatorsOfFellAppEmails($fellapp);

@@ -228,7 +228,8 @@ class RequestController extends Controller
 
             $requestName = $entity->getRequestName();
             $emailUtil = $this->get('user_mailer_utility');
-            $break = "\r\n";
+            //$break = "\r\n";
+            $break = "<br>";
 
             //set confirmation email to submitter and approver and email users
             $css = null;
@@ -646,7 +647,8 @@ class RequestController extends Controller
             }
 
             //Event Log
-            $break = "\r\n";
+            //$break = "\r\n";
+            $break = "<br>";
             $event = "Request ID #".$entity->getID()." for ".$entity->getUser()." has been ".$action." by ".$user.$break;
             $event .= $entity->getDetailedStatus().$break.$break;
             $userSecUtil = $this->container->get('user_security_utility');
@@ -1037,7 +1039,8 @@ class RequestController extends Controller
         $eventSubject = $userNameOptimal." is requesting cancellation of a ".ucwords($requestName)." ID #" . $entity->getId();
 
         //send email to an approver
-        $break = "\r\n";
+        //$break = "\r\n";
+        $break = "<br>";
 
         //The approver can then change the status from "Cancellation Requested" to either "Cancellation Approved (Canceled)" or "Cancellation Denied (Approved)"
         //cancellation-request => cancellation-request-approved
@@ -1178,7 +1181,8 @@ class RequestController extends Controller
 
         //set confirmation email to submitter and email users
         $vacreqUtil = $this->get('vacreq_util');
-        $break = "\r\n";
+        //$break = "\r\n";
+        $break = "<br>";
         $message = $eventSubject . $break . $break . $entity->printRequest($this->container);
         $vacreqUtil->sendSingleRespondEmailToSubmitter( $entity, $user, null, $message );
 

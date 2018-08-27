@@ -1019,7 +1019,7 @@ class ProjectController extends Controller
 
             if( $startProjectReview ) {
                 ///////////// send confirmation email to submitter and contact only ///////////////
-                $break = "\r\n";
+                $break = "<br>";
                 //get project url
                 $projectUrl = $transresUtil->getProjectShowUrl($project);
                 $emailBody = $msg . $break.$break. "To view this project request, please visit the link below:".$break.$projectUrl;
@@ -1238,7 +1238,7 @@ class ProjectController extends Controller
 
             if( $startProjectReview ) {
                 ///////////// send confirmation email to submitter and contact only ///////////////
-                $break = "\r\n";
+                $break = "<br>";
                 //get project url
                 $projectUrl = $transresUtil->getProjectShowUrl($project);
                 $emailBody = $msg . $break.$break. "To view this project request, please visit the link below:".$break.$projectUrl;

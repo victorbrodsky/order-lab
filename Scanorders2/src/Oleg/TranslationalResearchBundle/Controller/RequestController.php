@@ -158,7 +158,8 @@ class RequestController extends Controller
             }
 
             //set project's funded account number
-            $break = "\r\n";
+            //$break = "\r\n"; //text/plain
+            $break = "<br>"; //text/html
             $changedMsg = "";
             //$changedProjectFundNumber = false;
             $originalFundedAccountNumber = $project->getFundedAccountNumber();
@@ -397,7 +398,8 @@ class RequestController extends Controller
 
             //set project's funded account number
             $changedMsg = "";
-            $break = "\r\n";
+            //$break = "\r\n";
+            $break = "<br>";
             //$changedProjectFundNumber = false;
             $originalFundedAccountNumber = $project->getFundedAccountNumber();
             $fundedAccountNumber = $transresRequest->getFundedAccountNumber();

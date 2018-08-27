@@ -724,11 +724,11 @@ class OrderUtil {
             $subject = "User ".$user." needs to have an Institution added to their profile";
 
             $message =  "Please visit the ".$userUrl." of user ".$user.
-                        " and add the name of the institution that employs this user to enable her or him to place orders & and to view patient information known to that institution:\r\n\r\n".
-                        $userUrl."\r\n".
-                        "\r\n\r\n".
-                        "Agent Smith\r\n".
-                        "Virtual Keeper of O R D E R: ".$homeUrl."\r\n".
+                        " and add the name of the institution that employs this user to enable her or him to place orders & and to view patient information known to that institution:<br><br>".
+                        $userUrl."<br>".
+                        "<br><br>".
+                        "Agent Smith<br>".
+                        "Virtual Keeper of O R D E R: ".$homeUrl."<br>".
                         "Weill Cornell Medical College";
 
             $emailUtil = $this->container->get('user_mailer_utility');

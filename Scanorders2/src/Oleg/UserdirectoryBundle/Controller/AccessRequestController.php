@@ -496,7 +496,7 @@ class AccessRequestController extends Controller
         $email = $user->getEmail();
         $emailStr = "";
         if( $email && $email != "" ) {
-            $emailStr = "\r\nConfirmation email was sent to ".$email;
+            $emailStr = "<br>Confirmation email was sent to ".$email;
         }
 
         $emailUtil = $this->get('user_mailer_utility');
@@ -532,21 +532,21 @@ class AccessRequestController extends Controller
 
         //add access request management link
         $managementLink = $this->generateUrl( $sitename.'_accessrequest_management', array("id"=>$accReq->getId()), UrlGeneratorInterface::ABSOLUTE_URL );
-        $managementMsg = "To review, approve, or deny " . $approveDeclineMsg . "\r\n" . $managementLink;
+        $managementMsg = "To review, approve, or deny " . $approveDeclineMsg . "<br>" . $managementLink;
 
-        $msg = $msg . "\r\n"."\r\n" . $managementMsg;
+        $msg = $msg . "<br>"."<br>" . $managementMsg;
 
         //Verena-Wilberth Sailer has supplied the following information:
-        $msg .= "\r\n"."\r\n" . $user->getUsernameOptimal() . " has supplied the following information:"."\r\n";
-        $msg .= "\r\n"."E-Mail: ".$accReq->getEmail();
-        $msg .= "\r\n"."Phone Number: ".$accReq->getPhone();
-        $msg .= "\r\n"."Job Title: ".$accReq->getJob();
-        $msg .= "\r\n"."Organizational Group: ".$accReq->getOrganizationalGroup();
-        $msg .= "\r\n"."Reason for Access Request: ".$accReq->getReason();
-        $msg .= "\r\n"."Access permissions similar to (user name): ".$accReq->getSimilaruser();
-        $msg .= "\r\n"."Reference Name: ".$accReq->getReferencename();
-        $msg .= "\r\n"."Reference E-Mail: ".$accReq->getReferenceemail();
-        $msg .= "\r\n"."Reference Phone Number: ".$accReq->getReferencephone();
+        $msg .= "<br>"."<br>" . $user->getUsernameOptimal() . " has supplied the following information:"."<br>";
+        $msg .= "<br>"."E-Mail: ".$accReq->getEmail();
+        $msg .= "<br>"."Phone Number: ".$accReq->getPhone();
+        $msg .= "<br>"."Job Title: ".$accReq->getJob();
+        $msg .= "<br>"."Organizational Group: ".$accReq->getOrganizationalGroup();
+        $msg .= "<br>"."Reason for Access Request: ".$accReq->getReason();
+        $msg .= "<br>"."Access permissions similar to (user name): ".$accReq->getSimilaruser();
+        $msg .= "<br>"."Reference Name: ".$accReq->getReferencename();
+        $msg .= "<br>"."Reference E-Mail: ".$accReq->getReferenceemail();
+        $msg .= "<br>"."Reference Phone Number: ".$accReq->getReferencephone();
 
         $userSecUtil = $this->get('user_security_utility');
         $emails = $userSecUtil->getUserEmailsByRole($sitename,"Administrator");
@@ -821,7 +821,8 @@ class AccessRequestController extends Controller
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $siteLink = $this->generateUrl( $sitename.'_home', array(), UrlGeneratorInterface::ABSOLUTE_URL );
-        $newline = "\r\n";
+        //$newline = "\r\n";
+        $newline = "<br>";
         $msg = "";
 
         if( $user->getEmail() ) {
@@ -1592,7 +1593,8 @@ class AccessRequestController extends Controller
         $em = $this->getDoctrine()->getManager();
         $currentUser = $this->get('security.token_storage')->getToken()->getUser();
         $securityUtil = $this->get('order_security_utility');
-        $newline = "\r\n";
+        //$newline = "\r\n";
+        $newline = "<br>";
 
         //set minimum role
         //if( count($user->getRoles()) == 0 ) {
@@ -1749,7 +1751,8 @@ class AccessRequestController extends Controller
         $em = $this->getDoctrine()->getManager();
         $currentUser = $this->get('security.token_storage')->getToken()->getUser();
         $securityUtil = $this->get('order_security_utility');
-        $newline = "\r\n";
+        //$newline = "\r\n";
+        $newline = "<br>";
 
         //unlock the user
         $user->setLocked(false);
@@ -1816,7 +1819,8 @@ class AccessRequestController extends Controller
     }
 
     public function setUserPassword( $user ) {
-        $newline = "\r\n";
+        //$newline = "\r\n";
+        $newline = "<br>";
         $passwordNote = "";
         if( !$user->getPassword() && $user->getKeytype()->getName() == "Local User" ) {
             //exit("set password");

@@ -1325,7 +1325,8 @@ class CallLogUtil
             return;
         }
 
-        $break = "\r\n";
+        //$break = "\r\n";
+        $break = "<br>";
 
         $emails = array();
         foreach( $attendings as $attending ) {

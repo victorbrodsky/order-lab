@@ -124,7 +124,7 @@ class FosCommentListener implements EventSubscriberInterface {
 
         $resArr = $this->getMsgSubjectAndBody($comment,$entity,$stateLabel);
         $body = $resArr['body'];
-        $body = str_replace("\r\n","<br>",$body);
+        //$body = str_replace("\r\n","<br>",$body);
         $transresUtil->setEventLog($entity,$eventType,$body);
 
         return $resArr;
@@ -171,7 +171,8 @@ class FosCommentListener implements EventSubscriberInterface {
 
         $senderEmail = null; //Admin email
 
-        $break = "\r\n";
+        //$break = "\r\n";
+        $break = "<br>";
 
         if( !$resArr ) {
             $stateLabel = $transresUtil->getStateLabelByName($stateStr);
@@ -235,7 +236,8 @@ class FosCommentListener implements EventSubscriberInterface {
 
         $senderEmail = null; //Admin email
 
-        $break = "\r\n";
+        //$break = "\r\n";
+        $break = "<br>";
 
         if( !$resArr ) {
             //$stateStr = $this->getStateStrFromComment($comment);
@@ -260,7 +262,8 @@ class FosCommentListener implements EventSubscriberInterface {
     }
 
     public function getMsgSubjectAndBody($comment,$entity,$stateLabel=null) {
-        $break = "\r\n";
+        //$break = "\r\n";
+        $break = "<br>";
         if( $stateLabel ) {
             $stateLabel = " for the stage '".$stateLabel."'";
         }

@@ -758,7 +758,7 @@ class TableController extends Controller {
 
         $conflictStr = "";
         foreach( $entity->getDataqualityMrnAcc() as $dq ) {
-            $conflictStr = $conflictStr . "\r\n".$dq->getDescription()."\r\n"."Resolved by replacing: ".$dq->getAccession()." => ".$dq->getNewaccession()."\r\n";
+            $conflictStr = $conflictStr . "<br>".$dq->getDescription()."<br>"."Resolved by replacing: ".$dq->getAccession()." => ".$dq->getNewaccession()."<br>";
         }
 
         $submitStatusStr = null;

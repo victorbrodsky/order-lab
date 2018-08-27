@@ -39,7 +39,8 @@ class VacReqRequestVacation extends VacReqRequestBase
 
     public function __toString()
     {
-        $break = "\r\n";
+        //$break = "\r\n";
+        $break = "<br>";
         $transformer = new DateTimeToStringTransformer(null,null,'m/d/Y');
 
         $res = "### Vacation Request ###".$break;

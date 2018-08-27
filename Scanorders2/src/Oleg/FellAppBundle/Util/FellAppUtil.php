@@ -492,7 +492,8 @@ class FellAppUtil {
         $creationDate->setTimezone(new \DateTimeZone('America/New_York'));
         $creationDateStr = $creationDate->format('m/d/Y h:i A T');
 
-        $break = "\r\n";
+        //$break = "\r\n";
+        $break = "<br>";
         $populatedBodyFellApp = $applicant->getUsernameShortest()." has submitted a new application to your ".$fellowshipApplication->getFellowshipSubspecialty().
             " ".$fellowshipApplication->getStartDate()->format('Y')."'s fellowship on ".$creationDateStr.
             " and you can access it here: ".$break.$linkToGeneratedApplicantPDF;

@@ -482,7 +482,8 @@ class TransResUtil
         $user = $this->secTokenStorage->getToken()->getUser();
         $transresUtil = $this->container->get('transres_util');
         $workflow = $this->container->get('state_machine.transres_project');
-        $break = "\r\n";
+        //$break = "\r\n";
+        $break = "<br>";
 
         if( !$to ) {
             //Get Transition and $to
@@ -2022,7 +2023,8 @@ class TransResUtil
         $user = $this->secTokenStorage->getToken()->getUser();
         $userSecUtil = $this->container->get('user_security_utility');
         $transresUtil = $this->container->get('transres_util');
-        $break = "\r\n";
+        //$break = "\r\n";
+        $break = "<br>";
         //echo "user=".$user."<br>";
 
         //$currentState = $project->getState();
@@ -2051,43 +2053,6 @@ class TransResUtil
 
         //send notification emails (not used)
         $this->sendNotificationEmails($project,$review,$subject,$emailBody,$testing);
-
-//        $workflow = $this->container->get('state_machine.transres_project');
-//        $transitions = $workflow->getEnabledTransitions($project);
-//        $transitionArr = array();
-//        foreach ($transitions as $transition) {
-//            echo "transition=" . $this->printTransition($transition) . "<br>";
-//            $transitionArr[] = $this->printTransition($transition);
-//        }
-//        $projectTransition = "Project transition " . implode(";",$transitionArr);
-
-//        //Event Log
-//        if( $appliedTransition ) {
-//            $eventType = "Review Submitted";
-//            $event = "Project's (ID# " . $project->getId() . ") review has been successfully submitted. ".$review->getSubmittedReviewerInfo();
-//
-//            //testing
-//            echo "appliedTransition=" . $appliedTransition . "<br>";
-//            //echo "printTransition=".$this->printTransition($appliedTransition)."<br>";
-//
-//            $event .= ";<br> Project transitioned from '" . $this->getStateLabelByName($stateStr) . "'".
-//                " to '" . $this->getStateLabelByName($project->getState()) . "'";
-//            echo "event=".$event."<br>";
-//
-//            //exit('1');
-//
-//        } else {
-//            $eventType = "Review Submitting Not Performed";
-//            $event = "Project's (ID# " . $project->getId() . ") review submitting not performed. " . $review->getSubmittedReviewerInfo();
-//            $event .= ";<br> Project transitioned from '" . $this->getStateLabelByName($stateStr) . "'" .
-//                " to '" . $this->getStateLabelByName($project->getState()) . "'";
-//            echo "event=".$event."<br>";
-//
-//            //exit('2');
-//        }
-//
-//        $userSecUtil = $this->container->get('user_security_utility');
-//        $userSecUtil->createUserEditEvent($this->container->getParameter('translationalresearch.sitename'),$event,$user,$review,$request,$eventType);
 
         //event log
         //$this->setEventLog($project,$review,$appliedTransition,$stateStr,$eventType,$body,$testing);
@@ -2280,7 +2245,8 @@ class TransResUtil
         $body = null;
         $msg = null;
         $senderEmail = null; //Admin email
-        $break = "\r\n";
+        //$break = "\r\n";
+        $break = "<br>";
         $oid = $project->getOid();
         $currentStateStr = $project->getState();
         $currentStateLabel = $this->getStateLabelByProject($project);
@@ -2761,7 +2727,7 @@ class TransResUtil
     }
 
     //Get all comments with dates for the current project state
-    public function getReviewComments($project,$newline="\r\n") {
+    public function getReviewComments($project,$newline="<br>") {
         $comments = null;
 
         $reviewState = $this->getReviewClassNameByState($project->getState(),false);
