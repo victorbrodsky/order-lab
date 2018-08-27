@@ -479,7 +479,7 @@
     {% endif %}
 
     <div id="tissueprocurement" class="panel panel-default" style="{{ panelStyle }}">
-        <div class="panel-heading">Histology Tissue Procurement/Processing</div>
+        <div class="panel-heading">Fresh Tissue Procurement/Processing</div>
         <div class="panel-body">
             <p><font color="red">This is for RESEARCH ONLY tissue and NOT for archival slides from FFPE blocks</font></p>
             {{ formmacros.field(form.totalNumberOfPatientsProcessing) }}
@@ -1409,7 +1409,13 @@
         <div id="transres-request-content-{{ specialty.id }}" class="panel-collapse collapse">
             <div class="panel-body">
                 <p>
-                    Please use naming notation: [[PROJECT ID]] is for Project ID,  [[REQUEST ID]] is for Request ID and  [[INVOICE ID]] is for Invoice ID
+                    Please use naming notation:
+                    [[PROJECT ID]] is for Project ID,
+                    [[PROJECT TITLE]] is for Project Title,
+                    [[PROJECT SHOW URL]] is for Project Show Url,
+                    [[REQUEST ID]] is for Request ID,
+                    [[REQUEST SHOW URL]] is for Request Show Url,
+                    [[INVOICE ID]] is for Invoice ID
                 </p>
                 {{ formmacros.field(form.requestCompletedNotifiedEmailSubject) }}
                 {{ formmacros.field(form.requestCompletedNotifiedEmail) }}
@@ -1485,7 +1491,13 @@
 
                 <hr>
                 <p>
-                    Please use naming notation: [[PROJECT ID]] is for Project ID,  [[REQUEST ID]] is for Request ID and  [[INVOICE ID]] is for Invoice ID
+                    Please use naming notation:
+                    [[PROJECT ID]] is for Project ID,
+                    [[PROJECT TITLE]] is for Project Title,
+                    [[PROJECT SHOW URL]] is for Project Show Url,
+                    [[REQUEST ID]] is for Request ID,
+                    [[REQUEST SHOW URL]] is for Request Show Url,
+                    [[INVOICE ID]] is for Invoice ID
                 </p>
                 {{ formmacros.field(form.transresNotificationEmailSubject) }}
                 {{ formmacros.field(form.transresNotificationEmail) }}

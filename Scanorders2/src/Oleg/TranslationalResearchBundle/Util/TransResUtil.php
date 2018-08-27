@@ -3213,11 +3213,25 @@ class TransResUtil
     }
 
     public function replaceTextByNamingConvention( $text, $project, $transresRequest, $invoice ) {
-        if( $project )
+        if( $project ) {
             $text = str_replace("[[PROJECT ID]]", $project->getOid(), $text);
+            $text = str_replace("[[PROJECT TITLE]]", $project->getTitle(), $text);
 
-        if( $transresRequest )
+            $projectShowUrl = $this->getProjectShowUrl($project);
+            if( $projectShowUrl ) {
+                $text = str_replace("[[PROJECT SHOW URL]]", $projectShowUrl, $text);
+            }
+        }
+
+        if( $transresRequest ) {
             $text = str_replace("[[REQUEST ID]]", $transresRequest->getOid(), $text);
+
+            $transresRequestUtil = $this->container->get('transres_request_util');
+            $requestShowUrl = $transresRequestUtil->getRequestShowUrl($transresRequest);
+            if( $requestShowUrl ) {
+                $text = str_replace("[[REQUEST SHOW URL]]", $requestShowUrl, $text);
+            }
+        }
 
         if( $invoice )
             $text = str_replace("[[INVOICE ID]]", $invoice->getOid(), $text);
