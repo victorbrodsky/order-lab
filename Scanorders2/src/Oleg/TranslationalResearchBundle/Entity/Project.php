@@ -1685,6 +1685,15 @@ class Project {
         return "Project request " . $this->getOid() . " '$title' submitted by ".$this->getSubmitter()->getUsernameOptimal() . $createDateStr; //. " at ".$this->getCreateDate()->format('H:i:s')
     }
 
+    public function getProjectIdTitleDate() {
+        $title = $this->getTitle();
+        $createDateStr = null;
+        if( $this->getCreateDate() ) {
+            $createDateStr = " on " . $this->getCreateDate()->format('m/d/Y');
+        }
+        return $this->getOid() . " '$title' submitted by ".$this->getSubmitter()->getUsernameOptimal() . $createDateStr;
+    }
+
     //"IRB with PI FirstName LastName expires on MM/DD/YYYY."
     public function getIrbInfo() {
         $info = null;
