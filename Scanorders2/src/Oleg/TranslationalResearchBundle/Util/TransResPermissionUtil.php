@@ -163,7 +163,7 @@ class TransResPermissionUtil
             }
 
             //associated with the request as reviewer
-            if( $this->isRequestStateReviewer($transresRequest) ) {
+            if( $transresRequestUtil->isRequestStateReviewer($transresRequest) ) {
                 return true;
             }
 
@@ -195,7 +195,7 @@ class TransResPermissionUtil
             }
 
             //associated with the request as reviewer
-            if( $this->isRequestStateReviewer($transresRequest) ) {
+            if( $transresRequestUtil->isRequestStateReviewer($transresRequest) ) {
                 return true;
             }
 

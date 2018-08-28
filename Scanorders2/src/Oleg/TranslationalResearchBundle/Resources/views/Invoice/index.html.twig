@@ -49,7 +49,7 @@
 
             <tr>
                 <td>
-                    <a href="{{ path('translationalresearch_invoice_show', {'oid': invoice.oid }) }}">{{ invoice.oid }}</a>
+                    <a target="_blank" href="{{ path('translationalresearch_invoice_show', {'oid': invoice.oid }) }}">{{ invoice.oid }}</a>
                 </td>
                 <td>{{ invoice.fundedAccountNumber }}</td>
                 <td>{{ invoice.salesperson }}</td>
@@ -105,7 +105,7 @@
 
                             {% if transres_request_util.isUserHasInvoicePermission(invoice,"view") %}
                                 <li>
-                                    <a href="{{ path('translationalresearch_invoice_show', {'oid': invoice.oid }) }}">Show Invoice</a>
+                                    <a target="_blank" href="{{ path('translationalresearch_invoice_show', {'oid': invoice.oid }) }}">Show Invoice</a>
                                 </li>
                             {% endif %}
 
@@ -113,7 +113,7 @@
 
                                 {% if transres_request_util.isUserHasInvoicePermission(invoice,"update") %}
                                     <li>
-                                        <a href="{{ path('translationalresearch_invoice_edit', {'oid': invoice.oid }) }}">Edit Invoice</a>
+                                        <a target="_blank" href="{{ path('translationalresearch_invoice_edit', {'oid': invoice.oid }) }}">Edit Invoice</a>
                                     </li>
                                 {% endif %}
 
