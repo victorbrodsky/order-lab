@@ -26,7 +26,10 @@ class DashboardController extends Controller
      */
     public function piStatisticsAction( Request $request ) {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ||
+            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE') ) {
+            //ok
+        } else {
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
@@ -237,13 +240,15 @@ class DashboardController extends Controller
      */
     public function compareStatisticsAction( Request $request )
     {
-
-        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER')) {
-            return $this->redirect($this->generateUrl($this->container->getParameter('translationalresearch.sitename') . '-nopermission'));
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ||
+            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE') ) {
+            //ok
+        } else {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }
 
         $transresUtil = $this->container->get('transres_util');
-        $transresRequestUtil = $this->container->get('transres_request_util');
+        //$transresRequestUtil = $this->container->get('transres_request_util');
         $infos = array();
 
         //////////// Filter ////////////
