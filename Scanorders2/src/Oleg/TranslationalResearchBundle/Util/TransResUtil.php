@@ -2405,19 +2405,11 @@ class TransResUtil
             $linkMyInvoices = $this->container->get('router')->generate(
                 'translationalresearch_invoice_index_filter',
                 array(
-                    'filter[submitter]' => $user->getId(),
-                    'filter[salesperson]' => $user->getId(),
-                    'filter[principalInvestigator]' => $user->getId(),
-
-                    'filter[status][0]' => "Unpaid/Issued",
-                    'filter[status][1]' => "Paid in Full",
-                    'filter[status][2]' => "Paid Partially",
-                    'filter[status][3]' => 'Refunded Fully',
-                    'filter[status][4]' => 'Refunded Partially',
-
-                    'title' => "My Invoices",
-                )
+                    'type' => "My-Invoices",
+                ),
+                UrlGeneratorInterface::ABSOLUTE_URL
             );
+            $linkMyInvoices = '<a href="'.$linkMyInvoices.'">'.$linkMyInvoices.'</a>';
             $body = $body . $break.$break . "Any invoices associated with this project request or your other project requests can be accessed via the following link:";
             $body = $body . $break . $linkMyInvoices;
 
@@ -2841,6 +2833,8 @@ class TransResUtil
             ),
             UrlGeneratorInterface::ABSOLUTE_URL
         );
+
+        $projectUrl = '<a href="'.$projectUrl.'">'.$projectUrl.'</a>';
 
         return $projectUrl;
     }

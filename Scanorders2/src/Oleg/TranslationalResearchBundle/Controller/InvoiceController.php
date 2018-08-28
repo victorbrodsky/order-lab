@@ -60,6 +60,7 @@ class InvoiceController extends Controller
         $dql->leftJoin('salesperson.infos','salespersonInfos');
         $dql->leftJoin('invoice.transresRequest','transresRequest');
         $dql->leftJoin('invoice.principalInvestigator','principalInvestigator');
+        $dql->leftJoin('invoice.billingContact','billingContact');
 
         $dqlParameters = array();
 
@@ -149,9 +150,9 @@ class InvoiceController extends Controller
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
-                        'filter[submitter]' => $user->getId(),
-                        'filter[salesperson]' => $user->getId(),
-                        'filter[principalInvestigator]' => $user->getId(),
+                        //'filter[submitter]' => $user->getId(),
+                        //'filter[salesperson]' => $user->getId(),
+                        //'filter[principalInvestigator]' => $user->getId(),
 
                         'filter[status][0]' => "Unpaid/Issued",
                         'filter[status][1]' => "Paid in Full",
@@ -355,6 +356,7 @@ class InvoiceController extends Controller
             $submitter = $filterform['submitter']->getData();
             $principalInvestigator = $filterform['principalInvestigator']->getData();
             $salesperson = $filterform['salesperson']->getData();
+            $billingContact = $filterform['billingContact']->getData();
             $status = $filterform['status']->getData();
             $idSearch = $filterform['idSearch']->getData();
             $totalMin = $filterform['totalMin']->getData();
@@ -387,12 +389,14 @@ class InvoiceController extends Controller
         if( $filterTitle == "My Invoices" ) {
             //all Invoices for all Work Requests issued for Projects where I am listed in any way (submitter, PI, etc).
             //Use OR
-            $dql->andWhere("submitter.id = :userId OR principalInvestigator.id = :userId OR salesperson.id = :userId");
+            $dql->andWhere("submitter.id = :userId OR principalInvestigator.id = :userId OR salesperson.id = :userId OR billingContact.id = :userId");
             $dqlParameters["userId"] = $user->getId();
             //set all user filter to NULL to prevent AND query conditions
             $submitter = null;
             $principalInvestigator = null;
             $salesperson = null;
+
+            $title = $filterTitle = "My Invoices, where I am a Submitter, PI, Billing Contact or a Sales Person";
         }
 
         if( $submitter ) {

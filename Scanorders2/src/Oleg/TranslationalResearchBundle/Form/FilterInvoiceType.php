@@ -90,6 +90,23 @@ class FilterInvoiceType extends AbstractType
             },
         ));
 
+        $builder->add('billingContact', EntityType::class, array(
+            'class' => 'OlegUserdirectoryBundle:User',
+            'label'=> false,
+            'required'=> false,
+            'multiple' => false,
+            'attr' => array('class'=>'combobox combobox-width', 'placeholder' => "Billing Contact for the project"),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->leftJoin("list.employmentStatus", "employmentStatus")
+                    ->leftJoin("employmentStatus.employmentType", "employmentType")
+                    ->where("employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL")
+                    //->andWhere("list.roles LIKE '%ROLE_TRANSRES_%'")
+                    ->leftJoin("list.infos", "infos")
+                    ->orderBy("infos.displayName","ASC");
+            },
+        ));
+
         $builder->add('salesperson', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
             'label' => false,
