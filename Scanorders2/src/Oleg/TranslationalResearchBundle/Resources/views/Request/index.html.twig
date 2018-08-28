@@ -101,6 +101,10 @@
                 {% set trclassname = "order-complete-status" %}
             {% endif %}
 
+            {% if transresRequest.project.getFunded() == false %}
+                {% set trclassname = "order-onhold-status" %}
+            {% endif %}
+
             <tr class="{{ trclassname }}" style="border-bottom: 1px solid #C6C6C6;">
                 {% if hiderows is not defined or not hiderows %}
                 <td>

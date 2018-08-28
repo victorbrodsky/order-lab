@@ -240,10 +240,10 @@ function transresMakeColumnData() {
             }
         },
         { header:'Other ID', columns:{} },
-        { header:'Barcode', columns:{} },
+        { header:'Sample Name', columns:{} },
         //{ header:'Barcode Image', columns:{renderer:imageRenderer} },
         //{ header:'Barcode Image', columns:{renderer:canvasRenderer} },
-        { header:'Barcode Image', columns:{} },
+        { header:'Barcode', columns:{} },
         { header:'Comment', columns:{} }
     ];
 

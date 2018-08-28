@@ -2142,6 +2142,7 @@ class TransResRequestUtil
                 //'My Invoices (I am Submitter, Salesperson or PI)',
                 //"Invoices Sent to Me", -  the same as "Invoices where I am a PI"
                 "My Invoices",
+                "My Outstanding Invoices",
                 "Invoices where I am the PI",
                 "Issued invoices I generated", //the same as "Invoices where I am a Salesperson"
                 "Invoices where I am the salesperson",
@@ -2182,6 +2183,7 @@ class TransResRequestUtil
                 //'My Invoices (I am Submitter, Salesperson or PI)',
                 //"Invoices Sent to Me", -  the same as "Invoices where I am a PI"
                 "My Invoices",
+                "My Outstanding Invoices",
                 "Invoices where I am the PI",
                 "Issued invoices I generated", //the same as "Invoices where I am a Salesperson"
                 "Invoices where I am the salesperson",

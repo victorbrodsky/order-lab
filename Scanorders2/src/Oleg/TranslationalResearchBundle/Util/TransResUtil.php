@@ -2403,9 +2403,9 @@ class TransResUtil
 
             //Any invoices associated with this project request or your other project requests can be accessed via the following link: LINK-TO-MY-INVOICES
             $linkMyInvoices = $this->container->get('router')->generate(
-                'translationalresearch_invoice_index_filter',
+                'translationalresearch_invoice_index_type',
                 array(
-                    'type' => "My-Invoices",
+                    'invoicetype' => "My-Invoices",
                 ),
                 UrlGeneratorInterface::ABSOLUTE_URL
             );

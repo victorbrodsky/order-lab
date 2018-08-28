@@ -223,7 +223,7 @@
                                 {% else %}
                                     {% set filterTypeUrl = filterType|replace({' ':'-'}) %}
                                     <li id="nav-bar-translationalresearch-all-invoices-my">
-                                        <a href="{{ path(translationalresearch_sitename~'_invoice_index_filter',{'type':filterTypeUrl}) }}">{{ filterType }}</a>
+                                        <a href="{{ path(translationalresearch_sitename~'_invoice_index_type',{'invoicetype':filterTypeUrl}) }}">{{ filterType }}</a>
                                     </li>
                                 {% endif %}
                             {% endfor %}

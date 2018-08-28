@@ -34,10 +34,11 @@ class InvoiceController extends Controller
      *
      * @Route("/list-request/{id}", name="translationalresearch_invoice_index")
      * @Route("/list/", name="translationalresearch_invoice_index_filter")
+     * @Route("/list/{invoicetype}", name="translationalresearch_invoice_index_type")
      * @Template("OlegTranslationalResearchBundle:Invoice:index.html.twig")
      * @Method("GET")
      */
-    public function indexAction(Request $request, TransResRequest $transresRequest=null)
+    public function indexAction(Request $request, TransResRequest $transresRequest=null, $invoicetype=null)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
@@ -93,17 +94,19 @@ class InvoiceController extends Controller
 
         $filterform->handleRequest($request);
 
-        $filterType = trim( $request->get('type') );
         $filterTitle = trim( $request->get('title') );
 
-        $filterType = str_replace("-"," ",$filterType);
+        //$filterType = trim( $request->get('type') );
+        $invoicetype = str_replace("-"," ",$invoicetype);
+        $invoicetype = ucwords($invoicetype);
+        //echo "invoicetype=$invoicetype<br>";
 
-        if( $filterType ) {
-            if( $filterType == "All Invoices" ) {
+        if( $invoicetype ) {
+            if( $invoicetype == "All Invoices" ) {
                 //filter nothing
                 $title = "All Invoices";
             }
-            if( $filterType == "All Issued Invoices" ) {
+            if( $invoicetype == "All Issued Invoices" ) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
@@ -112,22 +115,22 @@ class InvoiceController extends Controller
                         'filter[status][2]' => "Paid Partially",
                         'filter[status][3]' => 'Refunded Fully',
                         'filter[status][4]' => 'Refunded Partially',
-                        'title' => $filterType,
+                        'title' => $invoicetype,
                     )
                 );
             }
-            if( $filterType == "All Pending Invoices" ) {
+            if( $invoicetype == "All Pending Invoices" ) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
                         'filter[status][]' => "Pending",
-                        'title' => $filterType,
+                        'title' => $invoicetype,
                     )
                 );
             }
 
             //Personal Invoices
-//            if( $filterType == "My Invoices (I am Submitter, Salesperson or PI)" ) {
+//            if( $invoicetype == "My Invoices (I am Submitter, Salesperson or PI)" ) {
 //                return $this->redirectToRoute(
 //                    'translationalresearch_invoice_index_filter',
 //                    array(
@@ -137,7 +140,7 @@ class InvoiceController extends Controller
 //                    )
 //                );
 //            }
-//            if( $filterType == "Invoices Sent to Me" ) {
+//            if( $invoicetype == "Invoices Sent to Me" ) {
 //                return $this->redirectToRoute(
 //                    'translationalresearch_invoice_index_filter',
 //                    array(
@@ -145,8 +148,27 @@ class InvoiceController extends Controller
 //                    )
 //                );
 //            }
-            if( $filterType == "My Invoices" ) {
-                //all Invoices for all Work Requests issued for Projects where I am listed in any way (submitter, PI, etc).
+//            if( $invoicetype == "My Invoices" ) {
+//                //all Invoices for all Work Requests issued for Projects where I am listed in any way (submitter, PI, etc).
+//                return $this->redirectToRoute(
+//                    'translationalresearch_invoice_index_filter',
+//                    array(
+//                        //'filter[submitter]' => $user->getId(),
+//                        //'filter[salesperson]' => $user->getId(),
+//                        //'filter[principalInvestigator]' => $user->getId(),
+//
+//                        //'filter[status][0]' => "Unpaid/Issued",
+//                        //'filter[status][1]' => "Paid in Full",
+//                        //'filter[status][2]' => "Paid Partially",
+//                        //'filter[status][3]' => 'Refunded Fully',
+//                        //'filter[status][4]' => 'Refunded Partially',
+//
+//                        'title' => $invoicetype,
+//                    )
+//                );
+//            }
+            if( $invoicetype == "My Outstanding Invoices" ) {
+                //all outstanding Invoices for all Work Requests issued, but not paid for Projects where I am listed in any way (submitter, PI, etc).
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
@@ -154,17 +176,17 @@ class InvoiceController extends Controller
                         //'filter[salesperson]' => $user->getId(),
                         //'filter[principalInvestigator]' => $user->getId(),
 
-                        //'filter[status][0]' => "Unpaid/Issued",
+                        'filter[status][0]' => "Unpaid/Issued",
                         //'filter[status][1]' => "Paid in Full",
                         //'filter[status][2]' => "Paid Partially",
                         //'filter[status][3]' => 'Refunded Fully',
                         //'filter[status][4]' => 'Refunded Partially',
 
-                        'title' => $filterType,
+                        'title' => $invoicetype,
                     )
                 );
             }
-            if( $filterType == "Issued invoices I generated" ) {
+            if( $invoicetype == "Issued invoices I generated" ) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
@@ -174,180 +196,180 @@ class InvoiceController extends Controller
                         'filter[status][2]' => "Paid Partially",
                         'filter[status][3]' => 'Refunded Fully',
                         'filter[status][4]' => 'Refunded Partially',
-                        'title' => $filterType,
+                        'title' => $invoicetype,
                     )
                 );
             }
-            if( $filterType == "Invoices where I am the salesperson" ) {
+            if( $invoicetype == "Invoices where I am the salesperson" ) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
                         'filter[salesperson]' => $user->getId(),
-                        'title' => $filterType,
+                        'title' => $invoicetype,
                     )
                 );
             }
-            if( $filterType == "Invoices where I am the PI" ) {
+            if( $invoicetype == "Invoices where I am the PI" ) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
                         'filter[principalInvestigator]' => $user->getId(),
-                        'title' => $filterType,
+                        'title' => $invoicetype,
                     )
                 );
             }
             //"Unpaid Invoices where I am a PI", "Unpaid Invoices sent to Me"
-            if( $filterType == "Unpaid Invoices where I am the PI" ) {
+            if( $invoicetype == "Unpaid Invoices where I am the PI" ) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
                         'filter[principalInvestigator]' => $user->getId(),
                         'filter[status][0]' => "Unpaid/Issued",
-                        'title' => $filterType,
+                        'title' => $invoicetype,
                     )
                 );
             }
 
             //Latest
-            if( $filterType == "Latest Versions of All Invoices" ) {
+            if( $invoicetype == "Latest Versions of All Invoices" ) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
                         'filter[version]' => "Latest",
-                        'title' => $filterType,
+                        'title' => $invoicetype,
                     )
                 );
             }
-            if( $filterType == "Latest Versions of Issued (Unpaid) Invoices" ) {
+            if( $invoicetype == "Latest Versions of Issued (Unpaid) Invoices" ) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
                         'filter[version]' => "Latest",
                         'filter[status][0]' => "Unpaid/Issued",
-                        'title' => $filterType,
+                        'title' => $invoicetype,
                     )
                 );
             }
-            if( $filterType == "Latest Versions of Pending (Unissued) Invoices" ) {
+            if( $invoicetype == "Latest Versions of Pending (Unissued) Invoices" ) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
                         'filter[version]' => "Latest",
                         'filter[status][0]' => "Pending",
-                        'title' => $filterType,
+                        'title' => $invoicetype,
                     )
                 );
             }
-            if( $filterType == "Latest Versions of Paid Invoices" ) {
+            if( $invoicetype == "Latest Versions of Paid Invoices" ) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
                         'filter[version]' => "Latest",
                         'filter[status][0]' => "Paid in Full",
-                        'title' => $filterType,
+                        'title' => $invoicetype,
                     )
                 );
             }
-            if( $filterType == "Latest Versions of Partially Paid Invoices" ) {
+            if( $invoicetype == "Latest Versions of Partially Paid Invoices" ) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
                         'filter[version]' => "Latest",
                         'filter[status][0]' => "Paid Partially",
-                        'title' => $filterType,
+                        'title' => $invoicetype,
                     )
                 );
             }
-            if( $filterType == "Latest Versions of Paid and Partially Paid Invoices" ) {
+            if( $invoicetype == "Latest Versions of Paid and Partially Paid Invoices" ) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
                         'filter[version]' => "Latest",
                         'filter[status][0]' => "Paid in Full",
                         'filter[status][1]' => "Paid Partially",
-                        'title' => $filterType,
+                        'title' => $invoicetype,
                     )
                 );
             }
-            if( $filterType == "Latest Versions of Canceled Invoices" ) {
+            if( $invoicetype == "Latest Versions of Canceled Invoices" ) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
                         'filter[version]' => "Latest",
                         'filter[status][0]' => "Canceled",
-                        'title' => $filterType,
+                        'title' => $invoicetype,
                     )
                 );
             }
 
             //Old
-            if( $filterType == "Old Versions of All Invoices" ) {
+            if( $invoicetype == "Old Versions of All Invoices" ) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
                         'filter[version]' => "Old",
-                        'title' => $filterType,
+                        'title' => $invoicetype,
                     )
                 );
             }
-            if( $filterType == "Old Versions of Issued (Unpaid) Invoices" ) {
+            if( $invoicetype == "Old Versions of Issued (Unpaid) Invoices" ) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
                         'filter[version]' => "Old",
                         'filter[status][0]' => "Unpaid/Issued",
-                        'title' => $filterType,
+                        'title' => $invoicetype,
                     )
                 );
             }
-            if( $filterType == "Old Versions of Pending (Unissued) Invoices" ) {
+            if( $invoicetype == "Old Versions of Pending (Unissued) Invoices" ) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
                         'filter[version]' => "Old",
                         'filter[status][0]' => "Pending",
-                        'title' => $filterType,
+                        'title' => $invoicetype,
                     )
                 );
             }
-            if( $filterType == "Old Versions of Paid Invoices" ) {
+            if( $invoicetype == "Old Versions of Paid Invoices" ) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
                         'filter[version]' => "Old",
                         'filter[status][0]' => "Paid in Full",
-                        'title' => $filterType,
+                        'title' => $invoicetype,
                     )
                 );
             }
-            if( $filterType == "Old Versions of Partially Paid Invoices" ) {
+            if( $invoicetype == "Old Versions of Partially Paid Invoices" ) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
                         'filter[version]' => "Old",
                         'filter[status][0]' => "Paid Partially",
-                        'title' => $filterType,
+                        'title' => $invoicetype,
                     )
                 );
             }
-            if( $filterType == "Old Versions of Paid and Partially Paid Invoices" ) {
+            if( $invoicetype == "Old Versions of Paid and Partially Paid Invoices" ) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
                         'filter[version]' => "Old",
                         'filter[status][0]' => "Paid in Full",
                         'filter[status][1]' => "Paid Partially",
-                        'title' => $filterType,
+                        'title' => $invoicetype,
                     )
                 );
             }
-            if( $filterType == "Old Versions of Canceled Invoices" ) {
+            if( $invoicetype == "Old Versions of Canceled Invoices" ) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
                         'filter[version]' => "Old",
                         'filter[status][0]' => "Canceled",
-                        'title' => $filterType,
+                        'title' => $invoicetype,
                     )
                 );
             }
@@ -386,7 +408,7 @@ class InvoiceController extends Controller
 //            $status = "Pending";
 //        }
 
-        if( $filterTitle == "My Invoices" ) {
+        if( $invoicetype == "My Invoices" ) {
             //all Invoices for all Work Requests issued for Projects where I am listed in any way (submitter, PI, etc).
             //Use OR
             $dql->andWhere("submitter.id = :userId OR principalInvestigator.id = :userId OR salesperson.id = :userId OR billingContact.id = :userId");
@@ -399,6 +421,22 @@ class InvoiceController extends Controller
             //$status = null;
 
             $title = $filterTitle = "My Invoices, where I am a Submitter, PI, Billing Contact or a Sales Person";
+            //exit($title);
+        }
+
+        if( $filterTitle == "My Outstanding Invoices" ) {
+            //all Invoices for all Work Requests all invoices that are issued but not paid for Projects where I am listed in any way (submitter, PI, etc).
+            $dql->andWhere("submitter.id = :userId OR principalInvestigator.id = :userId OR salesperson.id = :userId OR billingContact.id = :userId");
+            $dqlParameters["userId"] = $user->getId();
+            //set all user filter to NULL to prevent AND query conditions
+            $submitter = null;
+            $principalInvestigator = null;
+            $salesperson = null;
+            $billingContact = null;
+            //$status = null;
+
+            $title = $filterTitle = "My Outstanding Invoices, issued but not paid, where I am a Submitter, PI, Billing Contact or a Sales Person";
+            //exit($title);
         }
 
         if( $submitter ) {
@@ -526,7 +564,7 @@ class InvoiceController extends Controller
 
         //$latestVersion = $transresRequestUtil->getLatestInvoiceVersion($transresRequest);
 
-        //echo "filterType=".$filterType."<br>";
+        //echo "invoicetype=".$invoicetype."<br>";
         //echo "title=".$title."<br>";
         if( $filterTitle ) {
             $title = $filterTitle;
@@ -854,7 +892,7 @@ class InvoiceController extends Controller
             $transresUtil->setEventLog($invoice,$eventType,$msg);
         }
 
-        return $this->redirectToRoute('translationalresearch_invoice_index_filter', array('type'=>"All Invoices"));
+        return $this->redirectToRoute('translationalresearch_invoice_index_type', array('invoicetype'=>"All Invoices"));
     }
 
     /**
@@ -1354,7 +1392,7 @@ class InvoiceController extends Controller
         );
 
         //return $this->redirectToRoute('translationalresearch_invoice_show', array('oid' => $invoice->getOid()));
-        return $this->redirectToRoute('translationalresearch_invoice_index_filter', array('id'=>null,'type'=>"All Invoices"));
+        return $this->redirectToRoute('translationalresearch_invoice_index_type', array('id'=>null,'invoicetype'=>"All Invoices"));
     }
 
     /**

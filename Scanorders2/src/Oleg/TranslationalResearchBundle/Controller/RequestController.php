@@ -663,15 +663,15 @@ class RequestController extends Controller
             $otherId = $otherArr['id'];
 
 
-            $barcodeArr = $this->getValueByHeaderName('Barcode',$row,$headers);
+            $barcodeArr = $this->getValueByHeaderName('Sample Name',$row,$headers);
             $barcodeValue = $barcodeArr['val'];
             $barcodeId = $barcodeArr['id'];
             //echo "barcodeId=".$barcodeId." <br>";
             //echo "barcodeValue=".$barcodeValue." <br>";
 
-            $barcodeImageArr = $this->getValueByHeaderName('Barcode Image',$row,$headers);
-            $barcodeImageValue = $barcodeImageArr['val'];
-            $barcodeImageId = $barcodeImageArr['id'];
+            //$barcodeImageArr = $this->getValueByHeaderName('Barcode',$row,$headers);
+            //$barcodeImageValue = $barcodeImageArr['val'];
+            //$barcodeImageId = $barcodeImageArr['id'];
 
             $commentArr = $this->getValueByHeaderName('Comment',$row,$headers);
             $commentValue = $commentArr['val'];
@@ -809,8 +809,8 @@ class RequestController extends Controller
             $rowArr['Other ID']['value'] = $dataResult->getOtherId();
 
             //Barcode
-            $rowArr['Barcode']['id'] = $dataResult->getId();
-            $rowArr['Barcode']['value'] = $dataResult->getBarcode();
+            $rowArr['Sample Name']['id'] = $dataResult->getId();
+            $rowArr['Sample Name']['value'] = $dataResult->getBarcode();
 
             //Comment
             $rowArr['Comment']['id'] = $dataResult->getId();
