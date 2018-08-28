@@ -169,7 +169,8 @@ class FosCommentListener implements EventSubscriberInterface {
 
         $emails = array_unique($emails);
 
-        $senderEmail = null; //Admin email
+        //$senderEmail = null; //Admin email
+        $senderEmail = $transresUtil->getTransresSiteProjectParameter('fromEmail',$project);
 
         //$break = "\r\n";
         $break = "<br>";
@@ -234,7 +235,8 @@ class FosCommentListener implements EventSubscriberInterface {
         //print_r($emails);
         //exit("request comment email");
 
-        $senderEmail = null; //Admin email
+        //$senderEmail = null; //Admin email
+        $senderEmail = $transresUtil->getTransresSiteProjectParameter('fromEmail',$project);
 
         //$break = "\r\n";
         $break = "<br>";
