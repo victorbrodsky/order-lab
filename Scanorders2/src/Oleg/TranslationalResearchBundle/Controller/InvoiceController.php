@@ -395,7 +395,8 @@ class InvoiceController extends Controller
             $submitter = null;
             $principalInvestigator = null;
             $salesperson = null;
-            $status = null;
+            $billingContact = null;
+            //$status = null;
 
             $title = $filterTitle = "My Invoices, where I am a Submitter, PI, Billing Contact or a Sales Person";
         }
@@ -450,6 +451,12 @@ class InvoiceController extends Controller
             //echo "salesperson=$salesperson<br>";
             $dql->andWhere("salesperson.id = :salespersonId");
             $dqlParameters["salespersonId"] = $salesperson->getId();
+            $advancedFilter++;
+        }
+
+        if( $billingContact ) {
+            $dql->andWhere("billingContact.id = :billingContact");
+            $dqlParameters["billingContact"] = $billingContact->getId();
             $advancedFilter++;
         }
 
