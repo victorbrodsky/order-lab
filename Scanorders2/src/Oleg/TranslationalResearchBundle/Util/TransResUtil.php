@@ -2413,6 +2413,18 @@ class TransResUtil
             $body = $body . $break.$break . "Any invoices associated with this project request or your other project requests can be accessed via the following link:";
             $body = $body . $break . $linkMyInvoices;
 
+            //My Outstanding Invoices
+            $linkMyOutstandingInvoices = $this->container->get('router')->generate(
+                'translationalresearch_invoice_index_type',
+                array(
+                    'invoicetype' => "My-Outstanding-Invoices",
+                ),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $linkMyOutstandingInvoices = '<a href="'.$linkMyOutstandingInvoices.'">'.$linkMyOutstandingInvoices.'</a>';
+            $body = $body . $break.$break . "Any outstanding invoices associated with this project request or your other project requests can be accessed via the following link:";
+            $body = $body . $break . $linkMyOutstandingInvoices;
+
             //get project url
             $projectUrl = $this->getProjectShowUrl($project);
 
