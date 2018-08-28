@@ -658,7 +658,7 @@ class InvoiceController extends Controller
         }
 
         $cycle = "show";
-        $routeName = $request->get('_route');
+        //$routeName = $request->get('_route');
 
         $form = $this->createInvoiceForm($invoice,$cycle);
 
@@ -864,9 +864,9 @@ class InvoiceController extends Controller
             throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
         }
 
-        if( false === $transresPermissionUtil->isInvoiceBillingContact($invoice,$user) ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
-        }
+//        if( false === $transresPermissionUtil->isInvoiceBillingContact($invoice,$user) ) {
+//            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+//        }
 
         // Check if user allowed to access by the project's specialty
 //        if( $transresRequestUtil->isUserAllowedAccessInvoiceBySpecialty($invoice) === false ) {
@@ -877,10 +877,10 @@ class InvoiceController extends Controller
 //            return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
 //        }
 
-        if( $transresRequestUtil->isUserHasInvoicePermission($invoice,"view") === false ) {
+        if( $transresRequestUtil->isUserHasInvoicePermission($invoice,"generate-invoice-pdf") === false ) {
             $this->get('session')->getFlashBag()->add(
                 'warning',
-                "You don't have a permission to view this invoice"
+                "You don't have a permission to generate PDF for this invoice"
             );
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
@@ -937,9 +937,9 @@ class InvoiceController extends Controller
             $logger->notice("Download view: Token user is valid security.token_storage user=".$user);
         }
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
-        }
+//        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
+//            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+//        }
 
         //$em = $this->getDoctrine()->getManager();
         //$invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($oid);
@@ -1183,9 +1183,9 @@ class InvoiceController extends Controller
             throw new \Exception("Invoice is not found by invoice number (oid) '" . $oid . "'");
         }
 
-        if( false === $transresPermissionUtil->isInvoiceBillingContact($invoice,$user) ) {
-            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
-        }
+//        if( false === $transresPermissionUtil->isInvoiceBillingContact($invoice,$user) ) {
+//            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+//        }
 
         // Check if user allowed to access by the project's specialty
 //        if( $transresRequestUtil->isUserAllowedAccessInvoiceBySpecialty($invoice) === false ) {

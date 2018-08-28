@@ -76,6 +76,10 @@ class TransResPermissionUtil
             return true;
         }
 
+        if( $transresUtil->isProjectRequester($project) ) {
+            return true;
+        }
+
         return false;
     }
     //similar to isGranted("read",$entity)
@@ -145,7 +149,11 @@ class TransResPermissionUtil
         if( $action == "view" ) {
             $processed = true;
 
-            if( $this->isInvoiceBillingContact($invoice,$user) ) {
+            if( $this->isInvoiceSalesPerson($invoice,$user) ) {
+                return true;
+            }
+
+            if( $this->isInvoicePiAndBillingContact($invoice,$user) ) {
                 return true;
             }
 
@@ -173,6 +181,14 @@ class TransResPermissionUtil
             //    return true;
             //}
 
+            if( $this->isInvoiceSalesPerson($invoice,$user) ) {
+                return true;
+            }
+
+            if( $this->isInvoicePiAndBillingContact($invoice,$user) ) {
+                return true;
+            }
+
             //associated with the request as requester
             if( $transresRequestUtil->isRequestRequester($transresRequest) ) {
                 return true;
@@ -193,7 +209,15 @@ class TransResPermissionUtil
         if( $action == "update" ) {
             $processed = true;
 
-            if( $this->isInvoiceBillingContact($invoice,$user) ) {
+            if( $this->isInvoiceSalesPerson($invoice,$user) ) {
+                return true;
+            }
+        }
+
+        if( $action == "generate-invoice-pdf" ) {
+            $processed = true;
+
+            if( $this->isInvoiceSalesPerson($invoice,$user) ) {
                 return true;
             }
         }
@@ -201,7 +225,7 @@ class TransResPermissionUtil
         if( $action == "send-invoice-pdf-email" ) {
             $processed = true;
 
-            if( $this->isInvoiceBillingContact($invoice,$user) ) {
+            if( $this->isInvoiceSalesPerson($invoice,$user) ) {
                 return true;
             }
         }
@@ -209,7 +233,7 @@ class TransResPermissionUtil
         if( $action == "change-status" ) {
             $processed = true;
 
-            if( $this->isInvoiceBillingContact($invoice,$user) ) {
+            if( $this->isInvoiceSalesPerson($invoice,$user) ) {
                 return true;
             }
         }
@@ -237,7 +261,7 @@ class TransResPermissionUtil
         }
         return false;
     }
-    public function isInvoiceBillingContact( $invoice, $user ) {
+    public function isInvoiceSalesPerson( $invoice, $user ) {
         $transresRequest = $invoice->getTransresRequest();
         if( $transresRequest ) {
             //ok
@@ -262,6 +286,48 @@ class TransResPermissionUtil
         //Invoice's billing contact (salesperson)
         $salesperson = $invoice->getSalesperson();
         if( $salesperson->getId() == $user->getId() ) {
+            return true;
+        }
+
+        return false;
+    }
+    public function isInvoicePiAndBillingContact( $invoice, $user ) {
+        $transresRequest = $invoice->getTransresRequest();
+        if( $transresRequest ) {
+            //ok
+        } else {
+            return false;
+        }
+
+        $project = $transresRequest->getProject();
+        if( $project ) {
+            //ok
+        } else {
+            return false;
+        }
+
+        $specialtyStr = $project->getProjectSpecialty()->getUppercaseName();
+
+        //ROLE_TRANSRES_BILLING_ADMIN role
+        if( $this->secAuth->isGranted('ROLE_TRANSRES_BILLING_ADMIN_'.$specialtyStr) ) {
+            return true;
+        }
+
+        //Invoice's billing contact
+        $salesperson = $invoice->getSalesperson();
+        if( $salesperson->getId() == $user->getId() ) {
+            return true;
+        }
+
+        //Invoice's PI
+        $pi = $invoice->getPrincipalInvestigator();
+        if( $pi->getId() == $user->getId() ) {
+            return true;
+        }
+
+        //Invoice's Submitter
+        $submitter = $invoice->getSubmitter();
+        if( $submitter->getId() == $user->getId() ) {
             return true;
         }
 
