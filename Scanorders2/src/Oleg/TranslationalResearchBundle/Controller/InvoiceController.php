@@ -154,11 +154,11 @@ class InvoiceController extends Controller
                         //'filter[salesperson]' => $user->getId(),
                         //'filter[principalInvestigator]' => $user->getId(),
 
-                        'filter[status][0]' => "Unpaid/Issued",
-                        'filter[status][1]' => "Paid in Full",
-                        'filter[status][2]' => "Paid Partially",
-                        'filter[status][3]' => 'Refunded Fully',
-                        'filter[status][4]' => 'Refunded Partially',
+                        //'filter[status][0]' => "Unpaid/Issued",
+                        //'filter[status][1]' => "Paid in Full",
+                        //'filter[status][2]' => "Paid Partially",
+                        //'filter[status][3]' => 'Refunded Fully',
+                        //'filter[status][4]' => 'Refunded Partially',
 
                         'title' => $filterType,
                     )
@@ -395,6 +395,7 @@ class InvoiceController extends Controller
             $submitter = null;
             $principalInvestigator = null;
             $salesperson = null;
+            $status = null;
 
             $title = $filterTitle = "My Invoices, where I am a Submitter, PI, Billing Contact or a Sales Person";
         }
