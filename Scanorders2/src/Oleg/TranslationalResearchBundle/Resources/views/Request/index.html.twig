@@ -52,7 +52,7 @@
 
     {#{% stopwatch "### table ###" %}#}
     {#<table class="table table-hover table-condensed text-left table-bordered">#}
-    <table class="records_list table table-condensed text-left my-table-class">
+    <table class="table table-hover table-condensed text-left">
         <thead>
             <tr>
                 {#<th>Id</th>#}
@@ -76,6 +76,7 @@
                 <th>Actions</th>
             </tr>
         </thead>
+        <tbody data-link="row" class="rowlink">
 
         {#{% set count = 0 %}#}
         {% for transresRequest in transresRequests %}
@@ -100,8 +101,7 @@
                 {% set trclassname = "order-complete-status" %}
             {% endif %}
 
-            <tbody data-link="row" class="rowlink table-tbody-hover {{ trclassname }}">
-            <tr style="border-bottom: 1px solid #C6C6C6;">
+            <tr class="{{ trclassname }}" style="border-bottom: 1px solid #C6C6C6;">
                 {% if hiderows is not defined or not hiderows %}
                 <td>
                     <a href="{{ path(translationalresearch_sitename~'_request_show', { 'id': transresRequest.id }) }}" target="_blank">{{ transresRequest.oid }}</a>

@@ -154,7 +154,8 @@
     {#check performance   scan_perSiteSettings?     #}
     {% if projectsTableDisable is not defined %}
     {#<table class="table table-hover table-condensed text-left table-bordered">#}
-    <table class="records_list table table-condensed text-left my-table-class">
+    {#<table class="records_list table table-condensed table-hover text-left my-table-class">#}
+    <table class="table table-condensed table-hover text-left">
         <thead>
             <tr>
                 {#<th>Id</th>#}
@@ -183,7 +184,8 @@
                 <th>Actions</th>
             </tr>
         </thead>
-        <tbody data-link="row" class="rowlink table-tbody-hover">
+        {#<tbody data-link="row" class="rowlink table-tbody-hover">#}
+        <tbody data-link="row" class="rowlink">
 
         {#{% set count = 0 %}#}
         {% for project in projects %}
@@ -198,7 +200,7 @@
             {#add if state has "_rejected"?#}
             {% set trclassname = null %}
             {% if project.state == 'final_rejected' or project.state == 'closed' %}
-                {% set trclassname = "order-reject-status" %}
+                {% set trclassname = "order-complete-status" %}
             {% endif %}
 
             {#NOT equal to Draft AND NOT equal to Closed#}

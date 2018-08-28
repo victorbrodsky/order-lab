@@ -23,7 +23,7 @@
     {{ transresRequestMacros.transresInvoiceFilter(filterform,advancedFilter) }}
     <br>
 
-    <table class="records_list table table-condensed text-left">
+    <table class="table table-hover table-condensed text-left">
         <thead>
             <tr>
                 <th>{{ knp_pagination_sortable(invoices, 'Invoice Number', 'invoice.id') }}</th>
@@ -42,7 +42,7 @@
                 <th>Actions</th>
             </tr>
         </thead>
-        <tbody data-link="row">
+        <tbody data-link="row" class="rowlink">
         {% for invoice in invoices %}
 
             {{ transresRequestMacros.unpaidModal(invoice) }}
