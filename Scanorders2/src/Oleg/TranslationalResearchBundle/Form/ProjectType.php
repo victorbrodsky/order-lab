@@ -676,6 +676,12 @@ class ProjectType extends AbstractType
                 'attr' => array('class'=>'btn btn-success')
             ));
         }
+        if( $this->params['reSubmitReview'] === true ) {
+            $builder->add('reSubmitReview', SubmitType::class, array(
+                'label' => 'Resubmit Project',
+                'attr' => array('class'=>'btn btn-success')
+            ));
+        }
         if( $this->params['updateProject'] === true ) {
             $builder->add('updateProject', SubmitType::class, array(
                 'label' => 'Update Project',

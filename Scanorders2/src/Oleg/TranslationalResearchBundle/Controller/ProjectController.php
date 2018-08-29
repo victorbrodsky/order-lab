@@ -1199,11 +1199,11 @@ class ProjectController extends Controller
             }
 
             //testing
-            $services = $project->getTissueProcessingServices();
-            echo "services=".count($services)."<br>";
-            foreach($services as $service){
-                echo "servise=".$service->getId()."<br>";
-            }
+            //$services = $project->getTissueProcessingServices();
+            //echo "services=".count($services)."<br>";
+            //foreach($services as $service){
+            //    echo "servise=".$service->getId()."<br>";
+            //}
             //exit("Project update submitted");
 
             //testing
@@ -1230,6 +1230,15 @@ class ProjectController extends Controller
                 echo "<br>Enf of form submit<br>";
                 echo "Clicked button=".$form->getClickedButton()->getName()."<br>";
                 exit('Form is submitted and finished, msg='.$msg);
+            }
+
+            //TODO:
+            if ($form->getClickedButton() && 'reSubmitReview' === $form->getClickedButton()->getName()) {
+                //eventlog
+                $eventType = "Project Updated";
+                $transresUtil->setEventLog($project,$eventType,$msg.$eventResetMsg,$testing);
+
+                return $this->redirectToRoute('translationalresearch_project_resubmit', array('id' => $project->getId()));
             }
 
             $this->get('session')->getFlashBag()->add(
@@ -1815,6 +1824,7 @@ class ProjectController extends Controller
             //'saveAsComplete' => false,
             'updateProject' => false,
             'submitIrbReview' => false,
+            'reSubmitReview' => false,
             'stateChoiceArr'=>$stateChoiceArr,
             'institutionName'=>$institutionName
         );
@@ -1907,9 +1917,9 @@ class ProjectController extends Controller
                 }
             }
 
-            //if( $project->getState() && strpos($project->getState(),"_missinginfo") !== false ) {
-            //    $params['submitIrbReview'] = true;
-            //}
+            if( $project->getState() && strpos($project->getState(),"_missinginfo") !== false ) {
+                $params['reSubmitReview'] = true;
+            }
 
             //allow edit if admin at any time
             if( $transresUtil->isAdminOrPrimaryReviewer($project->getProjectSpecialty()) || $transresUtil->isProjectEditableByRequester($project) ) {

@@ -72,6 +72,11 @@
             {{ form_widget(edit_form.submitIrbReview) }}
         {% endif %}
 
+        {% if edit_form.reSubmitReview is defined %}
+            {#{% set showComment = true %}#}
+            {{ form_widget(edit_form.reSubmitReview) }}
+        {% endif %}
+
         {% if edit_form.updateProject is defined %}
             {{ form_widget(edit_form.updateProject) }}
         {% endif %}

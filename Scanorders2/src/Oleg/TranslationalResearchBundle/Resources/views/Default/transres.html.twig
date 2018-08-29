@@ -783,7 +783,11 @@
         {% if transres_util.isProjectStateReviewer(project,app.user) %}
             <p><strong>
                 This project request is in {{ transres_util.getStateLabelByProject(project) }} stage.
-                Please review this request, enter a comment (if any), and press the green or the red button to submit your opinion.
+                {% if project.state == 'irb_review' or project.state == 'admin_review' %}
+                    Please review this request, enter a comment (if any), and press the green, the red or the yellow button to submit your opinion.
+                {% else %}
+                    Please review this request, enter a comment (if any), and press the green or the red button to submit your opinion.
+                {% endif %}
             </strong></p>
         {% endif %}
 

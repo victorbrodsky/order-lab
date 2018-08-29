@@ -165,7 +165,6 @@ class TransResUtil
                 //}
 
                 $thisLink = "<a ".
-                    //"general-data-confirm='Are you sure you want to $label?'".
                     $generalDataConfirmation.
                     "href=".$thisUrl." class='".$classTransition."'>".$label."</a>";
                 $links[] = $thisLink;
@@ -2322,14 +2321,8 @@ class TransResUtil
             $body = $body . $break.$break. "The review process will resume once the requested information is added.";
 
             //To supply the requested information and re-submit for review, please visit:
-            //TODO: get project resubmit link
-            //edit
-            $projectEditUrl = $this->getProjectEditUrl($project);
-            $body = $body . $break.$break. "To supply the requested information for review, please visit:".$break.$projectEditUrl;
-            //resubmit
             $projectResubmitUrl = $this->getProjectResubmitUrl($project);
-            //$body = $body . $break.$break. "To supply the requested information and re-submit for review, please visit:".$break.$projectResubmitUrl;
-            $body = $body . $break.$break. "To re-submit for review, please visit:".$break.$projectResubmitUrl;
+            $body = $body . $break.$break. "To supply the requested information and re-submit for review, please visit:".$break.$projectResubmitUrl;
 
             //Admins as css
             $adminsCcs = $this->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //ok
@@ -2838,17 +2831,8 @@ class TransResUtil
         return $projectUrl;
     }
     public function getProjectResubmitUrl($project) {
-        $projectUrl = $this->container->get('router')->generate(
-            'translationalresearch_project_resubmit',
-            array(
-                'id' => $project->getId(),
-            ),
-            UrlGeneratorInterface::ABSOLUTE_URL
-        );
-
-        $projectUrl = '<a href="'.$projectUrl.'">'.$projectUrl.'</a>';
-
-        return $projectUrl;
+        //the same as edit, if the project in 'missinginfo' state, then resubmit button will appear on the edit page
+        return $this->getProjectEditUrl($project);
     }
 
     //$specialtyStr: hematopathology, ap-cp
