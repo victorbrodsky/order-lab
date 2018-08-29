@@ -151,7 +151,7 @@ function transresShowHideRequireArchivalProcessing(requireArchivalProcessing) {
 //Therefore use button 'onclick'=>'transresValidateProjectForm();' in php form type
 function transresValidateProjectForm() {
 
-    //console.log("Validate project");
+    console.log("Validate project");
 
     //e.preventDefault();
     //e.stopImmediatePropagation();
@@ -181,7 +181,7 @@ function transresValidateProjectForm() {
             if( !value ) {
                 //console.log("Error Input form-control. label="+label);
                 validated = false;
-                //transresShowBtn();
+                transresShowBtn();
                 return false;
             }
         }
@@ -194,7 +194,7 @@ function transresValidateProjectForm() {
             if( !value ) {
                 console.log("Error Select select combobox. label="+label);
                 validated = false;
-                //transresShowBtn();
+                transresShowBtn();
                 return false;
             }
         }
@@ -207,7 +207,7 @@ function transresValidateProjectForm() {
             if( !value ) {
                 console.log("Error Select input combobox. label="+label);
                 validated = false;
-                //transresShowBtn();
+                transresShowBtn();
                 return false;
             }
         }
@@ -285,7 +285,9 @@ function transresValidateProjectForm() {
     } else {
         //validate fields
     }
-    
+
+    transresShowBtn();
+
     //console.log("No Error");
     //return false; //testing
 
@@ -294,15 +296,16 @@ function transresValidateProjectForm() {
     //var form = document.getElementById("transresProjectForm");
     //form.submit();
     //projectForm.submit(); // If all the validations succeeded
-
 }
 
 function transresHideBtn() {
-    $('button').hide();
+    //console.log("hide submit");
+    $(":submit").hide();
     $('#please-wait').show();
 }
 function transresShowBtn() {
-    $('button').show();
+    //console.log("show submit");
+    $(":submit").show();
     $('#please-wait').hide();
 }
 

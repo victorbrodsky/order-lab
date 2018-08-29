@@ -506,6 +506,7 @@ class RequestController extends Controller
             $msg = str_replace($break,"<br>",$msg);
 
             if( $testing ) {
+                echo "ClickedButton=".$form->getClickedButton()->getName()."<br>";
                 exit('form is submitted and finished, msg='.$msg);
             }
 

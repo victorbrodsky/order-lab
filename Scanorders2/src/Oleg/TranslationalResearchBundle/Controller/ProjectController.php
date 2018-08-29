@@ -948,6 +948,7 @@ class ProjectController extends Controller
             $startProjectReview = false;
 
             //exit("clickedButton=".$form->getClickedButton()->getName());
+            echo "clickedButton=".$form->getClickedButton()->getName()."<br>";
 
             //new
             if ($form->getClickedButton() && 'saveAsDraft' === $form->getClickedButton()->getName()) {
@@ -1153,20 +1154,6 @@ class ProjectController extends Controller
             $transresUtil->removeReviewsFromProject($project, $originalFinalReviews, $project->getFinalReviews());
             //////////// EOF remove the relationship between the review and the project ////////////
 
-            //edit
-//            if ($form->getClickedButton() && 'saveAsDraft' === $form->getClickedButton()->getName()) {
-//                //Save Project as Draft => state='draft'
-//                $project->setState('draft');
-//            }
-
-            //edit
-//            if ($form->getClickedButton() && 'saveAsComplete' === $form->getClickedButton()->getName()) {
-//                //Complete Submission => state='submit'
-//                if( $project->getState() == 'draft' ) {
-//                    $project->setState('completed');
-//                }
-//            }
-
             //exit("clickedButton=".$form->getClickedButton()->getName());
 
             //exit('before set state to irb_review');
@@ -1198,21 +1185,6 @@ class ProjectController extends Controller
                 $em->flush();
             }
 
-            //testing
-            //$services = $project->getTissueProcessingServices();
-            //echo "services=".count($services)."<br>";
-            //foreach($services as $service){
-            //    echo "servise=".$service->getId()."<br>";
-            //}
-            //exit("Project update submitted");
-
-            //testing
-//            print "<pre>";
-//            var_dump($_POST);
-//            print "</pre><br>";
-//            echo "formnode[420]=".$_POST['formnode[420]']."<br>";
-//            echo "formnode[421]=".$_POST['formnode[421]']."<br>";
-
             //process form nodes
             if( $formnode ) {
                 $formNodeUtil = $this->get('user_formnode_utility');
@@ -1233,6 +1205,8 @@ class ProjectController extends Controller
             }
 
             //TODO:
+            //echo "cliked btn=".$form->getClickedButton()->getName()."<br>";
+            //exit('resubmit');
             if ($form->getClickedButton() && 'reSubmitReview' === $form->getClickedButton()->getName()) {
                 //eventlog
                 $eventType = "Project Updated";

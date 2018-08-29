@@ -157,6 +157,7 @@
 
     {{ form_end(form) }}
 
+    <div id="please-wait" style="display: none;">Please Wait ...</div>
 
     {% if cycle == "show" %}
         {#{% if#}
@@ -341,6 +342,8 @@
 
         function transresValidateRequest() {
 
+            transresHideBtn();
+
             //validate submit confirmation
             $("#projectError").hide();
             $("#projectError").html(null);
@@ -354,12 +357,25 @@
                     $("#projectError").show();
                     $("#projectError").html(msg);
                     console.log("not confirmed");
+                    transresShowBtn();
                     return false;
                 }
             }
             console.log("transresValidateRequest: finished");
 
             transresValidateHandsonTable();
+
+        }
+
+        function transresHideBtn() {
+            //console.log("hide submit");
+            $(":submit").hide();
+            $('#please-wait').show();
+        }
+        function transresShowBtn() {
+            //console.log("show submit");
+            $(":submit").show();
+            $('#please-wait').hide();
         }
 
         function transresPrepopulateProjectDetails( projectField ) {
