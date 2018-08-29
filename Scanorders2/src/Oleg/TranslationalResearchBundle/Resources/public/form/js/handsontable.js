@@ -201,7 +201,7 @@ function transresMakeColumnData() {
         }
     }
 
-    var defaultAntibodyIndex = 0;
+    var defaultAntibodyIndex = null;
     var defaultAntibody = $('#default-antibody').val();
     //console.log("defaultAccessionType="+defaultAccessionType);
     if( defaultAccessionType ) {
@@ -231,7 +231,7 @@ function transresMakeColumnData() {
         { header:'Stain Name', columns:{} },
         {
             header:'Antibody',
-            default: defaultAccessionTypeIndex,
+            default: defaultAntibodyIndex,
             columns: {
                 type: 'autocomplete',
                 source: _antibodies_simple,
@@ -844,21 +844,24 @@ function transresBarcodeParser( rowNumber, barcodeStr ) {
     //S13-20926 A1 5 08/12/14
 
     var barcodeArr = barcodeStr.split(" ");
-    console.log("barcodeArr len="+barcodeArr.length);
+    //console.log("barcodeArr len="+barcodeArr.length);
 
     //1) get Accession
     if( barcodeArr.length > 1 ) {
         var accession = barcodeArr[0];
-        console.log("accession="+accession);
+        //console.log("accession="+accession);
         _sotable.setDataAtCell(rowNumber,1,accession);
 
         var partBlock = barcodeArr[1];
-        console.log("partBlock.length="+partBlock.length);
+        //console.log("partBlock.length="+partBlock.length);
 
+        //A11
         if( partBlock.length > 1 ) {
-            console.log("Part="+partBlock.charAt(0));
-            _sotable.setDataAtCell(rowNumber, 2, partBlock.charAt(0));
-            _sotable.setDataAtCell(rowNumber, 3, partBlock.charAt(1));
+            //console.log("Part="+partBlock.charAt(0));
+            _sotable.setDataAtCell(rowNumber, 2, partBlock.charAt(0)); //get 'A'
+
+            var blockId = partBlock.substring(1); //remove the first character from 'A11' => '11'
+            _sotable.setDataAtCell(rowNumber, 3, blockId);
         }
     }
 }

@@ -551,6 +551,9 @@ class RequestController extends Controller
         $defaultAccessionType = $siteParameter->getAccessionType();
         //echo "defaultAccessionType=".$defaultAccessionType."<br>";
 
+        //defaultAntibodyType
+        $defaultAntibodyType = null;
+
         $eventType = "Request Viewed";
         $msg = "Request ".$transresRequest->getOid() ." has been viewed on the edit page.";
         $transresUtil->setEventLog($transresRequest,$eventType,$msg);
@@ -572,7 +575,8 @@ class RequestController extends Controller
             'routeName' => $request->get('_route'),
             //'handsometableData' => json_encode($jsonData)
             'handsometableData' => $jsonData,
-            'defaultAccessionType' => $defaultAccessionType
+            'defaultAccessionType' => $defaultAccessionType,
+            'defaultAntibodyType' => $defaultAntibodyType
         );
     }
 
@@ -773,8 +777,13 @@ class RequestController extends Controller
             //System
             $system = $dataResult->getSystem();
             if( $system ) {
+                $systemStr = $system->getName();
+                $abbreviation = $system->getAbbreviation();
+                if( $abbreviation ) {
+                    $systemStr = $abbreviation;
+                }
                 $rowArr['Source']['id'] = $system->getId();
-                $rowArr['Source']['value'] = $system."";
+                $rowArr['Source']['value'] = $systemStr;
             }
 
             //Accession ID
