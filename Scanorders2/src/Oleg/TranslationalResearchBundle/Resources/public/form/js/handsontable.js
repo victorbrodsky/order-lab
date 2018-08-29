@@ -220,7 +220,7 @@ function transresMakeColumnData() {
             columns: {
                 type: 'autocomplete',
                 source: _accessiontypes_simple,
-                strict: false,
+                strict: true,
                 filter: false,
             }
         },
@@ -235,7 +235,7 @@ function transresMakeColumnData() {
             columns: {
                 type: 'autocomplete',
                 source: _antibodies_simple,
-                strict: false,
+                strict: true,
                 filter: false,
             }
         },

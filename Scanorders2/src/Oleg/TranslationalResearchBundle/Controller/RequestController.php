@@ -777,13 +777,13 @@ class RequestController extends Controller
             //System
             $system = $dataResult->getSystem();
             if( $system ) {
-                $systemStr = $system->getName();
-                $abbreviation = $system->getAbbreviation();
-                if( $abbreviation ) {
-                    $systemStr = $abbreviation;
-                }
+//                $systemStr = $system->getName();
+//                $abbreviation = $system->getAbbreviation();
+//                if( $abbreviation ) {
+//                    $systemStr = $abbreviation;
+//                }
                 $rowArr['Source']['id'] = $system->getId();
-                $rowArr['Source']['value'] = $systemStr;
+                $rowArr['Source']['value'] = $system->getOptimalName(); //$systemStr;
             }
 
             //Accession ID
