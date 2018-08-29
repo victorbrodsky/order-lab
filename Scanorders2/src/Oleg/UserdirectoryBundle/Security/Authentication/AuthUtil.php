@@ -388,11 +388,11 @@ class AuthUtil {
         }
 
         foreach( $identifiers as $identifier ) {
-            //$this->logger->notice($identifier->getName()."?=".$identifierKeytype->getName());
+            $this->logger->notice($identifier->getName()."?=".$identifierKeytype->getName());
 
             if( $identifier->getName() == $identifierKeytype->getName() ) {
 
-                //$this->logger->notice("identifier match: ".$identifier);
+                $this->logger->notice("identifier match: ".$identifier);
                 $subjectUser = $this->authenticateUserByIdentifierType($username, $token->getCredentials(), $identifierKeytype->getName());
                 if( $subjectUser ) {
                     $this->addEventLog($subjectUser,$identifier);
