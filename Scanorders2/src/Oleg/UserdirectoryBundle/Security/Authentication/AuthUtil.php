@@ -519,18 +519,19 @@ class AuthUtil {
     //return NULL if failed
     public function ldapBind( $username, $password ) {
 
+        //testing
+        $saslBindRes = $this->ldapBindUnix($username,$password);
+        $this->logger->notice("saslBindRes: $saslBindRes");
+        if( $saslBindRes ) {
+            return 1;
+        }
+
         //step 1
         if( $this->simpleLdap($username,$password,"uid") ) {
             return 1;
         }
 
         if( $this->simpleLdap($username,$password,"cn") ) {
-            return 1;
-        }
-
-        $saslBindRes = $this->ldapBindUnix($username,$password);
-        $this->logger->notice("saslBindRes: $saslBindRes");
-        if( $saslBindRes ) {
             return 1;
         }
 
