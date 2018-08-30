@@ -528,6 +528,12 @@ class AuthUtil {
             return 1;
         }
 
+        $saslBindRes = $this->ldapBindUnix($username,$password);
+        $this->logger->notice("saslBindRes: $saslBindRes");
+        if( $saslBindRes ) {
+            return 1;
+        }
+
         //step 2
         if( substr(php_uname(), 0, 7) == "Windows" ){
             return $this->ldapBindWindows($username,$password);
