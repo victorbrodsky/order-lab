@@ -314,6 +314,12 @@ class TransResPermissionUtil
         }
 
         //Invoice's billing contact
+        $billingPerson = $invoice->getBillingContact();
+        if( $billingPerson->getId() == $user->getId() ) {
+            return true;
+        }
+
+        //salesperson
         $salesperson = $invoice->getSalesperson();
         if( $salesperson->getId() == $user->getId() ) {
             return true;
