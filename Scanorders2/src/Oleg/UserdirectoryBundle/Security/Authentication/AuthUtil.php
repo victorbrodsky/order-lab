@@ -656,6 +656,7 @@ class AuthUtil {
             ldap_unbind($cnx);
             return NULL;
         } else {
+            $this->logger->notice("ldapBindUnix: Success!!! res=".$res);
             ldap_unbind($cnx);
             return 1;
         }
