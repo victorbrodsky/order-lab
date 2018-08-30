@@ -615,7 +615,7 @@ class AuthUtil {
         //$LDAPHost = $this->container->getParameter('ldaphost');
         $LDAPHost = $userSecUtil->getSiteSettingParameter('aDLDAPServerAddress');
         $mech = "GSSAPI";
-        $mech = "DIGEST-MD5";
+        //$mech = "DIGEST-MD5";
         $cnx = $this->connectToLdap($LDAPHost);
 
         //testing
