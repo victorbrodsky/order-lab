@@ -895,8 +895,8 @@ class AuthUtil {
     //return ldap connection
     public function connectToLdap( $LDAPHost ) {
 
-        //$cnx = @ldap_connect($LDAPHost);
-        $cnx = ldap_connect($LDAPHost);
+        $cnx = @ldap_connect($LDAPHost);
+        //$cnx = ldap_connect($LDAPHost);
         if( !$cnx ) {
             $this->logger->warning("Ldap: Could not connect to LDAP");
             return NULL;
