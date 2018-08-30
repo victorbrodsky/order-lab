@@ -609,7 +609,7 @@ class AuthUtil {
 
 
     //TODO: must be tested on unix environment
-    public function ldapBindUnix( $username, $password ) {
+    public function ldapBindUnix( $username, $password, $userPrefix='cn' ) {
         $userSecUtil = $this->container->get('user_security_utility');
         $this->logger->warning("Unix system detected. Must be tested!");
         //$LDAPHost = $this->container->getParameter('ldaphost');
@@ -617,7 +617,37 @@ class AuthUtil {
         $mech = "GSSAPI";
         $cnx = $this->connectToLdap($LDAPHost);
 
-        $res = ldap_sasl_bind($cnx,NULL,$password,$mech,NULL,$username,NULL);
+        $ldapBindDN = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'); //scientists,dc=example,dc=com
+        $res = null;
+        $ldapBindDNArr = explode(";",$ldapBindDN);
+        //echo "count=".count($ldapBindDNArr)."<br>";
+        foreach( $ldapBindDNArr as $ldapBindDN) {
+            $ldapBindDN = $userPrefix."=".$username.",".$ldapBindDN;
+            $this->logger->notice("ldap Bind Unix: ldapBindDN=".$ldapBindDN);
+            $res = ldap_sasl_bind(
+                $cnx,       //1 resource link
+                NULL,       //2 binddn
+                $password,  //3 password
+                $mech,      //4 sals mech
+                NULL,       //5 sals realm
+                $username,  //6 auth id
+                $ldapBindDN //7 props: 'dn:uid=tommy,ou=people,dc=example,dc=com'
+            );
+            if( $res ) {
+                break;
+            }
+        }
+
+//        $res = ldap_sasl_bind(
+//            $cnx,       //1 resource link
+//            NULL,       //2 binddn
+//            $password,  //3 password
+//            $mech,      //4 sals mech
+//            NULL,       //5 sals realm
+//            $username,  //6 auth id
+//            NULL        //7 props: 'dn:uid=tommy,ou=people,dc=example,dc=com'
+//        );
+
         if( !$res ) {
             //echo $mech." - could not sasl bind to LDAP by SASL<br>";
             $this->logger->notice("ldapBindUnix: res=".$res);
