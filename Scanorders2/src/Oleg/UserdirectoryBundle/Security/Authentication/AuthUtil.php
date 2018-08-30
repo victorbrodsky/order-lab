@@ -622,7 +622,7 @@ class AuthUtil {
         $ldapBindDNArr = explode(";",$ldapBindDN);
         //echo "count=".count($ldapBindDNArr)."<br>";
         foreach( $ldapBindDNArr as $ldapBindDN) {
-            $ldapBindDN = $userPrefix."=".$username.",".$ldapBindDN;
+            //$ldapBindDN = $userPrefix."=".$username.",".$ldapBindDN;
             $this->logger->notice("ldap Bind Unix: ldapBindDN=".$ldapBindDN);
             $res = ldap_sasl_bind(
                 $cnx,       //1 resource link
