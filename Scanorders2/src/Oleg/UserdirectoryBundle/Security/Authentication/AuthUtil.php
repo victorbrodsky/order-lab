@@ -639,46 +639,33 @@ class AuthUtil {
     // Port: 389
     // AD/LDAP Server OU: ou=users,ou=guests,dc=zflexsoftware,dc=com
     // Username: guest1 Password: guest1password
+    //supports multiple aDLDAPServerOu: cn=Users,dc=a,dc=wcmc-ad,dc=net;ou=NYP Users,dc=a,dc=wcmc-ad,dc=net
     public function simpleLdap($username, $password, $userPrefix="uid") {
-        $userSecUtil = $this->container->get('user_security_utility');
         //$this->logger->notice("Simple Ldap");
-        //$LDAPHost = $this->container->getParameter('ldaphost');
+        $userSecUtil = $this->container->get('user_security_utility');
         $LDAPHost = $userSecUtil->getSiteSettingParameter('aDLDAPServerAddress');
         $cnx = $this->connectToLdap($LDAPHost);
 
         $ldapBindDN = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'); //scientists,dc=example,dc=com
 
-        //cn=read-only-admin,dc=example,dc=com => "uid=tesla,dc=example,dc=com"
-//        $ldapDcArr = explode(",",$ldapDc);
-//        $ldapBindArr = array();
-//        foreach( $ldapDcArr as $ldapPart) {
-//            if( strpos( strtolower($ldapPart), 'dc=') !== false ) {
-//                $ldapBindArr[] = $ldapPart;
-//            }
-//        }
-        //$binddn = implode(",",$ldapBindArr);
-        //$ldapBindDN = "uid=".$username.",".$ldapBindDN;
-        $ldapBindDN = $userPrefix."=".$username.",".$ldapBindDN;
-        //echo "binddn=[".$binddn."]<br>";
+        $res = null;
+        $ldapBindDNArr = explode(";",$ldapBindDN);
+        //echo "count=".count($ldapBindDNArr)."<br>";
+        foreach( $ldapBindDNArr as $ldapBindDN) {
+            $ldapBindDN = $userPrefix."=".$username.",".$ldapBindDN;
+            $res = @ldap_bind($cnx,$ldapBindDN,$password);
+            if( $res ) {
+                break;
+            }
+        }
 
-        //testing - Not working for 'tesla'. It works when 'ou' is removed.
-        //$ldapBindDN = "ou=scientists,dc=example,dc=com";
-        //$ldapBindDN = "uid=".$username.",".$ldapBindDN;
-
-        //test: https://www.forumsys.com/tutorials/integration-how-to/ldap/online-ldap-test-server/
-        //$password = "password";
-        //$ldapBindDN = "uid=tesla,dc=example,dc=com"; //workings
-
-        //test: https://www.zflexldapadministrator.com/index.php/blog/82-free-online-ldap
-        //$ldapBindDN = "uid=guest1,ou=users,ou=guests,dc=zflexsoftware,dc=com";
-        //$password = "guest1password";
-
-        //$this->logger->notice("Simple ldap: before ldap_bind");
-
-        //$ldapBindDN = "uid=".$username;
-
-        //$res = @ldap_bind($cnx,NULL,$password,$mech,NULL,$username,NULL);
-        $res = @ldap_bind($cnx,$ldapBindDN,$password);
+        //$ldapBindDN = $userPrefix."=".$username.",".$ldapBindDN;
+        ////test: https://www.forumsys.com/tutorials/integration-how-to/ldap/online-ldap-test-server/
+        ////$password = "password";
+        ////$ldapBindDN = "uid=tesla,dc=example,dc=com"; //workings
+        ////test: https://www.zflexldapadministrator.com/index.php/blog/82-free-online-ldap
+        ////$this->logger->notice("Simple ldap: before ldap_bind");
+        //$res = @ldap_bind($cnx,$ldapBindDN,$password);
 
         //$this->logger->notice("Simple ldap: after ldap_bind");
 
@@ -776,7 +763,17 @@ class AuthUtil {
         //echo "ldapBindDN=".$ldapBindDN."<br>";
         //echo "filter=".$filter."<br>";
 
-        $sr = ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
+        //$sr = ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
+
+        $sr = null;
+        $ldapBindDNArr = explode(";",$ldapBindDN);
+        //echo "count=".count($ldapBindDNArr)."<br>";
+        foreach( $ldapBindDNArr as $ldapBindDN) {
+            $sr = ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
+            if( $sr ) {
+                break;
+            }
+        }
 
         if( !$sr ) {
             //echo 'Search failed <br>';
