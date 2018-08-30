@@ -617,6 +617,10 @@ class AuthUtil {
         $mech = "GSSAPI";
         $cnx = $this->connectToLdap($LDAPHost);
 
+        //testing
+        ldap_set_option($cnx, LDAP_OPT_PROTOCOL_VERSION, 3);
+        ldap_set_option($cnx, LDAP_OPT_REFERRALS, 0);
+
         $ldapBindDN = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'); //scientists,dc=example,dc=com
         $res = null;
         $ldapBindDNArr = explode(";",$ldapBindDN);
@@ -896,7 +900,6 @@ class AuthUtil {
     public function connectToLdap( $LDAPHost ) {
 
         $cnx = @ldap_connect($LDAPHost);
-        //$cnx = ldap_connect($LDAPHost);
         if( !$cnx ) {
             $this->logger->warning("Ldap: Could not connect to LDAP");
             return NULL;
