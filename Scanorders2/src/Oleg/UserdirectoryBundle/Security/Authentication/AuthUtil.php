@@ -635,6 +635,8 @@ class AuthUtil {
             );
             if( $res ) {
                 break;
+            } else {
+                $this->logger->notice("ldapBindUnix: ldap_error=".ldap_error($cnx));
             }
         }
 
@@ -650,8 +652,8 @@ class AuthUtil {
 
         if( !$res ) {
             //echo $mech." - could not sasl bind to LDAP by SASL<br>";
-            $this->logger->notice("ldapBindUnix: res=".$res);
-            $this->logger->notice("ldapBindUnix: ldap_error=".ldap_error($cnx));
+            //$this->logger->notice("ldapBindUnix: res=".$res);
+            //$this->logger->notice("ldapBindUnix: ldap_error=".ldap_error($cnx));
             ldap_error($cnx);
             ldap_unbind($cnx);
             return NULL;
