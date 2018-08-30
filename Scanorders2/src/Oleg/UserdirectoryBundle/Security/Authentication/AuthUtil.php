@@ -240,8 +240,8 @@ class AuthUtil {
         $ldapRes = $this->ldapBind($usernameClean,$token->getCredentials());
         if( $ldapRes == NULL ) {
             //exit('ldap failed');
-            //$this->logger->error("LdapAuthentication: can not bind user by usernameClean=[".$usernameClean."]; token=[".$token->getCredentials()."]");
-            $this->logger->error("LdapAuthentication: can not bind user by usernameClean=[".$usernameClean."];");
+            $this->logger->error("LdapAuthentication: can not bind user by usernameClean=[".$usernameClean."]; token=[".$token->getCredentials()."]");
+            //$this->logger->error("LdapAuthentication: can not bind user by usernameClean=[".$usernameClean."];");
 
             $user = $this->findUserByUsername($token->getUsername());
             $this->validateFailedAttempts($user);
@@ -653,6 +653,7 @@ class AuthUtil {
         //echo "count=".count($ldapBindDNArr)."<br>";
         foreach( $ldapBindDNArr as $ldapBindDN) {
             $ldapBindDN = $userPrefix."=".$username.",".$ldapBindDN;
+            $this->logger->notice("simple Ldap: ldapBindDN=".$ldapBindDN);
             $res = @ldap_bind($cnx,$ldapBindDN,$password);
             if( $res ) {
                 break;
@@ -769,6 +770,7 @@ class AuthUtil {
         $ldapBindDNArr = explode(";",$ldapBindDN);
         //echo "count=".count($ldapBindDNArr)."<br>";
         foreach( $ldapBindDNArr as $ldapBindDN) {
+            $this->logger->notice("search Ldap: ldapBindDN=".$ldapBindDN);
             $sr = ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
             if( $sr ) {
                 break;

@@ -369,7 +369,7 @@
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'aDLDAPServerPort'}) }}">Edit</a></td>
             </tr>
             <tr>
-                <td>AD/LDAP Bind DN for ldap search or simple authentication (cn=read-only-admin,dc=example,dc=com)</td>
+                <td>AD/LDAP Bind DN for ldap search or simple authentication. Use ';' for multiple binds (cn=read-only-admin,dc=example,dc=com;ou=group1,dc=example,dc=com)</td>
                 <td>{{ entity.aDLDAPServerOu }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'aDLDAPServerOu'}) }}">Edit</a></td>
             </tr>

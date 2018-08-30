@@ -158,7 +158,7 @@ class InitialConfigurationType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
         $builder->add('aDLDAPServerOu',null,array(
-            'label'=>'AD/LDAP Bind DN for ldap search or simple authentication (cn=read-only-admin,dc=example,dc=com):',
+            'label'=>"AD/LDAP Bind DN for ldap search or simple authentication. Use ';' for multiple binds (cn=read-only-admin,dc=example,dc=com;ou=group1,dc=example,dc=com):",
             'attr' => array('class'=>'form-control')
         ));
         $builder->add('aDLDAPServerAccountUserName',null,array(
