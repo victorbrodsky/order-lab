@@ -640,6 +640,7 @@ class AuthUtil {
             if( $res ) {
                 break;
             } else {
+                $this->logger->notice("ldapBindUnix: res=".$res);
                 $this->logger->notice("ldapBindUnix: ldap_error=".ldap_error($cnx));
             }
         }
