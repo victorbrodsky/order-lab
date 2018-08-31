@@ -836,8 +836,12 @@ class AuthUtil {
             if( $sr ) {
                 $this->logger->error("search Ldap: ldap_search OK with filter=" . $filter . "; bindDn=".$ldapBindDN);
                 $info = ldap_get_entries($cnx, $sr);
-                $this->logger->error(print_r($info));
-                break;
+                if( $info["count"] > 0 ) {
+                    $this->logger->error("search Ldap: info: displayName=".$info[0]['displayname'][0]);
+                    break;
+                } else {
+                    $this->logger->error("search Ldap: ldap_search NOTOK = info null");
+                }
             } else {
                 $this->logger->error("search Ldap: ldap_search NOTOK with filter=" . $filter . "; bindDn=".$ldapBindDN);
             }
