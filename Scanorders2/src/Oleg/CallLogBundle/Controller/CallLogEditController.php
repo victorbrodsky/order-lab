@@ -185,7 +185,7 @@ class CallLogEditController extends CallEntryController
             return $this->redirect($this->generateUrl('calllog-nopermission'));
         }
 
-        //ini_set('memory_limit', '5120M');
+        ini_set('memory_limit', '5120M');
 
         //$userSecUtil = $this->get('user_security_utility');
         $calllogUtil = $this->get('calllog_util');
