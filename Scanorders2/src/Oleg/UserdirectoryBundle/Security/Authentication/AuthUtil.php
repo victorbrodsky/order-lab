@@ -222,8 +222,9 @@ class AuthUtil {
         $withNewUserPrePopulation = true;
         //$withNewUserPrePopulation = false; //testing
         if( $withNewUserPrePopulation ) {
-            //first search this user if exists in ldap directory
+            //////////////// first search this user if exists in ldap directory ////////////////
             $searchRes = $this->searchLdap($usernameClean);
+            //////////////// EOF first search this user if exists in ldap directory ////////////////
             if( $searchRes == NULL || count($searchRes) == 0 ) {
                 //$this->logger->error("LdapAuthentication: can not find user by usernameClean=" . $usernameClean);
                 $this->logger->error("LdapAuthentication: can not find user by usernameClean=[" . $usernameClean . "]; token=[" . $token->getCredentials() . "]");
@@ -532,11 +533,11 @@ class AuthUtil {
     public function ldapBind( $username, $password ) {
 
         //testing
-        $saslBindRes = $this->ldapBindUnix($username,$password);
-        $this->logger->notice("saslBindRes: $saslBindRes");
-        if( $saslBindRes ) {
-            return 1;
-        }
+//        $saslBindRes = $this->ldapBindUnix($username,$password);
+//        $this->logger->notice("saslBindRes: $saslBindRes");
+//        if( $saslBindRes ) {
+//            return 1;
+//        }
 
         //step 1
         if( $this->simpleLdap($username,$password,"uid") ) {
