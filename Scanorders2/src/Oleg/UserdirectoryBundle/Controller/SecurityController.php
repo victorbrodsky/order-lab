@@ -522,9 +522,9 @@ class SecurityController extends Controller
         }
 
         ///////// temp testing ///////////
-        $response = new Response();
-        $response->setContent("OK");
-        return $response;
+        //$response = new Response();
+        //$response->setContent("OK");
+        //return $response;
         ///////// EOF temp testing ///////////
 
         $em = $this->getDoctrine()->getManager();
