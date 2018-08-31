@@ -712,9 +712,12 @@ class AuthUtil {
         foreach( $ldapBindDNArr as $ldapBindDN) {
             $ldapBindDN = $userPrefix."=".$username.",".$ldapBindDN;
             $this->logger->notice("simple Ldap: ldapBindDN=".$ldapBindDN);
-            $resSimple = @ldap_bind($cnx,$ldapBindDN,$password);
-            if( $resSimple ) {
-                $res = $resSimple;
+            $res = @ldap_bind($cnx,$ldapBindDN,$password);
+            if( $res ) {
+                $this->logger->notice("simple Ldap: OK ldapBindDN=".$ldapBindDN);
+                break;
+            } else {
+                $this->logger->notice("simple Ldap: NOTOK ldapBindDN=".$ldapBindDN);
             }
         }
 
@@ -829,11 +832,12 @@ class AuthUtil {
         //echo "count=".count($ldapBindDNArr)."<br>";
         foreach( $ldapBindDNArr as $ldapBindDN) {
             $this->logger->notice("search Ldap: ldapBindDN=".$ldapBindDN);
-            $searchRes = ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
-            if( $searchRes ) {
+            $sr = ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
+            if( $sr ) {
                 $this->logger->error("search Ldap: ldap_search OK with filter=" . $filter . "; bindDn=".$ldapBindDN);
-                $sr = $searchRes;
                 break;
+            } else {
+                $this->logger->error("search Ldap: ldap_search NOTOK with filter=" . $filter . "; bindDn=".$ldapBindDN);
             }
         }
 
