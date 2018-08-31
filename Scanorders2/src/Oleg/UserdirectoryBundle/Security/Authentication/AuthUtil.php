@@ -835,6 +835,9 @@ class AuthUtil {
             $sr = ldap_search($cnx, $ldapBindDN, $filter, $LDAPFieldsToFind);
             if( $sr ) {
                 $this->logger->error("search Ldap: ldap_search OK with filter=" . $filter . "; bindDn=".$ldapBindDN);
+                $this->logger->error(print_r($sr));
+                //$info = ldap_get_entries($cnx, $sr);
+
                 break;
             } else {
                 $this->logger->error("search Ldap: ldap_search NOTOK with filter=" . $filter . "; bindDn=".$ldapBindDN);
