@@ -123,6 +123,22 @@
             {{ formmacros.field_left(form.fundedAccountNumber) }}
         {% endif %}
 
+        {% if transresRequest is defined and transresRequest %}
+            <p>
+            <div class="row">
+                <div class="col-xs-2" align="right">
+                    <strong>IRB Number:</strong>
+                </div>
+                <div class="col-xs-6" align="left">
+                    {{ transresRequest.getProject().getIrbNumber() }}
+                    <input id="{{ id }}" class="form-control form-control-modif not-mapped-simplefield" type="text" value="{{ transresRequest.getProject().getIrbNumber() }}" {{ disabled }}>
+                </div>
+                <div class="col-xs-4" align="right">
+                </div>
+            </div>
+            </p>
+        {% endif %}
+
         {% if form.dueDate is defined %}
             {{ formmacros.fieldDateLabel_left(form.dueDate,'allow-future-date') }}
         {% endif %}

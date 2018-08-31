@@ -2994,7 +2994,7 @@ class CallEntryController extends Controller
             $limit = 500;
         } else {
             set_time_limit(3600); //1 hour
-            ini_set('memory_limit', '30720M'); //30GB
+            //ini_set('memory_limit', '30720M'); //30GB
             //ini_set('memory_limit', '-1');
             $limit = null;
         }
