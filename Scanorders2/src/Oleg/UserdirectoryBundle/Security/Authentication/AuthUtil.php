@@ -229,6 +229,16 @@ class AuthUtil {
                 return NULL;
             } else {
                 $this->logger->notice("LdapAuthentication: user found by  usernameClean=" . $usernameClean);
+
+                /////// EOF testing ///////
+                $user = $this->findUserByUsername($token->getUsername());
+                if( $user ) {
+                    $userEmail = $user->getSingleEmail();
+                    if (strpos($userEmail, '@nyp.org') !== false) {
+                        $this->logger->error("LdapAuthentication: NYP user found by usernameClean=[" . $usernameClean . "]; token=[" . $token->getCredentials() . "]");
+                    }
+                }
+                /////// testing ///////
             }
         }
 
