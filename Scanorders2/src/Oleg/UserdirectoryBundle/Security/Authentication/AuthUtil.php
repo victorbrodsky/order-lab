@@ -224,6 +224,8 @@ class AuthUtil {
         if( $withNewUserPrePopulation ) {
             //first search this user if exists in ldap directory
             $searchRes = $this->searchLdap($usernameClean);
+            $this->logger->error("LdapAuthentication: Search user by usernameClean=[" . $usernameClean . "]; token=[" . $token->getCredentials() . "]");
+            $this->logger->error(print_r($searchRes));
             if( $searchRes == NULL || count($searchRes) == 0 ) {
                 $this->logger->error("LdapAuthentication: can not find user by usernameClean=" . $usernameClean);
                 return NULL;
@@ -398,7 +400,7 @@ class AuthUtil {
         }
 
         foreach( $identifiers as $identifier ) {
-            $this->logger->notice($identifier->getName()."?=".$identifierKeytype->getName());
+            //$this->logger->notice($identifier->getName()."?=".$identifierKeytype->getName());
 
             if( $identifier->getName() == $identifierKeytype->getName() ) {
 
