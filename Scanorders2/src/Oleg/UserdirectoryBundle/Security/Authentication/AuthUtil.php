@@ -833,6 +833,7 @@ class AuthUtil {
             if( $searchRes ) {
                 $this->logger->error("search Ldap: ldap_search OK with filter=" . $filter . "; bindDn=".$ldapBindDN);
                 $sr = $searchRes;
+                break;
             }
         }
 
