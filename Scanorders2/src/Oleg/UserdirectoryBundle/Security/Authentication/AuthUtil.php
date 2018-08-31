@@ -854,8 +854,9 @@ class AuthUtil {
 
         $info = ldap_get_entries($cnx, $sr);
 
-        //$this->logger->notice("search Ldap: ldap_search ok with ldapBindDN=".$ldapBindDN."; filter=" . $filter . "; count=".$info["count"]);
-        //print_r($info);
+        $this->logger->notice("search Ldap: ldap_search ok with ldapBindDN=".$ldapBindDN."; filter=" . $filter . "; count=".$info["count"]);
+        print_r($info);
+        exit('111');
 
         $searchRes = array();
 
