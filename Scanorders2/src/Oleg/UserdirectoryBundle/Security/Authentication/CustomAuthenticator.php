@@ -53,6 +53,14 @@ class CustomAuthenticator implements SimpleFormAuthenticatorInterface {
         //echo "CustomAuthenticator: username=".$token->getUsername()."<br>"; //", pwd=".$token->getCredentials()
         //exit();
 
+        if( $token->getCredentials() ) {
+            //ok
+        } else {
+            $logger = $this->container->get('logger');
+            $logger->error("authenticate Token: no credentials");
+            throw new AuthenticationException('Invalid username or password');
+        }
+
         $authUtil = new AuthUtil($this->container,$this->em);
 
         //////////////////////////////////////////////////////////////////////
