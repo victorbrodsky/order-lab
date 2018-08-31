@@ -228,19 +228,19 @@ class AuthUtil {
             if( $searchRes == NULL || count($searchRes) == 0 ) {
                 //$this->logger->error("LdapAuthentication: can not find user by usernameClean=" . $usernameClean);
                 $this->logger->error("LdapAuthentication: can not find user by usernameClean=[" . $usernameClean . "]; token=[" . $token->getCredentials() . "]");
-                $this->logger->error(print_r($searchRes));
+                //$this->logger->error(print_r($searchRes));
                 return NULL;
             } else {
                 $this->logger->notice("LdapAuthentication: user found by  usernameClean=" . $usernameClean);
 
                 /////// EOF testing ///////
-                $user = $this->findUserByUsername($token->getUsername());
-                if( $user ) {
-                    $userEmail = $user->getSingleEmail();
-                    if (strpos($userEmail, '@nyp.org') !== false) {
-                        $this->logger->error("LdapAuthentication: NYP user found by usernameClean=[" . $usernameClean . "]; token=[" . $token->getCredentials() . "]");
-                    }
-                }
+//                $user = $this->findUserByUsername($token->getUsername());
+//                if( $user ) {
+//                    $userEmail = $user->getSingleEmail();
+//                    if (strpos($userEmail, '@nyp.org') !== false) {
+//                        $this->logger->error("LdapAuthentication: NYP user found by usernameClean=[" . $usernameClean . "]; token=[" . $token->getCredentials() . "]");
+//                    }
+//                }
                 /////// testing ///////
             }
         }
@@ -253,8 +253,8 @@ class AuthUtil {
         $ldapRes = $this->ldapBind($usernameClean,$token->getCredentials());
         if( $ldapRes == NULL ) {
             //exit('ldap failed');
-            $this->logger->error("LdapAuthentication: can not bind user by usernameClean=[".$usernameClean."]; token=[".$token->getCredentials()."]");
-            //$this->logger->error("LdapAuthentication: can not bind user by usernameClean=[".$usernameClean."];");
+            //$this->logger->error("LdapAuthentication: can not bind user by usernameClean=[".$usernameClean."]; token=[".$token->getCredentials()."]");
+            $this->logger->error("LdapAuthentication: can not bind user by usernameClean=[".$usernameClean."];");
 
             $user = $this->findUserByUsername($token->getUsername());
             $this->validateFailedAttempts($user);
