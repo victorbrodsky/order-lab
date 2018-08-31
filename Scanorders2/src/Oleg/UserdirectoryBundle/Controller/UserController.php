@@ -1924,6 +1924,8 @@ class UserController extends Controller
                 ),
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
+            $userUrl = '<a href="'.$userUrl.'">'.$userUrl.'</a>';
+            
             $sitenameStr = $userServiceUtil->getSiteNameByAbbreviation($sitename);
             $event = "User account for " . $user . " has been created by " . $creator . " on the ".$sitenameStr." site.";
             $event = $event . "<br><br>" . "To review the details for this user account, please visit the link below:";

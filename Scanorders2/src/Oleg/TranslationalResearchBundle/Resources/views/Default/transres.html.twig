@@ -93,6 +93,26 @@
                         {% endif %}
                     {% endif %}
 
+                    {#PI#}
+                    {% for pi in project.getPrincipalInvestigators() %}
+                        {% if pi is defined and pi %}
+                            {{ formmacros.simplefield("PI:", pi, "input", "disabled") }}
+                        {% endif %}
+                    {% endfor %}
+
+                    {#Title#}
+                    {{ formmacros.simplefield("Title:", project.title, "input", "disabled") }}
+
+                    {#IRB#}
+                    {% set irbExpirationDate = null %}
+                    {% if project.irbExpirationDate %}
+                        {% set irbExpirationDate = project.irbExpirationDate|date('m/d/Y',false) %}
+                    {% endif %}
+                    {{ formmacros.simplefield("IRB Expiration Date:", irbExpirationDate, "input", "disabled") }}
+
+                    {#Funding#}
+                    {{ formmacros.simplefield("Funding:", project.isFunded(), "input", "disabled") }}
+
                     {% if project.updateDate or project.updateUser %}
                         {{ formmacros.simplefield("Update Date:", project.updateDate|date("m/d/Y",false), "input", "disabled") }}
                         {{ formmacros.simplefield("Updated By:", project.updateUser, "input", "disabled") }}

@@ -191,12 +191,16 @@ class TransResRequestType extends AbstractType
             }//if
         }
 
-
         //////////////// fields /////////////////////////
+        $fundedAccountNumberAttr = array('class' => 'form-control tarnsresrequest-fundedAccountNumber');
+        if( !$this->params['admin'] ) {
+            $fundedAccountNumberAttr['readonly'] = true;
+        }
         $builder->add('fundedAccountNumber',null, array(
             'label' => $this->params['fundedNumberLabel'],
             'required' => false,
-            'attr' => array('class' => 'form-control tarnsresrequest-fundedAccountNumber'),
+            //'attr' => array('class' => 'form-control tarnsresrequest-fundedAccountNumber'),
+            'attr' => $fundedAccountNumberAttr
         ));
 
 //        $builder->add('supportStartDate', DateType::class, array(
@@ -211,17 +215,15 @@ class TransResRequestType extends AbstractType
         if( $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN') ||
             ($this->params['cycle'] != 'new' && $this->params['cycle'] != 'edit')
         ) {
-//            if( $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN') ) {
-//                $disabledSupportEndDate = false;
-//            } else {
-//                $disabledSupportEndDate = true;
-//            }
+            $supportEndDateAttr = array('class' => 'datepicker form-control tarnsresrequest-supportEndDate');
+            if( !$this->params['admin'] ) {
+                $supportEndDateAttr['readonly'] = true;
+            }
             $builder->add('supportEndDate', DateType::class, array(
                 'widget' => 'single_text',
-                'label' => "Support End Date:",
+                'label' => "Support End Date/IRB Expiration Date:",
                 'format' => 'MM/dd/yyyy',
-                //'disabled' => $disabledSupportEndDate,
-                'attr' => array('class' => 'datepicker form-control'),
+                'attr' => $supportEndDateAttr,  //array('class' => 'datepicker form-control'),
                 'required' => false,
             ));
         }

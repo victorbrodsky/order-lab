@@ -1982,6 +1982,8 @@ class RequestController extends Controller
             if( $routeName == "translationalresearch_new_standalone_request" ) {
                 $availableProjects = $transresUtil->getAvailableProjects(true,true,true,false);
                 $params['availableProjects'] = $availableProjects;
+            } else {
+                $params['availableProjects'] = array($project);
             }
         }
 

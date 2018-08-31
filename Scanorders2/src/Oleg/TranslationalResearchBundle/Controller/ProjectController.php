@@ -2092,15 +2092,21 @@ class ProjectController extends Controller
         }
 
         //$irbExpirationDate = null;
-        //if( $project->getIrbExpirationDate() ) {
-        //   $irbExpirationDate = $project->getIrbExpirationDate();
-        //}
-        
+        if( $project->getIrbExpirationDate() ) {
+           $irbExpirationDate = $project->getIrbExpirationDate()->format("m/d/Y");
+        }
+
+        $fundedStr = "Not-Funded";
+        if( $project->getFunded() ) {
+            $fundedStr = "Funded";
+        }
+
         $output = array(
             "fundedAccountNumber" => $project->getFundedAccountNumber(),
-            "irbExpirationDate" => $project->getIrbExpirationDate()->format("m/d/Y"),
+            "irbExpirationDate" => $irbExpirationDate,
             "principalInvestigators" => $projectPisArr,
             "contact" => $billingContactId, //BillingContact,
+            "fundedStr" => $fundedStr
             //"irbExpirationDate" => $irbExpirationDate
         ); 
 

@@ -89,7 +89,13 @@
         ></div>
 
         {% if form.project is defined %}
+            {% if routeName != "translationalresearch_new_standalone_request" %}
+                <div style="display: none;">
+            {% endif %}
             {{ formmacros.field(form.project) }}
+            {% if routeName != "translationalresearch_new_standalone_request" %}
+                </div>
+            {% endif %}
         {% endif %}
 
         {#{{ transres.getProjectReviewPrototypeFormData(null,cycle,sitename) }}#}
@@ -412,7 +418,9 @@
                     $("#oleg_translationalresearchbundle_request_contact").select2('val',response.contact);
 
                     //set supportEndDate (project's irbExpirationDate)
-                    //$("#oleg_translationalresearchbundle_request_supportEndDate").val(response.irbExpirationDate);
+                    $("#oleg_translationalresearchbundle_request_supportEndDate").val(response.irbExpirationDate);
+
+                    $('#transer-funded').val(response.fundedStr);
 
                 }).done(function() {
                     //
@@ -423,6 +431,10 @@
 
             } else {
                 $("#oleg_translationalresearchbundle_request_fundedAccountNumber").val(null);
+                $("#oleg_translationalresearchbundle_request_supportEndDate").val(null);
+                $("#oleg_translationalresearchbundle_request_principalInvestigators").select2('val',null);
+                $("#oleg_translationalresearchbundle_request_contact").select2('val',null);
+                $('#transer-funded').val(null);
             }
         }
 

@@ -1655,8 +1655,13 @@ class Project {
         $this->tissueNumberOfBlocksPerCase = $tissueNumberOfBlocksPerCase;
     }
 
+    public function isFunded() {
+        if( $this->getFunded() ) {
+            return "Funded";
+        }
+        return "Not-Funded";
+    }
 
-    
 
     //show the name of the form (from the form hierarchy) that was used to generate this submitted message.
     // Make sure to save this form ID of the form linked from the Message Type at the time of message submission
