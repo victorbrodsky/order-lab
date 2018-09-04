@@ -104,7 +104,7 @@ class CalllogPatientType extends AbstractType
 //            },
 //        ));
 
-        if(0) {
+        if(1) {
             $builder->add('encounter', CollectionType::class, array(
                 'entry_type' => CalllogEncounterType::class,
                 'entry_options' => array(
