@@ -98,22 +98,25 @@ class CalllogMessageType extends AbstractType
         $patient = $this->entity->getPatient()->first();
         //echo "calllog patient id=".$patient->getId()."<br>";
 
-        //echo "message type: show patient <br>";
-        $builder->add('patient', CollectionType::class, array(
-            'entry_type' => CalllogPatientType::class,
-            'entry_options' => array(
-                'form_custom_value' => $this->params,
-                'form_custom_value_entity' => $patient
-            ),
-            'label' => false,
-            'required' => false,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__patient__',
-        ));
+        if(0) {
+            //echo "message type: show patient <br>";
+            $builder->add('patient', CollectionType::class, array(
+                'entry_type' => CalllogPatientType::class,
+                'entry_options' => array(
+                    'form_custom_value' => $this->params,
+                    'form_custom_value_entity' => $patient
+                ),
+                'label' => false,
+                'required' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__patient__',
+            ));
+        }
 
+        if(1) {
         //if (count($this->entity->getPatient()) == 0) {
             $builder->add('encounter', CollectionType::class, array(
                 'entry_type' => CalllogEncounterType::class,
@@ -129,7 +132,7 @@ class CalllogMessageType extends AbstractType
                 'prototype' => true,
                 'prototype_name' => '__encounter__',
             ));
-        //}
+        }
 
         /////////////////////////////////////// messageCategory ///////////////////////////////////////
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {

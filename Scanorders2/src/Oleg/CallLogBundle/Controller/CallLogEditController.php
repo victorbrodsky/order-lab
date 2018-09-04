@@ -186,7 +186,7 @@ class CallLogEditController extends CallEntryController
         }
 
         //ini_set('memory_limit', '5120M');
-        ini_set('memory_limit', '-1');
+        //ini_set('memory_limit', '-1');
 
         //$userSecUtil = $this->get('user_security_utility');
         $calllogUtil = $this->get('calllog_util');
