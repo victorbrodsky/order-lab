@@ -104,20 +104,22 @@ class CalllogPatientType extends AbstractType
 //            },
 //        ));
 
-        $builder->add('encounter', CollectionType::class, array(
-            'entry_type' => CalllogEncounterType::class,
-            'entry_options' => array(
-                'form_custom_value' => $this->params,
-                'form_custom_value_entity' => $this->entity
-            ),
-            'required' => false,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'label' => false,
-            'by_reference' => false,
-            'prototype' => true,
-            'prototype_name' => '__encounter__',
-        ));
+        if(0) {
+            $builder->add('encounter', CollectionType::class, array(
+                'entry_type' => CalllogEncounterType::class,
+                'entry_options' => array(
+                    'form_custom_value' => $this->params,
+                    'form_custom_value_entity' => $this->entity
+                ),
+                'required' => false,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'label' => false,
+                'by_reference' => false,
+                'prototype' => true,
+                'prototype_name' => '__encounter__',
+            ));
+        }
 
 
 //        $builder->add('lastname', CollectionType::class, array(
