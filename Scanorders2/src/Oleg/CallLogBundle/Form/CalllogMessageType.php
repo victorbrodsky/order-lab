@@ -98,7 +98,7 @@ class CalllogMessageType extends AbstractType
         $patient = $this->entity->getPatient()->first();
         //echo "calllog patient id=".$patient->getId()."<br>";
 
-        if(0) {
+        if(1) {
             //echo "message type: show patient <br>";
             $builder->add('patient', CollectionType::class, array(
                 'entry_type' => CalllogPatientType::class,
