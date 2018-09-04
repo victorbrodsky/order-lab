@@ -1119,7 +1119,7 @@ class TransResRequestUtil
 
                 $label = $this->getRequestStateLabelByName($to,$statMachineType);
 
-                $msgInfo = "The status of the work request ".$transresRequest->getOid().": has been changed from '".$originalStateLabel."' to '".$label."'";
+                $msgInfo = "The status of the work request ".$transresRequest->getOid()." has been changed from '".$originalStateLabel."' to '".$label."'";
 
                 //Exception: Changing the status of request to "Approved/Ready for Invoicing" should send an email notification
                 // to the users with the role of "Translational Research Billing Administrator"
@@ -1156,10 +1156,10 @@ class TransResRequestUtil
                     $addMsg = $addMsg . "<br>" . $emailMsg;
                 } else {
                     //All other status change cases
-                    //The status of the work request APCP28-REQ27: has been changed from 'Active' to 'Completed'
+                    //The status of the work request APCP28-REQ27 has been changed from 'Active' to 'Completed'
                     //$subject = "Project ID ".$transresRequest->getProject()->getOid().": Request ID ".$transresRequest->getId()." has been sent to the status '$label' from '".$originalStateLabel."'";
-                    //The status of the work request APCP28-REQ27: has been changed from 'Active' to 'Completed'
-                    $subject = "The status of the work request ".$transresRequest->getOid().": has been changed from '".$originalStateLabel."' to '".$label."'";
+                    //The status of the work request APCP28-REQ27 has been changed from 'Active' to 'Completed'
+                    $subject = "The status of the work request ".$transresRequest->getOid()." has been changed from '".$originalStateLabel."' to '".$label."'";
 
                     //Body: The status of the work request APCP28-REQ27 has been changed from 'Active' to 'Completed'
                     //get request url
@@ -1745,6 +1745,7 @@ class TransResRequestUtil
         //$project = $transresRequest->getProject();
         //$projectTitle = $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"Title");
 
+        $requestOid = $transresRequest->getOid();
         $emails = array();
 
         $project = $transresRequest->getProject();
@@ -1767,19 +1768,46 @@ class TransResRequestUtil
         }
 
         //Subject: Draft Translation Research Invoice for Request [Request ID] of Project [Project Title]
-        $subject = "Request ".$transresRequest->getOid()." has been sent to ".$label;
+        //$subject = "Request ".$transresRequest->getOid()." has been sent to ".$label;
+        //Subject: Work request APCP28-REQ27 has been completed and is ready for submitter notification
+        $subject = "Work request $requestOid has been completed and is ready for submitter notification";
 
-        $body = $subject . ".". $newline."Please confirm the '$label' status by clicking the following link ".
-            "and changing the status to 'Completed and Notified'".$newline;
+        //The status of the work request APCP28-REQ27 has been set to 'Completed'.
+        //$body = $subject . ".". $newline."Please confirm the '$label' status by clicking the following link ".
+        //    "and changing the status to 'Completed and Notified'".$newline;
+        $body = "The status of the work request $requestOid has been set to 'Completed'.";
+
+        //Please review the content of the request and verify that the work has indeed been completed:
+        $requestUrl = $this->getRequestShowUrl($transresRequest);
+        $body = $body. $newline.$newline. "Please review the content of the request and verify that the work has indeed been completed:";
+        $body = $body . $newline . $requestUrl;
+
+        //Once you are ready to notify the requestors of the completion status, please visit the following link and change the status to 'Completed and Notified' in order to send out the email notification:
+        $body = $body . $newline . "Once you are ready to notify the requestors of the completion status, 
+        please visit the following link and change the status 
+        to 'Completed and Notified' in order to send out the email notification:";
 
         //2 get allowed transactions as array with labels, data
-        $linksArray = $this->getReviewEnabledLinkActions($transresRequest,$statMachineType,false);
-
-        foreach($linksArray as $link) {
-            if( $link['label'] == "Completed and Notified" ) {
-                $body = $body . $link['url'] . $newline;
-            }
-        }
+        //$linksArray = $this->getReviewEnabledLinkActions($transresRequest,$statMachineType,false);
+        //foreach($linksArray as $link) {
+        //    if( $link['label'] == "Completed and Notified" ) {
+        //        $body = $body . $link['url'] . $newline; //TODO: test it
+        //    }
+        //}
+        //completed_completedNotified
+        $completedNotifiedUrl = $this->container->get('router')->generate(
+            'translationalresearch_request_transition_action_by_review',
+            array(
+                'transitionName'=>'completed_completedNotified',
+                'id'=>$transresRequest->getId(),
+                'statMachineType'=>$statMachineType
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        $completedNotifiedUrl = '<a href="'.$completedNotifiedUrl.'">'.$completedNotifiedUrl.'</a>';
+        $body = $body . $newline . $completedNotifiedUrl . $newline;
+        //echo "body=$body";
+        //exit('eof');
 
         //3) Send email        $emails, $subject, $message, $ccs=null, $fromEmail=null
         $senderEmail = $transresUtil->getTransresSiteProjectParameter('fromEmail',$project);
