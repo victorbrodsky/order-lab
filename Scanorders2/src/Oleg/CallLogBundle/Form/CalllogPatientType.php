@@ -104,7 +104,8 @@ class CalllogPatientType extends AbstractType
 //            },
 //        ));
 
-        if(1) {
+        //show it only when patient should be searched/selected (all cycles, except amend or edit)
+        if( $this->params['cycle'] != 'edit' && $this->params['cycle'] != 'amend' ) {
             $builder->add('encounter', CollectionType::class, array(
                 'entry_type' => CalllogEncounterType::class,
                 'entry_options' => array(
