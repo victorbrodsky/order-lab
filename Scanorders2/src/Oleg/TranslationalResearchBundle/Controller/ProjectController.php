@@ -55,7 +55,7 @@ class ProjectController extends Controller
 
         $transresUtil = $this->container->get('transres_util');
         if( $transresUtil->isAdminOrPrimaryReviewer() === false ) {
-            exit('not admin');
+            //exit('not admin');
             if( $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_REQUESTER') ) {
                 return $this->redirectToRoute('translationalresearch_my_project_index');
             }
