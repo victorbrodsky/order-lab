@@ -107,7 +107,7 @@ class InvoiceItem {
     private $unitPrice;
 
     /**
-     * @ORM\Column(type="decimal", precision=15, scale=2)
+     * @ORM\Column(type="decimal", precision=15, scale=2, nullable=true)
      */
     private $total;
     //////////// EOF Invoice fields ///////////////////
