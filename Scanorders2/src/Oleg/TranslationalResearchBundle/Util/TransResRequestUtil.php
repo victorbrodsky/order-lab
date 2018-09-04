@@ -1791,7 +1791,7 @@ class TransResRequestUtil
         //$linksArray = $this->getReviewEnabledLinkActions($transresRequest,$statMachineType,false);
         //foreach($linksArray as $link) {
         //    if( $link['label'] == "Completed and Notified" ) {
-        //        $body = $body . $link['url'] . $newline; //TODO: test it
+        //        $body = $body . $link['url'] . $newline;
         //    }
         //}
         //completed_completedNotified
@@ -1867,10 +1867,13 @@ class TransResRequestUtil
             $emailSubject = "Request ".$transresRequest->getOid()." status has been changed to 'Completed and Notified'";
         }
 
+        //send ccs to admin
+        $admins = $this->getRequestAdminEmails($transresRequest);
+
         //send by email
         $senderEmail = $transresUtil->getTransresSiteProjectParameter('fromEmail',$project);
         //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
-        $emailUtil->sendEmail( $emails, $emailSubject, $emailBody, null, $senderEmail );
+        $emailUtil->sendEmail( $emails, $emailSubject, $emailBody, $admins, $senderEmail );
 
         //4) set event log
         if( !$testing ) {
