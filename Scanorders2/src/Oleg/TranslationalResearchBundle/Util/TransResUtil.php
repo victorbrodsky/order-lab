@@ -2012,52 +2012,52 @@ class TransResUtil
     }
 
     //NOT USED
-    public function processProjectOnReviewUpdate( $review, $stateStr, $request, $testing=false ) {
-
-        $project = $review->getProject();
-        if( !$project ) {
-            throw new \Exception("Review with ID ".$review->getId()." does not have a project");
-            //return null;
-        }
-
-        $user = $this->secTokenStorage->getToken()->getUser();
-        $userSecUtil = $this->container->get('user_security_utility');
-        $transresUtil = $this->container->get('transres_util');
-        //$break = "\r\n";
-        $break = "<br>";
-        //echo "user=".$user."<br>";
-
-        //$currentState = $project->getState();
-
-        //set project next transit state depends on the decision
-        $appliedTransition = $this->setProjectState($project,$review,$testing);
-        //exit("exit appliedTransition=".$appliedTransition);
-
-        if( $appliedTransition ) {
-            //$recommended = false;
-            $eventType = "Review Submitted";
-            $label = $this->getTransitionLabelByName($appliedTransition,$review);//not used
-            $subject = "Project request ".$project->getOid()." has been sent to the status '$label'";
-            $body = "Project request ".$project->getOid()." has been sent to the status '$label'";
-        } else {
-            //$recommended = true;
-            $eventType = "Review Submitted";
-            $label = $this->getStateLabelByName($project->getState());
-            $subject = "Project request ".$project->getOid(). " (" .$label. "). Recommendation: ".$review->getDecision();
-            $body = $subject;
-        }
-
-        //get project url
-        $projectUrl = $transresUtil->getProjectShowUrl($project);
-        $emailBody = $body . $break.$break. "To view this project request, please visit the link below:".$break.$projectUrl;
-
-        //send notification emails (not used)
-        $this->sendNotificationEmails($project,$review,$subject,$emailBody,$testing);
-
-        //event log
-        //$this->setEventLog($project,$review,$appliedTransition,$stateStr,$eventType,$body,$testing);
-        $this->setEventLog($project,$eventType,$body,$testing);
-    }
+//    public function processProjectOnReviewUpdate( $review, $stateStr, $request, $testing=false ) {
+//
+//        $project = $review->getProject();
+//        if( !$project ) {
+//            throw new \Exception("Review with ID ".$review->getId()." does not have a project");
+//            //return null;
+//        }
+//
+//        $user = $this->secTokenStorage->getToken()->getUser();
+//        $userSecUtil = $this->container->get('user_security_utility');
+//        $transresUtil = $this->container->get('transres_util');
+//        //$break = "\r\n";
+//        $break = "<br>";
+//        //echo "user=".$user."<br>";
+//
+//        //$currentState = $project->getState();
+//
+//        //set project next transit state depends on the decision
+//        $appliedTransition = $this->setProjectState($project,$review,$testing);
+//        //exit("exit appliedTransition=".$appliedTransition);
+//
+//        if( $appliedTransition ) {
+//            //$recommended = false;
+//            $eventType = "Review Submitted";
+//            $label = $this->getTransitionLabelByName($appliedTransition,$review);//not used
+//            $subject = "Project request ".$project->getOid()." has been sent to the status '$label'";
+//            $body = "Project request ".$project->getOid()." has been sent to the status '$label'";
+//        } else {
+//            //$recommended = true;
+//            $eventType = "Review Submitted";
+//            $label = $this->getStateLabelByName($project->getState());
+//            $subject = "Project request ".$project->getOid(). " (" .$label. "). Recommendation: ".$review->getDecision();
+//            $body = $subject;
+//        }
+//
+//        //get project url
+//        $projectUrl = $transresUtil->getProjectShowUrl($project);
+//        $emailBody = $body . $break.$break. "To view this project request, please visit the link below:".$break.$projectUrl;
+//
+//        //send notification emails (not used)
+//        $this->sendNotificationEmails($project,$review,$subject,$emailBody,$testing);
+//
+//        //event log
+//        //$this->setEventLog($project,$review,$appliedTransition,$stateStr,$eventType,$body,$testing);
+//        $this->setEventLog($project,$eventType,$body,$testing);
+//    }
     //used by processProjectOnReviewUpdate
     public function setProjectState( $project, $review, $testing=false ) {
 

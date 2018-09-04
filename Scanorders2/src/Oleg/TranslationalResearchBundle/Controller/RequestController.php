@@ -249,10 +249,8 @@ class RequestController extends Controller
 
                 $subject = "New work request has been submitted " . $transresRequest->getOid();
                 $emailRes = $transresRequestUtil->sendRequestNotificationEmails($transresRequest, $subject, $msg, $testing);
-                $msg = $break.$break . $emailRes;
 
-                $msg = str_replace($break,"<br>",$msg);
-                $transresUtil->setEventLog($transresRequest, $eventType, $msg);
+                $transresUtil->setEventLog($transresRequest, $eventType, $emailRes);
             }
             //////////// EOF Event Log and Email for Create //////////////////
 
@@ -530,7 +528,7 @@ class RequestController extends Controller
                 $subject = "Work Request " . $transresRequest->getOid() . " has been updated ans set to Active.";
                 $emailRes = $transresRequestUtil->sendRequestNotificationEmails($transresRequest, $subject, $msg, $testing);
 
-                $msg = $msg."<br><br>".$emailRes;
+                $msg = $emailRes;
             }
 
             $eventType = "Request Updated";

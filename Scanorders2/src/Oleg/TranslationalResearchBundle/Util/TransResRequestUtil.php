@@ -1118,14 +1118,8 @@ class TransResRequestUtil
                 }
 
                 $label = $this->getRequestStateLabelByName($to,$statMachineType);
-                $subject = "Project ID ".$transresRequest->getProject()->getOid().": Request ID ".$transresRequest->getId()." has been sent to the status '$label' from '".$originalStateLabel."'";
-                $body = $subject;
-                //get request url
-                $requestUrl = $this->getRequestShowUrl($transresRequest);
-                $emailBody = $body . $break.$break. "To view this work Request, please visit the link below:".$break.$requestUrl;
 
-                //send confirmation email
-                $this->sendRequestNotificationEmails($transresRequest,$subject,$emailBody,$testing);
+                $msgInfo = "The status of the work request ".$transresRequest->getOid().": has been changed from '".$originalStateLabel."' to '".$label."'";
 
                 //Exception: Changing the status of request to "Approved/Ready for Invoicing" should send an email notification
                 // to the users with the role of "Translational Research Billing Administrator"
@@ -1139,7 +1133,7 @@ class TransResRequestUtil
                         //generate Invoice PDF
                         $res = $transresPdfUtil->generateInvoicePdf($invoice,$user);
                         $filename = $res['filename'];
-                        $pdf = $res['pdf'];
+                        //$pdf = $res['pdf'];
                         $size = $res['size'];
                         $msgPdf = "PDF has been created with filename=".$filename."; size=".$size;
 
@@ -1149,23 +1143,38 @@ class TransResRequestUtil
                         $emailMsg = $this->sendRequestBillingNotificationEmails($transresRequest,$invoice,$testing);
 
                         $addMsg = $addMsg . "<br>" . $emailMsg;
+                        $msgInfo = $addMsg;
                     }
                 }
-
-                if( $to == "completed" ) {
+                elseif ( $to == "completed" ) {
                     $emailMsg = $this->sendRequestCompletedEmails($transresRequest,$statMachineType,$label,$testing);
                     $addMsg = $addMsg . "<br>" . $emailMsg;
+                    $msgInfo = $addMsg;
                 }
-
-                if( $to == "completedNotified" ) {
+                elseif ( $to == "completedNotified" ) {
                     $emailMsg = $this->sendRequestCompletedNotifiedEmails($transresRequest,$statMachineType,$label,$testing);
                     $addMsg = $addMsg . "<br>" . $emailMsg;
+                } else {
+                    //All other status change cases
+                    //The status of the work request APCP28-REQ27: has been changed from 'Active' to 'Completed'
+                    //$subject = "Project ID ".$transresRequest->getProject()->getOid().": Request ID ".$transresRequest->getId()." has been sent to the status '$label' from '".$originalStateLabel."'";
+                    //The status of the work request APCP28-REQ27: has been changed from 'Active' to 'Completed'
+                    $subject = "The status of the work request ".$transresRequest->getOid().": has been changed from '".$originalStateLabel."' to '".$label."'";
+
+                    //Body: The status of the work request APCP28-REQ27 has been changed from 'Active' to 'Completed'
+                    //get request url
+                    $requestUrl = $this->getRequestShowUrl($transresRequest);
+                    $emailBody = $subject . $break.$break. "To view this work request, please visit the link below:".$break.$requestUrl;
+                    //$msgInfo = $emailBody;
+
+                    //send confirmation email
+                    $msgInfo = $this->sendRequestNotificationEmails($transresRequest,$subject,$emailBody,$testing);
                 }
 
                 //event log
                 //$this->setEventLog($project,$review,$transitionName,$originalStateStr,$body,$testing);
                 $eventType = "Request State Changed";
-                $transresUtil->setEventLog($transresRequest,$eventType,$body,$testing);
+                $transresUtil->setEventLog($transresRequest,$eventType,$msgInfo,$testing);
 
                 $this->container->get('session')->getFlashBag()->add(
                     'notice',
@@ -1592,7 +1601,7 @@ class TransResRequestUtil
 
     //Changing the status of request to "Approved/Ready for Invoicing" (approvedInvoicing) should send an email notification
     public function sendRequestBillingNotificationEmails($transresRequest,$invoice,$testing=false) {
-        $transResFormNodeUtil = $this->container->get('transres_formnode_util');
+        //$transResFormNodeUtil = $this->container->get('transres_formnode_util');
         //$transresRequestUtil = $this->container->get('transres_request_util');
         $transresUtil = $this->container->get('transres_util');
         $emailUtil = $this->container->get('user_mailer_utility');
@@ -1619,7 +1628,7 @@ class TransResRequestUtil
         
         $emails = array();
 
-        //0) get ROLE_TRANSRES_BILLING_ADMIN
+        //0) get ROLE_TRANSRES_ADMIN
         $adminUsers = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole("ROLE_TRANSRES_ADMIN".$specialtyPostfix);
         foreach( $adminUsers as $user ) {
             if( $user ) {
