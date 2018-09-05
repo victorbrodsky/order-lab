@@ -446,7 +446,7 @@ class PdfGenerator
             UrlGeneratorInterface::ABSOLUTE_URL
         ); //this does not work from console: 'order' is missing
 
-        $pageUrl = "http://localhost/order/translational-research/work-request/download-packing-slip-pdf/14078";
+        //$pageUrl = "http://localhost/order/translational-research/work-request/download-packing-slip-pdf/14078";
 
         //$ bin/phantomjs.exe examples/rasterize.js 'http://localhost/order/translational-research/work-request/download-packing-slip-pdf/3' result.pdf
         //$cmd = '"' . $libreOfficeConvertToPDFPathFellApp . DIRECTORY_SEPARATOR . $libreOfficeConvertToPDFFilenameFellApp .
