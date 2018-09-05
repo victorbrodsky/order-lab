@@ -489,12 +489,12 @@ class PdfGenerator
         //$shellout = shell_exec( $cmd );
         $shellout = exec( $cmd );
 
-        if( $shellout ) {
-            //echo "shellout=".$shellout."<br>";
-            //$logger->notice("Phantomjs converted output file=" . $applicationOutputFilePath);
-        } else {
-            $logger->error("Phantomjs failed to convert output file=" . $applicationOutputFilePath);
-        }
+//        if( $shellout ) {
+//            //echo "shellout=".$shellout."<br>";
+//            //$logger->notice("Phantomjs converted output file=" . $applicationOutputFilePath);
+//        } else {
+//            $logger->error("Phantomjs failed to convert output file=" . $applicationOutputFilePath);
+//        }
 
         //echo "generated ok! <br>";
     }
