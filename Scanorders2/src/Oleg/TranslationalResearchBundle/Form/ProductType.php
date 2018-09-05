@@ -73,6 +73,12 @@ class ProductType extends AbstractType
             'attr' => array('class' => 'textarea form-control')
         ));
 
+        $builder->add('note', null, array(
+            'label' => "Note (TRP tech):",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+
     }
     
     /**

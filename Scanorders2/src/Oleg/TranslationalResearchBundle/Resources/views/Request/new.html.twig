@@ -125,7 +125,11 @@
 
         {{ transresRequestMacros.transresRequestDetails(form,transresRequest,cycle,sitename) }}
 
-        {{ transresRequestMacros.transresRequestComment(form,transresRequest,cycle,'showFosComment') }}
+        {% set showFosComment = 'showFosComment' %}
+        {% if cycle == "new" %}
+            {% set showFosComment = null %}
+        {% endif %}
+        {{ transresRequestMacros.transresRequestComment(form,transresRequest,cycle,showFosComment) }}
 
         {% if cycle != "new" and is_granted('ROLE_TRANSRES_ADMIN') %}
             {{ transresRequestMacros.transresRequestInfo(form,transresRequest,cycle) }}

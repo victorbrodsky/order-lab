@@ -94,17 +94,17 @@
     <p>
     <div class="row">
         <div class="col-xs-6" align="right">
-            <strong>{{ label }}</strong>
+            <label>{{ label }}</label>
         </div>
         <div class="col-xs-6" align="left">
             {% if type is defined and type == "input" %}
                 {% if tooltip is defined and tooltip %}
-                    <input id="{{ id }}" class="form-control form-control-modif not-mapped-simplefield element-with-tooltip-always"
+                    <input id="{{ id }}" class="form-control not-mapped-simplefield element-with-tooltip-always"
                            type="text" value="{{ value|raw }}" {{ disabled }}
                            data-toggle="tooltip" title="{{ tooltip }}"
                     >
                 {% else %}
-                    <input id="{{ id }}" class="form-control form-control-modif not-mapped-simplefield" type="text" value="{{ value|raw }}" {{ disabled }}>
+                    <input id="{{ id }}" class="form-control not-mapped-simplefield" type="text" value="{{ value|raw }}" {{ disabled }}>
                 {% endif %}
             {% elseif type == "simple-field" %}
                 {{ value|raw }}
@@ -113,14 +113,14 @@
                     {#{{ value|raw }}#}
                 {#</div>#}
                 {% if tooltip is defined and tooltip %}
-                    <div id="{{ id }}" class="form-control form-control-modif not-mapped-simplefield element-with-tooltip-always"
+                    <div id="{{ id }}" class="form-control not-mapped-simplefield element-with-tooltip-always"
                          style="min-height:34px; height:auto;" {{ disabled }}
                          data-toggle="tooltip" title="{{ tooltip }}"
                     >
                         {{ value|raw }}
                     </div>
                 {% else %}
-                    <div id="{{ id }}" class="form-control form-control-modif not-mapped-simplefield" style="min-height:34px; height:auto;" {{ disabled }}>
+                    <div id="{{ id }}" class="form-control not-mapped-simplefield" style="min-height:34px; height:auto;" {{ disabled }}>
                         {{ value|raw }}
                     </div>
                 {% endif %}

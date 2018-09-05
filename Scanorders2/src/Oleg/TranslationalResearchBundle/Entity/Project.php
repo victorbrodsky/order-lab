@@ -645,8 +645,9 @@ class Project {
         return $this->updateDate;
     }
 
+    //@ORM\PreUpdate
     /**
-     * @ORM\PreUpdate
+     * @param \DateTime
      */
     public function setUpdateDate()
     {

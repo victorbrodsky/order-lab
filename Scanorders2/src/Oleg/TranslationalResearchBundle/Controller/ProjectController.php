@@ -1135,11 +1135,10 @@ class ProjectController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $services = $project->getTissueProcessingServices();
-            echo "services=".count($services)."<br>";
             //exit("Project update submitted");
 
             $project->setUpdateUser($user);
+            $project->setUpdateDate();
 
             $startProjectReview = false;
 

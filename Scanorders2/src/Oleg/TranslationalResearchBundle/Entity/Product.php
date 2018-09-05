@@ -70,6 +70,13 @@ class Product {
      */
     private $comment;
 
+    /**
+     * Note (TRP tech)
+     *
+     * @var string
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $note;
 
 
     public function __construct($user=null) {
@@ -207,5 +214,23 @@ class Product {
     {
         $this->comment = $comment;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getNote()
+    {
+        return $this->note;
+    }
+
+    /**
+     * @param mixed $note
+     */
+    public function setNote($note)
+    {
+        $this->note = $note;
+    }
+
+    
 
 }

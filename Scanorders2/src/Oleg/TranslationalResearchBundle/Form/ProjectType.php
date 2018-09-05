@@ -684,7 +684,7 @@ class ProjectType extends AbstractType
         }
         if( $this->params['updateProject'] === true ) {
             $builder->add('updateProject', SubmitType::class, array(
-                'label' => 'Update Project',
+                'label' => 'Save Changes',  //'Update Project',
                 //'attr' => array('class'=>'btn btn-warning', 'onclick'=>'transresValidateProjectForm();')
                 'attr' => array('class'=>'btn btn-warning')
             ));

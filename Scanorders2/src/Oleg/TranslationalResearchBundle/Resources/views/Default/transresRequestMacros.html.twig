@@ -104,7 +104,7 @@
                     {% endif %}
                     {% if form.fundedAccountNumber is defined %}
                         {#simplefield( label, value, type, disabled, tooltip, id )#}
-                        {{ formmacros.simplefield("Funding:", '', "input", "disabled", '', "transer-funded" ) }}
+                        {{ formmacros.simplefield("Funding:",null,"input","disabled",null,"transer-funded") }}
                         {{ formmacros.field(form.fundedAccountNumber) }}
                     {% endif %}
                     {% if form.supportStartDate is defined %}
@@ -420,6 +420,8 @@
         {% endif %}
 
         {{ formmacros.field(formproduct.comment) }}
+
+        {{ formmacros.field(formproduct.note) }}
 
     </div>
 
