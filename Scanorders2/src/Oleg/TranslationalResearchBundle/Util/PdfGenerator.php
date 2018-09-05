@@ -431,12 +431,12 @@ class PdfGenerator
 
         //generate application URL
         $router = $this->container->get('router');
-//        $context = $router->getContext();
-//
-//        //http://192.168.37.128/order/app_dev.php/translational-research/download-invoice-pdf/49
-//        $context->setHost('localhost');
-//        $context->setScheme('http');
-//        $context->setBaseUrl('/order');
+        $context = $router->getContext();
+
+        //http://192.168.37.128/order/app_dev.php/translational-research/download-invoice-pdf/49
+        $context->setHost('localhost');
+        $context->setScheme('http');
+        $context->setBaseUrl('/order');
 
         //invoice download
         $pageUrl = $router->generate('translationalresearch_packing_slip_download',
