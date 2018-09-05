@@ -486,7 +486,7 @@ class PdfGenerator
         $applicationOutputFilePath = '"'.$applicationOutputFilePath.'"';
 
         $cmd = $phantomjs . ' --disk-cache=true ' . $rasterize . ' ' . $pageUrl . ' ' . $applicationOutputFilePath . ' "A4"';
-        $logger->notice("cmd=".$cmd);
+        //$logger->notice("cmd=".$cmd);
 
         //$shellout = shell_exec( $cmd );
         $shellout = exec( $cmd );
