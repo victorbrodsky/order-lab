@@ -154,6 +154,8 @@ class PdfGenerator
     public function generatePdf($invoice,$applicationOutputFilePath) {
         $logger = $this->container->get('logger');
         $logger->notice("Trying to generate PDF in ".$applicationOutputFilePath);
+        $userSecUtil = $this->container->get('user_security_utility');
+
         if( file_exists($applicationOutputFilePath) ) {
             //return;
             $logger->notice("generatePdf: unlink file already exists path=" . $applicationOutputFilePath );
@@ -168,13 +170,18 @@ class PdfGenerator
         //$default_system_email = $this->container->getParameter('default_system_email');
         //echo "default_system_email=$default_system_email<br>";
 
+        $connectionChannel = $userSecUtil->getSiteSettingParameter('connectionChannel');
+        if( !$connectionChannel ) {
+            $connectionChannel = 'http';
+        }
+
         //generate application URL
         $router = $this->container->get('router');
         $context = $router->getContext();
 
         //http://192.168.37.128/order/app_dev.php/translational-research/download-invoice-pdf/49
         $context->setHost('localhost');
-        $context->setScheme('http');
+        $context->setScheme($connectionChannel);
         $context->setBaseUrl('/order');
 
         //exit("oid=".$invoice->getOid());
@@ -358,6 +365,8 @@ class PdfGenerator
     public function generatePdfPackingSlip($transresRequest,$fileFullReportUniqueName,$applicationOutputFilePath) {
         $logger = $this->container->get('logger');
         $logger->notice("Trying to generate PDF in ".$applicationOutputFilePath);
+        $userSecUtil = $this->container->get('user_security_utility');
+        
         if( file_exists($applicationOutputFilePath) ) {
             //return;
             $logger->notice("generatePdf: unlink file already exists path=" . $applicationOutputFilePath );
@@ -372,13 +381,18 @@ class PdfGenerator
         //$default_system_email = $this->container->getParameter('default_system_email');
         //echo "default_system_email=$default_system_email<br>";
 
+        $connectionChannel = $userSecUtil->getSiteSettingParameter('connectionChannel');
+        if( !$connectionChannel ) {
+            $connectionChannel = 'http';
+        }
+
         //generate application URL
         $router = $this->container->get('router');
         $context = $router->getContext();
 
         //http://192.168.37.128/order/app_dev.php/translational-research/download-invoice-pdf/49
         $context->setHost('localhost');
-        $context->setScheme('http');
+        $context->setScheme($connectionChannel);
         $context->setBaseUrl('/order');
 
         //invoice download
@@ -429,13 +443,18 @@ class PdfGenerator
         //$default_system_email = $this->container->getParameter('default_system_email');
         //echo "default_system_email=$default_system_email<br>";
 
+        $connectionChannel = $userSecUtil->getSiteSettingParameter('connectionChannel');
+        if( !$connectionChannel ) {
+            $connectionChannel = 'http';
+        }
+
         //generate application URL
         $router = $this->container->get('router');
         $context = $router->getContext();
 
         //http://192.168.37.128/order/app_dev.php/translational-research/download-invoice-pdf/49
         $context->setHost('localhost');
-        $context->setScheme('http');
+        $context->setScheme($connectionChannel);
         $context->setBaseUrl('/order');
 
         //invoice download

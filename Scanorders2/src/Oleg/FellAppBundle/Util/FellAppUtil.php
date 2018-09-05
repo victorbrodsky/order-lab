@@ -451,9 +451,15 @@ class FellAppUtil {
         $liveSiteRootUrl = $userSecUtil->getSiteSettingParameter('liveSiteRootUrl');    //http://c.med.cornell.edu/order/
         $liveSiteHost = parse_url($liveSiteRootUrl, PHP_URL_HOST); //c.med.cornell.edu
         //echo "liveSiteHost=".$liveSiteHost."; ";
+
+        $connectionChannel = $userSecUtil->getSiteSettingParameter('connectionChannel');
+        if( !$connectionChannel ) {
+            $connectionChannel = 'http';
+        }
+
         $context = $this->container->get('router')->getContext();
         $context->setHost($liveSiteHost);
-        $context->setScheme('http');
+        $context->setScheme($connectionChannel);
         $context->setBaseUrl('/order');
         /////////////// EOF Configuring the Request Context per Command ///////////////
 

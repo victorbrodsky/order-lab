@@ -608,6 +608,7 @@ class ReportGenerator {
     //http://wkhtmltopdf.org must be installed on server
     public function generateApplicationPdf($applicationId,$applicationOutputFilePath) {
         $logger = $this->container->get('logger');
+        $userSecUtil = $this->container->get('user_security_utility');
 
         if( file_exists($applicationOutputFilePath) ) {
             $logger->notice("generateApplicationPdf: unlink file already exists path=" . $applicationOutputFilePath );
@@ -615,6 +616,11 @@ class ReportGenerator {
         }
 
         ini_set('max_execution_time', 300); //300 sec
+
+        $connectionChannel = $userSecUtil->getSiteSettingParameter('connectionChannel');
+        if( !$connectionChannel ) {
+            $connectionChannel = 'http';
+        }
 
         //generate application URL
         $router = $this->container->get('router');
@@ -631,7 +637,7 @@ class ReportGenerator {
 
         //http://192.168.37.128/order/app_dev.php/fellowship-applications/download-pdf/49
         $context->setHost('localhost');
-        $context->setScheme('http');
+        $context->setScheme($connectionChannel);
         $context->setBaseUrl('/order');
 
 //        if( $env == 'dev' ) {
