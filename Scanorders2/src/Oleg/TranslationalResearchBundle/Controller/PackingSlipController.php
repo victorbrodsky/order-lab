@@ -93,7 +93,7 @@ class PackingSlipController extends Controller
         foreach($transresRequest->getPackingSlipPdfs() as $packingSlip) {
             $packingSlips->add($packingSlip);
         }
-        echo "0 packingSlips count=".count($packingSlips)."<br>";
+        //echo "0 packingSlips count=".count($packingSlips)."<br>";
 
         //Generate Packing Slip
         $res = $transresPdfUtil->generatePackingSlipPdf($transresRequest,$user);

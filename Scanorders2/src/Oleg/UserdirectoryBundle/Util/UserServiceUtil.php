@@ -398,6 +398,9 @@ class UserServiceUtil {
         $os = new Os();
         $platform = $os->getName();
 
+        $logger = $this->container->get('logger');
+        $logger->notice("$name $version browser on $platform");
+
         $msg = "You appear to be using the <strong>outdated $name $version browser on $platform</strong>
         and it is not able to show you this site properly.<br>
         Please use Chrome, Firefox, Internet Explorer 9, Internet Explorer 10, Internet Explorer 11,
