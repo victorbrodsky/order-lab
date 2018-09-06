@@ -818,6 +818,9 @@ class InvoiceController extends Controller
             //update user
             $invoice->setUpdateUser($user);
 
+            //update due date
+            $invoice->reSetDueDate();
+
             //update oid: don't update Invoice version on edit. Only the last version can be edited.
 
             //use the values in Invoice’s Quantity fields to overwrite/update the associated Request’s "Completed #" fields

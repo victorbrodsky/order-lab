@@ -1973,9 +1973,10 @@ class TransResRequestUtil
 //        $invoice->setFooter3($footer3);
 
         //pre-populate dueDate +30 days
-        $dueDateStr = date('Y-m-d', strtotime("+30 days"));
-        $dueDate = new \DateTime($dueDateStr);
-        $invoice->setDueDate($dueDate);
+        //$dueDateStr = date('Y-m-d', strtotime("+30 days"));
+        //$dueDate = new \DateTime($dueDateStr);
+        //$invoice->setDueDate($dueDate);
+        $invoice->reSetDueDate();
 
         //pre-populate PIs: use the first one from request
         $transreqPis = $transresRequest->getPrincipalInvestigators();

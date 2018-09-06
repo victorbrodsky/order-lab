@@ -131,7 +131,8 @@
         {% endif %}
         {{ transresRequestMacros.transresRequestComment(form,transresRequest,cycle,showFosComment) }}
 
-        {% if cycle != "new" and is_granted('ROLE_TRANSRES_ADMIN') %}
+        {#{% if cycle != "new" and is_granted('ROLE_TRANSRES_ADMIN') %}#}
+        {% if cycle != "new" %}
             {{ transresRequestMacros.transresRequestInfo(form,transresRequest,cycle) }}
         {% endif %}
 
