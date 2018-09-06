@@ -156,7 +156,7 @@
                         {{ loop.index }}
                     </td>
                     <td style="color: {{ headlineColor }}">
-                        {{ dataResult.system }}
+                        {{ dataResult.system.getOptimalName() }}
                     </td>
                     <td class="barcode-value" style="color: {{ headlineColor }}">
                         {{ dataResult.barcode }}
@@ -183,14 +183,14 @@
     <hr>
 
     <div align="left" style="opacity: {{ opacity }};">
-    <h6>
-        {#Please contact us for more information about this slip.#}
-        {{ transres_request_util.getTransresSiteParameter('transresPackingSlipFooter1',transresRequest) }}
-    </h6>
-    <h6>
-        {#Translational Research Program • 1300 York Ave., F512, New York, NY 10065 • Tel: (212) 746-6255#}
-        {{ transres_request_util.getTransresSiteParameter('transresPackingSlipFooter2',transresRequest) }}
-    </h6>
+        <h6>
+            {#Please contact us for more information about this slip.#}
+            {{ transres_request_util.getTransresSiteParameter('transresPackingSlipFooter1',transresRequest) }}
+        </h6>
+        <h6>
+            {#Translational Research Program • 1300 York Ave., F512, New York, NY 10065 • Tel: (212) 746-6255#}
+            {{ transres_request_util.getTransresSiteParameter('transresPackingSlipFooter2',transresRequest) }}
+        </h6>
     </div>
 
 {% endblock %}
