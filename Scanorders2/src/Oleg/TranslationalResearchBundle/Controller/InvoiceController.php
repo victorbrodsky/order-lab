@@ -101,11 +101,16 @@ class InvoiceController extends Controller
         $invoicetype = ucwords($invoicetype);
         //echo "invoicetype=$invoicetype<br>";
 
-        if( $invoicetype ) {
-            if( $invoicetype == "All Invoices" ) {
-                //filter nothing
-                $title = "All Invoices";
-            }
+        if( $invoicetype && $invoicetype == "All Invoices" ) {
+            //filter nothing
+            $title = "All Invoices";
+        }
+
+        if( $invoicetype && $invoicetype != "All Invoices" ) {
+//            if( $invoicetype == "All Invoices" ) {
+//                //filter nothing
+//                $title = "All Invoices";
+//            }
             if( $invoicetype == "All Issued Invoices" ) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
@@ -388,6 +393,8 @@ class InvoiceController extends Controller
             $version = $filterform['version']->getData();
             $fundingNumber = $filterform['fundingNumber']->getData();
             $fundingType = $filterform['fundingType']->getData();
+            $irbNumber = $filterform['irbNumber']->getData();
+            //echo "totalMin=".$totalMin."<br>";
         }
         ////// EOF create filter //////////
 
@@ -539,6 +546,13 @@ class InvoiceController extends Controller
             }
         }
 
+        if( $irbNumber ) {
+            $dql->leftJoin('transresRequest.project','project');
+            $dql->andWhere("project.irbNumber LIKE :irbNumber");
+            $dqlParameters["irbNumber"] = "%".$irbNumber."%";
+            $advancedFilter++;
+        }
+
         $limit = 30;
         $query = $em->createQuery($dql);
 
@@ -546,7 +560,7 @@ class InvoiceController extends Controller
             $query->setParameters($dqlParameters);
         }
 
-        echo "query=".$query->getSql()."<br>";
+        //echo "query=".$query->getSql()."<br>";
 
         $paginationParams = array(
             'defaultSortFieldName' => 'invoice.id',
@@ -1166,6 +1180,8 @@ class InvoiceController extends Controller
             'SecurityAuthChecker' => $this->get('security.authorization_checker'),
             'transres_request_util' => $transresRequestUtil
         );
+
+        $disabled = true;
 
         if( $cycle == "new" ) {
             $disabled = false;

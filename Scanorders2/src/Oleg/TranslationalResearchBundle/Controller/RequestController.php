@@ -1480,7 +1480,7 @@ class RequestController extends Controller
                     'notice',
                     "Filter pre-set type '$filterType' is not defined"
                 );
-                exit("Filter Type not known " . $filterType);
+                //exit("Filter Type not known " . $filterType);
             }
         }
     }
@@ -2226,6 +2226,7 @@ class RequestController extends Controller
      */
     public function deleteMultipleProjectsAction(Request $request)
     {
+        exit("Not Available");
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
         }

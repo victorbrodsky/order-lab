@@ -183,6 +183,12 @@ class FilterInvoiceType extends AbstractType
             'attr' => array('class' => 'combobox', 'placeholder'=>'Funded vs Non-Funded'),
         ));
 
+        $builder->add('irbNumber', TextType::class, array(
+            'required'=>false,
+            'label' => false,
+            'attr' => array('class'=>'form-control submit-on-enter-field', 'placeholder'=>'Search by IRB Number'),
+        ));
+
 //        $builder->add('complexFilterList', null, array(
 //            'label' => false,
 //            'required' => false,
