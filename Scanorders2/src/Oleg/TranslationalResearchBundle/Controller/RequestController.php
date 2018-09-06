@@ -2219,6 +2219,32 @@ class RequestController extends Controller
 
 
     /**
+     * Finds and displays a progress review form for this request entity.
+     *
+     * @Route("/request/fees-schedule", name="translationalresearch_fees_schedule")
+     * @Template("OlegTranslationalResearchBundle:Request:fee-schedule.html.twig")
+     * @Method("GET")
+     */
+    public function feeScheduleAction(Request $request, TransResRequest $transresRequest)
+    {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        //RequestCategoryTypeList
+        $fees = $em->getRepository('OlegTranslationalResearchBundle:RequestCategoryTypeList')->findBy(array('type' => array('default','user-added')));
+
+        return array(
+            'fees' => $fees,
+            'title' => "Fee Schedule",
+            'adminUser' => true
+        );
+    }
+
+
+    /**
      * Deletes a request entity.
      *
      * @Route("/delete-multiple-requests/", name="translationalresearch_requests_multiple_delete")

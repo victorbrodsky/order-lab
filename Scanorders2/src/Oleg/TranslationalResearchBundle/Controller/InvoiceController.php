@@ -696,6 +696,7 @@ class InvoiceController extends Controller
 
         //1) try to find by oid
         $invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findOneByOid($oid);
+
         if( !$invoice ) {
             //2) try to find by id
             $invoice = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->find($oid);
@@ -794,6 +795,10 @@ class InvoiceController extends Controller
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
+        //update due date
+        $invoice->reSetDueDate();
+        //echo "due date=".$invoice->getDueDate()->format("Y-m-d")."<br>";
+
         $invoiceSerializedOriginalStr = $invoice->getSerializeStr();
         //echo "invoiceSerializedOriginalStr=$invoiceSerializedOriginalStr<br>";
         //exit();
@@ -817,9 +822,6 @@ class InvoiceController extends Controller
 
             //update user
             $invoice->setUpdateUser($user);
-
-            //update due date
-            $invoice->reSetDueDate();
 
             //update oid: don't update Invoice version on edit. Only the last version can be edited.
 

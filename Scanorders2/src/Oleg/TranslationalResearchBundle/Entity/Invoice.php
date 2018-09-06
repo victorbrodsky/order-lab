@@ -431,7 +431,7 @@ class Invoice {
         $this->dueDate = $dueDate;
     }
 
-    public function reSetDueDate($dueDate)
+    public function reSetDueDate()
     {
         //pre-populate dueDate +30 days
         $dueDateStr = date('Y-m-d', strtotime("+30 days"));

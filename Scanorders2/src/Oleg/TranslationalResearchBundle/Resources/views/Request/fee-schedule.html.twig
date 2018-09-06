@@ -1,0 +1,85 @@
+
+{% extends "OlegTranslationalResearchBundle::Default/base.html.twig" %}
+
+
+{% block title %}
+    {{ title|raw }}
+{% endblock %}
+
+
+{% block content %}
+
+    <h4 class="text-info" align="center">
+        {{ title|raw }}
+    </h4>
+
+
+    <table class="table table-hover table-condensed text-left">
+        <thead>
+            <tr>
+                {#<th>{{ knp_pagination_sortable(transresRequests, 'ID', 'transresRequest.id') }}</th>#}
+                {#{% if not project %}#}
+                    {#<th>{{ knp_pagination_sortable(transresRequests, 'Project ID', 'project.id') }}</th>#}
+                {#{% endif %}#}
+                {#<th>{{ knp_pagination_sortable(transresRequests, 'Submitter', 'submitterInfos.displayName') }}</th>#}
+                {#<th>{{ knp_pagination_sortable(transresRequests, 'Submitted', 'transresRequest.createDate') }}</th>#}
+                {#<th>{{ knp_pagination_sortable(transresRequests, 'Fund Number', 'transresRequest.fundedAccountNumber') }}</th>#}
+                {#<th>{{ knp_pagination_sortable(transresRequests, 'Completion Status', 'transresRequest.progressState') }}</th>#}
+                {#<th>{{ knp_pagination_sortable(transresRequests, 'Billing Status', 'transresRequest.billingState') }}</th>#}
+
+                <th>{{ knp_pagination_sortable(transresRequests, 'Name', 'list.name') }}</th>
+                <th>{{ knp_pagination_sortable(transresRequests, 'Product ID', 'list.section') }}</th>
+                <th>{{ knp_pagination_sortable(transresRequests, 'Product ID', 'list.productId') }}</th>
+                <th>{{ knp_pagination_sortable(transresRequests, 'Product ID', 'list.fee') }}</th>
+                <th>{{ knp_pagination_sortable(transresRequests, 'Product ID', 'list.feeUnit') }}</th>
+
+                {% if adminUser %}
+                    <th>Actions</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody data-link="row" class="rowlink">
+
+        {#{% set count = 0 %}#}
+        {% for fee in fees %}
+
+            <tr style="border-bottom: 1px solid #C6C6C6;">
+                {#<td>#}
+                    {#<a href="{{ path(translationalresearch_sitename~'_request_show', { 'id': transresRequest.id }) }}" target="_blank">{{ fee.oid }}</a>#}
+                {#</td>#}
+
+                {#<td>#}
+                    {#{{ transresRequest.fundedAccountNumber }}#}
+                {#</td>#}
+
+                {% if adminUser %}
+                    <td class="rowlink-skip">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                Action <span class="caret"></span>
+                            </button>
+
+                            <ul class="dropdown-menu dropdown-menu-right">
+
+                                {#<li>#}
+                                    {#<a href="{{ path(translationalresearch_sitename~'_fees_show', { 'id': transresRequest.id }) }}"#}
+                                    {#>Show Request</a>#}
+                                {#</li>#}
+
+                            </ul>
+
+                        </div>
+                    </td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {# display navigation #}
+    <div class="navigation">
+        {{ knp_pagination_render(transresRequests) }}
+    </div>
+
+{% endblock %}
+

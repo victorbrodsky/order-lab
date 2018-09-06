@@ -30,12 +30,18 @@ class TransResListController extends ListController
 
     /**
      * @Route("/list/translational-research-request-category-types/", name="transresrequestcategorytypes-list_translationalresearch")
+     * @Route("/list/antibodies/", name="antibodies-list_translationalresearch")
+     *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:index.html.twig")
      */
     public function indexAction(Request $request)
     {
-        if (false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN')) {
+        if(
+            false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') &&
+            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN') &&
+            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE')
+        ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
@@ -44,12 +50,17 @@ class TransResListController extends ListController
 
     /**
      * @Route("/list/translational-research-request-category-types/", name="transresrequestcategorytypes_create_translationalresearch")
+     * @Route("/list/antibodies/", name="antibodies_create_translationalresearch")
+     *
      * @Method("POST")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
      */
     public function createAction(Request $request)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
+        if(
+            false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') &&
+            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
+        ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
@@ -58,12 +69,17 @@ class TransResListController extends ListController
 
     /**
      * @Route("/list/translational-research-request-category-types/new", name="transresrequestcategorytypes_new_translationalresearch")
+     * @Route("/list/antibodies/new", name="antibodies_new_translationalresearch")
+     *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:new.html.twig")
      */
     public function newAction(Request $request)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
+        if(
+            false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') &&
+            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
+        ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
@@ -72,13 +88,18 @@ class TransResListController extends ListController
 
     /**
      * @Route("/list/translational-research-request-category-types/{id}", name="transresrequestcategorytypes_show_translationalresearch")
+     * @Route("/list/antibodies/{id}", name="antibodies_show_translationalresearch")
+     *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:show.html.twig")
      */
     public function showAction(Request $request,$id)
     {
 
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
+        if(
+            false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') &&
+            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
+        ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
@@ -87,12 +108,17 @@ class TransResListController extends ListController
 
     /**
      * @Route("/list/translational-research-request-category-types/{id}/edit", name="transresrequestcategorytypes_edit_translationalresearch")
+     * @Route("/list/antibodies/{id}/edit", name="antibodies_edit_translationalresearch")
+     *
      * @Method("GET")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
      */
     public function editAction(Request $request,$id)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
+        if(
+            false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') &&
+            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
+        ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
@@ -101,12 +127,17 @@ class TransResListController extends ListController
 
     /**
      * @Route("/list/translational-research-request-category-types/{id}", name="transresrequestcategorytypes_update_translationalresearch")
+     * @Route("/list/antibodies/{id}", name="antibodies_update_translationalresearch")
+     *
      * @Method("PUT")
      * @Template("OlegUserdirectoryBundle:ListForm:edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
-        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
+        if(
+            false == $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') &&
+            false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_TECHNICIAN')
+        ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
