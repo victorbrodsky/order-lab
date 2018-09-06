@@ -356,8 +356,7 @@ class PdfGenerator
 
         return $res;
 
-
-        exit('exit generatePackingSlipPdf');
+        //exit('exit generatePackingSlipPdf');
     }
 
     //NOT USED
