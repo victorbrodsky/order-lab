@@ -278,7 +278,7 @@ class PdfGenerator
 
 
 
-    public function generatePackingSlipPdf($transresRequest,$authorUser) {
+    public function generatePackingSlipPdf($transresRequest,$authorUser,$request) {
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
 
@@ -318,7 +318,7 @@ class PdfGenerator
         $applicationFilePath = $outdir . $fileFullReportUniqueName;
 
         //$this->generatePdfPackingSlip($transresRequest,$fileFullReportUniqueName,$applicationFilePath);
-        $this->generatePdfPhantomjsPackingSlip($transresRequest,$fileFullReportUniqueName,$applicationFilePath);
+        $this->generatePdfPhantomjsPackingSlip($transresRequest,$fileFullReportUniqueName,$applicationFilePath,$request);
 
         $filesize = filesize($applicationFilePath);
         echo "filesize=".$filesize."<br>";
@@ -360,7 +360,8 @@ class PdfGenerator
         exit('exit generatePackingSlipPdf');
     }
 
-    //use KnpSnappyBundle to convert html to pdf
+    //NOT USED
+    //Do not use KnpSnappyBundle to convert html to pdf for packing slip
     //http://wkhtmltopdf.org must be installed on server
     public function generatePdfPackingSlip($transresRequest,$fileFullReportUniqueName,$applicationOutputFilePath) {
         $logger = $this->container->get('logger');
@@ -388,8 +389,9 @@ class PdfGenerator
 
         //generate application URL
         $router = $this->container->get('router');
-        $context = $router->getContext();
 
+        //change context only if not localhost or 127.0.0.1
+        $context = $router->getContext();
         //http://192.168.37.128/order/app_dev.php/translational-research/download-invoice-pdf/49
         $context->setHost('localhost');
         $context->setScheme($connectionChannel);
@@ -423,7 +425,7 @@ class PdfGenerator
 
     //use KnpSnappyBundle to convert html to pdf
     //http://wkhtmltopdf.org must be installed on server
-    public function generatePdfPhantomjsPackingSlip($transresRequest,$fileFullReportUniqueName,$applicationOutputFilePath) {
+    public function generatePdfPhantomjsPackingSlip($transresRequest,$fileFullReportUniqueName,$applicationOutputFilePath,$request) {
         $logger = $this->container->get('logger');
         $userServiceUtil = $this->container->get('user_service_utility');
         $userSecUtil = $this->container->get('user_security_utility');
@@ -450,12 +452,18 @@ class PdfGenerator
 
         //generate application URL
         $router = $this->container->get('router');
-        $context = $router->getContext();
 
-        //http://192.168.37.128/order/app_dev.php/translational-research/download-invoice-pdf/49
-        $context->setHost('localhost');
-        $context->setScheme($connectionChannel);
-        $context->setBaseUrl('/order');
+        $schemeAndHttpHost = $request->getSchemeAndHttpHost();
+        //exit("schemeAndHttpHost=$schemeAndHttpHost");
+        if( strpos($schemeAndHttpHost,"localhost") === false && strpos($schemeAndHttpHost,"127.0.0.1") === false ) {
+            //exit('use localhost');
+            $context = $router->getContext();
+
+            //http://192.168.37.128/order/app_dev.php/translational-research/download-invoice-pdf/49
+            $context->setHost('localhost');
+            $context->setScheme($connectionChannel);
+            $context->setBaseUrl('/order');
+        }
 
         //invoice download
         $pageUrl = $router->generate('translationalresearch_packing_slip_download',
@@ -505,6 +513,7 @@ class PdfGenerator
         $applicationOutputFilePath = '"'.$applicationOutputFilePath.'"';
 
         $cmd = $phantomjs . ' --disk-cache=true ' . $rasterize . ' ' . $pageUrl . ' ' . $applicationOutputFilePath . ' "A4"';
+        //$cmd = $phantomjs . ' ' . $rasterize . ' ' . $pageUrl . ' ' . $applicationOutputFilePath . ' "A4"';
         //$logger->notice("cmd=".$cmd);
 
         //$shellout = shell_exec( $cmd );

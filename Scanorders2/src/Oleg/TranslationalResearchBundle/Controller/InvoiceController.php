@@ -546,7 +546,7 @@ class InvoiceController extends Controller
             $query->setParameters($dqlParameters);
         }
 
-        //echo "query=".$query->getSql()."<br>";
+        echo "query=".$query->getSql()."<br>";
 
         $paginationParams = array(
             'defaultSortFieldName' => 'invoice.id',

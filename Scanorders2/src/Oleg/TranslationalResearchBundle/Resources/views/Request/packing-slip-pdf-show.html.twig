@@ -16,6 +16,10 @@
     {#</div>#}
 {% endblock %}
 
+{% block footer %}
+    {#empty#}
+{% endblock %}
+
 {% block contentleft %}
 
     <input type="hidden" id="formcycle" value="{{ cycle }}" />
@@ -33,7 +37,7 @@
 
     <div style="opacity: {{ opacity }} !important;">
     <div class="row">
-        <div class="col-xs-1"></div>
+        {#<div class="col-xs-1"></div>#}
         <div class="col-xs-5" align="left">
             <img src="{{ asset(packingSlipLogoFileName) }}" alt="Packing Slip Logo"/>
             <br>
@@ -44,7 +48,7 @@
             {{ transres_request_util.getTransresSiteParameter('transresPackingSlipHeadline2',transresRequest) }}
             </div>
         </div>
-        <div class="col-xs-5" align="right">
+        <div class="col-xs-7" align="right">
             <p><h2><b>
                 {#Packing Slip#}
                 {{ transres_request_util.getTransresSiteParameter('transresPackingSlipTitle',transresRequest) }}
@@ -75,7 +79,7 @@
                 Work Progress Status: <span style="color: {{ headlineColor }}">{{ transres_request_util.getProgressStateLabelByName(transresRequest.progressState) }}</span>
             </p>
         </div>
-        <div class="col-xs-1"></div>
+        {#<div class="col-xs-1"></div>#}
     </div>
     </div>
 
@@ -179,14 +183,14 @@
     <hr>
 
     <div align="left" style="opacity: {{ opacity }};">
-    <p>
+    <h6>
         {#Please contact us for more information about this slip.#}
         {{ transres_request_util.getTransresSiteParameter('transresPackingSlipFooter1',transresRequest) }}
-    </p>
-    <p>
+    </h6>
+    <h6>
         {#Translational Research Program • 1300 York Ave., F512, New York, NY 10065 • Tel: (212) 746-6255#}
         {{ transres_request_util.getTransresSiteParameter('transresPackingSlipFooter2',transresRequest) }}
-    </p>
+    </h6>
     </div>
 
 {% endblock %}

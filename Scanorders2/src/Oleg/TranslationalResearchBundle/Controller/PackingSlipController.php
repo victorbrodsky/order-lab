@@ -96,7 +96,7 @@ class PackingSlipController extends Controller
         //echo "0 packingSlips count=".count($packingSlips)."<br>";
 
         //Generate Packing Slip
-        $res = $transresPdfUtil->generatePackingSlipPdf($transresRequest,$user);
+        $res = $transresPdfUtil->generatePackingSlipPdf($transresRequest,$user,$request);
 
         $filename = $res['filename'];
         //$pdf = $res['pdf'];
