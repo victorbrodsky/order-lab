@@ -2231,9 +2231,6 @@ class RequestController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        //RequestCategoryTypeList
-        //$fees = $em->getRepository('OlegTranslationalResearchBundle:RequestCategoryTypeList')->findBy(array('type' => array('default','user-added')));
-
         $repository = $em->getRepository('OlegTranslationalResearchBundle:RequestCategoryTypeList');
         $dql =  $repository->createQueryBuilder("list");
         $dql->select('list');
@@ -2255,10 +2252,15 @@ class RequestController extends Controller
             $paginationParams
         );
 
+        $adminUser = false;
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ) {
+            $adminUser = true;
+        }
+
         return array(
             'fees' => $fees,
             'title' => "Fee Schedule",
-            'adminUser' => true
+            'adminUser' => $adminUser
         );
     }
 
