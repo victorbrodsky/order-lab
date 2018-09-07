@@ -134,7 +134,13 @@ class RequestCategoryTypeList extends ListAbstract
         $this->productId = $productId;
     }
 
-
+    public function getFeeUnitStr() {
+        if( $this->getFeeUnit() == "Project-specific" ) {
+            return $this->getFeeUnit();
+        } else {
+            return "per " . ucwords($this->getFeeUnit());
+        }
+    }
 
     public function getOptimalAbbreviationName() {
         return $this->getProductId() . " (" .$this->getSection() . ") - " . $this->getName() . ": $" . $this->getFee() . "/" . $this->getFeeUnit();
