@@ -1714,13 +1714,13 @@ class Project {
         return "Project request " . $this->getOid() . " '$title' submitted by ".$this->getSubmitter()->getUsernameOptimal() . $createDateStr; //. " at ".$this->getCreateDate()->format('H:i:s')
     }
 
-    public function getProjectIdTitleDate() {
+    public function getProjectIdTitle() {
         $title = $this->getTitle();
-        $createDateStr = null;
-        if( $this->getCreateDate() ) {
-            $createDateStr = " on " . $this->getCreateDate()->format('m/d/Y');
-        }
-        return $this->getOid() . " '$title' submitted by ".$this->getSubmitter()->getUsernameOptimal() . $createDateStr;
+        //$createDateStr = null;
+        //if( $this->getCreateDate() ) {
+        //    $createDateStr = " on " . $this->getCreateDate()->format('m/d/Y');
+        //}
+        return $this->getOid() . " '$title' submitted by ".$this->getSubmitter()->getUsernameOptimal();
     }
 
     //"IRB with PI FirstName LastName expires on MM/DD/YYYY."
