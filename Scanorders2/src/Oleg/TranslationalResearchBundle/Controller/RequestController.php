@@ -2219,13 +2219,11 @@ class RequestController extends Controller
 
 
     /**
-     * Finds and displays a progress review form for this request entity.
-     *
      * @Route("/request/fees-schedule", name="translationalresearch_fees_schedule")
      * @Template("OlegTranslationalResearchBundle:Request:fee-schedule.html.twig")
      * @Method("GET")
      */
-    public function feeScheduleAction(Request $request, TransResRequest $transresRequest)
+    public function feeScheduleAction(Request $request)
     {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_USER') ) {
             return $this->redirect( $this->generateUrl($this->container->getParameter('translationalresearch.sitename').'-nopermission') );
@@ -2234,7 +2232,28 @@ class RequestController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         //RequestCategoryTypeList
-        $fees = $em->getRepository('OlegTranslationalResearchBundle:RequestCategoryTypeList')->findBy(array('type' => array('default','user-added')));
+        //$fees = $em->getRepository('OlegTranslationalResearchBundle:RequestCategoryTypeList')->findBy(array('type' => array('default','user-added')));
+
+        $repository = $em->getRepository('OlegTranslationalResearchBundle:RequestCategoryTypeList');
+        $dql =  $repository->createQueryBuilder("list");
+        $dql->select('list');
+
+        $limit = 30;
+        $query = $em->createQuery($dql);
+
+        $paginationParams = array(
+            'defaultSortFieldName' => 'list.id',
+            'defaultSortDirection' => 'ASC',
+            'wrap-queries' => true
+        );
+
+        $paginator  = $this->get('knp_paginator');
+        $fees = $paginator->paginate(
+            $query,
+            $request->query->get('page', 1),    /*page number*/
+            $limit,                             /*limit per page*/
+            $paginationParams
+        );
 
         return array(
             'fees' => $fees,

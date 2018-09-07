@@ -17,21 +17,13 @@
     <table class="table table-hover table-condensed text-left">
         <thead>
             <tr>
-                {#<th>{{ knp_pagination_sortable(transresRequests, 'ID', 'transresRequest.id') }}</th>#}
-                {#{% if not project %}#}
-                    {#<th>{{ knp_pagination_sortable(transresRequests, 'Project ID', 'project.id') }}</th>#}
-                {#{% endif %}#}
-                {#<th>{{ knp_pagination_sortable(transresRequests, 'Submitter', 'submitterInfos.displayName') }}</th>#}
-                {#<th>{{ knp_pagination_sortable(transresRequests, 'Submitted', 'transresRequest.createDate') }}</th>#}
-                {#<th>{{ knp_pagination_sortable(transresRequests, 'Fund Number', 'transresRequest.fundedAccountNumber') }}</th>#}
-                {#<th>{{ knp_pagination_sortable(transresRequests, 'Completion Status', 'transresRequest.progressState') }}</th>#}
-                {#<th>{{ knp_pagination_sortable(transresRequests, 'Billing Status', 'transresRequest.billingState') }}</th>#}
+                <th>{{ knp_pagination_sortable(fees, 'ID', 'list.id') }}</th>
 
-                <th>{{ knp_pagination_sortable(transresRequests, 'Name', 'list.name') }}</th>
-                <th>{{ knp_pagination_sortable(transresRequests, 'Product ID', 'list.section') }}</th>
-                <th>{{ knp_pagination_sortable(transresRequests, 'Product ID', 'list.productId') }}</th>
-                <th>{{ knp_pagination_sortable(transresRequests, 'Product ID', 'list.fee') }}</th>
-                <th>{{ knp_pagination_sortable(transresRequests, 'Product ID', 'list.feeUnit') }}</th>
+                <th>{{ knp_pagination_sortable(fees, 'Histology', 'list.productId') }}</th>
+                <th>{{ knp_pagination_sortable(fees, 'Name', 'list.name') }}</th>
+                <th>{{ knp_pagination_sortable(fees, 'Section', 'list.section') }}</th>
+                <th>{{ knp_pagination_sortable(fees, 'Fee', 'list.fee') }}</th>
+                <th>{{ knp_pagination_sortable(fees, 'Unit', 'list.feeUnit') }}</th>
 
                 {% if adminUser %}
                     <th>Actions</th>
@@ -43,14 +35,32 @@
         {#{% set count = 0 %}#}
         {% for fee in fees %}
 
-            <tr style="border-bottom: 1px solid #C6C6C6;">
-                {#<td>#}
-                    {#<a href="{{ path(translationalresearch_sitename~'_request_show', { 'id': transresRequest.id }) }}" target="_blank">{{ fee.oid }}</a>#}
-                {#</td>#}
+            <tr>
+                <td>
+                    {{ fee.id }}
+                </td>
 
-                {#<td>#}
-                    {#{{ transresRequest.fundedAccountNumber }}#}
-                {#</td>#}
+                <td>
+                    {{ fee.name }}
+                </td>
+
+                <td>
+                    {{ fee.section }}
+                </td>
+
+                <td>
+                    {{ fee.productId }}
+                </td>
+
+                <td>
+                    {% if fee.fee %}
+                        ${{ fee.fee }}
+                    {% endif %}
+                </td>
+
+                <td>
+                    {{ fee.getFeeUnitStr() }}
+                </td>
 
                 {% if adminUser %}
                     <td class="rowlink-skip">
@@ -61,10 +71,10 @@
 
                             <ul class="dropdown-menu dropdown-menu-right">
 
-                                {#<li>#}
-                                    {#<a href="{{ path(translationalresearch_sitename~'_fees_show', { 'id': transresRequest.id }) }}"#}
-                                    {#>Show Request</a>#}
-                                {#</li>#}
+                                <li>
+                                    <a href="{{ path('transresrequestcategorytypes_edit', { 'id': fee.id }) }}"
+                                    >Edit</a>
+                                </li>
 
                             </ul>
 
@@ -78,7 +88,7 @@
 
     {# display navigation #}
     <div class="navigation">
-        {{ knp_pagination_render(transresRequests) }}
+        {{ knp_pagination_render(fees) }}
     </div>
 
 {% endblock %}

@@ -1841,6 +1841,14 @@ class TransResRequestUtil
             }
         }
 
+        //get submitter
+        $submitter = $transresRequest->getSubmitter();
+        if( $submitter ) {
+            $emails[] = $submitter->getSingleEmail();
+        }
+
+        $emails = array_unique($emails);
+
         //find default site parameters
         if( $transresRequest ) {
             $project = $transresRequest->getProject();
