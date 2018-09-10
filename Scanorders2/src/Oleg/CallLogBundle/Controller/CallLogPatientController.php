@@ -208,8 +208,8 @@ class CallLogPatientController extends PatientController {
         }
 
         ini_set('max_execution_time', 300); //300 seconds = 5 minutes
-        //ini_set('memory_limit', '5120M');
-        ini_set('memory_limit', '-1');
+        ini_set('memory_limit', '5120M');
+        //ini_set('memory_limit', '-1');
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $userSecUtil = $this->get('user_security_utility');
