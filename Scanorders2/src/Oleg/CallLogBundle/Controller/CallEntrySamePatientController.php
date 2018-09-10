@@ -87,7 +87,7 @@ class CallEntrySamePatientController extends CallEntryController
         //echo "mrntype=".$mrntype."<br>";
 
         //check if user has at least one institution
-        $securityUtil = $this->get('order_security_utility');
+        //$securityUtil = $this->get('order_security_utility');
         $userSiteSettings = $securityUtil->getUserPerSiteSettings($user);
         if( !$userSiteSettings ) {
             $orderUtil->setWarningMessageNoInstitution($user);

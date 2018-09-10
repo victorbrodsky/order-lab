@@ -27,6 +27,7 @@ namespace Oleg\CallLogBundle\Controller;
 
 use Oleg\CallLogBundle\Form\CalllogListPreviousEntriesFilterType;
 use Oleg\CallLogBundle\Form\CalllogPatientType;
+use Oleg\CallLogBundle\Form\CalllogSinglePatientType;
 use Oleg\OrderformBundle\Entity\Encounter;
 use Oleg\OrderformBundle\Entity\Patient;
 use Symfony\Component\HttpFoundation\Request;
@@ -313,6 +314,77 @@ class CallLogPatientController extends PatientController {
         );
 
         return $this->updatePatient($request,$id,$params);  //$datastructure,$showpath,$updatepath);
+    }
+
+    /**
+     * Displays a form to edit patient info only (not encounters)
+     *
+     * @Route("/edit-patient-demographics/{id}", name="calllog_single_patient_edit")
+     * @Template("OlegCallLogBundle:DataQuality:patient_only_edit.html.twig")
+     * @Method({"GET", "POST"})
+     */
+    public function patientSingleEditAction(Request $request, Patient $patient)
+    {
+        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_SUBMITTER') &&
+            false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_ORDERING_PROVIDER')
+        ) {
+            return $this->redirect($this->generateUrl('scan-nopermission'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $userSecUtil = $this->get('user_security_utility');
+
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $cycle = "edit";
+
+        $mrnEntity = $patient->obtainValidField('mrn');
+        $mrnNumber = $mrnEntity->getField();
+        $mrntype = $mrnEntity->getKeytype()->getId();
+
+        $editForm = $this->createPatientSingleForm($patient,$cycle);
+
+        $editForm->handleRequest($request);
+
+        if ($editForm->isSubmitted() && $editForm->isValid()) {
+
+            $em->flush();
+
+            ///////// Event Log /////////////////
+            $eventType = 'Patient Demographics Updated';
+            $event = "Patient with ID " . $patient->getId() . " has been updated by " . $user;
+            $changeSetStr = $patient->obtainChangeObjectStr();
+            $eventStr = $event . "<br>Changes:<br>".$changeSetStr;
+
+            $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $eventStr, $user, $patient, $request, $eventType);
+            ///////// EOF Event Log /////////////////
+
+            return $this->redirectToRoute('calllog_patient_view_by_mrn', array('mrn' => $mrnNumber, 'mrntype' => $mrntype, 'show-tree-depth' => 2));
+        }
+
+        return array(
+            'patient' => $patient,
+            'form' => $editForm->createView(),
+            'cycle' => $cycle,
+            'title' => "Edit Patient Demographics",
+        );
+    }
+    public function createPatientSingleForm($patient,$cycle) {
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+        $calllogUtil = $this->get('calllog_util');
+
+        $params = array(
+            'cycle' => 'new',
+            'user' => $user,
+            'em' => $em,
+        );
+
+        $form = $this->createForm(CalllogSinglePatientType::class, $patient, array(
+            'form_custom_value' => $params,
+            'form_custom_value_entity' => $patient
+        ));
+
+        return $form;
     }
 
 
