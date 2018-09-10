@@ -933,7 +933,12 @@ class TransResRequestUtil
                 }
 
                 //exception: Only admin can set status to "completedNotified"
-                if( $to == "completedNotified" && !$this->secAuth->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyPostfix) ) {
+                if( $to == "completedNotified" &&
+                    (
+                        !$this->secAuth->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyPostfix) &&
+                        !$this->secAuth->isGranted('ROLE_TRANSRES_TECHNICIAN'.$specialtyPostfix)
+                    )
+                ) {
                     continue; //skip this $to state
                 }
 
