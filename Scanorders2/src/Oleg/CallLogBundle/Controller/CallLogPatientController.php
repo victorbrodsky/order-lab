@@ -346,12 +346,7 @@ class CallLogPatientController extends PatientController {
         $form = $this->createPatientSingleForm($patient,$singlePatient,$cycle);
 
         //Encounter list
-        $encounterInfoArr = array();
-        foreach( $patient->getEncounter() as $encounter ) {
-            $encounterNumber = $encounter->obtainEncounterNumber();
-            $encounterInfoArr[$encounterNumber] = $encounter->obtainFullObjectName();
-        }
-        $encounterInfo = "<b>Encounter(s)</b>:<br>" . implode("<br>",$encounterInfoArr);
+        $encounterInfo = $this->getEncounterInfos($patient);
 
         return array(
             'patient' => $patient,
@@ -427,49 +422,75 @@ class CallLogPatientController extends PatientController {
             }
 
             if( $newGender ) {
-                $patient->setStatusAllFields($patient->getSex(), $invalidStatus);
-                $newSexObject = new PatientSex('valid',$user,null);
-                $sexObject = $em->getRepository('OlegUserdirectoryBundle:SexList')->find($newGender);
-                $newSexObject->setField($sexObject);
-                $patient->addSex($newSexObject,true);
+                $sex = $patient->obtainValidField('sex');
+                echo $sex->getId()." ?= $newGender<br>";
+                if( $sex->getId() != $newGender ) {
+                    $patient->setStatusAllFields($patient->getSex(), $invalidStatus);
+                    $newSexObject = new PatientSex('valid', $user, null);
+                    $sexObject = $em->getRepository('OlegUserdirectoryBundle:SexList')->find($newGender);
+                    $newSexObject->setField($sexObject);
+                    $patient->addSex($newSexObject, true);
+                }
             }
 
+            //TODO: test dob, gender, mrn
             if( $newDob ) {
-                $patient->setStatusAllFields($patient->getDob(), $invalidStatus);
-                $newDobObject = new PatientDob('valid',$user,null);
-                $newDobObject->setField($newDob);
-                $patient->addDob($newDobObject);
+                $dob = $patient->obtainValidField('dob'); //object data
+                $dobStr = null;
+                if( $dob && $dob->getField() ) {
+                    $dobStr = $dob->getField()->format('m/d/Y');
+                }
+                $newDobStr = $dob->getField()->format('m/d/Y');
+                echo "$dobStr ?= $newDobStr<br>";
+                if( $dobStr != $newDobStr ) {
+                    $patient->setStatusAllFields($patient->getDob(), $invalidStatus);
+                    $newDobObject = new PatientDob('valid', $user, null);
+                    $newDobObject->setField($newDob);
+                    $patient->addDob($newDobObject);
+                }
             }
 
             if( $newLastname ) {
-                $patient->setStatusAllFields($patient->getLastname(), $invalidStatus);
-                $newLastnameObject = new PatientLastName('valid', $user, null);
-                $newLastnameObject->setField($newLastname);
-                $patient->addLastname($newLastnameObject,true);
+                $lastname = $patient->obtainValidField('lastname');
+                if( $lastname != $newLastname ) {
+                    $patient->setStatusAllFields($patient->getLastname(), $invalidStatus);
+                    $newLastnameObject = new PatientLastName('valid', $user, null);
+                    $newLastnameObject->setField($newLastname);
+                    $patient->addLastname($newLastnameObject, true);
+                }
             }
 
             if( $newFirstname ) {
-                $patient->setStatusAllFields($patient->getFirstname(), $invalidStatus);
-                $newFirstnameObject = new PatientFirstName('valid', $user, null);
-                $newFirstnameObject->setField($newFirstname);
-                $patient->addFirstname($newFirstnameObject,true);
+                $firstname = $patient->obtainValidField('firstname');
+                if( $firstname != $newFirstname ) {
+                    $patient->setStatusAllFields($patient->getFirstname(), $invalidStatus);
+                    $newFirstnameObject = new PatientFirstName('valid', $user, null);
+                    $newFirstnameObject->setField($newFirstname);
+                    $patient->addFirstname($newFirstnameObject, true);
+                }
             }
 
             if( $newMiddlename ) {
-                $patient->setStatusAllFields($patient->getMiddlename(), $invalidStatus);
-                $newMiddlenameObject = new PatientMiddleName('valid',$user,null);
-                $newMiddlenameObject->setField($newMiddlename);
-                $patient->addMiddlename($newMiddlenameObject,true);
+                $middlename = $patient->obtainValidField('middlename');
+                if( $middlename != $newMiddlename ) {
+                    $patient->setStatusAllFields($patient->getMiddlename(), $invalidStatus);
+                    $newMiddlenameObject = new PatientMiddleName('valid', $user, null);
+                    $newMiddlenameObject->setField($newMiddlename);
+                    $patient->addMiddlename($newMiddlenameObject, true);
+                }
             }
 
             if( $newSuffix ) {
-                $patient->setStatusAllFields($patient->getSuffix(), $invalidStatus);
-                $newSuffixObject = new PatientSuffix('valid',$user,null);
-                $newSuffixObject->setField($newSuffix);
-                $patient->addSuffix($newSuffixObject,true);
+                $suffix = $patient->obtainValidField('suffix');
+                if( $suffix != $newSuffix ) {
+                    $patient->setStatusAllFields($patient->getSuffix(), $invalidStatus);
+                    $newSuffixObject = new PatientSuffix('valid', $user, null);
+                    $newSuffixObject->setField($newSuffix);
+                    $patient->addSuffix($newSuffixObject, true);
+                }
             }
 
-            //exit("Update Patient");
+            exit("Update Patient");
 
             $em->flush();
 
@@ -487,12 +508,7 @@ class CallLogPatientController extends PatientController {
         }
 
         //Encounter list
-        $encounterInfoArr = array();
-        foreach( $patient->getEncounter() as $encounter ) {
-            $encounterNumber = $encounter->obtainEncounterNumber();
-            $encounterInfoArr[$encounterNumber] = $encounter->obtainFullObjectName();
-        }
-        $encounterInfo = "<b>Encounter(s)</b>:<br>" . implode("<br>",$encounterInfoArr);
+        $encounterInfo = $this->getEncounterInfos($patient);
 
         return array(
             'patient' => $patient,
@@ -595,6 +611,16 @@ class CallLogPatientController extends PatientController {
         ));
 
         return $form;
+    }
+    public function getEncounterInfos($patient) {
+        //Encounter list
+        $encounterInfoArr = array();
+        foreach( $patient->getEncounter() as $encounter ) {
+            $encounterNumber = $encounter->obtainEncounterNumber();
+            $encounterInfoArr[$encounterNumber] = $encounter->obtainFullObjectName();
+        }
+        $encounterInfo = "<b>Encounter(s)</b>:<br>" . implode("<br>",$encounterInfoArr);
+        return $encounterInfo;
     }
 
 
