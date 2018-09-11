@@ -351,7 +351,7 @@ class CallLogPatientController extends PatientController {
             $encounterNumber = $encounter->obtainEncounterNumber();
             $encounterInfoArr[$encounterNumber] = $encounter->obtainFullObjectName();
         }
-        $encounterInfo = "Encounter(s):<br>" . implode("<br>",$encounterInfoArr);
+        $encounterInfo = "<b>Encounter(s)</b>:<br>" . implode("<br>",$encounterInfoArr);
 
         return array(
             'patient' => $patient,
@@ -492,7 +492,7 @@ class CallLogPatientController extends PatientController {
             $encounterNumber = $encounter->obtainEncounterNumber();
             $encounterInfoArr[$encounterNumber] = $encounter->obtainFullObjectName();
         }
-        $encounterInfo = "Encounter(s):<br>" . implode("<br>",$encounterInfoArr);
+        $encounterInfo = "<b>Encounter(s)</b>:<br>" . implode("<br>",$encounterInfoArr);
 
         return array(
             'patient' => $patient,
