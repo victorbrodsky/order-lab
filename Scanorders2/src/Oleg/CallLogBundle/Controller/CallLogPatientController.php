@@ -25,11 +25,19 @@
 namespace Oleg\CallLogBundle\Controller;
 
 
+use Oleg\CallLogBundle\Entity\SinglePatient;
 use Oleg\CallLogBundle\Form\CalllogListPreviousEntriesFilterType;
 use Oleg\CallLogBundle\Form\CalllogPatientType;
 use Oleg\CallLogBundle\Form\CalllogSinglePatientType;
 use Oleg\OrderformBundle\Entity\Encounter;
 use Oleg\OrderformBundle\Entity\Patient;
+use Oleg\OrderformBundle\Entity\PatientDob;
+use Oleg\OrderformBundle\Entity\PatientFirstName;
+use Oleg\OrderformBundle\Entity\PatientLastName;
+use Oleg\OrderformBundle\Entity\PatientMiddleName;
+use Oleg\OrderformBundle\Entity\PatientMrn;
+use Oleg\OrderformBundle\Entity\PatientSex;
+use Oleg\OrderformBundle\Entity\PatientSuffix;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -319,8 +327,45 @@ class CallLogPatientController extends PatientController {
     /**
      * Displays a form to edit patient info only (not encounters)
      *
-     * @Route("/edit-patient-demographics/{id}", name="calllog_single_patient_edit")
-     * @Template("OlegCallLogBundle:DataQuality:patient_only_edit.html.twig")
+     * @Route("/patient-demographics/{id}", name="calllog_single_patient_view")
+     * @Template("OlegCallLogBundle:DataQuality:single-patient-edit.html.twig")
+     * @Method("GET")
+     */
+    public function patientSingleViewAction(Request $request, Patient $patient)
+    {
+        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_SUBMITTER') &&
+            false === $this->get('security.authorization_checker')->isGranted('ROLE_SCANORDER_ORDERING_PROVIDER')
+        ) {
+            return $this->redirect($this->generateUrl('scan-nopermission'));
+        }
+
+        $cycle = "show";
+
+        $singlePatient = new SinglePatient();
+
+        $form = $this->createPatientSingleForm($patient,$singlePatient,$cycle);
+
+        //Encounter list
+        $encounterInfoArr = array();
+        foreach( $patient->getEncounter() as $encounter ) {
+            $encounterNumber = $encounter->obtainEncounterNumber();
+            $encounterInfoArr[$encounterNumber] = $encounter->obtainFullObjectName();
+        }
+        $encounterInfo = "Encounter(s):<br>" . implode("<br>",$encounterInfoArr);
+
+        return array(
+            'patient' => $patient,
+            'encounterInfo' => $encounterInfo,
+            'form' => $form->createView(),
+            'cycle' => $cycle,
+            'title' => "Patient Demographics",
+        );
+    }
+    /**
+     * Displays a form to edit patient info only (not encounters)
+     *
+     * @Route("/patient-demographics/edit/{id}", name="calllog_single_patient_edit")
+     * @Template("OlegCallLogBundle:DataQuality:single-patient-edit.html.twig")
      * @Method({"GET", "POST"})
      */
     public function patientSingleEditAction(Request $request, Patient $patient)
@@ -336,16 +381,95 @@ class CallLogPatientController extends PatientController {
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $cycle = "edit";
+        $invalidStatus = 'invalid';
 
-        $mrnEntity = $patient->obtainValidField('mrn');
-        $mrnNumber = $mrnEntity->getField();
-        $mrntype = $mrnEntity->getKeytype()->getId();
+        //$mrnEntity = $patient->obtainValidField('mrn');
+        //$mrnNumber = $mrnEntity->getField();
+        //$mrnTypeId = $mrnEntity->getKeytype()->getId();
 
-        $editForm = $this->createPatientSingleForm($patient,$cycle);
+        $singlePatient = new SinglePatient();
+
+        $editForm = $this->createPatientSingleForm($patient,$singlePatient,$cycle);
 
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+
+            $newMrntype = $singlePatient->getKeytype();
+            $newMrnNumber = $singlePatient->getMrn();
+            $newDob = $singlePatient->getDob();
+            $newLastname = $singlePatient->getLastname();
+            $newFirstname = $singlePatient->getFirstname();
+            $newMiddlename = $singlePatient->getMiddlename();
+            $newSuffix = $singlePatient->getSuffix();
+            $newGender = $singlePatient->getGender();
+
+//            echo "new mrntype=".$newMrntype."<br>";
+//            echo "new gender=".$newGender."<br>";
+//            echo "new Lastname=".$newLastname."<br>";
+//            echo "new Firstname=".$newFirstname."<br>";
+//            echo "new dob=".$newDob->format('Y-m-d')."<br>";
+
+            if( $newMrntype || $newMrnNumber ) {
+                $patient->setStatusAllFields($patient->getMrn(), $invalidStatus);
+                $newMrnObject = new PatientMrn('valid',$user,null);
+                if( $newMrntype ) {
+
+                    $mrntypeObject = $em->getRepository('OlegOrderformBundle:MrnType')->find($newMrntype);
+                    if( $mrntypeObject ) {
+                        $newMrnObject->setKeytype($mrntypeObject);
+                    }
+                }
+                if( $newMrnNumber ) {
+                    $newMrnObject->setField($newMrnNumber);
+                }
+                $patient->addMrn($newMrnObject);
+            }
+
+            if( $newGender ) {
+                $patient->setStatusAllFields($patient->getSex(), $invalidStatus);
+                $newSexObject = new PatientSex('valid',$user,null);
+                $sexObject = $em->getRepository('OlegUserdirectoryBundle:SexList')->find($newGender);
+                $newSexObject->setField($sexObject);
+                $patient->addSex($newSexObject,true);
+            }
+
+            if( $newDob ) {
+                $patient->setStatusAllFields($patient->getDob(), $invalidStatus);
+                $newDobObject = new PatientDob('valid',$user,null);
+                $newDobObject->setField($newDob);
+                $patient->addDob($newDobObject);
+            }
+
+            if( $newLastname ) {
+                $patient->setStatusAllFields($patient->getLastname(), $invalidStatus);
+                $newLastnameObject = new PatientLastName('valid', $user, null);
+                $newLastnameObject->setField($newLastname);
+                $patient->addLastname($newLastnameObject,true);
+            }
+
+            if( $newFirstname ) {
+                $patient->setStatusAllFields($patient->getFirstname(), $invalidStatus);
+                $newFirstnameObject = new PatientFirstName('valid', $user, null);
+                $newFirstnameObject->setField($newFirstname);
+                $patient->addFirstname($newFirstnameObject,true);
+            }
+
+            if( $newMiddlename ) {
+                $patient->setStatusAllFields($patient->getMiddlename(), $invalidStatus);
+                $newMiddlenameObject = new PatientMiddleName('valid',$user,null);
+                $newMiddlenameObject->setField($newMiddlename);
+                $patient->addMiddlename($newMiddlenameObject,true);
+            }
+
+            if( $newSuffix ) {
+                $patient->setStatusAllFields($patient->getSuffix(), $invalidStatus);
+                $newSuffixObject = new PatientSuffix('valid',$user,null);
+                $newSuffixObject->setField($newSuffix);
+                $patient->addSuffix($newSuffixObject,true);
+            }
+
+            //exit("Update Patient");
 
             $em->flush();
 
@@ -358,30 +482,116 @@ class CallLogPatientController extends PatientController {
             $userSecUtil->createUserEditEvent($this->container->getParameter('calllog.sitename'), $eventStr, $user, $patient, $request, $eventType);
             ///////// EOF Event Log /////////////////
 
-            return $this->redirectToRoute('calllog_patient_view_by_mrn', array('mrn' => $mrnNumber, 'mrntype' => $mrntype, 'show-tree-depth' => 2));
+            //return $this->redirectToRoute('calllog_patient_view_by_mrn', array('mrn' => $mrnNumber, 'mrntype' => $mrnTypeId, 'show-tree-depth' => 2));
+            return $this->redirectToRoute('calllog_single_patient_view',array('id'=>$patient->getId()));
         }
+
+        //Encounter list
+        $encounterInfoArr = array();
+        foreach( $patient->getEncounter() as $encounter ) {
+            $encounterNumber = $encounter->obtainEncounterNumber();
+            $encounterInfoArr[$encounterNumber] = $encounter->obtainFullObjectName();
+        }
+        $encounterInfo = "Encounter(s):<br>" . implode("<br>",$encounterInfoArr);
 
         return array(
             'patient' => $patient,
+            //'mrnNumber' => $mrnNumber,
+            //'mrntype' => $mrnTypeId,
+            'encounterInfo' => $encounterInfo,
             'form' => $editForm->createView(),
             'cycle' => $cycle,
             'title' => "Edit Patient Demographics",
         );
     }
-    public function createPatientSingleForm($patient,$cycle) {
+    public function createPatientSingleForm($patient,$singlePatient,$cycle) {
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
-        $calllogUtil = $this->get('calllog_util');
+        //$calllogUtil = $this->get('calllog_util');
+
+        //echo "Patient=".$patient->getId()."<br>";
+
+        //pre-populate single patient object
+
+        $mrn = $patient->obtainValidField('mrn');
+        if( $mrn ) {
+            $keytype = $mrn->getKeytype(); //MrnType entity
+            //echo "keytype=".$keytype->getId().": ".$keytype->getName()."<br>";
+            if( $keytype ) {
+                $singlePatient->setKeytype($keytype->getId());
+            }
+            $mrnNumber = $mrn->getField();
+            //echo "mrnNumber=$mrnNumber<br>";
+            if ($mrnNumber) {
+                $singlePatient->setMrn($mrnNumber);
+            }
+        }
+
+        $lastname = $patient->obtainValidField('lastname');
+        if( $lastname ) {
+            $singlePatient->setLastname($lastname);
+        }
+
+        $firstname = $patient->obtainValidField('firstname');
+        //echo "firstname=$firstname<br>";
+        if( $firstname ) {
+            $singlePatient->setFirstname($firstname);
+        }
+
+        $middlename = $patient->obtainValidField('middlename');
+        if( $middlename ) {
+            $singlePatient->setMiddlename($middlename);
+        }
+
+        $suffix = $patient->obtainValidField('suffix');
+        if( $suffix ) {
+            $singlePatient->setSuffix($suffix);
+        }
+
+        $dob = $patient->obtainValidField('dob');
+        //echo "dob=".$dob->getId()."<br>";
+        if( $dob ) {
+            $singlePatient->setDob($dob->getField());
+        }
+
+        $sex = $patient->obtainValidField('sex');
+        if( $sex ) {
+            $sexObject = $sex->getField(); //Oleg\UserdirectoryBundle\Entity\SexList
+            //echo "sexObject=".$sexObject->getId().": ".$sexObject->getName()."<br>";
+            $singlePatient->setGender($sexObject->getId());
+        }
+
+        //get mrntypes
+        $mrntypeChoices = array();
+        $mrntypeChoicesArr = $em->getRepository('OlegOrderformBundle:MrnType')->findBy(array('type'=>array('default','user-added')));
+        foreach( $mrntypeChoicesArr as $thisMrnType ) {
+            $mrntypeChoices[$thisMrnType->getName()] = $thisMrnType->getId();
+        }
+
+        //get genders
+        $genderChoices = array();
+        $genderChoicesArr = $em->getRepository('OlegUserdirectoryBundle:SexList')->findBy(array('type'=>array('default','user-added')));
+        foreach( $genderChoicesArr as $thisGender ) {
+            $genderChoices[$thisGender->getName()] = $thisGender->getId();
+        }
 
         $params = array(
-            'cycle' => 'new',
-            'user' => $user,
-            'em' => $em,
+            'keytypes' => $mrntypeChoices,
+            'genders' => $genderChoices,
+            'update' => false
         );
 
-        $form = $this->createForm(CalllogSinglePatientType::class, $patient, array(
+        if( $cycle == "show" ) {
+            $disabled = true;
+        }
+        if( $cycle == "edit" ) {
+            $disabled = false;
+            $params['update'] = true;
+        }
+
+        $form = $this->createForm(CalllogSinglePatientType::class, $singlePatient, array(
             'form_custom_value' => $params,
-            'form_custom_value_entity' => $patient
+            'disabled' => $disabled
         ));
 
         return $form;

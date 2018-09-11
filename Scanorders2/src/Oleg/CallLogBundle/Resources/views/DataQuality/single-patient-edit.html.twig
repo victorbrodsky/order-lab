@@ -1,0 +1,83 @@
+{#
+    Copyright 2017 Cornell University
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+#}
+
+{% extends "OlegCallLogBundle::Default/base.html.twig" %}
+
+{% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
+{#{% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}#}
+{#{% import "OlegCallLogBundle::Default/calllogmacros.html.twig" as calllogmacros %}#}
+
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+
+{% block content %}
+
+    <h4 class="text-info calllog-title" align="center">
+        {{ title|raw }}
+    </h4>
+    <br>
+
+
+    <input type="hidden" id="formcycle" value="{{ cycle }}" />
+    {#<input type="hidden" id="mrntype" value="{{ mrntype }}" />#}
+    {#<input type="hidden" id="mrn" value="{{ mrn }}" />#}
+
+    {{ form_start(form) }}
+        {#{{ form_widget(form) }}#}
+
+        {{ formmacros.field(form.keytype) }}
+        {{ formmacros.field(form.mrn) }}
+        {{ formmacros.field(form.dob) }}
+        {{ formmacros.field(form.lastname) }}
+        {{ formmacros.field(form.firstname) }}
+        {{ formmacros.field(form.middlename) }}
+        {{ formmacros.field(form.suffix) }}
+        {{ formmacros.field(form.gender) }}
+
+        {% if form.update is defined %}
+            <br>
+            {{ form_widget(form.update) }}
+        {% endif %}
+
+    {{ form_end(form) }}
+
+    <br><br>
+    <p>
+        {#{% for encounter in project.encounter %}#}
+            {#{{ encounter.obtainFullObjectName() }}<br>#}
+        {#{% endfor %}#}
+        {{ encounterInfo|raw }}
+    </p>
+
+    <br>
+    {% if cycle == "show" %}
+        <p>
+            <a class="btn btn-default" href="{{ path('calllog_single_patient_edit', { 'id': patient.id}) }}">Edit</a>
+        </p>
+    {% endif %}
+    {% if cycle == "edit" %}
+        <p>
+            {#<a class="btn btn-default" href="{{ path('calllog_patient_view_by_mrn', { 'mrn': mrnNumber, 'mrntype': mrnTypeId, 'show-tree-depth': 2}) }}" target="_blank">Cancel</a>#}
+            <a class="btn btn-default" href="{{ path('calllog_single_patient_view', { 'id': patient.id}) }}">Cancel</a>
+        </p>
+    {% endif %}
+
+
+{% endblock %}
+

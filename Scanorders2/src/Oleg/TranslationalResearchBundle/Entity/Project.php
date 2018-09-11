@@ -1720,7 +1720,8 @@ class Project {
         //if( $this->getCreateDate() ) {
         //    $createDateStr = " on " . $this->getCreateDate()->format('m/d/Y');
         //}
-        return $this->getOid() . " '$title' submitted by ".$this->getSubmitter()->getUsernameOptimal();
+        //return $this->getOid() . " '$title' submitted by ".$this->getSubmitter()->getUsernameOptimal();
+        return $this->getOid() . " '$title'";
     }
 
     //"IRB with PI FirstName LastName expires on MM/DD/YYYY."

@@ -1894,13 +1894,19 @@ class ProjectController extends Controller
                 }
             }
 
-            if( $project->getState() && strpos($project->getState(),"_missinginfo") !== false ) {
-                $params['reSubmitReview'] = true;
-            }
-
             //allow edit if admin at any time
             if( $transresUtil->isAdminOrPrimaryReviewer($project->getProjectSpecialty()) || $transresUtil->isProjectEditableByRequester($project) ) {
                 $params['updateProject'] = true;
+            }
+
+            if( $project->getState() && strpos($project->getState(),"_missinginfo") !== false ) {
+                $params['reSubmitReview'] = true;
+                //in the missing info stage, allow update project only by admin
+                if( $transresUtil->isAdminOrPrimaryReviewer($project->getProjectSpecialty()) ) {
+                    $params['updateProject'] = true;
+                } else {
+                    $params['updateProject'] = false;
+                }
             }
         }
 

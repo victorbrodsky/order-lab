@@ -1698,7 +1698,7 @@ class RequestController extends Controller
         //testing
         //$dql->andWhere("transresRequest.id = 2");
 
-        $limit = 10;
+        $limit = 20;
         $query = $em->createQuery($dql);
 
         //doctrine cache queries

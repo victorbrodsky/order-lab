@@ -477,9 +477,9 @@ class Patient extends ObjectAbstract
     }
 
 
-    public function addSuffix($suffix)
+    public function addSuffix($suffix,$force=false)
     {
-        if( $this->notEmpty($suffix) && !$this->suffix->contains($suffix) && !$this->hasSimpleField($suffix,"getSuffix") ) {
+        if( $force || ( $this->notEmpty($suffix) && !$this->suffix->contains($suffix) && !$this->hasSimpleField($suffix,"getSuffix") ) ) {
             $suffix->setPatient($this);
             $this->suffix->add($suffix);
         }
@@ -501,7 +501,7 @@ class Patient extends ObjectAbstract
      * @param \Oleg\OrderformBundle\Entity\PatientLastname $lastname
      * @return Patient
      */
-    public function addLastname($lastname)
+    public function addLastname($lastname,$force=false)
     {
 
         //echo "Patient add lastname: lastname=".$lastname.", id=".$lastname->getId().", status=".$lastname->getStatus()."<br>";
@@ -510,7 +510,7 @@ class Patient extends ObjectAbstract
 //            $lastname = new PatientLastname();
 //        }
 
-        if( $this->notEmpty($lastname) && !$this->lastname->contains($lastname) && !$this->hasSimpleField($lastname,"getLastname") ) {
+        if( $force || ( $this->notEmpty($lastname) && !$this->lastname->contains($lastname) && !$this->hasSimpleField($lastname,"getLastname") ) ) {
             //echo "adding lastname=".$lastname."<br>";
             $lastname->setPatient($this);
             $this->lastname->add($lastname);
@@ -561,7 +561,7 @@ class Patient extends ObjectAbstract
      * @param \Oleg\OrderformBundle\Entity\PatientFirstname $firstname
      * @return Patient
      */
-    public function addFirstname($firstname)
+    public function addFirstname($firstname,$force=false)
     {
 
         //echo "Patient add firstname: firstname=".$firstname."<br>";
@@ -570,7 +570,7 @@ class Patient extends ObjectAbstract
 //            $firstname = new PatientFirstname();
 //        }
 
-        if( $this->notEmpty($firstname) && !$this->firstname->contains($firstname) && !$this->hasSimpleField($firstname,"getFirstname") ) {
+        if( $force || ( $this->notEmpty($firstname) && !$this->firstname->contains($firstname) && !$this->hasSimpleField($firstname,"getFirstname") ) ) {
             $firstname->setPatient($this);
             $this->firstname->add($firstname);
         }
@@ -618,7 +618,7 @@ class Patient extends ObjectAbstract
      * @param \Oleg\OrderformBundle\Entity\PatientMiddlename $middlename
      * @return Patient
      */
-    public function addMiddlename($middlename)
+    public function addMiddlename($middlename,$force=false)
     {
 
         //echo "Patient add middlename: middlename=".$middlename."<br>";
@@ -627,7 +627,7 @@ class Patient extends ObjectAbstract
 //            $middlename = new PatientMiddlename();
 //        }
 
-        if( $this->notEmpty($middlename) && !$this->middlename->contains($middlename) && !$this->hasSimpleField($middlename,"getMiddlename") ) {
+        if( $force || ($this->notEmpty($middlename) && !$this->middlename->contains($middlename) && !$this->hasSimpleField($middlename,"getMiddlename") ) ) {
             $middlename->setPatient($this);
             $this->middlename->add($middlename);
         }
@@ -673,11 +673,12 @@ class Patient extends ObjectAbstract
      * Add sex
      *
      * @param \Oleg\OrderformBundle\Entity\PatientSex $sex
+     * @param boolean $force
      * @return Patient
      */
-    public function addSex($sex)
+    public function addSex($sex,$force=false)
     {
-        if( $this->notEmpty($sex) && !$this->sex->contains($sex) && !$this->hasSimpleField($sex,"getSex") ) {
+        if( $force || ($this->notEmpty($sex) && !$this->sex->contains($sex) && !$this->hasSimpleField($sex,"getSex")) ) {
             $sex->setPatient($this);
             $this->sex->add($sex);
         }
