@@ -115,7 +115,7 @@ class PackingSlipController extends Controller
             }
         }
 
-        $msg = "Packing Slip PDF has been created for Work Request ID " . $transresRequest->getOid() . "; filename=".$filename."; size=".$size;
+        $msg = "Packing Slip PDF has been generated for Work Request " . $transresRequest->getOid() . "; filename=".$filename."; size=".$size;
 
         //exit("<br><br>".$msg);
 

@@ -956,11 +956,18 @@ class InvoiceController extends Controller
 
         $res = $transresPdfUtil->generateInvoicePdf($invoice,$user);
         
-        $filename = $res['filename'];
-        $pdf = $res['pdf'];
+        //$filename = $res['filename'];
+        //$pdf = $res['pdf'];
         $size = $res['size'];
 
-        $msg = "PDF has been created for Invoice ID " . $invoice->getOid() . "; filename=".$filename."; size=".$size;
+        //$msg = "PDF has been created for Invoice ID " . $invoice->getOid() . "; filename=".$filename."; size=".$size;
+        $msg = "Draft Translation Research Invoice ".$invoice->getOid()." has been generated"."; PDF size=".$size;
+
+        //3) send by email to recipient (principalInvestigator)
+        //Send the most recent Invoice PDF by Email
+        $msgEmail = $transresRequestUtil->sendNewInvoicePDFGeneratedEmail($invoice);
+
+        $msg = $msg . "<br>" . $msgEmail;
 
         //exit("<br><br>".$msg);
 
@@ -1290,7 +1297,7 @@ class InvoiceController extends Controller
 
         $transresPdfUtil = $this->get('transres_pdf_generator');
         $transresRequestUtil = $this->get('transres_request_util');
-
+        
         $newline = "<br>"; //"\n";
         $msg = "";
 
@@ -1303,11 +1310,22 @@ class InvoiceController extends Controller
             //2) generate Invoice PDF
             $res = $transresPdfUtil->generateInvoicePdf($invoice,$user);
 
-            $filename = $res['filename'];
+            //$filename = $res['filename'];
             //$pdf = $res['pdf'];
             $size = $res['size'];
+            if( !$size ) {
+                return "Invoice generation failed!";
+            }
 
-            $msg = "PDF has been created for Invoice ID " . $invoice->getOid() . "; filename=".$filename."; size=".$size;
+            //$msg = "PDF has been created for Invoice ID " . $invoice->getOid() . "; filename=".$filename."; size=".$size;
+            //Draft Translation Research Invoice for work request APCP12-REQ12 has been generated
+            $msg = "Draft Translation Research Invoice ".$invoice->getOid()." has been generated"."; PDF size=".$size;
+
+            //3) send by email to recipient (principalInvestigator)
+            //Send the most recent Invoice PDF by Email
+            $msgEmail = $transresRequestUtil->sendNewInvoicePDFGeneratedEmail($invoice);
+
+            $msg = $msg . $newline . $msgEmail;
         }
 
         if( $form->getClickedButton() && 'saveAndGeneratePdfAndSendByEmail' === $form->getClickedButton()->getName() ) {
@@ -1316,11 +1334,15 @@ class InvoiceController extends Controller
             //2) generate Invoice PDF
             $res = $transresPdfUtil->generateInvoicePdf($invoice,$user);
 
-            $filename = $res['filename'];
+            //$filename = $res['filename'];
             //$pdf = $res['pdf'];
             $size = $res['size'];
+            if( !$size ) {
+                return "Invoice generation failed!";
+            }
 
-            $msg = "PDF has been created for Invoice ID " . $invoice->getOid() . "; filename=".$filename."; size=".$size;
+            //$msg = "PDF has been created for Invoice ID " . $invoice->getOid() . "; filename=".$filename."; size=".$size;
+            $msg = "Draft Translation Research Invoice ".$invoice->getOid()." has been generated and sent by email.". "; PDF size=".$size;
 
             //3) send by email to recipient (principalInvestigator)
             //Send the most recent Invoice PDF by Email

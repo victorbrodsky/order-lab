@@ -1236,6 +1236,53 @@ class TransResRequestUtil
         return $url;
     }
 
+    public function getInvoiceShowUrl($invoice,$asHref=true) {
+        $url = $this->container->get('router')->generate(
+            'translationalresearch_invoice_show',
+            array(
+                'oid' => $invoice->getOid(),
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+
+        if( $asHref ) {
+            $url = '<a href="'.$url.'">'.$url.'</a>';
+        }
+
+        return $url;
+    }
+    public function getInvoiceEditUrl($invoice,$asHref=true) {
+        $url = $this->container->get('router')->generate(
+            'translationalresearch_invoice_edit',
+            array(
+                'oid' => $invoice->getOid(),
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+
+        if( $asHref ) {
+            $url = '<a href="'.$url.'">'.$url.'</a>';
+        }
+
+        return $url;
+    }
+
+    public function getSendInvoiceByEmailUrl($invoice,$asHref=true) {
+        $url = $this->container->get('router')->generate(
+            'translationalresearch_invoice_send_pdf_email',
+            array(
+                'oid' => $invoice->getOid(),
+            ),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+
+        if( $asHref ) {
+            $url = '<a href="'.$url.'">'.$url.'</a>';
+        }
+
+        return $url;
+    }
+    
     //set transresRequest's $fundedAccountNumber to the project's formnode (i.e. $fundedAccountNumber => "If funded, please provide account number")
     public function setValueToFormNodeProject( $project, $fieldName, $value ) {
         //echo "value=$value<br>";
@@ -2385,35 +2432,10 @@ class TransResRequestUtil
         $emailUtil = $this->container->get('user_mailer_utility');
         $transresUtil = $this->container->get('transres_util');
 
-        $msg = "";
         $transresRequest = null;
         $siteParameter = null;
         $attachmentPath = null;
         $ccs = null;
-
-//        $piEmailArr = array();
-//
-//        $pi = $invoice->getPrincipalInvestigator();
-//
-//        if( !$pi ) {
-//            //return "There is no PI. Email has not been sent.";
-//            //use submitter
-//            $pi = $invoice->getSubmitter();
-//        }
-//
-//        $piEmail = $pi->getSingleEmail();
-//        if( $piEmail ) {
-//            $piEmailArr[] = $piEmail;
-//        }
-//
-//        //Invoice's Billing Contact
-//        $invoiceBillingContact = $invoice->getBillingContact();
-//        if( $invoiceBillingContact ) {
-//            $invoiceBillingContactEmail = $invoiceBillingContact->getSingleEmail();
-//            if( $invoiceBillingContactEmail) {
-//                $piEmailArr[] = $invoiceBillingContactEmail;
-//            }
-//        }
 
         $piEmailArr = $this->getInvoicePis($invoice);
 
@@ -2494,6 +2516,84 @@ class TransResRequestUtil
         //event log
         $eventType = "Invoice PDF Issued";
         $transresUtil->setEventLog($invoice,$eventType,$msg);
+
+        return $msg;
+    }
+
+    public function sendNewInvoicePDFGeneratedEmail($invoice) {
+
+        $emailUtil = $this->container->get('user_mailer_utility');
+        $transresUtil = $this->container->get('transres_util');
+
+        $newline = "<br>";
+        $siteParameter = null;
+        $attachmentPath = null;
+        $salespersonEmail = null;
+        $ccs = null;
+
+        $transresRequest = $invoice->getTransresRequest();
+        $project = $transresRequest->getProject();
+
+        if( $project ) {
+            $projectSpecialty = $project->getProjectSpecialty();
+            if( $projectSpecialty ) {
+                $specialtyPostfix = $projectSpecialty->getUppercaseName();
+                $specialtyPostfix = "_" . $specialtyPostfix;
+            } else {
+                $specialtyPostfix = null;
+            }
+        }
+
+        $invoicePisStr = $this->getInvoicePisStr($invoice);
+
+        if( !$invoicePisStr ) {
+            return "There are no PI to send invoice by emails. Email has not been sent.";
+        }
+
+        $salesperson = $invoice->getSalesperson();
+        if( $salesperson ) {
+            $salespersonEmail = $salesperson->getSingleEmail();
+        } else {
+            return "There is no sales person. Email has not been sent.";
+        }
+
+
+        $invoiceShowUrl = $this->getInvoiceShowUrl($invoice);
+        $invoiceEditUrl = $this->getInvoiceEditUrl($invoice);
+        $sendInvoiceByEmailUrl = $this->getSendInvoiceByEmailUrl($invoice);
+
+        $emailSubject = "Draft Translation Research Invoice for work request ".$transresRequest->getOid()." has been generated";
+
+        //Please review the draft invoice pdf for work request APCP12-REQ12 by visiting:
+        $body = "Please review the draft invoice pdf for work request APCP12-REQ12 by visiting:";
+        $body = $body . $newline . $invoiceShowUrl;
+
+        //To issue the invoice to Surya Seshan - svs2002 (WCMC CWID) at email svs2002@med.cornell.edu, led9016@med.cornell.edu please visit this link:
+        //http://localhost/order/translational-research/invoice/send-invoice-pdf-by-email/APCP12-REQ12-V2
+        $body = $body . $newline.$newline . "To issue the invoice to ".$invoicePisStr." please visit this link:";
+        $body = $body . $newline . $sendInvoiceByEmailUrl;
+
+        //To edit the invoice and generate an updated copy, please visit this link:
+        $body = $body . $newline.$newline . "To edit the invoice and generate an updated copy, please visit this link:";
+        $body = $body . $newline . $invoiceEditUrl;
+
+        //send by email
+        $senderEmail = $transresUtil->getTransresSiteProjectParameter('fromEmail',$project);
+
+        //Billing Admin as CC
+        $ccs = array();
+        $billingUsers = $this->em->getRepository('OlegUserdirectoryBundle:User')->findUserByRole("ROLE_TRANSRES_BILLING_ADMIN".$specialtyPostfix);
+        foreach( $billingUsers as $billingUser ) {
+            if( $billingUser ) {
+                $ccs[] = $billingUser->getSingleEmail();
+            }
+        }
+
+        //                    $emails, $subject, $message, $ccs=null, $fromEmail=null
+        $emailUtil->sendEmail( $salespersonEmail, $emailSubject, $body, $ccs, $senderEmail );
+
+        $msg =  "Invoice ".$invoice->getOid()." PDF has been sent by email to " . $salespersonEmail . " with CC to " . implode(", ",$ccs);
+        $msg = $msg . ".<br> Subject: " . $emailSubject . ".<br> Body: " . $body;
 
         return $msg;
     }
