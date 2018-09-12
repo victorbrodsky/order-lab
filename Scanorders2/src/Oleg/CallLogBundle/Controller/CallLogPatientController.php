@@ -346,11 +346,11 @@ class CallLogPatientController extends PatientController {
         $form = $this->createPatientSingleForm($patient,$singlePatient,$cycle);
 
         //Encounter list
-        $encounterInfo = $this->getEncounterInfos($patient);
+        $messages = $this->getEncounterInfos($patient);
 
         return array(
             'patient' => $patient,
-            'encounterInfo' => $encounterInfo,
+            'messages' => $messages,
             'form' => $form->createView(),
             'cycle' => $cycle,
             'title' => "Patient Demographics",
@@ -399,32 +399,69 @@ class CallLogPatientController extends PatientController {
             $newSuffix = $singlePatient->getSuffix();
             $newGender = $singlePatient->getGender();
 
+            $mrntypeObject = null;
+            $createNewMrn = false;
+
 //            echo "new mrntype=".$newMrntype."<br>";
+//            echo "new MrnNumber=".$newMrnNumber."<br>";
 //            echo "new gender=".$newGender."<br>";
 //            echo "new Lastname=".$newLastname."<br>";
 //            echo "new Firstname=".$newFirstname."<br>";
 //            echo "new dob=".$newDob->format('Y-m-d')."<br>";
 
+            ///////////////// Create new object if a new value exists and is not equal to the original /////////////////////
             if( $newMrntype || $newMrnNumber ) {
-                $patient->setStatusAllFields($patient->getMrn(), $invalidStatus);
-                $newMrnObject = new PatientMrn('valid',$user,null);
+                $mrnEntity = $patient->obtainValidField('mrn');
+                if( $mrnEntity ) {
+                    $mrnNumber = $mrnEntity->getField();
+                    $mrnTypeId = $mrnEntity->getKeytype()->getId();
+                } else {
+                    $mrnNumber = null;
+                    $mrnTypeId = null;
+                }
+                //$newMrnObject = new PatientMrn('valid',$user,null);
+                //check mrn type
                 if( $newMrntype ) {
+                    if( $newMrntype != $mrnTypeId ) {
+                        $mrntypeObject = $em->getRepository('OlegOrderformBundle:MrnType')->find($newMrntype);
+                        if ($mrntypeObject) {
+                            //$newMrnObject->setKeytype($mrntypeObject);
+                            $createNewMrn = true;
+                        }
+                    }
+                }
+                //check mrn number
+                if( $newMrnNumber ) {
+                    if( $newMrnNumber != $mrnNumber ) {
+                        //$newMrnObject->setField($newMrnNumber);
+                        $createNewMrn = true;
+                    }
+                }
 
-                    $mrntypeObject = $em->getRepository('OlegOrderformBundle:MrnType')->find($newMrntype);
+                if( $createNewMrn ) {
+                    //echo "create new mrn <br>";
+                    $patient->setStatusAllFields($patient->getMrn(), $invalidStatus);
+                    $newMrnObject = new PatientMrn('valid',$user,null);
                     if( $mrntypeObject ) {
                         $newMrnObject->setKeytype($mrntypeObject);
                     }
+                    if( $newMrnNumber ) {
+                        $newMrnObject->setField($newMrnNumber);
+                    }
+                    $patient->addMrn($newMrnObject);
                 }
-                if( $newMrnNumber ) {
-                    $newMrnObject->setField($newMrnNumber);
-                }
-                $patient->addMrn($newMrnObject);
             }
 
             if( $newGender ) {
                 $sex = $patient->obtainValidField('sex');
-                echo $sex->getId()." ?= $newGender<br>";
-                if( $sex->getId() != $newGender ) {
+                $sexStr = null;
+                if( $sex && $sex->getField() ) {
+                    //echo "current gender=".$sex->getField()->getId()."<br>";
+                    $sexStr = $sex->getField()->getId();
+                }
+                //echo "Sex: ".$sexStr." ?= ".$newGender."<br>";
+                if( $sexStr != $newGender ) {
+                    //echo "create new sex <br>";
                     $patient->setStatusAllFields($patient->getSex(), $invalidStatus);
                     $newSexObject = new PatientSex('valid', $user, null);
                     $sexObject = $em->getRepository('OlegUserdirectoryBundle:SexList')->find($newGender);
@@ -433,16 +470,16 @@ class CallLogPatientController extends PatientController {
                 }
             }
 
-            //TODO: test dob, gender, mrn
             if( $newDob ) {
                 $dob = $patient->obtainValidField('dob'); //object data
                 $dobStr = null;
                 if( $dob && $dob->getField() ) {
                     $dobStr = $dob->getField()->format('m/d/Y');
                 }
-                $newDobStr = $dob->getField()->format('m/d/Y');
-                echo "$dobStr ?= $newDobStr<br>";
+                $newDobStr = $newDob->format('m/d/Y');
+                //echo "$dobStr ?= $newDobStr<br>";
                 if( $dobStr != $newDobStr ) {
+                    //echo "create new dob <br>";
                     $patient->setStatusAllFields($patient->getDob(), $invalidStatus);
                     $newDobObject = new PatientDob('valid', $user, null);
                     $newDobObject->setField($newDob);
@@ -453,6 +490,7 @@ class CallLogPatientController extends PatientController {
             if( $newLastname ) {
                 $lastname = $patient->obtainValidField('lastname');
                 if( $lastname != $newLastname ) {
+                    //echo "create new lastname <br>";
                     $patient->setStatusAllFields($patient->getLastname(), $invalidStatus);
                     $newLastnameObject = new PatientLastName('valid', $user, null);
                     $newLastnameObject->setField($newLastname);
@@ -463,6 +501,7 @@ class CallLogPatientController extends PatientController {
             if( $newFirstname ) {
                 $firstname = $patient->obtainValidField('firstname');
                 if( $firstname != $newFirstname ) {
+                    //echo "create new firstname <br>";
                     $patient->setStatusAllFields($patient->getFirstname(), $invalidStatus);
                     $newFirstnameObject = new PatientFirstName('valid', $user, null);
                     $newFirstnameObject->setField($newFirstname);
@@ -473,6 +512,7 @@ class CallLogPatientController extends PatientController {
             if( $newMiddlename ) {
                 $middlename = $patient->obtainValidField('middlename');
                 if( $middlename != $newMiddlename ) {
+                    //echo "create new middlename <br>";
                     $patient->setStatusAllFields($patient->getMiddlename(), $invalidStatus);
                     $newMiddlenameObject = new PatientMiddleName('valid', $user, null);
                     $newMiddlenameObject->setField($newMiddlename);
@@ -483,14 +523,16 @@ class CallLogPatientController extends PatientController {
             if( $newSuffix ) {
                 $suffix = $patient->obtainValidField('suffix');
                 if( $suffix != $newSuffix ) {
+                    //echo "create new suffix <br>";
                     $patient->setStatusAllFields($patient->getSuffix(), $invalidStatus);
                     $newSuffixObject = new PatientSuffix('valid', $user, null);
                     $newSuffixObject->setField($newSuffix);
                     $patient->addSuffix($newSuffixObject, true);
                 }
             }
+            ///////////////// EOF Create new object if a new value exists and is not equal to the original /////////////////////
 
-            exit("Update Patient");
+            //exit("Update Patient");
 
             $em->flush();
 
@@ -508,13 +550,13 @@ class CallLogPatientController extends PatientController {
         }
 
         //Encounter list
-        $encounterInfo = $this->getEncounterInfos($patient);
+        $messages = $this->getEncounterInfos($patient);
 
         return array(
             'patient' => $patient,
             //'mrnNumber' => $mrnNumber,
             //'mrntype' => $mrnTypeId,
-            'encounterInfo' => $encounterInfo,
+            'messages' => $messages,
             'form' => $editForm->createView(),
             'cycle' => $cycle,
             'title' => "Edit Patient Demographics",
@@ -614,13 +656,37 @@ class CallLogPatientController extends PatientController {
     }
     public function getEncounterInfos($patient) {
         //Encounter list
-        $encounterInfoArr = array();
-        foreach( $patient->getEncounter() as $encounter ) {
-            $encounterNumber = $encounter->obtainEncounterNumber();
-            $encounterInfoArr[$encounterNumber] = $encounter->obtainFullObjectName();
+        if(0) {
+            $encounterInfoArr = array();
+            foreach ($patient->getEncounter() as $encounter) {
+                $encounterNumber = $encounter->obtainEncounterNumber();
+                $encounterInfoArr[$encounterNumber] = $encounter->obtainFullObjectName();
+            }
+            $encounterInfo = "<b>Encounter(s)</b>:<br>" . implode("<br>", $encounterInfoArr);
+            return $encounterInfo;
         }
-        $encounterInfo = "<b>Encounter(s)</b>:<br>" . implode("<br>",$encounterInfoArr);
-        return $encounterInfo;
+
+        //perform search
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository('OlegOrderformBundle:Message');
+        $dql = $repository->createQueryBuilder('message');
+        $dql->leftJoin("message.patient","patient");
+        $dql->leftJoin("message.messageStatus","messageStatus");
+//        $dql->leftJoin("patient.mrn","mrn");
+//        $dql->leftJoin("patient.lastname","lastname");
+//        $dql->leftJoin("patient.firstname","firstname");
+//        $dql->leftJoin("message.encounter","encounter");
+//        $dql->leftJoin("message.calllogEntryMessage","calllogEntryMessage");
+
+        $dql->where("patient.id = ".$patient->getId()." AND messageStatus.name != 'Deleted'");
+        $query = $em->createQuery($dql);
+        //$query->setMaxResults(10);
+
+        $messages = $query->getResult();
+        //echo "messages=".count($messages)."<br>";
+        //exit();
+
+        return $messages;
     }
 
 

@@ -220,7 +220,16 @@ class FosCommentListener implements EventSubscriberInterface {
             }
         }
 
-        //3) principalInvestigators
+        //3) submitster
+        $submiiter = $transresRequest->getSubmitter();
+        if( $submiiter ) {
+            $submiiterEmail = $submiiter->getSingleEmail();
+            if( $submiiterEmail ) {
+                $emails = array_merge($emails,array($submiiterEmail));
+            }
+        }
+
+        //4) principalInvestigators
         $piEmailArr = array();
         $pis = $transresRequest->getPrincipalInvestigators();
         foreach( $pis as $pi ) {
