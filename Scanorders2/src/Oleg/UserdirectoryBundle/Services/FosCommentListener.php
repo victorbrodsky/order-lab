@@ -211,7 +211,7 @@ class FosCommentListener implements EventSubscriberInterface {
         $adminEmails = $transresUtil->getTransResAdminEmails($project->getProjectSpecialty(),true,true);
         //$emails = array_merge($emails,$adminEmails);
 
-//        //2) contact (Billing Contact)
+//        //2) contact (Billing Contact). Removed by Bing's request: "The email should be sent to the work request submitted and the PI."
 //        $contact = $transresRequest->getContact();
 //        if( $contact ) {
 //            $contactEmail = $contact->getSingleEmail();
