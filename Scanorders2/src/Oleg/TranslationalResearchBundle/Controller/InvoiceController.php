@@ -553,7 +553,7 @@ class InvoiceController extends Controller
             $advancedFilter++;
         }
 
-        $limit = 10;
+        $limit = 30;
         $query = $em->createQuery($dql);
 
         if( count($dqlParameters) > 0 ) {
