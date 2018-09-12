@@ -1125,6 +1125,7 @@ class TransResRequestUtil
                 $label = $this->getRequestStateLabelByName($to,$statMachineType);
 
                 $msgInfo = "The status of the work request ".$transresRequest->getOid()." has been changed from '".$originalStateLabel."' to '".$label."'";
+                $msgInfo = $msgInfo . " by " . $user;
 
                 //Exception: Changing the status of request to "Approved/Ready for Invoicing" should send an email notification
                 // to the users with the role of "Translational Research Billing Administrator"
@@ -1165,6 +1166,7 @@ class TransResRequestUtil
                     //$subject = "Project ID ".$transresRequest->getProject()->getOid().": Request ID ".$transresRequest->getId()." has been sent to the status '$label' from '".$originalStateLabel."'";
                     //The status of the work request APCP28-REQ27 has been changed from 'Active' to 'Completed'
                     $subject = "The status of the work request ".$transresRequest->getOid()." has been changed from '".$originalStateLabel."' to '".$label."'";
+                    $subject = $subject . " by " . $user;
 
                     //Body: The status of the work request APCP28-REQ27 has been changed from 'Active' to 'Completed'
                     //get request url

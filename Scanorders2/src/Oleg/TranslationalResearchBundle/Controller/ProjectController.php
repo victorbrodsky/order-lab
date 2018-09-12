@@ -952,7 +952,7 @@ class ProjectController extends Controller
             $startProjectReview = false;
 
             //exit("clickedButton=".$form->getClickedButton()->getName());
-            echo "clickedButton=".$form->getClickedButton()->getName()."<br>";
+            //echo "clickedButton=".$form->getClickedButton()->getName()."<br>";
 
             //new
             if ($form->getClickedButton() && 'saveAsDraft' === $form->getClickedButton()->getName()) {
@@ -1005,11 +1005,20 @@ class ProjectController extends Controller
                 // status updates by email. You can also log back in to this site to review
                 // the status of your project request, submit your subsequent work requests
                 // (upon project request approval), and see your associated invoices (if any) as well.
-                $emailSubject = "Your project request has been assigned an ID of ".$project->getOid();
-                $msg = "Thank you for your submission! Your project request has been assigned an ID of ".$project->getOid().
+                $emailSubject = "Your project request has been received and assigned the following ID: ".$project->getOid();
+                $msg = "Thank you for your submission! Your project request has been received and assigned the following ID of ".$project->getOid().
                     " and will be reviewed.".
                     " You should receive notifications of approval status updates by email.".
                     " You can also log back in to this site to review the status of your project request, ".
+                    "submit your subsequent work requests (upon project request approval), and see your associated invoices (if any) as well.";
+                //Thank you for your submission! Your project request has been received and assigned the ID of APCP28.
+                // It will be reviewed and you should receive notifications regarding its approval status by email.
+                // You can also log back into this web site to review the status of your project request,
+                // submit your subsequent work requests (upon project request approval),
+                // and see your associated invoices (if any) as well.
+                $msg = "Thank you for your submission! Your project request has been received and assigned the following ID of ".$project->getOid().".".
+                    " It will be reviewed and you should receive notifications regarding its approval status by email.".
+                    " You can also log back into this web site to review the status of your project request, ".
                     "submit your subsequent work requests (upon project request approval), and see your associated invoices (if any) as well.";
             }
 
@@ -1168,6 +1177,7 @@ class ProjectController extends Controller
 
                     $label = $transresUtil->getStateLabelByName($project->getState());
                     $msg = "Project request " . $project->getOid() . " has been successfully updated and the status has been changed from '$originalStateLabel' to '$label'";
+                    $msg = $msg . " by " . $user;
                 }
             }
 
@@ -1207,7 +1217,6 @@ class ProjectController extends Controller
                 exit('Form is submitted and finished, msg='.$msg);
             }
 
-            //TODO:
             //echo "cliked btn=".$form->getClickedButton()->getName()."<br>";
             //exit('resubmit');
             if ($form->getClickedButton() && 'reSubmitReview' === $form->getClickedButton()->getName()) {

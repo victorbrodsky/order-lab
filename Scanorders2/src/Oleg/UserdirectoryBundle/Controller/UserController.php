@@ -2091,7 +2091,7 @@ class UserController extends Controller
 
             //record create user to Event Log
             $userAdmin = $this->get('security.token_storage')->getToken()->getUser();
-            $event = "User ".$user." has been created by ".$userAdmin."<br>";
+            $event = "User account for ".$user." has been created by ".$userAdmin."<br>";
             $userSecUtil = $this->get('user_security_utility');
             $userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'),$event,$userAdmin,$user,$request,'New user record added');
 

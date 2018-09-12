@@ -241,13 +241,13 @@ class RequestController extends Controller
             //exit("create: ID=".$transresRequest->getOid()."; state=".$transresRequest->getProgressState());
             if( $transresRequest->getProgressState() == 'active' ) {
                 $eventType = "Request Created";
-                $msg = "New work request " . $transresRequest->getOid() . " has been submitted";
+                $msg = "New work request (" . $transresRequest->getOid() . ") has been submitted";
                 $msg = $msg . $break.$break . $changedMsg;
 
                 $requestUrl = $transresRequestUtil->getRequestShowUrl($transresRequest);
                 $msg = $msg . $break.$break . "To view this work request, please visit the link below: " . $break . $requestUrl;
 
-                $subject = "New work request has been submitted " . $transresRequest->getOid();
+                $subject = "New work request has been submitted (" . $transresRequest->getOid().")";
                 $emailRes = $transresRequestUtil->sendRequestNotificationEmails($transresRequest, $subject, $msg, $testing);
 
                 $transresUtil->setEventLog($transresRequest, $eventType, $emailRes);
@@ -525,7 +525,7 @@ class RequestController extends Controller
             //update Request email
             if( $transresRequest->getProgressState() == 'active' ) {
                 //exit("create: ID=".$transresRequest->getOid()."; state=".$transresRequest->getProgressState());
-                $subject = "Work Request " . $transresRequest->getOid() . " has been updated ans set to Active.";
+                $subject = "Work Request " . $transresRequest->getOid() . " has been updated and set to Active.";
                 $emailRes = $transresRequestUtil->sendRequestNotificationEmails($transresRequest, $subject, $msg, $testing);
 
                 $msg = $emailRes;

@@ -2437,6 +2437,7 @@ class TransResUtil
             $emailRecipients = $this->getRequesterMiniEmails($project);
 
             $subject = "Project request $oid status has been changed from '$originalStateLabel' to '$currentStateLabel'";
+            $subject = $subject . " by " . $user;
 
             //"Additional information has been requested for the project with ID $id '".$title."' for the '".$fromLabel."' stage.";
             $body = $this->getNotificationMsgByStates($originalStateStr,$currentStateStr,$project);
@@ -3973,7 +3974,9 @@ class TransResUtil
         }
 
         if( !$msg ) {
+            $user = $this->secTokenStorage->getToken()->getUser();
             $msg = "The status of the project request $id '".$title."' has been changed from '".$fromLabel."' to '".$toLabel."'.";
+            $msg = $msg . " by " . $user;
         }
 
         return $msg;
