@@ -961,7 +961,7 @@ class InvoiceController extends Controller
         $size = $res['size'];
 
         //$msg = "PDF has been created for Invoice ID " . $invoice->getOid() . "; filename=".$filename."; size=".$size;
-        $msg = "Draft Translation Research Invoice ".$invoice->getOid()." has been generated"."; PDF size=".$size;
+        $msg = "Draft Translational Research Invoice ".$invoice->getOid()." has been generated"."; PDF size=".$size;
 
         //3) send by email to recipient (principalInvestigator)
         //Send the most recent Invoice PDF by Email
@@ -1319,7 +1319,7 @@ class InvoiceController extends Controller
 
             //$msg = "PDF has been created for Invoice ID " . $invoice->getOid() . "; filename=".$filename."; size=".$size;
             //Draft Translation Research Invoice for work request APCP12-REQ12 has been generated
-            $msg = "Draft Translation Research Invoice ".$invoice->getOid()." has been generated"."; PDF size=".$size;
+            $msg = "Draft Translational Research Invoice ".$invoice->getOid()." has been generated"."; PDF size=".$size;
 
             //3) send by email to recipient (principalInvestigator)
             //Send the most recent Invoice PDF by Email
@@ -1342,7 +1342,7 @@ class InvoiceController extends Controller
             }
 
             //$msg = "PDF has been created for Invoice ID " . $invoice->getOid() . "; filename=".$filename."; size=".$size;
-            $msg = "Draft Translation Research Invoice ".$invoice->getOid()." has been generated and sent by email.". "; PDF size=".$size;
+            $msg = "Draft Translational Research Invoice ".$invoice->getOid()." has been generated and sent by email.". "; PDF size=".$size;
 
             //3) send by email to recipient (principalInvestigator)
             //Send the most recent Invoice PDF by Email

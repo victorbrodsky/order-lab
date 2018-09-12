@@ -1708,7 +1708,7 @@ class TransResRequestUtil
 //        }
 
         //Subject: Draft Translation Research Invoice for Request [Request ID] of Project [Project Title]
-        $subject = "Draft Translation Research Invoice for Request ".$transresRequest->getOid()." of Project ".$projectTitle;
+        $subject = "Draft Translational Research Invoice for Request ".$transresRequest->getOid()." of Project ".$projectTitle;
 
         //1) Preview Invoice PDF
         $invoicePdfViewUrl = $this->container->get('router')->generate(
@@ -2564,7 +2564,7 @@ class TransResRequestUtil
         $invoiceEditUrl = $this->getInvoiceEditUrl($invoice);
         $sendInvoiceByEmailUrl = $this->getSendInvoiceByEmailUrl($invoice);
 
-        $emailSubject = "Draft Translation Research Invoice for work request ".$transresRequest->getOid()." has been generated";
+        $emailSubject = "Draft Translational Research Invoice for work request ".$transresRequest->getOid()." has been generated";
 
         //Please review the draft invoice pdf for work request APCP12-REQ12 by visiting:
         $body = "Please review the draft invoice pdf for work request APCP12-REQ12 by visiting:";

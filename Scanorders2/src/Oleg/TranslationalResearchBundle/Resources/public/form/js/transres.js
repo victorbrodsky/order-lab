@@ -153,6 +153,8 @@ function transresValidateProjectForm() {
 
     console.log("Validate project");
 
+    transresHideBtn();
+
     //e.preventDefault();
     //e.stopImmediatePropagation();
 
@@ -162,8 +164,6 @@ function transresValidateProjectForm() {
 
     $("#projectError").hide();
     $("#projectError").html(null);
-
-    transresHideBtn();
 
     //required class loop
     $("form[name=oleg_translationalresearchbundle_project]").find(".required").each(function( index ) {
@@ -286,7 +286,7 @@ function transresValidateProjectForm() {
         //validate fields
     }
 
-    transresShowBtn();
+    //transresShowBtn();
 
     //console.log("No Error");
     //return false; //testing
@@ -299,12 +299,12 @@ function transresValidateProjectForm() {
 }
 
 function transresHideBtn() {
-    //console.log("hide submit");
+    //console.log("hide submit buttons");
     $(":submit").hide();
     $('#please-wait').show();
 }
 function transresShowBtn() {
-    //console.log("show submit");
+    //console.log("show submit buttons");
     $(":submit").show();
     $('#please-wait').hide();
 }

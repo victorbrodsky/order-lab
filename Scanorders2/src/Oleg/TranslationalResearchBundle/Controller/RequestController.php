@@ -525,7 +525,7 @@ class RequestController extends Controller
             //update Request email
             if( $transresRequest->getProgressState() == 'active' ) {
                 //exit("create: ID=".$transresRequest->getOid()."; state=".$transresRequest->getProgressState());
-                $subject = "Work Request " . $transresRequest->getOid() . " has been updated and set to Active.";
+                $subject = "Work Request " . $transresRequest->getOid() . " has been updated and it’s status set to Active.";
                 $emailRes = $transresRequestUtil->sendRequestNotificationEmails($transresRequest, $subject, $msg, $testing);
 
                 $msg = $emailRes;
