@@ -1063,11 +1063,11 @@ class TransResRequestUtil
         //exception
         if( $to == "completedNotified" ) {
             //only Admin can change the status to completedNotified
-            if( !$this->secAuth->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyPostfix) ) {
+            if( !$this->secAuth->isGranted('ROLE_TRANSRES_ADMIN'.$specialtyPostfix) && !$this->secAuth->isGranted('ROLE_TRANSRES_TECHNICIAN'.$specialtyPostfix) ) {
                 $toLabel = $this->getRequestStateLabelByName($to,$statMachineType);
                 $this->container->get('session')->getFlashBag()->add(
                     'warning',
-                    "Only Admin can change the status of the Request to " . $toLabel
+                    "Only Admins and Technicians can change the status of the Request to " . $toLabel
                 );
                 return false;
             }
