@@ -214,6 +214,11 @@
         </tbody>
     </table>
 
+    {# display navigation #}
+    <div class="navigation">
+        {{ knp_pagination_render(invoices) }}
+    </div>
+
     {% if transresRequest and transres_request_util.isUserHasInvoicePermission(null,"create") %}
         <br>
         <p>

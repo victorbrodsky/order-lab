@@ -553,7 +553,7 @@ class InvoiceController extends Controller
             $advancedFilter++;
         }
 
-        $limit = 30;
+        $limit = 10;
         $query = $em->createQuery($dql);
 
         if( count($dqlParameters) > 0 ) {
@@ -1297,7 +1297,7 @@ class InvoiceController extends Controller
 
         $transresPdfUtil = $this->get('transres_pdf_generator');
         $transresRequestUtil = $this->get('transres_request_util');
-        
+
         $newline = "<br>"; //"\n";
         $msg = "";
 
