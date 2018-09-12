@@ -211,14 +211,14 @@ class FosCommentListener implements EventSubscriberInterface {
         $adminEmails = $transresUtil->getTransResAdminEmails($project->getProjectSpecialty(),true,true);
         //$emails = array_merge($emails,$adminEmails);
 
-        //2) contact
-        $contact = $transresRequest->getContact();
-        if( $contact ) {
-            $contactEmail = $contact->getSingleEmail();
-            if( $contactEmail ) {
-                $emails = array_merge($emails,array($contactEmail));
-            }
-        }
+//        //2) contact (Billing Contact)
+//        $contact = $transresRequest->getContact();
+//        if( $contact ) {
+//            $contactEmail = $contact->getSingleEmail();
+//            if( $contactEmail ) {
+//                $emails = array_merge($emails,array($contactEmail));
+//            }
+//        }
 
         //3) submitster
         $submiiter = $transresRequest->getSubmitter();
