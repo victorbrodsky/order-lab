@@ -446,7 +446,7 @@
                                 {% if transres_util.isAdminOrPrimaryReviewer() or transres_util.isProjectEditableByRequester(project) %}
                                     <li>
                                         <a href="{{ path(translationalresearch_sitename~'_project_edit', { 'id': project.id }) }}"
-                                           >Update IRB approval expiration date to submit new requests</a>
+                                           >Update IRB/IACUC approval expiration date to submit new requests</a>
                                     </li>
                                 {% endif %}
                             {% endif %}
