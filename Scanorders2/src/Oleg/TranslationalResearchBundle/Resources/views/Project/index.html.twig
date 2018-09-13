@@ -136,10 +136,10 @@
                     <br>
                     <div class="row">
                         <div class="col-xs-6">
-                            {{ formmacros.fielddate(filterform.fromIrbExpDate,'allow-future-date') }}
+                            {{ formmacros.fielddate(filterform.fromImplicitExpDate,'allow-future-date') }}
                         </div>
                         <div class="col-xs-6">
-                            {{ formmacros.fielddate(filterform.toIrbExpDate,'allow-future-date') }}
+                            {{ formmacros.fielddate(filterform.toImplicitExpDate,'allow-future-date') }}
                         </div>
                     </div>
 
@@ -173,7 +173,7 @@
                 <th>{{ knp_pagination_sortable(projects, 'Approval Date', 'project.approvalDate') }}</th>
                 {#<th>{{ knp_pagination_sortable(projects, 'Expiration Date', 'project.expirationDate') }}</th>#}
                 {#<th>IRB Expiration Date</th>#}
-                <th>{{ knp_pagination_sortable(projects, 'IRB Expiration Date', 'project.irbExpirationDate') }}</th>
+                <th>{{ knp_pagination_sortable(projects, 'IRB/IACUC Expiration Date', 'project.irbExpirationDate') }}</th>
                 <th>Work Requests</th>
 
                 <th title="Number of the Latest Issued Invoices">Issued Invoices</th>
@@ -212,7 +212,7 @@
                     project.state != 'committee_rejected' and project.state != 'final_rejected'
                     )
                     and
-                    date(project.irbExpirationDate) < date()|date_modify("+3 months")
+                    date(project.implicitExpirationDate) < date()|date_modify("+3 months")
             %}
                 {% set trclassname = "table-row-lightyellow" %}
             {% endif %}
@@ -224,7 +224,7 @@
                     project.state != 'committee_rejected' and project.state != 'final_rejected'
                     )
                     and
-                    date(project.irbExpirationDate) < date()
+                    date(project.implicitExpirationDate) < date()
             %}
                 {% set trclassname = "table-row-lightred" %}
             {% endif %}
@@ -290,8 +290,8 @@
                 <td>
                     {#{{ project.title }}#}
                     {#{{ transres_formnode_util.getProjectFormNodeFieldByName(project,"IRB Expiration Date") }}#}
-                    {% if project.irbExpirationDate %}
-                        {{ project.irbExpirationDate|date("m/d/Y",false) }}
+                    {% if project.implicitExpirationDate %}
+                        {{ project.implicitExpirationDate|date("m/d/Y",false) }}
                     {% endif %}
                 </td>
 

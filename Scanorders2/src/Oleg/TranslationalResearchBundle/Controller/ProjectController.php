@@ -183,8 +183,8 @@ class ProjectController extends Controller
             //'defaultStatesArr' => $defaultStatesArr,
             'projectSpecialtyAllowedArr' => $projectSpecialtyAllowedArr,
             'defaultStatesArr' => array("All-except-Drafts"),
-            'toIrbExpDate' => null,
-            'fromIrbExpDate' => null
+            'toImplicitExpDate' => null,
+            'fromImplicitExpDate' => null
         );
 
         if( $routeName == "translationalresearch_my_request_project_draft_index" ) {
@@ -197,7 +197,7 @@ class ProjectController extends Controller
                 'admin_review','admin_missinginfo',
                 'committee_review','final_review','final_approved'
             );
-            $params['toIrbExpDate'] =new \DateTime();
+            $params['toImplicitExpDate'] =new \DateTime();
             $title = "Active Project Requests with Expired IRB";
         }
         if( $routeName == "translationalresearch_active_expired_soon_project_index" ) {
@@ -207,8 +207,8 @@ class ProjectController extends Controller
                 'committee_review','final_review','final_approved'
             );
             $today = new \DateTime();
-            $params['fromIrbExpDate'] = new \DateTime();
-            $params['toIrbExpDate'] = $today->modify('+3 months');
+            $params['fromImplicitExpDate'] = new \DateTime();
+            $params['toImplicitExpDate'] = $today->modify('+3 months');
             $title = "Active Project Requests with IRB Expiring Soon";
         }
 
@@ -257,8 +257,8 @@ class ProjectController extends Controller
         $fromExpectedCompletionDate = $filterform['fromExpectedCompletionDate']->getData();
         $toExpectedCompletionDate = $filterform['toExpectedCompletionDate']->getData();
 
-        $fromIrbExpDate = $filterform['fromIrbExpDate']->getData();
-        $toIrbExpDate = $filterform['toIrbExpDate']->getData();
+        $fromImplicitExpDate = $filterform['fromImplicitExpDate']->getData();
+        $toImplicitExpDate = $filterform['toImplicitExpDate']->getData();
 
         //$showMatchingAndTotal = $filterform['showMatchingAndTotal']->getData();
 //        $archived = $filterform['completed']->getData();
@@ -526,15 +526,15 @@ class ProjectController extends Controller
             $advancedFilter++;
         }
 
-        if( $fromIrbExpDate ) {
-            $dql->andWhere('project.irbExpirationDate >= :fromIrbExpirationDate');
-            $dqlParameters['fromIrbExpirationDate'] = $fromIrbExpDate->format('Y-m-d H:i:s');
+        if( $fromImplicitExpDate ) {
+            $dql->andWhere('project.implicitExpirationDate >= :fromImplicitExpirationDate');
+            $dqlParameters['fromImplicitExpirationDate'] = $fromImplicitExpDate->format('Y-m-d H:i:s');
             $advancedFilter++;
         }
-        if( $toIrbExpDate ) {
-            $toIrbExpDate->modify('+1 day');
-            $dql->andWhere('project.irbExpirationDate <= :toIrbExpirationDate');
-            $dqlParameters['toIrbExpirationDate'] = $toIrbExpDate->format('Y-m-d H:i:s');
+        if( $toImplicitExpDate ) {
+            $toImplicitExpDate->modify('+1 day');
+            $dql->andWhere('project.implicitExpirationDate <= :toImplicitExpirationDate');
+            $dqlParameters['toImplicitExpirationDate'] = $toImplicitExpDate->format('Y-m-d H:i:s');
             $advancedFilter++;
         }
 
@@ -969,6 +969,8 @@ class ProjectController extends Controller
 
             $transresUtil->assignMinimumProjectRoles($project);
 
+            $project->calculateAndSetImplicitExpirationDate();
+
             $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($project,"document");
             $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($project,"irbApprovalLetter");
             $em->getRepository('OlegUserdirectoryBundle:Document')->processDocuments($project,"humanTissueForm");
@@ -1151,6 +1153,7 @@ class ProjectController extends Controller
 
             $project->setUpdateUser($user);
             $project->setUpdateDate();
+            $project->calculateAndSetImplicitExpirationDate();
 
             $startProjectReview = false;
 
@@ -2109,9 +2112,8 @@ class ProjectController extends Controller
             $billingContactId = $project->getBillingContact()->getId();
         }
 
-        //$irbExpirationDate = null;
-        if( $project->getIrbExpirationDate() ) {
-           $irbExpirationDate = $project->getIrbExpirationDate()->format("m/d/Y");
+        if( $project->getImplicitExpirationDate() ) {
+            $implicitExpirationDate = $project->getImplicitExpirationDate()->format("m/d/Y");
         }
 
         $fundedStr = "Not-Funded";
@@ -2121,12 +2123,11 @@ class ProjectController extends Controller
 
         $output = array(
             "fundedAccountNumber" => $project->getFundedAccountNumber(),
-            "irbExpirationDate" => $irbExpirationDate,
+            "implicitExpirationDate" => $implicitExpirationDate,
             "principalInvestigators" => $projectPisArr,
             "contact" => $billingContactId, //BillingContact,
             "fundedStr" => $fundedStr
-            //"irbExpirationDate" => $irbExpirationDate
-        ); 
+        );
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');

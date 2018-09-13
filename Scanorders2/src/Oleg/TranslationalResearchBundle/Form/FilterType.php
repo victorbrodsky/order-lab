@@ -248,21 +248,21 @@ class FilterType extends AbstractType
             'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'To Expected Completion Date'),
         ));
 
-        $builder->add('fromIrbExpDate', DateTimeType::class, array(
+        $builder->add('fromImplicitExpDate', DateTimeType::class, array(
             'label' => false,
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
-            'data' => $this->params['fromIrbExpDate'],
-            'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'From IRB Expiration Date'),
+            'data' => $this->params['fromImplicitExpDate'],
+            'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'From IRB/IACUC Expiration Date'),
         ));
-        $builder->add('toIrbExpDate', DateTimeType::class, array(
+        $builder->add('toImplicitExpDate', DateTimeType::class, array(
             'label' => false,
             'widget' => 'single_text',
             'required' => false,
             'format' => 'MM/dd/yyyy',
-            'data' => $this->params['toIrbExpDate'],
-            'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'To IRB Expiration Date'),
+            'data' => $this->params['toImplicitExpDate'],
+            'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'To IRB/IACUC Expiration Date'),
         ));
 
 //        $builder->add('showMatchingAndTotal', ChoiceType::class, array(

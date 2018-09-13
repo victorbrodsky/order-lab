@@ -103,12 +103,12 @@
                     {#Title#}
                     {{ formmacros.simplefield("Title:", project.title, "input", "disabled") }}
 
-                    {#IRB#}
-                    {% set irbExpirationDate = null %}
-                    {% if project.irbExpirationDate %}
-                        {% set irbExpirationDate = project.irbExpirationDate|date('m/d/Y',false) %}
+                    {#IRB/IACUC#}
+                    {% set implicitExpirationDate = null %}
+                    {% if project.implicitExpirationDate %}
+                        {% set implicitExpirationDate = project.implicitExpirationDate|date('m/d/Y',false) %}
                     {% endif %}
-                    {{ formmacros.simplefield("IRB Expiration Date:", irbExpirationDate, "input", "disabled") }}
+                    {{ formmacros.simplefield("IRB/IACUC Expiration Date:", implicitExpirationDate, "input", "disabled") }}
 
                     {#Funding#}
                     {{ formmacros.simplefield("Funding:", project.isFunded(), "input", "disabled") }}

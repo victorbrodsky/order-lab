@@ -848,9 +848,9 @@ class TransResRequestUtil
 
         //3) Request can not be submitted for the expired project
         $expDate = null;
-        if( $project->getIrbExpirationDate() ) {
+        if( $project->getImplicitExpirationDate() ) {
             //use simple project's field
-            $expDate = $project->getIrbExpirationDate();
+            $expDate = $project->getImplicitExpirationDate();
         } else {
             //use formnode project's field if the simple field is null
             //$expirationDate = $transResFormNodeUtil->getProjectFormNodeFieldByName($project, "IRB Expiration Date");

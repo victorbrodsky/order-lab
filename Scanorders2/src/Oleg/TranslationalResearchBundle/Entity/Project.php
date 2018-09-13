@@ -1316,27 +1316,46 @@ class Project {
     public function calculateAndSetImplicitExpirationDate()
     {
         $earliestDate = null;
+        $irb = false;
+        $iacuc = false;
         $irbExpDate = $this->getIrbExpirationDate();
         $iacucExpDate = $this->getIacucExpirationDate();
 
-        if( $irbExpDate ) {
+        $irbApproval = $this->getExemptIrbApproval();
+        if( $irbApproval && $irbApproval->getName() == "Not Exempt" ) {
+            $irb = true;
+        }
+        $iacucApproval = $this->getExemptIACUCApproval();
+        if( $iacucApproval && $iacucApproval->getName() == "Not Exempt" ) {
+            $iacuc = true;
+        }
+
+        if( $irb && $irbExpDate && $this->getExemptIrbApproval() ) {
             $earliestDate = $irbExpDate;
         }
-        if( $iacucExpDate ) {
+        if( $iacuc && $iacucExpDate && $this->getExemptIACUCApproval() ) {
             $earliestDate = $iacucExpDate;
         }
-        if( $irbExpDate && $iacucExpDate ) {
+        if( $irb && $iacuc && $irbExpDate && $iacucExpDate ) {
             //get the EARLIEST date and copy to $implicitExpirationDate
             if( $iacucExpDate < $irbExpDate ) {
-                $earliestDate = $iacucExpDate;
+                if( $iacuc ) {
+                    $earliestDate = $iacucExpDate;
+                }
             } else {
-                $earliestDate = $irbExpDate;
+                if( $irb ) {
+                    $earliestDate = $irbExpDate;
+                }
             }
         }
 
         if( $earliestDate ) {
+            //echo "earliestDate=".$earliestDate->format('Y-m-d')."<br>";
+            //exit("Changed");
             $this->setImplicitExpirationDate($earliestDate);
         }
+        //exit("Not changed");
+
         return $earliestDate;
     }
 

@@ -3346,7 +3346,7 @@ class TransResUtil
         $ews->setCellValue('E1', 'Funding');
         $ews->setCellValue('F1', 'Status');
         $ews->setCellValue('G1', 'Approval Date');
-        $ews->setCellValue('H1', 'IRB Expiration Date');
+        $ews->setCellValue('H1', 'IRB/IACUC Expiration Date');
 
         $ews->setCellValue('I1', 'Request ID');
 
@@ -3616,10 +3616,9 @@ class TransResUtil
         $ews->setCellValue('G'.$row, $this->convertDateToStr($project->getApprovalDate()) );
 
         //IRB Expiration Date
-        //$ews->setCellValue('H'.$row, $transResFormNodeUtil->getProjectFormNodeFieldByName($project,"IRB Expiration Date"));
         $expDateStr = null;
-        if( $project->getIrbExpirationDate() ) {
-            $expDateStr = $project->getIrbExpirationDate()->format('m/d/Y');
+        if( $project->getImplicitExpirationDate() ) {
+            $expDateStr = $project->getImplicitExpirationDate()->format('m/d/Y');
         }
         $ews->setCellValue('H'.$row, $expDateStr);
 

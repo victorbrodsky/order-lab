@@ -306,6 +306,36 @@ class DefaultController extends Controller
         return $this->redirectToRoute('employees_siteparameters');
     }
 
-    
+    /**
+     * http://localhost/order/translational-research/update-projects-implicit-date
+     *
+     * @Route("/update-projects-implicit-date", name="translationalresearch_update_projects_implicit_date")
+     */
+    public function updateProjectsImplicitDateAction( Request $request ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $projects = $em->getRepository('OlegTranslationalResearchBundle:Project')->findAll();
+
+        $batchSize = 20;
+        $i = 0;
+
+        foreach($projects as $project) {
+            $project->calculateAndSetImplicitExpirationDate();
+            $em->flush($project);
+            //$em->persist($project);
+//            if (($i % $batchSize) === 0) {
+//                $em->flush($project);
+//                $em->clear(); // Detaches all objects from Doctrine!
+//            }
+            $i++;
+        }
+        //$em->flush(); //Persist objects that did not make up an entire batch
+        //$em->clear();
+
+        exit("End of update project's implicit dates ".$i);
+    }
 
 }

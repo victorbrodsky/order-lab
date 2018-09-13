@@ -116,8 +116,8 @@ class RequestController extends Controller
             }
 
             //new: pre-populate Request's Support End Date by Project's IRB Expiration Date
-            if( $project->getIrbExpirationDate() ) {
-                $transresRequest->setSupportEndDate($project->getIrbExpirationDate());
+            if( $project->getImplicitExpirationDate() ) {
+                $transresRequest->setSupportEndDate($project->getImplicitExpirationDate());
             }
 
             //pre-populate PIs
@@ -152,8 +152,8 @@ class RequestController extends Controller
 
             //new: pre-populate Request's Support End Date by Project's IRB Expiration Date
             if( !$transresRequest->getSupportEndDate() ) {
-                if( $project->getIrbExpirationDate() ) {
-                    $transresRequest->setSupportEndDate($project->getIrbExpirationDate());
+                if( $project->getImplicitExpirationDate() ) {
+                    $transresRequest->setSupportEndDate($project->getImplicitExpirationDate());
                 }
             }
 
@@ -417,8 +417,8 @@ class RequestController extends Controller
 
             //edit: pre-populate Request's Support End Date by Project's IRB Expiration Date
             if( !$transresRequest->getSupportEndDate() ) {
-                if( $project->getIrbExpirationDate() ) {
-                    $transresRequest->setSupportEndDate($project->getIrbExpirationDate());
+                if( $project->getImplicitExpirationDate() ) {
+                    $transresRequest->setSupportEndDate($project->getImplicitExpirationDate());
                 }
             }
 
