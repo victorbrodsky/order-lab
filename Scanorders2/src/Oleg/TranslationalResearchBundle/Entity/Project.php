@@ -1322,11 +1322,11 @@ class Project {
         $iacucExpDate = $this->getIacucExpirationDate();
 
         $irbApproval = $this->getExemptIrbApproval();
-        if( $irbApproval && $irbApproval->getName() == "Not Exempt" ) {
+        if( !$irbApproval || ($irbApproval && $irbApproval->getName() == "Not Exempt") ) {
             $irb = true;
         }
         $iacucApproval = $this->getExemptIACUCApproval();
-        if( $iacucApproval && $iacucApproval->getName() == "Not Exempt" ) {
+        if( !$iacucApproval || ($iacucApproval && $iacucApproval->getName() == "Not Exempt") ) {
             $iacuc = true;
         }
 
