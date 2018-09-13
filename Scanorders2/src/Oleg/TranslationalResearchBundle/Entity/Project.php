@@ -503,6 +503,13 @@ class Project {
      */
     private $tissueFormComment;
 
+    /**
+     * Implicit Expiration Date
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $implicitExpirationDate;
+
+
 
     public function __construct($user=null) {
 
@@ -964,6 +971,7 @@ class Project {
     public function setIrbExpirationDate($irbExpirationDate)
     {
         $this->irbExpirationDate = $irbExpirationDate;
+        $this->calculateAndSetImplicitExpirationDate();
     }
 
     /**
@@ -1267,6 +1275,7 @@ class Project {
     public function setIacucExpirationDate($iacucExpirationDate)
     {
         $this->iacucExpirationDate = $iacucExpirationDate;
+        $this->calculateAndSetImplicitExpirationDate();
     }
 
     /**
@@ -1283,6 +1292,52 @@ class Project {
     public function setIacucNumber($iacucNumber)
     {
         $this->iacucNumber = $iacucNumber;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getImplicitExpirationDate()
+    {
+        return $this->implicitExpirationDate;
+    }
+
+    /**
+     * @param mixed $implicitExpirationDate
+     */
+    public function setImplicitExpirationDate($implicitExpirationDate)
+    {
+        $this->implicitExpirationDate = $implicitExpirationDate;
+    }
+
+    /**
+     * @param mixed $implicitExpirationDate
+     */
+    public function calculateAndSetImplicitExpirationDate()
+    {
+        $earliestDate = null;
+        $irbExpDate = $this->getIrbExpirationDate();
+        $iacucExpDate = $this->getIacucExpirationDate();
+
+        if( $irbExpDate ) {
+            $earliestDate = $irbExpDate;
+        }
+        if( $iacucExpDate ) {
+            $earliestDate = $iacucExpDate;
+        }
+        if( $irbExpDate && $iacucExpDate ) {
+            //get the EARLIEST date and copy to $implicitExpirationDate
+            if( $iacucExpDate < $irbExpDate ) {
+                $earliestDate = $iacucExpDate;
+            } else {
+                $earliestDate = $irbExpDate;
+            }
+        }
+
+        if( $earliestDate ) {
+            $this->setImplicitExpirationDate($earliestDate);
+        }
+        return $earliestDate;
     }
 
     /**
