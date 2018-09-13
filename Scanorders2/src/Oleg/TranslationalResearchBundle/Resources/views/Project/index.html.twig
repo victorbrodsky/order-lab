@@ -475,7 +475,8 @@
 
                             {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
                                 <li>
-                                    <a href="{{ path(translationalresearch_sitename~'_project_delete_get', { 'id': project.id }) }}"
+                                    <a general-data-confirm="Are you sure you want to delete project {{ project.oid }}?"
+                                       href="{{ path(translationalresearch_sitename~'_project_delete_get', { 'id': project.id }) }}"
                                        target="_blank">Delete Project (Visible to Platform Admin only)</a>
                                 </li>
                             {% endif %}

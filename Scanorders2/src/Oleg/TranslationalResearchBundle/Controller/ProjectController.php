@@ -1330,7 +1330,7 @@ class ProjectController extends Controller
 
         $form = $this->createProjectForm($project,$cycle,$request); //show
 
-        $deleteForm = $this->createDeleteForm($project);
+        //$deleteForm = $this->createDeleteForm($project);
 
         //create a review form (for example, IrbReview form if logged in user is a reviewer or reviewer delegate)
         //1) if project is in the review state: irb_review, admin_review, committee_review or final_review
@@ -1357,7 +1357,7 @@ class ProjectController extends Controller
             'form' => $form->createView(),
             'cycle' => $cycle,
             'title' => $project->getProjectInfoName(), //"Project request ".$project->getOid(),
-            'delete_form' => $deleteForm->createView(),
+            //'delete_form' => $deleteForm->createView(),
             'eventObjectTypeId' => $eventObjectTypeId,
             //'review_forms' => $reviewFormViews
         );
@@ -1446,7 +1446,7 @@ class ProjectController extends Controller
 
         //$cycle = "review";
 
-        $deleteForm = $this->createDeleteForm($project);
+        //$deleteForm = $this->createDeleteForm($project);
 
         //create a review form (for example, IrbReview form if logged in user is a reviewer or reviewer delegate)
         //1) if project is in the review state: irb_review, admin_review, committee_review or final_review
@@ -1462,7 +1462,7 @@ class ProjectController extends Controller
             'form' => $form->createView(),
             'cycle' => $cycle,
             'title' => "Review ".$project->getProjectInfoName(),
-            'delete_form' => $deleteForm->createView(),
+            //'delete_form' => $deleteForm->createView(),
             //'review_forms' => $reviewFormViews
         );
 

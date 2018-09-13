@@ -180,6 +180,10 @@ class PdfGenerator
         $context = $router->getContext();
 
         //http://192.168.37.128/order/app_dev.php/translational-research/download-invoice-pdf/49
+        $originalHost = $context->getHost();
+        $originalScheme = $context->getScheme();
+        $originalBaseUrl = $context->getBaseUrl();
+
         $context->setHost('localhost');
         $context->setScheme($connectionChannel);
         $context->setBaseUrl('/order');
@@ -204,6 +208,11 @@ class PdfGenerator
             $applicationOutputFilePath
         //array('cookie' => array($session->getName() => $session->getId()))
         );
+
+        //set back to original context
+        $context->setHost($originalHost);
+        $context->setScheme($originalScheme);
+        $context->setBaseUrl($originalBaseUrl);
 
         //echo "generated ok! <br>";
     }
@@ -458,6 +467,10 @@ class PdfGenerator
             //exit('use localhost');
             $context = $router->getContext();
 
+            $originalHost = $context->getHost();
+            $originalScheme = $context->getScheme();
+            $originalBaseUrl = $context->getBaseUrl();
+
             //http://192.168.37.128/order/app_dev.php/translational-research/download-invoice-pdf/49
             $context->setHost('localhost');
             $context->setScheme($connectionChannel);
@@ -471,6 +484,11 @@ class PdfGenerator
             ),
             UrlGeneratorInterface::ABSOLUTE_URL
         ); //this does not work from console: 'order' is missing
+
+        //set back to original context
+        $context->setHost($originalHost);
+        $context->setScheme($originalScheme);
+        $context->setBaseUrl($originalBaseUrl);
 
         //$pageUrl = "http://localhost/order/translational-research/work-request/download-packing-slip-pdf/14078";
 

@@ -2567,7 +2567,7 @@ class TransResRequestUtil
         $emailSubject = "Draft Translational Research Invoice for work request ".$transresRequest->getOid()." has been generated";
 
         //Please review the draft invoice pdf for work request APCP12-REQ12 by visiting:
-        $body = "Please review the draft invoice pdf for work request APCP12-REQ12 by visiting:";
+        $body = "Please review the draft invoice pdf for work request ".$transresRequest->getOid()." by visiting:";
         $body = $body . $newline . $invoiceShowUrl;
 
         //To issue the invoice to Surya Seshan - svs2002 (WCMC CWID) at email svs2002@med.cornell.edu, led9016@med.cornell.edu please visit this link:
