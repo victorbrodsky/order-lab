@@ -1323,17 +1323,19 @@ class Project {
 
         $irbApproval = $this->getExemptIrbApproval();
         if( !$irbApproval || ($irbApproval && $irbApproval->getName() == "Not Exempt") ) {
+            //echo "irb true <br>";
             $irb = true;
         }
         $iacucApproval = $this->getExemptIACUCApproval();
         if( !$iacucApproval || ($iacucApproval && $iacucApproval->getName() == "Not Exempt") ) {
+            //echo "iacuc true <br>";
             $iacuc = true;
         }
 
-        if( $irb && $irbExpDate && $this->getExemptIrbApproval() ) {
+        if( $irb && $irbExpDate ) {
             $earliestDate = $irbExpDate;
         }
-        if( $iacuc && $iacucExpDate && $this->getExemptIACUCApproval() ) {
+        if( $iacuc && $iacucExpDate ) {
             $earliestDate = $iacucExpDate;
         }
         if( $irb && $iacuc && $irbExpDate && $iacucExpDate ) {

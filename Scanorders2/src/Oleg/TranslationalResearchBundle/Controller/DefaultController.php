@@ -319,23 +319,30 @@ class DefaultController extends Controller
         $em = $this->getDoctrine()->getManager();
         $projects = $em->getRepository('OlegTranslationalResearchBundle:Project')->findAll();
 
-        $batchSize = 20;
+        //$project = $em->getRepository('OlegTranslationalResearchBundle:Project')->find(3294);
+        //$projects = array($project);
+
+        //$batchSize = 20;
         $i = 0;
 
         foreach($projects as $project) {
-            $project->calculateAndSetImplicitExpirationDate();
-            $em->flush($project);
+            $implicitExpDate = $project->calculateAndSetImplicitExpirationDate();
+            if($implicitExpDate) {
+                $i++;
+                //echo "update implicitExpDate=" . $implicitExpDate->format('Y-m-d') . "<br>";
+                $em->flush($project);
+            }
             //$em->persist($project);
 //            if (($i % $batchSize) === 0) {
 //                $em->flush($project);
 //                $em->clear(); // Detaches all objects from Doctrine!
 //            }
-            $i++;
+//            $i++;
         }
         //$em->flush(); //Persist objects that did not make up an entire batch
         //$em->clear();
 
-        exit("End of update project's implicit dates ".$i);
+        exit("End of update project's implicit dates: ".$i);
     }
 
 }
