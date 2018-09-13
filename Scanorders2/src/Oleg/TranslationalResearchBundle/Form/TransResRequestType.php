@@ -221,7 +221,7 @@ class TransResRequestType extends AbstractType
             }
             $builder->add('supportEndDate', DateType::class, array(
                 'widget' => 'single_text',
-                'label' => "Support End Date/IRB Expiration Date:",
+                'label' => "Support End Date (IRB/IACUC Expiration Date):",
                 'format' => 'MM/dd/yyyy',
                 'attr' => $supportEndDateAttr,  //array('class' => 'datepicker form-control'),
                 'required' => false,
