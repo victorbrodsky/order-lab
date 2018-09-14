@@ -2077,9 +2077,9 @@ class UserSecurityUtil {
         return false;
     }
 
-    public function isSiteFromEmail( $sitename ) {
+    public function getSiteFromEmail( $sitenameAbbreviation ) {
         $fromEmail = null;
-        $siteObject = $this->em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation($sitename);
+        $siteObject = $this->em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation($sitenameAbbreviation);
         if( $siteObject )  {
             $fromEmail = $siteObject->getFromEmail();
         }

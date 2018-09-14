@@ -62,13 +62,34 @@ class EmailUtil {
 //        }
         //exit('yes connection');
 
+        $sitenameAbbreviation = null;
+
         //adding “[TRP] “ in front of every notifications’ subject line
         $request = $this->container->get('request_stack')->getCurrentRequest();
         $url = $request->getRequestUri();
         if( strpos($url,"/translational-research/") !== false ) {
+            $sitenameAbbreviation = "translationalresearch";
             $subject = "[TRP] " . $subject;
         }
-
+        if( strpos($url,"/directory/") !== false ) {
+            $sitenameAbbreviation = "employees";
+            $subject = "[EMPLOYEE DIRECTORY] " . $subject;
+        }
+        if( strpos($url,"/fellowship-applications/") !== false ) {
+            $sitenameAbbreviation = "fellapp";
+        }
+        if( strpos($url,"/call-log-book/") !== false ) {
+            $sitenameAbbreviation = "calllog";
+        }
+        if( strpos($url,"/vacation-request/") !== false ) {
+            $sitenameAbbreviation = "vacreq";
+        }
+        if( strpos($url,"/scan/") !== false ) {
+            $sitenameAbbreviation = "scan";
+        }
+        if( strpos($url,"/deidentifier/") !== false ) {
+            $sitenameAbbreviation = "deidentifier";
+        }
 
         if( !$emails || $emails == "" ) {
             //$logger->error("sendEmail: emails empty=".$emails);
@@ -80,6 +101,10 @@ class EmailUtil {
             //$logger->error("sendEmail: message body empty=".$body);
             $logger->error("sendEmail: Email has not been sent (message body empty): subject=".$subject."; body=".$body);
             return false;
+        }
+
+        if( !$fromEmail && $sitenameAbbreviation ) {
+            $fromEmail = $userSecUtil->getSiteFromEmail($sitenameAbbreviation);
         }
 
         if( !$fromEmail ) {
