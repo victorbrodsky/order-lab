@@ -64,11 +64,12 @@ class EmailUtil {
 
         $sitenameAbbreviation = null;
 
-        //adding “[TRP] “ in front of every notifications’ subject line
+        //site specific settings
         $request = $this->container->get('request_stack')->getCurrentRequest();
         $url = $request->getRequestUri();
         if( strpos($url,"/translational-research/") !== false ) {
             $sitenameAbbreviation = "translationalresearch";
+            //adding “[TRP] “ in front of every notifications’ subject line
             $subject = "[TRP] " . $subject;
         }
         if( strpos($url,"/directory/") !== false ) {
@@ -103,8 +104,10 @@ class EmailUtil {
             return false;
         }
 
-        if( !$fromEmail && $sitenameAbbreviation ) {
-            $fromEmail = $userSecUtil->getSiteFromEmail($sitenameAbbreviation);
+        if( !$fromEmail ) {
+            if( $sitenameAbbreviation ) {
+                $fromEmail = $userSecUtil->getSiteFromEmail($sitenameAbbreviation);
+            }
         }
 
         if( !$fromEmail ) {
