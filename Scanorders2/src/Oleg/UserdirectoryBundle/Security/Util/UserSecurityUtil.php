@@ -2077,6 +2077,18 @@ class UserSecurityUtil {
         return false;
     }
 
+    public function isSiteFromEmail( $sitename ) {
+        $fromEmail = null;
+        $siteObject = $this->em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation($sitename);
+        if( $siteObject )  {
+            $fromEmail = $siteObject->getFromEmail();
+        }
+        if( !$fromEmail ) {
+            $fromEmail = $this->getSiteSettingParameter('siteEmail');
+        }
+        return $fromEmail;
+    }
+
     public function allowSiteLogin($sitename) {
         $environment = $this->getSiteSettingParameter('environment');
         if( $environment == "live" && $this->isSiteAccessible($sitename) === false ) {

@@ -639,6 +639,11 @@ class GenericListType extends AbstractType
                 'required' => false,
                 'attr' => array('class'=>'form-control'),
             ));
+            $builder->add('fromEmail',null,array(
+                'label' => "Emails sent by this site will appear to come from the following address:",
+                'required' => false,
+                'attr' => array('class'=>'form-control'),
+            ));
 
             $builder->add('documents', CollectionType::class, array(
                 'entry_type' => DocumentType::class,

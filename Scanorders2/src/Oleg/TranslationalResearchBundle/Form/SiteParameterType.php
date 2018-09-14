@@ -196,7 +196,7 @@ class SiteParameterType extends AbstractType
             'attr' => array('class' => 'form-control')
         ));
         $builder->add('fromEmail', null, array(
-            'label' => "TRP Admin Email (trp-admin@med.cornell.edu):",
+            'label' => "Emails sent by this site will appear to come from the following address (trp-admin@med.cornell.edu):",
             'required' => false,
             'attr' => array('class' => 'textarea form-control')
         ));

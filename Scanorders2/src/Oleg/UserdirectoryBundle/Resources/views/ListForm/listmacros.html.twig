@@ -112,6 +112,7 @@
                 <th>{{ knp_pagination_sortable(entities, 'Accessibility', 'ent.accessibility') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Self Sign Up', 'ent.selfSignUp') }}</th>
                 <th>{{ knp_pagination_sortable(entities, 'Lowest Roles', 'ent.lowestRoles') }}</th>
+                <th>{{ knp_pagination_sortable(entities, 'From Email', 'ent.fromEmail') }}</th>
             {% endif %}
 
             {% if entities|first.section is defined and entities|first.productId is defined and entities|first.feeUnit is defined %}
@@ -321,6 +322,9 @@
                         {% for lowestRole in entity.lowestRoles %}
                             "{{ lowestRole.getAlias() }}"<br>
                         {% endfor %}
+                    </td>
+                    <td>
+                        {{ entity.fromEmail }}
                     </td>
                 {% endif %}
 
@@ -888,6 +892,9 @@
     {% endif %}
     {% if form.lowestRoles is defined %}
         {{ formmacros.field(form.lowestRoles) }}
+    {% endif %}
+    {% if form.fromEmail is defined %}
+        {{ formmacros.field(form.fromEmail) }}
     {% endif %}
 
     {#AntibodyList#}

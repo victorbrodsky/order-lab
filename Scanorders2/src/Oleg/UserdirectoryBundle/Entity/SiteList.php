@@ -82,6 +82,13 @@ class SiteList extends ListAbstract
      **/
     private $documents;
 
+    /**
+     * Emails sent by this site will appear to come from the following address
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $fromEmail;
+
 
     public function __construct( $creator = null ) {
         parent::__construct($creator);
@@ -173,6 +180,24 @@ class SiteList extends ListAbstract
     {
         $this->showLinkNavbar = $showLinkNavbar;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getFromEmail()
+    {
+        return $this->fromEmail;
+    }
+
+    /**
+     * @param mixed $fromEmail
+     */
+    public function setFromEmail($fromEmail)
+    {
+        $this->fromEmail = $fromEmail;
+    }
+
+
 
     /**
      * @return mixed
