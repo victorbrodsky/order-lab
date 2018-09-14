@@ -368,12 +368,14 @@ class EmailUtil {
                 DIRECTORY_SEPARATOR . "spool".
                 DIRECTORY_SEPARATOR . "default";
             $spool = new \Swift_FileSpool($spoolPath);
+
+            $spool->recover();
+            $res = $spool->flushQueue($transport);
+
+            return $res;
         }
 
-        $spool->recover();
-        $res = $spool->flushQueue($transport);
-
-        return $res;
+        return null;
     }
 
 
