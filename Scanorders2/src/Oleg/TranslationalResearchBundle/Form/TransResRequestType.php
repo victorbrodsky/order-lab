@@ -276,7 +276,7 @@ class TransResRequestType extends AbstractType
                 'form_custom_value' => $this->params
             ),
             'label' => false,
-            'required' => false,
+            'required' => true,
             'allow_add' => true,
             'allow_delete' => true,
             'by_reference' => false,
@@ -342,19 +342,21 @@ class TransResRequestType extends AbstractType
             }
             $builder->add('saveAsDraft', SubmitType::class, array(
                 'label' => $saveAsDraftLabel,
-                'attr' => array('class' => 'btn btn-warning', 'onclick'=>'transresValidateHandsonTable(this);')
+                //'attr' => array('class' => 'btn btn-warning', 'onclick'=>'transresValidateHandsonTable();')
+                'attr' => array('class' => 'btn btn-warning', 'onclick'=>'return transresValidateRequest(false);')
             ));
         }
         if( $this->params['saveAsUpdate'] === true ) {
             $builder->add('saveAsUpdate', SubmitType::class, array(
                 'label' => 'Update',
-                'attr' => array('class'=>'btn btn-warning', 'onclick'=>'transresValidateHandsonTable(this);')
+                //'attr' => array('class'=>'btn btn-warning', 'onclick'=>'transresValidateHandsonTable();')
+                'attr' => array('class'=>'btn btn-warning', 'onclick'=>'return transresValidateRequest(false);')
             ));
         }
         if( $this->params['saveAsComplete'] === true ) {
             $builder->add('saveAsComplete', SubmitType::class, array(
                 'label' => 'Complete Submission',
-                'attr' => array('class'=>'btn btn-warning saveAsComplete', 'onclick'=>'return transresValidateRequest();') //'general-data-confirm'=>"Are you sure you want to submit this Working Request?"
+                'attr' => array('class'=>'btn btn-warning saveAsComplete', 'onclick'=>'return transresValidateRequest(true);') //'general-data-confirm'=>"Are you sure you want to submit this Working Request?"
             ));
             //, 'onsubmit'=>'transresValidateRequest();'
             //'onclick'=>'transresValidateHandsonTable();',
@@ -362,7 +364,8 @@ class TransResRequestType extends AbstractType
         if( $this->params['updateRequest'] === true ) {
             $builder->add('updateRequest', SubmitType::class, array(
                 'label' => 'Update Request',
-                'attr' => array('class'=>'btn btn-warning', 'onclick'=>'transresValidateHandsonTable(this);')
+                //'attr' => array('class'=>'btn btn-warning', 'onclick'=>'transresValidateHandsonTable();')
+                'attr' => array('class'=>'btn btn-warning', 'onclick'=>'return transresValidateRequest(false);')
             ));
         }
 

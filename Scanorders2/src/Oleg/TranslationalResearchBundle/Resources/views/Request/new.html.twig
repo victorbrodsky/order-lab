@@ -161,10 +161,10 @@
                 <label for="subscribeNews">I have verified the contents of this work request and authorize the department of pathology to charge the listed fund number for the listed amount.</label>
             </div>
 
-            <div id="projectError" class="alert alert-danger" style="display: none; margin: 5px;"></div>
-
             {{ form_widget(form.saveAsComplete) }}
         {% endif %}
+
+        <div id="projectError" class="alert alert-danger" style="display: none; margin: 5px;"></div>
 
     {{ form_end(form) }}
 
@@ -282,6 +282,7 @@
     '@OlegUserdirectoryBundle/Resources/public/bwip-js/freetype.js'
     '@OlegOrderformBundle/Resources/public/form/js/selectAjax.js'
     '@OlegOrderformBundle/Resources/public/form/js/masking.js'
+    '@OlegUserdirectoryBundle/Resources/public/form/js/user-masking.js'
     '@OlegTranslationalResearchBundle/Resources/public/form/js/barcode.js'
     '@OlegUserdirectoryBundle/Resources/public/qrcode/qrcode.js'
     '@OlegUserdirectoryBundle/Resources/public/jquery-qrcode/jquery.qrcode.min.js'
@@ -294,6 +295,8 @@
         var _handsometableDataArr = [];
 
         $(document).ready(function() {
+
+            fieldInputMask();
 
             //if( $('#oleg_translationalresearchbundle_request_project') ) {
                 //var projectId = $('#oleg_translationalresearchbundle_request_project').val();
@@ -343,39 +346,105 @@
             //bwipInit();
 
             var showPackingSlip = document.getElementById("latest-packing-slip-pdf-view");
-            console.log("1 show showPackingSlip");
+            //console.log("1 show showPackingSlip");
             if( showPackingSlip ) {
-                console.log("2 show showPackingSlip");
+                //console.log("2 show showPackingSlip");
                 showPackingSlip.click();
             }
 
         });
 
-        function transresValidateRequest() {
+        function transresValidateRequest(withConfirm) {
 
             transresHideBtn();
+
+            var validated = true;
+            var label = null;
+            var value = null;
 
             //validate submit confirmation
             $("#projectError").hide();
             $("#projectError").html(null);
-            var confirmationSubmit = $('#confirmationSubmit');
-            if( confirmationSubmit.length ) {
-                if( confirmationSubmit.is(':checked') ) {
-                    //ok confirmed
-                    console.log("ok confirmed");
-                } else {
-                    var msg = "Please confirm the agreement in order to submit a new work request.";
-                    $("#projectError").show();
-                    $("#projectError").html(msg);
-                    console.log("not confirmed");
-                    transresShowBtn();
-                    return false;
+
+            //validate "Requested Quantity" in product and service
+            $("form[name^=oleg_translationalresearchbundle_request]").find(".required").each(function( index ) {
+                console.log( "Required: "+index + ": " + $( this ).text() );
+                label = $( this ).text();   //$(this).find("label").text();
+                value = null;
+
+                var holder = $(this).closest(".row");
+
+                //input
+                var inputField = holder.find(".form-control");
+                if( inputField.length > 0 ) {
+                    value = inputField.val();
+                    //console.log("label="+label+"; value="+value);
+                    if( !value ) {
+                        //console.log("Error Input form-control. label="+label);
+                        validated = false;
+                        transresShowBtn();
+                        return false;
+                    }
+                }
+
+                //select combobox
+                var selectField = holder.find("select.combobox");
+                if( selectField.length > 0 ) {
+                    value = selectField.val();
+                    //console.log("select combobox: label="+label+"; value="+value);
+                    if( !value ) {
+                        console.log("Error Select select combobox. label="+label);
+                        validated = false;
+                        transresShowBtn();
+                        return false;
+                    }
+                }
+
+                //input combobox
+                var inputSelectField = holder.find("input.combobox");
+                if( inputSelectField.length > 0 ) {
+                    value = inputSelectField.val();
+                    //console.log("input combobox: label="+label+"; value="+value);
+                    if( !value ) {
+                        console.log("Error Select input combobox. label="+label);
+                        validated = false;
+                        transresShowBtn();
+                        return false;
+                    }
+                }
+
+            });
+
+            if( validated == false ) {
+                console.log("Error: required value is NULL! label="+label+"; value="+value);
+                var msg = "The required field '" + label + "' is empty";
+                $("#projectError").show();
+                $("#projectError").html(msg);
+
+                transresShowBtn();
+                return false;
+            }
+
+            if( withConfirm == true ) {
+                var confirmationSubmit = $('#confirmationSubmit');
+                if (confirmationSubmit.length) {
+                    if (confirmationSubmit.is(':checked')) {
+                        //ok confirmed
+                        console.log("ok confirmed");
+                    } else {
+                        var msg = "Please confirm the agreement in order to submit a new work request.";
+                        $("#projectError").show();
+                        $("#projectError").html(msg);
+                        console.log("not confirmed");
+                        transresShowBtn();
+                        return false;
+                    }
                 }
             }
+
             console.log("transresValidateRequest: finished");
 
             transresValidateHandsonTable();
-
         }
 
         function transresHideBtn() {

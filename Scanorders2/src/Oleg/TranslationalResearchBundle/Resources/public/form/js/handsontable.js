@@ -151,7 +151,7 @@ function ajaxFinishedCondition() {
     //console.log('_accessiontype.length='+_accessiontype.length);
 
     if( !(_accessiontype.length > 0) ) {
-        console.log('NULL _accessiontype.length='+_accessiontype.length);
+        //console.log('NULL _accessiontype.length='+_accessiontype.length);
     }
 
     if( _accessiontype.length > 0 ) {
@@ -177,7 +177,7 @@ function ajaxFinishedCondition() {
             if(  _antibodies[i].abbreviation ) {
                 antibodyName = _antibodies[i].abbreviation;
             }
-            console.log('antibodyName='+antibodyName);
+            //console.log('antibodyName='+antibodyName);
             _antibodies_simple.push(antibodyName);
         }
 
@@ -393,7 +393,7 @@ function handsonTableInit(handsometableDataArr,tableFormCycle) {
         },
         afterChange: function (change, source) {
             if (source === 'loadData') {
-                console.log("ignore source="+source);
+                //console.log("ignore source="+source);
                 return; //don't save this change
             }
 
@@ -423,7 +423,7 @@ function handsonTableInit(handsometableDataArr,tableFormCycle) {
                 }
 
                 if( columnNumber != _barcodeCol ) {
-                    console.log("ignore changes in col="+columnNumber);
+                    //console.log("ignore changes in col="+columnNumber);
                     return;
                 }
 
@@ -474,7 +474,7 @@ function handsonTableInit(handsometableDataArr,tableFormCycle) {
 
                     if(0) {
                         var barcodeImageSrc = getBarcodeCanvasSrc(newValue,rowNumber,columnNumber+1);
-                        console.log("barcodeImageSrc="+barcodeImageSrc);
+                        //console.log("barcodeImageSrc="+barcodeImageSrc);
                         _sotable.setDataAtCell(rowNumber, columnNumber + 1, barcodeImageSrc);
                     }
 
@@ -529,7 +529,7 @@ function handsonTableInit(handsometableDataArr,tableFormCycle) {
 }
 
 function resizeTableHeight() {
-    console.log("Setting height");
+    //console.log("Setting height");
     var countRow = _sotable.countRows();
     var newHeight = countRow*(_tdSize + _tdPadding*4);
     _sotable.updateSettings({height: newHeight});
@@ -561,11 +561,11 @@ function setMultipleQrcode() {
 
     var col = _barcodeCol;
     var countRow = _sotable.countRows();
-    console.log("countRow="+countRow+"; col="+col);
+    //console.log("countRow="+countRow+"; col="+col);
     for( var row=0; row<countRow; row++ ) { //for each row (except the last one)
         var barcode = _sotable.getDataAtCell(row,col);
         if( barcode ) {
-            console.log("barcode="+barcode+"; row="+row+"; col="+col);
+            //console.log("barcode="+barcode+"; row="+row+"; col="+col);
             setQrcode(barcode,row,col+1);
         }
     } //for each row
@@ -599,12 +599,12 @@ function setMultipleJqueryQrcode() {
 
     var col = _barcodeCol;
     var countRow = _sotable.countRows();
-    console.log("countRow="+countRow+"; col="+col);
+    //console.log("countRow="+countRow+"; col="+col);
     for( var row=0; row<countRow; row++ ) { //for each row (except the last one)
         var barcode = _sotable.getDataAtCell(row,col);
         if( barcode ) {
             barcode = barcode.trim();
-            console.log("barcode="+barcode+"; row="+row+"; col="+col);
+            //console.log("barcode="+barcode+"; row="+row+"; col="+col);
             jqueryQrcode(barcode,row,col+1);
         }
     } //for each row
@@ -634,7 +634,7 @@ function setBarcodeImageApi(barcodeText,rowNumber,columnNumber) {
 }
 
 function setBarcodeCanvas(barcodeText,rowNumber,columnNumber) {
-    console.log("setBarcodeCanvas: barcodeText="+barcodeText+"; rowNumber="+rowNumber+"; columnNumber="+columnNumber);
+    //console.log("setBarcodeCanvas: barcodeText="+barcodeText+"; rowNumber="+rowNumber+"; columnNumber="+columnNumber);
     //Returns a TD element for the given row and column arguments, if it is rendered on screen.
     //Returns null if the TD is not rendered on screen (probably because that part of the table is not visible).
     var cellEl = _sotable.getCell(rowNumber, columnNumber);
@@ -654,7 +654,7 @@ function setBarcodeCanvas(barcodeText,rowNumber,columnNumber) {
     //$("#"+canvasId).show();
 }
 function getBarcodeImg(barcodeText,rowNumber,columnNumber) {
-    console.log("getBarcodeCanvasSrc: barcodeText="+barcodeText+"; rowNumber="+rowNumber+"; columnNumber="+columnNumber);
+    //console.log("getBarcodeCanvasSrc: barcodeText="+barcodeText+"; rowNumber="+rowNumber+"; columnNumber="+columnNumber);
     //Returns a TD element for the given row and column arguments, if it is rendered on screen.
     //Returns null if the TD is not rendered on screen (probably because that part of the table is not visible).
     var cellEl = _sotable.getCell(rowNumber, columnNumber);
@@ -672,7 +672,7 @@ function getBarcodeImg(barcodeText,rowNumber,columnNumber) {
 
     var canvas = document.getElementById(canvasId);
     var src = canvas.toDataURL('image/png');
-    console.log("src="+src);
+    //console.log("src="+src);
 
     //$(canvas).remove();
     var imageEl = '<img src="' + src + '" height="42" width="42">';
@@ -682,7 +682,7 @@ function getBarcodeImg(barcodeText,rowNumber,columnNumber) {
 }
 
 function getBarcodeCanvasSrc(barcodeText,rowNumber,columnNumber) {
-    console.log("getBarcodeCanvasSrc: barcodeText="+barcodeText+"; rowNumber="+rowNumber+"; columnNumber="+columnNumber);
+    //console.log("getBarcodeCanvasSrc: barcodeText="+barcodeText+"; rowNumber="+rowNumber+"; columnNumber="+columnNumber);
     //Returns a TD element for the given row and column arguments, if it is rendered on screen.
     //Returns null if the TD is not rendered on screen (probably because that part of the table is not visible).
     var cellEl = _sotable.getCell(rowNumber, columnNumber);
@@ -700,7 +700,7 @@ function getBarcodeCanvasSrc(barcodeText,rowNumber,columnNumber) {
 
     var canvas = document.getElementById(canvasId);
     var src = canvas.toDataURL('image/png');
-    console.log("src="+src);
+    //console.log("src="+src);
 
     //$(canvas).remove();
     //var imageEl = '<img src="' + src + '" height="42" width="42">';
@@ -709,10 +709,10 @@ function getBarcodeCanvasSrc(barcodeText,rowNumber,columnNumber) {
     return src;
 }
 function renderBarcodeCanvasById(barcodeText,rowNumber,columnNumber) {
-    console.log("renderBarcodeCanvasById: barcodeText="+barcodeText+"; rowNumber="+rowNumber+"; columnNumber="+columnNumber);
+    //console.log("renderBarcodeCanvasById: barcodeText="+barcodeText+"; rowNumber="+rowNumber+"; columnNumber="+columnNumber);
     //<canvas id="canvas" width=1 height=1 style="border:1px solid #fff;visibility:hidden"></canvas>
     var canvasId = "canvas-"+rowNumber+"-"+columnNumber;
-    console.log("renderBarcodeCanvasById: canvasId="+canvasId);
+    //console.log("renderBarcodeCanvasById: canvasId="+canvasId);
 
     //$(cellEl).append(canvasEl);
     //appendBarcode($("#barcodeholder"),canvasEl);
@@ -723,11 +723,11 @@ function renderBarcodeCanvasById(barcodeText,rowNumber,columnNumber) {
 
 function setBarcodeMultipleCanvas(col) {
     var countRow = _sotable.countRows();
-    console.log("countRow="+countRow+"; col="+col);
+    //console.log("countRow="+countRow+"; col="+col);
     for( var row=0; row<countRow; row++ ) { //for each row (except the last one)
         var barcode = _sotable.getDataAtCell(row,col);
         if( barcode ) {
-            console.log("barcode="+barcode+"; row="+row+"; col="+col);
+            //console.log("barcode="+barcode+"; row="+row+"; col="+col);
             //render(canvasId,barcodeText);
             setBarcodeCanvas(barcode,row,col+1);
             //getBarcodeImg(barcode,row,col+1);
@@ -741,7 +741,7 @@ function appendBarcode(holderEl,canvasEl) {
 }
 
 function transresTableBarcodeGeneration( barcodeField ) {
-    console.log("generate barcode");
+    //console.log("generate barcode");
     //generate barcode
     var barcode = null;
 
@@ -750,7 +750,7 @@ function transresTableBarcodeGeneration( barcodeField ) {
         //var image = '<img src="https://www.imgonline.com.ua/examples/random-pixels.jpg" height="42" width="42">';
         //var image = "https://www.imgonline.com.ua/examples/random-pixels.jpg";
         var image = "https://arifdiyanto.files.wordpress.com/2015/11/qrcodeuk.gif";
-        console.log("image=" + image);
+        //console.log("image=" + image);
     }
 
     //var imageEl = '<img src="' + image + '" height="42" width="42">';
@@ -943,7 +943,7 @@ function transresBarcodeParser( rowNumber, barcodeStr ) {
 // }
 
 function transresValidateHandsonTable() {
-    //console.log("validateHandsonTable");
+    console.log("validateHandsonTable");
 
     if( !_sotable ) {
         return true;
@@ -965,6 +965,7 @@ function transresValidateHandsonTable() {
 
     //console.log("END !!!!!!!!!!!");
     //return true;
+
     return false;
 }
 
