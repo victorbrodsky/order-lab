@@ -103,6 +103,10 @@ function fieldInputMask( holder ) {
         "mask": "9", "repeat": 50, "greedy": false
     });
 
+    $('.digit-mask-seven').inputmask("mask", {
+        "mask": "9", "repeat": 7, "greedy": false
+    });
+
     // $('.positive-digit-mask').inputmask("mask", {
     //     "mask": "f", "repeat": 50, "greedy": false
     // });

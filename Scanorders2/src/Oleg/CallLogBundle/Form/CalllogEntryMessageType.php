@@ -24,6 +24,7 @@ use Oleg\UserdirectoryBundle\Form\InstitutionType;
 use Oleg\UserdirectoryBundle\Form\FormNode\MessageCategoryFormNodeType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormEvents;
@@ -109,11 +110,11 @@ class CalllogEntryMessageType extends AbstractType
             'attr' => array('class' => 'combobox', 'placeholder' => "Call Log Entry Tag(s)"),
         ));
 
-        $builder->add('timeSpentMinutes', null, array(
+        $builder->add('timeSpentMinutes', TextType::class, array(
             'label' => "Amount of Time Spent in Minutes:",
             'required' => false,
             //'data' => $this->params['mrntype'],
-            'attr' => array('class' => 'form-control', 'maxlength' => 7),
+            'attr' => array('class' => 'form-control digit-mask-seven'),
         ));
 
     }

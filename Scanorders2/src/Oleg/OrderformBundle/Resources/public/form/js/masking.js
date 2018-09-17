@@ -66,7 +66,7 @@ function getAccessionDefaultMask() {
 //holder - element holding all fields to apply masking
 function fieldInputMask( holder ) {
 
-    //console.log("masking.js: field Input Mask");
+    console.log("masking.js: field Input Mask");
 
     Inputmask.extendDefinitions({
         'f': {  //masksymbol
@@ -165,6 +165,10 @@ function fieldInputMask( holder ) {
     });
 
     //$('.email-mask').inputmask('Regex', { regex: "[a-zA-Z0-9._%-]+@[a-zA-Z0-9-]+\\.[a-zA-Z]{2,4}" });
+
+    $('.digit-mask-seven').inputmask("mask", {
+        "mask": "9", "repeat": 7, "greedy": false
+    });
 
     accessionTypeListener();
     mrnTypeListener();
