@@ -673,7 +673,7 @@ function populatePatientsInfo(patients,searchedStr,holderId,singleMatch,allowCre
         //console.log('patMergedLen='+patMergedLen);
 
         if( patMergedLen == 0 && processed == false ) {
-            console.log('single patient populate');
+            //console.log('single patient populate');
             populatePatientInfo(patient, false, true, holderId); //single patient found
             disableAllFields(true, holderId);
 
@@ -1357,8 +1357,8 @@ function populateSelectFieldCalllog( fieldEl, data, index ) {
 }
 
 function processMrnFieldsCalllog( patient, modify, holderId ) {
-    console.log("process Mrn FieldsCalllog patient:");
-    console.log(patient);
+    //console.log("process Mrn FieldsCalllog patient:");
+    //console.log(patient);
 
     //var disableStr = "readonly"; //disabled
     var disableStr = "disabled";
@@ -1374,44 +1374,7 @@ function processMrnFieldsCalllog( patient, modify, holderId ) {
 
     if( patient && patient.mrntype && patient.mrn ) {
 
-        //testing!!!
-        //patient.mrntype = 24;
-        //patient.mrntype = "mrn8";
-
-        // console.log('mrntype='+patient.mrntype);
-        // //check if mrntype exists in mrntype combobox, add if not
-        // //mrntype.each(function(){
-        // $("#oleg_calllogformbundle_messagetype_patient_0_mrn_0_keytype").each(function(){
-        //     if( $(this).find("option[value='" + patient.mrntype + "']").length ) {
-        //         //exists
-        //         console.log("exists: fieldId="+patient.mrntype);
-        //     } else {
-        //         // console.log("fieldId="+patient.mrntype+"=?="+$(this).attr('id'));
-        //         // if( patient.mrntype == $(this).attr('id') ) {
-        //         //     console.log("set this mrntype Id="+patient.mrntype);
-        //         //     var newOption = new Option(patient.mrntypestr, patient.mrntype, true, true);
-        //         // } else {
-        //         //     console.log("just add this mrntype Id="+patient.mrntype);
-        //         //     var newOption = new Option(patient.mrntypestr, patient.mrntype, false, false);
-        //         // }
-        //
-        //         //console.log("set this mrntype Id="+patient.mrntype);
-        //         //var newOption = new Option(patient.mrntypestr, patient.mrntype, true, true);
-        //         console.log("just add this mrntype Id="+patient.mrntype);
-        //         var newOption = new Option(patient.mrntypestr, patient.mrntype, false, false);
-        //         $(this).append(newOption).trigger('change');
-        //
-        //     }
-        // });
         calllogAddMrnType(patient);
-
-        //testing!!!
-        // mrntype.prop(disableStr, false);
-        // mrnid.prop(disableStr, false);
-        // //"readonly"
-        // mrntype.prop("readonly", false);
-        // mrnid.prop("readonly", false);
-        // return; //testing
 
         mrntype.select2('val',patient.mrntype);
         setMrntypeMask(mrntype,false);
@@ -1448,10 +1411,9 @@ function calllogAddMrnType(patient) {
     //patient.mrntype = 30;
     //patient.mrntypestr = "mrn30";
 
-    //console.log(_mrntype);
     var newEl = {id:patient.mrntype, text:patient.mrntypestr};
     _mrntype.push(newEl);
-    console.log(_mrntype);
+   //console.log(_mrntype);
     
     var targetid = ".mrntype-combobox";
     targetid = getElementTargetByHolder(null,targetid);
@@ -1461,32 +1423,6 @@ function calllogAddMrnType(patient) {
     $(targetid).select2('val', patient.mrntype);
 
     return;
-
-    // console.log('mrntype='+patient.mrntype);
-    // //check if mrntype exists in mrntype combobox, add if not
-    // //mrntype.each(function(){
-    // $("#oleg_calllogformbundle_messagetype_patient_0_mrn_0_keytype").each(function(){
-    //     if( $(this).find("option[value='" + patient.mrntype + "']").length ) {
-    //         //exists
-    //         console.log("exists: fieldId="+patient.mrntype);
-    //     } else {
-    //         // console.log("fieldId="+patient.mrntype+"=?="+$(this).attr('id'));
-    //         // if( patient.mrntype == $(this).attr('id') ) {
-    //         //     console.log("set this mrntype Id="+patient.mrntype);
-    //         //     var newOption = new Option(patient.mrntypestr, patient.mrntype, true, true);
-    //         // } else {
-    //         //     console.log("just add this mrntype Id="+patient.mrntype);
-    //         //     var newOption = new Option(patient.mrntypestr, patient.mrntype, false, false);
-    //         // }
-    //
-    //         //console.log("set this mrntype Id="+patient.mrntype);
-    //         //var newOption = new Option(patient.mrntypestr, patient.mrntype, true, true);
-    //         console.log("just add this mrntype Id="+patient.mrntype);
-    //         var newOption = new Option(patient.mrntypestr, patient.mrntype, false, false);
-    //         $(this).append(newOption).trigger('change');
-    //
-    //     }
-    // });
 }
 
 
