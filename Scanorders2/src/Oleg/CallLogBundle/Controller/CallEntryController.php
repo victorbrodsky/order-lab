@@ -2371,11 +2371,9 @@ class CallEntryController extends Controller
                 //not integer
                 $mrntypeTransformer = new MrnTypeTransformer($em,$user);
                 $withFlush = true;
-                //$withFlush = false; //testing!!!
                 $mrntypeNew = $mrntypeTransformer->reverseTransform($mrntype,$withFlush);
                 if( $mrntypeNew ) {
                     $mrntype = $mrntypeNew->getId();
-                    //$mrntype = 26; //testing!!!
                     $mrnTypeError = false;
                 }
             }
