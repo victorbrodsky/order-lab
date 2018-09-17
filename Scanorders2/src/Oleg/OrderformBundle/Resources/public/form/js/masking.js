@@ -216,10 +216,10 @@ function setMrntypeMask( elem, clean ) {
 
     var mrnField = getKeyGroupParent(elem).find('.patientmrn-mask');
     //printF(mrnField,"mrnField=");
-    //var value = elem.select2("val");
+    var value = elem.select2("val");
     //console.log("value=" + value);
     var text = elem.select2("data").text;
-    //console.log("text=" + text + ", value=" + value);
+    console.log("text=" + text + ", value=" + value);
 
     //clear input field
     if( clean ) {

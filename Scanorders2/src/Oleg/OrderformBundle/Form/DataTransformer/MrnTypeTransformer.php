@@ -89,7 +89,7 @@ class MrnTypeTransformer implements DataTransformerInterface
      *
      * @throws TransformationFailedException if object (stain) is not found.
      */
-    public function reverseTransform($text)
+    public function reverseTransform($text,$withFlush=true)
     {
 
         //echo "data transformer text=".$text."<br>";
@@ -116,14 +116,14 @@ class MrnTypeTransformer implements DataTransformerInterface
 
         } else {    //text => most probably it is new name
 
-            return $this->createNew($text); //create a new record in db
+            return $this->createNew($text,$withFlush); //create a new record in db
 
         }
 
 
     }
 
-    public function createNew($name) {
+    public function createNew($name,$withFlush=true) {
 
         //echo "mrn type name=".$name."<br>";
 
@@ -143,8 +143,10 @@ class MrnTypeTransformer implements DataTransformerInterface
             $nextorder = $query->getSingleResult()['maxorderinlist']+10;          
             $newEntity->setOrderinlist($nextorder);
 
-            $this->em->persist($newEntity);
-            $this->em->flush($newEntity);
+            if( $withFlush ) {
+                $this->em->persist($newEntity);
+                $this->em->flush($newEntity);
+            }
 
             return $newEntity;
         } else {

@@ -1697,7 +1697,7 @@ function updateUserComboboxes(response,fieldId) {
     var userName = response.userName;
     //console.log("userId="+userId+"; userName="+userName);
 
-    $("select.combobox").each(function(){
+    $("select.add-new-user-on-enter").each(function(){
 
         if( $(this).find("option[value='" + userId + "']").length ) {
             //$("#state").val(userId).trigger("change");

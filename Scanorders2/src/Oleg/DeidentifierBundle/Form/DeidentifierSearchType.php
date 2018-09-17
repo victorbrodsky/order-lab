@@ -57,7 +57,7 @@ class DeidentifierSearchType extends AbstractType
             'attr' => array('class'=>'combobox combobox-width accessiontype-combobox skip-server-populate'),
             'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('list')
-                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->where("(list.type = :typedef OR list.type = :typeadd) AND list.name != 'Specify Another Specimen ID Issuer'")
                         ->orderBy("list.orderinlist","ASC")
                         ->setParameters( array(
                             'typedef' => 'default',

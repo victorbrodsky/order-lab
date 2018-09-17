@@ -184,6 +184,19 @@ function addnewCalllogPatient(holderId) {
         if( data.output == "OK" ) {
 
             //console.log("patien has been created: output OK");
+
+            //testing!!!
+            // var patient = getFirstPatient(data.patients); //testing!!!
+            // var disableStr = "disabled";
+            // var mrntype = holder.find('.mrntype-combobox');
+            // var mrnid = holder.find('.patientmrn-mask');
+            // calllogAddMrnType(patient);
+            // mrntype.prop(disableStr, false);
+            // mrnid.prop(disableStr, false);
+            // //"readonly"
+            // mrntype.prop("readonly", false);
+            // mrnid.prop("readonly", false);
+            // return; //testing!!!
             populatePatientsInfo(data.patients,creationStr,holderId,true,null);
 
             //console.log("Patient has been created");
@@ -660,7 +673,7 @@ function populatePatientsInfo(patients,searchedStr,holderId,singleMatch,allowCre
         //console.log('patMergedLen='+patMergedLen);
 
         if( patMergedLen == 0 && processed == false ) {
-            //console.log('single patient populate');
+            console.log('single patient populate');
             populatePatientInfo(patient, false, true, holderId); //single patient found
             disableAllFields(true, holderId);
 
@@ -1195,6 +1208,20 @@ function populatePatientInfo( patient, showinfo, modify, holderId, singleMatch )
     holder.find(".patienttype-patient-id").trigger('change');
     holder.find(".patienttype-patient-id").change();
 
+    //testing!!!
+    // if( patient ) {
+    //     var disableStr = "disabled";
+    //     var mrntype = holder.find('.mrntype-combobox');
+    //     var mrnid = holder.find('.patientmrn-mask');
+    //     calllogAddMrnType(patient);
+    //     mrntype.prop(disableStr, false);
+    //     mrnid.prop(disableStr, false);
+    //     //"readonly"
+    //     mrntype.prop("readonly", false);
+    //     mrnid.prop("readonly", false);
+    //     return; //testing
+    // }
+
     processMrnFieldsCalllog(patient,modify,holderId);
 
     populateInputFieldCalllog(holder.find(".patient-dob-date"),patient,'dob',modify);
@@ -1330,8 +1357,8 @@ function populateSelectFieldCalllog( fieldEl, data, index ) {
 }
 
 function processMrnFieldsCalllog( patient, modify, holderId ) {
-    //console.log("process Mrn FieldsCalllog patient:");
-    //console.log(patient);
+    console.log("process Mrn FieldsCalllog patient:");
+    console.log(patient);
 
     //var disableStr = "readonly"; //disabled
     var disableStr = "disabled";
@@ -1346,6 +1373,45 @@ function processMrnFieldsCalllog( patient, modify, holderId ) {
     var mrnid = holder.find('.patientmrn-mask');
 
     if( patient && patient.mrntype && patient.mrn ) {
+
+        //testing!!!
+        //patient.mrntype = 24;
+        //patient.mrntype = "mrn8";
+
+        // console.log('mrntype='+patient.mrntype);
+        // //check if mrntype exists in mrntype combobox, add if not
+        // //mrntype.each(function(){
+        // $("#oleg_calllogformbundle_messagetype_patient_0_mrn_0_keytype").each(function(){
+        //     if( $(this).find("option[value='" + patient.mrntype + "']").length ) {
+        //         //exists
+        //         console.log("exists: fieldId="+patient.mrntype);
+        //     } else {
+        //         // console.log("fieldId="+patient.mrntype+"=?="+$(this).attr('id'));
+        //         // if( patient.mrntype == $(this).attr('id') ) {
+        //         //     console.log("set this mrntype Id="+patient.mrntype);
+        //         //     var newOption = new Option(patient.mrntypestr, patient.mrntype, true, true);
+        //         // } else {
+        //         //     console.log("just add this mrntype Id="+patient.mrntype);
+        //         //     var newOption = new Option(patient.mrntypestr, patient.mrntype, false, false);
+        //         // }
+        //
+        //         //console.log("set this mrntype Id="+patient.mrntype);
+        //         //var newOption = new Option(patient.mrntypestr, patient.mrntype, true, true);
+        //         console.log("just add this mrntype Id="+patient.mrntype);
+        //         var newOption = new Option(patient.mrntypestr, patient.mrntype, false, false);
+        //         $(this).append(newOption).trigger('change');
+        //
+        //     }
+        // });
+        calllogAddMrnType(patient);
+
+        //testing!!!
+        // mrntype.prop(disableStr, false);
+        // mrnid.prop(disableStr, false);
+        // //"readonly"
+        // mrntype.prop("readonly", false);
+        // mrnid.prop("readonly", false);
+        // return; //testing
 
         mrntype.select2('val',patient.mrntype);
         setMrntypeMask(mrntype,false);
@@ -1377,6 +1443,52 @@ function processMrnFieldsCalllog( patient, modify, holderId ) {
 
     }
 }
+function calllogAddMrnType(patient) {
+
+    //patient.mrntype = 30;
+    //patient.mrntypestr = "mrn30";
+
+    //console.log(_mrntype);
+    var newEl = {id:patient.mrntype, text:patient.mrntypestr};
+    _mrntype.push(newEl);
+    console.log(_mrntype);
+    
+    var targetid = ".mrntype-combobox";
+    targetid = getElementTargetByHolder(null,targetid);
+
+    populateSelectCombobox( targetid, _mrntype, null );
+
+    $(targetid).select2('val', patient.mrntype);
+
+    return;
+
+    // console.log('mrntype='+patient.mrntype);
+    // //check if mrntype exists in mrntype combobox, add if not
+    // //mrntype.each(function(){
+    // $("#oleg_calllogformbundle_messagetype_patient_0_mrn_0_keytype").each(function(){
+    //     if( $(this).find("option[value='" + patient.mrntype + "']").length ) {
+    //         //exists
+    //         console.log("exists: fieldId="+patient.mrntype);
+    //     } else {
+    //         // console.log("fieldId="+patient.mrntype+"=?="+$(this).attr('id'));
+    //         // if( patient.mrntype == $(this).attr('id') ) {
+    //         //     console.log("set this mrntype Id="+patient.mrntype);
+    //         //     var newOption = new Option(patient.mrntypestr, patient.mrntype, true, true);
+    //         // } else {
+    //         //     console.log("just add this mrntype Id="+patient.mrntype);
+    //         //     var newOption = new Option(patient.mrntypestr, patient.mrntype, false, false);
+    //         // }
+    //
+    //         //console.log("set this mrntype Id="+patient.mrntype);
+    //         //var newOption = new Option(patient.mrntypestr, patient.mrntype, true, true);
+    //         console.log("just add this mrntype Id="+patient.mrntype);
+    //         var newOption = new Option(patient.mrntypestr, patient.mrntype, false, false);
+    //         $(this).append(newOption).trigger('change');
+    //
+    //     }
+    // });
+}
+
 
 function editPatientBtn(holderId) {
     //disableAllFields(false,holderId);
