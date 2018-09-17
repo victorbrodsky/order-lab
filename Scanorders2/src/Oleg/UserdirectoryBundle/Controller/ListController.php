@@ -1854,6 +1854,8 @@ class ListController extends Controller
     }
     public function updateList( $request, $id ) {
 
+        $userSecUtil = $this->get('user_security_utility');
+
         $routeName = $request->get('_route');
         $pieces = explode("_", $routeName);
         $pathbase = $pieces[0];
@@ -1929,7 +1931,7 @@ class ListController extends Controller
                     $event = "Permission of the Role ".$entity->getId()." has been changed by ".$user.":"."<br>";
                     $event = $event . implode("<br>", $changedInfoArr);
                     $event = $event . "<br>" . implode("<br>", $removedCollections);
-                    $userSecUtil = $this->get('user_security_utility');
+                    //$userSecUtil = $this->get('user_security_utility');
                     //echo "event=".$event."<br>";
                     //print_r($removedCollections);
                     //exit();
@@ -1972,6 +1974,10 @@ class ListController extends Controller
 
             $em->flush();
 
+            //EventLog
+            $event = "List Updated by $user";
+            $userSecUtil->createUserEditEvent($this->container->getParameter('employees.sitename'),$event,$user,$entity,$request,'List Updated');
+
             return $this->redirect($this->generateUrl($pathbase.'_show'.$this->postPath, array('id' => $id)));
         }
 
@@ -2000,16 +2006,18 @@ class ListController extends Controller
         $changeset = $uow->getEntityChangeSet($entity);
         $eventArr = $this->addChangesToEventLog( $eventArr, $changeset );
 
-        //permission list
-        foreach( $entity->getPermissions() as $subentity ) {
-            //echo "subentity=".$subentity."<br>";
-            $changeset = $uow->getEntityChangeSet($subentity);
-            $text = "("."permission ".$this->getEntityId($subentity).")";
-            //print_r($changeset);
-            $eventArr = $this->addChangesToEventLog( $eventArr, $changeset, $text );
+        if( method_exists($entity,'getPermissions') ) {
+            //permission list
+            foreach ($entity->getPermissions() as $subentity) {
+                //echo "subentity=".$subentity."<br>";
+                $changeset = $uow->getEntityChangeSet($subentity);
+                $text = "(" . "permission " . $this->getEntityId($subentity) . ")";
+                //print_r($changeset);
+                $eventArr = $this->addChangesToEventLog($eventArr, $changeset, $text);
 
-            //add current object state
-            $eventArr[] = "Final state: " . $subentity;
+                //add current object state
+                $eventArr[] = "Final state: " . $subentity;
+            }
         }
 
         return $eventArr;
@@ -2063,7 +2071,7 @@ class ListController extends Controller
                 }
 
                 $event = "<strong>".$field.$text."</strong>".": "."old value=".$oldValue.", new value=".$newValue;
-                //echo "event=".$event."<br>";
+                echo "event=".$event."<br>";
                 //exit();
 
                 $changeArr[] = $event;
