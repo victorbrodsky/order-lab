@@ -244,6 +244,12 @@ class Invoice {
     private $fundedAccountNumber;
 
     /**
+     * irbNumber - pre-populated from request's $irbNumber
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $irbNumber;
+
+    /**
      * @var string
      * @ORM\Column(type="text", nullable=true)
      */
@@ -715,6 +721,30 @@ class Invoice {
     {
         $this->fundedAccountNumber = $fundedAccountNumber;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getIrbNumber()
+    {
+        $irbNumber = $this->irbNumber;
+        if( $irbNumber ) {
+            return $irbNumber;
+        } else {
+            return $this->getTransresRequest()->getProject()->getIrbNumber();
+        }
+        return $this->irbNumber;
+    }
+
+    /**
+     * @param mixed $irbNumber
+     */
+    public function setIrbNumber($irbNumber)
+    {
+        $this->irbNumber = $irbNumber;
+    }
+    
+    
 
     /**
      * @return mixed

@@ -1979,6 +1979,12 @@ class TransResRequestUtil
         }
 
         //pre-populate fundedAccountNumber
+        $irbNumber = $project->getIrbNumber();
+        if( $irbNumber ) {
+            $invoice->setIrbNumber($irbNumber);
+        }
+
+        //pre-populate irbNumber
         $transresFundedAccountNumber = $transresRequest->getFundedAccountNumber();
         if( $transresFundedAccountNumber ) {
             $invoice->setFundedAccountNumber($transresFundedAccountNumber);

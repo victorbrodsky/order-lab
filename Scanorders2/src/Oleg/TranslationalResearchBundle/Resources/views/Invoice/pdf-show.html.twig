@@ -44,6 +44,12 @@
             <p>
                 <b>Invoice No.: {{ invoice.oid }}</b>
             </p>
+            {% set irbNum = invoice.getIrbNumber() %}
+            {% if irbNum %}
+                <p>
+                    IRB No.: {{ irbNum }}
+                </p>
+            {% endif %}
             {#<p>#}
                 {#<b>Account number (if funded): {{ invoice.fundedAccountNumber }}</b>#}
             {#</p>#}
