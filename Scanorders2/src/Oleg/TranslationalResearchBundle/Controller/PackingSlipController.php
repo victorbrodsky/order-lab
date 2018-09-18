@@ -191,7 +191,7 @@ class PackingSlipController extends Controller
         }
         //echo "emailNoteConcern=[$emailNoteConcern]<br>";
 
-        $body = $body . "<br>" . $emailNoteConcern;
+        $body = $body . "<br><br>" . $emailNoteConcern;
 
         $res = $transresRequestUtil->sendPackingSlipPdfByEmail($transresRequest,$pdf,$subject,$body);
 
