@@ -460,6 +460,7 @@ class PdfGenerator
 
         //generate application URL
         $router = $this->container->get('router');
+        $context = null;
 
         $schemeAndHttpHost = $request->getSchemeAndHttpHost();
         //exit("schemeAndHttpHost=$schemeAndHttpHost");
@@ -486,9 +487,11 @@ class PdfGenerator
         ); //this does not work from console: 'order' is missing
 
         //set back to original context
-        $context->setHost($originalHost);
-        $context->setScheme($originalScheme);
-        $context->setBaseUrl($originalBaseUrl);
+        if( $context ) {
+            $context->setHost($originalHost);
+            $context->setScheme($originalScheme);
+            $context->setBaseUrl($originalBaseUrl);
+        }
 
         //$pageUrl = "http://localhost/order/translational-research/work-request/download-packing-slip-pdf/14078";
 

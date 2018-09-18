@@ -173,6 +173,7 @@ class RequestController extends Controller
                 $changedMsg = $changedMsg . $break . "Project's Account Fund Number has been updated: ";
                 $changedMsg = $changedMsg . $break . "Original account number " . $originalFundedAccountNumber;
                 $changedMsg = $changedMsg . $break . "New account number " . $project->getFundedAccountNumber();
+                $changedMsg = $break.$break . $changedMsg;
             }
 
             //set submitter to product
@@ -225,7 +226,7 @@ class RequestController extends Controller
 
 
             $msg = "New work request " . $transresRequest->getOid() . " has been submitted.";
-            $msg = $msg . $break.$break . $changedMsg;
+            $msg = $msg . $changedMsg;
             $msg = str_replace($break,"<br>",$msg);
 
             if ($testing) {
@@ -241,8 +242,8 @@ class RequestController extends Controller
             //exit("create: ID=".$transresRequest->getOid()."; state=".$transresRequest->getProgressState());
             if( $transresRequest->getProgressState() == 'active' ) {
                 $eventType = "Request Created";
-                $msg = "New work request (" . $transresRequest->getOid() . ") has been submitted";
-                $msg = $msg . $break.$break . $changedMsg;
+                $msg = "New work request (" . $transresRequest->getOid() . ") has been submitted.";
+                $msg = $msg . $changedMsg;
 
                 $requestUrl = $transresRequestUtil->getRequestShowUrl($transresRequest);
                 $msg = $msg . $break.$break . "To view this work request, please visit the link below: " . $break . $requestUrl;

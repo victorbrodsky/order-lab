@@ -2953,6 +2953,10 @@ class TransResRequestUtil
         $emailUtil = $this->container->get('user_mailer_utility');
         $transresUtil = $this->container->get('transres_util');
 
+        if( !$pdf ) {
+            return "Error: Packing Slip PDF not found";
+        }
+
         //get emails: admins and primary reviewers, submitter, principalInvestigators, contact
         $emails = $this->getRequestEmails($transresRequest);
 

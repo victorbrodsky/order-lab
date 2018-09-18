@@ -2391,14 +2391,36 @@ class TransResUtil
             );
             $linkNewRequest = '<a href="'.$linkNewRequest.'">'.$linkNewRequest.'</a>';
 
-            $body = $body .$break.$break .  "To submit a work request associated with this project request, please visit the link below:";
+            $body = $body .$break.$break .  "To submit a work request associated with this project, please visit the link below:";
             $body = $body . $break . $linkNewRequest;
+
+            //Once you submit any work requests associated with this project, you will be able to access them via the following link: LINK-TO-WORK-REQUESTS-ASSOCIATED-WITH-THIS-PROJECT-ONLY
+            $body = $body .$break.$break . "Once you submit any work requests associated with this project, you will be able to access them via the following link:";
+            $linkRequestsForThisProject = $this->container->get('router')->generate(
+                'translationalresearch_request_index',
+                array(
+                    'type' => $project->getId(),
+                ),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $body = $body . $break . $linkRequestsForThisProject;
+
+            //To view work requests (including drafts) for all your projects, please visit the following link: LINK-TO-MY-WORK-REQUESTS
+            $body = $body .$break.$break . "To view work requests (including drafts) for all your projects, please visit the following link:";
+            $linkMyRequests = $this->container->get('router')->generate(
+                'translationalresearch_request_index_filter',
+                array(
+                    'type' => "my-submitted-requests",
+                ),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+            $body = $body . $break . $linkMyRequests;
 
             //Any invoices associated with this project request or your other project requests can be accessed via the following link: LINK-TO-MY-INVOICES
             $linkMyInvoices = $this->container->get('router')->generate(
                 'translationalresearch_invoice_index_type',
                 array(
-                    'invoicetype' => "My-Invoices",
+                    'invoicetype' => "my-invoices",
                 ),
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
@@ -2410,7 +2432,7 @@ class TransResUtil
             $linkMyOutstandingInvoices = $this->container->get('router')->generate(
                 'translationalresearch_invoice_index_type',
                 array(
-                    'invoicetype' => "My-Outstanding-Invoices",
+                    'invoicetype' => "my-outstanding-invoices",
                 ),
                 UrlGeneratorInterface::ABSOLUTE_URL
             );

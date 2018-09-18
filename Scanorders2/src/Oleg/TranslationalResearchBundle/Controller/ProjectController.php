@@ -1020,7 +1020,7 @@ class ProjectController extends Controller
                 // and see your associated invoices (if any) as well.
                 $msg = "Thank you for your submission! Your project request has been received and assigned the following ID of ".$project->getOid().".".
                     " It will be reviewed and you should receive notifications regarding its approval status by email.".
-                    " You can also log back into this web site to review the status of your project request, ".
+                    " You can also log back into the Translational Research web site to review the status of your project request, ".
                     "submit your subsequent work requests (upon project request approval), and see your associated invoices (if any) as well.";
             }
 

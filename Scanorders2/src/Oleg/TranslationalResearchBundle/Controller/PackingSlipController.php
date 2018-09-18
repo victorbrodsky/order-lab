@@ -174,16 +174,22 @@ class PackingSlipController extends Controller
         //exit('1');
 
         //E-Mail Packing Slip to PIs and Submitter
-        $subject = "Please review attached deliverables for Work Request ID ".$transresRequest->getOid();
+        $subject = "Please review the attached deliverables for work request ".$transresRequest->getOid();
         // The Translational Research group is working on your request (REQ-ID)
         // and is planning to deliver the items listed in the attached document.
         // Please review the items and comments (if any), and if you have any concerns,
         // contact the Translational Research group by emailing [FirstName LastName] (email@address).
         // (mailto: link) list all users with Translational Research Administrator roles
         $body = "The Translational Research group is working on your request ".$transresRequest->getOid().
-            " and is planning to deliver the items listed in the attached document.".
-            " Please review the items and comments (if any), and if you have any concerns,".
+            " and is planning to deliver the items or services listed in the attached document.".
+
+        $emailNoteConcern = $transresUtil->getTransresSiteProjectParameter('emailNoteConcern',$project);
+        if( !$emailNoteConcern ) {
+            $emailNoteConcern  = "Please review the deliverables and comments (if any), and if you have any concerns,".
             " contact the Translational Research group by emailing [[EMAILS]]";
+        }
+        $body = $body . "<br>" . $emailNoteConcern;
+
         $res = $transresRequestUtil->sendPackingSlipPdfByEmail($transresRequest,$pdf,$subject,$body);
 
         $this->get('session')->getFlashBag()->add(
@@ -235,7 +241,7 @@ class PackingSlipController extends Controller
         //exit('1');
 
         //E-Mail Packing Slip to PIs and Submitter for Confirmation + Change Request Status to 'Pending Investigator'
-        $subject = "Please review attached deliverables for Work Request ID ".$transresRequest->getOid()." and reply to confirm";
+        $subject = "Please review the attached deliverables for work request ".$transresRequest->getOid()." and reply to confirm";
         // The Translational Research group is working on your work request (REQ-ID) for project “project title”,
         // and is planning to deliver the items listed in the attached document.
         // In order to enable the delivery, please review the items and comments (if any),
@@ -243,7 +249,7 @@ class PackingSlipController extends Controller
         // (mailto: link) list all users with Translational Research Administrator roles
         $body = "The Translational Research group is working on your request ".$transresRequest->getOid().
             " for project ".$project->getTitle().
-            " and is planning to deliver the items listed in the attached document.".
+            " and is planning to deliver the items or services listed in the attached document.".
             " In order to enable the delivery, please review the items and comments (if any),".
             " and confirm that you agree with this plan by emailing emailing [[EMAILS]]";
         $res = $transresRequestUtil->sendPackingSlipPdfByEmail($transresRequest,$pdf,$subject,$body);

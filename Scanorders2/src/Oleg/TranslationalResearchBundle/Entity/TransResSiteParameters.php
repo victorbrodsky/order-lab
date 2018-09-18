@@ -240,6 +240,15 @@ class TransResSiteParameters {
      */
     private $fromEmail;
 
+    /**
+     * Translational Research Email Notification Asking To Contact With Concerns:
+     * Please review the deliverables and comments (if any), and if you have any concerns,
+     * contact the Translational Research group by emailing User Name (email)...
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $emailNoteConcern;
+
 
     public function __construct($user=null) {
         $this->setCreator($user);
@@ -721,6 +730,22 @@ class TransResSiteParameters {
     public function setFromEmail($fromEmail)
     {
         $this->fromEmail = $fromEmail;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmailNoteConcern()
+    {
+        return $this->emailNoteConcern;
+    }
+
+    /**
+     * @param mixed $emailNoteConcern
+     */
+    public function setEmailNoteConcern($emailNoteConcern)
+    {
+        $this->emailNoteConcern = $emailNoteConcern;
     }
 
 

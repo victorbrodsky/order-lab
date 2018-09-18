@@ -201,6 +201,12 @@ class SiteParameterType extends AbstractType
             'attr' => array('class' => 'textarea form-control')
         ));
 
+        $builder->add('emailNoteConcern', null, array(
+            'label' => "Translational Research Email Notification Asking To Contact With Concerns:",
+            'required' => false,
+            'attr' => array('class' => 'textarea form-control')
+        ));
+
         //Buttons
         if( $this->params['cycle'] === "new" ) {
             $builder->add('save', SubmitType::class, array(
