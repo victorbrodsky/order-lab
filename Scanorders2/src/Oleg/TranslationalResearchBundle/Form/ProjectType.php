@@ -60,6 +60,11 @@ class ProjectType extends AbstractType
                 'attr' => array('class' => 'datepicker form-control'),
                 'required' => false,
             ));
+
+            $builder->add('stateComment', null, array(
+                'label' => "Status Comment:",
+                'attr' => array('class'=>'textarea form-control')
+            ));
         }
 
 //        if( $this->params['cycle'] == 'review' ) {

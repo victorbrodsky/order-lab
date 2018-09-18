@@ -1363,6 +1363,10 @@ class TransResUtil
 //                $state = "Pending additional information from submitter for Final Review";
 //                break;
 
+            case "canceled":
+                $state = "Canceled";
+                break;
+
             case "closed":
                 $state = "Closed";
                 break;
@@ -1428,6 +1432,10 @@ class TransResUtil
 //            case "final_missinginfo":
 //                $state = "Request additional information from submitter for Final Review";
 //                break;
+
+            case "canceled":
+                $state = "Canceled";
+                break;
 
             case "closed":
                 $state = "Closed";
@@ -1496,6 +1504,8 @@ class TransResUtil
             'final_approved',
             'final_rejected',
 //            'final_missinginfo',
+
+            'canceled',
 
             'closed'
         );

@@ -438,6 +438,17 @@ class TransResPermissionUtil
 
         }
 
+        if( $action == "cancel" ) {
+            $done = true;
+            if( $this->secAuth->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ) {
+                return true;
+            }
+
+            if( $transresUtil->isProjectRequester($project,false) ) {
+                return true;
+            }
+        }
+
         if( $action == "delete" ) {
             $done = true;
             if( $this->secAuth->isGranted("ROLE_TRANSRES_ADMIN".$specialtyStr) ) {

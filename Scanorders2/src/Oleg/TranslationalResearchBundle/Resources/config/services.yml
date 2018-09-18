@@ -85,6 +85,8 @@ framework:
                 - final_review
                 - final_approved
                 - final_rejected
+                # canceled
+                - canceled
                 # closed
                 - closed
 

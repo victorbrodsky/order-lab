@@ -509,6 +509,10 @@ class Project {
      */
     private $implicitExpirationDate;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $stateComment;
 
 
     public function __construct($user=null) {
@@ -1732,6 +1736,25 @@ class Project {
         $this->tissueNumberOfBlocksPerCase = $tissueNumberOfBlocksPerCase;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getStateComment()
+    {
+        return $this->stateComment;
+    }
+
+    /**
+     * @param mixed $stateComment
+     */
+    public function setStateComment($stateComment)
+    {
+        $this->stateComment = $stateComment;
+    }
+
+
+
+
     public function isFunded() {
         if( $this->getFunded() ) {
             return "Funded";
@@ -1836,6 +1859,7 @@ class Project {
         return $this->getProjectInfoLimited(false);
     }
     public function getProjectInfoNameWithPIsChoice() {
+        //return $this->getOid() . " " . $this->getTitle();
         return $this->getProjectInfoLimited(true);
     }
     public function getProjectInfoLimited($withpis=true) {
@@ -1863,9 +1887,9 @@ class Project {
             }
         }
 
-        if( $this->getCreateDate() ) {
-            $info = $info . ", " . $this->getCreateDate()->format('m/d/Y');
-        }
+        //if( $this->getCreateDate() ) {
+        //    $info = $info . ", " . $this->getCreateDate()->format('m/d/Y');
+        //}
 
         $limit = 70;
         if( strlen($info) > $limit ) {

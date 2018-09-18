@@ -22,6 +22,10 @@
                         {{ formmacros.field(form.state) }}
                     {% endif %}
 
+                    {% if form.stateComment is defined %}
+                        {{ formmacros.field(form.stateComment) }}
+                    {% endif %}
+
                     {% if form.oid is defined %}
                         {{ formmacros.field(form.oid) }}
                     {% endif %}
@@ -76,6 +80,9 @@
                     {% if project.state is defined %}
                         {% set projectStatusStr = transres_util.getStateLabelByName(project.state) %}
                         {{ formmacros.simplefield("Status:", projectStatusStr, "input", "disabled") }}
+                    {% endif %}
+                    {% if project.stateComment is defined %}
+                        {{ formmacros.simplefield("Status Comment:", project.stateComment, "textarea", "disabled") }}
                     {% endif %}
                     {% if project.projectSpecialty is defined %}
                         {{ formmacros.simplefield("Project Specialty:", project.projectSpecialty, "input", "disabled") }}

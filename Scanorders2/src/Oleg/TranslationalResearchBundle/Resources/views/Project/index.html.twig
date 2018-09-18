@@ -199,7 +199,7 @@
 
             {#add if state has "_rejected"?#}
             {% set trclassname = null %}
-            {% if project.state == 'final_rejected' or project.state == 'closed' %}
+            {% if project.state == 'final_rejected' or project.state == 'closed' or project.state == 'canceled' %}
                 {% set trclassname = "order-complete-status" %}
             {% endif %}
 
@@ -207,7 +207,7 @@
             {#Active Project Requests with IRB Expiring Soon#}
             {% if
                     (
-                    project.state != 'draft' and project.state != 'closed' and
+                    project.state != 'draft' and project.state != 'closed' and project.state != 'canceled' and
                     project.state != 'irb_rejected' and project.state != 'admin_rejected' and
                     project.state != 'committee_rejected' and project.state != 'final_rejected'
                     )
@@ -219,7 +219,7 @@
             {#Active Project Requests with Expired IRB#}
             {% if
                     (
-                    project.state != 'draft' and project.state != 'closed' and
+                    project.state != 'draft' and project.state != 'closed' and project.state != 'canceled' and
                     project.state != 'irb_rejected' and project.state != 'admin_rejected' and
                     project.state != 'committee_rejected' and project.state != 'final_rejected'
                     )
@@ -472,6 +472,13 @@
                                 {% endif %}
                             {% endif %}
 
+                            {% if transres_permission_util.hasProjectPermission("cancel",project) and project.state != 'canceled' %}
+                                <li>
+                                    <a general-data-confirm="Are you sure you want to cancel project {{ project.oid }}?"
+                                       href="{{ path(translationalresearch_sitename~'_project_cancel', { 'id': project.id }) }}"
+                                       >Cancel Project</a>
+                                </li>
+                            {% endif %}
 
                             {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
                                 <li>
