@@ -939,6 +939,13 @@ class SiteParametersType extends AbstractType
                 'prototype_name' => '__documentsid__',
             ));
         }
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'transresProjectSelectionNote' ) {
+            $builder->add('transresProjectSelectionNote', null, array(
+                'label' => 'Translational Research Project Request Specialty Selection Note:',
+                'attr' => array('class' => 'form-control')
+            ));
+        }
     }
     
     /**

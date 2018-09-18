@@ -2380,58 +2380,6 @@ class TransResRequestUtil
     public function findCreateSiteParameterEntity($specialtyStr) {
         $transresUtil = $this->container->get('transres_util');
         return $transresUtil->findCreateSiteParameterEntity($specialtyStr);
-//        $em = $this->em;
-//        $user = $this->secTokenStorage->getToken()->getUser();
-//
-//        //$entity = $em->getRepository('OlegTranslationalResearchBundle:TransResSiteParameters')->findOneByOid($specialtyStr);
-//
-//        $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResSiteParameters');
-//        $dql = $repository->createQueryBuilder("siteParameter");
-//        $dql->select('siteParameter');
-//        $dql->leftJoin('siteParameter.projectSpecialty','projectSpecialty');
-//
-//        $dqlParameters = array();
-//
-//        $dql->where("projectSpecialty.abbreviation = :specialtyStr");
-//
-//        $dqlParameters["specialtyStr"] = $specialtyStr;
-//
-//        $query = $em->createQuery($dql);
-//
-//        if( count($dqlParameters) > 0 ) {
-//            $query->setParameters($dqlParameters);
-//        }
-//
-//        $entities = $query->getResult();
-//        //echo "projectSpecialty count=".count($entities)."<br>";
-//
-//        if( count($entities) > 0 ) {
-//            return $entities[0];
-//        }
-//
-//        //Create New
-//        $specialty = $em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->findOneByAbbreviation($specialtyStr);
-//        if( !$specialty ) {
-//            throw new \Exception("SpecialtyList is not found by specialty abbreviation '" . $specialtyStr . "'");
-//        } else {
-//            $entity = new TransResSiteParameters($user);
-//
-//            $entity->setProjectSpecialty($specialty);
-//
-////            //remove null Logo document if exists
-////            $logoDocument = $entity->getTransresLogo();
-////            if( $logoDocument ) {
-////                $entity->setTransresLogo(null);
-////                $em->remove($logoDocument);
-////            }
-//
-//            $em->persist($entity);
-//            $em->flush($entity);
-//
-//            return $entity;
-//        }
-//
-//        return null;
     }
 
     //send by email to recipient (principalInvestigator)

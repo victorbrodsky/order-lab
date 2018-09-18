@@ -12,21 +12,14 @@
     </h4>
     <br>
 
-    {#<p>#}
-        {#If you collaborating with Hematopathology group click on "Create New Hemaptopathology Project", <br>#}
-        {#for all others click on the "Create New AP/CP Project". <br>#}
-        {#To see the current list of the Hematopathology group click#}
-        {#<a target="_blank" href="https://pathology.weill.cornell.edu/clinical-services/hematopathology/immunopathology">here</a>.#}
-    {#</p>#}
-
     <p>
-        If your project request involves collaboration with any
-        <a target="_blank" href="https://pathology.weill.cornell.edu/clinical-services/hematopathology"
-        >Weill Cornell Hematopathology faculty members</a>,<br>
-        please press the "New Hematopathology Project Request" button.<br>
-        For all other project requests, please press the "New AP/CP Project Request" button.<br>
-        To see the <a target="_blank" href="https://pathology.weill.cornell.edu/clinical-services/hematopathology"
-        >current list of the current Weill Cornell Hematopathology faculty members, please click here</a>.
+        {#If your project request involves collaboration with any#}
+        {#<a target="_blank" href="https://pathology.weill.cornell.edu/clinical-services/hematopathology"#}
+        {#>Weill Cornell Hematopathology faculty members</a>,<br>#}
+        {#please press the "New Hematopathology Project Request" button.<br>#}
+        {#For all other project requests, please press the "New AP/CP Project Request" button.#}
+
+        {{ user_security_utility.getSiteSettingParameter("transresProjectSelectionNote")|raw }}
     </p>
 
     <br>

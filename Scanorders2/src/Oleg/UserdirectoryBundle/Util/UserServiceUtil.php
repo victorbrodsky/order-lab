@@ -824,6 +824,12 @@ class UserServiceUtil {
             "noticeLdapName" => "Active Directory (LDAP)",
             ////////////////////////// EOF LDAP notice messages /////////////////////////
 
+            "transresProjectSelectionNote" => 'If your project request involves collaboration with any
+                                                <a target="_blank" href="https://pathology.weill.cornell.edu/clinical-services/hematopathology"
+                                                >Weill Cornell Hematopathology faculty members</a>,<br>
+                                                please press the "New Hematopathology Project Request" button.<br>
+                                                For all other project requests, please press the "New AP/CP Project Request" button.',
+
             "contentAboutPage" => '
                 <p>
                     This site is built on the platform titled "O R D E R" (as in the opposite of disorder).

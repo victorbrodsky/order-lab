@@ -139,6 +139,43 @@
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'connectionChannel'}) }}">Edit</a></td>
             </tr>
 
+            {#Maintenance#}
+            <tr>
+                <td class="rowlink-skip" colspan="3" align="center">
+                    <h3>Maintenance Mode:</h3>
+                    <p>
+                        Note: start maintenance after "Max Idle Time" minutes. This will insure that all users are logged out by JS.
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td>Maintenance</td>
+                <td>
+                    {% set maintenanceStr = 'No' %}
+                    {% if entity.maintenance == true %}
+                        {% set maintenanceStr = 'Yes' %}
+                    {% endif %}
+                    {{ maintenanceStr }}
+                </td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'maintenance'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>Maintenance Until</td>
+                {#<td>{{ entity.maintenanceenddate|date('m/d/Y H:i') }}</td>#}
+                <td>{{ entity.getMaintenanceenddateString }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'maintenanceenddate'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>Maintenance Message on Logout (use [[datetime]] string to use "Maintenance Until" field)</td>
+                <td>{{ entity.maintenancelogoutmsg }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'maintenancelogoutmsg'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>Maintenance Message on Login (use [[datetime]] string to use "Maintenance Until" field)</td>
+                <td>{{ entity.maintenanceloginmsg }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'maintenanceloginmsg'}) }}">Edit</a></td>
+            </tr>
+
             <tr>
                 <td class="rowlink-skip" colspan="3" align="center">
                     <h3>Default Values:</h3>
@@ -233,43 +270,6 @@
                 <td>Reroute all outgoing emails only to the following email address(es) listed in the "email1@example.com,email2@example.com,email3@example.com" format separated by commas. (This is useful for a non-live server environment to avoid sending emails to users. Leaving this field empty will result in emails being sent normally.)</td>
                 <td>{{ entity.mailerDeliveryAddresses }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'mailerDeliveryAddresses'}) }}">Edit</a></td>
-            </tr>
-
-            {#Maintenance#}
-            <tr>
-                <td class="rowlink-skip" colspan="3" align="center">
-                    <h3>Maintenance Mode:</h3>
-                    <p>
-                        Note: start maintenance after "Max Idle Time" minutes. This will insure that all users are logged out by JS.
-                    </p>
-                </td>
-            </tr>
-            <tr>
-                <td>Maintenance</td>
-                <td>
-                    {% set maintenanceStr = 'No' %}
-                    {% if entity.maintenance == true %}
-                        {% set maintenanceStr = 'Yes' %}
-                    {% endif %}
-                    {{ maintenanceStr }}
-                </td>
-                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'maintenance'}) }}">Edit</a></td>
-            </tr>
-            <tr>
-                <td>Maintenance Until</td>
-                {#<td>{{ entity.maintenanceenddate|date('m/d/Y H:i') }}</td>#}
-                <td>{{ entity.getMaintenanceenddateString }}</td>
-                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'maintenanceenddate'}) }}">Edit</a></td>
-            </tr>
-            <tr>
-                <td>Maintenance Message on Logout (use [[datetime]] string to use "Maintenance Until" field)</td>
-                <td>{{ entity.maintenancelogoutmsg }}</td>
-                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'maintenancelogoutmsg'}) }}">Edit</a></td>
-            </tr>
-            <tr>
-                <td>Maintenance Message on Login (use [[datetime]] string to use "Maintenance Until" field)</td>
-                <td>{{ entity.maintenanceloginmsg }}</td>
-                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'maintenanceloginmsg'}) }}">Edit</a></td>
             </tr>
 
             {#Accessibility#}
@@ -745,6 +745,17 @@
 
             <tr>
                 <td class="rowlink-skip" colspan="3" align="center">
+                    <h3>Translational Research:</h3>
+                </td>
+            </tr>
+            <tr>
+                <td>Translational Research Project Request Specialty Selection Note</td>
+                <td>{{ entity.transresProjectSelectionNote }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'transresProjectSelectionNote'}) }}">Edit</a></td>
+            </tr>
+
+            <tr>
+                <td class="rowlink-skip" colspan="3" align="center">
                     <h3>Platform Logo Image:</h3>
                 </td>
             </tr>
@@ -803,11 +814,11 @@
         {% include 'OlegUserdirectoryBundle:SiteParameters:transres-content.html.twig' %}
     {% endif %}
 
-    {% if (sitename == "employees" or sitename == "deidentifier") and is_granted('ROLE_TRANSRES_ADMIN') %}
+    {% if (sitename == "employees" or sitename == "deidentifier") and is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
         {% include 'OlegUserdirectoryBundle:SiteParameters:deidentifier-content.html.twig' %}
     {% endif %}
 
-    {% if (sitename == "employees" or sitename == "scan") and is_granted('ROLE_TRANSRES_ADMIN') %}
+    {% if (sitename == "employees" or sitename == "scan") and is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
         {% include 'OlegUserdirectoryBundle:SiteParameters:scan-content.html.twig' %}
     {% endif %}
 

@@ -1010,6 +1010,13 @@ class SiteParameters {
      */
     private $connectionChannel;
 
+    /**
+     * Translational Research Project Request Specialty Selection Note
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $transresProjectSelectionNote;
+
 
     function __construct( $addobjects=true )
     {
@@ -3542,5 +3549,22 @@ class SiteParameters {
         $this->connectionChannel = $connectionChannel;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getTransresProjectSelectionNote()
+    {
+        return $this->transresProjectSelectionNote;
+    }
+
+    /**
+     * @param mixed $transresProjectSelectionNote
+     */
+    public function setTransresProjectSelectionNote($transresProjectSelectionNote)
+    {
+        $this->transresProjectSelectionNote = $transresProjectSelectionNote;
+    }
+
     
+
 }
