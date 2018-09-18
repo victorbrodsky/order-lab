@@ -1180,7 +1180,7 @@ class ProjectController extends Controller
 
                     $label = $transresUtil->getStateLabelByName($project->getState());
                     $msg = "Project request " . $project->getOid() . " has been successfully updated and the status has been changed from '$originalStateLabel' to '$label'";
-                    $msg = $msg . " by " . $user;
+                    $msg = $msg . " by " . $user->getUsernameOptimal();
                 }
             }
 

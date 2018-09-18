@@ -1741,6 +1741,10 @@ class TransResRequestUtil
             //Use submitter
             $pi = $invoice->getSubmitter();
         }
+        if( !$pi ) {
+            throw new \Exception("There is no PI. Email has not been sent.");
+        }
+
         $piEmailArr = array();
         $piEmail = $pi->getSingleEmail();
         if( $piEmail ) {
@@ -1758,7 +1762,7 @@ class TransResRequestUtil
             }
         }
 
-        $body = $body . $newline."To issue the invoice to ".$pi.
+        $body = $body . $newline."To issue the invoice to ".$pi->getUsernameOptimal().
             " at email ".implode(", ",$piEmailArr)." please follow this link:".$newline.$sendPdfEmailUrl.$newline;
 
         //3 To edit the invoice and generate an updated copy, please follow this link
@@ -1833,11 +1837,11 @@ class TransResRequestUtil
 
         //Please review the content of the request and verify that the work has indeed been completed:
         $requestUrl = $this->getRequestShowUrl($transresRequest);
-        $body = $body. $newline.$newline. "Please review the content of the request and verify that the work has indeed been completed:";
+        $body = $body. $newline.$newline. "Please review the content of the work request and verify that the work has indeed been completed:";
         $body = $body . $newline . $requestUrl;
 
         //Once you are ready to notify the requestors of the completion status, please visit the following link and change the status to 'Completed and Notified' in order to send out the email notification:
-        $body = $body . $newline . "Once you are ready to notify the requestors of the completion status, 
+        $body = $body . $newline.$newline . "Once you are ready to notify the requestors of the completion status, 
         please visit the following link and change the status 
         to 'Completed and Notified' in order to send out the email notification:";
 

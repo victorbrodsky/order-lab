@@ -2322,7 +2322,7 @@ class TransResUtil
 
             //To supply the requested information and re-submit for review, please visit:
             $projectResubmitUrl = $this->getProjectResubmitUrl($project);
-            $body = $body . $break.$break. "To supply the requested information and re-submit for review, please visit:".$break.$projectResubmitUrl;
+            $body = $body . $break.$break. "To supply the requested information and re-submit for review, please visit the following link:".$break.$projectResubmitUrl;
 
             //Admins as css
             $adminsCcs = $this->getTransResAdminEmails($project->getProjectSpecialty(),true,true); //ok
