@@ -181,13 +181,16 @@ class PackingSlipController extends Controller
         // contact the Translational Research group by emailing [FirstName LastName] (email@address).
         // (mailto: link) list all users with Translational Research Administrator roles
         $body = "The Translational Research group is working on your request ".$transresRequest->getOid().
-            " and is planning to deliver the items or services listed in the attached document.".
+            " and is planning to deliver the items or services listed in the attached document.";
 
         $emailNoteConcern = $transresUtil->getTransresSiteProjectParameter('emailNoteConcern',$project);
+        //echo "emailNoteConcern=[$emailNoteConcern]<br>";
         if( !$emailNoteConcern ) {
-            $emailNoteConcern  = "Please review the deliverables and comments (if any), and if you have any concerns,".
+            $emailNoteConcern = "Please review the deliverables and comments (if any), and if you have any concerns,".
             " contact the Translational Research group by emailing [[EMAILS]]";
         }
+        //echo "emailNoteConcern=[$emailNoteConcern]<br>";
+
         $body = $body . "<br>" . $emailNoteConcern;
 
         $res = $transresRequestUtil->sendPackingSlipPdfByEmail($transresRequest,$pdf,$subject,$body);
