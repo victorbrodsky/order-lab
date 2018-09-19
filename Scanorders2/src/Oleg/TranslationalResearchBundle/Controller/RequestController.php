@@ -970,7 +970,7 @@ class RequestController extends Controller
     {
 
         $timer = false;
-        //$timer = true;
+        $timer = true;
         if( $timer ) {
             $stopwatch = new Stopwatch();
             //$time_pre = microtime(true);
