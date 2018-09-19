@@ -969,11 +969,14 @@ class RequestController extends Controller
     public function myRequestsAction(Request $request)
     {
 
+        //max optimization: 3 sec
+        //no matching:
+
         $withfilter = true;
         $withfilter = false; //testing!!!
 
         $withMatching = true;
-        $withMatching = false; //testing!!!
+        //$withMatching = false; //testing!!!
 
         $timer = false;
         $timer = true; //testing!!!
