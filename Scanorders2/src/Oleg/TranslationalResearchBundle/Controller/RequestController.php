@@ -972,15 +972,16 @@ class RequestController extends Controller
         //max optimization: 3 sec (14 MB)
         //with matching: 17 sec (62 MB)
         //with matching and filter: 19 sec (62 MB)
+        //without matching and with filter: 18 sec (60 MB)
 
         $withfilter = true;
         //$withfilter = false; //testing!!!
 
         $withMatching = true;
-        $withMatching = false; //testing!!!
+        //$withMatching = false; //testing!!!
 
         $timer = false;
-        $timer = true; //testing!!!
+        //$timer = true; //testing!!!
 
         if( $timer ) {
             $stopwatch = new Stopwatch();
