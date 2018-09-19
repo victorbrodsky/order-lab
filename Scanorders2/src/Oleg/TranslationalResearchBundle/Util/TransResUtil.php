@@ -1190,7 +1190,7 @@ class TransResUtil
             case "committee_review_approved":
                 $label = "Approve Project Request as a Result of Committee Review";
                 $labeled = "Approved Project Request as a Result of Committee Review";
-                if( method_exists($review, 'getPrimaryReview') ) {
+                if( $review && method_exists($review, 'getPrimaryReview') ) {
                     if ($review->getPrimaryReview() === true) {
                         //$label = $label . " as Primary Reviewer";
                         //$labeled = $labeled . " as Primary Reviewer";
@@ -1204,7 +1204,7 @@ class TransResUtil
             case "committee_review_rejected":
                 $label = "Reject Project Request as a Result of Committee Review";
                 $labeled = "Rejected Project Request as a Result of Committee Review";
-                if( method_exists($review, 'getPrimaryReview') ) {
+                if( $review && method_exists($review, 'getPrimaryReview') ) {
                     if ($review->getPrimaryReview() === true) {
                         //$label = $label . " as Primary Reviewer";
                         //$labeled = $labeled . " as Primary Reviewer";
@@ -1276,15 +1276,17 @@ class TransResUtil
         if( strpos($transitionName, "finalreview_approved") === false ) {
             $user = $this->secTokenStorage->getToken()->getUser();
             $showReviewer = false;
-            $reviewer = $review->getReviewer();
-            $reviewerDelegate = $review->getReviewerDelegate();
-            if ($reviewer && $reviewer->getId() != $user->getId()) {
-                $showReviewer = true;
+            if( $review ) {
+                $reviewer = $review->getReviewer();
+                $reviewerDelegate = $review->getReviewerDelegate();
+                if ($reviewer && $reviewer->getId() != $user->getId()) {
+                    $showReviewer = true;
+                }
+                if ($reviewerDelegate && $reviewerDelegate->getId() != $user->getId()) {
+                    $showReviewer = true;
+                }
             }
-            if ($reviewerDelegate && $reviewerDelegate->getId() != $user->getId()) {
-                $showReviewer = true;
-            }
-            if ($showReviewer) {
+            if( $showReviewer ) {
                 if (strpos($returnLabel, "(as ") === false) {
                     $userInfo = $this->getReviewerInfo($review);
                     $returnLabel = $returnLabel . $userInfo;
@@ -1296,7 +1298,7 @@ class TransResUtil
     }
     public function getReviewerInfo($review) {
         $userInfo = "";
-        if( $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') ) {
+        if( $review && $this->secAuth->isGranted('ROLE_TRANSRES_ADMIN') ) {
             $reviewer = $review->getReviewer();
             if( $reviewer ) {
                 $userInfo = " (as " . $reviewer->getDisplayName() . ")";

@@ -290,6 +290,9 @@ class UserController extends Controller
 
         $search = trim( $request->get('search') );
         $userid = trim( $request->get('userid') );
+        $all = trim($request->get('all'));
+
+        //echo "all=".$all."<br>";
 
 //        $page = $request->get('page');
 //        if( !$page && $page == "" ) {
@@ -317,7 +320,7 @@ class UserController extends Controller
             $locations = $userUtil->indexLocation($search, $request, $this->container, $this->getDoctrine());
 
             //user search
-            $params = array('time'=>'current_only','search'=>$search,'userid'=>$userid);
+            $params = array('time'=>'current_only','search'=>$search,'userid'=>$userid,'all'=>$all);
             $res = $this->indexUser($request,$params);
             $pagination = $res['entities'];
             $roles = $res['roles'];
@@ -329,6 +332,7 @@ class UserController extends Controller
             'entities' => $pagination,
             'roles' => $roles,
             'search' => $search,
+            'all' => $all,
             'postData' => $request->query->all()
         );
     }
@@ -398,6 +402,7 @@ class UserController extends Controller
         $limitFlag = ( array_key_exists('limitFlag', $params) ? $params['limitFlag'] : null);
         $search = ( array_key_exists('search', $params) ? $params['search'] : null);
         $userid = ( array_key_exists('userid', $params) ? $params['userid'] : null);
+        $all = ( array_key_exists('all', $params) ? $params['all'] : null);
 //        $myteam = ( array_key_exists('myteam', $params) ? $params['myteam'] : null);
 //        $myboss = ( array_key_exists('myboss', $params) ? $params['myboss'] : null);
 //        $myservice = ( array_key_exists('myservice', $params) ? $params['myservice'] : null);
@@ -408,6 +413,7 @@ class UserController extends Controller
 
         //echo "filter=".$filter."<br>";
         //echo "search=".$search."<br>";
+        //echo "all=".$all."<br>";
 
         //$request = $this->get('request');
         $postData = $request->query->all();
@@ -488,6 +494,7 @@ class UserController extends Controller
 
         } else {
 
+            $totalcriteriastr = null;
             $criteriastr = "";
 
             //filter
@@ -503,24 +510,35 @@ class UserController extends Controller
 
             //same object
             $criteriastr = $this->getTheSameObject( $dql, $subjectUserId, $objectname, $objectid, $excludeCurrentUser, $criteriastr );
+            //echo "criteriastr=".$criteriastr."<br>";
 
             //time
-            $userutil = new UserUtil();
-            $criteriastr = $userutil->getCriteriaStrByTime( $dql, $time, null, $criteriastr );
+            //echo "all=".$all."<br>";
+            if( !$all ) {
+                //echo "all=".$all."<br>";
+                $userutil = new UserUtil();
+                $criteriastr = $userutil->getCriteriaStrByTime($dql, $time, null, $criteriastr);
+                //echo "criteriastr=" . $criteriastr . "<br>";
 
-            //filter out system user
-            $totalcriteriastr = "user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system'";
+                //filter out system user
+                $totalcriteriastr = "user.keytype IS NOT NULL AND user.primaryPublicUserId != 'system'";
 
-            //filter out Pathology Fellowship Applicants
-            $totalcriteriastr = $totalcriteriastr . " AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)";
+                //filter out Pathology Fellowship Applicants
+                $totalcriteriastr = $totalcriteriastr . " AND (employmentType.name != 'Pathology Fellowship Applicant' OR employmentType.id IS NULL)";
 
-            //filter out users with excludeFromSearch set to true
-            if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
-                $totalcriteriastr = $totalcriteriastr . " AND (preferences.excludeFromSearch IS NULL OR preferences.excludeFromSearch = FALSE)";
+                //filter out users with excludeFromSearch set to true
+                if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+                    $totalcriteriastr = $totalcriteriastr . " AND (preferences.excludeFromSearch IS NULL OR preferences.excludeFromSearch = FALSE)";
+                }
             }
 
             if( $criteriastr ) {
-                $totalcriteriastr = $totalcriteriastr . " AND (".$criteriastr.")";
+                if( $totalcriteriastr ) {
+                    $totalcriteriastr = $totalcriteriastr . " AND (".$criteriastr.")";
+                } else {
+                    $totalcriteriastr = $criteriastr;
+                }
+
             } else {
 
             }

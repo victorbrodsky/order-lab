@@ -197,7 +197,7 @@ class AuthUtil {
 
 
 
-    public function LdapAuthentication($token, $userProvider) {
+    public function LdapAuthentication($token, $userProvider, $ldapType=1) {
 
         //$this->logger->notice("LdapAuthentication: LDAP authenticate user by token->getUsername()=".$token->getUsername());
         //echo "LdapAuthentication<br>";
@@ -223,7 +223,7 @@ class AuthUtil {
         //$withNewUserPrePopulation = false; //testing
         if( $withNewUserPrePopulation ) {
             //////////////// first search this user if exists in ldap directory ////////////////
-            $searchRes = $this->searchLdap($usernameClean);
+            $searchRes = $this->searchLdap($usernameClean,$ldapType,$ldapType);
             //////////////// EOF first search this user if exists in ldap directory ////////////////
             if( $searchRes == NULL || count($searchRes) == 0 ) {
                 $this->logger->error("LdapAuthentication: can not find user by usernameClean=" . $usernameClean);
@@ -249,7 +249,7 @@ class AuthUtil {
         //$this->logger->notice("LdapAuthentication: user found in LDAP by usernameClean=".$usernameClean);
 
         //if user exists in ldap, try bind this user and password
-        $ldapRes = $this->ldapBind($usernameClean,$token->getCredentials());
+        $ldapRes = $this->ldapBind($usernameClean,$token->getCredentials(),$ldapType);
         if( $ldapRes == NULL ) {
             //exit('ldap failed');
             //$this->logger->error("LdapAuthentication: can not bind user by usernameClean=[".$usernameClean."]; token=[".$token->getCredentials()."]");
@@ -529,7 +529,7 @@ class AuthUtil {
 
     //return 1 if bind successful
     //return NULL if failed
-    public function ldapBind( $username, $password ) {
+    public function ldapBind( $username, $password, $ldapType=1 ) {
 
         //testing
 //        $saslBindRes = $this->ldapBindUnix($username,$password);
@@ -539,26 +539,26 @@ class AuthUtil {
 //        }
 
         //step 1
-        if( $this->simpleLdap($username,$password,"uid") ) {
+        if( $this->simpleLdap($username,$password,"uid",$ldapType) ) {
             return 1;
         }
 
-        if( $this->simpleLdap($username,$password,"cn") ) {
+        if( $this->simpleLdap($username,$password,"cn",$ldapType) ) {
             return 1;
         }
 
         //step 2
         if( substr(php_uname(), 0, 7) == "Windows" ){
-            return $this->ldapBindWindows($username,$password);
+            return $this->ldapBindWindows($username,$password,$ldapType);
         }
         else {
-            return $this->ldapBindUnix($username,$password);
+            return $this->ldapBindUnix($username,$password,$ldapType);
         }
     }
 
     //return 1 if bind successful
     //return NULL if failed
-    public function ldapBindWindows( $username, $password ) {
+    public function ldapBindWindows( $username, $password, $ldapType=1 ) {
 
         //echo "Windows ldap<br>";
         $userSecUtil = $this->container->get('user_security_utility');
@@ -619,9 +619,8 @@ class AuthUtil {
         return '"' . addcslashes($s, '\\"') . '"';
     }
 
-
     //TODO: must be tested on unix environment
-    public function ldapBindUnix( $username, $password, $userPrefix='cn' ) {
+    public function ldapBindUnix( $username, $password, $ldapType=1 ) {
         $userSecUtil = $this->container->get('user_security_utility');
         $this->logger->warning("Unix system detected. Must be tested!");
         //$LDAPHost = $this->container->getParameter('ldaphost');
@@ -698,7 +697,7 @@ class AuthUtil {
     // AD/LDAP Server OU: ou=users,ou=guests,dc=zflexsoftware,dc=com
     // Username: guest1 Password: guest1password
     //supports multiple aDLDAPServerOu: cn=Users,dc=a,dc=wcmc-ad,dc=net;ou=NYP Users,dc=a,dc=wcmc-ad,dc=net
-    public function simpleLdap($username, $password, $userPrefix="uid") {
+    public function simpleLdap($username, $password, $userPrefix="uid", $ldapType=1) {
         //$this->logger->notice("Simple Ldap");
         $userSecUtil = $this->container->get('user_security_utility');
         $LDAPHost = $userSecUtil->getSiteSettingParameter('aDLDAPServerAddress');
@@ -752,16 +751,18 @@ class AuthUtil {
         return NULL;
     }
 
-    public function searchLdap($username) {
+    public function searchLdap($username,$ldapType=1) {
 
         //echo "username=".$username."<br>";
         $userSecUtil = $this->container->get('user_security_utility');
+
+        $postfix = $this->getPostfix($ldapType);
 
         //$dn = "CN=Users,DC=a,DC=wcmc-ad,DC=net";
         //$dn = "CN=Users";
         //$ldapDc = $this->container->getParameter('ldapou');
 
-        $ldapBindDN = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'); //old: a.wcmc-ad.net, new: cn=Users,dc=a,dc=wcmc-ad,dc=net
+        $ldapBindDN = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'.$postfix); //old: a.wcmc-ad.net, new: cn=Users,dc=a,dc=wcmc-ad,dc=net
 
 //        $dcArr = explode(".",$ldapDc);
 //        foreach( $dcArr as $dc ) {
@@ -777,9 +778,9 @@ class AuthUtil {
         //echo "dn=".$dn."<br>";
 
         //$LDAPUserAdmin = $this->container->getParameter('ldapusername');
-        $LDAPUserAdmin = $userSecUtil->getSiteSettingParameter('aDLDAPServerAccountUserName'); //cn=read-only-admin,dc=example,dc=com
+        $LDAPUserAdmin = $userSecUtil->getSiteSettingParameter('aDLDAPServerAccountUserName'.$postfix); //cn=read-only-admin,dc=example,dc=com
         //$LDAPUserPasswordAdmin = $this->container->getParameter('ldappassword');
-        $LDAPUserPasswordAdmin = $userSecUtil->getSiteSettingParameter('aDLDAPServerAccountPassword');
+        $LDAPUserPasswordAdmin = $userSecUtil->getSiteSettingParameter('aDLDAPServerAccountPassword'.$postfix);
 
         if( $LDAPUserAdmin && $LDAPUserPasswordAdmin ) {
             //ok
@@ -789,7 +790,7 @@ class AuthUtil {
         }
 
         //$LDAPHost = $this->container->getParameter('ldaphost');
-        $LDAPHost = $userSecUtil->getSiteSettingParameter('aDLDAPServerAddress');
+        $LDAPHost = $userSecUtil->getSiteSettingParameter('aDLDAPServerAddress'.$postfix);
         //echo "LDAPHost=".$LDAPHost."<br>";
         $cnx = $this->connectToLdap($LDAPHost);
 
@@ -921,6 +922,13 @@ class AuthUtil {
         //exit('Search OK');
 
         return $searchRes;
+    }
+
+    public function getPostfix($ldapType) {
+        if( $ldapType == 2 || $ldapType == '2' ) {
+            return "2";
+        }
+        return "";
     }
 
     //return ldap connection

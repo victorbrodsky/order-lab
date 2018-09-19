@@ -53,6 +53,8 @@ class CustomAuthenticator implements SimpleFormAuthenticatorInterface {
         //echo "CustomAuthenticator: username=".$token->getUsername()."<br>"; //", pwd=".$token->getCredentials()
         //exit();
 
+        $userSecUtil = $this->container->get('user_security_utility');
+
         if( $token->getCredentials() ) {
             //ok
         } else {
@@ -90,10 +92,18 @@ class CustomAuthenticator implements SimpleFormAuthenticatorInterface {
         //////////////////////////////////////////////////////////////////////
         //                       3) ldap authentication                     //
         //////////////////////////////////////////////////////////////////////
-        $user = $authUtil->LdapAuthentication($token, $userProvider);
+        $user = $authUtil->LdapAuthentication($token, $userProvider, $ldapType=1);
         if( $user ) {
             $this->resetFailedAttemptCounter($user);
             return $this->getUsernamePasswordToken($user,$providerKey);
+        }
+
+        if( $userSecUtil->getSiteSettingParameter('ldapAll') ) {
+            $user = $authUtil->LdapAuthentication($token, $userProvider, $ldapType=2);
+            if( $user ) {
+                $this->resetFailedAttemptCounter($user);
+                return $this->getUsernamePasswordToken($user,$providerKey);
+            }
         }
         ////////////////////EOF ldap authentication ////////////////////
 

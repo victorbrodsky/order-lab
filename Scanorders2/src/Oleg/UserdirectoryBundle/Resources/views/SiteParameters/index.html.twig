@@ -357,7 +357,16 @@
                     <h3>AD/LDAP:</h3>
                 </td>
             </tr>
-
+            <tr>
+                <td>Send request to both authentication Active Directory/LDAP servers when the first is selected for a single log in attempt</td>
+                {#<td>{{ entity.ldapAll }}</td>#}
+                {% set ldapAll = 'No' %}
+                {% if entity.ldapAll == true %}
+                    {% set ldapAll = 'Yes' %}
+                {% endif %}
+                {{ ldapAll }}
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'ldapAll'}) }}">Edit</a></td>
+            </tr>
             <tr>
                 <td>AD/LDAP Server Address</td>
                 <td>{{ entity.aDLDAPServerAddress }}</td>
@@ -369,7 +378,7 @@
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'aDLDAPServerPort'}) }}">Edit</a></td>
             </tr>
             <tr>
-                <td>AD/LDAP Bind DN for ldap search or simple authentication. Use ';' for multiple binds (cn=read-only-admin,dc=example,dc=com;ou=group1,dc=example,dc=com)</td>
+                <td>AD/LDAP Bind DN for ldap search or simple authentication ('cn=read-only-admin,dc=example,dc=com' or 'ou=group1,dc=example,dc=com')</td>
                 <td>{{ entity.aDLDAPServerOu }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'aDLDAPServerOu'}) }}">Edit</a></td>
             </tr>
@@ -398,6 +407,56 @@
                 <td>{{ entity.defaultPrimaryPublicUserIdType }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'defaultPrimaryPublicUserIdType'}) }}">Edit</a></td>
             </tr>
+
+            {#LDAP Server 2#}
+            <tr>
+                <td class="rowlink-skip" colspan="3" align="center">
+                    <h3>AD/LDAP 2:</h3>
+                </td>
+            </tr>
+
+            <tr>
+                <td>AD/LDAP Server Address</td>
+                <td>{{ entity.aDLDAPServerAddress2 }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'aDLDAPServerAddress2'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>AD/LDAP Server Port (Default: 389)</td>
+                <td>{{ entity.aDLDAPServerPort2 }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'aDLDAPServerPort2'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>AD/LDAP Bind DN for ldap search or simple authentication ('cn=read-only-admin,dc=example,dc=com' or 'ou=group1,dc=example,dc=com')</td>
+                <td>{{ entity.aDLDAPServerOu2 }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'aDLDAPServerOu2'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>AD/LDAP Server Account User Name (for ldap search)</td>
+                <td>{{ entity.aDLDAPServerAccountUserName2 }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'aDLDAPServerAccountUserName2'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>AD/LDAP Server Account Password (for ldap search)</td>
+                <td>{{ entity.aDLDAPServerAccountPassword2 }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'aDLDAPServerAccountPassword2'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>LDAP/AD Authenticator Relative Path (Default: "../src/Oleg/UserdirectoryBundle/Util/" )</td>
+                <td>{{ entity.ldapExePath2 }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'ldapExePath2'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>LDAP/AD Authenticator File Name - relevant for Windows-based servers only (Default: "LdapSaslCustom.exe"):</td>
+                <td>{{ entity.ldapExeFilename2 }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'ldapExeFilename2'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>Default Primary Public User ID Type:</td>
+                <td>{{ entity.defaultPrimaryPublicUserIdType2 }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'defaultPrimaryPublicUserIdType2'}) }}">Edit</a></td>
+            </tr>
+            {#EOF LDAP Server 2#}
+
 
             <tr>
                 <td class="rowlink-skip" colspan="3" align="center">

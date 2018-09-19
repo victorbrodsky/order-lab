@@ -33,13 +33,23 @@
         <form class="navbar-form user-typeahead-search-form" role="search" id="user-typeahead-search-form" action="{{ path(employees_sitename~'_home') }}" method="get">
             <div class="form-group">
                 <div id="multiple-datasets-typeahead-search" class="multiple-datasets-typeahead-search">
-                    <input
-                           style="width: 460px;"
-                           type="text"
-                           class="typeahead submit-on-enter-field"
-                           name="search" value="{{ search }}"
-                           placeholder="Search for a name, service, division, etc"
-                    >
+                    {% if all is defined and all %}
+                        {% set checked = "checked" %}
+                    {% endif %}
+                    <div class="row">
+                        <div class="col-xs-2">
+                            <input type="checkbox" name="all" value="all" {{ checked }}> All<br>
+                        </div>
+                        <div class="col-xs-10">
+                            <input
+                                   style="width: 460px;"
+                                   type="text"
+                                   class="typeahead submit-on-enter-field"
+                                   name="search" value="{{ search }}"
+                                   placeholder="Search for a name, service, division, etc"
+                            >
+                        </div>
+                    </div>
                 </div>
             </div>
             <button type="submit" class="btn btn-success btn-lg" style="height: 50px">Search</button>

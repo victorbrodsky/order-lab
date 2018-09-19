@@ -159,6 +159,14 @@ class SiteParameters {
     //////// EOF email (default gmail free SMTP Server Example) //////////
 
     /**
+     * Send request to both authentication Active Directory/LDAP servers when the first is selected for a single log in attempt
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $ldapAll;
+
+    /////////////// LDAP Server 1 ////////////////////
+    /**
      * @ORM\Column(type="string", nullable=true)
      */
     private $aDLDAPServerAddress;
@@ -205,6 +213,58 @@ class SiteParameters {
      * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\UsernameType")
      */
     private $defaultPrimaryPublicUserIdType;
+    /////////////// EOF LDAP Server 1 ////////////////////
+
+    /////////////// LDAP Server 2 ////////////////////
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $aDLDAPServerAddress2;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $aDLDAPServerPort2;
+
+    /**
+     * LDAP bind used for ldap_search or for simple authentication ldap_bind
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $aDLDAPServerOu2;
+
+    /**
+     * Used for ldap_search, if null, the ldap_search is not used
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $aDLDAPServerAccountUserName2;
+
+    /**
+     * Used for ldap_search, if null, the ldap_search is not used
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $aDLDAPServerAccountPassword2;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $ldapExePath2;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $ldapExeFilename2;
+
+    /**
+     * Default Primary Public User ID Type
+     *
+     * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\UsernameType")
+     */
+    private $defaultPrimaryPublicUserIdType2;
+    /////////////// EOF LDAP Server 2 ////////////////////
+
 
     /**
      * Enable auto-assignment of Institutional Scope

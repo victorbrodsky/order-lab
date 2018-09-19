@@ -183,7 +183,15 @@ class SiteParametersType extends AbstractType
             'attr' => array('class'=>'form-control')
         ));
 
-        //LDAP
+        //Send request to both authentication Active Directory/LDAP servers when the first is selected for a single log in attempt
+        
+        //////////////// LDAP 1 ////////////////////
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'ldapAll' )
+            $builder->add('ldapAll',null,array(
+                'label'=>'Send request to both authentication Active Directory/LDAP servers when the first is selected for a single log in attempt:',
+                'attr' => array('class'=>'form-control form-control-modif', 'style'=>'margin:0')
+            ));
+
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'aDLDAPServerAddress' )
         $builder->add('aDLDAPServerAddress',null,array(
             'label'=>'AD/LDAP Server Address:',
@@ -198,7 +206,7 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'aDLDAPServerOu' )
         $builder->add('aDLDAPServerOu',null,array(
-            'label'=>"AD/LDAP Bind DN for ldap search or simple authentication. Use ';' for multiple binds (cn=read-only-admin,dc=example,dc=com;ou=group1,dc=example,dc=com):",
+            'label'=>"AD/LDAP Bind DN for ldap search or simple authentication ('cn=read-only-admin,dc=example,dc=com' or 'ou=group1,dc=example,dc=com'):",
             'attr' => array('class'=>'form-control')
         ));
 
@@ -232,8 +240,59 @@ class SiteParametersType extends AbstractType
                 'label'=>'Default Primary Public User ID Type:',
                 'attr' => array('class'=>'form-control')
             ));
+        //////////////// EOF LDAP 1 ////////////////////
 
 
+        //////////////// LDAP 2 ////////////////////
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'aDLDAPServerAddress2' )
+            $builder->add('aDLDAPServerAddress2',null,array(
+                'label'=>'AD/LDAP Server Address:',
+                'attr' => array('class'=>'form-control')
+            ));
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'aDLDAPServerPort2' )
+            $builder->add('aDLDAPServerPort2',null,array(
+                'label'=>'AD/LDAP Server Port:',
+                'attr' => array('class'=>'form-control')
+            ));
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'aDLDAPServerOu2' )
+            $builder->add('aDLDAPServerOu2',null,array(
+                'label'=>"AD/LDAP Bind DN for ldap search or simple authentication ('cn=read-only-admin,dc=example,dc=com' or 'ou=group1,dc=example,dc=com'):",
+                'attr' => array('class'=>'form-control')
+            ));
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'aDLDAPServerAccountUserName2' )
+            $builder->add('aDLDAPServerAccountUserName2',null,array(
+                'label'=>'AD/LDAP Server Account User Name (for ldap search):',
+                'attr' => array('class'=>'form-control')
+            ));
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'aDLDAPServerAccountPassword2' )
+            $builder->add('aDLDAPServerAccountPassword2',null,array(
+                'label'=>'AD/LDAP Server Account Password (for ldap search):',
+                //'always_empty' => $always_empty,
+                'attr' => array('class'=>'form-control')
+            ));
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'ldapExePath2' )
+            $builder->add('ldapExePath2',null,array(
+                'label'=>'LDAP/AD Authenticator Path - relevant for Windows-based servers only (Default: "../src/Oleg/UserdirectoryBundle/Util/" ):',
+                'attr' => array('class'=>'form-control')
+            ));
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'ldapExeFilename2' )
+            $builder->add('ldapExeFilename2',null,array(
+                'label'=>'LDAP/AD Authenticator File Name - relevant for Windows-based servers only (Default: "LdapSaslCustom.exe"):',
+                'attr' => array('class'=>'form-control')
+            ));
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'defaultPrimaryPublicUserIdType2' )
+            $builder->add('defaultPrimaryPublicUserIdType2',null,array(
+                'label'=>'Default Primary Public User ID Type:',
+                'attr' => array('class'=>'form-control')
+            ));
+        //////////////// EOF LDAP 2 ////////////////////
 
 //        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'autoAssignInstitution' )
 //            $builder->add('autoAssignInstitution',null,array(
