@@ -612,9 +612,12 @@ class TransResUtil
             } catch (\LogicException $e) {
                 //event log
 
+                $logger = $this->container->get('logger');
+                $logger->error("Action failed: ".$this->getTransitionLabelByName($transitionName).", Error:".$e);
+
                 $this->container->get('session')->getFlashBag()->add(
                     'warning',
-                    "Action failed: ".$this->getTransitionLabelByName($transitionName)
+                    "Action failed: ".$this->getTransitionLabelByName($transitionName)."<br> Error:".$e
                 );
                 return false;
             }//try
@@ -2411,10 +2414,11 @@ class TransResUtil
             $linkRequestsForThisProject = $this->container->get('router')->generate(
                 'translationalresearch_request_index',
                 array(
-                    'type' => $project->getId(),
+                    'id' => $project->getId(),
                 ),
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
+            $linkRequestsForThisProject = '<a href="'.$linkRequestsForThisProject.'">'.$linkRequestsForThisProject.'</a>';
             $body = $body . $break . $linkRequestsForThisProject;
 
             //To view work requests (including drafts) for all your projects, please visit the following link: LINK-TO-MY-WORK-REQUESTS
@@ -2426,6 +2430,7 @@ class TransResUtil
                 ),
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
+            $linkMyRequests = '<a href="'.$linkMyRequests.'">'.$linkMyRequests.'</a>';
             $body = $body . $break . $linkMyRequests;
 
             //Any invoices associated with this project request or your other project requests can be accessed via the following link: LINK-TO-MY-INVOICES
