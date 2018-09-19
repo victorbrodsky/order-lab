@@ -257,12 +257,12 @@ class SiteParameters {
      */
     private $ldapExeFilename2;
 
-    /**
-     * Default Primary Public User ID Type
-     *
-     * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\UsernameType")
-     */
-    private $defaultPrimaryPublicUserIdType2;
+//    /**
+//     * Default Primary Public User ID Type
+//     *
+//     * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\UsernameType")
+//     */
+//    private $defaultPrimaryPublicUserIdType2;
     /////////////// EOF LDAP Server 2 ////////////////////
 
 
@@ -2137,6 +2137,134 @@ class SiteParameters {
     public function getLdapExeFilename()
     {
         return $this->ldapExeFilename;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLdapAll()
+    {
+        return $this->ldapAll;
+    }
+
+    /**
+     * @param mixed $ldapAll
+     */
+    public function setLdapAll($ldapAll)
+    {
+        $this->ldapAll = $ldapAll;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getADLDAPServerAddress2()
+    {
+        return $this->aDLDAPServerAddress2;
+    }
+
+    /**
+     * @param mixed $aDLDAPServerAddress2
+     */
+    public function setADLDAPServerAddress2($aDLDAPServerAddress2)
+    {
+        $this->aDLDAPServerAddress2 = $aDLDAPServerAddress2;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getADLDAPServerPort2()
+    {
+        return $this->aDLDAPServerPort2;
+    }
+
+    /**
+     * @param mixed $aDLDAPServerPort2
+     */
+    public function setADLDAPServerPort2($aDLDAPServerPort2)
+    {
+        $this->aDLDAPServerPort2 = $aDLDAPServerPort2;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getADLDAPServerOu2()
+    {
+        return $this->aDLDAPServerOu2;
+    }
+
+    /**
+     * @param mixed $aDLDAPServerOu2
+     */
+    public function setADLDAPServerOu2($aDLDAPServerOu2)
+    {
+        $this->aDLDAPServerOu2 = $aDLDAPServerOu2;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getADLDAPServerAccountUserName2()
+    {
+        return $this->aDLDAPServerAccountUserName2;
+    }
+
+    /**
+     * @param mixed $aDLDAPServerAccountUserName2
+     */
+    public function setADLDAPServerAccountUserName2($aDLDAPServerAccountUserName2)
+    {
+        $this->aDLDAPServerAccountUserName2 = $aDLDAPServerAccountUserName2;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getADLDAPServerAccountPassword2()
+    {
+        return $this->aDLDAPServerAccountPassword2;
+    }
+
+    /**
+     * @param mixed $aDLDAPServerAccountPassword2
+     */
+    public function setADLDAPServerAccountPassword2($aDLDAPServerAccountPassword2)
+    {
+        $this->aDLDAPServerAccountPassword2 = $aDLDAPServerAccountPassword2;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLdapExePath2()
+    {
+        return $this->ldapExePath2;
+    }
+
+    /**
+     * @param mixed $ldapExePath2
+     */
+    public function setLdapExePath2($ldapExePath2)
+    {
+        $this->ldapExePath2 = $ldapExePath2;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLdapExeFilename2()
+    {
+        return $this->ldapExeFilename2;
+    }
+
+    /**
+     * @param mixed $ldapExeFilename2
+     */
+    public function setLdapExeFilename2($ldapExeFilename2)
+    {
+        $this->ldapExeFilename2 = $ldapExeFilename2;
     }
 
     /**

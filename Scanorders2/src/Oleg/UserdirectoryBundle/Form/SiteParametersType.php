@@ -184,8 +184,14 @@ class SiteParametersType extends AbstractType
         ));
 
         //Send request to both authentication Active Directory/LDAP servers when the first is selected for a single log in attempt
-        
+
         //////////////// LDAP 1 ////////////////////
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'defaultPrimaryPublicUserIdType' )
+            $builder->add('defaultPrimaryPublicUserIdType',null,array(
+                'label'=>'Default Primary Public User ID Type:',
+                'attr' => array('class'=>'form-control')
+            ));
+
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'ldapAll' )
             $builder->add('ldapAll',null,array(
                 'label'=>'Send request to both authentication Active Directory/LDAP servers when the first is selected for a single log in attempt:',
@@ -206,7 +212,7 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'aDLDAPServerOu' )
         $builder->add('aDLDAPServerOu',null,array(
-            'label'=>"AD/LDAP Bind DN for ldap search or simple authentication ('cn=read-only-admin,dc=example,dc=com' or 'ou=group1,dc=example,dc=com'):",
+            'label'=>"AD/LDAP Bind DN for ldap search or simple authentication (cn=read-only-admin,dc=example,dc=com;ou=group1,dc=example,dc=com):",
             'attr' => array('class'=>'form-control')
         ));
 
@@ -234,12 +240,6 @@ class SiteParametersType extends AbstractType
                 'label'=>'LDAP/AD Authenticator File Name - relevant for Windows-based servers only (Default: "LdapSaslCustom.exe"):',
                 'attr' => array('class'=>'form-control')
             ));
-
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'defaultPrimaryPublicUserIdType' )
-            $builder->add('defaultPrimaryPublicUserIdType',null,array(
-                'label'=>'Default Primary Public User ID Type:',
-                'attr' => array('class'=>'form-control')
-            ));
         //////////////// EOF LDAP 1 ////////////////////
 
 
@@ -258,7 +258,7 @@ class SiteParametersType extends AbstractType
 
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'aDLDAPServerOu2' )
             $builder->add('aDLDAPServerOu2',null,array(
-                'label'=>"AD/LDAP Bind DN for ldap search or simple authentication ('cn=read-only-admin,dc=example,dc=com' or 'ou=group1,dc=example,dc=com'):",
+                'label'=>"AD/LDAP Bind DN for ldap search or simple authentication (cn=read-only-admin,dc=example,dc=com;ou=group1,dc=example,dc=com):",
                 'attr' => array('class'=>'form-control')
             ));
 
@@ -287,11 +287,11 @@ class SiteParametersType extends AbstractType
                 'attr' => array('class'=>'form-control')
             ));
 
-        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'defaultPrimaryPublicUserIdType2' )
-            $builder->add('defaultPrimaryPublicUserIdType2',null,array(
-                'label'=>'Default Primary Public User ID Type:',
-                'attr' => array('class'=>'form-control')
-            ));
+//        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'defaultPrimaryPublicUserIdType2' )
+//            $builder->add('defaultPrimaryPublicUserIdType2',null,array(
+//                'label'=>'Default Primary Public User ID Type:',
+//                'attr' => array('class'=>'form-control')
+//            ));
         //////////////// EOF LDAP 2 ////////////////////
 
 //        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'autoAssignInstitution' )

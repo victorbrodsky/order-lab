@@ -1140,6 +1140,7 @@ class RequestController extends Controller
 
             //replace - with space
             $filterType = str_replace("-", " ", $filterType);
+            $filterType = ucwords($filterType);
 
             if (isset($filterform['project'])) {
                 $projectFilter = $filterform['project']->getData();

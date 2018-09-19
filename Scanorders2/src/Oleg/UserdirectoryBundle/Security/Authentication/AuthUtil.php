@@ -563,20 +563,22 @@ class AuthUtil {
         //echo "Windows ldap<br>";
         $userSecUtil = $this->container->get('user_security_utility');
 
+        $postfix = $this->getPostfix($ldapType);
+
         //Ldap authentication using exe script
         //$LDAPHost = $this->container->getParameter('ldaphost');
-        $LDAPHost = $userSecUtil->getSiteSettingParameter('aDLDAPServerAddress');
+        $LDAPHost = $userSecUtil->getSiteSettingParameter('aDLDAPServerAddress'.$postfix);
 
         //$LDAPPort = $this->container->getParameter('ldapport');
-        $LDAPPort = $userSecUtil->getSiteSettingParameter('aDLDAPServerPort');
+        $LDAPPort = $userSecUtil->getSiteSettingParameter('aDLDAPServerPort'.$postfix);
 
         //$exePath = "../src/Oleg/UserdirectoryBundle/Util/";
         //$exePath = $this->container->getParameter('ldapexepath');
-        $exePath = $userSecUtil->getSiteSettingParameter('ldapExePath');
+        $exePath = $userSecUtil->getSiteSettingParameter('ldapExePath'.$postfix);
 
         //$exeFile = "LdapSaslCustom.exe";
         //$exeFile = $this->container->getParameter('ldapexefilename');
-        $exeFile = $userSecUtil->getSiteSettingParameter('ldapExeFilename');
+        $exeFile = $userSecUtil->getSiteSettingParameter('ldapExeFilename'.$postfix);
 
         $command = $exePath.$exeFile;
         //$command = $exeFile;
@@ -623,8 +625,11 @@ class AuthUtil {
     public function ldapBindUnix( $username, $password, $ldapType=1 ) {
         $userSecUtil = $this->container->get('user_security_utility');
         $this->logger->warning("Unix system detected. Must be tested!");
+
+        $postfix = $this->getPostfix($ldapType);
+
         //$LDAPHost = $this->container->getParameter('ldaphost');
-        $LDAPHost = $userSecUtil->getSiteSettingParameter('aDLDAPServerAddress');
+        $LDAPHost = $userSecUtil->getSiteSettingParameter('aDLDAPServerAddress'.$postfix);
         $mech = "GSSAPI";
         //$mech = "DIGEST-MD5";
         $cnx = $this->connectToLdap($LDAPHost);
@@ -633,7 +638,7 @@ class AuthUtil {
         ldap_set_option($cnx, LDAP_OPT_PROTOCOL_VERSION, 3);
         ldap_set_option($cnx, LDAP_OPT_REFERRALS, 0);
 
-        $ldapBindDN = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'); //scientists,dc=example,dc=com
+        $ldapBindDN = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'.$postfix); //scientists,dc=example,dc=com
         $res = null;
         $ldapBindDNArr = explode(";",$ldapBindDN);
         //echo "count=".count($ldapBindDNArr)."<br>";
@@ -700,10 +705,12 @@ class AuthUtil {
     public function simpleLdap($username, $password, $userPrefix="uid", $ldapType=1) {
         //$this->logger->notice("Simple Ldap");
         $userSecUtil = $this->container->get('user_security_utility');
-        $LDAPHost = $userSecUtil->getSiteSettingParameter('aDLDAPServerAddress');
+        $postfix = $this->getPostfix($ldapType);
+
+        $LDAPHost = $userSecUtil->getSiteSettingParameter('aDLDAPServerAddress'.$postfix);
         $cnx = $this->connectToLdap($LDAPHost);
 
-        $ldapBindDN = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'); //scientists,dc=example,dc=com
+        $ldapBindDN = $userSecUtil->getSiteSettingParameter('aDLDAPServerOu'.$postfix); //scientists,dc=example,dc=com
 
         $res = null;
         $ldapBindDNArr = explode(";",$ldapBindDN);
