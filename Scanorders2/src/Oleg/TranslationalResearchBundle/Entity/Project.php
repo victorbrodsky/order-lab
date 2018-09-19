@@ -1859,7 +1859,7 @@ class Project {
         return $this->getProjectInfoLimited(false);
     }
     public function getProjectInfoNameWithPIsChoice() {
-        //return $this->getOid() . " " . $this->getTitle();
+        return $this->getOid() . " " . $this->getTitle();
         return $this->getProjectInfoLimited(true);
     }
     public function getProjectInfoLimited($withpis=true) {
