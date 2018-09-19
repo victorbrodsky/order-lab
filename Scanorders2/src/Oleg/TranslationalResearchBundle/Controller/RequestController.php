@@ -970,7 +970,7 @@ class RequestController extends Controller
     {
 
         //max optimization: 3 sec (14 MB)
-        //with matching: 3.5 sec (17 MB)
+        //with matching: 17 sec (62 MB)
         //with filter: 17 sec (62 MB)
 
         $withfilter = true;
