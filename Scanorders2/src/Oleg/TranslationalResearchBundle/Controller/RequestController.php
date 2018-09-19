@@ -969,8 +969,15 @@ class RequestController extends Controller
     public function myRequestsAction(Request $request)
     {
 
+        $withfilter = true;
+        //$withfilter = false; //testing!!!
+
+        $withMatching = true;
+        //$withMatching = false; //testing!!!
+
         $timer = false;
-        //$timer = true;
+        $timer = true; //testing!!!
+
         if( $timer ) {
             $stopwatch = new Stopwatch();
             //$time_pre = microtime(true);
@@ -1047,8 +1054,6 @@ class RequestController extends Controller
         $ids = array();
         $showOnlyMyProjects = false;
 
-        $withfilter = true;
-        //$withfilter = false; //testing!!!
         if( $withfilter ) {
         $transresUsers = $transresUtil->getAppropriatedUsers();
         //$transresUsers = $em->getRepository('OlegUserdirectoryBundle:User')->findNotFellowshipUsers();
@@ -1766,8 +1771,6 @@ class RequestController extends Controller
             $title = $filterTitle;
         }
 
-        $withMatching = true;
-        //$withMatching = false;
         if( $withMatching ) {
             //Title
             $requestTotalFeeHtml = null;
@@ -1814,8 +1817,10 @@ class RequestController extends Controller
         }
 
         $filterformView = null;
+        $filterDisable = true;
         if( $withfilter ) {
             $filterformView = $filterform->createView();
+            $filterDisable = false;
         }
 
         //Template: OlegTranslationalResearchBundle:Request:index.html.twig
@@ -1826,7 +1831,7 @@ class RequestController extends Controller
             'requestTotalFeeHtml' => null, //$requestTotalFeeHtml
             'advancedFilter' => $advancedFilter,
             'project' => $project,
-            //'filterDisable' => true, //testing
+            'filterDisable' => $filterDisable, //testing
             //'hideaction' => true,    //testing
             //'hiderows' => true,      //testing
 

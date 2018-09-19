@@ -43,7 +43,7 @@
     {#{% endstopwatch %}#}
 
     {#{% stopwatch "### transresRequestsFilter ###" %}#}
-    {% if filterDisable is not defined %}
+    {% if filterDisable is not defined or filterDisable == false %}
         {{ transresRequestMacros.transresRequestsFilter(filterform,advancedFilter) }}
     {% endif %}
     {#{% endstopwatch %}#}
