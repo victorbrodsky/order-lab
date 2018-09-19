@@ -977,7 +977,7 @@ class RequestController extends Controller
         //$withfilter = false; //testing!!!
 
         $withMatching = true;
-        $withMatching = false; //testing!!!
+        //$withMatching = false; //testing!!!
 
         $timer = false;
         $timer = true; //testing!!!
@@ -1821,25 +1821,30 @@ class RequestController extends Controller
         }
 
         $filterformView = null;
-        $filterDisable = true;
+        //$filterDisable = true;
         if( $withfilter ) {
             $filterformView = $filterform->createView();
-            $filterDisable = false;
+            //$filterDisable = false;
         }
 
         //Template: OlegTranslationalResearchBundle:Request:index.html.twig
-        return array(
+        $formArray = array(
             'transresRequests' => $transresRequests,
             'filterform' => $filterformView,
             'title' => $title,
             'requestTotalFeeHtml' => null, //$requestTotalFeeHtml
             'advancedFilter' => $advancedFilter,
             'project' => $project,
-            'filterDisable' => $filterDisable, //testing
+            //'filterDisable' => $filterDisable, //testing
             //'hideaction' => true,    //testing
             //'hiderows' => true,      //testing
-
         );
+
+        if( !$withfilter ) {
+            $formArray['filterDisable'] = true;
+        }
+
+        return $formArray;
     }
     public function testingReturn($request,$stopwatch=null) {
         //TESTING
