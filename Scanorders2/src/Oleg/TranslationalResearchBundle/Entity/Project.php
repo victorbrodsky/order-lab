@@ -1859,10 +1859,11 @@ class Project {
         return $this->getProjectInfoLimited(false);
     }
     public function getProjectInfoNameWithPIsChoice() {
-        return $this->getOid() . " " . $this->getTitle();
+        //return $this->getOid();// . " " . $this->getTitle();
         return $this->getProjectInfoLimited(true);
     }
     public function getProjectInfoLimited($withpis=true) {
+        return $this->getOid(); //testing
         //$info = $this->getProjectInfoName();
         //$info = $this->getOid() . " submitted on ".$this->getCreateDate()->format('m/d/Y'); //. " at ".$this->getCreateDate()->format('H:i:s')
         //$info = $this->getOid() . ", submitted on " . $this->getCreateDate()->format('m/d/Y');
