@@ -232,18 +232,19 @@ class FilterRequestType extends AbstractType
 //        ));
 
         //return;
-        if( $this->params['routeName'] == "translationalresearch_request_index" ) {
-            //echo "Use data projects <br>";
-            $builder->add('project', EntityType::class, array(
-                'class' => 'OlegTranslationalResearchBundle:Project',
-                //'choice_label' => "getProjectInfoNameChoice",          //Without PIs
-                'choice_label' => "getProjectInfoNameWithPIsChoice",     //With PIs
-                'required' => false,
-                'label' => false,
-                'data' => $this->params['project'],
-                'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Project"),
-            ));
-        } else {
+        if(0) {
+            if ($this->params['routeName'] == "translationalresearch_request_index") {
+                //echo "Use data projects <br>";
+                $builder->add('project', EntityType::class, array(
+                    'class' => 'OlegTranslationalResearchBundle:Project',
+                    //'choice_label' => "getProjectInfoNameChoice",          //Without PIs
+                    'choice_label' => "getProjectInfoNameWithPIsChoice",     //With PIs
+                    'required' => false,
+                    'label' => false,
+                    'data' => $this->params['project'],
+                    'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Project"),
+                ));
+            } else {
 //            $builder->add('project', EntityType::class, array(
 //                'class' => 'OlegTranslationalResearchBundle:Project',
 //                'choice_label' => "getProjectInfoName",
@@ -251,20 +252,20 @@ class FilterRequestType extends AbstractType
 //                'label' => false,
 //                'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Project"),
 //            ));
-            //echo "Use all projects <br>";
-            $builder->add('project', EntityType::class, array(
-                'class' => 'OlegTranslationalResearchBundle:Project',
-                //'choice_label' => "getProjectInfoNameChoice",        //Without PIs
-                'choice_label' => "getProjectInfoNameWithPIsChoice",   //With PIs - this option causes ~135 additional DB queries (~number of existing projects)
-                'choices' => $this->params['availableProjects'],
-                //'disabled' => ($this->params['admin'] ? false : true),
-                //'disabled' => true,
-                'required' => false,
-                'multiple' => false,
-                'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Project")
-            ));
+                //echo "Use all projects <br>";
+                $builder->add('project', EntityType::class, array(
+                    'class' => 'OlegTranslationalResearchBundle:Project',
+                    //'choice_label' => "getProjectInfoNameChoice",        //Without PIs
+                    'choice_label' => "getProjectInfoNameWithPIsChoice",   //With PIs - this option causes ~135 additional DB queries (~number of existing projects)
+                    'choices' => $this->params['availableProjects'],
+                    //'disabled' => ($this->params['admin'] ? false : true),
+                    //'disabled' => true,
+                    'required' => false,
+                    'multiple' => false,
+                    'attr' => array('class' => 'combobox combobox-width', 'placeholder' => "Project")
+                ));
+            }
         }
-
     }
 
     public function configureOptions(OptionsResolver $resolver)

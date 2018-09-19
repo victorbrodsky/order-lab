@@ -436,7 +436,9 @@
             {#"Category", "Project Specialty" [AP/CP or Hematopathology], "Project", "Work Progress Status", "Billing Progress Status", and "Submitter"#}
             <div class="row">
                 <div class="col-xs-4">
-                    {{ form_widget(filterform.category,{'attr': {'placeholder': 'Category'}}) }}
+                    {% if filterform.category is defined %}
+                        {{ form_widget(filterform.category,{'attr': {'placeholder': 'Category'}}) }}
+                    {% endif %}
                 </div>
                 <div class="col-xs-2">
                     {{ form_widget(filterform.projectSpecialty, {'attr': {'placeholder': 'Project Specialty'}}) }}
