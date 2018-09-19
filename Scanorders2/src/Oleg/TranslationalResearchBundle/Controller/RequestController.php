@@ -970,10 +970,10 @@ class RequestController extends Controller
     {
 
         $withfilter = true;
-        //$withfilter = false; //testing!!!
+        $withfilter = false; //testing!!!
 
         $withMatching = true;
-        //$withMatching = false; //testing!!!
+        $withMatching = false; //testing!!!
 
         $timer = false;
         $timer = true; //testing!!!
