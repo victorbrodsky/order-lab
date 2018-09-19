@@ -969,9 +969,9 @@ class RequestController extends Controller
     public function myRequestsAction(Request $request)
     {
 
-        //max optimization: 3 sec
-        //with matching: 3.5 sec
-        //with filter:
+        //max optimization: 3 sec (14 MB)
+        //with matching: 3.5 sec (17 MB)
+        //with filter: 17 sec (62 MB)
 
         $withfilter = true;
         //$withfilter = false; //testing!!!
