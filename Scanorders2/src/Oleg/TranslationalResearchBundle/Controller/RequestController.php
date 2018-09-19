@@ -1061,7 +1061,8 @@ class RequestController extends Controller
         $showOnlyMyProjects = false;
 
         if( $withfilter ) {
-        $transresUsers = $transresUtil->getAppropriatedUsers();
+        //$transresUsers = $transresUtil->getAppropriatedUsers();
+        $transresUsers = array();
         //$transresUsers = $em->getRepository('OlegUserdirectoryBundle:User')->findNotFellowshipUsers();
         //TESTING
         //return $this->testingReturn($request,$stopwatch);
