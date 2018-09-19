@@ -973,6 +973,7 @@ class RequestController extends Controller
         //with matching: 17 sec (62 MB)
         //with matching and filter: 19 sec (62 MB)
         //without matching and with filter: 18 sec (60 MB)
+        //with matching and with filter (no project): 15 sec (60 MB)
 
         $withfilter = true;
         //$withfilter = false; //testing!!!
@@ -1114,12 +1115,16 @@ class RequestController extends Controller
         }
 
         if(1) {
+            if (isset($filterform['category'])) {
+                $category = $filterform['category']->getData();
+            }
+
             $requestId = $filterform['requestId']->getData();
             $externalId = $filterform['externalId']->getData();
             $submitter = $filterform['submitter']->getData();
             $progressStates = $filterform['progressState']->getData();
             $billingStates = $filterform['billingState']->getData();
-            $category = $filterform['category']->getData();
+            //$category = $filterform['category']->getData();
             $projectSpecialties = $filterform['projectSpecialty']->getData();
             $searchStr = $filterform['comment']->getData();
             $startDate = $filterform['startDate']->getData();

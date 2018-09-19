@@ -67,23 +67,25 @@ class FilterRequestType extends AbstractType
             'attr' => array('class'=>'form-control form-control-modif limit-font-size submit-on-enter-field'),
         ));
 
-        $builder->add( 'category', EntityType::class, array(
-            'class' => 'OlegTranslationalResearchBundle:RequestCategoryTypeList',
-            'label'=> false,
-            'choice_label' => "getOptimalAbbreviationName",
-            'required'=> false,
-            'multiple' => false,
-            'attr' => array('class'=>'combobox combobox-width'),
-            'query_builder' => function(EntityRepository $er) {
-                return $er->createQueryBuilder('list')
-                    ->where("list.type = :typedef OR list.type = :typeadd")
-                    ->orderBy("list.orderinlist","ASC")
-                    ->setParameters( array(
-                        'typedef' => 'default',
-                        'typeadd' => 'user-added',
-                    ));
-            },
-        ));
+        if(1) {
+            $builder->add('category', EntityType::class, array(
+                'class' => 'OlegTranslationalResearchBundle:RequestCategoryTypeList',
+                'label' => false,
+                'choice_label' => "getOptimalAbbreviationName",
+                'required' => false,
+                'multiple' => false,
+                'attr' => array('class' => 'combobox combobox-width'),
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('list')
+                        ->where("list.type = :typedef OR list.type = :typeadd")
+                        ->orderBy("list.orderinlist", "ASC")
+                        ->setParameters(array(
+                            'typedef' => 'default',
+                            'typeadd' => 'user-added',
+                        ));
+                },
+            ));
+        }
 
         $builder->add('progressState',ChoiceType::class, array(
             'label' => false,
@@ -231,8 +233,7 @@ class FilterRequestType extends AbstractType
 //            'attr' => array('class' => 'combobox'),
 //        ));
 
-        //return;
-        if(0) {
+        if(1) {
             if ($this->params['routeName'] == "translationalresearch_request_index") {
                 //echo "Use data projects <br>";
                 $builder->add('project', EntityType::class, array(
