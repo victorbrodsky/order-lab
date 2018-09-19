@@ -970,10 +970,11 @@ class RequestController extends Controller
     {
 
         //max optimization: 3 sec
-        //no matching:
+        //with matching: 3.5 sec
+        //with filter:
 
         $withfilter = true;
-        $withfilter = false; //testing!!!
+        //$withfilter = false; //testing!!!
 
         $withMatching = true;
         //$withMatching = false; //testing!!!
