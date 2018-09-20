@@ -3145,6 +3145,8 @@ class TransResUtil
             $query->setParameters($dqlParameters);
         }
 
+        $query->setMaxResults(5);
+
         $projects = $query->getResult();
 
         return $projects;
