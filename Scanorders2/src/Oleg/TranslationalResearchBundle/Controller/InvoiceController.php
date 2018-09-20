@@ -98,20 +98,21 @@ class InvoiceController extends Controller
 
         //$filterType = trim( $request->get('type') );
         $invoicetype = str_replace("-"," ",$invoicetype);
-        $invoicetype = ucwords($invoicetype);
+        $invoicetypeLowerCase = strtolower($invoicetype);
         //echo "invoicetype=$invoicetype<br>";
 
-        if( $invoicetype && $invoicetype == "All Invoices" ) {
+        if( $invoicetype && $invoicetypeLowerCase == strtolower("All Invoices") ) {
             //filter nothing
             $title = "All Invoices";
         }
 
-        if( $invoicetype && $invoicetype != "All Invoices" ) {
+        if( $invoicetype && $invoicetypeLowerCase != strtolower("All Invoices") ) {
 //            if( $invoicetype == "All Invoices" ) {
 //                //filter nothing
 //                $title = "All Invoices";
 //            }
-            if( $invoicetype == "All Issued Invoices" ) {
+
+            if( $invoicetypeLowerCase == strtolower("All Issued Invoices") ) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
@@ -124,7 +125,7 @@ class InvoiceController extends Controller
                     )
                 );
             }
-            if( $invoicetype == "All Pending Invoices" ) {
+            if( $invoicetypeLowerCase == strtolower("All Pending Invoices") ) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
@@ -172,7 +173,7 @@ class InvoiceController extends Controller
 //                    )
 //                );
 //            }
-            if( $invoicetype == "My Outstanding Invoices" ) {
+            if( $invoicetypeLowerCase == strtolower("My Outstanding Invoices") ) {
                 //all outstanding Invoices for all Work Requests issued, but not paid for Projects where I am listed in any way (submitter, PI, etc).
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
@@ -191,7 +192,7 @@ class InvoiceController extends Controller
                     )
                 );
             }
-            if( $invoicetype == "Issued invoices I generated" ) {
+            if( $invoicetypeLowerCase == strtolower("Issued invoices I generated") ) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
@@ -205,7 +206,7 @@ class InvoiceController extends Controller
                     )
                 );
             }
-            if( $invoicetype == "Invoices where I am the salesperson" ) {
+            if( $invoicetypeLowerCase == strtolower("Invoices where I am the salesperson") ) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
@@ -214,7 +215,7 @@ class InvoiceController extends Controller
                     )
                 );
             }
-            if( $invoicetype == "Invoices where I am the PI" ) {
+            if( $invoicetypeLowerCase == strtolower("Invoices where I am the PI") ) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
@@ -224,7 +225,7 @@ class InvoiceController extends Controller
                 );
             }
             //"Unpaid Invoices where I am a PI", "Unpaid Invoices sent to Me"
-            if( $invoicetype == "Unpaid Invoices where I am the PI" ) {
+            if( $invoicetypeLowerCase == strtolower("Unpaid Invoices where I am the PI") ) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
@@ -236,7 +237,7 @@ class InvoiceController extends Controller
             }
 
             //Latest
-            if( $invoicetype == "Latest Versions of All Invoices" ) {
+            if( $invoicetypeLowerCase == strtolower("Latest Versions of All Invoices") ) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
@@ -245,7 +246,7 @@ class InvoiceController extends Controller
                     )
                 );
             }
-            if( $invoicetype == "Latest Versions of Issued (Unpaid) Invoices" ) {
+            if( $invoicetypeLowerCase == strtolower("Latest Versions of Issued (Unpaid) Invoices") ) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
@@ -255,7 +256,7 @@ class InvoiceController extends Controller
                     )
                 );
             }
-            if( $invoicetype == "Latest Versions of Pending (Unissued) Invoices" ) {
+            if( $invoicetypeLowerCase == strtolower("Latest Versions of Pending (Unissued) Invoices") ) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
@@ -265,7 +266,7 @@ class InvoiceController extends Controller
                     )
                 );
             }
-            if( $invoicetype == "Latest Versions of Paid Invoices" ) {
+            if( $invoicetypeLowerCase == strtolower("Latest Versions of Paid Invoices") ) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
@@ -275,7 +276,7 @@ class InvoiceController extends Controller
                     )
                 );
             }
-            if( $invoicetype == "Latest Versions of Partially Paid Invoices" ) {
+            if( $invoicetypeLowerCase == strtolower("Latest Versions of Partially Paid Invoices") ) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
@@ -285,7 +286,7 @@ class InvoiceController extends Controller
                     )
                 );
             }
-            if( $invoicetype == "Latest Versions of Paid and Partially Paid Invoices" ) {
+            if( $invoicetypeLowerCase == strtolower("Latest Versions of Paid and Partially Paid Invoices") ) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
@@ -296,7 +297,7 @@ class InvoiceController extends Controller
                     )
                 );
             }
-            if( $invoicetype == "Latest Versions of Canceled Invoices" ) {
+            if( $invoicetypeLowerCase == strtolower("Latest Versions of Canceled Invoices") ) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
@@ -308,7 +309,7 @@ class InvoiceController extends Controller
             }
 
             //Old
-            if( $invoicetype == "Old Versions of All Invoices" ) {
+            if( $invoicetypeLowerCase == strtolower("Old Versions of All Invoices") ) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
@@ -317,7 +318,7 @@ class InvoiceController extends Controller
                     )
                 );
             }
-            if( $invoicetype == "Old Versions of Issued (Unpaid) Invoices" ) {
+            if( $invoicetypeLowerCase == strtolower("Old Versions of Issued (Unpaid) Invoices") ) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
@@ -327,7 +328,7 @@ class InvoiceController extends Controller
                     )
                 );
             }
-            if( $invoicetype == "Old Versions of Pending (Unissued) Invoices" ) {
+            if( $invoicetypeLowerCase == strtolower("Old Versions of Pending (Unissued) Invoices") ) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
@@ -337,7 +338,7 @@ class InvoiceController extends Controller
                     )
                 );
             }
-            if( $invoicetype == "Old Versions of Paid Invoices" ) {
+            if( $invoicetypeLowerCase == strtolower("Old Versions of Paid Invoices") ) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
@@ -347,7 +348,7 @@ class InvoiceController extends Controller
                     )
                 );
             }
-            if( $invoicetype == "Old Versions of Partially Paid Invoices" ) {
+            if( $invoicetypeLowerCase == strtolower("Old Versions of Partially Paid Invoices") ) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
@@ -357,7 +358,7 @@ class InvoiceController extends Controller
                     )
                 );
             }
-            if( $invoicetype == "Old Versions of Paid and Partially Paid Invoices" ) {
+            if( $invoicetypeLowerCase == strtolower("Old Versions of Paid and Partially Paid Invoices") ) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
@@ -368,7 +369,7 @@ class InvoiceController extends Controller
                     )
                 );
             }
-            if( $invoicetype == "Old Versions of Canceled Invoices" ) {
+            if( $invoicetypeLowerCase == strtolower("Old Versions of Canceled Invoices") ) {
                 return $this->redirectToRoute(
                     'translationalresearch_invoice_index_filter',
                     array(
@@ -415,7 +416,7 @@ class InvoiceController extends Controller
 //            $status = "Pending";
 //        }
 
-        if( $invoicetype == "My Invoices" ) {
+        if( $invoicetypeLowerCase == strtolower("My Invoices") ) {
             //all Invoices for all Work Requests issued for Projects where I am listed in any way (submitter, PI, etc).
             //Use OR
             $dql->andWhere("submitter.id = :userId OR principalInvestigator.id = :userId OR salesperson.id = :userId OR billingContact.id = :userId");
