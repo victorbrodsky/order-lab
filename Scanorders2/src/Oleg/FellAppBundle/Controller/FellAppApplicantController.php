@@ -497,7 +497,13 @@ class FellAppApplicantController extends Controller {
 
             $text .= "If you have any additional questions, please don't hesitate to email " . $senderEmail . $break.$break;
 
-            $emailUtil->sendEmail( $email, "Fellowship Candidate (".$applicant->getUsernameOptimal().") Application", $text, null, $senderEmail );
+            $attachmentPath = null;
+            $recentReport = $entity->getTheMostRecentReport();
+            if( $recentReport ) {
+                $attachmentPath = $recentReport->getAbsoluteUploadFullPath();
+            }
+
+            $emailUtil->sendEmail( $email, "Fellowship Candidate (".$applicant->getUsernameOptimal().") Application", $text, null, $senderEmail, $attachmentPath );
 
             $logger->notice("inviteObserversToRateAction: Send observer invitation email from " . $senderEmail . " to :".$email);
         }
