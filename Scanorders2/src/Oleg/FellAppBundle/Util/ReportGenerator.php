@@ -751,6 +751,13 @@ class ReportGenerator {
                 continue; //ignore this file
             }
 
+            //testing!!!
+            $errorMsg = "Test email; filePath=".$filePath;
+            $errorMsg = "Test email";
+            $logger->notice($errorMsg);
+            $userSecUtil->sendEmailToSystemEmail("Test email", $errorMsg);
+            //exit("email sent");
+
             //$outFilename = $outdir . basename($filePath);
             $outFilename = $outdir . pathinfo($filePath, PATHINFO_FILENAME) . ".pdf";
             //echo "outFilename=".$outFilename."<br>";
@@ -814,7 +821,7 @@ class ReportGenerator {
 
                 //check if this PDF is readable
                 if( $this->isPdfCorrupted($filePath) ) {
-                    $errorMsg = "convert To Pdf: PDF is corrupted; filePath=".$filePath;
+                    $errorMsg = "convert To Pdf: PDF is corrupted";
                     $logger->error($errorMsg);
                     $userSecUtil->sendEmailToSystemEmail("Convert to PDF failed", $errorMsg);
                     continue; //ignore this file

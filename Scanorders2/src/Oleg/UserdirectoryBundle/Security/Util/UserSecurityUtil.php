@@ -1370,7 +1370,7 @@ class UserSecurityUtil {
         $emailUtil = $this->container->get('user_mailer_utility');
 
         $systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
-        echo "systemEmail=".$systemEmail."<br>";
+        //echo "systemEmail=".$systemEmail."<br>";
 
         //$logger->notice("sendEmailToSystemEmail: systemEmail=".$systemEmail."; subject=".$subject."; message=".$message);
         $emailUtil->sendEmail( $systemEmail, $subject, $message );
@@ -2081,9 +2081,11 @@ class UserSecurityUtil {
 
     public function getSiteFromEmail( $sitenameAbbreviation ) {
         $fromEmail = null;
-        $siteObject = $this->em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation($sitenameAbbreviation);
-        if( $siteObject )  {
-            $fromEmail = $siteObject->getFromEmail();
+        if( $sitenameAbbreviation ) {
+            $siteObject = $this->em->getRepository('OlegUserdirectoryBundle:SiteList')->findOneByAbbreviation($sitenameAbbreviation);
+            if ($siteObject) {
+                $fromEmail = $siteObject->getFromEmail();
+            }
         }
         if( !$fromEmail ) {
             $fromEmail = $this->getSiteSettingParameter('siteEmail');
