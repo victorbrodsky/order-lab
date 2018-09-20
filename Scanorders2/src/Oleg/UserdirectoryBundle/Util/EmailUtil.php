@@ -36,8 +36,12 @@ class EmailUtil {
     }
 
     //php bin/console swiftmailer:spool:send --env=prod
-    //$emails: single or array of emails
-    //$ccs: single or array of emails
+    //$emails: single, comma separated emails, or array of emails
+    //$ccs: single, comma separated emails, or array of emails
+    //$subject: string
+    //$body: html email text
+    //$attachmentPath: absolute path to the attachment file
+    //$fromEmail: site's email or system email will be used if null
     public function sendEmail( $emails, $subject, $body, $ccs=null, $fromEmail=null, $attachmentPath=null ) {
 
         //testing
