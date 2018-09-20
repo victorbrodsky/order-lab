@@ -530,7 +530,7 @@ class ReportGenerator {
         $createFlag = true;
 
         //2) convert all uploads to pdf using LibreOffice
-        $fileNamesArr = $this->convertToPdf( $filePathsArr, $outdir );
+        $fileNamesArr = $this->convertToPdf( $filePathsArr, $outdir, $id );
         //$logger->notice("Successfully converted all uploads to PDF for ID=".$id."; files count=".count($fileNamesArr));
 
         //3) merge all pdfs
@@ -686,7 +686,7 @@ class ReportGenerator {
     }
 
     //convert all uploads to pdf using LibreOffice
-    protected function convertToPdf( $filePathsArr, $outdir ) {
+    protected function convertToPdf( $filePathsArr, $outdir, $id ) {
 
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
@@ -745,18 +745,11 @@ class ReportGenerator {
             $filePath = realpath($filePath);
 
             if( !file_exists($filePath) ) {
-                $event = "Convert to PDF: Input file does not exist!!!: filePath=".$filePath;
+                $event = "Convert to PDF: Input file does not exist for FellApp $id: filePath=".$filePath;
                 $logger->error($event);
                 $userSecUtil->sendEmailToSystemEmail("Convert to PDF: Input file does not exist!!!", $event);
                 continue; //ignore this file
             }
-
-            //testing!!!
-            $errorMsg = "Test email; filePath=".$filePath;
-            $errorMsg = "Test email";
-            $logger->notice($errorMsg);
-            $userSecUtil->sendEmailToSystemEmail("Test email", $errorMsg);
-            //exit("email sent");
 
             //$outFilename = $outdir . basename($filePath);
             $outFilename = $outdir . pathinfo($filePath, PATHINFO_FILENAME) . ".pdf";
@@ -787,14 +780,14 @@ class ReportGenerator {
                     //echo "shellout=".$shellout."<br>";
                     //$logger->notice("LibreOffice converted input file=" . $filePath);
                 } else {
-                    $errorMsg = "LibreOffice failed to convert input file=" . $filePath;
+                    $errorMsg = "FellApp $id - LibreOffice failed to convert input file=" . $filePath;
                     $logger->error($errorMsg);
                     $userSecUtil->sendEmailToSystemEmail("Convert to PDF failed", $errorMsg);
                     continue; //ignore this file
                 }
 
                 if( !file_exists($outFilename) ) {
-                    $errorMsg = "Output file does not exist after PDF generation!!!: outFilename=".$outFilename;
+                    $errorMsg = "FellApp $id - Output file does not exist after PDF generation!!!: outFilename=".$outFilename;
                     $logger->error($errorMsg);
                     $userSecUtil->sendEmailToSystemEmail("Convert to PDF failed", $errorMsg);
                     continue; //ignore this file
@@ -813,7 +806,7 @@ class ReportGenerator {
                     //ok
                 } else {
                     //echo "source does not exist\n<br>";
-                    $errorMsg = "convert To Pdf: source does not exist; filePath=".$filePath;
+                    $errorMsg = "FellApp $id - convert To Pdf: source does not exist; filePath=".$filePath;
                     $logger->error($errorMsg);
                     $userSecUtil->sendEmailToSystemEmail("Convert to PDF failed", $errorMsg);
                     continue; //ignore this file
@@ -821,7 +814,7 @@ class ReportGenerator {
 
                 //check if this PDF is readable
                 if( $this->isPdfCorrupted($filePath) ) {
-                    $errorMsg = "convert To Pdf: PDF is corrupted";
+                    $errorMsg = "FellApp $id - convert To Pdf: PDF is corrupted; filePath=".$filePath;
                     $logger->error($errorMsg);
                     $userSecUtil->sendEmailToSystemEmail("Convert to PDF failed", $errorMsg);
                     continue; //ignore this file
@@ -830,7 +823,7 @@ class ReportGenerator {
                 if( !file_exists($outFilename) ) {
                     if( !copy($filePath, $outFilename ) ) {
                         //echo "failed to copy $filePath...\n<br>";
-                        $errorMsg = "Failed to copy to temp folder; filePath=".$filePath;
+                        $errorMsg = "FellApp $id - Failed to copy to temp folder; filePath=".$filePath;
                         $logger->error($errorMsg);
                         $userSecUtil->sendEmailToSystemEmail("Convert to PDF failed", $errorMsg);
                         continue; //ignore this file

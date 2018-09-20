@@ -1365,7 +1365,6 @@ class UserSecurityUtil {
     }
     public function sendEmailToSystemEmail($subject, $message) {
         //$logger = $this->container->get('logger');
-
         $userSecUtil = $this->container->get('user_security_utility');
         $emailUtil = $this->container->get('user_mailer_utility');
 

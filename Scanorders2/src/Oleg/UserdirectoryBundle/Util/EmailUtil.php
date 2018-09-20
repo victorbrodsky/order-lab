@@ -52,8 +52,8 @@ class EmailUtil {
         //echo "emails=".$emails."<br>";
         //print_r($emails);
         //echo "ccs=".$ccs."<br>";
-        $logger->notice("emails=".$emails);
-        $logger->notice("ccs=".$ccs);
+        //$logger->notice("emails=".$emails);
+        //$logger->notice("ccs=".$ccs);
 
 //        if( $this->hasConnection() == false ) {
 //            $logger->error("sendEmail: connection error");
@@ -126,7 +126,7 @@ class EmailUtil {
             $logger->error("sendEmail: Email has not been sent (fromEmail empty): subject=".$subject."; body=".$body);
             return false;
         }
-        $logger->notice("sendEmail: sending email: subject=".$subject."; body=".$body."; fromEmail=".$fromEmail);
+        //$logger->notice("sendEmail: sending email: subject=".$subject."; body=".$body."; fromEmail=".$fromEmail);
 
         $emails = $this->checkEmails($emails);
         $ccs = $this->checkEmails($ccs);
