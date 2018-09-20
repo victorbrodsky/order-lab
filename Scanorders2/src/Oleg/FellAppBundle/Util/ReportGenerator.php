@@ -691,6 +691,7 @@ class ReportGenerator {
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
         $userServiceUtil = $this->container->get('user_service_utility');
+        $systemUser = $userSecUtil->findSystemUser();
 
         //fellapp admin
         $confirmationEmailFellApp = $userSecUtil->getSiteSettingParameter('confirmationEmailFellApp');
@@ -750,9 +751,10 @@ class ReportGenerator {
             $filePath = realpath($filePath);
 
             if( !file_exists($filePath) ) {
-                $event = "Convert to PDF: Input file does not exist for Fellowship Application $id: filePath=".$filePath;
-                $logger->error($event);
-                $userSecUtil->sendEmailToSystemEmail("Convert to PDF: Input file does not exist",$event,$toEmailsArr);
+                $errorMsg = "Convert to PDF: Input file does not exist for Fellowship Application $id: filePath=".$filePath;
+                $logger->error($errorMsg);
+                $userSecUtil->sendEmailToSystemEmail("Convert to PDF: Input file does not exist",$errorMsg,$toEmailsArr);
+                $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$errorMsg,$systemUser,null,null,'Corrupted File');
                 continue; //ignore this file
             }
 
@@ -788,6 +790,7 @@ class ReportGenerator {
                     $errorMsg = "Fellowship Application $id - LibreOffice failed to convert input file=" . $filePath;
                     $logger->error($errorMsg);
                     $userSecUtil->sendEmailToSystemEmail("Convert to PDF failed",$errorMsg,$toEmailsArr);
+                    $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$errorMsg,$systemUser,null,null,'Corrupted File');
                     continue; //ignore this file
                 }
 
@@ -795,6 +798,7 @@ class ReportGenerator {
                     $errorMsg = "Fellowship Application $id - Output file does not exist after PDF generation!!!: outFilename=".$outFilename;
                     $logger->error($errorMsg);
                     $userSecUtil->sendEmailToSystemEmail("Convert to PDF failed",$errorMsg,$toEmailsArr);
+                    $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$errorMsg,$systemUser,null,null,'Corrupted File');
                     continue; //ignore this file
                 }
 
@@ -814,6 +818,7 @@ class ReportGenerator {
                     $errorMsg = "Fellowship Application $id - convert To Pdf: source does not exist; filePath=".$filePath;
                     $logger->error($errorMsg);
                     $userSecUtil->sendEmailToSystemEmail("Convert to PDF failed",$errorMsg,$toEmailsArr);
+                    $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$errorMsg,$systemUser,null,null,'Corrupted File');
                     continue; //ignore this file
                 }
 
@@ -822,6 +827,7 @@ class ReportGenerator {
                     $errorMsg = "Fellowship Application $id - convert To Pdf: PDF is corrupted; filePath=".$filePath;
                     $logger->error($errorMsg);
                     $userSecUtil->sendEmailToSystemEmail("Convert to PDF failed",$errorMsg,$toEmailsArr);
+                    $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$errorMsg,$systemUser,null,null,'Corrupted File');
                     continue; //ignore this file
                 }
 
@@ -831,6 +837,7 @@ class ReportGenerator {
                         $errorMsg = "Fellowship Application $id - Failed to copy to temp folder; filePath=".$filePath;
                         $logger->error($errorMsg);
                         $userSecUtil->sendEmailToSystemEmail("Convert to PDF failed",$errorMsg,$toEmailsArr);
+                        $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$errorMsg,$systemUser,null,null,'Corrupted File');
                         continue; //ignore this file
                     }
                 }
