@@ -862,17 +862,30 @@ class ReportGenerator {
         }
 
         //checking footer "%%EOF" - last 5 characters
-        fseek($fp, -5, SEEK_END);   // read 5 bytes from byte 0
-        $dataFooter = fread($fp, 5);
-        //echo "Footer=".$dataFooter."<br>";
-        $logger->notice("Footer=".$dataFooter);
-        //if( strcmp($dataFooter,"%%EOF")==0 ) {
-        if( strpos($dataFooter, '%EOF') !== false ) {
-            //echo "Footer: The PDF File is not Corrupted.<br>";
+        if(0) {
+            fseek($fp, -5, SEEK_END);   // read 5 bytes from byte 0
+            $dataFooter = fread($fp, 5);
+            //echo "Footer=".$dataFooter."<br>";
+            $logger->notice("Footer=".$dataFooter);
+            //if( strcmp($dataFooter,"%%EOF")==0 ) {
+            if( strpos($dataFooter, '%EOF') !== false ) {
+                //echo "Footer: The PDF File is not Corrupted.<br>";
+            } else {
+                //echo "Footer: The PDF File is  Corrupted.<br>";
+                $corrupted++;
+            }
+        }
+        $file = file($filePath);
+        $endfile= trim($file[count($file) - 1]);
+        //echo "endfile=".$endfile."<br>";
+        $n="%%EOF";
+        if( $endfile === $n ) {
+            //echo "good <br>";
         } else {
-            //echo "Footer: The PDF File is  Corrupted.<br>";
+            //echo "corrupted <br>";
             $corrupted++;
         }
+
         fclose($fp);
 
         //echo "Corrupted count=".$corrupted."<br>";
