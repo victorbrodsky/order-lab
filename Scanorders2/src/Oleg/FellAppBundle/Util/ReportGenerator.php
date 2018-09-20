@@ -691,6 +691,11 @@ class ReportGenerator {
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
         $userServiceUtil = $this->container->get('user_service_utility');
+
+        //fellapp admin
+        $confirmationEmailFellApp = $userSecUtil->getSiteSettingParameter('confirmationEmailFellApp');
+        $toEmailsArr = array($confirmationEmailFellApp);
+
         $fileNamesArr = array();
 
         if( $userServiceUtil->isWinOs() ) {
@@ -745,9 +750,9 @@ class ReportGenerator {
             $filePath = realpath($filePath);
 
             if( !file_exists($filePath) ) {
-                $event = "Convert to PDF: Input file does not exist for FellApp $id: filePath=".$filePath;
+                $event = "Convert to PDF: Input file does not exist for Fellowship Application $id: filePath=".$filePath;
                 $logger->error($event);
-                $userSecUtil->sendEmailToSystemEmail("Convert to PDF: Input file does not exist!!!", $event);
+                $userSecUtil->sendEmailToSystemEmail("Convert to PDF: Input file does not exist",$event,$toEmailsArr);
                 continue; //ignore this file
             }
 
@@ -780,16 +785,16 @@ class ReportGenerator {
                     //echo "shellout=".$shellout."<br>";
                     //$logger->notice("LibreOffice converted input file=" . $filePath);
                 } else {
-                    $errorMsg = "FellApp $id - LibreOffice failed to convert input file=" . $filePath;
+                    $errorMsg = "Fellowship Application $id - LibreOffice failed to convert input file=" . $filePath;
                     $logger->error($errorMsg);
-                    $userSecUtil->sendEmailToSystemEmail("Convert to PDF failed", $errorMsg);
+                    $userSecUtil->sendEmailToSystemEmail("Convert to PDF failed",$errorMsg,$toEmailsArr);
                     continue; //ignore this file
                 }
 
                 if( !file_exists($outFilename) ) {
-                    $errorMsg = "FellApp $id - Output file does not exist after PDF generation!!!: outFilename=".$outFilename;
+                    $errorMsg = "Fellowship Application $id - Output file does not exist after PDF generation!!!: outFilename=".$outFilename;
                     $logger->error($errorMsg);
-                    $userSecUtil->sendEmailToSystemEmail("Convert to PDF failed", $errorMsg);
+                    $userSecUtil->sendEmailToSystemEmail("Convert to PDF failed",$errorMsg,$toEmailsArr);
                     continue; //ignore this file
                 }
 
@@ -806,26 +811,26 @@ class ReportGenerator {
                     //ok
                 } else {
                     //echo "source does not exist\n<br>";
-                    $errorMsg = "FellApp $id - convert To Pdf: source does not exist; filePath=".$filePath;
+                    $errorMsg = "Fellowship Application $id - convert To Pdf: source does not exist; filePath=".$filePath;
                     $logger->error($errorMsg);
-                    $userSecUtil->sendEmailToSystemEmail("Convert to PDF failed", $errorMsg);
+                    $userSecUtil->sendEmailToSystemEmail("Convert to PDF failed",$errorMsg,$toEmailsArr);
                     continue; //ignore this file
                 }
 
                 //check if this PDF is readable
                 if( $this->isPdfCorrupted($filePath) ) {
-                    $errorMsg = "FellApp $id - convert To Pdf: PDF is corrupted; filePath=".$filePath;
+                    $errorMsg = "Fellowship Application $id - convert To Pdf: PDF is corrupted; filePath=".$filePath;
                     $logger->error($errorMsg);
-                    $userSecUtil->sendEmailToSystemEmail("Convert to PDF failed", $errorMsg);
+                    $userSecUtil->sendEmailToSystemEmail("Convert to PDF failed",$errorMsg,$toEmailsArr);
                     continue; //ignore this file
                 }
 
                 if( !file_exists($outFilename) ) {
                     if( !copy($filePath, $outFilename ) ) {
                         //echo "failed to copy $filePath...\n<br>";
-                        $errorMsg = "FellApp $id - Failed to copy to temp folder; filePath=".$filePath;
+                        $errorMsg = "Fellowship Application $id - Failed to copy to temp folder; filePath=".$filePath;
                         $logger->error($errorMsg);
-                        $userSecUtil->sendEmailToSystemEmail("Convert to PDF failed", $errorMsg);
+                        $userSecUtil->sendEmailToSystemEmail("Convert to PDF failed",$errorMsg,$toEmailsArr);
                         continue; //ignore this file
                     }
                 }
@@ -843,16 +848,17 @@ class ReportGenerator {
         return $fileNamesArr;
     }
     public function isPdfCorrupted($filePath) {
-        $logger = $this->container->get('logger');
+        //$logger = $this->container->get('logger');
         $corrupted = 0;
-        $logger->notice("Checking PDF=".$filePath);
-        //checking header "%PDF-"
+        //$logger->notice("Checking PDF=".$filePath);
+
+        ////////// checking header "%PDF-" ///////////////
         $fp = fopen($filePath, 'r');
         // move to the 0th byte
         fseek($fp, 0);
         $data = fread($fp, 5);   // read 5 bytes from byte 0
         //echo "Header=".$data."<br>";
-        $logger->notice("Header=".$data);
+        //$logger->notice("Header=".$data);
         //if(strcmp($data,"%PDF-")==0) {
         if( strpos($data, '%PDF-') !== false ) {
             //echo "The PDF File is not Corrupted.<br>";
@@ -860,21 +866,10 @@ class ReportGenerator {
             //echo "The PDF File is  Corrupted.<br>";
             $corrupted++;
         }
+        fclose($fp);
+        ////////// EOF checking header "%PDF-" ///////////////
 
-        //checking footer "%%EOF" - last 5 characters
-        if(0) {
-            fseek($fp, -5, SEEK_END);   // read 5 bytes from byte 0
-            $dataFooter = fread($fp, 5);
-            //echo "Footer=".$dataFooter."<br>";
-            $logger->notice("Footer=".$dataFooter);
-            //if( strcmp($dataFooter,"%%EOF")==0 ) {
-            if( strpos($dataFooter, '%EOF') !== false ) {
-                //echo "Footer: The PDF File is not Corrupted.<br>";
-            } else {
-                //echo "Footer: The PDF File is  Corrupted.<br>";
-                $corrupted++;
-            }
-        }
+        ///////////// checking footer "%%EOF" ///////////////
         $file = file($filePath);
         $endfile= trim($file[count($file) - 1]);
         //echo "endfile=".$endfile."<br>";
@@ -885,8 +880,7 @@ class ReportGenerator {
             //echo "corrupted <br>";
             $corrupted++;
         }
-
-        fclose($fp);
+        ///////////// EOF checking footer "%%EOF" ///////////////
 
         //echo "Corrupted count=".$corrupted."<br>";
         //$logger->notice("Corrupted count=".$corrupted);

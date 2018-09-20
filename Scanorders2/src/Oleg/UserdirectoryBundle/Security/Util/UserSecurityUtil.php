@@ -1363,16 +1363,16 @@ class UserSecurityUtil {
 
         return $date;
     }
-    public function sendEmailToSystemEmail($subject, $message) {
+    public function sendEmailToSystemEmail($subject, $message, $toEmailsArr=array()) {
         //$logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
         $emailUtil = $this->container->get('user_mailer_utility');
 
         $systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
-        //echo "systemEmail=".$systemEmail."<br>";
+        $toEmailsArr[] = $systemEmail;
 
         //$logger->notice("sendEmailToSystemEmail: systemEmail=".$systemEmail."; subject=".$subject."; message=".$message);
-        $emailUtil->sendEmail( $systemEmail, $subject, $message );
+        $emailUtil->sendEmail( $toEmailsArr, $subject, $message );
     }
 
 
