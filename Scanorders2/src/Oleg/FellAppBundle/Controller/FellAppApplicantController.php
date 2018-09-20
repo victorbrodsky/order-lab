@@ -306,6 +306,8 @@ class FellAppApplicantController extends Controller {
         $recentReport = $fellapp->getTheMostRecentReport();
         if( $recentReport ) {
             $attachmentPath = $recentReport->getAbsoluteUploadFullPath();
+        } else {
+            $logger->error("sendInvitationEmail: no recent report found for fellapp ID".$fellapp->getId());
         }
 
         //get email
