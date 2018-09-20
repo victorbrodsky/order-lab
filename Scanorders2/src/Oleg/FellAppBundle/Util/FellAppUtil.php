@@ -474,6 +474,7 @@ class FellAppUtil {
             ),
             UrlGeneratorInterface::ABSOLUTE_URL
         );
+        $linkToGeneratedApplicantPDF = $this->convertToHref($linkToGeneratedApplicantPDF);
         //echo "linkToGeneratedApplicantPDF=".$linkToGeneratedApplicantPDF."; ";
 
         $linkToChangeStatusOfApplicationToPriority = $this->container->get('router')->generate(
@@ -484,6 +485,7 @@ class FellAppUtil {
             ),
             UrlGeneratorInterface::ABSOLUTE_URL
         );
+        $linkToChangeStatusOfApplicationToPriority = $this->convertToHref($linkToChangeStatusOfApplicationToPriority);
 
         $linkToList = $this->container->get('router')->generate(
             'fellapp_home',
@@ -493,6 +495,7 @@ class FellAppUtil {
             ),
             UrlGeneratorInterface::ABSOLUTE_URL
         );
+        $linkToList = $this->convertToHref($linkToList);
 
         $creationDate = $fellowshipApplication->getCreatedate();
         $creationDate->setTimezone(new \DateTimeZone('America/New_York'));
@@ -518,6 +521,10 @@ class FellAppUtil {
         $emailUtil->sendEmail( $responsibleEmails, $populatedSubjectFellApp, $populatedBodyFellApp );
     }
 
+    public function convertToHref($url) {
+        return '<a href="'.$url.'">'.$url.'</a>';
+    }
+    
     //add based on interviewers in FellowshipSubspecialty object
     //TODO: rewrite and test add default interviewers based on roles and discard interviewers, coordinator, directors in FellowshipSubspecialty object?
     public function addDefaultInterviewers( $fellapp ) {
@@ -547,7 +554,7 @@ class FellAppUtil {
         return false;
     }
 
-
+    
 
 
 

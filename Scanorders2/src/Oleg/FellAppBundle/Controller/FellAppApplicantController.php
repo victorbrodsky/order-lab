@@ -302,6 +302,12 @@ class FellAppApplicantController extends Controller {
             return null;
         }
 
+        $attachmentPath = null;
+        $recentReport = $fellapp->getTheMostRecentReport();
+        if( $recentReport ) {
+            $attachmentPath = $recentReport->getAbsoluteUploadFullPath();
+        }
+
         //get email
         $email = $interviewer->getEmail();
 
@@ -314,12 +320,15 @@ class FellAppApplicantController extends Controller {
         //$scheduleDocumentId = $fellapp->getRecentItinerary()->getId();
         //$scheduleLink = $this->generateUrl( 'fellapp_file_download', array("id"=>$scheduleDocumentId), true );
         $scheduleLink = $this->generateUrl( 'fellapp_download_itinerary_pdf', array("id"=>$fellapp->getId()), UrlGeneratorInterface::ABSOLUTE_URL );
+        $scheduleLink = $this->convertToHref($scheduleLink);
 
         //fellapp_interview_edit
         $interviewFormLink = $this->generateUrl( 'fellapp_interview_edit', array("id"=>$interview->getId()), UrlGeneratorInterface::ABSOLUTE_URL );
+        $interviewFormLink = $this->convertToHref($interviewFormLink);
 
         //$pdfLink = $this->generateUrl( 'fellapp_file_download', array("id"=>$fellapp->getRecentReport()->getId()), true );
         $pdfLink = $this->generateUrl( 'fellapp_download_pdf', array("id"=>$fellapp->getId()), UrlGeneratorInterface::ABSOLUTE_URL );
+        $pdfLink = $this->convertToHref($pdfLink);
 
         //$break = "\r\n";
         $break = "<br>";
@@ -345,11 +354,15 @@ class FellAppApplicantController extends Controller {
         $interviewDateStr = $interview->getInterviewDateStr();
 
         $cc = null; //"oli2002@med.cornell.edu";
-        $emailUtil->sendEmail( $email, "Fellowship Candidate (".$applicant->getUsernameOptimal().$interviewDateStr.") Interview Application and Evaluation Form", $text, $cc, $senderEmail );
+        $emailUtil->sendEmail( $email, "Fellowship Candidate (".$applicant->getUsernameOptimal().$interviewDateStr.") Interview Application and Evaluation Form", $text, $cc, $senderEmail, $attachmentPath );
 
         $logger->notice("sendInvitationEmail: Email has been sent to " . $email . $interviewDateStr);
 
         return $email;
+    }
+
+    public function convertToHref($url) {
+        return '<a href="'.$url.'">'.$url.'</a>';
     }
 
     public function sendConfirmationEmail( $emails, $fellapp, $event, $emailUtil, $request ) {
@@ -405,8 +418,14 @@ class FellAppApplicantController extends Controller {
             $interviewDateStr = ", interview date ".$interviewDate->format('m/d/Y');
         }
 
+        $attachmentPath = null;
+        $recentReport = $fellapp->getTheMostRecentReport();
+        if( $recentReport ) {
+            $attachmentPath = $recentReport->getAbsoluteUploadFullPath();
+        }
+
         $applicant = $fellapp->getUser();
-        $emailUtil->sendEmail( $coordinatorEmails, "Fellowship Candidate (ID# ".$fellapp->getId()." ".$applicant->getUsernameOptimal().$interviewDateStr.") Interview Application and Evaluation Form", $event, null, $senderEmail );
+        $emailUtil->sendEmail( $coordinatorEmails, "Fellowship Candidate (ID# ".$fellapp->getId()." ".$applicant->getUsernameOptimal().$interviewDateStr.") Interview Application and Evaluation Form", $event, null, $senderEmail, $attachmentPath );
 
         $logger->notice("sendConfirmationEmail: "."Fellowship Candidate (ID# ".$fellapp->getId()." ".$applicant->getUsernameOptimal().$interviewDateStr.": Send confirmation email from " . $senderEmail . " to coordinators:".implode(", ",$coordinatorEmails));
     }
@@ -445,6 +464,7 @@ class FellAppApplicantController extends Controller {
         foreach( $entity->getObservers() as $observer ) {
             //$pdfLink = $this->generateUrl( 'fellapp_file_download', array("id"=>$entity->getRecentReport()->getId()), true );
             $pdfLink = $this->generateUrl( 'fellapp_download_pdf', array("id"=>$entity->getId()), UrlGeneratorInterface::ABSOLUTE_URL );
+            $pdfLink = $this->convertToHref($pdfLink);
 
             //fellapp_file_download
             $scheduleLink = null;
@@ -452,6 +472,7 @@ class FellAppApplicantController extends Controller {
                 //$scheduleDocumentId = $entity->getRecentItinerary()->getId();
                 //$scheduleLink = $this->generateUrl( 'fellapp_file_download', array("id"=>$scheduleDocumentId), true );
                 $scheduleLink = $this->generateUrl( 'fellapp_download_itinerary_pdf', array("id"=>$entity->getId()), UrlGeneratorInterface::ABSOLUTE_URL );
+                $scheduleLink = $this->convertToHref($scheduleLink);
             }
 
             //get email

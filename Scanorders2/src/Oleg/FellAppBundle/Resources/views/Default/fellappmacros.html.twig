@@ -444,8 +444,7 @@
             </p>
 
             <p>
-            {% if fellapp.itinerarys|length > 0 %}
-
+            {% if fellapp.itinerarys|length > 0 and fellapp.getRecentReport() %}
                 {% if reallinks %}
                     <a href="{{ url('fellapp_inviteinterviewerstorate', { 'id': fellapp.id}) }}">Invite these interviewers to submit evaluations</a>
                 {% else %}
@@ -454,7 +453,7 @@
                         href="#">Invite these interviewers to submit evaluations</a>
                  {% endif %}
             {% else %}
-                <div class="alert alert-danger" role="alert">Please upload Itinerary in order to invite interviewer(s) to rate</div>
+                <div class="alert alert-danger" role="alert">Please upload Itinerary and make sure a complete application PDF is available in order to invite interviewer(s) to rate</div>
             {% endif %}
             {% if fellapp.daysAfterInterviewDate() and fellapp.daysAfterInterviewDate() > 0 %}
                 <b>(Interview date was {{ fellapp.interviewDate|date('m/d/Y','UTC') }}, {{ fellapp.daysAfterInterviewDate()|abs }} days ago).</b>

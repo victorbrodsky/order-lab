@@ -1048,6 +1048,17 @@ class FellowshipApplication extends BaseUserAttributes {
             return null;
         }
     }
+    public function getTheMostRecentReport() {
+        if( count($this->getReports()) > 0 ) {
+            return $this->getReports()->last();
+        } else {
+            if( count($this->getOldReports()) > 0 ) {
+                return $this->getOldReports()->last();
+            } else {
+                return null;
+            }
+        }
+    }
 
     public function getRecentCoverLetter() {
         if( count($this->getCoverLetters()) > 0 ) {
