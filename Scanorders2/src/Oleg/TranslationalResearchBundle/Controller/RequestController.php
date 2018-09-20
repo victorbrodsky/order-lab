@@ -1140,7 +1140,7 @@ class RequestController extends Controller
 
             //replace - with space
             $filterType = str_replace("-", " ", $filterType);
-            $filterType = ucwords($filterType);
+            $filterTypeLowerCase = strtolower($filterType);
 
             if (isset($filterform['project'])) {
                 $projectFilter = $filterform['project']->getData();
@@ -1244,11 +1244,11 @@ class RequestController extends Controller
         if ($filterType) {
             $filterTypeDone = false;
 
-            if ($filterType == "All Requests (including Drafts)") {
+            if( $filterTypeLowerCase == strtolower("All Requests (including Drafts)") ) {
                 $title = "All Work Requests (including Drafts)";
                 $filterTypeDone = true;
             }
-            if ($filterType == "All Requests") {
+            if( $filterTypeLowerCase == strtolower("All Requests") ) {
                 //$title = "All Work Requests";
                 //$filterTypeDone = true;
                 return $this->redirectToRoute(
@@ -1270,7 +1270,7 @@ class RequestController extends Controller
 //                    )
 //                );
 //            }
-            if ($filterType == "My Submitted Requests") {
+            if ($filterTypeLowerCase == strtolower("My Submitted Requests") ) {
                 //exit('start filtering '.$filterType);
                 return $this->redirectToRoute(
                     'translationalresearch_request_index_filter',
@@ -1283,7 +1283,7 @@ class RequestController extends Controller
 
             $titleAdd = "";
             //set filter's progressState or add a filter option "my projects only"
-            if ($filterType == "Submitted Requests for My Projects") {
+            if ($filterTypeLowerCase == strtolower("Submitted Requests for My Projects") ) {
                 //exit('start filtering '.$filterType);
                 //where I'm a project's requester
                 $filterTypeDone = true;
@@ -1300,7 +1300,7 @@ class RequestController extends Controller
 //                );
             }
             //set filter's progressState or add a filter option "my projects only"
-            if ($filterType == "Draft Requests for My Projects") {
+            if ($filterTypeLowerCase == strtolower("Draft Requests for My Projects") ) {
                 //exit('start filtering '.$filterType);
                 //where I'm a project's requester
                 $filterTypeDone = true;
@@ -1308,7 +1308,7 @@ class RequestController extends Controller
                 $progressStates = array('draft');
                 $titleAdd = "Draft ";
             }
-            if ($filterType == "My Draft Requests") {
+            if ($filterTypeLowerCase == strtolower("My Draft Requests") ) {
                 //exit('start filtering '.$filterType);
                 return $this->redirectToRoute(
                     'translationalresearch_request_index_filter',
@@ -1320,7 +1320,7 @@ class RequestController extends Controller
                 );
             }
 
-            if ($filterType == "All AP/CP Requests") {
+            if ($filterTypeLowerCase == strtolower("All AP/CP Requests") ) {
                 $projectSpecialtyObject = $transresUtil->getSpecialtyObject("ap-cp");
                 return $this->redirectToRoute(
                     'translationalresearch_request_index_filter',
@@ -1331,7 +1331,7 @@ class RequestController extends Controller
                     )
                 );
             }
-            if ($filterType == "All Hematopathology Requests") {
+            if ($filterTypeLowerCase == strtolower("All Hematopathology Requests") ) {
                 $projectSpecialtyObject = $transresUtil->getSpecialtyObject("hematopathology");
                 return $this->redirectToRoute(
                     'translationalresearch_request_index_filter',
@@ -1344,7 +1344,7 @@ class RequestController extends Controller
             }
 
             //"Pending" is all status except, Canceled, Completed, CompletedNotified
-            if ($filterType == "All Pending Requests") {
+            if ($filterTypeLowerCase == strtolower("All Pending Requests") ) {
                 $pendingRequestArr = $transresRequestUtil->getFilterPendingRequestArr($filterType);
 
                 return $this->redirectToRoute(
@@ -1352,7 +1352,7 @@ class RequestController extends Controller
                     $pendingRequestArr
                 );
             }
-            if ($filterType == "All AP/CP Pending Requests") {
+            if ($filterTypeLowerCase == strtolower("All AP/CP Pending Requests") ) {
                 $pendingRequestArr = $transresRequestUtil->getFilterPendingRequestArr($filterType);
 
                 $projectSpecialtyObject = $transresUtil->getSpecialtyObject("ap-cp");
@@ -1363,7 +1363,7 @@ class RequestController extends Controller
                     $pendingRequestArr
                 );
             }
-            if ($filterType == "All Hematopathology Pending Requests") {
+            if ($filterTypeLowerCase == strtolower("All Hematopathology Pending Requests") ) {
                 $pendingRequestArr = $transresRequestUtil->getFilterPendingRequestArr($filterType);
 
                 $projectSpecialtyObject = $transresUtil->getSpecialtyObject("hematopathology");
@@ -1389,7 +1389,7 @@ class RequestController extends Controller
                 );
             }
 
-            if ($filterType == "All Active Requests") {
+            if ($filterTypeLowerCase == strtolower("All Active Requests") ) {
                 return $this->redirectToRoute(
                     'translationalresearch_request_index_filter',
                     array(
@@ -1398,7 +1398,7 @@ class RequestController extends Controller
                     )
                 );
             }
-            if ($filterType == "All AP/CP Active Requests") {
+            if ($filterTypeLowerCase == strtolower("All AP/CP Active Requests") ) {
                 $projectSpecialtyObject = $transresUtil->getSpecialtyObject("ap-cp");
                 return $this->redirectToRoute(
                     'translationalresearch_request_index_filter',
@@ -1409,7 +1409,7 @@ class RequestController extends Controller
                     )
                 );
             }
-            if ($filterType == "All Hematopathology Active Requests") {
+            if ($filterTypeLowerCase == strtolower("All Hematopathology Active Requests") ) {
                 $projectSpecialtyObject = $transresUtil->getSpecialtyObject("hematopathology");
                 return $this->redirectToRoute(
                     'translationalresearch_request_index_filter',
@@ -1421,7 +1421,7 @@ class RequestController extends Controller
                 );
             }
 
-            if ($filterType == "All Completed Requests") {
+            if ($filterTypeLowerCase == strtolower("All Completed Requests") ) {
                 return $this->redirectToRoute(
                     'translationalresearch_request_index_filter',
                     array(
@@ -1430,7 +1430,7 @@ class RequestController extends Controller
                     )
                 );
             }
-            if ($filterType == "All AP/CP Completed Requests") {
+            if ($filterTypeLowerCase == strtolower("All AP/CP Completed Requests") ) {
                 $projectSpecialtyObject = $transresUtil->getSpecialtyObject("ap-cp");
                 return $this->redirectToRoute(
                     'translationalresearch_request_index_filter',
@@ -1441,7 +1441,7 @@ class RequestController extends Controller
                     )
                 );
             }
-            if ($filterType == "All Hematopathology Completed Requests") {
+            if ($filterTypeLowerCase == strtolower("All Hematopathology Completed Requests") ) {
                 $projectSpecialtyObject = $transresUtil->getSpecialtyObject("hematopathology");
                 return $this->redirectToRoute(
                     'translationalresearch_request_index_filter',
@@ -1453,7 +1453,7 @@ class RequestController extends Controller
                 );
             }
 
-            if ($filterType == "All Completed and Notified Requests") {
+            if ($filterTypeLowerCase == strtolower("All Completed and Notified Requests") ) {
                 return $this->redirectToRoute(
                     'translationalresearch_request_index_filter',
                     array(
@@ -1462,7 +1462,7 @@ class RequestController extends Controller
                     )
                 );
             }
-            if ($filterType == "All AP/CP Completed and Notified Requests") {
+            if ($filterTypeLowerCase == strtolower("All AP/CP Completed and Notified Requests") ) {
                 $projectSpecialtyObject = $transresUtil->getSpecialtyObject("ap-cp");
                 return $this->redirectToRoute(
                     'translationalresearch_request_index_filter',
@@ -1473,7 +1473,7 @@ class RequestController extends Controller
                     )
                 );
             }
-            if ($filterType == "All Hematopathology Completed and Notified Requests") {
+            if ($filterTypeLowerCase == strtolower("All Hematopathology Completed and Notified Requests") ) {
                 $projectSpecialtyObject = $transresUtil->getSpecialtyObject("hematopathology");
                 return $this->redirectToRoute(
                     'translationalresearch_request_index_filter',
