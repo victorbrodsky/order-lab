@@ -812,7 +812,7 @@ class ReportGenerator {
                     continue; //ignore this file
                 }
 
-                //TODO: check if this PDF is readable
+                //check if this PDF is readable
                 if( $this->isPdfCorrupted($filePath) ) {
                     $errorMsg = "convert To Pdf: PDF is corrupted; filePath=".$filePath;
                     $logger->error($errorMsg);
@@ -845,53 +845,44 @@ class ReportGenerator {
     public function isPdfCorrupted($filePath) {
         $logger = $this->container->get('logger');
         $corrupted = 0;
-
+        $logger->notice("Checking PDF=".$filePath);
         //checking header "%PDF-"
         $fp = fopen($filePath, 'r');
         // move to the 0th byte
         fseek($fp, 0);
         $data = fread($fp, 5);   // read 5 bytes from byte 0
+        //echo "Header=".$data."<br>";
         $logger->notice("Header=".$data);
-        if(strcmp($data,"%PDF-")==0)
-        {
-            echo "The PDF File is not Corrupted.";
-        }
-        else
-        {
-            echo "The PDF File is  Corrupted.";
+        //if(strcmp($data,"%PDF-")==0) {
+        if( strpos($data, '%PDF-') !== false ) {
+            //echo "The PDF File is not Corrupted.<br>";
+        } else {
+            //echo "The PDF File is  Corrupted.<br>";
             $corrupted++;
         }
 
         //checking footer "%%EOF" - last 5 characters
-        $dataFooter = fread($fp, -5, SEEK_END);   // read 5 bytes from byte 0
+        fseek($fp, -5, SEEK_END);   // read 5 bytes from byte 0
+        $dataFooter = fread($fp, 5);
+        //echo "Footer=".$dataFooter."<br>";
         $logger->notice("Footer=".$dataFooter);
-        if(strcmp($dataFooter,"%%EOF")==0)
-        {
-            echo "Footer: The PDF File is not Corrupted.";
-        }
-        else
-        {
-            echo "Footer: The PDF File is  Corrupted.";
+        //if( strcmp($dataFooter,"%%EOF")==0 ) {
+        if( strpos($dataFooter, '%EOF') !== false ) {
+            //echo "Footer: The PDF File is not Corrupted.<br>";
+        } else {
+            //echo "Footer: The PDF File is  Corrupted.<br>";
             $corrupted++;
         }
         fclose($fp);
 
-//        //checking footer "%%EOF"
-//        $file = file($filePath);
-//        $endfile= trim($file[count($file) - 1]);
-//        $n="%%EOF";
-//        if ($endfile === $n) {
-//            echo "good";
-//
-//        } else {
-//            echo "corrupted";
-//        }
+        //echo "Corrupted count=".$corrupted."<br>";
+        //$logger->notice("Corrupted count=".$corrupted);
 
         if( $corrupted === 0 ) {
-            return true;
+            return false;
         }
 
-        return false;
+        return true;
     }
 
 //    //TODO: try https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/
