@@ -1367,8 +1367,10 @@ class UserSecurityUtil {
         //$logger = $this->container->get('logger');
 
         $userSecUtil = $this->container->get('user_security_utility');
-        $systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
         $emailUtil = $this->container->get('user_mailer_utility');
+
+        $systemEmail = $userSecUtil->getSiteSettingParameter('siteEmail');
+        echo "systemEmail=".$systemEmail."<br>";
 
         //$logger->notice("sendEmailToSystemEmail: systemEmail=".$systemEmail."; subject=".$subject."; message=".$message);
         $emailUtil->sendEmail( $systemEmail, $subject, $message );

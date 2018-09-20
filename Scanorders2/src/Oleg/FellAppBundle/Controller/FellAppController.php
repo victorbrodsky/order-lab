@@ -2244,15 +2244,19 @@ class FellAppController extends Controller {
 
         //testing
 //        $fellappRepGen = $this->container->get('fellapp_reportgenerator');
-//        $loc = "C:\\Users\\ch3\\Desktop\\";
-//        $filepath = $loc."badpdf.pdf";
+        $loc = "C:\\Users\\ch3\\Desktop\\";
+        $filepath = $loc."badpdf.pdf";
 //        $filepath = $loc."goodpdf.pdf";
 //        if( $fellappRepGen->isPdfCorrupted($filepath) ) {
 //            echo "corrupted<br>";
 //        } else {
 //            echo "not corrupted<br>";
 //        }
-//        exit();
+//        
+        $userSecUtil = $this->container->get('user_security_utility');
+        $errorMsg = "convert To Pdf: PDF is corrupted; filePath=".$filepath;
+        $userSecUtil->sendEmailToSystemEmail("Convert to PDF failed", $errorMsg);
+        exit();
 
         $fellappRepGen = $this->container->get('fellapp_reportgenerator');
         $numUpdated = $fellappRepGen->resetQueueRun();
