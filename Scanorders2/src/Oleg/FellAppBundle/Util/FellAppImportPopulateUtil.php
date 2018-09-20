@@ -433,7 +433,7 @@ class FellAppImportPopulateUtil {
                 $event = $documentType . " file has been successful downloaded to the server with id=" . $fileDb->getId() . ", title=" . $fileDb->getUniquename();
                 $logger->notice($event);
             } else {
-                $logger->warning($documentType." dataFile has not been added (already exists) for fileId=$fileId; fileDb Id=".$fileDb->getId(). ", title=" . $fileDb->getUniquename());
+                //$logger->warning($documentType." dataFile has not been added (already exists) for fileId=$fileId; fileDb Id=".$fileDb->getId(). ", title=" . $fileDb->getUniquename());
             }
         } else {
             $event = $documentType . " download failed!";
@@ -456,8 +456,8 @@ class FellAppImportPopulateUtil {
 
         $dataFile = $this->em->getRepository('OlegFellAppBundle:DataFile')->findOneByDocument($document->getId());
         if( $dataFile ) {
-            $event = "DataFile already exists with document ID=".$document->getId();
-            $logger->notice($event);
+            //$event = "DataFile already exists with document ID=".$document->getId();
+            //$logger->notice($event);
             return null;
         }
 
