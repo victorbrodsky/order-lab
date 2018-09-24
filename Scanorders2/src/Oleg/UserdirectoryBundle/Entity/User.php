@@ -1047,6 +1047,9 @@ class User extends BaseUser {
     }
     public function setUsernameCanonicalForce($usernameCanonical)
     {
+        if( $usernameCanonical ) {
+            $usernameCanonical = strtolower($usernameCanonical);
+        }
         $this->usernameCanonical = $usernameCanonical;
     }
     public function setUsernameCanonical($usernameCanonical)
@@ -1058,7 +1061,7 @@ class User extends BaseUser {
             //throw new \Exception( 'Can not change canonical username when user is in DB: username='.$usernameCanonical.', existing canonical username='.$this->getUsername().', id='.$this->getId() );
         }
 
-        $this->usernameCanonical = $usernameCanonical;
+        $this->setUsernameCanonicalForce($usernameCanonical);
 
         return $this;
     }
@@ -1084,7 +1087,10 @@ class User extends BaseUser {
         return $usernameArr[0];
     }
 
-    public function getUsernamePrefix($username) {
+    public function getUsernamePrefix($username=null) {
+        if( !$username ) {
+            $username = $this->getUsername();
+        }
         $usernameArr = explode("_@_",$username);
         if( array_key_exists(1, $usernameArr) ) {
             $prefix = $usernameArr[1];
@@ -1094,7 +1100,10 @@ class User extends BaseUser {
         return $prefix;
     }
 
-    public function usernameIsValid($username) {
+    public function usernameIsValid($username=null) {
+        if( !$username ) {
+            $username = $this->getUsername();
+        }
         if( strpos($username,"_@_") !== false ) {
             return true;
         }
@@ -1416,6 +1425,9 @@ class User extends BaseUser {
     {
         $infos = $this->getInfos();
         if( count($infos) > 0 ) {
+            if( $emailCanonical ) {
+                $emailCanonical = strtolower($emailCanonical);
+            }
             $infos->first()->setEmailCanonical($emailCanonical);
         }
     }

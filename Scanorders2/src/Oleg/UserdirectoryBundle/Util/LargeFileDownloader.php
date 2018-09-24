@@ -119,7 +119,8 @@ class LargeFileDownloader {
             readfile($resizedImg);
 
         } else {
-            if( $size < 10000000 ) {
+            //use regular readfile for file less than 3000000=>3 000 000 bytes => 3MB
+            if( $size < 3000000 ) {
                 readfile($filenameClean); //use for files less than 10MB => 10000000 bytes
             } else {
                 $this->readfile_chunked($filenameClean);

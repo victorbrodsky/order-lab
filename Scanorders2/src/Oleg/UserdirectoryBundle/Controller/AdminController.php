@@ -8953,6 +8953,65 @@ class AdminController extends Controller
         exit($msg);
     }
 
+    /**
+     * Update user's postfix
+     * username+postfix is required by symfony authentication token having only username $token->getUsername().
+     * Postfix is used to determine the correspondint auth mechanism (ldap, local, external etc.)
+     *
+     * run: http://127.0.0.1/order/directory/admin/update-user-postfix/
+     * @Route("/update-user-postfix/", name="user_update_user_postfix")
+     */
+    public function updateUserPostfixAction()
+    {
+        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN')) {
+            return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename') . '-order-nopermission'));
+        }
+
+        //exit("not permitted. It has been used only for changing user's postfix once.");
+
+        $em = $this->getDoctrine()->getManager();
+
+        //1) get all users with TRANSRES roles
+        $users = $em->getRepository('OlegUserdirectoryBundle:User')->findAll();
+
+        $msg = "Found ".count($users). " users <br>";
+        $count = 1;
+
+        foreach($users as $user) {
+
+            if( !$user->usernameIsValid() ) {
+                exit("Username is not valid for ".$user);
+            }
+
+            //$cleanUsername = $user->createCleanUsername();
+            
+            if( $user->getUsernamePrefix() == "wcmc-cwid" )
+            {
+                //$newPostfix = "ldap-user";
+                $newUsername = $user->createUniqueUsername();
+                $user->setUsernameForce($newUsername);
+                $user->setUsernameCanonicalForce($newUsername);
+                echo $count.": Update postfix for " . $user . " to [" . $user->getUsername() . "],[" .$user->getUsernameCanonical(). "]<br>";
+                //$em->flush($user);
+            }
+            elseif ( $user->getUsernamePrefix() == "aperio" )
+            {
+                //$newPostfix = "external";
+                $newUsername = $user->createUniqueUsername();
+                $user->setUsernameForce($newUsername);
+                $user->setUsernameCanonicalForce($newUsername);
+                echo $count.": Update postfix for " . $user . " to [" . $user->getUsername() . "],[" .$user->getUsernameCanonical(). "]<br>";
+                //$em->flush($user);
+            } else {
+                echo $count." user is OK ".$user."<br>";
+            }
+
+            $count++;
+        }
+
+        exit($msg);
+    }
+
 
 //    public function createAdminAntibodyList($filename) {
 //        $importUtil = $this->get('transres_import');

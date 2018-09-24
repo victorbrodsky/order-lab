@@ -195,7 +195,7 @@ class UserRequestController extends Controller
         $usernametypes = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findBy(
             array(
                 'type' => array('default', 'user-added'),
-                'abbreviation' => array('wcmc-cwid','local-user')
+                'abbreviation' => array('ldap-user','local-user') //wcmc-cwid
             ),
             array('orderinlist' => 'ASC')
         );

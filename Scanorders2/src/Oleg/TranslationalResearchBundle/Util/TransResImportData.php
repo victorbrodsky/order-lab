@@ -1190,9 +1190,9 @@ class TransResImportData
         //$email = "oli2002@med.cornell.edu";
         $requests = array();
 
-        $default_time_zone = $this->container->getParameter('default_time_zone');
-        $userSecUtil = $this->container->get('user_security_utility');
-        $userkeytype = $userSecUtil->getUsernameType($this->usernamePrefix);
+        //$default_time_zone = $this->container->getParameter('default_time_zone');
+        //$userSecUtil = $this->container->get('user_security_utility');
+        //$userkeytype = $userSecUtil->getUsernameType($this->usernamePrefix);
 
         ////////////// add system user /////////////////
         $systemUser = $userSecUtil->findSystemUser();

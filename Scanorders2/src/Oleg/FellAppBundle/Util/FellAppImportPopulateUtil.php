@@ -588,7 +588,7 @@ class FellAppImportPopulateUtil {
             throw new IOException($event);
         }
 
-        $logger->notice("Successfully obtained sheet with filename=".$inputFileName);
+        //$logger->notice("Successfully obtained sheet with filename=".$inputFileName);
 
         //$uploadPath = $this->uploadDir.'/FellowshipApplicantUploads';
         $applicantsUploadPathFellApp = $userSecUtil->getSiteSettingParameter('applicantsUploadPathFellApp');
