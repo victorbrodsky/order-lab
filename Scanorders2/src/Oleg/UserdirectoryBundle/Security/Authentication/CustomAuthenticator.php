@@ -89,7 +89,7 @@ class CustomAuthenticator implements SimpleFormAuthenticatorInterface {
                 break;
 
 
-            case "wcmc-cwid": //use for auth transition. Remove after transition.
+            //case "wcmc-cwid": //use for auth transition. Remove after transition.
             case "ldap-user":
                 //////////////////////////////////////////////////////////////////////
                 //                       3) ldap authentication                     //
@@ -124,7 +124,8 @@ class CustomAuthenticator implements SimpleFormAuthenticatorInterface {
                 break;
 
             default:
-                throw new AuthenticationException('Invalid username or password');
+                $user = $authUtil->LdapAuthentication($token, $userProvider, $ldapType = 1);
+                //throw new AuthenticationException('Invalid username or password');
 
         }
 
