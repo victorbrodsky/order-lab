@@ -1094,6 +1094,7 @@ class SiteParameters {
         $this->platformLogos = new ArrayCollection();
         $this->setMaintenance(false);
         $this->setShowCopyrightOnFooter(true);
+        $this->setLdapAll(true);
     }
 
 
