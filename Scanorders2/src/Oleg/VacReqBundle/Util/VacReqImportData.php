@@ -37,7 +37,7 @@ class VacReqImportData
     protected $em;
     protected $container;
 
-    private $usernamePrefix = 'wcmc-cwid';
+    private $usernamePrefix = 'ldap-user';
 
     public function __construct( $em, $sc, $container ) {
 

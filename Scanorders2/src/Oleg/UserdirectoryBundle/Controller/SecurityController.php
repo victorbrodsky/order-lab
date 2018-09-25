@@ -107,14 +107,14 @@ class SecurityController extends Controller
         $usernametypes = $em->getRepository('OlegUserdirectoryBundle:UsernameType')->findBy(
             array(
                 'type' => array('default', 'user-added'),
-                //'abbreviation' => array('wcmc-cwid','local-user')
+                //'abbreviation' => array('ldap-user','local-user')
             ),
             array('orderinlist' => 'ASC')
         );
 
         if( count($usernametypes) == 0 ) {
             $usernametypes = array();
-            //$option = array('abbreviation'=>'wcmc-cwid', 'name'=>'WCM CWID');
+            //$option = array('abbreviation'=>'ldap-user', 'name'=>'WCM CWID');
             //$usernametypes[] = $option;
             $option_localuser = array('abbreviation'=>'local-user', 'name'=>'Local User');
             $usernametypes[] = $option_localuser;

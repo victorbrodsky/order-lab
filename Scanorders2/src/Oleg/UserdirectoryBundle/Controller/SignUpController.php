@@ -507,7 +507,7 @@ class SignUpController extends Controller
             $publicUserId = $signUp->getUserName();
             $username = $publicUserId . "_@_" . "local-user";
 
-            $user = $userSecUtil->constractNewUser($username); //publicUserId_@_wcmc-cwid
+            $user = $userSecUtil->constractNewUser($username); //publicUserId_@_ldap-user
 
             //create user info
             if( count($user->getInfos() ) == 0 ) {

@@ -42,7 +42,7 @@ class TransResImportData
     private $em;
     private $container;
 
-    private $usernamePrefix = 'wcmc-cwid';
+    private $usernamePrefix = 'ldap-user';
     private $headerMapArr = null;
 
     public function __construct( $em, $container ) {
@@ -2127,7 +2127,7 @@ class TransResImportData
             return $user;
         }
 
-        $username = $cwid . "_@_" . "wcmc-cwid";
+        $username = $cwid . "_@_" . "ldap-user";
 
         $usernameClean = $userSecUtil->createCleanUsername($username);
         $usernamePrefix = $userSecUtil->getUsernamePrefix($username);

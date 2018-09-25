@@ -680,8 +680,8 @@ class FellAppManagement extends Controller {
 
         foreach( $users as $userCwid ) {
 
-            //cwidstr_@_wcmc-cwid
-            $username = $userCwid."_@_wcmc-cwid";
+            //cwidstr_@_ldap-user
+            $username = $userCwid."_@_ldap-user";
 
             $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername($username);
             if( !$user ) {

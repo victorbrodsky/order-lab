@@ -1863,7 +1863,7 @@ class UserController extends Controller
             //create WCMC LDAP user: oli2002c_@_ldap-user
             //echo "create WCMC LDAP user<br>";
             $username = $publicUserId . "_@_" . "ldap-user"; //"ldap-user" default username postfix
-            //compare email domain for ldap-user or ldap2-user and use ldap according to the domain
+            //TODO: compare email domain for ldap-user or ldap2-user and use ldap according to the domain
             $emailMapperPostfix1 = $userSecUtil->getSiteSettingParameter("ldapMapperEmail");
             if( $emailMapperPostfix1 && $secondEmailPart == $emailMapperPostfix1 ) {
                 $username = $publicUserId . "_@_" . "ldap-user";
@@ -2881,6 +2881,8 @@ class UserController extends Controller
         //echo "count=".count($originalAdminTitles)."<br>";
         //exit();
 
+        $originalKeyType = $entity->getKeytype();
+
         $originalInsts = new ArrayCollection();
         $originalScanOrdersServicesScope = new ArrayCollection();
         $originalChiefServices = new ArrayCollection();
@@ -3017,6 +3019,12 @@ class UserController extends Controller
                 }
             }
 
+            //TODO: update username if keytype is changed
+            $currentKeyType = $entity->getKeytype();
+            if( $currentKeyType && $currentKeyType != $originalKeyType ) {
+                $uniqueUsername = $entity->createUniqueUsername();
+                $entity->setUsernameForce($uniqueUsername);
+            }
 
             //check if insts were changed and user is not admin
             if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') &&

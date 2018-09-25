@@ -8965,7 +8965,8 @@ class AdminController extends Controller
      * 5) run http://c.med.cornell.edu/order/directory/admin/update-user-postfix/
      * 6) remove line 93 'case "wcmc-cwid":' from CustomAuthentication.php
      * 7) remove lines 226-230 from AuthUtil.php
-     * 8) Test ldap login
+     * 8) enable line 8980 exit() in this file
+     * 9) Test ldap login
      *
      * run: http://127.0.0.1/order/directory/admin/update-user-postfix/
      * @Route("/update-user-postfix/", name="user_update_user_postfix")

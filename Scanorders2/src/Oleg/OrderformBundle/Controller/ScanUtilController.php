@@ -1094,7 +1094,7 @@ class ScanUtilController extends UtilController {
             //echo "Case2: providerId is string=$providerId<br>";
 
             if( strpos($providerId, '_@_') !== false ) {
-                //asb2018_@_wcmc-cwid
+                //cwid_@_ldap-user
                 $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername($providerId);
             } else {
                 //$user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername($providerId);

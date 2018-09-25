@@ -712,7 +712,7 @@ class UserSecurityUtil {
     }
 
 
-    //username - full username including user type ie external_username_@_wcmc-cwid
+    //username - full username including user type ie external_username_@_ldap-user
     public function constractNewUser($username) {
 
         $serviceContainer = $this->container;
@@ -819,7 +819,7 @@ class UserSecurityUtil {
 
         }
 
-        //4) try username aio3001_@_wcmc-cwid
+        //4) try username cwid_@_ldap-user
         if( !$user ) {
             $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername($name);
         }

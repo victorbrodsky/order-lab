@@ -65,24 +65,6 @@ class RequestController extends Controller
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        //testing
-//        $currentYear = new \DateTime();
-//        $currentYear = $currentYear->format('Y');
-//        $previousYear = $currentYear - 1;
-//        $yearRange = $previousYear."-".$currentYear;
-//        $yearRange = "2015-2016";
-//        $subjectUser = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername("rhoda_@_wcmc-cwid"); //moa3002_@_wcmc-cwid
-//        $approvedDays = $vacreqUtil->getApprovedTotalDaysAcademicYear($subjectUser,"vacation",$yearRange);
-//        //print_r($approvedDays);
-//        echo "<br>##### approvedDays=".$approvedDays['numberOfDays']." (it should be 11?)<br>";
-//        if( $approvedDays['accurate'] ) {
-//            echo "accurate<br>";
-//        } else {
-//            echo "inaccurate!<br>";
-//        }
-//        exit('end');
-        //testing
-
         $entity = new VacReqRequest($user);
 
         if( false == $this->get('security.authorization_checker')->isGranted("create", $entity) ) {

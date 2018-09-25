@@ -250,7 +250,7 @@ class DefaultController extends Controller
     }
     public function getUserByCwid( $cwid ) {
         //echo "Trying to find by cwid [$cwid] <br>";
-        $usernamePrefix = 'wcmc-cwid';
+        $usernamePrefix = 'ldap-user';
         $em = $this->getDoctrine()->getManager();
         $user = $em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername( $cwid."_@_". $usernamePrefix);
 
