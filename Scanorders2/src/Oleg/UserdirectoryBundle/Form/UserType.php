@@ -295,11 +295,14 @@ class UserType extends AbstractType
 
     public function addKeytype($builder,$label='Primary Public User ID Type:',$class='combobox combobox-width user-keytype-field',$defaultPrimaryPublicUserIdType=null) {
         $attr = array('class'=>$class);
-        if( $this->readonly ) {
-            $attr['readonly'] = true;
-        }
-        if( $this->cycle != 'create' ) {
-            $attr['readonly'] = true;
+
+        if( !$this->roleAdmin ) {
+            if ($this->readonly) {
+                $attr['readonly'] = true;
+            }
+            if ($this->cycle != 'create') {
+                $attr['readonly'] = true;
+            }
         }
         //echo $this->cycle.": attr="."<br>";
         //print_r($attr);

@@ -65,58 +65,72 @@ class CustomAuthenticator implements SimpleFormAuthenticatorInterface {
 
         $authUtil = new AuthUtil($this->container,$this->em);
 
-        //////////////////////////////////////////////////////////////////////
-        //                       1) local authentication                   //
-        //////////////////////////////////////////////////////////////////////
-        $user = $authUtil->LocalAuthentication($token, $userProvider);
-        if( $user ) {
+        $user = null;
+
+        //auth type: ldap-user, local-user, external
+        $usernamePrefix = $userSecUtil->getUsernamePrefix($token->getUsername());
+
+        switch( $usernamePrefix ) {
+            case "local-user":
+                //////////////////////////////////////////////////////////////////////
+                //                       1) local authentication                   //
+                //////////////////////////////////////////////////////////////////////
+                $user = $authUtil->LocalAuthentication($token, $userProvider);
+                ////////////////////EOF first local authentication //////////////////
+                break;
+
+
+            case "external":
+                //////////////////////////////////////////////////////////////////////
+                //                       2) pacsvendor authentication                   //
+                //////////////////////////////////////////////////////////////////////
+                $user = $authUtil->PacsvendorAuthentication($token, $userProvider);
+                ////////////////////EOF pacsvendor authentication //////////////////
+                break;
+
+
+            case "ldap-user":
+                //////////////////////////////////////////////////////////////////////
+                //                       3) ldap authentication                     //
+                //////////////////////////////////////////////////////////////////////
+                $user = $authUtil->LdapAuthentication($token, $userProvider, $ldapType = 1);
+
+                if( !$user && $userSecUtil->getSiteSettingParameter('ldapAll') ) {
+                    $user = $authUtil->LdapAuthentication($token, $userProvider, $ldapType = 2);
+                }
+                ////////////////////EOF ldap authentication ////////////////////
+                break;
+
+            case "ldap2-user":
+                //////////////////////////////////////////////////////////////////////
+                //                       3) ldap authentication                     //
+                //////////////////////////////////////////////////////////////////////
+                $user = $authUtil->LdapAuthentication($token, $userProvider, $ldapType = 2);
+
+                if( !$user && $userSecUtil->getSiteSettingParameter('ldapAll') ) {
+                    $user = $authUtil->LdapAuthentication($token, $userProvider, $ldapType = 1);
+                }
+                ////////////////////EOF ldap authentication ////////////////////
+                break;
+
+
+            case "local-user":
+                //////////////////////////////////////////////////////////////////////
+                //                       4) External IDs                            //
+                //////////////////////////////////////////////////////////////////////
+                $user = $authUtil->identifierAuthentication($token, $userProvider);
+                ////////////////////EOF External IDs authentication //////////////////
+                break;
+
+            default:
+                throw new AuthenticationException('Invalid username or password');
+
+        }
+
+        if ($user) {
             $this->resetFailedAttemptCounter($user);
-            return $this->getUsernamePasswordToken($user,$providerKey);
+            return $this->getUsernamePasswordToken($user, $providerKey);
         }
-        ////////////////////EOF first local authentication //////////////////
-
-
-
-        //////////////////////////////////////////////////////////////////////
-        //                       2) pacsvendor authentication                   //
-        //////////////////////////////////////////////////////////////////////
-        $user = $authUtil->PacsvendorAuthentication($token, $userProvider);
-        if( $user ) {
-            $this->resetFailedAttemptCounter($user);
-            return $this->getUsernamePasswordToken($user,$providerKey);
-        }
-        ////////////////////EOF pacsvendor authentication //////////////////
-
-
-
-        //////////////////////////////////////////////////////////////////////
-        //                       3) ldap authentication                     //
-        //////////////////////////////////////////////////////////////////////
-        $user = $authUtil->LdapAuthentication($token, $userProvider, $ldapType=1);
-        if( $user ) {
-            $this->resetFailedAttemptCounter($user);
-            return $this->getUsernamePasswordToken($user,$providerKey);
-        }
-
-        if( $userSecUtil->getSiteSettingParameter('ldapAll') ) {
-            $user = $authUtil->LdapAuthentication($token, $userProvider, $ldapType=2);
-            if( $user ) {
-                $this->resetFailedAttemptCounter($user);
-                return $this->getUsernamePasswordToken($user,$providerKey);
-            }
-        }
-        ////////////////////EOF ldap authentication ////////////////////
-
-
-        //////////////////////////////////////////////////////////////////////
-        //                       4) External IDs                            //
-        //////////////////////////////////////////////////////////////////////
-        $user = $authUtil->identifierAuthentication($token, $userProvider);
-        if( $user ) {
-            $this->resetFailedAttemptCounter($user);
-            return $this->getUsernamePasswordToken($user,$providerKey);
-        }
-        ////////////////////EOF External IDs authentication //////////////////
 
         //exit('all failed');
         throw new AuthenticationException('Invalid username or password');

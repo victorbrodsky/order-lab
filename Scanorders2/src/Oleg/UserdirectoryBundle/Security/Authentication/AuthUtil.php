@@ -39,9 +39,9 @@ class AuthUtil {
     private $logger;
     protected $requestStack;
 
-    private $supportedUsertypesExternal = array('external');
-    private $supportedUsertypesLdap = null; //array('wcmc-cwid');
-    private $supportedUsertypesLocal = array('local-user');
+    //private $supportedUsertypesExternal = array('external');
+    //private $supportedUsertypesLdap = null; //array('ldap-user');
+    //private $supportedUsertypesLocal = array('local-user');
 
     public function __construct( $container, $em, RequestStack $requestStack=null )
     {
@@ -51,11 +51,11 @@ class AuthUtil {
         $this->logger = $container->get('logger');
 
         //set $supportedUsertypesLdap from defaultPrimaryPublicUserIdType
-        $userSecUtil = $this->container->get('user_security_utility');
-        $defaultPrimaryPublicUserIdType = $userSecUtil->getSiteSettingParameter('defaultPrimaryPublicUserIdType');
-        if( $defaultPrimaryPublicUserIdType ) {
-            $this->supportedUsertypesLdap[] = $defaultPrimaryPublicUserIdType->getAbbreviation();
-        }
+//        $userSecUtil = $this->container->get('user_security_utility');
+//        $defaultPrimaryPublicUserIdType = $userSecUtil->getSiteSettingParameter('defaultPrimaryPublicUserIdType');
+//        if( $defaultPrimaryPublicUserIdType ) {
+//            $this->supportedUsertypesLdap[] = $defaultPrimaryPublicUserIdType->getAbbreviation();
+//        }
     }
 
 
@@ -68,16 +68,8 @@ class AuthUtil {
         //return NULL;
 
         //get clean username
-        $userSecUtil = $this->container->get('user_security_utility');
-        $usernameClean = $userSecUtil->createCleanUsername($token->getUsername());
-
-        $usernamePrefix = $userSecUtil->getUsernamePrefix($token->getUsername());
-        //echo "usernamePrefix=".$usernamePrefix."<br>";
-        if( in_array($usernamePrefix, $this->supportedUsertypesLocal) == false ) {
-            $this->logger->notice('Local Authentication: the '.$token->getUsername().' with usertype '.$usernamePrefix.' can not be authenticated by ' . implode(', ',$this->supportedUsertypesLocal));
-            return NULL;
-        }
-        //exit('local ok');
+        //$userSecUtil = $this->container->get('user_security_utility');
+        //$usernameClean = $userSecUtil->createCleanUsername($token->getUsername());
 
         //check if user already exists in DB
         $user = $this->findUserByUsername($token->getUsername());
@@ -85,17 +77,13 @@ class AuthUtil {
         //exit();
 
         if( $user ) {
-            $this->logger->notice("Local Authentication: local user found by usernameClean=".$usernameClean);
-            //echo "DB user found=".$user->getUsername()."<br>";
-            //exit();
-            //return $user; //testing
+            $this->logger->notice("Local Authentication: local user found by username=".$token->getUsername());
 
             if( !$this->canLogin($user) ) {
                 //exit("User can not login");
+                $this->logger->notice("User can not login ".$user);
                 return NULL;
             }
-
-            //return $user; //testing
 
             //check password
 //            $encoder = $this->container->get('security.password_encoder');
@@ -122,46 +110,6 @@ class AuthUtil {
         }
 
         return NULL;
-
-
-
-        //Local user can not created by login process
-        //return NULL;
-
-        //TODO: remove the code below on testing and production!
-        //////////////////// Testing: constract a new user ////////////////////
-        $user = $userSecUtil->constractNewUser($token->getUsername());
-        //echo "user=".$user->getUsername()."<br>";
-
-        $user->setCreatedby('local');
-
-        //modify user: set keytype and primary public user id
-        $userkeytype = $userSecUtil->getUsernameType($usernamePrefix);
-
-        if( !$userkeytype ) {
-            $userUtil = new UserUtil();
-            $count_usernameTypeList = $userUtil->generateUsernameTypes($this->em);
-            $userkeytype = $userSecUtil->getUsernameType($this->usernamePrefix);
-            //echo "userkeytype=".$userkeytype."<br>";
-        }
-
-        $user->setKeytype($userkeytype);
-        $user->setPrimaryPublicUserId($usernameClean);
-
-        if( $user->getUsername() == "oli2002_@_local-user" ) {
-            $user->addRole('ROLE_PLATFORM_ADMIN');
-        } else {
-            return NULL;
-        }
-
-        //exit('local ok');
-
-        //////////////////// save user to DB ////////////////////
-        $userManager = $this->container->get('fos_user.user_manager');
-        $userManager->updateUser($user);
-
-        return $user;
-        //////////////////// EOF Testing: constract a new user ////////////////////
     }
 
 
@@ -169,14 +117,6 @@ class AuthUtil {
 
         //echo "PacsvendorAuthentication<br>";
         //exit();
-
-        $userSecUtil = $this->container->get('user_security_utility');
-
-        $usernamePrefix = $userSecUtil->getUsernamePrefix($token->getUsername());
-        if( in_array($usernamePrefix, $this->supportedUsertypesExternal) == false ) {
-            $this->logger->notice('Pacsvendor Authentication: the usertype '.$usernamePrefix.' can not be authenticated by ' . implode(', ',$this->supportedUsertypesExternal));
-            return NULL;
-        }
 
         $pacsvendorUtil = new PacsvendorUtil();
 
@@ -186,6 +126,7 @@ class AuthUtil {
             //echo "pacsvendor user found=".$user->getUsername()."<br>";
 
             if( $this->canLogin($user) === false ) {
+                $this->logger->notice("PacsvendorAuthentication: User can not login ".$user);
                 return NULL;
             }
 
@@ -203,20 +144,16 @@ class AuthUtil {
         //echo "LdapAuthentication<br>";
         //exit();
 
-        if( !$this->supportedUsertypesLdap ) {
-            $this->logger->notice('LDAP usertype is not set.');
-            return false;
-        }
+//        if( !$this->supportedUsertypesLdap ) {
+//            $this->logger->notice('LDAP usertype is not set.');
+//            return false;
+//        }
 
         //get clean username
         $userSecUtil = $this->container->get('user_security_utility');
         $usernameClean = $userSecUtil->createCleanUsername($token->getUsername());
 
         $usernamePrefix = $userSecUtil->getUsernamePrefix($token->getUsername());
-        if( in_array($usernamePrefix, $this->supportedUsertypesLdap) == false ) {
-            $this->logger->notice('LDAP Authentication: the usertype ['.$usernamePrefix.'] can not be authenticated by ' . implode(', ',$this->supportedUsertypesLdap));
-            return NULL;
-        }
 
         $searchRes = null;
         $withNewUserPrePopulation = true;
@@ -273,7 +210,7 @@ class AuthUtil {
             $this->logger->notice("findUserByUsername: existing user found in DB by token->getUsername()=".$token->getUsername());
 
             if( $this->canLogin($user) === false ) {
-                $this->logger->warning("User cannot login");
+                $this->logger->warning("LdapAuthentication: User cannot login ".$user);
                 return NULL;
             }
 
@@ -313,9 +250,9 @@ class AuthUtil {
         }
 
         //cwid is admin cwid
-        if( $user->getUsername() == "cwid1_@_wcmc-cwid" || $user->getUsername() == "cwid2_@_wcmc-cwid" ) {
-            $user->addRole('ROLE_PLATFORM_ADMIN');
-        }
+        //if( $user->getUsername() == "cwid1_@_ldap-user" || $user->getUsername() == "cwid2_@_ldap-user" ) {
+        //    $user->addRole('ROLE_PLATFORM_ADMIN');
+        //}
 
         //exit('ldap ok');
 
@@ -334,7 +271,7 @@ class AuthUtil {
 
         $username = $token->getUsername();
 
-        //oli2002c_@_local-user, oli2002c_@_wcmc-cwid
+        //oli2002c_@_local-user, oli2002c_@_ldap-user
         $usernameArr = explode("_@_", $username);
         if( count($usernameArr) != 2 ) {
             $this->logger->warning("Invalid username ".$username);
@@ -354,7 +291,7 @@ class AuthUtil {
         }
 
         //Case 2: LDAP User
-        if( $identifierKeytype == 'wcmc-cwid' ) {
+        if( $identifierKeytype == 'ldap-user' || $identifierKeytype == 'ldap2-user' ) {
             //Case 2: "NYP CWID"
             $token->setUser($subjectUser);
             $this->logger->warning('Trying authenticating the LDAP user with username=' . $identifierUsername);
@@ -373,7 +310,7 @@ class AuthUtil {
         //$credentials = $token->getCredentials();
         $this->logger->notice("identifierAuthentication with username ".$username);
 
-        //oli2002c_@_local-user, oli2002c_@_wcmc-cwid
+        //oli2002c_@_local-user, oli2002c_@_ldap-user
         $usernameArr = explode("_@_", $username);
         if( count($usernameArr) != 2 ) {
             $this->logger->warning("Invalid username ".$username);

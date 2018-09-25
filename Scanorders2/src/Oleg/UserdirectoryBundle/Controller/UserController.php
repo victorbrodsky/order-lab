@@ -1860,12 +1860,19 @@ class UserController extends Controller
             //create local user: oli2002c_@_local-user
             $username = $publicUserId . "_@_" . "local-user";
         } else {
-            //create WCMC LDAP user: oli2002c_@_wcmc-cwid
+            //create WCMC LDAP user: oli2002c_@_ldap-user
             //echo "create WCMC LDAP user<br>";
-            $username = $publicUserId . "_@_" . "wcmc-cwid";
+            $username = $publicUserId . "_@_" . "ldap-user";
+            //TODO: compare email domain for ldap-user or ldap2-user and use ldap according to the domain
+            if( 0 ) {
+                $username = $publicUserId . "_@_" . "ldap-user";
+            }
+            if( 0 ) {
+                $username = $publicUserId . "_@_" . "ldap2-user";
+            }
         }
 
-        $user = $userSecUtil->constractNewUser($username); //publicUserId_@_wcmc-cwid
+        $user = $userSecUtil->constractNewUser($username); //publicUserId_@_ldap-user
 
         //add site specific creation string
         //$createdBy = "Manually by Translational Research User";

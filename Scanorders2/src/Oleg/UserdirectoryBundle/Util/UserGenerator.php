@@ -52,7 +52,7 @@ class UserGenerator {
     private $em;
     private $container;
 
-    private $usernamePrefix = 'wcmc-cwid';
+    private $usernamePrefix = 'ldap-user';
 
     public function __construct( $em, $container ) {
         $this->em = $em;
@@ -174,7 +174,7 @@ class UserGenerator {
                 exit("usernamePrefix is not define for ".$userType);
             }
 
-            //username: oli2002_@_wcmc-cwid
+            //username: oli2002_@_ldap-user
             $fillUsername = $username."_@_". $usernamePrefix;
             //echo "fillUsername=".$fillUsername."<br>";
 
@@ -1239,7 +1239,7 @@ class UserGenerator {
             //echo "<br>divisions=".$rowData[0][2]." == ";
             //print_r($services);
 
-            //username: oli2002_@_wcmc-cwid
+            //username: oli2002_@_ldap-user
             $user = $this->em->getRepository('OlegUserdirectoryBundle:User')->findOneByUsername( $username."_@_". $this->usernamePrefix);
             //echo "DB user=".$user."<br>";
 
@@ -1749,12 +1749,12 @@ class UserGenerator {
 
             //add Platform Admin role and WCMC Institution for specific users
             //TODO: remove in prod
-            if( $user->getUsername() == "cwid1_@_wcmc-cwid" || $user->getUsername() == "cwid2_@_wcmc-cwid" ) {
-                $user->addRole('ROLE_PLATFORM_ADMIN');
-            }
+//            if( $user->getUsername() == "cwid1_@_ldap-user" || $user->getUsername() == "cwid2_@_ldap-user" ) {
+//                $user->addRole('ROLE_PLATFORM_ADMIN');
+//            }
 
             //coordinator
-            if( $user->getUsername() == "cwid_@_wcmc-cwid" ) {
+            if( $user->getUsername() == "cwid_@_ldap-user" ) {
                 $user->addRole('ROLE_USERDIRECTORY_EDITOR');
                 //$user->addRole('ROLE_FELLAPP_COORDINATOR');
                 $user->addRole('ROLE_FELLAPP_COORDINATOR_WCMC_BREASTPATHOLOGY');
@@ -1767,47 +1767,47 @@ class UserGenerator {
             }
 
 
-            if( $user->getUsername() == "cwid_@_wcmc-cwid" ) {
+            if( $user->getUsername() == "cwid_@_ldap-user" ) {
                 //$user->addRole('ROLE_FELLAPP_DIRECTOR');
                 $user->addRole('ROLE_FELLAPP_DIRECTOR_WCMC_GASTROINTESTINALPATHOLOGY');
             }
 
-            if( $user->getUsername() == "cwid_@_wcmc-cwid" ) {
+            if( $user->getUsername() == "cwid_@_ldap-user" ) {
                 //$user->addRole('ROLE_FELLAPP_DIRECTOR');
                 $user->addRole('ROLE_FELLAPP_DIRECTOR_WCMC_CYTOPATHOLOGY');
             }
 
-            if( $user->getUsername() == "cwid_@_wcmc-cwid" ) {
+            if( $user->getUsername() == "cwid_@_ldap-user" ) {
                 //$user->addRole('ROLE_FELLAPP_DIRECTOR');
                 $user->addRole('ROLE_FELLAPP_DIRECTOR_WCMC_HEMATOPATHOLOGY');
             }
 
-            if( $user->getUsername() == "cwid_@_wcmc-cwid" ) {
+            if( $user->getUsername() == "cwid_@_ldap-user" ) {
                 //$user->addRole('ROLE_FELLAPP_DIRECTOR');
                 $user->addRole('ROLE_FELLAPP_DIRECTOR_WCMC_HEMATOPATHOLOGY');
             }
 
-            if( $user->getUsername() == "cwid_@_wcmc-cwid" ) {
+            if( $user->getUsername() == "cwid_@_ldap-user" ) {
                 //$user->addRole('ROLE_FELLAPP_DIRECTOR');
                 $user->addRole('ROLE_FELLAPP_DIRECTOR_WCMC_MOLECULARGENETICPATHOLOGY');
             }
 
-            if( $user->getUsername() == "cwid_@_wcmc-cwid" ) {
+            if( $user->getUsername() == "cwid_@_ldap-user" ) {
                 //$user->addRole('ROLE_FELLAPP_DIRECTOR');
                 $user->addRole('ROLE_FELLAPP_DIRECTOR_WCMC_GYNECOLOGICPATHOLOGY');
             }
 
-            if( $user->getUsername() == "cwid_@_wcmc-cwid" ) {
+            if( $user->getUsername() == "cwid_@_ldap-user" ) {
                 //$user->addRole('ROLE_FELLAPP_DIRECTOR');
                 $user->addRole('ROLE_FELLAPP_DIRECTOR_WCMC_BREASTPATHOLOGY');
             }
 
-            if( $user->getUsername() == "cwid_@_wcmc-cwid" ) {
+            if( $user->getUsername() == "cwid_@_ldap-user" ) {
                 //$user->addRole('ROLE_FELLAPP_DIRECTOR');
                 $user->addRole('ROLE_FELLAPP_DIRECTOR_WCMC_BREASTPATHOLOGY');
             }
 
-            if( $user->getUsername() == "cwid_@_wcmc-cwid" ) {
+            if( $user->getUsername() == "cwid_@_ldap-user" ) {
                 //$user->addRole('ROLE_FELLAPP_DIRECTOR');
                 $user->addRole('ROLE_FELLAPP_DIRECTOR_WCMC_BREASTPATHOLOGY');
             }
