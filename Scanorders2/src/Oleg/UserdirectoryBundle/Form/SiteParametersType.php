@@ -240,6 +240,12 @@ class SiteParametersType extends AbstractType
                 'label'=>'LDAP/AD Authenticator File Name - relevant for Windows-based servers only (Default: "LdapSaslCustom.exe"):',
                 'attr' => array('class'=>'form-control')
             ));
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'ldapMapperEmail' )
+            $builder->add('ldapMapperEmail',null,array(
+                'label'=>'LDAP/AD Mapper Email Postfix (med.cornell.edu):',
+                'attr' => array('class'=>'form-control')
+            ));
         //////////////// EOF LDAP 1 ////////////////////
 
 
@@ -284,6 +290,12 @@ class SiteParametersType extends AbstractType
         if( $this->params['cycle'] == 'show' || $this->params['param'] == 'ldapExeFilename2' )
             $builder->add('ldapExeFilename2',null,array(
                 'label'=>'LDAP/AD Authenticator File Name - relevant for Windows-based servers only (Default: "LdapSaslCustom.exe"):',
+                'attr' => array('class'=>'form-control')
+            ));
+
+        if( $this->params['cycle'] == 'show' || $this->params['param'] == 'ldapMapperEmail2' )
+            $builder->add('ldapMapperEmail2',null,array(
+                'label'=>'LDAP/AD Mapper Email Postfix (nyp.org):',
                 'attr' => array('class'=>'form-control')
             ));
 

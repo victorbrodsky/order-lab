@@ -408,6 +408,11 @@
                 <td>{{ entity.ldapExeFilename }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'ldapExeFilename'}) }}">Edit</a></td>
             </tr>
+            <tr>
+                <td>LDAP/AD Mapper Email Postfix (med.cornell.edu):</td>
+                <td>{{ entity.ldapMapperEmail }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'ldapMapperEmail'}) }}">Edit</a></td>
+            </tr>
 
             {#LDAP Server 2#}
             <tr>
@@ -450,6 +455,11 @@
                 <td>LDAP/AD Authenticator File Name - relevant for Windows-based servers only (Default: "LdapSaslCustom.exe"):</td>
                 <td>{{ entity.ldapExeFilename2 }}</td>
                 <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'ldapExeFilename2'}) }}">Edit</a></td>
+            </tr>
+            <tr>
+                <td>LDAP/AD Mapper Email Postfix (nyp.org):</td>
+                <td>{{ entity.ldapMapperEmail2 }}</td>
+                <td><a href="{{ path(sitename~'_siteparameters_edit', { 'id': entity.id, 'param': 'ldapMapperEmail2'}) }}">Edit</a></td>
             </tr>
             {#<tr>#}
                 {#<td>Default Primary Public User ID Type:</td>#}

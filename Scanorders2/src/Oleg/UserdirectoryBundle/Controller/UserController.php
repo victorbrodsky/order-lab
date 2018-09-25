@@ -1766,18 +1766,18 @@ class UserController extends Controller
         $userSecUtil = $this->get('user_security_utility');
         $userServiceUtil = $this->get('user_service_utility');
         $username = null;
+        $firstEmailPart = null;
+        $secondEmailPart = null;
+
+        $emailParts = explode("@",$email);
+        if( count($emailParts) == 2 ) {
+            $firstEmailPart = $emailParts[0];
+            $secondEmailPart = $emailParts[1];
+            $publicUserId = $firstEmailPart;
+        }
 
         if( !$publicUserId ) {
-            //If the Email that is entered ends with @nyp.org OR @med.cornell.edu ,
-            // pre-fill the Public Identifier (CWID) field with the first portion of the email (before @).
-            $emailParts = explode("@",$email);
-            if( count($emailParts) == 2 ) {
-                $firstEmailPart = $emailParts[0];
-                //$secondEmailPart = $emailParts[1];
-                //if( $secondEmailPart == "nyp.org" || $secondEmailPart == "med.cornell.edu" ) {
-                    $publicUserId = $firstEmailPart;
-                //}
-            }
+            $publicUserId = $firstEmailPart;
         }
 
         if( !$displayname ) {
@@ -1862,14 +1862,18 @@ class UserController extends Controller
         } else {
             //create WCMC LDAP user: oli2002c_@_ldap-user
             //echo "create WCMC LDAP user<br>";
-            $username = $publicUserId . "_@_" . "ldap-user";
-            //TODO: compare email domain for ldap-user or ldap2-user and use ldap according to the domain
-            if( 0 ) {
+            $username = $publicUserId . "_@_" . "ldap-user"; //"ldap-user" default username postfix
+            //compare email domain for ldap-user or ldap2-user and use ldap according to the domain
+            $emailMapperPostfix1 = $userSecUtil->getSiteSettingParameter("ldapMapperEmail");
+            if( $emailMapperPostfix1 && $secondEmailPart == $emailMapperPostfix1 ) {
                 $username = $publicUserId . "_@_" . "ldap-user";
+            } else {
+                $emailMapperPostfix2 = $userSecUtil->getSiteSettingParameter("ldapMapperEmail2");
+                if( $emailMapperPostfix2 && $secondEmailPart == $emailMapperPostfix2 ) {
+                    $username = $publicUserId . "_@_" . "ldap2-user";
+                }
             }
-            if( 0 ) {
-                $username = $publicUserId . "_@_" . "ldap2-user";
-            }
+
         }
 
         $user = $userSecUtil->constractNewUser($username); //publicUserId_@_ldap-user

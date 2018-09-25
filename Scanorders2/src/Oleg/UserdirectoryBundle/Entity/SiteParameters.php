@@ -213,6 +213,11 @@ class SiteParameters {
      * @ORM\OneToOne(targetEntity="Oleg\UserdirectoryBundle\Entity\UsernameType")
      */
     private $defaultPrimaryPublicUserIdType;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $ldapMapperEmail;
     /////////////// EOF LDAP Server 1 ////////////////////
 
     /////////////// LDAP Server 2 ////////////////////
@@ -256,6 +261,11 @@ class SiteParameters {
      * @ORM\Column(type="string", nullable=true)
      */
     private $ldapExeFilename2;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $ldapMapperEmail2;
 
 //    /**
 //     * Default Primary Public User ID Type
@@ -2265,6 +2275,38 @@ class SiteParameters {
     public function setLdapExeFilename2($ldapExeFilename2)
     {
         $this->ldapExeFilename2 = $ldapExeFilename2;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLdapMapperEmail()
+    {
+        return $this->ldapMapperEmail;
+    }
+
+    /**
+     * @param mixed $ldapMapperEmail
+     */
+    public function setLdapMapperEmail($ldapMapperEmail)
+    {
+        $this->ldapMapperEmail = $ldapMapperEmail;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLdapMapperEmail2()
+    {
+        return $this->ldapMapperEmail2;
+    }
+
+    /**
+     * @param mixed $ldapMapperEmail2
+     */
+    public function setLdapMapperEmail2($ldapMapperEmail2)
+    {
+        $this->ldapMapperEmail2 = $ldapMapperEmail2;
     }
 
     /**
