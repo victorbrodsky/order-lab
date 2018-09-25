@@ -100,6 +100,10 @@ class AuthUtil {
             $encoder = $encoderService->getEncoder($user);
             if( $encoder->isPasswordValid($user->getPassword(), $token->getCredentials(), $user->getSalt()) ) {
                 //exit('password invalid ['.$token->getCredentials().']');
+                foreach($user->getRoles() as $role) {
+                    echo "Role=".$role."<br>";
+                }
+                exit("User found ".$user);
                 return $user;
             } else {
                 $this->validateFailedAttempts($user);
