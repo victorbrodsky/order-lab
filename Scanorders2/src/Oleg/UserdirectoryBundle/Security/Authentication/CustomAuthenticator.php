@@ -69,6 +69,7 @@ class CustomAuthenticator implements SimpleFormAuthenticatorInterface {
 
         //auth type: ldap-user, local-user, external
         $usernamePrefix = $userSecUtil->getUsernamePrefix($token->getUsername());
+        exit("usernamePrefix=".$usernamePrefix);
 
         switch( $usernamePrefix ) {
             case "local-user":
@@ -89,7 +90,7 @@ class CustomAuthenticator implements SimpleFormAuthenticatorInterface {
                 break;
 
 
-            //case "wcmc-cwid": //use for auth transition. Remove after transition.
+            case "wcmc-cwid": //use for auth transition. Remove after transition.
             case "ldap-user":
                 //////////////////////////////////////////////////////////////////////
                 //                       3) ldap authentication                     //
@@ -124,8 +125,7 @@ class CustomAuthenticator implements SimpleFormAuthenticatorInterface {
                 break;
 
             default:
-                $user = $authUtil->LdapAuthentication($token, $userProvider, $ldapType = 1);
-                //throw new AuthenticationException('Invalid username or password');
+                throw new AuthenticationException('Invalid username or password');
 
         }
 
