@@ -830,7 +830,7 @@ class ReportGenerator {
                 if( $this->isPdfCorrupted($filePath) ) {
                     //Body: The fellowship application system was unable to generate the complete application PDF file
                     // for applicant [XXX] to [FellowshipSpecialty], FirstName LastName at HH:MM on MM/DD/YYYY.
-                    $errorMsg = "The fellowship application system was unable to convert the file $filePath to PDF for application $fellappInfo. Error: PDF is corrupted";
+                    $errorMsg = "The fellowship application system was unable to convert the file $filePath to PDF for application $fellappInfo. <br>Error: PDF is corrupted";
                     $errorMsg = $errorMsg . "<br>" . "Please replace the corrupted file for this applicant.";
                     $logger->error($errorMsg);
                     $userSecUtil->sendEmailToSystemEmail($errorEmailSubject,$errorMsg,$toEmailsArr);
