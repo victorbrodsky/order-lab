@@ -723,8 +723,8 @@ class UserServiceUtil {
             "aDLDAPServerAddress" => "ldap.forumsys.com",
             "aDLDAPServerPort" => "389",
             "aDLDAPServerOu" => "dc=example,dc=com",    //used for DC
-            "aDLDAPServerAccountUserName" => "null",
-            "aDLDAPServerAccountPassword" => "null",
+            "aDLDAPServerAccountUserName" => null,
+            "aDLDAPServerAccountPassword" => null,
             "ldapExePath" => "../src/Oleg/UserdirectoryBundle/Util/",
             "ldapExeFilename" => "LdapSaslCustom.exe",
 

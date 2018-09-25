@@ -26,6 +26,7 @@ use Oleg\TranslationalResearchBundle\Entity\CommitteeReview;
 use Oleg\TranslationalResearchBundle\Entity\FinalReview;
 use Oleg\TranslationalResearchBundle\Entity\IrbReview;
 use Oleg\TranslationalResearchBundle\Entity\SpecialtyList;
+use Oleg\TranslationalResearchBundle\Entity\TransResSiteParameters;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
