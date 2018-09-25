@@ -8979,8 +8979,10 @@ class AdminController extends Controller
 
         foreach($users as $user) {
 
-            if( !$user->usernameIsValid() ) {
-                exit("Username is not valid for ".$user);
+            if( $user->getPrimaryPublicUserId() != "system" ) {
+                if (!$user->usernameIsValid()) {
+                    exit("Username is not valid for " . $user);
+                }
             }
 
             //$cleanUsername = $user->createCleanUsername();
