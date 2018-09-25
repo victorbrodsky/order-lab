@@ -530,7 +530,7 @@ class ReportGenerator {
         $createFlag = true;
 
         //2) convert all uploads to pdf using LibreOffice
-        $fileNamesArr = $this->convertToPdf( $filePathsArr, $outdir, $id );
+        $fileNamesArr = $this->convertToPdf( $filePathsArr, $outdir, $entity );
         //$logger->notice("Successfully converted all uploads to PDF for ID=".$id."; files count=".count($fileNamesArr));
 
         //3) merge all pdfs
@@ -686,13 +686,15 @@ class ReportGenerator {
     }
 
     //convert all uploads to pdf using LibreOffice
-    protected function convertToPdf( $filePathsArr, $outdir, $id ) {
+    protected function convertToPdf( $filePathsArr, $outdir, $entity ) {
 
         $logger = $this->container->get('logger');
         $userSecUtil = $this->container->get('user_security_utility');
         $userServiceUtil = $this->container->get('user_service_utility');
         $systemUser = $userSecUtil->findSystemUser();
 
+        $fellappInfo = $entity->getInfo();
+        
         //fellapp admin
         $confirmationEmailFellApp = $userSecUtil->getSiteSettingParameter('confirmationEmailFellApp');
         $toEmailsArr = array($confirmationEmailFellApp);
@@ -751,7 +753,7 @@ class ReportGenerator {
             $filePath = realpath($filePath);
 
             if( !file_exists($filePath) ) {
-                $errorMsg = "Convert to PDF: Input file does not exist for Fellowship Application $id: filePath=".$filePath;
+                $errorMsg = "Convert to PDF: Input file does not exist for Fellowship Application $fellappInfo: filePath=".$filePath;
                 $logger->error($errorMsg);
                 $userSecUtil->sendEmailToSystemEmail("Convert to PDF: Input file does not exist",$errorMsg,$toEmailsArr);
                 $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$errorMsg,$systemUser,null,null,'Corrupted File');
@@ -775,6 +777,8 @@ class ReportGenerator {
 
             $cmd = $cmd .' "'.$filePath.'"';
 
+            $errorEmailSubject = "PDF conversion failed for Applicant $fellappInfo";
+
             $ext = pathinfo($filePath, PATHINFO_EXTENSION);
             if( $ext != 'pdf' ) { //TESTING!!!
 
@@ -787,17 +791,17 @@ class ReportGenerator {
                     //echo "shellout=".$shellout."<br>";
                     //$logger->notice("LibreOffice converted input file=" . $filePath);
                 } else {
-                    $errorMsg = "Fellowship Application $id - LibreOffice failed to convert input file=" . $filePath;
+                    $errorMsg = "Fellowship Application $fellappInfo - LibreOffice failed to convert input file=" . $filePath;
                     $logger->error($errorMsg);
-                    $userSecUtil->sendEmailToSystemEmail("Convert to PDF failed",$errorMsg,$toEmailsArr);
+                    $userSecUtil->sendEmailToSystemEmail($errorEmailSubject,$errorMsg,$toEmailsArr);
                     $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$errorMsg,$systemUser,null,null,'Corrupted File');
                     continue; //ignore this file
                 }
 
                 if( !file_exists($outFilename) ) {
-                    $errorMsg = "Fellowship Application $id - Output file does not exist after PDF generation!!!: outFilename=".$outFilename;
+                    $errorMsg = "Fellowship Application $fellappInfo - Output file does not exist after PDF generation!!!: outFilename=".$outFilename;
                     $logger->error($errorMsg);
-                    $userSecUtil->sendEmailToSystemEmail("Convert to PDF failed",$errorMsg,$toEmailsArr);
+                    $userSecUtil->sendEmailToSystemEmail($errorEmailSubject,$errorMsg,$toEmailsArr);
                     $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$errorMsg,$systemUser,null,null,'Corrupted File');
                     continue; //ignore this file
                 }
@@ -815,18 +819,21 @@ class ReportGenerator {
                     //ok
                 } else {
                     //echo "source does not exist\n<br>";
-                    $errorMsg = "Fellowship Application $id - convert To Pdf: source does not exist; filePath=".$filePath;
+                    $errorMsg = "Fellowship Application $fellappInfo - convert To Pdf: source does not exist; filePath=".$filePath;
                     $logger->error($errorMsg);
-                    $userSecUtil->sendEmailToSystemEmail("Convert to PDF failed",$errorMsg,$toEmailsArr);
+                    $userSecUtil->sendEmailToSystemEmail($errorEmailSubject,$errorMsg,$toEmailsArr);
                     $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$errorMsg,$systemUser,null,null,'Corrupted File');
                     continue; //ignore this file
                 }
 
                 //check if this PDF is readable
                 if( $this->isPdfCorrupted($filePath) ) {
-                    $errorMsg = "Fellowship Application $id - convert To Pdf: PDF is corrupted; filePath=".$filePath;
+                    //Body: The fellowship application system was unable to generate the complete application PDF file
+                    // for applicant [XXX] to [FellowshipSpecialty], FirstName LastName at HH:MM on MM/DD/YYYY.
+                    $errorMsg = "The fellowship application system was unable to convert the file $filePath to PDF for application $fellappInfo. Error: PDF is corrupted";
+                    $errorMsg = $errorMsg . "<br>" . "Please replace the corrupted file for this applicant.";
                     $logger->error($errorMsg);
-                    $userSecUtil->sendEmailToSystemEmail("Convert to PDF failed",$errorMsg,$toEmailsArr);
+                    $userSecUtil->sendEmailToSystemEmail($errorEmailSubject,$errorMsg,$toEmailsArr);
                     $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$errorMsg,$systemUser,null,null,'Corrupted File');
                     continue; //ignore this file
                 }
@@ -834,9 +841,9 @@ class ReportGenerator {
                 if( !file_exists($outFilename) ) {
                     if( !copy($filePath, $outFilename ) ) {
                         //echo "failed to copy $filePath...\n<br>";
-                        $errorMsg = "Fellowship Application $id - Failed to copy to temp folder; filePath=".$filePath;
+                        $errorMsg = "Fellowship Application $fellappInfo - Failed to copy to temp folder; filePath=".$filePath;
                         $logger->error($errorMsg);
-                        $userSecUtil->sendEmailToSystemEmail("Convert to PDF failed",$errorMsg,$toEmailsArr);
+                        $userSecUtil->sendEmailToSystemEmail($errorEmailSubject,$errorMsg,$toEmailsArr);
                         $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$errorMsg,$systemUser,null,null,'Corrupted File');
                         continue; //ignore this file
                     }

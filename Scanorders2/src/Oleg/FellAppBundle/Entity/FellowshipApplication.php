@@ -1408,6 +1408,17 @@ class FellowshipApplication extends BaseUserAttributes {
         return implode(", ",$resArr);
     }
 
+    public function getInfo() {
+        $info = $this->getId();
+
+        $subjectUser = $this->getUser();
+        if( $subjectUser ) {
+            $info = $info . " " . $subjectUser->getFirstNameUppercase() . " " . $subjectUser->getLastNameUppercase();
+        }
+
+        return $info;
+    }
+
     public function __toString() {
         return "FellowshipApplication";
     }
