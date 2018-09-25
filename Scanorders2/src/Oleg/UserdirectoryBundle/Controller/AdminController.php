@@ -8977,7 +8977,7 @@ class AdminController extends Controller
             return $this->redirect($this->generateUrl($this->container->getParameter('employees.sitename') . '-order-nopermission'));
         }
 
-        //exit("not permitted. It has been used only for changing user's postfix once.");
+        exit("not permitted. It has been used only for changing user's postfix once.");
 
         $em = $this->getDoctrine()->getManager();
 

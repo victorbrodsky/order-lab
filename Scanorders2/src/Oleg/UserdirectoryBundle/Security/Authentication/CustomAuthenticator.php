@@ -90,7 +90,7 @@ class CustomAuthenticator implements SimpleFormAuthenticatorInterface {
                 break;
 
 
-            case "wcmc-cwid": //use for auth transition. Remove after transition.
+            //case "wcmc-cwid": //use for auth transition. Remove after transition.
             case "ldap-user":
                 //////////////////////////////////////////////////////////////////////
                 //                       3) ldap authentication                     //
