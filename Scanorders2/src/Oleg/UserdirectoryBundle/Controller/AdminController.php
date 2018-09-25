@@ -8957,6 +8957,15 @@ class AdminController extends Controller
      * Update user's postfix
      * username+postfix is required by symfony authentication token having only username $token->getUsername().
      * Postfix is used to determine the correspondint auth mechanism (ldap, local, external etc.)
+     * Auth Transition:
+     * 1) edit Username type (Platform List Manager Root List): add  "NYH User" - "ldap2-user"
+     * 2) Set checkmark "Send request to both authentication Active Directory/LDAP servers when the first is selected for a single log in attempt"
+     * 3) set "LDAP/AD Mapper Email Postfix (med.cornell.edu)"
+     * 4) set section "AD/LDAP 2:" in site settings
+     * 5) run http://c.med.cornell.edu/order/directory/admin/update-user-postfix/
+     * 6) remove line 93 'case "wcmc-cwid":' from CustomAuthentication.php
+     * 7) remove lines 226-230 from AuthUtil.php
+     * 8) Test ldap login
      *
      * run: http://127.0.0.1/order/directory/admin/update-user-postfix/
      * @Route("/update-user-postfix/", name="user_update_user_postfix")

@@ -227,7 +227,7 @@ class AuthUtil {
         if( $usernameClean == "oli2002" ) {
             exit("attempt generate new admin user");
         }
-        exit("attempt generate new user");
+        //exit("attempt generate new user");
 
         $this->logger->notice("LdapAuthentication: create a new user found by token->getUsername()=".$token->getUsername());
         $user = $userSecUtil->constractNewUser($token->getUsername());
