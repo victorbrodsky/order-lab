@@ -100,10 +100,6 @@ class AuthUtil {
             $encoder = $encoderService->getEncoder($user);
             if( $encoder->isPasswordValid($user->getPassword(), $token->getCredentials(), $user->getSalt()) ) {
                 //exit('password invalid ['.$token->getCredentials().']');
-//                foreach($user->getRoles() as $role) {
-//                    echo "Role=".$role."<br>";
-//                }
-//                exit("User found ".$user);
                 return $user;
             } else {
                 $this->validateFailedAttempts($user);
@@ -217,12 +213,6 @@ class AuthUtil {
                 $this->logger->warning("LdapAuthentication: User cannot login ".$user);
                 return NULL;
             }
-
-            //testing!!!
-            foreach($user->getRoles() as $role) {
-                echo "Role=".$role."<br>";
-            }
-            exit("LDAP user found ".$user);
 
             return $user;
         } else {
