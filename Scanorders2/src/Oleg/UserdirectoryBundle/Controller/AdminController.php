@@ -8992,7 +8992,7 @@ class AdminController extends Controller
                 $user->setUsernameForce($newUsername);
                 $user->setUsernameCanonicalForce($newUsername);
                 echo $count.": Update postfix for " . $user . " to [" . $user->getUsername() . "],[" .$user->getUsernameCanonical(). "]<br>";
-                //$em->flush($user);
+                $em->flush($user);
             }
             elseif ( $user->getUsernamePrefix() == "aperio" )
             {
@@ -9001,7 +9001,7 @@ class AdminController extends Controller
                 $user->setUsernameForce($newUsername);
                 $user->setUsernameCanonicalForce($newUsername);
                 echo $count.": Update postfix for " . $user . " to [" . $user->getUsername() . "],[" .$user->getUsernameCanonical(). "]<br>";
-                //$em->flush($user);
+                $em->flush($user);
             } else {
                 echo $count." user is OK ".$user."<br>";
             }
