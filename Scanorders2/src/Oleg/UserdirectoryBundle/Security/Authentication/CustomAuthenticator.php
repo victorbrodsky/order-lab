@@ -69,7 +69,7 @@ class CustomAuthenticator implements SimpleFormAuthenticatorInterface {
 
         //auth type: ldap-user, local-user, external
         $usernamePrefix = $userSecUtil->getUsernamePrefix($token->getUsername());
-        exit("usernamePrefix=".$usernamePrefix);
+        //exit("usernamePrefix=".$usernamePrefix);
 
         switch( $usernamePrefix ) {
             case "local-user":
