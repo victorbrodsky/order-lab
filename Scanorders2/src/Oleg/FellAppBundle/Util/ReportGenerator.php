@@ -857,7 +857,7 @@ class ReportGenerator {
     public function isPdfCorrupted($filePath) {
         $logger = $this->container->get('logger');
         $corrupted = 0;
-        $logger->notice("Checking PDF=".$filePath);
+        //$logger->notice("Checking PDF=".$filePath);
 
         ////////// checking header "%PDF-" ///////////////
         $fp = fopen($filePath, 'r');
@@ -865,35 +865,38 @@ class ReportGenerator {
         fseek($fp, 0);
         $data = fread($fp, 5);   // read 5 bytes from byte 0
         //echo "Header=".$data."<br>";
-        $logger->notice("Header=".$data);
+        //$logger->notice("Header=".$data);
         //if(strcmp($data,"%PDF-")==0) {
         if( strpos($data, '%PDF-') !== false ) {
             //echo "The PDF File is not Corrupted.<br>";
         } else {
             //echo "The PDF File is  Corrupted.<br>";
-            $logger->notice("Header is not valid");
+            $logger->error("Header is not valid: [".$data . "] for ".$filePath);
             $corrupted++;
         }
         fclose($fp);
         ////////// EOF checking header "%PDF-" ///////////////
 
         ///////////// checking footer "%%EOF" ///////////////
-        $file = file($filePath);
-        $endfile= trim($file[count($file) - 1]);
-        //echo "endfile=".$endfile."<br>";
-        $logger->notice("endfile=".$endfile);
-        $n="%%EOF";
-        if( $endfile === $n ) {
-            //echo "good <br>";
-        } else {
-            //echo "corrupted <br>";
-            $logger->notice("Endfile is not valid");
-            $corrupted++;
+        if(1) {
+            $file = file($filePath);
+            $endfile = trim($file[count($file) - 1]);
+            //echo "endfile=".$endfile."<br>";
+            //$logger->notice("endfile=" . $endfile);
+            $n = "%%EOF";
+            //if( $endfile === $n ) {
+            if( strpos($endfile, $n) !== false ) {
+                //echo "good <br>";
+            } else {
+                //echo "corrupted <br>";
+                $logger->error("Endfile is not valid: [".$endfile . "] for ".$filePath);
+                $corrupted++;
+            }
         }
         ///////////// EOF checking footer "%%EOF" ///////////////
 
         //echo "Corrupted count=".$corrupted."<br>";
-        $logger->notice("Corrupted count=".$corrupted);
+        //$logger->notice("Corrupted count=".$corrupted);
 
         if( $corrupted === 0 ) {
             return false;
