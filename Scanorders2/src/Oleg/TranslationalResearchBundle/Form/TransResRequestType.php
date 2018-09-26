@@ -246,18 +246,21 @@ class TransResRequestType extends AbstractType
         ));
 
         //availableProjects
+        $attrArr = array('class'=>'combobox combobox-width');
         if( $this->params['availableProjects'] === null ) {
-            $disabledPi = true;
-        } else {
-            $disabledPi = false;
+            $attrArr['readonly'] = true;
         }
+        if( $this->params['SecurityAuthChecker']->isGranted('ROLE_TRANSRES_ADMIN') === false ) {
+            $attrArr['readonly'] = true;
+        }
+
         $builder->add('principalInvestigators', EntityType::class, array(
             'class' => 'OlegUserdirectoryBundle:User',
             'label' => "Principal Investigator(s) for the project:",
             'required' => false,
-            'disabled' => $disabledPi,
+            //'disabled' => $disabledPi,
             'multiple' => true,
-            'attr' => array('class'=>'combobox combobox-width'),
+            'attr' => $attrArr,
             'query_builder' => function(EntityRepository $er) {
                 return $er->createQueryBuilder('list')
                     ->leftJoin("list.employmentStatus", "employmentStatus")
