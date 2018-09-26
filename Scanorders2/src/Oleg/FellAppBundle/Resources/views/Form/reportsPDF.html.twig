@@ -16,6 +16,10 @@
 
 {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
+{% if collapsein is not defined %}
+    {% set collapsein = "in" %}
+{% endif %}
+
 {#{% if is_granted('ROLE_FELLAPP_COORDINATOR') %}#}
 <div class="panel panel-info">
 
@@ -27,7 +31,7 @@
         </h4>
     </div>
 
-    <div id="complete-reports" class="panel-collapse collapse in">
+    <div id="complete-reports" class="panel-collapse collapse {{ collapsein }}">
         <div class="panel-body">
 
                 <div class="well form-element-holder user-Report">
@@ -57,7 +61,7 @@
         </h4>
     </div>
 
-    <div id="form-reports" class="panel-collapse collapse in">
+    <div id="form-reports" class="panel-collapse collapse {{ collapsein }}">
         <div class="panel-body">
 
             <div class="well form-element-holder user-FormReport">
@@ -88,7 +92,7 @@
         </h4>
     </div>
 
-    <div id="complete-oldreports" class="panel-collapse collapse in">
+    <div id="complete-oldreports" class="panel-collapse collapse {{ collapsein }}">
         <div class="panel-body">
 
             <div class="well form-element-holder user-OldReport">

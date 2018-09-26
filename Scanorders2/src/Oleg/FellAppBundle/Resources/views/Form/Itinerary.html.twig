@@ -16,6 +16,9 @@
 
 {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
+{% if collapsein is not defined %}
+    {% set collapsein = "in" %}
+{% endif %}
 
 <div class="panel panel-info">
 
@@ -27,7 +30,7 @@
         </h4>
     </div>
 
-    <div id="Itinerary" class="panel-collapse collapse in">
+    <div id="Itinerary" class="panel-collapse collapse {{ collapsein }}">
         <div class="panel-body">
 
             <div class="row withpaddingtop">

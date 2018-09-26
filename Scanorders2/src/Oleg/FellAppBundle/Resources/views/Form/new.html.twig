@@ -22,6 +22,11 @@
 
 
 {% block content %}
+
+    {% if cycle == "download" %}
+        {% set collapsein = "in" %}
+    {% endif %}
+
     {% include 'OlegFellAppBundle:Form:applicant-content.html.twig' %}
 
     {#{{ form_start(form,{'attr': {'id': 'fellapp-applicant-form'}}) }}#}

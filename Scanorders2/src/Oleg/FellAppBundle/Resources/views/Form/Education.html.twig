@@ -14,6 +14,10 @@
     limitations under the License.
 #}
 
+{% if collapsein is not defined %}
+    {% set collapsein = "in" %}
+{% endif %}
+
 <!-- Education -->
 <div class="panel panel-info">
 
@@ -25,7 +29,7 @@
     </h4>
 </div>
 
-<div id="education" class="panel-collapse collapse in">
+<div id="education" class="panel-collapse collapse {{ collapsein }}">
     <div class="panel-body">
 
     {#form.user.id:{{ form.user.vars.value.id }}<br>#}
@@ -166,7 +170,7 @@
         </h4>
     </div>
 
-    <div id="otherExperience" class="panel-collapse collapse in">
+    <div id="otherExperience" class="panel-collapse collapse {{ collapsein }}">
         <div class="panel-body">
 
             <p>In chronological order, list other educational experiences, jobs, military service or training that is not accounted for above.</p>

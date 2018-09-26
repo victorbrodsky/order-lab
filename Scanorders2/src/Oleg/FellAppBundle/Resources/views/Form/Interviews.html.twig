@@ -17,6 +17,10 @@
 {% import "OlegFellAppBundle::Default/fellappmacros.html.twig" as fellappmacros %}
 {% import "OlegUserdirectoryBundle::Default/usermacros.html.twig" as usermacros %}
 
+{% if collapsein is not defined %}
+    {% set collapsein = "in" %}
+{% endif %}
+
 <div class="panel panel-info">
 
     <div class="panel-heading">
@@ -49,7 +53,7 @@
     </div>
 
 
-    <div id="interviews" class="panel-collapse collapse in">
+    <div id="interviews" class="panel-collapse collapse {{ collapsein }}">
         <div class="panel-body">
 
             {#<div tooltip="test tooltip" data-toggle="tooltip">#}
@@ -110,7 +114,7 @@
         </h4>
     </div>
 
-    <div id="observers" class="panel-collapse collapse in">
+    <div id="observers" class="panel-collapse collapse {{ collapsein }}">
         <div class="panel-body">
 
             <div class="fellapp-observers-holder">

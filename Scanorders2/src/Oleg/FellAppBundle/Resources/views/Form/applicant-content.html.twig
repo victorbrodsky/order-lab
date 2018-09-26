@@ -115,6 +115,10 @@
     </div>
 {% endif %}
 
+{% if collapsein is not defined %}
+    {% set collapsein = "in" %}
+{% endif %}
+
 <div class="fellapp-application-holder">
 
 <!-- Fellowship Type, Training period, Applicant Name -->
