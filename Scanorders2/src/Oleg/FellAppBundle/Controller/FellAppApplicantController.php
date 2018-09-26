@@ -205,7 +205,6 @@ class FellAppApplicantController extends Controller {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
         }
 
-        $emailUtil = $this->get('user_mailer_utility');
         $emails = array();
         $event = "Invited interviewers to rate fellowship application ID " . $id . " ".$entity->getUser().".";
 
@@ -213,7 +212,7 @@ class FellAppApplicantController extends Controller {
         foreach( $entity->getInterviews() as $interview ) {
             if( !$interview->getTotalRank() || $interview->getTotalRank() <= 0 ) {
                 //send email to interviewer with links to PDF and Interview object to fill out.
-                $email = $this->sendInvitationEmail($interview,$emailUtil);
+                $email = $this->sendInvitationEmail($interview);
                 if( $email ) {
                     $emails[] = $email;
                 }
@@ -222,7 +221,7 @@ class FellAppApplicantController extends Controller {
             }
         }
 
-        $this->sendConfirmationEmail($emails,$entity,$event,$emailUtil,$request); //to admin
+        $this->sendConfirmationEmail($emails,$entity,$event,$request); //to admin
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -252,9 +251,7 @@ class FellAppApplicantController extends Controller {
             throw $this->createNotFoundException('Interviewer can not be found: interviewId='.$interviewId);
         }
 
-        $emailUtil = $this->get('user_mailer_utility');
-
-        $email = $this->sendInvitationEmail($interview,$emailUtil);
+        $email = $this->sendInvitationEmail($interview);
 
         $fellapp = $interview->getFellapp();
 
@@ -264,7 +261,7 @@ class FellAppApplicantController extends Controller {
         }
 
         $event = "Invited interviewer to rate fellowship application ID " . $fellapp->getId() . " ".$fellapp->getUser().".";
-        $this->sendConfirmationEmail($emails,$fellapp,$event,$emailUtil,$request);
+        $this->sendConfirmationEmail($emails,$fellapp,$event,$request);
 
 //        $response = new Response();
 //        $response->headers->set('Content-Type', 'application/json');
@@ -279,16 +276,17 @@ class FellAppApplicantController extends Controller {
     }
 
 
-    public function sendInvitationEmail( $interview, $emailUtil=null) {
+    public function sendInvitationEmail( $interview ) {
 
         $logger = $this->container->get('logger');
+        $emailUtil = $this->get('user_mailer_utility');
         //$em = $this->getDoctrine()->getManager();
         $fellapp = $interview->getFellapp();
         $applicant = $fellapp->getUser();
         $interviewer = $interview->getInterviewer();
 
         if( !$interviewer ) {
-            $logger->error("sendInvitationEmail: No interviewer exists for interview=" . $interview );
+            $logger->error("send InvitationEmail: No interviewer exists for interview=" . $interview );
             return null;
         }
 
@@ -300,7 +298,7 @@ class FellAppApplicantController extends Controller {
                 'Email invitations to evaluate '.$appHref.' have not been sent. Please upload Itinerary and try again.'
             );
 
-            $logger->error("sendInvitationEmail: No recent itinerary found for fellapp ID=" . $fellapp->getId() );
+            $logger->error("send InvitationEmail: No recent itinerary found for fellapp ID=" . $fellapp->getId() );
             return null;
         }
 
@@ -309,7 +307,7 @@ class FellAppApplicantController extends Controller {
         if( $recentReport ) {
             $attachmentPath = $recentReport->getAbsoluteUploadFullPath();
         } else {
-            $logger->error("sendInvitationEmail: no recent report found for fellapp ID".$fellapp->getId());
+            $logger->error("send InvitationEmail: no recent report found for fellapp ID".$fellapp->getId());
         }
 
         //get email
@@ -352,11 +350,7 @@ class FellAppApplicantController extends Controller {
 
         $text .= "If you have any additional questions, please don't hesitate to email " . $senderEmail . $break.$break;
 
-        $logger->notice("sendInvitationEmail: Before send email to " . $email);
-
-        if( $emailUtil == null ) {
-            $emailUtil = $this->get('user_mailer_utility');
-        }
+        $logger->notice("send InvitationEmail: Before send email to " . $email);
 
         //get interview date string
         $interviewDateStr = $interview->getInterviewDateStr();
@@ -364,7 +358,7 @@ class FellAppApplicantController extends Controller {
         $cc = null; //"oli2002@med.cornell.edu";
         $emailUtil->sendEmail( $email, "Fellowship Candidate (".$applicant->getUsernameOptimal().$interviewDateStr.") Interview Application and Evaluation Form", $text, $cc, $senderEmail, $attachmentPath );
 
-        $logger->notice("sendInvitationEmail: Email has been sent to " . $email . $interviewDateStr);
+        $logger->notice("send InvitationEmail: Email has been sent to " . $email . $interviewDateStr);
 
         return $email;
     }
@@ -373,7 +367,7 @@ class FellAppApplicantController extends Controller {
         return '<a href="'.$url.'">'.$url.'</a>';
     }
 
-    public function sendConfirmationEmail( $emails, $fellapp, $event, $emailUtil, $request ) {
+    public function sendConfirmationEmail( $emails, $fellapp, $event, $request ) {
 
         if( $emails && count($emails) > 0 ) {
             $emailStr = " Emails have been sent to the following: ".implode(", ",$emails);
@@ -382,6 +376,7 @@ class FellAppApplicantController extends Controller {
         }
 
         $logger = $this->container->get('logger');
+        $emailUtil = $this->get('user_mailer_utility');
         $userSecUtil = $this->container->get('user_security_utility');
         $systemUser = $userSecUtil->findSystemUser();
         $event = $event . "<br>" . $emailStr;
@@ -414,10 +409,6 @@ class FellAppApplicantController extends Controller {
         //print_r($coordinatorEmails);
         //exit('1');
 
-        if( $emailUtil == null ) {
-            $emailUtil = $this->get('user_mailer_utility');
-        }
-
         //get interview date string
         $interviewDateStr = "";
         $interviewDate = $fellapp->getInterviewDate();
@@ -435,7 +426,7 @@ class FellAppApplicantController extends Controller {
         $applicant = $fellapp->getUser();
         $emailUtil->sendEmail( $coordinatorEmails, "Fellowship Candidate (ID# ".$fellapp->getId()." ".$applicant->getUsernameOptimal().$interviewDateStr.") Interview Application and Evaluation Form", $event, null, $senderEmail, $attachmentPath );
 
-        $logger->notice("sendConfirmationEmail: "."Fellowship Candidate (ID# ".$fellapp->getId()." ".$applicant->getUsernameOptimal().$interviewDateStr.": Send confirmation email from " . $senderEmail . " to coordinators:".implode(", ",$coordinatorEmails));
+        $logger->notice("send ConfirmationEmail: "."Fellowship Candidate (ID# ".$fellapp->getId()." ".$applicant->getUsernameOptimal().$interviewDateStr.": Send confirmation email from " . $senderEmail . " to coordinators:".implode(", ",$coordinatorEmails));
     }
 
 
@@ -452,7 +443,7 @@ class FellAppApplicantController extends Controller {
 
         //echo "invite interviewers to rate <br>";
         //exit();
-        $logger = $this->container->get('logger');
+
 
         $em = $this->getDoctrine()->getManager();
 
@@ -462,8 +453,10 @@ class FellAppApplicantController extends Controller {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
         }
 
-        $emails = array();
+        $logger = $this->container->get('logger');
         $emailUtil = $this->get('user_mailer_utility');
+
+        $emails = array();
 
         //get all interviews
         $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -515,7 +508,7 @@ class FellAppApplicantController extends Controller {
         }
 
         $event = "Invited observers to view fellowship application ID " . $id . " ".$entity->getUser().".";
-        $this->sendConfirmationEmail($emails,$entity,$event,$emailUtil,$request);
+        $this->sendConfirmationEmail($emails,$entity,$event,$request);
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
