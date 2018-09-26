@@ -1193,4 +1193,14 @@ class FellAppUtil {
         echo "######################<br><br>";
     }
 
+    public function findInterviewByFellappAndUser( $fellapp, $user ) {
+        $interviews = array();
+        foreach($fellapp->getInterviews() as $interview) {
+            $interviewer = $interview->getInterviewer();
+            if( $interviewer && $user && $interviewer->getId() == $user->getId() ) {
+                $interviews[] = $interview;
+            }
+        }
+        return $interviews;
+    }
 } 

@@ -207,6 +207,7 @@ class FellAppApplicantController extends Controller {
 
         $emailUtil = $this->get('user_mailer_utility');
         $emails = array();
+        $event = "Invited interviewers to rate fellowship application ID " . $id . " ".$entity->getUser().".";
 
         //get all interviews
         foreach( $entity->getInterviews() as $interview ) {
@@ -216,11 +217,12 @@ class FellAppApplicantController extends Controller {
                 if( $email ) {
                     $emails[] = $email;
                 }
+            } else {
+                $event = $event . "<br>" . "Skipped interviewer ".$interview->getInterviewerInfo().", because the corresponding evaluation form has been rated.";
             }
         }
 
-        $event = "Invited interviewers to rate fellowship application ID " . $id . " ".$entity->getUser().".";
-        $this->sendConfirmationEmail($emails,$entity,$event,$emailUtil,$request);
+        $this->sendConfirmationEmail($emails,$entity,$event,$emailUtil,$request); //to admin
 
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
@@ -325,8 +327,11 @@ class FellAppApplicantController extends Controller {
         $scheduleLink = $this->convertToHref($scheduleLink);
 
         //fellapp_interview_edit
-        $interviewFormLink = $this->generateUrl( 'fellapp_interview_edit', array("id"=>$interview->getId()), UrlGeneratorInterface::ABSOLUTE_URL );
-        $interviewFormLink = $this->convertToHref($interviewFormLink);
+        //$interviewFormLink = $this->generateUrl( 'fellapp_interview_edit', array("id"=>$interview->getId()), UrlGeneratorInterface::ABSOLUTE_URL );
+        //$interviewFormLink = $this->convertToHref($interviewFormLink);
+        //fellapp_applicant_edit
+        $applicationFormLink = $this->generateUrl( 'fellapp_application_edit', array("id"=>$fellapp->getId()), UrlGeneratorInterface::ABSOLUTE_URL );
+        $applicationFormLink = $this->convertToHref($applicationFormLink);
 
         //$pdfLink = $this->generateUrl( 'fellapp_file_download', array("id"=>$fellapp->getRecentReport()->getId()), true );
         $pdfLink = $this->generateUrl( 'fellapp_download_pdf', array("id"=>$fellapp->getId()), UrlGeneratorInterface::ABSOLUTE_URL );
@@ -340,7 +345,8 @@ class FellAppApplicantController extends Controller {
 
         $text .= "The INTERVIEW SCHEDULE URL link:" . $break . $scheduleLink . $break.$break;
 
-        $text .= "The ONLINE EVALUATION FORM URL link:" . $break . $interviewFormLink . $break.$break;
+        //$text .= "The ONLINE EVALUATION FORM URL personalize link:" . $break . $interviewFormLink . $break.$break;
+        $text .= "The ONLINE EVALUATION FORM URL link:" . $break . $applicationFormLink . $break.$break;
 
         $text .= "The COMPLETE APPLICATION PDF link:" . $break . $pdfLink . $break.$break;
 
@@ -372,7 +378,7 @@ class FellAppApplicantController extends Controller {
         if( $emails && count($emails) > 0 ) {
             $emailStr = " Emails have been sent to the following: ".implode(", ",$emails);
         } else {
-            $emailStr = " Emails have not been sent.";
+            $emailStr = " Emails have not been sent: there are no destination emails.";
         }
 
         $logger = $this->container->get('logger');
@@ -383,12 +389,12 @@ class FellAppApplicantController extends Controller {
 
         //return $this->redirect( $this->generateUrl('fellapp_home') );
 
-        if( $emails && count($emails) > 0 ) {
+        //if( $emails && count($emails) > 0 ) {
             $this->get('session')->getFlashBag()->add(
                 'notice',
                 $event
             );
-        }
+        //}
 
         //send only 1 email to coordinator
         $user = $this->get('security.token_storage')->getToken()->getUser();

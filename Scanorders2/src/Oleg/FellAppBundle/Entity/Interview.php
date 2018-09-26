@@ -359,4 +359,13 @@ class Interview {
         return $interviewDateStr;
     }
 
+    public function getInterviewerInfo() {
+        $res = "Unknown Interviewer";
+        if( $this->getInterviewer() ) {
+            //$res = $this->getInterviewer()->getUsernameOptimal();
+            $res = $this->getInterviewer()."";
+        }
+        return $res;
+    }
+
 } 

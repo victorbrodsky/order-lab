@@ -1619,6 +1619,71 @@ class FellAppController extends Controller {
 //        return $this->redirect( $this->generateUrl('fellapp_home') );
 //    }
 
+    /**
+     * @Route("/application-evaluation/show/{id}", name="fellapp_application_show")
+     * @Route("/application-evaluation/{id}", name="fellapp_application_edit")
+     * @Method("GET")
+     * @Template("OlegFellAppBundle:Interview:interview_selector.html.twig")
+     */
+    public function applicationAction( Request $request, FellowshipApplication $fellapp )
+    {
+
+        //echo "status <br>";
+
+        if (false == $this->get('security.authorization_checker')->isGranted("create", "Interview")) {
+            return $this->redirect($this->generateUrl('fellapp-nopermission'));
+        }
+
+        $fellappUtil = $this->container->get('fellapp_util');
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $routeName = $request->get('_route');
+        $cycle = "show";
+
+        if( $routeName == "fellapp_application_edit" ) {
+            $cycle = "edit";
+        }
+
+        //1) check if this user is an interviewer for this application
+        $interviews = $fellappUtil->findInterviewByFellappAndUser($fellapp,$user);
+        if( count($interviews) > 0 ) {
+            if( count($interviews) == 1 ) {
+                $interview = $interviews[0];
+                if ($routeName == "fellapp_application_edit") {
+                    return $this->redirect($this->generateUrl('fellapp_interview_edit', array('id' => $interview->getId())));
+                } else {
+                    return $this->redirect($this->generateUrl('fellapp_interview_show', array('id' => $interview->getId())));
+                }
+            } else {
+                if( count($interviews) > 0 ) {
+                    //show all interviews selector
+                    return array(
+                        'fellapp' => $fellapp,
+                        'interviews' => $interviews,
+                        'cycle' => $cycle,
+                        'sitename' => $this->container->getParameter('fellapp.sitename')
+                    );
+                }
+            }
+
+        } else {
+            //this user is not interviewer for this application
+            if ($this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_COORDINATOR') ||
+                $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_DIRECTOR') ||
+                $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN')
+            ) {
+                //show all interviews selector
+                $interviews = $fellapp->getInterviews();
+                return array(
+                    'fellapp' => $fellapp,
+                    'interviews' => $interviews,
+                    'cycle' => $cycle,
+                    'sitename' => $this->container->getParameter('fellapp.sitename')
+                );
+            }
+        }
+
+        return $this->redirect($this->generateUrl('fellapp-nopermission'));
+    }
 
     /**
      * @Route("/interview-evaluation/show/{id}", name="fellapp_interview_show")
@@ -1658,8 +1723,16 @@ class FellAppController extends Controller {
             throw $this->createNotFoundException('Interviewer is undefined');
         }
         //echo $user->getId()."?=".$interviewerId."<br>";
-        if( $user->getId() != $interviewerId ) {
-            return $this->redirect( $this->generateUrl('fellapp-nopermission') );
+
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_COORDINATOR') ||
+            $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_DIRECTOR') ||
+            $this->get('security.authorization_checker')->isGranted('ROLE_FELLAPP_ADMIN')
+        ){
+            //allow
+        } else {
+            if ($user->getId() != $interviewerId) {
+                return $this->redirect($this->generateUrl('fellapp-nopermission'));
+            }
         }
 
         if( $routeName == "fellapp_interview_edit" && $interview->getTotalRank() && $interview->getTotalRank() > 0 ) {

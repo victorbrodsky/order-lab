@@ -93,6 +93,10 @@ class UserUtil {
 
         }
 
+        if( $options['eventtype'] == "Bad Credentials" ) {
+            $options['event'] = $options['event'] . ". Username=".$username;
+        }
+
         $logger->setRoles($roles);
         $logger->setUsername($username);
         $logger->setIp($request->getClientIp());

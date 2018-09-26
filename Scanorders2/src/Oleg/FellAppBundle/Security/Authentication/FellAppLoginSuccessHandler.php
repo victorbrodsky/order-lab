@@ -62,7 +62,10 @@ class FellAppLoginSuccessHandler extends LoginSuccessHandler {
         //If "Fellowship Interviewer" is the highest role of the user logging into the fellowship site,
         // automatically redirect them to the /my-interviewees page after login
         // UNLESS they came to the site via a link from an email to evaluate a specific candidate already.
-        if( $url == "/order/fellowship-applications/" && $url != "/order/fellowship-applications/interview-evaluation/") {
+        if( $url == "/order/fellowship-applications/" &&
+            $url != "/order/fellowship-applications/interview-evaluation/" &&
+            $url != "/order/fellowship-applications/application-evaluation/"
+        ) {
 
             if( $this->isFellowshipInterviewerHighestRole($token->getUser()) ) {
                 $redirectResponse->setTargetUrl("/order/fellowship-applications/my-interviewees/");
