@@ -1530,6 +1530,11 @@ class InvoiceController extends Controller
         $invoice->setStatus($status);
 
         //Set Paid to Total and Due to 0 if values is unchanged
+        //Please fix the display of “paid” and “due” amounts:
+        // Once the invoice is marked as “paid in full” via any method,
+        // the “paid” field/column should be set to the amount
+        // that used to be “due” and the “due” amount should be set to zero.
+        //paid is set to 'total' instead of 'due', because due might be updated incrementally by multiple partial payment until it reaches the 'total'
         if( $status == "Paid in Full" ) {
             if( $paid != $originalPaid ) {
                 //don't update if changed
