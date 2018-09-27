@@ -695,13 +695,7 @@ class ReportGenerator {
 
         ////////// Potential error subject //////////////
         $fellappInfo = $entity->getInfo();
-        $hostname = "(Unknown host)";
-        $request = $this->container->get('request_stack')->getCurrentRequest();
-        if( $request ) {
-            $hostname = "(" . $request->getSchemeAndHttpHost() . " server)";
-        } else {
-            $hostname = "(" . $userSecUtil->getSiteSettingParameter('environment') . " server)";
-        }
+        $hostname = "(" . $userSecUtil->getSiteSettingParameter('environment') . " server)";
         $errorEmailSubject = "PDF conversion failed for Applicant $fellappInfo $hostname";
         $logger->notice("errorEmailSubject=".$errorEmailSubject);
         ////////// EOF Potential error subject //////////////
