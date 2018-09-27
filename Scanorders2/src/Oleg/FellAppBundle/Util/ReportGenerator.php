@@ -697,7 +697,7 @@ class ReportGenerator {
         $fellappInfo = $entity->getInfo();
         $hostname = "(" . $userSecUtil->getSiteSettingParameter('environment') . " server)";
         $errorEmailSubject = "PDF conversion failed for Applicant $fellappInfo $hostname";
-        $logger->notice("errorEmailSubject=".$errorEmailSubject);
+        //$logger->notice("errorEmailSubject=".$errorEmailSubject);
         ////////// EOF Potential error subject //////////////
 
         //fellapp admin
