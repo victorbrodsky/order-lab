@@ -25,6 +25,8 @@
 
     {% if cycle == "download" %}
         {% set collapsein = "in" %}
+    {% else %}
+        {% set collapsein = "" %}
     {% endif %}
 
     {% include 'OlegFellAppBundle:Form:applicant-content.html.twig' %}
