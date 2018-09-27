@@ -121,7 +121,7 @@ class TransResListController extends ListController
         ) {
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
-
+        
         return $this->editList($request,$id);
     }
 

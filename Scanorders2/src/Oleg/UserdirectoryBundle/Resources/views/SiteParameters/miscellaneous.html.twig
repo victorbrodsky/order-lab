@@ -14,6 +14,7 @@
     limitations under the License.
 #}
 
+{% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
 
 <div class="panel panel-primary">
     <div class="panel-heading">
@@ -25,8 +26,6 @@
     </div>
     <div id="miscellaneous" class="panel-collapse collapse">
         <div class="panel-body">
-
-            {% if is_granted('ROLE_PLATFORM_DEPUTY_ADMIN') %}
 
                 <h4 class="text-info">Populate Lists</h4>
 
@@ -141,10 +140,8 @@
                     <a href="{{ path('stain_update_fulltitle') }}">Update Stain Titles</a>
                 </p>
 
-
-            {% endif %}
-
         </div>
     </div>
 </div>
 
+{% endif %}

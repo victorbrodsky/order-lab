@@ -777,7 +777,13 @@ class ReportGenerator {
 
             $cmd = $cmd .' "'.$filePath.'"';
 
-            $errorEmailSubject = "PDF conversion failed for Applicant $fellappInfo";
+            $hostname = "(Unknown host)";
+            $request = $this->container->get('request_stack')->getCurrentRequest();
+            if( $request ) {
+                $hostname = "(" . $request->getSchemeAndHttpHost() . ")";
+            }
+            $errorEmailSubject = "PDF conversion failed for Applicant $fellappInfo $hostname";
+            $logger->notice("errorEmailSubject=".$errorEmailSubject);
 
             $ext = pathinfo($filePath, PATHINFO_EXTENSION);
             if( $ext != 'pdf' ) { //TESTING!!!

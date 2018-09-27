@@ -1550,7 +1550,7 @@ class ListController extends Controller
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_USERDIRECTORY_EDITOR') ) {
             return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
         }
-
+        
         return $this->editList($request,$id);
     }
     public function editList( $request, $id ) {
