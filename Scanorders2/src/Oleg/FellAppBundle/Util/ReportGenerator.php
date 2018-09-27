@@ -693,8 +693,19 @@ class ReportGenerator {
         $userServiceUtil = $this->container->get('user_service_utility');
         $systemUser = $userSecUtil->findSystemUser();
 
+        ////////// Potential error subject //////////////
         $fellappInfo = $entity->getInfo();
-        
+        $hostname = "(Unknown host)";
+        $request = $this->container->get('request_stack')->getCurrentRequest();
+        if( $request ) {
+            $hostname = "(" . $request->getSchemeAndHttpHost() . " server)";
+        } else {
+            $hostname = "(" . $userSecUtil->getSiteSettingParameter('environment') . " server)";
+        }
+        $errorEmailSubject = "PDF conversion failed for Applicant $fellappInfo $hostname";
+        $logger->notice("errorEmailSubject=".$errorEmailSubject);
+        ////////// EOF Potential error subject //////////////
+
         //fellapp admin
         $confirmationEmailFellApp = $userSecUtil->getSiteSettingParameter('confirmationEmailFellApp');
         $toEmailsArr = array($confirmationEmailFellApp);
@@ -776,14 +787,6 @@ class ReportGenerator {
             //}
 
             $cmd = $cmd .' "'.$filePath.'"';
-
-            $hostname = "(Unknown host)";
-            $request = $this->container->get('request_stack')->getCurrentRequest();
-            if( $request ) {
-                $hostname = "(" . $request->getSchemeAndHttpHost() . ")";
-            }
-            $errorEmailSubject = "PDF conversion failed for Applicant $fellappInfo $hostname";
-            $logger->notice("errorEmailSubject=".$errorEmailSubject);
 
             $ext = pathinfo($filePath, PATHINFO_EXTENSION);
             if( $ext != 'pdf' ) { //TESTING!!!
