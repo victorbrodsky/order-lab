@@ -368,7 +368,7 @@ class ScanListController extends ListController
             return $this->redirect( $this->generateUrl($this->container->getParameter('scan.sitename').'-order-nopermission') );
         }
 
-        return $this->showList($request,$id);
+        return $this->showList($request,$id,true);
     }
 
     /**

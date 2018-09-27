@@ -1297,9 +1297,14 @@ class ListController extends Controller
             return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
         }
 
-        return $this->showList($request,$id);
+        $showEditBtn = false;
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            $showEditBtn = true;
+        }
+
+        return $this->showList($request,$id,$showEditBtn);
     }
-    public function showList( $request, $id ) {
+    public function showList( $request, $id, $showEditBtn=false ) {
 
         $routeName = $request->get('_route');
         $pieces = explode("_", $routeName);
@@ -1327,7 +1332,8 @@ class ListController extends Controller
             'delete_form' => null,  //$deleteForm->createView(),
             'displayName' => $mapper['displayName'],
             'pathbase' => $pathbase,
-            'sitename' => $this->sitename
+            'sitename' => $this->sitename,
+            'showEditBtn' => $showEditBtn
         );
     }
 

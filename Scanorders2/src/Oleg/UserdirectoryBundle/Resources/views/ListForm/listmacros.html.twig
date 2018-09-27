@@ -579,7 +579,7 @@
 
 
 
-{% macro listEdit( entity, edit_form, delete_form, pathbase, cycle, postPath ) %}
+{% macro listEdit( entity, edit_form, delete_form, pathbase, cycle, postPath, showEditBtn ) %}
 
     {% import "OlegOrderformBundle::Default/formmacros.html.twig" as formmacros %}
     {% import _self as listmacros %}
@@ -715,10 +715,19 @@
 
     <br>
 
-    {% if cycle == 'show' and (is_granted('ROLE_USERDIRECTORY_EDITOR') or is_granted('ROLE_SCANORDER_PROCESSOR')) %}
-        <p>
-            <a class="btn btn-success" href="{{ path(pathbase~'_edit'~postPath, { 'id': entity.id }) }}">Edit</a>
-        </p>
+    {% if cycle == 'show' %}
+        {% set showEdit = false %}
+        {#{% if is_granted('ROLE_USERDIRECTORY_EDITOR') or is_granted('ROLE_SCANORDER_PROCESSOR') %}#}
+            {#{% set showEdit = true %}#}
+        {#{% endif %}#}
+        {% if showEditBtn is defined and showEditBtn %}
+            {% set showEdit = true %}
+        {% endif %}
+        {% if showEdit %}
+            <p>
+                <a class="btn btn-success" href="{{ path(pathbase~'_edit'~postPath, { 'id': entity.id }) }}">Edit</a>
+            </p>
+        {% endif %}
     {% endif %}
 
     <br />
