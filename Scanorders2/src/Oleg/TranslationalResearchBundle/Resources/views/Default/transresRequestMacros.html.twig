@@ -806,9 +806,13 @@
                     {% set statuses = transres_request_util.getInvoiceStatuses() %}
                     <div class="center-block updateInvoiceBtnHolder">
                     {% for status in statuses %}
+                        {% set btnType = "primary" %}
+                        {% if status == "Paid in Full" %}
+                            {% set btnType = "success" %}
+                        {% endif %}
                         {#{% if status != invoice.status %}#}
                             <p>
-                            <button class="btn btn-primary updateInvoiceBtn"
+                            <button class="btn btn-{{ btnType }} updateInvoiceBtn"
                                     type="button"
                                     onclick="transresUpdateInvoiceStatus('{{ invoice.oid }}','{{ status }}');"
                             >Update Invoice Status to '{{ status }}'</button>

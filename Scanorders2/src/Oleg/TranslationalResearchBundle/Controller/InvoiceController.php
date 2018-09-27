@@ -1490,6 +1490,9 @@ class InvoiceController extends Controller
             return $this->redirect($this->generateUrl('translationalresearch-nopermission'));
         }
 
+        $originalPaid = $invoice->getPaid();
+        $originalDue = $invoice->getDue();
+
         $invoiceSerializedOriginalStr = $invoice->getSerializeStr();
 
 
@@ -1525,6 +1528,20 @@ class InvoiceController extends Controller
         //change-status
         //$status = "Paid Partially";
         $invoice->setStatus($status);
+
+        //Set Paid to Total and Due to 0 if values is unchanged
+        if( $status == "Paid in Full" ) {
+            if( $paid != $originalPaid ) {
+                //don't update if changed
+            } else {
+                $invoice->setPaid($total);
+            }
+            if( $due != $originalDue ) {
+                //don't update if changed
+            } else {
+                $invoice->setDue(NULL);
+            }
+        }
 
         $em->persist($invoice);
         $em->flush();
