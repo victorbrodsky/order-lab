@@ -366,7 +366,7 @@ class DefaultController extends Controller
 
         foreach($invoices as $invoice) {
             if ($invoice->getStatus() == "Paid in Full") {
-                if( !$invoice->getDue() ) {
+                if( $invoice->getDue() && !$invoice->getPaid() ) {
                     echo $i.": Original: total=".$invoice->getTotal()."; paid=".$invoice->getPaid()."; due=".$invoice->getDue()."<br>";
                     $invoice->setPaid($invoice->getTotal());
                     $invoice->setDue(NULL);
