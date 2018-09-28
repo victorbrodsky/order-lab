@@ -370,7 +370,7 @@ class DefaultController extends Controller
                     echo $i.": Original: total=".$invoice->getTotal()."; paid=".$invoice->getPaid()."; due=".$invoice->getDue()."<br>";
                     $invoice->setPaid($invoice->getTotal());
                     $invoice->setDue(NULL);
-                    //$em->flush($invoice);
+                    $em->flush($invoice);
                     echo $i.": Updated: total=".$invoice->getTotal()."; paid=".$invoice->getPaid()."; due=".$invoice->getDue()."<br><br>";
                     $i++;
                 }
