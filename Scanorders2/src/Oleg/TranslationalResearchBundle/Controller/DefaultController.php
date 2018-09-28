@@ -316,6 +316,8 @@ class DefaultController extends Controller
             return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
         }
 
+        exit("updateProjectsImplicitDateAction: Not allowed");
+
         $count = $this->updateInvoicePaidDue($request);
         exit("End of update invoice's paid and due: ".$count);
 
@@ -358,6 +360,8 @@ class DefaultController extends Controller
             return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
         }
 
+        exit("updateInvoicePaidDue: Not allowed");
+
         $em = $this->getDoctrine()->getManager();
         $invoices = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findByStatus('Paid in Full');
         echo "Found invoices=".count($invoices)."<br>";
@@ -378,7 +382,7 @@ class DefaultController extends Controller
         }
 
         //exit("End of update project's implicit dates: ".$i);
-        return $i;
+        return $i-1;
     }
 
 
