@@ -154,6 +154,8 @@
 
         {#<hr />#}
 
+        <div class="invoice-financial-fields">
+
         {#{% for invoiceItem in form.invoiceItems %}#}
             {#<div class="well well-sm">#}
             {#{{ formmacros.field(invoiceItem.quantity) }}#}
@@ -164,7 +166,7 @@
             {#</div>#}
             {#{{ transresRequestMacros.invoiceItem(invoiceItem,cycle) }}#}
         {#{% endfor %}#}
-        {{ transresRequestMacros.invoiceItemSections(form,cycle,sitename) }}
+            {{ transresRequestMacros.invoiceItemSections(form,cycle,sitename) }}
 
         {#{{ transresRequestMacros.invoiceAddItems(form,cycle) }}#}
         {#Product or Service Panel +/-#}
@@ -172,72 +174,74 @@
 
         {#<hr />#}
 
-        {#{{ formmacros.field(form.subTotal) }}#}
-        <p>
-        <div class="row">
-            <div class="col-xs-2" align="right">
-                <strong>{{ form.subTotal.vars.label|raw }}</strong>
-            </div>
-            <div class="col-xs-6" align="left">
-                <div class = "input-group">
-                    {{ form_widget(form.subTotal) }}
-                    <span class = "input-group-addon btn" onclick="transresUpdateSubTotal();">
-                        Recalculate
-                    </span>
+
+            {#{{ formmacros.field(form.subTotal) }}#}
+            <p>
+            <div class="row">
+                <div class="col-xs-2" align="right">
+                    <strong>{{ form.subTotal.vars.label|raw }}</strong>
+                </div>
+                <div class="col-xs-6" align="left">
+                    <div class = "input-group">
+                        {{ form_widget(form.subTotal) }}
+                        <span class = "input-group-addon btn" onclick="transresUpdateSubTotal(this);">
+                            Recalculate
+                        </span>
+                    </div>
+                </div>
+                <div class="col-xs-4" align="right">
                 </div>
             </div>
-            <div class="col-xs-4" align="right">
-            </div>
-        </div>
-        </p>
+            </p>
 
-        {% if cycle == "show" and not form.discountNumeric %}
-            {#show nothing on show page when empty#}
-        {% else %}
-            {{ formmacros.field_left(form.discountNumeric) }}
-        {% endif %}
+            {% if cycle == "show" and not form.discountNumeric %}
+                {#show nothing on show page when empty#}
+            {% else %}
+                {{ formmacros.field_left(form.discountNumeric) }}
+            {% endif %}
 
-        {% if cycle == "show" and not form.discountPercent %}
-            {#show nothing on show page when empty#}
-        {% else %}
-            {{ formmacros.field_left(form.discountPercent) }}
-        {% endif %}
+            {% if cycle == "show" and not form.discountPercent %}
+                {#show nothing on show page when empty#}
+            {% else %}
+                {{ formmacros.field_left(form.discountPercent) }}
+            {% endif %}
 
-        {#{{ formmacros.field_left(form.total) }}#}
-        <p>
-        <div class="row">
-            <div class="col-xs-2" align="right">
-                <strong>{{ form.total.vars.label|raw }}</strong>
-            </div>
-            <div class="col-xs-6" align="left">
-                <div class = "input-group">
-                    {{ form_widget(form.total) }}
-                    <span class = "input-group-addon btn" onclick="transresUpdateTotal();">
-                        Recalculate
-                    </span>
+            {#{{ formmacros.field_left(form.total) }}#}
+            <p>
+            <div class="row">
+                <div class="col-xs-2" align="right">
+                    <strong>{{ form.total.vars.label|raw }}</strong>
+                </div>
+                <div class="col-xs-6" align="left">
+                    <div class = "input-group">
+                        {{ form_widget(form.total) }}
+                        <span class = "input-group-addon btn" onclick="transresUpdateTotal(this);">
+                            Recalculate
+                        </span>
+                    </div>
+                </div>
+                <div class="col-xs-4" align="right">
                 </div>
             </div>
-            <div class="col-xs-4" align="right">
-            </div>
+            </p>
+
+            {% if form.paid is defined %}
+                {{ formmacros.field_left(form.paid) }}
+            {% endif %}
+
+            {#"Balance Due" (total - paid)#}
+            {% if form.due is defined %}
+                {{ formmacros.field_left(form.due) }}
+            {% endif %}
+
+            {% if form.paidDate is defined %}
+                {{ formmacros.fieldDateLabel_left(form.paidDate,'allow-future-date') }}
+            {% endif %}
+
+            {% if form.comment is defined %}
+                {{ formmacros.field_left(form.comment) }}
+            {% endif %}
         </div>
-        </p>
-
-        {% if form.paid is defined %}
-            {{ formmacros.field_left(form.paid) }}
-        {% endif %}
-
-        {#"Balance Due" (total - paid)#}
-        {% if form.due is defined %}
-            {{ formmacros.field_left(form.due) }}
-        {% endif %}
-
-        {% if form.paidDate is defined %}
-            {{ formmacros.fieldDateLabel_left(form.paidDate,'allow-future-date') }}
-        {% endif %}
-
-        {% if form.comment is defined %}
-            {{ formmacros.field_left(form.comment) }}
-        {% endif %}
 
         <br>
         <hr>
@@ -413,7 +417,8 @@
 
             //console.log("cycle="+cycle);
             if( cycle == "new" ) {
-                transresUpdateSubTotal();
+                var subtotalEl = $('#oleg_translationalresearchbundle_invoice_subTotal');
+                transresUpdateSubTotal(subtotalEl);
                 //transresUpdateDue();
             }
 

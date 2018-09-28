@@ -113,47 +113,59 @@ function transresInvoiceItemListeneres(){
         } else {
             invoiceItemTotalEl.val(null);
         }
-        //console.log("transresUpdateSubTotal: triggered by claculated row total");
-        transresUpdateSubTotal();
+        //console.log("transres UpdateSubTotal: triggered by claculated row total");
+        transresUpdateSubTotal(this);
     });
 
     //total update => update subtotal and total
     $('.invoiceitem-total').on('input', function(event) {
-        //console.log("transresUpdateSubTotal: triggered by manually update row total");
-        transresUpdateSubTotal();
-        //transresUpdateDue();
+        //console.log("transres UpdateSubTotal: triggered by manually update row total");
+        //var holder = $(this).closest('.invoice-financial-fields');
+        transresUpdateSubTotal(this);
     });
 
     $('.invoice-discountNumeric').on('input', function(event) {
         // $('.invoice-discountPercent').val(null);
         // transresUpdateTotal();
-        transresDiscountNumericUpdate();
+        //var holder = $(this).closest('.invoice-financial-fields');
+        //console.log("discountNumeric updated");
+        //console.log(holder);
+        transresDiscountNumericUpdate(this);
     });
     $('.invoice-discountPercent').on('input', function(event) {
         // $('.invoice-discountNumeric').val(null);
         // transresUpdateTotal();
-        transresDiscountPercentUpdate();
+        //var holder = $(this).closest('.invoice-financial-fields');
+        //console.log("discountPercent updated");
+        transresDiscountPercentUpdate(this);
     });
 
     $('.invoice-paid').on('input', function(event) {
-        transresUpdateDue();
+        //var holder = $(this).closest('.invoice-financial-fields');
+        //console.log("paid updated");
+        transresUpdateDue(this);
     });
 }
 
-function transresDiscountNumericUpdate() {
-    $('.invoice-discountPercent').val(null);
-    transresUpdateTotal();
+function transresDiscountNumericUpdate(thisEl) {
+    var holder = $(thisEl).closest('.invoice-financial-fields');
+    console.log("transres DiscountNumericUpdate holder:");
+    console.log(holder);
+    holder.find('.invoice-discountPercent').val(null);
+    transresUpdateTotal(thisEl);
 }
 
-function transresDiscountPercentUpdate() {
-    $('.invoice-discountNumeric').val(null);
-    transresUpdateTotal();
+function transresDiscountPercentUpdate(thisEl) {
+    var holder = $(thisEl).closest('.invoice-financial-fields');
+    holder.find('.invoice-discountNumeric').val(null);
+    transresUpdateTotal(thisEl);
 }
 
-function transresUpdateSubTotal() { //invoiceItemTotalEl
+function transresUpdateSubTotal(thisEl) { //invoiceItemTotalEl
     //console.log("update subtotal and total");
-    //var totals = invoiceItemTotalEl.closest('.transres-invoiceItems-holder').find(".invoiceitem-total");
-    var totals = $('.transres-invoiceItems-holder').find(".invoiceitem-total");
+    //var totals = invoiceItemTotalEl.closest('.invoice-financial-fields').find(".invoiceitem-total");
+    var holder = $(thisEl).closest('.invoice-financial-fields');
+    var totals = holder.find(".invoiceitem-total");
     var subTotal = 0;
     totals.each(function() {
         var total = $(this).val();
@@ -165,15 +177,21 @@ function transresUpdateSubTotal() { //invoiceItemTotalEl
     });
     subTotal = transresRoundDecimal(subTotal);
     //console.log("subTotal="+subTotal);
-    $(".invoice-subTotal").val(subTotal);
-    transresUpdateTotal();
+    holder.find(".invoice-subTotal").val(subTotal);
+    transresUpdateTotal(thisEl);
 }
 
-function transresUpdateTotal() {
+function transresUpdateTotal(thisEl) {
+    var holder = $(thisEl).closest('.invoice-financial-fields');
+    console.log("transresUpdateTotal holder:");
+    console.log(holder);
     var discount = 0;
-    var discountNumeric = $(".invoice-discountNumeric").val();
-    var discountPercent = $(".invoice-discountPercent").val();
-    var subTotal = $(".invoice-subTotal").val();
+    var discountNumeric = holder.find(".invoice-discountNumeric").val();
+    var discountPercent = holder.find(".invoice-discountPercent").val();
+    var subTotal = holder.find(".invoice-subTotal").val();
+
+    console.log("count="+$(".invoice-discountNumeric").length);
+    console.log("transresUpdateTotal: discountNumeric="+discountNumeric+"; discountPercent="+discountPercent+"; subTotal="+subTotal);
 
     if( subTotal ) {
         if( discountNumeric ) {
@@ -187,9 +205,9 @@ function transresUpdateTotal() {
     var total = subTotal - discount;
 
     total = transresRoundDecimal(total);
-    $(".invoice-total").val(total);
+    holder.find(".invoice-total").val(total);
 
-    transresUpdateDue();
+    transresUpdateDue(thisEl);
 }
 
 function transresRoundDecimal(value) {
@@ -250,9 +268,10 @@ function transresUpdateBillTo(userId) {
 //            });
 //        }
 
-function transresUpdateDue() {
-    var total = $(".invoice-total").val();
-    var paid = $(".invoice-paid").val();
+function transresUpdateDue(thisEl) {
+    var holder = $(thisEl).closest('.invoice-financial-fields');
+    var total = holder.find(".invoice-total").val();
+    var paid = holder.find(".invoice-paid").val();
     var due = parseFloat(total);
 
     if( total && paid ) {
@@ -260,6 +279,6 @@ function transresUpdateDue() {
     }
 
     due = transresRoundDecimal(due);
-    $(".invoice-due").val(due);
+    holder.find(".invoice-due").val(due);
 }
 

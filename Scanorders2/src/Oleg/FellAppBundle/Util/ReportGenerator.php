@@ -465,36 +465,47 @@ class ReportGenerator {
 
         //1) get all upload documents
         $filePathsArr = array();
+        $fileErrors = array();
 
         //itinerarys
         $itineraryDocument = $entity->getRecentItinerary();
         if( $itineraryDocument ) {
-            $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($itineraryDocument);
+            if( $this->isValidFile($itineraryDocument,$fileErrors) ) {
+                $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($itineraryDocument);
+            }
         }
 
         //check if photo is not image
         $photo = $entity->getRecentAvatar();
         if( $photo ) {
-            $ext = pathinfo($photo->getOriginalnameClean(), PATHINFO_EXTENSION);
-            $photoUrl = null;
-            if( $ext == 'pdf' ) {
-                $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($photo);
+            if( $this->isValidFile($photo,$fileErrors) ) {
+                $ext = pathinfo($photo->getOriginalnameClean(), PATHINFO_EXTENSION);
+                $photoUrl = null;
+                if ($ext == 'pdf') {
+                    $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($photo);
+                }
             }
         }
 
         //application form
-        $filePathsArr[] = $applicationFilePath;
+        if( $this->isValidFile($applicationFilePath,$fileErrors) ) {
+            $filePathsArr[] = $applicationFilePath;
+        }
 
         //cv
         $recentDocumentCv = $entity->getRecentCv();
         if( $recentDocumentCv ) {
-            $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($recentDocumentCv);
+            if( $this->isValidFile($recentDocumentCv,$fileErrors) ) {
+                $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($recentDocumentCv);
+            }
         }
 
         //cover letter
         $recentCoverLetter = $entity->getRecentCoverLetter();
         if( $recentCoverLetter ) {
-            $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($recentCoverLetter);
+            if( $this->isValidFile($recentCoverLetter,$fileErrors) ) {
+                $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($recentCoverLetter);
+            }
         }
 
         //scores
@@ -525,6 +536,15 @@ class ReportGenerator {
         $otherDocuments = $entity->getDocuments();
         foreach( $otherDocuments as $otherDocument ) {
             $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($otherDocument);
+        }
+
+        if( count($fileErrors) > 0 ) {
+            //print_r($fileErrors);
+            $logger->notice("fileErrors=".print_r($fileErrors));
+            //exit();
+            //send email
+
+            //eventLog
         }
 
         $createFlag = true;
@@ -912,6 +932,13 @@ class ReportGenerator {
             return false;
         }
 
+        return true;
+    }
+    public function isValidFile( $filePath, $fileErrors ) {
+        $ext = pathinfo($filePath, PATHINFO_EXTENSION);
+        if( $ext != 'pdf' ) {
+            $fileErrors[] = "Error 1";
+        }
         return true;
     }
 

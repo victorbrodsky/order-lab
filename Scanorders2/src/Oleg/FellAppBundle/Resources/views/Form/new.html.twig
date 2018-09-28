@@ -26,7 +26,7 @@
     {% if cycle == "download" %}
         {% set collapsein = "in" %}
     {% else %}
-        {% if is_granted('ROLE_FELLAPP_ADMIN') || is_granted('ROLE_FELLAPP_COORDINATOR') %}
+        {% if is_granted('ROLE_FELLAPP_ADMIN') or is_granted('ROLE_FELLAPP_COORDINATOR') %}
             {% set collapsein = "" %}
         {% endif %}
     {% endif %}

@@ -645,7 +645,7 @@
 
 {% macro unpaidModal( invoice ) %}
     <!-- Modal -->
-    <div class="modal fade" id="modal_update_invoice_{{ invoice.oid }}" role="dialog">
+    <div class="modal fade" id="modal_update_invoice_{{ invoice.getCleanOid() }}" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
 
@@ -655,9 +655,9 @@
                     <h4 class="modal-title text-center">Update Invoice {{ invoice.oid }} Status</h4>
                 </div>
 
-                <div class="modal-body">
+                <div class="modal-body invoice-financial-fields">
 
-                    <div id="modal_error_{{ invoice.oid }}" class="modal_error_div"></div>
+                    <div id="modal_error_{{ invoice.getCleanOid() }}" class="modal_error_div"></div>
 
 
                     <div class="row">
@@ -665,7 +665,7 @@
 
                             {#<p>#}
                                 {#<input type="hidden" id="baseurl" value="{{app.request.host}}{{app.request.getBaseURL()}}" />#}
-                                {#<input id="invoice-paid-{{ invoice.oid }}" class="invoice-paid" name="invoice-paid" class="form-control" placeholder="Paid" type="text" required>#}
+                                {#<input id="invoice-paid-{{ invoice.getCleanOid() }}" class="invoice-paid" name="invoice-paid" class="form-control" placeholder="Paid" type="text" required>#}
                             {#</p>#}
 
                             {#{{ formmacros.simplefield( "Paid ($):", invoice.paid, "", "disabled" ) }}#}
@@ -676,7 +676,7 @@
                                     <strong>Current Status:</strong>
                                 </div>
                                 <div class="col-xs-6" align="left">
-                                    <input class="form-control invoice-status-{{ invoice.oid }}" type="text" value="{{ invoice.status }}" disabled>
+                                    <input class="form-control invoice-status-{{ invoice.getCleanOid() }}" type="text" value="{{ invoice.status }}" disabled>
                                 </div>
                             </div>
                             </p>
@@ -688,8 +688,8 @@
                                 </div>
                                 <div class="col-xs-6" align="left">
                                     <input
-                                            class="form-control invoice-subTotal invoice-subtotal-{{ invoice.oid }}"
-                                            type="text" value="{{ invoice.subTotal }}" disabled>
+                                            class="form-control invoice-subTotal invoice-subtotal-{{ invoice.getCleanOid() }}"
+                                            type="text" value="{{ invoice.subTotal }}" readonly>
                                 </div>
                             </div>
                             </p>
@@ -702,10 +702,10 @@
                                     </div>
                                     <div class="col-xs-6" align="left">
                                         <input
-                                                id="invoice-discountNumeric-{{ invoice.oid }}"
+                                                id="invoice-discountNumeric-{{ invoice.getCleanOid() }}"
                                                 class="form-control invoice-discountNumeric"
                                                 type="text"
-                                                oninput="transresDiscountNumericUpdate();"
+                                                oninput="transresDiscountNumericUpdate(this);"
                                                 value="{{ invoice.discountNumeric }}">
                                     </div>
                                 </div>
@@ -720,10 +720,10 @@
                                     </div>
                                     <div class="col-xs-6" align="left">
                                         <input
-                                                id="invoice-discountPercent-{{ invoice.oid }}"
+                                                id="invoice-discountPercent-{{ invoice.getCleanOid() }}"
                                                 class="form-control invoice-discountPercent"
                                                 type="text"
-                                                oninput="transresDiscountPercentUpdate();"
+                                                oninput="transresDiscountPercentUpdate(this);"
                                                 value="{{ invoice.discountPercent }}">
                                     </div>
                                 </div>
@@ -736,9 +736,9 @@
                                     <strong>Total ($):</strong>
                                 </div>
                                 <div class="col-xs-6" align="left">
-                                    <input id="invoice-total-{{ invoice.oid }}"
+                                    <input id="invoice-total-{{ invoice.getCleanOid() }}"
                                            class="form-control invoice-total"
-                                           type="text" value="{{ invoice.total }}" disabled>
+                                           type="text" value="{{ invoice.total }}" readonly>
                                 </div>
                             </div>
                             </p>
@@ -750,10 +750,10 @@
                                     </div>
                                     <div class="col-xs-6" align="left">
                                         <input
-                                            id="invoice-paid-{{ invoice.oid }}"
+                                            id="invoice-paid-{{ invoice.getCleanOid() }}"
                                             class="form-control invoice-paid"
                                             type="text"
-                                            oninput="transresUpdateDue();"
+                                            oninput="transresUpdateDue(this);"
                                             value="{{ invoice.paid }}">
                                     </div>
                                 </div>
@@ -766,10 +766,10 @@
                                     </div>
                                     <div class="col-xs-6" align="left">
                                         <input
-                                                id="invoice-due-{{ invoice.oid }}"
+                                                id="invoice-due-{{ invoice.getCleanOid() }}"
                                                 class="form-control invoice-due"
                                                 type="text"
-                                                value="{{ invoice.due }}" disabled>
+                                                value="{{ invoice.due }}">
                                     </div>
                                 </div>
                             </p>
@@ -781,13 +781,13 @@
                                 </div>
                                 <div class="col-xs-6" align="left">
                                     {#<textarea#}
-                                            {#id="invoice-comment-{{ invoice.oid }}"#}
+                                            {#id="invoice-comment-{{ invoice.getCleanOid() }}"#}
                                             {#class="textarea form-control invoice-comment"#}
                                             {#type="text"#}
                                             {#value="{{ invoice.comment }}" required>#}
 
                                      <textarea
-                                        id="invoice-comment-{{ invoice.oid }}"
+                                        id="invoice-comment-{{ invoice.getCleanOid() }}"
                                         class="textarea form-control invoice-comment">{{ invoice.comment }}</textarea>
                                 </div>
                             </div>

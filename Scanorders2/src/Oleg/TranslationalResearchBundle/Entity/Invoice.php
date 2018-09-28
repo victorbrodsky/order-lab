@@ -892,4 +892,11 @@ class Invoice {
         return number_format((float)$number, 2, '.', '');
     }
 
+    public function getCleanOid() {
+        $oid = $this->getOid();
+        $oid = str_replace(" ","-",$oid);
+        $oid = str_replace("(","-",$oid);
+        $oid = str_replace(")","-",$oid);
+        return $oid;
+    }
 }

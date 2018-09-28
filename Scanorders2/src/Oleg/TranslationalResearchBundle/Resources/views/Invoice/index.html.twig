@@ -287,23 +287,11 @@
     {% endjavascripts %}
 
 
-    {#<script type="text/javascript">#}
-
-        {#$(document).ready(function() {#}
-
-            {#//console.log("cycle="+cycle);#}
-            {#if( cycle == "new" ) {#}
-                {#transresUpdateSubTotal();#}
-                {#//transresUpdateDue();#}
-            {#}#}
-
-            {#transresInvoiceItemListeneres();#}
-
-            {#transresInvoicePiListeneres();#}
-
-            {#//transresInvoiceBtnOnClick();#}
-
-        {#});#}
-    {#</script>#}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            //console.log("cycle="+cycle);
+            transresInvoiceItemListeneres();
+        });
+    </script>
 
 {% endblock %}
