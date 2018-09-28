@@ -23,7 +23,9 @@
 
 {% block content %}
 
-    {% set collapsein = "" %}
+    {% if is_granted('ROLE_FELLAPP_COORDINATOR') or is_granted('ROLE_FELLAPP_DIRECTOR') %}
+        {% set collapsein = "" %}
+    {% endif %}
 
     {% include 'OlegFellAppBundle:Form:applicant-content.html.twig' %}
 
