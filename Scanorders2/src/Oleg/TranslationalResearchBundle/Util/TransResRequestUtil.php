@@ -2142,8 +2142,7 @@ class TransResRequestUtil
 
         return $transresRequest;
     }
-
-    //TODO: clarify is the status: how to update the status if it is "Unpaid/Issued"?
+    
     public function updateInvoiceStatus($invoice) {
         $paid = $invoice->getPaid();
 

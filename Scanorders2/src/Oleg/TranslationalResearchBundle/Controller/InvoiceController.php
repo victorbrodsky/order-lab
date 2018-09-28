@@ -807,10 +807,14 @@ class InvoiceController extends Controller
         //Get $transresRequest (Assume invoice has a single $transresRequest)
         $transresRequest = $invoice->getTransresRequest();
 
-        $originalInvoiceStatus = $invoice->getStatus();
+
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $cycle = "edit";
+
+        $originalInvoiceStatus = $invoice->getStatus();
+        $originalPaid = $invoice->getPaid();
+        $originalDue = $invoice->getDue();
 
         //$deleteForm = $this->createDeleteForm($invoice);
 
@@ -830,6 +834,31 @@ class InvoiceController extends Controller
             $transresRequestUtil->updateRequestCompletedFieldsByInvoice($invoice);
 
             $transresRequestUtil->updateInvoiceStatus($invoice);
+            
+            //Set Paid to Total and Due to 0 if values is unchanged
+            //Please fix the display of “paid” and “due” amounts:
+            // Once the invoice is marked as “paid in full” via any method,
+            // the “paid” field/column should be set to the amount
+            // that used to be “due” and the “due” amount should be set to zero.
+            //paid is set to 'total' instead of 'due', because due might be updated incrementally by multiple partial payment until it reaches the 'total'
+            if( $originalInvoiceStatus != $invoice->getStatus() ) {
+                if ($invoice->getStatus() == "Paid in Full") {
+                    echo "Status modified<br>";
+                    if ($invoice->getPaid() != $originalPaid) {
+                        //don't update if changed
+                    } else {
+                        echo "update Paid<br>";
+                        $invoice->setPaid($invoice->getTotal());
+                    }
+                    if ($invoice->getDue() != $originalDue) {
+                        //don't update if changed
+                    } else {
+                        echo "update Due<br>";
+                        $invoice->setDue(NULL);
+                    }
+                }
+            }
+            //exit("status=".$invoice->getStatus());
 
             $em->flush();
 

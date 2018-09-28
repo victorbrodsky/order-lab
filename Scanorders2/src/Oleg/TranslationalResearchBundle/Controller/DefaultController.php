@@ -345,4 +345,36 @@ class DefaultController extends Controller
         exit("End of update project's implicit dates: ".$i);
     }
 
+    /**
+     * http://127.0.0.1/order/translational-research/update-invoice-paid-due
+     *
+     * @Route("/update-invoice-paid-due", name="translationalresearch_update_invoice_paid_due")
+     */
+    public function updateInvoicePaidDueAction( Request $request ) {
+        if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
+            return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $invoices = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findByStatus('Paid in Full');
+
+        $i = 1;
+
+        foreach($invoices as $invoice) {
+            if ($invoice->getStatus() == "Paid in Full") {
+                if( !$invoice->getDue() ) {
+                    echo $i.": Original: total=".$invoice->getTotal()."; paid=".$invoice->getPaid()."; due=".$invoice->getDue()."<br>";
+                    $invoice->setPaid($invoice->getTotal());
+                    $invoice->setDue(NULL);
+                    //$em->flush($invoice);
+                    echo $i.": Updated: total=".$invoice->getTotal()."; paid=".$invoice->getPaid()."; due=".$invoice->getDue()."<br><br>";
+                    $i++;
+                }
+            }
+        }
+
+        exit("End of update project's implicit dates: ".$i);
+    }
+
+
 }
