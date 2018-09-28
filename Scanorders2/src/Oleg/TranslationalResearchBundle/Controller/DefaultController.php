@@ -317,7 +317,7 @@ class DefaultController extends Controller
         }
 
         $count = $this->updateInvoicePaidDue($request);
-        exit("End of update project's implicit dates: ".$count);
+        exit("End of update invoice's paid and due: ".$count);
 
         $em = $this->getDoctrine()->getManager();
         $projects = $em->getRepository('OlegTranslationalResearchBundle:Project')->findAll();
@@ -360,6 +360,7 @@ class DefaultController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $invoices = $em->getRepository('OlegTranslationalResearchBundle:Invoice')->findByStatus('Paid in Full');
+        echo "Found invoices=".count($invoices)."<br>";
 
         $i = 1;
 
