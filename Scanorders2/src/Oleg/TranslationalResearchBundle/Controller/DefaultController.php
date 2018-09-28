@@ -316,6 +316,9 @@ class DefaultController extends Controller
             return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
         }
 
+        $count = $this->updateInvoicePaidDue($request);
+        exit("End of update project's implicit dates: ".$count);
+
         $em = $this->getDoctrine()->getManager();
         $projects = $em->getRepository('OlegTranslationalResearchBundle:Project')->findAll();
 
@@ -345,12 +348,12 @@ class DefaultController extends Controller
         exit("End of update project's implicit dates: ".$i);
     }
 
-    /**
-     * http://127.0.0.1/order/translational-research/update-invoice-paid-due
-     *
-     * @Route("/update-invoice-paid-due", name="translationalresearch_update_invoice_paid_due")
-     */
-    public function updateInvoicePaidDueAction( Request $request ) {
+//    /**
+//     * http://127.0.0.1/order/translational-research/update-invoice-paid-due
+//     *
+//     * @Route("/update-invoice-paid-due", name="translationalresearch_update_invoice_paid_due")
+//     */
+    public function updateInvoicePaidDue( Request $request ) {
         if( false === $this->get('security.authorization_checker')->isGranted('ROLE_PLATFORM_DEPUTY_ADMIN') ) {
             return $this->redirect( $this->generateUrl($this->container->getParameter('employees.sitename').'-order-nopermission') );
         }
@@ -373,7 +376,8 @@ class DefaultController extends Controller
             }
         }
 
-        exit("End of update project's implicit dates: ".$i);
+        //exit("End of update project's implicit dates: ".$i);
+        return $i;
     }
 
 
