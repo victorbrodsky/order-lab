@@ -569,10 +569,10 @@ class ReportGenerator {
             //Body: The fellowship application system was unable to generate the complete application PDF file
             // for applicant [XXX] to [FellowshipSpecialty], FirstName LastName at HH:MM on MM/DD/YYYY.
             $errorMsg = "The fellowship application system was unable to properly generate the complete application PDF file".
-                        " for application $fellappInfo. <br>Corrupted PDF file(s):<br>";
+                        " for application $fellappInfo. <br><br>Corrupted PDF file(s):<br>";
             $errorMsg = $errorMsg . implode("<br>",$fileErrors);
 
-            $errorMsg = $errorMsg . "<br><br>" . "Please replace the corrupted file for this applicant.";
+            $errorMsg = $errorMsg . "<br><br>" . "Please replace the corrupted file(s) for this applicant.";
             $logger->error($errorMsg);
             $userSecUtil->sendEmailToSystemEmail($errorEmailSubject,$errorMsg,$toEmailsArr);
             $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$errorMsg,$systemUser,null,null,'Corrupted File');
@@ -971,7 +971,7 @@ class ReportGenerator {
         $ext = pathinfo($filePath, PATHINFO_EXTENSION);
         if( $ext == 'pdf' ) {
             if( $this->isPdfCorrupted($filePath) ) {
-                $fileErrors[] = $fileType . ": " . $filePath;
+                $fileErrors[] = $fileType . " (" . $file->getDescriptiveFilename() . "): " . $filePath;
                 return false;
             }
         }
