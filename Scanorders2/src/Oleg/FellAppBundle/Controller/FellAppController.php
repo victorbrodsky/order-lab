@@ -506,7 +506,7 @@ class FellAppController extends Controller {
         if( !$entity ) {
             throw $this->createNotFoundException('Unable to find Fellowship Application by id='.$id);
         }
-
+        
         //user who has the same fell type can view or edit
         //can use hasFellappPermission or isGranted("read",$entity). isGranted("read",$entity) fellapp voter contains hasFellappPermission
         //$fellappUtil = $this->container->get('fellapp_util');

@@ -470,7 +470,7 @@ class ReportGenerator {
         //itinerarys
         $itineraryDocument = $entity->getRecentItinerary();
         if( $itineraryDocument ) {
-            if( $this->isValidFile($itineraryDocument,$fileErrors) ) {
+            if( $this->isValidFile($itineraryDocument,$fileErrors,"Itenirary") ) {
                 $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($itineraryDocument);
             }
         }
@@ -478,7 +478,7 @@ class ReportGenerator {
         //check if photo is not image
         $photo = $entity->getRecentAvatar();
         if( $photo ) {
-            if( $this->isValidFile($photo,$fileErrors) ) {
+            if( $this->isValidFile($photo,$fileErrors,"Photo") ) {
                 $ext = pathinfo($photo->getOriginalnameClean(), PATHINFO_EXTENSION);
                 $photoUrl = null;
                 if ($ext == 'pdf') {
@@ -488,14 +488,14 @@ class ReportGenerator {
         }
 
         //application form
-        if( $this->isValidFile($applicationFilePath,$fileErrors) ) {
+        if( $applicationFilePath ) {
             $filePathsArr[] = $applicationFilePath;
         }
 
         //cv
         $recentDocumentCv = $entity->getRecentCv();
         if( $recentDocumentCv ) {
-            if( $this->isValidFile($recentDocumentCv,$fileErrors) ) {
+            if( $this->isValidFile($recentDocumentCv,$fileErrors,"CV") ) {
                 $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($recentDocumentCv);
             }
         }
@@ -503,7 +503,7 @@ class ReportGenerator {
         //cover letter
         $recentCoverLetter = $entity->getRecentCoverLetter();
         if( $recentCoverLetter ) {
-            if( $this->isValidFile($recentCoverLetter,$fileErrors) ) {
+            if( $this->isValidFile($recentCoverLetter,$fileErrors,"Cover Letter") ) {
                 $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($recentCoverLetter);
             }
         }
@@ -511,40 +511,71 @@ class ReportGenerator {
         //scores
         $scores = $entity->getExaminationScores();
         foreach( $scores as $score ) {
-            $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($score);
+            if( $this->isValidFile($score,$fileErrors,"Score") ) {
+                $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($score);
+            }
         }
 
         //Reprimand
         $reprimand = $entity->getRecentReprimand();
         if( $reprimand ) {
-            $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($reprimand);
+            if( $this->isValidFile($reprimand,$fileErrors,"Reprimand") ) {
+                $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($reprimand);
+            }
         }
 
         //Legal Explanation
         $legalExplanation = $entity->getRecentLegalExplanation();
         if( $legalExplanation ) {
-            $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($legalExplanation);
+            if( $this->isValidFile($legalExplanation,$fileErrors,"Legal Explanation") ) {
+                $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($legalExplanation);
+            }
         }
 
         //references
         $references = $entity->getReferenceLetters();
         foreach( $references as $reference ) {
-            $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($reference);
+            if( $this->isValidFile($reference,$fileErrors,"Reference Letter") ) {
+                $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($reference);
+            }
         }
 
         //other documents
         $otherDocuments = $entity->getDocuments();
         foreach( $otherDocuments as $otherDocument ) {
-            $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($otherDocument);
+            if( $this->isValidFile($otherDocument,$fileErrors,"Other Document") ) {
+                $filePathsArr[] = $userSecUtil->getAbsoluteServerFilePath($otherDocument);
+            }
         }
 
+        //Send a single warning email to admin
         if( count($fileErrors) > 0 ) {
             //print_r($fileErrors);
             $logger->notice("fileErrors=".print_r($fileErrors));
             //exit();
-            //send email
 
-            //eventLog
+            //fellapp admin
+            $confirmationEmailFellApp = $userSecUtil->getSiteSettingParameter('confirmationEmailFellApp');
+            $toEmailsArr = array($confirmationEmailFellApp);
+
+            ////////// Potential error subject //////////////
+            //Subject: PDF not properly generated for Applicant [XXX]
+            $fellappInfo = $entity->getInfo();
+            $hostname = "(" . $userSecUtil->getSiteSettingParameter('environment') . " server)";
+            $errorEmailSubject = "PDF not properly generated for application $fellappInfo $hostname";
+            //$logger->notice("errorEmailSubject=".$errorEmailSubject);
+            ////////// EOF Potential error subject //////////////
+
+            //Body: The fellowship application system was unable to generate the complete application PDF file
+            // for applicant [XXX] to [FellowshipSpecialty], FirstName LastName at HH:MM on MM/DD/YYYY.
+            $errorMsg = "The fellowship application system was unable to properly generate the complete application PDF file".
+                        " for application $fellappInfo. <br>Corrupted PDF file(s):<br>";
+            $errorMsg = $errorMsg . implode("<br>",$fileErrors);
+
+            $errorMsg = $errorMsg . "<br><br>" . "Please replace the corrupted file for this applicant.";
+            $logger->error($errorMsg);
+            $userSecUtil->sendEmailToSystemEmail($errorEmailSubject,$errorMsg,$toEmailsArr);
+            $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$errorMsg,$systemUser,null,null,'Corrupted File');
         }
 
         $createFlag = true;
@@ -934,10 +965,15 @@ class ReportGenerator {
 
         return true;
     }
-    public function isValidFile( $filePath, &$fileErrors ) {
+    public function isValidFile( $file, &$fileErrors, $fileType ) {
+        $userSecUtil = $this->container->get('user_security_utility');
+        $filePath = $userSecUtil->getAbsoluteServerFilePath($file);
         $ext = pathinfo($filePath, PATHINFO_EXTENSION);
-        if( $ext != 'pdf' ) {
-            $fileErrors[] = "Error 1";
+        if( $ext == 'pdf' ) {
+            if( $this->isPdfCorrupted($filePath) ) {
+                $fileErrors[] = $fileType . ": " . $filePath;
+                return false;
+            }
         }
         return true;
     }
