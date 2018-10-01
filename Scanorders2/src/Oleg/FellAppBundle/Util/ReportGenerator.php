@@ -971,7 +971,7 @@ class ReportGenerator {
         $ext = pathinfo($filePath, PATHINFO_EXTENSION);
         if( $ext == 'pdf' ) {
             if( $this->isPdfCorrupted($filePath) ) {
-                $fileErrors[] = $fileType . " (" . $file->getDescriptiveFilename() . "): " . $filePath;
+                $fileErrors[] = "<b>".$fileType . "</b>" . " (" . $file->getDescriptiveFilename() . "): " . $filePath;
                 return false;
             }
         }
