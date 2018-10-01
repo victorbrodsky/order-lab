@@ -598,4 +598,20 @@ class Document {
         return $filename;
     }
 
+    public function getDescriptiveFilename()
+    {
+        if( $this->getTitle() ) {
+            return $this->getTitle();
+        }
+        if( $this->getOriginalname() ) {
+            return $this->getOriginalname();
+        }
+        if( $this->getUniqueid() ) {
+            return $this->getUniqueid();
+        }
+        if( $this->getUniquename() ) {
+            return $this->getUniquename();
+        }
+        return $this->getFullDescriptionStr();
+    }
 }

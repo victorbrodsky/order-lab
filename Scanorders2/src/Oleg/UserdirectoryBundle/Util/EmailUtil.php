@@ -37,12 +37,13 @@ class EmailUtil {
 
     //php bin/console swiftmailer:spool:send --env=prod
     //$emails: single, comma separated emails, or array of emails
-    //$ccs: single, comma separated emails, or array of emails
+    //$ccs: single, comma separated emails, or array of emails (optional)
     //$subject: string
     //$body: html email text
-    //$attachmentPath: absolute path to the attachment file
-    //$fromEmail: site's email or system email will be used if null
-    public function sendEmail( $emails, $subject, $body, $ccs=null, $fromEmail=null, $attachmentPath=null ) {
+    //$attachmentPath: absolute path to the attachment file (optional)
+    //$attachmentFilename: attachment file name (optional)
+    //$fromEmail: site's email or system email will be used if null (optional)
+    public function sendEmail( $emails, $subject, $body, $ccs=null, $fromEmail=null, $attachmentPath=null, $attachmentFilename=null ) {
 
         //testing
         //$emails = "oli2002@med.cornell.edu, cinava@yahoo.com";
@@ -209,7 +210,11 @@ class EmailUtil {
 
         // Optionally add any attachments
         if( $attachmentPath ) {
-            $message->attach(\Swift_Attachment::fromPath($attachmentPath));
+            $attachment = \Swift_Attachment::fromPath($attachmentPath);
+            if( $attachmentFilename ) {
+                $attachment->setFilename($attachmentFilename);
+            }
+            $message->attach($attachment);
         }
 
         $ccStr = "";

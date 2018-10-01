@@ -303,9 +303,11 @@ class FellAppApplicantController extends Controller {
         }
 
         $attachmentPath = null;
+        $attachmentFilename = null;
         $recentReport = $fellapp->getTheMostRecentReport();
         if( $recentReport ) {
             $attachmentPath = $recentReport->getAbsoluteUploadFullPath();
+            $attachmentFilename = $recentReport->getDescriptiveFilename();
         } else {
             $logger->error("send InvitationEmail: no recent report found for fellapp ID".$fellapp->getId());
         }
@@ -356,7 +358,15 @@ class FellAppApplicantController extends Controller {
         $interviewDateStr = $interview->getInterviewDateStr();
 
         $cc = null; //"oli2002@med.cornell.edu";
-        $emailUtil->sendEmail( $email, "Fellowship Candidate (".$applicant->getUsernameOptimal().$interviewDateStr.") Interview Application and Evaluation Form", $text, $cc, $senderEmail, $attachmentPath );
+        $emailUtil->sendEmail(
+            $email,
+            "Fellowship Candidate (".$applicant->getUsernameOptimal().$interviewDateStr.") Interview Application and Evaluation Form",
+            $text,
+            $cc,
+            $senderEmail,
+            $attachmentPath,
+            $attachmentFilename
+        );
 
         $logger->notice("send InvitationEmail: Email has been sent to " . $email . $interviewDateStr);
 
@@ -418,13 +428,23 @@ class FellAppApplicantController extends Controller {
         }
 
         $attachmentPath = null;
+        $attachmentFilename = null;
         $recentReport = $fellapp->getTheMostRecentReport();
         if( $recentReport ) {
             $attachmentPath = $recentReport->getAbsoluteUploadFullPath();
+            $attachmentFilename = $recentReport->getDescriptiveFilename();
         }
 
         $applicant = $fellapp->getUser();
-        $emailUtil->sendEmail( $coordinatorEmails, "Fellowship Candidate (ID# ".$fellapp->getId()." ".$applicant->getUsernameOptimal().$interviewDateStr.") Interview Application and Evaluation Form", $event, null, $senderEmail, $attachmentPath );
+        $emailUtil->sendEmail(
+            $coordinatorEmails,
+            "Fellowship Candidate (ID# ".$fellapp->getId()." ".$applicant->getUsernameOptimal().$interviewDateStr.") Interview Application and Evaluation Form",
+            $event,
+            null,
+            $senderEmail,
+            $attachmentPath,
+            $attachmentFilename
+        );
 
         $logger->notice("send ConfirmationEmail: "."Fellowship Candidate (ID# ".$fellapp->getId()." ".$applicant->getUsernameOptimal().$interviewDateStr.": Send confirmation email from " . $senderEmail . " to coordinators:".implode(", ",$coordinatorEmails));
     }
@@ -497,12 +517,22 @@ class FellAppApplicantController extends Controller {
             $text .= "If you have any additional questions, please don't hesitate to email " . $senderEmail . $break.$break;
 
             $attachmentPath = null;
+            $attachmentFilename = null;
             $recentReport = $entity->getTheMostRecentReport();
             if( $recentReport ) {
                 $attachmentPath = $recentReport->getAbsoluteUploadFullPath();
+                $attachmentFilename = $recentReport->getDescriptiveFilename();
             }
 
-            $emailUtil->sendEmail( $email, "Fellowship Candidate (".$applicant->getUsernameOptimal().") Application", $text, null, $senderEmail, $attachmentPath );
+            $emailUtil->sendEmail(
+                $email,
+                "Fellowship Candidate (".$applicant->getUsernameOptimal().") Application",
+                $text,
+                null,
+                $senderEmail,
+                $attachmentPath,
+                $attachmentFilename
+            );
 
             $logger->notice("inviteObserversToRateAction: Send observer invitation email from " . $senderEmail . " to :".$email);
         }

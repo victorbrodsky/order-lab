@@ -541,7 +541,7 @@ class ReportGenerator {
         if( count($fileErrors) > 0 ) {
             //print_r($fileErrors);
             $logger->notice("fileErrors=".print_r($fileErrors));
-            //exit();
+            exit();
             //send email
 
             //eventLog
@@ -934,7 +934,7 @@ class ReportGenerator {
 
         return true;
     }
-    public function isValidFile( $filePath, $fileErrors ) {
+    public function isValidFile( $filePath, &$fileErrors ) {
         $ext = pathinfo($filePath, PATHINFO_EXTENSION);
         if( $ext != 'pdf' ) {
             $fileErrors[] = "Error 1";
