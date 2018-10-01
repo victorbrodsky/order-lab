@@ -459,7 +459,7 @@ class ReportGenerator {
         //echo "before generateApplicationPdf id=".$id."; outdir=".$outdir."<br>";
         //0) generate application pdf
         $applicationFilePath = $outdir . "application_ID" . $id . ".pdf";
-        $logger->notice("applicationFilePath=".$applicationFilePath);
+        //$logger->notice("applicationFilePath=".$applicationFilePath);
         $this->generateApplicationPdf($id,$applicationFilePath);
         //$logger->notice("Successfully Generated Application PDF from HTML for ID=".$id."; file=".$applicationFilePath);
 
@@ -551,7 +551,7 @@ class ReportGenerator {
         //Send a single warning email to admin
         if( count($fileErrors) > 0 ) {
             //print_r($fileErrors);
-            $logger->notice("fileErrors=".print_r($fileErrors));
+            //$logger->notice("fileErrors=".print_r($fileErrors));
             //exit();
 
             //fellapp admin
@@ -569,11 +569,11 @@ class ReportGenerator {
             //Body: The fellowship application system was unable to generate the complete application PDF file
             // for applicant [XXX] to [FellowshipSpecialty], FirstName LastName at HH:MM on MM/DD/YYYY.
             $errorMsg = "The fellowship application system was unable to properly generate the complete application PDF file".
-                        " for application $fellappInfo. <br><br>Corrupted PDF file(s):<br>";
-            $errorMsg = $errorMsg . implode("<br>",$fileErrors);
+                        " for application $fellappInfo. <br><br>Corrupted PDF file(s):<br><br>";
+            $errorMsg = $errorMsg . implode("<br><br>",$fileErrors);
 
             $errorMsg = $errorMsg . "<br><br>" . "Please replace the corrupted file(s) for this applicant.";
-            $logger->error($errorMsg);
+            //$logger->error($errorMsg);
             $userSecUtil->sendEmailToSystemEmail($errorEmailSubject,$errorMsg,$toEmailsArr);
             $userSecUtil->createUserEditEvent($this->container->getParameter('fellapp.sitename'),$errorMsg,$systemUser,null,null,'Corrupted File');
         }
