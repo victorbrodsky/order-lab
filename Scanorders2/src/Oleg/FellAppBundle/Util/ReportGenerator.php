@@ -550,10 +550,6 @@ class ReportGenerator {
 
         //Send a single warning email to admin
         if( count($fileErrors) > 0 ) {
-            //print_r($fileErrors);
-            //$logger->notice("fileErrors=".print_r($fileErrors));
-            //exit();
-
             //fellapp admin
             $confirmationEmailFellApp = $userSecUtil->getSiteSettingParameter('confirmationEmailFellApp');
             $toEmailsArr = array($confirmationEmailFellApp);
@@ -562,14 +558,14 @@ class ReportGenerator {
             //Subject: PDF not properly generated for Applicant [XXX]
             $fellappInfo = $entity->getInfo();
             $hostname = "(" . $userSecUtil->getSiteSettingParameter('environment') . " server)";
-            $errorEmailSubject = "PDF not properly generated for application $fellappInfo $hostname";
+            $errorEmailSubject = "PDF not properly generated for application ID $fellappInfo $hostname";
             //$logger->notice("errorEmailSubject=".$errorEmailSubject);
             ////////// EOF Potential error subject //////////////
 
             //Body: The fellowship application system was unable to generate the complete application PDF file
             // for applicant [XXX] to [FellowshipSpecialty], FirstName LastName at HH:MM on MM/DD/YYYY.
             $errorMsg = "The fellowship application system was unable to properly generate the complete application PDF file".
-                        " for application $fellappInfo. <br><br>Corrupted PDF file(s):<br><br>";
+                        " for application ID $fellappInfo. <br><br>Corrupted PDF file(s):<br><br>";
             $errorMsg = $errorMsg . implode("<br><br>",$fileErrors);
 
             //To address this issue, please follow these steps:
