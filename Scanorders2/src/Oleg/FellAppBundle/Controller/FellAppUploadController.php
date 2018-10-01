@@ -61,11 +61,11 @@ class FellAppUploadController extends UploadController {
         }
 
         //// quick fix for non-existing http://c.med.cornell.edu/order/fellowship-applications/file-download/7281
-        $userSecUtil = $this->container->get('user_security_utility');
-        $environment = $userSecUtil->getSiteSettingParameter('environment');
-        if( $id == 7281 && $environment == "live" ) {
-            $id = 7327;
-        }
+//        $userSecUtil = $this->container->get('user_security_utility');
+//        $environment = $userSecUtil->getSiteSettingParameter('environment');
+//        if( $id == 7281 && $environment == "live" ) {
+//            $id = 7327;
+//        }
         /////// EOF ///////
 
         return $this->downloadFileMethod($request,$id,$this->container->getParameter('fellapp.sitename'),$eventtype);

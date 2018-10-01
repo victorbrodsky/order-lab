@@ -972,22 +972,23 @@ class ReportGenerator {
         $ext = pathinfo($filePath, PATHINFO_EXTENSION);
         if( $ext == 'pdf' ) {
             if( $this->isPdfCorrupted($filePath) ) {
-                $error = "<b>".$fileType . "</b>" . " (" . $file->getDescriptiveFilename() . ")";
+                $error = "<b>".$fileType . "</b>" . " with the original filename " . "<b>" . $file->getDescriptiveFilename() . "</b>".".";
 
                 //The uploaded file that appears to have caused this issue is located here:
                 $error = $error . "<br>" . "The location of the corrupted file " . $filePath;
 
-                //and can also be viewed by following this link:
-                $router = $this->container->get('router');
-                $fileLink = $router->generate(
-                    'fellapp_file_download',
-                    array(
-                        'id' => $file->getId()
-                    ),
-                    UrlGeneratorInterface::ABSOLUTE_URL
-                );
-                $fileLink = '<a href="'.$fileLink.'">'.$fileLink.'</a>';
-                $error = $error . " and can also be viewed by following this link: " . $fileLink;
+                if(0) {
+                    //and can also be viewed by following this link:
+                    $fileLink = $this->container->get('router')->generate(
+                        'fellapp_file_download',
+                        array(
+                            'id' => $file->getId()
+                        ),
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    );
+                    $fileLink = '<a href="' . $fileLink . '">' . $fileLink . '</a>';
+                    $error = $error . " and can also be viewed by following this link: " . $fileLink;
+                }
 
                 $fileErrors[] = $error;
 
