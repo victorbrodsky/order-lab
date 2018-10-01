@@ -978,7 +978,8 @@ class ReportGenerator {
                 $error = $error . "<br>" . "The location of the corrupted file " . $filePath;
 
                 //and can also be viewed by following this link:
-                $fileLink = $this->generateUrl(
+                $router = $this->container->get('router');
+                $fileLink = $router->generate(
                     'fellapp_file_download',
                     array(
                         'id' => $file->getId()
