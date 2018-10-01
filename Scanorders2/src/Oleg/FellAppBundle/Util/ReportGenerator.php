@@ -572,6 +572,7 @@ class ReportGenerator {
                         " for application $fellappInfo. <br><br>Corrupted PDF file(s):<br><br>";
             $errorMsg = $errorMsg . implode("<br><br>",$fileErrors);
 
+            //To address this issue, please follow these steps:
             $errorMsg = $errorMsg . "<br><br>" . "Please replace the corrupted file(s) for this applicant.";
             //$logger->error($errorMsg);
             $userSecUtil->sendEmailToSystemEmail($errorEmailSubject,$errorMsg,$toEmailsArr);
@@ -971,7 +972,24 @@ class ReportGenerator {
         $ext = pathinfo($filePath, PATHINFO_EXTENSION);
         if( $ext == 'pdf' ) {
             if( $this->isPdfCorrupted($filePath) ) {
-                $fileErrors[] = "<b>".$fileType . "</b>" . " (" . $file->getDescriptiveFilename() . "): " . $filePath;
+                $error = "<b>".$fileType . "</b>" . " (" . $file->getDescriptiveFilename() . ")";
+
+                //The uploaded file that appears to have caused this issue is located here:
+                $error = $error . "<br>" . "The location of the corrupted file " . $filePath;
+
+                //and can also be viewed by following this link:
+                $fileLink = $this->generateUrl(
+                    'fellapp_file_download',
+                    array(
+                        'id' => $file->getId()
+                    ),
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+                $fileLink = '<a href="'.$fileLink.'">'.$fileLink.'</a>';
+                $error = $error . " and can also be viewed by following this link: " . $fileLink;
+
+                $fileErrors[] = $error;
+
                 return false;
             }
         }
