@@ -803,8 +803,12 @@
                         {#>Update Invoice 'Paid' value and Status to 'Paid Partially'</button>#}
                     {#</div>#}
 
+                    <p>
+                        <div id="modal-invoice-error-{{ invoice.getCleanOid() }}" class="alert alert-danger" style="display: none;"></div>
+                    </p>
+
                     {% set statuses = transres_request_util.getInvoiceStatuses() %}
-                    <div class="center-block updateInvoiceBtnHolder">
+                    <div id="updateInvoiceBtnHolder-{{ invoice.getCleanOid() }}" class="center-block updateInvoiceBtnHolder">
                     {% for status in statuses %}
                         {% set btnType = "primary" %}
                         {% if status == "Paid in Full" %}

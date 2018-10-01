@@ -41,26 +41,102 @@
 // }
 
 function transresUpdateInvoiceStatus(invoiceOid,status) {
-    console.log("transresUpdateInvoice: invoiceOid="+invoiceOid);
+    //console.log("transresUpdateInvoice: invoiceOid="+invoiceOid);
+
+    $("#modal-invoice-error-"+invoiceOid).hide();
+    $("#modal-invoice-error-"+invoiceOid).html(null);
 
     //remove all buttons
-    $(".updateInvoiceBtn").remove();
+    //$(".updateInvoiceBtn").hide();
     //insert new text to the updateInvoiceBtnHolder
-    $(".updateInvoiceBtnHolder").html("Please wait ...");
+    //$("#updateInvoiceBtnHolder-"+invoiceOid).html("Please wait ...");
+    $("#updateInvoiceBtnHolder-"+invoiceOid).hide();
 
     //var form = $("#change_invoice_form_"+invoiceOid);
     //var paid = form.find("#invoice-paid").val();
 
     var paid = $("#invoice-paid-"+invoiceOid).val();
-    console.log("paid="+paid);
+    //console.log("paid="+paid);
 
     var comment = $("#invoice-comment-"+invoiceOid).val();
-    console.log("comment="+comment);
+    //console.log("comment="+comment);
 
     var discountNumeric = $("#invoice-discountNumeric-"+invoiceOid).val();
     var discountPercent = $("#invoice-discountPercent-"+invoiceOid).val();
     var total = $("#invoice-total-"+invoiceOid).val();
     var due = $("#invoice-due-"+invoiceOid).val();
+
+    //console.log("status="+status);
+
+    if( status == "Paid Partially" ) {
+
+        //If “paid partially” is pressed but no amount is typed into the “paid” field,
+        // a red error well should be displayed stating “Please enter the partial amount into the “paid” field.”
+        if( !paid ) {
+            var error = "Please enter the partial amount into the 'Paid' field.";
+            $("#modal-invoice-error-"+invoiceOid).show();
+            $("#modal-invoice-error-"+invoiceOid).html(error);
+            $("#updateInvoiceBtnHolder-"+invoiceOid).show();
+            return false;
+        }
+
+        //If any amount typed into the “Paid” field is equal to the amount in the “Due” field and “Paid Partially”
+        // button is pressed, a red error well should be displayed stating “The amount entered into the “paid” field
+        // is equal to the amount due. If the invoice has been paid in full, please press the “Paid in Full” button.
+        // If the invoice has been paid partially, please enter the partial amount paid and press the “Paid Partially” button.”
+        var paidFloat = 0;
+        if( paid ) {
+            var paidFloat = parseFloat(paid);
+        }
+        var paidTotal = 0;
+        if( total ) {
+            var paidTotal = parseFloat(total);
+        }
+        if( paidFloat == paidTotal ) {
+            var error = "The amount entered into the 'Paid' field is equal to the amount due in the 'Total' field."+
+                " If the invoice has been paid in full, please press the 'Paid in Full' button."+
+                " If the invoice has been paid partially, please enter the partial amount paid and press the 'Paid Partially' button.";
+            $("#modal-invoice-error-"+invoiceOid).show();
+            $("#modal-invoice-error-"+invoiceOid).html(error);
+            $("#updateInvoiceBtnHolder-"+invoiceOid).show();
+            return false;
+        }
+    }
+
+    //If any amount typed into the “Paid” field is less than the amount in the “Due” field
+    // and “Paid in Full” button is pressed,
+    // a red error well should be displayed stating “The amount entered into the “paid” field
+    // does not equal the amount due. If the invoice has been paid in full, please delete
+    // the value in the “Paid” field and press the “Paid in Full” button.
+    // If the invoice has been paid partially, please enter the amount paid and press the “Paid Partially” button.”
+    if( status == "Paid in Full" && paid ) {
+        var paidFloat = 0;
+        if( paid ) {
+            var paidFloat = parseFloat(paid);
+        }
+        var paidTotal = 0;
+        if( total ) {
+            var paidTotal = parseFloat(total);
+        }
+        //console.log(status+":"+"paid="+paid+"; total="+total);
+        //console.log(status+":"+"paidFloat="+paidFloat+"; paidTotal="+paidTotal);
+        if( paidFloat > 0 && paidFloat < paidTotal ) {
+            //console.log(status+": error");
+            var error = "The amount entered into the 'Paid' field does not equal the amount due in the 'Total' field."+
+                " If the invoice has been paid in full, please delete the value in the 'Paid' field"+
+                " and press the 'Paid in Full' button. If the invoice has been paid partially,"+
+                " please enter the amount paid and press the 'Paid Partially' button.";
+            //console.log("error="+error);
+            $("#modal-invoice-error-"+invoiceOid).show();
+            $("#modal-invoice-error-"+invoiceOid).html(error);
+            $("#updateInvoiceBtnHolder-"+invoiceOid).show();
+            return false;
+        }
+    }
+
+    $("#updateInvoiceBtnHolder-"+invoiceOid).show();
+    $("#updateInvoiceBtnHolder-"+invoiceOid).html("Please wait ...");
+    //return false; //testing
 
     var url = Routing.generate('translationalresearch_invoice_update_ajax');
 
