@@ -88,10 +88,10 @@ class DashboardController extends Controller
                 $userName = $pi->getUsernameOptimal();
 
                 //1. Principle Investigators by Affiliation
-                if( $this->isWcmPathology($pi,$wcmPathology) ) {
+                if( $this->isUserBelongsToInstitution($pi,$wcmPathology) ) {
                     //WCM Pathology Faculty - WCM Department of Pathology and Laboratory Medicine in any Title’s department field
                     $piWcmPathologyCounter++;
-                } elseif ( 1 ) {
+                } elseif ( $this->isUserBelongsToInstitution($pi,$wcmc) ) {
                     //WCM Other Departmental Faculty - WCM institution
                     $piWcmCounter++;
                 } else {
@@ -841,14 +841,14 @@ class DashboardController extends Controller
         return $resStatArr;
     }
 
-    public function isWcmPathology($user, $wcmPathology) {
+    public function isUserBelongsToInstitution($user, $parentInstitution) {
         $em = $this->getDoctrine()->getManager();
 
-        //get all title institutions
+        //get all user's institutions
         $institutions = $user->getInstitutions();
 
         foreach($institutions as $institution) {
-            if ($em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderParentnode($wcmPathology, $institution)) {
+            if( $em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderParentnode($parentInstitution,$institution) ) {
                 return true;
             }
         }
