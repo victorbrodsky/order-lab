@@ -332,6 +332,23 @@ class TransResRequestType extends AbstractType
                 'prototype_name' => '__documentsid__',
             ));
         }
+
+        $builder->add('businessPurposes', EntityType::class, array(
+            'class' => 'OlegTranslationalResearchBundle:BusinessPurposeList',
+            'label'=> "Business Purpose(s):",
+            'required'=> true,
+            'multiple' => true,
+            'attr' => array('class'=>'combobox combobox-width'),
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('list')
+                    ->where("list.type = :typedef OR list.type = :typeadd")
+                    ->orderBy("list.orderinlist","ASC")
+                    ->setParameters( array(
+                        'typedef' => 'default',
+                        'typeadd' => 'user-added',
+                    ));
+            },
+        ));
         //////////////// EOF fields /////////////////////////
 
 

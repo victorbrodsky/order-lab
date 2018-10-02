@@ -250,6 +250,17 @@ class TransResRequest {
      **/
     private $antibodyReferences;
 
+    /**
+     * Translational Research Work Request Business Purposes
+     *
+     * @ORM\ManyToMany(targetEntity="Oleg\TranslationalResearchBundle\Entity\BusinessPurposeList", cascade={"persist","remove"})
+     * @ORM\JoinTable(name="transres_request_businessPurpose",
+     *      joinColumns={@ORM\JoinColumn(name="request_id", referencedColumnName="id", onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="businessPurpose_id", referencedColumnName="id", onDelete="CASCADE")}
+     *      )
+     * @ORM\OrderBy({"createdate" = "DESC"})
+     **/
+    private $businessPurposes;
 
     
     public function __construct($user=null) {
@@ -265,6 +276,7 @@ class TransResRequest {
         $this->packingSlipPdfs = new ArrayCollection();
         $this->oldPackingSlipPdfs = new ArrayCollection();
         $this->antibodyReferences = new ArrayCollection();
+        $this->businessPurposes = new ArrayCollection();
     }
 
 
@@ -759,6 +771,24 @@ class TransResRequest {
         $this->antibodyReferences->removeElement($item);
     }
 
+    /**
+     * @return mixed
+     */
+    public function getBusinessPurposes()
+    {
+        return $this->businessPurposes;
+    }
+    public function addBusinessPurpose($item)
+    {
+        if( $item && !$this->businessPurposes->contains($item) ) {
+            $this->businessPurposes->add($item);
+        }
+        return $this;
+    }
+    public function removeBusinessPurpose($item)
+    {
+        $this->businessPurposes->removeElement($item);
+    }
     //////////////// EOF fields /////////////////////////
 
 

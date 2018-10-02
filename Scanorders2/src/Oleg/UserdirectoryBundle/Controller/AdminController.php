@@ -22,6 +22,7 @@ use Oleg\FellAppBundle\Entity\FellAppRank;
 use Oleg\FellAppBundle\Entity\FellAppStatus;
 use Oleg\FellAppBundle\Entity\LanguageProficiency;
 use Oleg\OrderformBundle\Controller\ScanListController;
+use Oleg\TranslationalResearchBundle\Entity\BusinessPurposeList;
 use Oleg\TranslationalResearchBundle\Entity\IrbApprovalTypeList;
 use Oleg\TranslationalResearchBundle\Entity\OtherRequestedServiceList;
 use Oleg\TranslationalResearchBundle\Entity\ProjectTypeList;
@@ -864,6 +865,7 @@ class AdminController extends Controller
         $count_generateIrbApprovalTypeList = $this->generateIrbApprovalTypeList();
         $count_generateTissueProcessingServiceList = $this->generateTissueProcessingServiceList();
         $count_generateRestrictedServiceList = $this->generateRestrictedServiceList();
+        $count_BusinessPurposesList = $this->generateBusinessPurposes();
 
         $count_generatePlatformListManagerList = $this->generatePlatformListManagerList(null,null);
 
@@ -967,6 +969,7 @@ class AdminController extends Controller
             'TissueProcessingServiceList='.$count_generateTissueProcessingServiceList.', '.
             'RestrictedServiceList='.$count_generateRestrictedServiceList.', '.
             'populateClassUrl='.$count_populateClassUrl.', '.
+            'businessPurposesList='.$count_BusinessPurposesList.', '.
             //'createAdminAntibodyList='.$count_createAdminAntibodyList.', '.
 
             ' (Note: -1 means that this table is already exists)';
@@ -6612,7 +6615,7 @@ class AdminController extends Controller
             "antibodies" => array('AntibodyList','antibodies-list','Antibody List'),
             "transrestissueprocessingservices" => array('TissueProcessingServiceList','transrestissueprocessingservices-list','Translational Research Tissue Processing Service List'),
             "transresotherrequestedservices" => array('OtherRequestedServiceList','transresotherrequestedservices-list','Translational Research Other Requested Service List'),
-
+            "transresbusinesspurposes" => array('BusinessPurposeList','transresbusinesspurposes-list','Translational Research Work Request Business Purposes'),
         );
 
         if( $withcustom ) {
@@ -8506,6 +8509,39 @@ class AdminController extends Controller
             $this->setDefaultList($listEntity,$count,$username,$name);
 
             //exit('exit generateObjectTypeActions');
+            $em->persist($listEntity);
+            $em->flush();
+
+            $count = $count + 10;
+        }
+
+        return round($count/10);
+    }
+
+
+    //TODO
+    public function generateBusinessPurposes() {
+        $username = $this->get('security.token_storage')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        $types = array(
+            "Deliverable for the main project",
+            "USCAP-related",
+            "Related to a professional meeting (non-USCAP)",
+            "Related to a planned manuscript"
+        );
+
+        $count = 10;
+        foreach( $types as $name ) {
+
+            $listEntity = $em->getRepository('OlegTranslationalResearchBundle:BusinessPurposeList')->findOneByName($name);
+            if( $listEntity ) {
+                continue;
+            }
+
+            $listEntity = new BusinessPurposeList();
+            $this->setDefaultList($listEntity,$count,$username,$name);
+
             $em->persist($listEntity);
             $em->flush();
 

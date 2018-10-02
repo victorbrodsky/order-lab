@@ -153,6 +153,7 @@ class ListController extends Controller
      * @Route("/list/translational-research-project-types/", name="transresprojecttypes-list")
      * @Route("/list/translational-research-request-category-types/", name="transresrequestcategorytypes-list")
      * @Route("/list/translational-irb-approval-types/", name="transresirbapprovaltypes-list")
+     * @Route("/list/translational-business-purposes/", name="transresbusinesspurposes-list")
      * @Route("/list/antibodies/", name="antibodies-list")
      * @Route("/list/custom000/", name="custom000-list")
      * @Route("/list/custom001/", name="custom001-list")
@@ -614,6 +615,7 @@ class ListController extends Controller
      * @Route("/list/translational-research-project-types/", name="transresprojecttypes_create")
      * @Route("/list/translational-research-request-category-types/", name="transresrequestcategorytypes_create")
      * @Route("/list/translational-irb-approval-types/", name="transresirbapprovaltypes_create")
+     * @Route("/list/translational-business-purposes/", name="transresbusinesspurposes_create")
      * @Route("/list/antibodies/", name="antibodies_create")
      * @Route("/list/custom000/", name="custom000_create")
      * @Route("/list/custom001/", name="custom001_create")
@@ -917,6 +919,7 @@ class ListController extends Controller
      * @Route("/list/translational-research-project-types/new", name="transresprojecttypes_new")
      * @Route("/list/translational-research-request-category-types/new", name="transresrequestcategorytypes_new")
      * @Route("/list/translational-irb-approval-types/new", name="transresirbapprovaltypes_new")
+     * @Route("/list/translational-business-purposes/new", name="transresbusinesspurposes_new")
      * @Route("/list/antibodies/new", name="antibodies_new")
      * @Route("/list/custom000/new", name="custom000_new")
      * @Route("/list/custom001/new", name="custom001_new")
@@ -1183,6 +1186,7 @@ class ListController extends Controller
      * @Route("/list/translational-research-project-types/{id}", name="transresprojecttypes_show")
      * @Route("/list/translational-research-request-category-types/{id}", name="transresrequestcategorytypes_show")
      * @Route("/list/translational-irb-approval-types/{id}", name="transresirbapprovaltypes_show")
+     * @Route("/list/translational-business-purposes/{id}", name="transresbusinesspurposes_show")
      * @Route("/list/antibodies/{id}", name="antibodies_show")
      * @Route("/list/custom000/{id}", name="custom000_show")
      * @Route("/list/custom001/{id}", name="custom001_show")
@@ -1444,6 +1448,7 @@ class ListController extends Controller
      * @Route("/list/translational-research-project-types/{id}/edit", name="transresprojecttypes_edit")
      * @Route("/list/translational-research-request-category-types/{id}/edit", name="transresrequestcategorytypes_edit")
      * @Route("/list/translational-irb-approval-types/{id}/edit", name="transresirbapprovaltypes_edit")
+     * @Route("/list/translational-business-purposes/{id}/edit", name="transresbusinesspurposes_edit")
      * @Route("/list/antibodies/{id}/edit", name="antibodies_edit")
      * @Route("/list/custom000/{id}/edit", name="custom000_edit")
      * @Route("/list/custom001/{id}/edit", name="custom001_edit")
@@ -1743,6 +1748,7 @@ class ListController extends Controller
      * @Route("/list/translational-research-project-types/{id}", name="transresprojecttypes_update")
      * @Route("/list/translational-research-request-category-types/{id}", name="transresrequestcategorytypes_update")
      * @Route("/list/translational-irb-approval-types/{id}", name="transresirbapprovaltypes_update")
+     * @Route("/list/translational-business-purposes/{id}", name="transresbusinesspurposes_update")
      * @Route("/list/antibodies/{id}", name="antibodies_update")
      * @Route("/list/custom000/{id}", name="custom000_update")
      * @Route("/list/custom001/{id}", name="custom001_update")
@@ -2626,6 +2632,11 @@ class ListController extends Controller
                 $displayName = "Translational Research Other Requested Service List";
                 $bundleName = "TranslationalResearchBundle";
                 break;
+            case "transresbusinesspurposes":
+                $className = "BusinessPurposeList";
+                $displayName = "Translational Research Work Request Business Purposes";
+                $bundleName = "TranslationalResearchBundle";
+                break;
 
             case "antibodies":
                 $className = "AntibodyList";
@@ -3212,6 +3223,7 @@ class ListController extends Controller
      * @Route("/list/translational-research-project-types/{id}", name="transresprojecttypes_delete")
      * @Route("/list/translational-research-request-category-types/{id}", name="transresrequestcategorytypes_delete")
      * @Route("/list/translational-irb-approval-types/{id}", name="transresirbapprovaltypes_delete")
+     * @Route("/list/translational-business-purposes/{id}", name="transresbusinesspurposes_delete")
      * @Route("/list/antibodies/{id}", name="antibodies_delete")
      * @Route("/list/custom000/{id}", name="custom000_delete")
      * @Route("/list/custom001/{id}", name="custom001_delete")
