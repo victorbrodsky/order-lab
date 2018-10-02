@@ -42,23 +42,29 @@ class FilterDashboardType extends AbstractType
         $this->formConstructor($options['form_custom_value']);
 
         if( $this->params["projectSpecialty"] ) {
-            $builder->add('projectSpecialty', EntityType::class, array(
-                'class' => 'OlegTranslationalResearchBundle:SpecialtyList',
-                //'choice_label' => 'name',
-                'label' => false,   //'Project Specialty',
-                //'disabled' => ($this->params['admin'] ? false : true),
+//            $builder->add('projectSpecialty', EntityType::class, array(
+//                'class' => 'OlegTranslationalResearchBundle:SpecialtyList',
+//                //'choice_label' => 'name',
+//                'label' => false,   //'Project Specialty',
+//                //'disabled' => ($this->params['admin'] ? false : true),
+//                'required' => false,
+//                'multiple' => true,
+//                'attr' => array('class' => 'combobox combobox-width', 'placeholder' => 'Specialty'),
+//                'query_builder' => function (EntityRepository $er) {
+//                    return $er->createQueryBuilder('list')
+//                        ->where("list.type = :typedef OR list.type = :typeadd")
+//                        ->orderBy("list.orderinlist", "ASC")
+//                        ->setParameters(array(
+//                            'typedef' => 'default',
+//                            'typeadd' => 'user-added',
+//                        ));
+//                },
+//            ));
+            $builder->add('projectSpecialty', ChoiceType::class, array(
+                'label' => false,
+                'choices' => $this->params['projectSpecialties'],
                 'required' => false,
-                'multiple' => true,
-                'attr' => array('class' => 'combobox combobox-width', 'placeholder' => 'Specialty'),
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('list')
-                        ->where("list.type = :typedef OR list.type = :typeadd")
-                        ->orderBy("list.orderinlist", "ASC")
-                        ->setParameters(array(
-                            'typedef' => 'default',
-                            'typeadd' => 'user-added',
-                        ));
-                },
+                'attr' => array('class' => 'combobox', 'placeholder' => "Specialty")
             ));
         }
 

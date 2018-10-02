@@ -17,6 +17,168 @@ use Symfony\Component\Validator\Constraints\Date;
  */
 class DashboardController extends Controller
 {
+    /**
+     * @Route("/pi-statistics/", name="translationalresearch_dashboard_project")
+     * @Template("OlegTranslationalResearchBundle:Dashboard:dashboard.html.twig")
+     */
+    public function projectStatisticsAction( Request $request )
+    {
+
+        if( $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ||
+            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE')
+        ) {
+            //ok
+        } else {
+            return $this->redirect($this->generateUrl($this->container->getParameter('translationalresearch.sitename') . '-nopermission'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $transresUtil = $this->container->get('transres_util');
+        //$transResFormNodeUtil = $this->container->get('transres_formnode_util');
+        $routeName = $request->get('_route');
+        $infos = array();
+
+        $filterform = $this->getFilter();
+        $filterform->handleRequest($request);
+
+        $startDate = $filterform['startDate']->getData();
+        $endDate = $filterform['endDate']->getData();
+        $projectSpecialty = $filterform['projectSpecialty']->getData();
+        if( $projectSpecialty != 0 ) {
+            $projectSpecialtyObject = $em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->find($projectSpecialty);
+            $projectSpecialtyObjects[] = $projectSpecialtyObject;
+        }
+
+        $projects = $this->getProjectsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+        echo "projects=".count($projects)."<br>";
+
+        $layoutArray = array(
+            'height' => 600,
+            'width' =>  600,
+        );
+
+        $chartsArray = array();
+
+        //1. Principle Investigators by Affiliation
+        $piWcmPathologyCounter = 0;
+        $piWcmCounter = 0;
+        $piOtherCounter = 0;
+        $mapper = array(
+            'prefix' => 'Oleg',
+            'bundleName' => 'UserdirectoryBundle',
+            'className' => 'Institution'
+        );
+        $wcmc = $em->getRepository('OlegUserdirectoryBundle:Institution')->findOneByAbbreviation("WCMC");
+        $wcmPathology = $em->getRepository('OlegUserdirectoryBundle:Institution')->findByChildnameAndParent(
+            "Pathology and Laboratory Medicine",
+            $wcmc,
+            $mapper
+        );
+        ////////////////////
+
+        //2. Total number of projects (XXX) per PI (Top 5/10) (APPROVED & CLOSED)
+        $piProjectCountArr = array();
+
+        foreach($projects as $project) {
+
+            //1. Principle Investigators by Affiliation
+            //2. Total number of projects (XXX) per PI (Top 5/10) (APPROVED & CLOSED)
+            $pis = $project->getPrincipalInvestigators();
+            foreach ($pis as $pi) {
+                $userName = $pi->getUsernameOptimal();
+
+                //1. Principle Investigators by Affiliation
+                if( $this->isWcmPathology($pi,$wcmPathology) ) {
+                    //WCM Pathology Faculty - WCM Department of Pathology and Laboratory Medicine in any Title’s department field
+                    $piWcmPathologyCounter++;
+                } elseif ( 1 ) {
+                    //WCM Other Departmental Faculty - WCM institution
+                    $piWcmCounter++;
+                } else {
+                    //Other Institutions
+                    $piOtherCounter++;
+                }
+
+                //2. Total number of projects (XXX) per PI (Top 5/10) (APPROVED & CLOSED)
+                if (isset($piProjectCountArr[$userName])) {
+                    $count = $piProjectCountArr[$userName] + 1;
+                } else {
+                    $count = 1;
+                }
+                $piProjectCountArr[$userName] = $count;
+
+
+            }
+        }
+
+        ///////////// 1. Principle Investigators by Affiliation ///////////////////
+        $dataArray = array();
+        $chartDataArray = array();
+        $type = 'pie';
+
+        $layoutArray['title'] = "Principle Investigators by Affiliation ";
+
+        $labels = array('WCM Pathology Faculty','WCM Other Departmental Faculty','Other Institutions');
+        $values = array($piWcmPathologyCounter,$piWcmCounter,$piOtherCounter);
+
+        $chartDataArray['values'] = $values;
+        $chartDataArray['labels'] = $labels;
+        $chartDataArray['type'] = $type;
+        $chartDataArray["textinfo"] = "value+percent";
+        $chartDataArray["outsidetextfont"] = array('size'=>1,'color'=>'white');
+        $dataArray[] = $chartDataArray;
+
+        //$chartsArray['layout'] = $layoutArray;
+        //$chartsArray['data'] = $dataArray;
+
+        $chartsArray[] = array(
+            'layout' => $layoutArray,
+            'data' => $dataArray
+        );
+        ///////////// EOF 1. Principle Investigators by Affiliation ///////////////////
+
+        ///////////// 2. Total number of projects (XXX) per PI (Top 5/10) (APPROVED & CLOSED) - $piProjectCountArr //////////////
+        $piProjectCountTopArr = $this->getTopArray($piProjectCountArr);
+        //Projects per PI
+        $chartsArray = $this->addChart( $chartsArray, $piProjectCountTopArr, "Total number of projects per PI (Top 10) (APPROVED & CLOSED)");
+        ///////////// EOF top $piProjectCountArr //////////////
+
+        return array(
+            'infos' => $infos,
+            'title' => "PI/PROJECT STATISTICS",
+            'filterform' => $filterform->createView(),
+            //'dataArray' => $dataArray,
+            //'layoutArray' => $layoutArray
+            'chartsArray' => $chartsArray
+        );
+    }
+
+    public function getFilter() {
+        $transresUtil = $this->container->get('transres_util');
+        //////////// Filter ////////////
+        //default date range from today to 1 year back
+        $projectSpecialtiesWithAll = array('All'=>0);
+        $projectSpecialties = $transresUtil->getTransResProjectSpecialties();
+        foreach($projectSpecialties as $projectSpecialty) {
+            $projectSpecialtiesWithAll[$projectSpecialty->getName()] = $projectSpecialty->getId();
+        }
+        $params = array(
+            //'startDate' => $today,
+            //'endDate' => $today
+            "projectSpecialty" => true,
+            "projectSpecialties" => $projectSpecialtiesWithAll
+        );
+        $filterform = $this->createForm(FilterDashboardType::class, null,array(
+            'method' => 'GET',
+            'form_custom_value'=>$params
+        ));
+        //$filterform->handleRequest($request);
+        //////////// EOF Filter ////////////
+
+        return $filterform;
+    }
+
+
 
     /**
      * @Route("/pi-statistics/", name="translationalresearch_dashboard_pilevel")
@@ -602,20 +764,7 @@ class DashboardController extends Controller
         $dql =  $repository->createQueryBuilder("project");
         $dql->select('project');
 
-        //$dql->where("project.state=:state");
-        //$projects = $repository->findAll();
-        //$query = $dql->getQuery();
-        //echo "projectId=".$project->getId()."<br>";
-        //echo "reviewId=".$reviewId."<br>";
-
-        //$startDate = $filterform['startDate']->getData();
-        //$endDate = $filterform['endDate']->getData();
-//        if( $projectSpecialtyAbbreviation == null ) {
-//            $projectSpecialties = $filterform['projectSpecialty']->getData();
-//        } else {
-//            $specialtyObject = $transresUtil->getSpecialtyObject($projectSpecialtyAbbreviation);
-//            $projectSpecialties[] = $specialtyObject;
-//        }
+        $dql->where("project.state = 'final_approved' OR project.state = 'closed'");
 
         $dqlParameters = array();
 
@@ -692,4 +841,18 @@ class DashboardController extends Controller
         return $resStatArr;
     }
 
+    public function isWcmPathology($user, $wcmPathology) {
+        $em = $this->getDoctrine()->getManager();
+
+        //get all title institutions
+        $institutions = $user->getInstitutions();
+
+        foreach($institutions as $institution) {
+            if ($em->getRepository('OlegUserdirectoryBundle:Institution')->isNodeUnderParentnode($wcmPathology, $institution)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

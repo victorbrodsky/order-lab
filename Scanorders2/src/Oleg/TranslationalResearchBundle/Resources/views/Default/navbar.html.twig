@@ -318,24 +318,29 @@
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dashboard<b class="caret"></b></a>
                             <ul class="dropdown-menu">
 
-                                <li>
-                                    <a href="{{ path(translationalresearch_sitename~'_dashboard_pilevel',{'filter[startDate]':startDate,'filter[endDate]':endDate}) }}"
-                                    >PI statistics</a>
-                                </li>
+                                {#<li>#}
+                                    {#<a href="{{ path(translationalresearch_sitename~'_dashboard_pilevel',{'filter[startDate]':startDate,'filter[endDate]':endDate}) }}"#}
+                                    {#>PI statistics</a>#}
+                                {#</li>#}
+
+                                {#<li>#}
+                                    {#<a href="{{ path(translationalresearch_sitename~'_dashboard_projectlevel',{'filter[startDate]':startDate,'filter[endDate]':endDate}) }}"#}
+                                    {#>Project statistics</a>#}
+                                {#</li>#}
+
+                                {#<li>#}
+                                    {#<a href="{{ path(translationalresearch_sitename~'_dashboard_invoicelevel',{'filter[startDate]':startDate,'filter[endDate]':endDate}) }}"#}
+                                    {#>Invoice statistics</a>#}
+                                {#</li>#}
+
+                                {#<li>#}
+                                    {#<a href="{{ path(translationalresearch_sitename~'_dashboard_compare',{'filter[startDate]':startDate,'filter[endDate]':endDate}) }}"#}
+                                    {#>Comparison statistics</a>#}
+                                {#</li>#}
 
                                 <li>
-                                    <a href="{{ path(translationalresearch_sitename~'_dashboard_projectlevel',{'filter[startDate]':startDate,'filter[endDate]':endDate}) }}"
-                                    >Project statistics</a>
-                                </li>
-
-                                <li>
-                                    <a href="{{ path(translationalresearch_sitename~'_dashboard_invoicelevel',{'filter[startDate]':startDate,'filter[endDate]':endDate}) }}"
-                                    >Invoice statistics</a>
-                                </li>
-
-                                <li>
-                                    <a href="{{ path(translationalresearch_sitename~'_dashboard_compare',{'filter[startDate]':startDate,'filter[endDate]':endDate}) }}"
-                                    >Comparison statistics</a>
+                                    <a href="{{ path(translationalresearch_sitename~'_dashboard_project',{'filter[startDate]':startDate,'filter[endDate]':endDate,'filter[projectSpecialty]':0}) }}"
+                                    >Project Request Statistics</a>
                                 </li>
 
                                 {% if allProjectIdsArr is defined %}
