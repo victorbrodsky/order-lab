@@ -215,9 +215,13 @@ class DashboardController extends Controller
 
         $fundedRequestCount = 0;
         $notFundedRequestCount = 0;
+
         $requestPerProjectArr = array();
         $fundedRequestPerProjectArr = array();
         $unFundedRequestPerProjectArr = array();
+        $quantityCountByCategoryArr = array();
+        $fundedQuantityCountByCategoryArr = array();
+        $unFundedQuantityCountByCategoryArr = array();
 
         foreach($requests as $transRequest) {
 
@@ -271,8 +275,45 @@ class DashboardController extends Controller
             }
             //////////////////////
 
+            //9. TRP Service Productivity by Category Types (Top 10)
+            //9- Group work requests Based on what is ordered (“Category”) & sorted by Total Quantity (1 work request ordering 1000 slides counts as 1000)
+            foreach($transRequest->getProducts() as $product) {
+                $category = $product->getCategory();
+                if( $category ) {
+                    $categoryIndex = $category->getName();
+                    //9. TRP Service Productivity by Category Types (Top 10)
+                    if (isset($quantityCountByCategoryArr[$categoryIndex])) {
+                        $count = $quantityCountByCategoryArr[$categoryIndex] + 1;
+                    } else {
+                        $count = 1;
+                    }
+                    $quantityCountByCategoryArr[$categoryIndex] = $count;
+                    /////////////
 
-        }
+                    //10,11. TRP Service Productivity for Funded/Not-Funded Projects (Top 10)
+                    if( $transRequest->getFundedAccountNumber() ) {
+                        //10. TRP Service Productivity for Funded Projects (Top 10)
+                        if (isset($fundedQuantityCountByCategoryArr[$categoryIndex])) {
+                            $count = $fundedQuantityCountByCategoryArr[$categoryIndex] + 1;
+                        } else {
+                            $count = 1;
+                        }
+                        $fundedQuantityCountByCategoryArr[$categoryIndex] = $count;
+                    } else {
+                        //11. TRP Service Productivity for non-Funded projects (Top 10)
+                        if (isset($unFundedQuantityCountByCategoryArr[$categoryIndex])) {
+                            $count = $unFundedQuantityCountByCategoryArr[$categoryIndex] + 1;
+                        } else {
+                            $count = 1;
+                        }
+                        $unFundedQuantityCountByCategoryArr[$categoryIndex] = $count;
+                    }
+                }
+            }
+            ///////////////////////////
+
+
+        } //foreach transRequest
 
         //5. Total Number of Work Requests (XXXX) by Funding Source
         $dataArray = array();
@@ -322,6 +363,29 @@ class DashboardController extends Controller
         $unFundedRequestPerProjectTopArr = $this->getTopArray($unFundedRequestPerProjectArr);
         $chartsArray = $this->addChart( $chartsArray, $unFundedRequestPerProjectTopArr, "Total number of Requests per Non-Funded Project (Top 10)",'pie',$layoutArray);
         ////////////////////
+
+        //9. TRP Service Productivity by Category Types (Top 10)
+        //9- Group work requests Based on what is ordered (“Category”) & sorted by Total Quantity (1 work request ordering 1000 slides counts as 1000)
+        $quantityCountByCategoryTopArr = $this->getTopArray($quantityCountByCategoryArr);
+        $layoutArray = array(
+            'height' => 600,
+            'width' => 1400,
+        );
+        $chartsArray = $this->addChart( $chartsArray, $quantityCountByCategoryTopArr, "TRP Service Productivity by Category Types (Top 10)",'pie',$layoutArray);
+        ///////////////////////////
+
+        //10,11. TRP Service Productivity for Funded/Not-Funded Projects (Top 10)
+        $layoutArray = array(
+            'height' => 600,
+            'width' => 1400,
+        );
+        //10. TRP Service Productivity for Funded Projects (Top 10)
+        $fundedQuantityCountByCategoryTopArr = $this->getTopArray($fundedQuantityCountByCategoryArr);
+        $chartsArray = $this->addChart( $chartsArray, $fundedQuantityCountByCategoryTopArr, "TRP Service Productivity for Funded Projects (Top 10)",'pie',$layoutArray);
+        //10. TRP Service Productivity for Non-Funded Projects (Top 10)
+        $unFundedQuantityCountByCategoryTopArr = $this->getTopArray($unFundedQuantityCountByCategoryArr);
+        $chartsArray = $this->addChart( $chartsArray, $unFundedQuantityCountByCategoryTopArr, "TRP Service Productivity for Non-Funded Projects (Top 10)",'pie',$layoutArray);
+        ////////////////////////////////
 
         return array(
             'title' => "WORK REQUESTS STATISTICS".", ".count($requests)." Total Matching Requests",
