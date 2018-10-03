@@ -449,6 +449,12 @@ class DashboardController extends Controller
         $fundedTotalFeesByInvestigatorArr = array();
         $unFundedTotalFeesByInvestigatorArr = array();
 
+        $totalPaidFee = 0;
+        $totalUnPaidFee = 0;
+
+        $fundedTotalFeesByProjectArr = array();
+        $unFundedTotalFeesByProjectArr = array();
+
         foreach($invoices as $invoice) {
 
             $transRequest = $invoice->getTransresRequest();
@@ -482,7 +488,7 @@ class DashboardController extends Controller
 
             //13. Total Fees per Funded Project (Top 10)
             //14. Total Fees per non-funded Project (Top 10)
-            if( $transRequest->getFundedAccountNumber() ) {
+            if( $invoice->getFundedAccountNumber() ) {
                 //12. Total Fees by Work Requests (Total $400K)
                 $fundedTotalFees = $fundedTotalFees + $totalFee;
                 //13. Total Fees per Funded Project (Top 10)
@@ -516,7 +522,7 @@ class DashboardController extends Controller
 
             //16. Total Fees per Investigator (Funded) (Top 10)
             //17. Total Fees per Investigator (non-Funded) (Top 10)
-            if( $transRequest->getFundedAccountNumber() ) {
+            if( $invoice->getFundedAccountNumber() ) {
                 //16. Total Fees per Investigator (Funded) (Top 10)
                 if (isset($fundedTotalFeesByInvestigatorArr[$investigatorIndex])) {
                     $totalFee = $fundedTotalFeesByInvestigatorArr[$investigatorIndex] + $totalFee;
@@ -531,6 +537,33 @@ class DashboardController extends Controller
             }
             ////////////////////////////////////////
 
+            //18. Generated Invoices by Status from Funded Projects (Total invoiced $152K)
+            if( $invoice->getFundedAccountNumber() ) {
+                if ($invoice->getStatus() == "Paid in Full") {
+                    $totalPaidFee = $totalPaidFee + $totalFee;
+                } else {
+                    $totalUnPaidFee = $totalUnPaidFee + $totalFee;
+                }
+            }
+            //////////////////////////////////////////////
+
+            //19. Generated Invoices by Status per Funded Project (Top 10)
+            //20. Generated Invoices by Status per PI (Top 10)
+            if( $invoice->getFundedAccountNumber() ) {
+                //19. Generated Invoices by Status per Funded Project (Top 10)
+                if (isset($fundedTotalFeesByProjectArr[$investigatorIndex])) {
+                    $totalFee = $fundedTotalFeesByProjectArr[$investigatorIndex] + $totalFee;
+                }
+                $fundedTotalFeesByProjectArr[$investigatorIndex] = $totalFee;
+            } else {
+                //20. Generated Invoices by Status per PI (Top 10)
+                if (isset($unFundedTotalFeesByProjectArr[$projectIndex])) {
+                    $totalFee = $unFundedTotalFeesByProjectArr[$projectIndex] + $totalFee;
+                }
+                $unFundedTotalFeesByProjectArr[$projectIndex] = $totalFee;
+            }
+            /////////////////////////////////////////
+
         } //foreach invoices
 
         $chartsArray = array();
@@ -543,7 +576,7 @@ class DashboardController extends Controller
         $layoutArray = array(
             'height' => 600,
             'width' =>  600,
-            'title' => "Total Fees by Work Requests (Total $totalFees)"
+            'title' => "Total Fees by Work Requests (Total $".$totalFees.")"
         );
 
         $labels = array('Funded','Non-Funded');
@@ -603,10 +636,51 @@ class DashboardController extends Controller
         $chartsArray = $this->addChart( $chartsArray, $unFundedTotalFeesByInvestigatorTopArr, "Total Fees per Investigator (non-Funded) (Top 10)",'pie',$layoutArray);
         ////////////////////////////////////////
 
+        //18. Generated Invoices by Status from Funded Projects (Total invoiced $152K)
+        $dataArray = array();
+        $chartDataArray = array();
+        $type = 'pie';
 
+        $layoutArray = array(
+            'height' => 600,
+            'width' =>  600,
+            'title' => "Generated Invoices by Status from Funded Projects (Total invoiced $".$totalFees.")"
+        );
+
+        $labels = array('Paid','Unpaid (Due)');
+        $values = array($totalPaidFee,$totalUnPaidFee);
+
+        $chartDataArray['values'] = $values;
+        $chartDataArray['labels'] = $labels;
+        $chartDataArray['type'] = $type;
+        $chartDataArray["textinfo"] = "value+percent";
+        $chartDataArray["outsidetextfont"] = array('size'=>1,'color'=>'white');
+        $dataArray[] = $chartDataArray;
+
+        $chartsArray[] = array(
+            'layout' => $layoutArray,
+            'data' => $dataArray
+        );
+        /////////////////////////////
+        
+        $chartsArray[] = array('newline'=>true);
+
+        //19. Generated Invoices by Status per Funded Project (Top 10)
+        //20. Generated Invoices by Status per PI (Top 10)
+        $layoutArray = array(
+            'height' => 600,
+            'width' => 800,
+        );
+        //19. Generated Invoices by Status per Funded Project (Top 10)
+        $fundedTotalFeesByProjectTopArr = $this->getTopArray($fundedTotalFeesByProjectArr);
+        $chartsArray = $this->addChart( $chartsArray, $fundedTotalFeesByProjectTopArr, "Generated Invoices by Status per Funded Project (Top 10)",'pie',$layoutArray);
+        //20. Generated Invoices by Status per PI (Top 10)
+        $unFundedTotalFeesByProjectTopArr = $this->getTopArray($unFundedTotalFeesByProjectArr);
+        $chartsArray = $this->addChart( $chartsArray, $unFundedTotalFeesByProjectTopArr, "Generated Invoices by Status per PI (Top 10)",'pie',$layoutArray);
+        //////////////////////////////////////////////
 
         return array(
-            'title' => "FINANCIAL STATISTICS" . ", " . count($invoices) . " Total Matching Invoices",
+            'title' => "FINANCIAL STATISTICS ($)" . ", " . count($invoices) . " Total Matching Invoices",
             'filterform' => $filterform->createView(),
             'chartsArray' => $chartsArray
         );
@@ -1125,7 +1199,7 @@ class DashboardController extends Controller
         $chartDataArray[$yAxis] = $values;
         $chartDataArray['type'] = $type;
 
-        //$chartDataArray["text"] = $text;
+        //$chartDataArray["text"] = "111";
         $chartDataArray["textinfo"] = "value+percent";
         //hoverinfo: label+text+value+percent
         $chartDataArray["outsidetextfont"] = array('size'=>1,'color'=>'white');
