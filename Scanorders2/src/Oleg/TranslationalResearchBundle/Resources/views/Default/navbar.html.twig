@@ -340,7 +340,12 @@
 
                                 <li>
                                     <a href="{{ path(translationalresearch_sitename~'_dashboard_project',{'filter[startDate]':startDate,'filter[endDate]':endDate,'filter[projectSpecialty]':0}) }}"
-                                    >Project Request Statistics</a>
+                                    >PI/Project Statistics</a>
+                                </li>
+
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_dashboard_request',{'filter[startDate]':startDate,'filter[endDate]':endDate,'filter[projectSpecialty]':0}) }}"
+                                    >Work Requests Statistics</a>
                                 </li>
 
                                 {% if allProjectIdsArr is defined %}

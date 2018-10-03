@@ -18,7 +18,7 @@ use Symfony\Component\Validator\Constraints\Date;
 class DashboardController extends Controller
 {
     /**
-     * @Route("/pi-statistics/", name="translationalresearch_dashboard_project")
+     * @Route("/pi-project-statistics/", name="translationalresearch_dashboard_project")
      * @Template("OlegTranslationalResearchBundle:Dashboard:dashboard.html.twig")
      */
     public function projectStatisticsAction( Request $request )
@@ -33,10 +33,6 @@ class DashboardController extends Controller
         }
 
         $em = $this->getDoctrine()->getManager();
-        $transresUtil = $this->container->get('transres_util');
-        //$transResFormNodeUtil = $this->container->get('transres_formnode_util');
-        $routeName = $request->get('_route');
-        $infos = array();
 
         $filterform = $this->getFilter();
         $filterform->handleRequest($request);
@@ -50,12 +46,7 @@ class DashboardController extends Controller
         }
 
         $projects = $this->getProjectsByFilter($startDate,$endDate,$projectSpecialtyObjects);
-        echo "projects=".count($projects)."<br>";
-
-        $layoutArray = array(
-            'height' => 600,
-            'width' =>  600,
-        );
+        //echo "projects=".count($projects)."<br>";
 
         $chartsArray = array();
 
@@ -79,7 +70,14 @@ class DashboardController extends Controller
         //2. Total number of projects (XXX) per PI (Top 5/10) (APPROVED & CLOSED)
         $piProjectCountArr = array();
 
+        // 3. Total number of Funded Projects per PI (Top 10)
+        $piFundedProjectCountArr = array();
+        //4. Total number of Non-Funded Projects per PI (Top 10)
+        $piUnFundedProjectCountArr = array();
+
         foreach($projects as $project) {
+
+            $fundingNumber = $project->getFundedAccountNumber();
 
             //1. Principle Investigators by Affiliation
             //2. Total number of projects (XXX) per PI (Top 5/10) (APPROVED & CLOSED)
@@ -107,6 +105,27 @@ class DashboardController extends Controller
                 }
                 $piProjectCountArr[$userName] = $count;
 
+                /////////// 3,4 Total number of Funded/Un-Funded Projects per PI (Top 10) ////////////////
+                if( $fundingNumber ) {
+                    // 3. Total number of Funded Projects per PI (Top 10)
+                    if (isset($piFundedProjectCountArr[$userName])) {
+                        $count = $piFundedProjectCountArr[$userName] + 1;
+                    } else {
+                        $count = 1;
+                    }
+                    $piFundedProjectCountArr[$userName] = $count;
+                } else {
+                    //4. Total number of Non-Funded Projects per PI (Top 10)
+                    if (isset($piUnFundedProjectCountArr[$userName])) {
+                        $count = $piUnFundedProjectCountArr[$userName] + 1;
+                    } else {
+                        $count = 1;
+                    }
+                    $piUnFundedProjectCountArr[$userName] = $count;
+                }
+                /////////// EOF 3,4 Total number of Funded/Un-Funded Projects per PI (Top 10) ////////////////
+
+
 
             }
         }
@@ -116,7 +135,11 @@ class DashboardController extends Controller
         $chartDataArray = array();
         $type = 'pie';
 
-        $layoutArray['title'] = "Principle Investigators by Affiliation ";
+        $layoutArray = array(
+            'height' => 600,
+            'width' =>  600,
+            'title' => "Principle Investigators by Affiliation"
+        );
 
         $labels = array('WCM Pathology Faculty','WCM Other Departmental Faculty','Other Institutions');
         $values = array($piWcmPathologyCounter,$piWcmCounter,$piOtherCounter);
@@ -128,9 +151,6 @@ class DashboardController extends Controller
         $chartDataArray["outsidetextfont"] = array('size'=>1,'color'=>'white');
         $dataArray[] = $chartDataArray;
 
-        //$chartsArray['layout'] = $layoutArray;
-        //$chartsArray['data'] = $dataArray;
-
         $chartsArray[] = array(
             'layout' => $layoutArray,
             'data' => $dataArray
@@ -140,15 +160,172 @@ class DashboardController extends Controller
         ///////////// 2. Total number of projects (XXX) per PI (Top 5/10) (APPROVED & CLOSED) - $piProjectCountArr //////////////
         $piProjectCountTopArr = $this->getTopArray($piProjectCountArr);
         //Projects per PI
-        $chartsArray = $this->addChart( $chartsArray, $piProjectCountTopArr, "Total number of projects per PI (Top 10) (APPROVED & CLOSED)");
+        $chartsArray = $this->addChart( $chartsArray, $piProjectCountTopArr, "Total number of projects per PI (Top 10)");
         ///////////// EOF top $piProjectCountArr //////////////
 
+        /////////// 3,4 Total number of Funded/Un-Funded Projects per PI (Top 10) ////////////////
+        //3. Funded Projects per PI
+        $piFundedProjectCountTopArr = $this->getTopArray($piFundedProjectCountArr);
+        $chartsArray = $this->addChart( $chartsArray, $piFundedProjectCountTopArr, "Total number of Funded Projects per PI (Top 10)");
+        //4. Un-Funded Projects per PI
+        $piUnFundedProjectCountTopArr = $this->getTopArray($piFundedProjectCountArr);
+        //Funded Projects per PI
+        $chartsArray = $this->addChart( $chartsArray, $piUnFundedProjectCountTopArr, "Total number of Non-Funded Projects per PI (Top 10)");
+        /////////// EOF 3,4 Total number of Funded/Un-Funded Projects per PI (Top 10) ////////////////
+
         return array(
-            'infos' => $infos,
-            'title' => "PI/PROJECT STATISTICS",
+            'title' => "PI/PROJECT STATISTICS (APPROVED or CLOSED)".", ".count($projects)." Total Matching Projects",
             'filterform' => $filterform->createView(),
-            //'dataArray' => $dataArray,
-            //'layoutArray' => $layoutArray
+            'chartsArray' => $chartsArray
+        );
+    }
+
+    /**
+     * @Route("/work-request-statistics/", name="translationalresearch_dashboard_request")
+     * @Template("OlegTranslationalResearchBundle:Dashboard:dashboard.html.twig")
+     */
+    public function requestStatisticsAction( Request $request )
+    {
+
+        if ($this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ||
+            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE')
+        ) {
+            //ok
+        } else {
+            return $this->redirect($this->generateUrl($this->container->getParameter('translationalresearch.sitename') . '-nopermission'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $filterform = $this->getFilter();
+        $filterform->handleRequest($request);
+
+        $startDate = $filterform['startDate']->getData();
+        $endDate = $filterform['endDate']->getData();
+        $projectSpecialty = $filterform['projectSpecialty']->getData();
+        if( $projectSpecialty != 0 ) {
+            $projectSpecialtyObject = $em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->find($projectSpecialty);
+            $projectSpecialtyObjects[] = $projectSpecialtyObject;
+        }
+
+        $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
+        //echo "requests=".count($requests)."<br>";
+
+        $chartsArray = array();
+
+        $fundedRequestCount = 0;
+        $notFundedRequestCount = 0;
+        $requestPerProjectArr = array();
+        $fundedRequestPerProjectArr = array();
+        $unFundedRequestPerProjectArr = array();
+
+        foreach($requests as $transRequest) {
+
+            $project = $transRequest->getProject();
+            $projectIndex = $project->getOid();
+            $pis = $project->getPrincipalInvestigators();
+            $piInfoArr = array();
+            foreach( $pis as $pi ) {
+                if( $pi ) {
+                    $piInfoArr[] = $pi->getUsernameOptimal();
+                }
+            }
+            if( count($piInfoArr) > 0 ) {
+                $projectIndex = $projectIndex . " (" . implode(", ",$piInfoArr) . ")";
+            }
+
+            //5. Total Number of Work Requests (XXXX) by Funding Source
+            if( $transRequest->getFundedAccountNumber() ) {
+                $fundedRequestCount++;
+            } else {
+                $notFundedRequestCount++;
+            }
+            //////////////////////
+
+            //6. Total number of Requests per Project (Top 10)
+            if (isset($requestPerProjectArr[$projectIndex])) {
+                $count = $requestPerProjectArr[$projectIndex] + 1;
+            } else {
+                $count = 1;
+            }
+            $requestPerProjectArr[$projectIndex] = $count;
+            //////////////////////
+
+            //7,8. Total number of Requests per Funded/Un-Funded Project (Top 10)
+            if( $transRequest->getFundedAccountNumber() ) {
+                //7. Total number of Requests per Funded Project (Top 10)
+                if (isset($fundedRequestPerProjectArr[$projectIndex])) {
+                    $count = $fundedRequestPerProjectArr[$projectIndex] + 1;
+                } else {
+                    $count = 1;
+                }
+                $fundedRequestPerProjectArr[$projectIndex] = $count;
+            } else {
+                //8. Total number of Requests per Non_Funded Project (Top 10)
+                if (isset($unFundedRequestPerProjectArr[$projectIndex])) {
+                    $count = $unFundedRequestPerProjectArr[$projectIndex] + 1;
+                } else {
+                    $count = 1;
+                }
+                $unFundedRequestPerProjectArr[$projectIndex] = $count;
+            }
+            //////////////////////
+
+
+        }
+
+        //5. Total Number of Work Requests (XXXX) by Funding Source
+        $dataArray = array();
+        $chartDataArray = array();
+        $type = 'pie';
+
+        $layoutArray = array(
+            'height' => 600,
+            'width' =>  800,
+            'title' => "Total Number of Work Requests by Funding Source"
+        );
+
+        $labels = array('Funded','Non-Funded');
+        $values = array($fundedRequestCount,$notFundedRequestCount);
+
+        $chartDataArray['values'] = $values;
+        $chartDataArray['labels'] = $labels;
+        $chartDataArray['type'] = $type;
+        $chartDataArray["textinfo"] = "value+percent";
+        $chartDataArray["outsidetextfont"] = array('size'=>1,'color'=>'white');
+        $dataArray[] = $chartDataArray;
+
+        $chartsArray[] = array(
+            'layout' => $layoutArray,
+            'data' => $dataArray
+        );
+        ////////////////////
+
+        //6. Total number of Requests per Project (Top 10)
+        $requestPerProjectTopArr = $this->getTopArray($requestPerProjectArr);
+        $layoutArray = array(
+            'height' => 600,
+            'width' => 800,
+        );
+        $chartsArray = $this->addChart( $chartsArray, $requestPerProjectTopArr, "Total number of Requests per Project (Top 10)",'pie',$layoutArray);
+        ////////////////////
+
+        //7,8. Total number of Requests per Funded/Un-Funded Project (Top 10)
+        $layoutArray = array(
+            'height' => 600,
+            'width' => 800,
+        );
+        //7. Total number of Requests per Funded Project (Top 10)
+        $fundedRequestPerProjectTopArr = $this->getTopArray($fundedRequestPerProjectArr);
+        $chartsArray = $this->addChart( $chartsArray, $fundedRequestPerProjectTopArr, "Total number of Requests per Funded Project (Top 10)",'pie',$layoutArray);
+        //8. Total number of Requests per Non_Funded Project (Top 10)
+        $unFundedRequestPerProjectTopArr = $this->getTopArray($unFundedRequestPerProjectArr);
+        $chartsArray = $this->addChart( $chartsArray, $unFundedRequestPerProjectTopArr, "Total number of Requests per Non-Funded Project (Top 10)",'pie',$layoutArray);
+        ////////////////////
+
+        return array(
+            'title' => "WORK REQUESTS STATISTICS".", ".count($requests)." Total Matching Requests",
+            'filterform' => $filterform->createView(),
             'chartsArray' => $chartsArray
         );
     }
@@ -177,6 +354,7 @@ class DashboardController extends Controller
 
         return $filterform;
     }
+
 
 
 
@@ -590,11 +768,11 @@ class DashboardController extends Controller
     }
 
 
-    //select top 25, BUT make sure the other PIs are still shown as "Other"
-    public function getTopArray($piProjectCountArr) {
+    //select top 10, BUT make sure the other PIs are still shown as "Other"
+    public function getTopArray($piProjectCountArr,$limit=10) {
         arsort($piProjectCountArr);
-        $limit = 25;
-        $count = 0;
+        //$limit = 10;
+        $count = 1;
         $piProjectCountTopArr = array();
         foreach($piProjectCountArr as $username=>$value) {
             //echo $username.": ".$count."<br>";
@@ -614,7 +792,7 @@ class DashboardController extends Controller
         return $piProjectCountTopArr;
     }
 
-    public function addChart( $chartsArray, $dataArr, $title, $type='pie' ) {
+    public function addChart( $chartsArray, $dataArr, $title, $type='pie', $layoutArray=null ) {
 
         if( count($dataArr) == 0 ) {
             return $chartsArray;
@@ -623,7 +801,17 @@ class DashboardController extends Controller
         $labels = array();
         $values = array();
         //$text = array();
-        $layoutArray['title'] = $title;
+
+        if( !$layoutArray ) {
+            $layoutArray = array(
+                'height' => 600,
+                'width' => 600,
+            );
+        }
+
+        if( $title ) {
+            $layoutArray['title'] = $title;
+        }
 
         foreach( $dataArr as $label => $value ) {
             if( $type == "bar" || $value ) {
@@ -758,7 +946,7 @@ class DashboardController extends Controller
 
     public function getProjectsByFilter($startDate, $endDate, $projectSpecialties, $addOneEndDay=true) {
         $em = $this->getDoctrine()->getManager();
-        $transresUtil = $this->container->get('transres_util');
+        //$transresUtil = $this->container->get('transres_util');
 
         $repository = $em->getRepository('OlegTranslationalResearchBundle:Project');
         $dql =  $repository->createQueryBuilder("project");
@@ -854,5 +1042,58 @@ class DashboardController extends Controller
         }
 
         return false;
+    }
+
+    public function getRequestsByFilter($startDate, $endDate, $projectSpecialties, $addOneEndDay=true) {
+        $em = $this->getDoctrine()->getManager();
+        //$transresUtil = $this->container->get('transres_util');
+
+        $repository = $em->getRepository('OlegTranslationalResearchBundle:TransResRequest');
+        $dql =  $repository->createQueryBuilder("request");
+        $dql->select('request');
+
+        //Exclude Work requests with status=Canceled and Draft
+        $dql->where("request.progressState != 'draft' AND request.progressState != 'canceled'");
+
+        $dqlParameters = array();
+
+        if( $startDate ) {
+            //echo "startDate=" . $startDate->format('Y-m-d H:i:s') . "<br>";
+            $dql->andWhere('request.createDate >= :startDate');
+            $dqlParameters['startDate'] = $startDate->format('Y-m-d'); //H:i:s
+        }
+        if( $endDate ) {
+            if( $addOneEndDay ) {
+                $endDate->modify('+1 day');
+            }
+            //echo "endDate=" . $endDate->format('Y-m-d H:i:s') . "<br>";
+            $dql->andWhere('request.createDate <= :endDate');
+            $dqlParameters['endDate'] = $endDate->format('Y-m-d'); //H:i:s
+        }
+
+        if( $projectSpecialties && count($projectSpecialties) > 0 ) {
+            $dql->leftJoin('request.project','project');
+            $dql->leftJoin('project.projectSpecialty','projectSpecialty');
+            $projectSpecialtyIdsArr = array();
+            $projectSpecialtyNamesArr = array();
+            foreach($projectSpecialties as $projectSpecialty) {
+                //echo "projectSpecialty=$projectSpecialty<br>";
+                $projectSpecialtyIdsArr[] = $projectSpecialty->getId();
+                $projectSpecialtyNamesArr[] = $projectSpecialty."";
+            }
+            $dql->andWhere("projectSpecialty.id IN (:projectSpecialtyIdsArr)");
+            $dqlParameters["projectSpecialtyIdsArr"] = $projectSpecialtyIdsArr;
+        }
+
+        $query = $em->createQuery($dql);
+
+        $query->setParameters($dqlParameters);
+        //echo "query=".$query->getSql()."<br>";
+
+        $projects = $query->getResult();
+
+        //echo implode(",",$projectSpecialtyNamesArr)." Projects=".count($projects)." (".$startDate->format('d-M-Y')." - ".$endDate->format('d-M-Y').")<br>";
+
+        return $projects;
     }
 }
