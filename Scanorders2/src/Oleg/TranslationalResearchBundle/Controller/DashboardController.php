@@ -48,8 +48,6 @@ class DashboardController extends Controller
         $projects = $this->getProjectsByFilter($startDate,$endDate,$projectSpecialtyObjects);
         //echo "projects=".count($projects)."<br>";
 
-        $chartsArray = array();
-
         //1. Principle Investigators by Affiliation
         $piWcmPathologyCounter = 0;
         $piWcmCounter = 0;
@@ -128,7 +126,9 @@ class DashboardController extends Controller
 
 
             }
-        }
+        } //foreach $projects
+
+        $chartsArray = array();
 
         ///////////// 1. Principle Investigators by Affiliation ///////////////////
         $dataArray = array();
@@ -210,8 +210,6 @@ class DashboardController extends Controller
 
         $requests = $this->getRequestsByFilter($startDate,$endDate,$projectSpecialtyObjects);
         //echo "requests=".count($requests)."<br>";
-
-        $chartsArray = array();
 
         $fundedRequestCount = 0;
         $notFundedRequestCount = 0;
@@ -313,7 +311,9 @@ class DashboardController extends Controller
             ///////////////////////////
 
 
-        } //foreach transRequest
+        } //foreach $requests
+
+        $chartsArray = array();
 
         //5. Total Number of Work Requests (XXXX) by Funding Source
         $dataArray = array();
@@ -382,7 +382,7 @@ class DashboardController extends Controller
         //10. TRP Service Productivity for Funded Projects (Top 10)
         $fundedQuantityCountByCategoryTopArr = $this->getTopArray($fundedQuantityCountByCategoryArr);
         $chartsArray = $this->addChart( $chartsArray, $fundedQuantityCountByCategoryTopArr, "TRP Service Productivity for Funded Projects (Top 10)",'pie',$layoutArray);
-        //10. TRP Service Productivity for Non-Funded Projects (Top 10)
+        //11. TRP Service Productivity for Non-Funded Projects (Top 10)
         $unFundedQuantityCountByCategoryTopArr = $this->getTopArray($unFundedQuantityCountByCategoryArr);
         $chartsArray = $this->addChart( $chartsArray, $unFundedQuantityCountByCategoryTopArr, "TRP Service Productivity for Non-Funded Projects (Top 10)",'pie',$layoutArray);
         ////////////////////////////////
@@ -394,7 +394,225 @@ class DashboardController extends Controller
         );
     }
 
-    public function getFilter() {
+    /**
+     * @Route("/financial-statistics/", name="translationalresearch_dashboard_financial")
+     * @Template("OlegTranslationalResearchBundle:Dashboard:dashboard.html.twig")
+     */
+    public function financialStatisticsAction( Request $request )
+    {
+
+        if ($this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_ADMIN') ||
+            $this->get('security.authorization_checker')->isGranted('ROLE_TRANSRES_EXECUTIVE')
+        ) {
+            //ok
+        } else {
+            return $this->redirect($this->generateUrl($this->container->getParameter('translationalresearch.sitename') . '-nopermission'));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $filterform = $this->getFilter(true);
+        $filterform->handleRequest($request);
+
+        $startDate = $filterform['startDate']->getData();
+        $endDate = $filterform['endDate']->getData();
+        $compareType = $filterform['compareType']->getData();
+        $projectSpecialty = $filterform['projectSpecialty']->getData();
+        if ($projectSpecialty != 0) {
+            $projectSpecialtyObject = $em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->find($projectSpecialty);
+            $projectSpecialtyObjects[] = $projectSpecialtyObject;
+        }
+
+        //Get data from the invoice perspective
+        //12- Show radio buttons allowing work request submission date vs last invoice generation date vs date when status changed to “paid in full”;
+        // Source of dollar amount is “Total Fees”
+        //12. Total Fees by Work Requests (Total $400K)
+        //13. Total Fees per Funded Project (Top 10)
+        //14. Total Fees per non-funded Project (Top 10)
+        //15. Total Fees per Investigator (Top 10)
+        //16. Total Fees per Investigator (Funded) (Top 10)
+        //17. Total Fees per Investigator (non-Funded) (Top 10)
+        //18. Generated Invoices by Status from Funded Projects (Total invoiced $152K)
+        //19. Generated Invoices by Status per Funded Project (Top 10)
+        //20. Generated Invoices by Status per PI (Top 10)
+
+        $invoices = $this->getInvoicesByFilter($startDate, $endDate, $projectSpecialtyObjects, true, $compareType);
+
+        $totalFees = 0;
+        $fundedTotalFees = 0;
+        $unFundedTotalFees = 0;
+
+        $fundedTotalFeesByRequestArr = array();
+        $unFundedTotalFeesByRequestArr = array();
+
+        $totalFeesByInvestigatorArr = array();
+        $fundedTotalFeesByInvestigatorArr = array();
+        $unFundedTotalFeesByInvestigatorArr = array();
+
+        foreach($invoices as $invoice) {
+
+            $transRequest = $invoice->getTransresRequest();
+
+            $project = $transRequest->getProject();
+            $projectIndex = $project->getOid();
+            $pis = $project->getPrincipalInvestigators();
+            $piInfoArr = array();
+            foreach( $pis as $pi ) {
+                if( $pi ) {
+                    $piInfoArr[] = $pi->getUsernameOptimal();
+                }
+            }
+            if( count($piInfoArr) > 0 ) {
+                $projectIndex = $projectIndex . " (" . implode(", ",$piInfoArr) . ")";
+            }
+
+            $investigator = $invoice->getPrincipalInvestigator();
+            if( $investigator ) {
+                $investigatorIndex = $investigator->getUsernameOptimal();
+            } else {
+                $submitter = $invoice->getSubmitter();
+                $investigatorIndex = $submitter->getUsernameOptimal();
+            }
+
+            $totalFee = $invoice->getTotal();
+            $totalFees = $totalFees + $totalFee;
+
+            //12. Total Fees by Work Requests (Total $400K)
+            ////////////////////
+
+            //13. Total Fees per Funded Project (Top 10)
+            //14. Total Fees per non-funded Project (Top 10)
+            if( $transRequest->getFundedAccountNumber() ) {
+                //12. Total Fees by Work Requests (Total $400K)
+                $fundedTotalFees = $fundedTotalFees + $totalFee;
+                //13. Total Fees per Funded Project (Top 10)
+                if (isset($fundedTotalFeesByRequestArr[$projectIndex])) {
+                    $totalFee = $fundedTotalFeesByRequestArr[$projectIndex] + $totalFee;
+                } else {
+                    //$totalFee = $invoice->getTotal();
+                }
+                $fundedTotalFeesByRequestArr[$projectIndex] = $totalFee;
+            } else {
+                //12. Total Fees by Work Requests (Total $400K)
+                $unFundedTotalFees = $unFundedTotalFees + $totalFee;
+                //14. Total Fees per non-funded Project (Top 10)
+                if (isset($unFundedTotalFeesByRequestArr[$projectIndex])) {
+                    $totalFee = $unFundedTotalFeesByRequestArr[$projectIndex] + $totalFee;
+                } else {
+                    //$totalFee = $invoice->getTotal();
+                }
+                $unFundedTotalFeesByRequestArr[$projectIndex] = $totalFee;
+            }
+            /////////////////////
+
+            //15. Total Fees per Investigator (Top 10)
+            if (isset($totalFeesByInvestigatorArr[$investigatorIndex])) {
+                $totalFee = $totalFeesByInvestigatorArr[$investigatorIndex] + $totalFee;
+            } else {
+                //$totalFee = $invoice->getTotal();
+            }
+            $totalFeesByInvestigatorArr[$investigatorIndex] = $totalFee;
+            /////////////////////////////
+
+            //16. Total Fees per Investigator (Funded) (Top 10)
+            //17. Total Fees per Investigator (non-Funded) (Top 10)
+            if( $transRequest->getFundedAccountNumber() ) {
+                //16. Total Fees per Investigator (Funded) (Top 10)
+                if (isset($fundedTotalFeesByInvestigatorArr[$investigatorIndex])) {
+                    $totalFee = $fundedTotalFeesByInvestigatorArr[$investigatorIndex] + $totalFee;
+                }
+                $fundedTotalFeesByInvestigatorArr[$investigatorIndex] = $totalFee;
+            } else {
+                //17. Total Fees per Investigator (non-Funded) (Top 10)
+                if (isset($unFundedTotalFeesByInvestigatorArr[$projectIndex])) {
+                    $totalFee = $unFundedTotalFeesByInvestigatorArr[$projectIndex] + $totalFee;
+                }
+                $unFundedTotalFeesByInvestigatorArr[$projectIndex] = $totalFee;
+            }
+            ////////////////////////////////////////
+
+        } //foreach invoices
+
+        $chartsArray = array();
+
+        //12. Total Fees by Work Requests (Total $400K)
+        $dataArray = array();
+        $chartDataArray = array();
+        $type = 'pie';
+
+        $layoutArray = array(
+            'height' => 600,
+            'width' =>  600,
+            'title' => "Total Fees by Work Requests (Total $totalFees)"
+        );
+
+        $labels = array('Funded','Non-Funded');
+        $values = array($fundedTotalFees,$unFundedTotalFees);
+
+        $chartDataArray['values'] = $values;
+        $chartDataArray['labels'] = $labels;
+        $chartDataArray['type'] = $type;
+        $chartDataArray["textinfo"] = "value+percent";
+        $chartDataArray["outsidetextfont"] = array('size'=>1,'color'=>'white');
+        $dataArray[] = $chartDataArray;
+
+        $chartsArray[] = array(
+            'layout' => $layoutArray,
+            'data' => $dataArray
+        );
+        /////////////////////
+
+        $chartsArray[] = array('newline'=>true);
+
+        //13. Total Fees per Funded Project (Top 10)
+        //14. Total Fees per non-funded Project (Top 10)
+        $layoutArray = array(
+            'height' => 600,
+            'width' => 800,
+        );
+        //13. Total Fees per Funded Project (Top 10)
+        $fundedTotalFeesByRequestTopArr = $this->getTopArray($fundedTotalFeesByRequestArr);
+        $chartsArray = $this->addChart( $chartsArray, $fundedTotalFeesByRequestTopArr, "Total Fees per Funded Project (Top 10)",'pie',$layoutArray);
+        //14. Total Fees per non-funded Project (Top 10)
+        $unFundedTotalFeesByRequestTopArr = $this->getTopArray($unFundedTotalFeesByRequestArr);
+        $chartsArray = $this->addChart( $chartsArray, $unFundedTotalFeesByRequestTopArr, "Total Fees per Non-Funded Project (Top 10)",'pie',$layoutArray);
+        ////////////////////////////////
+
+        //15. Total Fees per Investigator (Top 10)
+        $layoutArray = array(
+            'height' => 600,
+            'width' => 800,
+        );
+        $totalFeesByInvestigatorTopArr = $this->getTopArray($totalFeesByInvestigatorArr);
+        $chartsArray = $this->addChart( $chartsArray, $totalFeesByInvestigatorTopArr, "Total Fees per Investigator (Top 10)",'pie',$layoutArray);
+        ////////////////////////////
+
+        $chartsArray[] = array('newline'=>true);
+
+        //16. Total Fees per Investigator (Funded) (Top 10)
+        //17. Total Fees per Investigator (non-Funded) (Top 10)
+        $layoutArray = array(
+            'height' => 600,
+            'width' => 800,
+        );
+        //16. Total Fees per Investigator (Funded) (Top 10)
+        $fundedTotalFeesByInvestigatorTopArr = $this->getTopArray($fundedTotalFeesByInvestigatorArr);
+        $chartsArray = $this->addChart( $chartsArray, $fundedTotalFeesByInvestigatorTopArr, "Total Fees per Investigator (Funded) (Top 10)",'pie',$layoutArray);
+        //17. Total Fees per Investigator (non-Funded) (Top 10)
+        $unFundedTotalFeesByInvestigatorTopArr = $this->getTopArray($unFundedTotalFeesByInvestigatorArr);
+        $chartsArray = $this->addChart( $chartsArray, $unFundedTotalFeesByInvestigatorTopArr, "Total Fees per Investigator (non-Funded) (Top 10)",'pie',$layoutArray);
+        ////////////////////////////////////////
+
+
+
+        return array(
+            'title' => "FINANCIAL STATISTICS" . ", " . count($invoices) . " Total Matching Invoices",
+            'filterform' => $filterform->createView(),
+            'chartsArray' => $chartsArray
+        );
+    }
+
+    public function getFilter( $withCompareType=false ) {
         $transresUtil = $this->container->get('transres_util');
         //////////// Filter ////////////
         //default date range from today to 1 year back
@@ -407,8 +625,14 @@ class DashboardController extends Controller
             //'startDate' => $today,
             //'endDate' => $today
             "projectSpecialty" => true,
-            "projectSpecialties" => $projectSpecialtiesWithAll
+            "projectSpecialties" => $projectSpecialtiesWithAll,
+            "compareType" => false
         );
+
+        if( $withCompareType ) {
+            $params["compareType"] = true;
+        }
+
         $filterform = $this->createForm(FilterDashboardType::class, null,array(
             'method' => 'GET',
             'form_custom_value'=>$params
@@ -1118,6 +1342,60 @@ class DashboardController extends Controller
 
         //Exclude Work requests with status=Canceled and Draft
         $dql->where("request.progressState != 'draft' AND request.progressState != 'canceled'");
+
+        $dqlParameters = array();
+
+        if( $startDate ) {
+            //echo "startDate=" . $startDate->format('Y-m-d H:i:s') . "<br>";
+            $dql->andWhere('request.createDate >= :startDate');
+            $dqlParameters['startDate'] = $startDate->format('Y-m-d'); //H:i:s
+        }
+        if( $endDate ) {
+            if( $addOneEndDay ) {
+                $endDate->modify('+1 day');
+            }
+            //echo "endDate=" . $endDate->format('Y-m-d H:i:s') . "<br>";
+            $dql->andWhere('request.createDate <= :endDate');
+            $dqlParameters['endDate'] = $endDate->format('Y-m-d'); //H:i:s
+        }
+
+        if( $projectSpecialties && count($projectSpecialties) > 0 ) {
+            $dql->leftJoin('request.project','project');
+            $dql->leftJoin('project.projectSpecialty','projectSpecialty');
+            $projectSpecialtyIdsArr = array();
+            $projectSpecialtyNamesArr = array();
+            foreach($projectSpecialties as $projectSpecialty) {
+                //echo "projectSpecialty=$projectSpecialty<br>";
+                $projectSpecialtyIdsArr[] = $projectSpecialty->getId();
+                $projectSpecialtyNamesArr[] = $projectSpecialty."";
+            }
+            $dql->andWhere("projectSpecialty.id IN (:projectSpecialtyIdsArr)");
+            $dqlParameters["projectSpecialtyIdsArr"] = $projectSpecialtyIdsArr;
+        }
+
+        $query = $em->createQuery($dql);
+
+        $query->setParameters($dqlParameters);
+        //echo "query=".$query->getSql()."<br>";
+
+        $projects = $query->getResult();
+
+        //echo implode(",",$projectSpecialtyNamesArr)." Projects=".count($projects)." (".$startDate->format('d-M-Y')." - ".$endDate->format('d-M-Y').")<br>";
+
+        return $projects;
+    }
+
+    public function getInvoicesByFilter($startDate, $endDate, $projectSpecialties, $addOneEndDay=true, $compareType) {
+        $em = $this->getDoctrine()->getManager();
+        //$transresUtil = $this->container->get('transres_util');
+
+        $repository = $em->getRepository('OlegTranslationalResearchBundle:Invoice');
+        $dql =  $repository->createQueryBuilder("invoice");
+        $dql->select('invoice');
+        $dql->leftJoin('invoice.transresRequest','request');
+
+        //Exclude Work requests with status=Canceled and Draft
+        $dql->where("request.progressState != 'draft' AND request.progressState != 'canceled' AND invoice.latestVersion = TRUE AND invoice.status != 'canceled'");
 
         $dqlParameters = array();
 

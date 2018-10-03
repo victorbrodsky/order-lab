@@ -94,6 +94,19 @@ class FilterDashboardType extends AbstractType
             'attr' => array('class'=>'datepicker form-control submit-on-enter-field', 'placeholder'=>'To Submission Date'), //'title'=>'End Year', 'data-toggle'=>'tooltip',
         ));
 
+        if( $this->params['compareType'] ) {
+            $builder->add('compareType', ChoiceType::class, array(
+                'label' => false,
+                'choices' => array(
+                    "work request submission date" => "work request submission date",
+                    "last invoice generation date" => "last invoice generation date",
+                    "date when status changed to 'Paid in Full'" => "date when status changed to 'Paid in Full'"
+                ),
+                'required' => false,
+                'attr' => array('class' => 'combobox', 'placeholder' => "Compare Type")
+            ));
+        }
+
 //        $builder->add('searchId', TextType::class, array(
 //            'required'=>false,
 //            'label' => false,

@@ -40,15 +40,20 @@
     <div class="well form-search">
         {{ form_start(filterform) }}
         <div class="row">
-            <div class="col-xs-3">
+            <div class="col-xs-2">
                 {{ formmacros.fielddate(filterform.startDate,'allow-future-date') }}
             </div>
-            <div class="col-xs-3">
+            <div class="col-xs-2">
                 {{ formmacros.fielddate(filterform.endDate,'allow-future-date') }}
             </div>
             <div class="col-xs-3">
                 {% if filterform.projectSpecialty is defined %}
                     {{ form_widget(filterform.projectSpecialty, {'attr': {'placeholder': 'Specialty'}}) }}
+                {% endif %}
+            </div>
+            <div class="col-xs-3">
+                {% if filterform.compareType is defined %}
+                    {{ form_widget(filterform.compareType, {'attr': {'placeholder': 'Compare Type'}}) }}
                 {% endif %}
             </div>
             <div class="col-xs-2">
@@ -100,23 +105,33 @@
 
             for( var i = 0; i < charts.length; i++ ) {
 
-                var divId = 'chart-'+i;
-                var div = document.createElement("div");
-                div.style.float = "left";
-                div.style.margin = "10px";
-                div.setAttribute('id', divId);
-                document.getElementById("charts").appendChild(div);
+                if( charts[i]['newline'] && charts[i]['newline'] == true ) {
+                    console.log("newline");
+                    var newline = document.createElement("div");
+                    newline.style.float = "left";
+                    newline.style.width = "100%";
+                    //newline.setAttribute('id', divId);
+                    document.getElementById("charts").appendChild(newline);
+                } else {
 
-                var layout = charts[i]['layout'];
-                var data = charts[i]['data'];
+                    var divId = 'chart-' + i;
+                    var div = document.createElement("div");
+                    div.style.float = "left";
+                    div.style.margin = "10px";
+                    div.setAttribute('id', divId);
+                    document.getElementById("charts").appendChild(div);
 
-                {#//var layout = {{ layoutArray|json_encode|raw }};#}
-                {#//var data = {{ dataArray|json_encode|raw }};#}
+                    var layout = charts[i]['layout'];
+                    var data = charts[i]['data'];
 
-                console.log("data:");
-                console.log(data);
+                    {#//var layout = {{ layoutArray|json_encode|raw }};#}
+                    {#//var data = {{ dataArray|json_encode|raw }};#}
 
-                Plotly.newPlot(divId, data, layout);
+                    //console.log("data:");
+                    //console.log(data);
+
+                    Plotly.newPlot(divId, data, layout);
+                }
             }
 
 
