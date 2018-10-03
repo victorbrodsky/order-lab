@@ -100,7 +100,7 @@ class FilterDashboardType extends AbstractType
                 'choices' => array(
                     "work request submission date" => "work request submission date",
                     "last invoice generation date" => "last invoice generation date",
-                    "date when status changed to 'Paid in Full'" => "date when status changed to 'Paid in Full'"
+                    "date when status changed to 'Paid in Full'" => "date when status changed to paid in full"
                 ),
                 'required' => false,
                 'attr' => array('class' => 'combobox', 'placeholder' => "Compare Type")

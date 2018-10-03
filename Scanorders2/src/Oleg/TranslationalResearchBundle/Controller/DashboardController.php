@@ -416,12 +416,17 @@ class DashboardController extends Controller
 
         $startDate = $filterform['startDate']->getData();
         $endDate = $filterform['endDate']->getData();
+
         $compareType = $filterform['compareType']->getData();
+        $compareType = str_replace("-"," ",$compareType);
+
         $projectSpecialty = $filterform['projectSpecialty']->getData();
         if ($projectSpecialty != 0) {
             $projectSpecialtyObject = $em->getRepository('OlegTranslationalResearchBundle:SpecialtyList')->find($projectSpecialty);
             $projectSpecialtyObjects[] = $projectSpecialtyObject;
         }
+
+
 
         //Get data from the invoice perspective
         //12- Show radio buttons allowing work request submission date vs last invoice generation date vs date when status changed to “paid in full”;
@@ -662,7 +667,7 @@ class DashboardController extends Controller
             'data' => $dataArray
         );
         /////////////////////////////
-        
+
         $chartsArray[] = array('newline'=>true);
 
         //19. Generated Invoices by Status per Funded Project (Top 10)
@@ -1474,8 +1479,17 @@ class DashboardController extends Controller
         $dqlParameters = array();
 
         if( $startDate ) {
-            //echo "startDate=" . $startDate->format('Y-m-d H:i:s') . "<br>";
-            $dql->andWhere('request.createDate >= :startDate');
+            $startDateCriterion = 'request.createDate >= :startDate';
+            if( $compareType == 'work request submission date' ) {
+                $startDateCriterion = 'request.createDate >= :startDate';
+            } elseif( $compareType == 'last invoice generation date' ) {
+                $startDateCriterion = 'invoice.createDate >= :startDate';
+            } elseif( $compareType == "date when status changed to paid in full" ) {
+                $startDateCriterion = 'invoice.paidDate >= :startDate';
+            } else {
+                $startDateCriterion = 'request.createDate >= :startDate';
+            }
+            $dql->andWhere($startDateCriterion);
             $dqlParameters['startDate'] = $startDate->format('Y-m-d'); //H:i:s
         }
         if( $endDate ) {
@@ -1484,6 +1498,19 @@ class DashboardController extends Controller
             }
             //echo "endDate=" . $endDate->format('Y-m-d H:i:s') . "<br>";
             $dql->andWhere('request.createDate <= :endDate');
+
+            $endDateCriterion = 'request.createDate <= :endDate';
+            if( $compareType == 'work request submission date' ) {
+                $endDateCriterion = 'request.createDate <= :endDate';
+            } elseif( $compareType == 'last invoice generation date' ) {
+                $endDateCriterion = 'invoice.createDate <= :endDate';
+            } elseif( $compareType == "date when status changed to paid in full" ) {
+                $endDateCriterion = 'invoice.paidDate <= :endDate';
+            } else {
+                $endDateCriterion = 'request.createDate <= :endDate';
+            }
+            $dql->andWhere($endDateCriterion);
+
             $dqlParameters['endDate'] = $endDate->format('Y-m-d'); //H:i:s
         }
 
