@@ -318,6 +318,22 @@
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dashboard<b class="caret"></b></a>
                             <ul class="dropdown-menu">
 
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_dashboard_project',{'filter[startDate]':startDate,'filter[endDate]':endDate,'filter[projectSpecialty]':0}) }}"
+                                    >PI/Project Statistics</a>
+                                </li>
+
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_dashboard_request',{'filter[startDate]':startDate,'filter[endDate]':endDate,'filter[projectSpecialty]':0}) }}"
+                                    >Work Requests Statistics</a>
+                                </li>
+
+                                <li>
+                                    <a href="{{ path(translationalresearch_sitename~'_dashboard_financial',{'filter[startDate]':startDate,'filter[endDate]':endDate,'filter[projectSpecialty]':0, 'filter[compareType]':'work request submission date'}) }}"
+                                    >Financial Statistics</a>
+                                </li>
+
+                                {#<hr>#}
                                 {#<li>#}
                                     {#<a href="{{ path(translationalresearch_sitename~'_dashboard_pilevel',{'filter[startDate]':startDate,'filter[endDate]':endDate}) }}"#}
                                     {#>PI statistics</a>#}
@@ -333,24 +349,9 @@
                                     {#>Invoice statistics</a>#}
                                 {#</li>#}
 
-                                {#<li>#}
-                                    {#<a href="{{ path(translationalresearch_sitename~'_dashboard_compare',{'filter[startDate]':startDate,'filter[endDate]':endDate}) }}"#}
-                                    {#>Comparison statistics</a>#}
-                                {#</li>#}
-
                                 <li>
-                                    <a href="{{ path(translationalresearch_sitename~'_dashboard_project',{'filter[startDate]':startDate,'filter[endDate]':endDate,'filter[projectSpecialty]':0}) }}"
-                                    >PI/Project Statistics</a>
-                                </li>
-
-                                <li>
-                                    <a href="{{ path(translationalresearch_sitename~'_dashboard_request',{'filter[startDate]':startDate,'filter[endDate]':endDate,'filter[projectSpecialty]':0}) }}"
-                                    >Work Requests Statistics</a>
-                                </li>
-
-                                <li>
-                                    <a href="{{ path(translationalresearch_sitename~'_dashboard_financial',{'filter[startDate]':startDate,'filter[endDate]':endDate,'filter[projectSpecialty]':0, 'filter[compareType]':'work-request-submission-date'}) }}"
-                                    >Financial Statistics</a>
+                                    <a href="{{ path(translationalresearch_sitename~'_dashboard_compare',{'filter[startDate]':startDate,'filter[endDate]':endDate}) }}"
+                                    >Comparison Statistics</a>
                                 </li>
 
                                 {% if allProjectIdsArr is defined %}

@@ -168,7 +168,7 @@ class DashboardController extends Controller
         $piFundedProjectCountTopArr = $this->getTopArray($piFundedProjectCountArr);
         $chartsArray = $this->addChart( $chartsArray, $piFundedProjectCountTopArr, "Total number of Funded Projects per PI (Top 10)");
         //4. Un-Funded Projects per PI
-        $piUnFundedProjectCountTopArr = $this->getTopArray($piFundedProjectCountArr);
+        $piUnFundedProjectCountTopArr = $this->getTopArray($piUnFundedProjectCountArr);
         //Funded Projects per PI
         $chartsArray = $this->addChart( $chartsArray, $piUnFundedProjectCountTopArr, "Total number of Non-Funded Projects per PI (Top 10)");
         /////////// EOF 3,4 Total number of Funded/Un-Funded Projects per PI (Top 10) ////////////////
@@ -1489,6 +1489,7 @@ class DashboardController extends Controller
             } else {
                 $startDateCriterion = 'request.createDate >= :startDate';
             }
+            //echo "startDateCriterion=$startDateCriterion <br>";
             $dql->andWhere($startDateCriterion);
             $dqlParameters['startDate'] = $startDate->format('Y-m-d'); //H:i:s
         }
@@ -1509,6 +1510,7 @@ class DashboardController extends Controller
             } else {
                 $endDateCriterion = 'request.createDate <= :endDate';
             }
+            //echo "endDateCriterion=$endDateCriterion <br>";
             $dql->andWhere($endDateCriterion);
 
             $dqlParameters['endDate'] = $endDate->format('Y-m-d'); //H:i:s
