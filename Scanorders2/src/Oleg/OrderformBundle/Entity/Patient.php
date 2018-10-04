@@ -1689,8 +1689,13 @@ class Patient extends ObjectAbstract
         //[MRN Type(short name)]: [MRN]
         $mrnRes = $this->obtainStatusField('mrn', $status);
         if( $mrnRes ) {
-            $mrntypeStr = $mrnRes->getKeytype()->getOptimalName();
-            $patientAddInfoArr[] = $mrntypeStr.": ".$mrnRes->getField();
+            $mrnKeyType = $mrnRes->getKeytype();
+            if( $mrnKeyType ) {
+                $mrntypeStr = $mrnKeyType->getOptimalName();
+                $patientAddInfoArr[] = $mrntypeStr . ": " . $mrnRes->getField();
+            } else {
+                $patientAddInfoArr[] = $mrnRes->getField();
+            }
         }
 
         $patientAddInfo = implode(", ",$patientAddInfoArr);
