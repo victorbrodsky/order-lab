@@ -1173,7 +1173,7 @@ class DashboardController extends Controller
 
 
     //select top 10, BUT make sure the other PIs are still shown as "Other"
-    public function getTopArray($piProjectCountArr, $maxLen=70) {
+    public function getTopArray($piProjectCountArr, $maxLen=80) {
         arsort($piProjectCountArr);
         $limit = 10;
         $count = 1;
