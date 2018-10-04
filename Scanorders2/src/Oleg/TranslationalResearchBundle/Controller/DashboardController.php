@@ -369,7 +369,7 @@ class DashboardController extends Controller
         $quantityCountByCategoryTopArr = $this->getTopArray($quantityCountByCategoryArr);
         $layoutArray = array(
             'height' => 600,
-            'width' => 1400,
+            'width' => 1200,
         );
         $chartsArray = $this->addChart( $chartsArray, $quantityCountByCategoryTopArr, "TRP Service Productivity by Category Types (Top 10)",'pie',$layoutArray);
         ///////////////////////////
@@ -377,7 +377,7 @@ class DashboardController extends Controller
         //10,11. TRP Service Productivity for Funded/Not-Funded Projects (Top 10)
         $layoutArray = array(
             'height' => 600,
-            'width' => 1600,
+            'width' => 1200,
         );
         //10. TRP Service Productivity for Funded Projects (Top 10)
         $fundedQuantityCountByCategoryTopArr = $this->getTopArray($fundedQuantityCountByCategoryArr);
@@ -1173,7 +1173,7 @@ class DashboardController extends Controller
 
 
     //select top 10, BUT make sure the other PIs are still shown as "Other"
-    public function getTopArray($piProjectCountArr) {
+    public function getTopArray($piProjectCountArr, $maxLen=70) {
         arsort($piProjectCountArr);
         $limit = 10;
         $count = 1;
@@ -1191,6 +1191,17 @@ class DashboardController extends Controller
                 $piProjectCountTopArr['Other'] = $value;
             }
             $count++;
+        }
+
+        if( $maxLen ) {
+            $piProjectCountTopShortArr = array();
+            foreach($piProjectCountTopArr as $index=>$value) {
+                if( strlen($index) > $maxLen ) {
+                    $index = substr($index, 0, $maxLen) . '...';
+                }
+                $piProjectCountTopShortArr[$index] = $value;
+            }
+            return $piProjectCountTopShortArr;
         }
 
         return $piProjectCountTopArr;
